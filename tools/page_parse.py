@@ -56,8 +56,10 @@ HEADING = re.compile(
 LABEL_MAP = {
     "header": "header", "headers": "header", "header file": "header",
     "header files": "header", "include file": "header",
+    "required header": "header", "required headers": "header",
     "link library": "library", "library": "library", "link libraries": "library",
     "library file": "library", "import library": "library", "libraries": "library",
+    "required library": "library", "required link library": "library",
     "dll": "dll", "dlls": "dll", "dll file": "dll", "dynamic link library": "dll",
     "os versions": "os_versions", "os version": "os_versions",
     "windows ce versions": "os_versions", "windows ce version": "os_versions",
@@ -731,6 +733,35 @@ def _information_rows(fragment, seen):
         seen.add((field, value))
         out.append({"field": field, "label": label, "value": value,
                     "evidence": f"{label}: {value}"})
+    
+    # Learn pages sometimes embed "Requirements" inside a <pre> block and
+    # place the actual requirement data in the next paragraph as
+    # <strong>Label:</strong> value pairs (e.g., <strong>Header:</strong> Dmusici.h.).
+    # Extract these <strong>Label:</strong> patterns from the fragment.
+    # Handle both <strong>Label:</strong> and <strong>Label</strong>: forms.
+    strong_label_pattern = re.compile(
+        r"<strong>([^<]+?)</strong>\s*:?\s*([^<]+?)(?:<br|</p)", re.I)
+    for match in strong_label_pattern.finditer(fragment):
+        label = text_of(match.group(1), keep_newlines=False).strip().rstrip(":")
+        value = text_of(match.group(2), keep_newlines=False).strip()
+        if not label or not value:
+            continue
+        field = _field(label)
+        if not field or field == "other":
+            continue
+        if not value or (field, value) in seen:
+            continue
+        # For header/library/dll fields, the value should look like a file name
+        # or be a stated-none value. Reject prose text.
+        if field in ("header", "library", "dll"):
+            if not stated_none(value) and not FILEISH.search(value):
+                continue
+        if not _plausible(field, value):
+            continue
+        seen.add((field, value))
+        out.append({"field": field, "label": label, "value": value,
+                    "evidence": match.group(0).strip()})
+    
     return out
 
 
@@ -1726,6 +1757,14 @@ _SIGNATURE = re.compile(
     r"(?is)^(?:typedef\s+)?(?:enum\s+|struct\s+|union\s+)?"
     r"[A-Za-z_][\w\s\*]*\s+[*&]*\s*"
     r"[A-Za-z_][\w]*(?:::[A-Za-z_][\w]*)?\s*\(")
+# Function pointer typedef: ``DWORD (APIENTRY *PDD_CREATESURFACEEX)(...)``
+# or ``typedef DWORD (*LPFN)(...)``
+_FUNC_PTR_TYPEDEF = re.compile(
+    r"(?is)^(?:typedef\s+)?[A-Za-z_][\w\s\*]*\(\s*(?:\w+\s+)?\*\s*"
+    r"[A-Za-z_][\w]*\s*\)\s*\(")
+# Constructor-style declaration: ``ClassName();`` (single line, no type prefix)
+_CONSTRUCTOR_DECL = re.compile(
+    r"(?i)^[A-Za-z_][\w]*(?:::[A-Za-z_][\w]*)?\s*\(\s*\)\s*;?\s*$")
 # ``typedef CComAutoCriticalSection AutoCriticalSection`` is the declaration.
 # The page omitted the semicolon.  A sentence that starts with typedef is not
 # this form: the whole paragraph has to be the two identifiers.
@@ -1793,7 +1832,9 @@ def _is_documented_prototype(text):
     if len(lines) > 8 and ("{" in body or not (
             _SIGNATURE.match(body) and ";" in body)):
         return False
-    return bool(_SIGNATURE.match(body)) and (";" in body or len(lines) <= 3)
+    # Check standard signature, function pointer typedef, or constructor
+    return bool(_SIGNATURE.match(body) or _FUNC_PTR_TYPEDEF.match(body) or
+                _CONSTRUCTOR_DECL.match(body)) and (";" in body or len(lines) <= 3)
 
 
 def _section_title_before(fragment, pos):
