@@ -180,7 +180,7 @@ def regions(fragment, *headings, window=6000):
 # CE 3.0 requirements table is read from its column headers, and cutting
 # every label paragraph would shorten regions that reader already handles.
 _P_CLASS_SECTION = re.compile(
-    r"(?is)<p\b[^>]*\bclass\s*=\s*[\"']?(clsRef|blue)(?=[\"'\s>])"
+    r"(?is)<p\b[^>]*\bclass\s*=\s*[\"']?(clsRef|blue|label)(?=[\"'\s>])"
     r"[^>]*>\s*(?:<[^>]+>\s*)*([^<]{2,40})")
 _P_CLASS_TITLES = {
     "syntax", "c/c++ syntax", "c/c++syntax", "declaration", "prototype",
@@ -619,6 +619,30 @@ def requirements(fragment):
          re.compile(r"(?i)\bthis\s+is\s+an\s+(?:application\s+programming\s+"
                     r"interface\s+\(API\)|API)\s+exported\s+by\s+(?:the\s+)?"
                     r"([A-Za-z0-9_]+\.dll)\b")),
+        # ``It is declared in Stdlib.h as follows:`` -- the subject is the
+        # variable or function the page documents.  ``the`` before the file
+        # name is optional; ``as follows`` or a colon ends the clause.
+        ("header", "declared in",
+         re.compile(r"(?i)\bit\s+is\s+(?:declared|defined)\s+in\s+(?:the\s+)?"
+                    r"([A-Za-z0-9_]+\.h)\b")),
+        # ``The library (X.lib)`` or ``library X.lib`` assigns a library.
+        # ``The ACM Driver Wrapper library (Acmdwrap.lib)`` is the library
+        # for the API the page documents.
+        ("library", "library",
+         re.compile(r"(?i)\b(?:the\s+)?[A-Z][\w\s]*library\s*"
+                    r"\(\s*([A-Za-z0-9_]+\.lib)\s*\)")),
+        # ``link to X.lib`` / ``link with X.lib`` in prose.  Not a
+        # requirements table: ``you must link to the Coredll.lib file``.
+        ("library", "link to",
+         re.compile(r"(?i)\b(?:must|need\s+to|should)?\s*link\s+(?:to|with)"
+                    r"\s+(?:the\s+)?([A-Za-z0-9_]+\.lib)\b")),
+        # ``defined in X.h`` without ``header file`` -- the CE 3.0 OAL pages
+        # print ``defined in dstruct.h`` for structures and variables.  The
+        # match has to be about *this* page's subject, not a random mention.
+        ("header", "defined in",
+         re.compile(r"(?i)\b(?:this\s+)?(?:structure|variable|type|enum|"\
+                    r"union|constant|macro)\s+(?:is\s+)?defined\s+in\s+"
+                    r"(?:the\s+)?([A-Za-z0-9_]+\.h)\b")),
     )
     for field, label, pattern in stated:
         for match in pattern.finditer(plain):
