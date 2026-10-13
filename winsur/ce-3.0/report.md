@@ -24,7 +24,7 @@ fallback:
 * headers taken from the Win32 reference, because no CE page states one: **352** -- a desktop header (`processthreadsapi.h`, `windows.h`) is never passed off as a Windows CE header
 * libraries borrowed the same way: CE set **927**, Win32 reference **280**
 * EXPORTS worklists: 154 module file(s) in /home/user/wince-docs-corpus/winsur/ce-3.0/link, **2,702 export line(s)** (functions and callbacks only; structures, typedefs and C++ methods stay in the include material)
-* numbered constants: **2,869** derived `#define` lines in 98 `*.h.constants` file(s), from **9,394** table rows the pages print.  The `#define` keyword is not on the page; the row is quoted above each line.  **1** name(s) whose pages disagree on the number were not turned into a `#define`.  **0** `#define` line(s) are commented out because a CE page lists the name as not supported (the sentence is quoted above the line); **4,657** rows name no header, so they stay in `constants.tsv` only.  A number stated only by the Win32 reference is not borrowed
+* numbered constants: **3,060** derived `#define` lines in 101 `*.h.constants` file(s), from **9,394** table rows the pages print.  The `#define` keyword is not on the page; the row is quoted above each line.  **1** name(s) whose pages disagree on the number were not turned into a `#define`.  **0** `#define` line(s) are commented out because a CE page lists the name as not supported (the sentence is quoted above the line); **4,657** rows name no header, so they stay in `constants.tsv` only.  A number stated only by the Win32 reference is not borrowed.  **191** essential Win32 constant(s) added from tools/win32_constants.py
 * pages behind the output: 29,499
 
 ## Rights behind the output
