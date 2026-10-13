@@ -2816,3 +2816,115 @@ def unsupported_constants(fragment):
         out.append({"intro": intro[:300], "names": names,
                     "negated": match.group(2).lower() != "supports only"})
     return out
+
+# ---------------------------------------------------------------------------
+# pinvoke.net support
+# ---------------------------------------------------------------------------
+# pinvoke.net is a wiki-style site that documents P/Invoke signatures for
+# calling Win32 API from .NET. Pages contain C# code blocks with DllImport
+# attributes and constant definitions.
+#
+# URL pattern: http://www.pinvoke.net/default.aspx/{module}/{function}
+# Stored at: corpus/pinvoke/{module}/{function}.html
+
+_PINVOKE_DLL = re.compile(r'DllImport\s*\(\s*"([^"]+)"')
+_PINVOKE_CONST = re.compile(
+    r'(?:public\s+)?(?:const|static\s+readonly)\s+'
+    r'(?:uint|int|ushort|short|byte|long)\s+'
+    r'(\w+)\s*=\s*(0x[0-9a-fA-F]+|\d+)'
+)
+_PINVOKE_DEFINE = re.compile(
+    r'#define\s+(\w+)\s+(0x[0-9a-fA-F]+|\d+)'
+)
+
+
+def pinvoke_requirements(fragment):
+    """Extract requirements from a pinvoke.net page.
+    
+    Returns a list of requirement records with field/value pairs:
+    - dll: the DLL name from DllImport attribute
+    """
+    out = []
+    text = text_of(fragment, keep_newlines=False)
+    
+    # Extract DLL name from DllImport
+    dll_match = _PINVOKE_DLL.search(text)
+    if dll_match:
+        dll_name = dll_match.group(1)
+        out.append({
+            "field": "dll",
+            "label": "DLL",
+            "value": dll_name,
+            "evidence": f'DllImport("{dll_name}")'
+        })
+    
+    return out
+
+
+def pinvoke_constants(fragment):
+    """Extract constants from a pinvoke.net page.
+    
+    Returns a list of constant records with name/value pairs.
+    """
+    out = []
+    text = text_of(fragment, keep_newlines=False)
+    
+    # Extract const definitions
+    for match in _PINVOKE_CONST.finditer(text):
+        name = match.group(1)
+        value = match.group(2)
+        out.append({
+            "name": name,
+            "value": value,
+            "decimal": "",
+            "table": "pinvoke constant",
+            "row": f"{name} = {value}",
+        })
+    
+    # Extract #define definitions
+    for match in _PINVOKE_DEFINE.finditer(text):
+        name = match.group(1)
+        value = match.group(2)
+        out.append({
+            "name": name,
+            "value": value,
+            "decimal": "",
+            "table": "pinvoke define",
+            "row": f"#define {name} {value}",
+        })
+    
+    return out
+
+
+# Map pinvoke.net module names to Windows header files
+_PINVOKE_MODULE_TO_HEADER = {
+    "kernel32": "Windows.h",
+    "user32": "Windows.h",
+    "gdi32": "Windows.h",
+    "advapi32": "Windows.h",
+    "shell32": "Shellapi.h",
+    "comctl32": "Commctrl.h",
+    "comdlg32": "Commdlg.h",
+    "winmm": "Mmsystem.h",
+    "wininet": "Wininet.h",
+    "ws2_32": "Winsock2.h",
+    "ole32": "Objbase.h",
+    "oleaut32": "Oleauto.h",
+    "crypt32": "Wincrypt.h",
+    "secur32": "Security.h",
+    "rasapi32": "Ras.h",
+    "mpr": "Mpr.h",
+    "netapi32": "Lm.h",
+    "shlwapi": "Shlwapi.h",
+    "urlmon": "Urlmon.h",
+    "version": "Winver.h",
+    "winspool": "Winspool.h",
+    "coredll": "Windows.h",
+    "rapi": "Rapi.h",
+}
+
+
+def pinvoke_header_from_module(module_name):
+    """Infer header file from pinvoke.net module name."""
+    module_lower = module_name.lower()
+    return _PINVOKE_MODULE_TO_HEADER.get(module_lower, "Windows.h")

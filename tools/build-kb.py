@@ -83,6 +83,8 @@ TREE_LAYER = (
     # statement, and not include/def material: parse_page records a quoted
     # note and does not mint an entity, a declaration or a constant from it.
     ("corpus/oss/", "oss"),
+    # pinvoke.net P/Invoke signatures and constants for Win32 APIs
+    ("corpus/pinvoke/", "pinvoke"),
 )
 PAPERWORK = {"README.md", "PROVENANCE.md"}
 
@@ -223,6 +225,37 @@ def parse_page(job):
             return fact
         fragment = page_parse.article_html(raw)
         fact["constraints"] = page_parse.oss_statements(fragment)
+        return fact
+    # pinvoke.net pages document P/Invoke signatures for Win32 APIs.
+    # Extract DLL name from DllImport attribute and constants from C# code.
+    # The module name (e.g., kernel32) is inferred from the page path.
+    if layer == "pinvoke":
+        full = os.path.join(ROOT, path)
+        try:
+            raw = open(full, "rb").read()
+        except OSError:
+            return fact
+        fragment = page_parse.article_html(raw)
+        # Extract DLL name from DllImport attribute
+        fact["requirements"] = page_parse.pinvoke_requirements(fragment)
+        # Extract constants from C# const definitions
+        fact["constants"] = page_parse.pinvoke_constants(fragment)
+        # Extract entity name from page_id (e.g., "kernel32/CreateFile" -> "CreateFile")
+        if "/" in page_id:
+            module, func = page_id.split("/", 1)
+            if func != "index":
+                fact["display"] = func
+                fact["entity"] = ce_api_names.normalize(func)
+                fact["entity_evidence"] = "pinvoke-page"
+                fact["kind"] = "function"
+                # Add header file fact based on module name
+                header = page_parse.pinvoke_header_from_module(module)
+                fact["requirements"].append({
+                    "field": "header",
+                    "label": "Header",
+                    "value": header,
+                    "evidence": f"pinvoke.net module: {module}"
+                })
         return fact
     full = os.path.join(ROOT, path)
     try:
