@@ -655,15 +655,71 @@ def requirements(fragment):
          re.compile(r"(?i)\b(?:error\s+)?(?:code|value)"
                     r"s?\s+(?:is\s+|are\s+)?(?:defined|declared)\s+in\s+"
                     r"(?:the\s+)?([A-Za-z0-9_]+\.h)(?:\s+header\s+file)?\b")),
+        # ``see ... header file X.h`` / ``declared in the X.h header file`` --
+        # prose that explicitly names the header for the page's subject.
+        # Must be preceded by ``see``, ``in``, ``declared``, or ``defined``
+        # to avoid matching unrelated mentions (e.g. "mshtmdid.h" in prose).
+        ("header", "header file",
+         re.compile(r"(?i)(?:see|in|declared|defined)\b[^.]{0,40}\bheader\s+file\s+"
+                    r"([A-Za-z0-9_]+\.h)\b")),
+        # ``error code(s) defined in X.h or Y.h`` -- multiple headers
+        # joined by ``or`` in Return Values prose.  Extracts all files.
+        ("header", "defined in",
+         re.compile(r"(?i)\b(?:error\s+)?(?:code|value)s?"
+                    r"\s+(?:is\s+|are\s+)?(?:defined|declared)\s+in\s+"
+                    r"((?:the\s+)?[A-Za-z0-9_]+\.h(?:\s+or\s+(?:the\s+)?[A-Za-z0-9_]+\.h)*)")),
+        # ``must come from X.h, Y.h or Z.h`` -- RAS/EAP authentication
+        # failure codes reference multiple headers.  Extracts all files.
+        ("header", "from",
+         re.compile(r"(?i)\bfrom\s+((?:[A-Za-z0-9_]+\.h(?:\s*,\s*)?)"
+                    r"+(?:\s+or\s+[A-Za-z0-9_]+\.h)?)")),
+        # ``See X.h for the legally defined values`` -- prose reference
+        # to the header where constants or values are defined.
+        ("header", "see",
+         re.compile(r"(?i)\bSee\s+([A-Za-z0-9_]+\.h)\s+for\b")),
+        # ``Header: Wdm.h or Ntddk.h`` -- Requirements section with
+        # alternative headers joined by ``or``.
+        ("header", "header",
+         re.compile(r"(?i)\bHeader\s*:\s*([A-Za-z0-9_]+\.h)\s+or\s+([A-Za-z0-9_]+\.h)\b")),
+        # ``values, defined in X.h`` -- comma-separated clause naming
+        # the header where values or constants are defined.
+        ("header", "defined in",
+         re.compile(r"(?i)\bvalues?\s*,\s*defined\s+in\s+([A-Za-z0-9_]+\.h)\b")),
+        # ``as defined in X.h`` -- Return Values prose
+        ("header", "defined in",
+         re.compile(r"(?i)\bas\s+defined\s+in\s+(?:the\s+)?"
+                    r"([A-Za-z0-9_]+\.h)\b")),
+        # ``Include X.h for definitions`` -- prose directive to include a header
+        ("header", "include",
+         re.compile(r"(?i)\bInclude\s+([A-Za-z0-9_]+\.h)\s+for\b")),
+        # ``its DLL is X.dll`` / ``the DLL is X.dll`` -- prose assigning a DLL
+        ("dll", "dll is",
+         re.compile(r"(?i)\b(?:its|the|this)\s+DLL\s+is\s+([A-Za-z0-9_]+\.dll)\b")),
     )
     for field, label, pattern in stated:
         for match in pattern.finditer(plain):
+            evidence = re.sub(r"\s+", " ", match.group(0)).strip()
             value = match.group(1)
-            if (field, value) in seen or not _plausible(field, value):
-                continue
-            seen.add((field, value))
-            out.append({"field": field, "label": label, "value": value,
-                        "evidence": re.sub(r"\s+", " ", match.group(0)).strip()})
+            
+            # For header/library/dll fields, extract file names from the match
+            # to handle patterns like "X.h or Y.h" (multiple files).
+            if field in ("header", "library", "dll"):
+                file_names = [m.group(0) for m in FILEISH.finditer(evidence)]
+                if not file_names:
+                    continue
+                for file_name in file_names:
+                    if (field, file_name) in seen or not _plausible(field, file_name):
+                        continue
+                    seen.add((field, file_name))
+                    out.append({"field": field, "label": label, "value": file_name,
+                                "evidence": evidence})
+            else:
+                # Non-file fields (os_versions, etc.)
+                if (field, value) in seen or not _plausible(field, value):
+                    continue
+                seen.add((field, value))
+                out.append({"field": field, "label": label, "value": value,
+                            "evidence": evidence})
     # MSHTML prints the header and the implementing DLL under
     # ``Interface Information``, not under Requirements:
     # ``Header and IDL files | mshtml.h, mshtml.idl``,
