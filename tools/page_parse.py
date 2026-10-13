@@ -695,6 +695,24 @@ def requirements(fragment):
         # ``its DLL is X.dll`` / ``the DLL is X.dll`` -- prose assigning a DLL
         ("dll", "dll is",
          re.compile(r"(?i)\b(?:its|the|this)\s+DLL\s+is\s+([A-Za-z0-9_]+\.dll)\b")),
+        # ``is part of the X.lib component`` -- Remarks prose assigning a library/DLL
+        # when the Requirements table's Link to column is empty (&nbsp;).
+        ("library", "component",
+         re.compile(r"(?i)\b(?:is|are)\s+part\s+of\s+(?:the\s+)?"
+                    r"([A-Za-z0-9_]+\.(?:lib|dll))\s+component\b")),
+        # ``( // X.h`` -- code comment after function signature indicating the header
+        # where the function is declared.  Common in MSDN Library pages.
+        ("header", "code comment",
+         re.compile(r"(?m)\(\s*//\s*([A-Za-z0-9_]+\.h)\b")),
+        # ``X defined in Y.h`` -- generic definition pattern (identifiers, structures, etc.)
+        ("header", "defined in",
+         re.compile(r"(?i)\b\w+\s+defined\s+in\s+(?:the\s+)?([A-Za-z0-9_]+\.h)\b")),
+        # ``values listed in X.h`` -- values or constants listed in a header
+        ("header", "listed in",
+         re.compile(r"(?i)\bvalues?\s+(?:listed|defined)\s+in\s+(?:the\s+)?([A-Za-z0-9_]+\.h)\b")),
+        # ``see X.h and Y.h`` -- prose reference to multiple headers
+        ("header", "see",
+         re.compile(r"(?i)\bsee\s+([A-Za-z0-9_]+\.h)\s+and\s+([A-Za-z0-9_]+\.h)\b")),
     )
     for field, label, pattern in stated:
         for match in pattern.finditer(plain):
