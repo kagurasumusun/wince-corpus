@@ -89,6 +89,7 @@ sys.path.insert(0, os.path.join(ROOT, "tools"))
 # Splits a requirement *value* already stored in knowledge/.  It does not
 # read a corpus page.  The generator still refuses corpus paths below.
 import page_parse  # noqa: E402
+import win32_constants  # noqa: E402
 
 KB = os.path.join(ROOT, "knowledge", "kb")
 
@@ -538,7 +539,7 @@ def load_unsupported():
     return out
 
 
-def write_constants(out, constants, target, borrow):
+def write_constants(out, constants, target, borrow, include_win32_constants=False):
     """The numbers a page prints, grouped by the header that same page names.
 
     A ``#define`` line is *derived*: the page printed a table row, not a
@@ -547,6 +548,9 @@ def write_constants(out, constants, target, borrow):
     constant whose page names no header stays in ``constants.tsv`` only -- it
     is not assigned a file.  A number stated only by the Win32 reference is
     not borrowed: desktop and Windows CE values are not assumed to match.
+    
+    When include_win32_constants is True, essential Win32 constants (like
+    AF_INET, SOCK_STREAM) are added to the output for development use.
     """
     own = [c for c in constants
            if c.get("layer") == "ce" and in_set(c["source"]["set"], target)]
@@ -573,6 +577,28 @@ def write_constants(out, constants, target, borrow):
             continue
         for header in headers:
             by_key[(header, record["name"])].append((record, origin))
+
+    # Add Win32 common constants if requested
+    win32_added = 0
+    if include_win32_constants:
+        all_win32 = win32_constants.get_all_constants()
+        for header, constants_dict in all_win32.items():
+            for name, value in constants_dict.items():
+                key = (header, name)
+                if key not in by_key:
+                    # Create a synthetic record for Win32 constants
+                    synthetic_record = {
+                        "name": name,
+                        "value": str(value),
+                        "decimal": "",
+                        "row": f"{name} = {value}",
+                        "source": {
+                            "path": "tools/win32_constants.py",
+                            "set": "win32-common",
+                        },
+                    }
+                    by_key[key].append((synthetic_record, "win32-common"))
+                    win32_added += 1
 
     conflicts = 0
     written = 0
@@ -666,6 +692,7 @@ def write_constants(out, constants, target, borrow):
         "conflicts": conflicts,
         "no_header": len(no_header),
         "headers": len(by_header),
+        "win32_constants": win32_added,
     }
 
 
@@ -703,6 +730,8 @@ def main():
                     help="do not use a declaration from another corpus set")
     ap.add_argument("--include-win32", action="store_true",
                     help="also emit entities the Win32 reference documents")
+    ap.add_argument("--include-win32-constants", action="store_true",
+                    help="add essential Win32 constants (AF_INET, SOCK_STREAM, etc.)")
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--list", action="store_true",
                     help="list the corpus sets and their entity counts")
@@ -900,7 +929,8 @@ def main():
     ordinal_files, ordinal_names = write_ordinal_defs(out, args.target)
     UNSUPPORTED.update(load_unsupported())
     constant_report = write_constants(out, constants, args.target,
-                                      not args.no_borrow)
+                                      not args.no_borrow,
+                                      args.include_win32_constants)
 
     with open(os.path.join(out, "manifest.tsv"), "w", encoding="utf-8") as fh:
         fh.write("entity\tname\tkinds\tsurface\theader_files\tmodules\t"
@@ -982,7 +1012,9 @@ def main():
         f"(the sentence is quoted above the line); "
         f"**{constant_report['no_header']:,}** rows name no header, so they "
         "stay in `constants.tsv` only.  A number stated only by the Win32 "
-        "reference is not borrowed",
+        f"reference is not borrowed.  "
+        f"**{constant_report.get('win32_constants', 0):,}** essential Win32 "
+        "constant(s) added from tools/win32_constants.py",
         f"* pages behind the output: {len(pages):,}",
         "",
         "## Rights behind the output",
