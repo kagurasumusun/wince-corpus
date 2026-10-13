@@ -703,13 +703,16 @@ def requirements(fragment):
         # ``( // X.h`` -- code comment after function signature indicating the header
         # where the function is declared.  Common in MSDN Library pages.
         ("header", "code comment",
-         re.compile(r"(?m)\(\s*//\s*([A-Za-z0-9_]+\.h)\b")),
+         re.compile(r"(?m)[(;]\s*//\s*([A-Za-z0-9_]+\.h)\s*(?:and\s+([A-Za-z0-9_]+\.h)\b)?")),
         # ``in X.h header file`` -- general pattern for any word followed by "in X.h header file"
         ("header", "in header file",
          re.compile(r"(?i)\bin\s+(?:the\s+)?([A-Za-z0-9_]+\.h)\s+header\s+file\b")),
         # ``X.h must be included`` -- explicit inclusion requirement
         ("header", "must be included",
          re.compile(r"(?i)\b([A-Za-z0-9_]+\.h)\s+(?:file\s+)?must\s+be\s+(?:explicitly\s+)?included\b")),
+        # ``found in X.h`` -- prose reference
+        ("header", "found in",
+         re.compile(r"(?i)\bfound\s+in\s+(?:the\s+)?([A-Za-z0-9_]+\.h)\b")),
         # ``X defined in Y.h`` -- generic definition pattern (identifiers, structures, etc.)
         ("header", "defined in",
          re.compile(r"(?i)\b\w+\s+defined\s+in\s+(?:the\s+)?([A-Za-z0-9_]+\.h)\b")),
