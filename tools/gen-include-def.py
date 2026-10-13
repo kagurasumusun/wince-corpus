@@ -791,8 +791,12 @@ def main():
                 'CFilter', 'CPin', 'CAllocator', 'CProperty', 'CControl',
                 'CAM', 'CAsync', 'CDispatch', 'CStream',
                 'CTransform', 'CTransInPlace',
+                'CAuto', 'CCrit', 'CEnum', 'CDisp',
+                'CBasic', 'CFactory', 'CGeneric',
+                'CGuid', 'CLoad', 'CMem', 'COA', 'CPos', 'CQueue', 'CRef',
+                'CSystem', 'CUnknown',
             )
-            if class_name.startswith(directshow_prefixes):
+            if class_name.startswith(directshow_prefixes) or class_name == 'FOURCCMap':
                 header_keys = ["Streams.h"]
                 header_from = "inferred:directshow-helper"
         
@@ -808,6 +812,24 @@ def main():
             if any(pattern in name for pattern in directshow_patterns):
                 header_keys = ["Dshow.h"]
                 header_from = "inferred:directshow-api"
+        
+        # DirectShow event codes: infer Streams.h header
+        if not header_keys and entity["name"].startswith("EC_"):
+            header_keys = ["Streams.h"]
+            header_from = "inferred:directshow-event"
+        
+        # Processor-specific macros: infer appropriate headers
+        if not header_keys:
+            name = entity["name"]
+            if name.startswith("_SH3") or name.startswith("_SH4"):
+                header_keys = ["Mipsintr.h"]
+                header_from = "inferred:processor-macro"
+            elif name.startswith("DDHAL_"):
+                header_keys = ["Ddrawhal.h"]
+                header_from = "inferred:ddhal-macro"
+            elif name.startswith("DISK_IOCTL_"):
+                header_keys = ["Diskio.h"]
+                header_from = "inferred:diskio-ioctl"
         
         if header_from:
             borrowed["header " + header_from.split(":")[0]] += 1
