@@ -212,6 +212,23 @@ def dest_for(url):
 
         return "wayback", match.group(2)
 
+    if "pinvoke.net" in p.netloc:
+        # pinvoke.net URL patterns:
+        # http://www.pinvoke.net/default.aspx/{module}/{function}
+        # http://www.pinvoke.net/default.aspx/{module}
+        match = re.match(
+            r"/default\.aspx/([A-Za-z0-9_]+)(?:/([A-Za-z0-9_]+))?$",
+            p.path,
+        )
+
+        if not match:
+            return None, None
+
+        module = match.group(1)
+        function = match.group(2) or "index"
+        
+        return "pinvoke", f"{module}/{function}"
+
     return None, None
 
 
@@ -846,6 +863,17 @@ def process_url(url, have_ids, faillog, fetcher, index_by_id, dry_run=False,
         base = DOTNET_DIR if bucket in DOTNET_SETS else LEARN_DIR
         directory = os.path.join(base, bucket)
         stored_id = pid
+    elif kind == "pinvoke":
+        # pinvoke.net pages: store under corpus/pinvoke/{module}/{function}.html
+        pinvoke_dir = os.path.join(CORPUS, "pinvoke")
+        # pid is "{module}/{function}" or "{module}/index"
+        parts = pid.split("/", 1)
+        if len(parts) == 2:
+            module, function = parts
+            directory = os.path.join(pinvoke_dir, module)
+        else:
+            directory = pinvoke_dir
+        stored_id = "pinvoke:" + pid
     else:
         book = index_by_id.get(pid, "unclassified")
         directory = os.path.join(WAYBACK_DIR, book)
@@ -921,7 +949,7 @@ def main():
         else os.path.join(ROOT, args.queue)
     qname = args.queue_name or os.path.basename(qpath).replace(".txt", "")
 
-    default_delay = {"wayback-msdn-2010": 1.5}.get(qname, 0.4)
+    default_delay = {"wayback-msdn-2010": 1.5, "pinvoke-net": 1.0}.get(qname, 0.4)
     delay = args.delay if args.delay > 0 else default_delay
 
     logdir = os.path.join(ROOT, "data", "logs")
