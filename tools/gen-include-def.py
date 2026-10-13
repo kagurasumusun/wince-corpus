@@ -781,6 +781,34 @@ def main():
             reqs_of.get(entity["id"], ()), ("library", "dll"), args.target)
         lib_keys, library_from = choose_keys(
             lib_groups, lib_sets, not args.no_borrow)
+        
+        # DirectShow helper classes: infer Streams.h header
+        if not header_keys and "::" in entity["name"]:
+            class_name = entity["name"].split("::")[0]
+            directshow_prefixes = (
+                'CBase', 'CDirect', 'CAgg', 'CRenderer', 'CSource', 'CMsg',
+                'CPull', 'COutput', 'CInput', 'CVideo', 'CAudio', 'CMedia',
+                'CFilter', 'CPin', 'CAllocator', 'CProperty', 'CControl',
+                'CAM', 'CAsync', 'CDispatch', 'CStream',
+                'CTransform', 'CTransInPlace',
+            )
+            if class_name.startswith(directshow_prefixes):
+                header_keys = ["Streams.h"]
+                header_from = "inferred:directshow-helper"
+        
+        # DirectShow functions/types: infer Dshow.h header
+        if not header_keys:
+            name = entity["name"]
+            directshow_patterns = (
+                'AMGet', 'AMovie', 'AM_SAMPLE', 'AM_MEDIA',
+                'EC_STREAM', 'IAMovie', 'IBaseFilter', 'IFilterGraph',
+                'IFilterMapper', 'IMediaControl', 'IMediaEvent',
+                'IMediaSeeking', 'IMediaPosition', 'IMediaFilter',
+            )
+            if any(pattern in name for pattern in directshow_patterns):
+                header_keys = ["Dshow.h"]
+                header_from = "inferred:directshow-api"
+        
         if header_from:
             borrowed["header " + header_from.split(":")[0]] += 1
         if library_from:
