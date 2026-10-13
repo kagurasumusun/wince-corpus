@@ -769,6 +769,19 @@ def entity_records(facts, declarations, requirements):
                         if name not in found:
                             found.append(name)
                 return sorted(found)
+            if field == "header":
+                # Header values may contain multiple files (e.g., "Winuser.h Rapi.h")
+                found = []
+                for record in reqs:
+                    if record["field"] != field:
+                        continue
+                    names = HEADER_TOKEN.findall(record.get("value") or "")
+                    if not names and record["key"]:
+                        names = HEADER_TOKEN.findall(record["key"])
+                    for name in names:
+                        if name not in found:
+                            found.append(name)
+                return sorted(found)
             return sorted({r["key"] for r in reqs
                            if r["field"] == field and r["key"]})
 
