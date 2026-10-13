@@ -8,24 +8,24 @@ below is documented by a Windows CE set (`ce_sets` contains the
 target); the Win32 reference is only ever *evidence* or a marked
 fallback:
 
-* entities emitted by surface: `ce-only` 12,244, `shared` 4,178
-* declarations that come from a Win32 page: **0** (marked in the fragment comments, the manifest and the `.def` worklists)
+* entities emitted by surface: `ce-only` 12,244, `shared` 4,178, `win32-spelling` 1,144
+* declarations that come from a Win32 page: **4** (marked in the fragment comments, the manifest and the `.def` worklists)
 * a Win32-only name (a page the CE documents never claim) is never emitted, even with `--include-win32`: that flag only adds entries whose CE evidence exists
 
 ## What was generated
 
-* entities in scope: **16,422**
-* declarations written: **17,275** in 491 header fragment(s) (/home/user/wince-docs-corpus/winsur/ce-6.0/include)
-* ANSI spellings left out because a CE page states the device supports only the Unicode version: **0** (`knowledge/kb/unicode-only.tsv` has the sentence; the Win32 reference documents those `A` names for the desktop)
+* entities in scope: **17,566**
+* declarations written: **17,283** in 493 header fragment(s) (/home/user/wince-docs-corpus/winsur/ce-6.0/include)
+* ANSI spellings left out because a CE page states the device supports only the Unicode version: **17** (`knowledge/kb/unicode-only.tsv` has the sentence; the Win32 reference documents those `A` names for the desktop)
 * export tables printed by this set's own pages: **1** DLL(s), **94** name(s) with the ordinal the page prints (`link/*.ordinals.def`).  Every other `.def` line here has no ordinal, because no document gives it one
 * declarations borrowed from another CE set: **32** -- **15** of them because this version's page lost the spaces between tokens and another CE page kept them, and the two texts are the same once whitespace is removed (quoted as that page printed them, not repaired)
-* declarations taken from the Win32 reference instead (the CE pages print none): **0** -- marked in the fragments, the manifest and here: the Win32 pages document the shared surface as desktop Windows, so each one must be checked against the CE SDK
+* declarations taken from the Win32 reference instead (the CE pages print none): **4** -- marked in the fragments, the manifest and here: the Win32 pages document the shared surface as desktop Windows, so each one must be checked against the CE SDK
 * headers taken from another CE set, because this version's pages state none: **71** (marked `header_from` in the manifest and in the fragment comment)
-* headers taken from the Win32 reference, because no CE page states one: **517** -- a desktop header (`processthreadsapi.h`, `windows.h`) is never passed off as a Windows CE header
-* libraries borrowed the same way: CE set **308**, Win32 reference **491**
-* EXPORTS worklists: 204 module file(s) in /home/user/wince-docs-corpus/winsur/ce-6.0/link, **4,561 export line(s)** (functions and callbacks only; structures, typedefs and C++ methods stay in the include material)
-* numbered constants: **1,780** derived `#define` lines in 67 `*.h.constants` file(s), from **5,853** table rows the pages print.  The `#define` keyword is not on the page; the row is quoted above each line.  **1** name(s) whose pages disagree on the number were not turned into a `#define`.  **0** `#define` line(s) are commented out because a CE page lists the name as not supported (the sentence is quoted above the line); **4,154** rows name no header, so they stay in `constants.tsv` only.  A number stated only by the Win32 reference is not borrowed.  **191** essential Win32 constant(s) added from tools/win32_constants.py
-* pages behind the output: 50,414
+* headers taken from the Win32 reference, because no CE page states one: **1,644** -- a desktop header (`processthreadsapi.h`, `windows.h`) is never passed off as a Windows CE header
+* libraries borrowed the same way: CE set **308**, Win32 reference **1,341**
+* EXPORTS worklists: 220 module file(s) in /home/user/wince-docs-corpus/winsur/ce-6.0/link, **5,420 export line(s)** (functions and callbacks only; structures, typedefs and C++ methods stay in the include material)
+* numbered constants: **1,589** derived `#define` lines in 64 `*.h.constants` file(s), from **5,853** table rows the pages print.  The `#define` keyword is not on the page; the row is quoted above each line.  **1** name(s) whose pages disagree on the number were not turned into a `#define`.  **0** `#define` line(s) are commented out because a CE page lists the name as not supported (the sentence is quoted above the line); **4,154** rows name no header, so they stay in `constants.tsv` only.  A number stated only by the Win32 reference is not borrowed
+* pages behind the output: 50,418
 
 ## Rights behind the output
 
@@ -39,6 +39,7 @@ scope whose `redistribution` is not `yes` may not be republished
 |-------|---------------------:|------------------|
 | learn-tou | 17,256 | no |
 | ce30-internal-reference | 17 | no |
+| sdk-api-cc-by-4.0 | 8 | yes |
 | ms-media-copyright | 2 | no |
 
 ## The wall this generator keeps
@@ -49,8 +50,9 @@ scope whose `redistribution` is not `yes` may not be republished
 
 | reason | entities |
 |--------|----------|
-| no declaration in the corpus | 1,310 |
+| no declaration in the corpus | 2,433 |
 | no header stated | 459 |
+| ANSI spelling denied by a CE page (Unicode only) | 17 |
 
 The skipped entities are the collection worklist: their pages exist,
 they simply do not state the declaration, the header or the library.
