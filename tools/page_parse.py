@@ -645,6 +645,10 @@ def requirements(fragment):
          re.compile(r"(?i)\b(?:this\s+)?(?:structure|variable|type|enum|"\
                     r"union|constant|macro)\s+(?:is\s+)?defined\s+in\s+"
                     r"(?:the\s+)?([A-Za-z0-9_]+\.h)\b")),
+        # ``X.h include file`` -- error code tables and similar pages
+        # mention the header file that defines the constants.
+        ("header", "include file",
+         re.compile(r"(?i)\b([A-Za-z0-9_]+\.h)\s+include\s+file\b")),
     )
     for field, label, pattern in stated:
         for match in pattern.finditer(plain):

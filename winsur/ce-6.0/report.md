@@ -24,7 +24,7 @@ fallback:
 * headers taken from the Win32 reference, because no CE page states one: **1,644** -- a desktop header (`processthreadsapi.h`, `windows.h`) is never passed off as a Windows CE header
 * libraries borrowed the same way: CE set **308**, Win32 reference **1,341**
 * EXPORTS worklists: 220 module file(s) in /home/user/wince-docs-corpus/winsur/ce-6.0/link, **5,420 export line(s)** (functions and callbacks only; structures, typedefs and C++ methods stay in the include material)
-* numbered constants: **1,589** derived `#define` lines in 64 `*.h.constants` file(s), from **5,853** table rows the pages print.  The `#define` keyword is not on the page; the row is quoted above each line.  **1** name(s) whose pages disagree on the number were not turned into a `#define`.  **0** `#define` line(s) are commented out because a CE page lists the name as not supported (the sentence is quoted above the line); **4,154** rows name no header, so they stay in `constants.tsv` only.  A number stated only by the Win32 reference is not borrowed
+* numbered constants: **1,740** derived `#define` lines in 65 `*.h.constants` file(s), from **5,853** table rows the pages print.  The `#define` keyword is not on the page; the row is quoted above each line.  **1** name(s) whose pages disagree on the number were not turned into a `#define`.  **0** `#define` line(s) are commented out because a CE page lists the name as not supported (the sentence is quoted above the line); **3,991** rows name no header, so they stay in `constants.tsv` only.  A number stated only by the Win32 reference is not borrowed
 * pages behind the output: 50,418
 
 ## Rights behind the output
