@@ -19,7 +19,7 @@ The knowledge base is built from the pages in `corpus/` only: every declaration,
 * pages parsed: **121,053**
 * API entities: **30,076** -- CE-specific **24,565**, documented by Windows CE and the Win32 reference alike **4,353**, Win32 pages for a CE name's A/W spelling **1,155**, named by the CE catalog only **3**, unclaimed Win32 pages **0** (`reports/surface.tsv`; 585 names have a Win32 page through a variant spelling)
 * declarations extracted: **110,319** (C/C++ 78,993 in `kb/declarations.jsonl`, managed-code signatures 31,326 in `kb/declarations-dotnet.jsonl` -- the separated .NET layer)
-* requirement statements: **196,992**
+* requirement statements: **197,075**
 * of those, a page's own `Module` (not an sdk-api UID): **146**; a `sysgen` variable: **980**; a CPU list (`Architecture`): **78**; a catalog `Component`: **28**
 * numbered constants: **18,746** (`kb/constants.jsonl`, 791 page(s))
 * Windows CE constraint sentences: **3,510** and ABI statements quoted from the pages (**969**, `kind: "abi-note"`)
@@ -34,16 +34,16 @@ The knowledge base is built from the pages in `corpus/` only: every declaration,
 
 | tree | pages | with entity | with requirements | with declaration | requirements | declarations |
 |------|-------|-------------|-------------------|------------------|--------------|--------------|
-| `learn/windows-ce-5.0` | 24,694 | 14,746 | 14,928 | 15,063 | 37,454 | 17,281 |
-| `learn/windows-embedded-ce-6.0` | 23,714 | 16,593 | 17,079 | 16,739 | 42,342 | 18,887 |
-| `chm/windows-ce-5.0` | 20,179 | 14,767 | 12,941 | 14,981 | 27,654 | 16,381 |
-| `learn/windows-ce-net-4x` | 8,969 | 6,536 | 6,537 | 6,327 | 17,012 | 7,164 |
-| `chm/windows-ce-3.0` | 8,962 | 7,026 | 5,313 | 6,802 | 12,433 | 7,558 |
-| `msdn-library/wcedevcon-99` | 6,382 | 4,532 | 3,432 | 4,512 | 7,126 | 4,916 |
+| `learn/windows-ce-5.0` | 24,694 | 14,746 | 14,938 | 15,063 | 37,477 | 17,281 |
+| `learn/windows-embedded-ce-6.0` | 23,714 | 16,593 | 17,088 | 16,739 | 42,360 | 18,887 |
+| `chm/windows-ce-5.0` | 20,179 | 14,767 | 12,944 | 14,981 | 27,665 | 16,381 |
+| `learn/windows-ce-net-4x` | 8,969 | 6,536 | 6,538 | 6,327 | 17,016 | 7,164 |
+| `chm/windows-ce-3.0` | 8,962 | 7,026 | 5,316 | 6,802 | 12,439 | 7,558 |
+| `msdn-library/wcedevcon-99` | 6,382 | 4,532 | 3,440 | 4,512 | 7,138 | 4,916 |
 | `dotnet/pos-for-net` | 5,793 | 0 | 5,793 | 5,067 | 11,586 | 23,157 |
-| `msdn-library/techshelps` | 5,165 | 3,877 | 3,276 | 3,269 | 7,159 | 3,358 |
+| `msdn-library/techshelps` | 5,165 | 3,877 | 3,281 | 3,269 | 7,167 | 3,358 |
 | `dotnet/dotnet-micro-framework` | 4,012 | 0 | 4,012 | 1,835 | 5,583 | 6,535 |
-| `msdn-library/datadungeon-2000-04` | 2,931 | 1,330 | 245 | 752 | 486 | 833 |
+| `msdn-library/datadungeon-2000-04` | 2,931 | 1,330 | 246 | 752 | 487 | 833 |
 | `mvb/windows-ce-1.0/PEGSDK` | 1,918 | 1,473 | 623 | 268 | 647 | 429 |
 | `dotnet/dotnet-compact-framework` | 852 | 0 | 852 | 636 | 853 | 2,135 |
 | `chm/windows-ce-4.2` | 566 | 278 | 260 | 254 | 517 | 278 |

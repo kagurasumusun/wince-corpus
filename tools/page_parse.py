@@ -715,13 +715,19 @@ def requirements(fragment):
          re.compile(r"(?i)\bfound\s+in\s+(?:the\s+)?([A-Za-z0-9_]+\.h)\b")),
         # ``X defined in Y.h`` -- generic definition pattern (identifiers, structures, etc.)
         ("header", "defined in",
-         re.compile(r"(?i)\b\w+\s+defined\s+in\s+(?:the\s+)?([A-Za-z0-9_]+\.h)\b")),
+         re.compile(r"(?i)[\w\s,]+\s+defined\s+in\s+(?:the\s+)?([A-Za-z0-9_]+\.h)\b")),
         # ``values listed in X.h`` -- values or constants listed in a header
         ("header", "listed in",
          re.compile(r"(?i)\bvalues?\s+(?:listed|defined)\s+in\s+(?:the\s+)?([A-Za-z0-9_]+\.h)\b")),
         # ``see X.h and Y.h`` -- prose reference to multiple headers
         ("header", "see",
          re.compile(r"(?i)\bsee\s+([A-Za-z0-9_]+\.h)\s+and\s+([A-Za-z0-9_]+\.h)\b")),
+        # ``must include X.h`` -- explicit inclusion requirement
+        ("header", "must include",
+         re.compile(r"(?i)must\s+include\s+(?:the\s+)?([A-Za-z0-9_]+\.h)")),
+        # ``listed in X.h`` -- values/flags/constants listed in a header
+        ("header", "listed in",
+         re.compile(r"(?i)\blisted\s+in\s+(?:the\s+)?([A-Za-z0-9_]+\.h)\b")),
     )
     for field, label, pattern in stated:
         for match in pattern.finditer(plain):
