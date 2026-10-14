@@ -27,6 +27,8 @@ import argparse
 import hashlib
 import html
 import json
+import re as _re
+import signal
 import os
 import re
 import sys
@@ -49,6 +51,12 @@ def main():
     ap.add_argument("--out", default="data/probe")
     ap.add_argument("--delay", type=float, default=2.0,
                     help="fixed delay per host (seconds)")
+    ap.add_argument("--max-seconds", type=int, default=1500,
+                    help="hard wall-clock budget for the whole probe run; "
+                         "when it is spent each later row is recorded as "
+                         "'budget-exhausted' instead of fetching, so the "
+                         "run always terminates (a hung host must not hold "
+                         "the queue for an hour)")
     ap.add_argument("--refresh-all", action="store_true",
                     help="re-probe rows whose earlier probe already "
                          "succeeded (default: skip them -- a probe answer "
@@ -70,6 +78,9 @@ def main():
 
     fetcher = harvest.Fetcher(harvest.HostPacer(), respect_robots=True)
     out_root = os.path.join(ROOT, args.out)
+    started = time.monotonic()
+    def _budget_dead():
+        return time.monotonic() - started >= args.max_seconds
     summary = []
     for ordinal, (name, url, mode) in enumerate(rows, 1):
         target_dir = os.path.join(out_root, name)
@@ -81,10 +92,24 @@ def main():
                   "delete data/probe/%s to re-ask)" % name, flush=True)
             continue
         os.makedirs(target_dir, exist_ok=True)
-        body, status = fetcher.get(url, args.delay)
         stamp = time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime())
-        head = [f"# probe: {name}", "", f"- url: {url}", f"- mode: {mode}",
-                f"- fetched: {stamp}", f"- status: {status}"]
+        base_head = [f"# probe: {name}", "", f"- url: {url}", f"- mode: {mode}",
+                     f"- fetched: {stamp}"]
+        if _budget_dead():
+            head = base_head + ["- status: budget-exhausted", "",
+                                "**skipped: wall-clock budget spent by earlier "
+                                "rows** (host did not answer; "
+                                "probe is re-runnable -- idempotency skips "
+                                "answered rows)", ""]
+            with open(os.path.join(target_dir, "INDEX.md"), "w",
+                      encoding="utf-8") as fh:
+                fh.write("\n".join(head))
+            summary.append(f"{name}\tbudget-exhausted\t0")
+            print(f"[probe] {name}: budget-exhausted (row recorded as "
+                  "skipped)", flush=True)
+            continue
+        body, status = fetcher.get(url, args.delay)
+        head = base_head + [f"- status: {status}"]
         if body is None:
             head += ["", "**fetch failed** (see status)", ""]
         else:
