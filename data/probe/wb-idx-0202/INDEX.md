@@ -1,0 +1,64 @@
+# probe: wb-idx-0202
+
+- url: https://web.archive.org/web/20070108031438id_/http://msdn.microsoft.com:80/msdnmag/issues/02/02/
+- mode: small
+- fetched: 2026-10-14 13:25:13 UTC
+- status: 200
+- bytes: 22,738
+- sha256: e040792dc35c62a0bf7b30299a133df0f8d698d473d13e445e457cfe9cd29763
+- stored: data/probe/wb-idx-0202/177-index
+
+## same-host links seen (52, capped at 300)
+
+- /library/mnp/2/aspx/css.aspx
+- /msdnmag/css/mag.css
+- /library/toolbar/3.0/css.aspx
+- /library/toolbar/3.0/sitemap/en-us.mspx
+- /default.aspx
+- /developercenters/
+- /library/default.asp
+- /downloads/
+- /howtobuy/
+- /subscriptions/
+- /worldwide.aspx
+- /msdnmag/default.aspx
+- /msdnmag/issues/02/02/default.aspx
+- /msdnmag/find/default.aspx
+- /msdnmag/code.aspx
+- /msdnmag/backissues.aspx
+- /msdnmag/columns/default.aspx
+- /msdnmag/rss/default.aspx
+- /msdnmag/Subscribe.aspx
+- /msdnmag/backissues/default.aspx
+- /msdnmag/service.aspx
+- /msdnmag/staff.aspx
+- /msdnmag/authors.aspx
+- /msdnmag/cdrom/default.aspx
+- /msdnmag/podcast/default.aspx
+- /msdnmag/submit.aspx
+- /msdnmag/write.aspx
+- /msdnmag/correct.aspx
+- /isapi/gomscom.asp
+- /default.aspx
+- /msdnmag/default.aspx
+- /msdnmag/issues/02/02/default.aspx
+- /msdnmag/subscribe.aspx
+- /msdnmag/issues/02/02/PE/default.aspx
+- /msdnmag/issues/02/02/ASPDraw/default.aspx
+- /msdnmag/issues/02/02/ModernC/default.aspx
+- /msdnmag/issues/02/02/TalkingTo/default.aspx
+- /msdnmag/issues/02/02/ednote/default.aspx
+- /msdnmag/issues/02/02/Stuff/default.aspx
+- /msdnmag/issues/02/02/web/default.aspx
+- /msdnmag/issues/02/02/xml/default.aspx
+- /msdnmag/issues/02/02/Data/default.aspx
+- /msdnmag/issues/02/02/cutting/default.aspx
+- /msdnmag/issues/02/02/Basics/default.aspx
+- /msdnmag/issues/02/02/NET/default.aspx
+- /msdnmag/issues/02/02/WebServ/default.aspx
+- /msdnmag/issues/02/02/c/default.aspx
+- /msdnmag/issues/02/02/managedc/default.aspx
+- /msdnmag/issues/02/02/VSIDE/default.aspx
+- /isapi/gomscom.asp
+- /flash/
+- /library/toolbar/3.0/trademarks/en-us.mspx
