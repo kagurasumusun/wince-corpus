@@ -1,0 +1,59 @@
+# probe: wb-idx-0104
+
+- url: https://web.archive.org/web/20010502205225id_/http://msdn.microsoft.com:80/msdnmag/issues/01/04/
+- mode: small
+- fetched: 2026-10-14 13:24:44 UTC
+- status: 200
+- bytes: 26,048
+- sha256: df34d41597b2732c3afa7b6c2084747ac5f2de3f8c4904333ce8f1ff29bf7357
+- title: MSDN Magazine Contents - April 2001
+- stored: data/probe/wb-idx-0104/167-index
+
+## same-host links seen (46, capped at 300)
+
+- /isapi/gomscom.asp
+- /isapi/gosupport.asp
+- /isapi/gosearch.asp
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /default.asp
+- /resources/magazines.asp
+- /resources/libraries.asp
+- /resources/devcenters.asp
+- /resources/
+- /downloads/
+- /code/
+- /isapi/gosearch.asp
+- /msdnmag/default.asp
+- /msdnmag/issues/01/04/default.asp
+- /msdnmag/backissues01.asp
+- /msdnmag/backissues00.asp
+- /msdnmag/code01.asp
+- /msdnmag/code.asp
+- /msdnmag/issues/01/06/default.asp
+- /msdnmag/subscribe.asp
+- /msdnmag/defaulttop.asp
+- /msdnmag/service.asp
+- /msdnmag/submit.asp
+- /msdnmag/staff.asp
+- /msdnmag/write.asp
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /msdnmag/issues/01/04/counter.htm
+- /msdnmag/issues/01/04/Attributes/Attributes.asp
+- /msdnmag/issues/01/04/QOS/QOS.asp
+- /msdnmag/issues/01/04/STL/STL.asp
+- /msdnmag/issues/01/04/Toolkit20/Toolkit20.asp
+- /msdnmag/issues/01/04/WSH/WSH.asp
+- /msdnmag/issues/01/04/SSL/SSL.asp
+- /msdnmag/issues/01/04/ednote/ednote0104.asp
+- /msdnmag/issues/01/04/stuff/stuff0104.asp
+- /msdnmag/issues/01/04/web/web0104.asp
+- /msdnmag/issues/01/04/serving/serving0104.asp
+- /msdnmag/issues/01/04/cutting/cutting0104.asp
+- /msdnmag/issues/01/04/net/net0104.asp
+- /msdnmag/issues/01/04/Security/Security0104.asp
+- /msdnmag/issues/01/04/Wicked/Wicked0104.asp
+- /msdnmag/issues/01/04/c/c0104.asp
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
