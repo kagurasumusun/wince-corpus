@@ -1,0 +1,69 @@
+# probe: wb-idx-0211
+
+- url: https://web.archive.org/web/20021031125435id_/http://msdn.microsoft.com:80/msdnmag/issues/02/11/
+- mode: small
+- fetched: 2026-10-14 13:25:46 UTC
+- status: 200
+- bytes: 19,780
+- sha256: 85d58c75bd93c439e01f41fc5c52f442f34999f272932089ccbfe65b030e4e96
+- title: MSDN Magazine Contents - November 2002
+- stored: data/probe/wb-idx-0211/186-index
+
+## same-host links seen (56, capped at 300)
+
+- /msdnmag/css/mag.css
+- /msdnmag/css/msdn.css
+- /library/mnp/2/aspx/css.aspx
+- /default.asp
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /isapi/gosupport.asp
+- /isapi/gosearch.asp
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /default.asp
+- /library/default.asp
+- /downloads/default.asp
+- /code/default.asp
+- /sitemap/default.asp
+- /worldwide/default.asp
+- /isapi/gosearch.asp
+- /msdnmag/default.aspx
+- /msdnmag/issues/02/11/default.aspx
+- /msdnmag/issues/02/11/default.aspx
+- /msdnmag/code.aspx
+- /msdnmag/backissues.aspx
+- /msdnmag/columns/default.aspx
+- /msdnmag/find/default.aspx
+- /msdnmag/issues/02/12/default.aspx
+- /msdnmag/service.aspx
+- /msdnmag/submit.aspx
+- /msdnmag/staff.aspx
+- /msdnmag/write.aspx
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /newsgroups/
+- /msdnmag/cdrom/2001/default.aspx
+- /default.asp
+- /msdnmag/default.aspx
+- /msdnmag/issues/02/11/default.aspx
+- /msdnmag/issues/02/11/NETGUIBliss/default.aspx
+- /msdnmag/issues/02/11/MMIT/default.aspx
+- /msdnmag/issues/02/11/SQLServerNotificationServices/default.aspx
+- /msdnmag/issues/02/11/CLRDebugging/default.aspx
+- /msdnmag/issues/02/11/NETExceptions/default.aspx
+- /msdnmag/issues/02/11/EditorsNote/default.aspx
+- /msdnmag/issues/02/11/NewStuff/default.aspx
+- /msdnmag/issues/02/11/WebQA/default.aspx
+- /msdnmag/issues/02/11/XMLFiles/default.aspx
+- /msdnmag/issues/02/11/DataPoints/default.aspx
+- /msdnmag/issues/02/11/CuttingEdge/default.aspx
+- /msdnmag/issues/02/11/AdvancedBasics/default.aspx
+- /msdnmag/issues/02/11/ASPColumn/default.aspx
+- /msdnmag/issues/02/11/CQA/default.aspx
+- /msdnmag/issues/02/11/ResourceFile/default.aspx
+- /flash/
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
