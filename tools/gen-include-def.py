@@ -1223,7 +1223,11 @@ def run_unified(args):
             header_mark, lib_mark))
 
     # ---- constants: every numbered constant the CE documents quote,
-    # filed under the header the linkage table names for it.
+    # filed under the header the linkage table names for it.  Entries are
+    # collected structured; the fragment writer batches several constants
+    # under ONE version guard (the old one-guard-per-constant output was
+    # unreadable) and keeps one compact comment per constant instead of a
+    # wall of repeated row quotes.
     const_rows = collections.defaultdict(dict)
     win32_only = collections.Counter()
     for record in constants:
@@ -1232,7 +1236,7 @@ def run_unified(args):
         else:
             win32_only[record["name"]] += 1
     defines = conflicts = unsupported_written = no_header = 0
-    const_blocks = collections.defaultdict(list)   # header -> [text block]
+    const_entries = collections.defaultdict(list)   # header lower -> [entry]
     for name in sorted(const_rows, key=str.lower):
         groups = constant_value_groups(list(const_rows[name].values()))
         unsupported = UNSUPPORTED.get(name) or []
@@ -1245,81 +1249,20 @@ def run_unified(args):
         conflict = groups_conflict(groups)
         if conflict:
             conflicts += 1
-        others = [t["header"] for t in targets[1:]]
+        taken_away = [row for row in unsupported if row["set"]]
         for target in targets:
             header = target["header"]
-            strength = target["strength"] or "?"
-            block = [f"/* {name}",
-                     f" * linkage: {strength} "
-                     f"({target.get('statements') or 1} statement(s), "
-                     f"e.g. {target.get('example_page') or '-'})"]
-            named = [h for h in targets if h["header"] != header]
-            if named:
-                block.append(" * also stated in: "
-                             + ", ".join(h["header"] for h in named))
-            if strength == "pinvoke-weak":
-                block.append(" * WEAK AUXILIARY HINT from the isolated "
-                             "pinvoke material (community P/Invoke data) -- "
-                             "no Microsoft page states this header; verify "
-                             "before relying on it")
-            elif strength == "win32-reference":
-                block.append(" * header stated by the Win32 desktop "
-                             "reference only -- verify against the CE SDK")
-            for group in groups:
-                for row, path, origin in group["rows"][:3]:
-                    block.append(f" * row ({origin}): {row}")
-                    block.append(f" * source: {path}")
-                if len(group["rows"]) > 3:
-                    block.append(
-                        f" * ... and {len(group['rows']) - 3} more row(s)")
-            taken_away = [(row, wce_interval(row["set"])) for row in
-                          unsupported]
-            if conflict:
-                block.append(" * CONFLICT: the pages do not agree on the "
-                             "number -- no #define is written")
-                for group in groups:
-                    block.append(f" *   {group['print']}"
-                                 f" in {wce_range_comment(group['merged'])}"
-                                 f" ({len(group['rows'])} row(s))")
-                block.append(" */")
-            else:
-                block.append(" * derived: the #define keyword is not on "
-                             "the page (the quoted rows are)")
-                block.append(" */")
-                lines = []
-                if len(groups) == 1:
-                    group = groups[0]
-                    g_guard, g_merged = wce_guard(group["sets"])
-                    body = [f"#define {name} {group['print']}"]
-                    if g_guard:
-                        body = [f"#if {g_guard}"] + body + \
-                            [f"#endif /* {wce_range_comment(g_merged)} */"]
-                    lines = body
-                else:
-                    parts = []
-                    for index, group in enumerate(groups):
-                        g_guard, g_merged = wce_guard(group["sets"])
-                        cond = g_guard or "(/* versions below undecided */ 1)"
-                        header_line = ("#if " if index == 0 else "#elif ") + \
-                            cond + (f" /* {wce_range_comment(group['merged'])}" 
-                                    " */" if g_merged else "")
-                        parts.append(header_line)
-                        parts.append(f"#define {name} {group['print']}")
-                    parts.append("#else /* no version documents a number */")
-                    parts.append(f"/* #define {name} ? -- not documented "
-                                 "for this _WIN32_WCE */")
-                    parts.append("#endif")
-                    lines = parts
-                for row, _interval in taken_away:
-                    if row["set"]:
-                        lines.insert(0, f"/* NOT SUPPORTED per {row['set']}: "
-                                        f"{row['statement']} "
-                                        f"[{row['page']}] */")
-                        unsupported_written += 1
-                defines += 1
-            block.extend(lines)
-            const_blocks[header.lower()].append(
-                (header, "\n".join(block)))
+            const_entries[header.lower()].append({
+                "name": name,
+                "strength": target["strength"] or "?",
+                "statements": target.get("statements") or 1,
+                "example_page": target.get("example_page") or "-",
+                "other_headers": [h["header"] for h in targets
+                                  if h["header"] != header],
+                "groups": groups,
+                "conflict": conflict,
+                "taken_away": taken_away,
+            })
 
     out = os.path.abspath(args.out)
     os.makedirs(out, exist_ok=True)
@@ -1328,17 +1271,92 @@ def run_unified(args):
     os.makedirs(include_dir, exist_ok=True)
     os.makedirs(link_dir, exist_ok=True)
 
-    # ---- one fragment per header: constants first (alphabetical), then
-    # the declarations.  The tree is single: no per-generation copies.
+    # ---- one fragment per header: constants first, then the
+    # declarations.  The tree is single: no per-generation copies.
+    # Constants that share one _WIN32_WCE guard are batched under one #if
+    # region (sorted by guard, then name); the same for declarations --
+    # one guard per line made the old fragments unreadable walls.
     header_files_written = 0
-    for key in sorted(set(by_header) | set(const_blocks)):
+
+    def guard_sort_key(merged):
+        return tuple((lo, hi) for lo, hi in (merged or ()))
+
+    def open_guard(lines, guard, merged):
+        if guard:
+            lines.append(f"#if {guard}"
+                         + (f" /* CE {wce_range_comment(merged)} */"
+                            if merged else ""))
+
+    def close_guard(lines, guard):
+        if guard:
+            lines.append("#endif /* _WIN32_WCE */")
+
+    def const_note(entry, group, quote_cap=1):
+        """The one compact evidence comment for one constant.
+
+        `linkage` names the rank; the *shortest* quoted row stands for the
+        evidence with the total row count, the example page for the filing,
+        and every marking rule that applies (pinvoke-weak, win32-reference,
+        duplicates in other headers, and -- when the page's own syntax
+        block already prints the #define -- the suppression of the derived
+        line. derived line)."""
+        name = entry["name"]
+        strength = entry["strength"]
+        note = f"/* {name} {group['print']} | {strength}"
+        if strength == "pinvoke-weak":
+            note += " HINT (community P/Invoke data;"
+        elif strength == "win32-reference":
+            note += " (Win32 desktop reference only;"
+        note += f" {entry['statements']} link statement(s), " \
+                f"e.g. {entry['example_page']}"
+        if entry["other_headers"]:
+            note += "; also stated in: " + ", ".join(
+                entry["other_headers"])
+        if strength == "pinvoke-weak" or strength == "win32-reference":
+            note += " -- verify against the CE SDK"
+        note += " */"
+        out = [note]
+        rows = [(row, path, origin)
+                for g in entry["groups"] for row, path, origin in g["rows"]]
+        total = len(rows)
+        shortest = min(rows, key=lambda r: len(r[0])) if rows else None
+        if shortest:
+            row, path, origin = shortest
+            out.append(f"/* quoted row ({origin}): {row}")
+            if total > quote_cap:
+                out.append(" *   ... and "
+                           f"{total - quote_cap} more CE row(s)")
+            out.append(" */")
+        return out
+
+    for key in sorted(set(by_header) | set(const_entries)):
         display = safe_name(printed_forms.get(key) or key, ".h")
-        blocks = [text for _h, text in sorted(
-            const_blocks.get(key, []), key=lambda hb: hb[1].split("\n")[0])]
+        def entry_sort(e):
+            if e["conflict"] or len(e["groups"]) != 1:
+                return (1, (), e["name"].lower())   # self-contained, batched last
+            _g_guard, g_merged = wce_guard(e["groups"][0]["sets"])
+            return (0,
+                    guard_sort_key(g_merged) if g_merged else ((0, 0),),
+                    e["name"].lower())
+
+        entries = sorted(const_entries.get(key, []), key=entry_sort)
         decls = sorted(by_header.get(key, []),
-                       key=lambda e: e["entity"]["name"].lower())
-        if not blocks and not decls:
+                       key=lambda e: (guard_sort_key(e["merged"]),
+                                      e["entity"]["name"].lower()))
+        if not entries and not decls:
             continue
+        # A page whose syntax block prints `#define NAME <value>` already
+        # carries the line verbatim below; the derived line adds nothing
+        # but noise, so it is suppressed (marked in the constant comment).
+        printed_defines = {}
+        for info_item in decls:
+            for match in re.finditer(
+                    r"(?m)^#define\s+([A-Za-z_]\w*)\s+(\S+)",
+                    info_item["declaration"]["text"]):
+                printed_defines.setdefault(
+                    (match.group(1), re.sub(r"\s+", "",
+                                            match.group(2))), True)
+
         lines = [
             f"/* {printed_forms.get(key) or key} -- Windows CE include/def"
             " surface, ONE tree for",
@@ -1346,31 +1364,139 @@ def run_unified(args):
             " *",
             " * Generated by tools/gen-include-def.py --unified from",
             " * wince-docs-corpus knowledge/.  Everything quoted is verbatim",
-            " * from the page named beside it; the #define keywords, the",
+            " * from the page named beside it; the #define keyword, the",
             " * header-to-constant filing and the version branches are",
             " * DERIVED structure and say so.  Version differences are",
             " * carried by _WIN32_WCE branches (the macro the",
             " * documentation itself prints):",
             " *   #if defined(_WIN32_WCE) && (_WIN32_WCE >= 500)",
+            " * several constants/declarations under ONE version branch share",
+            " * that branch: the #if above a batch covers everything down to",
+            " * its matching #endif.",
             " * The Win32-shared half of Windows CE is part of this same",
             " * tree, never a second one; such entries are marked",
             " * 'Win32 reference'.  This file is a *fragment*: include",
             " * guards, include order and everything the documentation does",
             " * not describe are the job of the tool consuming it.",
-            f" * constants: {len(blocks)}, declarations: {len(decls)}",
+            f" * constants: {len(entries)}, declarations: {len(decls)}",
             " */",
         ]
-        if blocks:
+
+        if entries:
             lines += ["", "/* " + "=" * 66,
-                      " * constants",
-                      " * " + "=" * 64 + " */", ""]
-            lines.extend(blocks)
+                      " * constants (one evidence comment per #define; the",
+                      " * #if of a batch covers every #define in it; values",
+                      " * that differ per generation pool into #if/#elif",
+                      " * chains with the evidence after the #endif)",
+                      " * " + "=" * 64 + " */"]
+            # Non-conflicting multi-value constants whose branch guards
+            # are identical are pooled into one shared #if/#elif chain
+            # after the plain batches; conflicts stay self-contained.
+            chain_members = collections.defaultdict(list)
+            main_entries = []
+            for cand in entries:
+                if not cand["conflict"] and len(cand["groups"]) > 1:
+                    chain_members[tuple(
+                        wce_guard(group["sets"])[0] or "(undecided)"
+                        for group in cand["groups"])].append(cand)
+                else:
+                    main_entries.append(cand)
+            open_guard_now = None
+            for entry in main_entries:
+                if entry["conflict"]:
+                    # self-contained block: the pages do not agree on the
+                    # number -- no #define is written
+                    if open_guard_now is not None:
+                        close_guard(lines, open_guard_now)
+                        open_guard_now = None
+                    lines.append("")
+                    lines.append(f"/* {entry['name']} | CONFLICT")
+                    for group in entry["groups"]:
+                        g_merged = group["merged"]
+                        rc = wce_range_comment(g_merged) if g_merged \
+                            else "version not established"
+                        lines.append(f" *   {group['print']}  in CE "
+                                     f"{rc} ({len(group['rows'])} row(s))")
+                    lines.append(" * the pages do not agree on the "
+                                 "number -- no #define is written */")
+                    continue
+                group = entry["groups"][0]
+                g_guard, g_merged = wce_guard(group["sets"])
+                if g_guard != open_guard_now:
+                    if open_guard_now is not None:
+                        close_guard(lines, open_guard_now)
+                    lines.append("")
+                    open_guard(lines, g_guard, g_merged)
+                    open_guard_now = g_guard
+                lines.append("")
+                for row in entry["taken_away"]:
+                    lines.append(f"/* NOT SUPPORTED per {row['set']}: "
+                                 f"{row['statement']} [{row['page']}] */")
+                    unsupported_written += 1
+                printed = (entry["name"],
+                           re.sub(r"\s+", "", group["print"])) in \
+                    printed_defines
+                if printed:
+                    lines.append(
+                        f"/* {entry['name']} {group['print']} -- the page's "
+                        "syntax declaration below prints this #define; "
+                        "derived line suppressed (linkage: "
+                        f"{entry['strength']}) */")
+                    continue
+                lines.extend(const_note(entry, group))
+                lines.append(f"#define {entry['name']} {group['print']}")
+                defines += 1
+            if open_guard_now is not None:
+                close_guard(lines, open_guard_now)
+            for chain in sorted(chain_members, key=lambda c: (len(c), c)):
+                members = sorted(chain_members[chain],
+                                 key=lambda e: e["name"].lower())
+                lines.append("")
+                lines.append("/* " + "=" * 66)
+                lines.append(f" * {len(members)} constant(s) share the "
+                             "branch structure below: every name gets one")
+                lines.append(" * #define per branch; per-name evidence "
+                             "follows the #endif.")
+                lines.append(" * " + "=" * 62 + " */")
+                for gi in range(len(chain)):
+                    cond = chain[gi]
+                    if cond == "(undecided)":
+                        cond = "(/* versions below undecided */ 1)"
+                    lines.append(("#if " if gi == 0 else "#elif ") + cond)
+                    for e in members:
+                        lines.append(
+                            "#define %s %s"
+                            % (e["name"], e["groups"][gi]["print"]))
+                lines.append("#else")
+                lines.append("/* this configuration documents none of the "
+                             f"{len(members)} name(s) above */")
+                lines.append("#endif")
+                lines.append("/* per-name evidence:")
+                for e in members:
+                    bits = "; ".join(
+                        "%r: %d row(s) e.g. %s"
+                        % (g["print"], len(g["rows"]),
+                           min((rv[1] for rv in g["rows"]), key=len))
+                        for g in e["groups"])
+                    lines.append(" *   %s -- %s [linkage: %s]"
+                                 % (e["name"], bits, e["strength"]))
+                lines.append(" */")
+                defines += len(members)
+        if decls:
+            lines.append("")
+        open_decl_guard = None
         for info in decls:
             entity = info["entity"]
             declaration = info["declaration"]
             libs = ", ".join(
                 name for names in info["modules"].values()
                 for name in sorted(names)) or "-"
+            if info["guard"] != open_decl_guard:
+                if open_decl_guard is not None:
+                    close_guard(lines, open_decl_guard)
+                lines.append("")
+                open_guard(lines, info["guard"], info["merged"])
+                open_decl_guard = info["guard"]
             head = [
                 "", "/*" + "-" * 68,
                 f" * {entity['name']}  [{', '.join(entity['kinds']) or '?'}]",
@@ -1418,14 +1544,10 @@ def run_unified(args):
                             "identical once whitespace is removed)")
             head.append(f" * source: {declaration['source']['path']}")
             head.append(" */")
-            if info["guard"]:
-                head.append(f"#if {info['guard']}"
-                            + (f" /* CE {wce_range_comment(info['merged'])} */"
-                               if info["merged"] else ""))
             head.append(declaration["text"])
-            if info["guard"]:
-                head.append("#endif /* _WIN32_WCE */")
             lines.extend(head)
+        if open_decl_guard is not None:
+            close_guard(lines, open_decl_guard)
         path = os.path.join(include_dir, display + ".h.fragment")
         _write_lines(path, lines)
         header_files_written += 1

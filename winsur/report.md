@@ -15,7 +15,7 @@ the SAME tree, marked 'Win32 reference' -- never a second tree.
   with its documented constants first and its declarations after;
   quoted text is verbatim, the `#define` keyword and the
   header/constant filing are derived and say so
-* derived `#define` lines written: **4,678**
+* derived `#define` lines written: **4,664**
 * constants whose pages disagree / overlap: **2**
   (listed, no `#define` written)
 * constants with no header linkage at all: **2,012**
