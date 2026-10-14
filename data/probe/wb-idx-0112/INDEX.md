@@ -1,0 +1,63 @@
+# probe: wb-idx-0112
+
+- url: https://web.archive.org/web/20061202021314id_/http://msdn.microsoft.com:80/msdnmag/issues/01/12/
+- mode: small
+- fetched: 2026-10-14 13:25:07 UTC
+- status: 200
+- bytes: 22,514
+- sha256: f6942a52e6fb21e2ab2d482226d1f920c6305924415f8da1f3cf0517db39c3e7
+- stored: data/probe/wb-idx-0112/175-index
+
+## same-host links seen (51, capped at 300)
+
+- /library/mnp/2/aspx/css.aspx
+- /msdnmag/css/mag.css
+- /library/toolbar/3.0/css.aspx
+- /library/toolbar/3.0/sitemap/en-us.mspx
+- /default.aspx
+- /developercenters/
+- /library/default.asp
+- /downloads/
+- /howtobuy/
+- /subscriptions/
+- /worldwide.aspx
+- /msdnmag/default.aspx
+- /msdnmag/issues/01/12/default.aspx
+- /msdnmag/find/default.aspx
+- /msdnmag/code.aspx
+- /msdnmag/backissues.aspx
+- /msdnmag/columns/default.aspx
+- /msdnmag/rss/default.aspx
+- /msdnmag/Subscribe.aspx
+- /msdnmag/backissues/default.aspx
+- /msdnmag/service.aspx
+- /msdnmag/staff.aspx
+- /msdnmag/authors.aspx
+- /msdnmag/cdrom/default.aspx
+- /msdnmag/podcast/default.aspx
+- /msdnmag/submit.aspx
+- /msdnmag/write.aspx
+- /msdnmag/correct.aspx
+- /isapi/gomscom.asp
+- /default.aspx
+- /msdnmag/default.aspx
+- /msdnmag/issues/01/12/default.aspx
+- /msdnmag/subscribe.aspx
+- /msdnmag/issues/01/12/NETServ/default.aspx
+- /msdnmag/issues/01/12/DRM/default.aspx
+- /msdnmag/issues/01/12/GenProg/default.aspx
+- /msdnmag/issues/01/12/MSMQCE/default.aspx
+- /msdnmag/issues/01/12/ednote/default.aspx
+- /msdnmag/issues/01/12/stuff/default.aspx
+- /msdnmag/issues/01/12/web/default.aspx
+- /msdnmag/issues/01/12/xml/default.aspx
+- /msdnmag/issues/01/12/asp/default.aspx
+- /msdnmag/issues/01/12/cutting/default.aspx
+- /msdnmag/issues/01/12/instincts/default.aspx
+- /msdnmag/issues/01/12/hood/default.aspx
+- /msdnmag/issues/01/12/c/default.aspx
+- /msdnmag/issues/01/12/XPKernel/default.aspx
+- /msdnmag/issues/01/12/DataProv/default.aspx
+- /isapi/gomscom.asp
+- /flash/
+- /library/toolbar/3.0/trademarks/en-us.mspx
