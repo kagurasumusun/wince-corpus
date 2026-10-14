@@ -54,25 +54,27 @@ Two limits follow, and the project must not get them wrong:
 
 | Clean-room role | In this repository |
 |-----------------|--------------------|
-| First team (studies the original) | `tools/page_parse.py` + `tools/build-kb.py`: read `corpus/`, write `knowledge/`. Open-source documents in `corpus/oss/` are read as documents only (`layer: oss`); their source trees are not in the corpus, and a code sample on a page is not turned into a declaration |
+| First team (studies the original) | `tools/page_parse.py` + `tools/build-kb.py`: read `corpus/`, write `knowledge/`. Open-source documents in `corpus/oss/` are read as documents only (`layer: oss`); their source trees are not in the corpus, and a code sample on a page is not turned into a declaration. The isolated pinvoke.net layer (`corpus/pinvoke/`, the only third-party exception, see `docs/COLLECTION-POLICY.md`) is read into `knowledge/aux/` only — never into the specification tables — and its one use is the weakest constant/header linkage rank, marked `pinvoke-weak` |
 | Reviewed specification | `knowledge/`: facts with their page, plus the declarations **quoted** as evidence of what the page prints — not as the project's own text |
 | Second team (implements from the specification only) | a consumer such as `tools/gen-include-def.py`: reads `knowledge/`, writes `build/` |
 | The wall | `gen-include-def.py` refuses to open anything under `corpus/` (`check_spec_path()`; `CORPUS_READS` counts any attempt) and `tools/check-cleanroom.py` runs a real build and requires the count to be 0 |
-| Independent creation | every record names its page; nothing is reconstructed from memory or analogy. The generator writes a declaration only as the page printed it. A header or a library is taken from the version being built; a borrow from another CE set or from the Win32 reference is marked (`header_from`, `library_from`) and a desktop header is never passed off as a Windows CE header. A declaration whose page lost the spaces between tokens is replaced by another CE page's quotation only when, whitespace aside, the two texts are the same, and the borrow is marked (`borrowed_from` ending `|spacing`); a copy that also prints a calling convention or a different type is not used. A `#define` in `*.h.constants` is the one derived line: the page printed a table row, the row is quoted above the line, and the keyword is marked derived. A number stated only by the Win32 reference is not borrowed |
+| Independent creation | every record names its page; nothing is reconstructed from memory or analogy. The generator writes a declaration only as the page printed it. A header or a library is taken from the version being built; a borrow from another CE set or from the Win32 reference is marked (`header_from`, `library_from`) and a desktop header is never passed off as a Windows CE header. In `--unified` mode the version branches (`_WIN32_WCE` guards) are derived from the documented set->version wiring, each page's own CE sets are quoted beside the line, and values the pages disagree on across generations become a listed conflict, not a silent pick. A declaration whose page lost the spaces between tokens is replaced by another CE page's quotation only when, whitespace aside, the two texts are the same, and the borrow is marked (`borrowed_from` ending `|spacing`); a copy that also prints a calling convention or a different type is not used. A `#define` is the one derived line: the page printed a table row (or a `#define`, `enum` or prose spelling the readers also accept), the row is quoted above the line, and the keyword is marked derived. A number stated only by the Win32 reference is not borrowed; a header hinted only by the pinvoke.net wiki is filed at the marked rank `pinvoke-weak` (with `license_use=no`), never silently |
 
 ## 4. What the tools verify (`python3 tools/check-cleanroom.py`)
 
-Result on 2026-10-05, with `--all` (every quote, no sampling; the file is
+Result on 2026-10-14, default (sampled) run (`--all` switches the quote
+fidelity row to every quote, no sampling; the file is
 `knowledge/reports/cleanroom.tsv`):
 
 | Invariant | Checked | Violations |
 |-----------|--------:|-----------:|
-| no fact without a document — every record's `source.path` (an entity: every page it lists) exists in `corpus/` | 383,528 | 0 |
-| quotes are faithful — the record's characters, in order, whitespace aside, are on the page it names (declaration texts, requirement values, constraint sentences, **layout-table rows, constant-table rows and open-source document quotations**) | 274,492 | 0 |
+| no fact without a document — every record's `source.path` (an entity: every page it lists) exists in `corpus/` | 409,948 | 0 |
+| quotes are faithful — the record's characters, in order, whitespace aside, are on the page it names (declaration texts, requirement values, constraint sentences, layout-table rows, **constant rows of every origin** (table/cell/enum/define/prose), module rows, export-ordinal rows, .def-rule statements, Unicode-only and stated-unsupported statements, open-source document quotations; 1 in 25 sampled here, all 300k+ with `--all`) | 12,016 | 0 |
 | documented members are on their page — every `documented_fields` name occurs in one of the pages that document the entity (an A/W pair documents one structure) | 5,204 | 0 |
-| sample code stays out of the declarations — no entity's `syntax_declarations` points at a `role: "example"` or `implementation` record | 62,803 | 0 |
-| syntax blocks are declarations — no `role: "syntax"` text is implementation code; code blocks kept as `role: "example"` and never emitted: 4,570 | all declarations | 0 |
-| the generator reads the specification only — a real `gen-include-def.py` run reports zero corpus reads | 0 reads | 0 |
+| module rows / export ordinals / stated .def rules / Unicode-only / stated-unsupported constants quote their page | 350 / 94 / 533 / 165 / 766 | 0 |
+| sample code stays out of the declarations — no entity's `syntax_declarations` points at a `role: "example"` or `implementation` record | 62,874 | 0 |
+| syntax blocks are declarations — no `role: "syntax"` text is implementation code; code blocks kept as `role: "example"` and never emitted: 4,571 | all declarations | 0 |
+| the generator reads the specification only — a real `gen-include-def.py` run (both the `--set` and the `--unified` mode) reports zero corpus reads | 0 reads | 0 |
 
 The check found real defects when it was first run seriously, which is the point
 of having it:

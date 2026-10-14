@@ -50,7 +50,7 @@ part of the CE API surface nor a reason to widen the Win32 rule. See
 | source code, headers, samples, toolchains, OS images, installer payloads — including the source trees of the open-source projects whose documentation is allowlisted | `tools/import-media.py` counts and skips them; `tools/harvest.py` stores pages only; `tools/check-corpus.py`/`check-policy.py` report a `source or binary` count that must stay 0; `queues/oss-docs.tsv` names documents, not repositories |
 | a medium's shop window and leftovers: sponsor and vendor pages, sample trees and their readme pages, FrontPage metadata (`_vti_cnf/`, `_vti_pvt/`, `_derived/`) | per-medium exclude regexes in `queues/media.tsv` plus the built-in metadata-directory rule in `tools/import-media.py` |
 | help for a medium's own viewer/IDE (InfoViewer, the Visual C++ help) | per-medium exclude regexes in `queues/media.tsv` |
-| third-party mirrors, vendor knowledge bases, blog posts, and an open-source document that is not on the allowlist | `queues/third-party-sources.md` (the accepted mirrors for the CE 1.0/2.0 era, and the open-source documents that were looked at and refused, are listed there); `queues/oss-docs.tsv` is the only door into `corpus/oss/` |
+| third-party mirrors, vendor knowledge bases, blog posts, and an open-source document that is not on the allowlist | `queues/third-party-sources.md` (the accepted mirrors for the CE 1.0/2.0 era, and the open-source documents that were looked at and refused, are listed there); `queues/oss-docs.tsv` is the only door into `corpus/oss/`. **One deliberate exception, and where it stops, is the pinvoke.net section below** |
 
 ## What the corpus is for
 
@@ -117,6 +117,42 @@ message/notification/macro constants (`WM_PAINT`, `CB_GETEDITSEL`, ...) that
 sdk-api has no page for, and the rest are CE-only APIs (`Ce*` RAPI,
 `CommandBar_*`) and Win32 APIs the reference no longer pages (`GetStringType`,
 `Random`): no page was missed, and the list keeps the question answerable.
+
+## The one third-party exception: pinvoke.net as weak auxiliary reference
+
+Every rule above says the corpus is **Microsoft's own documentation**.  There
+is one deliberate carve-out, and its boundary is written into the tools rather
+than left to habit:
+
+* `corpus/pinvoke/` may hold pages of the pinvoke.net P/Invoke reference wiki
+  (a user-contributed third-party site), and **only** the wiki sections named
+  in `queues/pinvoke-net.txt` (`default.aspx/{module}`: the CE-relevant
+  modules such as `coredll` and `rapi`, the shared Win32 modules, and the
+  wiki's Constants/Structures/Enums sections).  `tools/check-policy.py`
+  refuses any page outside exactly those sections — the queue is the door,
+  the same way `queues/oss-docs.tsv` is for `corpus/oss/`.
+* **Why it exists at all**: the constants problem.  The official
+  documentation numbers fewer constants than an include file needs
+  (`WM_USER`, `SW_SHOW`, `WS_OVERLAPPED` and thousands of others are
+  documented by name but never *numbered* by Microsoft's CE pages), while
+  pinvoke.net's community pages print numeric spellings of those names.  It
+  is used **only** as a *weak auxiliary* hint for judging constant /
+  value / header **linkage** where Microsoft's own pages state nothing —
+  highest-suspicion, lowest-priority evidence by construction.
+* **Why it is isolated**: pinvoke.net is not documentation of Windows CE and
+  its numbers are not Windows CE facts.  Therefore
+  * `tools/build-kb.py` never mints an entity, declaration, requirement or
+    constant from it; its facts are written to `knowledge/aux/`, a separate
+    layer beside (never inside) the specification the include/def surface is
+    generated from — see `knowledge/aux/README.md`;
+  * the generator (`tools/gen-include-def.py`) consumes it only at the
+    weakest linkage rank (`pinvoke-weak` in `kb/constant-headers.tsv`), lets
+    any official statement — and even the Win32 desktop reference — outrank
+    it, never takes a *value* from it, and marks every use loudly in the
+    output;
+  * `data/license-scopes.tsv` stamps the tree `pinvoke-user-wiki`,
+    redistribution **no**: it is evidence for review, not publishable
+    documentation.
 
 ## Review 2026-10 (what was wrong, what changed)
 

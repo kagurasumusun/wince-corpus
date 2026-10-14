@@ -13,6 +13,14 @@ This checker makes that rule executable, so a harvest, an import or a re-run of
 the Win32 import cannot quietly widen the corpus.  It is run by the workflows
 after every collection step.
 
+The one deliberate exception: ``corpus/pinvoke/`` -- the isolated
+pinvoke.net P/Invoke reference wiki, collected only through
+``queues/pinvoke-net.txt`` as a *weak auxiliary* reference for judging
+constant/value/header linkages where Microsoft's documentation is
+silent.  It is not Windows CE documentation, and nothing in the main
+knowledge tables may be built from it: the checker keeps the tree
+isolated to exactly the wiki sections the queue names.
+
     python3 tools/check-policy.py            # summary; exit 1 on a violation
     python3 tools/check-policy.py --json     # machine readable
 
@@ -53,7 +61,7 @@ PAPERWORK = {"README.md", "PROVENANCE.md"}
 
 # The corpus trees that may exist.
 TOP_LEVEL = {"README.md", "learn", "dotnet", "chm", "mvb", "msdn-library", "kb",
-             "site", "win32", "oss"}
+             "site", "win32", "oss", "pinvoke"}
 
 # Windows CE product history, documented in ``corpus/win32/README.md``: these
 # are the sections whose pages make up the CE-specific half.  ``dotnet`` is
@@ -62,7 +70,10 @@ TOP_LEVEL = {"README.md", "learn", "dotnet", "chm", "mvb", "msdn-library", "kb",
 # are Windows-Embedded documentation of a *layer on top of* CE, kept separate
 # from the OS/SDK material that an include/def database is built from.
 CE_SECTIONS = {"learn", "chm", "mvb", "msdn-library", "kb", "site"}
-OTHER_SECTIONS = {"dotnet", "oss"}
+# pinvoke is a *third layer*: neither CE documentation (CE_SECTIONS) nor a
+# sibling documentation set (OTHER_SECTIONS) -- the isolated weak-auxiliary
+# reference, referenced from Microsoft's docs nowhere.
+OTHER_SECTIONS = {"dotnet", "oss", "pinvoke"}
 
 # Things that must not come back (a CD image's or a web server's leftovers, not
 # documentation of the product).
@@ -221,6 +232,47 @@ def check_oss(problems, checked):
     checked["oss_pages"] = len(found)
 
 
+def check_pinvoke(problems, checked):
+    """corpus/pinvoke/ may hold only pages of the queued wiki sections.
+
+    The queue (queues/pinvoke-net.txt) is the door, the same way
+    queues/oss-docs.tsv is for corpus/oss/.  A harvested page is filed as
+    ``corpus/pinvoke/{module}/{name}.html``; every module directory under
+    the tree must be one the queue fetches (``default.aspx/{module}``),
+    and every stray page is a violation.  The tree may be absent (nothing
+    harvested yet) -- then nothing is checked.
+    """
+    queue = os.path.join(ROOT, "queues", "pinvoke-net.txt")
+    modules = set()
+    if os.path.isfile(queue):
+        with open(queue, encoding="utf-8") as fh:
+            for line in fh:
+                line = line.strip()
+                match = re.search(
+                    r"pinvoke\.net/default\.aspx/([^/#?\s]+)$", line)
+                if match:
+                    modules.add(match.group(1).lower())
+    base = os.path.join(CORPUS, "pinvoke")
+    found = 0
+    if os.path.isdir(base):
+        for path in walk():
+            if not path.startswith(base + os.sep):
+                continue
+            page = rel(path)
+            name = os.path.basename(path)
+            if name in PAPERWORK:
+                continue
+            found += 1
+            parts = page.split("/")
+            if len(parts) < 4 or parts[2].lower() not in modules:
+                problems.append(
+                    ("pinvoke-not-queued", page,
+                     "not under a module listed in queues/pinvoke-net.txt; "
+                     "the pinvoke.net reference is collected only through "
+                     "that queue, as weak auxiliary evidence"))
+    checked["pinvoke_pages"] = found
+
+
 def check_top_level(problems, checked):
     found = set()
     for entry in sorted(os.listdir(CORPUS)):
@@ -244,6 +296,7 @@ def main():
     check_junk(problems, checked)
     check_win32(problems, checked)
     check_oss(problems, checked)
+    check_pinvoke(problems, checked)
 
     if args.json:
         print(json.dumps({"problems": problems, "checked": checked},

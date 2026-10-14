@@ -75,6 +75,10 @@ CE_API_NAMES = os.path.join(ROOT, "data", "reports", "ce-api-names.tsv")
 KNOWLEDGE = os.path.join(ROOT, "knowledge")
 KB = os.path.join(KNOWLEDGE, "kb")
 REPORTS = os.path.join(KNOWLEDGE, "reports")
+# The isolated weak-auxiliary reference (pinvoke.net), deliberately NOT
+# under kb/: it is not part of the specification the include/def surface
+# is generated from, only weak evidence for judging linkages.
+AUX = os.path.join(KNOWLEDGE, "aux")
 
 TREE_LAYER = (
     ("corpus/win32/", "win32"),
@@ -226,9 +230,20 @@ def parse_page(job):
         fragment = page_parse.article_html(raw)
         fact["constraints"] = page_parse.oss_statements(fragment)
         return fact
-    # pinvoke.net pages document P/Invoke signatures for Win32 APIs.
-    # Extract DLL name from DllImport attribute and constants from C# code.
-    # The module name (e.g., kernel32) is inferred from the page path.
+    # pinvoke.net is a user-contributed P/Invoke wiki, NOT Microsoft
+    # documentation.  By design (docs/COLLECTION-POLICY.md) it is an
+    # *isolated* layer: its facts are kept as ``pinvoke`` evidence on the
+    # fact record and are written to knowledge/aux/, never into the
+    # entities/declarations/requirements/constants tables the include/def
+    # surface is built from.  A pinvoke page mints no entity, no
+    # declaration and no requirement; it only yields:
+    #   * apis:      the name the page documents, the DLL its DllImport
+    #                line names, and the header *inferred* from the module
+    #                the page filed the name under (a weak, derived hint);
+    #   * constants: the C# ``const``/``#define`` spellings the page prints.
+    # Both are consumed as *weak auxiliary* evidence only -- for the
+    # constant/header linkage where the official documentation states
+    # nothing -- and are always labelled as such in output.
     if layer == "pinvoke":
         full = os.path.join(ROOT, path)
         try:
@@ -236,26 +251,22 @@ def parse_page(job):
         except OSError:
             return fact
         fragment = page_parse.article_html(raw)
-        # Extract DLL name from DllImport attribute
-        fact["requirements"] = page_parse.pinvoke_requirements(fragment)
-        # Extract constants from C# const definitions
-        fact["constants"] = page_parse.pinvoke_constants(fragment)
-        # Extract entity name from page_id (e.g., "kernel32/CreateFile" -> "CreateFile")
+        pinvoke = {"apis": [],
+                   "constants": page_parse.pinvoke_constants(fragment)}
+        module = page_id.split("/", 1)[0] if "/" in page_id else page_id
+        dlls = [req["value"] for req in
+                page_parse.pinvoke_requirements(fragment)]
         if "/" in page_id:
-            module, func = page_id.split("/", 1)
-            if func != "index":
-                fact["display"] = func
-                fact["entity"] = ce_api_names.normalize(func)
-                fact["entity_evidence"] = "pinvoke-page"
-                fact["kind"] = "function"
-                # Add header file fact based on module name
-                header = page_parse.pinvoke_header_from_module(module)
-                fact["requirements"].append({
-                    "field": "header",
-                    "label": "Header",
-                    "value": header,
-                    "evidence": f"pinvoke.net module: {module}"
+            func = page_id.split("/", 1)[1]
+            if func and func != "index":
+                pinvoke["apis"].append({
+                    "name": func,
+                    "module": module,
+                    "dll": dlls[0] if dlls else "",
+                    "header": page_parse.pinvoke_header_from_module(module),
+                    "evidence": "pinvoke.net page " + page_id,
                 })
+        fact["pinvoke"] = pinvoke
         return fact
     full = os.path.join(ROOT, path)
     try:
@@ -278,6 +289,10 @@ def parse_page(job):
         fact["kind"] = page_parse.kind_from_filename(name)
         fact["requirements"] = reqs
         fact["declarations"] = decls
+        # The same values as the HTML side: enum members and #define lines
+        # quoted by the *syntax* blocks, and ``NAME (0x...)`` in prose.
+        fact["constants"] = page_parse.syntax_constant_rows(decls) + \
+            page_parse.prose_constants_text(text)
         fact["constraints"] = [dict(note, kind="abi-note")
                                for note in page_parse.abi_notes(text)]
         # sdk-api documents every member of a structure under -struct-fields,
@@ -381,6 +396,13 @@ def parse_page(job):
     # ``NAME (0x0001)`` is a numbered constant the page states.  Read only,
     # and only when the name is one identifier and the value one number.
     fact["constants"] = page_parse.constant_tables(fragment)
+    # The same rule for the other two shapes a page numbers a constant in:
+    # running prose (``WM_USER (0x0400)``) and the page's own *syntax*
+    # declarations (``#define OEM_BLOCK_RESERVED 0x01``, an enum member
+    # ``FWM_PRIVATE_HOST = 0x01,``).  Example code yields none of these
+    # (page_parse.syntax_constant_rows).
+    fact["constants"] += page_parse.prose_constants(fragment)
+    fact["constants"] += page_parse.syntax_constant_rows(fact["declarations"])
     # The one page family that prints export ordinals: ``Export | Ordinal``
     # for the floating point C run-time library.  A `.def` needs exactly
     # this (`name @ordinal`), and it exists nowhere else in the corpus, so
@@ -681,11 +703,18 @@ def constant_records(facts, entity_of):
                  str(index) + "\x00" + item["row"]).encode("utf-8")
             ).hexdigest()[:12]
             own = ce_api_names.normalize(item["name"])
+            value = re.sub(r"^0X", "0x", item["value"])
             records.append({
                 "id": "k" + key,
                 "name": item["name"],
-                "value": item["value"],
-                "decimal": item["decimal"],
+                "value": value,
+                "decimal": item.get("decimal"),
+                # How the page numbers the constant: a name/value table row
+                # ("table"), a one-cell ``NAME = 0x0001`` ("cell"), a
+                # ``#define`` line of a syntax declaration ("define"), an
+                # enum member of a syntax declaration ("enum"), or running
+                # prose, ``NAME (0x0400)`` ("prose").
+                "origin": item.get("origin") or "table",
                 "headers": headers,
                 "entity": own if own and own == page_entity else None,
                 "page_entity": page_entity,
@@ -699,6 +728,215 @@ def constant_records(facts, entity_of):
     records.sort(key=lambda r: (r["source"]["path"], r["name"].lower(),
                                 r["value"]))
     return records
+
+
+PINVOKE_AUX_README = """# `aux/` -- weak auxiliary reference material (pinvoke.net)
+
+The files here are **not** part of the specification in `kb/`: they are the
+machine-readable residue of the pinvoke.net P/Invoke reference wiki
+(`corpus/pinvoke/`, an isolated corpus tree -- see
+`docs/COLLECTION-POLICY.md`), a user-contributed third-party site.  They are
+kept strictly separate from the official-documentation knowledge base and are
+consumed as **weak auxiliary evidence only**: where Microsoft's own pages
+state nothing about a constant's value or its header, the pinvoke statement
+may *hint* at the linkage (`strength: "pinvoke-weak"` in
+`kb/constant-headers.tsv`) so the gap is visible and decisions can be
+reviewed; it never overrides a documented statement, it is always labelled,
+and its licence forbids republication (`data/license-scopes.tsv`).
+
+| File | Contents |
+|------|----------|
+| `pinvoke-apis.jsonl.gz` | one row per API name the wiki documents: `name`, `module` (the wiki section), `dll` (the DllImport line), `header` (derived from the module, weak), `evidence`, `source` |
+| `pinvoke-constants.jsonl.gz` | one row per constant the wiki prints (a C# `const` or `#define` spelling), with the module/page it came from |
+"""
+
+
+def pinvoke_records(facts):
+    """The isolated pinvoke.net layer -> knowledge/aux records.
+
+    pinvoke.net is a user-contributed P/Invoke wiki, collected as a
+    *weak auxiliary* reference for judging constant/value/header
+    linkages -- never as documentation of Windows CE.  Its records are
+    written to knowledge/aux/ and are deliberately NOT part of
+    entities/requirements/constants: a pinvoke page mints no entity.
+    The ``header`` of an API record is *derived* from the module the
+    site files the name under (page_parse.pinvoke_header_from_module)
+    and is labelled as derived wherever it is used.
+    """
+    apis, constants = [], []
+    for fact in facts:
+        pinvoke = fact.get("pinvoke")
+        if not pinvoke:
+            continue
+        for item in pinvoke.get("apis") or []:
+            key = hashlib.sha1(
+                (fact["path"] + "\x00" + item["name"]).encode("utf-8")
+            ).hexdigest()[:12]
+            apis.append({
+                "id": "p" + key,
+                "name": item["name"],
+                "module": item["module"],
+                "dll": item["dll"],
+                "header": item["header"],
+                "evidence": item["evidence"],
+                "page_id": fact["page_id"],
+                "layer": "pinvoke",
+                "license": license_of(fact["path"]),
+                "source": source_of(fact),
+            })
+        module = fact["book"].split("/", 1)[1] if "/" in fact["book"] else ""
+        for index, item in enumerate(pinvoke.get("constants") or []):
+            key = hashlib.sha1(
+                (fact["path"] + "\x00" + item["name"] + "\x00" +
+                 item["value"] + "\x00" + str(index)).encode("utf-8")
+            ).hexdigest()[:12]
+            constants.append({
+                "id": "p" + key,
+                "name": item["name"],
+                "value": re.sub(r"^0X", "0x", item["value"]),
+                "decimal": item.get("decimal"),
+                "module": module,
+                "header": page_parse.pinvoke_header_from_module(module)
+                if module else "",
+                "table": item.get("table") or "pinvoke",
+                "row": item["row"],
+                "page_id": fact["page_id"],
+                "layer": "pinvoke",
+                "license": license_of(fact["path"]),
+                "source": source_of(fact),
+            })
+    apis.sort(key=lambda r: (r["name"].lower(), r["source"]["path"]))
+    constants.sort(key=lambda r: (r["name"].lower(), r["source"]["path"]))
+    return apis, constants
+
+
+# The constant -> header linkage ranks, best first.  A rank's label says
+# *who* states the header for a constant the pages number.  The official
+# Windows CE documentation always outranks the Win32 desktop reference,
+# which in turn outranks the pinvoke.net weak auxiliary hint; within one
+# name only the best available rank is written out.
+LINK_RANKS = ("own-page", "entity-page", "constant-entity",
+              "win32-reference", "pinvoke-weak")
+LINK_RANK_INDEX = {rank: index for index, rank in enumerate(LINK_RANKS)}
+
+
+def constant_header_links(constants, requirements, pinvoke_records_pair):
+    """constant name -> header file, ranked by the strength of the statement.
+
+    Every row keeps its evidence: how many statements say it, one example
+    page, and the sets those pages belong to.  ``own-page``: the page
+    that numbers the constant also states a Header.  ``entity-page``:
+    the requirements of the page's own entity (the enumeration's or
+    macro's page) name a header.
+    ``win32-reference``: only the desktop Win32 reference names a header
+    (marked -- the generator has to verify those against the CE SDK).
+    ``pinvoke-weak``: nothing in the documentation says anything, and
+    the only hint is the pinvoke.net module the name is filed under.
+    No header is invented: every emitted row traces to a printed
+    statement or, at the weakest rank, to the pinvoke page itself.
+    """
+    def headers_of_value(value):
+        files = []
+        for match in HEADER_TOKEN.findall(value or ""):
+            name = match.split("/")[-1].split("\\")[-1]
+            if name and name.lower() not in [f.lower() for f in files]:
+                files.append(name)
+        return files
+
+    # entity -> header files, split by who states them (CE docs / win32 ref)
+    entity_headers = {"ce": collections.defaultdict(set),
+                      "win32": collections.defaultdict(set)}
+    for record in requirements:
+        if record.get("field") != "header" or not record.get("entity"):
+            continue
+        layer = record.get("layer")
+        if layer not in entity_headers:
+            continue
+        for name in headers_of_value(record.get("value")):
+            entity_headers[layer][record["entity"]].add(name)
+
+    best = collections.defaultdict(
+        lambda: {"rank": None, "headers": collections.defaultdict(
+            lambda: {"count": 0, "page": "", "sets": set()})})
+
+    def offer(name, rank, headers, page, book):
+        slot = best[name]
+        if slot["rank"] is None or LINK_RANK_INDEX[rank] < \
+                LINK_RANK_INDEX[slot["rank"]]:
+            slot["rank"] = rank
+            slot["headers"] = collections.defaultdict(
+                lambda: {"count": 0, "page": "", "sets": set()})
+        if rank != slot["rank"]:
+            return
+        for header in headers:
+            entry = slot["headers"][header.lower()]
+            entry["count"] += 1
+            if not entry["page"]:
+                entry["page"] = page
+            entry["sets"].add(book)
+            if len(header) > len(entry.get("as_printed", "")):
+                entry["as_printed"] = header
+
+    # rank 1+4: the numbering page itself states the header
+    by_name = collections.defaultdict(list)
+    for record in constants:
+        by_name[record["name"]].append(record)
+    for name, rows in by_name.items():
+        for record in rows:
+            if record.get("layer") not in ("ce", "win32"):
+                continue
+            own = headers_of_value(";".join(record.get("headers") or ()))
+            rank = "own-page" if record.get("layer") == "ce" \
+                else "win32-reference"
+            if own:
+                offer(name, rank, own, record["source"]["path"],
+                      record["source"]["set"])
+            # rank 2: the entity whose page carries the constant
+            entity = record.get("page_entity")
+            if entity and entity_headers["ce"].get(entity):
+                offer(name, "entity-page",
+                      sorted(entity_headers["ce"][entity]),
+                      record["source"]["path"], record["source"]["set"])
+            if entity and entity_headers["win32"].get(entity):
+                offer(name, "win32-reference",
+                      sorted(entity_headers["win32"][entity]),
+                      record["source"]["path"], record["source"]["set"])
+        # Aggregation is by constant *name*: a constant one page numbers
+        # without naming a header and another page numbers while naming
+        # the header lands at "own-page" through the second page's row, so
+        # a weaker "another page also documents it" tier is not needed.
+        # But a constant that is ITSELF an entity (a macro with a page of
+        # its own) takes its header from that entity's CE requirements
+        # even when the numbering page is a different one.
+        entity_headers_ce = sorted(entity_headers["ce"].get(
+            ce_api_names.normalize(name) or "") or ())
+        if entity_headers_ce:
+            first = rows[0]
+            offer(name, "constant-entity", entity_headers_ce,
+                  first["source"]["path"], first["source"]["set"])
+
+    # rank 5: the pinvoke.net weak auxiliary hint
+    apis, pinvoke_constants = pinvoke_records_pair or ([], [])
+    for item in apis + pinvoke_constants:
+        header = item.get("header")
+        if item.get("name") and header:
+            offer(item["name"], "pinvoke-weak", [header],
+                  item["source"]["path"], item["source"]["set"])
+
+    out = []
+    for name in sorted(best, key=str.lower):
+        slot = best[name]
+        if slot["rank"] is None:
+            continue
+        for lower, entry in sorted(slot["headers"].items()):
+            out.append((
+                name,
+                entry.get("as_printed") or lower,
+                slot["rank"],
+                entry["count"],
+                entry["page"],
+                ";".join(sorted(entry["sets"]))))
+    return out
 
 
 def entity_records(facts, declarations, requirements):
@@ -1438,6 +1676,8 @@ def build(rows, workers, report_only, plain=False):
     constraints = constraint_records(facts, entity_of)
     abi_offsets = abi_offset_records(facts, entity_of)
     constants = constant_records(facts, entity_of)
+    pinvoke_pair = pinvoke_records(facts)
+    link_rows = constant_header_links(constants, requirements, pinvoke_pair)
     entities = entity_records(facts, declarations, requirements)
 
     # attach constraint ids to entities
@@ -1509,6 +1749,28 @@ def build(rows, workers, report_only, plain=False):
     write_jsonl(os.path.join(KB, "constraints.jsonl"), constraints, compress)
     write_jsonl(os.path.join(KB, "abi-offsets.jsonl"), abi_offsets, compress)
     write_jsonl(os.path.join(KB, "constants.jsonl"), constants, compress)
+
+    # The constant -> header linkage the include/def generator consumes:
+    # one row per (name, header) at the best available evidence rank.
+    write_tsv(os.path.join(KB, "constant-headers.tsv"),
+              ["name", "header", "strength", "statements", "example_page",
+               "sets"], link_rows)
+
+    # The isolated pinvoke.net weak-auxiliary reference -> knowledge/aux/
+    # (written only when the isolated corpus tree has been harvested).
+    pinvoke_apis, pinvoke_constants_rows = pinvoke_pair
+    os.makedirs(AUX, exist_ok=True)
+    with open(os.path.join(AUX, "README.md"), "w",
+              encoding="utf-8") as fh:
+        fh.write(PINVOKE_AUX_README)
+    if pinvoke_apis or pinvoke_constants_rows:
+        os.makedirs(AUX, exist_ok=True)
+        if pinvoke_apis:
+            write_jsonl(os.path.join(AUX, "pinvoke-apis.jsonl"),
+                        pinvoke_apis, compress)
+        if pinvoke_constants_rows:
+            write_jsonl(os.path.join(AUX, "pinvoke-constants.jsonl"),
+                        pinvoke_constants_rows, compress)
 
     for field, filename, title in (("header", "headers.tsv", "header"),
                                    ("library", "libraries.tsv", "library"),
@@ -1604,10 +1866,11 @@ def build(rows, workers, report_only, plain=False):
             ";".join(record["headers"]), record["page_entity"] or "",
             record["source"]["path"], record["page_id"],
             record["source"]["title"], record["table"], record["row"],
-            record["license"]))
+            record.get("origin") or "table", record["license"]))
     write_tsv(os.path.join(KB, "constants.tsv"),
               ["name", "value", "decimal", "headers", "page_entity", "page",
-               "page_id", "title", "table", "row", "license"], constant_rows)
+               "page_id", "title", "table", "row", "origin", "license"],
+              constant_rows)
 
     # ---- the members a page documents without printing a declaration
     field_pages = [f for f in facts if f["documented_fields"]]

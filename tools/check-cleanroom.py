@@ -52,13 +52,25 @@ KB = os.path.join(ROOT, "knowledge", "kb")
 REPORTS = os.path.join(ROOT, "knowledge", "reports")
 
 FILES = {
-    "entity": "entities.jsonl.gz",
-    "declaration": "declarations.jsonl.gz",
-    "declaration_dotnet": "declarations-dotnet.jsonl.gz",
-    "requirement": "requirements.jsonl.gz",
-    "constraint": "constraints.jsonl.gz",
-    "abi_offset": "abi-offsets.jsonl.gz",
-    "constant": "constants.jsonl.gz",
+    "entity": ("kb", "entities.jsonl.gz"),
+    "declaration": ("kb", "declarations.jsonl.gz"),
+    "declaration_dotnet": ("kb", "declarations-dotnet.jsonl.gz"),
+    "requirement": ("kb", "requirements.jsonl.gz"),
+    "constraint": ("kb", "constraints.jsonl.gz"),
+    "abi_offset": ("kb", "abi-offsets.jsonl.gz"),
+    "constant": ("kb", "constants.jsonl.gz"),
+    # The isolated pinvoke.net weak-auxiliary layer (exists only after
+    # corpus/pinvoke/ is harvested).  The same invariants apply to it:
+    # every row names a page that exists, and its quote is on that page.
+    "pinvoke_api": ("aux", "pinvoke-apis.jsonl.gz"),
+    "pinvoke_constant": ("aux", "pinvoke-constants.jsonl.gz"),
+}
+# The quoting field of each record kind (pinvoke constants quote the line
+# they print; pinvoke apis quote the name the page documents).
+QUOTE_FIELD = {
+    "declaration": "text", "requirement": "value", "constraint": "text",
+    "abi_offset": "row", "constant": "row",
+    "pinvoke_api": "name", "pinvoke_constant": "row",
 }
 
 # A statement form in a *declaration* would mean the extractor took a line of
@@ -102,17 +114,20 @@ class Pages:
 
 def load_records(reports=None):
     records = {}
-    for kind, filename in FILES.items():
-        records[kind] = [json.loads(line) for line in _lines(filename)]
-    if reports is not None:
-        reports.append((filename, len(records[kind])))
+    for kind, (directory, filename) in FILES.items():
+        path = os.path.join(ROOT, "knowledge", directory, filename)
+        if not os.path.exists(path) and path.endswith(".gz"):
+            path = path[:-3]
+        if not os.path.exists(path):
+            records[kind] = []   # the pinvoke aux layer is not harvested yet
+            continue
+        records[kind] = [json.loads(line) for line in _lines(path)]
+        if reports is not None:
+            reports.append((filename, len(records[kind])))
     return records
 
 
-def _lines(filename):
-    path = os.path.join(KB, filename)
-    if not os.path.exists(path) and path.endswith(".gz"):
-        path = path[:-3]
+def _lines(path):
     opener = gzip.open if path.endswith(".gz") else open
     with opener(path, "rt", encoding="utf-8") as fh:
         for line in fh:
@@ -161,10 +176,8 @@ def check_quotes(records, pages, every):
     """The record's characters, in order, are on the page it names."""
     checked = not_found = 0
     details = []
-    for kind, field in (("declaration", "text"), ("requirement", "value"),
-                        ("constraint", "text"), ("abi_offset", "row"),
-                        ("constant", "row")):
-        for record in sample(records[kind], every):
+    for kind, field in QUOTE_FIELD.items():
+        for record in sample(records.get(kind) or [], every):
             text = record.get(field) or ""
             if not text.strip():
                 continue
@@ -326,24 +339,32 @@ def check_separation(records):
 
 
 def check_generator(use_generator):
-    """A real generation run must read zero pages under corpus/."""
+    """A real generation run must read zero pages under corpus/.
+
+    Both consumers are exercised: the per-generation build and the
+    unified single-tree build (``--unified``).  Each report states the
+    corpus pages it read; zero is the only passing number.
+    """
     if not use_generator:
         return None, []
-    out = tempfile.mkdtemp(prefix="cleanroom-")
-    try:
-        result = subprocess.run(
-            [sys.executable, os.path.join(ROOT, "tools", "gen-include-def.py"),
-             "--set", "learn/windows-ce-5.0", "--limit", "300",
-             "--out", out],
-            cwd=ROOT, capture_output=True, text=True)
-        report = os.path.join(out, "report.md")
-        if result.returncode != 0 or not os.path.exists(report):
-            return 0, [f"gen-include-def.py failed: "
-                       f"{(result.stderr or result.stdout).strip()[:200]}"]
-        with open(report, encoding="utf-8") as fh:
-            text = fh.read()
-    finally:
-        shutil.rmtree(out, ignore_errors=True)
+    text = ""
+    for extra in (["--set", "learn/windows-ce-5.0", "--limit", "300"],
+                  ["--unified", "--limit", "300"]):
+        out = tempfile.mkdtemp(prefix="cleanroom-")
+        try:
+            result = subprocess.run(
+                [sys.executable,
+                 os.path.join(ROOT, "tools", "gen-include-def.py")] +
+                extra + ["--out", out],
+                cwd=ROOT, capture_output=True, text=True)
+            report = os.path.join(out, "report.md")
+            if result.returncode != 0 or not os.path.exists(report):
+                return 0, [f"gen-include-def.py failed: "
+                           f"{(result.stderr or result.stdout).strip()[:200]}"]
+            with open(report, encoding="utf-8") as fh:
+                text += fh.read()
+        finally:
+            shutil.rmtree(out, ignore_errors=True)
     reads = 0
     problems = []
     match = re.search(r"corpus pages read by this generator:\s*\*\*(\d+)\*\*",

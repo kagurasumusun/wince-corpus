@@ -1424,6 +1424,7 @@ def constant_tables(fragment):
                 "value": value,
                 "decimal": decimal,
                 "table": header,
+                "origin": "table",
                 "row": " ".join(cells),
             })
     out.extend(_constants_in_cells(fragment, out))
@@ -1474,8 +1475,166 @@ def _constants_in_cells(fragment, already):
                     "value": value,
                     "decimal": None,
                     "table": header,
+                    "origin": "cell",
                     "row": " ".join(cells),
                 })
+    return out
+
+
+# ------------------------------------------------------------------ #
+# More numbered constants: the definitions a *syntax declaration*      #
+# quotes, and the values a page prints in running prose.               #
+#                                                                      #
+# A page prints a number for a constant in more shapes than a          #
+# name/value table: the `#define NAME <number>` line of a macro        #
+# declaration, the `NAME = <number>` member of an enum body it         #
+# quotes, and the inline spelling `NAME (0x0400)` / `NAME = 0x0400` of #
+# a paragraph.  The same honesty rule as the table reader applies:     #
+# the quote is the text the page printed, only a numeric right-hand    #
+# side is a value, and example code is never read (these readers are   #
+# given syntax declarations and prose only, by build-kb.py).           #
+# ------------------------------------------------------------------ #
+
+# ``#define NAME (0x0400) /* comment */`` -- a complete single-line
+# numeric macro definition.  The C suffix (``0x0001L``) and the outer
+# parentheses are part of the printing, not of the number, so the stored
+# value is the bare number while ``row`` keeps the whole line.  A
+# function-like macro (``#define SIZEOF(x)``), an expression or a
+# continuation line is not a numbered constant and is skipped.
+_DEFINE_ROW = re.compile(
+    r"^\s*#\s*define\s+([A-Za-z_][A-Za-z0-9_]*)\s+"
+    r"\(?\s*(0[xX][0-9A-Fa-f]+|-?\d+)\s*[uUlL]*\)?\s*"
+    r"(?:(?:/\*[^*]*\*/|//[^\n]*)\s*)?$")
+
+# ``NAME = 0x01,`` -- an enum member that carries its value.  Applied
+# only inside a declaration that has an ``enum`` and a ``{`` (the
+# caller's check), so an initialiser in a struct body or a default
+# argument of a prototype is never taken for one.
+_ENUM_MEMBER_ROW = re.compile(
+    r"^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*"
+    r"\(?\s*(0[xX][0-9A-Fa-f]+|-?\d+)\s*[uUlL]*\)?\s*,\s*"
+    r"(?:(?:/\*[^*]*\*/|//[^\n]*)\s*)?$|"
+    r"^\s*([A-Za-z_][A-Za-z0-9_]*)\s*=\s*"
+    r"\(?\s*(0[xX][0-9A-Fa-f]+|-?\d+)\s*[uUlL]*\)?\s*"
+    r"(?:/\*[^*]*\*/\s*)?$")
+
+
+def define_value_rows(text):
+    """``#define NAME <number>`` lines of a syntax declaration.
+
+    One dict per line: ``name``, ``value`` (the bare number), ``table``
+    (``#define``, the quoting construct) and ``row`` (the line itself,
+    including a trailing comment).  Empty when the declaration has none.
+    """
+    out = []
+    for line in (text or "").splitlines():
+        match = _DEFINE_ROW.match(line)
+        if match:
+            out.append({"name": match.group(1), "value": match.group(2),
+                        "table": "#define", "origin": "define",
+                        "row": line.strip()})
+    return out
+
+
+def enum_value_rows(text):
+    """``NAME = <number>`` members of an enum body a syntax block quotes."""
+    if not text or "{" not in text or "enum" not in text.lower():
+        return []
+    out = []
+    for line in text.splitlines():
+        match = _ENUM_MEMBER_ROW.match(line)
+        if not match:
+            continue
+        name, value = (match.group(1), match.group(2)) if match.group(1) \
+            else (match.group(3), match.group(4))
+        out.append({"name": name, "value": value, "table": "enum member",
+                    "origin": "enum", "row": line.strip()})
+    return out
+
+
+# Running prose also numbers a constant, ``WM_USER (0x0400)`` /
+# ``WM_USER = 0x0400``.  Precision over recall: hexadecimal only (a
+# decimal in parentheses is too often "(2)" a version), the name is an
+# all-caps identifier of at least four characters, and without an
+# underscore it has to be at least six (``HTERROR`` borders on fine,
+# ``BYTE`` at length four does not).  PRE/TABLE/CODE regions are read by
+# the other readers and are stripped before this one runs, so a value is
+# not recorded twice.
+_PROSE_REGION = re.compile(r"(?is)<(pre|table|code)\b[^>]*>.*?</\1>")
+_PROSE_EQ = re.compile(
+    r"(?<![\w(\[])([A-Z][A-Z0-9_]{3,})\s*=\s*(0[xX][0-9A-Fa-f]+)\b")
+_PROSE_PAREN = re.compile(
+    r"(?<![\w(\[])([A-Z][A-Z0-9_]{3,})\s*\(\s*(0[xX][0-9A-Fa-f]+)\s*\)")
+_PROSE_NAME_OK = re.compile(r"^(?:[A-Z][A-Z0-9]*_[A-Z0-9_]*|[A-Z0-9_]{6,})$")
+
+
+def prose_constants(fragment):
+    """``NAME (0x...)`` / ``NAME = 0x...`` spelled in running prose.
+
+    The evidence ``row`` is the matched span itself.  A matched name is
+    still only a *documented* constant: a name the page does not number
+    has no row here, and a win32-only number is never treated as a
+    Windows CE value by the generator.
+    """
+    out = []
+    seen = set()
+    fragment = _PROSE_REGION.sub(" ", fragment)
+    text = text_of(fragment, keep_newlines=False)
+    for pattern in (_PROSE_EQ, _PROSE_PAREN):
+        for match in pattern.finditer(text):
+            name, value = match.group(1), match.group(2)
+            if not _PROSE_NAME_OK.match(name) or (name, value) in seen:
+                continue
+            seen.add((name, value))
+            out.append({"name": name, "value": value,
+                        "table": "prose value", "origin": "prose",
+                        "row": match.group(0)})
+    return out
+
+
+def syntax_constant_rows(declarations):
+    """The constant definitions a page's *syntax* declarations quote.
+
+    build-kb.py hands this reader the declarations a page already
+    classified, so the clean-room rule is kept by construction: a
+    ``role: "example"`` or ``implementation`` block is sample code and
+    yields nothing here -- sample ``#define cEvents 3`` is not a
+    documented constant of the SDK.
+    """
+    out = []
+    for decl in declarations or []:
+        if decl.get("role") != "syntax" or decl.get("implementation"):
+            continue
+        out.extend(define_value_rows(decl.get("text") or ""))
+        out.extend(enum_value_rows(decl.get("text") or ""))
+    return out
+
+
+_MD_FENCE = re.compile(r"(?ms)^```.*?^```")
+_MD_CODE = re.compile(r"`([^`\n]+)`")
+
+
+def prose_constants_text(text):
+    """The markdown twin of :func:`prose_constants` (no HTML to strip).
+
+    Fenced code (````` ``` `````) and inline code spans are read by the
+    declaration reader (or are example code), so the prose reader sees
+    the text with them removed -- the same no-double-record rule as the
+    PRE/TABLE/CODE stripping on the HTML side.
+    """
+    out = []
+    seen = set()
+    text = _MD_FENCE.sub(" ", text or "")
+    text = _MD_CODE.sub(r" \1 ", text)
+    for pattern in (_PROSE_EQ, _PROSE_PAREN):
+        for match in pattern.finditer(text):
+            name, value = match.group(1), match.group(2)
+            if not _PROSE_NAME_OK.match(name) or (name, value) in seen:
+                continue
+            seen.add((name, value))
+            out.append({"name": name, "value": value,
+                        "table": "prose value", "origin": "prose",
+                        "row": match.group(0)})
     return out
 
 

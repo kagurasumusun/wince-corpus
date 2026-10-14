@@ -70,8 +70,8 @@ REQUIRED = {
                    "offset_printed", "size", "size_unit", "size_printed",
                    "matches_declared_member", "table", "row", "license",
                    "source"),
-    "constant": ("id", "name", "value", "decimal", "headers", "entity",
-                 "page_entity", "page_id", "layer", "table", "row",
+    "constant": ("id", "name", "value", "decimal", "origin", "headers",
+                 "entity", "page_entity", "page_id", "layer", "table", "row",
                  "license", "source"),
     "constraint": ("id", "entity", "page_id", "layer", "kind", "pattern",
                    "text", "license", "source"),
@@ -95,6 +95,111 @@ def read(name):
             line = line.strip()
             if line:
                 yield json.loads(line)
+
+
+def check_aux():
+    """The isolated pinvoke.net weak-auxiliary rows, when present.
+
+    knowledge/aux/ exists only once corpus/pinvoke/ has been harvested.
+    The same questions as the main tables: one identifier per name, a
+    known scope, a page that exists, the pinvoke layer stamp -- and, on
+    top, the isolation rule: no aux row may claim an entity or a header
+    that was not *derived* from the wiki's own module structure.
+    """
+    problems = []
+    aux = os.path.join(ROOT, "knowledge", "aux")
+    counts = {}
+    for kind, filename, required in (
+            ("pinvoke_api", "pinvoke-apis.jsonl",
+             ("id", "name", "module", "dll", "header", "evidence",
+              "page_id", "layer", "license", "source")),
+            ("pinvoke_constant", "pinvoke-constants.jsonl",
+             ("id", "name", "value", "module", "header", "table", "row",
+              "page_id", "layer", "license", "source"))):
+        for suffix in (".gz", ""):
+            path = os.path.join(aux, filename + suffix)
+            if os.path.exists(path):
+                break
+        else:
+            continue
+        with (gzip.open(path, "rt", encoding="utf-8")
+              if path.endswith(".gz") else open(path, encoding="utf-8")) \
+                as fh:
+            for line in fh:
+                line = line.strip()
+                if not line:
+                    continue
+                record = json.loads(line)
+                rid = record.get("id") or ""
+                counts[kind] = counts.get(kind, 0) + 1
+                for field in required:
+                    if field not in record:
+                        problems.append(f"{kind} {rid}: missing {field!r}")
+                if not re.match(r"^p[0-9a-f]{12}$", rid):
+                    problems.append(f"{kind}: bad id {rid!r}")
+                if record.get("layer") != "pinvoke":
+                    problems.append(f"{kind} {rid}: layer is not pinvoke")
+                if record.get("license") not in SCOPES:
+                    problems.append(f"{kind} {rid}: license "
+                                    f"{record.get('license')!r} not a scope")
+                source = record.get("source") or {}
+                path_src = source.get("path") or ""
+                if not path_src.startswith("corpus/pinvoke/"):
+                    problems.append(f"{kind} {rid}: source {path_src!r} is "
+                                    "not in corpus/pinvoke/ -- the isolated "
+                                    "layer must stay visibly isolated")
+                elif not os.path.exists(os.path.join(ROOT, path_src)):
+                    problems.append(f"{kind} {rid}: page {path_src} is not "
+                                    "in the repository")
+                if record.get("entity"):
+                    problems.append(f"{kind} {rid}: an aux row must never "
+                                    "mint an entity")
+    if counts:
+        print("knowledge/aux/            " +
+              ", ".join(f"{k} {n:,}" for k, n in sorted(counts.items())))
+    return problems
+
+
+def check_constant_headers():
+    """The derived constant -> header linkage table keeps its shape."""
+    problems = []
+    path = os.path.join(KB, "constant-headers.tsv")
+    if not os.path.exists(path):
+        problems.append("constant-headers.tsv: missing -- run build-kb.py")
+        return problems
+    ranks = {"own-page", "entity-page", "constant-entity",
+             "win32-reference", "pinvoke-weak"}
+    rows = 0
+    with open(path, encoding="utf-8") as fh:
+        header = fh.readline().rstrip("\n").split("\t")
+        want = ["name", "header", "strength", "statements", "example_page",
+                "sets"]
+        if header != want:
+            return [f"constant-headers.tsv: unexpected columns {header}"]
+        for line in fh:
+            cells = line.rstrip("\n").split("\t")
+            if len(cells) != len(want):
+                continue
+            rows += 1
+            name, cell_header, strength = cells[0], cells[1], cells[2]
+            if not re.match(r"^[A-Za-z_][A-Za-z0-9_]*$", name):
+                problems.append(f"constant-headers: bad name {name!r}")
+            if not re.search(r"\.(h|hpp|hh|hxx|idl|inc)$", cell_header,
+                             re.I):
+                problems.append(f"constant-headers: {name} -> {cell_header!r}"
+                                " is not a header file")
+            if strength not in ranks:
+                problems.append(f"constant-headers: {name}: strength "
+                                f"{strength!r} is not a known rank")
+            if rows > 1 and cells[2] == "pinvoke-weak" and \
+                    not cells[4].startswith("corpus/pinvoke/"):
+                problems.append(f"constant-headers: {name}: a pinvoke-weak "
+                                "row must name a corpus/pinvoke/ page")
+            if len(problems) > 200:
+                break
+    if rows and not problems:
+        print(f"constant-headers.tsv      {rows:>8,} linkage rows")
+    return problems[:200]
 
 
 def main():
@@ -165,6 +270,10 @@ def main():
                         f"{record.get('matches_declared_member')!r} is not "
                         "a bool")
             if kind == "constant":
+                if record.get("origin") not in ("table", "cell", "define",
+                                                "enum", "prose"):
+                    problems.append(f"constant {rid}: origin "
+                                    f"{record.get('origin')!r} is not known")
                 if not re.match(r"^[A-Za-z_][A-Za-z0-9_]*$",
                                 record.get("name") or ""):
                     problems.append(f"constant {rid}: name "
@@ -343,6 +452,9 @@ def main():
     print("\ngeneration_use coverage:")
     for name, count in use.most_common():
         print(f"  {name:22s} {count:>8,}")
+
+    problems.extend(check_aux())
+    problems.extend(check_constant_headers())
 
     kinds = collections.Counter()
     for entity in records["entity"].values():

@@ -1,12 +1,13 @@
 {
   "title": "Numbered constant",
-  "description": "One row of a name/value table a page prints (Flag | Value | Description, Return code | Hexadecimal | Decimal, Symbolic constant | Value (Hex), Control code | Value, Message identifier | Value, Element | Hex code, HRESULT Name | Value, Value | Weight for the font-weight constants, and the same shapes). name and value are the cells as printed; a row is kept only when the name cell is one identifier and the value cell is one number. A column the page heads as hexadecimal but fills with digits and no 0x prefix is stored as those digits -- the prefix is not added. decimal is set only when a decimal column prints a decimal beside the value -- a hexadecimal is never converted. headers are the header files that same page states, and only those. entity is the page's entity only when the constant's own name is that entity; a flag listed on a function's page is not that function. Never inferred: a constant the page does not number has no record. A correspondence table (character set beside a code page, virtual key beside a scan code, locale beside an LCID) is not a constant row.",
+  "description": "One numbered constant a page prints: a row of a name/value table (Flag | Value | Description, Symbolic constant | Value (Hex), ..), a one-cell NAME = 0x0001 / NAME (0x0001) spelling, a #define NAME <number> line of a syntax declaration, a NAME = <number> member of an enum body a syntax declaration quotes, or the NAME (0x0400) / NAME = 0x0400 inline form in running prose.  origin says which.  name and value are as printed; decimal is set only when a decimal column prints a decimal beside the value -- a hexadecimal is never converted.  headers are the header files that same page states (the wider constant -> header linkage, ranked by evidence strength, is derived in kb/constant-headers.tsv).  Example code is never read: #define lines yield constants only from role: \"syntax\" declarations (sample #defines like '#define cEvents 3' are quarantined).  A constant the page does not number has no record.",
   "type": "object",
   "required": [
     "id",
     "name",
     "value",
     "decimal",
+    "origin",
     "headers",
     "entity",
     "page_entity",
@@ -29,17 +30,28 @@
       "type": "string"
     },
     "decimal": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "headers": {
       "type": "array",
-      "items": {"type": "string"}
+      "items": {
+        "type": "string"
+      }
     },
     "entity": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "page_entity": {
-      "type": ["string", "null"]
+      "type": [
+        "string",
+        "null"
+      ]
     },
     "page_id": {
       "type": "string"
@@ -58,6 +70,16 @@
     },
     "source": {
       "type": "object"
+    },
+    "origin": {
+      "type": "string",
+      "enum": [
+        "table",
+        "cell",
+        "define",
+        "enum",
+        "prose"
+      ]
     }
   }
 }
