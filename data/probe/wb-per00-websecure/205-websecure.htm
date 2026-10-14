@@ -1,0 +1,327 @@
+
+<HTML>
+<Head>
+<META NAME="DESCRIPTION" CONTENT="MSDN Library - Periodicals - 2000.  Excerpt:  This article may contain URLs that were valid when originally published, but now link to sites or pages that no longer exist.">
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso8859-1">
+<meta name="MS.LOCALE" content="EN-US">
+<META NAME="DESCRIPTION" CONTENT="MSDN Library - Periodicals - 2000.  Excerpt:  This article may contain URLs that were valid when originally published, but now link to sites or pages that no longer exist.">
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso8859-1">
+<meta name="MS.LOCALE" content="EN-US">
+<TITLE>Web Security: Putting a Secure Front End on Your COM+ Distributed Applications -- MSDN Magazine, June 2000</TITLE>
+<META NAME="msdnID" CONTENT="_556415">
+<META NAME="MS-GlueFolder" CONTENT="3530">
+<META NAME="DESCRIPTION" CONTENT="MSDN Library - Periodicals - 2000. Excerpt: This article covers the options, from digital certificates to public and private key encryption to Secure Sockets Layer and Web certificates. The discussion covers the installation of certificates in Microsoft Internet Information Services along with other options specific to IIS.">
+<META NAME="ms.locale" CONTENT="EN-US">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso8859-1"><!--CSS_START-->
+<style>@import url(/library/msdn_ie4.css);</style>
+<link disabled rel="stylesheet" href="/library/msdn_ie3.css">
+<!--CSS_END-->
+
+</head>
+<BODY>
+
+<script language=javascript src='/library/toolbar/tgar.js'></script>
+	
+<!--TOOLBAR_START-->
+<!--TOOLBAR_EXEMPT-->
+<!--TOOLBAR_END-->
+
+<!--SYNC_START-->
+<script language="JavaScript" src='/library/synch.js'></script>
+<!--SYNC_END-->
+<P>
+
+<P>
+
+<font FACE="Verdana, Arial, Helvetica" size="1">This article may contain URLs that were valid when originally published, but now link to sites or pages that no longer exist. To maintain the flow of the article, we've  left these URLs in the text, but disabled the links.</font><HR color=000080 width=50% align="left">
+<img BORDER="0" SRC="mmlogosm.gif" ALT="MIND">
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0" HEIGHT="100%">
+<TR>
+
+
+
+<table>
+<TR>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<H1>Web Security: Putting a Secure Front End on Your COM+ Distributed Applications</H1>
+</FONT></FONT></TD>
+</TR>
+<TR>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+Keith Brown
+</FONT></FONT></TD>
+</TR>
+
+<TR>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+
+<table>
+<TR>
+<td BGCOLOR="#ffffff"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+This article assumes you're familiar with ISAPI, ASP, and CGI
+</FONT></FONT></TD>
+</TR>
+<TR>
+<td BGCOLOR="#336699" VALIGN="bottom"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+
+<font color="#ffffff">Level of Difficulty&nbsp;&nbsp;&nbsp;</font>
+<FONT COLOR="#999999">1</FONT>&nbsp;&nbsp;
+<FONT COLOR="#999999">2</FONT>&nbsp;&nbsp;
+<FONT COLOR="#ffffff">3</FONT>&nbsp;
+</FONT></FONT></TD>
+</TR>
+
+<TR>
+<td BGCOLOR="#ffffff"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<b>Keith Brown</B> works at DevelopMentor, developing the COM and Windows NT Security curriculum. He is coauthor of
+ <I>Effective COM</I> (Addison Wesley, 1999), and is writing a developer's guide to distributed security. Reach Keith at <a href="http://www.develop.com/kbrown" target="_new">http://www.develop.com/kbrown</a>.<P>
+The Internet requires that developers provide a different security model for clients than is used on a closed network. Because it would be too resource-intensive for both the client and server to prove their identity to each other, you need to look at other ways to ensure secure communications.<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This article covers the options, from digital certificates to public and private key encryption to Secure Sockets Layer and Web certificates. The discussion covers the installation of certificates in Microsoft Internet Information Services along with other options specific to IIS.<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This article was adapted from Keith Brown's <I>Programming Windows Security</I> (Addison-Wesley), due out in July 2000.
+<HR COLOR="#6699cc">
+</FONT></FONT></TD>
+</TR>
+</TABLE>
+</FONT></FONT></TD>
+</TR>
+<TR>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<TABLE ALIGN="LEFT">
+<TR>
+<td VALIGN="BOTTOM"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<IMG SRC="a.gif" WIDTH="44" HEIGHT="63" ALT="A">
+</FONT></FONT></TD>
+</TR>
+</TABLE>
+s you well know, not everyone on the Internet runs Microsoft&reg; Windows&reg;. There are many other platforms populating the Internet that will have absolutely no idea how to send or receive DCOM packets. Due to the large number of commercial enterprises farming the Internet using HTTP, and the vast numbers of consumers who want to jump on the information superhighway, an incredible amount of research, development, and most importantly, standardization has gone into hardware and software for making HTTP a viable protocol on just about any platform you can imagine. For example, most pagers these days can access the Web. There are refrigerators in the works that automatically order groceries over the Internet when your supplies are running low. If you want to tap into this well, you've got to buy into HTTP and Web server technology, and if you want to secure your transactions, you've got to learn ways of authenticating in the face of firewalls and an incredible variety of client platforms.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This article and its upcoming second part are all about putting a Web front end on your COM+ distributed application. You'll find that there is virtually no code in this article, because the job is mainly an administrative task. (I assume you already know how to program ISAPI, ASP, or CGI apps.) By the time you're done reading parts one and two, you should feel more comfortable working with Microsoft Internet Information Services (IIS) since you'll have a clearer understanding of the security context in which your application will be running given any particular configuration. There are so many different configuration options that it's easy to become confused<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In this article I'll explain how authentication works on the Web using public key cryptography and certificates. In part two I'll describe the various client authentications, the benefits and drawbacks of each, as well as application isolation options and some tips for using IIS as a gateway into a COM+ application.
+<h3>Authentication on the Web</h3>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;When you go online and plan a trip, you typically send sensitive information across the wire: information about where you're going to be and special needs that you might have. Often you'll even send your credit card number across the wire to purchase tickets or reserve a room or a rental car. It's amazing to me that so many people are willing to do this without understanding how their conversations are secured. Most consumers who care about security look for the little key in Netscape's Communicator or the little padlock in Microsoft Internet Explorer and feel comfortable that these conversations are being encrypted so that a bad guy cannot see this sensitive information. But what's the point of encrypting a message if you don't know who you're sending the message to? How do you know that it's really Amazon.com on the other end and not a bad guy? I'm pretty confident that Jeff Bezos doesn't have lunch with each and every Amazon customer and exchange a secret passphrase that can later be used to generate session keys. What's needed is some form of authentication that scales to the global Internet.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In past Security Briefs columns, I've discussed two authentication protocols that can be used to prove the identity of one principal to another electronically: Windows NT&reg; Challenge/Response Authentication (NTLM) and Kerberos. Can either of these technologies be applied to this particular problem?<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;NTLM is all about proving the identity of the client to the server, and this is usually satisfactory in a controlled environment like a single business. The client is never cryptographically assured of the server's identity, but it's also much harder to spoof internal servers than it is to spoof servers on the Internet at large. On the Web, where compromise of a router is a much more likely scenario, the focus is reversed and protecting the consumer from spoofed servers is critical. E-commerce sites typically still need to have some form of client authentication, but often this is as simple as correlating a credit card number with a billing address. Client authentication is pushed off to the credit card authority. Even if you were to reverse NTLM so that the client challenges the server, this would require the server to have a shared secret with each client, or that client's authority, which is pretty much equivalent to having the CEO of Amazon.com whisper a shared passphrase in your ear at lunch.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;What about Kerberos? Kerberos, the protocol for distributed security used by Windows 2000 and defined by the IETF (<a href="http://www.ietf.org/rfc/rfc1510.txt" target="_new">http://www.ietf.org/rfc/rfc1510.txt</a>), provides specific provisions for mutual authentication. The client can verify the identity of the server during the authentication handshake. Then any information that the client encrypts with the resulting session key and sends to the server is useful only to the server with whom the client originally authenticated because that server knows the session key and can decrypt the incoming message.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;When it comes to scalability, Kerberos is certainly a move in the right direction; by issuing tickets that have an expiration time on the order of 10 hours, the load on the authority is significantly smaller than it is with a protocol like NTLM, in which the authority must be contacted for each authentication request.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;So why doesn't Amazon.com use Kerberos to prove its identity to clients? Well, when used in the conventional way, Kerberos requires the client to prove her identity to the server. Having the server prove its identity to the client is a nifty optional feature of Kerberos, but this doesn't help Amazon.com, who would now be forced to cryptographically authenticate each and every client, which once again puts Amazon.com in the business of whispering secrets to clients on lunch breaks.<BR>
+<table align="right">
+<tr>
+<td bgcolor="#ffffff"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<img src="websecurefig01.gif" height="175" width="250" alt="Figure 1 Kerberos in Reverse?"></FONT></FONT></TD></tr>
+<tr>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><b>Figure 1</b> <b> Kerberos in Reverse?</b>
+</FONT></FONT></TD>
+</tr>
+</table>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;However, what if you were to use Kerberos in reverse? Perhaps the server could present a ticket to the client to prove his identity, as opposed to the other way around. <b>Figure&nbsp;1</b> shows how this might work. The client makes a request to the server, and the server sends a ticket plus an authenticator to the client to verify its identity. The ticket contains the server's name, an expiration date, and a key that the client and server can use to secure their conversations. This information was encrypted by the authority (not the server), so as long as the client trusts that authority, she'll trust that the ticket was not forged. If the client can decrypt this information, checking the authenticator to make sure the server really sent this message and that it wasn't stolen or replayed, she can confidently use the key in the ticket to send confidential messages to the server.<BR>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Look at all the good ideas that can be generated from the Kerberos concept. Kerberos tickets do contain a key that can be used to establish an encrypted session, and they do contain an expiration date that helps make the authentication protocol scale better than something like NTLM, and they do have the notion of ownership (the server's name is in the ticket and anyone who purports to be the server must prove knowledge of the secret key associated with the ticket). The glaring problem is that the ticket also has a fixed target. In this case, the target is the client. If Amazon.com wants to prove its identity to Alice, it must obtain a ticket targeted at Alice. If Amazon.com wants to prove its identity to Mary, it must obtain a ticket targeted at Mary. This means that everyone must register with a Kerberos authority&#151;even clients. A client cannot simply be an anonymous Internet user and have any chance of verifying a server's identity using this scheme.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Why does this limitation exist? The reason is that the Kerberos Key Distribution Center (KDC) that issues tickets and temporary session keys, relies entirely on conventional cryptography to prove the origin of its tickets. Using this reverse-Kerberos scheme I've concocted, when Alice receives a ticket from Amazon.com, that ticket is encrypted with a secret key shared by Alice and the authority. The only reason Alice trusts the contents of the ticket is because she can decrypt it successfully, and thus she knows it came from her authority. It's not feasible at all to have Amazon.com (or its Kerberos authority) register as a principal with every client's authority on the Internet in order to weave a chain of secret keys across the Web. It just won't scale. Once again, it's back to whispering secrets.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If, on the other hand, there were some way for an authority to encrypt a ticket with a special secret key in such a way that anyone could decrypt it using a different key that was not a secret (but instead was a well-known value), I'd be just about half way to a solution. When Alice receives this ticket from Amazon.com, if she can decrypt it with the well-known key for the authority, she will trust that the contents were really produced by that authority.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This doesn't completely solve the problem, though. If anyone in the world can decrypt the ticket with the authority's well-known key, this also means that anyone can see the secret key inside that Alice will use to encrypt data that she sends to Amazon.com. These sorts of tickets cannot hold secrets. So instead of a secret, the authority can put a well-known key for Amazon.com in the ticket. Similar to the key the authority used to encrypt the ticket, anyone can use this well-known key to encrypt a message, but only Amazon.com knows the corresponding secret key to decrypt that message. In this scenario, the ticket doesn't even need to be encrypted at all since it holds no secrets. Instead, the authority could simply sign the ticket using the special secret key I mentioned earlier. Anyone in the world who trusts that authority could then verify this signature using the authority's well-known key. This seemingly bizarre idea for a cryptosystem where two paired keys are used (one public and one secret), was invented in the mid-1970s by Whitfield Diffie. It's known as public key cryptography. The tickets I'm talking about now are not Kerberos tickets, but rather digital certificates.
+<h3>Public Key Cryptography</h3>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Without going into the mathematics involved in making it work, the idea behind public key cryptography is quite simple. Instead of having a single secret key that can be used for encryption and decryption, the key is split into two parts: a public key and a private key. Only a single entity knows the private key, but the public key is just that: public. Most public key cryptosystems work in the following way: if you encrypt some plaintext with key A, you can only decrypt the resulting ciphertext with key B (see <b>Figure&nbsp;2</b>). Because two different keys must be used for encryption and decryption, public key algorithms are also known as asymmetric algorithms, and conventional cryptosystems that use a single key are known as symmetric algorithms. <BR>
+<table>
+<tr>
+<td bgcolor="#ffffff"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<img src="websecurefig02.gif" height="77" width="270" alt="Figure 2 Public Key Cryptography"></FONT></FONT></TD></tr>
+<tr>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><b>Figure 2</b> <b> Public Key Cryptography</b>
+</FONT></FONT></TD>
+</tr>
+</table>
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Here's an example of a public key algorithm. In the Digital Signature Algorithm (DSA), key A is a private key and key B is the corresponding public key. This means that only one person can encrypt the plaintext into ciphertext, but many people can decrypt it. Clearly this cannot be used to send secrets, since anyone with the public key can decrypt the ciphertext, but this sort of mechanism is exactly what is required for signatures. By calculating a one-way hash of some plaintext and encrypting that hash with a private key, anyone who knows the corresponding public key can verify the signature. After verifying a digital signature of this type, you know that the plaintext wasn't tampered with since it was originally signed, and you know that the only entity that could have created the signature was the one who knows the associated private key.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;By far the most well-known digital signature algorithm is RSA, named after its inventors, Rivest, Shamir, and Adleman. This algorithm can be used to create digital signatures as with DSA, but it can also be used to send secrets. In this mode, the way the keys are used is reversed so that anyone who knows the public key can encrypt a block of plaintext, but only the holder of the private key can decrypt the resulting ciphertext. What's convenient about RSA is that it works both ways; the same algorithm can be used to encrypt secrets that's used to create signatures by reversing the way the keys are used. It's a bad idea to use the same key pair to do both, however. Usually one key pair is used for signatures and another is used for encryption (see <b>Figure&nbsp;3</b>).<BR>
+<table>
+<tr>
+<td bgcolor="#ffffff"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<img src="websecurefig03.gif" height="275" width="380" alt="Figure 3 RSA Encryption and Signature Generation"></FONT></FONT></TD></tr>
+<tr>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><b>Figure 3</b> <b> RSA Encryption and Signature Generation</b>
+</FONT></FONT></TD>
+</tr>
+</table>
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;One thing that stands out about asymmetric algorithms is that while they are great for producing and verifying signatures where only a hash value needs to be encrypted or decrypted (a hash value is typically between 128 and 256 bits of data), they are really poor performers for encrypting bulk data. Symmetric algorithms are hundreds of times faster at bulk encryption. In practice, if Alice wants to send an encrypted message to Bob taking advantage of his public key, she can do something as simple as generating a random conventional key and sending it to Bob encrypted with his public key. She can then send Bob as much data as she likes, encrypting it using a symmetric algorithm. Thus in practice, public keys are used for two different purposes: generating digital signatures and exchanging symmetric keys (which are also known as session keys).
+<h3>Certificates</h3>
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;When I first learned about public key cryptography, I thought it was the silver bullet that would solve all key exchange problems. What I quickly realized, however, was that when used properly, it can lead to a more scalable cryptosystem, but that the key exchange process is still difficult.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;With a conventional cryptosystem, all keys are secret keys. When the KDC constructs a Kerberos ticket and embeds a session key inside, the contents of that ticket must be carefully encrypted so that a bad guy cannot discover the embedded key. This also means that if a bad guy were to tamper with the ticket in an attempt to change the session key to a value he knows, the server receiving the ticket would detect this because the ticket would not decrypt properly. The results would be a garbled mess, and Kerberos implementations watch for this sort of funny business.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;However, when you send your public key across the wire, it's tempting to think that it doesn't need any protection. Granted, it's not a secret, so you don't need to hide it as Kerberos hides its session keys inside tickets, but imagine what would happen if a bad guy were to tamper with the key in transit. If Bob were sending his public key to Alice, and Fred intercepted that message and replaced Bob's public key with his own before sending the message on to Alice, any secrets that Alice subsequently sends to Bob using the compromised key will be readable by Fred. Granted, if Bob receives any of these messages directly, if he's paying any attention at all, he'll see that they decrypt to complete gibberish (only Fred can successfully decrypt messages encrypted with his own public key); but if Fred has hijacked a router between Alice and Bob, it's all over. Fred will simply intercept each of Alice's encrypted messages, decrypt them, read them, modify them to his liking, and then encrypt them using Bob's real public key. Neither Alice nor Bob will have a clue that Fred is in the middle. If Bob also asks Alice for her public signature key, Fred can substitute his own key; now Fred will be able to sign messages to Bob and Bob will be tricked into thinking that Alice was the signer (<a href="websecurefigs.htm#fig4">Figure&nbsp;4</a> shows the scam). The crux of the problem is that for Alice or Bob to be able to safely use public keys that they receive electronically, they must have some way to verify the identity of the person who owns the corresponding private key.<BR>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Can't Bob just sign the key he sends to Alice, so Alice can verify that it really came from Bob? This is like asking which came first, the chicken or the egg? Alice can't verify any of Bob's signatures until she obtains his public signature key, and how will she ever verify that key? The point that I'm trying to drive home here is that secure key exchange is just plain difficult, even with public keys, which are not secret. Two popular solutions to the problem are:<BR>
+<ul><li>Exchange initial public keys with your friends (even face-to-face if necessary) so that Fred can't get in the middle. Then treat those friends as trusted authorities. This is the model used by Pretty Good Privacy (PGP).<BR>
+</LI><LI>Use a hierarchy of trusted authorities. This is the model used by X.509, the digital certificate model described by the IETF (<a href="http://ietf.org/ids.by.wg/pkix.html" target="_new">http://ietf.org/ids.by.wg/pkix.html</a>).<BR>
+</LI></ul>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Here's the idea behind PGP (one particular public key scheme), in a nutshell: Alice and Bob are friends, so they exchange public keys simply by sending them via e-mail, but then they meet at lunch (or call each other on the phone) and authenticate those keys that were exchanged earlier. The way this is done is quite simple. For example, for Alice to verify Bob's public key, she calculates a hash of the key she received in the mail, and Bob takes a hash of the key he sent. Alice then reads the hash value aloud (either over the phone or over a ham sandwich). Now that they trust the validity of each other's keys, Alice and Bob can sign and/or seal packets that they send to one another. If Bob wants to introduce Alice to Mary, he can send Alice a signed message containing Mary's public key, and Alice, because she trusts Bob, adds this key to her key ring (presumably Bob met Mary face to face or obtained her key electronically from someone he trusts and with whom he had previously exchanged keys). This web of trust expands into a community of users who trust one another's public keys (this is obviously a simplified explanation).<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Each public key that Alice receives electronically from Bob comes wrapped in a tight little package called a certificate. The certificate contains a public key usually along with an e-mail address identifying the owner of that public key, plus an expiration date. The contents are signed with Bob's private key. Bob in this case is the certifying authority. Since Alice trusts Bob, when she validates his signature she develops trust in Mary's public key.<BR>
+<table align="left">
+<tr>
+<td bgcolor="#ffffff"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<img src="websecurefig05.gif" height="157" width="130" alt="Figure 5 Certificate"></FONT></FONT></TD></tr>
+<tr>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><b>Figure 5</b> <b> Certificate</b>
+</FONT></FONT></TD>
+</tr>
+</table>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The X.509 model of trust asserts that there is a rigid hierarchy of authorities (your buddy can't simply act as an authority). In the degenerate case there is just one authority whose public key is well known. If Alice needs to obtain Bob's public key, she simply asks him for it electronically, and Bob sends Alice a certificate (see <b>Figure&nbsp;5</b>) that contains a public key and an X.500 distinguished name, along with (among other things) an expiration date and the name of the authority that issued the certificate. The contents of the certificate are signed with the private key of the issuing authority, and since this authority is well known, Alice can verify Bob's certificate by simply using the well-known public key of the authority.<BR>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In the real world, there are several authorities whose public keys (contained in self-signed certificates) actually ship with Web browsers such as Netscape Communicator and Microsoft Internet Explorer. Many individual companies also maintain their own certificate authorities so that they can issue certificates internally. This works well as long as the certificates are only used within that particular company. In order to broaden the scope of trust for these internal certificates, it's possible for the company's certificate authority to be validated by one of the well-known authorities, forming a tree of trust (see <b>Figure&nbsp;6</b>).<BR>
+<table>
+<tr>
+<td bgcolor="#ffffff"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<img src="websecurefig06.gif" height="125" width="380" alt="Figure 6 Hierarchy of Trust"></FONT></FONT></TD></tr>
+<tr>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><b>Figure 6</b> <b> Hierarchy of Trust</b>
+</FONT></FONT></TD>
+</tr>
+</table>
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In <b>Figure&nbsp;6</b>, the company called Foo may choose to accept Bob's certificate, which was issued by Bar, because Bar has been certified by an authority that Foo trusts. This manifests itself by a chain of certificates, starting with Bob's certificate, which is signed by Bar, and Bar's certificate, which is signed by Quux. Quux is a root authority and thus signs its own certificate. This is the sort of well-known certificate that gets distributed with software like a Web browser. As long as Foo trusts one of the certificates in the chain (in this case, Quux), Foo develops trust in Bob's certificate.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Web servers use X.509 certificates to prove their authenticity to clients, and each client can obtain the Web server's certificate, ask the server for proof of its identity, and ascend the hierarchy of trust until a trusted certifying authority is found.
+<h3>SSL, PCT, and TLS, oh my!</h3>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In 1994, Netscape Communications developed and popularized a network authentication protocol known as the Secure Sockets Layer (SSL) 2.0. In 1995, Microsoft countered with a protocol known as Private Communications Technology (PCT) 1.0, which was an improvement on SSL 2.0. Around the same time Netscape released an independent suite of improvements via the SSL 3.0 protocol, which dominates the Web as of this writing. SSL 3.0 was submitted to the IETF as an Internet draft in 1996, and an IETF working group was formed to develop a recommendation. In January 1999, RFC 2246 was issued by the IETF, documenting the result of this group's efforts: the Transport Layer Security (TLS) protocol 1.0, which is virtually indistinguishable from SSL 3.0. You can think of TLS 1.0 as a version of SSL 3.1 with the IETF's stamp of approval.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I'd like to use the term TLS throughout the rest of this article (because it's been standardized), but there is so little difference between TLS and SSL, and the world still refers to the protocol as SSL; therefore, I'll cave in and refer to the protocol as SSL as well.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;You may have heard the term SCHANNEL, which stands for secure channel. This is the name of the Security Support Provider (SSP) in Windows that implements all four of the authentication protocols discussed previously&#151;SSL 2.0, PCT 1.0, SSL 3.0, and TLS 1.0. SCHANNEL is a term specific to Windows, often bandied about in MSDN&#153; documentation as an umbrella for all of these authentication protocols.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The Internet Assigned Numbers Authority (IANA) reserved port 443 for HTTP over SSL (although all the different flavors of SSL, including PCT and TLS also use this port), and HTTPS is the name of the URL scheme used with this port. Thus a URL such as http://www.develop.com implies the use of vanilla HTTP to port 80, and https://www.develop.com implies the use of HTTP over SSL to port 443.
+<h3>Secure Sockets Layer</h3>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;At the heart of SSL is the record protocol, which provides message framing, typing and fragmentation, as well as compression, encryption, and Message Authentication Code (MAC) generation and verification. MAC authentication is used to authenticate the message itself, which demonstrates cryptographically two properties: whether the message was tampered with in transit, and whether the message came from the person with whom you're having the secure conversation. The sender typically creates a MAC by encrypting a one-way hash of the message with a conventional session key shared by the two parties on either end of the wire, and then appends the MAC to the message. The receiver verifies the MAC by performing the same calculation.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SSL assumes a connection-oriented transport is in use, usually TCP, and unless the message fragments are received in the correct order from the underlying communication protocol, the receiver won't be able to decrypt the stream (each fragment isn't guaranteed to be independently decryptable).<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In order to encrypt or generate/verify MACs, both endpoints need to share a secret key, also known as a session key. On top of the record protocol SSL uses a higher-level protocol known as the handshake protocol to exchange this key and authenticate the client and server to one another. Authentication is technically optional, and there are three modes in which SSL can be used: mutual authentication, server-only authentication (client knows who server is), and no authentication (this is deprecated).<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The third option is silly if you think about it. Exchanging sensitive data over an encrypted but unauthenticated link is like two spies sitting alone in a dark corner of an obscure restaurant, whispering secrets to one another without either of them having a clue who the other one is. The vast majority of commercial HTTPS traffic over the Web today uses SSL with server-only authentication, where the client is anonymous (as far as SSL is concerned), but the server is authenticated.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SSL uses a four-way handshake in all three cases (see <b>Figure&nbsp;7</b>). My discussion of this handshake will focus on the elements necessary for authentication and key exchange. The client (Alice) first sends a client hello message to the server (Bob) to indicate that she wants to establish a new SSL session. This message contains a random number generated by Alice, as well as an ordered set of preferred cipher suites (each cipher suite indicates a key exchange algorithm, a bulk encryption algorithm, and a MAC algorithm).<BR>
+<table>
+<tr>
+<td bgcolor="#ffffff"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<img src="websecurefig07.gif" height="380" width="380" alt="Figure 7 Establishing an SSL Session"></FONT></FONT></TD></tr>
+<tr>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><b>Figure 7</b> <b> Establishing an SSL Session</b>
+</FONT></FONT></TD>
+</tr>
+</table>
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bob looks at the incoming request, selects a cipher suite from Alice's proposed list (assuming one is acceptable), and sends a server hello message back to Alice. This message includes a random number generated independently by Bob along with the cipher suite that Bob chose from Alice's list. If Bob chose a cipher suite whose key exchange algorithm requires him to prove his identity (only the deprecated no authentication option does not), he'll send his X.509 certificate as well. Depending on the key exchange algorithm, Bob might also need to include extra information to allow key exchange or satisfy U.S. export restrictions (see the sidebar &quot;<a href="websecureside.htm">What is Server Gated Cryptography?</a>&quot;). But to keep things simple, let's assume that the certificate Bob sends to Alice can also be used directly for key exchange. Finally, as long as Bob has provided his certificate, he is allowed to include a request for Alice's certificate.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;When Alice receives this information from Bob, she can verify Bob's certificate. This includes checking the signature of the root authority with her copy of the authority's well-known public key (I'll revisit certificate verification in the upcoming section on certificate revocation). At this point, Alice knows that she's got a public key for Bob, but she really doesn't have any proof that it's actually Bob on the other end of the wire. No session key has been exchanged, but Alice is now going to remedy that.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Alice sends Bob her certificate (if it was requested), and another random number known as the premaster secret that has been encrypted with Bob's public key. If Bob requested a certificate from Alice, she will also include her signature on all of the data she has sent to or received from the record layer so far during the handshake process.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Up until now, the SSL record layer has been streaming data using the NULL bulk data encryption algorithm; nothing has been encrypted. Alice now streams out a change cipher spec message, which basically says, &quot;Until I say otherwise, I'm going to instruct my record layer to use the cipher suite we just negotiated for all future output.&quot; This means that Alice needs to calculate keys for bulk data encryption and MAC generation/verification, both of which are ultimately just functions of the premaster secret, and the two random numbers generated independently by the client and server during the first two messages.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Finally, Alice streams out a finished message, which is encrypted by the record layer. This message includes a MAC of all of the data she's sent to or received from the record layer so far during the handshake.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;When Bob receives Alice's transmission, he verifies her certificate (assuming that he asked her for one), obtains the premaster secret by decrypting it using his private key, and verifies Alice's signature on the handshake messages he's seen so far using the certificate she sent. He's now developed trust that it really is Alice on the other end of the wire.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bob now receives Alice's change cipher spec message, calculates the keys for bulk data encryption and MAC generation/verification, and instructs his record layer to start using the new cipher suite to decrypt the incoming transmission. This allows Bob to read the finished message, which is at the tail of Alice's transmission. After verifying the MAC in the finished message, Bob develops trust that the entire handshake and cipher suite negotiation wasn't tampered with, as this MAC protects the entire set of handshake messages exchanged so far.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Finally, Bob sends a change cipher spec message back to Alice, instructing his record layer to use the new cipher suite to encrypt outgoing messages. This is followed by a finished message, which once again includes a MAC of all messages exchanged so far.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Alice receives the change cipher spec message, instructs her record layer to decrypt incoming messages using the negotiated cipher suite, and reads the finished message from Bob. If the message decrypts successfully and she can verify the MAC Bob sends to her, she develops trust in Bob's identity. Only Bob could have decrypted the premaster secret she sent, which was required for him to be able to generate the MAC.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;At this point, Alice and Bob have negotiated a cipher suite, exchanged shared keys for bulk data encryption and message authentication, and Alice knows that she's talking to Bob. Bob may also know Alice's identity (if he asked for a client certificate).
+<h3>Certificate Revocation</h3>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;One of the biggest potential traps of using certificates is the tendency for people to assume that a certificate is valid simply because its signature can be verified and it has not yet expired. In a password-based authentication system, if Bob's password is compromised, he can simply change his password. In NTLM the authority immediately enforces this change for all new authentication requests (barring replication latency between domain controllers) because the authority is involved in every single network authentication exchange. In Kerberos, this change is usually enforced in less than 10 hours (after Bob's outstanding TGTs expire). So what happens in a certificate-based system if Bob's private key is compromised? Well, Bob notifies his authority and obtains a new certificate, and the authority revokes the old certificate.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;But what does this mean for Alice, who contacts a server that she presumes is run by Bob but really has been hijacked by Fred, who has an illegitimate copy of Bob's old private key? Fred can simply send Bob's old certificate, which won't expire for a year or so, back to Alice. He can prove ownership of the certificate because he now holds the associated private key. Unless Alice specifically checks for revocation, she'll never know that she's really talking to Fred. Once again, public key cryptography is not a silver bullet. Alice still needs to contact an authority to verify that Bob's certificate hasn't been revoked. Bob's authority publishes a certificate revocation list (CRL) that Alice can obtain occasionally, perhaps every day or once a week, and she can use her current copy of the list to validate Bob's certificate. As an example, Internet Explorer 5.0 has a security setting entitled &quot;Check for server certificate revocation&quot; that forces the browser to download a CRL (or retrieve a freshly cached one) and verify that each server-side certificate hasn't been revoked. If you think about it, the real reason that certificates have expiration dates is to keep CRLs from growing infinitely long.
+<h3>Obtaining and Installing Certificates</h3>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Now that I've described how SSL authentication works, you'll find that it's mainly an administrative task to enable it in IIS. Recall that for SSL to be effective, the server must have a certificate so that at least one of the parties can be authenticated. If you look at the properties for a Web site in IIS, you'll notice on the Web Site tab that the entry for SSL Port is disabled by default (see <b>Figure&nbsp;8</b>). IIS will not support SSL without a server-side certificate.<BR>
+<table>
+<tr>
+<td bgcolor="#ffffff"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<img src="websecurefig08.gif" height="353" width="360" alt="Figure 8 Disabled SSL Port"></FONT></FONT></TD></tr>
+<tr>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><b>Figure 8</b> <b> Disabled SSL Port</b>
+</FONT></FONT></TD>
+</tr>
+</table>
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Obtaining and installing a Web server certificate for an established company is very straightforward; in this example I'm using IIS 5.0. IIS provides a wizard that makes it easy. IIS allows you to have multiple Web sites exposed from a single machine, and each of these Web sites can have a certificate (or not). The point is that you must set them up independently. Choose the Web site for which you want to obtain a certificate, bring up its property sheet and choose the Directory Security tab. Press the Server Certificate button to invoke the wizard. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The wizard allows you to create certificate requests, install new certificates, remove an existing certificate, and so on. Each of these activities requires answering a few straightforward questions. Unless you're planning to use your own enterprise certificate authority to issue a certificate directly, obtaining and installing a certificate will be a four-step process. (When installing certificate services on a Windows 2000 domain controller, you can choose to have it integrate with Active Directory&#153;, becoming an &quot;enterprise&quot; certificate authority.) The first step is to create the request. To do this, you need to choose the strength for the key in the certificate (you should use 1024 bits or greater), along with some strings that will end up in the certificate exactly as you type them here:<BR>
+
+<b><font color="#003399">Name</font></b> This is some friendly name that you can use to distinguish this certificate from any others you might obtain. This isn't important for authentication, but will be included as an extra property in the certificate.<BR>
+
+<b><font color="#003399">Organization Name</font></b>  This is the name of your company.<BR>
+<b><font color="#003399">Organizational Unit</font></b>  Typically this is your department.<BR>
+<b><font color="#003399">Common Name</font></b>  The name that will be used to authenticate the URL being used to access the Web server, so it should match the DNS name that you expect clients to use. For instance, the common name for DevelopMentor's Web site is www.develop.com.<BR>
+<b><font color="#003399">Country/Region</font></b>  This one is self-explanatory.<BR>
+<b><font color="#003399">State/Province</font></b>  You cannot use an abbreviation here; specify Texas instead of TX.<BR>
+<b><font color="#003399">City/Locality</font></b>  No surprises here.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;After this, the wizard asks you to choose the name of a text file where it will dump the request. By the time this file is created, the wizard will have made calls into the CryptoAPI to generate a public/private key pair for the certificate, storing the private key on the local machine. This public key will be included along with the other information you've entered in the text request file, which you can send to your certificate authority (for instance, VeriSign). The resulting file contains a base-64 encoded ASCII rendering of all the information in the request, as shown in <a href="websecurefigs.htm#fig9">Figure&nbsp;9</a>.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The second step is to send the request to the authority. You'll typically paste this into the authority's Web-based certificate application form, along with contact information, proof of domain ownership, and proof of your right to do business under the specified organization name. Third-party certificate authorities will charge you a fee for this service. Fees vary depending on the level of service and security. As of this writing, you can expect to pay approximately $100 to $1000 for a certificate that expires in a year.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The third step is the decision of the authority (who either issues or denies your request). Assuming the authority can determine that you are who you say you are (by checking addresses and making phone calls, for example), you'll receive e-mail typically within a few business days indicating that your certificate request has been granted and you can download your certificate, which will again take the form of a file. The contents will look very similar to the certificate request.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The fourth and final step is to install the downloaded certificate. If you now revisit the certificate wizard, it will allow you to process the response. Give it the path to the file you downloaded from the authority, and you should be off and running.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Note that during this request/response phase, the private key remains on the computer where you generated the request. Be aware that if you delete the pending request using the wizard (before you install the certificate), the private key will be erased, and you'll have to start all over again. If you've already paid money to a third-party authority to sign your public key, this can be painful, so watch out.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Once you've installed the certificate, you can export the certificate along with its corresponding private key to a file that you can drop on a floppy and put in an offline vault in case the Web server crashes and the private key becomes unrecoverable. To do this, bring up the property page for the Web site, go to the Directory Security tab, and press the View Certificate button. Go to the Details tab on the resulting dialog, and choose Copy to File. If you choose to export the private key, you'll be asked for a password that will be used to encrypt the file. If you were really concerned about security, you could store the password in a separate vault, but to be honest, you should be more worried about someone simply compromising the Web server and stealing the private key from there. Unfortunately, for a Web server there's not much sense in keeping the private key offline, since it is needed to establish each new HTTPS session.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;After installing a certificate, you'll notice that the SSL Port field on the Web Site tab of the Web site's property sheet is now enabled, and defaults to the standard port number for HTTPS, 443. You should now be able to access your Web site from a browser using the https scheme.
+<h3>Requiring HTTPS via the IIS Metabase</h3>
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In IIS, once you've installed a server certificate, any virtual directory may be accessed via HTTP or HTTPS. If you want to require HTTPS for a particular resource, you can use the metabase to do so. If you're not already familiar with the metabase, it's simply a hierarchical data structure that mimics the layout of your Web site. The metabase tree is what you're looking at when you manage the Web site using the IIS MMC snap-in. The metabase uses an attribute inheritance scheme somewhat similar to the DACL inheritance scheme used in Windows 2000. When you change an attribute on a node, it propagates to all children of that node, except for those children that have provided their own definition of the attribute.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The attribute that controls whether HTTPS is required is AccessSSL. Here's a script that turns on this attribute for a virtual directory known as Secure on the default Web site:
+<table>
+<TR>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<pre><code>
+
+set vd = getObject(&quot;IIS://localhost/W3SVC/1/Root/secure&quot;)
+vd.accessSSL = true
+vd.setInfo
+</code></PRE>
+</FONT></FONT></TD>
+</TR>
+</TABLE>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In the metabase, once a child node has defined an attribute, the flow of inheritance is interrupted at that node. If you want to remove the attribute from an object and unblock the flow of inheritance for that attribute, you must use the PutEx method:
+<table>
+<TR>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<pre><code>
+
+set vd = getObject(&quot;IIS://localhost/W3SVC/1/Root/secure&quot;)
+vd.putEx 1, &quot;AccessSSL&quot;, &quot;&quot;
+vd.setInfo
+</code></PRE>
+</FONT></FONT></TD>
+</TR>
+</TABLE>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If you enable AccessSSL on a virtual directory, as long as no children provide their own definitions, they will automatically inherit the new setting, and all the resources subordinate to that directory will require the client to use HTTPS. If the client attempts to access any of these resources via vanilla HTTP, she'll get an error instructing her to switch to HTTPS. As with most metabase settings, you can control this setting on a per-file basis if you need that level of granularity. To access this property via the user interface, bring up the property sheet for the resource in question and choose Directory Security for a Web site or virtual directory object, or File Security for an individual file, and then press the Edit button in the section labeled Secure communications. Most of the metabase keys described in <a href="websecurefigs.htm#fig10">Figure&nbsp;10</a> have pretty obvious user interface representations, but some aren't accessible via the user interface at all.
+<h3>Conclusion</h3>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In this article, I've examined how SSL works, explained how to obtain and install a server-side certificate, and scratched the surface of the security settings in the IIS metabase. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;In a follow-up article, I'll examine why it's important from a security perspective to move ISAPI applications out-of-process, and I'll introduce the Web Application Manager that makes this possible. I'll also cover all the forms of client authentication and provide tips that will help you make an informed decision about which one to pick for a given scenario. I'll wrap up by discussing a couple of options for using IIS as a gateway into a traditional three-tier COM+ application.<BR>
+<BR>
+</FONT></FONT></TD>
+</TR>
+<TR>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<HR COLOR="#dddddd">
+
+<B>For related articles see:</B><BR>
+<a href="/library/periodic/period99/kerberos.htm">http://www.microsoft.com/msj/0899/kerberos/kerberos.htm</a><br>
+<a href="/workshop/security/default.asp" target="_new">http://msdn.microsoft.com/workshop/security/default.asp</a>
+<BR>
+
+<B>Background information:</B><BR>
+<a href="/library/psdk/certsrv/crtsvnode_intro_8f3n.htm">http://msdn.microsoft.com/library/psdk/certsrv/ crtsvnode_intro_8f3n.htm</a><br>
+<a href="/library/psdk/crypto/cryptovrvw_8395.htm">http://msdn.microsoft.com/library/psdk/crypto/ cryptovrvw_8395.htm</a>
+<BR>
+<HR COLOR="#dddddd">
+<i><B>Keith Brown</B> works at DevelopMentor, developing the COM and Windows NT Security curriculum. He is coauthor of 
+</I>Effective COM<I> (Addison Wesley, 1999), and is writing a developer's guide to distributed security. Reach Keith at <a href="http://www.develop.com/kbrown" target="_new">http://www.develop.com/kbrown</a>.</i><BR>
+<HR COLOR="#dddddd">
+
+
+</FONT></FONT></TD>
+</TR>
+</TABLE>
+
+<P><I>From the June 2000 issue of MSDN Magazine.</i></p>
+<!--FOOTER_START-->
+<P>&nbsp;</P>
+<hr width='90%' size='1' align='left'>
+<FONT SIZE=1>
+<P><i><a href="/siteguide/write-us.asp" TARGET="_top">Send feedback</a> on this article.&nbsp;&nbsp;Find <a href="/isapi/gosupport.asp?TARGET=/servicedesks/msdn/" TARGET="_top">support options</a></i>.</P>
+<P><A HREF="/isapi/gomscom.asp?TARGET=/info/cpyright.htm" TARGET="_top">&#169; 2001 Microsoft Corporation. All rights reserved. Terms of use.</A></P>
+</FONT>
+<!--FOOTER_END-->
+</body>
+</HTML>
