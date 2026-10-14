@@ -1,0 +1,52 @@
+# Fallback probe lane, created because a 2026-10-14 probe run hung on a
+# learn.microsoft.com fetch and (with cancel-in-progress: false in the main
+# workflow) queued every later run behind it.  Same tool, same queue, its
+# own concurrency group so it can run in parallel; probes are idempotent
+# (already-answered rows are skipped) so overlapping lanes never duplicate
+# work or content.  Retire this file once probes pass cleanly again -- the
+# push trigger here is deliberately only the workflow file itself.
+
+name: Probe web targets (fallback)
+
+on:
+  workflow_dispatch: {}
+  push:
+    paths:
+      - '.github/workflows/probe-web-fallback.yml'
+
+concurrency:
+  group: probe-web-fallback
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GIT_PAT || secrets.GITHUB_TOKEN }}
+          ref: ${{ github.ref_name }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Run the probe
+        run: python3 tools/probe-web.py --queue queues/probe-web.txt --out data/probe
+
+      - name: Commit the report
+        run: |
+          git config user.name "wince-docs-corpus prober"
+          git config user.email "wince-corpus-harvester@users.noreply.github.com"
+          git add data/probe
+          if git diff --staged --quiet; then
+            echo "no report changes"
+            exit 0
+          fi
+          git commit -m "probe: probe-web.txt results (fallback lane)"
+          git pull --rebase
+          git push
