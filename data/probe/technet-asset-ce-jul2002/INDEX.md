@@ -2,7 +2,7 @@
 
 - url: https://technet.microsoft.com/en-us/AssetId:c9609d29-964e-4292-a40d-06253798301f
 - mode: list
-- fetched: 2026-10-14 13:37:18 UTC
+- fetched: 2026-10-14 13:50:27 UTC
 - status: redirect-offsite
 - redirect-target: https://learn.microsoft.com
 
