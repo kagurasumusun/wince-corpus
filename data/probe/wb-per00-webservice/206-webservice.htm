@@ -1,0 +1,237 @@
+
+<HTML>
+<Head>
+<META NAME="DESCRIPTION" CONTENT="MSDN Library - Periodicals - 2000.  Excerpt:  This article may contain URLs that were valid when originally published, but now link to sites or pages that no longer exist.">
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso8859-1">
+<meta name="MS.LOCALE" content="EN-US">
+<META NAME="DESCRIPTION" CONTENT="MSDN Library - Periodicals - 2000.  Excerpt:  This article may contain URLs that were valid when originally published, but now link to sites or pages that no longer exist.">
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso8859-1">
+<meta name="MS.LOCALE" content="EN-US">
+<TITLE>Develop a Web Service: Up and Running with the SOAP Toolkit for Visual Studio -- MSDN Magazine, August 2000</TITLE>
+<META NAME="msdnID" CONTENT="_556418">
+<META NAME="MS-GlueFolder" CONTENT="3525">
+<META Name="Description" CONTENT="MSDN Library: Periodics 2000: Excerpt:The new Simple Object Access Protocol (SOAP) Toolkit for Visual Studio 6.0 provides the infrastructure for developers to build, expose, and consume Web services. With a few exceptions that are outlined in the toolkit, the SOAP Toolkit complies with the SOAP version 1.1 specification. It includes the Remote Object Proxy Engine (ROPE), a Service Description and Code Generation Wizard, and code that provides ASP and ISAPI reference implementations of SOAP listeners. This article describes the tools and the object model of the SOAP Toolkit, and then demonstrates ASP and ISAPI implementations of a functional Web service using this toolkit.">
+<META NAME="ms.locale" CONTENT="EN-US">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso8859-1">
+
+
+<!--CSS_START-->
+<style>@import url(/library/msdn_ie4.css);</style>
+<link disabled rel="stylesheet" href="/library/msdn_ie3.css">
+<!--CSS_END-->
+</HEAD>
+
+<BODY>
+
+<script language=javascript src='/library/toolbar/tgar.js'></script>
+	
+<!--TOOLBAR_START-->
+<!--TOOLBAR_EXEMPT-->
+<!--TOOLBAR_END-->
+
+<!--SYNC_START-->
+<script language="JavaScript" src='/library/synch.js'></script>
+<!--SYNC_END-->
+<P>
+
+<P>
+<font FACE="Verdana, Arial, Helvetica" size="1">This article may contain URLs that were valid when originally published, but now link to sites or pages that no longer exist. To maintain the flow of the article, we've  left these URLs in the text, but disabled the links.</font><HR color=000080 width=50% align="left">
+<img BORDER="0" SRC="mmlogosm.gif" ALT="MIND"><TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0">
+
+<TR>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<H1>Develop a Web Service: Up and Running with the SOAP Toolkit for Visual Studio</H1>
+</FONT></FONT></TD>
+</TR>
+<TR>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+Rob Caron
+</FONT></FONT></TD>
+</TR>
+
+<TR>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+
+<TABLE BORDER="0" BGCOLOR="#ffffff" CELLPADDING="3" CELLSPACING="0">
+<TR>
+<td BGCOLOR="#ffffff"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+This article assumes you’re familiar with COM, COM+, HTTP,  ASP, XML
+</FONT></FONT></TD>
+</TR>
+<TR>
+<td BGCOLOR="#336699" VALIGN="bottom"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+
+<font color="#ffffff">Level of Difficulty&nbsp;&nbsp;&nbsp;</font>
+<FONT COLOR="#999999">1</FONT>&nbsp;&nbsp;
+<FONT COLOR="#ffffff">2</FONT>&nbsp;&nbsp;
+<FONT COLOR="#999999">3</FONT>&nbsp;
+</FONT></FONT></TD>
+</TR>
+
+<TR>
+<td BGCOLOR="#99CCFF"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+Code for this article: <a href="Caron0800.exe">Caron0800.exe (49KB)</a><BR>
+Code Update (for Soap Toolkit v205): <a href="Caron20800.exe">Caron20800.exe</a> (49KB)
+
+</FONT></FONT></TD>
+</TR>
+
+<TR>
+<td BGCOLOR="#ffffff"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<b>Rob Caron</B> is a programmer/writer working on the Visual Studio team at Microsoft. A former nuclear engineer, he now limits his physics projects to testing the laws of gravity by skydiving. He can be reached at <a href="mailto:robcaron@microsoft.com">robcaron@microsoft.com</a>.<P>
+The new Simple Object Access Protocol (SOAP) Toolkit for Visual Studio 6.0 provides the infrastructure for developers to build, expose, and consume Web services. With a few exceptions that are outlined in the toolkit, the SOAP Toolkit complies with the SOAP version 1.1 specification. It includes the Remote Object Proxy Engine (ROPE), a Service Description and Code Generation Wizard, and code that provides ASP and ISAPI reference implementations of SOAP listeners. This article describes the tools and the object model of the SOAP Toolkit, and then demonstrates ASP and ISAPI implementations of a functional Web service using this toolkit. Download the SOAP Toolkit at <a href="/xml/general/toolkit_intro.asp" target="_new">http://msdn.microsoft.com/xml/general/toolkit_intro.asp</a>.
+<HR COLOR="#6699cc">
+</FONT></FONT></TD>
+</TR>
+</TABLE>
+</FONT></FONT></TD>
+</TR>
+<TR>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<TABLE ALIGN="LEFT">
+<TR>
+<td VALIGN="BOTTOM"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<IMG SRC="t2000.gif" WIDTH="44" HEIGHT="63" ALT="T">
+</FONT></FONT></TD>
+</TR>
+</TABLE>
+he new Simple Object Access Protocol (SOAP) Toolkit for Visual Studio&reg; 6.0 gives developers the infrastructure and tools they need to integrate SOAP-based Web services into their client and server applications. In this article, I'll demonstrate these tools with a sample Web service for consumption by SOAP-compliant Web service clients. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;SOAP is a lightweight, XML-based protocol for exchanging information in a decentralized, distributed environment. It is rapidly gaining support and has been submitted to the W3C for consideration. SOAP is a messaging protocol that is not limited to Remote Procedure Calls (RPC). It does not require synchronous execution or request/response interaction, and SOAP messages can have multiple parts addressed to different parties. SOAP defines an envelope formatting and processing mechanism for arbitrarily complex message structures. Furthermore, SOAP has an extension mechanism, allowing loose coupling between senders and receivers of messages, which allows for richer messaging facilities such as workflow routing and guaranteed delivery in systems such as the BizTalk&#153; framework. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The SOAP Toolkit focuses on exposing a limited aspect of the functionality that can be built on top of the SOAP specification, and I want to mention two of these. First, although SOAP permits transmission over numerous transport protocols, the sample kit, and hence this demonstration, uses HTTP. Second, one of the benefits of the toolkit is that it allows programmers to use a familiar, method-call-style syntax to create and send messages; that is, it allows sending a SOAP message using the same syntax as an RPC. For COM-oriented developers, this means that many SOAP-compatible Web services can act just like COM objects. For more information on how the SOAP Toolkit supports the SOAP specification, see the documentation in the SOAP Toolkit.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Any SOAP-compliant client can consume a Web service that uses the SOAP Toolkit; likewise, a client can use the SOAP Toolkit to consume any SOAP-compliant Web service. SOAP compliance means that neither end needs to know how the other was constructed. Just because a Web service was built with the SOAP Toolkit does not mean that consumers of that Web service must be built with the SOAP Toolkit.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Note that this article is based on my use of the SOAP Toolkit beta, and some features may be different in the final release. 
+<h3>Tools for Web Services Development</h3>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The Microsoft&reg; SOAP Toolkit complies with most of the SOAP version 1.1 specification, and the SOAP Toolkit team is working to bring the toolkit into full compliance. While the SOAP Toolkit greatly simplifies developing and consuming Web services using standards-based programming guidelines, the next version of Visual Studio will further ease the process. Microsoft is very committed to supporting the SOAP standard in its future technologies and developer tools. The SOAP Toolkit includes the Remote Object Proxy Engine (ROPE), the Service Description and Code Generation Wizard, and code for two reference implementations of a SOAP listener. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ROPE is a DLL that provides the core functionality and infrastructure for Web service development and implementation using a familiar programming paradigm. I'll describe the ROPE object model later. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The Service Description and Code Generation Wizard automatically generates everything needed on the server, including the service description files (defined later) which provide functionality that's both specific to the Web service being created and generic to any Web service. Additional required files are also included with the SOAP Toolkit and are copied to the appropriate directory when you use the wizard.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Two implementations of a SOAP listener, including source code, are provided in the SOAP Toolkit. One implementation is written as an ASP script, while the other is a custom-built ISAPI extension. The SOAP listener provides a point of entry for clients to access the Web service. I'll demonstrate the use of both implementations in this article.
+<h3>The ROPE Object Model</h3>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The ROPE object model (see <a href="webservicefigs.htm#fig1">Figure&nbsp;1</a>) consists of two primary objects that programmers can use to implement and use SOAP Web services: Proxy and SOAPPackager. The sample app will show how these objects can be used. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The Proxy object allows a client to access a Web service as if it were a local COM object, which lets any COM-enabled language easily access the Web service. Once the Proxy has been educated about a particular Web service by loading the service description file, all of the published methods of that Web service are made available to the client application. While the Proxy object enables a late-bound programming model (since the service description was loaded at runtime), it is technically possible to load the service description at design time and generate wrapper classes that encapsulate the Proxy object to provide an early-bound programming model. However, the SOAP Toolkit only provides the late-bound model. Using this object alone, a developer can construct a SOAP Web service client.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The SOAPPackager object offers a lower-level programming model for handling SOAP messages. Typically, the SOAPPackager object is used on the server side and under the covers on the client side&#151;although you might occasionally use the SOAPPackager object on the client side, for example, to access SOAP message headers. This object may also be used on the client side as a programming model for processing incoming and outgoing SOAP messages. Its methods enable fine control of the packaging and unpackaging of SOAP messages at the expense of some added complexity. However, this level of control allows you to work programmatically with the individual pieces of a SOAP message. Incidentally, the Proxy object uses the SOAPPackager object to handle its SOAP message processing.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The SOAPPackager object extends the ROPE object model with four additional objects: ServiceDescriptors, SDEndPointInfo, SDMethodInfo, and SDParameterInfo. The ServiceDescriptors collection object gives you programmatic access to the individual elements of the service description, such as the SOAP listener locations, methods, and method parameters. ServiceDescriptors can contain a collection of either SDMethodInfo or SDEndPointInfo objects, depending upon which was requested from the SOAPPackager object when the collection object was created. The service description must be loaded by the SOAPPackager object to supply the information contained in these objects. SDMethodInfo objects are used to map SOAP messages to object method calls, which can then provide RPC functionality on top of SOAP messages.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;An SDMethodInfo object exposes the parameters of the method for which it is providing information using a SAFEARRAY. The elements in the SAFEARRAY can represent the order of parameters in a method signature if that is what you request. In this case, ROPE will use the parameter order specified in the service description, or if the parameter order is not specified, ROPE will place them in an order following an algorithm specified in the ROPE API.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Each parameter is accessed using an SDParameterInfo object, which only describes the characteristics of the parameter such as the direction (in only, out only, or both), data type, and parameter name&#151;not the value of the parameter. SDEndPointInfo objects expose a single property that returns the URI of their associated SOAP endpoint. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The ROPE object model is supplemented by a WireTransfer utility object. WireTransfer is a helper object that can execute HTTP POST and GET actions for SOAP Web services. This object is built on top of Winsock and is designed to be highly scalable.
+<h3>The Service Description and Code Generation Wizard</h3>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The Service Description and Code Generation Wizard generates several customized files to simplify Web service development. Creating these files using the SOAP Toolkit wizard instead of authoring them by hand ensures that the resulting files will comply with the SOAP 1.1 specification. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The key file that is generated is a description of the Web service. It contains XML elements that contain information such as the URL of the service, references to schemas that define the format of messages, and the capabilities of the service. A Web service uses this file to advertise its features. This file is used in turn by consumers of the service to understand how to interact with it. However, the service description does not reveal how the service is actually implemented. You'll see an example of a service description in my sample later on. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The wizard is designed to generate files for COM components. Other service implementations, such as ASP scripts, require the schema to be written by hand to describe the service.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The SOAP listener is the SOAP message processor. It provides the SOAP functionality for the Web service. Its address is the one referred to in the service description for calling the Web service. Using the wizard, the SOAP listener can be implemented as an ASP file, an ISAPI extension, or a custom-built listener.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The ASP file generated by the wizard contains methods that act as interfaces to the COM component providing the Web service. Implementing the endpoint as an ISAPI extension solution is discussed later.
+<h3>Implementation Options</h3>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The easiest way to implement and test a SOAP listener for a Web service is to use ASP to interact with an existing application, such as making a method call to a COM object. This solution allows you a great deal of freedom in writing code that is executed both before and after the method in the COM object is called. Later, if you want better performance for services based on a COM component, you can use the toolkit's ISAPI SOAP listener solution. Once the Web service has been implemented via ISAPI, calls to the Web service will be sent directly to the target COM component. You can't insert custom code before or after the component is called. If you need to add custom code, one option is to write another COM object that the ISAPI listener will invoke so that the COM object can call the original COM object as well as execute custom code&#151;or you can write your own custom ISAPI extension using the source code for the toolkit's ISAPI extension, which is included. With ROPE, you can develop custom SOAP listener implementations, or simply modify the ones provided to suit your requirements. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Since the provided SOAP listener implementations were designed to handle a broad set of circumstances, you may want to replace these pieces with code that has been optimized for your own Web service. 
+<h3>Developing a Web Service</h3>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;It is possible to develop a Web service from scratch and write all the code necessary to process SOAP messages without using the SOAP Toolkit, but the time it would take would be better invested in developing the actual service functionality. The SOAP Toolkit provides the infrastructure to support SOAP-compliant Web services in much the same way that Microsoft Internet Information Services (IIS) and ASP provide the infrastructure for building Web applications.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To build a SOAP-compliant Web service, you need some functionality that constitutes the service, a service description that defines how to use the service, and an infrastructure to support sending, receiving, and processing SOAP messages. I'm going to build a sample Web service on top of a sample COM component that calculates sales tax for an e-commerce site. This Web service is for illustration purposes only; a real sales tax Web service would have to take into consideration factors such as local sales tax as determined by ZIP code.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The core functionality of the code is a COM component called SalesTaxRates that was written in Microsoft Visual Basic&reg; 6.0. The functions implemented in the rates.cls file are shown in <a href="webservicefigs.htm#fig2">Figure&nbsp;2</a>. For simplicity, this component references data that is stored in an ActiveX&reg; Data Objects (ADO) recordset, which has been persisted as a static XML file, StateTaxRatesRS.xml. The SalesTaxRates component implements three public functions on the USStateRates interface: GetTaxRateForState, GetStateTaxAmt, and GetStateTaxRates. GetTaxRateForState returns the current tax rate for a given state; GetStateTaxAmt calculates the sales tax for a given state and a given taxable sale amount; and GetStateTaxRates function returns an ADO 2.5 recordset that has been persisted as XML and that contains the state tax rates for all 50 states.<BR>
+<table>
+<tr>
+<td bgcolor="#ffffff"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<img src="webservicefig03.gif" height="333" width="300" alt="Figure 3 Component Properties"></FONT></FONT></TD></tr>
+<tr>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><b>Figure 3</b> <b> Component Properties</b>
+</FONT></FONT></TD>
+</tr>
+</table>
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To simplify deployment and minimize recompilation, the full path to the XML file is passed to the component upon activation as a constructor string. This is accomplished by creating a COM+ application from the DLL in Windows&reg; 2000 Component Services (see <b>Figure&nbsp;3</b>). The constructor string assigns the file's physical path to a parameter named XMLFilePath. Whenever this object is created, the constructor string is parsed to determine the location of the XML file.
+<h3>Running the Wizard</h3>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Next, I'll need a SOAP listener to process service requests and a service description to define what the service does. To expose the functionality of this DLL as a Web service, I'll use the wizard provided in the SOAP Toolkit to generate files. These files will be used in conjunction with files provided in the SOAP Toolkit to implement the common SOAP functionality. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Walking through the steps of the wizard, I must first indicate the COM DLL from which to generate the needed files. The wizard will then interrogate the type library to determine which methods are available on the exposed interfaces. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The next step is to select which methods of the DLL I'd like to expose as part of the Web service. If you run the wizard, you'll see that one method, GetStateTaxAmt, is displayed in red. The SOAP Toolkit only supports a subset of those data types shown in <a href="webservicefigs.htm#fig4">Figure&nbsp;4</a> that are supported by XML Data Reduced (XDR), which correspond to the namespace URI <!a href="http://www.w3.org/1999/XMLSchema.dtd/datatypes" target="_new">http://www.w3.org/1999/XMLSchema.dtd/datatypes<!/a>. This method appears in red because the data type of one of its parameters and of the returned value is the Visual Basic currency data type, which is not supported. By default, the wizard will change all unsupported data types to strings in the files it generates. However, the service description can be edited, as you will see later, to change the specified data type to one of the other data types supported by the SOAP Toolkit. Any methods that have not been selected will not be exposed in the service description.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;After selecting the methods to expose as a Web service, I then need to tell the wizard what the address of the endpoint URI will be. This location is a directory on a Web site to which the service will be deployed. Should this location change, it is a simple matter of editing two lines of code to relocate the service: the address of the endpoint URI in the service description file and the address of the service description file in the endpoint URI. Later, I'll implement the service as an ISAPI solution, but for now I'll go with the default solution, ASP. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The final step of the wizard is to select the location to which the newly generated files will be saved. This is just a working directory in which these files can be placed. Later, I'll upload these files to the appropriate Web server. After completing the wizard, the files are generated and saved to the location I specified. The wizard automatically copies the additional required toolkit files to the same location as the generated files.
+<h3>The Wizard-generated Files</h3>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The XML file that was automatically generated, USStateRates.xml (see <a href="webservicefigs.htm#fig5">Figure&nbsp;5</a>), is a schema that describes key information about the Web service. The SOAP element of the schema defines which methods are available from the Web service and the address of the SOAP endpoint to which SOAP request messages for these services should be directed. At the bottom of the file is a schema that further defines the syntax of a SOAP message for both requests and their responses as they apply to my service. Both the Web service server and the Web service client use this XML file to understand the expected flow and content of SOAP messages.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The ASP file that was automatically generated, USStateRates.asp (see <a href="webservicefigs.htm#fig6">Figure&nbsp;6</a>), contains functions in the ASP script with signatures similar to the methods that were chosen in the wizard. In addition, the wizard has inserted code in each of these functions that will create an instance of the SalesTaxRates component and call the prescribed function with the provided parameters. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I should make two modifications to this service before it's ready for consumption. First, as I pointed out earlier, the GetStateTaxAmt function as defined in the service description file has been decremented to accept a string value from the SOAP client in lieu of the unsupported currency value that the actual DLL function is expecting. To compensate for this I could add some custom code in the ASP script to test the string to see if it is a valid currency value. If the test fails, I could then return an error message to the calling Web service client. Or, since this parameter is passed by value to the method in the DLL, I could rely on the scripting engine to perform this conversion. For the purpose of the sample, I'll just go with the latter.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Second, the GetStateTaxRates function returns an ADO 2.5 recordset that has been persisted as an XML string. Since a SOAP message is constructed using XML, I should place this function's return data inside a CDATA section to make sure the SOAPPackager object does not attempt to parse this XML. This avoids the problem of invalid XML causing an XML parsing error in the SOAPPackager object. The SOAPPackager object provides a simple function to accomplish this task, CDATAize. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Now that all the files have been assembled, the final step in developing this Web service is to deploy it to my Web server. The following six files need to be deployed: <BR>
+<ul><LI>ROPE.dll, the COM component from the SOAP Toolkit that is used to receive, process, and send SOAP messages. <BR>
+</LI><LI>SalesTaxRates.dll, my custom COM component that actually provides the Web service.<BR>
+</LI><LI>USStateRates.asp, a generated ASP file, which contains three functions that call their counterparts in SalesTaxRates.dll. This script performs a server-side include of listener.asp.<BR>
+</LI><LI>Listener.asp, from the SOAP Toolkit, which provides the SOAP functionality for the Web service server.<BR>
+</LI><LI>USStateRates.xml, the service description generated by the wizard.<BR>
+</LI><LI>StateTaxRatesRS.xml, an XML document containing an XML-persisted ADO 2.5 recordset.<BR></LI></UL>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;On the Web server, the ROPE.dll must be registered and made available to the interactive user account. In addition, I need to create a COM+ application using the SalesTaxRates.dll and specify the required constructor string, as mentioned earlier. The SOAP Toolkit documents how to install the supporting files. For additional information on how to create COM+ applications, see the Platform SDK documentation in the MSDN&reg; library. 
+<h3>Consuming a Web Service</h3>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Since the decentralized nature of SOAP enables both the sender and receiver of a SOAP message to function as autonomous units, there are countless ways to consume a Web service. For example, a call to a Web service can be included in an ASP script or called from within a middleware component. No matter what form the SOAP client may take, all that's needed to call a SOAP-compliant Web service is to send a SOAP request message that conforms to the published service description. Here, I accessed the Web service from ASP scripts. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;I created three ASP files that are called from a simple HTML page, index.htm (see <a href="webservicefigs.htm#fig7">Figure&nbsp;7</a>), to exercise each of the methods of the service. The sample ASP files employ different methods to consume the Web service to demonstrate ROPE's capabilities. GetTaxRateForState.asp (see <a href="webservicefigs.htm#fig8">Figure&nbsp;8</a>) and GetStateTaxRates.asp (see <a href="webservicefigs.htm#fig9">Figure&nbsp;9</a>) use the simple programming model of the Proxy object. GetStateTaxAmt.asp (see <a href="webservicefigs.htm#fig10">Figure&nbsp;10</a>) uses the more complex programming model of the SOAPPackager object. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;With ROPE handling the details, consuming a Web service is rather trivial using the Proxy object.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The following is a step-by-step demonstration of what happens when the client requests the state sales tax rate for the state of Washington (WA) using the Proxy object as illustrated in <a href="webservicefigs.htm#fig11">Figure&nbsp;11</a>. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The process starts with the Web service client:<BR>
+<OL><LI>GetTaxRateForState.asp is called, which creates an instance of ROPE.Proxy.<BR>
+</LI><LI>Proxy attempts to load the service description file from the specified location.<BR>
+</LI><LI>Assuming the load was successful, a call is then made to the Web service method on the Proxy object. (Note that the method name is case-sensitive and must match the method name as it appears in the service description file.) It will then prepare a request payload and place it inside a SOAP message according to the syntax specified in the service description.<BR>
+</LI><LI>Proxy will then send the message to the SOAP listener whose address is also provided in the service description.<BR></LI></OL>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;At this point, control moves to the Web service itself:<BR>
+<OL start="5"><LI>When the message is received by the SOAP endpoint, it is loaded into the XML Document Object Model (DOM).<BR>
+</LI><LI>The SOAPPackager object loads the service description file to understand the contents of the payload that has been received.<BR>
+</LI><LI>The payload is then parsed from the SOAP message and loaded as a request payload in a SOAPPackager object.<BR>
+</LI><LI>Using the SOAPPackager object, the method being called and the supplied parameters are retrieved programmatically using ServiceDescriptor objects.<BR>
+</LI><LI>The SOAP listener now has the required information to call the GetTaxRateForState method in the ASP script. When GetTaxRateForState is called, the script creates an instance of the USStateRates object and calls the object's GetTaxRateForState method with the supplied parameters. <BR>
+</LI><LI>The GetTaxRateForState method obtains its data from StateTaxRatesRS.xml.<BR>
+</LI><LI>The return value from the object method call is then returned by the script method call. Using the SOAPPackager object, a response payload is created programmatically with the ServiceDescriptor objects. Once the payload has been created and loaded into the SOAPPackager object as a response payload, it is then stuffed inside a SOAP response message, which is sent back to the client that called the Web service.<BR></LI></OL>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Now, control reverts to the Web service client:<BR>
+<OL start="12"><LI>The Proxy object parses the response payload from the SOAP response message and retrieves the return value.<BR>
+</LI><LI>The value is used in creating the response that is written to the page seen in the browser.<BR></LI></ol>
+<h3>An ISAPI Solution</h3>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;After testing the Web service and making sure it works properly, you may want to improve its performance by implementing the SOAP listener as an ISAPI solution. To do so, simply run the wizard once more and select ISAPI instead of ASP. The wizard generates the two files again. Instead of the ASP file that was previously generated, an SOD file will be created. This is a file that contains a simple XML document having a single XML element with two attributes, ProgID and SchemaLoc. ProgID, as you'd expect, is the ProgID of the Web service component. SchemaLoc is the physical path to the service description file.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Just like the service description in the ASP solution described earlier, this service description will have an element called location with an attribute named URL that will point to the location of the SOAP listener. This time, the address of the SOAP listener points to an SOD file instead of an ASP file. The ISAPI extension that comes with the SOAP Toolkit will intercept calls to the Web server for files with an extension of .sod, and will recognize these calls as SOAP Web service requests. The ISAPI extension will then reference the SOD file and the service description for information pertaining to the Web service. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The following six files need to be deployed to the Web server:<BR>
+<UL><LI>ROPE.dll, the COM component from the SOAP Toolkit that is used to receive, process, and send SOAP messages.<BR>
+</LI><LI>SOAPISAPI.dll, the ISAPI extension that is associated with SOD files on the Web server.<BR>
+</LI><LI>SalesTaxRates.dll, the COM component that actually provides the Web service.<BR>
+</LI><LI>USStateRates.sod, a generated XML document that provides the address of the SOAP listener.<BR>
+</LI><LI>USStateRates.xml, a generated service description.<BR>
+</LI><LI>StateTaxRatesRS.xml, a data file containing an XML-persisted ADO 2.5 recordset.<BR></LI></UL>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Once the SOD file is deployed to the Web service server, the path specified in the location element of the SOD file will need to be updated to reflect the physical path to the service description file on the server. Since the SOAP client doesn't need to know how the Web service has been implemented, no changes are needed in the client code.
+<h3>Conclusion</h3>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The sample here and the additional tools, code, documentation, and samples in the new SOAP Toolkit allow you to focus your efforts on developing and consuming SOAP-compliant Web services rather than on developing the SOAP infrastructure underneath. <BR>
+<BR>
+</FONT></FONT></TD>
+</TR>
+<TR>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<HR COLOR="#dddddd">
+
+<B>For related articles see:</B><BR>
+&quot;<a href="soap.htm">A Young Person's Guide to the Simple Object Access Protocol</a>&quot;<br>
+<a href="http://www.w3.org/TR/SOAP" target="_new">http://www.w3.org/TR/SOAP</a><BR>
+<I>Professional XML</I>, &quot;Chapter 18 - Case Study 4&#151;SOAP&quot;by Jonathan Pinnock et. al. (Wrox Press, 2000)
+<BR>
+                          </FONT></FONT></TD>
+                       </TR>
+<TR><td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<HR COLOR="#dddddd">
+<i><B>Rob Caron</B> is a programmer/writer working on the Visual Studio team at Microsoft. A former nuclear engineer, he now limits his physics projects to testing the laws of gravity by skydiving. He can be reached at <a href="mailto:robcaron@microsoft.com">robcaron@microsoft.com</a>.</i><BR>
+<HR COLOR="#dddddd">
+                          </FONT></FONT></TD>
+                       </TR>
+<TR>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+</table>
+<P><I>From the August 2000 issue of MSDN Magazine.</i></p>
+<!--FOOTER_START-->
+<P>&nbsp;</P>
+<hr width='90%' size='1' align='left'>
+<FONT SIZE=1>
+<P><i><a href="/siteguide/write-us.asp" TARGET="_top">Send feedback</a> on this article.&nbsp;&nbsp;Find <a href="/isapi/gosupport.asp?TARGET=/servicedesks/msdn/" TARGET="_top">support options</a></i>.</P>
+<P><A HREF="/isapi/gomscom.asp?TARGET=/info/cpyright.htm" TARGET="_top">&#169; 2001 Microsoft Corporation. All rights reserved. Terms of use.</A></P>
+</FONT>
+<!--FOOTER_END-->
+
+</BODY>
+</HTML>
