@@ -49,6 +49,11 @@ def main():
     ap.add_argument("--out", default="data/probe")
     ap.add_argument("--delay", type=float, default=2.0,
                     help="fixed delay per host (seconds)")
+    ap.add_argument("--refresh-all", action="store_true",
+                    help="re-probe rows whose earlier probe already "
+                         "succeeded (default: skip them -- a probe answer "
+                         "is recorded once, delete data/probe/<name>/ to "
+                         "re-ask a question)")
     args = ap.parse_args()
 
     rows = []
@@ -68,6 +73,13 @@ def main():
     summary = []
     for ordinal, (name, url, mode) in enumerate(rows, 1):
         target_dir = os.path.join(out_root, name)
+        index_md = os.path.join(target_dir, "INDEX.md")
+        if (not args.refresh_all and os.path.exists(index_md)
+                and "- status: 200" in open(index_md,
+                                            encoding="utf-8").read()):
+            print(f"[probe] {name}: skipped (already probed, "
+                  "delete data/probe/%s to re-ask)" % name, flush=True)
+            continue
         os.makedirs(target_dir, exist_ok=True)
         body, status = fetcher.get(url, args.delay)
         stamp = time.strftime("%Y-%m-%d %H:%M:%S UTC", time.gmtime())
