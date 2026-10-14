@@ -14,7 +14,10 @@ an archive is.
 mode: `small` (default) fetch and commit bodies up to 512 KB; `list` fetch
 only to record existence/size/hash (never commit the body); `cache` same as
 `list` but write the body to `.cache/probe/<name>/` (git-ignored) so a
-document can be inspected in the runner log's artifact cache; `json` fetch
+document can be inspected in the runner log's artifact cache; `keep` write
+the body VERBATIM to `sources/bitsavers-microsoft/<basename>` (for the
+media that the licence review has accepted; the INDEX.md receipt records
+size and sha256 next to it); `json` fetch
 a JSON document (toc feeds etc.) and commit it verbatim to
 `data/probe/<name>/` when it is <= 2,048 KB, INDEX.md records the entry
 count and a few sample hrefs.
@@ -142,6 +145,19 @@ def main():
                     fh.write(body)
                 head.append(f"- cached (not committed): .cache/probe/"
                             f"{name}/{fname}")
+            elif mode == "keep":
+                keep_dir = os.path.join(ROOT, "sources",
+                                        "bitsavers-microsoft")
+                os.makedirs(keep_dir, exist_ok=True)
+                fname = os.path.basename(p.path) or "index.bin"
+                dest = os.path.join(keep_dir, fname)
+                if os.path.exists(dest):
+                    head.append(f"- kept already: sources/"
+                                f"bitsavers-microsoft/{fname}")
+                else:
+                    with open(dest, "wb") as fh:
+                        fh.write(body)
+                    head.append(f"- kept: sources/bitsavers-microsoft/{fname}")
             elif mode == "json":
                 try:
                     parsed = json.loads(text)
