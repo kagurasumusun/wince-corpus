@@ -196,7 +196,10 @@ def dest_for(url):
         # same year cannot collide.
         match = re.match(
             r"/[a-z]{2}(?:-[a-zA-Z]{2,4})?/archive/msdn-magazine/"
-            r"(?:issues/)?(\d{4})/(\d{2})/([a-z0-9-]+)$",
+            r"(?:issues/)?(\d{4})/(\d{2}|(?:jan|feb)uary|mar(?:ch)?|"
+            r"apr(?:il)?|may|june?|july?|aug(?:ust)?|"
+            r"sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)"
+            r"/([a-z0-9-]+)$",
             p.path.rstrip("/"),
         )
 
