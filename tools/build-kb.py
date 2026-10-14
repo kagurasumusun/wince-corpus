@@ -1756,6 +1756,35 @@ def build(rows, workers, report_only, plain=False):
               ["name", "header", "strength", "statements", "example_page",
                "sets"], link_rows)
 
+    # The collection worklist: CE constants no page names a header for.
+    # Nothing can fill that from the corpus itself -- not the page (it
+    # states none), not the entity tier (the names are not entities),
+    # not the Win32 reference (the CE-shared subset documents none of
+    # them) -- so they instead land here, one row per name with the sets
+    # and a page to start from.  The pinvoke-weak rank and the CE SDK
+    # review are the intended way to shrink this list.
+    linked_names = {row[0] for row in link_rows}
+    gap = {}
+    for record in constants:
+        if record.get("layer") != "ce" or record["name"] in linked_names:
+            continue
+        entry = gap.setdefault(record["name"], {
+            "rows": 0, "origins": collections.Counter(),
+            "sets": set(), "example_page": ""})
+        entry["rows"] += 1
+        entry["origins"][record.get("origin") or "?"] += 1
+        entry["sets"].add(record["source"]["set"])
+        if not entry["example_page"]:
+            entry["example_page"] = record["source"]["path"]
+    write_tsv(os.path.join(REPORTS, "constant-header-gaps.tsv"),
+              ["name", "rows", "origins", "sets", "example_page"],
+              sorted((name, entry["rows"],
+                      ",".join(f"{k}:{v}" for k, v in
+                               entry["origins"].most_common()),
+                      ";".join(sorted(entry["sets"])),
+                      entry["example_page"])
+                     for name, entry in gap.items()))
+
     # The isolated pinvoke.net weak-auxiliary reference -> knowledge/aux/
     # (written only when the isolated corpus tree has been harvested).
     pinvoke_apis, pinvoke_constants_rows = pinvoke_pair

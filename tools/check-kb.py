@@ -199,6 +199,48 @@ def check_constant_headers():
                 break
     if rows and not problems:
         print(f"constant-headers.tsv      {rows:>8,} linkage rows")
+
+    # The worklist of CE constants with no header statement at all: its
+    # names must be the *complement* of the linkage names over the CE
+    # constants, or a future extraction drift goes unnoticed.
+    worklist = os.path.join(REPORTS, "constant-header-gaps.tsv")
+    if not os.path.exists(worklist):
+        problems.append("constant-header-gaps.tsv: missing -- run build-kb.py")
+        return problems
+    link_names = set()
+    with open(path, encoding="utf-8") as fh:
+        next(fh)
+        for line in fh:
+            link_names.add(line.split("\t", 1)[0])
+    gap_names = []
+    with open(worklist, encoding="utf-8") as fh:
+        header = fh.readline().rstrip("\n").split("\t")
+        if header != ["name", "rows", "origins", "sets", "example_page"]:
+            problems.append(f"constant-header-gaps.tsv: unexpected columns "
+                            f"{header}")
+        for line in fh:
+            cells = line.rstrip("\n").split("\t", 1)
+            if cells:
+                gap_names.append(cells[0])
+    ce_names = set()
+    constants_path = os.path.join(KB, "constants.jsonl.gz")
+    if not os.path.exists(constants_path):
+        constants_path = constants_path[:-3]
+    opener = gzip.open if constants_path.endswith(".gz") else open
+    with opener(constants_path, "rt", encoding="utf-8") as fh:
+        for line in fh:
+            if not line.strip():
+                continue
+            record = json.loads(line)
+            if record.get("layer") == "ce" and record["name"] not in link_names:
+                ce_names.add(record["name"])
+    if set(gap_names) != set(ce_names):
+        problems.append(f"constant-header-gaps.tsv: {len(gap_names):,} names "
+                        f"but {len(ce_names):,} CE constants are unlinked -- "
+                        "rerun build-kb.py")
+    if not problems:
+        print(f"constant-header-gaps.tsv  {len(gap_names):>8,} collection "
+              "worklist names")
     return problems[:200]
 
 

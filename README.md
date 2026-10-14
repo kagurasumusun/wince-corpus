@@ -212,7 +212,12 @@ resume check) don't have to rescan ~120k files.
   a listed conflict or a version branch, not a silent pick (2 conflicts at
   this point), spacing-collapsed declarations are left as evidence rather
   than repaired, and the generation set -> `_WIN32_WCE` interval wiring is
-  documented in the generator itself.
+  documented in the generator itself.  The **2,347** names the corpus cannot
+  link at any rank are a checked collection worklist,
+  `knowledge/reports/constant-header-gaps.tsv` (name, rows, origins, sets,
+  example page) — the input to the pinvoke-weak review once the isolated
+  corpus is harvested and to any CE SDK verification; `tools/check-kb.py`
+  requires it to stay the exact complement of the linkage table.
 * 2026-10 (the boundary, measured): the Windows CE / Win32 boundary is now
   explicit in the knowledge base — every entity carries `surface` (CE-only,
   shared, Win32 spelling of a CE name, catalog-only, or Win32-only; the last is
