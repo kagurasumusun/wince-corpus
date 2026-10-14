@@ -220,6 +220,22 @@ def dest_for(url):
         return "learn", match.group(1)
 
     if "web.archive.org" in p.netloc:
+        # MSDN Magazine article pages (pre-2008 msdnmag tree):
+        #   /web/<ts>/http://msdn.microsoft.com/msdnmag/issues/YY/MM/<slug>/<...>.asp
+        # The magazine never moved to msdn "library" ids; its pages live
+        # under per-issue directories.
+        match = re.match(
+            r"/web/(\d+)(?:id_)?/https?://msdn\.microsoft\.com(?::80)?/"
+            r"msdnmag/issues/(\d{2})/(\d{2})/([A-Za-z0-9_.-]+?)"
+            r"(?:/[A-Za-z0-9_.-]+\.aspx?)?$",
+            p.path,
+        )
+
+        if match:
+            slug = match.group(4).lower()
+            return ("wayback-mag",
+                    f"msdnmag-{match.group(2)}{match.group(3)}-{slug}")
+
         match = re.match(
             r"/web/(\d+)/https?://msdn\.microsoft\.com/en-us/library/"
             r"([a-z0-9]+)\.aspx$",
@@ -804,6 +820,9 @@ def process_url(url, have_ids, faillog, fetcher, index_by_id, dry_run=False,
     if kind in ("learn", "learn-magazine"):
         if pid in have_ids:
             return "skipped", None, ""
+    elif kind == "wayback-mag":
+        if "wbm:" + pid in have_ids:
+            return "skipped", None, ""
     else:
         if "wb:" + pid in have_ids:
             return "skipped", None, ""
@@ -864,7 +883,7 @@ def process_url(url, have_ids, faillog, fetcher, index_by_id, dry_run=False,
                 fh.write(f"{status}\t{url}\n")
         return "failed", None, str(status)
 
-    if kind == "wayback" and wayback_bad(content):
+    if kind in ("wayback", "wayback-mag") and wayback_bad(content):
         for timestamp in WAYBACK_FALLBACK_TIMESTAMPS[:wayback_retries]:
             other, _ = fetcher.get(wayback_retimestamp(url, timestamp),
                                    fetcher.base_delay)
@@ -896,6 +915,9 @@ def process_url(url, have_ids, faillog, fetcher, index_by_id, dry_run=False,
             bucket = "msdn-magazine"
         directory = os.path.join(LEARN_DIR, bucket)
         stored_id = pid
+    elif kind == "wayback-mag":
+        directory = os.path.join(CORPUS, "msdn-library", "msdn-magazine")
+        stored_id = "wbm:" + pid
     elif kind == "pinvoke":
         # pinvoke.net pages: store under corpus/pinvoke/{module}/{function}.html
         pinvoke_dir = os.path.join(CORPUS, "pinvoke")
