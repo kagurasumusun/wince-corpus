@@ -228,9 +228,39 @@ resume check) don't have to rescan ~120k files.
   than repaired, and the generation set -> `_WIN32_WCE` interval wiring is
   documented in the generator itself.  And the generated surface is now
   committed itself: **`winsur/` holds the unified include/def tree**
-  (568 header fragments carrying 4,678 derived `#define` lines, 266 module
+  (568 header fragments carrying 4,664 derived `#define` lines, 266 module
   `.def` worklists, manifest and report; regenerate with
   `python3 tools/gen-include-def.py --unified --out winsur`).
+  The fragments were restructured for readability: constants and
+  declarations that share one `_WIN32_WCE` guard now sit under **one batched
+  `#if` region** (one evidence comment per `#define`) instead of one guard
+  per line, values that differ per CE generation pool into **shared
+  `#if/#elif` chains** (the 37 VK_* codes of `windows.h` became a single
+  chain), a derived `#define` is suppressed when the page's own syntax
+  declaration already prints it (no more in-fragment duplicates), and the
+  header's display spelling is picked deterministically — regenerating is a
+  no-op in git.
+* 2026-10 (licence-vetted cross-check reference): the "what is still
+  missing" question gets an outside yardstick: **pinned mingw-w64 headers**
+  (commit `63ebe6cd`, tarball + licence texts under `sources/mingw-w64/`).
+  Per the project's rule for reference material, `PROVENANCE.md` there
+  documents the acquisition route (GitHub mirror codeload tarball of the
+  pinned commit), the publisher (the mingw-w64 project, deliberately *not*
+  Microsoft material and kept out of `corpus/`), and the licence scope read
+  from the files themselves: root `COPYING` is Zope Public License 2.1, with
+  per-file exceptions tallied over all 1,810 `include/` files (868 Public
+  Domain, 642 ZPL, 297 LGPL, 3 GPL — the LGPL/GPL files and the whole `ddk/`
+  tree are excluded from every report).  `tools/mingw_xcheck.py` parses the
+  Public Domain + ZPL files into **review-only** reports
+  (`knowledge/reports/mingw-w64-*.tsv` and `…-crosscheck.md`): 140,948
+  `#define` rows, of which 2,425 names overlap the CE-documented surface
+  (1,257 numeric agreements, no outright contradiction needing repair),
+  and **107,491 candidate names absent from the CE corpus** after removing
+  compiler-internal and include-guard artefacts — led by **6,572 `DISPID_*`
+  dispatch ids** (the corpus documents the MSHTML event handlers but never
+  their id numbers).  Nothing from this reference feeds any generator; a
+  listed name is a lead for further documentation searching, not a value to
+  adopt.
 * 2026-10 (the boundary, measured): the Windows CE / Win32 boundary is now
   explicit in the knowledge base — every entity carries `surface` (CE-only,
   shared, Win32 spelling of a CE name, catalog-only, or Win32-only; the last is

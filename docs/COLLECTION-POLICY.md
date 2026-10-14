@@ -171,6 +171,28 @@ than left to habit.  It has two accept paths, both equally isolated:
     either way it is evidence for review, never publishable documentation
     inside the CE surface.
 
+## The second third-party exception: mingw-w64 as review-only cross-check
+
+`sources/mingw-w64/` holds a pinned snapshot of the mingw-w64 headers
+(commit `63ebe6cd`).  Its licence was investigated before any use, per the
+project's rule for reference material — acquisition route (GitHub mirror
+codeload tarball of the pinned commit), publisher (the mingw-w64 project;
+not Microsoft material, kept out of `corpus/`), licence scope read from
+the files themselves (root COPYING is ZPL 2.1; per-file tally over `include/`
+recorded in its `PROVENANCE.md`: 868 Public Domain, 633 implicit + 9
+explicit ZPL, 297 LGPL, 3 GPL, the latter classes and the whole `ddk/`
+tree excluded from all output).  It answers one question: **which names
+exist that the CE corpus never documents**, and do values agree where both
+sides speak (over the 2,425 names both sides document: 1,257 numeric
+agreements, zero contradictions; 107,491 candidate leads absent from the
+CE surface, led
+by 6,572 `DISPID_*` ids).  The isolation is stricter than the pinvoke
+carve-out: `tools/mingw_xcheck.py` writes only *reports* under
+`knowledge/reports/` (each row attributed header:line of the pinned
+commit); nothing it parses is an input to `tools/build-kb.py`,
+`tools/gen-include-def.py` or `winsur/`.  A listed name is a lead for
+further documentation searching, never a value to adopt.
+
 ## Review 2026-10 (what was wrong, what changed)
 
 The corpus had grown by collecting whole Win32 *modules* instead of the shared
