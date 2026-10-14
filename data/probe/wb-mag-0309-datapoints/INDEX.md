@@ -1,0 +1,55 @@
+# probe: wb-mag-0309-datapoints
+
+- url: https://web.archive.org/web/20040402085031id_/http://msdn.microsoft.com:80/msdnmag/issues/03/09/DataPoints/default.aspx
+- mode: small
+- fetched: 2026-10-14 20:43:10 UTC
+- status: 200
+- bytes: 46,629
+- sha256: 2c125d0fd9142cf3aded83b935bec1af84d0bff6f163ceaa7b35c2b568566d77
+- stored: data/probe/wb-mag-0309-datapoints/212-default.aspx
+
+## same-host links seen (43, capped at 300)
+
+- /library/mnp/2/aspx/css.aspx
+- /msdnmag/css/mag.css
+- /library/toolbar/3.0/css.aspx
+- /library/toolbar/3.0/sitemap/en-us.mspx
+- /default.aspx
+- /developercenters/
+- /library/default.asp
+- /downloads/
+- /code/
+- /subscriptions/
+- /worldwide.aspx
+- /msdnmag/default.aspx
+- /msdnmag/issues/03/09/default.aspx
+- /msdnmag/find/default.aspx
+- /msdnmag/code.aspx
+- /msdnmag/backissues.aspx
+- /msdnmag/columns/default.aspx
+- /msdnmag/issues/04/05/default.aspx
+- /msdnmag/Subscribe.aspx
+- /msdnmag/service.aspx
+- /msdnmag/cdrom/2003/default.aspx
+- /msdnmag/staff.aspx
+- /msdnmag/submit.aspx
+- /msdnmag/write.aspx
+- /msdnmag/correct.aspx
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /newsgroups/default.aspx
+- /default.asp
+- /msdnmag/default.aspx
+- /msdnmag/issues/03/09/default.aspx
+- /library/en-us/sqlce/htm/_lce_configuring_security_for_connectivity.asp
+- /web/20040402085031id_/http:/msdn.microsoft.com:80/msdnmag/issues/03/09/DataPoints/figures.asp
+- /web/20040402085031id_/http:/msdn.microsoft.com:80/msdnmag/issues/03/09/DataPoints/figures.asp
+- /web/20040402085031id_/http:/msdn.microsoft.com:80/msdnmag/issues/03/09/DataPoints/figures.asp
+- /web/20040402085031id_/http:/msdn.microsoft.com:80/msdnmag/issues/03/09/DataPoints/figures.asp
+- /web/20040402085031id_/http:/msdn.microsoft.com:80/msdnmag/issues/03/09/DataPoints/figures.asp
+- /web/20040402085031id_/http:/msdn.microsoft.com:80/msdnmag/issues/03/09/DataPoints/figures.asp
+- /msdnmag/issues/03/09/default.aspx
+- /msdnmag/default.aspx
+- /msdnmag/subscribe.aspx
+- /isapi/gomscom.asp
+- /flash/
