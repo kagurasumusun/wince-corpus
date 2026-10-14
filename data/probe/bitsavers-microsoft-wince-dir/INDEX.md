@@ -2,7 +2,7 @@
 
 - url: https://bitsavers.trailing-edge.com/pdf/microsoft/windows_CE/
 - mode: small
-- fetched: 2026-10-14 07:48:45 UTC
+- fetched: 2026-10-14 07:55:04 UTC
 - status: 200
 - bytes: 5,449
 - sha256: d47a2273ea8ee674298bdc3140abde28afbc179fe35cc68b6bbb535b26d90e94
