@@ -1128,8 +1128,12 @@ def run_unified(args):
         header_cands = {}
         for key, items in header_stmts.items():
             books = {b for b in items if "/" in b}
-            printed = max((i for i in items if "/" not in i), key=len,
-                          default=key)
+            # deterministic display spelling: longest, then ASCII order --
+            # a set max() tie used to flip the fragment filename casing
+            # from run to run (PYTHONHASHSEED-dependent iteration).
+            spellings = sorted((i for i in items if "/" not in i),
+                               key=lambda s: (-len(s), s))
+            printed = spellings[0] if spellings else key
             newest = max((wce_interval(b) or (0, 0))[0] for b in books)
             header_cands[key] = {"printed": printed, "sets": books,
                                  "newest": newest}
