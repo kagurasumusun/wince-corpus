@@ -27,9 +27,12 @@ corpus/
     └── windows-mobile-6.5/   MSHelp-format Windows Mobile 6.5 topics
 ```
 
-Total: 121,039 pages = **105,103 CE pages + 10,657 .NET pages + 5,279
-Win32-common pages** (as of 2026-10-04; the April 2000 crawl is still
-running). The CE trees are `learn/`, `chm/`, `mvb/`, `kb/`, `site/` and
+Total: about 121,000 pages = about 105,000 CE pages + 10,657 .NET pages +
+about 5,280 Win32-common pages (2026-10-15 rough recount by filename;
+the April 2000 crawl is still running, so the CE number grows daily).
+The learn-side mslearn harvest is complete (both URL queues fully
+covered; see `queues/README.md`), and the 12-article MSDN Magazine
+CE audit is closed (`queues/to-fetch-msdn-magazine.txt`). The CE trees are `learn/`, `chm/`, `mvb/`, `kb/`, `site/` and
 `msdn-library/`; `dotnet/` is separated because it documents a layer on top of
 Windows CE, not the OS its include/def files describe — see
 `dotnet/README.md`. For provenance, see

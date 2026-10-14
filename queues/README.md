@@ -6,7 +6,7 @@ as `invalid` and skipped.
 
 | File | Lines | Target |
 |------|------:|--------|
-| `to-fetch-mslearn.txt` | 31,635 | `learn.microsoft.com/en-us/previous-versions/windows/embedded/<id>(v=…)` — the current harvest queue. |
+| `to-fetch-mslearn.txt` | 31,635 | `learn.microsoft.com/en-us/previous-versions/windows/embedded/<id>(v=…)`. **Done** (2026-10-15): final run stored the last uncovered row (`ms866183`, an `AppConfig.RefreshCache (PIA)` page now in `learn/unclassified/`), every other row skipped as already-stored. The superset enumeration `mslearn-embedded.txt` dry-runs to `would-fetch=0`, i.e. the whole namespace is covered. |
 | `mslearn-embedded.txt` | 38,726 | The original full enumeration of the same namespace (superset; first line is the namespace root). |
 | `wayback-msdn-2010.txt` | 31,388 | `web.archive.org/web/20100501000000/https://msdn.microsoft.com/en-us/library/<id>.aspx` — the May 2010 MSDN Library snapshot. **Done**: 161 stored, 31,226 already covered by the Learn harvest, 1 never captured (see below). |
 | `to-fetch-msdn-magazine.txt` | 8 | MSDN Magazine article pages on Windows CE (2000–2003 issues), harvested as Wayback captures of the pre-2008 MSDN Magazine trees: `msdnmag/issues/YY/MM/<slug>` (2001+) and `library/periodic/period00/<page>.htm` (2000, pre-issues scheme) (kind `wayback-mag`, ids `wbm:msdnmag-*`, stored under `corpus/msdn-library/msdn-magazine/`). **Done**: the 47-issue TOC audit found 12 CE rows and all 12 are stored, each title verified against the learn markdown TOCs. Audit trail + exclusions: queue file header. |
@@ -28,8 +28,9 @@ therefore finishes in seconds without making a request.
 
 ## Automatic run (`queues/auto-harvest.txt`)
 
-`.github/workflows/harvest.yml` also runs on a schedule: every day at 18:00 UTC
-(03:00 JST) it harvests the queue named in `queues/auto-harvest.txt`, up to the
+`.github/workflows/harvest.yml` used to run on a daily schedule; there is no
+schedule in the workflow at present, so the automatic lane fires only on a
+push of this file (or manually from the Actions tab). When it runs, it harvests the queue named in `queues/auto-harvest.txt`, up to the
 page budget on that line, then refreshes the indexes and commits. The same run
 starts whenever that file changes, which makes editing it the quickest way to
 start one — and `off` stops the automatic runs.
