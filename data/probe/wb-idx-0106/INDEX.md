@@ -1,0 +1,69 @@
+# probe: wb-idx-0106
+
+- url: https://web.archive.org/web/20020628142442id_/http://msdn.microsoft.com:80/msdnmag/issues/01/06/
+- mode: small
+- fetched: 2026-10-14 13:24:49 UTC
+- status: 200
+- bytes: 28,212
+- sha256: c5afd797fca289e135872425448bfd01737795d2e1ec784ed43eb258cf540729
+- stored: data/probe/wb-idx-0106/169-index
+
+## same-host links seen (57, capped at 300)
+
+- /web/20020628142442id_/http:/msdn.microsoft.com:80/msdnmag/issues/01/06/ie3.css
+- /library/shared/comments/css/down.css
+- /msdnmag/css/IE4.css
+- /library/flyoutmenu/default.css
+- /library/shared/adbar/css/default.css
+- /library/shared/eyebrow/css/default.css
+- /default.asp
+- /products/
+- /isapi/gosupport.asp
+- /isapi/gosearch.asp
+- /
+- /isapi/gomscom.asp
+- /default.asp
+- /library/default.asp
+- /downloads/default.asp
+- /code/default.asp
+- /sitemap/default.asp
+- /worldwide/default.asp
+- /isapi/gosearch.asp
+- /msdnmag/default.asp
+- /msdnmag/issues/01/06/default.asp
+- /msdnmag/issues/01/06/default.asp
+- /msdnmag/code.asp
+- /msdnmag/backissues.asp
+- /msdnmag/find.asp
+- /msdnmag/subscribe.asp
+- /msdnmag/service.asp
+- /msdnmag/submit.asp
+- /msdnmag/staff.asp
+- /msdnmag/write.asp
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /msdnmag/cdrom/2001/default.asp
+- /vstudio/partneroffer/
+- /default.asp
+- /msdnmag/default.asp
+- /msdnmag/issues/01/06/default.asp
+- /msdnmag/issues/01/06/sqlce/sqlce.asp
+- /msdnmag/issues/01/06/PPC/PPC.asp
+- /msdnmag/issues/01/06/FP/FP.asp
+- /msdnmag/issues/01/06/Matrix/Matrix.asp
+- /msdnmag/issues/01/06/Mobile/Mobile.asp
+- /msdnmag/issues/01/06/UseMon/UseMon.asp
+- /msdnmag/issues/01/06/ednote/ednote0106.asp
+- /msdnmag/issues/01/06/stuff/stuff0106.asp
+- /msdnmag/issues/01/06/web/web0106.asp
+- /msdnmag/issues/01/06/data/data0106.asp
+- /msdnmag/issues/01/06/cutting/cutting0106.asp
+- /msdnmag/issues/01/06/net/net0106.asp
+- /msdnmag/issues/01/06/Basics/Basics0106.asp
+- /msdnmag/issues/01/06/Hood/Hood0106.asp
+- /msdnmag/issues/01/06/c/c0106.asp
+- /msdnmag/issues/01/06/update/update0106.asp
+- /flash/
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
