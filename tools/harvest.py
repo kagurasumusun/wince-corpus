@@ -224,6 +224,21 @@ def dest_for(url):
         #   /web/<ts>/http://msdn.microsoft.com/msdnmag/issues/YY/MM/<slug>/<...>.asp
         # The magazine never moved to msdn "library" ids; its pages live
         # under per-issue directories.
+        # Year-2000 MSDN Magazine pages predate the issues/YY/MM tree and
+        # lived in the Library under /library/periodic/period00/<file>.htm
+        # (the issues/00* wildcard has zero captures).  Their issue is not in
+        # the URL, so month resolution happens in the queue file header; the
+        # pid keeps the year and the page stem.
+        match = re.match(
+            r"/web/(\d+)(?:id_)?/https?://msdn\.microsoft\.com(?::80)?/"
+            r"library/periodic/period00/([A-Za-z0-9_.-]+\.htm)$",
+            p.path,
+        )
+
+        if match:
+            return ("wayback-mag",
+                    "msdnmag-00xx-" + match.group(2).lower().removesuffix(".htm"))
+
         match = re.match(
             r"/web/(\d+)(?:id_)?/https?://msdn\.microsoft\.com(?::80)?/"
             r"msdnmag/issues/(\d{2})/(\d{2})/([A-Za-z0-9_.-]+?)"
