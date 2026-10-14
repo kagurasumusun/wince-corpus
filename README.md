@@ -240,27 +240,37 @@ resume check) don't have to rescan ~120k files.
   declaration already prints it (no more in-fragment duplicates), and the
   header's display spelling is picked deterministically — regenerating is a
   no-op in git.
-* 2026-10 (licence-vetted cross-check reference): the "what is still
-  missing" question gets an outside yardstick: **pinned mingw-w64 headers**
-  (commit `63ebe6cd`, tarball + licence texts under `sources/mingw-w64/`).
-  Per the project's rule for reference material, `PROVENANCE.md` there
-  documents the acquisition route (GitHub mirror codeload tarball of the
-  pinned commit), the publisher (the mingw-w64 project, deliberately *not*
-  Microsoft material and kept out of `corpus/`), and the licence scope read
-  from the files themselves: root `COPYING` is Zope Public License 2.1, with
-  per-file exceptions tallied over all 1,810 `include/` files (868 Public
-  Domain, 642 ZPL, 297 LGPL, 3 GPL — the LGPL/GPL files and the whole `ddk/`
-  tree are excluded from every report).  `tools/mingw_xcheck.py` parses the
-  Public Domain + ZPL files into **review-only** reports
-  (`knowledge/reports/mingw-w64-*.tsv` and `…-crosscheck.md`): 140,948
-  `#define` rows, of which 2,425 names overlap the CE-documented surface
-  (1,257 numeric agreements, no outright contradiction needing repair),
-  and **107,491 candidate names absent from the CE corpus** after removing
-  compiler-internal and include-guard artefacts — led by **6,572 `DISPID_*`
-  dispatch ids** (the corpus documents the MSHTML event handlers but never
-  their id numbers).  Nothing from this reference feeds any generator; a
-  listed name is a lead for further documentation searching, not a value to
-  adopt.
+* 2026-10 (licence-vetted cross-check references): the "what is still
+  missing" question gets outside yardsticks, each accepted only after a
+  licence investigation (acquisition route, publisher, licence scope,
+  usage decision — the project's rule for reference material, recording
+  everything in the source's `PROVENANCE.md`).  **Primary:
+  `sources/w32api-cegcc/`**, the CeGCC toolchain's w32api pinned at
+  commit `8e64b608` — the classic 32-bit Win32 API headers *adapted for
+  Windows CE itself* (`libce/`, `_WIN32_WCE` branches), released as
+  public domain with named permissive notices; **secondary:
+  `sources/mingw-w64/`** (commit `63ebe6cd`), 64-bit *desktop* material
+  — the wrong target for 32-bit CE — kept because it alone carries the
+  MSHTML dispatch ids, under ZPL 2.1 with per-file public-domain
+  exceptions (all 1,810 `include/` files tallied: 868 PD, 642 ZPL,
+  297 LGPL, 3 GPL — the LGPL/GPL files and the whole `ddk/` tree are
+  excluded from every report).  `tools/xcheck_references.py` re-counts
+  each reference's licence banner tally and writes **review-only**
+  reports (`knowledge/reports/xcheck-*.tsv` and `xcheck-summary.md`;
+  nothing feeds any generator, a listed name is a lead, never a value
+  to adopt).  Headlines: w32api-cegcc contributes 26,737 names and
+  128 linker export lists (`libce/coredll.def` and friends —
+  14,267 export rows cross-checked against `winsur/link/*.def`), with
+  **24,936 candidate names absent from the CE corpus** (10,828 export
+  leads); against the documented CE surface its 1,729 common names show
+  1,074 numeric agreements + 133 text-identical with exactly **two
+  flagged divergences**, and they are the cross-check proving itself:
+  `MAX_PATH` (CE docs print 128 — but on the DirectShow DVD
+  `Dvdata.h`/`UNICODE_PATH` pages, a local shadow of the desktop's 260)
+  and `HTTP_QUERY_MAX` (generational drift: CE pages print 75, the two
+  references print 45 and 78).  mingw-w64 adds the **6,572 `DISPID_*`
+  dispatch-id leads** (the corpus documents the MSHTML event handlers
+  but never their id numbers).
 * 2026-10 (the boundary, measured): the Windows CE / Win32 boundary is now
   explicit in the knowledge base — every entity carries `surface` (CE-only,
   shared, Win32 spelling of a CE name, catalog-only, or Win32-only; the last is

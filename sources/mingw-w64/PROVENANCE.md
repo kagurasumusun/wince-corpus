@@ -1,7 +1,15 @@
-# PROVENANCE — mingw-w64 headers (cross-check reference, REVIEW ONLY)
+# PROVENANCE — mingw-w64 headers (SECONDARY cross-check reference, REVIEW ONLY)
+
+**Status update (2026-10): this reference is SECONDARY.**  Windows CE is
+a 32-bit target and this package targets 64-bit desktop Windows — the
+wrong frame.  The primary cross-check reference is the CeGCC toolchain's
+CE-adapted w32api (`sources/w32api-cegcc/`).  mingw-w64 is kept because
+it alone carries the MSHTML dispatch ids (`mshtmdid.h`): reports derived
+from it are flagged accordingly and nothing it yields is ever treated as
+CE fact.
 
 Pinned reference material for the `winsur/` cross-check reports in
-`knowledge/reports/mingw-w64-*.tsv|.md`.  This file is the licence
+`knowledge/reports/xcheck-mingw-w64-*.tsv`.  This file is the licence
 investigation the project requires before any outside reference may be
 used: acquisition route, publisher, licence scope, usage decision.
 
