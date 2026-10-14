@@ -1,0 +1,70 @@
+# probe: wb-idx-0110
+
+- url: https://web.archive.org/web/20020814150611id_/http://msdn.microsoft.com:80/msdnmag/issues/01/10/
+- mode: small
+- fetched: 2026-10-14 13:25:02 UTC
+- status: 200
+- bytes: 27,884
+- sha256: e341d234c5b09ee7759b360f0174c6adeb39fcb8392fe6dd609f235fba77feab
+- title: MSDN Magazine Contents - October 2001
+- stored: data/probe/wb-idx-0110/173-index
+
+## same-host links seen (57, capped at 300)
+
+- /web/20020814150611id_/http:/msdn.microsoft.com:80/msdnmag/issues/01/10/ie3.css
+- /library/shared/comments/css/down.css
+- /msdnmag/css/IE4.css
+- /library/flyoutmenu/default.css
+- /library/shared/adbar/css/default.css
+- /library/shared/eyebrow/css/default.css
+- /default.asp
+- /products/
+- /isapi/gosupport.asp
+- /isapi/gosearch.asp
+- /
+- /isapi/gomscom.asp
+- /default.asp
+- /library/default.asp
+- /downloads/default.asp
+- /code/default.asp
+- /sitemap/default.asp
+- /worldwide/default.asp
+- /isapi/gosearch.asp
+- /msdnmag/default.aspx
+- /msdnmag/issues/01/10/default.asp
+- /msdnmag/issues/01/10/default.asp
+- /msdnmag/code.aspx
+- /msdnmag/backissues.aspx
+- /msdnmag/columns/default.aspx
+- /msdnmag/find/default.asp
+- /msdnmag/subscribe.aspx
+- /msdnmag/service.aspx
+- /msdnmag/submit.aspx
+- /msdnmag/staff.aspx
+- /msdnmag/write.aspx
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /msdnmag/cdrom/2001/default.aspx
+- /vstudio/partneroffer/
+- /default.asp
+- /msdnmag/default.asp
+- /msdnmag/issues/01/10/default.asp
+- /msdnmag/issues/01/10/complus/complus.asp
+- /msdnmag/issues/01/10/VFP7/VFP7.asp
+- /msdnmag/issues/01/10/MSLU/MSLU.asp
+- /msdnmag/issues/01/10/BizTalk/BizTalk.asp
+- /msdnmag/issues/01/10/Upload/Upload.asp
+- /msdnmag/issues/01/10/Cursor/Cursor.asp
+- /msdnmag/issues/01/10/Sentry/Sentry.asp
+- /msdnmag/issues/01/10/ednote/ednote0110.asp
+- /msdnmag/issues/01/10/stuff/stuff0110.asp
+- /msdnmag/issues/01/10/Flux/Flux0110.asp
+- /msdnmag/issues/01/10/web/web0110.asp
+- /msdnmag/issues/01/10/cutting/cutting0110.asp
+- /msdnmag/issues/01/10/Bugslayer/Bugslayer0110.asp
+- /msdnmag/issues/01/10/net/net0110.asp
+- /msdnmag/issues/01/10/c/c0110.asp
+- /flash/
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
