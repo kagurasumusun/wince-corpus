@@ -1,0 +1,70 @@
+# probe: wb-idx-0208
+
+- url: https://web.archive.org/web/20030709235949id_/http://msdn.microsoft.com:80/msdnmag/issues/02/08/
+- mode: small
+- fetched: 2026-10-14 13:25:38 UTC
+- status: 200
+- bytes: 22,897
+- sha256: afc4efab7fcb8702d8ff31b6700329073e6bc610708794687e77fedbec0ce08a
+- stored: data/probe/wb-idx-0208/183-index
+
+## same-host links seen (58, capped at 300)
+
+- /msdnmag/css/msdn.css
+- /library/mnp/2/aspx/css.aspx
+- /msdnmag/css/mag.css
+- /default.aspx
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /isapi/gosearch.asp
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /default.aspx
+- /developercenters/
+- /library/default.asp
+- /downloads/
+- /code/
+- /subscriptions/
+- /worldwide.aspx
+- /isapi/gosearch.asp
+- /msdnmag/default.aspx
+- /msdnmag/issues/02/08/default.aspx
+- /msdnmag/find/default.aspx
+- /msdnmag/code.aspx
+- /msdnmag/backissues.aspx
+- /msdnmag/columns/default.aspx
+- /msdnmag/issues/03/08/default.aspx
+- /msdnmag/Subscribe.aspx
+- /msdnmag/service.aspx
+- /msdnmag/cdrom/2002/default.aspx
+- /msdnmag/staff.aspx
+- /msdnmag/submit.aspx
+- /msdnmag/write.aspx
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /newsgroups/
+- /msdnmag/cdrom/2002/default.aspx
+- /default.asp
+- /msdnmag/default.aspx
+- /msdnmag/issues/02/08/default.aspx
+- /msdnmag/issues/02/08/VisualStudioforApplications/default.aspx
+- /msdnmag/issues/02/08/HTTPFilters/default.aspx
+- /msdnmag/issues/02/08/VBScriptandSQLServer2000/default.aspx
+- /msdnmag/issues/02/08/EscapefromDLLHell/default.aspx
+- /msdnmag/issues/02/08/ASPNETCommerceApp/default.aspx
+- /msdnmag/issues/02/08/SENS/default.aspx
+- /msdnmag/issues/02/08/NETReflection/default.aspx
+- /msdnmag/issues/02/08/EditorsNote/default.aspx
+- /msdnmag/issues/02/08/NewStuff/default.aspx
+- /msdnmag/issues/02/08/WebQA/default.aspx
+- /msdnmag/issues/02/08/XMLFiles/default.aspx
+- /msdnmag/issues/02/08/CuttingEdge/default.aspx
+- /msdnmag/issues/02/08/AdvancedBasics/default.aspx
+- /msdnmag/issues/02/08/ASPColumn/default.aspx
+- /msdnmag/issues/02/08/WickedCode/default.aspx
+- /msdnmag/issues/02/08/CQA/default.aspx
+- /msdnmag/issues/02/08/ResourceFile/default.aspx
+- /flash/
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
