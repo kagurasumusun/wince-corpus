@@ -1,0 +1,65 @@
+# probe: wb-idx-0205
+
+- url: https://web.archive.org/web/20080218162655id_/http://msdn.microsoft.com/msdnmag/issues/02/05/
+- mode: small
+- fetched: 2026-10-14 13:25:24 UTC
+- status: 200
+- bytes: 23,104
+- sha256: 86f0f106a0a592019b0d1f0b42741449198057222629732fb4b0310a9b24a2b0
+- stored: data/probe/wb-idx-0205/180-index
+
+## same-host links seen (53, capped at 300)
+
+- /library/mnp/2/aspx/css.aspx
+- /msdnmag/css/mag.css
+- /library/toolbar/3.0/css.aspx
+- /library/toolbar/3.0/sitemap/en-us.mspx
+- /default.aspx
+- /developercenters/
+- /library/default.asp
+- /downloads/
+- /howtobuy/
+- /subscriptions/
+- /worldwide.aspx
+- /msdnmag/default.aspx
+- /msdnmag/issues/02/05/default.aspx
+- /msdnmag/find/default.aspx
+- /msdnmag/code.aspx
+- /msdnmag/backissues.aspx
+- /msdnmag/columns/default.aspx
+- /msdnmag/rss/default.aspx
+- /msdnmag/Subscribe.aspx
+- /msdnmag/backissues/default.aspx
+- /msdnmag/service.aspx
+- /msdnmag/staff.aspx
+- /msdnmag/authors.aspx
+- /msdnmag/cdrom/default.aspx
+- /msdnmag/podcast/default.aspx
+- /msdnmag/submit.aspx
+- /msdnmag/write.aspx
+- /msdnmag/correct.aspx
+- /isapi/gomscom.asp
+- /default.aspx
+- /msdnmag/default.aspx
+- /msdnmag/issues/02/05/default.aspx
+- /msdnmag/subscribe.aspx
+- /msdnmag/issues/02/05/RoleSec/default.aspx
+- /msdnmag/issues/02/05/wsh/default.aspx
+- /msdnmag/issues/02/05/SQLXML3/default.aspx
+- /msdnmag/issues/02/05/ASPSec2/default.aspx
+- /msdnmag/issues/02/05/WMIMan/default.aspx
+- /msdnmag/issues/02/05/Crystal/default.aspx
+- /msdnmag/issues/02/05/web/default.aspx
+- /msdnmag/issues/02/05/xml/default.aspx
+- /msdnmag/issues/02/05/asp/default.aspx
+- /msdnmag/issues/02/05/data/default.aspx
+- /msdnmag/issues/02/05/cutting/default.aspx
+- /msdnmag/issues/02/05/Basics/default.aspx
+- /msdnmag/issues/02/05/Hood/default.aspx
+- /msdnmag/issues/02/05/c/default.aspx
+- /msdnmag/issues/02/05/Resource/default.aspx
+- /msdnmag/issues/02/05/ednote/default.aspx
+- /msdnmag/issues/02/05/Stuff/default.aspx
+- /isapi/gomscom.asp
+- /flash/
+- /library/toolbar/3.0/trademarks/en-us.mspx
