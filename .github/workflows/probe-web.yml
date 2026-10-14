@@ -40,8 +40,13 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Configure git (before the run; the probe commits per row)
+        run: |
+          git config user.name "wince-docs-corpus prober"
+          git config user.email "wince-corpus-harvester@users.noreply.github.com"
+
       - name: Run the probe
-        run: python3 tools/probe-web.py --queue "queues/${{ inputs.queue || 'probe-web.txt' }}" --out data/probe
+        run: python3 tools/probe-web.py --queue "queues/${{ inputs.queue || 'probe-web.txt' }}" --out data/probe --commit-every-row
 
       - name: Commit the report
         run: |

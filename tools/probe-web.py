@@ -60,6 +60,14 @@ def main():
                          "'budget-exhausted' instead of fetching, so the "
                          "run always terminates (a hung host must not hold "
                          "the queue for an hour)")
+    ap.add_argument("--row-timeout", type=int, default=240,
+                    help="hard cap seconds per row's fetch (SIGALRM); "
+                         "a trickling mirror that never ends a read "
+                         "otherwise burns the whole job")
+    ap.add_argument("--commit-every-row", action="store_true",
+                    help="git add/commit/push after each answered row, so "
+                         "a hung later row does not lose the run's "
+                         "progress")
     ap.add_argument("--refresh-all", action="store_true",
                     help="re-probe rows whose earlier probe already "
                          "succeeded (default: skip them -- a probe answer "
@@ -84,6 +92,39 @@ def main():
     started = time.monotonic()
     def _budget_dead():
         return time.monotonic() - started >= args.max_seconds
+
+    class _RowTimeout(BaseException):
+        pass  # must escape fetcher.get's 'except Exception' retry loop
+
+    def _row_alarm(signum, frame):
+        raise _RowTimeout()
+
+    import subprocess as _sp
+
+    def _commit_row(name):
+        if not args.commit_every_row:
+            return
+        try:
+            _sp.run(["git", "add", args.out, "sources/bitsavers-microsoft"],
+                    cwd=ROOT, check=True, capture_output=True)
+            _sp.run(["git", "diff", "--staged", "--quiet"],
+                    cwd=ROOT, check=False, capture_output=True)
+            r = _sp.run(["git", "diff", "--staged", "--name-only"],
+                        cwd=ROOT, check=True, capture_output=True, text=True)
+            if not r.stdout.strip():
+                return
+            _sp.run(["git", "commit", "-q", "-m",
+                     f"probe: {name}", "--",
+                     os.path.join(args.out, name),
+                     "sources/bitsavers-microsoft"],
+                    cwd=ROOT, check=True, capture_output=True)
+            _sp.run(["git", "pull", "--rebase"], cwd=ROOT, check=True,
+                    capture_output=True)
+            _sp.run(["git", "push"], cwd=ROOT, check=True,
+                    capture_output=True)
+        except _sp.CalledProcessError as e:
+            print(f"[probe] row-commit failed for {name}: "
+                  f"{e.stderr.decode(errors='replace')[:200]}", flush=True)
     summary = []
     for ordinal, (name, url, mode) in enumerate(rows, 1):
         target_dir = os.path.join(out_root, name)
@@ -111,7 +152,14 @@ def main():
             print(f"[probe] {name}: budget-exhausted (row recorded as "
                   "skipped)", flush=True)
             continue
-        body, status = fetcher.get(url, args.delay)
+        signal.signal(signal.SIGALRM, _row_alarm)
+        signal.alarm(args.row_timeout)
+        try:
+            body, status = fetcher.get(url, args.delay)
+        except _RowTimeout:
+            body, status = None, f"fetch-aborted(>{args.row_timeout}s)"
+        finally:
+            signal.alarm(0)
         head = base_head + [f"- status: {status}"]
         if body is None:
             head += ["", "**fetch failed** (see status)", ""]
@@ -199,6 +247,7 @@ def main():
         with open(os.path.join(target_dir, "INDEX.md"), "w",
                   encoding="utf-8") as fh:
             fh.write("\n".join(head))
+        _commit_row(name)
         summary.append(f"{name}\t{status}\t"
                        f"{len(body) if body else 0}")
         print(f"[probe] {name}: {status} "
