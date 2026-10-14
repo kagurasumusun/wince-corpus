@@ -1,0 +1,68 @@
+# probe: wb-idx-0209
+
+- url: https://web.archive.org/web/20030618172416id_/http://msdn.microsoft.com:80/msdnmag/issues/02/09/
+- mode: small
+- fetched: 2026-10-14 13:25:41 UTC
+- status: 200
+- bytes: 22,149
+- sha256: 63ebc4505db28edcf0b30dd3f8c079526fbffccf7bde00b4b52a28030f2fae3a
+- stored: data/probe/wb-idx-0209/184-index
+
+## same-host links seen (56, capped at 300)
+
+- /msdnmag/css/msdn.css
+- /library/mnp/2/aspx/css.aspx
+- /msdnmag/css/mag.css
+- /default.aspx
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /isapi/gosearch.asp
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /default.aspx
+- /developercenters/
+- /library/default.asp
+- /downloads/
+- /code/
+- /subscriptions/
+- /worldwide.aspx
+- /isapi/gosearch.asp
+- /msdnmag/default.aspx
+- /msdnmag/issues/02/09/default.aspx
+- /msdnmag/find/default.aspx
+- /msdnmag/code.aspx
+- /msdnmag/backissues.aspx
+- /msdnmag/columns/default.aspx
+- /msdnmag/issues/03/08/default.aspx
+- /msdnmag/Subscribe.aspx
+- /msdnmag/service.aspx
+- /msdnmag/cdrom/2002/default.aspx
+- /msdnmag/staff.aspx
+- /msdnmag/submit.aspx
+- /msdnmag/write.aspx
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /newsgroups/
+- /msdnmag/cdrom/2002/default.aspx
+- /default.asp
+- /msdnmag/default.aspx
+- /msdnmag/issues/02/09/default.aspx
+- /msdnmag/issues/02/09/SecurityTips/default.aspx
+- /msdnmag/issues/02/09/SecurityinNET/default.aspx
+- /msdnmag/issues/02/09/SecurityinIIS60/default.aspx
+- /msdnmag/issues/02/09/Passport/default.aspx
+- /msdnmag/issues/02/09/HTTPPipelines/default.aspx
+- /msdnmag/issues/02/09/ASPNETHashAlgorithms/default.aspx
+- /msdnmag/issues/02/09/EditorsNote/default.aspx
+- /msdnmag/issues/02/09/NewStuff/default.aspx
+- /msdnmag/issues/02/09/WebQA/default.aspx
+- /msdnmag/issues/02/09/XMLFiles/default.aspx
+- /msdnmag/issues/02/09/CuttingEdge/default.aspx
+- /msdnmag/issues/02/09/AdvancedBasics/default.aspx
+- /msdnmag/issues/02/09/NET/default.aspx
+- /msdnmag/issues/02/09/CQA/default.aspx
+- /msdnmag/issues/02/09/ResourceFile/default.aspx
+- /flash/
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
