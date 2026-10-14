@@ -1,0 +1,353 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.0 Transitional//EN">
+<!-- saved from url=(0060)http://www.sqlmag.com/Articles/Index.cfm?ArticleID=9004&pg=2 -->
+<HTML><Head>
+<META NAME="DESCRIPTION" CONTENT="MSDN Library - Periodicals - 2000.  Excerpt:  This article may contain URLs that were valid when originally published, but now link to sites or pages that no longer exist.">
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso8859-1">
+<meta name="MS.LOCALE" content="EN-US"><TITLE>SQL Server Magazine Online - An Early Look: SQL Server 2000 Windows CE</TITLE>
+<META content="text/html; charset=windows-1252" http-equiv=Content-Type>
+<META NAME="DESCRIPTION" CONTENT="MSDN Library - Periodicals - 2000. Excerpt:SQL Server and Database,Windows CE,SQL Server 2000,Microsoft SQL Server," 
+name=keywords>
+<META 
+content="This pint-sized application gives mobile users powerful database functionality." >
+
+<META content="MSHTML 5.00.2920.0" name=GENERATOR><!--CSS_START-->
+<style>@import url(/library/msdn_ie4.css);</style>
+<link disabled rel="stylesheet" href="/library/msdn_ie3.css">
+<!--CSS_END-->
+</HEAD>
+<BODY>
+	
+<!--TOOLBAR_START-->
+<!--TOOLBAR_EXEMPT-->
+<!--TOOLBAR_END-->
+
+<!--SYNC_START-->
+<script language="JavaScript" src='/library/synch.js'></script>
+<!--SYNC_END-->
+<P>
+<font FACE="Verdana, Arial, Helvetica" size="1">This article may contain  URLs that were valid when originally published,  but now link to sites or  pages that no longer exist. To maintain the flow of the article, we've  left these URLs in the text, but disabled the links.</font><P>
+<hr color=000080 width=50% align="left">
+<a href="http://www.sqlmag.com"><img src="sqlmag.gif" border=0></a>    <P>  
+<FONT color=#990033 face="Arial, Helvetica" size=3><B>  
+Features</B></FONT><BR><FONT face="Arial, Helvetica" size=5><B>An Early Look: SQL Server 2000 Windows 
+                  CE</B></FONT><BR><FONT color=#999999 
+            face="Arial, Helvetica" size=3><B>Pint-sized application gives mobile users 
+                  powerful database functionality</B></FONT></P>
+
+
+                <b>By Morris Lewis</b>
+                  <P>This architecture also handles changes in network 
+                  connectivity. If you lose or remove network connectivity 
+                  during synchronization, when you regain connectivity, the 
+                  Client and Server Agents pick up where they left off in the 
+                  synchronization process. In addition, the Server Agent won't 
+                  synchronize with the publisher until all changes have been 
+                  sent from the subscriber.</P>
+                  <P>The key to implementing merge replication is understanding 
+                  how your application will use the data in SQL Server CE. The 
+                  easiest way to handle asynchronous updates is to partition the 
+                  publications so that each subscriber receives only the data 
+                  for which it is responsible. Revisiting the sales 
+                  representative example, each salesperson's Windows CE device 
+                  would subscribe to a publication that holds the data that is 
+                  specific to that person's customers. SQL Server CE also 
+                  supports dynamic filters that let each client receive a subset 
+                  of the publication's data, so that each salesperson sees only 
+                  his or her data. Another feature of merge replication is that 
+                  you can create a custom conflict resolver that applies your 
+                  company's rules to the changes. For example, a sales manager's 
+                  changes could override changes by all other salespeople, or 
+                  exceeding a credit limit could invalidate an entire order.</P>
+                  <P>An alternative to merge replication is RDA, in which the 
+                  client initiates and controls the flow of data instead of 
+                  depending on a publisher or distributor to coordinate updates. 
+                  The most significant difference between merge replication and 
+                  RDA is that RDA supports getting data from SQL Server 2000, 
+                  7.0, and 6.5, whereas merge replication supports only SQL 
+                  Server 2000 publishers.</P>
+                  <P>With RDA, the SQL Server CE Server Agent acts as the 
+                  intermediary between SQL Server CE and a SQL Server 2000, 7.0, 
+                  or 6.5 server. The client application running on Windows CE 
+                  uses the RDA object, which is an ActiveX component, to pull 
+                  the contents of a table down to the client and push changes 
+                  back to the server. If you need to send SQL statements to the 
+                  server, you can use RDA's SubmitSQL method.</P>
+                  <P>Using an RDA object is relatively simple. The InternetURL 
+                  property stores the address of the IIS server that has the SQL 
+                  Server CE Server Agent. The Pull method takes the names of a 
+                  table in a local database, a SELECT statement, and an OLE DB 
+                  connection string as parameters, contacts the SQL Server CE 
+                  Server Agent, which executes the query on the server specified 
+                  in the connection string, and stores the result set in the 
+                  local table, which the Pull method creates for you. If your 
+                  program specifies that it wants to push changes back to the 
+                  server, you can turn on tracking when you call the Pull 
+                  method. Calling the Push method with the local table name 
+                  sends the changes back to the original source table.</P>
+                  <P>Whether you choose merge replication or RDA depends mainly 
+                  on how your users will use data on the Windows CE device. 
+                  Merge replication is well suited to environments in which 
+                  multiple people through multiple applications can update 
+                  tables. If the data on the server mostly supports a Windows CE 
+                  application that operates independently of other users, RDA is 
+                  probably the best choice. Merge replication requires that the 
+                  server keep a change history; RDA manages changes on the 
+                  client device. Merge replication lets SQL Server CE read and 
+                  update multiple tables at the same time; RDA works on a single 
+                  table at a time, so an application would need to call the Pull 
+                  and Push methods for each table it uses.</P>
+                  <h3>Prime Performance </h3>SQL Server 
+                  CE runs on any platform that Windows CE 2.x supports, 
+                  including the H/PC and PPC platforms, or that Windows CE 3.0 
+                  supports, including the Pocket PC platform. RDA and merge 
+                  replication run on all Windows CE versions and work with IIS 
+                  4.0 running on Windows NT Server 4.0 with Service Pack 5 (SP5) 
+                  and IIS 5.0 running on all versions of Windows 2000. All of 
+                  these features run on embedded platforms as well.</P>
+                  <P>eMbedded Visual Tools supports all CPUs on which Windows CE 
+                  2.x and 3.0 run, and interactive debugging works with serial 
+                  port, IrDA, USB, and network connections. ADOCE 3.1 and ADOXCE 
+                  3.1 are new versions that specifically add support for SQL 
+                  Server CE. ADOCE 3.0 will not work with SQL Server CE.</P>
+                  <P>Microsoft's early benchmarks show that the alpha version of 
+                  SQL Server CE is substantially faster than Windows CE's data 
+                  provider, CEDB. On a Jornada 820, which is a handheld platform 
+                  and has a StrongARM 1100 CPU running at 190MHz, SQL Server 
+                  2000 CE created four indexes in 24.244 seconds, whereas CEDB 
+                  took 6261.32 seconds—almost 30 times longer. Loading 15K of 
+                  data took 19.092 seconds for SQL Server CE and 170.28 seconds 
+                  for CEDB. A seek update without an index took 17.804 seconds 
+                  on SQL Server CE and 543.2 seconds for CEDB. Most tests showed 
+                  CEDB taking anywhere from 10 to 30 times longer than SQL 
+                  Server CE to perform the same task.</P>
+                  <P>The new Compaq IPaq H3600, which should be available at 
+                  press time, will feature a 206MHz processor in a palm-sized 
+                  device. Although the Compaq processor is slower than most of 
+                  today's desktops, it's fast enough to provide good response 
+                  time for applications that run on Windows CE. Even my HP 
+                  Jornada 545, which has a 131MHz CPU, offers reasonable 
+                  response times. Given Microsoft's track record, the final 
+                  release will likely beat the performance of the alpha 
+                  release.</P>
+                  <h3>Get Ready </h3>At the Windows DNA 
+                  2000 Readiness Conference in March, Microsoft showcased an 
+                  example of a bread bakery in Mexico City. Each delivery person 
+                  has a Windows CE device with an application that lets the 
+                  delivery person take orders and note inventory when visiting 
+                  client stores. When the salesperson returns to the bakery, the 
+                  wireless network card connects to the network, and SQL Server 
+                  CE replicates all the changes to the bakery's order and 
+                  inventory databases. The orders flow into the production 
+                  system database, which determines how many loaves of bread the 
+                  bakery will bake the next day. At the same time, new delivery 
+                  instructions download to the delivery person's device. The 
+                  process occurs automatically as soon as the delivery person 
+                  comes in range of the bakery's wireless network.</P>
+                  <P>Such scenarios offer great promise for the future of mobile 
+                  computing. Laptop computers have enabled many companies to 
+                  make their databases more mobile, but even the smallest laptop 
+                  is heavy and expensive compared with most Windows CE devices. 
+                  In June, IBM announced that it increased the capacity of its 
+                  tiny Type II Compact Flash form factor hard disk to 1GB. 
+                  Because 32MB of RAM is the standard on the palm-sized 
+                  platforms and 64MB of RAM is common on the handheld platform, 
+                  the addition of a 1GB hard disk makes Windows CE devices 
+                  viable database application platforms. And with the 
+                  combination of eMbedded Visual Tools and SQL Server CE, 
+                  developers can create database applications that run on 
+                  smaller, lighter, more portable devices than 
+                  laptops.</P>
+              
+
+                  <P>In this age of rapidly proliferating data stored on large 
+                  arrays of disks, the idea of working with a database measured 
+                  only in tens of megabytes and stored on a device that fits in 
+                  the palm of your hand might seem strange. However, Microsoft 
+                  built SQL Server 2000 Windows CE Edition (which Microsoft 
+                  expects to release later this year) specifically for managing 
+                  small databases on portable devices. With SQL Server CE, your 
+                  users can take a piece of the company database with them in a 
+                  mobile device and access the database with familiar tools. And 
+                  SQL Server CE is many times faster than CEDB, the database 
+                  system built in to Windows CE devices today. Let's explore SQL 
+                  Server CE's features and see where you might put them to use 
+                  in your organization.</P>
+                  <h3>Programming for the Enterprise 
+                  </h3>What can a Windows CE-based database offer that 
+                  other solutions can't? SQL Server CE lets users who need to 
+                  access only small parts of a larger database work with a 
+                  subset of data on Windows CE. In many cases, SQL Server CE and 
+                  a mobile device can replace an application that currently runs 
+                  on a laptop computer.</P>
+                  <P>Consider salespeople who spend their working hours on the 
+                  road visiting customers. Sales representatives don't need 
+                  access to the entire company data warehouse. All they really 
+                  need is customer information, customer order and payment 
+                  history, and inventory information. In most cases, you can 
+                  measure the total amount of data that a salesperson needs on a 
+                  given day in thousands or millions—not billions—of bytes. In 
+                  addition, many sales transactions involve using forms—usually 
+                  paper forms—to gather information about customers and orders. 
+                  When the salespeople return to the office, they (or their 
+                  assistants) have to enter the form information into company 
+                  databases. SQL Server CE lets you give salespeople the data 
+                  they need in a format that integrates well with SQL Server 
+                  2000 and existing applications.</P>
+                  <P>A Windows CE-based solution might answer mobile users' 
+                  needs for data access and integration, what does it mean for 
+                  the SQL Server programmers who have to build and maintain such 
+                  a solution? The development tools available for Windows CE 
+                  haven't been as easy to use as the tools for developing 
+                  desktop applications. Database performance also has been 
+                  unsatisfactory. Two changes to the Windows CE development 
+                  environment have fixed these problems.</P>
+                  <P>In June, Microsoft released the new eMbedded Visual Tools 
+                  3.0 suite as a replacement for the previous set of tools, 
+                  which were secondary additions to Visual Studio 6.0. Now, you 
+                  can develop applications for Windows CE by using versions of 
+                  Visual C++ (VC++) and Visual Basic (VB) specifically designed 
+                  for that OS. eMbedded Visual C++ includes versions of both the 
+                  Microsoft Foundation Classes (MFC) and Active Template Library 
+                  (ATL) for Windows CE. eMbedded Visual Basic (eVB) is a port of 
+                  the VBScript runtime engine. In both cases, the integrated 
+                  development environment varies only slightly from the 
+                  environment in Visual Studio 6.0. I found the tools simple 
+                  enough to use that I had a sample Windows CE program compiled, 
+                  transferred, and running on my Windows CE 3.0 device in about 
+                  10 minutes. The SQL Server CE sample programs took only 
+                  another 10 minutes.</P>
+                  <P>The combination of eMbedded Visual Tools and SQL Server CE 
+                  lets database application programmers reuse existing code from 
+                  desktop VB or VC++ applications or build new code without 
+                  having to learn a new set of skills. SQL Server programmers 
+                  will find only a few SQL syntax differences between SQL Server 
+                  2000 and SQL Server CE. The standard SELECT, INSERT, UPDATE, 
+                  and DELETE statements that run on SQL Server 2000 run on SQL 
+                  Server CE, as do most data definition language statements, 
+                  such as CREATE TABLE, ALTER TABLE, and DROP TABLE. SQL Server 
+                  CE supports inner and outer joins, GROUP BY/HAVING clauses, 
+                  ORDER BY clauses, aggregate functions, and inner queries, as 
+                  well as most SQL Server 2000 data types. However, SQL Server 
+                  CE doesn't support SQL Server 2000's ability to use the 
+                  results of a query in the FROM clause or to use data pulled 
+                  from a remote server.</P>
+                  <P>Technically, SQL Server CE is an OLE DB provider, not a 
+                  service like SQL Server 2000 or SQL Server 7.0. But SQL Server 
+                  CE supports transactions, multicolumn indexes, seek on index, 
+                  and referential integrity. The initial release doesn't support 
+                  views, stored procedures, triggers, or T-SQL, but it does 
+                  offer cost-based query optimization as SQL Server 2000 does. 
+                  Each table can have as many as 32 indexes, which should be 
+                  more than enough for the kinds of applications you would run 
+                  on a Windows CE device. The CE edition features almost all the 
+                  SQL Server 2000 constraints, including the identity, default, 
+                  check, and Declarative Referential Integrity (DRI) 
+                  constraints. Although SQL Server CE doesn't implement SQL 
+                  Server 2000's database access and object security model, it 
+                  does offer password access to the database. You can code the 
+                  database password into the application to control what users 
+                  can do with the data, or you can let users enter their 
+                  password at runtime. For high-security applications, you can 
+                  encrypt the entire database file with 128-bit encryption.</P>
+                  <P>SQL Server CE is small—approximately 700K for Intel 
+                  StrongARM x86 architecture CPUs and a little more than 1MB for 
+                  other CPUs. To keep SQL Server CE small, Microsoft left out 
+                  some SQL Server 2000 features, usually choosing to exclude 
+                  those that were redundant or didn't apply to the Windows CE 
+                  environment. For example, SQL Server CE supports only the 
+                  Unicode character types nchar, nvarchar, and ntext because 
+                  Windows CE is a Unicode-only OS. In addition, the CE edition 
+                  doesn't support variations on main data types, such as 
+                  smalldatetime, smallmoney, and timestamp. The "small" versions 
+                  convert to the bigger types—datetime and money, 
+                  respectively—but the timestamp data type just doesn't exist. 
+                  However, SQL Server 2000 CE implements all other important 
+                  data types, including integer, numeric, float, real, double, 
+                  bit, bigint, binary, and uniqueidentifier.</P>
+                  <P>Client application programmers also will find few 
+                  differences between SQL Server 2000 and the CE edition. 
+                  Windows CE applications use ADOCE 3.1 and OLEDBCE 3.1 to 
+                  access SQL Server CE databases. In addition, Microsoft has 
+                  extended ADOXCE support so that programmers can create SQL 
+                  Server CE databases, tables, and so on by using ActiveX 
+                  Extensibility Objects (ADOX) instead of SQL data definition 
+                  statements. Perhaps the main difference between ADOCE and ADO 
+                  object models is that ADOCE doesn't offer the Command or the 
+                  Parameter object.</P>
+                  <h3>Keeping Data in Sync 
+                  </h3>Programming ease is only one factor to consider 
+                  when you evaluate SQL Server CE. Another, perhaps more 
+                  important, factor is the ease with which you can keep the 
+                  databases on the Windows CE devices synchronized with your 
+                  main server. SQL Server CE has two ways to implement 
+                  synchronization: merge replication and Remote Data Access 
+                  (RDA).</P>
+                  <P>Since merge replication appeared in SQL Server 7.0, I've 
+                  considered it a solution looking for a problem. In the past 
+                  two years, none of my 200-plus students and none of my clients 
+                  has found merge replication useful. However, merge replication 
+                  is ideal for mobile database applications.</P>
+                  <P>Merge replication manages changes to data when subscribers 
+                  either are disconnected from the network or operate 
+                  independently of each other and the publisher. This 
+                  replication model is perfect for databases on Windows CE 
+                  devices because Windows CE is designed to adapt to changing 
+                  hardware and connectivity configurations. For example, my 
+                  Hewlett-Packard Jornada 545 can synchronize with my desktop 
+                  computer through the serial port, the IrDA port, the USB port, 
+                  or the Compact Flash Ethernet adapter, depending on which 
+                  method is available. If I used a wireless network card, 
+                  whenever the device was in range, it would automatically 
+                  connect to my network. In its initial release, SQL Server CE 
+                  supports replication through both wired and wireless LAN/WAN 
+                  connectivity. A later release will support replication through 
+                  a desktop's network connectivity.</P>
+                  <P>SQL Server CE's merge replication uses Microsoft IIS as the 
+                  conduit to a SQL Server 2000 server. Because Windows CE 
+                  supports only Windows NT client-side security, SQL Server CE 
+                  uses IIS's security mechanisms to validate logins. If you need 
+                  complete security for both data and passwords, SQL Server CE 
+                  supports Secure Sockets Layer (SSL) encryption between the 
+                  Windows CE device and IIS, with IIS acting as a proxy for 
+                  validating the user's identity and securing the data transfer 
+                  to SQL Server CE.</P>
+                  <P>Implementing SQL Server CE merge replication is a topic 
+                  worthy of another article, but let's look briefly at the basic 
+                  architecture. An Internet Server API (ISAPI) DLL, called the 
+                  SQL Server CE Server Agent, runs on the IIS server. That agent 
+                  communicates both with the SQL Server CE Client Agent, which 
+                  runs on the Windows CE device, and the SQL Server 2000 
+                  publisher. The Client Agent sends a list of changes to the 
+                  Server Agent, which stores them in a file on the IIS server. 
+                  When the Client Agent has sent all the changes, the Server 
+                  Agent reconciles the changes with the data on the publisher by 
+                  using either the default or a custom conflict-resolution 
+                  mechanism. At the end of the reconciliation process, the 
+                  Server Agent reads all changes on the publisher that have 
+                  occurred since the last synchronization and stores the changes 
+                  in another file, which it sends to the client. The SQL Server 
+                  CE Client Agent then applies the changes one by one to the 
+                  local database.</P>
+
+<table><TR>
+	<td COLSPAN="3" WIDTH="100%" VALIGN="top" ALIGN="center" BGCOLOR="ffffff"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<FONT FACE="ms sans serif, arial" SIZE="1">
+<A HREF="http://www.win2000mag.net/about/feedback.cfm" target="_new">Bugs, comments, suggestions</A> |
+	<A HREF="http://www.win2000mag.net/about/legal.cfm">Legal</A> & <A HREF="http://www.win2000mag.net/about/privacy.cfm">Privacy</A> Notices |
+	<A HREF="http://www.win2000mag.net/MediaKit/" target="_new">Advertising</A>
+	<BR>
+	&copy; 2000 Duke Communications
+	International, Inc. All rights reserved.</FONT>
+	</FONT></TD>
+</TR></TBODY></TABLE><!-- end/copyright -->
+<!--FOOTER_START-->
+<P>&nbsp;</P>
+<hr width='90%' size='1' align='left'>
+<FONT SIZE=1>
+<P><i><a href="/siteguide/write-us.asp" TARGET="_top">Send feedback</a> on this article.&nbsp;&nbsp;Find <a href="/isapi/gosupport.asp?TARGET=/servicedesks/msdn/" TARGET="_top">support options</a></i>.</P>
+<P><A HREF="/isapi/gomscom.asp?TARGET=/info/cpyright.htm" TARGET="_top">&#169; 2000 Microsoft Corporation. All rights reserved. Terms of use.</A></P>
+</FONT>
+<!--FOOTER_END-->
+
+</BODY></HTML>
