@@ -1,0 +1,318 @@
+
+<HTML>
+<Head>
+<META NAME="DESCRIPTION" CONTENT="MSDN Library - Periodicals - 2000.  Excerpt:  This article may contain URLs that were valid when originally published, but now link to sites or pages that no longer exist.">
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso8859-1">
+<meta name="MS.LOCALE" content="EN-US">
+<META NAME="DESCRIPTION" CONTENT="MSDN Library - Periodicals - 2000.  Excerpt:  This article may contain URLs that were valid when originally published, but now link to sites or pages that no longer exist.">
+
+<meta http-equiv="Content-Type" content="text/html; charset=iso8859-1">
+<meta name="MS.LOCALE" content="EN-US">
+<TITLE>Windows CE Web Server: Using Web Tools to Monitor and Manage Embedded Devices -- MSDN Magazine, May 2000</TITLE>
+<META NAME="msdnID" CONTENT="_606593">
+<META NAME="MS-GlueFolder" CONTENT="3532">
+<META NAME="DESCRIPTION" CONTENT="MSDN Library - Periodicals - 2000. Excerpt: When it ships, Windows CE 3.0 is expected to include Web services via the Windows CE Web Server. This new component of the Windows CE operating system will allow developers to share data or monitor and manage devices that are running Windows CE&#151;whether they are handheld PCs or embedded in devices such as gas pumps or refrigerators. This article explains how the Windows CE Web Server component can be included in the operating system for a given device. We’ll also show you how the Web server features you’re familiar with from Microsoft Internet Information Services are implemented in the Windows CE Web Server.">
+<META NAME="ms.locale" CONTENT="EN-US">
+<META HTTP-EQUIV="Content-Type" CONTENT="text/html; charset=iso8859-1">
+
+
+
+<!--CSS_START-->
+<style>@import url(/library/msdn_ie4.css);</style>
+<link disabled rel="stylesheet" href="/library/msdn_ie3.css">
+<!--CSS_END-->
+
+</HEAD>
+
+<BODY>
+
+<script language=javascript src='/library/toolbar/tgar.js'></script>
+	
+<!--TOOLBAR_START-->
+<!--TOOLBAR_EXEMPT-->
+<!--TOOLBAR_END-->
+
+<!--SYNC_START-->
+<script language="JavaScript" src='/library/synch.js'></script>
+<!--SYNC_END-->
+<P>
+
+<P>
+<font FACE="Verdana, Arial, Helvetica" size="1">This article may contain URLs that were valid when originally published, but now link to sites or pages that no longer exist. To maintain the flow of the article, we've  left these URLs in the text, but disabled the links.</font><HR color=000080 width=50% align="left">
+<img BORDER="0" SRC="mmlogosm.gif" ALT="MIND">
+
+
+
+<TABLE BORDER="0" CELLPADDING="0" CELLSPACING="0"  ALIGN="center">
+<TR>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<H1>Windows CE Web Server: Using Web Tools to Monitor and Manage Embedded Devices</H1>
+</FONT></FONT></TD>
+</TR>
+<TR>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+Leonid Braginski and Matthew Powell
+</FONT></FONT></TD>
+</TR>
+<TR>
+<td HEIGHT="15"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+</FONT></FONT></TD>
+</TR>
+<TR>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+
+<TABLE BORDER="0"  BGCOLOR="#ffffff" CELLPADDING="3" CELLSPACING="0">
+<TR>
+<td BGCOLOR="#ffffff"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+This article assumes you’re familiar with ASP, IIS, ISAPI
+</FONT></FONT></TD>
+</TR>
+<TR>
+<td BGCOLOR="#336699" VALIGN="bottom"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+
+<font color="#ffffff">Level of Difficulty&nbsp;&nbsp;&nbsp;</font>
+<FONT COLOR="#999999">1</FONT>&nbsp;&nbsp;
+<FONT COLOR="#ffffff">2</FONT>&nbsp;&nbsp;
+<FONT COLOR="#999999">3</FONT>&nbsp;
+</FONT></FONT></TD>
+</TR>
+<TR>
+<td BGCOLOR="#99CCFF"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+Code for this article: <a href="WinCEISAPI.exe">WinCEISAPI.exe (43KB)</a>
+
+</FONT></FONT></TD>
+</TR>
+<TR>
+<td BGCOLOR="#ffffff"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<b>Matthew Powell</B> and <B>Leonid Braginski</B> are the authors of <I>Running Microsoft Internet Information Server</I> (Microsoft Press, 1998) and work for Microsoft on the WinInet/ISAPI Developer Support team.
+<P>When it ships, Windows CE 3.0 is expected to include Web services via the Windows CE Web Server. This new component of the Windows CE operating system will allow developers to share data or monitor and manage devices that are running Windows CE&#151;whether they are handheld PCs or embedded in devices such as gas pumps or refrigerators.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This article explains how the Windows CE Web Server component can be included in the operating system for a given device. We’ll also show you how the Web server features you’re familiar with from Microsoft Internet Information Services are implemented in the Windows CE Web Server.</P>
+<HR COLOR="#6699cc">
+</FONT></FONT></TD>
+</TR>
+</TABLE>
+</FONT></FONT></TD>
+</TR>
+<TR>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<TABLE ALIGN="LEFT">
+<TR>
+<td VALIGN="BOTTOM"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<IMG SRC="w2000.gif" WIDTH="44" HEIGHT="63" ALT="W">
+</FONT></FONT></TD>
+</TR>
+</TABLE>
+
+hen you think of Windows&reg; CE, you probably think of those handheld and palm-size devices that some people use to organize their calendars and contacts. Putting a server application such as a Web server on one of these devices might seem a little crazy at first. But the Windows CE Web Server lets you remotely monitor and manage any device running Windows CE&#151;whether it’s a handheld PC or a gas pump. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Windows CE is a 32-bit preemptive multitasking operating system designed to run on various portable and embedded devices&#151;handheld organizers are just the most common example. The entire operating system is designed to fit in the device’s ROM. Its small footprint and support for programming features such as networking, COM, and rich GDI facilities are not the only highlights of Windows CE. What makes Windows CE unique is its flexibility in terms of operating system subcomponents and its ability to run on a wide range of processors. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Although today you’re more likely to see Windows CE  running on a handheld PC than on something like a refrigerator or a gas pump, that isn’t the only intended use for Windows CE. You may have a hard time imagining a gas station with a keyboard attached to every pump, or a refrigerator with a mouse, and you’re unlikely to see an embedded data acquisition device with a pretty monitor. To address these issues and make the operating system available to a variety of devices, Windows CE is composed of multiple building blocks. We’ll get back to these building blocks later. Let’s first examine what this has to do with the Windows CE Web Server.
+<h3>Why a Web Server?</h3>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;A handheld device running a Web server is not such a bad idea in itself. For example, you could take notes in a meeting using your handheld device and instantly make your notes available to others in the room via the Web server in that device. Using only a Web browser, anyone could easily view documents that are on your handheld device. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;This scenario illustrates one compelling reason to run a Web server on a Windows CE-based device. Remember that Windows CE is designed to run on embedded devices, such as printers, cameras, telephones, and the refrigerator and gas pump mentioned earlier. If you owned such a gas pump, there are a number of pieces of information you might want to monitor. For example, you may want to know how many gallons of gas had been purchased from the pump today, or whether it is pumping, processing a credit card transaction, or sitting idle. You might want to turn the pump off, adjust the gasoline price, or change a message that is displayed to customers. All of these tasks could be accomplished through a server application running on the gas pump that allows you to monitor or manipulate aspects of the device.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;What better way to do this than with a Web server, which uses one of the most popular client/server protocols around&#151;HTTP. There are other specifications and protocols that can be used to manage a device, such as the Simple Network Management Protocol (SNMP). But unlike SNMP, which requires specific SNMP management software, any machine with a Web browser installed can manage a device through a Web server. You can create the entire management architecture without having to register object IDs or create MIB files. A Web server is much easier to develop applications for, and is much more flexible.
+<h3>Building Blocks of Windows CE</h3>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Let’s say you decide to build that gas pump. A gas pump does not have a standard keyboard or monitor, and does little more than monitor the flow of gasoline, calculate the total sales, and display messages to customers. It certainly won’t be running Microsoft&reg; Pocket Word. Assuming that a Hardware Abstraction Layer (HAL) has already been written for your target platform (the pump), you could simply choose the operating system components that you want to run on the device. (Creating a HAL for the device is beyond the scope of this article. If you’re interested, take a look at
+ <a href="/library/winresource/dnwinnt/S8302.HTM">http://msdn.microsoft.com/library/winresource/dnwinnt/S8302.HTM</a> for details.) The list of components might include modules supporting network communications, a Web server, and custom modules for managing the gas pump. Once the required components are selected, the Windows CE operating system can be built. The build platform can later be burned into the ROM for the device. Now we have a gas pump ready to run on the Web. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The tool used to build all of this is called Platform Builder, and it can be used to build a version of the Windows CE operating system to run on any CPU for which a HAL has been written. Information on Platform Builder can be found at <a href="/isapi/gomscom.asp?TARGET=/windowsce/Embedded/start/datasheet.asp"  target="_new">http://www.microsoft.com/windowsce/Embedded/start/datasheet.asp</a>.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The Windows CE Web Server is a framework that accepts various building components such as ASP COM objects, ISAPI extension DLLs, and so on. Without these building blocks, the server is only partly useful. The real value of the Web server is its ability to easily invoke components that take advantage of the unique features of the operating system. As a part of the process of creating 
+a custom Windows CE operating system for your device, you would also build an SDK and make it available to developers who will create software that runs on your device. Among other things, this SDK would  include a 
+set of header files and libraries that would allow programmers to take advantage of the specific features of the Windows CE operating system on your device. For a refrigerator, the SDK may export something like the following function, which returns the temperature for a specific shelf:
+<TABLE>
+<TR>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<pre><code>
+
+DWORD GetCurrentTemp (DWORD dwShelfId);
+</code></pre>
+</FONT></FONT></TD>
+</TR>
+</TABLE>Now any programmer with a Refrigerator SDK can build an ASP object or ISAPI extension that gets the current temperature.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If the device has network access, whether via a wireless network or some other type of communications interface, the programmer or any consumer can download an application that would run on the device. Because Windows CE Web Server is part of the operating system embedded on the refrigerator, there is nothing else 
+that needs to be done. So now whenever you have a Web browser open, you can connect to your fridge and make sure that your steaks are fresh.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Before we move on to the actual implementation, we should point out that this article was written based on a prerelease version of the Windows CE Web Server (<a href="/isapi/gomscom.asp?TARGET=/windowsce/embedded/download/http.asp"  target="_new">http://www.microsoft.com/windowsce/embedded/download/http.asp</a>).The Windows CE Web Server is scheduled to be shipped as part of the Windows CE 3.0 Platform Builder release.  Some details may change in the final version of the Web server. We installed the server on a handheld PC running Windows CE 2.11. For ISAPI programming we used Visual C++&reg; 6.0. 
+<h3>Web Server Implementation</h3>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;If you are familiar with Microsoft Internet Information Services (IIS), you will find many similarities in Windows CE Web Server. The final version of Windows CE Web Server is expected to support most of the same components as IIS, including extensions, ISAPI filters, ASP scripts, and of course static HTML files. To keep the Windows CE Web Server footprint as small as possible, there is no support for CGI applications since ISAPI and ASP applications are more efficient anyway. So let’s take a look at some of the differences between IIS and the Windows CE Web Server.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The Windows CE Web Server is implemented as an installable device driver called HTTPD.DLL, which is loaded by device.exe when the system boots. (The D in HTTPD stands for daemon.) Because loading it as a device driver means that Windows CE Web Server is running whenever the device is running, debugging any code launched by the Web server is a bit complex. ISAPI extensions, filters, and ASP COM objects are loaded by the server in its own process space just as COM objects and ISAPI extensions are on Windows 2000 for Web applications configured to run with low application protection (in-process). Because Web server applications are running as device drivers, it’s possible for a misbehaving application to destabilize the entire system. To debug any code loaded as a device driver, you need to actually debug device.exe. However, since this is a device driver, it’s not possible to use the Visual C++ debugging tools; you’ll need a kernel debugger. 
+Setting up a kernel debugger for Windows CE is different from setting one up on Windows 2000. 
+<b>Figure 1</b> shows the Windows CE Remote Process Viewer. Notice that device.exe has two modules related to Windows CE Web Server loaded within its process space: simpleisapi.dll and HTTPD.DLL.<BR>
+<table>
+<tr>
+<td bgcolor="#ffffff"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<img src="wincefig050001.gif" height="272"  alt="Figure 1 Windows CE Remote Process Viewer"></FONT></FONT></TD></tr>
+<tr>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><b>Figure 1</b> <b> Windows CE Remote Process Viewer</b>
+</FONT></FONT></TD>
+</tr>
+</table>
+<p>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To avoid using a kernel debugger for your Web applications, 
+a special wrapper process, httpdexe.exe, is provided with the Windows CE Web Server distribution. Starting with Platform Builder 3.0, you’ll be able to choose httpdexe.exe as an optional operating system component, so you can include it in the Windows CE installation for your device, if necessary. If it’s not already installed, you can manually copy httpdexe.exe from the Web server distribution files to your Windows CE-based device. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;To debug your Web applications on Windows CE without using a kernel debugger, follow these steps:<BR>
+<ol><li>Disable the Web server by either running vishttpd.exe or using the httpdsvc.exe command-line utility with the -stop option.<BR>
+</LI><LI>Make sure httpdexe.exe is in the root directory on the device.<BR>
+</LI><LI>Open Visual Studio&reg;, select File | Open, and open httpdexe.exe from your PC. Make sure you currently have an ActiveSync&reg; connection with your Windows CE-based device.<BR>
+</LI><LI>Now run httpdexe.exe from Visual Studio and debug the process. If your code calls the DebugBreak API, you will be able to debug your ISAPI application or ASP COM object with the debugger for Windows CE in Visual C++.<BR></LI></OL>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;There are a few important notes to remember. First, httpdexe.exe does not fully mimic the functionality of the Windows CE Web Server. Even though it uses all of the same registry keys, it cannot be controlled by vishttp.exe. Once httpdexe.exe is running, the only way to stop it is to reboot the system. If you have ISAPI code or an ASP COM object that may potentially crash, running your code with httpdexe.exe is a much more benign option than running your code as a device driver. Since device.exe is the heart of the operating system, it is much safer to crash the httpdexe.exe process instead.
+<h3>Windows CE Management</h3>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The management and HTTP protocol support in the Windows CE Web Server is quite different than it is in IIS. Keep in mind that the Windows CE Web Server is intended to run on embedded devices, so it doesn’t make much sense to put an elaborate (or any) management user interface on the device. Therefore, you won’t be using a Microsoft Management Console snap-in on Windows CE to administer your server like you do with IIS. Because Windows CE Web Server does not use the Metabase, the IIS Admin Base Objects and IIS Admin Objects interfaces are not available on Windows CE. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;All of the server configuration information for the Windows CE Web server is stored in the registry under HKEY_LOCAL_MACHINE\COMM\HTTPD. The server can be fully configured and managed through the registry settings on the device. Because Windows CE itself does not include a registry editor, you’ll see the Windows CE Remote Registry Editor shown in <b>Figure 2</b>.
+<table>
+<tr>
+<td bgcolor="#ffffff"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<img src="wincefig050002.gif" height="265" width="330" alt="Figure 2 Changing Registry Settings"></FONT></FONT></TD></tr>
+<tr>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><b>Figure 2</b> <b> Changing Registry Settings</b>
+</FONT></FONT></TD>
+</tr>
+</table>
+<p>
+ Since all settings are stored in the registry, you simply change settings in the registry and restart the Web server to configure it. In the prerelease version we used, once the Web server was installed, there was a shortcut to vishttpd.exe on the desktop that conveniently let us restart the Windows CE Web Server. You can also run the following command to restart it: 
+<TABLE>
+<TR>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<pre><code>
+
+HTTPDSVC.EXE -restart
+</code></pre>
+</FONT></FONT></TD>
+</TR>
+</TABLE> 
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The end result is that the Windows CE Web Server will be restarted and new registry values will take effect. <a href="wincefigs.htm#fig3">Figure 3</a> lists the available registry values for configuring your Windows CE Web Server. It is worth mentioning that the released version of the Web server will not include the vishttpd.exe utility. The command-line utility HTTPDSVC.EXE will be the only tool to start or restart the Web service. <BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The released version of the Web server will have two more registry values: Post Read Size and a DWORD called MaxConnections. PostReadSize determines how much data to read in on the initial post (and also how much to read in a read raw data filter that requests more data by returning the SF_STATUS_REQ_READ_ NEXT). By default this is set 48KB. This registry value is similar to the UploadReadAheadSize Metabase property in IIS 5.0. Max Connections is the maximum number of simultaneous connections the Web server accepts. By default this is 10.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Also located in the registry is the list of virtual directories configured for the Web server. Virtual directories have their own keys under HKEY_LOCAL_MACHINE\COMM\HTTPD\VROOTS. Each virtual directory has its own settings that allow you to specify the associated physical path and other configuration options. <a href="wincefigs.htm#fig4">Figure 4</a> shows the available registry values for virtual roots.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The Windows CE Web Server also provides an administration tool called Web Server Admin that simplifies server configuration. This tool is just an ISAPI DLL, and can be accessed via http://CE_
+Machine/Admin. This ISAPI extension allows you to configure many of the Web server options, like creating virtual directories.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The source code for the administration extension, httpdadm.dll, is part of the Windows CE Web Server distribution files, and can be used as the basis for your own tools. However, the administration ISAPI extension directly obtains pointers to the functions exported by the server executable, which controls starting and stopping the server. If you want to write an app that accomplishes a similar task, it may be tempting to use the same method, but there are no promises that this method will continue to work in the future. A better solution would be to start httpdsvc.exe programmatically using the CreateProcess API with -stop, -start, and -refresh parameters in the lpCommandLine parameter.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;One common feature of Web servers is the ability to log requests and the Windows CE Web Server provides this functionality as well. The Windows CE Web Server creates a file called current-httpd.log in the logging directory. When the log file reaches its maximum, it will copy the current log to previous-httpd.log and create a new current-httpd.log file. If there is already a previous-httpd.log, it will be overwritten. The Windows CE Web Server logs all the information using the standard NCSA HTTP logging method, which includes a timestamp, the client’s IP address, the HTTP method, for the request, the requested URL, the HTTP response code, and any appended data from ISAPI extensions, filters, or ASP pages.
+<h3>HTTP Support</h3>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The Windows CE Web server supports a limited set of the HTTP/1.0 specification outlined in RFC 1945 (<a href="http://www.ietf.org/rfc/rfc1945.txt"  target="_new">http://www.ietf.org/rfc/rfc1945.txt</a>). The Windows CE Web Server only supports the GET, HEAD, and POST methods of the HTTP specification. Although you can specify other status codes from your ASP page or ISAPI extensions or filters, the Windows CE Web Server only returns the following HTTP status codes:
+<TABLE>
+<TR>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<pre><code>
+
+200, &quot;OK&quot;
+301, &quot;Moved Permanently&quot;
+304, &quot;Not Modified&quot;
+400, &quot;Bad Request&quot;
+401, &quot;Unauthorized&quot;
+403, &quot;Forbidden&quot;
+404, &quot;Object Not Found&quot;
+500, &quot;Internal Server Error&quot;
+501, &quot;Not Implemented&quot;
+503, &quot;Server Too Busy&quot;
+</code></pre>
+</FONT></FONT></TD>
+</TR>
+</TABLE>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The Windows CE Web Server supports most of the common HTTP headers that are used by HTTP/1.0-compliant browsers and other Web servers, including Connection: Keep-Alive support to reuse TCP connections. Any headers that the Web server doesn’t support are parsed, but ignored.
+<h3>ISAPI Support</h3>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The Windows CE Web Server supports most of the functionality provided for ISAPI extensions and filters on IIS. As for IIS, to create an ISAPI extension for the Windows CE Web Server you build a DLL that exports the standard ISAPI entry points: GetExtensionVersion, HttpExtensionProc, and TerminateExtension (the latter is optional). GetExtensionVersion is called when the DLL is first loaded, HttpExtensionProc is called for each request, and TerminateExtension is called when the DLL is being unloaded. Interaction with the Web server is performed through the standard ISAPI callback functions.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The following limitations apply to ISAPI extension support on the Windows CE Web Server:
+
+<P><b><font color="#003399">No asynchronous support</font></b> You cannot return HSE_STATUS_
+PENDING from your HttpExtensionProc, and there is no support for the HSE_IO_ASYNC WriteClient flag.
+<P><b><font color="#003399">ServerSupportFunction limitations</font></b> The ServerSupportFunction callback function only supports the following options: HSE_REQ_
+SEND_URL_REDIRECT_RESP, HSE_REQ_SEND_URL, HSE_
+REQ_SEND_RESPONSE_HEADER, HSE_REQ_MAP_URL_
+TO_PATH, and HSE_APPEND_LOG_PARAMETER. The released version of the Web server should also support HSE_SEND_
+RESPONSE_HEADER_EX, HSE_MAP_URL_TO_PATH_EX, and HSE_REQ_IS_KEEP_CONN.
+<P><b><font color="#003399">GetServerVariable support</font></b> Most of the common server variables are supported in Windows CE. But because there is no Secure Sockets Layer (SSL) or metabase support, none of the server variables that correspond to SSL or metabase information are provided. The ALL_HTTP server variable is also not available.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;As with ISAPI extensions, most of the ISAPI filter support available on IIS is also available with Windows CE Web Server. ISAPI filters allow you to get notifications of various events during the 
+processing of requests received by the server so that you can modify the way the server works. As with extensions, you build a DLL that exports the ISAPI filter functions GetFilterVersion, HttpFilterProc, and TerminateFilter (optional).<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The following restrictions apply to ISAPI filter support in the  Windows CE Web Server:
+<P><b><font color="#003399">No SSL support</font></b> Because there is no SSL support provided by the Windows CE Web Server, the SF_NOTIFY_SECURE_PORT and SF_NOTIFY_NONSECURE_PORT flags to GetFilterVersion are ignored. The limitations to the available server variables for SSL-oriented variables are obviously also not supported.
+<P><b><font color="#003399">No SF_STATUS_REQ_READ_NEXT support</font></b> Raw data filters do not have the option to wait for more data using the SF_STATUS_
+REQ_READ_NEXT return code. If you return this value, it is handled as if you returned SF_STATS_REQ_NEXT_NOTIFICATION. No SF_STATUS_REQ_READ_NEXT support is provided in the Beta version. The released version of the Web server should support this return value.
+<P><b><font color="#003399">ServerSupportFunction support</font></b> The SF_REQ_SEND_RESPONSE_HEADER option for ServerSupportFunction is pretty much the only ServerSupportFunction supported for ISAPI filters.
+<P><b><font color="#003399">GetServerVariable support</font></b> The same limitations for ISAPI extensions apply to support for the GetServerVariable callback function for ISAPI filters.
+<P><b><font color="#003399">Modifying request and response headers</font></b> In the SF_NOTIFY_PREPROC_HEADERS notification, you can only modify the method, URI, and HTTP version fields. You cannot modify any existing HTTP headers. When sending responses, you cannot delete or change any existing headers.
+<h3>ASP Support</h3>
+
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The Windows CE Web Server has some very functional support for ASP scripting. You can use both VBScript and JScript&reg; as long as the corresponding components are installed on the system. The normal &lt;% %&gt; delimiters are still used, and the object model is similar to the one provided by IIS.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The following restrictions apply to ASP support on Windows CE Web Server:
+<P><b><font color="#003399">Intrinsic objects</font></b> The Request, Response, and Server intrinsic objects are available, but there is no support for Session or Application objects on the Windows CE Web Server. This implies that state is not maintained automatically for you by ASP. (You will need to set and read your own cookies to maintain state.) There is also no support for global.asa files. Because there is no support for Session and Application objects, there is also no support for the OnStart and OnEnd callback functions associated with ASP sessions and applications.
+<P><b><font color="#003399">No transaction support</font></b> Unlike IIS, the Windows CE Web Server does not provide built-in support for transactions.
+<P><b><font color="#003399">No RUNAT support</font></b> There is no support for using the &lt;SCRIPT&gt; tag with the RUNAT=SERVER option. Any information in the &lt;SCRIPT&gt; tag would simply be sent to the client without the expected server processing.
+<P><b><font color="#003399">Collection limitations</font></b> The intrinsic ASP objects offer a number of collections for the support of ServerVariables, Cookies, QueryStrings, and Forms. However, the collection implementation in Windows CE Web Server is not as full-featured as in IIS. Enumerating collections in a For/Next loop is not supported. Elements of the collection can only be accessed directly.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Also, the ServerVariables collection is implemented as a method&#151;not  as a collection. You can get the associated values of ServerVariables, but you can’t use the normal inherent collection properties and methods like this:
+<TABLE>
+<TR>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<pre><code>
+
+Request.ServerVariables(&quot;URL&quot;).Count
+</code></pre>
+</FONT></FONT></TD>
+</TR>
+</TABLE>The previously mentioned limitations of the GetServerVariable ISAPI callback function apply to the Request.ServerVariables collection as well.
+<P><b><font color="#003399">Request object limitations</font></b> Along with the collection limitations mentioned earlier, the Request object does not support the ClientCertificate collection due to the lack of SSL support. The Request.BinaryRead method needs to be used with caution since the Windows CE environment runs in Unicode mode. The BinaryRead method makes no attempt to convert ASCII strings to Unicode.
+<P><b><font color="#003399">Response object limitations</font></b> The Response object supports most of the functionality available from the IIS ASP implementation. There is no support for the CacheControl or PICS properties, but you can achieve the same functionality by adding the appropriate HTTP header with the AddHeader method. The AddHeader method only appends header values to the HTTP response headers. Trying to overwrite a header value will result in simply adding another HTTP header to the end of the existing headers. The previous header is not removed.
+<P><b><font color="#003399">Server object limitations</font></b> The only supported server object methods are MapPath and URLEncode. You can still launch objects from your ASP page, but instead of using the Server.CreateObject method, you simply use the scripting support for creating objects. For example, in VBScript you would use the following code:
+<TABLE>
+<TR>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<pre><code>
+
+&lt;% Set MyObj = CreateObject(&quot;object.class&quot;) %&gt;
+</code></pre>
+</FONT></FONT></TD>
+</TR>
+</TABLE>
+<b><font color="#003399">Processing directives</font></b> The only supported processing directives are Language, Codepage, and LCID. As mentioned earlier, there is no transaction support.
+<P><b><font color="#003399">#include support</font></b> You can include other files just like you can with IIS. However, there are limitations on the number of include files allowed per page, and there is no support for nested includes. 
+<h3>Build a Sample App</h3>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The ISAPI extension and filter implementations for the Windows CE Web Server are not as rich as the IIS implementations. Nonetheless, you still can easily write powerful Web server applications for Windows CE. To demonstrate ISAPI on Windows CE, we took a simple ISAPI extension called simpleisapi.dll that we had developed for IIS, and ported it to Windows CE. Our sample simply dumps the various server variables and any posted data back to the browser in the HTTP response.<BR>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;The code for the ISAPI extension is shown in <a href="wincefigs.htm#fig5">Figure 5</a>. Granted this is a pretty trivial sample, but we were able to take our existing code, rebuild it for the Windows CE-based device, and come out with a working Web application. You will notice that a number of the server variables in the HTML response (see <b>Figure 6</b>) are missing because those server variables are not supported by the Windows CE Web Server. The application still works, however, without causing any failures on the server or in the ISAPI extension.<BR>
+<table>
+<tr>
+<td bgcolor="#ffffff"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<img src="wincefig050006.gif" height="437" width="330" alt="Figure 6 SimpleISAPI in Action"></FONT></FONT></TD></tr>
+<tr>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><b>Figure 6</b> <b> SimpleISAPI in Action</b>
+</FONT></FONT></TD>
+</tr>
+</table>
+<h3>Conclusion</h3>
+
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;You can think of the Windows CE Web Server as a framework where developers can plug in their own custom ASP scripts, ASP COM objects, and ISAPI extensions and filters. The real power of the Windows CE-based device will become apparent as more devices running Windows CE 3.0 and more SDKs that support the Web server components become available. If you are creating devices that run Windows CE Web Server, you might want to publish your own SDK. If you are a developer, get ready to use all sorts of new SDKs so that you can make the remote management and monitoring of a Windows CE-based device as easy as opening a Web browser.<BR>
+</FONT></FONT></TD>
+</TR>
+<TR>
+<td><FONT FACE="Verdana, Arial, Helvetica" SIZE="2"><FONT FACE="Verdana, Arial, Helvetica" SIZE="2">
+<HR COLOR="#dddddd">
+<P>
+<B>For related articles see:</B><BR>
+<a href="/library/wcedoc/wcecomm/wininet.htm"  target="_new">Internet Connections</a></p><BR>
+<P>
+<B>Background information:</B><BR>
+<a href="/library/backgrnd/html/msdn_wince.htm">Windows CE: The New Choice for Dedicated Systems</a><br>
+<a href="/library/periodic/period99/wincekernel.htm">Updated with New Kernel Features, Windows CE 3.0 Really Packs a Punch</a></p><BR>
+<HR COLOR="#dddddd">
+<i><B>Matthew Powell</B> and <B>Leonid Braginski</B> are the authors of </I>Running Microsoft Internet Information Server<I> (Microsoft Press, 1998) and work for Microsoft on the WinInet/ISAPI Developer Support team.</i><BR>
+<HR COLOR="#dddddd">
+<P><I>From the May 2000 issue of MSDN Magazine.</i></p>
+
+</FONT></FONT></TD>
+</TR>
+</TABLE>
+
+
+<!--FOOTER_START-->
+<P>&nbsp;</P>
+<hr width='90%' size='1' align='left'>
+<FONT SIZE=1>
+<P><i><a href="/siteguide/write-us.asp" TARGET="_top">Send feedback</a> on this article.&nbsp;&nbsp;Find <a href="/isapi/gosupport.asp?TARGET=/servicedesks/msdn/" TARGET="_top">support options</a></i>.</P>
+<P><A HREF="/isapi/gomscom.asp?TARGET=/info/cpyright.htm" TARGET="_top">&#169; 2001 Microsoft Corporation. All rights reserved. Terms of use.</A></P>
+</FONT>
+<!--FOOTER_END-->
+</BODY>
+</HTML>
