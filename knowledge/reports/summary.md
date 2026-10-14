@@ -16,13 +16,13 @@ The knowledge base is built from the pages in `corpus/` only: every declaration,
 
 ## Totals
 
-* pages parsed: **121,074**
+* pages parsed: **121,076**
 * API entities: **30,076** -- CE-specific **24,565**, documented by Windows CE and the Win32 reference alike **4,353**, Win32 pages for a CE name's A/W spelling **1,155**, named by the CE catalog only **3**, unclaimed Win32 pages **0** (`reports/surface.tsv`; 585 names have a Win32 page through a variant spelling)
-* declarations extracted: **110,358** (C/C++ 79,032 in `kb/declarations.jsonl`, managed-code signatures 31,326 in `kb/declarations-dotnet.jsonl` -- the separated .NET layer)
+* declarations extracted: **110,361** (C/C++ 79,035 in `kb/declarations.jsonl`, managed-code signatures 31,326 in `kb/declarations-dotnet.jsonl` -- the separated .NET layer)
 * requirement statements: **193,539**
 * of those, a page's own `Module` (not an sdk-api UID): **146**; a `sysgen` variable: **980**; a CPU list (`Architecture`): **78**; a catalog `Component`: **28**
 * numbered constants: **22,937** (`kb/constants.jsonl`, 1,676 page(s))
-* Windows CE constraint sentences: **3,547** and ABI statements quoted from the pages (**970**, `kind: "abi-note"`)
+* Windows CE constraint sentences: **3,555** and ABI statements quoted from the pages (**970**, `kind: "abi-note"`)
 * entities with a gap record: **19,709** (`reports/gaps.tsv`)
 * structures whose members a page documents without printing a declaration body: **801** (842 page(s) carry a member list, 840 of them print no declaration at all; `kb/struct-fields.tsv` has the member names and order, one row per field -- the pages state no offsets, so none are recorded)
 * relations between definitions: **29,146** (`unicode-ansi`/`unicode-ansi-base`/`unicode-ansi-variant` from the page's own statement, `interface-method`, `layer`, `ce-name-lead` for the spelling a CE page prints, `related-macro` / `related-message` for the identifier a page prints beside that label)
@@ -47,7 +47,7 @@ The knowledge base is built from the pages in `corpus/` only: every declaration,
 | `mvb/windows-ce-1.0/PEGSDK` | 1,918 | 1,473 | 10 | 268 | 10 | 429 |
 | `dotnet/dotnet-compact-framework` | 852 | 0 | 852 | 636 | 853 | 2,135 |
 | `chm/windows-ce-4.2` | 566 | 278 | 257 | 254 | 514 | 278 |
-| `learn/unclassified` | 413 | 328 | 361 | 280 | 770 | 293 |
+| `learn/unclassified` | 413 | 327 | 361 | 280 | 770 | 293 |
 | `win32/api/winuser` | 378 | 378 | 378 | 20 | 2,046 | 26 |
 | `win32/api/commctrl` | 336 | 336 | 336 | 215 | 970 | 217 |
 | `mvb/windows-ce-2.0-sdk/WINDBG` | 291 | 29 | 1 | 13 | 1 | 18 |
@@ -130,6 +130,7 @@ The knowledge base is built from the pages in `corpus/` only: every declaration,
 | `win32/api/ole2` | 11 | 11 | 11 | 0 | 48 | 0 |
 | `win32/api/winineti` | 11 | 11 | 11 | 0 | 85 | 0 |
 | `kb/192` | 10 | 0 | 0 | 5 | 0 | 5 |
+| `msdn-library/msdn-magazine` | 10 | 0 | 1 | 8 | 1 | 37 |
 | `site/windows-ce-2.0/prodinfo` | 10 | 0 | 0 | 0 | 0 | 0 |
 | `win32/api/sysinfoapi` | 10 | 10 | 10 | 0 | 52 | 0 |
 | `win32/api/debugapi` | 9 | 9 | 9 | 0 | 47 | 0 |
@@ -137,7 +138,6 @@ The knowledge base is built from the pages in `corpus/` only: every declaration,
 | `win32/api/uxtheme` | 9 | 9 | 9 | 0 | 36 | 0 |
 | `win32/api/wincred` | 9 | 9 | 9 | 0 | 44 | 0 |
 | `win32/api/wsdxmldom` | 9 | 9 | 9 | 0 | 27 | 0 |
-| `msdn-library/msdn-magazine` | 8 | 0 | 1 | 7 | 1 | 34 |
 | `oss/qt` | 8 | 0 | 0 | 0 | 0 | 0 |
 | `site/windows-ce-2.0/technical` | 8 | 0 | 0 | 0 | 0 | 0 |
 | `win32/api/coml2api` | 8 | 8 | 8 | 0 | 40 | 0 |
@@ -355,11 +355,11 @@ A header or a `.def` for one Windows CE version can only be built from what *tha
 
 | set | entities | syntax | header | library | functions with all three | numbered constants |
 |-----|----------|--------|--------|---------|--------------------------|--------------------|
-| `learn/windows-ce-5.0` | 14,678 | 12,650 | 12,533 | 6,992 | 6,304 / 10,509 | 4,296 (3,175 names) |
-| `learn/windows-embedded-ce-6.0` | 16,422 | 15,084 | 14,124 | 7,549 | 7,205 / 12,277 | 5,909 (4,754 names) |
+| `learn/windows-ce-5.0` | 14,678 | 12,650 | 12,533 | 6,992 | 6,304 / 10,508 | 4,296 (3,175 names) |
+| `learn/windows-embedded-ce-6.0` | 16,422 | 15,084 | 14,124 | 7,549 | 7,205 / 12,276 | 5,909 (4,754 names) |
 | `learn/windows-ce-net-4x` | 6,504 | 5,622 | 6,065 | 3,623 | 3,402 / 4,527 | 1,843 (1,796 names) |
-| `chm/windows-ce-5.0` | 14,672 | 13,448 | 11,084 | 5,278 | 4,577 / 12,119 | 4,633 (3,581 names) |
-| `chm/windows-ce-3.0` | 6,820 | 6,188 | 4,560 | 2,069 | 1,983 / 5,345 | 2,603 (1,524 names) |
+| `chm/windows-ce-5.0` | 14,672 | 13,448 | 11,084 | 5,278 | 4,577 / 12,118 | 4,633 (3,581 names) |
+| `chm/windows-ce-3.0` | 6,820 | 6,188 | 4,560 | 2,069 | 1,983 / 5,344 | 2,603 (1,524 names) |
 | `chm/windows-ce-4.2` | 277 | 235 | 254 | 0 | 0 / 227 | 4 (4 names) |
 | `mvb/windows-ce-1.0/PEGSDK` | 1,470 | 189 | 0 | 7 | 0 / 1,128 | 72 (72 names) |
 | `msdn-library/wcedevcon-99` | 4,466 | 4,140 | 3,244 | 13 | 1 / 3,612 | 2,359 (1,296 names) |
@@ -383,7 +383,7 @@ Numbered constants are rows of a name/value table the page prints, or a cell it 
 
 | missing | entities | what to collect |
 |---------|----------|-----------------|
-| `no-declaration` | 3,543 | the page prints no syntax block -- look for the same topic in another collected set (another medium often has it), or add the SDK/DOC medium that does |
+| `no-declaration` | 3,544 | the page prints no syntax block -- look for the same topic in another collected set (another medium often has it), or add the SDK/DOC medium that does |
 | `no-header` | 4,494 | the page has no `Header` requirement -- same approach |
 | `no-library` | 17,489 | the page has no `Link Library`/`Library` requirement -- expected for compiler intrinsics and macros, worth collecting for functions |
 | `header-stated-none` | 159 | nothing: the page prints `Header: Not applicable` / `None` / `Developer Implemented`, so the documents have answered |
