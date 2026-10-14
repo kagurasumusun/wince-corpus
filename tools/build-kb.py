@@ -730,24 +730,38 @@ def constant_records(facts, entity_of):
     return records
 
 
-PINVOKE_AUX_README = """# `aux/` -- weak auxiliary reference material (pinvoke.net)
+PINVOKE_AUX_README = """# `aux/` -- the isolated weak-auxiliary pinvoke material
 
 The files here are **not** part of the specification in `kb/`: they are the
-machine-readable residue of the pinvoke.net P/Invoke reference wiki
-(`corpus/pinvoke/`, an isolated corpus tree -- see
-`docs/COLLECTION-POLICY.md`), a user-contributed third-party site.  They are
-kept strictly separate from the official-documentation knowledge base and are
-consumed as **weak auxiliary evidence only**: where Microsoft's own pages
-state nothing about a constant's value or its header, the pinvoke statement
-may *hint* at the linkage (`strength: "pinvoke-weak"` in
+machine-readable residue of the **one third-party exception** in
+`docs/COLLECTION-POLICY.md`, the pinvoke P/Invoke reference, and they are
+kept strictly separate from the official-documentation knowledge base.
+They are consumed as **weak auxiliary evidence only**: where Microsoft's own
+pages state nothing about a constant's header, a pinvoke statement may
+*hint* at the linkage (`strength: "pinvoke-weak"` in
 `kb/constant-headers.tsv`) so the gap is visible and decisions can be
 reviewed; it never overrides a documented statement, it is always labelled,
-and its licence forbids republication (`data/license-scopes.tsv`).
+and the rules are in `data/license-scopes.tsv`.  A pinvoke value is never
+treated as a Windows CE value and never written into a generated header:
+the review report `reports/constant-pinvoke-review.tsv` compares each
+community value with the documented CE one.
+
+Two accept paths feed this directory, both isolated:
+
+* `sources/dotnet-pinvoke/` -- the pinned, archived github.com/dotnet
+  /pinvoke snapshot (MIT), parsed by `tools/pinvoke_extract.py` into
+  constants (`public const`/`enum` member) and API (`[DllImport]`) rows.
+  Each record quotes the verbatim `.cs` line with its archive member and
+  line number; `header` is DERIVED from the module directory (the Windows
+  library project the name is filed under -- a weak hint by design).
+* `corpus/pinvoke/` -- the pinvoke.net user wiki, queue-gated by
+  `queues/pinvoke-net.txt` (currently empty: not harvested).
 
 | File | Contents |
 |------|----------|
-| `pinvoke-apis.jsonl.gz` | one row per API name the wiki documents: `name`, `module` (the wiki section), `dll` (the DllImport line), `header` (derived from the module, weak), `evidence`, `source` |
-| `pinvoke-constants.jsonl.gz` | one row per constant the wiki prints (a C# `const` or `#define` spelling), with the module/page it came from |
+| `pinvoke-apis.jsonl.gz` | one row per API: `name`, `module`, `dll` (the DllImport text, when it names one), `header` (derived), `evidence`, `source` (archive member + line) |
+| `pinvoke-constants.jsonl.gz` | one row per constant: `name`, `value` as printed, `value_eval` (best-effort fold, marked), `module`, `header` (derived), `table`, `row` (the quote), `source` |
+| `pinvoke-apis.tsv` / `pinvoke-constants.tsv` | flat review views of the same rows |
 """
 
 
@@ -805,6 +819,21 @@ def pinvoke_records(facts):
                 "license": license_of(fact["path"]),
                 "source": source_of(fact),
             })
+    # Second accept path for the weak-auxiliary layer: the pinned
+    # dotnet/pinvoke snapshot (sources/dotnet-pinvoke/, MIT).  Its records
+    # quote the .cs lines, carry the module placement, and the derived
+    # header; like the wiki rows, they are aux evidence only.
+    try:
+        import pinvoke_extract  # noqa: E402
+        archive = pinvoke_extract.recent_archive()
+    except ImportError:  # pragma: no cover - defensive
+        archive = None
+    if archive is not None:
+        dotnet_apis, dotnet_constants = pinvoke_extract.parse_archive(
+            archive)
+        apis.extend(dotnet_apis)
+        constants.extend(dotnet_constants)
+
     apis.sort(key=lambda r: (r["name"].lower(), r["source"]["path"]))
     constants.sort(key=lambda r: (r["name"].lower(), r["source"]["path"]))
     return apis, constants
@@ -915,12 +944,16 @@ def constant_header_links(constants, requirements, pinvoke_records_pair):
             offer(name, "constant-entity", entity_headers_ce,
                   first["source"]["path"], first["source"]["set"])
 
-    # rank 5: the pinvoke.net weak auxiliary hint
+    # rank 5: the pinvoke.net weak auxiliary hint.  It may only file a
+    # name the CE (or CE-shared Win32) documentation actually numbers:
+    # a community name with no documented value anywhere in the corpus
+    # mints no linkage row at all.
     apis, pinvoke_constants = pinvoke_records_pair or ([], [])
     for item in apis + pinvoke_constants:
         header = item.get("header")
-        if item.get("name") and header:
-            offer(item["name"], "pinvoke-weak", [header],
+        name = item.get("name")
+        if name and header and name in by_name:
+            offer(name, "pinvoke-weak", [header],
                   item["source"]["path"], item["source"]["set"])
 
     out = []
@@ -1765,8 +1798,12 @@ def build(rows, workers, report_only, plain=False):
     # review are the intended way to shrink this list.
     linked_names = {row[0] for row in link_rows}
     gap = {}
+    ce_value = collections.defaultdict(set)   # name -> values the CE docs print
     for record in constants:
-        if record.get("layer") != "ce" or record["name"] in linked_names:
+        if record.get("layer") != "ce":
+            continue
+        ce_value[record["name"]].add(record.get("value") or "")
+        if record["name"] in linked_names:
             continue
         entry = gap.setdefault(record["name"], {
             "rows": 0, "origins": collections.Counter(),
@@ -1776,14 +1813,82 @@ def build(rows, workers, report_only, plain=False):
         entry["sets"].add(record["source"]["set"])
         if not entry["example_page"]:
             entry["example_page"] = record["source"]["path"]
-    write_tsv(os.path.join(REPORTS, "constant-header-gaps.tsv"),
-              ["name", "rows", "origins", "sets", "example_page"],
-              sorted((name, entry["rows"],
-                      ",".join(f"{k}:{v}" for k, v in
-                               entry["origins"].most_common()),
-                      ";".join(sorted(entry["sets"])),
-                      entry["example_page"])
-                     for name, entry in gap.items()))
+
+    # The weak-auxiliary review view over the gap names: which of them the
+    # isolated pinvoke layer knows, in which module, and whether the
+    # community value AGREES with the documented CE value.  It is review
+    # material only -- it never changes a number or a header by itself.
+    _, pinvoke_constants = pinvoke_pair
+    aux_by_name = collections.defaultdict(list)
+    for item in pinvoke_constants:
+        aux_by_name[item["name"]].append(item)
+
+    def aux_hit_text(name):
+        hits = aux_by_name.get(name) or []
+        return ";".join(sorted({h["module"] for h in hits}))
+
+    write_tsv(
+        os.path.join(REPORTS, "constant-header-gaps.tsv"),
+        ["name", "rows", "origins", "sets", "example_page", "pinvoke_hit"],
+        sorted((name, entry["rows"],
+                ",".join(f"{k}:{v}" for k, v in
+                         entry["origins"].most_common()),
+                ";".join(sorted(entry["sets"])),
+                entry["example_page"], aux_hit_text(name))
+               for name, entry in gap.items()))
+
+    def numeric_candidates(text):
+        """The numeric readings of one printed value, for comparison only.
+
+        A bare-digits cell of a hex-headed table keeps its digits, so the
+        comparison tries both decimal and hex (a hexadecimal is never
+        re-written in the knowledge base itself -- this set exists only
+        to judge the community value against the documented one).
+        """
+        out = set()
+        try:
+            out.add(int(text, 0))
+        except (TypeError, ValueError):
+            pass
+        if re.fullmatch(r"[0-9a-fA-F]+", text or ""):
+            out.add(int(text, 16))
+        return out
+
+    # The review target is the set of names the corpus itself numbers
+    # *and* for which only the weak auxiliary states a header -- for
+    # those names the community value can be compared against the
+    # documented CE value, and disagreements are SDK-review red flags.
+    weak_names = {row[0] for row in link_rows if row[2] == "pinvoke-weak"}
+    review = []
+    for name, hits in sorted(aux_by_name.items(), key=lambda kv: kv[0].lower()):
+        if name not in weak_names:
+            continue
+        ce_numbers = set()
+        for v in ce_value.get(name, ()):
+            ce_numbers |= numeric_candidates(v)
+        agrees, disagrees, unclear = 0, 0, 0
+        for hit in hits:
+            fold = hit.get("value_eval")
+            if fold is None:
+                unclear += 1
+            elif fold in ce_numbers:
+                agrees += 1
+            else:
+                disagrees += 1
+        agreement = ("match" if agrees and not disagrees else
+                     "mismatch" if disagrees else
+                     "no-hit" if unclear == len(hits) else "partial")
+        review.append((
+            name,
+            ",".join(sorted(v for v in ce_value.get(name, ()) if v)),
+            ";".join(sorted({h["module"] for h in hits})),
+            ",".join(sorted({str(h.get("value_eval")) for h in hits
+                             if h.get("value_eval") is not None})),
+            agreement,
+            hits[0]["source"]["archive_member"]))
+    write_tsv(os.path.join(REPORTS, "constant-pinvoke-review.tsv"),
+              ["name", "ce_values", "pinvoke_modules", "pinvoke_values",
+               "agreement", "example_member"], review)
 
     # The isolated pinvoke.net weak-auxiliary reference -> knowledge/aux/
     # (written only when the isolated corpus tree has been harvested).
@@ -1793,13 +1898,34 @@ def build(rows, workers, report_only, plain=False):
               encoding="utf-8") as fh:
         fh.write(PINVOKE_AUX_README)
     if pinvoke_apis or pinvoke_constants_rows:
-        os.makedirs(AUX, exist_ok=True)
         if pinvoke_apis:
             write_jsonl(os.path.join(AUX, "pinvoke-apis.jsonl"),
                         pinvoke_apis, compress)
+            write_tsv(os.path.join(AUX, "pinvoke-apis.tsv"),
+                      ["id", "name", "module", "dll", "header", "evidence",
+                       "page_id", "site", "archive_member", "line"],
+                      [(r["id"], r["name"], r["module"], r.get("dll") or "",
+                        r["header"], r.get("evidence") or "", r["page_id"],
+                        r["source"].get("site") or "",
+                        r["source"].get("archive_member") or "",
+                        r["source"].get("line") or "")
+                       for r in pinvoke_apis])
         if pinvoke_constants_rows:
             write_jsonl(os.path.join(AUX, "pinvoke-constants.jsonl"),
                         pinvoke_constants_rows, compress)
+            write_tsv(os.path.join(AUX, "pinvoke-constants.tsv"),
+                      ["id", "name", "value", "value_eval", "module",
+                       "header", "enum", "table", "page_id", "site",
+                       "archive_member", "line"],
+                      [(r["id"], r["name"], r["value"],
+                        "" if r.get("value_eval") is None
+                        else r.get("value_eval"),
+                        r["module"], r["header"], r.get("enum") or "",
+                        r["table"], r["page_id"],
+                        r["source"].get("site") or "",
+                        r["source"].get("archive_member") or "",
+                        r["source"].get("line") or "")
+                       for r in pinvoke_constants_rows])
 
     for field, filename, title in (("header", "headers.tsv", "header"),
                                    ("library", "libraries.tsv", "library"),

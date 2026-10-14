@@ -95,7 +95,7 @@ the collection rather than part of it).
 | `corpus/win32/api/` | 5,279 Win32 pages for the 5,068 API names Windows CE documents (from `MicrosoftDocs/sdk-api`, pinned by commit). `data/reports/win32-shared.tsv` maps each name to its CE pages, `data/reports/win32-imported.tsv` records each page's CE evidence, `data/reports/win32-coverage.tsv` is the review worklist of that rule, and `tools/find-api.py` looks a name up on both sides. |
 | `corpus/msdn-library/2010-05/<set>/` | 161 Internet Archive copies of MSDN topics (May 2010), filed under the set they duplicate. |
 | `corpus/msdn-library/windows-mobile-6.5/` | 34 Windows Mobile 6.5 topics in MSDN Library (MSHelp) format. |
-| `knowledge/` | The machine-readable knowledge base built from `corpus/` by `tools/build-kb.py`: 30,076 API entities with their `surface` (**where each name sits in the Windows CE / Win32 split** — 24,565 CE-only, 4,353 shared, 1,155 Win32 spellings of CE names, 3 catalog-only, 0 unclaimed Win32 pages), header/library/DLL/module statements, relations (including the Unicode/ANSI variant links and the `ce-name-lead` records of what the CE page actually prints, each with the evidence it rests on) and generation use, 801 structures whose pages document their members without printing a declaration body (5,204 member rows in `knowledge/kb/struct-fields.tsv` — names and documented order; those pages state no offsets, so none is recorded for them), 78,993 C/C++ declaration quotes (plus 31,326 managed-code signatures in the separated .NET file), 193,538 requirements, 3,510 CE constraint sentences and 969 quoted ABI statements (`kind: "abi-note"`: alignment, byte order, pointer size, structure size), an **ABI view per name** (`knowledge/reports/abi.tsv`: the calling convention each declaration prints — never guessed — its member types (38,938 of 46,972 member lines), bitfields, packing/alignment flags, documented offsets and stated sizes), **399 documented offset rows** quoted from the layout tables of 58 pages (`knowledge/kb/abi-offsets.tsv`), **22,936 numbered constants** quoted from name/value tables, from cells a page prints as `NAME = 0x0001` or `NAME (0x0001)`, from `#define` and `enum` blocks of syntax declarations, and from `NAME (0x0400)` prose on 1,675 pages — each row carries a `layer` and an `origin` (`knowledge/kb/constants.tsv`) — plus the **constant -> header linkage ranked by evidence strength** (`knowledge/kb/constant-headers.tsv`: 4,460 rows over 3,811 names: `own-page`, then the entity's own page (`entity-page` / `constant-entity`), then, marked, the Win32 reference, and — weakest, from the isolated aux layer, never primary evidence — the pinvoke.net module hint). A constant the page does not number is absent, and the scope of the licence each record's page carries (`license`, from `data/license-scopes.tsv`). Every record names its page. See `knowledge/README.md`. |
+| `knowledge/` | The machine-readable knowledge base built from `corpus/` by `tools/build-kb.py`: 30,076 API entities with their `surface` (**where each name sits in the Windows CE / Win32 split** — 24,565 CE-only, 4,353 shared, 1,155 Win32 spellings of CE names, 3 catalog-only, 0 unclaimed Win32 pages), header/library/DLL/module statements, relations (including the Unicode/ANSI variant links and the `ce-name-lead` records of what the CE page actually prints, each with the evidence it rests on) and generation use, 801 structures whose pages document their members without printing a declaration body (5,204 member rows in `knowledge/kb/struct-fields.tsv` — names and documented order; those pages state no offsets, so none is recorded for them), 78,993 C/C++ declaration quotes (plus 31,326 managed-code signatures in the separated .NET file), 193,538 requirements, 3,510 CE constraint sentences and 969 quoted ABI statements (`kind: "abi-note"`: alignment, byte order, pointer size, structure size), an **ABI view per name** (`knowledge/reports/abi.tsv`: the calling convention each declaration prints — never guessed — its member types (38,938 of 46,972 member lines), bitfields, packing/alignment flags, documented offsets and stated sizes), **399 documented offset rows** quoted from the layout tables of 58 pages (`knowledge/kb/abi-offsets.tsv`), **22,936 numbered constants** quoted from name/value tables, from cells a page prints as `NAME = 0x0001` or `NAME (0x0001)`, from `#define` and `enum` blocks of syntax declarations, and from `NAME (0x0400)` prose on 1,675 pages — each row carries a `layer` and an `origin` (`knowledge/kb/constants.tsv`) — plus the **constant -> header linkage ranked by evidence strength** (`knowledge/kb/constant-headers.tsv`: 4,803 rows over 3,811 names: `own-page`, then the entity's own page (`entity-page` / `constant-entity`), then, marked, the Win32 reference, and — weakest, from the isolated aux layer, never primary evidence — the pinvoke module hint, 343 names at this point). A constant the page does not number is absent, and the scope of the licence each record's page carries (`license`, from `data/license-scopes.tsv`). Every record names its page. See `knowledge/README.md`. |
 | `sources/` | The verbatim official media the corpus was extracted from (CHMs, HLP/MVB books, documentation zips, the 41-page CE 2.0 site mirror) and the sdk-api snapshot (`sources/microsoftdocs/`), with a `PROVENANCE.md` per release. Reference material — not part of the corpus text. |
 | `data/` | Derived datasets (catalogs, TOC trees, manifests, per-page API metadata, gap report) and the generated index. See `data/README.md`. |
 | `docs/` | `COLLECTION-POLICY.md` — what belongs in the corpus, the Win32-common rule and the .NET split; `LICENSING.md` — the per-item rights registry, the statements it rests on and the finding that most of the collection is not licensed for redistribution; `clean-room.md` — the clean-room definition, the cases, and the invariants `tools/check-cleanroom.py` verifies; `review-2026-10.ja.md` — the 2026-10 review (Japanese), including the round that removed 16,228 pages, the .NET split, the knowledge layer, the rights finding and the ABI layer. |
@@ -202,22 +202,35 @@ resume check) don't have to rescan ~120k files.
   declarations and to `NAME (0xNNNN)` prose (17,228 → **22,936** numbered
   constants over **1,675** pages, every row with a quoted `layer` and
   `origin`).  Build-definition -> header linkage is now its own evidence
-  table, `knowledge/kb/constant-headers.tsv` (**4,460** rows over **3,811**
+  table, `knowledge/kb/constant-headers.tsv` (**4,803** rows over **3,811**
   names), ranked `own-page` > `entity-page` > `constant-entity` >
   `win32-reference` (marked) > `pinvoke-weak` — the last rank being the one
-  use case of the *isolated* pinvoke.net user-wiki aux layer
-  (`knowledge/aux/`, never primary evidence, `license_use=no`; its harvesting
-  is gated on the queue `queues/pinvoke-net.txt`, and the layer currently
-  holds only its README).  Everything pages across generations disagree on is
+  use case of the *isolated pinvoke weak-auxiliary layer*
+  (`knowledge/aux/`, never primary evidence).  The pinvoke accept source is
+  [github.com/dotnet/pinvoke](https://github.com/dotnet/pinvoke): the pinned,
+  archived snapshot of the community P/Invoke data lives as a tarball under
+  `sources/dotnet-pinvoke/` (MIT, `PROVENANCE.md` records the commit), stays
+  out of `corpus/` (it is C# code; the corpus is documentation-only), and is
+  parsed by `tools/pinvoke_extract.py` into 588 `[DllImport]` and 4,498
+  constant rows that quote their `.cs` lines by archive member and line
+  number.  It files **343** otherwise unlinked constants at rank
+  `pinvoke-weak` (module-derived header hint, loudly marked everywhere);
+  **its values are never taken** — `knowledge/reports/constant-pinvoke-review.tsv`
+  instead compares each community value with the documented CE value and all
+  **335** comparable names agree (hex/decimal spellings aside).  The
+  **2,012** names the corpus cannot link at any rank stay a checked
+  collection worklist, `knowledge/reports/constant-header-gaps.tsv` (name,
+  rows, origins, sets, example page, pinvoke hit) — the input to any CE SDK
+  verification; `tools/check-kb.py` requires it to stay the exact complement
+  of the linkage table.  Everything pages across generations disagree on is
   a listed conflict or a version branch, not a silent pick (2 conflicts at
   this point), spacing-collapsed declarations are left as evidence rather
   than repaired, and the generation set -> `_WIN32_WCE` interval wiring is
-  documented in the generator itself.  The **2,347** names the corpus cannot
-  link at any rank are a checked collection worklist,
-  `knowledge/reports/constant-header-gaps.tsv` (name, rows, origins, sets,
-  example page) — the input to the pinvoke-weak review once the isolated
-  corpus is harvested and to any CE SDK verification; `tools/check-kb.py`
-  requires it to stay the exact complement of the linkage table.
+  documented in the generator itself.  And the generated surface is now
+  committed itself: **`winsur/` holds the unified include/def tree**
+  (568 header fragments carrying 4,678 derived `#define` lines, 266 module
+  `.def` worklists, manifest and report; regenerate with
+  `python3 tools/gen-include-def.py --unified --out winsur`).
 * 2026-10 (the boundary, measured): the Windows CE / Win32 boundary is now
   explicit in the knowledge base — every entity carries `surface` (CE-only,
   shared, Win32 spelling of a CE name, catalog-only, or Win32-only; the last is

@@ -118,12 +118,22 @@ sdk-api has no page for, and the rest are CE-only APIs (`Ce*` RAPI,
 `CommandBar_*`) and Win32 APIs the reference no longer pages (`GetStringType`,
 `Random`): no page was missed, and the list keeps the question answerable.
 
-## The one third-party exception: pinvoke.net as weak auxiliary reference
+## The one third-party exception: pinvoke as weak auxiliary reference
 
 Every rule above says the corpus is **Microsoft's own documentation**.  There
 is one deliberate carve-out, and its boundary is written into the tools rather
-than left to habit:
+than left to habit.  It has two accept paths, both equally isolated:
 
+* `sources/dotnet-pinvoke/` holds the pinned snapshot of
+  [github.com/dotnet/pinvoke](https://github.com/dotnet/pinvoke) (the .NET
+  Foundation's community-maintained re-formatting of the pinvoke.net data as
+  C# bindings; **archived upstream**, MIT): `sources/dotnet-pinvoke/PROVENANCE.md`
+  records the commit.  Because the tree is C# *code*, it is kept out of
+  `corpus/` (the corpus stays documentation-only): `tools/pinvoke_extract.py`
+  reads the tarball and writes only the isolated aux records (constant names
+  and values as printed, module placement, `[DllImport]` APIs) to
+  `knowledge/aux/`, every row quoting its `.cs` line by archive member and
+  line number and stamped `dotnet-pinvoke-mit`.
 * `corpus/pinvoke/` may hold pages of the pinvoke.net P/Invoke reference wiki
   (a user-contributed third-party site), and **only** the wiki sections named
   in `queues/pinvoke-net.txt` (`default.aspx/{module}`: the CE-relevant
@@ -135,10 +145,16 @@ than left to habit:
   documentation numbers fewer constants than an include file needs
   (`WM_USER`, `SW_SHOW`, `WS_OVERLAPPED` and thousands of others are
   documented by name but never *numbered* by Microsoft's CE pages), while
-  pinvoke.net's community pages print numeric spellings of those names.  It
+  the pinvoke community pages print numeric spellings of those names.  It
   is used **only** as a *weak auxiliary* hint for judging constant /
   value / header **linkage** where Microsoft's own pages state nothing —
-  highest-suspicion, lowest-priority evidence by construction.
+  highest-suspicion, lowest-priority evidence by construction.  In
+  practice: the dotnet/pinvoke rows currently file **343** otherwise
+  unlinked constants at rank `pinvoke-weak`, the remaining **2,012** names
+  stay on the open worklist (`knowledge/reports/constant-header-gaps.tsv`),
+  and the review table (`knowledge/reports/constant-pinvoke-review.tsv`)
+  compares each community value against the documented CE value (335 of
+  335 linked names agree, hex/decimal spellings aside).
 * **Why it is isolated**: pinvoke.net is not documentation of Windows CE and
   its numbers are not Windows CE facts.  Therefore
   * `tools/build-kb.py` never mints an entity, declaration, requirement or
@@ -150,9 +166,10 @@ than left to habit:
     any official statement — and even the Win32 desktop reference — outrank
     it, never takes a *value* from it, and marks every use loudly in the
     output;
-  * `data/license-scopes.tsv` stamps the tree `pinvoke-user-wiki`,
-    redistribution **no**: it is evidence for review, not publishable
-    documentation.
+  * `data/license-scopes.tsv` stamps the wiki tree `pinvoke-user-wiki`,
+    redistribution **no**, and the tarball `dotnet-pinvoke-mit` (MIT):
+    either way it is evidence for review, never publishable documentation
+    inside the CE surface.
 
 ## Review 2026-10 (what was wrong, what changed)
 

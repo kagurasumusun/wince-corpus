@@ -98,17 +98,33 @@ def read(name):
 
 
 def check_aux():
-    """The isolated pinvoke.net weak-auxiliary rows, when present.
+    """The isolated weak-auxiliary rows, when present.
 
-    knowledge/aux/ exists only once corpus/pinvoke/ has been harvested.
-    The same questions as the main tables: one identifier per name, a
-    known scope, a page that exists, the pinvoke layer stamp -- and, on
-    top, the isolation rule: no aux row may claim an entity or a header
-    that was not *derived* from the wiki's own module structure.
+    knowledge/aux/ holds the one third-party exception: pinvoke material
+    (the user wiki under corpus/pinvoke/ and the pinned dotnet/pinvoke
+    snapshot under sources/dotnet-pinvoke/ -- see docs/COLLECTION-POLICY.md).
+    The same questions as the main tables: one identifier per record, a
+    known scope, a source that exists, the pinvoke layer stamp -- and, on
+    top, the isolation rule (no aux row may claim an entity) plus verbatim
+    quoting against the archived .cs text for the dotnet/pinvoke flavour.
     """
     problems = []
     aux = os.path.join(ROOT, "knowledge", "aux")
     counts = {}
+    archive_lines = {}   # tarball path -> {member: [(no, text)]}
+
+    def cs_lines(tarball, member):
+        rows = archive_lines.get(tarball)
+        if rows is None:
+            try:
+                import pinvoke_extract
+            except ImportError:  # pragma: no cover
+                pinvoke_extract = None
+            rows = (pinvoke_extract.read_cs_archive(
+                os.path.join(ROOT, tarball)) if pinvoke_extract else {})
+            archive_lines[tarball] = rows
+        return rows.get(member)
+
     for kind, filename, required in (
             ("pinvoke_api", "pinvoke-apis.jsonl",
              ("id", "name", "module", "dll", "header", "evidence",
@@ -144,16 +160,43 @@ def check_aux():
                                     f"{record.get('license')!r} not a scope")
                 source = record.get("source") or {}
                 path_src = source.get("path") or ""
-                if not path_src.startswith("corpus/pinvoke/"):
+                isolated = path_src.startswith("corpus/pinvoke/") or \
+                    path_src.startswith("sources/dotnet-pinvoke/")
+                if not isolated:
                     problems.append(f"{kind} {rid}: source {path_src!r} is "
-                                    "not in corpus/pinvoke/ -- the isolated "
+                                    "neither corpus/pinvoke/ nor "
+                                    "sources/dotnet-pinvoke/ -- the isolated "
                                     "layer must stay visibly isolated")
                 elif not os.path.exists(os.path.join(ROOT, path_src)):
-                    problems.append(f"{kind} {rid}: page {path_src} is not "
+                    problems.append(f"{kind} {rid}: source {path_src} is not "
                                     "in the repository")
                 if record.get("entity"):
                     problems.append(f"{kind} {rid}: an aux row must never "
                                     "mint an entity")
+                # verbatim quoting: the dotnet/pinvoke row must be readable
+                # back from the archived .cs text at the recorded member/line
+                member = source.get("archive_member")
+                line_no = source.get("line")
+                if member and line_no and \
+                        source.get("site") == "dotnet-pinvoke":
+                    rows = cs_lines(path_src, member)
+                    if rows is None:
+                        problems.append(f"{kind} {rid}: archive member "
+                                        f"{member} not found")
+                    else:
+                        text = next((t for n, t in rows if n == line_no), "")
+                        if not text:
+                            problems.append(f"{kind} {rid}: line {line_no} "
+                                            "not in archive member")
+                        elif kind == "pinvoke_constant" and \
+                                (record["name"] not in text or
+                                 record["value"] not in text):
+                            problems.append(f"{kind} {rid}: quoted row not "
+                                            "verbatim at its member/line")
+                        elif kind == "pinvoke_api" and \
+                                record["name"] not in text:
+                            problems.append(f"{kind} {rid}: quoted "
+                                            "signature not at its member/line")
     if counts:
         print("knowledge/aux/            " +
               ", ".join(f"{k} {n:,}" for k, n in sorted(counts.items())))
@@ -192,9 +235,10 @@ def check_constant_headers():
                 problems.append(f"constant-headers: {name}: strength "
                                 f"{strength!r} is not a known rank")
             if rows > 1 and cells[2] == "pinvoke-weak" and \
-                    not cells[4].startswith("corpus/pinvoke/"):
+                    not (cells[4].startswith("corpus/pinvoke/") or
+                         cells[4].startswith("sources/dotnet-pinvoke/")):
                 problems.append(f"constant-headers: {name}: a pinvoke-weak "
-                                "row must name a corpus/pinvoke/ page")
+                                "row must name an isolated-aux source")
             if len(problems) > 200:
                 break
     if rows and not problems:
@@ -215,7 +259,8 @@ def check_constant_headers():
     gap_names = []
     with open(worklist, encoding="utf-8") as fh:
         header = fh.readline().rstrip("\n").split("\t")
-        if header != ["name", "rows", "origins", "sets", "example_page"]:
+        if header != ["name", "rows", "origins", "sets", "example_page",
+                      "pinvoke_hit"]:
             problems.append(f"constant-header-gaps.tsv: unexpected columns "
                             f"{header}")
         for line in fh:
@@ -241,6 +286,22 @@ def check_constant_headers():
     if not problems:
         print(f"constant-header-gaps.tsv  {len(gap_names):>8,} collection "
               "worklist names")
+
+    review = os.path.join(REPORTS, "constant-pinvoke-review.tsv")
+    if not os.path.exists(review):
+        problems.append("constant-pinvoke-review.tsv: missing -- run "
+                        "build-kb.py")
+        return problems
+    with open(review, encoding="utf-8") as fh:
+        header = fh.readline().rstrip("\n").split("\t")
+        want = ["name", "ce_values", "pinvoke_modules", "pinvoke_values",
+                "agreement", "example_member"]
+        if header != want:
+            problems.append(f"constant-pinvoke-review.tsv: unexpected "
+                            f"columns {header}")
+        review_rows = sum(1 for _ in fh if _.strip())
+    if not problems:
+        print(f"constant-pinvoke-review.tsv {review_rows:>8,} weak-review rows")
     return problems[:200]
 
 

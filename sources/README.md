@@ -37,6 +37,13 @@ collection policy in the top-level `README.md`).
 | `windows-ce-5.0/` | CE 5.0 CD1: 98 component CHMs (`P302_wce*.chm` … `P407_*.chm`) + release notes. | `corpus/chm/windows-ce-5.0/` (20,209 pages: the per-component guides and API reference). The Learn harvest (`corpus/learn/windows-ce-5.0/`) shares only 4 of its 20,141 titles, so this is complementary, not a duplicate. |
 | `windows-ce-6.0/` | CE 6.0 DVD: release notes (the DVD carries no documentation CHM/HTM set). | Reference only. |
 
+Non-media exception (not Windows CE source material at all):
+
+| Directory | Medium | Output |
+|-----------|--------|--------|
+| `microsoftdocs/` | Microsoft's public documentation repositories (CC-BY-4.0 / MIT tooling), pinned commits. | `corpus/win32/api/` (5,279 pages, the CE-shared Win32 surface). |
+| `dotnet-pinvoke/` | **Third-party, one deliberate exception** (see `docs/COLLECTION-POLICY.md`): the archived github.com/dotnet/pinvoke snapshot (MIT), the community-maintained re-formatting of the pinvoke.net P/Invoke data. | **Never into `corpus/`** (it is C# code; the corpus stays documentation-only): `tools/pinvoke_extract.py` writes the isolated weak-auxiliary rows of `knowledge/aux/` from it (constant names/values as printed, module placement, `[DllImport]` rows), used only to *judge* constant/header linkage and never as Windows CE fact. |
+
 Extracted text is never edited in place; if a source turns out to be wrong,
 fix the extraction under `corpus/` and note it in the release's
 `PROVENANCE.md`.

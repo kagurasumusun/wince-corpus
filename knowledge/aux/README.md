@@ -1,24 +1,32 @@
-# knowledge/aux — the isolated pinvoke.net weak-auxiliary reference
+# `aux/` -- the isolated weak-auxiliary pinvoke material
 
-**Auxiliary, not knowledge.** Everything in `aux/` comes from the isolated
-`corpus/pinvoke/` tree (pinvoke.net user wiki pages, see
-`docs/COLLECTION-POLICY.md`). It is NOT part of the specification and never
-joins the knowledge tables in `knowledge/kb/`.
+The files here are **not** part of the specification in `kb/`: they are the
+machine-readable residue of the **one third-party exception** in
+`docs/COLLECTION-POLICY.md`, the pinvoke P/Invoke reference, and they are
+kept strictly separate from the official-documentation knowledge base.
+They are consumed as **weak auxiliary evidence only**: where Microsoft's own
+pages state nothing about a constant's header, a pinvoke statement may
+*hint* at the linkage (`strength: "pinvoke-weak"` in
+`kb/constant-headers.tsv`) so the gap is visible and decisions can be
+reviewed; it never overrides a documented statement, it is always labelled,
+and the rules are in `data/license-scopes.tsv`.  A pinvoke value is never
+treated as a Windows CE value and never written into a generated header:
+the review report `reports/constant-pinvoke-review.tsv` compares each
+community value with the documented CE one.
 
-* `pinvoke-apis.jsonl` when the isolated corpus has been harvested — one row
-  per pinvoke.net API page (name, note, DLL, header, quote, tags, provenance).
-* `pinvoke-constants.jsonl` also when harvested — one row per pinvoke.net
-  constant page (name, value text, header, description, tags, provenance).
-* `pinvoke-apis.tsv` / `pinvoke-constants.tsv` flattened review views.
+Two accept paths feed this directory, both isolated:
 
-What it is used for: the weakest constant/header linkage rank
-`pinvoke-weak` in `knowledge/kb/constant-headers.tsv`, consumed by
-`tools/gen-include-def.py` when every documented rank is absent; each such
-row borrows the *printed header field* of the community wiki page. The
-auxiliary data may differ per Windows CE generation; the wiki has no version
-ranges, so per-generation truth always comes from official docs, and a CE
-statement always outranks a pinvoke hint.
+* `sources/dotnet-pinvoke/` -- the pinned, archived github.com/dotnet
+  /pinvoke snapshot (MIT), parsed by `tools/pinvoke_extract.py` into
+  constants (`public const`/`enum` member) and API (`[DllImport]`) rows.
+  Each record quotes the verbatim `.cs` line with its archive member and
+  line number; `header` is DERIVED from the module directory (the Windows
+  library project the name is filed under -- a weak hint by design).
+* `corpus/pinvoke/` -- the pinvoke.net user wiki, queue-gated by
+  `queues/pinvoke-net.txt` (currently empty: not harvested).
 
-License: see `data/license-scopes.tsv` — rows in aux carry
-`license_use=no`: community wiki content is reference material for review
-only. The CE app include/def surface never *needs* it.
+| File | Contents |
+|------|----------|
+| `pinvoke-apis.jsonl.gz` | one row per API: `name`, `module`, `dll` (the DllImport text, when it names one), `header` (derived), `evidence`, `source` (archive member + line) |
+| `pinvoke-constants.jsonl.gz` | one row per constant: `name`, `value` as printed, `value_eval` (best-effort fold, marked), `module`, `header` (derived), `table`, `row` (the quote), `source` |
+| `pinvoke-apis.tsv` / `pinvoke-constants.tsv` | flat review views of the same rows |

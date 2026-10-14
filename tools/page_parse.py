@@ -3080,6 +3080,25 @@ _PINVOKE_MODULE_TO_HEADER = {
     "winspool": "Winspool.h",
     "coredll": "Windows.h",
     "rapi": "Rapi.h",
+    # dotnet/pinvoke library projects beyond the classic wiki modules
+    "bcrypt": "Bcrypt.h",
+    "cabinet": "Fci.h",
+    "cfgmgr32": "Cfgmgr32.h",
+    "dbghelp": "Dbghelp.h",
+    "dwmapi": "Dwmapi.h",
+    "fusion": "Fusion.h",
+    "hid": "Hidsdi.h",
+    "iphlpapi": "Iphlpapi.h",
+    "imagehlp": "Imagehlp.h",
+    "mscoree": "Mscoree.h",
+    "magnification": "Magnification.h",
+    "msi": "Msi.h",
+    "ncrypt": "Ncrypt.h",
+    "ntdll": "Winternl.h",
+    "newdev": "Newdev.h",
+    "psapi": "Psapi.h",
+    "shcore": "Shellscalingapi.h",
+    "setupapi": "Setupapi.h",
 }
 
 

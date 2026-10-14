@@ -24,7 +24,7 @@ surface lives in the SAME tree, marked as the desktop reference wherever it is
 the only statement -- never a second tree.  A constant's derived ``#define``
 is filed into the header the linkage table assigns it
 (``kb/constant-headers.tsv``), with its evidence and the strength of the
-linkage printed beside it; the weakest rank, the pinvoke.net weak auxiliary
+linkage printed beside it; the weakest rank, the pinvoke weak auxiliary
 hint, is marked loudly.  Differences in a constant's number between
 generations become ``#if``/``#elif`` branches; disagreements within one
 generation are conflicts and are listed, never guessed.
@@ -866,7 +866,7 @@ def load_constant_links():
 
 
 def load_pinvoke_aux(path):
-    """The isolated pinvoke.net weak-auxiliary material, when harvested."""
+    """The isolated weak-auxiliary pinvoke material, when harvested."""
     if not os.path.exists(path) and path.endswith(".gz"):
         path = path[:-3]
     if not os.path.exists(path):
@@ -1258,9 +1258,10 @@ def run_unified(args):
                 block.append(" * also stated in: "
                              + ", ".join(h["header"] for h in named))
             if strength == "pinvoke-weak":
-                block.append(" * WEAK AUXILIARY HINT from pinvoke.net, a "
-                             "user-contributed wiki -- no Microsoft page "
-                             "states this header; verify before relying on it")
+                block.append(" * WEAK AUXILIARY HINT from the isolated "
+                             "pinvoke material (community P/Invoke data) -- "
+                             "no Microsoft page states this header; verify "
+                             "before relying on it")
             elif strength == "win32-reference":
                 block.append(" * header stated by the Win32 desktop "
                              "reference only -- verify against the CE SDK")
@@ -1590,20 +1591,24 @@ def _unified_report(args, entities, by_header, by_module, header_files,
         lines.append(f"| {rank} | {strengths.get(rank, 0):,} |")
     lines += [
         "",
-        "## The isolated pinvoke.net weak-auxiliary reference",
+        "## The isolated weak-auxiliary pinvoke reference",
         "",
         f"* aux API rows: **{len(pinvoke_apis):,}**, aux constant rows:",
         f"  **{len(pinvoke_consts):,}** (`knowledge/aux/`, isolated from",
-        "  the specification; 0 until `corpus/pinvoke/` is harvested)",
+        "  the specification; accept paths: the pinned dotnet/pinvoke",
+        "  snapshot under `sources/dotnet-pinvoke/` and, not yet harvested,",
+        "  the user wiki under `corpus/pinvoke/`)",
         "* what they are used for: ONLY the weakest constant/header",
         "  linkage rank above, consumed so that the gap between official",
         "  documentation and community reference is reviewable;",
         f"  **{strengths.get('pinvoke-weak', 0):,}** linkage rows rest on",
-        "  them directly, each loudly marked in its header comment",
-        "* what they are never used for: no value ever comes from",
-        "  pinvoke.net (values are CE-page quotations only), no entity,",
-        "  no declaration, no requirement is minted from it, and no pinvoke",
-        "  statement overrides a documented one",
+        "  them directly, each loudly marked in its header comment, and",
+        "  `reports/constant-pinvoke-review.tsv` compares every such",
+        "  community value with the documented CE value",
+        "* what they are never used for: no value ever comes from the",
+        "  pinvoke material (values are CE-page quotations only), no",
+        "  entity, no declaration, no requirement is minted from it, and",
+        "  no pinvoke statement overrides a documented one",
         f"* Win32-only numbers seen but not used: **{len(win32_only):,}**",
         "  constants (CE and desktop values are not assumed to match)",
         "",

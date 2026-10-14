@@ -59,9 +59,12 @@ FILES = {
     "constraint": ("kb", "constraints.jsonl.gz"),
     "abi_offset": ("kb", "abi-offsets.jsonl.gz"),
     "constant": ("kb", "constants.jsonl.gz"),
-    # The isolated pinvoke.net weak-auxiliary layer (exists only after
-    # corpus/pinvoke/ is harvested).  The same invariants apply to it:
-    # every row names a page that exists, and its quote is on that page.
+    # The isolated weak-auxiliary layer (pinvoke material, when harvested:
+    # the wiki under corpus/pinvoke/ and the pinned dotnet/pinvoke snapshot
+    # under sources/dotnet-pinvoke/).  Source existence is checked here;
+    # the quote fidelity of aux rows is verified per archive member and
+    # line number by tools/check-kb.py (their source is a tarball, not a
+    # corpus page, so page-text matching does not apply).
     "pinvoke_api": ("aux", "pinvoke-apis.jsonl.gz"),
     "pinvoke_constant": ("aux", "pinvoke-constants.jsonl.gz"),
 }
@@ -177,6 +180,8 @@ def check_quotes(records, pages, every):
     checked = not_found = 0
     details = []
     for kind, field in QUOTE_FIELD.items():
+        if kind.startswith("pinvoke_"):
+            continue  # aux quote fidelity is per archive member/line
         for record in sample(records.get(kind) or [], every):
             text = record.get(field) or ""
             if not text.strip():
