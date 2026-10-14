@@ -1,0 +1,72 @@
+# probe: wb-idx-0301
+
+- url: https://web.archive.org/web/20030220160303id_/http://msdn.microsoft.com:80/msdnmag/issues/03/01/
+- mode: small
+- fetched: 2026-10-14 13:25:52 UTC
+- status: 200
+- bytes: 22,910
+- sha256: 2afb842ecc9bbf29b342811aa30fa02668d9f3beccc8a15268f14e16b554cc49
+- title: MSDN Magazine Contents - January 2003
+- stored: data/probe/wb-idx-0301/188-index
+
+## same-host links seen (59, capped at 300)
+
+- /msdnmag/css/mag.css
+- /msdnmag/css/msdn.css
+- /library/mnp/2/aspx/css.aspx
+- /default.asp
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /isapi/gosupport.asp
+- /isapi/gosearch.asp
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /default.asp
+- /library/default.asp
+- /downloads/default.asp
+- /code/default.asp
+- /sitemap/default.asp
+- /worldwide/default.asp
+- /isapi/gosearch.asp
+- /msdnmag/default.aspx
+- /msdnmag/issues/03/01/default.aspx
+- /msdnmag/issues/03/01/default.aspx
+- /msdnmag/code.aspx
+- /msdnmag/backissues.aspx
+- /msdnmag/columns/default.aspx
+- /msdnmag/find/default.aspx
+- /msdnmag/Subscribe.aspx
+- /msdnmag/service.aspx
+- /msdnmag/submit.aspx
+- /msdnmag/staff.aspx
+- /msdnmag/write.aspx
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /newsgroups/
+- /msdnmag/cdrom/2001/default.aspx
+- /default.asp
+- /msdnmag/default.aspx
+- /msdnmag/issues/03/01/default.aspx
+- /web/20030220160303id_/http:/msdn.microsoft.com:80/msdnmag/issues/03/01/MSDNMag0301.chm
+- /msdnmag/issues/03/01/NETProfilerAPI/default.aspx
+- /msdnmag/issues/03/01/GDILeaks/default.aspx
+- /msdnmag/issues/03/01/LoadTesting/default.aspx
+- /msdnmag/issues/03/01/UITestAutomation/default.aspx
+- /msdnmag/issues/03/01/SQLServerCE20/default.aspx
+- /msdnmag/issues/03/01/EditorsNote/default.aspx
+- /msdnmag/issues/03/01/NewStuff/default.aspx
+- /msdnmag/issues/03/01/WebQA/default.aspx
+- /msdnmag/issues/03/01/XMLFiles/default.aspx
+- /msdnmag/issues/03/01/DataPoints/default.aspx
+- /msdnmag/issues/03/01/CuttingEdge/default.aspx
+- /msdnmag/issues/03/01/AdvancedBasics/default.aspx
+- /msdnmag/issues/03/01/BasicInstincts/default.aspx
+- /msdnmag/issues/03/01/NET/default.aspx
+- /msdnmag/issues/03/01/CQA/default.aspx
+- /msdnmag/issues/03/01/ResourceFile/default.aspx
+- /flash/
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
