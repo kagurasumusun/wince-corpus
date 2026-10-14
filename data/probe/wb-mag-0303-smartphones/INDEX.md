@@ -1,0 +1,71 @@
+# probe: wb-mag-0303-smartphones
+
+- url: https://web.archive.org/web/20030303164411id_/http://msdn.microsoft.com:80/msdnmag/issues/03/03/Smartphones/default.aspx
+- mode: small
+- fetched: 2026-10-14 20:43:03 UTC
+- status: 200
+- bytes: 43,122
+- sha256: 95f93452f5983183c30b3f43e98678c26074484e33301d5e9201335a5dc2eed7
+- title: Smartphones: Design Robust Apps that Take Advantage of Windows CE-powered Smartphone Devices
+- stored: data/probe/wb-mag-0303-smartphones/211-default.aspx
+
+## same-host links seen (58, capped at 300)
+
+- /msdnmag/css/mag.css
+- /msdnmag/css/msdn.css
+- /library/mnp/2/aspx/css.aspx
+- /default.asp
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /isapi/gosupport.asp
+- /isapi/gosearch.asp
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /default.asp
+- /library/default.asp
+- /downloads/default.asp
+- /code/default.asp
+- /sitemap/default.asp
+- /worldwide/default.asp
+- /isapi/gosearch.asp
+- /msdnmag/default.aspx
+- /msdnmag/issues/03/03/default.aspx
+- /msdnmag/issues/03/03/default.aspx
+- /msdnmag/code.aspx
+- /msdnmag/backissues.aspx
+- /msdnmag/columns/default.aspx
+- /msdnmag/find/default.aspx
+- /msdnmag/issues/03/04/default.aspx
+- /msdnmag/Subscribe.aspx
+- /msdnmag/service.aspx
+- /msdnmag/submit.aspx
+- /msdnmag/staff.aspx
+- /msdnmag/write.aspx
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /newsgroups/
+- /isapi/gomscom.asp
+- /default.asp
+- /msdnmag/default.aspx
+- /msdnmag/issues/03/03/default.aspx
+- /msdnmag/find/default.aspx
+- /isapi/gomscom.asp
+- /library/en-us/dnsmtphn/html/devSPUI.asp
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /web/20030303164411id_/http:/msdn.microsoft.com:80/msdnmag/issues/03/03/Smartphones/&
+- /web/20030303164411id_/http:/msdn.microsoft.com:80/msdnmag/issues/03/03/Smartphones/&
+- /web/20030303164411id_/http:/msdn.microsoft.com:80/msdnmag/issues/03/03/Smartphones/&
+- /library/en-us/dnsmtphn/html/devappsp.asp
+- /library/en-us/dnsmtphn/html/sp_devsmartphone2002.asp
+- /msdnmag/issues/02/11/MMIT/
+- /isapi/gomscom.asp
+- /msdnmag/issues/03/03/default.aspx
+- /msdnmag/default.aspx
+- /msdnmag/subscribe.aspx
+- /flash/
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
