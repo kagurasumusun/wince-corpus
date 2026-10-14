@@ -38,7 +38,15 @@ Candidate sources that were looked at and deliberately left out - vendor
 knowledge bases, blog posts and SDK downloads. They are CE-related but are
 either commercial vendor material or not documentation:
 
-* https://blog.ch3cooh.jp/entry/20130417/1366182420 (blog post)
+* https://blog.ch3cooh.jp/entry/20130417/1366182420 (blog post; an earlier refusal
+  note claimed the site had been inactive since 2017 -- that claim was made from
+  memory and was wrong.  Fact-checked 2026-10-15 via probe
+  : the post is live (200 OK); its actual title is
+  "Windows Mobile 6.0 のcoredll.libに含まれるWindowsAPIの関数一覧" -- a personal
+  blog's function-name list for one library, not Microsoft documentation, so the
+  Not-collected verdict stands for scope reasons alone (community listings are
+  never header/#define sources; docs/COLLECTION-POLICY.md).  Keep the probe as the
+  write-up of the site; no further action)
 * https://datalogic.github.io/wince-sdk/ (vendor SDK page)
 * https://developer.toradex.com/windows-ce/knowledge-base/vf50-vf61-wec-software/ (vendor knowledge base)
 * https://github.com/datalogic/wince-sdk (2026-10 re-visited: the same Datalogic vendor SDK documentation as the line above, now as a GitHub repository.  The tarball was fetched from codeload.github.com and inspected: 1,963 files under docs/, pages such as AZTEC_*, BATINFO, Beacon*, EAP_CL, CL_Decode*, BTProfile, AUTH -- barcode/scanner SDK reference for the vendor's scanners and mobile computers, not Windows CE documentation; each page footer says "Copyright © Datalogic ADC. All Right Reserved" and the repo has no licence file, so import would be an unlicensed copy)
