@@ -11,11 +11,11 @@ the SAME tree, marked 'Win32 reference' -- never a second tree.
 ## What was generated
 
 * entities in scope: **28,916** (by surface: `ce-only` 24,563, `shared` 4,353)
-* header fragments: **568** under `include/`, each
+* header fragments: **569** under `include/`, each
   with its documented constants first and its declarations after;
   quoted text is verbatim, the `#define` keyword and the
   header/constant filing are derived and say so
-* derived `#define` lines written: **4,664**
+* derived `#define` lines written: **4,665**
 * constants whose pages disagree / overlap: **2**
   (listed, no `#define` written)
 * constants with no header linkage at all: **2,012**
@@ -40,7 +40,7 @@ pinvoke weak auxiliary hint):
 
 | rank | link rows |
 |------|----------:|
-| own-page | 4,160 |
+| own-page | 4,161 |
 | entity-page | 42 |
 | constant-entity | 34 |
 | win32-reference | 224 |
