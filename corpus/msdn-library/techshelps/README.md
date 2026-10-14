@@ -17,8 +17,9 @@ which no other tree of this corpus covers.
 | `WCEDDK/` | 339 | Windows CE Device Driver Kit |
 | `VCCE/` | 105 | Visual C++ for Windows CE |
 | `DNEMBED/` | 86 | Embedded/Windows CE development topics |
+| `BACKGRND-CE/` | 13 | the Windows CE pages of the MSDN Library "Backgrounder" pile (the 13 CE pages of MSDN/BACKGRND's 1,251; subset named in `tools/import-techshelps.py`) |
 
-5,165 pages in total. They are third-party mirror copies rather than an
+5,178 pages in total. They are third-party mirror copies rather than an
 official Microsoft download, which is why they live in their own directory:
 `corpus/msdn-library/` is the collection of *mirror* copies of CE
 documentation, as opposed to `corpus/learn/`, `corpus/chm/` and `corpus/mvb/`,

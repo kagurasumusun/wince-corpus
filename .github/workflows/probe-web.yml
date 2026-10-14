@@ -1,0 +1,55 @@
+# Probe one-off web targets from a runner (the sandbox this corpus is
+# maintained from cannot reach most of the web).  Reads queues/probe-web.txt,
+# writes data/probe/<name>/INDEX.md (+ small fetch bodies) and commits.
+# Nothing here lands in corpus/ -- a probe is reconnaissance for a decision,
+# not collection.  See tools/probe-web.py.
+
+name: Probe web targets
+
+on:
+  workflow_dispatch:
+    inputs:
+      queue:
+        description: 'Probe queue under queues/ (default probe-web.txt)'
+        required: false
+        default: 'probe-web.txt'
+  push:
+    paths:
+      - 'queues/probe-web.txt'
+
+concurrency:
+  group: probe-web
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  probe:
+    runs-on: ubuntu-latest
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GIT_PAT || secrets.GITHUB_TOKEN }}
+          ref: ${{ github.ref_name }}
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Run the probe
+        run: python3 tools/probe-web.py --queue "queues/${{ inputs.queue || 'probe-web.txt' }}" --out data/probe
+
+      - name: Commit the report
+        run: |
+          git config user.name "wince-docs-corpus prober"
+          git config user.email "wince-corpus-harvester@users.noreply.github.com"
+          git add data/probe
+          if git diff --staged --quiet; then
+            echo "no report changes"
+            exit 0
+          fi
+          git commit -m "probe: ${{ inputs.queue || 'probe-web.txt' }} results"
+          git pull --rebase
+          git push

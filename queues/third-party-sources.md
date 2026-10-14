@@ -41,3 +41,6 @@ either commercial vendor material or not documentation:
 * https://blog.ch3cooh.jp/entry/20130417/1366182420 (blog post)
 * https://datalogic.github.io/wince-sdk/ (vendor SDK page)
 * https://developer.toradex.com/windows-ce/knowledge-base/vf50-vf61-wec-software/ (vendor knowledge base)
+* https://github.com/datalogic/wince-sdk (2026-10 re-visited: the same Datalogic vendor SDK documentation as the line above, now as a GitHub repository -- barcode/scan SDK for the vendor's devices, not Windows CE documentation; no licence statement in the repo beyond a one-line README)
+* https://developer.toradex.com/windows-ce/ (2026-10 re-visited: vendor module knowledge base, as refused above; `queues/probe-web.txt` fetches its imprint page so the licence reading is on file)
+* https://ce-programming.github.io/toolchain/ (the TI-84+ CE **calculator** C/C++ toolchain -- a different "CE"; not Windows CE software)

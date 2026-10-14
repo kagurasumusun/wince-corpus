@@ -7,15 +7,12 @@ MSDN Library content from the late 1990s — the editions that documented
 **Windows CE 1.0 and 2.0**, which Microsoft never put on the Web and which the
 rest of this corpus does not cover.
 
-Seven CE sets are imported (5,170 pages):
-
-    MSDN/CEGUIDE   Windows CE Guide (SDK guide)          974 pages
-    MSDN/WCEMFC    Windows CE MFC                       2,247 pages
-    MSDN/WCEATL    Windows CE ATL                         745 pages
-    MSDN/VBCE      Visual Basic for Windows CE            672 pages
-    MSDN/WCEDDK    Windows CE DDK                         340 pages
-    MSDN/VCCE      Visual C++ for Windows CE              106 pages
-    MSDN/DNEMBED   Embedded/Windows CE development         86 pages
+Seven CE sets are imported (5,170 pages) plus the BACKGRND-CE subset:
+MSDN/BACKGRND is a 1,251-page "Backgrounder" pile of which exactly 13
+pages are Windows CE material (the CE Technical FAQ, the Communications
+Model, Memory Use, Display Drivers, Real-Time Systems, Porting Win95
+programs, the Win32 Programming Model primer, and five more -- named in
+SUBSETS).
 
 Pages are copied verbatim except for the mirror's injected Google Analytics
 snippet, which is removed (documented in the tree's PROVENANCE.md).
@@ -51,6 +48,28 @@ SETS = {
     "DNEMBED": "Windows CE embedded development",
 }
 
+# The MSDN Library "Backgrounder" section (MSDN/BACKGRND) is one mixed
+# 1,251-file pile; exactly these 13 pages are Windows CE material (found by
+# title/body scan of the whole pile -- their images are dropped like every
+# other techshelps set's images, see walk_html).
+SUBSETS = {
+    "BACKGRND-CE": ("BACKGRND/html", [
+        "msdn_cetecfaq.htm",   # Microsoft Windows CE Technical FAQ
+        "msdn_comm_mod.htm",   # The Microsoft Windows CE Communications Model
+        "msdn_devwince.htm",   # Developing Applications for Microsoft Windows CE
+        "msdn_embeddev.htm",   # Embedded Development with Microsoft Windows CE 2.0
+        "msdn_memdrft2.htm",   # Microsoft Windows CE Memory Use
+        "msdn_mgdidft1.htm",   # Microsoft Windows CE Graphics Features
+        "msdn_mgdiview.htm",   # Microsoft Windows CE Display Drivers and Hardware
+        "msdn_porting.htm",    # Porting Windows 95 Programs to Windows CE
+        "msdn_rtdraft6.htm",   # Real-Time Systems with Microsoft Windows CE
+        "msdn_vcceembo.htm",   # Introducing the Windows CE Embedded Toolkit for VC++ 5.0
+        "msdn_vcwincefaq.htm", # Visual C++ for Windows CE FAQ
+        "msdn_w32model.htm",   # The Microsoft Win32 Programming Model: A Primer
+        "msdn_wince.htm",      # Microsoft Windows CE: The New Choice for Dedicated Systems
+    ]),
+}
+
 # The mirror injects a Google Analytics snippet into every page.
 GA_RE = re.compile(
     r"<script[^>]*googletagmanager[^>]*>\s*</script>"
@@ -73,6 +92,8 @@ def clone_to(cache_dir):
          REPO_URL, target])
     run(["git", "-C", target, "sparse-checkout", "init", "--no-cone"])
     patterns = [f"MSDN/{name}/**" for name in SETS]
+    for directory, files in SUBSETS.values():
+        patterns += [f"MSDN/{directory}/{name}" for name in files]
     run(["git", "-C", target, "sparse-checkout", "set"] + patterns)
     run(["git", "-C", target, "checkout"])
     return target
@@ -140,8 +161,32 @@ def main():
         total += written
         print(f"[techshelps] {name}: {written} pages -> {os.path.relpath(target, ROOT)}")
 
-    if args.list or args.dry_run:
-        return 0
+    for name, (directory, files) in SUBSETS.items():
+        source = os.path.join(root, "MSDN", directory)
+        target = os.path.join(ROOT, args.out, name)
+        written = 0
+        for f in files:
+            path = os.path.join(source, f)
+            if not os.path.isfile(path):
+                print(f"[techshelps] {name}: MISSING {f} (sparse checkout?)")
+                continue
+            if args.list or args.dry_run:
+                written += 1
+                continue
+            os.makedirs(target, exist_ok=True)
+            with open(path, "rb") as fh:
+                text = fh.read().decode("cp1252", "replace")
+            new = GA_RE.sub("", text)
+            if new == text:
+                new = text.replace("\r\n", "\n")
+            with open(os.path.join(target, f), "w", encoding="utf-8",
+                      newline="\n") as fh:
+                fh.write(new)
+            written += 1
+        verb = "would write" if args.dry_run else             ("have" if args.list else "wrote")
+        print(f"[techshelps] {name}: {written} pages ({directory}, CE subset)")
+        total += 0 if (args.list or args.dry_run) else written
+
     print(f"[techshelps] {total} pages imported")
     return 0
 
