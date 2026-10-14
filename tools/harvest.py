@@ -499,6 +499,10 @@ class Fetcher:
                     return None, "too-many-redirects"
                 target = urllib.parse.urljoin(url, location)
                 if urllib.parse.urlparse(target).netloc != host:
+                    # Remember where it wanted to go: probe tools need the
+                    # redirect target even though pacing forbids following
+                    # it off-host.
+                    self.last_redirect = target
                     return None, "redirect-offsite"
                 url = target
                 continue

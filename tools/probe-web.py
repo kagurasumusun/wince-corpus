@@ -161,6 +161,10 @@ def main():
         finally:
             signal.alarm(0)
         head = base_head + [f"- status: {status}"]
+        if status and "redirect" in str(status):
+            redirect = getattr(fetcher, "last_redirect", None)
+            if redirect:
+                head.append(f"- redirect-target: {redirect}")
         if body is None:
             head += ["", "**fetch failed** (see status)", ""]
         else:
