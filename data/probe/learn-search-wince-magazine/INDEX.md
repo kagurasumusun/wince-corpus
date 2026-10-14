@@ -2,7 +2,7 @@
 
 - url: https://learn.microsoft.com/api/search?search=%22Windows%20CE%22&locale=en-us&facet=category:Archive
 - mode: json
-- fetched: 2026-10-14 20:38:04 UTC
+- fetched: 2026-10-14 22:04:26 UTC
 - status: fetch-aborted(>240s)
 
 **fetch failed** (see status)
