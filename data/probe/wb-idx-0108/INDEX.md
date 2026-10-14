@@ -1,0 +1,63 @@
+# probe: wb-idx-0108
+
+- url: https://web.archive.org/web/20080125100109id_/http://msdn.microsoft.com:80/msdnmag/issues/01/08/
+- mode: small
+- fetched: 2026-10-14 13:24:55 UTC
+- status: 200
+- bytes: 22,572
+- sha256: 23ad12938eba0392ac861bb37db1edb2a17ef4c63fcd0c44954ab912130e6abc
+- stored: data/probe/wb-idx-0108/171-index
+
+## same-host links seen (51, capped at 300)
+
+- /library/mnp/2/aspx/css.aspx
+- /msdnmag/css/mag.css
+- /library/toolbar/3.0/css.aspx
+- /library/toolbar/3.0/sitemap/en-us.mspx
+- /default.aspx
+- /developercenters/
+- /library/default.asp
+- /downloads/
+- /howtobuy/
+- /subscriptions/
+- /worldwide.aspx
+- /msdnmag/default.aspx
+- /msdnmag/issues/01/08/default.aspx
+- /msdnmag/find/default.aspx
+- /msdnmag/code.aspx
+- /msdnmag/backissues.aspx
+- /msdnmag/columns/default.aspx
+- /msdnmag/rss/default.aspx
+- /msdnmag/Subscribe.aspx
+- /msdnmag/backissues/default.aspx
+- /msdnmag/service.aspx
+- /msdnmag/staff.aspx
+- /msdnmag/authors.aspx
+- /msdnmag/cdrom/default.aspx
+- /msdnmag/podcast/default.aspx
+- /msdnmag/submit.aspx
+- /msdnmag/write.aspx
+- /msdnmag/correct.aspx
+- /isapi/gomscom.asp
+- /default.aspx
+- /msdnmag/default.aspx
+- /msdnmag/issues/01/08/default.aspx
+- /msdnmag/subscribe.aspx
+- /msdnmag/issues/01/08/Interop/default.aspx
+- /msdnmag/issues/01/08/ComXP/default.aspx
+- /msdnmag/issues/01/08/XMLSQL/default.aspx
+- /msdnmag/issues/01/08/FaxServ/default.aspx
+- /msdnmag/issues/01/08/Concur/default.aspx
+- /msdnmag/issues/01/08/Async/default.aspx
+- /msdnmag/issues/01/08/web/default.aspx
+- /msdnmag/issues/01/08/data/default.aspx
+- /msdnmag/issues/01/08/cutting/default.aspx
+- /msdnmag/issues/01/08/net/default.aspx
+- /msdnmag/issues/01/08/instincts/default.aspx
+- /msdnmag/issues/01/08/bugslayer/default.aspx
+- /msdnmag/issues/01/08/c/default.aspx
+- /msdnmag/issues/01/08/ednote/default.aspx
+- /msdnmag/issues/01/08/stuff/default.aspx
+- /isapi/gomscom.asp
+- /flash/
+- /library/toolbar/3.0/trademarks/en-us.mspx
