@@ -1,0 +1,68 @@
+# probe: wb-idx-0206
+
+- url: https://web.archive.org/web/20031018003837id_/http://msdn.microsoft.com:80/msdnmag/issues/02/06/
+- mode: small
+- fetched: 2026-10-14 13:25:28 UTC
+- status: 200
+- bytes: 22,241
+- sha256: 80b84ac06cc3997d01b1ee244302741c148e706a59187117a303cc6b69a0a609
+- stored: data/probe/wb-idx-0206/181-index
+
+## same-host links seen (56, capped at 300)
+
+- /msdnmag/css/msdn.css
+- /library/mnp/2/aspx/css.aspx
+- /msdnmag/css/mag.css
+- /default.aspx
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /isapi/gosearch.asp
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /default.aspx
+- /developercenters/
+- /library/default.asp
+- /downloads/
+- /code/
+- /subscriptions/
+- /worldwide.aspx
+- /msdnmag/default.aspx
+- /msdnmag/issues/02/06/default.aspx
+- /msdnmag/find/default.aspx
+- /msdnmag/code.aspx
+- /msdnmag/backissues.aspx
+- /msdnmag/columns/default.aspx
+- /msdnmag/issues/03/12/default.aspx
+- /msdnmag/Subscribe.aspx
+- /msdnmag/service.aspx
+- /msdnmag/cdrom/2002/default.aspx
+- /msdnmag/staff.aspx
+- /msdnmag/submit.aspx
+- /msdnmag/write.aspx
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /newsgroups/
+- /msdnmag/cdrom/2002/default.aspx
+- /default.asp
+- /msdnmag/default.aspx
+- /msdnmag/issues/02/06/default.aspx
+- /msdnmag/issues/02/06/webc/default.aspx
+- /msdnmag/issues/02/06/debug/default.aspx
+- /msdnmag/issues/02/06/Crypto/default.aspx
+- /msdnmag/issues/02/06/Internat/default.aspx
+- /msdnmag/issues/02/06/XMLC/default.aspx
+- /msdnmag/issues/02/06/Rich/default.aspx
+- /msdnmag/issues/02/06/ednote/default.aspx
+- /msdnmag/issues/02/06/Stuff/default.aspx
+- /msdnmag/issues/02/06/web/default.aspx
+- /msdnmag/issues/02/06/xml/default.aspx
+- /msdnmag/issues/02/06/cutting/default.aspx
+- /msdnmag/issues/02/06/Basics/default.aspx
+- /msdnmag/issues/02/06/Bugslayer/default.aspx
+- /msdnmag/issues/02/06/Instincts/default.aspx
+- /msdnmag/issues/02/06/c/default.aspx
+- /msdnmag/issues/02/06/Resource/default.aspx
+- /flash/
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
+- /isapi/gomscom.asp
