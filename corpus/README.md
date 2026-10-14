@@ -23,6 +23,7 @@ corpus/
     ├── techshelps/<set>/     MSDN Library CE 1.0/2.0 sets (techshelps mirror)
     ├── datadungeon-2000-04/  MSDN Library April 2000 CE documentation (crawled)
     ├── wcedevcon-99/         CE 2.11/2.12 SDK/DDK docs of the DevCon '99 disc
+    ├── msdn-magazine/        MSDN Magazine CE-era articles (2000-2003, Wayback)
     └── windows-mobile-6.5/   MSHelp-format Windows Mobile 6.5 topics
 ```
 
@@ -125,6 +126,12 @@ keeps file names joinable with `data/catalogs/*.tsv`, `data/manifests/*` and
   Windows CE 1.0/2.0 (CEGUIDE, WCEMFC, WCEATL, VBCE, WCEDDK, VCCE, DNEMBED)
   as mirrored by <https://techshelps.github.io/>; see
   `msdn-library/techshelps/README.md` and `../queues/third-party-sources.md`.
+* `msdn-library/msdn-magazine/` — 12 pages: every Windows CE / Pocket PC /
+  SQL Server CE / .NET Compact Framework article flagged CE in the
+  2000-2003 MSDN Magazine issue TOCs (47 issues audited).  They live on
+  Wayback captures of the pre-2008 magazine trees
+  (`queues/to-fetch-msdn-magazine.txt` holds the full trail and per-title
+  verifications; `tools/harvest.py` kind `wayback-mag`, ids `wbm:msdnmag-*`).
 * `msdn-library/datadungeon-2000-04/` — the Windows CE documentation of the
   MSDN Library April 2000 (CE 2.12/3.0 era), crawled from
   <https://library.thedatadungeon.com/> (`queues/mirrors.tsv`,
