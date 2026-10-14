@@ -189,6 +189,21 @@ def dest_for(url):
     p = urllib.parse.urlparse(url)
 
     if "learn.microsoft.com" in p.netloc:
+        # MSDN Magazine archive: both shapes exist on learn.microsoft.com:
+        #   /{locale}/archive/msdn-magazine/YYYY/MM/{slug}      (2000-era issues)
+        #   /{locale}/archive/msdn-magazine/issues/YYYY/MM/{slug}
+        # MM is a two-digit month; id it as YYYY-MM-slug so issues of the
+        # same year cannot collide.
+        match = re.match(
+            r"/[a-z]{2}(?:-[a-zA-Z]{2,4})?/archive/msdn-magazine/"
+            r"(?:issues/)?(\d{4})/(\d{2})/([a-z0-9-]+)$",
+            p.path.rstrip("/"),
+        )
+
+        if match:
+            return ("learn-magazine",
+                    f"{match.group(1)}-{match.group(2)}-{match.group(3)}")
+
         last = p.path.rstrip("/").split("/")[-1]
 
         match = re.match(
@@ -779,7 +794,7 @@ def process_url(url, have_ids, faillog, fetcher, index_by_id, dry_run=False,
     if kind is None:
         return "invalid", None, "unrecognised-url"
 
-    if kind == "learn":
+    if kind in ("learn", "learn-magazine"):
         if pid in have_ids:
             return "skipped", None, ""
     else:
@@ -863,6 +878,16 @@ def process_url(url, have_ids, faillog, fetcher, index_by_id, dry_run=False,
         bucket = classify(title, head)
         base = DOTNET_DIR if bucket in DOTNET_SETS else LEARN_DIR
         directory = os.path.join(base, bucket)
+        stored_id = pid
+    elif kind == "learn-magazine":
+        # Magazine articles keep their source grouping: the msdn-magazine
+        # buckets (CE-marked titles split into msdn-magazine-winextra).
+        bucket = classify(title, head)
+        if bucket.startswith("windows-ce-"):
+            bucket = "msdn-magazine-winextra"
+        else:
+            bucket = "msdn-magazine"
+        directory = os.path.join(LEARN_DIR, bucket)
         stored_id = pid
     elif kind == "pinvoke":
         # pinvoke.net pages: store under corpus/pinvoke/{module}/{function}.html
