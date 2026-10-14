@@ -2,7 +2,7 @@
 
 - url: https://developer.toradex.com/imprint
 - mode: small
-- fetched: 2026-10-14 07:49:02 UTC
+- fetched: 2026-10-14 07:55:10 UTC
 - status: 200
 - bytes: 96,583
 - sha256: 36cda7ad8e2ae3eabcb38173853d387d91f77c3d1d127406f6d9eaaae2581373
