@@ -2,7 +2,7 @@
 
 - url: https://learn.microsoft.com/en-us/archive/msdn-magazine/2000/february
 - mode: small
-- fetched: 2026-10-14 13:50:16 UTC
+- fetched: 2026-10-14 13:57:33 UTC
 - status: 404
 
 **fetch failed** (see status)
