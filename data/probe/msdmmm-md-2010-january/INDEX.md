@@ -2,7 +2,7 @@
 
 - url: https://learn.microsoft.com/en-us/archive/msdn-magazine/2010/january/msdn-magazine-january-2010?accept=text/markdown
 - mode: small
-- fetched: 2026-10-14 12:42:01 UTC
+- fetched: 2026-10-14 12:48:31 UTC
 - status: 404
 
 **fetch failed** (see status)
