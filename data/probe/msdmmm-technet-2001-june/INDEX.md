@@ -2,7 +2,7 @@
 
 - url: https://technet.microsoft.com/en-us/library/Cc135816(v=MSDN.10)
 - mode: small
-- fetched: 2026-10-14 14:12:48 UTC
+- fetched: 2026-10-14 14:23:08 UTC
 - status: redirect-offsite
 - redirect-target: https://learn.microsoft.com/en-us/archive/msdn-magazine/2001/june/msdn-magazine-june-2001
 
