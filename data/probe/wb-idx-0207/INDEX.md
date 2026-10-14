@@ -1,0 +1,63 @@
+# probe: wb-idx-0207
+
+- url: https://web.archive.org/web/20080218165213id_/http://msdn.microsoft.com/msdnmag/issues/02/07/
+- mode: small
+- fetched: 2026-10-14 13:25:31 UTC
+- status: 200
+- bytes: 22,633
+- sha256: 11311e306a2e5a8d445288dd348dbeff410daefbc577613e2f7510f7a7b5fd14
+- stored: data/probe/wb-idx-0207/182-index
+
+## same-host links seen (51, capped at 300)
+
+- /library/mnp/2/aspx/css.aspx
+- /msdnmag/css/mag.css
+- /library/toolbar/3.0/css.aspx
+- /library/toolbar/3.0/sitemap/en-us.mspx
+- /default.aspx
+- /developercenters/
+- /library/default.asp
+- /downloads/
+- /howtobuy/
+- /subscriptions/
+- /worldwide.aspx
+- /msdnmag/default.aspx
+- /msdnmag/issues/02/07/default.aspx
+- /msdnmag/find/default.aspx
+- /msdnmag/code.aspx
+- /msdnmag/backissues.aspx
+- /msdnmag/columns/default.aspx
+- /msdnmag/rss/default.aspx
+- /msdnmag/Subscribe.aspx
+- /msdnmag/backissues/default.aspx
+- /msdnmag/service.aspx
+- /msdnmag/staff.aspx
+- /msdnmag/authors.aspx
+- /msdnmag/cdrom/default.aspx
+- /msdnmag/podcast/default.aspx
+- /msdnmag/submit.aspx
+- /msdnmag/write.aspx
+- /msdnmag/correct.aspx
+- /isapi/gomscom.asp
+- /default.aspx
+- /msdnmag/default.aspx
+- /msdnmag/issues/02/07/default.aspx
+- /msdnmag/subscribe.aspx
+- /msdnmag/issues/02/07/SharedSourceCLI/default.aspx
+- /msdnmag/issues/02/07/WindowsCENET/default.aspx
+- /msdnmag/issues/02/07/DirectShow/default.aspx
+- /msdnmag/issues/02/07/NetSmartClients/default.aspx
+- /msdnmag/issues/02/07/ADONETBugTracker/default.aspx
+- /msdnmag/issues/02/07/WebQA/default.aspx
+- /msdnmag/issues/02/07/XMLFiles/default.aspx
+- /msdnmag/issues/02/07/CuttingEdge/default.aspx
+- /msdnmag/issues/02/07/DataPoints/default.aspx
+- /msdnmag/issues/02/07/AdvancedBasics/default.aspx
+- /msdnmag/issues/02/07/net/default.aspx
+- /msdnmag/issues/02/07/CQA/default.aspx
+- /msdnmag/issues/02/07/ResourceFile/default.aspx
+- /msdnmag/issues/02/07/EditorsNote/default.aspx
+- /msdnmag/issues/02/07/NewStuff/default.aspx
+- /isapi/gomscom.asp
+- /flash/
+- /library/toolbar/3.0/trademarks/en-us.mspx
