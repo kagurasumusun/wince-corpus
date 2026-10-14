@@ -1,0 +1,61 @@
+# probe: wb-idx-0212
+
+- url: https://web.archive.org/web/20060114074307id_/http://msdn.microsoft.com:80/msdnmag/issues/02/12/
+- mode: small
+- fetched: 2026-10-14 13:25:49 UTC
+- status: 200
+- bytes: 21,550
+- sha256: 3a03bed3940c6241a3e3a9c88dd6cda09f685029cac1d9354aeb96127c931901
+- stored: data/probe/wb-idx-0212/187-index
+
+## same-host links seen (49, capped at 300)
+
+- /library/mnp/2/aspx/css.aspx
+- /msdnmag/css/mag.css
+- /library/toolbar/3.0/css.aspx
+- /library/toolbar/3.0/sitemap/en-us.mspx
+- /default.aspx
+- /developercenters/
+- /library/default.asp
+- /downloads/
+- /howtobuy/
+- /subscriptions/
+- /worldwide.aspx
+- /msdnmag/default.aspx
+- /msdnmag/issues/02/12/default.aspx
+- /msdnmag/find/default.aspx
+- /msdnmag/code.aspx
+- /msdnmag/backissues.aspx
+- /msdnmag/columns/default.aspx
+- /msdnmag/rss/default.aspx
+- /msdnmag/Subscribe.aspx
+- /msdnmag/service.aspx
+- /msdnmag/staff.aspx
+- /msdnmag/cdrom/2004/default.aspx
+- /msdnmag/submit.aspx
+- /msdnmag/write.aspx
+- /msdnmag/correct.aspx
+- /isapi/gomscom.asp
+- /default.aspx
+- /msdnmag/default.aspx
+- /msdnmag/issues/02/12/default.aspx
+- /msdnmag/subscribe.aspx
+- /msdnmag/issues/02/12/ATLServer/default.aspx
+- /msdnmag/issues/02/12/DIME/default.aspx
+- /msdnmag/issues/02/12/OfficeXPToolkit/default.aspx
+- /msdnmag/issues/02/12/WebFarms/default.aspx
+- /msdnmag/issues/02/12/WebServicesDesign/default.aspx
+- /msdnmag/issues/02/12/XMLSchemaImporting/default.aspx
+- /msdnmag/issues/02/12/WebServicesProvisioning/default.aspx
+- /msdnmag/issues/02/12/WebQA/default.aspx
+- /msdnmag/issues/02/12/XMLFiles/default.aspx
+- /msdnmag/issues/02/12/CuttingEdge/default.aspx
+- /msdnmag/issues/02/12/AdvancedBasics/default.aspx
+- /msdnmag/issues/02/12/BasicInstincts/default.aspx
+- /msdnmag/issues/02/12/CQA/default.aspx
+- /msdnmag/issues/02/12/TalkingTo/default.aspx
+- /msdnmag/issues/02/12/EditorsNote/default.aspx
+- /msdnmag/issues/02/12/NewStuff/default.aspx
+- /isapi/gomscom.asp
+- /flash/
+- /library/toolbar/3.0/trademarks/en-us.mspx
