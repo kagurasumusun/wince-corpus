@@ -604,6 +604,19 @@ def load_unassigned_defines():
         return [d for d in defines if d.get("definition")]
 
 
+def load_unassigned_declarations():
+    """Load declarations that could not be assigned to any specific header.
+    
+    Returns a list of declaration dicts from kb/declarations-by-header/_unassigned.declarations.json.
+    """
+    unassigned_path = os.path.join(KB, "declarations-by-header", "_unassigned.declarations.json")
+    if not os.path.exists(unassigned_path):
+        return []
+    
+    with open(unassigned_path, encoding="utf-8") as fh:
+        return json.load(fh)
+
+
 def load_assigned_declarations():
     """Load declarations from KB and group by header.
     
@@ -2278,45 +2291,117 @@ def run_unified(args):
     # assigned defines are already in their respective header fragments.
     if unassigned_defines:
         extra_path = os.path.join(include_dir, "ExtraDefines.h.fragment")
-        extra_lines = [
-            "/* ExtraDefines.h -- supplementary macro definitions",
-            " *",
-            " * These #define macros were found in Windows CE corpus pages",
-            " * by tools/extract-missing-defines.py.  They supplement the",
-            " * macros already extracted by the main parser.",
-            " *",
-            " * These are the macros that could not be assigned to a specific",
-            " * header.  Macros assigned to headers are in their respective",
-            " * header fragments.",
-            f" * {len(unassigned_defines)} unassigned macros",
-            f" * ({sum(1 for d in unassigned_defines if d['type'] == 'function-like')} function-like, "
-            f"{sum(1 for d in unassigned_defines if d['type'] == 'object-like')} object-like)",
-            " */",
-            "#ifndef _EXTRADEFINES_H_",
-            "#define _EXTRADEFINES_H_",
-            "",
-        ]
+        if args.minimal_comments:
+            extra_lines = [
+                "/* ExtraDefines.h -- supplementary macro definitions",
+                f" * {len(unassigned_defines)} unassigned macros",
+                f" * ({sum(1 for d in unassigned_defines if d['type'] == 'function-like')} function-like, "
+                f"{sum(1 for d in unassigned_defines if d['type'] == 'object-like')} object-like)",
+                " */",
+                "#ifndef _EXTRADEFINES_H_",
+                "#define _EXTRADEFINES_H_",
+                "",
+            ]
+        else:
+            extra_lines = [
+                "/* ExtraDefines.h -- supplementary macro definitions",
+                " *",
+                " * These #define macros were found in Windows CE corpus pages",
+                " * by tools/extract-missing-defines.py.  They supplement the",
+                " * macros already extracted by the main parser.",
+                " *",
+                " * These are the macros that could not be assigned to a specific",
+                " * header.  Macros assigned to headers are in their respective",
+                " * header fragments.",
+                f" * {len(unassigned_defines)} unassigned macros",
+                f" * ({sum(1 for d in unassigned_defines if d['type'] == 'function-like')} function-like, "
+                f"{sum(1 for d in unassigned_defines if d['type'] == 'object-like')} object-like)",
+                " */",
+                "#ifndef _EXTRADEFINES_H_",
+                "#define _EXTRADEFINES_H_",
+                "",
+            ]
         # Group by type
         func_macros = [d for d in unassigned_defines if d["type"] == "function-like"]
         obj_macros = [d for d in unassigned_defines if d["type"] == "object-like"]
         if obj_macros:
-            extra_lines.append("/* " + "=" * 66)
-            extra_lines.append(" * object-like macros (simple #define NAME value)")
-            extra_lines.append(" * " + "=" * 64 + " */")
+            if not args.minimal_comments:
+                extra_lines.append("/* " + "=" * 66)
+                extra_lines.append(" * object-like macros (simple #define NAME value)")
+                extra_lines.append(" * " + "=" * 64 + " */")
             for d in sorted(obj_macros, key=lambda x: x["name"]):
-                extra_lines.append(f"/* source: {d['source']} */")
+                if not args.minimal_comments:
+                    extra_lines.append(f"/* source: {d['source']} */")
                 extra_lines.append(d["definition"])
-                extra_lines.append("")
+                if not args.minimal_comments:
+                    extra_lines.append("")
         if func_macros:
-            extra_lines.append("/* " + "=" * 66)
-            extra_lines.append(" * function-like macros (#define NAME(args) ...)")
-            extra_lines.append(" * " + "=" * 64 + " */")
+            if not args.minimal_comments:
+                extra_lines.append("/* " + "=" * 66)
+                extra_lines.append(" * function-like macros (#define NAME(args) ...)")
+                extra_lines.append(" * " + "=" * 64 + " */")
             for d in sorted(func_macros, key=lambda x: x["name"]):
-                extra_lines.append(f"/* source: {d['source']} */")
+                if not args.minimal_comments:
+                    extra_lines.append(f"/* source: {d['source']} */")
                 extra_lines.append(d["definition"])
-                extra_lines.append("")
+                if not args.minimal_comments:
+                    extra_lines.append("")
         extra_lines.append("#endif /* _EXTRADEFINES_H_ */")
         _write_lines(extra_path, extra_lines)
+        header_files_written += 1
+
+    # ---- extra declarations: declarations found in CE corpus pages that
+    # could not be assigned to a specific header.  These go to ExtraDeclarations.h.
+    unassigned_declarations = load_unassigned_declarations()
+    if unassigned_declarations:
+        extra_decl_path = os.path.join(include_dir, "ExtraDeclarations.h.fragment")
+        extra_decl_lines = []
+        if args.minimal_comments:
+            extra_decl_lines = [
+                "/* ExtraDeclarations.h -- declarations without header assignment",
+                f" * {len(unassigned_declarations)} unassigned declarations",
+                " */",
+                "#ifndef _EXTRADECLARATIONS_H_",
+                "#define _EXTRADECLARATIONS_H_",
+                "",
+            ]
+        else:
+            extra_decl_lines = [
+                "/* ExtraDeclarations.h -- declarations without header assignment",
+                " *",
+                " * These declarations were found in Windows CE corpus pages",
+                " * but could not be assigned to a specific header file.",
+                " * They may belong to internal or undocumented headers.",
+                " *",
+                f" * {len(unassigned_declarations)} unassigned declarations",
+                " */",
+                "#ifndef _EXTRADECLARATIONS_H_",
+                "#define _EXTRADECLARATIONS_H_",
+                "",
+            ]
+        
+        # Group by type
+        by_type = collections.defaultdict(list)
+        for decl in unassigned_declarations:
+            dtype = decl.get('type', 'function')
+            by_type[dtype].append(decl)
+        
+        # Output by type
+        for dtype in sorted(by_type.keys()):
+            decls = by_type[dtype]
+            if not args.minimal_comments:
+                extra_decl_lines.append(f"/* {len(decls)} {dtype}(s) */")
+                extra_decl_lines.append("")
+            
+            for decl in decls:
+                decl_text = decl.get('declaration', '').strip()
+                if decl_text:
+                    extra_decl_lines.append(decl_text)
+                    if not args.minimal_comments:
+                        extra_decl_lines.append("")
+        
+        extra_decl_lines.append("#endif /* _EXTRADECLARATIONS_H_ */")
+        _write_lines(extra_decl_path, extra_decl_lines)
         header_files_written += 1
 
     # ---- module .def worklists (one per module, annotated per line: the
