@@ -211,7 +211,9 @@ def check_constant_headers():
         problems.append("constant-headers.tsv: missing -- run build-kb.py")
         return problems
     ranks = {"own-page", "entity-page", "constant-entity",
-             "win32-reference", "pinvoke-weak"}
+             "win32-reference", "co-mention",
+             "reference-header", "reference-header-secondary",
+             "pinvoke-weak"}
     rows = 0
     with open(path, encoding="utf-8") as fh:
         header = fh.readline().rstrip("\n").split("\t")
@@ -239,6 +241,16 @@ def check_constant_headers():
                          cells[4].startswith("sources/dotnet-pinvoke/")):
                 problems.append(f"constant-headers: {name}: a pinvoke-weak "
                                 "row must name an isolated-aux source")
+            if rows > 1 and cells[2] in ("reference-header",
+                                         "reference-header-secondary") and \
+                    not (cells[4].startswith("sources/w32api-cegcc/") or
+                         cells[4].startswith("sources/mingw-w64/")):
+                problems.append(f"constant-headers: {name}: a reference "
+                                "rank must name its pinned sources/ tarball")
+            if rows > 1 and cells[2] == "co-mention" and \
+                    not cells[4].startswith("corpus/"):
+                problems.append(f"constant-headers: {name}: a co-mention "
+                                "row must name the CE page behind it")
             if len(problems) > 200:
                 break
     if rows and not problems:
@@ -257,16 +269,25 @@ def check_constant_headers():
         for line in fh:
             link_names.add(line.split("\t", 1)[0])
     gap_names = []
+    gap_classes = collections.Counter()
     with open(worklist, encoding="utf-8") as fh:
         header = fh.readline().rstrip("\n").split("\t")
         if header != ["name", "rows", "origins", "sets", "example_page",
-                      "pinvoke_hit"]:
+                      "pinvoke_hit", "classification"]:
             problems.append(f"constant-header-gaps.tsv: unexpected columns "
                             f"{header}")
         for line in fh:
-            cells = line.rstrip("\n").split("\t", 1)
-            if cells:
+            cells = line.rstrip("\n").split("\t")
+            if cells and cells[0]:
                 gap_names.append(cells[0])
+                if len(cells) > 6:
+                    gap_classes[cells[6]] += 1
+                    if cells[6] not in ("needs-sdk-verification",
+                                        "vb-language-constant",
+                                        "ole-automation-constant"):
+                        problems.append(
+                            f"constant-header-gaps.tsv: {cells[0]}: "
+                            f"unknown classification {cells[6]!r}")
     ce_names = set()
     constants_path = os.path.join(KB, "constants.jsonl.gz")
     if not os.path.exists(constants_path):
@@ -285,7 +306,41 @@ def check_constant_headers():
                         "rerun build-kb.py")
     if not problems:
         print(f"constant-header-gaps.tsv  {len(gap_names):>8,} collection "
-              "worklist names")
+              "worklist names ("
+              + ", ".join(f"{k} {n:,}" for k, n in sorted(gap_classes.items()))
+              + ")")
+
+    conflicts_path = os.path.join(KB, "constant-conflicts.tsv")
+    if not os.path.exists(conflicts_path):
+        problems.append("constant-conflicts.tsv: missing -- run build-kb.py")
+    else:
+        with open(conflicts_path, encoding="utf-8") as fh:
+            header = fh.readline().rstrip("\n").split("\t")
+            want = ["name", "numbers", "printed_values", "category",
+                    "reviewed_category", "pages", "sets", "resolved_value",
+                    "verdict"]
+            if header != want:
+                problems.append(f"constant-conflicts.tsv: unexpected columns "
+                                f"{header}")
+            conflict_rows = 0
+            resolved_rows = 0
+            for line in fh:
+                cells = line.rstrip("\n").split("\t")
+                if not cells or not cells[0]:
+                    continue
+                conflict_rows += 1
+                if len(cells) > 7 and cells[7]:
+                    resolved_rows += 1
+                    if cells[7] not in (cells[2] or "").split("|"):
+                        problems.append(
+                            f"constant-conflicts: {cells[0]}: resolved value "
+                            f"{cells[7]!r} is not one of the printed forms")
+                if len(problems) > 200:
+                    break
+        if not problems:
+            print(f"constant-conflicts.tsv    {conflict_rows:>8,} value "
+                  f"disagreements ({resolved_rows} with a reviewed "
+                  "resolution)")
 
     review = os.path.join(REPORTS, "constant-pinvoke-review.tsv")
     if not os.path.exists(review):

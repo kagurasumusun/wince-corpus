@@ -5,29 +5,37 @@ This is the first consumer of the knowledge base, and it exists to prove the
 pipeline end to end: take the machine-readable statements in ``knowledge/`` and
 write the material an include/def generator would be built from.
 
+    python3 tools/gen-include-def.py --out winsur
+                                     # THE product: ONE tree for every CE
+                                     # generation (the default build)
     python3 tools/gen-include-def.py --unified --out build/generated/wince
-                                     # ONE tree for every CE generation:
-                                     # the mode to use for a Windows CE
-                                     # include/def surface
+                                     # the same, --unified spelled out
     python3 tools/gen-include-def.py --set learn/windows-ce-5.0 \
-        --out build/generated/wince50       # the per-generation build
+        --out build/generated/wince50       # per-generation build, for
+                                            # comparison only -- never the
+                                            # product
     python3 tools/gen-include-def.py --set chm/windows-ce-3.0 --out ... \
         --no-borrow            # only declarations from that set's own pages
     python3 tools/gen-include-def.py --list      # sets that can be generated
 
-The **unified** mode answers "what is the include/def surface of Windows CE as
-a whole?": a single tree, never one tree per generation.  Where generations
-differ the tree carries a derived ``#if defined(_WIN32_WCE) && ...`` branch
-(``_WIN32_WCE`` is the version macro the documentation itself prints -- the
-CE .NET pages write ``#if (_WIN32_WCE < 300)``).  The Win32-shared half of the
-surface lives in the SAME tree, marked as the desktop reference wherever it is
-the only statement -- never a second tree.  A constant's derived ``#define``
-is filed into the header the linkage table assigns it
-(``kb/constant-headers.tsv``), with its evidence and the strength of the
-linkage printed beside it; the weakest rank, the pinvoke weak auxiliary
-hint, is marked loudly.  Differences in a constant's number between
-generations become ``#if``/``#elif`` branches; disagreements within one
-generation are conflicts and are listed, never guessed.
+The **default (unified)** build answers "what is the include/def surface of
+Windows CE as a whole?": a single tree, never one tree per generation.  Where
+generations differ the tree carries a derived ``#if defined(_WIN32_WCE) &&
+...`` branch (``_WIN32_WCE`` is the version macro the documentation itself
+prints -- the CE .NET pages write ``#if (_WIN32_WCE < 300)``).  The
+Win32-shared half of the surface lives in the SAME tree, marked as the
+desktop reference wherever it is the only statement -- never a second tree.
+A constant's derived ``#define`` is filed into the header the linkage table
+assigns it (``kb/constant-headers.tsv``), with its evidence and the strength
+of the linkage printed beside it; the weakest ranks (the pinvoke weak
+auxiliary hint, the pinned reference headers) are marked loudly.  Values
+that differ per CE generation pool into shared ``#if``/``#elif`` chains;
+disagreements within one generation are conflicts -- each keeps a CONFLICT
+block, and only a reviewed resolution (``kb/constant-conflicts.tsv``, the
+review in ``data/constant-value-review.tsv``) writes the reviewed print the
+pages themselves state.  Each fragment is laid out for reading: constants
+first, then the macro blocks, the types (structures and enums, plus derived
+member outlines for structures whose body no page prints) and the functions.
 
 What it writes (nothing is added to the repository -- ``--out`` is yours):
 
@@ -68,11 +76,15 @@ Honesty rules (the same ones the knowledge base keeps):
   Implemented``) is *not* turned into a file name, it is counted in
   ``report.md`` and stays visible in ``knowledge/reports/filtered-values.tsv``;
 * a numbered constant is a table row the page prints (``kb/constants.jsonl``).
-  The ``*.h.constants`` file quotes that row and, below it, a ``#define``
-  whose keyword the page did not print -- the comment says so.  Pages that
-  disagree on the number produce no ``#define``.  A number stated only by
-  the Win32 reference is not borrowed: desktop and Windows CE values are
-  not assumed to match;
+  The fragment quotes that row and, below it, a ``#define`` whose keyword the
+  page did not print -- the comment says so.  Pages that disagree on the
+  number produce a CONFLICT block and, without a reviewed resolution, no
+  ``#define``; a resolved conflict writes only a print the pages themselves
+  state, with the verdict quoted above it.  A number stated only by the
+  Win32 reference is not borrowed: desktop and Windows CE values are
+  not assumed to match, and no number is ever taken from the pinned
+  reference headers under ``sources/`` (they may state which header
+  defines a name -- never what it equals);
 * a library and a DLL are kept apart (``coredll.lib`` in the library field,
   ``coredll.dll`` in the DLL field) and the worklist file is named after the
   module both spellings refer to, with the spellings it was stated as printed
@@ -145,6 +157,7 @@ ENTITIES = os.path.join(KB, "entities.jsonl.gz")
 REQUIREMENTS = os.path.join(KB, "requirements.jsonl.gz")
 CONSTANTS = os.path.join(KB, "constants.jsonl.gz")
 CONSTANT_HEADERS = os.path.join(KB, "constant-headers.tsv")
+CONSTANT_CONFLICTS = os.path.join(KB, "constant-conflicts.tsv")
 PINVOKE_APIS = os.path.join(ROOT, "knowledge", "aux",
                             "pinvoke-apis.jsonl.gz")
 PINVOKE_CONSTANTS = os.path.join(ROOT, "knowledge", "aux",
@@ -865,6 +878,56 @@ def load_constant_links():
     return out
 
 
+def load_constant_conflicts():
+    """``kb/constant-conflicts.tsv`` -> {name: row dict}.
+
+    The examined value disagreements, with the reviewed category and --
+    where the review resolved the case -- the value the pages themselves
+    print and the verdict explaining why.  A conflict with no resolution
+    still gets no ``#define``; a resolved one gets the reviewed print
+    with the whole disagreement quoted above it.
+    """
+    out = {}
+    if not os.path.exists(CONSTANT_CONFLICTS):
+        return out
+    with open(CONSTANT_CONFLICTS, encoding="utf-8") as fh:
+        header = fh.readline().rstrip("\n").split("\t")
+        for line in fh:
+            cells = line.rstrip("\n").split("\t")
+            if len(cells) < len(header):
+                continue
+            row = dict(zip(header, cells))
+            out[row["name"]] = row
+    return out
+
+
+def member_outline(entity, variants):
+    """The documented member list of an entity no page gives a body for.
+
+    Members a page documents *without* printing a declaration body: the
+    fragment carries them as a derived outline (marked as derived), so a
+    structure whose body no page prints is no longer missing from its
+    header fragment.  The A/W spelling pages of the entity contribute
+    their member lists too (each member is credited to the spelling that
+    documented it).
+    """
+    outline = []
+    seen = set()
+    owners = [(entity, entity.get("documented_fields") or [])]
+    owners += [(v, v.get("documented_fields") or []) for v in variants]
+    for owner, fields in owners:
+        pages_map = owner.get("documented_field_pages") or {}
+        fallback = owner.get("documented_fields_page") or ""
+        for field in fields:
+            if not field or field in seen:
+                continue
+            seen.add(field)
+            outline.append({"field": field,
+                            "page": pages_map.get(field) or fallback,
+                            "spelling": owner.get("name") or ""})
+    return outline
+
+
 def load_pinvoke_aux(path):
     """The isolated weak-auxiliary pinvoke material, when harvested."""
     if not os.path.exists(path) and path.endswith(".gz"):
@@ -1057,6 +1120,21 @@ def groups_conflict(groups):
     return False
 
 
+def wrap_comment(prefix, text, width=64):
+    """One comment paragraph, word-wrapped -- long review verdicts read
+    as comment lines instead of one endless one."""
+    words = text.split()
+    lines, current = [], prefix
+    for word in words:
+        if len(current) + len(word) + 1 > width and current.strip() != prefix.strip():
+            lines.append(current.rstrip())
+            current = " *   "
+        current += (" " if current and not current.endswith(" ") else "") + word
+    if current.strip() and current.strip() != "*":
+        lines.append(current.rstrip())
+    return lines
+
+
 def run_unified(args):
     """One include/def tree for every Windows CE generation at once."""
     declarations_of = {d["id"]: d for d in load(DECLARATIONS)}
@@ -1068,6 +1146,7 @@ def run_unified(args):
     all_entities = list(load(ENTITIES))
     UNSUPPORTED.update(load_unsupported())
     links = load_constant_links()
+    conflict_rows = load_constant_conflicts()
     pinvoke_apis = load_pinvoke_aux(PINVOKE_APIS)
     pinvoke_consts = load_pinvoke_aux(PINVOKE_CONSTANTS)
     borrow = not args.no_borrow
@@ -1184,17 +1263,23 @@ def run_unified(args):
             lib_mark = "win32-reference"
             borrowed["library win32-reference"] += 1
 
-        if not chosen:
+        # Members a page documents without printing a declaration body:
+        # the fragment carries them as a derived outline instead of
+        # leaving the structure out of the header entirely.
+        outline = member_outline(entity, variants.get(entity["id"], [])) \
+            if not chosen else []
+        if not chosen and not outline:
             skipped["no declaration in the corpus"] += 1
         if not primary:
             skipped["no header stated"] += 1
         guard, merged = wce_guard(versions)
         if not versions and not neutral_ce:
             skipped["no CE version evidence"] += 1
-        if primary and chosen:
+        if primary and (chosen or outline):
             printed_forms[primary.lower()] = primary
             by_header[primary.lower()].append(
                 {"entity": entity, "declaration": chosen,
+                 "outline": outline,
                  "borrowed_from": borrowed_from, "guard": guard,
                  "merged": merged, "versions": versions,
                  "neutral_ce": neutral_ce, "header_mark": header_mark,
@@ -1240,6 +1325,7 @@ def run_unified(args):
         else:
             win32_only[record["name"]] += 1
     defines = conflicts = unsupported_written = no_header = 0
+    conflicts_resolved = 0
     const_entries = collections.defaultdict(list)   # header lower -> [entry]
     for name in sorted(const_rows, key=str.lower):
         groups = constant_value_groups(list(const_rows[name].values()))
@@ -1265,6 +1351,7 @@ def run_unified(args):
                                   if h["header"] != header],
                 "groups": groups,
                 "conflict": conflict,
+                "review": conflict_rows.get(name) or {},
                 "taken_away": taken_away,
             })
 
@@ -1295,29 +1382,56 @@ def run_unified(args):
         if guard:
             lines.append("#endif /* _WIN32_WCE */")
 
+    def short_evidence(text):
+        """The long pinned-tarball paths, named briefly but exactly."""
+        if text.startswith("sources/dotnet-pinvoke/"):
+            return "the pinned dotnet/pinvoke snapshot (sources/dotnet-pinvoke/)"
+        match = re.search(r"sources/(w32api-cegcc|mingw-w64)/[^!]*!.*[/\\]"
+                          r"([^/\\]+)$", text)
+        if match:
+            tag = match.group(1)
+            label = ("w32api-cegcc reference" if tag == "w32api-cegcc"
+                     else "mingw-w64 secondary reference")
+            return f"{label} {match.group(2)}"
+        return text
+
     def const_note(entry, group, quote_cap=1):
         """The one compact evidence comment for one constant.
 
         `linkage` names the rank; the *shortest* quoted row stands for the
-        evidence with the total row count, the example page for the filing,
-        and every marking rule that applies (pinvoke-weak, win32-reference,
-        duplicates in other headers, and -- when the page's own syntax
-        block already prints the #define -- the suppression of the derived
-        line. derived line)."""
+        evidence with the total row count, the filing evidence names the
+        statement behind the header (the long pinned tarball paths are
+        named briefly), and every marking rule that applies (pinvoke-weak,
+        the reference ranks, win32-reference, duplicates in other headers,
+        and -- when the page's own syntax block already prints the #define
+        -- the suppression of the derived line)."""
         name = entry["name"]
         strength = entry["strength"]
+        marks = {
+            "pinvoke-weak":
+                "community P/Invoke hint -- verify against the CE SDK",
+            "win32-reference":
+                "Win32 desktop reference only -- verify against the CE SDK",
+            "co-mention":
+                "a CE page lists the name while stating the header",
+            "reference-header":
+                "w32api-cegcc reference header; membership only -- "
+                "verify against the CE SDK",
+            "reference-header-secondary":
+                "mingw-w64 secondary reference, wrong target; "
+                "membership only -- verify against the CE SDK",
+        }
         note = f"/* {name} {group['print']} | {strength}"
-        if strength == "pinvoke-weak":
-            note += " HINT (community P/Invoke data;"
-        elif strength == "win32-reference":
-            note += " (Win32 desktop reference only;"
-        note += f" {entry['statements']} link statement(s), " \
-                f"e.g. {entry['example_page']}"
+        if strength in marks:
+            note += f" ({marks[strength]}"
+            note += f"; {entry['statements']} statement(s), e.g. " \
+                    f"{short_evidence(entry['example_page'])})"
+        else:
+            note += f"; {entry['statements']} statement(s), e.g. " \
+                    f"{short_evidence(entry['example_page'])}"
         if entry["other_headers"]:
-            note += "; also stated in: " + ", ".join(
+            note += " | also in: " + ", ".join(
                 entry["other_headers"])
-        if strength == "pinvoke-weak" or strength == "win32-reference":
-            note += " -- verify against the CE SDK"
         note += " */"
         out = [note]
         rows = [(row, path, origin)
@@ -1326,11 +1440,9 @@ def run_unified(args):
         shortest = min(rows, key=lambda r: len(r[0])) if rows else None
         if shortest:
             row, path, origin = shortest
-            out.append(f"/* quoted row ({origin}): {row}")
-            if total > quote_cap:
-                out.append(" *   ... and "
-                           f"{total - quote_cap} more CE row(s)")
-            out.append(" */")
+            out.append(f"/* quoted ({origin}): {row}"
+                       + (f"  [+{total - quote_cap} more row(s)]"
+                          if total > quote_cap else "") + " */")
         return out
 
     for key in sorted(set(by_header) | set(const_entries)):
@@ -1354,6 +1466,8 @@ def run_unified(args):
         # but noise, so it is suppressed (marked in the constant comment).
         printed_defines = {}
         for info_item in decls:
+            if info_item["declaration"] is None:
+                continue
             for match in re.finditer(
                     r"(?m)^#define\s+([A-Za-z_]\w*)\s+(\S+)",
                     info_item["declaration"]["text"]):
@@ -1382,7 +1496,10 @@ def run_unified(args):
             " * 'Win32 reference'.  This file is a *fragment*: include",
             " * guards, include order and everything the documentation does",
             " * not describe are the job of the tool consuming it.",
-            f" * constants: {len(entries)}, declarations: {len(decls)}",
+            f" * constants: {len(entries)}, declarations: "
+            f"{sum(1 for d in decls if d['declaration'] is not None)}, "
+            f"derived member outlines: "
+            f"{sum(1 for d in decls if d['declaration'] is None)}",
             " */",
         ]
 
@@ -1409,7 +1526,9 @@ def run_unified(args):
             for entry in main_entries:
                 if entry["conflict"]:
                     # self-contained block: the pages do not agree on the
-                    # number -- no #define is written
+                    # number.  A reviewed resolution (kb/constant-conflicts.tsv)
+                    # writes the reviewed print below the block; without one
+                    # no #define is written.
                     if open_guard_now is not None:
                         close_guard(lines, open_guard_now)
                         open_guard_now = None
@@ -1421,6 +1540,36 @@ def run_unified(args):
                             else "version not established"
                         lines.append(f" *   {group['print']}  in CE "
                                      f"{rc} ({len(group['rows'])} row(s))")
+                    review = entry.get("review") or {}
+                    if review.get("verdict"):
+                        tag = review.get("reviewed_category") or "reviewed"
+                        lines.extend(wrap_comment(
+                            " * reviewed [" + tag + "]: ",
+                            review["verdict"]))
+                    resolved = re.sub(
+                        r"\s+", "", (review.get("resolved_value") or ""))
+                    picked = [g for g in entry["groups"]
+                              if re.sub(r"\s+", "", g["print"]) == resolved] \
+                        if resolved else []
+                    if picked:
+                        group = picked[0]
+                        union = set()
+                        for g in entry["groups"]:
+                            union |= g["sets"]
+                        g_guard, g_merged = wce_guard(union)
+                        lines.append(
+                            " * resolution: #define " + entry["name"] + " " +
+                            group["print"] + " -- the reviewed print, one "
+                            "the pages themselves state")
+                        lines.append(" */")
+                        lines.append("")
+                        open_guard(lines, g_guard, g_merged)
+                        lines.append(f"#define {entry['name']} "
+                                     f"{group['print']}")
+                        defines += 1
+                        conflicts_resolved += 1
+                        close_guard(lines, g_guard)
+                        continue
                     lines.append(" * the pages do not agree on the "
                                  "number -- no #define is written */")
                     continue
@@ -1486,70 +1635,133 @@ def run_unified(args):
                                  % (e["name"], bits, e["strength"]))
                 lines.append(" */")
                 defines += len(members)
-        if decls:
-            lines.append("")
-        open_decl_guard = None
+        # The declarations, in reading order: the macro blocks the pages
+        # print (verbatim #define / macro syntax), then the types (structs,
+        # enums, typedefs, interfaces, and the derived member outlines for
+        # structures whose body no page prints), then the functions and
+        # callbacks.  Macros and constants used to be one undifferentiated
+        # wall; the sections keep each kind together.  Within a section
+        # the same batching rule applies: one _WIN32_WCE guard per batch,
+        # never one guard per line.
+        def decl_bucket(info):
+            if info["declaration"] is None:
+                return "types"          # derived member outline
+            kinds = set(info["entity"]["kinds"] or [])
+            text = info["declaration"].get("text") or ""
+            if text.lstrip().startswith("#") or "macro" in kinds:
+                return "macros"
+            if kinds & {"struct", "enum", "interface"} or \
+                    re.match(r"(?s)\s*(typedef|struct|enum|union|interface)"
+                             r"\b", text):
+                return "types"
+            return "functions"
+
+        sections = (
+            ("macros", "macros -- the macro/#define blocks the pages print "
+                       "(verbatim)"),
+            ("types", "types -- structures, enumerations and typedefs; the "
+                      "member outlines marked DERIVED below document a "
+                      "structure whose declaration body no page prints"),
+            ("functions", "functions and callbacks"),
+        )
+        buckets = collections.defaultdict(list)
         for info in decls:
-            entity = info["entity"]
-            declaration = info["declaration"]
-            libs = ", ".join(
-                name for names in info["modules"].values()
-                for name in sorted(names)) or "-"
-            if info["guard"] != open_decl_guard:
-                if open_decl_guard is not None:
-                    close_guard(lines, open_decl_guard)
-                lines.append("")
-                open_guard(lines, info["guard"], info["merged"])
-                open_decl_guard = info["guard"]
-            head = [
-                "", "/*" + "-" * 68,
-                f" * {entity['name']}  [{', '.join(entity['kinds']) or '?'}]",
-                f" * surface: {entity.get('surface') or '?'}",
-                f" * library: {libs}"
-                + ("  [stated by the Win32 reference; the CE pages name "
-                   "no module]" if info["lib_mark"] else ""),
-            ]
-            if info["neutral_ce"] or info["versions"]:
-                desc = wce_range_comment(info["merged"]) if info["merged"] \
-                    else "no versioned set documents interface material"
-                head.append(f" * versions: {desc}")
-                if info["neutral_ce"]:
-                    head.append(" *   also documented by version-neutral "
-                                "CE pages: " + "; ".join(info["neutral_ce"]))
-            if info["alternates"]:
-                for printed, sets in info["alternates"]:
-                    head.append(f" * also stated in: {printed}"
-                                + (f"  ({'; '.join(sorted(sets))})"
-                                   if sets else ""))
-            if info["header_mark"]:
-                head.append(" * header: stated by the Win32 desktop "
-                            "reference only -- NOT a header a Windows CE "
-                            "page names for this entry")
-            for variant in info["variants"]:
-                head.append(" * documented spelling: "
-                            f"{variant['name']}  "
-                            f"[{'; '.join(variant.get('win32_pages') or [])}]"
-                            if variant.get("win32_pages") else
-                            f" * documented spelling: {variant['name']}")
-            for item in (item for item in entity.get("unicode_only") or []
-                         if item.get("scope") == "this-api"):
-                head.append(f" * {item['text']}  [{item['page']}]")
-            bf = info["borrowed_from"]
-            if bf == "win32-reference":
-                head.append(" * declaration: the Win32 reference copy -- "
-                            "the CE documents print none; verify against "
-                            "the CE SDK")
-            elif bf.startswith("ce-set:"):
-                head.append(f" * declaration: {bf[len('ce-set:'):].split('|')[0]}"
-                            " copy (another CE generation prints it)")
-            if bf.endswith("|spacing"):
-                head.append(" *   (the newest CE copy lost the spaces "
-                            "between tokens; this is another page's text, "
-                            "identical once whitespace is removed)")
-            head.append(f" * source: {declaration['source']['path']}")
-            head.append(" */")
-            head.append(declaration["text"])
-            lines.extend(head)
+            buckets[decl_bucket(info)].append(info)
+        open_decl_guard = None
+        for bucket_key, bucket_title in sections:
+            items = buckets.get(bucket_key) or []
+            if not items:
+                continue
+            if open_decl_guard is not None:
+                close_guard(lines, open_decl_guard)
+                open_decl_guard = None
+            lines.append("")
+            lines.append("/* " + "=" * 66)
+            for piece in re.findall(r".{1,64}(?:\s|$)", bucket_title):
+                lines.append(" * " + piece.rstrip())
+            lines.append(" * " + "=" * 64 + " */")
+            for info in items:
+                entity = info["entity"]
+                declaration = info["declaration"]
+                libs = ", ".join(
+                    name for names in info["modules"].values()
+                    for name in sorted(names)) or "-"
+                if info["guard"] != open_decl_guard:
+                    if open_decl_guard is not None:
+                        close_guard(lines, open_decl_guard)
+                    lines.append("")
+                    open_guard(lines, info["guard"], info["merged"])
+                    open_decl_guard = info["guard"]
+                head = [
+                    "", "/*" + "-" * 68,
+                    f" * {entity['name']}  "
+                    f"[{', '.join(entity['kinds']) or '?'}]",
+                    f" * surface: {entity.get('surface') or '?'}",
+                    f" * library: {libs}"
+                    + ("  [stated by the Win32 reference; the CE pages name "
+                       "no module]" if info["lib_mark"] else ""),
+                ]
+                if info["neutral_ce"] or info["versions"]:
+                    desc = wce_range_comment(info["merged"]) \
+                        if info["merged"] else \
+                        "no versioned set documents interface material"
+                    head.append(f" * versions: {desc}")
+                    if info["neutral_ce"]:
+                        head.append(
+                            " *   also documented by version-neutral "
+                            "CE pages: " + "; ".join(info["neutral_ce"]))
+                if info["alternates"]:
+                    for printed, sets in info["alternates"]:
+                        head.append(f" * also stated in: {printed}"
+                                    + (f"  ({'; '.join(sorted(sets))})"
+                                       if sets else ""))
+                if info["header_mark"]:
+                    head.append(" * header: stated by the Win32 desktop "
+                                "reference only -- NOT a header a Windows CE "
+                                "page names for this entry")
+                for variant in info["variants"]:
+                    head.append(" * documented spelling: "
+                                f"{variant['name']}  "
+                                f"[{'; '.join(variant.get('win32_pages') or [])}]"
+                                if variant.get("win32_pages") else
+                                f" * documented spelling: {variant['name']}")
+                for item in (item for item in entity.get("unicode_only") or []
+                             if item.get("scope") == "this-api"):
+                    head.append(f" * {item['text']}  [{item['page']}]")
+                bf = info["borrowed_from"]
+                if bf == "win32-reference":
+                    head.append(" * declaration: the Win32 reference copy -- "
+                                "the CE documents print none; verify against "
+                                "the CE SDK")
+                elif bf.startswith("ce-set:"):
+                    head.append(
+                        f" * declaration: "
+                        f"{bf[len('ce-set:'):].split('|')[0]}"
+                        " copy (another CE generation prints it)")
+                if bf.endswith("|spacing"):
+                    head.append(" *   (the newest CE copy lost the spaces "
+                                "between tokens; this is another page's text, "
+                                "identical once whitespace is removed)")
+                if declaration is not None:
+                    head.append(f" * source: {declaration['source']['path']}")
+                    head.append(" */")
+                    head.append(declaration["text"])
+                else:
+                    outline = info["outline"]
+                    head.append(
+                        " * DERIVED member outline -- the page(s) below "
+                        "document these members, in this order, without "
+                        "printing a declaration body; the types, offsets "
+                        "and the body are not stated and not guessed.")
+                    for member in outline:
+                        credit = ""
+                        if member["spelling"] and \
+                                member["spelling"] != entity["name"]:
+                            credit = f"  (spelling: {member['spelling']})"
+                        head.append(f" *   {member['field']}  "
+                                    f"[{member['page']}]{credit}")
+                    head.append(" */")
+                lines.extend(head)
         if open_decl_guard is not None:
             close_guard(lines, open_decl_guard)
         path = os.path.join(include_dir, display + ".h.fragment")
@@ -1638,16 +1850,21 @@ def run_unified(args):
         for row in manifest:
             fh.write("\t".join(row) + "\n")
 
+    outlines = sum(1 for items in by_header.values() for info in items
+                   if info["declaration"] is None)
     report = _unified_report(
         args, entities, by_header, by_module, header_files_written,
         defines, conflicts, unsupported_written, no_header,
         ordinal_files, ordinal_names, borrowed, skipped, pages,
-        links, pinvoke_apis, pinvoke_consts, win32_only)
+        links, pinvoke_apis, pinvoke_consts, win32_only,
+        conflicts_resolved=conflicts_resolved, outlines=outlines,
+        conflict_rows=conflict_rows)
     _write_lines(os.path.join(out, "report.md"), report)
     print(f"unified tree: {header_files_written:,} header fragments "
-          f"({sum(len(v) for v in by_header.values()):,} declarations, "
-          f"{defines:,} #define lines), {len(by_module):,} module .def "
-          f"worklists, written to {out} (see report.md)")
+          f"({sum(len(v) for v in by_header.values()):,} declarations/"
+          f"outlines, {defines:,} #define lines, {conflicts_resolved:,} "
+          f"reviewed conflict resolution(s)), {len(by_module):,} module "
+          f".def worklists, written to {out} (see report.md)")
     return 0
 
 
@@ -1659,7 +1876,8 @@ def _write_lines(path, lines):
 def _unified_report(args, entities, by_header, by_module, header_files,
                     defines, conflicts, unsupported_written, no_header,
                     ordinal_files, ordinal_names, borrowed, skipped, pages,
-                    links, pinvoke_apis, pinvoke_consts, win32_only):
+                    links, pinvoke_apis, pinvoke_consts, win32_only,
+                    conflicts_resolved=0, outlines=0, conflict_rows=None):
     surfaces = collections.Counter(e.get("surface") for e in entities)
     strengths = collections.Counter()
     for name, targets in links.items():
@@ -1682,12 +1900,20 @@ def _unified_report(args, entities, by_header, by_module, header_files,
         ", ".join(f"`{k}` {v:,}" for k, v in sorted(
             surfaces.items(), key=lambda kv: str(kv[0]))) + ")",
         f"* header fragments: **{header_files:,}** under `include/`, each",
-        "  with its documented constants first and its declarations after;",
-        "  quoted text is verbatim, the `#define` keyword and the",
-        "  header/constant filing are derived and say so",
+        "  with its documented constants first, then the macros, the types",
+        "  and the functions; quoted text is verbatim, the `#define`",
+        "  keyword and the header/constant filing are derived and say so",
         f"* derived `#define` lines written: **{defines:,}**",
-        f"* constants whose pages disagree / overlap: **{conflicts:,}**",
-        "  (listed, no `#define` written)",
+        f"* derived member outlines (structures whose body no page prints):",
+        f"  **{outlines:,}** -- marked DERIVED in the fragment",
+        f"* constants whose pages disagree / overlap: "
+        f"**{len(conflict_rows or {}):,}** name(s) examined in "
+        "`kb/constant-conflicts.tsv`",
+        f"  ({conflicts:,} of them reach a header fragment in this build;",
+        f"  **{conflicts_resolved:,}** resolved by the review in",
+        "  `data/constant-value-review.tsv` to a print the pages themselves",
+        "  state, the rest get no `#define` -- every one keeps its",
+        "  CONFLICT block with the verdict)",
         f"* constants with no header linkage at all: **{no_header:,}**",
         "  (worklist only -- they stay in `constants.tsv`)",
         f"* module `.def` worklists: **{len(by_module):,}** under `link/`",
@@ -1705,16 +1931,28 @@ def _unified_report(args, entities, by_header, by_module, header_files,
         "",
         "## Constant/header linkage (kb/constant-headers.tsv)",
         "",
-        "Ranks consumed by this build (best rank per name, all CE always",
-        "outranks the Win32 desktop reference, everything outranks the",
-        "pinvoke weak auxiliary hint):",
+        "Ranks consumed by this build (best rank per name: the CE",
+        "documentation always outranks the Win32 desktop reference, which",
+        "outranks the co-mention evidence and the pinned reference",
+        "headers, and everything outranks the pinvoke weak auxiliary",
+        "hint):",
         "",
         "| rank | link rows |",
         "|------|----------:|",
     ]
     for rank in ("own-page", "entity-page", "constant-entity",
-                 "win32-reference", "pinvoke-weak"):
+                 "win32-reference", "co-mention",
+                 "reference-header", "reference-header-secondary",
+                 "pinvoke-weak"):
         lines.append(f"| {rank} | {strengths.get(rank, 0):,} |")
+    lines += [
+        "",
+        "The reference-header ranks come from the pinned, licence-vetted",
+        "public references under `sources/`: their header files *define*",
+        "the name (the row quotes tarball!member), so they say which",
+        "header the name sits in.  No value is ever taken from them --",
+        "every `#define` number above is a CE documentation quotation.",
+    ]
     lines += [
         "",
         "## The isolated weak-auxiliary pinvoke reference",
@@ -1789,12 +2027,17 @@ def main():
             print(f"{book:44s} {count:7,} entities")
         return 0
 
-    if args.unified:
+    # The default build is the unified one: ONE include/def tree for the
+    # whole of Windows CE, version differences carried by _WIN32_WCE
+    # branches, the Win32-shared half merged in the same tree.  The
+    # per-generation build (--set) stays available for comparison, but
+    # it is never the product.
+    if args.unified or not args.target:
         if not args.out:
-            ap.error("--unified needs --out")
+            ap.error("the unified build needs --out")
         return run_unified(args)
-    if not args.target or not args.out:
-        ap.error("--set and --out are required (or use --list)")
+    if not args.out:
+        ap.error("--set needs --out")
 
     declarations_of = {d["id"]: d for d in load(DECLARATIONS)}
     reqs_of = collections.defaultdict(list)

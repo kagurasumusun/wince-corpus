@@ -22,6 +22,8 @@ The knowledge base is built from the pages in `corpus/` only: every declaration,
 * requirement statements: **193,542**
 * of those, a page's own `Module` (not an sdk-api UID): **146**; a `sysgen` variable: **980**; a CPU list (`Architecture`): **78**; a catalog `Component`: **28**
 * numbered constants: **22,937** (`kb/constants.jsonl`, 1,676 page(s))
+* constant -> header linkage: **6,282** rows over **5,336** names (`kb/constant-headers.tsv`; ranks: `own-page` 4,161, `entity-page` 42, `constant-entity` 34, `win32-reference` 224, `reference-header` 1,316, `reference-header-secondary` 481, `co-mention` 5, `pinvoke-weak` 19); **823** name(s) wait in `reports/constant-header-gaps.tsv` (needs-sdk-verification 529, vb-language-constant 286, ole-automation-constant 8)
+* value disagreements examined: **8** name(s) whose pages print more than one number and cannot be a version branch (`kb/constant-conflicts.tsv`; categories: same-page 2, same-set 6)
 * Windows CE constraint sentences: **3,555** and ABI statements quoted from the pages (**970**, `kind: "abi-note"`)
 * entities with a gap record: **19,709** (`reports/gaps.tsv`)
 * structures whose members a page documents without printing a declaration body: **801** (842 page(s) carry a member list, 840 of them print no declaration at all; `kb/struct-fields.tsv` has the member names and order, one row per field -- the pages state no offsets, so none are recorded)

@@ -46,6 +46,8 @@ import argparse
 import collections
 import concurrent.futures
 import datetime
+import glob
+import gzip
 import hashlib
 import io
 import json
@@ -730,6 +732,77 @@ def constant_records(facts, entity_of):
     return records
 
 
+def constant_conflict_rows(constants, review):
+    """Every CE constant whose pages print more than one number, examined.
+
+    A name the generations document at *different* numbers is a version
+    branch, not a conflict (the generator writes an ``#if`` chain).  The
+    rows here are the disagreements that a branch cannot explain: two
+    numbers printed by one page (``same-page``), by one set
+    (``same-set``), or by overlapping version intervals
+    (``version-overlap``).  Each row carries the printed values, the
+    pages behind each, and -- where ``data/constant-value-review.tsv``
+    reviewed the case -- the category, the resolved value and the
+    verdict.  Resolution never invents a number: the resolved value must
+    be one the pages themselves print.
+    """
+    by_name = collections.defaultdict(list)
+    for record in constants:
+        if record.get("layer") != "ce":
+            continue
+        by_name[record["name"]].append(record)
+    rows = []
+    for name in sorted(by_name, key=str.lower):
+        values = collections.defaultdict(lambda: {
+            "pages": set(), "sets": set(), "printed": set()})
+        for record in by_name[name]:
+            number = value_number(record.get("value"))
+            if number is None:
+                continue
+            slot = values[number]
+            slot["printed"].add(record.get("value"))
+            slot["pages"].add(record["source"]["path"])
+            slot["sets"].add(record["source"]["set"])
+        if len(values) < 2:
+            continue
+        same_page = any(
+            len({value_number(r.get("value")) for r in by_name[name]
+                 if r["source"]["path"] == page}) > 1
+            for page in {r["source"]["path"] for r in by_name[name]})
+        same_set = any(
+            len({value_number(r.get("value")) for r in by_name[name]
+                 if r["source"]["set"] == book}) > 1
+            for book in {r["source"]["set"] for r in by_name[name]})
+        # disjoint set families per number -> a version branch, skipped
+        if not same_page and not same_set:
+            set_families = [slot["sets"] for slot in values.values()]
+            overlap = any(a & b for i, a in enumerate(set_families)
+                          for b in set_families[i + 1:])
+            if not overlap:
+                continue
+            category = "version-overlap"
+        else:
+            category = ("same-page" if same_page else "same-set")
+        verdict_row = review.get(name) or {}
+        resolved = (verdict_row.get("resolved_value") or "").strip()
+        printed_all = {p for slot in values.values() for p in slot["printed"]}
+        if resolved and resolved not in printed_all:
+            resolved = ""      # a resolution must quote a printed form
+        rows.append((
+            name,
+            ",".join(str(number) for number in sorted(values)),
+            "|".join(sorted(printed_all)),
+            category,
+            verdict_row.get("category") or "",
+            ";".join(sorted({p for slot in values.values()
+                             for p in slot["pages"]})),
+            ";".join(sorted({s for slot in values.values()
+                             for s in slot["sets"]})),
+            resolved,
+            verdict_row.get("verdict") or ""))
+    return rows
+
+
 PINVOKE_AUX_README = """# `aux/` -- the isolated weak-auxiliary pinvoke material
 
 The files here are **not** part of the specification in `kb/`: they are the
@@ -842,27 +915,248 @@ def pinvoke_records(facts):
 # The constant -> header linkage ranks, best first.  A rank's label says
 # *who* states the header for a constant the pages number.  The official
 # Windows CE documentation always outranks the Win32 desktop reference,
-# which in turn outranks the pinvoke.net weak auxiliary hint; within one
-# name only the best available rank is written out.
+# which in turn outranks the pinned reference headers that *define* the
+# name (a definition is stronger membership evidence than a listing),
+# which outrank the co-mention evidence of other CE pages, which in turn
+# outranks the pinvoke.net weak auxiliary hint; within one name only the
+# best available rank is written out.
 LINK_RANKS = ("own-page", "entity-page", "constant-entity",
-              "win32-reference", "pinvoke-weak")
+              "win32-reference",
+              "reference-header", "reference-header-secondary",
+              "co-mention", "pinvoke-weak")
 LINK_RANK_INDEX = {rank: index for index, rank in enumerate(LINK_RANKS)}
 
 
-def constant_header_links(constants, requirements, pinvoke_records_pair):
+def value_number(text):
+    """The integer one printed value states, or None (never re-emitted)."""
+    try:
+        text = str(text).strip()
+        if text.lower().startswith(("0x", "-0x")):
+            return int(text, 16)
+        return int(text, 10)
+    except (ValueError, TypeError):
+        return None
+
+
+# The hand-reviewed value disagreements (data/constant-value-review.tsv):
+# one row per name whose pages print more than one number, the value the
+# review resolved it to (empty when the corpus alone cannot say), the
+# category of the disagreement and the verdict text.  The file is an
+# INPUT of the build -- the analysis lives beside the other curated
+# inputs (data/win32-exclude.tsv and friends) so rebuilding knowledge/
+# stays reproducible.
+CONSTANT_VALUE_REVIEW = os.path.join(ROOT, "data", "constant-value-review.tsv")
+
+
+def read_constant_value_review():
+    review = {}
+    if not os.path.exists(CONSTANT_VALUE_REVIEW):
+        return review
+    with open(CONSTANT_VALUE_REVIEW, encoding="utf-8") as fh:
+        header = None
+        for line in fh:
+            if line.startswith("#"):
+                continue
+            cells = line.rstrip("\n").split("\t")
+            if header is None:
+                header = cells
+                continue
+            if len(cells) < 4:
+                continue
+            row = dict(zip(header, cells))
+            review[row["name"]] = row
+    return review
+
+
+# The pinned, licence-vetted public references under sources/: their
+# header files *define* names, so a documented constant they define is
+# evidence of the header membership (which file the name sits in) --
+# never of its value: values come only from the CE/Win32 documentation
+# pages.  The PRIMARY reference is the CeGCC w32api, the classic 32-bit
+# Win32 headers adapted for Windows CE (public domain,
+# sources/w32api-cegcc/PROVENANCE.md); the SECONDARY reference is
+# mingw-w64 (64-bit desktop target -- the wrong target, used only where
+# the primary says nothing, e.g. the MSHTML enumerations; LGPL/GPL files
+# are never parsed).  Rows are filed at the marked ranks
+# ``reference-header`` / ``reference-header-secondary``.
+REFERENCE_RANKS = (
+    {"tag": "w32api-cegcc", "rank": "reference-header",
+     "glob": os.path.join(ROOT, "sources", "w32api-cegcc",
+                          "w32api-*-src.tar.gz"),
+     "parseable": None, "label": "w32api-cegcc"},
+    {"tag": "mingw-w64", "rank": "reference-header-secondary",
+     "glob": os.path.join(ROOT, "sources", "mingw-w64",
+                          "mingw-*-src.tar.gz"),
+     "parseable": {"public-domain", "zpl-implicit", "zpl-explicit"},
+     "label": "mingw-w64"},
+)
+
+REF_DEFINE_RE = re.compile(r"^\s*#\s*define\s+([A-Za-z_]\w*)\s*(.*)$")
+REF_COMMENT_RE = re.compile(r"/\*.*?\*/|//.*$")
+REF_ENUM_RE = re.compile(r"\benum\b[^{};]*\{([^{}]*)\}", re.S)
+REF_MEMBER_RE = re.compile(r"^\s*([A-Za-z_]\w*)\s*(?::\s*\d+\s*)?(?:=|,|$)")
+REF_GUARDISH = re.compile(r"_INC_[A-Z0-9_]+$|__?\S+_H(?:INCLUDED)?_+$")
+
+
+def reference_define_headers():
+    """name -> [(header, rank, evidence)] from the pinned reference headers.
+
+    Both ``#define`` lines and ``enum`` members of the top-level files of
+    each reference's ``include/`` directory are read (no subdirectories --
+    the same parse scope tools/xcheck_references.py states).  The value
+    beside the name is parsed away and never returned: this function can
+    only say *which header defines the name*.
+    """
+    import tarfile  # local: only the reference pass needs archives
+
+    out = collections.defaultdict(list)
+    for spec in REFERENCE_RANKS:
+        tarballs = sorted(glob.glob(spec["glob"]))
+        if not tarballs:
+            print(f"[kb] reference {spec['tag']}: no pinned tarball under "
+                  "sources/ -- header-membership evidence skipped",
+                  flush=True)
+            continue
+        tarball = tarballs[-1]
+        try:
+            from xcheck_references import (w32api_cegcc_class,  # noqa
+                                           mingw_w64_class)
+            classifier = (w32api_cegcc_class if spec["tag"] == "w32api-cegcc"
+                          else mingw_w64_class)
+        except ImportError:  # pragma: no cover - defensive
+            continue
+        rows = 0
+        with tarfile.open(tarball) as tar:
+            for member in tar.getmembers():
+                if not member.isfile():
+                    continue
+                parts = member.name.split("/")
+                if len(parts) < 2 or parts[-2] != "include":
+                    continue        # top-level include/ files only
+                if not parts[-1].lower().endswith((".h", ".hpp")):
+                    continue
+                handle = tar.extractfile(member)
+                if handle is None:
+                    continue
+                text = handle.read().decode("utf-8", "replace")
+                klas = classifier(text)
+                if spec["parseable"] is not None and \
+                        klas not in spec["parseable"]:
+                    continue
+                header = parts[-1]
+                evidence = f"{os.path.relpath(tarball, ROOT)}!{member.name}"
+                seen = set()
+                for line in text.splitlines():
+                    match = REF_DEFINE_RE.match(line)
+                    if match is None:
+                        continue
+                    name = match.group(1)
+                    value = REF_COMMENT_RE.sub("", match.group(2)).strip()
+                    if value.startswith("(") and f"{name}(" in line:
+                        continue            # function-like macro
+                    if name.startswith("__") or REF_GUARDISH.match(name):
+                        continue
+                    if name not in seen:
+                        seen.add(name)
+                        out[name].append((header, spec["rank"], evidence))
+                        rows += 1
+                for enum in REF_ENUM_RE.findall(text):
+                    for piece in enum.split(","):
+                        match = REF_MEMBER_RE.match(
+                            piece.split("/*")[0].split("//")[0])
+                        if match is None:
+                            continue
+                        name = match.group(1)
+                        if name.startswith("__") or name in seen:
+                            continue
+                        seen.add(name)
+                        out[name].append((header, spec["rank"], evidence))
+                        rows += 1
+        print(f"[kb] reference {spec['tag']}: {rows:,} name -> header "
+              f"statement(s) from {os.path.basename(tarball)}", flush=True)
+    return out
+
+
+def co_mention_links(names, requirements):
+    """name -> [(header, page, headers_of_page)]: the CE pages that state a
+    header while *listing* the name among their subject's values.
+
+    This is the one corpus-side bridge for a constant whose own pages
+    state no header: the value tables number the name, another page of
+    the same API family presents it as a named value of an entity whose
+    Requirements block names a header (``GetSysColor`` lists
+    ``COLOR_*`` and states ``Winuser.h``).  Accepted only under a strict
+    unanimity rule -- every such page must name the *same single* header,
+    and the name must be a spelled identifier (an underscore inside an
+    uppercase-initial name), never a word like ``True`` or ``READ`` that
+    pages use in passing.  Everything weaker stays in the worklist.
+    """
+    wanted = {n for n in names
+              if "_" in n and re.match(r"^[A-Z][A-Za-z0-9_]*$", n)
+              and len(n) >= 6}
+    if not wanted:
+        return {}
+    page_headers = collections.defaultdict(set)
+    page_set = {}
+    for record in requirements:
+        if record.get("field") != "header" or record.get("layer") != "ce":
+            continue
+        page_set[record["source"]["path"]] = record["source"]["set"]
+        for match in HEADER_TOKEN.findall(record.get("value") or ""):
+            page_headers[record["source"]["path"]].add(
+                match.split("/")[-1].split("\\")[-1])
+    hits = collections.defaultdict(list)   # name -> [(page, headers)]
+    scanned = 0
+    token_re = re.compile(r"\b[A-Z][A-Za-z0-9_]{4,}\b")
+    for path, headers in sorted(page_headers.items()):
+        if not headers:
+            continue
+        try:
+            text = open(os.path.join(ROOT, path), encoding="utf-8",
+                        errors="replace").read()
+        except OSError:
+            continue
+        scanned += 1
+        found = {match.group(0) for match in token_re.finditer(text)}
+        for name in found & wanted:
+            hits[name].append((path, headers))
+    out = {}
+    for name, rows in hits.items():
+        common = set(rows[0][1])
+        for _path, headers in rows[1:]:
+            common &= headers
+        if len(common) != 1:
+            continue        # zero common header, or several: never guessed
+        header = sorted(common)[0]
+        out[name] = [(header, path, page_set.get(path, ""))
+                     for path, headers in rows]
+    print(f"[kb] co-mention scan: {scanned:,} header-stating CE page(s), "
+          f"{len(out):,} name(s) with one unanimous header", flush=True)
+    return out
+
+
+def constant_header_links(constants, requirements, pinvoke_records_pair,
+                          reference_links=None, mention_links=None):
     """constant name -> header file, ranked by the strength of the statement.
 
     Every row keeps its evidence: how many statements say it, one example
     page, and the sets those pages belong to.  ``own-page``: the page
     that numbers the constant also states a Header.  ``entity-page``:
     the requirements of the page's own entity (the enumeration's or
-    macro's page) name a header.
-    ``win32-reference``: only the desktop Win32 reference names a header
-    (marked -- the generator has to verify those against the CE SDK).
-    ``pinvoke-weak``: nothing in the documentation says anything, and
-    the only hint is the pinvoke.net module the name is filed under.
-    No header is invented: every emitted row traces to a printed
-    statement or, at the weakest rank, to the pinvoke page itself.
+    macro's page) name a header.  ``win32-reference``: only the desktop
+    Win32 reference names a header (marked -- the generator has to
+    verify those against the CE SDK).  ``reference-header`` /
+    ``reference-header-secondary``: the pinned, licence-vetted reference
+    headers under sources/ *define* the name in one header file (marked
+    -- header membership only; their values are never taken).
+    ``co-mention``: another CE page lists the name among its subject's
+    values and names one unanimous header (a listing ranks under a
+    definition, so an error code listed on an API page stays where its
+    defining header puts it).  ``pinvoke-weak``: nothing else says
+    anything, and the only hint is the pinvoke.net module the name is
+    filed under.  No header is invented: every emitted row traces to a
+    printed statement or, at the weakest ranks, to the reference or
+    pinvoke material itself.
     """
     def headers_of_value(value):
         files = []
@@ -944,7 +1238,39 @@ def constant_header_links(constants, requirements, pinvoke_records_pair):
             offer(name, "constant-entity", entity_headers_ce,
                   first["source"]["path"], first["source"]["set"])
 
-    # rank 5: the pinvoke.net weak auxiliary hint.  It may only file a
+    # ranks: the pinned, licence-vetted reference headers under sources/.
+    # They *define* the name in one header file -- evidence of the header
+    # membership only.  No value is ever read from them (the value beside
+    # the name is parsed away in reference_define_headers()), and the
+    # rows are marked so the generator has to verify against the CE SDK.
+    # The secondary reference (mingw-w64, wrong target) is offered only
+    # where the primary says nothing.
+    ref_links = reference_links or {}
+    primary_names = {name for name, rows in ref_links.items()
+                     if any(r[1] == "reference-header" for r in rows)}
+    for name in sorted(ref_links, key=str.lower):
+        if name not in by_name:
+            continue
+        for header, rank, evidence in ref_links[name]:
+            if rank == "reference-header-secondary" and name in primary_names:
+                continue
+            book = evidence.split("/")[1] if "/" in evidence else rank
+            offer(name, rank, [header], evidence, book)
+
+    # rank: co-mention -- another CE page of the same API family lists the
+    # name among its subject's values while its Requirements block names
+    # one unanimous header.  The official documentation one step removed
+    # from the numbering page -- but only a listing, never a definition,
+    # so it ranks under the references above (an error code listed on an
+    # API page belongs to winerror.h, not to that API's header); the
+    # strict rule is in co_mention_links().
+    for name, rows in (mention_links or {}).items():
+        if name not in by_name:
+            continue
+        for header, page, book in rows:
+            offer(name, "co-mention", [header], page, book)
+
+    # last rank: the pinvoke.net weak auxiliary hint.  It may only file a
     # name the CE (or CE-shared Win32) documentation actually numbers:
     # a community name with no documented value anywhere in the corpus
     # mints no linkage row at all.
@@ -1710,7 +2036,17 @@ def build(rows, workers, report_only, plain=False):
     abi_offsets = abi_offset_records(facts, entity_of)
     constants = constant_records(facts, entity_of)
     pinvoke_pair = pinvoke_records(facts)
-    link_rows = constant_header_links(constants, requirements, pinvoke_pair)
+    # Header-membership evidence beyond the pages themselves: the pinned,
+    # licence-vetted reference headers under sources/ (marked ranks, no
+    # values), and the co-mention scan over the header-stating CE pages.
+    reference_links = reference_define_headers()
+    ce_constant_names = {r["name"] for r in constants
+                         if r.get("layer") == "ce"}
+    mention_links = co_mention_links(ce_constant_names, requirements)
+    link_rows = constant_header_links(constants, requirements, pinvoke_pair,
+                                      reference_links, mention_links)
+    value_review = read_constant_value_review()
+    conflict_rows = constant_conflict_rows(constants, value_review)
     entities = entity_records(facts, declarations, requirements)
 
     # attach constraint ids to entities
@@ -1789,13 +2125,22 @@ def build(rows, workers, report_only, plain=False):
               ["name", "header", "strength", "statements", "example_page",
                "sets"], link_rows)
 
-    # The collection worklist: CE constants no page names a header for.
-    # Nothing can fill that from the corpus itself -- not the page (it
-    # states none), not the entity tier (the names are not entities),
-    # not the Win32 reference (the CE-shared subset documents none of
-    # them) -- so they instead land here, one row per name with the sets
-    # and a page to start from.  The pinvoke-weak rank and the CE SDK
-    # review are the intended way to shrink this list.
+    # The examined value disagreements: names whose pages print more than
+    # one number and cannot be explained as a version branch, with the
+    # reviewed category/verdict beside them (data/constant-value-review.tsv).
+    write_tsv(os.path.join(KB, "constant-conflicts.tsv"),
+              ["name", "numbers", "printed_values", "category",
+               "reviewed_category", "pages", "sets", "resolved_value",
+               "verdict"], conflict_rows)
+
+    # The collection worklist: CE constants no evidence files in any
+    # header.  The corpus pages that number them state none, the names
+    # are not entities, the CE-shared Win32 subset documents none of
+    # them, no other CE page co-mentions them with one unanimous header,
+    # and neither pinned reference header defines them -- so they land
+    # here, one row per name with the sets, a page to start from, and
+    # the classification of why no header can be filed yet.  The CE SDK
+    # verification is the intended way to shrink this list.
     linked_names = {row[0] for row in link_rows}
     gap = {}
     ce_value = collections.defaultdict(set)   # name -> values the CE docs print
@@ -1827,14 +2172,38 @@ def build(rows, workers, report_only, plain=False):
         hits = aux_by_name.get(name) or []
         return ";".join(sorted({h["module"] for h in hits}))
 
+    VB_SETS = ("msdn-library/datadungeon-2000-04/vbce",
+               "msdn-library/techshelps/VBCE")
+    AUTOMATION_SETS = ("msdn-library/datadungeon-2000-04/adoce",)
+
+    def classify_gap(sets):
+        """Why the corpus cannot file this name in a header (yet).
+
+        ``vb-language-constant``: documented only by the eVB/VBCE
+        language references -- language-runtime constants with no C
+        header at all.  ``ole-automation-constant``: documented only by
+        the ADO CE automation reference -- type-library enumerations.
+        ``needs-sdk-verification``: a platform constant whose header no
+        public material examined so far states.
+        """
+        if all(any(s.startswith(p) for p in VB_SETS) for s in sets):
+            return "vb-language-constant"
+        if all(any(s.startswith(p) for p in AUTOMATION_SETS) for s in sets):
+            return "ole-automation-constant"
+        return "needs-sdk-verification"
+
+    for entry in gap.values():
+        entry["class"] = classify_gap(entry["sets"])
     write_tsv(
         os.path.join(REPORTS, "constant-header-gaps.tsv"),
-        ["name", "rows", "origins", "sets", "example_page", "pinvoke_hit"],
+        ["name", "rows", "origins", "sets", "example_page", "pinvoke_hit",
+         "classification"],
         sorted((name, entry["rows"],
                 ",".join(f"{k}:{v}" for k, v in
                          entry["origins"].most_common()),
                 ";".join(sorted(entry["sets"])),
-                entry["example_page"], aux_hit_text(name))
+                entry["example_page"], aux_hit_text(name),
+                entry["class"])
                for name, entry in gap.items()))
 
     def numeric_candidates(text):
@@ -2222,7 +2591,8 @@ def build(rows, workers, report_only, plain=False):
               gap_rows)
     write_summary(facts, entities, declarations, requirements, constraints,
                   abi_offsets, constants, per_tree, gap_rows, ordinal_rows,
-                  rule_rows, unicode_rows, unsupported_rows)
+                  rule_rows, unicode_rows, unsupported_rows,
+                  link_rows, conflict_rows, gap)
     return (facts, entities, declarations, requirements, constraints,
             abi_offsets, constants)
 
@@ -2236,7 +2606,8 @@ def jst_today():
 def write_summary(facts, entities, declarations, requirements, constraints,
                   abi_offsets, constants, per_tree, gap_rows,
                   ordinal_rows=(), rule_rows=(), unicode_rows=(),
-                  unsupported_rows=()):
+                  unsupported_rows=(), link_rows=(), conflict_rows=(),
+                  gap=None):
     def top(book):
         """learn/windows-ce-5.0/... -> learn/windows-ce-5.0 (the report unit)."""
         parts = book.split("/")
@@ -2413,6 +2784,28 @@ def write_summary(facts, entities, declarations, requirements, constraints,
         f"**{sum(1 for r in requirements if r.get('field') == 'component' and r.get('key')):,}**",
         f"* numbered constants: **{len(constants):,}** "
         f"(`kb/constants.jsonl`, {len(constant_pages):,} page(s))",
+        f"* constant -> header linkage: **{len(link_rows):,}** rows over "
+        f"**{len({row[0] for row in link_rows}):,}** names "
+        f"(`kb/constant-headers.tsv`; ranks: "
+        + (", ".join(
+            f"`{rank}` {sum(1 for row in link_rows if row[2] == rank):,}"
+            for rank in LINK_RANKS
+            if any(row[2] == rank for row in link_rows)) or "none")
+        + (f"); **{len(gap or {}):,}** name(s) wait in "
+           "`reports/constant-header-gaps.tsv` ("
+           + ", ".join(
+               f"{kind} {sum(1 for entry in (gap or {}).values() if entry.get('class') == kind):,}"
+               for kind in ("needs-sdk-verification", "vb-language-constant",
+                            "ole-automation-constant"))
+           + ")" if gap else ")"),
+        f"* value disagreements examined: **{len(conflict_rows):,}** "
+        "name(s) whose pages print more than one number and cannot be a "
+        "version branch (`kb/constant-conflicts.tsv`; categories: "
+        + (", ".join(
+            f"{kind} {sum(1 for row in conflict_rows if row[3] == kind):,}"
+            for kind in ("same-page", "same-set", "version-overlap")
+            if any(row[3] == kind for row in conflict_rows)) or "none")
+        + ")",
         f"* Windows CE constraint sentences: "
         f"**{sum(1 for c in constraints if c.get('kind') != 'abi-note'):,}** "
         f"and ABI statements quoted from the pages "

@@ -26,11 +26,19 @@ knowledge/reports/.
 
 What this tool must never do
 ----------------------------
-Nothing parsed here is input to tools/gen-include-def.py or any other
-generator, and nothing is ever emitted into winsur/ -- header values
+Nothing parsed here supplies a VALUE to any generator: header values
 come only from the official CE/Win32 documentation pages.  A listed
 name is a lead for further documentation searching, never a value to
 adopt.
+
+The one part of the references that does feed the pipeline is *header
+membership*: tools/build-kb.py reads the same pinned tarballs and files
+a documented constant under the header whose file defines the name
+(ranks `reference-header` / `reference-header-secondary` in
+knowledge/kb/constant-headers.tsv, loudly marked, values parsed away).
+That evidence is harvested by the first team into knowledge/, never
+read across the clean-room wall -- and even there, the value beside the
+name is discarded.
 """
 
 import argparse
@@ -237,8 +245,11 @@ def main():
 
     stamp = ("# REVIEW ONLY -- parsed from a pinned, licence-vetted "
              "reference under sources/ (see its PROVENANCE.md).  These "
-             "rows are cross-check leads for a human; they are NEVER "
-             "input to any generator and NEVER emitted into winsur/.\n")
+             "rows are cross-check leads for a human: values are NEVER "
+             "input to any generator and NEVER emitted into winsur/. "
+             "(Header membership -- which file defines a name -- is "
+             "harvested separately by tools/build-kb.py into the marked "
+             "reference-header ranks of kb/constant-headers.tsv.)\n")
 
     all_ref_names = {}          # tag -> {name: [(value, src, klas)]}
     summary = {"defines": {}, "exports": {}, "agree": {}, "leads": {},
