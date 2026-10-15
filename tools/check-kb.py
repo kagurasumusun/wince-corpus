@@ -212,7 +212,7 @@ def check_constant_headers():
         return problems
     ranks = {"own-page", "entity-page", "constant-entity",
              "win32-reference", "co-mention",
-             "reference-header", "reference-header-secondary",
+             "reference-header",
              "pinvoke-weak"}
     rows = 0
     with open(path, encoding="utf-8") as fh:
@@ -241,10 +241,8 @@ def check_constant_headers():
                          cells[4].startswith("sources/dotnet-pinvoke/")):
                 problems.append(f"constant-headers: {name}: a pinvoke-weak "
                                 "row must name an isolated-aux source")
-            if rows > 1 and cells[2] in ("reference-header",
-                                         "reference-header-secondary") and \
-                    not (cells[4].startswith("sources/w32api-cegcc/") or
-                         cells[4].startswith("sources/mingw-w64/")):
+            if rows > 1 and cells[2] == "reference-header" and \
+                    not cells[4].startswith("sources/w32api-cegcc/"):
                 problems.append(f"constant-headers: {name}: a reference "
                                 "rank must name its pinned sources/ tarball")
             if rows > 1 and cells[2] == "co-mention" and \

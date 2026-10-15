@@ -1402,13 +1402,10 @@ def run_unified(args):
         """The long pinned-tarball paths, named briefly but exactly."""
         if text.startswith("sources/dotnet-pinvoke/"):
             return "the pinned dotnet/pinvoke snapshot (sources/dotnet-pinvoke/)"
-        match = re.search(r"sources/(w32api-cegcc|mingw-w64)/[^!]*!.*[/\\]"
+        match = re.search(r"sources/(w32api-cegcc)/[^!]*!.*[/\\]"
                           r"([^/\\]+)$", text)
         if match:
-            tag = match.group(1)
-            label = ("w32api-cegcc reference" if tag == "w32api-cegcc"
-                     else "mingw-w64 secondary reference")
-            return f"{label} {match.group(2)}"
+            return f"w32api-cegcc reference {match.group(2)}"
         return text
 
     def const_note(entry, group, quote_cap=1):
@@ -1433,9 +1430,9 @@ def run_unified(args):
             "reference-header":
                 "w32api-cegcc reference header; membership only -- "
                 "verify against the CE SDK",
-            "reference-header-secondary":
-                "mingw-w64 secondary reference, wrong target; "
-                "membership only -- verify against the CE SDK",
+            # Wine/ReactOS/MinGW-w64 are prohibited (not Windows CE):
+            # the reference-header-secondary rank existed for MinGW-w64
+            # and is retired with it.
         }
         note = f"/* {name} {group['print']} | {strength}"
         if strength in marks:
@@ -1958,7 +1955,7 @@ def _unified_report(args, entities, by_header, by_module, header_files,
     ]
     for rank in ("own-page", "entity-page", "constant-entity",
                  "win32-reference", "co-mention",
-                 "reference-header", "reference-header-secondary",
+                 "reference-header",
                  "pinvoke-weak"):
         lines.append(f"| {rank} | {strengths.get(rank, 0):,} |")
     lines += [

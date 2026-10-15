@@ -197,29 +197,26 @@ before any use — acquisition route, publisher, licence scope read from
 the files themselves, usage decision, all recorded in the source's
 `PROVENANCE.md`:
 
-* `sources/w32api-cegcc/` — **PRIMARY**: the CeGCC toolchain's w32api
-  (pinned commit `8e64b608`), the classic 32-bit Win32 API headers
+* `sources/w32api-cegcc/` — **the only reference**: the CeGCC toolchain's
+  w32api (pinned commit `8e64b608`), the classic 32-bit Win32 API headers
   adapted for Windows CE itself (`libce/`, `_WIN32_WCE` branches).
   Windows CE is a 32-bit target; this is the right frame.  The package
   is public domain with named permissive notices (its `README.w32api`),
   and the per-file tally is reproducible by `tools/xcheck_references.py`.
-* `sources/mingw-w64/` — **SECONDARY**: pinned commit `63ebe6cd`.
-  64-bit *desktop* Windows material — the wrong target for CE — kept
-  because it alone carries the MSHTML dispatch ids.  ZPL 2.1 with
-  per-file Public Domain exceptions (868 PD / 633 implicit + 9 explicit
-  ZPL / 297 LGPL / 3 GPL of 1,810 `include/` files; the LGPL/GPL files
-  and the whole `ddk/` tree are excluded from every report).
+* **Standing prohibition (2026-10, user order): Wine, ReactOS and
+  MinGW-w64 are NOT Windows CE — their material must never be used as a
+  reference here.**  Their snapshots and every report derived from them
+  are deleted; do not re-add them.
 
 `tools/xcheck_references.py` writes only *reports* under
 `knowledge/reports/xcheck-*.tsv` + `xcheck-summary.md` (each row
 attributed header:line of its pinned commit): 24,936 candidate names
 absent from the CE corpus from w32api-cegcc (plus 10,828 `.def` export
-leads from its `libce/`+`lib/` lists against `winsur/link/*.def`);
-107,491 from mingw-w64 led by 6,572 `DISPID_*` ids; and where both
-sides number a name the verdicts run to two flagged divergences per
-reference — `MAX_PATH` (CE's DirectShow DVD `Dvdata.h` page prints 128,
+leads from its `libce/`+`lib/` lists against `winsur/link/*.def`); and
+where both sides number a name the verdicts run to flagged divergences —
+`MAX_PATH` (CE's DirectShow DVD `Dvdata.h` page prints 128,
 a local shadow of the desktop's 260) and `HTTP_QUERY_MAX` (CE pages
-print 75; the references print 45 and 78 — generational drift).  The
+print 75; the reference prints 45 — generational drift).  The
 isolation is stricter than the pinvoke carve-out: nothing it parses is
 an input to `tools/build-kb.py`, `tools/gen-include-def.py` or
 `winsur/`.  A listed name is a lead for further documentation

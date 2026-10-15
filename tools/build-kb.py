@@ -966,9 +966,12 @@ def pinvoke_records(facts):
 # which outrank the co-mention evidence of other CE pages, which in turn
 # outranks the pinvoke.net weak auxiliary hint; within one name only the
 # best available rank is written out.
+# Wine/ReactOS/MinGW-w64 are prohibited (not Windows CE); the
+# ``reference-header-secondary`` rung existed for MinGW-w64 and is
+# retired with it.
 LINK_RANKS = ("own-page", "entity-page", "constant-entity",
               "win32-reference",
-              "reference-header", "reference-header-secondary",
+              "reference-header",
               "co-mention", "pinvoke-weak")
 LINK_RANK_INDEX = {rank: index for index, rank in enumerate(LINK_RANKS)}
 
@@ -1023,27 +1026,21 @@ def read_constant_value_review():
 # header files *define* names, so a documented constant they define is
 # evidence of the header membership (which file the name sits in) --
 # never of its value: values come only from the CE/Win32 documentation
-# pages.  The PRIMARY reference is the CeGCC w32api, the classic 32-bit
+# pages.  The ONLY reference is the CeGCC w32api, the classic 32-bit
 # Win32 headers adapted for Windows CE (public domain,
-# sources/w32api-cegcc/PROVENANCE.md); the SECONDARY reference is
-# mingw-w64 (64-bit desktop target -- the wrong target, used only where
-# the primary says nothing, e.g. the MSHTML enumerations; LGPL/GPL files
-# are never parsed).  Rows are filed at the marked ranks
-# ``reference-header`` / ``reference-header-secondary``.
+# sources/w32api-cegcc/PROVENANCE.md), filed at the marked rank
+# ``reference-header``.
+#
+# STANDING PROHIBITION (2026-10, user order): Wine, ReactOS and
+# MinGW-w64 are NOT Windows CE and must never be used as reference
+# material for this corpus -- not for header membership, not for values,
+# not for cross-checking, not as a secondary fallback.  Their snapshots
+# and every row derived from them are deleted; do not re-add them.
 REFERENCE_RANKS = (
     {"tag": "w32api-cegcc", "rank": "reference-header",
      "glob": os.path.join(ROOT, "sources", "w32api-cegcc",
                           "w32api-*-src.tar.gz"),
      "parseable": None, "label": "w32api-cegcc"},
-    {"tag": "mingw-w64", "rank": "reference-header-secondary",
-     "glob": os.path.join(ROOT, "sources", "mingw-w64",
-                          "mingw-*-src.tar.gz"),
-     "parseable": {"public-domain", "zpl-implicit", "zpl-explicit"},
-     # the C runtime limits (limits.h, float.h, ...) live under crt/,
-     # not include/ -- the standard constants the CE Data Type Constants
-     # page numbers have no other membership evidence
-     "dirs": ("include", "crt"),
-     "label": "mingw-w64"},
 )
 
 REF_DEFINE_RE = re.compile(r"^\s*#\s*define\s+([A-Za-z_]\w*)\s*(.*)$")
@@ -1057,11 +1054,9 @@ def reference_define_headers():
     """name -> [(header, rank, evidence)] from the pinned reference headers.
 
     Both ``#define`` lines and ``enum`` members of the top-level files of
-    each reference's ``include/`` directory are read (plus ``crt/`` for
-    the mingw-w64 secondary reference, where the standard limits live:
-    ``limits.h``, ``float.h``).  The value beside the name is parsed away
-    and never returned: this function can only say *which header defines
-    the name*.
+    the reference's ``include/`` directory are read.  The value beside
+    the name is parsed away and never returned: this function can only
+    say *which header defines the name*.
     """
     import tarfile  # local: only the reference pass needs archives
 
@@ -1075,12 +1070,10 @@ def reference_define_headers():
             continue
         tarball = tarballs[-1]
         try:
-            from xcheck_references import (w32api_cegcc_class,  # noqa
-                                           mingw_w64_class)
-            classifier = (w32api_cegcc_class if spec["tag"] == "w32api-cegcc"
-                          else mingw_w64_class)
+            from xcheck_references import w32api_cegcc_class  # noqa
         except ImportError:  # pragma: no cover - defensive
             continue
+        classifier = w32api_cegcc_class
         rows = 0
         with tarfile.open(tarball) as tar:
             for member in tar.getmembers():
@@ -1202,8 +1195,8 @@ def constant_header_links(constants, requirements, pinvoke_records_pair,
     the requirements of the page's own entity (the enumeration's or
     macro's page) name a header.  ``win32-reference``: only the desktop
     Win32 reference names a header (marked -- the generator has to
-    verify those against the CE SDK).  ``reference-header`` /
-    ``reference-header-secondary``: the pinned, licence-vetted reference
+    verify those against the CE SDK).  ``reference-header``:
+    the pinned, licence-vetted reference
     headers under sources/ *define* the name in one header file (marked
     -- header membership only; their values are never taken).
     ``co-mention``: another CE page lists the name among its subject's
@@ -1300,17 +1293,13 @@ def constant_header_links(constants, requirements, pinvoke_records_pair,
     # membership only.  No value is ever read from them (the value beside
     # the name is parsed away in reference_define_headers()), and the
     # rows are marked so the generator has to verify against the CE SDK.
-    # The secondary reference (mingw-w64, wrong target) is offered only
-    # where the primary says nothing.
+    # Wine/ReactOS/MinGW-w64 are prohibited (not Windows CE): no row of
+    # theirs may ever appear here.
     ref_links = reference_links or {}
-    primary_names = {name for name, rows in ref_links.items()
-                     if any(r[1] == "reference-header" for r in rows)}
     for name in sorted(ref_links, key=str.lower):
         if name not in by_name:
             continue
         for header, rank, evidence in ref_links[name]:
-            if rank == "reference-header-secondary" and name in primary_names:
-                continue
             book = evidence.split("/")[1] if "/" in evidence else rank
             offer(name, rank, [header], evidence, book)
 

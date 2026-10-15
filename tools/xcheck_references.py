@@ -6,15 +6,15 @@ sources/*/.
 References (each with its own PROVENANCE.md recording the licence
 investigation the project requires before use):
 
-  w32api-cegcc  PRIMARY.  The CeGCC toolchain's w32api -- the classic
-                32-bit Win32 API headers adapted for Windows CE
+  w32api-cegcc  The ONLY reference.  The CeGCC toolchain's w32api -- the
+                classic 32-bit Win32 API headers adapted for Windows CE
                 (libce/, _WIN32_WCE branches).  Public domain with
                 short permissive notices named in its README.w32api.
-  mingw-w64     SECONDARY.  64-bit desktop Windows material -- the
-                wrong target for CE, kept because it is the only
-                reference carrying the MSHTML/DISPID ids, and filed as
-                such with the mismatch caveat.  ZPL 2.1 with per-file
-                Public Domain exceptions; LGPL/GPL files are excluded.
+
+STANDING PROHIBITION (2026-10, user order): Wine, ReactOS and MinGW-w64
+are NOT Windows CE and must never be used as reference material -- not
+here, not in tools/build-kb.py, not anywhere else.  Their snapshots and
+every report derived from them are deleted; do not re-add them.
 
 What this tool is allowed to do
 -------------------------------
@@ -32,10 +32,10 @@ name is a lead for further documentation searching, never a value to
 adopt.
 
 The one part of the references that does feed the pipeline is *header
-membership*: tools/build-kb.py reads the same pinned tarballs and files
+membership*: tools/build-kb.py reads the same pinned tarball and files
 a documented constant under the header whose file defines the name
-(ranks `reference-header` / `reference-header-secondary` in
-knowledge/kb/constant-headers.tsv, loudly marked, values parsed away).
+(rank `reference-header` in knowledge/kb/constant-headers.tsv, loudly
+marked, values parsed away).
 That evidence is harvested by the first team into knowledge/, never
 read across the clean-room wall -- and even there, the value beside the
 name is discarded.
@@ -78,25 +78,6 @@ def w32api_cegcc_class(text):
     return "package-public-domain"
 
 
-def mingw_w64_class(text):
-    """mingw-w64: root COPYING is ZPL 2.1; per-file markings narrow it
-    (LGPL/GPL first), a Public Domain sentence widens it, a Zope/ZPL
-    mention records the explicit form.  Must reproduce the PROVENANCE
-    tally: 868 PD / 633 ZPL-implicit / 9 ZPL-explicit / 297 LGPL / 3 GPL.
-    """
-    low = text[:BANNER_SLICE].lower()
-    klas = "zpl-implicit"
-    if "lgpl" in low or "lesser general public" in low:
-        klas = "lgpl"
-    if "general public license" in low and "lesser" not in low:
-        klas = "gpl"
-    if "public domain" in low:
-        klas = "public-domain"
-    if "zope" in low or "zpl" in low.split():
-        klas = "zpl-explicit"
-    return klas
-
-
 REFERENCES = [
     {"tag": "w32api-cegcc", "primary": True,
      "commit": "8e64b608fc9c4d81e206e920ecc977d941577bef",
@@ -105,16 +86,6 @@ REFERENCES = [
      "classifier": w32api_cegcc_class,
      "parseable": None,      # every licence class found there is quotable
      "label": "CeGCC w32api, 32-bit, CE-adapted -- PRIMARY reference"},
-    {"tag": "mingw-w64", "primary": False,
-     "commit": "63ebe6cdb3ec4d5c586b7f0f0c03dd502e44c296",
-     "root": "/home/user/mingw-extract",
-     "include": "include", "def_dirs": (),
-     "classifier": mingw_w64_class,
-     "parseable": {"public-domain", "zpl-implicit", "zpl-explicit"},
-     "label": "mingw-w64, 64-bit desktop target -- SECONDARY, wrong "
-              "target for CE, kept for the MSHTML/DISPID ids",
-     "skips": "LGPL/GPL-marked files and the whole ddk/ tree are never "
-              "parsed"},
 ]
 
 
@@ -466,12 +437,15 @@ def main():
               "Only files directly inside each reference's `include/` "
               "directory are classified and parsed (no recursion; e.g. the "
               "w32api `GL/` subdirectory is outside the scope)."]
-    lines += ["## primary vs secondary", "",
+    lines += ["## the one reference (and the standing prohibition)", "",
               "Windows CE is 32-bit; `w32api-cegcc` (the CeGCC toolchain's "
-              "CE-adapted w32api) is the primary reference.  `mingw-w64` "
-              "targets 64-bit desktop Windows -- the wrong target -- and is "
-              "kept only because it alone carries the MSHTML dispatch ids; "
-              "its **6,572 `DISPID_*` names** remain review leads.",
+              "CE-adapted w32api) is the only reference.  Wine, ReactOS and "
+              "MinGW-w64 are NOT Windows CE and are prohibited as reference "
+              "material by standing user order (2026-10): their snapshots "
+              "and every report derived from them are deleted.  The MSHTML "
+              "dispatch ids only the MinGW-w64 snapshot carried are no "
+              "longer review leads here; find them in the CE/Win32 "
+              "documentation itself.",
               ""]
     (out / "xcheck-summary.md").write_text("\n".join(lines),
                                            encoding="utf-8")

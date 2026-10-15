@@ -11,11 +11,11 @@ the SAME tree, marked 'Win32 reference' -- never a second tree.
 ## What was generated
 
 * entities in scope: **29,161** (by surface: `ce-only` 24,678, `shared` 4,483)
-* header fragments: **586** under `include/`, each
+* header fragments: **579** under `include/`, each
   with its documented constants first, then the macros, the types
   and the functions; quoted text is verbatim, the `#define`
   keyword and the header/constant filing are derived and say so
-* derived `#define` lines written: **6,221**
+* derived `#define` lines written: **5,706**
 * derived member outlines (structures whose body no page prints):
   **2** -- marked DERIVED in the fragment
 * constants whose pages disagree / overlap: **8** name(s) examined in `kb/constant-conflicts.tsv`
@@ -24,7 +24,7 @@ the SAME tree, marked 'Win32 reference' -- never a second tree.
   `data/constant-value-review.tsv` to a print the pages themselves
   state, the rest get no `#define` -- every one keeps its
   CONFLICT block with the verdict)
-* constants with no header linkage at all: **816**
+* constants with no header linkage at all: **1,122**
   (worklist only -- they stay in `constants.tsv`)
 * module `.def` worklists: **266** under `link/`
   (per-line version range is a comment; `.def` has no
@@ -54,8 +54,7 @@ hint):
 | win32-reference | 224 |
 | co-mention | 5 |
 | reference-header | 1,319 |
-| reference-header-secondary | 529 |
-| pinvoke-weak | 20 |
+| pinvoke-weak | 34 |
 
 The reference-header ranks come from the pinned, licence-vetted
 public references under `sources/`: their header files *define*
@@ -73,7 +72,7 @@ every `#define` number above is a CE documentation quotation.
 * what they are used for: ONLY the weakest constant/header
   linkage rank above, consumed so that the gap between official
   documentation and community reference is reviewable;
-  **20** linkage rows rest on
+  **34** linkage rows rest on
   them directly, each loudly marked in its header comment, and
   `reports/constant-pinvoke-review.tsv` compares every such
   community value with the documented CE value

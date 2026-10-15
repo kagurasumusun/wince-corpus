@@ -22,7 +22,7 @@ The knowledge base is built from the pages in `corpus/` only: every declaration,
 * requirement statements: **193,714**
 * of those, a page's own `Module` (not an sdk-api UID): **146**; a `sysgen` variable: **980**; a CPU list (`Architecture`): **78**; a catalog `Component`: **28**
 * numbered constants: **23,131** (`kb/constants.jsonl`, 1,685 page(s))
-* constant -> header linkage: **6,358** rows over **5,405** names (`kb/constant-headers.tsv`; ranks: `own-page` 4,185, `entity-page` 42, `constant-entity` 34, `win32-reference` 224, `reference-header` 1,319, `reference-header-secondary` 529, `co-mention` 5, `pinvoke-weak` 20); **816** name(s) wait in `reports/constant-header-gaps.tsv` (needs-sdk-verification 518, vb-language-constant 290, ole-automation-constant 8)
+* constant -> header linkage: **5,843** rows over **5,099** names (`kb/constant-headers.tsv`; ranks: `own-page` 4,185, `entity-page` 42, `constant-entity` 34, `win32-reference` 224, `reference-header` 1,319, `co-mention` 5, `pinvoke-weak` 34); **1,122** name(s) wait in `reports/constant-header-gaps.tsv` (needs-sdk-verification 809, vb-language-constant 302, ole-automation-constant 11)
 * value disagreements examined: **8** name(s) whose pages print more than one number and cannot be a version branch (`kb/constant-conflicts.tsv`; categories: same-page 2, same-set 6)
 * Windows CE constraint sentences: **3,555** and ABI statements quoted from the pages (**970**, `kind: "abi-note"`)
 * entities with a gap record: **19,948** (`reports/gaps.tsv`)

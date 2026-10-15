@@ -23,20 +23,19 @@
 
 * CE 文書は一貫して **75** を印字する（CE 5.0 `ms918842`、CE 6.0
   `ee492813`、いずれも HTTP クエリフラグ定数表）。
-* 参考資料は別値: w32api-cegcc `wininet.h:325` は **45**、mingw-w64
-  は **78**。
+* 参考資料は別値: w32api-cegcc `wininet.h:325` は **45**。
 
 判定: **世代差**（Win32 デスクトップの wininet.h の値が時代とともに
-増加した）。CE 本体の値 75 が生成物に使われ、参考資料の 45/78 は
-採用されない。xcheck の `xcheck-*-agreement.tsv` に `DISAGREE` 行として
-記録済み。
+増加した）。CE 本体の値 75 が生成物に使われ、参考資料の 45 は
+採用されない。xcheck の `xcheck-w32api-cegcc-agreement.tsv` に `DISAGREE`
+行として記録済み（wine / reactos / mingw-w64 は wince と全く違うため
+参考資料からも除外済み）。
 
 ## 2. 製品差 — `MAX_PATH`
 
 * CE 文書は **128** を印字する（`wce50lrfUNICODEPATH`、CE .NET `ms897592`、
   CE 6.0 `ee495176` の各定数表。CE のファイル名上限）。
-* w32api-cegcc も mingw-w64 もデスクトップ互換の **260**
-  (`windef.h`)。
+* w32api-cegcc もデスクトップ互換の **260** (`windef.h`)。
 
 判定: **製品差**。DirectShow DVD 系の資料（`wce50lrfUNICODEPATH`）が
 ローカル定数として `MAX_PATH` を印字するが、それは CE の 128 を指す
