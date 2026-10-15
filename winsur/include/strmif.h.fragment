@@ -17,7 +17,7 @@
  * 'Win32 reference'.  This file is a *fragment*: include
  * guards, include order and everything the documentation does
  * not describe are the job of the tool consuming it.
- * constants: 59, declarations: 126, derived member outlines: 0
+ * constants: 59, declarations: 131, derived member outlines: 0
  */
 
 /* ==================================================================
@@ -281,41 +281,51 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
 
 /*--------------------------------------------------------------------
- * QualityMessageType  [enum]
+ * AM_STREAM_INFO_FLAGS  [enum, typedef]
  * surface: shared
  * library: -
  * versions: 3.0..399, 5.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee493384(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee496153(v=winembedded.60).html
  */
 typedef enum {
- Famine,
- Flood
-} QualityMessageType;
+ AM_STREAM_INFO_START_DEFINED = 0x00000001,
+ AM_STREAM_INFO_STOP_DEFINED = 0x00000002,
+ AM_STREAM_INFO_DISCARDING = 0x00000004,
+ AM_STREAM_INFO_STOP_SEND_EXTRA = 0x00000010
+} AM_STREAM_INFO_FLAGS;
+
+/*--------------------------------------------------------------------
+ * PIN_DIRECTION  [enum, typedef]
+ * surface: shared
+ * library: -
+ * versions: 3.0..399, 5.0..699
+ * also stated in: Dshow.h
+ * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
+ * source: corpus/learn/windows-embedded-ce-6.0/ee494604(v=winembedded.60).html
+ */
+typedef enum _PinDirection {
+ PINDIR_INPUT,
+ PINDIR_OUTPUT
+} PIN_DIRECTION;
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 
 /*--------------------------------------------------------------------
- * CameraControlProperty  [enum]
+ * CameraControlFlags  [enum]
  * surface: shared
  * library: -
  * versions: 6.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee494147(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee494566(v=winembedded.60).html
  */
-typedef enum {
- CameraControl_Pan,
- CameraControl_Tilt,
- CameraControl_Roll,
- CameraControl_Zoom,
- CameraControl_Exposure,
- CameraControl_Iris,
- CameraControl_Focus
- CameraControl_Flash
-} CameraControlProperty;
+typedef enum{
+ CameraControl_Flags_Auto = 0x0001,
+ CameraControl_Flags_Manual = 0x0002
+} CameraControlFlags;
 
 /*--------------------------------------------------------------------
  * VideoProcAmpFlags  [enum]
@@ -339,39 +349,64 @@ typedef enum tagVideoProcAmpFlags {
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 3.0..399, 5.0..599 */
 
 /*--------------------------------------------------------------------
- * IFilterMapper2::RegisterFilter  [function]
+ * IFilterMapper2::CreateCategory  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
  * versions: 3.0..399, 5.0..599
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/chm/windows-ce-5.0/wcedshow5/html/wce50lrfIFilterMapper2RegisterFilter.html
+ * source: corpus/chm/windows-ce-5.0/wcedshow5/html/wce50lrfIFilterMapper2CreateCategory.html
  */
-HRESULT RegisterFilter( 
- REFCLSID clsidFilter, 
- LPCWSTR Name, 
- IMoniker** ppMoniker, 
+HRESULT CreateCategory( 
+ REFCLSID clsidCategory, 
+ DWORD dwCategoryMerit, 
+ LPCWSTR Description 
+);
+
+/*--------------------------------------------------------------------
+ * IFilterMapper2::EnumMatchingFilters  [function]
+ * surface: shared
+ * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
+ * versions: 3.0..399, 5.0..599
+ * also stated in: Dshow.h
+ * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
+ * source: corpus/chm/windows-ce-5.0/wcedshow5/html/wce50lrfIFilterMapper2EnumMatchingFilters.html
+ */
+HRESULT EnumMatchingFilters( 
+ IEnumMoniker** ppEnum, 
+ DWORD dwFlags, 
+ BOOL bExactMatch, 
+ DWORD dwMerit, 
+ BOOL bInputNeeded, 
+ DWORD cInputTypes, 
+ const GUID* pInputTypes, 
+ const REGPINMEDIUM* pMedIn, 
+ const CLSID* pPinCategoryIn, 
+ BOOL bRender, 
+ BOOL bOutputNeeded, 
+ DWORD cOutputTypes, 
+ const GUID* pOutputTypes, 
+ const REGPINMEDIUM* pMedOut, 
+ const CLSID* pPinCategoryOut 
+);
+
+/*--------------------------------------------------------------------
+ * IFilterMapper2::UnregisterFilter  [function]
+ * surface: shared
+ * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
+ * versions: 3.0..399, 5.0..599
+ * also stated in: Dshow.h
+ * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
+ * source: corpus/chm/windows-ce-5.0/wcedshow5/html/wce50lrfIFilterMapper2UnregisterFilter.html
+ */
+HRESULT UnregisterFilter( 
  const CLSID* pclsidCategory, 
  const OLECHAR* szInstance, 
- const REGFILTER2* prf2 
+ REFCLSID Filter 
 );
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-
-/*--------------------------------------------------------------------
- * IAMDevMemoryAllocator::Alloc  [function]
- * surface: shared
- * library: -
- * versions: 3.0..399, 5.0..699
- * also stated in: Dshow.h
- * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee492708(v=winembedded.60).html
- */
-HRESULT Alloc(
- BYTE** ppBuffer,
- DWORD* pdwcbBuffer
-);
 
 /*--------------------------------------------------------------------
  * IAMDevMemoryAllocator::CheckMemory  [function]
@@ -400,33 +435,15 @@ HRESULT Free(
 );
 
 /*--------------------------------------------------------------------
- * IAMDevMemoryAllocator::GetInfo  [function]
+ * IAMDevMemoryControl::WriteSync  [function]
  * surface: shared
  * library: -
  * versions: 3.0..399, 5.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee496514(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee496529(v=winembedded.60).html
  */
-HRESULT GetInfo(
- DWORD* pdwcbTotalFree,
- DWORD* pdwcbLargestFree,
- DWORD* pdwcbTotalMemory,
- DWORD* pdwcbMinimumChunk
-);
-
-/*--------------------------------------------------------------------
- * IAMDevMemoryControl::GetDevId  [function]
- * surface: shared
- * library: -
- * versions: 3.0..399, 5.0..699
- * also stated in: Dshow.h
- * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee492950(v=winembedded.60).html
- */
-HRESULT GetDevId(
- DWORD* pdwDevId
-);
+HRESULT WriteSync( );
 
 /*--------------------------------------------------------------------
  * IAMovieSetup::Register  [function]
@@ -440,16 +457,32 @@ HRESULT GetDevId(
 HRESULT Register( );
 
 /*--------------------------------------------------------------------
- * IAMStreamControl::GetInfo  [function]
+ * IAMStreamControl::StartAt  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
  * versions: 3.0..399, 5.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee492977(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee493811(v=winembedded.60).html
  */
-HRESULT GetInfo(
- AM_STREAM_INFO* pInfo
+HRESULT StartAt(
+ const REFERENCE_TIME* ptStart,
+ DWORD dwCookie
+);
+
+/*--------------------------------------------------------------------
+ * IAMStreamControl::StopAt  [function]
+ * surface: shared
+ * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
+ * versions: 3.0..399, 5.0..699
+ * also stated in: Dshow.h
+ * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
+ * source: corpus/learn/windows-embedded-ce-6.0/ee492679(v=winembedded.60).html
+ */
+HRESULT StopAt(
+ const REFERENCE_TIME* ptStop,
+ BOOL bSendExtra,
+ DWORD dwCookie
 );
 
 /*--------------------------------------------------------------------
@@ -471,17 +504,6 @@ HRESULT Info(
  IUnknown** ppObject,
  IUnknown** ppUnk 
 );
-
-/*--------------------------------------------------------------------
- * IAsyncReader::BeginFlush  [function]
- * surface: shared
- * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
- * versions: 3.0..399, 5.0..699
- * also stated in: Dshow.h
- * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee495217(v=winembedded.60).html
- */
-HRESULT BeginFlush( );
 
 /*--------------------------------------------------------------------
  * IAsyncReader::EndFlush  [function]
@@ -507,6 +529,34 @@ HRESULT RequestAllocator(
  IMemAllocator* pPreferred,
  ALLOCATOR_PROPERTIES* pProps,
  IMemAllocator** ppActual
+);
+
+/*--------------------------------------------------------------------
+ * IAsyncReader::SyncRead  [function]
+ * surface: shared
+ * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
+ * versions: 3.0..399, 5.0..699
+ * also stated in: Dshow.h
+ * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
+ * source: corpus/learn/windows-embedded-ce-6.0/ee492280(v=winembedded.60).html
+ */
+HRESULT SyncRead(
+ LONGLONG llPosition,
+ LONG lLength,
+ BYTE* pBuffer
+);
+
+/*--------------------------------------------------------------------
+ * IAsyncReader::SyncReadAligned  [function]
+ * surface: shared
+ * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
+ * versions: 3.0..399, 5.0..699
+ * also stated in: Dshow.h
+ * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
+ * source: corpus/learn/windows-embedded-ce-6.0/ee495504(v=winembedded.60).html
+ */
+HRESULT SyncReadAligned(
+ IMediaSample* pSample
 );
 
 /*--------------------------------------------------------------------
@@ -539,20 +589,6 @@ HRESULT FindPin(
 );
 
 /*--------------------------------------------------------------------
- * IBaseFilter::JoinFilterGraph  [function]
- * surface: shared
- * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
- * versions: 3.0..399, 5.0..699
- * also stated in: Dshow.h
- * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee492551(v=winembedded.60).html
- */
-HRESULT JoinFilterGraph(
- IFilterGraph* pGraph,
- LPCWSTR pName
-);
-
-/*--------------------------------------------------------------------
  * IDistributorNotify::NotifyGraphChange  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
@@ -575,29 +611,42 @@ HRESULT NotifyGraphChange( );
 HRESULT Pause( );
 
 /*--------------------------------------------------------------------
- * IDistributorNotify::Run  [function]
+ * IEnumFilters::Reset  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
  * versions: 3.0..399, 5.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee493581(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee496737(v=winembedded.60).html
  */
-HRESULT Run(
- REFERENCE_TIME tStart
+HRESULT Reset( );
+
+/*--------------------------------------------------------------------
+ * IEnumFilters::Skip  [function]
+ * surface: shared
+ * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
+ * versions: 3.0..399, 5.0..699
+ * also stated in: Dshow.h
+ * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
+ * source: corpus/learn/windows-embedded-ce-6.0/ee494814(v=winembedded.60).html
+ */
+HRESULT Skip(
+ ULONG cFilter
 );
 
 /*--------------------------------------------------------------------
- * IEnumFilters::Clone  [function]
+ * IEnumMediaTypes::Next  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
  * versions: 3.0..399, 5.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee495020(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee494993(v=winembedded.60).html
  */
-HRESULT Clone(
- IEnumFilters** ppEnum
+HRESULT Next(
+ ULONG cMediaTypes,
+ AM_MEDIA_TYPE** ppMediaTypes,
+ ULONG* pcFetched
 );
 
 /*--------------------------------------------------------------------
@@ -612,55 +661,16 @@ HRESULT Clone(
 HRESULT Reset( );
 
 /*--------------------------------------------------------------------
- * IEnumPins::Clone  [function]
+ * IEnumPins::Skip  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
  * versions: 3.0..399, 5.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee494788(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee492904(v=winembedded.60).html
  */
-HRESULT Clone(
- IEnumPins** ppEnum
-);
-
-/*--------------------------------------------------------------------
- * IEnumPins::Next  [function]
- * surface: shared
- * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
- * versions: 3.0..399, 5.0..699
- * also stated in: Dshow.h
- * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee493382(v=winembedded.60).html
- */
-HRESULT Next(
- ULONG cPins,
- IPin** ppPins,
- ULONG* pcFetched
-);
-
-/*--------------------------------------------------------------------
- * IEnumPins::Reset  [function]
- * surface: shared
- * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
- * versions: 3.0..399, 5.0..699
- * also stated in: Dshow.h
- * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee495183(v=winembedded.60).html
- */
-HRESULT Reset( );
-
-/*--------------------------------------------------------------------
- * IEnumRegFilters::Clone  [function]
- * surface: shared
- * library: -
- * versions: 3.0..399, 5.0..699
- * also stated in: Dshow.h
- * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee494207(v=winembedded.60).html
- */
-HRESULT Clone(
- IEnumRegFilters** ppEnum
+HRESULT Skip(
+ ULONG cPins
 );
 
 /*--------------------------------------------------------------------
@@ -679,45 +689,41 @@ HRESULT Next(
 );
 
 /*--------------------------------------------------------------------
- * IEnumRegFilters::Skip  [function]
+ * IEnumRegFilters::Reset  [function]
  * surface: shared
  * library: -
  * versions: 3.0..399, 5.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee492549(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee496562(v=winembedded.60).html
  */
-HRESULT Skip(
- ULONG celt
-);
+HRESULT Reset( );
 
 /*--------------------------------------------------------------------
- * IFileSourceFilter::GetCurfile  [function]
+ * IFilterGraph::AddFilter  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
  * versions: 3.0..399, 5.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee494368(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee496305(v=winembedded.60).html
  */
-HRESULT GetCurfile(
- LPOLESTR* ppszFileName,
- AM_MEDIA_TYPE* pmt
+HRESULT AddFilter(
+ IBaseFilter* pFilter,
+ LPCWSTR pName
 );
 
 /*--------------------------------------------------------------------
- * IFilterGraph::ConnectDirect  [function]
+ * IFilterGraph::Disconnect  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
  * versions: 3.0..399, 5.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee496503(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee496073(v=winembedded.60).html
  */
-HRESULT ConnectDirect(
- IPin* ppinOut,
- IPin* ppinIn,
- const AM_MEDIA_TYPE* pmt
+HRESULT Disconnect(
+ IPin* ppin
 );
 
 /*--------------------------------------------------------------------
@@ -734,96 +740,129 @@ HRESULT Reconnect(
 );
 
 /*--------------------------------------------------------------------
- * IFilterGraph::SetDefaultSyncSource  [function]
+ * IFilterGraph::RemoveFilter  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
  * versions: 3.0..399, 5.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee495584(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee495526(v=winembedded.60).html
  */
-HRESULT SetDefaultSyncSource(void);
-
-/*--------------------------------------------------------------------
- * IFilterMapper::EnumMatchingFilters  [function]
- * surface: shared
- * library: -
- * versions: 3.0..399, 5.0..699
- * also stated in: Dshow.h
- * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee492334(v=winembedded.60).html
- */
-HRESULT EnumMatchingFilters(
- IEnumRegFilters** ppEnum,
- DWORD dwMerit,
- BOOL bInputNeeded,
- CLSID clsInMaj,
- CLSID clsInSub,
- BOOL bRender,
- BOOL bOutputNeeded,
- CLSID clsOutMaj,
- CLSID clsOutSub
+HRESULT RemoveFilter(
+ IBaseFilter* pFilter
 );
 
 /*--------------------------------------------------------------------
- * IFilterMapper::RegisterPin  [function]
+ * IFilterMapper::RegisterFilter  [function]
  * surface: shared
  * library: -
  * versions: 3.0..399, 5.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee496017(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee493952(v=winembedded.60).html
  */
-HRESULT RegisterPin(
- CLSID Filter,
+HRESULT RegisterFilter(
+ CLSID clsid,
  LPCWSTR Name,
- BOOL bRendered,
- BOOL bOutput,
- BOOL bZero,
- BOOL bMany,
- CLSID ConnectsToFilter,
- LPWSTR ConnectsToPin
+ DWORD dwMerit
 );
 
 /*--------------------------------------------------------------------
- * IFilterMapper::UnregisterPin  [function]
+ * IFilterMapper::RegisterFilterInstance  [function]
  * surface: shared
  * library: -
  * versions: 3.0..399, 5.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee493401(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee493157(v=winembedded.60).html
  */
-HRESULT UnregisterPin(
- CLSID Filter,
- LPCWSTR Name
+HRESULT RegisterFilterInstance(
+ CLSID clsid,
+ LPCWSTR Name,
+ CLSID* MRId
 );
 
 /*--------------------------------------------------------------------
- * IGraphVersion::QueryVersion  [function]
+ * IFilterMapper::UnregisterFilterInstance  [function]
+ * surface: shared
+ * library: -
+ * versions: 3.0..399, 5.0..699
+ * also stated in: Dshow.h
+ * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
+ * source: corpus/learn/windows-embedded-ce-6.0/ee493398(v=winembedded.60).html
+ */
+HRESULT UnregisterFilterInstance(
+ CLSID MRId
+);
+
+/*--------------------------------------------------------------------
+ * IGraphBuilder::AddSourceFilter  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
  * versions: 3.0..399, 5.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee493407(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee493924(v=winembedded.60).html
  */
-HRESULT QueryVersion(
- LONG* pVersion
+HRESULT AddSourceFilter(
+ LPCWSTR lpwstrFileName,
+ LPCWSTR lpwstrFilterName,
+ IbaseFilter** ppFilter 
 );
 
 /*--------------------------------------------------------------------
- * IMediaFilter::GetState  [function]
+ * IGraphBuilder::Connect  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
  * versions: 3.0..399, 5.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee492294(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee494765(v=winembedded.60).html
  */
-HRESULT GetState(
- DWORD dwMilliSecsTimeout,
- FILTER_STATE* State
+HRESULT Connect(
+ IPin* ppinOut,
+ IPin* ppinIn
+);
+
+/*--------------------------------------------------------------------
+ * IGraphBuilder::Render  [function]
+ * surface: shared
+ * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
+ * versions: 3.0..399, 5.0..699
+ * also stated in: Dshow.h
+ * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
+ * source: corpus/learn/windows-embedded-ce-6.0/ee494210(v=winembedded.60).html
+ */
+HRESULT Render(
+ IPin* ppinOut
+);
+
+/*--------------------------------------------------------------------
+ * IMediaEventSink::Notify  [function]
+ * surface: shared
+ * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
+ * versions: 3.0..399, 5.0..699
+ * also stated in: Dshow.h
+ * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
+ * source: corpus/learn/windows-embedded-ce-6.0/ee496531(v=winembedded.60).html
+ */
+HRESULT Notify(
+ long EventCode,
+ long EventParam1,
+ long EventParam2
+);
+
+/*--------------------------------------------------------------------
+ * IMediaFilter::GetSyncSource  [function]
+ * surface: shared
+ * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
+ * versions: 3.0..399, 5.0..699
+ * also stated in: Dshow.h
+ * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
+ * source: corpus/learn/windows-embedded-ce-6.0/ee493977(v=winembedded.60).html
+ */
+HRESULT GetSyncSource(
+ IReferenceClock** pClock
 );
 
 /*--------------------------------------------------------------------
@@ -853,32 +892,15 @@ HRESULT SetSyncSource(
 );
 
 /*--------------------------------------------------------------------
- * IMediaSample2::GetProperties  [function]
+ * IMediaFilter::Stop  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
  * versions: 3.0..399, 5.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee493925(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee493355(v=winembedded.60).html
  */
-HRESULT GetProperties(
- DWORD cbProperties,
- BYTE* pbProperties
-);
-
-/*--------------------------------------------------------------------
- * IMediaSample2::SetProperties  [function]
- * surface: shared
- * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
- * versions: 3.0..399, 5.0..699
- * also stated in: Dshow.h
- * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee494136(v=winembedded.60).html
- */
-HRESULT SetProperties(
- DWORD cbProperties,
- const BYTE* pbProperties
-);
+HRESULT Stop(void);
 
 /*--------------------------------------------------------------------
  * IMediaSample::GetActualDataLength  [function]
@@ -891,6 +913,20 @@ HRESULT SetProperties(
 HRESULT GetActualDataLength(void);
 
 /*--------------------------------------------------------------------
+ * IMediaSample::GetMediaTime  [function]
+ * surface: shared
+ * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
+ * versions: 3.0..399, 5.0..699
+ * also stated in: Dshow.h
+ * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
+ * source: corpus/learn/windows-embedded-ce-6.0/ee492724(v=winembedded.60).html
+ */
+HRESULT GetMediaTime(
+ LONGLONG* pTimeStart,
+ LONGLONG* pTimeEnd
+);
+
+/*--------------------------------------------------------------------
  * IMediaSample::GetMediaType  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
@@ -901,6 +937,19 @@ HRESULT GetActualDataLength(void);
  */
 HRESULT GetMediaType(
  AM_MEDIA_TYPE** ppMediaType
+);
+
+/*--------------------------------------------------------------------
+ * IMediaSample::GetPointer  [function]
+ * surface: shared
+ * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
+ * versions: 3.0..399, 5.0..699
+ * also stated in: Dshow.h
+ * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
+ * source: corpus/learn/windows-embedded-ce-6.0/ee493740(v=winembedded.60).html
+ */
+HRESULT GetPointer(
+ BYTE** ppBuffer
 );
 
 /*--------------------------------------------------------------------
@@ -926,16 +975,16 @@ HRESULT IsDiscontinuity(void);
 HRESULT IsSyncPoint(void);
 
 /*--------------------------------------------------------------------
- * IMediaSample::SetDiscontinuity  [function]
+ * IMediaSample::SetActualDataLength  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
  * versions: 3.0..399, 5.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee495318(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee496494(v=winembedded.60).html
  */
-HRESULT SetDiscontinuity(
- BOOL bIsDiscontinuity
+HRESULT SetActualDataLength(
+ long lLen
 );
 
 /*--------------------------------------------------------------------
@@ -949,6 +998,32 @@ HRESULT SetDiscontinuity(
  */
 HRESULT SetMediaType(
  AM_MEDIA_TYPE* pMediaType
+);
+
+/*--------------------------------------------------------------------
+ * IMediaSample::SetPreroll  [function]
+ * surface: shared
+ * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
+ * versions: 3.0..399, 5.0..699
+ * also stated in: Dshow.h
+ * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
+ * source: corpus/learn/windows-embedded-ce-6.0/ee492710(v=winembedded.60).html
+ */
+HRESULT SetPreroll(
+ BOOL bIsPreroll
+);
+
+/*--------------------------------------------------------------------
+ * IMediaSample::SetSyncPoint  [function]
+ * surface: shared
+ * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
+ * versions: 3.0..399, 5.0..699
+ * also stated in: Dshow.h
+ * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
+ * source: corpus/learn/windows-embedded-ce-6.0/ee496071(v=winembedded.60).html
+ */
+HRESULT SetSyncPoint(
+ BOOL bIsSyncPoint
 );
 
 /*--------------------------------------------------------------------
@@ -982,16 +1057,17 @@ HRESULT ConvertTimeFormat(
 );
 
 /*--------------------------------------------------------------------
- * IMediaSeeking::GetDuration  [function]
+ * IMediaSeeking::GetAvailable  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
  * versions: 3.0..399, 5.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee494627(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee495187(v=winembedded.60).html
  */
-HRESULT GetDuration(
- LONGLONG* pDuration
+HRESULT GetAvailable(
+ LONGLONG* pEarliest,
+ LONGLONG* pLatest
 );
 
 /*--------------------------------------------------------------------
@@ -1022,32 +1098,42 @@ HRESULT GetPreroll(
 );
 
 /*--------------------------------------------------------------------
- * IMediaSeeking::GetRate  [function]
+ * IMediaSeeking::GetStopPosition  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
  * versions: 3.0..399, 5.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee496284(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee495740(v=winembedded.60).html
  */
-HRESULT GetRate(
- double* dRate
+HRESULT GetStopPosition(
+ LONGLONG* pStop
 );
 
 /*--------------------------------------------------------------------
- * IMediaSeeking::SetPositions  [function]
+ * IMediaSeeking::IsFormatSupported  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
  * versions: 3.0..399, 5.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee493361(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee492499(v=winembedded.60).html
  */
-HRESULT SetPositions(
- LONGLONG* pCurrent,
- DWORD dwCurrentFlags,
- LONGLONG* pStop,
- DWORD dwStopFlags
+HRESULT IsFormatSupported(
+ const GUID* pFormat
+);
+
+/*--------------------------------------------------------------------
+ * IMediaSeeking::QueryPreferredFormat  [function]
+ * surface: shared
+ * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
+ * versions: 3.0..399, 5.0..699
+ * also stated in: Dshow.h
+ * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
+ * source: corpus/learn/windows-embedded-ce-6.0/ee493175(v=winembedded.60).html
+ */
+HRESULT QueryPreferredFormat(
+ GUID* pFormat
 );
 
 /*--------------------------------------------------------------------
@@ -1064,19 +1150,40 @@ HRESULT SetRate(
 );
 
 /*--------------------------------------------------------------------
- * IMemAllocator::GetBuffer  [function]
+ * IMediaSeeking::SetTimeFormat  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
  * versions: 3.0..399, 5.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee492961(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee492364(v=winembedded.60).html
  */
-HRESULT GetBuffer(
- IMediaSample** ppBuffer,
- REFERENCE_TIME* pStartTime,
- REFERENCE_TIME* pEndTime,
- DWORD dwFlags
+HRESULT SetTimeFormat(
+ const GUID* pFormat
+);
+
+/*--------------------------------------------------------------------
+ * IMemAllocator::Commit  [function]
+ * surface: shared
+ * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
+ * versions: 3.0..399, 5.0..699
+ * also stated in: Dshow.h
+ * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
+ * source: corpus/learn/windows-embedded-ce-6.0/ee495140(v=winembedded.60).html
+ */
+HRESULT Commit(void);
+
+/*--------------------------------------------------------------------
+ * IMemAllocator::ReleaseBuffer  [function]
+ * surface: shared
+ * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
+ * versions: 3.0..399, 5.0..699
+ * also stated in: Dshow.h
+ * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
+ * source: corpus/learn/windows-embedded-ce-6.0/ee495502(v=winembedded.60).html
+ */
+HRESULT ReleaseBuffer(
+ IMediaSample* pBuffer
 );
 
 /*--------------------------------------------------------------------
@@ -1107,28 +1214,17 @@ HRESULT GetAllocator(
 );
 
 /*--------------------------------------------------------------------
- * IMemInputPin::Receive  [function]
+ * IMemInputPin::GetAllocatorRequirements  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
  * versions: 3.0..399, 5.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee495725(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee494943(v=winembedded.60).html
  */
-HRESULT Receive(
- IMediaSample* pSample
+HRESULT GetAllocatorRequirements(
+ ALLOCATOR_PROPERTIES* pProps
 );
-
-/*--------------------------------------------------------------------
- * IMemInputPin::ReceiveCanBlock  [function]
- * surface: shared
- * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
- * versions: 3.0..399, 5.0..699
- * also stated in: Dshow.h
- * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee495268(v=winembedded.60).html
- */
-HRESULT ReceiveCanBlock(void);
 
 /*--------------------------------------------------------------------
  * IMemInputPin::ReceiveMultiple  [function]
@@ -1143,6 +1239,20 @@ HRESULT ReceiveMultiple(
  IMediaSample** pSamples,
  long nSamples,
  long* nSamplesProcessed
+);
+
+/*--------------------------------------------------------------------
+ * IOverlay::Advise  [function]
+ * surface: shared
+ * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
+ * versions: 3.0..399, 5.0..699
+ * also stated in: Dshow.h
+ * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
+ * source: corpus/learn/windows-embedded-ce-6.0/ee493976(v=winembedded.60).html
+ */
+HRESULT Advise(
+ IOverlayNotify* pOverlayNotify,
+ DWORD dwInterests
 );
 
 /*--------------------------------------------------------------------
@@ -1161,17 +1271,29 @@ HRESULT GetClipList(
 );
 
 /*--------------------------------------------------------------------
- * IOverlay::GetPalette  [function]
+ * IOverlay::GetColorKey  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
  * versions: 3.0..399, 5.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee495774(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee495316(v=winembedded.60).html
  */
-HRESULT GetPalette(
- DWORD* pdwColors,
- PALETTEENTRY** ppPalette
+HRESULT GetColorKey(
+ COLORKEY* pColorKey
+);
+
+/*--------------------------------------------------------------------
+ * IOverlay::GetDefaultColorKey  [function]
+ * surface: shared
+ * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
+ * versions: 3.0..399, 5.0..699
+ * also stated in: Dshow.h
+ * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
+ * source: corpus/learn/windows-embedded-ce-6.0/ee495377(v=winembedded.60).html
+ */
+HRESULT GetDefaultColorKey(
+ COLORKEY* pColorKey
 );
 
 /*--------------------------------------------------------------------
@@ -1189,55 +1311,32 @@ HRESULT GetVideoPosition(
 );
 
 /*--------------------------------------------------------------------
- * IOverlay::Unadvise  [function]
+ * IOverlay::SetPalette  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
  * versions: 3.0..399, 5.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee493750(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee495143(v=winembedded.60).html
  */
-HRESULT Unadvise( );
-
-/*--------------------------------------------------------------------
- * IOverlayNotify::OnColorKeyChange  [function]
- * surface: shared
- * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
- * versions: 3.0..399, 5.0..699
- * also stated in: Dshow.h
- * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee493775(v=winembedded.60).html
- */
-HRESULT OnColorKeyChange(
- COLORKEY* pColorKey
-);
-
-/*--------------------------------------------------------------------
- * IOverlayNotify::OnPaletteChange  [function]
- * surface: shared
- * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
- * versions: 3.0..399, 5.0..699
- * also stated in: Dshow.h
- * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee492544(v=winembedded.60).html
- */
-HRESULT OnPaletteChange(
+HRESULT SetPalette(
  DWORD dwColors,
- const PALETTEENTRY* pPalette
+ PALETTEENTRY* pPalette
 );
 
 /*--------------------------------------------------------------------
- * IOverlayNotify::OnPositionChange  [function]
+ * IOverlayNotify::OnClipChange  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
  * versions: 3.0..399, 5.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee493403(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee492931(v=winembedded.60).html
  */
-HRESULT OnPositionChange(
- const RECT* pSourceRect,
- const RECT* pDestinationRect
+HRESULT OnClipChange(
+ RECT* pSourceRect,
+ RECT* pDestinationRect,
+ RGNDATA* pRgnData
 );
 
 /*--------------------------------------------------------------------
@@ -1290,29 +1389,29 @@ HRESULT ConnectionMediaType(
 HRESULT Disconnect(void);
 
 /*--------------------------------------------------------------------
- * IPin::QueryDirection  [function]
+ * IPin::EnumMediaTypes  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
  * versions: 3.0..399, 5.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee496121(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee494786(v=winembedded.60).html
  */
-HRESULT QueryDirection(
- PIN_DIRECTION* pPinDir
+HRESULT EnumMediaTypes(
+ IEnumMediaTypes** ppEnum
 );
 
 /*--------------------------------------------------------------------
- * IPin::QueryPinInfo  [function]
+ * IPin::QueryId  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
  * versions: 3.0..399, 5.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee492485(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee493390(v=winembedded.60).html
  */
-HRESULT QueryPinInfo(
- PIN_INFO* pInfo
+HRESULT QueryId(
+ LPWSTR* Id
 );
 
 /*--------------------------------------------------------------------
@@ -1330,6 +1429,36 @@ HRESULT ReceiveConnection(
 );
 
 /*--------------------------------------------------------------------
+ * IQualityControl::Notify  [function]
+ * surface: shared
+ * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
+ * versions: 3.0..399, 5.0..699
+ * also stated in: Dshow.h
+ * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
+ * source: corpus/learn/windows-embedded-ce-6.0/ee495474(v=winembedded.60).html
+ */
+HRESULT Notify(
+ IBaseFilter* pSelf,
+ Quality q
+);
+
+/*--------------------------------------------------------------------
+ * IReferenceClock::AdviseTime  [function]
+ * surface: shared
+ * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
+ * versions: 3.0..399, 5.0..699
+ * also stated in: Dshow.h
+ * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
+ * source: corpus/learn/windows-embedded-ce-6.0/ee492762(v=winembedded.60).html
+ */
+HRESULT AdviseTime(
+ REFERENCE_TIME rtBaseTime,
+ REFERENCE_TIME rtStreamTime,
+ HEVENT hEvent,
+ DWORD* pdwAdviseCookie
+);
+
+/*--------------------------------------------------------------------
  * IReferenceClock::GetTime  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
@@ -1340,33 +1469,6 @@ HRESULT ReceiveConnection(
  */
 HRESULT GetTime(
  REFERENCE_TIME* pTime
-);
-
-/*--------------------------------------------------------------------
- * IReferenceClock::Unadvise  [function]
- * surface: shared
- * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
- * versions: 3.0..399, 5.0..699
- * also stated in: Dshow.h
- * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee495475(v=winembedded.60).html
- */
-HRESULT Unadvise(
- DWORD dwAdviseCookie
-);
-
-/*--------------------------------------------------------------------
- * ISeekingPassThru::Init  [function]
- * surface: shared
- * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
- * versions: 3.0..399, 5.0..699
- * also stated in: Dshow.h
- * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee496738(v=winembedded.60).html
- */
-HRESULT Init(
- BOOL bSupportRendering,
- IPin* pPin
 );
 #endif /* _WIN32_WCE */
 
@@ -1387,16 +1489,18 @@ HRESULT GetNumberOfCapabilities(
 );
 
 /*--------------------------------------------------------------------
- * IAMStreamConfig::SetFormat  [function]
+ * IAMStreamConfig::GetStreamCaps  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
  * versions: 5.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee492357(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee496151(v=winembedded.60).html
  */
-HRESULT SetFormat(
- AM_MEDIA_TYPE* pmt
+HRESULT GetStreamCaps(
+ int iIndex,
+ AM_MEDIA_TYPE** pmt,
+ BYTE* pSCC
 );
 
 /*--------------------------------------------------------------------
@@ -1689,22 +1793,6 @@ HRESULT put_InputType(
  * source: corpus/learn/windows-embedded-ce-6.0/ee495121(v=winembedded.60).html
  */
 HRESULT StoreAutoTune(void);
-
-/*--------------------------------------------------------------------
- * IReferenceClock::AdvisePeriodic  [function]
- * surface: shared
- * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
- * versions: 5.0..699
- * also stated in: Dshow.h
- * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee496039(v=winembedded.60).html
- */
-HRESULT AdvisePeriodic(
- REFERENCE_TIME rtStartTime,
- REFERENCE_TIME rtPeriodTime,
- HSEMAPHORE hSemaphore,
- DWORD* pdwAdviseCookie
-);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
@@ -1722,6 +1810,21 @@ HRESULT Get (
  long Property,
  long* lValue,
  long* Flags
+);
+
+/*--------------------------------------------------------------------
+ * IAMCameraControl::Set  [function]
+ * surface: shared
+ * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
+ * versions: 6.0..699
+ * also stated in: Dshow.h
+ * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
+ * source: corpus/learn/windows-embedded-ce-6.0/ee492326(v=winembedded.60).html
+ */
+HRESULT Set (
+ long Property,
+ long lValue,
+ long Flags
 );
 
 /*--------------------------------------------------------------------
@@ -1749,6 +1852,19 @@ get_KeyFrameRate(
 );
 
 /*--------------------------------------------------------------------
+ * IAMVideoCompression::get_Quality  [function]
+ * surface: shared
+ * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
+ * versions: 6.0..699
+ * also stated in: Dshow.h
+ * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
+ * source: corpus/learn/windows-embedded-ce-6.0/ee495728(v=winembedded.60).html
+ */
+HRESULT get_Quality(
+ double* pQuality
+);
+
+/*--------------------------------------------------------------------
  * IAMVideoCompression::put_KeyFrameRate  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
@@ -1762,6 +1878,19 @@ HRESULT put_KeyFrameRate(
 );
 
 /*--------------------------------------------------------------------
+ * IAMVideoCompression::put_PFramesPerKeyFrame  [function]
+ * surface: shared
+ * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
+ * versions: 6.0..699
+ * also stated in: Dshow.h
+ * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
+ * source: corpus/learn/windows-embedded-ce-6.0/ee495747(v=winembedded.60).html
+ */
+HRESULT put_PFramesPerKeyFrame(
+ long PFramesPerKeyFrame
+);
+
+/*--------------------------------------------------------------------
  * IAMVideoCompression::put_WindowSize  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
@@ -1772,20 +1901,6 @@ HRESULT put_KeyFrameRate(
  */
 HRESULT put_WindowSize(
  DWORDLONG WindowSize
-);
-
-/*--------------------------------------------------------------------
- * IAMVideoControl::GetCaps  [function]
- * surface: shared
- * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
- * versions: 6.0..699
- * also stated in: Dshow.h
- * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee496271(v=winembedded.60).html
- */
-HRESULT GetCaps (
- IPin* pPin,
- long* pCapsFlags
 );
 
 /*--------------------------------------------------------------------
@@ -1806,17 +1921,19 @@ HRESULT GetFrameRateList (
 );
 
 /*--------------------------------------------------------------------
- * IAMVideoControl::GetMode  [function]
+ * IAMVideoControl::GetMaxAvailableFrameRate  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
  * versions: 6.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee492379(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee495213(v=winembedded.60).html
  */
-HRESULT GetMode (
+HRESULT GetMaxAvailableFrameRate(
  IPin* pPin,
- long* Mode
+ long iIndex,
+ SIZE Dimensions,
+ LONGLONG* MaxAvailableFrameRate
 );
 
 /*--------------------------------------------------------------------
@@ -1834,21 +1951,18 @@ HRESULT SetMode (
 );
 
 /*--------------------------------------------------------------------
- * IAMVideoProcAmp::GetRange  [function]
+ * IAMVideoProcAmp::Get  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
  * versions: 6.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee495126(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee492713(v=winembedded.60).html
  */
-HRESULT GetRange(
+HRESULT Get(
  long Property,
- long* pMin,
- long* pMax,
- long* pSteppingDelta,
- long* pDefault,
- long* pCapsFlags
+ long* lValue,
+ long* Flags
 );
 
 /*--------------------------------------------------------------------
@@ -1868,23 +1982,6 @@ HRESULT ControlStream(
  REFERENCE_TIME* pstop,
  WORD wStartCookie,
  WORD wStopCookie
-);
-
-/*--------------------------------------------------------------------
- * ICaptureGraphBuilder2::FindInterface  [function]
- * surface: shared
- * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
- * versions: 6.0..699
- * also stated in: Dshow.h
- * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee495992(v=winembedded.60).html
- */
-HRESULT FindInterface(
- const GUID* pCategory,
- const GUID* pType,
- IBaseFilter* pf,
- REFIID riid,
- void** ppint
 );
 
 /*--------------------------------------------------------------------
@@ -1920,62 +2017,15 @@ HRESULT GetFiltergraph(
 );
 
 /*--------------------------------------------------------------------
- * ICaptureGraphBuilder2::RenderStream  [function]
+ * IFileSinkFilter2::GetMode  [function]
  * surface: shared
  * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
  * versions: 6.0..699
  * also stated in: Dshow.h
  * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee495492(v=winembedded.60).html
+ * source: corpus/learn/windows-embedded-ce-6.0/ee494982(v=winembedded.60).html
  */
-HRESULT RenderStream(
- const GUID* pCategory,
- const GUID* pType,
- IUnknown* pSource,
- IBaseFilter* pIntermediate,
- IBaseFilter* pSink
-);
-
-/*--------------------------------------------------------------------
- * ICaptureGraphBuilder2::SetOutputFileName  [function]
- * surface: shared
- * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
- * versions: 6.0..699
- * also stated in: Dshow.h
- * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee496041(v=winembedded.60).html
- */
-HRESULT SetOutputFileName(
- const GUID* pType,
- LPCOLESTR lpwstrFile,
- IBaseFilter** ppf,
- IFileSinkFilter** pSink
-);
-
-/*--------------------------------------------------------------------
- * IFileSinkFilter2::SetMode  [function]
- * surface: shared
- * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
- * versions: 6.0..699
- * also stated in: Dshow.h
- * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee496729(v=winembedded.60).html
- */
-HRESULT SetMode(
- DWORD dwFlags
-);
-
-/*--------------------------------------------------------------------
- * IFileSinkFilter::GetCurFile  [function]
- * surface: shared
- * library: Strmiids.lib  [stated by the Win32 reference; the CE pages name no module]
- * versions: 6.0..699
- * also stated in: Dshow.h
- * header: stated by the Win32 desktop reference only -- NOT a header a Windows CE page names for this entry
- * source: corpus/learn/windows-embedded-ce-6.0/ee495746(v=winembedded.60).html
- */
-HRESULT GetCurFile(
- LPOLESTR* ppszFileName,
- AM_MEDIA_TYPE* pmt
+HRESULT GetMode(
+ DWORD* dwFlags
 );
 #endif /* _WIN32_WCE */

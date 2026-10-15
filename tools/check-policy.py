@@ -102,13 +102,41 @@ def walk():
             yield os.path.join(dirpath, name)
 
 
+def load_common_pages():
+    """The admit list of corpus/win32/common/ (data/win32-common-pages.tsv)."""
+    path = os.path.join(ROOT, "data", "win32-common-pages.tsv")
+    allowed = {}
+    if not os.path.exists(path):
+        return allowed
+    with open(path, encoding="utf-8") as fh:
+        header = None
+        for line in fh:
+            if line.startswith("#") or not line.strip():
+                continue
+            cells = line.rstrip("\n").split("\t")
+            if header is None:
+                header = cells
+                continue
+            row = dict(zip(header, cells))
+            allowed[row.get("dest", "")] = row
+    return allowed
+
+
 def check_win32(problems, checked):
-    """corpus/win32/ may only hold CE-shared sdk-api pages."""
+    """corpus/win32/ may only hold CE-shared material.
+
+    api/ carries the CE-shared sdk-api pages; common/ carries the
+    shared-surface reference pages data/win32-common-pages.tsv admits
+    (the Windows Data Types base surface, collected from the pinned
+    MicrosoftDocs/win32 snapshot -- the pages that print the typedef
+    bodies the CE name-list pages never printed).
+    """
     base = os.path.join(CORPUS, "win32")
     if not os.path.isdir(base):
         return
     names = ce_api_names.load_names()
     excluded = ce_api_names.load_excluded()
+    common = load_common_pages()
     shared = 0
     for path in walk():
         if not path.startswith(base + os.sep):
@@ -123,6 +151,15 @@ def check_win32(problems, checked):
                  "the Win32 programming guides are desktop documentation; "
                  "extract them outside the corpus "
                  "(tools/fetch-upstream.py guides --out DIR)"))
+            continue
+        if page.startswith("corpus/win32/common/"):
+            if name not in common:
+                problems.append(
+                    ("not-a-common-page", page,
+                     "corpus/win32/common/ holds only the shared-surface "
+                     "reference pages named in data/win32-common-pages.tsv"))
+                continue
+            shared += 1
             continue
         match = ce_api_names.SDK_PAGE.match(name)
         if not match:

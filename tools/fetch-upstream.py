@@ -297,6 +297,53 @@ def extract_member(tar, member_name, dest):
         shutil.copyfileobj(src, out)
 
 
+# ------------------------------------------------------------------ common
+COMMON_PAGES = os.path.join(ROOT, "data", "win32-common-pages.tsv")
+
+
+def load_common_pages():
+    """The win32-common pages data/win32-common-pages.tsv admits."""
+    out = []
+    with open(COMMON_PAGES, encoding="utf-8") as fh:
+        header = None
+        for line in fh:
+            if line.startswith("#") or not line.strip():
+                continue
+            cells = line.rstrip("\n").split("\t")
+            if header is None:
+                header = cells
+                continue
+            out.append(dict(zip(header, cells)))
+    return out
+
+
+def extract_common(tar_path, apply=True):
+    """Import the admitted Win32-common reference pages into the corpus.
+
+    corpus/win32/common/ holds the pages that document the shared base
+    surface the CE books name but never spell out (the typedef bodies of
+    Windows Data Types).  The allowlist is data/win32-common-pages.tsv;
+    nothing else may enter, and tools/check-policy.py enforces that.
+    """
+    meta = UPSTREAM["win32"]
+    rows = load_common_pages()
+    written = []
+    with open_tarball(tar_path) as tar:
+        root = tarball_root(tar, meta["subdir"])
+        for row in rows:
+            member_name = join(root, row["member"])
+            dest = os.path.join(CORPUS, "win32", "common", row["dest"])
+            if apply:
+                extract_member(tar, member_name, dest)
+            written.append(dest)
+        if apply:
+            copy_licenses(tar, root, "win32")
+    total = sum(os.path.getsize(p) for p in written if os.path.exists(p))
+    print(f"[common] {len(written):,} shared-surface reference pages "
+          f"({total / 1024:.0f} KB) -> corpus/win32/common/")
+    return written
+
+
 # ------------------------------------------------------------------ pack
 def build_pack(source, tar_path):
     meta = UPSTREAM[source]
@@ -322,7 +369,7 @@ def build_pack(source, tar_path):
 def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("mode", nargs="?", default="subset",
-                    choices=["subset", "guides", "pack", "list"])
+                    choices=["subset", "common", "guides", "pack", "list"])
     ap.add_argument("--source", default="sdk-api",
                     choices=["sdk-api", "win32"],
                     help="sdk-api for the API reference (default); win32 is "
@@ -335,7 +382,7 @@ def main():
                                                         "upstream"))
     args = ap.parse_args()
 
-    if args.mode == "guides":
+    if args.mode in ("guides", "common"):
         source = "win32"
     else:
         source = args.source
@@ -368,6 +415,8 @@ def main():
 
     if args.mode == "pack":
         build_pack(source, tar_path)
+    elif args.mode == "common":
+        extract_common(tar_path)
     elif args.mode == "guides":
         extract_guides(tar_path, args.out)
     else:

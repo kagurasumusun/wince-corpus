@@ -20,6 +20,7 @@ corpus/            121,050 pages in 10 trees
   CE trees         105,103 pages
   other layers     10,668 pages (dotnet, oss; oss allowlist 11)
 corpus/win32/api/  5,279 CE-shared API pages
+# corpus/win32/common/  shared-surface reference pages (data/win32-common-pages.tsv)
 policy             OK
 ```
 
@@ -40,6 +41,7 @@ part of the CE API surface nor a reason to widen the Win32 rule. See
 | `corpus/msdn-library/` | the MSDN Library CE sets of the CE 1.0/2.0 era (techshelps), the April 2000 MSDN Library crawl (CE 2.12/3.0), the 2010-05 capture, Windows Mobile 6.5, and the CE 2.11/2.12 SDK documentation of the DevCon '99 disc |
 | `corpus/kb/` | the Windows CE KnowledgeBase articles |
 | `corpus/win32/api/` | the **Win32-common** half: sdk-api pages whose API name Windows CE also documents |
+| `corpus/win32/common/` | shared-surface reference pages named in `data/win32-common-pages.tsv` (the base-type table with its typedef bodies) |
 | `corpus/oss/` | official documentation pages from named open-source projects (Qt, SDL, OpenSSL, wxWidgets) that are themselves about Windows CE. An allowlist (`queues/oss-docs.tsv`), not a source tree. Kept out of the CE API surface (`layer: oss`) |
 
 ## Out of scope (and how it is kept out)
@@ -85,6 +87,19 @@ documentation **for exactly that subset**:
   control manager — and are not part of the corpus either.
   `tools/fetch-upstream.py guides --out DIR` extracts them as an offline extra
   outside the repository for anyone who wants the desktop reading.
+* The one thing the CE books never printed, and the shared surface cannot be
+  built without, is the **name|description table of the base types with their
+  typedef bodies** ("Windows Data Types": `typedef PVOID HANDLE;`, "declared
+  in WinNT.h").  That shared-surface reference page is admitted into
+  `corpus/win32/common/` one page at a time
+  (`data/win32-common-pages.tsv`, imported by
+  `tools/fetch-upstream.py common` from the pinned `MicrosoftDocs/win32`
+  snapshot).  The rule is deliberately narrow: only pages that document the
+  shared *base surface* (types, their declarations, type constants,
+  generic-text mappings) — never a desktop feature area — and
+  `tools/check-policy.py` refuses anything else under `corpus/win32/common/`.
+  The same surface is collected from msdn / mslearn / the Wayback Machine by
+  the harvest queue `queues/to-fetch-w32-common.txt`.
 * `data/win32-exclude.tsv` lists the reviewed exceptions: two name matches
   where CE documents a *different* thing with the same name (CE's
   `Run (Windows Media Player)` vs. the printer-driver `RUN` structure; the
@@ -104,7 +119,9 @@ is in the corpus only when a CE document uses it, and the knowledge base says so
 per name — `surface` in `knowledge/kb/entities.jsonl` (and
 `knowledge/reports/surface.tsv`) marks each entity `ce-only`, `shared`,
 `win32-spelling` (an A/W spelling of a CE name), `catalog-only` (only the CE TOC
-names it — a collection lead) or `win32-only` (of which there are none).
+names it — a collection lead) or `win32-only` (documented by the shared-surface
+reference only — the base-type rows of `corpus/win32/common/` that no CE page
+names, e.g. `HRESULT` in the CE 5.0 list's absence).
 
 The rule is reviewed from both sides: `tools/build-win32-coverage.py` lists the
 CE-documented names that state a shared-surface header (`Winbase.h`,

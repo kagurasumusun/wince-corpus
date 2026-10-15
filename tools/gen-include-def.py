@@ -1040,6 +1040,17 @@ def choose_unified_declaration(entity, declarations_of, borrow):
     return None, "", ce, win32
 
 
+def _strip_c_suffix(text):
+    """A trailing C number suffix (``L``/``UL``/``f``), never hex digits.
+
+    ``0xFFFFFFFF`` keeps its F's; ``0x0001UL`` loses ``UL``; ``1.0f``
+    loses the float suffix.
+    """
+    text = re.sub(r"[uUlL]+$", "", text)
+    if re.search(r"\d[.eE]", text) or re.match(r"^-?\d+\.\d*", text):
+        text = re.sub(r"[fF]$", "", text)
+    return text
+
 def _int_of(value):
     """Numeric value of a printed constant, without reformatting it.
 
@@ -1048,7 +1059,7 @@ def _int_of(value):
     text emitted is always a printed form, never a recomputed one.
     """
     try:
-        text = str(value).strip()
+        text = _strip_c_suffix(str(value).strip())
         if text.lower().startswith("0x") or text.lower().startswith("-0x"):
             return int(text, 16)
         return int(text, 10)
@@ -1071,7 +1082,12 @@ def constant_value_groups(rows):
     for record in rows:
         key = _int_of(record.get("value"))
         if key is None:
-            continue
+            # a float or other printed number: grouped by its printed
+            # text, never dropped (DBL_EPSILON is a number, too)
+            text_key = _strip_c_suffix(str(record.get("value") or "").strip())
+            if not text_key:
+                continue
+            key = text_key
         slot = groups.setdefault(key, {"forms": collections.Counter(),
                                        "sets": set(), "rows": [],
                                        "license": set()})

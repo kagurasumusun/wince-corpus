@@ -1345,7 +1345,47 @@ CONSTANT_VALUE_COLUMNS = {
     "value", "numeric value", "code", "win32 value", "registry order",
 }
 CONSTANT_IDENT = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
-CONSTANT_NUMBER = re.compile(r"^(0x[0-9A-Fa-f]+|\d+)$")
+# A printed number is more than ``0x..`` or ``digits``: the Data Type
+# Constants page prints ``-32768`` (typed with a dash that is not
+# hyphen-minus), ``2.2204460492503131e-016`` and ``255 (0xff)``.  The cell
+# is read as printed; every dash-like sign mark is accepted, and a C number
+# suffix may trail.
+_NUM_CORE = (r"(?:0[xX][0-9A-Fa-f]+|\d+\.\d*(?:[eE][+-]?\d+)?"
+             r"|\d+[eE][+-]?\d+|\.\d+(?:[eE][+-]?\d+)?|\d+)")
+_DASHS = "[-\u2010-\u2015\u2212]"
+_NUM = "(" + _DASHS + "?" + _NUM_CORE + "[uUlLfF]*)"
+_NUM_TOKEN = re.compile("^" + _NUM + "$")
+_NUM_PAIR = re.compile(
+    "^\(?\s*" + _NUM + "\s*\(\s*" + _NUM + "\s*\)\s*\)?$")
+
+
+def number_cell(cell):
+    """Read one printed number cell -> (value, paired) or (None, None).
+
+    ``value`` is the number as printed (sign marks normalised to ``-`` so
+    the text stays valid in a generated ``#define``); ``row`` evidence
+    keeps the original cell.  A compound ``255 (0xff)`` prints one number
+    two ways: the hexadecimal becomes ``value`` (hexadecimal preferred,
+    like the columns rule) and the decimal becomes ``paired`` -- both are
+    printed beside each other, so both are read.
+    """
+    text = re.sub(r"\s+", " ", (cell or "").replace("\xa0", " ")).strip()
+    for dash in "\u2010\u2011\u2012\u2013\u2014\u2015\u2212":
+        text = text.replace(dash, "-")
+    if not text:
+        return None, None
+    pair = _NUM_PAIR.match(text)
+    if pair:
+        first, second = pair.group(1), pair.group(2)
+        if first.lower().startswith(("0x", "-0x")):
+            return first, second
+        if second.lower().startswith(("0x", "-0x")):
+            return second, first
+        return first, second
+    token = _NUM_TOKEN.match(text)
+    if token:
+        return token.group(1), None
+    return None, None
 
 
 def _column(labels, names):
@@ -1398,27 +1438,31 @@ def constant_tables(fragment):
 
             def number_at(index):
                 if index is None or index >= len(cells):
-                    return None
-                cell = cells[index].strip()
-                return cell if CONSTANT_NUMBER.match(cell) else None
+                    return None, None
+                return number_cell(cells[index])
 
             value = None
             value_from = None
+            paired = None
             for index in (hex_i, val_i, dec_i):
-                got = number_at(index)
+                got, pair = number_at(index)
                 if got:
                     value = got
+                    paired = pair
                     value_from = index
                     break
             if not value:
                 continue
             # A decimal is kept only when the page prints one *beside* the
-            # value, never by converting a hexadecimal and never by repeating
-            # the only number the row prints.
-            decimal = number_at(dec_i)
+            # value (a separate decimal column, or the second half of a
+            # compound ``255 (0xff)`` cell), never by converting a
+            # hexadecimal and never by repeating the only number printed.
+            decimal = number_at(dec_i)[0]
             if not decimal or decimal.lower().startswith("0x") \
                     or value_from == dec_i:
-                decimal = None
+                decimal = paired
+            elif paired:
+                decimal = paired
             out.append({
                 "name": cells[name_i],
                 "value": value,
@@ -1479,6 +1523,255 @@ def _constants_in_cells(fragment, already):
                     "row": " ".join(cells),
                 })
     return out
+
+
+# ------------------------------------------------------------------ #
+# Name-list tables: the pages that document many types at once.       #
+#                                                                      #
+# "Windows Data Types" is one table (Data type | Description) whose    #
+# rows carry the type name, what it means, often the typedef behind    #
+# it ("This type is declared in WinNT.h as follows: <code>typedef     #
+# PVOID HANDLE;</code>") and sometimes the header it lives in.  The    #
+# name/value readers read none of this: there is no value column.     #
+# Each row is read as printed -- the name, the description, any        #
+# declaration the description quotes, any header it states.            #
+# ------------------------------------------------------------------ #
+
+# The name column of a name|description *data-type* list.  Bare ``type``
+# is deliberately absent: a member table (Field | Type | Description) and
+# an option table (Type | Description) carry a Type column whose cells are
+# not the documented names -- reading them mints noise (``std``, ``tzi``).
+TYPE_NAME_COLUMNS = {
+    "data type", "data types", "datatype", "data type name",
+    "generic-text data type name", "structure",
+}
+_FIELD_COLUMNS = {"field", "member", "offset", "option", "parameter",
+                  "bit", "flag name", "value"}
+_TYPE_DESC_COLUMNS = {
+    "description", "definition", "comments", "comment",
+    "unicode defined", "ansi defined", "_unicode defined", "_ansi defined",
+}
+# A row quotes one declaration: a typedef, or a #define whose value is the
+# one token that follows the name (``#define CALLBACK __stdcall``).  A
+# ``#ifdef``-guarded block is read whole (see _pre_blocks below).
+_ROW_DECL = re.compile(
+    r"typedef\s+[^;{}]+;|#define\s+[A-Za-z_][A-Za-z0-9_]*\s+[A-Za-z_][A-Za-z0-9_]*")
+_ROW_HEADER = re.compile(
+    r"(?i)(?:declared|defined|prototype\s+d)?\s*in\s+([A-Za-z][A-Za-z0-9_]*\.h)"
+    r"|(?:header|headers)\s*:\s*([A-Za-z][A-Za-z0-9_,\.\s]*\.h)")
+_PRE_BLOCK = re.compile(r"(?is)<pre\b[^>]*>(.*?)</pre>")
+
+
+def _row_code_spans(cell):
+    """The <code>...</code> / `...` spans of one cell, tags stripped."""
+    out = []
+    for match in re.finditer(r"(?is)<code\b[^>]*>(.*?)</code>", cell):
+        out.append(text_of(match.group(1), keep_newlines=False).strip())
+    for match in re.finditer(r"`([^`\n]+)`", cell):
+        out.append(match.group(1).strip())
+    return out
+
+
+def _pre_blocks(cell):
+    """The <pre> blocks of one cell, newlines preserved (a ``#ifdef``
+    branch block is only readable line by line)."""
+    out = []
+    for match in _PRE_BLOCK.finditer(cell):
+        inner = re.sub(r"(?is)</?code\b[^>]*>", "", match.group(1))
+        text = text_of(inner, keep_newlines=True).strip("\n")
+        if text.strip():
+            out.append(text)
+    return out
+
+
+def _block_names(text):
+    """Every name a declaration block defines (branch by branch)."""
+    names = []
+    # only the conditional directives are stripped -- a #define line is
+    # the declaration, not scaffolding
+    body = re.sub(r"(?m)^\s*#\s*(?:if|ifdef|ifndef|elif|else|endif)\b.*$",
+                  "", text)
+    # statement by statement: a typedef with a braced body declares its tag
+    # *and* its tail aliases (``} UNICODE_STRING;``)
+    for statement in re.findall(r"typedef\s+(?:[^;{}]|\{[^}]*\})*;|"
+                               r"#define\s+[A-Za-z_][A-Za-z0-9_]*\b[^;\n]*",
+                                body):
+        for name in declared_names(statement):
+            if name not in names:
+                names.append(name)
+    for name in declared_names(text):
+        if name not in names:
+            names.append(name)
+    return names
+
+
+def _decl_of(text):
+    kind = _kind_of(text)
+    if re.match(r"\s*#\s*(?:if|ifdef|ifndef)\b", text):
+        # a conditional block: its kind is what the branches define,
+        # not the ``defined(...)`` parentheses _kind_of would read
+        stripped = re.sub(
+            r"(?m)^\s*#\s*(?:if|ifdef|ifndef|elif|else|endif)\b.*$", "",
+            text)
+        if re.search(r"typedef\b", stripped):
+            kind = "typedef"
+        elif re.search(r"#\s*define\b", stripped):
+            kind = "macro"
+        else:
+            kind = None
+    elif kind is None and _block_names(text):
+        kind = "typedef"
+    return {
+        "text": text,
+        "markup": "table-row",
+        "spacing": _spacing(text),
+        "role": "syntax",
+        "calling_convention": _calling_convention(text),
+        "kind": kind,
+        "members": _members(text),
+        "member_types": [],
+        "abi_flags": abi_flags(text),
+        # a name-list row quotes the declaration the *reference table*
+        # states for the type -- never sample code
+        "implementation": False,
+    }
+
+
+def listed_type_rows(fragment):
+    """Rows of a name|description table: one dict per documented name.
+
+    Each row states ``name`` (the identifier cell), ``description`` (the
+    remaining cells, as printed), ``declarations`` (the C declarations the
+    row's own text quotes -- a typedef body, a #define, or a whole
+    ``#ifdef`` branch block), ``requirements`` (the headers the row's text
+    states) and ``row`` (the evidence).  The reader walks the *rows* of
+    the page, not the <table> elements: the archived pages nest a code
+    table inside a row, and the outer table's HTML never closes again.
+
+    A continuation row that prints only a declaration block (the
+    ``#ifdef _WIN64`` shape) is read as documentation of the names the
+    block defines.
+    """
+    out = []
+    header = None
+    for match in ROW.finditer(fragment):
+        cells = [text_of(cell, keep_newlines=False).strip()
+                 for cell in CELL.findall(match.group(1))]
+        if not cells:
+            continue
+        labels = [re.sub(r"\s+", " ", c).strip().rstrip(":").lower()
+                  for c in cells]
+        if any(OFFSET_COLUMN.search(label) for label in labels) \
+                or any(label in _FIELD_COLUMNS for label in labels):
+            header = None
+            continue
+        name_i = None
+        for index, label in enumerate(labels):
+            if label in TYPE_NAME_COLUMNS:
+                name_i = index
+                break
+        if name_i is not None and (len(cells) > 1 or
+                                   any(l in _TYPE_DESC_COLUMNS
+                                       for l in labels)):
+            header = " ".join(cells)
+            header_name_i = name_i
+            continue
+        if header is None:
+            continue
+        name = cells[0].strip().strip("`") if cells else ""
+        # the description side of the row (the raw cell markup, so that
+        # <pre> blocks keep their lines and <code> spans keep their text)
+        desc_markup = match.group(1)
+        raw_cells = CELL.findall(match.group(1))
+        desc_raw = " ".join(raw_cells[1:] if len(raw_cells) > 1 else raw_cells)
+        declarations = []
+        blocks = _pre_blocks(desc_raw)
+        if blocks:
+            declarations = [_decl_of(block) for block in blocks]
+        else:
+            for span in _row_code_spans(desc_raw):
+                for piece in _ROW_DECL.findall(span) or [span.strip()]:
+                    piece = piece.strip()
+                    if piece and _block_names(piece):
+                        declarations.append(_decl_of(piece))
+        plain = text_of(desc_raw, keep_newlines=False)
+        if not blocks:
+            for piece in _ROW_DECL.findall(plain):
+                piece = piece.strip()
+                if piece and _block_names(piece) \
+                        and not any(d["text"].find(piece) >= 0
+                                    for d in declarations):
+                    declarations.append(_decl_of(piece))
+        requirements = []
+        for row_header in _ROW_HEADER.finditer(plain):
+            for group in row_header.groups():
+                if not group:
+                    continue
+                for item in re.split(r",", group):
+                    item = item.strip().strip(".")
+                    if item and item.lower().endswith(".h"):
+                        requirements.append({
+                            "field": "header",
+                            "label": "declared in",
+                            "value": item,
+                            "evidence": row_header.group(0).strip(),
+                        })
+        if CONSTANT_IDENT.match(name):
+            out.append({
+                "name": name,
+                "description": plain,
+                "declarations": declarations,
+                "requirements": requirements,
+                "table": header,
+                "row": " ".join(cells),
+            })
+        elif declarations:
+            # a continuation row: the block documents the names it defines
+            for block_name in _block_names(declarations[0]["text"]):
+                out.append({
+                    "name": block_name,
+                    "description": plain,
+                    "declarations": declarations,
+                    "requirements": requirements,
+                    "table": header,
+                    "row": " ".join(cells),
+                })
+        else:
+            header = None
+    # A row whose HTML nests the code block splits into two reads (the name
+    # row and the block's own row): same name, union of what was read.
+    merged = {}
+    order = []
+    for row in out:
+        key = row["name"]
+        if key not in merged:
+            merged[key] = row
+            order.append(key)
+            continue
+        keep = merged[key]
+        if len(row["description"]) > len(keep["description"]):
+            keep["description"] = row["description"]
+        if len(row["row"]) > len(keep["row"]):
+            keep["row"] = row["row"]
+        for decl in row["declarations"]:
+            if not any(d["text"] == decl["text"]
+                       for d in keep["declarations"]):
+                keep["declarations"].append(decl)
+        for req in row["requirements"]:
+            if not any(q["value"] == req["value"]
+                       and q["evidence"] == req["evidence"]
+                       for q in keep["requirements"]):
+                keep["requirements"].append(req)
+
+    return [merged[key] for key in order]
+
+
+def listed_type_rows_text(text):
+    """The same reader for a markdown page: strip fences so code spans and
+    tables are the only carriers, then read the HTML tables embedded in
+    the markdown (the sdk-api style)."""
+    body = _MD_FENCE.sub("", text)
+    return listed_type_rows(body)
 
 
 # ------------------------------------------------------------------ #
@@ -1784,7 +2077,22 @@ def is_implementation(text):
     if re.match(r"\s*#\s*(define|pragma)\b", text):
         return False            # a #define/#pragma block is a declaration
     if re.match(r"\s*#", text):
-        return True             # an #ifdef/#if-fenced block is code
+        # An #ifdef/#if-fenced block is code unless every branch only
+        # declares: the conditional typedefs a reference header prints
+        # (``#ifdef _WIN64 typedef int HALF_PTR; #else ...``) are interface
+        # material, and the branch keywords are scaffolding, not statements.
+        body = re.sub(
+            r"(?m)^\s*#\s*(?:if|ifdef|ifndef|elif|else|endif)\b.*$", "",
+            text)
+        body = body.replace("#if", "\n#if")  # inline forms, one per line
+        body = re.sub(
+            r"(?m)^\s*#\s*(?:if|ifdef|ifndef|elif|else|endif)\b.*$", "",
+            body)
+        if re.search(r"#\s*include\b", body):
+            return True
+        if not body.strip():
+            return True
+        return bool(IMPLEMENTATION_STATEMENT.search(body))
     if not re.search(r"[;{}]", text):
         return False            # prose, a field list, a documentation header
     return bool(IMPLEMENTATION_STATEMENT.search(text))
@@ -1837,6 +2145,8 @@ def _kind_of(text):
         return "callback"
     if re.search(r"\bDECLARE_INTERFACE|\binterface\s+[A-Za-z_]", text):
         return "interface"
+    if re.match(r"\s*typedef\b", text):
+        return "typedef"
     if "(" in text and ")" in text:
         return "function"
     return None
@@ -2219,6 +2529,21 @@ def declared_names(text):
         if match:
             add(match.group(1))
         return names
+    if re.match(r"\s*typedef\b", text) and "{" not in text:
+        # ``typedef unsigned long DWORD, *PDWORD;`` -- every alias of a
+        # brace-less typedef is declared by it.  A function-pointer
+        # typedef (``typedef int (*FARPROC)();``) is read by the
+        # pointer-name rule below instead.
+        body = text.split(";", 1)[0]
+        body = re.sub(r"^\s*typedef\s+", "", body)
+        for part in body.split(","):
+            if "(" in part:
+                continue
+            ids = _C_ID.findall(part)
+            if ids:
+                add(ids[-1])
+        if names:
+            return [name for name in names if not name.startswith("__")]
     for match in _TAG.finditer(text):
         add(match.group(1))
     if re.match(r"^\s*(?:extern\s+|static\s+|inline\s+)*[A-Za-z_]",

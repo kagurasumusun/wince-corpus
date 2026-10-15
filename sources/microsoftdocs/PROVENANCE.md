@@ -84,3 +84,30 @@ Re-running `tools/fetch-upstream.py subset --source sdk-api` regenerates
 same URL space and page ids change over time, and this corpus is meant to be
 usable offline. The GitHub repositories are the source of truth behind Learn
 and are versioned, so a pinned commit gives a reproducible snapshot.
+
+## `win32/` — Win32 programming documentation
+
+* Repository: <https://github.com/MicrosoftDocs/win32>
+* Commit: `e103fa4e8810bd8d42c4777e17081e24dbe62dbd` (2026-09-15)
+* Snapshot: `sources/microsoftdocs/win32-e103fa4e8810-md.tar.gz` (`.md` only),
+  and the full tree cached by `tools/fetch-upstream.py` at
+  `.cache/upstream/win32-e103fa4e8810.tar.gz` (48,212 `.md` pages).
+
+### What was extracted into the corpus
+
+`corpus/win32/common/` — the **shared-surface reference pages** admitted
+one by one in `data/win32-common-pages.tsv`:
+
+* `windows-data-types.md` ("Windows Data Types (BaseTsd.h)"): the base-type
+  table of 130+ rows, each row carrying the type name, what it is, the
+  `typedef` body behind it and the header it is declared in ("This type is
+  declared in WinNT.h as follows: `typedef PVOID HANDLE;`").  Windows CE
+  documents the same surface as one name|description table with no
+  declarations (`ms927189`, `wce50conWindowsDataTypes354`); this page is
+  the Win32-common half those CE pages never printed.
+
+The rest of the repository stays out: `desktop-src/` is desktop
+programming-guide material (extract with
+`python3 tools/fetch-upstream.py guides --out DIR`, outside the corpus).
+`tools/check-policy.py` fails if anything under `corpus/win32/common/` is
+not named in `data/win32-common-pages.tsv`.

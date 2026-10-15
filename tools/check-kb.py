@@ -437,13 +437,14 @@ def main():
                     problems.append(f"constant {rid}: name "
                                     f"{record.get('name')!r} is not one "
                                     "identifier")
-                if not re.match(r"^(0x[0-9A-Fa-f]+|-?\d+)$",
-                                record.get("value") or ""):
+                if not re.match(r"^(0x[0-9A-Fa-f]+|-?\d+|-?\d+\.\d*"
+                                r"(?:[eE][+-]?\d+)?|-?\d+[eE][+-]?\d+)"
+                                r"[uUlLfF]*$", record.get("value") or ""):
                     problems.append(f"constant {rid}: value "
                                     f"{record.get('value')!r} is not one "
                                     "number")
                 decimal = record.get("decimal")
-                if decimal is not None and not re.match(r"^\d+$", decimal):
+                if decimal is not None and not re.match(r"^-?\d+$", decimal):
                     problems.append(f"constant {rid}: decimal {decimal!r} "
                                     "is not a printed decimal")
                 if not isinstance(record.get("headers"), list):

@@ -207,6 +207,37 @@ def layer_of(book):
 
 # ------------------------------------------------------------------- worker
 
+
+def attach_name_rows(fact, rows):
+    """A name|description table documents each name in its own row.
+
+    The row becomes: an entity evidence item (quote = the row), the kind
+    the row documents, the declaration the row quotes (a typedef body or
+    a #define) and the header the row states -- each aimed at that one
+    name (``for_name``), never at every name of the page.
+    """
+    if not rows:
+        fact["name_rows"] = []
+        return
+    fact["name_rows"] = [{
+        "name": row["name"], "description": row["description"],
+        "table": row["table"], "row": row["row"],
+    } for row in rows]
+    also = fact.setdefault("also_documented", [])
+    have = {item["id"] for item in also}
+    for row in rows:
+        entity = ce_api_names.entity_id(row["name"])
+        kind = next((d["kind"] for d in row["declarations"] if d.get("kind")),
+                    "typedef")
+        if entity not in have:
+            also.append({"id": entity, "name": row["name"], "row": row["row"],
+                         "kind": kind})
+            have.add(entity)
+        fact["declarations"].extend(row["declarations"])
+        for req in row["requirements"]:
+            fact["requirements"].append(dict(req, for_name=row["name"]))
+
+
 def parse_page(job):
     """One page -> its facts.  Runs in a worker process."""
     page_id, book, path, title = job
@@ -302,6 +333,10 @@ def parse_page(job):
         # documented fact (member names and order, no offsets), so it is kept.
         fact["documented_fields"] = [f["name"] for f in struct_fields]
         fact["documented_fields_page"] = path if struct_fields else None
+        # A page like "Windows Data Types" documents its names in one
+        # name|description table, each row carrying the typedef body and
+        # the header statement ("This type is declared in WinNT.h ...").
+        attach_name_rows(fact, page_parse.listed_type_rows_text(text))
         fact["front_matter"] = {k: v for k, v in fields.items()
                                 if k in ("title", "UID", "ms.date",
                                          "req.header", "req.lib", "req.dll")}
@@ -404,6 +439,11 @@ def parse_page(job):
     # ``FWM_PRIVATE_HOST = 0x01,``).  Example code yields none of these
     # (page_parse.syntax_constant_rows).
     fact["constants"] += page_parse.prose_constants(fragment)
+    # A name|description table ("Windows Data Types", structure lists):
+    # the row name is a documented type, and the row may quote the typedef
+    # body and state the header it lives in.  Read before the syntax
+    # constants so a row-quoted #define counts too.
+    attach_name_rows(fact, page_parse.listed_type_rows(fragment))
     fact["constants"] += page_parse.syntax_constant_rows(fact["declarations"])
     # The one page family that prints export ordinals: ``Export | Ordinal``
     # for the floating point C run-time library.  A `.def` needs exactly
@@ -587,12 +627,17 @@ def requirement_records(facts, entity_of):
     records = []
     for fact in facts:
         for req in fact["requirements"]:
+            # a name-list row states its own header: the target name is part
+            # of the identity, or every "declared in WinNT.h" row of one
+            # page collapses into a single record
             key = hashlib.sha1(
                 (fact["path"] + "\x00" + req["field"] + "\x00" +
-                 req["value"]).encode("utf-8")).hexdigest()[:12]
+                 req["value"] + "\x00" +
+                 (req.get("for_name") or "")).encode("utf-8")).hexdigest()[:12]
             records.append({
                 "id": "r" + key,
-                "entity": entity_of(fact),
+                "entity": (ce_api_names.entity_id(req["for_name"])
+                           if req.get("for_name") else entity_of(fact)),
                 "page_id": fact["page_id"],
                 "layer": fact["layer"],
                 "field": req["field"],
@@ -600,6 +645,7 @@ def requirement_records(facts, entity_of):
                 "value": req["value"],
                 "key": normalize_value(req["value"], req["field"]),
                 "evidence": req["evidence"],
+                "for_name": req.get("for_name"),
                 "license": license_of(fact["path"]),
                 "source": source_of(fact),
             })
@@ -928,9 +974,14 @@ LINK_RANK_INDEX = {rank: index for index, rank in enumerate(LINK_RANKS)}
 
 
 def value_number(text):
-    """The integer one printed value states, or None (never re-emitted)."""
+    """The integer one printed value states, or None (never re-emitted).
+
+    A C suffix (``0x0001L``) is a printing mark, not part of the number.
+    """
     try:
         text = str(text).strip()
+        # a suffix is L/U/f -- never a hex digit (0xFFFFFFFF keeps its F's)
+        text = re.sub(r"[uUlL]+$", "", text)
         if text.lower().startswith(("0x", "-0x")):
             return int(text, 16)
         return int(text, 10)
@@ -988,6 +1039,10 @@ REFERENCE_RANKS = (
      "glob": os.path.join(ROOT, "sources", "mingw-w64",
                           "mingw-*-src.tar.gz"),
      "parseable": {"public-domain", "zpl-implicit", "zpl-explicit"},
+     # the C runtime limits (limits.h, float.h, ...) live under crt/,
+     # not include/ -- the standard constants the CE Data Type Constants
+     # page numbers have no other membership evidence
+     "dirs": ("include", "crt"),
      "label": "mingw-w64"},
 )
 
@@ -1002,10 +1057,11 @@ def reference_define_headers():
     """name -> [(header, rank, evidence)] from the pinned reference headers.
 
     Both ``#define`` lines and ``enum`` members of the top-level files of
-    each reference's ``include/`` directory are read (no subdirectories --
-    the same parse scope tools/xcheck_references.py states).  The value
-    beside the name is parsed away and never returned: this function can
-    only say *which header defines the name*.
+    each reference's ``include/`` directory are read (plus ``crt/`` for
+    the mingw-w64 secondary reference, where the standard limits live:
+    ``limits.h``, ``float.h``).  The value beside the name is parsed away
+    and never returned: this function can only say *which header defines
+    the name*.
     """
     import tarfile  # local: only the reference pass needs archives
 
@@ -1031,8 +1087,9 @@ def reference_define_headers():
                 if not member.isfile():
                     continue
                 parts = member.name.split("/")
-                if len(parts) < 2 or parts[-2] != "include":
-                    continue        # top-level include/ files only
+                dirs = spec.get("dirs") or ("include",)
+                if len(parts) < 2 or parts[-2] not in dirs:
+                    continue        # top-level include/ (and crt/) files only
                 if not parts[-1].lower().endswith((".h", ".hpp")):
                     continue
                 handle = tar.extractfile(member)
@@ -1332,6 +1389,10 @@ def entity_records(facts, declarations, requirements):
     for record in requirements:
         if record["entity"]:
             req_by_entity[record["entity"]].append(record)
+        if record.get("for_name"):
+            # a name-list row states its own header; it is not the page's
+            # requirement for every name the page lists
+            continue
         extras = extras_of.get((record.get("source") or {}).get("path"))
         if not extras:
             continue
@@ -1362,6 +1423,9 @@ def entity_records(facts, declarations, requirements):
         for f in pages:
             if f["kind"]:
                 kinds[f["kind"]] += 1
+            for item in f.get("also_documented") or []:
+                if item["id"] == entity and item.get("kind"):
+                    kinds[item["kind"]] += 1
         for record in decl_by_entity[entity]:
             if record["role"] == "syntax" and record["kind"]:
                 kinds[record["kind"]] += 1
