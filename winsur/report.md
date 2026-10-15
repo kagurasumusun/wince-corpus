@@ -15,7 +15,7 @@ the SAME tree, marked 'Win32 reference' -- never a second tree.
   with its documented constants first, then the macros, the types
   and the functions; quoted text is verbatim, the `#define`
   keyword and the header/constant filing are derived and say so
-* derived `#define` lines written: **11,089**
+* derived `#define` lines written: **11,128**
 * derived member outlines (structures whose body no page prints):
   **2** -- marked DERIVED in the fragment
 * constants whose pages disagree / overlap: **33** name(s) examined in `kb/constant-conflicts.tsv`
@@ -36,7 +36,7 @@ the SAME tree, marked 'Win32 reference' -- never a second tree.
   one marked in the fragment and the manifest; CE and desktop
   values are never assumed equal
 * constants numbered only by the Win32 shared reference (and only
-  for names a CE page documents): **2,042** -- same
+  for names a CE page documents): **2,046** -- same
   tree, every one marked 'verify against the CE SDK'; a number a
   CE page prints always wins
 * spacing-only repairs across CE generations: **0**
@@ -52,10 +52,10 @@ hint):
 
 | rank | link rows |
 |------|----------:|
-| own-page | 4,464 |
+| own-page | 4,466 |
 | entity-page | 1,366 |
 | constant-entity | 63 |
-| win32-reference | 1,576 |
+| win32-reference | 1,636 |
 | co-mention | 20 |
 | reference-header | 1,632 |
 | pinvoke-weak | 45 |
@@ -84,7 +84,7 @@ every `#define` number above is a CE documentation quotation.
   pinvoke material (values are CE-page quotations only), no
   entity, no declaration, no requirement is minted from it, and
   no pinvoke statement overrides a documented one
-* Win32-only numbers seen but not used: **2,235**
+* Win32-only numbers seen but not used: **2,241**
   constants (CE and desktop values are not assumed to match)
 
 ## The wall this generator keeps

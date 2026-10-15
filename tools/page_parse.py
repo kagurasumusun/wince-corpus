@@ -1565,6 +1565,17 @@ _PRE_BLOCK = re.compile(r"(?is)<pre[^>]*>.*?</pre>")
 _FENCE_BLOCK = re.compile(r"(?ms)^```.*?^```")
 
 
+_DEFINE_NUMERIC = re.compile(
+    r"^(0[xX][0-9A-Fa-f]+|0[bB][01]+|-?\d+(?:\.\d*)?(?:[eE][+-]?\d+)?"
+    r"|-?\d+[eE][+-]?\d+)[uUlLfF]*$")
+_DEFINE_ALIAS = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
+# Example code never yields constants: a define line announced by "the
+# following code fragment / sample code ..." is an example, not a spec.
+_EXAMPLE_LOOKBEHIND = re.compile(
+    r"(?i)(code fragment|code sample|sample code|following sample"
+    r"|example code|example application)\W{0,40}[^#]{0,220}$")
+
+
 def define_line_constants(text, quote_stripped=False):
     """``#define NAME value`` lines a page prints OUTSIDE code blocks ->
     constant rows.
@@ -1595,12 +1606,24 @@ def define_line_constants(text, quote_stripped=False):
             name, rest = match.group(1), match.group(2)
             value = re.split(r"//|/\*", rest, 1)[0].strip()
             value = re.sub(r"\s+", " ", value).strip()
-            token = _VALUE_TOKEN.match(value)
-            if token is None:
+            # the docstring contract: the value head is a number, a
+            # printed expression or a single identifier (an alias
+            # another page defines) -- nothing else.  Kept as printed,
+            # never truncated at a token boundary: TEXT("X") is a prose
+            # macro body, not a constant; RASBASE+127 is kept whole.
+            # Table-row residue after the value ("0x4 | ") is not part
+            # of the head.
+            head = re.split(r"[\s;|]", value, 1)[0].strip()
+            if re.match(r"^[A-Za-z_][A-Za-z0-9_]*\s*\(", value):
+                continue
+            if not (_DEFINE_NUMERIC.match(head) or _EXPR_VALUE.match(head)
+                    or _DEFINE_ALIAS.match(head)):
+                continue
+            if _EXAMPLE_LOOKBEHIND.search(clean[:match.start()]):
                 continue
             out.append({
                 "name": name,
-                "value": token.group(0).strip(),
+                "value": head,
                 "decimal": None,
                 "table": "printed #define",
                 "origin": "define",
@@ -1717,6 +1740,22 @@ def _constants_in_cells(fragment, already, raw_row=False):
 # and the name cell must look like a constant -- an all-caps identifier
 # with an underscore (BS_3STATE, MF_BYCOMMAND, WH_CALLWNDPROC).
 CONSTANT_NAME_CELL = re.compile(r"^[A-Z][A-Z0-9_]*_[A-Z0-9_]+$")
+# Tables headed "Value | Description", "Error code | Description" and kin
+# carry the identifier itself in the first cell: PATCOPY, BLACKNESS,
+# S_OK, WSANOTINITIALISED... the underscore form above rejects the
+# unhyphenated spellings; this tier takes all-caps identifiers, and the
+# event tier takes positioned event/message/command names (onclick...).
+UPPER_NAME_CELL = re.compile(r"^[A-Z][A-Z0-9_]+$")
+EVENT_NAME_CELL = re.compile(r"^[A-Za-z_][A-Za-z0-9_]+$")
+EVENT_LABELS = {"event", "events", "message", "messages", "command", "commands",
+                "notification", "notifications", "element", "elements"}
+
+
+def _const_name_cell_ok(name, name_label):
+    if TYPEISH_NAME.match(name):
+        return False
+    return bool(CONSTANT_NAME_CELL.match(name) or UPPER_NAME_CELL.match(name)
+                or (name_label in EVENT_LABELS and EVENT_NAME_CELL.match(name)))
 # A base type is not a constant: LONG_PTR, DWORD_PTR, SIZE_T and kin are
 # documented in type tables this reader must never claim.  (The type
 # tables this reader is walled off from via TYPE_NAME_COLUMNS carry the
@@ -1734,6 +1773,12 @@ _CONST_LIST_LABELS = {
     "identifier", "code", "command", "message", "event", "notification",
     "symbol", "name", "option", "options", "attribute", "attributes",
     "id", "constant name", "flag name", "style name",
+    # "Element | Description" heads both structure member lists (the
+    # CONSTANT_NAME_CELL gate below keeps those out) and flag/constant
+    # name lists; the name is a documented identifier either way.
+    "element", "elements",
+    "error code", "error codes", "return code", "return codes",
+    "status code", "status codes", "code name",
 }
 
 
@@ -1747,6 +1792,7 @@ def constant_name_rows(fragment, raw_row=False):
     out = []
     header = None
     header_name_i = 0
+    header_name_label = ""
     for match in ROW.finditer(fragment):
         cells = [text_of(cell, keep_newlines=False).strip()
                  for cell in CELL.findall(match.group(1))]
@@ -1770,13 +1816,14 @@ def constant_name_rows(fragment, raw_row=False):
                 not any(label in TYPE_NAME_COLUMNS for label in labels):
             header = " ".join(cells)
             header_name_i = name_i[0]
+            header_name_label = labels[name_i[0]]
             continue
         if header is None:
             continue
         if header_name_i >= len(cells):
             continue
         name = cells[header_name_i]
-        if not CONSTANT_NAME_CELL.match(name) or TYPEISH_NAME.match(name):
+        if not _const_name_cell_ok(name, header_name_label):
             continue
         out.append({
             "name": name,
@@ -1947,11 +1994,12 @@ def constant_name_rows_text(text):
             continue
         header = " ".join(header_cells)
         header_name_i = name_i[0]
+        header_name_label = labels[name_i[0]]
         for raw, cells in rows:
             if header_name_i >= len(cells):
                 continue
             name = cells[header_name_i]
-            if not CONSTANT_NAME_CELL.match(name) or TYPEISH_NAME.match(name):
+            if not _const_name_cell_ok(name, header_name_label):
                 continue
             if name in seen:
                 continue

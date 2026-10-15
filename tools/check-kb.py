@@ -435,9 +435,22 @@ def main():
                     problems.append(f"constant {rid}: name "
                                     f"{record.get('name')!r} is not one "
                                     "identifier")
-                if not re.match(r"^(0x[0-9A-Fa-f]+|-?\d+|-?\d+\.\d*"
-                                r"(?:[eE][+-]?\d+)?|-?\d+[eE][+-]?\d+)"
-                                r"[uUlLfF]*$", record.get("value") or ""):
+                # one printed number, or one printed symbolic offset
+                # (RASBASE+127: the page prints the expression -- it is
+                # never evaluated and no decimal is derived from it).
+                _numeric = (r"(?:0x[0-9A-Fa-f]+|-?\d+|-?\d+\.\d*"
+                            r"(?:[eE][+-]?\d+)?|-?\d+[eE][+-]?\d+)"
+                            r"[uUlLfF]*")
+                _symbolic = (r"[A-Za-z_][A-Za-z0-9_]*"
+                             r"(?:\s*[+-]\s*(?:0x[0-9A-Fa-f]+|\d+)"
+                             r"[uUlLfF]*)+")
+                # or a macro alias (#define APIENTRY WINAPI) or a printed
+                # call-like value (#define FOO TEXT("FOO")) -- printed
+                # verbatim on the page, never evaluated.
+                _alias = r"[A-Za-z_][A-Za-z0-9_]*"
+                _call = r"[A-Za-z_][A-Za-z0-9_]*\(.*\)"
+                if not re.match(f"^({_numeric}|{_symbolic}|{_alias}|{_call})$",
+                                record.get("value") or ""):
                     problems.append(f"constant {rid}: value "
                                     f"{record.get('value')!r} is not one "
                                     "number")

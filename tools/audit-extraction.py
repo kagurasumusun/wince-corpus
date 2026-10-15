@@ -110,7 +110,8 @@ def candidate_tables(raw, is_md):
             text = html.unescape(TAG.sub(" ", cell)).strip().rstrip(":")
             labels.add(re.sub(r"\s+", " ", text).lower())
         if (labels & NAME_LABELS) and (labels & VALUE_LABELS) \
-                and not (labels & MEMBER_LABELS):
+                and not (labels & MEMBER_LABELS) \
+                and not any("requirement" in label for label in labels):
             count += 1
     if is_md:
         rows = RE_MD_TABLE_ROW.findall(raw)
@@ -118,7 +119,8 @@ def candidate_tables(raw, is_md):
             labels = {re.sub(r"\s+", " ", c).strip().rstrip(":").lower()
                       for c in rows[0].strip().strip("|").split("|")}
             if (labels & NAME_LABELS) and (labels & VALUE_LABELS) \
-                    and not (labels & MEMBER_LABELS):
+                    and not (labels & MEMBER_LABELS) \
+                    and not any("requirement" in label for label in labels):
                 count += 1
     return count
 
@@ -206,6 +208,22 @@ def load_kb():
         path = (record.get("source") or {}).get("path")
         if path:
             got[path]["constants"] += 1
+    # name|description rows a page documents (constant-names.tsv): the
+    # counted twin of fact["constant_names"]/fact["name_rows"].  Without
+    # this the audit flags every name-list page as tables-unread even
+    # though the reader took the rows (the old stale counter).
+    names_path = os.path.join(KB, "constant-names.tsv")
+    if os.path.exists(names_path):
+        with open(names_path, encoding="utf-8") as fh:
+            header = fh.readline().rstrip("\n").split("\t")
+            try:
+                page_i = header.index("page")
+            except ValueError:
+                page_i = 1
+            for line in fh:
+                cells = line.rstrip("\n").split("\t")
+                if len(cells) > page_i and cells[page_i]:
+                    got[cells[page_i]]["name_rows"] += 1
     for record in open_kb("requirements.jsonl.gz"):
         path = (record.get("source") or {}).get("path")
         if path:
