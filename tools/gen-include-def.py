@@ -775,20 +775,22 @@ def write_defs(out, by_module, generated, ordinals=None,
                  (reference_exports or {}).get(module_stem, [])
                  if name.lower() not in known]
         if leads:
-            lines += [
-                ";",
-                f"; reference-export leads ({len(leads)}): names the pinned",
-                "; CeGCC reference's .def export list claims for this module",
-                "; but no CE page documents.  MEMBERSHIP ONLY -- the name is",
-                "; claimed by the given list; ordinals and decoration were",
-                "; never taken (values: never).  Each name is a REVIEW LEAD:",
-                "; verify it against the CE SDK export table before linking,",
-                "; and confirm any A-sounding spelling page by page (CE is",
-                "; W-side basically).",
-                ";",
-            ]
+            if not args.minimal_comments:
+                lines += [
+                    ";",
+                    f"; reference-export leads ({len(leads)}): names the pinned",
+                    "; CeGCC reference's .def export list claims for this module",
+                    "; but no CE page documents.  MEMBERSHIP ONLY -- the name is",
+                    "; claimed by the given list; ordinals and decoration were",
+                    "; never taken (values: never).  Each name is a REVIEW LEAD:",
+                    "; verify it against the CE SDK export table before linking,",
+                    "; and confirm any A-sounding spelling page by page (CE is",
+                    "; W-side basically).",
+                    ";",
+                ]
             for name, member in leads:
-                lines.append(f";   {name:38s}; lead  {member}")
+                if not args.minimal_comments:
+                    lines.append(f";   {name:38s}; lead  {member}")
         for entry in entries:
             entity, declaration = entry[0], entry[1]
             library_from = entry[2] if len(entry) > 2 else ""
@@ -1996,10 +1998,12 @@ def run_unified(args):
                 if g_guard != open_guard_now:
                     if open_guard_now is not None:
                         close_guard(lines, open_guard_now)
-                    lines.append("")
+                    if not args.minimal_comments:
+                        lines.append("")
                     open_guard(lines, g_guard, g_merged)
                     open_guard_now = g_guard
-                lines.append("")
+                if not args.minimal_comments:
+                    lines.append("")
                 for row in entry["taken_away"]:
                     lines.append(f"/* NOT SUPPORTED per {row['set']}: "
                                  f"{row['statement']} [{row['page']}] */")
@@ -2323,37 +2327,45 @@ def run_unified(args):
     for stem, worklist in sorted(by_module.items()):
         entries = sorted(worklist["entries"],
                          key=lambda e: e["entity"]["name"].lower())
-        ch = [f"; {stem} -- EXPORTS worklist for the whole of Windows CE",
-              "; (one tree across generations; see include/ for the rest).",
-              ";",
-              "; The version range of a line is a COMMENT -- the .def",
-              "; grammar has no conditionals: filter the line for the",
-              "; version you target with the range printed beside it.",
-              "; Names are the documented names, not the _Name@N",
-              "; decorated symbols the documentation does not print.",
-              ";",
-              f"; stated as: {', '.join(sorted(worklist['stated']))}",
-              f"; {len(entries)} name(s)", "EXPORTS"]
+        if args.minimal_comments:
+            ch = [f"; {stem} -- EXPORTS",
+                  f"; {len(entries)} name(s)",
+                  "EXPORTS"]
+        else:
+            ch = [f"; {stem} -- EXPORTS worklist for the whole of Windows CE",
+                  "; (one tree across generations; see include/ for the rest).",
+                  ";",
+                  "; The version range of a line is a COMMENT -- the .def",
+                  "; grammar has no conditionals: filter the line for the",
+                  "; version you target with the range printed beside it.",
+                  "; Names are the documented names, not the _Name@N",
+                  "; decorated symbols the documentation does not print.",
+                  ";",
+                  f"; stated as: {', '.join(sorted(worklist['stated']))}",
+                  f"; {len(entries)} name(s)", "EXPORTS"]
         known = {info["entity"]["name"].lower() for info in entries}
         leads = [(name, member) for name, member in
                  (reference_exports or {}).get(safe_name(stem).lower(), [])
                  if name.lower() not in known]
         if leads:
-            ch += [
-                ";",
-                f"; reference-export leads ({len(leads)}): names the pinned",
-                "; CeGCC reference's .def export list claims for this module",
-                "; but no CE page documents.  MEMBERSHIP ONLY -- the name is",
-                "; claimed by the given list; ordinals and decoration were",
-                "; never taken (values: never).  Each name is a REVIEW LEAD:",
-                "; verify it against the CE SDK export table before linking,",
-                "; and confirm any A-sounding spelling page by page (CE is",
-                "; W-side basically).",
-                ";",
-            ]
+            if not args.minimal_comments:
+                ch += [
+                    ";",
+                    f"; reference-export leads ({len(leads)}): names the pinned",
+                    "; CeGCC reference's .def export list claims for this module",
+                    "; but no CE page documents.  MEMBERSHIP ONLY -- the name is",
+                    "; claimed by the given list; ordinals and decoration were",
+                    "; never taken (values: never).  Each name is a REVIEW LEAD:",
+                    "; verify it against the CE SDK export table before linking,",
+                    "; and confirm any A-sounding spelling page by page (CE is",
+                    "; W-side basically).",
+                    ";",
+                ]
             for name, member in leads:
-                ch.append(f";   {name:38s}; lead  {member}")
-            ch.append(";")
+                if not args.minimal_comments:
+                    ch.append(f";   {name:38s}; lead  {member}")
+            if not args.minimal_comments:
+                ch.append(";")
         for info in entries:
             entity = info["entity"]
             tag = ""
