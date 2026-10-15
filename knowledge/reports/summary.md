@@ -11,7 +11,7 @@ The knowledge base is built from the pages in `corpus/` only: every declaration,
 * statements a page makes about alignment, byte order, pointer width or a structure size: **970** quoted sentences (`kind: "abi-note"` in `kb/constraints.jsonl`; the structure-size sentences are counted again on their own line below)
 * layout tables (`Offset | Field | Size | …`): **399** documented offset rows over **58** page(s), quoted row by row in `kb/abi-offsets.jsonl` (the flat view is `kb/abi-offsets.tsv`, with the page and its title). **18** of the rows name a member the same page declares in a syntax block; the others are rows whose field the page does not declare (wire/packet layouts, array spellings such as `dwIndex[0]` where the declaration says `dwOffset`, and string literals inside the table) -- each is kept as the page printed it, and the column is marked `matches_declared_member`
 * structure sizes stated in prose: **5** sentences (the number is a read of the quoted sentence, never a guess)
-* numbered constants (`Name | Value`, `Return code | Hexadecimal | Decimal`, `Symbolic constant | Value (Hex)`, `Control code | Value`, `Message identifier | Value`, `Element | Hex code`, `Value | Weight` for the font-weight constants, a cell printed `NAME = 0x0001` or `NAME (0x0001)`, and the same shapes): **23,131** rows over **1,685** page(s), quoted in `kb/constants.jsonl` (the flat view is `kb/constants.tsv`).  A row is kept only when the name is one identifier and the value is one number; a one-letter `A=0` cell is left out, and a hexadecimal is never converted.  A decimal is kept only when the page prints one.  A constant the page does not number has no row
+* numbered constants (`Name | Value`, `Return code | Hexadecimal | Decimal`, `Symbolic constant | Value (Hex)`, `Control code | Value`, `Message identifier | Value`, `Element | Hex code`, `Value | Weight` for the font-weight constants, a cell printed `NAME = 0x0001` or `NAME (0x0001)`, and the same shapes): **26,614** rows over **1,991** page(s), quoted in `kb/constants.jsonl` (the flat view is `kb/constants.tsv`).  A row is kept only when the name is one identifier and the value is one number; a one-letter `A=0` cell is left out, and a hexadecimal is never converted.  A decimal is kept only when the page prints one.  A constant the page does not number has no row
 * where a page states **no** offset, none is recorded: for the structures whose members a page documents without printing a body, `kb/struct-fields.tsv` keeps the names and documented order only, and `reports/abi.tsv` says how many offsets a name has (0 for most)
 
 ## Totals
@@ -21,9 +21,9 @@ The knowledge base is built from the pages in `corpus/` only: every declaration,
 * declarations extracted: **110,544** (C/C++ 79,218 in `kb/declarations.jsonl`, managed-code signatures 31,326 in `kb/declarations-dotnet.jsonl` -- the separated .NET layer)
 * requirement statements: **193,714**
 * of those, a page's own `Module` (not an sdk-api UID): **146**; a `sysgen` variable: **980**; a CPU list (`Architecture`): **78**; a catalog `Component`: **28**
-* numbered constants: **23,131** (`kb/constants.jsonl`, 1,685 page(s))
-* constant -> header linkage: **5,843** rows over **5,099** names (`kb/constant-headers.tsv`; ranks: `own-page` 4,185, `entity-page` 42, `constant-entity` 34, `win32-reference` 224, `reference-header` 1,319, `co-mention` 5, `pinvoke-weak` 34); **1,122** name(s) wait in `reports/constant-header-gaps.tsv` (needs-sdk-verification 809, vb-language-constant 302, ole-automation-constant 11)
-* value disagreements examined: **8** name(s) whose pages print more than one number and cannot be a version branch (`kb/constant-conflicts.tsv`; categories: same-page 2, same-set 6)
+* numbered constants: **26,614** (`kb/constants.jsonl`, 1,991 page(s))
+* constant -> header linkage: **8,379** rows over **6,769** names (`kb/constant-headers.tsv`; ranks: `own-page` 4,226, `entity-page` 1,314, `constant-entity` 34, `win32-reference` 1,488, `reference-header` 1,278, `co-mention` 5, `pinvoke-weak` 34); **1,126** name(s) wait in `reports/constant-header-gaps.tsv` (needs-sdk-verification 813, vb-language-constant 302, ole-automation-constant 11)
+* value disagreements examined: **9** name(s) whose pages print more than one number and cannot be a version branch (`kb/constant-conflicts.tsv`; categories: same-page 3, same-set 6)
 * Windows CE constraint sentences: **3,555** and ABI statements quoted from the pages (**970**, `kind: "abi-note"`)
 * entities with a gap record: **19,948** (`reports/gaps.tsv`)
 * structures whose members a page documents without printing a declaration body: **801** (842 page(s) carry a member list, 840 of them print no declaration at all; `kb/struct-fields.tsv` has the member names and order, one row per field -- the pages state no offsets, so none are recorded)
@@ -358,14 +358,14 @@ A header or a `.def` for one Windows CE version can only be built from what *tha
 
 | set | entities | syntax | header | library | functions with all three | numbered constants |
 |-----|----------|--------|--------|---------|--------------------------|--------------------|
-| `learn/windows-ce-5.0` | 14,868 | 12,651 | 12,533 | 6,992 | 6,295 / 10,500 | 4,334 (3,213 names) |
-| `learn/windows-embedded-ce-6.0` | 16,650 | 15,086 | 14,124 | 7,549 | 7,194 / 12,267 | 5,950 (4,795 names) |
-| `learn/windows-ce-net-4x` | 6,556 | 5,623 | 6,065 | 3,623 | 3,397 / 4,523 | 1,861 (1,814 names) |
-| `chm/windows-ce-5.0` | 14,810 | 13,448 | 11,084 | 5,278 | 4,566 / 12,104 | 4,654 (3,602 names) |
-| `chm/windows-ce-3.0` | 6,826 | 6,189 | 4,560 | 2,069 | 1,982 / 5,344 | 2,610 (1,528 names) |
-| `chm/windows-ce-4.2` | 279 | 235 | 254 | 0 | 0 / 227 | 4 (4 names) |
+| `learn/windows-ce-5.0` | 14,868 | 12,651 | 12,533 | 6,992 | 6,295 / 10,500 | 4,368 (3,226 names) |
+| `learn/windows-embedded-ce-6.0` | 16,650 | 15,086 | 14,124 | 7,549 | 7,194 / 12,267 | 5,992 (4,827 names) |
+| `learn/windows-ce-net-4x` | 6,556 | 5,623 | 6,065 | 3,623 | 3,397 / 4,523 | 1,882 (1,826 names) |
+| `chm/windows-ce-5.0` | 14,810 | 13,448 | 11,084 | 5,278 | 4,566 / 12,104 | 4,664 (3,612 names) |
+| `chm/windows-ce-3.0` | 6,826 | 6,189 | 4,560 | 2,069 | 1,982 / 5,344 | 2,621 (1,530 names) |
+| `chm/windows-ce-4.2` | 279 | 235 | 254 | 0 | 0 / 227 | 6 (5 names) |
 | `mvb/windows-ce-1.0/PEGSDK` | 1,471 | 189 | 0 | 7 | 0 / 1,128 | 76 (76 names) |
-| `msdn-library/wcedevcon-99` | 4,468 | 4,141 | 3,244 | 13 | 1 / 3,612 | 2,366 (1,300 names) |
+| `msdn-library/wcedevcon-99` | 4,468 | 4,141 | 3,244 | 13 | 1 / 3,612 | 2,378 (1,302 names) |
 | `msdn-library/techshelps` | 3,821 | 3,145 | 3,155 | 5 | 1 / 3,031 | 330 (183 names) |
 
 Numbered constants are rows of a name/value table the page prints, or a cell it prints as `NAME = 0x0001` / `NAME (0x0001)` (`kb/constants.jsonl`).  A heading such as `Value (Hex)`, `Control code`, `Message identifier`, `Hex code` or `Weight` is read when the cells are one identifier and one number.  Digits in a column the page heads as hexadecimal are stored as printed; `0x` is not added.  A scan code beside a virtual key, a code page beside a character set, and a locale beside an LCID are not constant values, so those tables are not read.  No page prints the decorated form (`_Name@N`) of a Windows CE export, so no decorated symbol is recorded; the compiler's decoration *rules* are documented, and those sentences are quoted in `kb/def-rules.tsv` under the `name-decoration` topic.

@@ -325,7 +325,8 @@ def parse_page(job):
         # The same values as the HTML side: enum members and #define lines
         # quoted by the *syntax* blocks, and ``NAME (0x...)`` in prose.
         fact["constants"] = page_parse.syntax_constant_rows(decls) + \
-            page_parse.prose_constants_text(text)
+            page_parse.prose_constants_text(text) + \
+            page_parse.constant_tables_text(text)
         fact["constraints"] = [dict(note, kind="abi-note")
                                for note in page_parse.abi_notes(text)]
         # sdk-api documents every member of a structure under -struct-fields,
@@ -337,6 +338,9 @@ def parse_page(job):
         # name|description table, each row carrying the typedef body and
         # the header statement ("This type is declared in WinNT.h ...").
         attach_name_rows(fact, page_parse.listed_type_rows_text(text))
+        # Constants the page documents but does not number (flag and
+        # style name lists): one tuple per row, value left absent.
+        fact["constant_names"] = page_parse.constant_name_rows_text(text)
         fact["front_matter"] = {k: v for k, v in fields.items()
                                 if k in ("title", "UID", "ms.date",
                                          "req.header", "req.lib", "req.dll")}
@@ -444,6 +448,10 @@ def parse_page(job):
     # body and state the header it lives in.  Read before the syntax
     # constants so a row-quoted #define counts too.
     attach_name_rows(fact, page_parse.listed_type_rows(fragment))
+    # Constants the page documents but does not number (the Control
+    # Styles mother table, `Value | Description` flag lists): one tuple
+    # per row, value left absent -- never merged, never invented.
+    fact["constant_names"] = page_parse.constant_name_rows(fragment)
     fact["constants"] += page_parse.syntax_constant_rows(fact["declarations"])
     # The one page family that prints export ordinals: ``Export | Ordinal``
     # for the floating point C run-time library.  A `.def` needs exactly
@@ -2448,6 +2456,22 @@ def build(rows, workers, report_only, plain=False):
               ["name", "value", "decimal", "headers", "page_entity", "page",
                "page_id", "title", "table", "row", "origin", "license"],
               constant_rows)
+
+    # ---- constants a page documents WITHOUT a number (name lists)
+    named_rows = []
+    for fact in facts:
+        for item in fact.get("constant_names") or []:
+            named_rows.append((
+                item["name"], fact["path"], fact["page_id"], fact["book"],
+                fact["title"], item["table"], item["row"],
+                license_of(fact["path"])))
+    named_rows.sort(key=lambda r: (r[0].lower(), r[1]))
+    print(f"[kb] {len(named_rows):,} unnumbered constant name(s) from "
+          f"{len({row[1] for row in named_rows}):,} page(s)", flush=True)
+    write_tsv(os.path.join(KB, "constant-names.tsv"),
+              ["name", "page", "page_id", "set", "title", "table", "row",
+               "license"],
+              named_rows)
 
     # ---- the members a page documents without printing a declaration
     field_pages = [f for f in facts if f["documented_fields"]]

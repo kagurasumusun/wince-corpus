@@ -852,6 +852,33 @@ def wce_range_comment(merged):
     return ", ".join(parts)
 
 
+def load_ce_documented_names():
+    """``kb/constant-names.tsv`` -> the names a CE page documents.
+
+    Only pages outside ``corpus/win32/`` count: a name the shared Win32
+    reference documents alone is desktop surface, and Windows CE is not
+    all of Win32.  This set is the gate for using a Win32-shared *value*
+    in the same tree.
+    """
+    names = set()
+    path = os.path.join(KB, "constant-names.tsv")
+    if not os.path.exists(path):
+        return names
+    with open(path, encoding="utf-8") as fh:
+        header = fh.readline().rstrip("\n").split("\t")
+        try:
+            name_i = header.index("name")
+            page_i = header.index("page")
+        except ValueError:
+            return names
+        for line in fh:
+            cells = line.rstrip("\n").split("\t")
+            if len(cells) > page_i and \
+                    not cells[page_i].startswith("corpus/win32/"):
+                names.add(cells[name_i])
+    return names
+
+
 def load_constant_links():
     """``kb/constant-headers.tsv`` -> {name: [{header, strength, sets}]}.
 
@@ -1334,12 +1361,41 @@ def run_unified(args):
     # unreadable) and keeps one compact comment per constant instead of a
     # wall of repeated row quotes.
     const_rows = collections.defaultdict(dict)
+    win32_shared = collections.defaultdict(dict)
     win32_only = collections.Counter()
+    ce_documented = load_ce_documented_names()
+    surfaces = {e["id"]: e.get("surface") for e in all_entities}
+
+    def shared_surface_name(record):
+        """A name of the CE surface: a CE page lists it, or the API it
+        belongs to is one the CE documents (surface is not win32-only).
+        Desktop-only feature areas stay out (Windows CE is not all of
+        Win32)."""
+        if record["name"] in ce_documented:
+            return True
+        surface = surfaces.get(record.get("page_entity") or "")
+        return bool(surface) and surface != "win32-only"
+
+    shared_values = 0
     for record in constants:
         if record.get("layer") == "ce":
             const_rows[record["name"]][record["id"]] = record
         else:
             win32_only[record["name"]] += 1
+            # The Win32-shared half of the surface lives in this SAME
+            # tree (round-3 model: wince固有部分 + w32共通部分 +
+            # w32共通(ce固有値)部分).  A number the shared reference
+            # prints may fill in a gap only for a name of the CE surface
+            # -- never a desktop-only one -- and only when no CE page
+            # numbers the name anywhere (a CE print always wins).  The
+            # value is marked for SDK verification.
+            if shared_surface_name(record):
+                win32_shared[record["name"]][record["id"]] = record
+    for name, records in win32_shared.items():
+        if name in const_rows:
+            continue
+        const_rows[name] = records
+        shared_values += 1
     defines = conflicts = unsupported_written = no_header = 0
     conflicts_resolved = 0
     const_entries = collections.defaultdict(list)   # header lower -> [entry]
@@ -1360,6 +1416,9 @@ def run_unified(args):
             header = target["header"]
             const_entries[header.lower()].append({
                 "name": name,
+                "win32_value": all(
+                    r.get("layer") != "ce"
+                    for r in const_rows[name].values()),
                 "strength": target["strength"] or "?",
                 "statements": target.get("statements") or 1,
                 "example_page": target.get("example_page") or "-",
@@ -1445,6 +1504,10 @@ def run_unified(args):
         if entry["other_headers"]:
             note += " | also in: " + ", ".join(
                 entry["other_headers"])
+        if entry.get("win32_value"):
+            note += (" | value printed only by the Win32 shared reference"
+                     " (a CE page documents the name; verify the number"
+                     " against the CE SDK)")
         note += " */"
         out = [note]
         rows = [(row, path, origin)
@@ -1871,7 +1934,7 @@ def run_unified(args):
         ordinal_files, ordinal_names, borrowed, skipped, pages,
         links, pinvoke_apis, pinvoke_consts, win32_only,
         conflicts_resolved=conflicts_resolved, outlines=outlines,
-        conflict_rows=conflict_rows)
+        conflict_rows=conflict_rows, shared_values=shared_values)
     _write_lines(os.path.join(out, "report.md"), report)
     print(f"unified tree: {header_files_written:,} header fragments "
           f"({sum(len(v) for v in by_header.values()):,} declarations/"
@@ -1890,7 +1953,8 @@ def _unified_report(args, entities, by_header, by_module, header_files,
                     defines, conflicts, unsupported_written, no_header,
                     ordinal_files, ordinal_names, borrowed, skipped, pages,
                     links, pinvoke_apis, pinvoke_consts, win32_only,
-                    conflicts_resolved=0, outlines=0, conflict_rows=None):
+                    conflicts_resolved=0, outlines=0, conflict_rows=None,
+                    shared_values=0):
     surfaces = collections.Counter(e.get("surface") for e in entities)
     strengths = collections.Counter()
     for name, targets in links.items():
@@ -1938,6 +2002,10 @@ def _unified_report(args, entities, by_header, by_module, header_files,
         f"  prints one: **{borrowed.get('win32-reference', 0):,}** -- every",
         "  one marked in the fragment and the manifest; CE and desktop",
         "  values are never assumed equal",
+        f"* constants numbered only by the Win32 shared reference (and only",
+        f"  for names a CE page documents): **{shared_values:,}** -- same",
+        "  tree, every one marked 'verify against the CE SDK'; a number a",
+        "  CE page prints always wins",
         f"* spacing-only repairs across CE generations: "
         f"**{borrowed.get('spacing', 0):,}**",
         f"* pages behind this output: {len(pages):,}",

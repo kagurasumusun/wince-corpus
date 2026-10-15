@@ -1395,7 +1395,7 @@ def _column(labels, names):
     return None
 
 
-def constant_tables(fragment):
+def constant_tables(fragment, raw_row=False):
     """Rows of a name/value table a page prints, quoted as printed.
 
     One dict per row that states both: ``name`` (the identifier cell),
@@ -1430,7 +1430,9 @@ def constant_tables(fragment):
         if name_i is None or not value_is or name_i in value_is:
             continue
         header = " ".join(headers)
-        for row in rows[1:]:
+        for row_match in list(ROW.finditer(table.group(1)))[1:]:
+            row = row_match.group(1)
+            row_quote = _raw_row_text(row_match.group(0))
             cells = [text_of(cell, keep_newlines=False).strip()
                      for cell in CELL.findall(row)]
             if len(cells) <= name_i or not CONSTANT_IDENT.match(cells[name_i]):
@@ -1469,9 +1471,9 @@ def constant_tables(fragment):
                 "decimal": decimal,
                 "table": header,
                 "origin": "table",
-                "row": " ".join(cells),
+                "row": (row_quote if raw_row else " ".join(cells)),
             })
-    out.extend(_constants_in_cells(fragment, out))
+    out.extend(_constants_in_cells(fragment, out, raw_row=raw_row))
     return out
 
 
@@ -1484,30 +1486,43 @@ def constant_tables(fragment):
 _CELL_EQ = re.compile(r"^([A-Z][A-Z0-9_]*)\s*=\s*(0x[0-9A-Fa-f]+|-?\d+)$")
 _CELL_PAR = re.compile(
     r"^([A-Z][A-Z0-9_]*)\s*\(\s*(0x[0-9A-Fa-f]+|-?\d+)\s*\)$")
+# The sdk-api style prints the pair in ONE cell of the "Value" column:
+# ``KLF_ACTIVATE 0x00000001``.  Same honesty: the whole cell is the
+# name and one number and nothing else.
+_CELL_NAME_VALUE = re.compile(
+    r"^([A-Z][A-Z0-9_]*)\s+(0x[0-9A-Fa-f]+|-?\d+)\s*[uUlL]*$")
 
 
 def _constant_name(name):
     return "_" in name or len(name) >= 4
 
 
-def _constants_in_cells(fragment, already):
+def _raw_row_text(raw):
+    """One whitespace-normalised line of the row as the page printed it
+    (markup included): the quote a markdown page can carry verbatim."""
+    return re.sub(r"\s+", " ", raw).strip()
+
+
+def _constants_in_cells(fragment, already, raw_row=False):
     seen = {(item["name"], item["value"]) for item in already}
     out = []
     for table in HTML_TABLE.finditer(fragment):
-        rows = ROW.findall(table.group(1))
+        rows = list(ROW.finditer(table.group(1)))
         if not rows:
             continue
         headers = [text_of(cell, keep_newlines=False).strip()
-                   for cell in CELL.findall(rows[0])]
+                   for cell in CELL.findall(rows[0].group(1))]
         labels = [header.lower() for header in headers]
         if any(OFFSET_COLUMN.search(label) for label in labels):
             continue
         header = " ".join(headers)
-        for row in rows:
+        for row_match in rows:
+            row = row_match.group(1)
             cells = [text_of(cell, keep_newlines=False).strip()
                      for cell in CELL.findall(row)]
             for cell in cells:
-                match = _CELL_EQ.match(cell) or _CELL_PAR.match(cell)
+                match = (_CELL_EQ.match(cell) or _CELL_PAR.match(cell)
+                         or _CELL_NAME_VALUE.match(cell))
                 if not match or not _constant_name(match.group(1)):
                     continue
                 name, value = match.group(1), match.group(2)
@@ -1520,9 +1535,122 @@ def _constants_in_cells(fragment, already):
                     "decimal": None,
                     "table": header,
                     "origin": "cell",
-                    "row": " ".join(cells),
+                    # the evidence is the row as the page printed it; on
+                    # a markdown page that includes its markup, which is
+                    # exactly what the page carries (docs/clean-room.md)
+                    "row": (_raw_row_text(row_match.group(0)) if raw_row
+                            else cell),
                 })
     return out
+
+
+# ------------------------------------------------------------------ #
+# Constant name lists: rows that state a constant name and its        #
+# meaning but print no number.                                        #
+# ------------------------------------------------------------------ #
+
+# A page also documents constants it does NOT number: the Control Styles
+# mother table (twenty `X styles | Description` tables of BS_/ES_/SS_/...
+# names), the `Value | Description` flag tables whose "Value" column
+# holds symbolic names (MF_BYCOMMAND, KLF_ACTIVATE), and their kin.  The
+# row states the name and what it means but prints no number, so the
+# numbered reader rightly passes it by -- yet the name is a documented
+# constant and must not be lost ("情報の欠落").  Each row is filed as its
+# own tuple (name, no value, the row's own text), never merged into a
+# page blob.
+#
+# Shape gates (a type table must not be stolen by this reader): the
+# header must NOT use a type-name label (listed_type_rows owns those),
+# and the name cell must look like a constant -- an all-caps identifier
+# with an underscore (BS_3STATE, MF_BYCOMMAND, WH_CALLWNDPROC).
+CONSTANT_NAME_CELL = re.compile(r"^[A-Z][A-Z0-9_]*_[A-Z0-9_]+$")
+# A base type is not a constant: LONG_PTR, DWORD_PTR, SIZE_T and kin are
+# documented in type tables this reader must never claim.  (The type
+# tables this reader is walled off from via TYPE_NAME_COLUMNS carry the
+# obvious spellings; this blocklist catches the stragglers.)
+TYPEISH_NAME = re.compile(
+    r"^(LONG|ULONG|DWORD|WORD|SHORT|USHORT|INT|UINT|U?INT8|U?INT16|"
+    r"U?INT32|U?INT64|CHAR|UCHAR|WCHAR|TCHAR|BYTE|BOOL|BOOLEAN|FLOAT|"
+       r"DOUBLE|SIZE|SSIZE|HANDLE|SOCKET|HRESULT|LRESULT|WPARAM|LPARAM|"
+    r"FILETIME|SYSTEMTIME|LARGE_INTEGER|ULARGE_INTEGER|POINTER)_"
+    r"|_(PTR|T|TA|TW)$")
+_DESC_LABELS = {"description", "meaning", "definition", "remarks",
+                "comments", "comment", "notes"}
+_CONST_LIST_LABELS = {
+    "value", "flag", "flags", "constant", "constants", "style", "styles",
+    "identifier", "code", "command", "message", "event", "notification",
+    "symbol", "name", "option", "options", "attribute", "attributes",
+    "id", "constant name", "flag name", "style name",
+}
+
+
+def constant_name_rows(fragment, raw_row=False):
+    """One dict per documented-but-unnumbered constant row of the page.
+
+    ``name`` (the identifier cell), ``value`` None (the page prints no
+    number -- nothing is ever computed), ``table`` (the header row) and
+    ``row`` (the evidence).
+    """
+    out = []
+    header = None
+    header_name_i = 0
+    for match in ROW.finditer(fragment):
+        cells = [text_of(cell, keep_newlines=False).strip()
+                 for cell in CELL.findall(match.group(1))]
+        if not cells:
+            continue
+        labels = [re.sub(r"\s+", " ", c).strip().rstrip(":").lower()
+                  for c in cells]
+        if any(OFFSET_COLUMN.search(label) for label in labels):
+            header = None
+            continue
+        # a header row: one column names constants (or styles/flags), one
+        # is a description -- and no type-name label (those are type rows)
+        desc_i = [i for i, label in enumerate(labels)
+                  if label in _DESC_LABELS]
+        name_i = [i for i, label in enumerate(labels)
+                  if (label in _CONST_LIST_LABELS or
+                      label.endswith(("style", "styles", "flags",
+                                      "constants")))
+                  and i not in desc_i]
+        if desc_i and name_i and \
+                not any(label in TYPE_NAME_COLUMNS for label in labels):
+            header = " ".join(cells)
+            header_name_i = name_i[0]
+            continue
+        if header is None:
+            continue
+        if header_name_i >= len(cells):
+            continue
+        name = cells[header_name_i]
+        if not CONSTANT_NAME_CELL.match(name) or TYPEISH_NAME.match(name):
+            continue
+        out.append({
+            "name": name,
+            "value": None,
+            "decimal": None,
+            "table": header,
+            "origin": "table-name-list",
+            "row": (_raw_row_text(match.group(0)) if raw_row
+                    else " ".join(cells)),
+        })
+    return out
+
+
+def constant_name_rows_text(text):
+    """The same reader for a markdown page: strip fences, then read the
+    HTML tables embedded in the markdown (the sdk-api style)."""
+    body = _MD_FENCE.sub("", text)
+    return constant_name_rows(body, raw_row=True)
+
+
+def constant_tables_text(text):
+    """The numbered-constant table reader for a markdown page: the same
+    fence strip, the same table and cell shapes (a sdk-api ``Value``
+    column prints the pair in one cell, ``KLF_ACTIVATE 0x00000001``).
+    Rows are quoted as printed (markup included)."""
+    body = _MD_FENCE.sub("", text)
+    return constant_tables(body, raw_row=True)
 
 
 # ------------------------------------------------------------------ #
