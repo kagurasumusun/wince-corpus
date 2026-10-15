@@ -11,7 +11,7 @@ the SAME tree, marked 'Win32 reference' -- never a second tree.
 ## What was generated
 
 * entities in scope: **29,161** (by surface: `ce-only` 24,666, `shared` 4,495)
-* header fragments: **596** under `include/`, each
+* header fragments: **597** under `include/`, each
   with its documented constants first, then the macros, the types
   and the functions; quoted text is verbatim, the `#define`
   keyword and the header/constant filing are derived and say so
@@ -24,7 +24,7 @@ the SAME tree, marked 'Win32 reference' -- never a second tree.
   `data/constant-value-review.tsv` to a print the pages themselves
   state, the rest get no `#define` -- every one keeps its
   CONFLICT block with the verdict)
-* constants with no header linkage at all: **2,005**
+* constants with no header linkage at all: **1,909**
   (worklist only -- they stay in `constants.tsv`)
 * module `.def` worklists: **266** under `link/`
   (per-line version range is a comment; `.def` has no
@@ -58,7 +58,8 @@ hint):
 | win32-reference | 1,636 |
 | co-mention | 20 |
 | reference-header | 1,632 |
-| pinvoke-weak | 45 |
+| heuristic-prefix | 123 |
+| pinvoke-weak | 18 |
 
 The reference-header ranks come from the pinned, licence-vetted
 public references under `sources/`: their header files *define*
@@ -76,7 +77,7 @@ every `#define` number above is a CE documentation quotation.
 * what they are used for: ONLY the weakest constant/header
   linkage rank above, consumed so that the gap between official
   documentation and community reference is reviewable;
-  **45** linkage rows rest on
+  **18** linkage rows rest on
   them directly, each loudly marked in its header comment, and
   `reports/constant-pinvoke-review.tsv` compares every such
   community value with the documented CE value
@@ -96,7 +97,7 @@ every `#define` number above is a CE documentation quotation.
 
 | reason | entities |
 |--------|----------|
-| no header stated | 5,914 |
+| no header stated | 5,893 |
 | no declaration in the corpus | 3,589 |
 | no CE version evidence | 1,504 |
 

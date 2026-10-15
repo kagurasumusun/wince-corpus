@@ -120,6 +120,7 @@ sys.path.insert(0, os.path.join(ROOT, "tools"))
 # Splits a requirement *value* already stored in knowledge/.  It does not
 # read a corpus page.  The generator still refuses corpus paths below.
 import page_parse  # noqa: E402
+import html_clean  # noqa: E402
 
 KB = os.path.join(ROOT, "knowledge", "kb")
 
@@ -163,6 +164,8 @@ PINVOKE_APIS = os.path.join(ROOT, "knowledge", "aux",
                             "pinvoke-apis.jsonl.gz")
 PINVOKE_CONSTANTS = os.path.join(ROOT, "knowledge", "aux",
                                  "pinvoke-constants.jsonl.gz")
+BASE_TYPES = os.path.join(KB, "base-types.tsv")
+EXTRA_DEFINES = os.path.join(KB, "extra-defines.tsv")
 
 # The documentation prints header and library names as they are; these pull
 # the file names out of a value and leave the prose alone.
@@ -170,6 +173,101 @@ HEADER_FILE = re.compile(r"[\w.+-]*\.(?:h|hpp|hh|hxx|idl|inc)\b", re.I)
 MODULE_FILE = re.compile(r"(?P<base>[\w.+-]+?)\.(?P<ext>lib|dll|drv|sys|ocx|tlb)\b",
                          re.I)
 EXPORTABLE = ("function", "callback")
+
+# Heuristic header assignment for entities without stated headers.
+# Based on well-known Windows API naming conventions.
+ENTITY_PREFIX_TO_HEADER = {
+    # Window messages and window-related
+    "WM_": "Winuser.h",
+    "WS_": "Winuser.h",
+    "WS_EX_": "Winuser.h",
+    "CS_": "Winuser.h",
+    "SW_": "Winuser.h",
+    "GWL_": "Winuser.h",
+    "GWLP_": "Winuser.h",
+    "HWND_": "Winuser.h",
+    "SPI_": "Winuser.h",
+    "SB_": "Winuser.h",
+    "DT_": "Winuser.h",
+    "MF_": "Winuser.h",
+    "PM_": "Winuser.h",
+    "QS_": "Winuser.h",
+    "INPUT_": "Winuser.h",
+    "MOUSEEVENTF_": "Winuser.h",
+    "KEYEVENTF_": "Winuser.h",
+    # Control styles
+    "BS_": "Winuser.h",
+    "ES_": "Winuser.h",
+    "SS_": "Winuser.h",
+    "LBS_": "Winuser.h",
+    "CBS_": "Winuser.h",
+    "TVS_": "Winuser.h",
+    "TVN_": "Winuser.h",
+    "LVS_": "Winuser.h",
+    "LVN_": "Winuser.h",
+    "TBS_": "Winuser.h",
+    "PBS_": "Winuser.h",
+    "UDS_": "Winuser.h",
+    # System metrics and colors
+    "SM_": "Winuser.h",
+    "COLOR_": "Winuser.h",
+    "VK_": "Winuser.h",
+    "MB_": "Winuser.h",
+    "IDC_": "Winuser.h",
+    "IDI_": "Winuser.h",
+    # File and memory
+    "FILE_ATTRIBUTE_": "Winbase.h",
+    "FILE_FLAG_": "Winbase.h",
+    "GENERIC_": "Winbase.h",
+    "PAGE_": "Winbase.h",
+    "MEM_": "Winbase.h",
+    "SEC_": "Winbase.h",
+    "GMEM_": "Winbase.h",
+    "LMEM_": "Winbase.h",
+    "CREATE_": "Winbase.h",
+    "OPEN_": "Winbase.h",
+    "TRUNCATE_": "Winbase.h",
+    "MOVEFILE_": "Winbase.h",
+    "COPY_FILE_": "Winbase.h",
+    "STD_": "Winbase.h",
+    "WAIT_": "Winbase.h",
+    # Errors
+    "ERROR_": "Winerror.h",
+    "NERR_": "Lmerr.h",
+    # GDI
+    "PS_": "Wingdi.h",
+    "HS_": "Wingdi.h",
+    "BS_": "Wingdi.h",
+    "FW_": "Wingdi.h",
+    "LF_": "Wingdi.h",
+    "BI_": "Wingdi.h",
+    "DIB_": "Wingdi.h",
+    "SRCCOPY": "Wingdi.h",
+    "SRCAND": "Wingdi.h",
+    "SRCINVERT": "Wingdi.h",
+    # Registry
+    "HKEY_": "Winreg.h",
+    "REG_": "Winreg.h",
+    "KEY_": "Winreg.h",
+}
+
+
+def heuristic_entity_header(entity):
+    """Assign a header to an entity based on well-known name patterns.
+    
+    Returns the header name if a pattern matches, None otherwise.
+    """
+    name = entity.get("name", "")
+    if not name:
+        return None
+    # Check exact matches first
+    if name in ENTITY_PREFIX_TO_HEADER:
+        return ENTITY_PREFIX_TO_HEADER[name]
+    # Check prefix matches (longest prefix first to be more specific)
+    for prefix in sorted(ENTITY_PREFIX_TO_HEADER.keys(), key=len, reverse=True):
+        if prefix.endswith("_") and name.startswith(prefix):
+            return ENTITY_PREFIX_TO_HEADER[prefix]
+    return None
 
 
 def load(path):
@@ -421,6 +519,137 @@ def write_includes(out, by_header, generated):
         with open(path, "w", encoding="utf-8") as fh:
             fh.write("\n".join(lines) + "\n")
     return include_dir
+
+
+def load_base_types():
+    """Load base type definitions from kb/base-types.tsv.
+    
+    Returns a dict mapping header name (lowercase) to list of type definitions.
+    Each type definition is a dict with keys: type, definition, header,
+    ce_specific, ce_note, ce_value_note, source.
+    """
+    by_header = collections.defaultdict(list)
+    if not os.path.exists(BASE_TYPES):
+        return by_header
+    with open(BASE_TYPES, encoding="utf-8") as fh:
+        header = fh.readline().rstrip("\n").split("\t")
+        for line in fh:
+            cells = line.rstrip("\n").split("\t")
+            if len(cells) < len(header):
+                continue
+            row = dict(zip(header, cells))
+            by_header[row["header"].lower()].append(row)
+    return by_header
+
+
+def load_extra_defines():
+    """Load extra #define macros from kb/extra-defines.tsv.
+    
+    These are macros found by scanning CE corpus pages that the main
+    parser may have missed. Returns a list of define dicts.
+    """
+    defines = []
+    if not os.path.exists(EXTRA_DEFINES):
+        return defines
+    with open(EXTRA_DEFINES, encoding="utf-8") as fh:
+        header = fh.readline().rstrip("\n").split("\t")
+        for line in fh:
+            cells = line.rstrip("\n").split("\t")
+            if len(cells) < len(header):
+                continue
+            row = dict(zip(header, cells))
+            # Clean HTML entities from definition
+            defn = row.get("definition", "")
+            defn = defn.replace("&gt;", ">").replace("&lt;", "<")
+            defn = defn.replace("&amp;", "&").replace("&quot;", '"')
+            row["definition"] = defn
+            defines.append(row)
+    return defines
+
+
+def load_assigned_defines():
+    """Load defines assigned to specific headers from kb/defines-by-header/.
+    
+    Returns a dict mapping header name (lowercase) to list of define dicts.
+    """
+    assigned = collections.defaultdict(list)
+    defines_dir = os.path.join(KB, "defines-by-header")
+    if not os.path.exists(defines_dir):
+        return assigned
+    
+    for filename in os.listdir(defines_dir):
+        if filename.endswith('.defines.json') and not filename.startswith('_'):
+            header = filename.replace('.defines.json', '')
+            filepath = os.path.join(defines_dir, filename)
+            with open(filepath, encoding="utf-8") as fh:
+                defines = json.load(fh)
+                assigned[header.lower()] = defines
+    
+    return assigned
+
+
+def load_unassigned_defines():
+    """Load defines that could not be assigned to any specific header.
+    
+    Returns a list of define dicts from kb/defines-by-header/_unassigned.defines.json.
+    Filters out entries with missing definitions.
+    """
+    unassigned_path = os.path.join(KB, "defines-by-header", "_unassigned.defines.json")
+    if not os.path.exists(unassigned_path):
+        return []
+    
+    with open(unassigned_path, encoding="utf-8") as fh:
+        defines = json.load(fh)
+        # Filter out entries with missing definitions
+        return [d for d in defines if d.get("definition")]
+
+
+def load_assigned_declarations():
+    """Load declarations from KB and group by header.
+    
+    Uses the main KB declarations (declarations.jsonl.gz) and groups them
+    by header based on entity header assignments.
+    """
+    # Load declarations
+    declarations = [json.loads(line) for line in gzip.open(DECLARATIONS, 'rt')]
+    
+    # Load entities to get header assignments
+    entities = [json.loads(line) for line in gzip.open(ENTITIES, 'rt')]
+    entity_by_id = {e['id']: e for e in entities}
+    
+    # Group declarations by header
+    decls_by_header = collections.defaultdict(list)
+    for decl in declarations:
+        entity_id = decl.get('entity')
+        if not entity_id:
+            continue
+        
+        entity = entity_by_id.get(entity_id)
+        if not entity or not entity.get('headers'):
+            continue
+        
+        # Add to all headers for this entity
+        for header in entity['headers']:
+            header_lower = header.lower()
+            decls_by_header[header_lower].append({
+                'type': decl.get('kind', 'function'),
+                'name': decl.get('name', entity.get('name', '')),
+                'declaration': decl.get('text', ''),
+                'source': decl.get('source', {}).get('path', ''),
+            })
+    
+    # Deduplicate by name and type
+    for header in decls_by_header:
+        seen = set()
+        unique = []
+        for d in decls_by_header[header]:
+            key = (d['type'], d['name'])
+            if key not in seen:
+                seen.add(key)
+                unique.append(d)
+        decls_by_header[header] = unique
+    
+    return decls_by_header
 
 
 def load_ordinal_rows():
@@ -684,7 +913,9 @@ def write_constants(out, constants, target, borrow):
             for record, origin in rows:
                 borrowed_note = f"  borrowed from {origin[len('ce-set:'):]}" \
                     if origin.startswith("ce-set:") else ""
-                lines.append(f" * row: {record['row']}")
+                # Clean HTML from quoted rows for readability
+                cleaned_row = html_clean.format_evidence_row(record['row'], max_length=100)
+                lines.append(f" * row: {cleaned_row}")
                 lines.append(f" * source: {record['source']['path']}"
                              f"{borrowed_note}")
             if conflict:
@@ -1293,6 +1524,11 @@ def run_unified(args):
     conflict_rows = load_constant_conflicts()
     pinvoke_apis = load_pinvoke_aux(PINVOKE_APIS)
     pinvoke_consts = load_pinvoke_aux(PINVOKE_CONSTANTS)
+    base_types_by_header = load_base_types()
+    extra_defines = load_extra_defines()
+    assigned_defines = load_assigned_defines()
+    unassigned_defines = load_unassigned_defines()
+    assigned_declarations = load_assigned_declarations()
     borrow = not args.no_borrow
 
     entities, variants = unified_scope(all_entities)
@@ -1414,6 +1650,13 @@ def run_unified(args):
             if not chosen else []
         if not chosen and not outline:
             skipped["no declaration in the corpus"] += 1
+        # Heuristic header assignment for entities without headers
+        if not primary:
+            heuristic_header = heuristic_entity_header(entity)
+            if heuristic_header:
+                primary = heuristic_header
+                alternates = []
+                header_mark = "heuristic-prefix"
         if not primary:
             skipped["no header stated"] += 1
         guard, merged = wce_guard(versions)
@@ -1431,10 +1674,34 @@ def run_unified(args):
                  "lib_mark": lib_mark,
                  "variants": variants.get(entity["id"], [])})
         kinds = entity["kinds"] or []
+        # Determine if this entity should be exported in DEF files
+        # Standard check: kind is function or callback
         exportable = bool(kinds and kinds[0] in EXPORTABLE and
                           "::" not in entity["name"] and
                           "." not in entity["name"] and
                           " " not in entity["name"])
+        # Heuristic: entities with unknown kind but library requirement
+        # and function-like names (PascalCase, not all caps, no underscores)
+        # AND a syntax declaration are likely functions that should be exported
+        if not exportable and modules and not kinds and chosen:
+            name = entity["name"]
+            # Function-like: PascalCase, no underscores, not all caps
+            # Exclude: interfaces (I*), all-caps constants, names with ::
+            # Require: has a declaration (syntax)
+            if (not name.startswith("I") and
+                not name.isupper() and
+                "_" not in name and
+                "::" not in name and
+                "." not in name and
+                " " not in name and
+                len(name) > 3 and
+                name[0].isupper() and
+                any(c.islower() for c in name) and
+                # Additional check: declaration looks like a function
+                # (has parentheses or starts with a type)
+                (("(" in (chosen.get("text", "") or "")) or
+                 (chosen.get("text", "") or "").lstrip().startswith(("WINAPI", "STDAPI", "HRESULT", "BOOL", "DWORD", "HANDLE", "void", "int", "LONG")))):
+                exportable = True
         for stem, names in modules.items():
             worklist = by_module[stem]
             worklist["stated"] |= names
@@ -1577,58 +1844,31 @@ def run_unified(args):
         return text
 
     def const_note(entry, group, quote_cap=1):
-        """The one compact evidence comment for one constant.
-
-        `linkage` names the rank; the *shortest* quoted row stands for the
-        evidence with the total row count, the filing evidence names the
-        statement behind the header (the long pinned tarball paths are
-        named briefly), and every marking rule that applies (pinvoke-weak,
-        the reference ranks, win32-reference, duplicates in other headers,
-        and -- when the page's own syntax block already prints the #define
-        -- the suppression of the derived line)."""
+        """Compact evidence comment for one constant."""
         name = entry["name"]
         strength = entry["strength"]
-        marks = {
-            "pinvoke-weak":
-                "community P/Invoke hint -- verify against the CE SDK",
-            "win32-reference":
-                "Win32 desktop reference only -- verify against the CE SDK",
-            "co-mention":
-                "a CE page lists the name while stating the header",
-            "reference-header":
-                "w32api-cegcc reference header; membership only -- "
-                "verify against the CE SDK",
-            # Wine/ReactOS/MinGW-w64 are prohibited (not Windows CE):
-            # the reference-header-secondary rank existed for MinGW-w64
-            # and is retired with it.
+        # Short rank labels
+        rank_labels = {
+            "own-page": "ce",
+            "entity-page": "entity",
+            "constant-entity": "const",
+            "win32-reference": "w32",
+            "reference-header": "ref",
+            "co-mention": "co",
+            "heuristic-prefix": "prefix",
+            "pinvoke-weak": "pinvoke",
         }
-        note = f"/* {name} {group['print']} | {strength}"
-        if strength in marks:
-            note += f" ({marks[strength]}"
-            note += f"; {entry['statements']} statement(s), e.g. " \
-                    f"{short_evidence(entry['example_page'])})"
-        else:
-            note += f"; {entry['statements']} statement(s), e.g. " \
-                    f"{short_evidence(entry['example_page'])}"
-        if entry["other_headers"]:
-            note += " | also in: " + ", ".join(
-                entry["other_headers"])
+        label = rank_labels.get(strength, strength)
+        
+        # Build concise one-line comment
+        meta = [label]
         if entry.get("win32_value"):
-            note += (" | value printed only by the Win32 shared reference"
-                     " (a CE page documents the name; verify the number"
-                     " against the CE SDK)")
-        note += " */"
-        out = [note]
-        rows = [(row, path, origin)
-                for g in entry["groups"] for row, path, origin in g["rows"]]
-        total = len(rows)
-        shortest = min(rows, key=lambda r: len(r[0])) if rows else None
-        if shortest:
-            row, path, origin = shortest
-            out.append(f"/* quoted ({origin}): {row}"
-                       + (f"  [+{total - quote_cap} more row(s)]"
-                          if total > quote_cap else "") + " */")
-        return out
+            meta.append("verify")
+        if entry["other_headers"]:
+            meta.append("+" + str(len(entry["other_headers"])))
+        
+        comment = f"/* {name} = {group['print']}  [{', '.join(meta)}] */"
+        return [comment]
 
     for key in sorted(set(by_header) | set(const_entries)):
         display = safe_name(printed_forms.get(key) or key, ".h")
@@ -1660,32 +1900,25 @@ def run_unified(args):
                     (match.group(1), re.sub(r"\s+", "",
                                             match.group(2))), True)
 
+        guard_name = safe_name(printed_forms.get(key) or key, '.h').upper().replace('.', '_') + "_"
+        n_consts = len(entries)
+        n_decls = sum(1 for d in decls if d['declaration'] is not None)
+        n_outlines = sum(1 for d in decls if d['declaration'] is None)
+        n_base_types = len(base_types_by_header.get(key.lower(), []))
         lines = [
-            f"/* {printed_forms.get(key) or key} -- Windows CE include/def"
-            " surface, ONE tree for",
-            " * every CE generation (not one tree per generation).",
+            f"/* {printed_forms.get(key) or key} -- Windows CE unified surface",
             " *",
-            " * Generated by tools/gen-include-def.py --unified from",
-            " * wince-docs-corpus knowledge/.  Everything quoted is verbatim",
-            " * from the page named beside it; the #define keyword, the",
-            " * header-to-constant filing and the version branches are",
-            " * DERIVED structure and say so.  Version differences are",
-            " * carried by _WIN32_WCE branches (the macro the",
-            " * documentation itself prints):",
-            " *   #if defined(_WIN32_WCE) && (_WIN32_WCE >= 500)",
-            " * several constants/declarations under ONE version branch share",
-            " * that branch: the #if above a batch covers everything down to",
-            " * its matching #endif.",
-            " * The Win32-shared half of Windows CE is part of this same",
-            " * tree, never a second one; such entries are marked",
-            " * 'Win32 reference'.  This file is a *fragment*: include",
-            " * guards, include order and everything the documentation does",
-            " * not describe are the job of the tool consuming it.",
-            f" * constants: {len(entries)}, declarations: "
-            f"{sum(1 for d in decls if d['declaration'] is not None)}, "
-            f"derived member outlines: "
-            f"{sum(1 for d in decls if d['declaration'] is None)}",
+            " * ONE tree for every CE generation.  Version differences use",
+            " * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.",
+            " * Win32-shared entries are marked 'win32-ref'.",
+            " * Generated from wince-docs-corpus knowledge/ by",
+            " * tools/gen-include-def.py --unified.",
+            f" * {n_consts} constants, {n_decls} declarations, "
+            f"{n_outlines} derived outlines, {n_base_types} base types",
             " */",
+            f"#ifndef _{guard_name}",
+            f"#define _{guard_name}",
+            "",
         ]
 
         if entries:
@@ -1781,7 +2014,8 @@ def run_unified(args):
                         "derived line suppressed (linkage: "
                         f"{entry['strength']}) */")
                     continue
-                lines.extend(const_note(entry, group))
+                if not args.no_const_comments:
+                    lines.extend(const_note(entry, group))
                 lines.append(f"#define {entry['name']} {group['print']}")
                 defines += 1
             if open_guard_now is not None:
@@ -1820,6 +2054,73 @@ def run_unified(args):
                                  % (e["name"], bits, e["strength"]))
                 lines.append(" */")
                 defines += len(members)
+        # Base types section: typedef definitions for fundamental Windows types
+        # These are critical for CE development as some have CE-specific values
+        base_types_for_header = base_types_by_header.get(key.lower(), [])
+        if base_types_for_header:
+            lines.append("")
+            lines.append("/* " + "=" * 66)
+            lines.append(" * base types -- fundamental Windows type definitions")
+            lines.append(" * CE-specific types are marked; verify sizes for your platform")
+            lines.append(" * " + "=" * 64 + " */")
+            for bt in sorted(base_types_for_header, key=lambda x: x["type"]):
+                lines.append("")
+                ce_mark = " [CE-SPECIFIC]" if bt["ce_specific"] == "yes" else ""
+                lines.append(f"/* {bt['type']}{ce_mark}")
+                if bt["ce_note"]:
+                    lines.append(f" * {bt['ce_note']}")
+                if bt["ce_value_note"]:
+                    lines.append(f" * {bt['ce_value_note']}")
+                lines.append(f" * source: {bt['source']} */")
+                # Handle multi-line definitions (e.g., TCHAR with #ifdef)
+                defn_lines = bt["definition"].split("\\n")
+                for defn_line in defn_lines:
+                    lines.append(defn_line)
+        # Assigned defines: extra macros found in corpus pages and assigned to this header
+        # These supplement the macros already extracted by the main parser
+        assigned_for_header = assigned_defines.get(key.lower(), [])
+        if assigned_for_header:
+            lines.append("")
+            lines.append("/* " + "=" * 66)
+            lines.append(" * additional macros -- supplementary definitions from corpus")
+            lines.append(" * " + "=" * 64 + " */")
+            # Group by type
+            func_macros = [d for d in assigned_for_header if d["type"] == "function-like"]
+            obj_macros = [d for d in assigned_for_header if d["type"] == "object-like"]
+            if obj_macros:
+                for d in sorted(obj_macros, key=lambda x: x["name"]):
+                    lines.append(d["definition"])
+            if func_macros:
+                if obj_macros:
+                    lines.append("")
+                for d in sorted(func_macros, key=lambda x: x["name"]):
+                    lines.append(d["definition"])
+        # Assigned declarations: additional declarations from KB
+        # These supplement the declarations already extracted by the main parser
+        assigned_decls_for_header = assigned_declarations.get(key.lower(), [])
+        if assigned_decls_for_header:
+            lines.append("")
+            if not args.minimal_comments:
+                lines.append("/* " + "=" * 66)
+                lines.append(" * additional declarations -- supplementary definitions from KB")
+                lines.append(" * " + "=" * 64 + " */")
+            # Group by type
+            from collections import defaultdict
+            decls_by_type = defaultdict(list)
+            for d in assigned_decls_for_header:
+                decls_by_type[d["type"]].append(d)
+            # Write in order: typedef, enum, struct, callback, function
+            for decl_type in ["typedef", "enum", "struct", "callback", "function"]:
+                if decl_type in decls_by_type:
+                    lines.append("")
+                    if not args.minimal_comments:
+                        lines.append(f"/* {decl_type} declarations */")
+                    for d in sorted(decls_by_type[decl_type], key=lambda x: x["name"]):
+                        decl_text = d["declaration"]
+                        # Clean up declaration text
+                        decl_text = html_clean.clean_declaration(decl_text)
+                        if decl_text and decl_text.strip():
+                            lines.append(decl_text)
         # The declarations, in reading order: the macro blocks the pages
         # print (verbatim #define / macro syntax), then the types (structs,
         # enums, typedefs, interfaces, and the derived member outlines for
@@ -1961,8 +2262,57 @@ def run_unified(args):
                 lines.extend(head)
         if open_decl_guard is not None:
             close_guard(lines, open_decl_guard)
+        # Close the include guard
+        lines.append("")
+        lines.append(f"#endif /* _{guard_name} */")
         path = os.path.join(include_dir, display + ".h.fragment")
         _write_lines(path, lines)
+        header_files_written += 1
+
+    # ---- extra defines: macros found in CE corpus pages that the main
+    # parser may have missed.  Only unassigned defines go to ExtraDefines.h;
+    # assigned defines are already in their respective header fragments.
+    if unassigned_defines:
+        extra_path = os.path.join(include_dir, "ExtraDefines.h.fragment")
+        extra_lines = [
+            "/* ExtraDefines.h -- supplementary macro definitions",
+            " *",
+            " * These #define macros were found in Windows CE corpus pages",
+            " * by tools/extract-missing-defines.py.  They supplement the",
+            " * macros already extracted by the main parser.",
+            " *",
+            " * These are the macros that could not be assigned to a specific",
+            " * header.  Macros assigned to headers are in their respective",
+            " * header fragments.",
+            f" * {len(unassigned_defines)} unassigned macros",
+            f" * ({sum(1 for d in unassigned_defines if d['type'] == 'function-like')} function-like, "
+            f"{sum(1 for d in unassigned_defines if d['type'] == 'object-like')} object-like)",
+            " */",
+            "#ifndef _EXTRADEFINES_H_",
+            "#define _EXTRADEFINES_H_",
+            "",
+        ]
+        # Group by type
+        func_macros = [d for d in unassigned_defines if d["type"] == "function-like"]
+        obj_macros = [d for d in unassigned_defines if d["type"] == "object-like"]
+        if obj_macros:
+            extra_lines.append("/* " + "=" * 66)
+            extra_lines.append(" * object-like macros (simple #define NAME value)")
+            extra_lines.append(" * " + "=" * 64 + " */")
+            for d in sorted(obj_macros, key=lambda x: x["name"]):
+                extra_lines.append(f"/* source: {d['source']} */")
+                extra_lines.append(d["definition"])
+                extra_lines.append("")
+        if func_macros:
+            extra_lines.append("/* " + "=" * 66)
+            extra_lines.append(" * function-like macros (#define NAME(args) ...)")
+            extra_lines.append(" * " + "=" * 64 + " */")
+            for d in sorted(func_macros, key=lambda x: x["name"]):
+                extra_lines.append(f"/* source: {d['source']} */")
+                extra_lines.append(d["definition"])
+                extra_lines.append("")
+        extra_lines.append("#endif /* _EXTRADEFINES_H_ */")
+        _write_lines(extra_path, extra_lines)
         header_files_written += 1
 
     # ---- module .def worklists (one per module, annotated per line: the
@@ -2166,6 +2516,7 @@ def _unified_report(args, entities, by_header, by_module, header_files,
     for rank in ("own-page", "entity-page", "constant-entity",
                  "win32-reference", "co-mention",
                  "reference-header",
+                 "heuristic-prefix",
                  "pinvoke-weak"):
         lines.append(f"| {rank} | {strengths.get(rank, 0):,} |")
     lines += [
@@ -2236,6 +2587,10 @@ def main():
                     help="do not use a declaration from another corpus set")
     ap.add_argument("--include-win32", action="store_true",
                     help="also emit entities the Win32 reference documents")
+    ap.add_argument("--no-const-comments", action="store_true",
+                    help="omit evidence comments for constants (cleaner output)")
+    ap.add_argument("--minimal-comments", action="store_true",
+                    help="minimize all comments (only keep essential section headers)")
     ap.add_argument("--limit", type=int, default=0)
     ap.add_argument("--list", action="store_true",
                     help="list the corpus sets and their entity counts")

@@ -983,7 +983,7 @@ def pinvoke_records(facts):
 LINK_RANKS = ("own-page", "entity-page", "constant-entity",
               "win32-reference",
               "reference-header",
-              "co-mention", "pinvoke-weak")
+              "co-mention", "heuristic-prefix", "pinvoke-weak")
 LINK_RANK_INDEX = {rank: index for index, rank in enumerate(LINK_RANKS)}
 
 
@@ -1387,6 +1387,83 @@ def constant_header_links(constants, requirements, pinvoke_records_pair,
             continue
         for header, page, book in rows:
             offer(name, "co-mention", [header], page, book)
+
+    # rank: heuristic-prefix -- well-known constant name prefixes that
+    # reliably map to specific headers.  This is a fallback for constants
+    # with no other linkage, based on Windows API naming conventions.
+    # Only used when no stronger rank applies.
+    PREFIX_TO_HEADER = {
+        "WM_": "Winuser.h",      # window messages
+        "WS_": "Winuser.h",      # window styles
+        "WS_EX_": "Winuser.h",   # extended window styles
+        "BS_": "Winuser.h",      # button styles
+        "ES_": "Winuser.h",      # edit styles
+        "SS_": "Winuser.h",      # static styles
+        "CS_": "Winuser.h",      # class styles
+        "SM_": "Winuser.h",      # system metrics
+        "COLOR_": "Winuser.h",   # system colors
+        "VK_": "Winuser.h",      # virtual keys
+        "MB_": "Winuser.h",      # message box
+        "IDC_": "Winuser.h",     # cursors
+        "IDI_": "Winuser.h",     # icons
+        "IDOK": "Winuser.h",     # dialog IDs
+        "IDCANCEL": "Winuser.h",
+        "IDABORT": "Winuser.h",
+        "IDRETRY": "Winuser.h",
+        "IDIGNORE": "Winuser.h",
+        "IDYES": "Winuser.h",
+        "IDNO": "Winuser.h",
+        "ERROR_": "Winerror.h",  # error codes
+        "NERR_": "Lmerr.h",      # network errors
+        "FILE_ATTRIBUTE_": "Winbase.h",  # file attributes
+        "FILE_FLAG_": "Winbase.h",       # file flags
+        "GENERIC_": "Winbase.h",         # generic access
+        "PAGE_": "Winbase.h",            # page protection
+        "MEM_": "Winbase.h",             # memory allocation
+        "SEC_": "Winbase.h",             # security
+        "INFINITE": "Winbase.h",
+        "INVALID_HANDLE_VALUE": "Winbase.h",
+        "NULL": "Windef.h",
+        "TRUE": "Windef.h",
+        "FALSE": "Windef.h",
+        "MAX_PATH": "Windef.h",
+        "HWND_": "Winuser.h",    # special window handles
+        "SPI_": "Winuser.h",     # system parameters
+        "SB_": "Winuser.h",      # scroll bar
+        "SW_": "Winuser.h",      # show window
+        "GWL_": "Winuser.h",     # window long
+        "GWLP_": "Winuser.h",    # window long pointer
+        "DT_": "Winuser.h",      # draw text
+        "MF_": "Winuser.h",      # menu flags
+        "PM_": "Winuser.h",      # peek message
+        "QS_": "Winuser.h",      # queue status
+        "INPUT_": "Winuser.h",   # input
+        "MOUSEEVENTF_": "Winuser.h",  # mouse events
+        "KEYEVENTF_": "Winuser.h",    # key events
+        "GMEM_": "Winbase.h",    # global memory
+        "LMEM_": "Winbase.h",    # local memory
+        "CREATE_": "Winbase.h",  # file creation
+        "OPEN_": "Winbase.h",    # file open
+        "TRUNCATE_": "Winbase.h", # file truncate
+        "MOVEFILE_": "Winbase.h", # move file
+        "COPY_FILE_": "Winbase.h", # copy file
+        "STD_INPUT_HANDLE": "Winbase.h",
+        "STD_OUTPUT_HANDLE": "Winbase.h",
+        "STD_ERROR_HANDLE": "Winbase.h",
+        "WAIT_OBJECT_0": "Winbase.h",
+        "WAIT_TIMEOUT": "Winbase.h",
+        "WAIT_ABANDONED": "Winbase.h",
+        "WAIT_FAILED": "Winbase.h",
+    }
+    for name in by_name:
+        if name in best and best[name]["rank"] is not None:
+            continue  # already has stronger linkage
+        for prefix, header in PREFIX_TO_HEADER.items():
+            if name.startswith(prefix) or name == prefix.rstrip("_"):
+                first = by_name[name][0]
+                offer(name, "heuristic-prefix", [header],
+                      first["source"]["path"], first["source"]["set"])
+                break
 
     # last rank: the pinvoke.net weak auxiliary hint.  It may only file a
     # name the CE (or CE-shared Win32) documentation actually numbers:
