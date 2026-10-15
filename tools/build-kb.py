@@ -2101,6 +2101,20 @@ def build(rows, workers, report_only, plain=False):
     # licence-vetted reference headers under sources/ (marked ranks, no
     # values), and the co-mention scan over the header-stating CE pages.
     reference_links = reference_define_headers()
+    # The full CE-adapted header surface of the pinned reference
+    # (membership ONLY -- the value beside each name was parsed away):
+    # which file of the CE toolchain's headers defines which name.  The
+    # generator uses this to know a name is part of the Win32-shared CE
+    # surface even when no CE page lists it (WH_*, HCBT_*, ...).
+    ref_name_rows = []
+    for name in sorted(reference_links, key=str.lower):
+        for header, rank, evidence in reference_links[name]:
+            ref_name_rows.append((name, header, rank, evidence))
+    write_tsv(os.path.join(KB, "reference-names.tsv"),
+              ["name", "header", "rank", "evidence"], ref_name_rows)
+    print(f"[kb] {len(ref_name_rows):,} reference header-membership "
+          f"row(s) (values never taken) -> kb/reference-names.tsv",
+          flush=True)
     ce_constant_names = {r["name"] for r in constants
                          if r.get("layer") == "ce"}
     mention_links = co_mention_links(ce_constant_names, requirements)

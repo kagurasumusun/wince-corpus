@@ -317,16 +317,22 @@ def load_common_pages():
     return out
 
 
-def extract_common(tar_path, apply=True):
+def extract_common(tar_path, apply=True, source="win32"):
     """Import the admitted Win32-common reference pages into the corpus.
 
     corpus/win32/common/ holds the pages that document the shared base
     surface the CE books name but never spell out (the typedef bodies of
-    Windows Data Types).  The allowlist is data/win32-common-pages.tsv;
-    nothing else may enter, and tools/check-policy.py enforces that.
+    Windows Data Types, the style/flag constant tables of the shared API
+    surface).  The allowlist is data/win32-common-pages.tsv (each row
+    names its snapshot); nothing else may enter, and tools/check-policy.py
+    enforces that.  Run once per snapshot::
+
+        python3 tools/fetch-upstream.py common --source win32
+        python3 tools/fetch-upstream.py common --source sdk-api
     """
-    meta = UPSTREAM["win32"]
-    rows = load_common_pages()
+    meta = UPSTREAM[source]
+    rows = [row for row in load_common_pages()
+            if (row.get("snapshot") or "win32") == source]
     written = []
     with open_tarball(tar_path) as tar:
         root = tarball_root(tar, meta["subdir"])
@@ -337,10 +343,10 @@ def extract_common(tar_path, apply=True):
                 extract_member(tar, member_name, dest)
             written.append(dest)
         if apply:
-            copy_licenses(tar, root, "win32")
+            copy_licenses(tar, root, source)
     total = sum(os.path.getsize(p) for p in written if os.path.exists(p))
-    print(f"[common] {len(written):,} shared-surface reference pages "
-          f"({total / 1024:.0f} KB) -> corpus/win32/common/")
+    print(f"[common:{source}] {len(written):,} shared-surface reference "
+          f"pages ({total / 1024:.0f} KB) -> corpus/win32/common/")
     return written
 
 
@@ -370,10 +376,11 @@ def main():
     ap = argparse.ArgumentParser(description=__doc__.split("\n")[0])
     ap.add_argument("mode", nargs="?", default="subset",
                     choices=["subset", "common", "guides", "pack", "list"])
-    ap.add_argument("--source", default="sdk-api",
+    ap.add_argument("--source", default=None,
                     choices=["sdk-api", "win32"],
-                    help="sdk-api for the API reference (default); win32 is "
-                         "only used by pack/guides")
+                    help="snapshot to read (default: sdk-api for subset/"
+                         "list/pack, win32 for common/guides; common also "
+                         "admits sdk-api rows of the allowlist)")
     ap.add_argument("--tarball", help="use a local snapshot instead of "
                                       "downloading (per --source)")
     ap.add_argument("--out", default=GUIDE_OUT,
@@ -382,10 +389,12 @@ def main():
                                                         "upstream"))
     args = ap.parse_args()
 
-    if args.mode in ("guides", "common"):
+    if args.source:
+        source = args.source
+    elif args.mode in ("guides", "common"):
         source = "win32"
     else:
-        source = args.source
+        source = "sdk-api"
 
     tar_path = args.tarball or os.path.join(
         args.cache_dir, f"{source}-{UPSTREAM[source]['sha'][:12]}.tar.gz")
@@ -416,7 +425,7 @@ def main():
     if args.mode == "pack":
         build_pack(source, tar_path)
     elif args.mode == "common":
-        extract_common(tar_path)
+        extract_common(tar_path, source=source)
     elif args.mode == "guides":
         extract_guides(tar_path, args.out)
     else:

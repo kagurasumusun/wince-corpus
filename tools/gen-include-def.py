@@ -853,29 +853,39 @@ def wce_range_comment(merged):
 
 
 def load_ce_documented_names():
-    """``kb/constant-names.tsv`` -> the names a CE page documents.
-
-    Only pages outside ``corpus/win32/`` count: a name the shared Win32
-    reference documents alone is desktop surface, and Windows CE is not
-    all of Win32.  This set is the gate for using a Win32-shared *value*
-    in the same tree.
+    """The names that are part of the CE surface: one a CE page lists
+    (``kb/constant-names.tsv``, pages outside ``corpus/win32/``) or one
+    the CE-adapted reference headers define (``kb/reference-names.tsv``,
+    membership only -- w32api-cegcc is the CE toolchain's own winuser.h
+    & co., so a name it defines is Win32-shared CE surface).  This set is
+    the gate for using a Win32-shared *value* in the same tree.  A name
+    the shared reference alone documents is desktop surface -- Windows CE
+    is not all of Win32.
     """
     names = set()
     path = os.path.join(KB, "constant-names.tsv")
-    if not os.path.exists(path):
-        return names
-    with open(path, encoding="utf-8") as fh:
-        header = fh.readline().rstrip("\n").split("\t")
-        try:
-            name_i = header.index("name")
-            page_i = header.index("page")
-        except ValueError:
-            return names
-        for line in fh:
-            cells = line.rstrip("\n").split("\t")
-            if len(cells) > page_i and \
-                    not cells[page_i].startswith("corpus/win32/"):
-                names.add(cells[name_i])
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as fh:
+            header = fh.readline().rstrip("\n").split("\t")
+            try:
+                name_i = header.index("name")
+                page_i = header.index("page")
+            except ValueError:
+                name_i = page_i = None
+            if name_i is not None:
+                for line in fh:
+                    cells = line.rstrip("\n").split("\t")
+                    if len(cells) > page_i and \
+                            not cells[page_i].startswith("corpus/win32/"):
+                        names.add(cells[name_i])
+    ref = os.path.join(KB, "reference-names.tsv")
+    if os.path.exists(ref):
+        with open(ref, encoding="utf-8") as fh:
+            fh.readline()
+            for line in fh:
+                cells = line.rstrip("\n").split("\t")
+                if cells and cells[0]:
+                    names.add(cells[0])
     return names
 
 
@@ -1801,6 +1811,10 @@ def run_unified(args):
                                 f"[{'; '.join(variant.get('win32_pages') or [])}]"
                                 if variant.get("win32_pages") else
                                 f" * documented spelling: {variant['name']}")
+                if info["variants"]:
+                    head.append(" * A/W: Windows CE は基本的に W 系。A 系綴りの"
+                                "面は個別確認必須 -- CE 文書が A 綴りを明示する"
+                                "場合のみ採用する (user order 2026-10)")
                 for item in (item for item in entity.get("unicode_only") or []
                              if item.get("scope") == "this-api"):
                     head.append(f" * {item['text']}  [{item['page']}]")
@@ -1819,6 +1833,14 @@ def run_unified(args):
                                 "between tokens; this is another page's text, "
                                 "identical once whitespace is removed)")
                 if declaration is not None:
+                    aw_ansi = any(
+                        re.search(r"\b" + re.escape(v["name"]) + r"\s*\(",
+                                  declaration["text"])
+                        for v in info["variants"] if v["name"].endswith("A"))
+                    if aw_ansi:
+                        head.append(" * A/W 個別確認必須: この宣言文は A (ANSI) 綴"
+                                    "りの版。Windows CE は W 系が基本 -- CE 文書の"
+                                    "明示がない限り A 面は使わない")
                     head.append(f" * source: {declaration['source']['path']}")
                     head.append(" */")
                     head.append(declaration["text"])

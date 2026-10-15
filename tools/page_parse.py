@@ -1320,6 +1320,9 @@ def _cell_int(text):
 # prints one, never by converting the hexadecimal.
 CONSTANT_NAME_COLUMNS = {
     "flag", "name", "constant", "symbolic constant", "resource identifier",
+    # the MicrosoftDocs/win32 style tables head them "Constant name" /
+    # "Constant value"; the classic tables head them "Constant" / "Value"
+    "constant name",
     "notification flag", "error code", "return code", "identifier",
     "message", "macro", "symbol", "symbolic name",
     # The same shape under a more specific heading.  Each label was checked
@@ -1343,6 +1346,8 @@ CONSTANT_HEX_COLUMNS = {
 CONSTANT_DECIMAL_COLUMNS = {"decimal"}
 CONSTANT_VALUE_COLUMNS = {
     "value", "numeric value", "code", "win32 value", "registry order",
+    # the MicrosoftDocs/win32 style tables head it "Constant value"
+    "constant value",
 }
 CONSTANT_IDENT = re.compile(r"^[A-Za-z_][A-Za-z0-9_]*$")
 # A printed number is more than ``0x..`` or ``digits``: the Data Type
@@ -1613,7 +1618,7 @@ def constant_name_rows(fragment, raw_row=False):
                       label.endswith(("style", "styles", "flags",
                                       "constants")))
                   and i not in desc_i]
-        if desc_i and name_i and \
+        if name_i and len(labels) >= 2 and \
                 not any(label in TYPE_NAME_COLUMNS for label in labels):
             header = " ".join(cells)
             header_name_i = name_i[0]
@@ -1637,20 +1642,181 @@ def constant_name_rows(fragment, raw_row=False):
     return out
 
 
-def constant_name_rows_text(text):
-    """The same reader for a markdown page: strip fences, then read the
-    HTML tables embedded in the markdown (the sdk-api style)."""
-    body = _MD_FENCE.sub("", text)
-    return constant_name_rows(body, raw_row=True)
+# Markdown pipe tables (the MicrosoftDocs/win32 guide style): the readers
+# below walk them as rows of cells the way the HTML readers do.  A cell may
+# carry inline HTML (`<span id="CBS_AUTOHSCROLL"></span><dl> <dt>**CBS\_
+# AUTOHSCROLL**</dt> </dl>`) -- the name is read from the cleaned text
+# (`CBS_AUTOHSCROLL`), and the row is quoted as the raw line the page
+# printed.  Bold markers and backslash escapes are presentation only and
+# are removed before a name or number is matched, never in the quote.
+_MD_PIPE_ROW = re.compile(r"^[ \t]*\|.*\|[ \t]*$")
+_MD_PIPE_RULE = re.compile(r"^[ \t]*\|[ \t:|-]+\|[ \t]*$")
+_MD_BOLD = re.compile(r"\*\*([^*]+)\*\*")
+_MD_CODE = re.compile(r"`([^`]*)`")
+
+
+def _md_cell_clean(cell):
+    """One pipe-table cell as text: tags and emphasis off, escapes open."""
+    text = text_of(cell, keep_newlines=False)
+    text = _MD_BOLD.sub(r"\1", text)
+    text = _MD_CODE.sub(r"\1", text)
+    return text.replace("\\_", "_").replace("\\*", "*").strip()
+
+
+def _md_pipe_cells(line):
+    inner = line.strip()
+    if inner.startswith("|"):
+        inner = inner[1:]
+    if inner.endswith("|"):
+        inner = inner[:-1]
+    return [_md_cell_clean(c) for c in inner.split("|")]
+
+
+def _md_pipe_tables(text):
+    """Yield (header_line, header_cells, [(raw_line, cells), ...])."""
+    lines = text.splitlines()
+    i = 0
+    while i < len(lines) - 1:
+        if not _MD_PIPE_ROW.match(lines[i]) or \
+                not _MD_PIPE_RULE.match(lines[i + 1]):
+            i += 1
+            continue
+        header_line = lines[i]
+        header_cells = _md_pipe_cells(header_line)
+        i += 2
+        rows = []
+        while i < len(lines) and _MD_PIPE_ROW.match(lines[i]):
+            rows.append((lines[i], _md_pipe_cells(lines[i])))
+            i += 1
+        yield header_line, header_cells, rows
 
 
 def constant_tables_text(text):
-    """The numbered-constant table reader for a markdown page: the same
-    fence strip, the same table and cell shapes (a sdk-api ``Value``
-    column prints the pair in one cell, ``KLF_ACTIVATE 0x00000001``).
-    Rows are quoted as printed (markup included)."""
+    """The numbered-constant readers for a markdown page: the embedded
+    HTML tables (the sdk-api style, fence stripped) AND the markdown pipe
+    tables (the guide style).  Pipe rows are quoted as the raw line the
+    page printed."""
     body = _MD_FENCE.sub("", text)
-    return constant_tables(body, raw_row=True)
+    out = constant_tables(body, raw_row=True)
+    seen = {(item["name"], item["value"]) for item in out}
+    for _header_line, header_cells, rows in _md_pipe_tables(text):
+        labels = [re.sub(r"\s+", " ", c).strip().rstrip(":").lower()
+                  for c in header_cells]
+        if any(OFFSET_COLUMN.search(label) for label in labels):
+            continue
+        name_i = _column(labels, CONSTANT_NAME_COLUMNS)
+        hex_i = _column(labels, CONSTANT_HEX_COLUMNS)
+        dec_i = _column(labels, CONSTANT_DECIMAL_COLUMNS)
+        val_i = _column(labels, CONSTANT_VALUE_COLUMNS)
+        if name_i is None and "value" in labels and "weight" in labels:
+            name_i = labels.index("value")
+            val_i = labels.index("weight")
+            hex_i = dec_i = None
+        header = " ".join(header_cells)
+        for raw, cells in rows:
+            row_quote = re.sub(r"\s+", " ", raw).strip()
+            # the pair in one cell: `**WS\_BORDER** 0x00800000L`
+            for cell in cells:
+                match = (_CELL_EQ.match(cell) or _CELL_PAR.match(cell)
+                         or _CELL_NAME_VALUE.match(cell))
+                if not match or not _constant_name(match.group(1)):
+                    continue
+                key = (match.group(1), match.group(2))
+                if key in seen:
+                    continue
+                seen.add(key)
+                out.append({
+                    "name": match.group(1),
+                    "value": match.group(2),
+                    "decimal": None,
+                    "table": header,
+                    "origin": "cell",
+                    "row": row_quote,
+                })
+            value_is = [i for i in (hex_i, val_i, dec_i) if i is not None]
+            if name_i is None or not value_is or name_i in value_is:
+                continue
+            if len(cells) <= name_i or not CONSTANT_IDENT.match(cells[name_i]):
+                continue
+
+            def number_at(index):
+                if index is None or index >= len(cells):
+                    return None, None
+                return number_cell(cells[index])
+
+            value = paired = value_from = None
+            for index in (hex_i, val_i, dec_i):
+                got, pair = number_at(index)
+                if got:
+                    value = got
+                    paired = pair
+                    value_from = index
+                    break
+            if not value:
+                continue
+            decimal = number_at(dec_i)[0]
+            if not decimal or decimal.lower().startswith("0x") \
+                    or value_from == dec_i:
+                decimal = paired
+            elif paired:
+                decimal = paired
+            key = (cells[name_i], value)
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append({
+                "name": cells[name_i],
+                "value": value,
+                "decimal": decimal,
+                "table": header,
+                "origin": "table",
+                "row": row_quote,
+            })
+    return out
+
+
+def constant_name_rows_text(text):
+    """The name-list reader for a markdown page: the embedded HTML tables
+    AND the markdown pipe tables.  Rows are quoted as printed (markup
+    included) -- the page carries them verbatim."""
+    body = _MD_FENCE.sub("", text)
+    out = constant_name_rows(body, raw_row=True)
+    seen = {item["name"] for item in out}
+    for _header_line, header_cells, rows in _md_pipe_tables(text):
+        labels = [re.sub(r"\s+", " ", c).strip().rstrip(":").lower()
+                  for c in header_cells]
+        if any(OFFSET_COLUMN.search(label) for label in labels):
+            continue
+        desc_i = [i for i, label in enumerate(labels)
+                  if label in _DESC_LABELS]
+        name_i = [i for i, label in enumerate(labels)
+                  if (label in _CONST_LIST_LABELS or
+                      label.endswith(("style", "styles", "flags",
+                                      "constants")))
+                  and i not in desc_i]
+        if not name_i or len(labels) < 2 or \
+                any(label in TYPE_NAME_COLUMNS for label in labels):
+            continue
+        header = " ".join(header_cells)
+        header_name_i = name_i[0]
+        for raw, cells in rows:
+            if header_name_i >= len(cells):
+                continue
+            name = cells[header_name_i]
+            if not CONSTANT_NAME_CELL.match(name) or TYPEISH_NAME.match(name):
+                continue
+            if name in seen:
+                continue
+            seen.add(name)
+            out.append({
+                "name": name,
+                "value": None,
+                "decimal": None,
+                "table": header,
+                "origin": "table-name-list",
+                "row": re.sub(r"\s+", " ", raw).strip(),
+            })
+    return out
 
 
 # ------------------------------------------------------------------ #
