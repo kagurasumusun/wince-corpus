@@ -1432,14 +1432,66 @@ def constant_tables(fragment, raw_row=False):
             val_i = labels.index("weight")
             hex_i = dec_i = None
         value_is = [i for i in (hex_i, val_i, dec_i) if i is not None]
+        header = " ".join(headers)
+        body = list(ROW.finditer(table.group(1)))[1:]
+        body_cells = [[text_of(cell, keep_newlines=False).strip()
+                       for cell in CELL.findall(row.group(1))]
+                      for row in body]
+        if name_i is None or not value_is or name_i in value_is:
+            # The headers do not name the columns ("Level description",
+            # "Raster operation", a value column ahead of the name).  Fall
+            # back to the CELLS: a name column is one whose cells are
+            # constant identifiers; a value column is one whose cells are
+            # all printed values (number or expression).  A table read
+            # this way is still only ever read as printed.
+            def ident_column(i):
+                seen = 0
+                for cells in body_cells:
+                    if i >= len(cells):
+                        return False
+                    text = cells[i]
+                    if not text:
+                        continue
+                    if not CONSTANT_IDENT.match(text) or \
+                            (text.upper() != text and "_" not in text):
+                        return False
+                    seen += 1
+                return seen >= 2
+
+            def value_column(i):
+                seen = 0
+                for cells in body_cells:
+                    if i >= len(cells):
+                        return False
+                    text = cells[i]
+                    if not text:
+                        continue
+                    if not (number_cell(text)[0] or expression_cell(text)):
+                        return False
+                    seen += 1
+                return seen >= 2
+
+            width = max((len(c) for c in body_cells), default=0)
+            if name_i is None or name_i in value_is or \
+                    (name_i is not None and not ident_column(name_i)):
+                # also when a HEADER match points at a non-name column
+                # ("Error code" holding 0xC00CE508L beside "Error string"
+                # holding MSG_E_BADCHARDATA)
+                name_i = next((i for i in range(width)
+                               if i not in value_is and ident_column(i)),
+                              None)
+            if not value_is or name_i in value_is:
+                value_is = [i for i in range(width)
+                            if i != name_i and value_column(i)]
+                hex_i = value_is[0] if value_is else None
+                val_i = (value_is[1] if len(value_is) > 1
+                         else (value_is[0] if value_is else None))
+                dec_i = (value_is[2] if len(value_is) > 2 else None)
         if name_i is None or not value_is or name_i in value_is:
             continue
-        header = " ".join(headers)
-        for row_match in list(ROW.finditer(table.group(1)))[1:]:
+        for row_match, cells in zip(body, body_cells):
             row = row_match.group(1)
             row_quote = _raw_row_text(row_match.group(0))
-            cells = [text_of(cell, keep_newlines=False).strip()
-                     for cell in CELL.findall(row)]
             if len(cells) <= name_i or not CONSTANT_IDENT.match(cells[name_i]):
                 continue
 
@@ -1458,6 +1510,17 @@ def constant_tables(fragment, raw_row=False):
                     paired = pair
                     value_from = index
                     break
+            if not value:
+                # printed expression values (``RASBASE+1``): quoted as
+                # printed, never computed (values: never derived)
+                for index in (val_i, hex_i, dec_i):
+                    if index is None or index >= len(cells):
+                        continue
+                    got = expression_cell(cells[index])
+                    if got:
+                        value = got
+                        value_from = index
+                        break
             if not value:
                 continue
             # A decimal is kept only when the page prints one *beside* the
@@ -1488,14 +1551,34 @@ def constant_tables(fragment, raw_row=False):
 # split apart.  The name is the all-caps identifier the page prints.  A
 # one-letter cell (``A=0``, a setting, not a constant) is left out; a name
 # with an underscore or at least four characters is kept (``S_OK``, ``TRUE``).
-_CELL_EQ = re.compile(r"^([A-Z][A-Z0-9_]*)\s*=\s*(0x[0-9A-Fa-f]+|-?\d+)$")
+# A printed value can be an EXPRESSION the page prints instead of a
+# number: the RAS error table prints ``RASBASE+1`` under "Code".  The
+# expression is quoted exactly as printed -- never computed (values:
+# never derived).  A C header defines the name exactly this way.
+_EXPR_VALUE = re.compile(r"^[A-Z][A-Z0-9_]{1,40}\s*[+-]\s*\d{1,6}$")
+
+
+def expression_cell(text):
+    """The cell is one printed expression value (``RASBASE+1``) -> the
+    text as printed.  Anything else -> None."""
+    text = (text or "").strip()
+    if _EXPR_VALUE.match(text):
+        return re.sub(r"\s+", "", text)
+    return None
+
+
+_CELL_EQ = re.compile(
+    r"^([A-Z][A-Z0-9_]*)\s*=\s*(0x[0-9A-Fa-f]+|-?\d+"
+    r"|[A-Z][A-Z0-9_]{1,40}\s*[+-]\s*\d{1,6})$")
 _CELL_PAR = re.compile(
-    r"^([A-Z][A-Z0-9_]*)\s*\(\s*(0x[0-9A-Fa-f]+|-?\d+)\s*\)$")
+    r"^([A-Z][A-Z0-9_]*)\s*\(\s*(0x[0-9A-Fa-f]+|-?\d+"
+    r"|[A-Z][A-Z0-9_]{1,40}\s*[+-]\s*\d{1,6})\s*\)$")
 # The sdk-api style prints the pair in ONE cell of the "Value" column:
 # ``KLF_ACTIVATE 0x00000001``.  Same honesty: the whole cell is the
 # name and one number and nothing else.
 _CELL_NAME_VALUE = re.compile(
-    r"^([A-Z][A-Z0-9_]*)\s+(0x[0-9A-Fa-f]+|-?\d+)\s*[uUlL]*$")
+    r"^([A-Z][A-Z0-9_]*)\s+((?:0x[0-9A-Fa-f]+|-?\d+)\s*[uUlL]*"
+    r"|[A-Z][A-Z0-9_]{1,40}\s*[+-]\s*\d{1,6})$")
 
 
 def _constant_name(name):

@@ -52,7 +52,7 @@ class MarkdownPipeValueTests(unittest.TestCase):
         rows = page_parse.constant_tables_text(text)
         out = {r["name"]: r.get("value") for r in rows}
         self.assertGreaterEqual(len(out), 24, sorted(out))
-        self.assertEqual(out.get("WS_EX_DLGMODALFRAME"), "0x00000001")
+        self.assertEqual(out.get("WS_EX_DLGMODALFRAME"), "0x00000001L")
 
 
 class HtmlValueTableTests(unittest.TestCase):
@@ -77,6 +77,53 @@ class DlValuePairTests(unittest.TestCase):
         self.assertGreaterEqual(len(wh), 15, sorted(wh))
         self.assertEqual(wh.get("WH_CALLWNDPROC"), "4")
         self.assertEqual(wh.get("WH_CBT"), "5")
+
+
+class ExpressionValueTests(unittest.TestCase):
+    def test_ras_expression_values(self):
+        """The RAS error table prints "Code" values as printed
+        expressions (RASBASE+1).  The expression is quoted as printed --
+        never computed (values: never derived)."""
+        import glob
+        found = glob.glob(os.path.join(
+            ROOT, "corpus", "**", "*RAS_Error_Values*"), recursive=True)
+        if not found:
+            raise unittest.SkipTest("RAS error page not committed")
+        frag = page_parse.article_html(open(found[0], "rb").read())
+        rows = page_parse.constant_tables(frag)
+        out = {r["name"]: r.get("value") for r in rows}
+        self.assertGreaterEqual(len(out), 150, len(out))
+        self.assertEqual(out.get("ERROR_INVALID_PORT_HANDLE"), "RASBASE+1")
+        self.assertEqual(out.get("PENDING"), "RASBASE+0")
+
+
+class ContentColumnTests(unittest.TestCase):
+    def test_value_first_and_odd_headers(self):
+        """Tables whose headers do not name the columns ("Level
+        description | Value", "Error code | Error string | Description")
+        are read by their CELLS: identifiers vs printed values."""
+        import glob
+        found = glob.glob(os.path.join(
+            ROOT, "corpus", "**", "aa447933*"), recursive=True)
+        if not found:
+            raise unittest.SkipTest("debug-levels page not committed")
+        frag = page_parse.article_html(open(found[0], "rb").read())
+        rows = page_parse.constant_tables(frag)
+        out = {r["name"]: r.get("value") for r in rows}
+        self.assertEqual(out.get("DBG_LEVEL_INFO"), "0x00000000")
+        self.assertEqual(out.get("DBG_LEVEL_ERR"), "0x00002000")
+
+    def test_error_string_name_column(self):
+        import glob
+        found = glob.glob(os.path.join(
+            ROOT, "corpus", "**", "ms891734*"), recursive=True)
+        if not found:
+            raise unittest.SkipTest("parse-error page not committed")
+        frag = page_parse.article_html(open(found[0], "rb").read())
+        rows = page_parse.constant_tables(frag)
+        out = {r["name"]: r.get("value") for r in rows}
+        self.assertGreaterEqual(len(out), 150, len(out))
+        self.assertEqual(out.get("MSG_E_BADCHARDATA"), "0xC00CE508L")
 
 
 class NameListTests(unittest.TestCase):

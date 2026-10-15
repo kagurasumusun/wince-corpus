@@ -11,20 +11,20 @@ the SAME tree, marked 'Win32 reference' -- never a second tree.
 ## What was generated
 
 * entities in scope: **29,161** (by surface: `ce-only` 24,678, `shared` 4,483)
-* header fragments: **591** under `include/`, each
+* header fragments: **593** under `include/`, each
   with its documented constants first, then the macros, the types
   and the functions; quoted text is verbatim, the `#define`
   keyword and the header/constant filing are derived and say so
-* derived `#define` lines written: **8,521**
+* derived `#define` lines written: **10,909**
 * derived member outlines (structures whose body no page prints):
   **2** -- marked DERIVED in the fragment
-* constants whose pages disagree / overlap: **9** name(s) examined in `kb/constant-conflicts.tsv`
-  (6 of them reach a header fragment in this build;
+* constants whose pages disagree / overlap: **33** name(s) examined in `kb/constant-conflicts.tsv`
+  (50 of them reach a header fragment in this build;
   **5** resolved by the review in
   `data/constant-value-review.tsv` to a print the pages themselves
   state, the rest get no `#define` -- every one keeps its
   CONFLICT block with the verdict)
-* constants with no header linkage at all: **1,126**
+* constants with no header linkage at all: **1,999**
   (worklist only -- they stay in `constants.tsv`)
 * module `.def` worklists: **266** under `link/`
   (per-line version range is a comment; `.def` has no
@@ -36,7 +36,7 @@ the SAME tree, marked 'Win32 reference' -- never a second tree.
   one marked in the fragment and the manifest; CE and desktop
   values are never assumed equal
 * constants numbered only by the Win32 shared reference (and only
-  for names a CE page documents): **1,870** -- same
+  for names a CE page documents): **1,879** -- same
   tree, every one marked 'verify against the CE SDK'; a number a
   CE page prints always wins
 * spacing-only repairs across CE generations: **0**
@@ -52,13 +52,13 @@ hint):
 
 | rank | link rows |
 |------|----------:|
-| own-page | 4,226 |
+| own-page | 4,462 |
 | entity-page | 1,355 |
-| constant-entity | 34 |
-| win32-reference | 1,545 |
-| co-mention | 5 |
-| reference-header | 1,338 |
-| pinvoke-weak | 35 |
+| constant-entity | 35 |
+| win32-reference | 1,564 |
+| co-mention | 20 |
+| reference-header | 1,510 |
+| pinvoke-weak | 45 |
 
 The reference-header ranks come from the pinned, licence-vetted
 public references under `sources/`: their header files *define*
@@ -76,7 +76,7 @@ every `#define` number above is a CE documentation quotation.
 * what they are used for: ONLY the weakest constant/header
   linkage rank above, consumed so that the gap between official
   documentation and community reference is reviewable;
-  **35** linkage rows rest on
+  **45** linkage rows rest on
   them directly, each loudly marked in its header comment, and
   `reports/constant-pinvoke-review.tsv` compares every such
   community value with the documented CE value
@@ -84,7 +84,7 @@ every `#define` number above is a CE documentation quotation.
   pinvoke material (values are CE-page quotations only), no
   entity, no declaration, no requirement is minted from it, and
   no pinvoke statement overrides a documented one
-* Win32-only numbers seen but not used: **2,049**
+* Win32-only numbers seen but not used: **2,059**
   constants (CE and desktop values are not assumed to match)
 
 ## The wall this generator keeps

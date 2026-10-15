@@ -720,6 +720,53 @@ def write_constants(out, constants, target, borrow):
         with open(path, "w", encoding="utf-8") as fh:
             fh.write("\n".join(lines) + "\n")
 
+    # Constants whose pages state NO header are still documented numbers
+    # ("定数は全て使った状態に"): they go to one honest catch-all file
+    # whose name invents no header.  The comment says exactly that -- the
+    # value is documented, its home header is not; check the CE SDK.
+    if no_header:
+        by_name = collections.defaultdict(list)
+        for record, origin in no_header:
+            by_name[record["name"]].append((record, origin))
+        path = os.path.join(include_dir, "NoStatedHeader.h.constants")
+        lines = [
+            "/* NoStatedHeader -- numbers a page prints without naming a header",
+            " *",
+            " * Each block quotes a table row a page prints.  No collected page",
+            " * states the header these names live in, so no header file is",
+            " * invented for them: the value is documented, its home header is",
+            " * not.  Check the CE SDK for the real header before use.  The",
+            " * #define line below a block is derived from the row (the page",
+            " * did not print a #define); rows whose pages disagree are listed",
+            " * and not turned into one.",
+            " */",
+        ]
+        nohdr_written = 0
+        for name, rows in sorted(by_name.items(),
+                                 key=lambda item: item[0].lower()):
+            values = {row["value"] for row, _origin in rows}
+            lines.append("")
+            lines.append(f"/* {name}")
+            for record, origin in rows:
+                borrowed_note = f"  borrowed from {origin[len('ce-set:'):]} \
+" if origin.startswith("ce-set:") else ""
+                lines.append(f" * row: {record['row']}")
+                lines.append(f" * source: {record['source']['path']}"
+                             f"{borrowed_note}")
+            if len(values) > 1:
+                lines.append(" * CONFLICT: the pages do not agree on the "
+                             "number -- no #define is written")
+                lines.append(" */")
+                continue
+            lines.append(" * derived: the #define keyword is not on the page")
+            lines.append(" */")
+            record = rows[0][0]
+            lines.append(f"#define {record['name']} {record['value']}")
+            nohdr_written += 1
+        with open(path, "w", encoding="utf-8") as fh:
+            fh.write("\n".join(lines) + "\n")
+        written += nohdr_written
+
     with open(os.path.join(out, "constants.tsv"), "w", encoding="utf-8") as fh:
         fh.write("name\tvalue\tdecimal\theaders\tborrowed_from\tpage\trow\t"
                  "conflict\n")
@@ -1460,8 +1507,16 @@ def run_unified(args):
             continue
         targets = links.get(name) or []
         if not targets:
+            # No page names a header -- but the number IS documented
+            # ("定数は全て使った状態に"): file it under the honest catch-all
+            # NoStatedHeader.h, whose name invents no header and whose
+            # comment says the value is documented and the home header is
+            # not (check the CE SDK).
             no_header += 1
-            continue
+            printed_forms.setdefault("nostatedheader.h", "NoStatedHeader.h")
+            targets = [{"header": "NoStatedHeader.h",
+                        "strength": "no header stated by any page",
+                        "statements": 0, "example_page": "-"}]
         conflict = groups_conflict(groups)
         if conflict:
             conflicts += 1

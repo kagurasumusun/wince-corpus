@@ -43,9 +43,12 @@
 /* quoted (cell): <tr> <td width="40%"><a id="SCARD_PROVIDER_PRIMARY"></a><a id="scard_provider_primary"></a><dl> <dt><b>SCARD_PROVIDER_PRIMARY</b></dt> <dt>1</dt> </dl> </td> <td width="60%"> The function retrieves the name of the <a href="/windows/desktop/SecGloss/s-gly">smart card's</a> <a href="/windows/desktop/SecGloss/p-gly">primary service provider</a> as a GUID string. </td> </tr>  [+3 more row(s)] */
 #define SCARD_PROVIDER_PRIMARY 1
 
-/* SCARD_W_RESET_CARD 0x80100068 | entity-page; 2 statement(s), e.g. corpus/win32/api/winscard/nf-winscard-scardendtransaction.md | value printed only by the Win32 shared reference (a CE page documents the name; verify the number against the CE SDK) */
-/* quoted (cell): <tr> <td width="40%"> <dl> <dt><b>SCARD_W_RESET_CARD</b></dt> <dt>0x80100068L</dt> </dl> </td> <td width="60%"> The transaction was released. Any future communication with the card requires a call to the <a href="/windows/desktop/api/winscard/nf-winscard-scardreconnect">SCardReconnect</a> function. <b>Windows Server 2008, Windows Vista, Windows Server 2003 and Windows XP: </b>The transaction was not released. The application must immediately call the <a href="/windows/desktop/api/winscard/nf-winscard-scarddisconnect">SCardDisconnect</a>, <a href="/windows/desktop/api/winscard/nf-winscard-scardreconnect">SCardReconnect</a>, or <a href="/windows/desktop/api/winscard/nf-winscard-scardreleasecontext">SCardReleaseContext</a> function to avoid an existing transaction blocking other threads and processes from communicating with the smart card. </td> </tr> */
-#define SCARD_W_RESET_CARD 0x80100068
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+
+/* SCARD_W_RESET_CARD 0x80100068L | entity-page; 2 statement(s), e.g. corpus/win32/api/winscard/nf-winscard-scardendtransaction.md */
+/* quoted (table): SCARD_W_RESET_CARD 0x80100068L The smart card has been reset, so any shared state information is invalid.  [+1 more row(s)] */
+#define SCARD_W_RESET_CARD 0x80100068L
+#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
