@@ -1058,6 +1058,67 @@ REF_MEMBER_RE = re.compile(r"^\s*([A-Za-z_]\w*)\s*(?::\s*\d+\s*)?(?:=|,|$)")
 REF_GUARDISH = re.compile(r"_INC_[A-Z0-9_]+$|__?\S+_H(?:INCLUDED)?_+$")
 
 
+DEF_EXPORT_RE = re.compile(r"^([A-Za-z_@$?][\w@$?]*)")
+DEF_KEYWORDS = {"LIBRARY", "NAME", "EXPORTS", "SECTIONS", "VERSION",
+                "HEAPSIZE", "STACKSIZE", "DESCRIPTION"}
+
+
+def reference_export_names():
+    """module -> [(name, def_member, rank, evidence)] from the pinned
+    reference's ``.def`` export lists (its lib/ and libce/ -- the CeGCC
+    import libraries' export lists).
+
+    MEMBERSHIP ONLY -- which export list claims which name.  Ordinals and
+    decoration are parsed away and never returned (values: never).  The
+    rank is ``reference-export``: a lead for the generated .def
+    worklists, never documentation.  The A/W spelling is kept exactly as
+    the list prints it: an A-sounding name is a review lead, and the
+    A/W-per-page confirmation rule still applies.
+    """
+    import tarfile  # local: only the reference pass needs archives
+
+    out = collections.defaultdict(list)
+    for spec in REFERENCE_RANKS:
+        tarballs = sorted(glob.glob(spec["glob"]))
+        if not tarballs:
+            continue
+        tarball = tarballs[-1]
+        with tarfile.open(tarball) as tar:
+            for member in tar.getmembers():
+                parts = member.name.split("/")
+                if len(parts) < 2 or parts[-2] not in ("lib", "libce"):
+                    continue
+                if not parts[-1].lower().endswith(".def"):
+                    continue
+                handle = tar.extractfile(member)
+                if handle is None:
+                    continue
+                text = handle.read().decode("utf-8", "replace")
+                module = parts[-1][:-4].lower()
+                evidence = (f"{os.path.relpath(tarball, ROOT)}!{member.name}")
+                in_exports = False
+                for line in text.splitlines():
+                    s = line.strip()
+                    if not s or s.startswith(";"):
+                        continue
+                    head = s.split()[0].upper()
+                    if head == "EXPORTS":
+                        in_exports = True
+                        continue
+                    if head in DEF_KEYWORDS:
+                        in_exports = False
+                        continue
+                    if not in_exports:
+                        continue
+                    match = DEF_EXPORT_RE.match(s)
+                    if match is None:
+                        continue
+                    name = match.group(1)
+                    out[module].append((name, member.name, spec["rank"],
+                                        evidence))
+    return out
+
+
 def reference_define_headers():
     """name -> [(header, rank, evidence)] from the pinned reference headers.
 
@@ -2114,6 +2175,23 @@ def build(rows, workers, report_only, plain=False):
               ["name", "header", "rank", "evidence"], ref_name_rows)
     print(f"[kb] {len(ref_name_rows):,} reference header-membership "
           f"row(s) (values never taken) -> kb/reference-names.tsv",
+          flush=True)
+    # Export-list membership from the same pinned reference's .def files
+    # (lib/ and libce/): which export list claims which name.  Names
+    # only -- ordinals and decoration parsed away (values: never).  The
+    # generator appends these as marked leads under the .def worklists.
+    reference_exports = reference_export_names()
+    ref_export_rows = []
+    for module in sorted(reference_exports):
+        for name, def_member, rank, evidence in reference_exports[module]:
+            ref_export_rows.append((module, name, def_member, rank,
+                                    evidence))
+    write_tsv(os.path.join(KB, "reference-exports.tsv"),
+              ["module", "name", "def_member", "rank", "evidence"],
+              ref_export_rows)
+    print(f"[kb] {len(ref_export_rows):,} reference export-membership "
+          f"row(s) (names only, ordinals never taken) -> "
+          f"kb/reference-exports.tsv",
           flush=True)
     ce_constant_names = {r["name"] for r in constants
                          if r.get("layer") == "ce"}

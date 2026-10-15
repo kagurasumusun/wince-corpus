@@ -107,6 +107,7 @@ Honesty rules (the same ones the knowledge base keeps):
 
 import argparse
 import collections
+import csv
 import gzip
 import json
 import os
@@ -499,7 +500,26 @@ def load_ordinals():
     return out
 
 
-def write_defs(out, by_module, generated, ordinals=None):
+def load_reference_exports():
+    """module -> [(name, def_member)] from kb/reference-exports.tsv: the
+    export-list MEMBERSHIP of the pinned CeGCC reference's .def files.
+    Names only -- ordinals were never taken.  Marked leads for the .def
+    worklists, not documentation: every line printed from this file
+    carries the reference mark."""
+    path = os.path.join(ROOT, "knowledge", "kb", "reference-exports.tsv")
+    out = {}
+    if not os.path.exists(path):
+        return out
+    with open(path, encoding="utf-8") as fh:
+        reader = csv.DictReader(fh, delimiter="\t")
+        for row in reader:
+            out.setdefault(row["module"].lower(), []).append(
+                (row["name"], row["def_member"]))
+    return out
+
+
+def write_defs(out, by_module, generated, ordinals=None,
+               reference_exports=None):
     link_dir = os.path.join(out, "link")
     os.makedirs(link_dir, exist_ok=True)
     for module, worklist in sorted(by_module.items()):
@@ -521,6 +541,25 @@ def write_defs(out, by_module, generated, ordinals=None):
             "EXPORTS",
         ]
         module_stem = safe_name(module).lower()
+        known = {entry[0]["name"].lower() for entry in entries}
+        leads = [(name, member) for name, member in
+                 (reference_exports or {}).get(module_stem, [])
+                 if name.lower() not in known]
+        if leads:
+            lines += [
+                ";",
+                f"; reference-export leads ({len(leads)}): names the pinned",
+                "; CeGCC reference's .def export list claims for this module",
+                "; but no CE page documents.  MEMBERSHIP ONLY -- the name is",
+                "; claimed by the given list; ordinals and decoration were",
+                "; never taken (values: never).  Each name is a REVIEW LEAD:",
+                "; verify it against the CE SDK export table before linking,",
+                "; and confirm any A-sounding spelling page by page (CE is",
+                "; W-side basically).",
+                ";",
+            ]
+            for name, member in leads:
+                lines.append(f";   {name:38s}; lead  {member}")
         for entry in entries:
             entity, declaration = entry[0], entry[1]
             library_from = entry[2] if len(entry) > 2 else ""
@@ -541,6 +580,11 @@ def write_defs(out, by_module, generated, ordinals=None):
             else:
                 name_field = entity["name"]
             lines.append(f"    {name_field:32s}; {kind}  {page}")
+        if leads:
+            lines.append(";")
+            lines.append(f"; {len(entries)} documented name(s) above; "
+                         f"{len(leads)} reference-export lead(s) in "
+                         f"comment")
         with open(path, "w", encoding="utf-8") as fh:
             fh.write("\n".join(lines) + "\n")
     return link_dir
@@ -1870,6 +1914,7 @@ def run_unified(args):
     # .def grammar itself has no version conditional).
     ordinal_rows = load_ordinal_rows()
     ord_map = load_ordinals()
+    reference_exports = load_reference_exports()
     for stem, worklist in sorted(by_module.items()):
         entries = sorted(worklist["entries"],
                          key=lambda e: e["entity"]["name"].lower())
@@ -1884,6 +1929,26 @@ def run_unified(args):
               ";",
               f"; stated as: {', '.join(sorted(worklist['stated']))}",
               f"; {len(entries)} name(s)", "EXPORTS"]
+        known = {info["entity"]["name"].lower() for info in entries}
+        leads = [(name, member) for name, member in
+                 (reference_exports or {}).get(safe_name(stem).lower(), [])
+                 if name.lower() not in known]
+        if leads:
+            ch += [
+                ";",
+                f"; reference-export leads ({len(leads)}): names the pinned",
+                "; CeGCC reference's .def export list claims for this module",
+                "; but no CE page documents.  MEMBERSHIP ONLY -- the name is",
+                "; claimed by the given list; ordinals and decoration were",
+                "; never taken (values: never).  Each name is a REVIEW LEAD:",
+                "; verify it against the CE SDK export table before linking,",
+                "; and confirm any A-sounding spelling page by page (CE is",
+                "; W-side basically).",
+                ";",
+            ]
+            for name, member in leads:
+                ch.append(f";   {name:38s}; lead  {member}")
+            ch.append(";")
         for info in entries:
             entity = info["entity"]
             tag = ""
@@ -2355,7 +2420,8 @@ def main():
     os.makedirs(out, exist_ok=True)
     generated = {"set": args.target, "pages": len(pages)}
     include_dir = write_includes(out, by_header, generated)
-    link_dir = write_defs(out, by_module, generated, load_ordinals())
+    link_dir = write_defs(out, by_module, generated, load_ordinals(),
+                          reference_exports=load_reference_exports())
     ordinal_files, ordinal_names = write_ordinal_defs(out, args.target)
     UNSUPPORTED.update(load_unsupported())
     constant_report = write_constants(out, constants, args.target,
