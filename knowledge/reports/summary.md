@@ -6,28 +6,28 @@ The knowledge base is built from the pages in `corpus/` only: every declaration,
 
 ## ABI
 
-* syntax declarations: **96,963**; of those **93,339** print no calling convention (none is guessed) and **3,624** print one (winapi 2,933, stdcall 419, cdecl 265, extern-c 6, fastcall 1)
+* syntax declarations: **97,078**; of those **93,454** print no calling convention (none is guessed) and **3,624** print one (winapi 2,933, stdcall 419, cdecl 265, extern-c 6, fastcall 1)
 * member lines that print a type: **39,116** out of **47,153**; bitfields **126**, `#pragma pack` **6**, `__declspec(align` **5**
 * statements a page makes about alignment, byte order, pointer width or a structure size: **970** quoted sentences (`kind: "abi-note"` in `kb/constraints.jsonl`; the structure-size sentences are counted again on their own line below)
 * layout tables (`Offset | Field | Size | …`): **399** documented offset rows over **58** page(s), quoted row by row in `kb/abi-offsets.jsonl` (the flat view is `kb/abi-offsets.tsv`, with the page and its title). **18** of the rows name a member the same page declares in a syntax block; the others are rows whose field the page does not declare (wire/packet layouts, array spellings such as `dwIndex[0]` where the declaration says `dwOffset`, and string literals inside the table) -- each is kept as the page printed it, and the column is marked `matches_declared_member`
 * structure sizes stated in prose: **5** sentences (the number is a read of the quoted sentence, never a guess)
-* numbered constants (`Name | Value`, `Return code | Hexadecimal | Decimal`, `Symbolic constant | Value (Hex)`, `Control code | Value`, `Message identifier | Value`, `Element | Hex code`, `Value | Weight` for the font-weight constants, a cell printed `NAME = 0x0001` or `NAME (0x0001)`, and the same shapes): **31,084** rows over **2,184** page(s), quoted in `kb/constants.jsonl` (the flat view is `kb/constants.tsv`).  A row is kept only when the name is one identifier and the value is one number; a one-letter `A=0` cell is left out, and a hexadecimal is never converted.  A decimal is kept only when the page prints one.  A constant the page does not number has no row
+* numbered constants (`Name | Value`, `Return code | Hexadecimal | Decimal`, `Symbolic constant | Value (Hex)`, `Control code | Value`, `Message identifier | Value`, `Element | Hex code`, `Value | Weight` for the font-weight constants, a cell printed `NAME = 0x0001` or `NAME (0x0001)`, and the same shapes): **31,311** rows over **2,306** page(s), quoted in `kb/constants.jsonl` (the flat view is `kb/constants.tsv`).  A row is kept only when the name is one identifier and the value is one number; a one-letter `A=0` cell is left out, and a hexadecimal is never converted.  A decimal is kept only when the page prints one.  A constant the page does not number has no row
 * where a page states **no** offset, none is recorded: for the structures whose members a page documents without printing a body, `kb/struct-fields.tsv` keeps the names and documented order only, and `reports/abi.tsv` says how many offsets a name has (0 for most)
 
 ## Totals
 
-* pages parsed: **121,109**
-* API entities: **30,371** -- CE-specific **24,680**, documented by Windows CE and the Win32 reference alike **4,483**, Win32 pages for a CE name's A/W spelling **1,155**, named by the CE catalog only **3**, unclaimed Win32 pages **50** (`reports/surface.tsv`; 585 names have a Win32 page through a variant spelling)
-* declarations extracted: **110,549** (C/C++ 79,223 in `kb/declarations.jsonl`, managed-code signatures 31,326 in `kb/declarations-dotnet.jsonl` -- the separated .NET layer)
-* requirement statements: **193,720**
+* pages parsed: **122,170**
+* API entities: **30,372** -- CE-specific **24,668**, documented by Windows CE and the Win32 reference alike **4,495**, Win32 pages for a CE name's A/W spelling **1,155**, named by the CE catalog only **3**, unclaimed Win32 pages **51** (`reports/surface.tsv`; 585 names have a Win32 page through a variant spelling)
+* declarations extracted: **110,863** (C/C++ 79,537 in `kb/declarations.jsonl`, managed-code signatures 31,326 in `kb/declarations-dotnet.jsonl` -- the separated .NET layer)
+* requirement statements: **193,726**
 * of those, a page's own `Module` (not an sdk-api UID): **146**; a `sysgen` variable: **980**; a CPU list (`Architecture`): **78**; a catalog `Component`: **28**
-* numbered constants: **31,084** (`kb/constants.jsonl`, 2,184 page(s))
-* constant -> header linkage: **8,991** rows over **7,297** names (`kb/constant-headers.tsv`; ranks: `own-page` 4,462, `entity-page` 1,355, `constant-entity` 35, `win32-reference` 1,564, `reference-header` 1,510, `co-mention` 20, `pinvoke-weak` 45); **1,999** name(s) wait in `reports/constant-header-gaps.tsv` (needs-sdk-verification 1,686, vb-language-constant 302, ole-automation-constant 11)
+* numbered constants: **31,311** (`kb/constants.jsonl`, 2,306 page(s))
+* constant -> header linkage: **9,166** rows over **7,463** names (`kb/constant-headers.tsv`; ranks: `own-page` 4,464, `entity-page` 1,366, `constant-entity` 63, `win32-reference` 1,576, `reference-header` 1,632, `co-mention` 20, `pinvoke-weak` 45); **2,005** name(s) wait in `reports/constant-header-gaps.tsv` (needs-sdk-verification 1,692, vb-language-constant 302, ole-automation-constant 11)
 * value disagreements examined: **33** name(s) whose pages print more than one number and cannot be a version branch (`kb/constant-conflicts.tsv`; categories: same-page 23, same-set 10)
 * Windows CE constraint sentences: **3,555** and ABI statements quoted from the pages (**970**, `kind: "abi-note"`)
-* entities with a gap record: **19,949** (`reports/gaps.tsv`)
-* structures whose members a page documents without printing a declaration body: **801** (842 page(s) carry a member list, 840 of them print no declaration at all; `kb/struct-fields.tsv` has the member names and order, one row per field -- the pages state no offsets, so none are recorded)
-* relations between definitions: **29,278** (`unicode-ansi`/`unicode-ansi-base`/`unicode-ansi-variant` from the page's own statement, `interface-method`, `layer`, `ce-name-lead` for the spelling a CE page prints, `related-macro` / `related-message` for the identifier a page prints beside that label)
+* entities with a gap record: **19,946** (`reports/gaps.tsv`)
+* structures whose members a page documents without printing a declaration body: **801** (842 page(s) carry a member list, 831 of them print no declaration at all; `kb/struct-fields.tsv` has the member names and order, one row per field -- the pages state no offsets, so none are recorded)
+* relations between definitions: **29,290** (`unicode-ansi`/`unicode-ansi-base`/`unicode-ansi-variant` from the page's own statement, `interface-method`, `layer`, `ce-name-lead` for the spelling a CE page prints, `related-macro` / `related-message` for the identifier a page prints beside that label)
 * catalog-only names (the CE TOC names it, no CE page for it is in the corpus): **3** (`reports/catalog-leads.tsv` shows the CE page the name list points at, what that page actually prints, and what the Win32 page documents -- a lead, not a CE definition)
 * requirement values that name no file (a library statement like `Developer Implemented`) stay in `kb/requirements.jsonl` with an empty derived key and are listed in `reports/filtered-values.tsv`
 * a library/DLL cell that is only a list of file names (`Ole32.lib, Uuid.lib`, `A.lib or B.lib`) assigns each file.  The requirement record stays one statement and its derived key is the first file; `kb/libraries.tsv`, `kb/dlls.tsv` and `entity.libraries` / `entity.dlls` list every file the cell names.  A sentence that names one file (`Shell32.dll (version 4.0 or later)`) assigns that file only
@@ -47,6 +47,7 @@ The knowledge base is built from the pages in `corpus/` only: every declaration,
 | `dotnet/dotnet-micro-framework` | 4,012 | 0 | 4,012 | 1,835 | 5,583 | 6,535 |
 | `msdn-library/datadungeon-2000-04` | 2,931 | 1,330 | 237 | 752 | 478 | 833 |
 | `mvb/windows-ce-1.0/PEGSDK` | 1,918 | 1,473 | 10 | 268 | 10 | 429 |
+| `win32/common` | 1,091 | 17 | 8 | 310 | 184 | 495 |
 | `dotnet/dotnet-compact-framework` | 852 | 0 | 852 | 636 | 853 | 2,135 |
 | `chm/windows-ce-4.2` | 566 | 278 | 257 | 254 | 514 | 278 |
 | `learn/unclassified` | 414 | 328 | 362 | 281 | 773 | 295 |
@@ -101,7 +102,6 @@ The knowledge base is built from the pages in `corpus/` only: every declaration,
 | `win32/api/shobjidl_core` | 32 | 32 | 32 | 4 | 127 | 8 |
 | `win32/api/upnp` | 31 | 31 | 31 | 0 | 93 | 0 |
 | `win32/api/winnetwk` | 30 | 30 | 30 | 4 | 148 | 4 |
-| `win32/common` | 30 | 4 | 2 | 6 | 178 | 181 |
 | `win32/api/commdlg` | 28 | 28 | 28 | 0 | 125 | 0 |
 | `win32/api/objbase` | 28 | 28 | 28 | 1 | 115 | 1 |
 | `kb/180` | 26 | 0 | 0 | 23 | 0 | 23 |
@@ -358,13 +358,13 @@ A header or a `.def` for one Windows CE version can only be built from what *tha
 
 | set | entities | syntax | header | library | functions with all three | numbered constants |
 |-----|----------|--------|--------|---------|--------------------------|--------------------|
-| `learn/windows-ce-5.0` | 14,868 | 12,651 | 12,533 | 6,992 | 6,295 / 10,500 | 5,215 (3,954 names) |
-| `learn/windows-embedded-ce-6.0` | 16,650 | 15,086 | 14,124 | 7,549 | 7,194 / 12,267 | 7,202 (5,853 names) |
+| `learn/windows-ce-5.0` | 14,868 | 12,651 | 12,533 | 6,992 | 6,295 / 10,500 | 5,220 (3,956 names) |
+| `learn/windows-embedded-ce-6.0` | 16,650 | 15,086 | 14,124 | 7,549 | 7,194 / 12,267 | 7,210 (5,857 names) |
 | `learn/windows-ce-net-4x` | 6,556 | 5,623 | 6,065 | 3,623 | 3,397 / 4,523 | 2,523 (2,268 names) |
 | `chm/windows-ce-5.0` | 14,810 | 13,448 | 11,084 | 5,278 | 4,566 / 12,104 | 5,141 (4,001 names) |
 | `chm/windows-ce-3.0` | 6,826 | 6,189 | 4,560 | 2,069 | 1,982 / 5,344 | 3,218 (1,946 names) |
 | `chm/windows-ce-4.2` | 279 | 235 | 254 | 0 | 0 / 227 | 6 (5 names) |
-| `mvb/windows-ce-1.0/PEGSDK` | 1,471 | 189 | 0 | 7 | 0 / 1,128 | 76 (76 names) |
+| `mvb/windows-ce-1.0/PEGSDK` | 1,471 | 189 | 0 | 7 | 0 / 1,128 | 77 (77 names) |
 | `msdn-library/wcedevcon-99` | 4,468 | 4,141 | 3,244 | 13 | 1 / 3,612 | 2,848 (1,742 names) |
 | `msdn-library/techshelps` | 3,821 | 3,145 | 3,155 | 5 | 1 / 3,031 | 330 (183 names) |
 
@@ -386,7 +386,7 @@ Numbered constants are rows of a name/value table the page prints, or a cell it 
 
 | missing | entities | what to collect |
 |---------|----------|-----------------|
-| `no-declaration` | 3,614 | the page prints no syntax block -- look for the same topic in another collected set (another medium often has it), or add the SDK/DOC medium that does |
+| `no-declaration` | 3,605 | the page prints no syntax block -- look for the same topic in another collected set (another medium often has it), or add the SDK/DOC medium that does |
 | `no-header` | 4,552 | the page has no `Header` requirement -- same approach |
 | `no-library` | 17,718 | the page has no `Link Library`/`Library` requirement -- expected for compiler intrinsics and macros, worth collecting for functions |
 | `header-stated-none` | 159 | nothing: the page prints `Header: Not applicable` / `None` / `Developer Implemented`, so the documents have answered |

@@ -1545,6 +1545,71 @@ def constant_tables(fragment, raw_row=False):
     return out
 
 
+# The reference pages of the message surface print the DEFINITION as the
+# syntax block itself: ``#define WM_CREATE 0x0001`` (winmsg) or
+# ``#define EM_... (WM_USER + 255)``.  The page PRINTS the #define -- the
+# line is not derived; it is quoted.  The value is taken exactly as
+# printed (an expression stays an expression: values are never computed).
+# not line-anchored: a table cell can quote the definition inline
+# (``<code>#define TBSTYLE_EX_VERTICAL 0x00000004</code>`` in a note)
+DEFINE_LINE_RE = re.compile(
+    r"#\s*define\s+([A-Z][A-Z0-9_]{1,60})\s+(.+)")
+_ANY_TAG = re.compile(r"<[^>]+>")
+_VALUE_TOKEN = re.compile(
+    r"^(?:0x[0-9A-Fa-f]{1,16}[uUlL]{0,3}|-?\d+[uUlL]{0,3}"
+    r"|[A-Z][A-Z0-9_]{1,60}(?:\s*[+\-]\s*\d+)?"
+    r"|\([A-Z][A-Z0-9_]{1,60}(?:\s*[+\-]\s*\d+)?\))")
+
+
+_PRE_BLOCK = re.compile(r"(?is)<pre[^>]*>.*?</pre>")
+_FENCE_BLOCK = re.compile(r"(?ms)^```.*?^```")
+
+
+def define_line_constants(text, quote_stripped=False):
+    """``#define NAME value`` lines a page prints OUTSIDE code blocks ->
+    constant rows.
+
+    ``quote_stripped``: the row quote is the tag-free line -- the .html
+    reader's ground (check-cleanroom compares against
+    ``text_of(article_html())``).  The markdown reader quotes the raw
+    line (its page text is the raw markdown).
+
+    ``<pre>`` and fenced code are the syntax/example readers' ground
+    (syntax_constant_rows keeps the cleanroom example rule); this reader
+    covers the definitions a page prints inline -- a table note quoting
+    ``#define TBSTYLE_EX_VERTICAL 0x00000004`` for a style the header
+    does not define.  The trailing C comment is not part of the value;
+    the value is otherwise quoted as printed.  A line whose right side is
+    not a number, a printed expression or a single identifier (an alias
+    another page defines) is skipped -- prose macro bodies are not
+    constants."""
+    out = []
+    if not text:
+        return out
+    text = _PRE_BLOCK.sub(" ", text or "")
+    text = _FENCE_BLOCK.sub(" ", text)
+    for line in text.splitlines():
+        raw = line.strip()
+        clean = _ANY_TAG.sub(" ", line)
+        for match in DEFINE_LINE_RE.finditer(clean):
+            name, rest = match.group(1), match.group(2)
+            value = re.split(r"//|/\*", rest, 1)[0].strip()
+            value = re.sub(r"\s+", " ", value).strip()
+            token = _VALUE_TOKEN.match(value)
+            if token is None:
+                continue
+            out.append({
+                "name": name,
+                "value": token.group(0).strip(),
+                "decimal": None,
+                "table": "printed #define",
+                "origin": "define",
+                "row": (clean.strip()[:240] if quote_stripped
+                        else raw[:240])
+            })
+    return out
+
+
 # A page also prints a constant as one cell, ``NAME = 0x0001`` or
 # ``NAME (0x0001)``, instead of a name column and a value column.  The cell
 # has to be that and nothing else: a sentence that mentions a number is not
@@ -3020,6 +3085,20 @@ def markdown(text):
         role = "example" if implementation else (
             "syntax" if re.search(r"(?im)^##\s+-?syntax\s*$", before)
             else "example")
+        # A block that is only #define definition lines is the declaration
+        # of those macros (the message reference prints ``#define WM_CREATE
+        # 0x0001`` with no Syntax heading at all), unless the page put it
+        # under an Example heading -- same rule as the HTML reader.
+        if role == "example" and _is_macro_block(body) and not implementation:
+            title = ""
+            for line in before.splitlines()[::-1]:
+                m = re.match(r"(?im)^#{1,6}\s+(.+?)\s*$", line)
+                if m:
+                    title = m.group(1).strip().lower()
+                    break
+            if title not in _EXAMPLE_SECTION and \
+                    not title.startswith("example"):
+                role = "syntax"
         decls.append({"text": body, "markup": f"fence:{language or 'text'}",
                       "spacing": _spacing(body), "role": role,
                       "calling_convention": _calling_convention(body),

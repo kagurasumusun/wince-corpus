@@ -126,6 +126,42 @@ class ContentColumnTests(unittest.TestCase):
         self.assertEqual(out.get("MSG_E_BADCHARDATA"), "0xC00CE508L")
 
 
+class PrintedDefineTests(unittest.TestCase):
+    def test_message_define_block_is_syntax(self):
+        """The message reference prints the definition as the page's
+        block: ``#define WM_CREATE 0x0001`` with no Syntax heading.  A
+        block that is only #define lines is a declaration (macro block),
+        not sample code -- and the value is quoted as printed."""
+        text = page_parse.decode(_load("corpus/win32/common/wm-create.md"))
+        _fields, _reqs, decls, _sf = page_parse.markdown(text)
+        rows = page_parse.syntax_constant_rows(decls)
+        out = {r["name"]: r.get("value") for r in rows}
+        self.assertEqual(out.get("WM_CREATE"), "0x0001")
+
+    def test_example_stays_example(self):
+        """Sample code never yields constants (the cleanroom rule)."""
+        text = ("## Example\n\n"
+                "```C++\n"
+                "#define cEvents 3\n"
+                "int main() { return cEvents; }\n"
+                "```\n")
+        _fields, _reqs, decls, _sf = page_parse.markdown(text)
+        for d in decls:
+            self.assertEqual(d["role"], "example")
+        self.assertEqual(page_parse.syntax_constant_rows(decls), [])
+
+    def test_inline_define_in_table_note(self):
+        """A table note quoting ``#define TBSTYLE_EX_VERTICAL
+        0x00000004`` for a style the header does not define prints the
+        definition; the reader takes it outside code blocks only."""
+        text = page_parse.decode(_load(
+            "corpus/win32/common/toolbar-extended-styles.md"))
+        rows = page_parse.define_line_constants(text)
+        out = {r["name"]: r.get("value") for r in rows}
+        self.assertEqual(out.get("TBSTYLE_EX_VERTICAL"), "0x00000004")
+        self.assertEqual(out.get("TBSTYLE_EX_MULTICOLUMN"), "0x00000002")
+
+
 class NameListTests(unittest.TestCase):
     def test_button_styles_names(self):
         text = page_parse.decode(_load("corpus/win32/common/"

@@ -326,7 +326,8 @@ def parse_page(job):
         # quoted by the *syntax* blocks, and ``NAME (0x...)`` in prose.
         fact["constants"] = page_parse.syntax_constant_rows(decls) + \
             page_parse.prose_constants_text(text) + \
-            page_parse.constant_tables_text(text)
+            page_parse.constant_tables_text(text) + \
+            page_parse.define_line_constants(text)
         fact["constraints"] = [dict(note, kind="abi-note")
                                for note in page_parse.abi_notes(text)]
         # sdk-api documents every member of a structure under -struct-fields,
@@ -453,6 +454,8 @@ def parse_page(job):
     # per row, value left absent -- never merged, never invented.
     fact["constant_names"] = page_parse.constant_name_rows(fragment)
     fact["constants"] += page_parse.syntax_constant_rows(fact["declarations"])
+    fact["constants"] += page_parse.define_line_constants(fragment,
+                                                        quote_stripped=True)
     # The one page family that prints export ordinals: ``Export | Ordinal``
     # for the floating point C run-time library.  A `.def` needs exactly
     # this (`name @ordinal`), and it exists nowhere else in the corpus, so
