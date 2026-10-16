@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 1 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 3 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _GETDEVICEUNIQUEID_
 #define _GETDEVICEUNIQUEID_
@@ -15,9 +15,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
-
-/* GetDeviceUniqueID  [function; ce-only; CE 6.0..699; coredll.lib] */
+/* GetDeviceUniqueID  [function; ce-only; unified-kb; unified-kb] */
 HRESULT GetDeviceUniqueID(
  LPBYTE pbApplicationData,
  DWORD cbApplictionData,
@@ -25,6 +23,5 @@ HRESULT GetDeviceUniqueID(
  LPBYTE pbDeviceIDOutput,
  DWORD* pcbDeviceIDOutput
 );
-#endif /* _WIN32_WCE */
 
 #endif /* _GETDEVICEUNIQUEID_ */
