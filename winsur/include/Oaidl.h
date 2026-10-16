@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 61 constants, 29 declarations, 19 outlines, 0 base types, 0 extra macros, 99 extra decls
+ * 61 constants, 29 declarations, 19 outlines, 0 base types, 0 extra macros, 100 extra decls
  */
 #ifndef _OAIDL_
 #define _OAIDL_
@@ -319,6 +319,9 @@ typedef struct tagCLIPDATA { // cbSize is the size of the buffer pointed to // b
 
 /* CY  [extra struct] */
 typedef struct tagCY { unsigned long Lo; long Hi; } CY;
+
+/* DECIMAL  [extra struct] */
+typedef struct tagDEC { USHORT wReserved; BYTE scale; BYTE sign; ULONG Hi32; ULONGLONG Lo64; } DECIMAL;
 
 /* tagIDLDESC  [extra struct] */
 typedef struct tagIDLDESC { ULONG dwReserved; USHORT wIDLFlags; };

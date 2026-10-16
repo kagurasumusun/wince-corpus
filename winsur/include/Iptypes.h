@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 25 constants, 9 declarations, 6 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 25 constants, 14 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _IPTYPES_
 #define _IPTYPES_
@@ -42,20 +42,6 @@
 #define MAX_SCOPE_ID_LEN 256
 #define MIXED_NODETYPE 4
 #define PEER_TO_PEER_NODETYPE 2
-
-/* ==================================================================
- * macros -- the macro/#define blocks the pages print (verbatim)
- * ================================================================ */
-
-/* IP_ADAPTER_ADDRESSES  [struct; ce-only] */
-
-/* IP_ADAPTER_ANYCAST_ADDRESS  [struct; ce-only] */
-
-/* IP_ADAPTER_MULTICAST_ADDRESS  [struct; ce-only] */
-
-/* IP_ADAPTER_PREFIX  [struct; ce-only] */
-
-/* IP_ADAPTER_UNICAST_ADDRESS  [struct; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

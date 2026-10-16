@@ -194,5 +194,10 @@ void CoFreeUnusedLibrariesEx(
 
 /* function */
 HRESULT Flush( void );
+HRESULT LockRegion( ULARGE_INTEGER libOffset, ULARGE_INTEGER cb, DWORD dwLockType );
+HRESULT ReadAt( ULARGE_INTEGER ulOffset, void *pv, ULONG cb, ULONG *pcbRead );
+HRESULT SetSize( ULARGE_INTEGER cb );
+HRESULT UnlockRegion( ULARGE_INTEGER libOffset, ULARGE_INTEGER cb, DWORD dwLockType );
+HRESULT WriteAt( ULARGE_INTEGER ulOffset, void const *pv, ULONG cb, ULONG * pcbWritten );
 
 #endif /* _OBJBASE_ */

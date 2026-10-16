@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 566 constants, 318 declarations, 8 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 566 constants, 320 declarations, 8 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINBASE_
 #define _WINBASE_
@@ -695,6 +695,39 @@ typedef struct _CREATE_THREAD_DEBUG_INFO {
 } CREATE_THREAD_DEBUG_INFO;
 typedef CREATE_THREAD_DEBUG_INFO *PCREATE_THREAD_DEBUG_INFO, *LPCREATE_THREAD_DEBUG_INFO;
 
+/* DCB  [struct; ce-only; harvest-kb; harvest-kb] */
+typedef struct _DCB { 
+DWORD DCBlength; 
+DWORD BaudRate; 
+DWORD fBinary:1; 
+DWORD fParity:1; 
+DWORD fOutxCtsFlow:1; 
+DWORD fOutxDsrFlow:1; 
+DWORD fDtrControl:2; 
+DWORD fDsrSensitivity:1; 
+DWORD fTXContinueOnXoff:1; 
+DWORD fOutX: 1; 
+DWORD fInX: 1; 
+DWORD fErrorChar:1; 
+DWORD fNull:1; 
+DWORD fRtsControl:2; 
+DWORD fAbortOnError:1; 
+DWORD fDummy2:17; 
+WORD wReserved; 
+WORD XonLim; 
+WORD XoffLim; 
+BYTE ByteSize; 
+BYTE Parity; 
+BYTE StopBits; 
+char XonChar; 
+char XoffChar; 
+char ErrorChar; 
+char EofChar; 
+char EvtChar; 
+WORD wReserved1; 
+} DCB;
+typedef DCB *PDCB, *LPDCB;
+
 /* DeviceSearchType  [enum; ce-only] */
 typedef enum {
  DeviceSearchByLegacyName, 
@@ -807,6 +840,12 @@ typedef struct _SORTORDERSPEC {
  DWORD dwFlags;
 } SORTORDERSPEC;
 typedef SORTORDERSPEC *PSORTORDERSPEC, *LPSORTORDERSPEC;
+
+/* STORE_INFORMATION  [struct; ce-only; harvest-kb; harvest-kb] */
+typedef struct STORE_INFORMATION { 
+DWORD dwStoreSize; 
+DWORD dwFreeSize; 
+} STORE_INFORMATION, *LPSTORE_INFORMATION;
 
 /* SYSTEM_POWER_STATUS_EX2  [struct; ce-only] */
 typedef struct _SYSTEM_POWER_STATUS_EX2 {
@@ -944,37 +983,6 @@ typedef CEFILEINFO *PCEFILEINFO, *LPCEFILEINFO;
 /*   dwProviderSize */
 /*   wcProviderData */
 
-/* DCB  [struct; shared] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   DCBlength */
-/*   BaudRate */
-/*   fBinary */
-/*   fParity */
-/*   fOutxCtsFlow */
-/*   fOutxDsrFlow */
-/*   fDtrControl */
-/*   fDsrSensitivity */
-/*   fTXContinueOnXoff */
-/*   fOutX */
-/*   fInX */
-/*   fErrorChar */
-/*   fNull */
-/*   fRtsControl */
-/*   fAbortOnError */
-/*   fDummy2 */
-/*   wReserved */
-/*   XonLim */
-/*   XoffLim */
-/*   ByteSize */
-/*   Parity */
-/*   StopBits */
-/*   XonChar */
-/*   XoffChar */
-/*   ErrorChar */
-/*   EofChar */
-/*   EvtChar */
-/*   wReserved1 */
-
 /* SYSTEM_INFO  [struct; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   DUMMYUNIONNAME */
@@ -997,6 +1005,11 @@ typedef CEFILEINFO *PCEFILEINFO, *LPCEFILEINFO;
 /* CheckPassword  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, Fspass.lib, fspass.lib] */
 BOOL CheckPassword(
  LPWSTR lpszPassword 
+);
+
+/* GetStoreInformation  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
+BOOL GetStoreInformation( 
+ LPSTORE_INFORMATION lpsi 
 );
 
 /* GetTickCount  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, nk.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
@@ -1321,10 +1334,24 @@ BOOL GetCommProperties(
  LPCOMMPROP lpCommProp
 );
 
+/* GetCommState  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
+BOOL GetCommState(
+ HANDLE hFile,
+ LPDCB lpDCB
+);
+
 /* GetCommTimeouts  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
 BOOL GetCommTimeouts(
  HANDLE hFile,
  LPCOMMTIMEOUTS lpCommTimeouts
+);
+
+/* GetDiskFreeSpaceEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Fsmain.lib, fsmain.lib; A/W GetDiskFreeSpaceExA,GetDiskFreeSpaceExW (CE is W-side)] */
+BOOL GetDiskFreeSpaceEx( 
+ LPCWSTR lpDirectoryName, 
+ PULARGE_INTEGER lpFreeBytesAvailableToCaller, 
+ PULARGE_INTEGER lpTotalNumberOfBytes, 
+ PULARGE_INTEGER lpTotalNumberOfFreeBytes 
 );
 
 /* GetExitCodeProcess  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
@@ -1758,6 +1785,12 @@ BOOL SetCommBreak(
 BOOL SetCommMask(
  HANDLE hFile,
  DWORD dwEvtMask
+);
+
+/* SetCommState  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
+BOOL SetCommState(
+ HANDLE hFile,
+ LPDCB lpDCB
 );
 
 /* SetCommTimeouts  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */

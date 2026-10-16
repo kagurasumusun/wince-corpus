@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 18 constants, 36 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 18 constants, 39 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _PWINUSER_
 #define _PWINUSER_
@@ -116,18 +116,6 @@ typedef struct tagWAGI {
  BYTE bVerticalExtent;
 } WAGINFO
 
-/* GESTUREINFO  [struct; shared] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   cbSize */
-/*   dwFlags */
-/*   dwID */
-/*   hwndTarget */
-/*   ptsLocation */
-/*   dwInstanceID */
-/*   dwSequenceID */
-/*   ullArguments */
-/*   cbExtraArgs */
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
@@ -223,6 +211,20 @@ BOOL WINAPI TouchCalibrate(void);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
+
+/* DisableGestures  [function; ce-only; CE 6.0..699; TouchGesture.lib] */
+BOOL DisableGestures(
+ HWND hwnd,
+ ULONGLONG ullFlags,
+ UINT uScope
+);
+
+/* EnableGestures  [function; ce-only; CE 6.0..699; TouchGesture.lib] */
+BOOL EnableGestures(
+ HWND hwnd,
+ ULONGLONG ullFlags,
+ UINT uScope
+);
 
 /* GetAnimateMessageInfo  [function; ce-only; CE 6.0..699] */
 BOOL GetAnimateMessageInfo(

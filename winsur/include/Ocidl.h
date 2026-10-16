@@ -153,6 +153,7 @@ typedef enum tagREADYSTATE {
 /* function */
 HRESULT GetLicInfo( LICINFO *pLicInfo );
 HRESULT GetPages( CAUUID *pPages //Pointer to structure );
+HRESULT GetSizeMax( ULARGE_INTEGER *pcbSize );
 HRESULT GetViewStatus( DWORD* pdwStatus );
 HRESULT LockInPlaceActive( BOOL fLock);
 HRESULT OnControlInfoChanged(void);

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 26 declarations, 6 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 30 declarations, 2 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _CS_
 #define _CS_
@@ -15,17 +15,9 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-/* CSIDENTIFIER  [struct; ce-only] */
-
-/* CSPROPERTY  [struct; ce-only] */
-
 /* CSPROPERTY_BOUNDS_LONGLONG  [struct; ce-only] */
 
 /* CSPROPERTY_STEPPING_LONGLONG  [struct; ce-only] */
-
-/* CSSTREAM_HEADER  [struct; ce-only] */
-
-/* CSTIME  [struct; ce-only] */
 
 /* DEFINE_CSPROPERTY_ITEM  [macro; ce-only] */
 #define DEFINE_CSPROPERTY_ITEM(PropertyId, GetHandler,\
@@ -175,6 +167,25 @@ typedef enum {
  CSSTATE_PAUSE,
  CSSTATE_RUN
 } CSSTATE, *PCSSTATE;
+
+/* CSTIME  [struct; ce-only] */
+typedef struct {
+ LONGLONG Time;
+ ULONG Numerator;
+ ULONG Denominator;
+} CSTIME, *PCSTIME;
+
+/* CSSTREAM_HEADER  [struct; ce-only] */
+typedef struct {
+ ULONG Size;
+ ULONG TypeSpecificFlags;
+ CSTIME PresentationTime;
+ LONGLONG Duration;
+ ULONG FrameExtent;
+ ULONG DataUsed;
+ PVOID Data;
+ ULONG OptionsFlags;
+} CSSTREAM_HEADER, *PCSSTREAM_HEADER;
 
 /* PCSEVENT  [extra typedef] */
 typedef CSIDENTIFIER CSPROPERTY, *PCSPROPERTY, CSMETHOD, \ *PCSMETHOD, CSEVENT, *PCSEVENT;

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 53 extra decls
+ * 0 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 55 extra decls
  */
 #ifndef _SAPIDDK_
 #define _SAPIDDK_
@@ -100,6 +100,7 @@ HRESULT SetAttribs( const WCHAR* pszReqAttribs, const WCHAR* pszOptAttribs );
 HRESULT SetPropertyNum( SPPROPSRC eSrc, void* pvSrcObj, const WCHAR* pName, LONG lValue );
 HRESULT SetPropertyString( SPPROPSRC eSrc, void* pvSrcObj, const WCHAR* pName, const WCHAR* pValue );
 HRESULT StartThread( DWORD dwFlags, HWND* phwnd );
+HRESULT Synchronize( ULONGLONG ullStreamPos );
 HRESULT TerminateTask( DWORD dwTaskId, ULONG ulWaitPeriod );
 HRESULT TerminateTaskGroup( DWORD dwGroupId, ULONG ulWaitPeriod );
 HANDLE ThreadCompleteEvent(void);
@@ -107,6 +108,7 @@ HANDLE ThreadHandle(void);
 DWORD ThreadId(void);
 HRESULT UnloadProprietaryGrammar( void* pvEngineGrammar );
 HRESULT UnloadSLM( void* pvEngineGrammar );
+HRESULT UpdateRecoPos( ULONGLONG ullStreamPos );
 HWND WindowHandle(void);
 
 #endif /* _SAPIDDK_ */

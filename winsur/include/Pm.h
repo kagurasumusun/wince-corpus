@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 14 constants, 16 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 14 constants, 16 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _PM_
 #define _PM_
@@ -87,6 +87,9 @@ typedef struct _POWER_RELATIONSHIP {
  HANDLE hChild;
  LPCWSTR pwsChild;
 } POWER_RELATIONSHIP, *PPOWER_RELATIONSHIP;
+
+/* PBT_ADDR  [extra typedef] */
+typedef ULONGLONG bt_addr, *pbt_addr, BT_ADDR, *PBT_ADDR;
 
 /* ==================================================================
  * functions and callbacks

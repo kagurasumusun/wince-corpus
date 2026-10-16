@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 34 constants, 6 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 34 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _NUIOUSER_
 #define _NUIOUSER_
@@ -51,12 +51,6 @@
 #define NUIOO_RESET_IN_PROGRESS 0x00000100
 #define NUIOO_UNBIND_FLAGS 0x10000000
 #define NUIOO_UNBIND_RECEIVED 0x10000000
-
-/* ==================================================================
- * macros -- the macro/#define blocks the pages print (verbatim)
- * ================================================================ */
-
-/* NIC_STATISTICS  [struct; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

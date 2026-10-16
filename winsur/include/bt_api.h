@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 12 constants, 66 declarations, 1 outlines, 0 base types, 0 extra macros, 3 extra decls
+ * 12 constants, 67 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _BT_API_
 #define _BT_API_
@@ -29,12 +29,6 @@
 #define RFCOMM_PORT_FLAGS_ENCRYPT 0x00000008
 #define RFCOMM_PORT_FLAGS_KEEP_DCD 0x00000002
 #define RFCOMM_PORT_FLAGS_REMOTE_DCB 0x00000001
-
-/* ==================================================================
- * macros -- the macro/#define blocks the pages print (verbatim)
- * ================================================================ */
-
-/* IOCTL_BLUETOOTH_GET_PEER_DEVICE  [typedef; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

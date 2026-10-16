@@ -125,6 +125,12 @@ VOID HWSetBreak(
  PVOID pContext 
 );
 
+/* HWSetDCB  [function; ce-only; CE 2.11..2.12, 3.0..699] */
+BOOL HWSetDCB(
+ PVOID pContext,
+ LPDCB pDCB 
+);
+
 /* HWSetDTR  [function; ce-only; CE 2.11..2.12, 3.0..699] */
 VOID HWSetDTR(
  PVOID pContext 

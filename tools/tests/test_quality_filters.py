@@ -110,6 +110,12 @@ class GluedPrototypeTests(unittest.TestCase):
         self.assertFalse(q.is_glued_prototype(text))
         self.assertTrue(q.looks_like_c_declaration(text))
 
+    def test_ularge_integer_is_not_glued(self):
+        text = ("typedef struct ULARGE_INTEGER {\n"
+                " ULONGLONG QuadPart;\n} ULARGE_INTEGER;")
+        self.assertFalse(q.is_glued_prototype(text))
+        self.assertTrue(q.looks_like_c_declaration(text))
+
     def test_wsprintf_is_kept(self):
         text = "int wsprintf(LPTSTR lpOut, LPCTSTR lpFmt, ...);"
         self.assertTrue(q.looks_like_c_declaration(text))

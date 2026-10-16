@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 59 declarations, 12 outlines, 0 base types, 0 extra macros, 103 extra decls
+ * 0 constants, 68 declarations, 3 outlines, 0 base types, 0 extra macros, 112 extra decls
  */
 #ifndef _SAPI_
 #define _SAPI_
@@ -15,29 +15,11 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-/* SPAUDIOSTATUS  [struct; ce-only] */
-
-/* SPEVENT  [struct; ce-only] */
-
-/* SPEVENTSOURCEINFO  [struct; ce-only] */
-
-/* SPPARSEINFO  [struct; ce-only] */
-
-/* SPPHRASE  [struct; ce-only] */
-
 /* SPPHRASEALT  [struct; ce-only] */
 
 /* SPPHRASEALTREQUEST  [struct; ce-only] */
 
-/* SPRECOGNIZERSTATUS  [struct; ce-only] */
-
 /* SPRECORESULTINFO  [struct; ce-only] */
-
-/* SPRECORESULTTIMES  [struct; ce-only] */
-
-/* SPSERIALIZEDEVENT  [struct; ce-only] */
-
-/* SPSERIALIZEDEVENT64  [struct; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -68,6 +50,17 @@ typedef enum _SPAUDIOSTATE{
  SPAS_RUN
 } SPAUDIOSTATE;
 typedef SPAUDIOSTATE *PSPAUDIOSTATE, *LPSPAUDIOSTATE;
+
+/* SPAUDIOSTATUS  [struct; ce-only] */
+typedef [restricted] struct SPAUDIOSTATUS{
+ long cbFreeBuffSpace;
+ ULONG cbNonBlockingIO;
+ SPAUDIOSTATE State;
+ ULONGLONG CurSeekPos;
+ ULONGLONG CurDevicePos;
+ DWORD dwReserved1;
+ DWORD dwReserved2;
+} SPAUDIOSTATUS;
 
 /* SPBINARYGRAMMAR  [struct; ce-only] */
 typedef struct SPBINARYGRAMMAR{
@@ -134,6 +127,16 @@ typedef enum SPENDSRSTREAMFLAGS{
 } SPENDSRSTREAMFLAGS;
 typedef SPENDSRSTREAMFLAGS *PSPENDSRSTREAMFLAGS, *LPSPENDSRSTREAMFLAGS;
 
+/* SPEVENT  [struct; ce-only] */
+typedef [restricted] struct SPEVENT{
+ WORD eEventId;
+ WORD elParamType;
+ ULONG ulStreamNum;
+ ULONGLONG ullAudioStreamOffset;
+ WPARAM wParam;
+ LPARAM lParam;
+} SPEVENT;
+
 /* SPEVENTLPARAMTYPE  [enum; ce-only] */
 typedef enum SPEVENTLPARAMTYPE{
  SPET_LPARAM_IS_UNDEFINED = 0,
@@ -143,6 +146,14 @@ typedef enum SPEVENTLPARAMTYPE{
  SPET_LPARAM_IS_STRING
 } SPEVENTLPARAMTYPE;
 typedef SPEVENTLPARAMTYPE *PSPEVENTLPARAMTYPE, *LPSPEVENTLPARAMTYPE;
+
+/* SPEVENTSOURCEINFO  [struct; ce-only] */
+typedef struct SPEVENTSOURCEINFO{
+ ULONGLONG ullEventInterest;
+ ULONGLONG ullQueuedInterest;
+ ULONG ulCount;
+} SPEVENTSOURCEINFO;
+typedef SPEVENTSOURCEINFO *PSPEVENTSOURCEINFO, *LPSPEVENTSOURCEINFO;
 
 /* SPFILEMODE  [enum; ce-only] */
 typedef enum SPFILEMODE{
@@ -280,6 +291,15 @@ typedef enum SPRECOEVENTFLAGS{
  SPREF_Emulated = (1 << 1)
 } SPRECOECOEVENTFLAGS;
 
+/* SPRECORESULTTIMES  [struct; ce-only] */
+typedef struct SPRECORESULTTIMES{
+ FILETIME ftStreamTime;
+ ULONGLONG ullLength;
+ DWORD dwTickCount;
+ ULONGLONG ullStart;
+} SPRECORESULTTIMES;
+typedef SPRECORESULTTIMES *PSPRECORESULTTIMES, *LPSPRECORESULTTIMES;
+
 /* SPRECOSTATE  [enum; ce-only] */
 typedef enum SPRECOSTATE{
  SPRST_INACTIVE,
@@ -304,6 +324,26 @@ typedef enum SPRUNSTATE{
  SPRS_IS_SPEAKING = (1L << 1) 
 } SPRUNSTATE;
 typedef SPRUNSTATE *PSPRUNSTATE, *LPSPRUNSTATE;
+
+/* SPSERIALIZEDEVENT  [struct; ce-only] */
+typedef [restricted] struct SPSERIALIZEDEVENT{
+ WORD eEventId;
+ WORD elParamType;
+ ULONG ulStreamNum;
+ ULONGLONG ullAudioStreamOffset;
+ ULONG SerializedwParam;
+ LONG SerializedlParam;
+} SPSERIALIZEDEVENT;
+
+/* SPSERIALIZEDEVENT64  [struct; ce-only] */
+typedef [restricted] struct SPSERIALIZEDEVENT64{
+ WORD eEventId;
+ WORD elParamType;
+ ULONG ulStreamNum;
+ ULONGLONG ullAudioStreamOffset;
+ ULONGLONG SerializedwParam;
+ LONGLONG SerializedlParam;
+} SPSERIALIZEDEVENT64;
 
 /* SPSERIALIZEDPHRASE  [struct; ce-only] */
 typedef struct tagSPSERIALIZEDPHRASE{
@@ -564,6 +604,7 @@ HRESULT AddElements( ULONG cElements, const SPPHRASEELEMENT* pElement );
 HRESULT AddEvents( const SPEVENT* pEventArray, ULONG ulCount );
 HRESULT AddReplacements( ULONG cReplacements, const SPPHRASEREPLACEMENT* pReplacements );
 HRESULT AppendTranscript( const WCHAR* pszTranscript );
+HRESULT Bookmark( SPBOOKMARKOPTIONS Options, ULONGLONG ullStreamPosition, LPARAM lParamEvent );
 HRESULT DeleteKey( const WCHAR* pszSubKeyName );
 HRESULT DeleteValue( const WCHAR* pszValueName );
 HRESULT Discard( DWORD dwValueTypes );
@@ -577,9 +618,11 @@ HRESULT GetContextState( SPCONTEXTSTATE* peContextState );
 HRESULT GetDWORD( const WCHAR* pszKeyName, DWORD* pdwValue );
 HRESULT GetDefaultTokenId( const WCHAR** ppszCoMemTokenId );
 HRESULT GetDeviceId( UINT* puDeviceId );
+HRESULT GetEventInterest( ULONGLONG* pullEventInterest );
 HRESULT GetEvents( ULONG ulCount, SPEVENT* pEventArray, ULONG* pulFetched );
 HRESULT GetGeneration( DWORD* pdwGeneration );
 HRESULT GetGenerationChange( DWORD dwFlags, DWORD* pdwGeneration, SPWORDLIST* pWordList );
+HRESULT GetGrammarId( ULONGLONG* pullGrammarId );
 HRESULT GetGrammarState( SPGRAMMARSTATE* peGrammarState );
 HRESULT GetId( WCHAR** ppszCoMemCategoryId );
 HRESULT GetLineId( UINT* puLineId );
@@ -594,6 +637,7 @@ HRESULT GetStringValue( const WCHAR* pszValueName, WCHAR** ppszValue );
 HRESULT GetSyncSpeakTimeout( ULONG* pmsTimeout );
 HRESULT GetText( ULONG ulStart, ULONG ulCount, BOOL fUseTextReplacements, WCHAR** ppszCoMemText, BYTE* pbDisplayAttributes );
 HRESULT GetTranscript( WCHAR** ppszTranscript );
+HRESULT GetVoicePurgeEvent( ULONGLONG* pullEventInterest );
 HRESULT GetWords( DWORD dwFlags, DWORD* pdwGeneration, DWORD* pdwCookie, SPWORDLIST* pWordList );
 HRESULT InitFromPhrase( const SPPHRASE* pSrcPhrase );
 HRESULT InitFromSerializedPhrase( const SPSERIALIZEDPHRASE* pPhrase );
@@ -608,6 +652,8 @@ HRESULT LoadDictation( const WCHAR* pszTopicName, SPLOADOPTIONS Options );
 HRESULT MatchesAttributes( const WCHAR* pszAttributes, BOOL* pfMatches );
 HRESULT NotifyCallback( WPARAM wParam, LPARAM lParam );
 HRESULT ResetSeekPosition(void);
+HRESULT ScaleBaseToConvertedOffset( ULONGLONG ullOffsetBaseStream, ULONGLONG* pullOffsetConvertedStream );
+HRESULT ScaleConvertedToBaseOffset( ULONGLONG ullOffsetConvertedStream, ULONGLONG* pullOffsetBaseStream );
 HRESULT Serialize( SPSERIALIZEDRESULT** ppCoMemSerializedResult );
 HRESULT SetAdaptationData( const WCHAR* pAdaptationData, const ULONG cch );
 HRESULT SetAlertBoundary( SPEVENTENUM eBoundary );
@@ -620,6 +666,7 @@ HRESULT SetDeviceId( UINT uDeviceId );
 HRESULT SetDictationState( SPRULESTATE NewState );
 HRESULT SetGrammarState( SPGRAMMARSTATE eGrammarState );
 HRESULT SetId( const WCHAR* pszCategoryId, BOOL fCreateIfNotExist );
+HRESULT SetInterest( ULONGLONG ullEventInterest, ULONGLONG ullQueuedInterest );
 HRESULT SetKey( HKEY hkey, BOOL fReadOnly );
 HRESULT SetLineId( UINT uLineId );
 HRESULT SetMaxAlternates( ULONG cAlternates );
@@ -631,6 +678,7 @@ HRESULT SetRuleState( const WCHAR* pszName, void* pReserved, SPRULESTATE NewStat
 HRESULT SetStringValue( const WCHAR* pszValueName, const WCHAR* pszValue );
 HRESULT SetSyncSpeakTimeout( ULONG msTimeout );
 HRESULT SetTextSelection( const SPTEXTSELECTIONINFO* pInfo );
+HRESULT SetVoicePurgeEvent( ULONGLONG ullEventInterest );
 HRESULT SetWordSequenceData( const WCHAR* pText, ULONG cchText, const SPTEXTSELECTIONINFO* pInfo );
 HRESULT SpeakAudio( ULONG ulStartElement, ULONG cElements, DWORD dwFlags, ULONG* pulStreamNumber );
 HANDLE SpeakCompleteEvent(void);

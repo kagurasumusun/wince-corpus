@@ -44,6 +44,9 @@ int WINAPI WinMain(HINSTANCE h, HINSTANCE p, LPWSTR cmd, int show) {
     CreateDialogParam(NULL, NULL, NULL, NULL, 0);
     EnumWindows(NULL, 0);
     EnumFontFamilies(NULL, NULL, NULL, 0);
+    GetCommState(NULL, NULL);
+    GetStoreInformation(NULL);
+    GetDiskFreeSpaceEx(NULL, NULL, NULL, NULL);
     return 0;
 }
 '''

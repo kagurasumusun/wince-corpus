@@ -432,6 +432,10 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: INTEGER 誤 glue と DCB/ストア（第19弾）
+
+コピーはしない。`INT(?!ERFACE)` が `ULARGE_INTEGER` / `ULONGLONG` を glued と誤認し、CE 3.0 `ULARGE_INTEGER` PRE（`ULONGLONG QuadPart`）を落としていた。壊れた `typedef struct _DCB {-` が harvest 本文を塞いでいた。DCB / STORE_INFORMATION / GetCommState / GetStoreInformation / GetDiskFreeSpaceEx を載せる。harvest 54,962。NLS/fonts HTML と serial 頁を生で開いた。gcc でこれらが通る。
+
 ### 2026-10-16: LCID/PDWORD と列挙コールバック（第18弾）
 
 コピーはしない。windows-data-types.md（CC-BY-4.0）が印刷する `typedef DWORD LCID` / `DWORD *PDWORD` / `UINT *PUINT` / `int *LPINT` / `USHORT *PUSHORT`。CE 3.0/5.0 の EnumWindowsProc / EnumFontFamProc 頁から `WNDENUMPROC` / `FONTENUMPROC`。CE 5.0 core/wave/imm/registry HTML 400 頁を生で開いた。gcc で EnumWindows / EnumFontFamilies が通る。MMRESULT / HIMC / REGSAM の typedef 頁は無いので出さない。

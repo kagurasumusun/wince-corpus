@@ -5,23 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 23 declarations, 4 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 27 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _CSMEDIA_
 #define _CSMEDIA_
 
-
-/* ==================================================================
- * macros -- the macro/#define blocks the pages print (verbatim)
- * ================================================================ */
-
-/* CS_FRAME_INFO  [struct; ce-only] */
-
-/* CS_VIDEO_STREAM_CONFIG_CAPS  [struct; ce-only] */
-
-/* CSPROPERTY_DROPPEDFRAMES_CURRENT_S  [struct; ce-only] */
-
-/* CSPROPERTY_VIDEOCONTROL_ACTUAL_FRAME_RATE_S  [struct; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -53,6 +41,21 @@ typedef enum {
  CS_CompressionCaps_CanWindow = 0x10,
 } CS_CompressionCaps;
 typedef CS_CompressionCaps *PCS_CompressionCaps, *LPCS_CompressionCaps;
+
+/* CS_FRAME_INFO  [struct; ce-only] */
+typedef struct tagCS_FRAME_INFO {
+ ULONG ExtendedHeaderSize;
+ DWORD dwFrameFlags;
+ LONGLONG PictureNumber;
+ LONGLONG DropCount;
+ HANDLE hDirectDraw;
+ HANDLE hSurfaceHandle;
+ RECT DirectDrawRect;
+ DWORD Reserved1;
+ DWORD Reserved2;
+ DWORD Reserved3;
+ DWORD Reserved4;
+} CS_FRAME_INFO, *PCS_FRAME_INFO;
 
 /* CS_RGBQUAD  [struct; ce-only] */
 typedef struct tagCS_RGBQUAD {

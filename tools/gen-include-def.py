@@ -1528,7 +1528,7 @@ def overlay_unified_surface(by_header, printed_forms, by_module, all_entities):
         for info in infos:
             decl = info.get("declaration") or {}
             text = decl.get("text") if isinstance(decl, dict) else ""
-            if text and str(text).strip():
+            if text and str(text).strip() and not quality_filters.is_broken_c(text):
                 have.add(info["entity"]["name"])
     have_exp = set()
     for wl in by_module.values():
@@ -1927,6 +1927,9 @@ _OVERLAY_NAMED = {
     "AppendMenu", "CreateDialogParam",
     "EnumWindows", "EnumFontFamilies", "EnumFonts", "TEXTMETRIC",
     "WAVEFORMATEX",
+    "DCB", "GetCommState", "SetCommState",
+    "STORE_INFORMATION", "GetStoreInformation",
+    "ULARGE_INTEGER", "GetDiskFreeSpaceEx",
 }
 
 _OVERLAY_HEADERS = {
@@ -2092,6 +2095,9 @@ _CORE_TYPEDEFS = (
     ("WAVEFORMATEX",
      "typedef struct tWAVEFORMATEX WAVEFORMATEX, *PWAVEFORMATEX, "
      "*LPWAVEFORMATEX;"),
+    ("ULARGE_INTEGER",
+     "typedef struct ULARGE_INTEGER { ULONGLONG QuadPart; } "
+     "ULARGE_INTEGER, *PULARGE_INTEGER;"),
 )
 
 _WINDEF_NEED = (
@@ -2147,6 +2153,9 @@ _C_KNOWN_TYPES = {
     "TEXTMETRIC", "PTEXTMETRIC", "LPTEXTMETRIC",
     "ENUMLOGFONT", "PENUMLOGFONT", "LPENUMLOGFONT",
     "WAVEFORMATEX", "PWAVEFORMATEX", "LPWAVEFORMATEX",
+    "ULARGE_INTEGER", "PULARGE_INTEGER",
+    "DCB", "LPDCB", "PDCB",
+    "STORE_INFORMATION", "LPSTORE_INFORMATION",
 }
 
 

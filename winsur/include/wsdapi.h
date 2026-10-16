@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 8 constants, 19 declarations, 51 outlines, 0 base types, 0 extra macros, 61 extra decls
+ * 8 constants, 20 declarations, 50 outlines, 0 base types, 0 extra macros, 63 extra decls
  */
 #ifndef _WSDAPI_
 #define _WSDAPI_
@@ -42,6 +42,14 @@
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
+
+/* WSD_APP_SEQUENCE  [struct; shared; wsdapi.lib] */
+typedef struct _WSD_APP_SEQUENCE {
+ ULONGLONG InstanceId;
+ const WCHAR* SequenceId;
+ ULONGLONG MessageNumber;
+} WSD_APP_SEQUENCE;
+typedef WSD_APP_SEQUENCE *PWSD_APP_SEQUENCE, *LPWSD_APP_SEQUENCE;
 
 /* WSD_DATETIME  [struct; shared; wsdapi.lib] */
 typedef struct _WSD_DATETIME {
@@ -168,12 +176,6 @@ typedef WSD_SCOPES *PWSD_SCOPES, *LPWSD_SCOPES;
 /*   Status */
 /*   Reason */
 /*   Any */
-
-/* WSD_APP_SEQUENCE  [struct; shared; wsdapi.lib] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   InstanceId */
-/*   SequenceId */
-/*   MessageNumber */
 
 /* WSD_BYE  [struct; shared; wsdapi.lib] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
@@ -450,8 +452,10 @@ HRESULT GetFaultInfo( WSD_SOAP_FAULT** ppFault );
 HRESULT GetHostMetadata( WSD_HOST_METADATA** ppHostMetadata );
 HRESULT GetID( LPCWSTR* ppszId );
 HRESULT GetInboundHttpHeaders( LPCWSTR* ppszHeaders );
+HRESULT* GetInstanceId( ULONGLONG* pullInstanceId );
 HRESULT GetLocalTransportAddress( LPCWSTR* ppszLocalTransportAddress );
 HRESULT GetMetadata( WSD_METADATA_SECTION_LIST** MetadataOut );
+HRESULT GetMetadataVersion( ULONGLONG* pullMetadataVersion );
 HRESULT GetOutboundHttpHeaders( LPCWSTR* ppszHeaders );
 HRESULT GetPort( WORD* pwPort );
 HRESULT GetProbeResolveTag( LPCWSTR* ppszTag );

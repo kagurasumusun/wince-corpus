@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 27 constants, 31 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 27 constants, 32 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDNS_
 #define _WINDNS_
@@ -245,20 +245,5 @@ typedef struct _DNS_WIRE_RECORD {
 typedef struct {
  DWORD IP6Dword[4];
 } IP6_ADDRESS, *PIP6_ADDRESS;
-
-/* DNS_TSIG_DATA  [struct; shared; A/W DNS_TSIG_DATAA,DNS_TSIG_DATAW (CE is W-side)] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   pNameAlgorithm */
-/*   pAlgorithmPacket */
-/*   pSignature */
-/*   pOtherData */
-/*   i64CreateTime */
-/*   wFudgeTime */
-/*   wOriginalXid */
-/*   wError */
-/*   wSigLength */
-/*   wOtherLength */
-/*   cAlgNameLength */
-/*   bPacketPointers */
 
 #endif /* _WINDNS_ */

@@ -183,9 +183,9 @@ def is_keepable_unassigned_macro(name: str, value: str, definition: str) -> bool
 
 _GLUED = re.compile(
     r"\b(?:HANDLE|HMODULE|HINSTANCE|HWND|HDC|HMENU|HKEY|HBITMAP|HFONT|"
-    r"BOOL(?!EAN)|DWORD|UINT|ULONG|LONG|WORD|BYTE|LPVOID|LPCVOID|LPSTR|LPCSTR|"
+    r"BOOL(?!EAN)|DWORD|UINT|ULONG(?!LONG)|LONG(?!LONG)|WORD|BYTE|LPVOID|LPCVOID|LPSTR|LPCSTR|"
     r"LPWSTR|LPCWSTR|LPTSTR|LPCTSTR|HRESULT|LRESULT|NTSTATUS|"
-    r"VOID|INT(?!ERFACE)|SHORT|CHAR)[A-Za-z]|"
+    r"VOID|INT(?!ERFACE|EGER)|SHORT|CHAR(?!SET))[A-Za-z]|"
     r"\b(?:struct|enum|union)_[A-Z]"
 )
 

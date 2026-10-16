@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 25 constants, 45 declarations, 4 outlines, 0 base types, 0 extra macros, 66 extra decls
+ * 25 constants, 50 declarations, 2 outlines, 0 base types, 0 extra macros, 68 extra decls
  */
 #ifndef _DSHOW_
 #define _DSHOW_
@@ -186,6 +186,23 @@ typedef enum _FilterState {
 } FILTER_STATE;
 typedef FILTER_STATE *PFILTER_STATE, *LPFILTER_STATE;
 
+/* MPEG2Level  [enum, typedef; ce-only; heuristic-prefix] */
+enum MPEG2Level {
+ MPEG2Level_Low = 1,
+ MPEG2Level_Main,
+ MPEG2Level_High1440,
+ MPEG2Level_High
+};
+
+/* MPEG2Profile  [enum, typedef; ce-only; heuristic-prefix] */
+enum MPEG2Profile {
+ MPEG2Profile_Simple = 1,
+ MPEG2Profile_Main,
+ MPEG2Profile_SNRScalable,
+ MPEG2Profile_SpatiallyScalable,
+ MPEG2Profile_High
+};
+
 /* PIN_DIRECTION  [enum, typedef; shared; entity-headers] */
 typedef enum _PinDirection {
  PINDIR_INPUT,
@@ -204,6 +221,12 @@ typedef enum {
 } QualityMessageType;
 typedef QualityMessageType *PQualityMessageType, *LPQualityMessageType;
 
+/* StreamControlState  [enum, typedef; ce-only; heuristic-prefix] */
+enum StreamControlState {
+ STREAM_FLOWING,
+ STREAM_DISCARDING
+};
+
 /* TIMECODE  [struct, typedef; shared] */
 typedef struct tagTIMECODE {
  WORD wFrameRate;
@@ -211,6 +234,15 @@ typedef struct tagTIMECODE {
  WORD dwFrames;
 }TIMECODE;
 typedef TIMECODE *PTIMECODE, *LPTIMECODE;
+
+/* TIMECODE_SAMPLE  [struct, typedef; shared] */
+typedef struct tagTIMECODE_SAMPLE {
+ LONGLONG qwTick;
+ TIMECODE timecode;
+ DWORD dwUser;
+ DWORD dwFlags;
+} TIMECODE_SAMPLE;
+typedef TIMECODE_SAMPLE *PTIMECODE_SAMPLE, *LPTIMECODE_SAMPLE;
 
 /* VideoControlFlags  [enum; shared; entity-headers] */
 typedef enum tagVideoControlFlags {
@@ -261,37 +293,6 @@ typedef VideoProcAmpProperty *PVideoProcAmpProperty, *LPVideoProcAmpProperty;
 /*   dir */
 /*   achName */
 
-/* TIMECODE_SAMPLE  [struct, typedef; shared] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   qwTick */
-/*   timecode */
-/*   dwUser */
-/*   dwFlags */
-
-/* VIDEO_STREAM_CONFIG_CAPS  [struct, typedef; shared] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   guid */
-/*   VideoStandard */
-/*   InputSize */
-/*   MinCroppingSize */
-/*   MaxCroppingSize */
-/*   CropGranularityX */
-/*   CropGranularityY */
-/*   CropAlignX */
-/*   CropAlignY */
-/*   MinOutputSize */
-/*   MaxOutputSize */
-/*   OutputGranularityX */
-/*   OutputGranularityY */
-/*   StretchTapsX */
-/*   StretchTapsY */
-/*   ShrinkTapsX */
-/*   ShrinkTapsY */
-/*   MinFrameInterval */
-/*   MaxFrameInterval */
-/*   MinBitsPerSecond */
-/*   MaxBitsPerSecond */
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
@@ -326,6 +327,7 @@ HRESULT GetNumNotDropped( long* plNotDropped);
 HRESULT GetNumberOfCapabilities( int* piCount, int* piSize );
 HRESULT GetRange( long Property, long* pMin, long* pMax, long* pSteppingDelta, long* pDefault, long* pCapsFlags );
 HRESULT GetStreamCaps( int iIndex, AM_MEDIA_TYPE** pmt, BYTE* pSCC );
+HRESULT Length( LONGLONG* pTotal, LONGLONG* pAvailable );
 HRESULT Logout(void);
 HRESULT NotifyGraphChange( );
 HRESULT OnColorKeyChange( COLORKEY *pColorKey);
@@ -339,6 +341,7 @@ HRESULT SetLogFile( HANDLE hFile);
 HRESULT SignalPresent( long *plSignalStrength);
 HRESULT StoreAutoTune(void);
 HRESULT SuggestAllocatorProperties( const ALLOCATOR_PROPERTIES* pprop );
+HRESULT SyncRead( LONGLONG llPosition, LONG lLength, BYTE* pBuffer);
 HRESULT WriteSync( );
 HRESULT get_AudioFrequency( long *lFreq);
 HRESULT get_AvailableTVFormats( long *lAnalogVideoStandard);

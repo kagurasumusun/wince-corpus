@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 30 constants, 67 declarations, 9 outlines, 117 base types, 0 extra macros, 0 extra decls
+ * 30 constants, 67 declarations, 9 outlines, 118 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDEF_
 #define _WINDEF_
@@ -537,6 +537,11 @@ typedef struct tagENUMLOGFONT ENUMLOGFONT, *PENUMLOGFONT, *LPENUMLOGFONT;
  * CE Unicode / 32-bit data-types row
  * source: win32/common/windows-data-types.md */
 typedef struct tWAVEFORMATEX WAVEFORMATEX, *PWAVEFORMATEX, *LPWAVEFORMATEX;
+
+/* ULARGE_INTEGER [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef struct ULARGE_INTEGER { ULONGLONG QuadPart; } ULARGE_INTEGER, *PULARGE_INTEGER;
 
 /* ATOM
  * source: win32/common/windows-data-types.md */

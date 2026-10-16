@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 19 constants, 115 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 19 constants, 118 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _PKFUNCS_
 #define _PKFUNCS_
@@ -714,6 +714,16 @@ HRESULT CeFreeDuplicateBuffer(
  PVOID pSrcMarshalled,
  DWORD cbSrc,
  DWORD ArgumentDescriptor
+);
+
+/* CeGetRawTime  [function; ce-only; CE 6.0..699; coredll.lib] */
+BOOL CeGetRawTime(
+ ULONGLONG * pui64Millsec
+);
+
+/* CeGetRawTimeOffset  [function; ce-only; CE 6.0..699; coredll.lib] */
+BOOL CeGetRawTimeOffset(
+ LONGLONG * pi64Offset
 );
 
 /* CeImpersonateCurrentProcess  [function; ce-only; CE 6.0..699; coredll.dll] */

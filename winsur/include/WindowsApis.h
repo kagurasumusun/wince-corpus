@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 105 constants, 42 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 105 constants, 42 declarations, 17 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDOWSAPIS_
 #define _WINDOWSAPIS_
@@ -127,16 +127,50 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
+/* definition  [typedef; ce-only; heuristic-prefix] */
+
+/* firstChild  [typedef; ce-only; heuristic-prefix] */
+
+/* lastChild  [typedef; ce-only; heuristic-prefix] */
+
 /* MAKEINTATOM  [macro, function; shared] */
 LPTSTR MAKEINTATOM(
  WORD wInteger
 );
+
+/* namespaceURI  [typedef; ce-only; heuristic-prefix] */
+
+/* nextSibling  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeName  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeType  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeTypedValue  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeTypeString  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeValue  [typedef; ce-only; heuristic-prefix] */
+
+/* ownerDocument  [typedef; ce-only; heuristic-prefix] */
 
 /* PALETTEINDEX2BPP  [macro; ce-only] */
 #define PALETTEINDEX2BPP (i) \
  (((i)==0)?0x00000000: \
  (((i)==1)?0x00808080: \
  (((i)==2)?0x00C0C0C0:0x00FFFFFF)));
+
+/* parentNode  [typedef; ce-only; heuristic-prefix] */
+
+/* parsed  [typedef; ce-only; heuristic-prefix] */
+
+/* prefix  [typedef; ce-only; heuristic-prefix] */
+
+/* previousSibling  [typedef; ce-only; heuristic-prefix] */
+
+/* specified  [typedef; ce-only; heuristic-prefix] */
+
+/* xml  [typedef; ce-only; heuristic-prefix] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

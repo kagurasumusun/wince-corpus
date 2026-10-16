@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 9 constants, 340 declarations, 3 outlines, 0 base types, 2 extra macros, 18 extra decls
+ * 9 constants, 342 declarations, 2 outlines, 0 base types, 2 extra macros, 17 extra decls
  */
 #ifndef _NDIS_
 #define _NDIS_
@@ -93,6 +93,11 @@ PVOID NDIS_GET_PACKET_CANCEL_ID(
  ((PNDIS_PACKET_OOB_DATA)((PUCHAR)(_Packet) + \
  (_Packet)->Private.NdisPacketOobOffset))->TimeReceived
 
+/* NDIS_GET_PACKET_TIME_SENT  [macro, function; ce-only] */
+ULONGLONG NDIS_GET_PACKET_TIME_SENT(
+ PNDIS_PACKET _Packet
+);
+
 /* NDIS_GET_PACKET_TIME_TO_SEND  [function, macro; ce-only] */
 #define NDIS_GET_PACKET_TIME_SENT(_Packet) \
  ((PNDIS_PACKET_OOB_DATA)((PUCHAR)(_Packet) + \
@@ -107,8 +112,6 @@ PNDIS_PACKET_OOB_DATA NDIS_OOB_DATA_FROM_PACKET(
 PNDIS_PACKET_EXTENSION NDIS_PACKET_EXTENSION_FROM_PACKET(
  PNDIS_PACKET _P
 );
-
-/* NDIS_PACKET_OOB_DATA  [struct; ce-only] */
 
 /* NDIS_PHYSICAL_ADDRESS_CONST  [function, macro; ce-only] */
 VOID NDIS_PHYSICAL_ADDRESS_CONST( 
@@ -459,6 +462,19 @@ typedef struct _TRANSPORT_HEADER_OFFSET {
  USHORT ProtocolType; 
  USHORT HeaderOffset; 
 } TRANSPORT_HEADER_OFFSET, *PTRANSPORT_HEADER_OFFSET;
+
+/* NDIS_PACKET_OOB_DATA  [struct; ce-only] */
+typedef struct _NDIS_PACKET_OOB_DATA {
+ union {
+ ULONGLONG TimeToSend;
+ ULONGLONG TimeSent;
+ };
+ ULONGLONG TimeReceived;
+ UINT HeaderSize;
+ UINT SizeMediaSpecificInfo;
+ PVOID MediaSpecificInformation;
+ NDIS_STATUS Status;
+} NDIS_PACKET_OOB_DATA, *PNDIS_PACKET_OOB_DATA;
 
 /* MEDIA_SPECIFIC_INFORMATION  [extra struct] */
 typedef struct MediaSpecificInformation { UINT NextEntryOffset; NDIS_CLASS_ID ClassId; UINT Size; UCHAR ClassInformation[1]; } MEDIA_SPECIFIC_INFORMATION;
@@ -1363,8 +1379,10 @@ UINT NdisPacketPoolUsage(
 /* function */
 PVOID NDIS_BUFFER_LINKAGE(  IN PNDIS_BUFFER Buffer );
 UINT NDIS_GET_PACKET_PROTOCOL_TYPE(PNDIS_PACKET_Packet_,);
-LONG NDIS_GET_PACKET_TIME_SENT(PNDIS_PACKET_Packet);
 UINT NDIS_SET_PACKET_HEADER_SIZE(PNDIS_PACKET _Packet,UINT _HdrSize);
+LONG NDIS_SET_PACKET_TIME_RECEIVED( PNDIS_PACKET _Packet, ULONGLONG _TimeReceived );
+LONG NDIS_SET_PACKET_TIME_SENT(PNDIS_PACKET _Packet,ULONGLONG _TimeSent);
+LONG NDIS_SET_PACKET_TIME_TO_SEND(PNDIS_PACKET _Packet,ULONGLONG _TimeToSend);
 LONG NdisMReadDmaCounter (IN NDIS_HANDLE MiniportDmaHandle);
 
 #endif /* _NDIS_ */

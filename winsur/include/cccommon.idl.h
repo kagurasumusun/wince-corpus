@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 4 declarations, 3 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 5 declarations, 2 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _CCCOMMON_IDL_
 #define _CCCOMMON_IDL_
@@ -14,8 +14,6 @@
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
-
-/* FileInfo  [struct; ce-only; coredll.lib] */
 
 /* FileVerifyInfo  [struct; ce-only] */
 
@@ -32,6 +30,16 @@ typedef enum tagFileCustomAction{
  FileCustomAction_None = 0x0000,
  FileCustomAction_COM = 0x0001,
 } FileAction;
+
+/* FileInfo  [struct; ce-only; coredll.lib] */
+typedef struct tagFileInfo{
+ LONG m_FileAttribues;
+ LONGLONG m_FileSize;
+ FILETIME m_CreationTime;
+ FILETIME m_LastAccessTime;
+ FILETIME m_LastWriteTime;
+} FileInfo;
+typedef FileInfo *PFileInfo, *LPFileInfo;
 
 /* FileVerifyResult  [struct; ce-only] */
 typedef struct tagFileVerifyResult{

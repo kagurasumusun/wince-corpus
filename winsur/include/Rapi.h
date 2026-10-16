@@ -142,6 +142,11 @@ DWORD CeGetSpecialFolderPath(
  LPWSTR lpBuffer 
 );
 
+/* CeGetStoreInformation  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
+BOOL CeGetStoreInformation( 
+ LPSTORE_INFORMATION lpsi 
+);
+
 /* CeGetTempPath  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
 DWORD CeGetTempPath(
  DWORD nBufferLength,
@@ -351,6 +356,14 @@ BOOL CeQueryInstructionSet(
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
+
+/* CeGetDiskFreeSpaceEx  [function; ce-only; CE 6.0..699; rapi.lib] */
+int CeGetDiskFreeSpaceEx( 
+ LPCTSTR _lpDirectoryName, 
+ PULARGE_INTEGER lpFreeBytesAvailable, 
+ PULARGE_INTEGER lpTotalNumberOfBytes, 
+ PULARGE_INTEGER lpTotalNumberOfFreeBytes
+);
 
 /* CeSyncStart  [function; ce-only; CE 6.0..699; rapi.lib] */
 HRESULT CeSyncStart(

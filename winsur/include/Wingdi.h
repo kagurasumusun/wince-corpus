@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1265 constants, 142 declarations, 5 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 1265 constants, 143 declarations, 4 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINGDI_
 #define _WINGDI_
@@ -1526,12 +1526,6 @@ typedef struct _RGNDATA {
  char Buffer[1]; 
 } RGNDATA;
 typedef RGNDATA *PRGNDATA, *LPRGNDATA;
-
-/* CHARSETINFO  [struct; shared] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   ciCharset */
-/*   ciACP */
-/*   fs */
 
 /* ==================================================================
  * functions and callbacks
