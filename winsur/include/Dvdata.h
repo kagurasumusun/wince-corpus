@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define DVD_CELL_CMD 2
 #define DVD_MENU_ANGLE 4
 #define DVD_MENU_AUDIO 3
@@ -66,7 +65,6 @@
 #define SPRM_TT_PGCN 6
 #define SPRM_TTN 4
 #define SPRM_VTS_TTN 5
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

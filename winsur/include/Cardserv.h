@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define CE_BATTERY_DEAD 0x01
 #define CE_BATTERY_LOW 0x02
 #define CE_CARD_INSERTION 0x40
@@ -45,7 +44,6 @@
 #define CE_STATUS_CHANGE_INTERRUPT 0xFE
 #define CE_TIMER_EXPIRED 0x15
 #define CE_WRITE_PROTECT 0x17
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

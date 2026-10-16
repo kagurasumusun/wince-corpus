@@ -179,9 +179,6 @@ typedef HANDLE HRSRC;
  * declaration body no page prints
  * ================================================================ */
 
-/* HCONV  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HCONV;
-
 /* HCONVLIST  [typedef; shared; entity-headers; win32-reference] */
 typedef HANDLE HCONVLIST;
 

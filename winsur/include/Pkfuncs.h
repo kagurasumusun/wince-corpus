@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 19 constants, 115 declarations, 1 outlines, 0 base types, 0 extra macros, 9 extra decls
+ * 19 constants, 116 declarations, 1 outlines, 0 base types, 0 extra macros, 9 extra decls
  */
 #ifndef _PKFUNCS_
 #define _PKFUNCS_
@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define INTA 1
 #define INTB 2
 #define INTC 3
@@ -37,7 +36,6 @@
 #define KD_IOCTL_RESET 0x00000030
 #define KD_IOCTL_SET_CBP 0x00000001
 #define KD_IOCTL_SET_DBP 0x00000010
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
@@ -274,6 +272,12 @@ DWORD pfnHandler(DWORD iMethod);
 /* CacheSync  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
 VOID CacheSync(
  int flags
+);
+
+/* CeChangeDatabaseLCID  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
+VOID CeChangeDatabaseLCID( 
+ PCEGUID pceguid, 
+ DWORD LCID 
 );
 
 /* CeGetRandomSeed  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib] */

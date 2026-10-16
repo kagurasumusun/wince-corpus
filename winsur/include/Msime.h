@@ -308,21 +308,10 @@ typedef struct tagIPCANDIDATE {DWORD dwSize;DWORD dwFlags;INT iSelIndex;INT nCan
 typedef struct _IMEWRD {WCHAR* pwchReading;WCHAR* pwchDisplay;Union{ULONGulPos;Struct{ WORDnPos1; WORDnPos2;};
 
 /* function */
-STDMETHOD ControlIME( DWORD dwIMEFuncID, LPARAM lparam );
-STDMETHOD DeleteCompString(INTiPos,INTcchSzDel);
-HRESULT::ExistWord(IMEWRD* pWrd);
 HRESULT GenerateMessage(void);
-STDMETHOD GetAllCompositionInfo( WCHAR** ppwSzCompStr, DWORD** ppdwCharID, INT* pcchCompStr, INT* piIPPos, INT* piStartUndetStrPos, INT* pcchUndetStr, INT* piEditStart, INT* piEditLen );
-HRESULT IFEDictionary::GetPosTable(POSTBL** prgPosTbl,int* pcPosTbl);
-STDMETHOD InsertImeItem(IPCANDIDATE* pImeItem,INTiPos,DWORD*lpdwCharId);
-STDMETHOD InsertStringEx(WCHAR*pwSzInsert,INTcchSzInsert,DWORD*lpdwCharId);
 HRESULT IsReadingHalfKana(void);
-HRESULT IFEDictionary::NextWords(UCHAR* pchBuffer,ULONG cbBuffer,ULONG* pcWrd);
-HRESULT::RegisterWord(IMEREG reg,IMEWRD* pWrd);
-STDMETHOD ReplaceCompString(INTiPos,INTiTargetLen,WCHAR*pwSzInsert,INTcchSzInsert,DWORD*lpdwCharId);
 STDMETHODGetAllCompositionInfo(WCHAR** ppwSzCompStr,DWORD** ppdwCharID,INT*pcchCompStr,INT*piIPPos,INT*piStartUndetStrPos,INT* pcchUndetStr,INT* piEditStart,INT*piEditLen);
 STDMETHODSelectIpCandidate(DWORD dwCharId,INT iselno);
-STDMETHOD SelectIpCandidate( DWORD dwCharId, INT iselno );
 HRESULT SetCandidateSelection(UINT iciCandidate);
 HRESULT SetCandidateStr(UINTciCandidate,WCHAR* pwsz,UINT cbData);
 HRESULT SetCompositionAttr(UINT ciAtr,BYTE* pb);
@@ -336,6 +325,5 @@ HRESULT SetResultClause(UINT ciCls,DWORD* pdw);
 HRESULT SetResultReadClause(UINT ciCls,DWORD* pdw);
 HRESULT SetResultReadStr(UINT cwch,WCHAR* pwsz);
 HRESULT SetResultStr(UINT cwch,WCHAR* pwsz);
-STDMETHOD UpdateContext(VOID* pCallBack);
 
 #endif /* _MSIME_ */

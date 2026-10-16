@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2433 constants, 308 declarations, 4 outlines, 1 base types, 0 extra macros, 92 extra decls
+ * 2457 constants, 401 declarations, 4 outlines, 1 base types, 0 extra macros, 92 extra decls
  */
 #ifndef _WINUSER_
 #define _WINUSER_
@@ -17,6 +17,7 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
+#define ADD 78
 #define ARW_BOTTOMLEFT 0
 #define ARW_BOTTOMRIGHT 1
 #define ARW_DOWN 4
@@ -106,6 +107,8 @@
 #define BS_MULTILINE 0x2000
 #define BS_NOTIFY 0x4000
 #define BS_OWNERDRAW 0xb
+/* NOT SUPPORTED per mvb/windows-ce-1.0/PEGSDK: Windows CE Notes The following button styles are not supported: [corpus/mvb/windows-ce-1.0/PEGSDK/AD20A.html] */
+#define BS_PUSHBOX 0x0000000A
 #define BS_PUSHBUTTON 0
 #define BS_PUSHLIKE 4096
 #define BS_RADIOBUTTON 4
@@ -221,18 +224,49 @@
 #define CF_TIFF 6
 #define CF_UNICODETEXT 13
 #define CF_WAVE 12
+#define CLEAR 76
+#define COLOR_3DDKSHADOW 21
 #define COLOR_3DFACE 15
 #define COLOR_3DHIGHLIGHT 20
 #define COLOR_3DHILIGHT 20
+#define COLOR_3DLIGHT 22
 #define COLOR_3DSHADOW 16
+#define COLOR_ACTIVEBORDER 10
+#define COLOR_ACTIVECAPTION 2
+#define COLOR_APPWORKSPACE 12
+#define COLOR_BACKGROUND 1
+#define COLOR_BTNFACE 15
+#define COLOR_BTNHIGHLIGHT 20
 #define COLOR_BTNHILIGHT 20
+#define COLOR_BTNSHADOW 16
+#define COLOR_BTNTEXT 18
+#define COLOR_CAPTIONTEXT 9
 #define COLOR_DESKTOP 1
+#define COLOR_GRADIENTACTIVECAPTION 27
+#define COLOR_GRADIENTINACTIVECAPTION 28
+#define COLOR_GRAYTEXT 17
+#define COLOR_HIGHLIGHT 13
+#define COLOR_HIGHLIGHTTEXT 14
 #define COLOR_HOTLIGHT 26
+#define COLOR_INACTIVEBORDER 11
+#define COLOR_INACTIVECAPTION 3
+#define COLOR_INACTIVECAPTIONTEXT 19
+#define COLOR_INFOBK 24
+#define COLOR_INFOTEXT 23
+#define COLOR_MENU 4
 #define COLOR_MENUBAR 30
 #define COLOR_MENUHILIGHT 29
+#define COLOR_MENUTEXT 7
+#define COLOR_SCROLLBAR 0
+#define COLOR_STATIC 25
+#define COLOR_STATICTEXT 26
+#define COLOR_WINDOW 5
+#define COLOR_WINDOWFRAME 6
+#define COLOR_WINDOWTEXT 8
 #define CONSOLE_APPLICATION_16BIT 0x00000001
 #define CONSOLE_CARET_SELECTION 0x00000001
 #define CONSOLE_CARET_VISIBLE 0x00000002
+#define CONTROL 29
 #define CREATEPROCESS_MANIFEST_RESOURCE_ID MAKEINTRESOURCE(1)
 #define CS_BYTEALIGNCLIENT 0x1000
 #define CS_BYTEALIGNWINDOW 0x2000
@@ -278,6 +312,7 @@
 #define DCX_CLIPCHILDREN 8
 #define DCX_CLIPSIBLINGS 16
 #define DCX_EXCLUDERGN 64
+#define DCX_EXCLUDEUPDATE 0x00000100
 #define DCX_INTERSECTRGN 128
 #define DCX_INTERSECTUPDATE 0x200
 #define DCX_LOCKWINDOWUPDATE 0x400
@@ -572,6 +607,16 @@
 #define EWX_POWEROFF 8
 #define EWX_REBOOT 2
 #define EWX_SHUTDOWN 1
+#define F1 59
+#define F10 68
+#define F11 87
+#define F12 88
+#define F2 60
+#define F3 61
+#define F4 62
+#define F5 63
+#define F8 66
+#define F9 67
 #define FALT 0x10
 #define FCONTROL 0x08
 #define FE_FONTSMOOTHINGCLEARTYPE 0x0002
@@ -675,6 +720,7 @@
 #define HCF_HOTKEYSOUND 0x00000010
 #define HCF_INDICATOR 0x00000020
 #define HCF_OPTION_NOTHEMECHANGE 0x00001000
+#define HELP 99
 #define HELP_COMMAND 0x102
 #define HELP_CONTENTS 3
 #define HELP_CONTEXT 1
@@ -700,6 +746,7 @@
 #define HIDE_WINDOW 0
 #define HKL_NEXT 1
 #define HKL_PREV 0
+#define HOME 71
 #define HOVER_DEFAULT 0xFFFFFFFF
 #define HSHELL_ACCESSIBILITYSTATE 11
 #define HSHELL_ACTIVATESHELLWINDOW 3
@@ -764,6 +811,11 @@
 #define IDC_BTNFINDNEXT 1010
 #define IDC_BTNREPLACE 1008
 #define IDC_BTNREPLACEALL 1009
+#define IDC_BUTTON1 100
+#define IDC_BUTTON2 101
+#define IDC_BUTTON3 102
+#define IDC_BUTTON4 103
+#define IDC_BUTTON5 104
 #define IDC_CROSS MAKEINTRESOURCE(32515)
 #define IDC_CURSOR 102
 #define IDC_FINDWHAT 1000
@@ -771,6 +823,8 @@
 #define IDC_HELP MAKEINTRESOURCE(32651)
 #define IDC_IBEAM MAKEINTRESOURCE(32513)
 #define IDC_ICON MAKEINTRESOURCE(32641)
+#define IDC_LISTBOX 202
+#define IDC_MENUBAR 200
 #define IDC_NO MAKEINTRESOURCE(32648)
 #define IDC_REPLACE 1001
 #define IDC_SIZE MAKEINTRESOURCE(32640)
@@ -782,6 +836,7 @@
 #define IDC_STATIC -1
 #define IDC_STATIC1 1011
 #define IDC_STATIC2 1012
+#define IDC_STATUSREGION 201
 #define IDC_UPARROW MAKEINTRESOURCE(32516)
 #define IDC_WAIT MAKEINTRESOURCE(32514)
 #define IDCANCEL 2
@@ -830,6 +885,10 @@
 #define ISMEX_SEND 0x00000001
 #define ISOLATIONAWARE_MANIFEST_RESOURCE_ID MAKEINTRESOURCE(2)
 #define ISOLATIONAWARE_NOSTATICIMPORT_MANIFEST_RESOURCE_ID MAKEINTRESOURCE(3)
+#define KBDI_KEYBOARD_ALPHA_NUM 0x0008
+#define KBDI_KEYBOARD_ENABLED 0x0002
+#define KBDI_KEYBOARD_ENTER_ESC 0x0004
+#define KBDI_KEYBOARD_PRESENT 0x0001
 #define KEYBOARD_OVERRUN_MAKE_CODE 0x00ff
 #define KEYEVENTF_EXTENDEDKEY 0x0001
 #define KEYEVENTF_KEYUP 0x0002
@@ -971,6 +1030,7 @@
 #define MB_ICONQUESTION 0x00000020L
 #define MB_ICONSTOP 0x00000010L
 #define MB_ICONWARNING 0x00000030L
+#define MB_LEN_MAX 2
 #define MB_MISCMASK 0x0000C000
 #define MB_MODEMASK 0x00003000
 #define MB_NOFOCUS 0x00008000
@@ -1000,6 +1060,7 @@
 #define MDITILE_SKIPDISABLED 0x0002
 #define MDITILE_VERTICAL 0x0000
 #define MDITILE_ZORDER 0x0004
+#define MENU 56
 #define MENULOOP_POPUP 1
 #define MENULOOP_WINDOW 0
 #define MF_APPEND 256
@@ -1103,10 +1164,13 @@
 #define MWMO_ALERTABLE 0x0002
 #define MWMO_INPUTAVAILABLE 0x0004
 #define MWMO_WAITALL 0x0001
+#define NEXT 81
 #define NF_QUERY 3
 #define NF_REQUERY 4
 #define NFR_ANSI 1
 #define NFR_UNICODE 2
+#define NONAME 0
+#define NONE 0
 #define OBM_BTNCORNERS 32758
 #define OBM_BTSIZE 32761
 #define OBM_CHECK 32760
@@ -1361,10 +1425,12 @@
 #define SC_TASKLIST 0xF130
 #define SC_VSCROLL 0xF070
 #define SC_ZOOM 0xF030
+#define SCROLL 70
 #define SERKF_ACTIVE 8
 #define SERKF_AVAILABLE 2
 #define SERKF_INDICATOR 4
 #define SERKF_SERIALKEYSON 1
+#define SHIFT 42
 #define SHOW_FULLSCREEN 3
 #define SHOW_ICONWINDOW 2
 #define SHOW_OPENNOACTIVATE 4
@@ -2027,6 +2093,12 @@
 #define SPI_SETACTIVEWNDTRKTIMEOUT 0x2003
 #define SPI_SETACTIVEWNDTRKZORDER 0x100D
 #define SPI_SETANIMATION 0x0049
+#define SPI_SETAPCAUDIO 0x000100104
+#define SPI_SETAPCFEEDBACK 0x000100108
+#define SPI_SETAPCGLOBALGRAMMAR 0x00010010a
+#define SPI_SETAPCLOCALE 0x000100106
+#define SPI_SETAPCSCREENSAVER 0x000100102
+#define SPI_SETAPCSHELL 0x000100100
 #define SPI_SETAUDIODESCRIPTION 0x0075
 #define SPI_SETBEEP 0x0002
 #define SPI_SETBLOCKSENDINPUTRESETS 0x1027
@@ -2273,11 +2345,34 @@
 #define ULW_COLORKEY 0x01
 #define ULW_OPAQUE 0x04
 #define UNICODE_NOCHAR 0xffff
+#define Unknown -1
 #define UOI_FLAGS 1
 #define UOI_NAME 2
 #define UOI_TYPE 3
 #define UOI_USER_SID 4
+#define VK_0 30
+#define VK_1 31
+#define VK_2 32
+#define VK_3 33
+#define VK_4 34
+#define VK_5 35
+#define VK_6 36
+#define VK_7 37
+#define VK_8 38
+#define VK_9 39
+#define VK_A 41
 #define VK_ACCEPT 0x1E
+#define VK_ADD 0x6B
+#define VK_APP1 0xC1
+#define VK_APP2 0xC2
+#define VK_APP3 0xC3
+#define VK_APP4 0xC4
+#define VK_APP5 0xC5
+#define VK_APP6 0xC6
+#define VK_APPS 0x5D
+#define VK_ATTN 0xF6
+#define VK_B 42
+#define VK_BACK 08
 #define VK_BROWSER_BACK 0xA6
 #define VK_BROWSER_FAVORITES 0xAB
 #define VK_BROWSER_FORWARD 0xA7
@@ -2285,11 +2380,76 @@
 #define VK_BROWSER_REFRESH 0xA8
 #define VK_BROWSER_SEARCH 0xAA
 #define VK_BROWSER_STOP 0xA9
+#define VK_C 43
+#define VK_CANCEL 03
+#define VK_CAPITAL 14
+#define VK_CLEAR 0x0C
+#define VK_CONTROL 11
 #define VK_CONVERT 0x1C
+#define VK_CRSEL 0xF7
+#define VK_D 44
+#define VK_DBE_ALPHANUMERIC 0x0f0
+#define VK_DBE_CODEINPUT 0x0fa
+#define VK_DBE_DBCSCHAR 0x0f4
+#define VK_DBE_DETERMINESTRING 0x0fc
+#define VK_DBE_ENTERDLGCONVERSIONMODE 0x0fd
+#define VK_DBE_ENTERIMECONFIGMODE 0x0f8
+#define VK_DBE_ENTERWORDREGISTERMODE 0x0f7
+#define VK_DBE_FLUSHSTRING 0x0f9
+#define VK_DBE_HIRAGANA 0x0f2
+#define VK_DBE_KATAKANA 0x0f1
+#define VK_DBE_NOCODEINPUT 0x0fb
+#define VK_DBE_NOROMAN 0x0f6
+#define VK_DBE_ROMAN 0x0f5
+#define VK_DBE_SBCSCHAR 0x0f3
+#define VK_DECIMAL 0x6E
+#define VK_DELETE 0x2E
+#define VK_DIVIDE 0x6F
+#define VK_DOWN 28
+#define VK_E 45
+#define VK_END 23
+#define VK_EREOF 0xF9
+#define VK_ERICSSON_BASE 0xE8
+#define VK_ESCAPE 0x1B
+#define VK_EXECUTE 0x2B
+#define VK_EXSEL 0xF8
+#define VK_F 46
+#define VK_F1 70
+#define VK_F10 79
+#define VK_F11 0x7A
+#define VK_F12 0x7B
+#define VK_F13 0x7C
+#define VK_F14 0x7D
+#define VK_F15 0x7E
+#define VK_F16 0x7F
+#define VK_F17 0x80
+#define VK_F18 0x81
+#define VK_F19 0x82
+#define VK_F2 71
+#define VK_F20 0x83
+#define VK_F21 0x84
+#define VK_F22 0x85
+#define VK_F23 0x86
+#define VK_F24 0x87
+#define VK_F3 72
+#define VK_F4 73
+#define VK_F5 74
+#define VK_F6 75
+#define VK_F7 76
+#define VK_F8 77
+#define VK_F9 78
 #define VK_FINAL 0x18
+#define VK_G 47
 #define VK_HANGEUL 0x15
 #define VK_HANGUL 0x15
 #define VK_HANJA 0x19
+#define VK_HELP 0x2F
+#define VK_HOME 24
+#define VK_I 49
+#define VK_ICO_00 0xE4
+#define VK_ICO_CLEAR 0xE6
+#define VK_ICO_HELP 0xE3
+#define VK_INSERT 0x2D
 #define VK_JUNJA 0x17
 #define VK_KANA 0x15
 #define VK_KANJI 0x19
@@ -2297,19 +2457,143 @@
 #define VK_LAUNCH_APP2 0xB7
 #define VK_LAUNCH_MAIL 0xB4
 #define VK_LAUNCH_MEDIA_SELECT 0xB5
+#define VK_LBUTTON 01
+#define VK_LCONTROL 0xA2
+#define VK_LEFT 25
+#define VK_LMENU 0xA4
+#define VK_LSHIFT 0xA0
+#define VK_LWIN 0x5B
+#define VK_MBUTTON 04
 #define VK_MEDIA_NEXT_TRACK 0xB0
 #define VK_MEDIA_PLAY_PAUSE 0xB3
 #define VK_MEDIA_PREV_TRACK 0xB1
 #define VK_MEDIA_STOP 0xB2
+#define VK_MENU 12
 #define VK_MODECHANGE 0x1F
+#define VK_MULTIPLY 0x6A
+#define VK_NEXT 22
+#define VK_NONAME 0xFC
 #define VK_NONCONVERT 0x1D
+#define VK_NUMLOCK 90
+#define VK_NUMPAD0 60
+#define VK_NUMPAD1 61
+#define VK_NUMPAD2 62
+#define VK_NUMPAD3 63
+#define VK_NUMPAD4 64
+#define VK_NUMPAD5 65
+#define VK_NUMPAD6 66
+#define VK_NUMPAD7 67
+#define VK_NUMPAD8 68
+#define VK_NUMPAD9 69
+#define VK_OEM_1 0xBA
+#define VK_OEM_102 0xE2
+#define VK_OEM_2 0xBF
+#define VK_OEM_3 0xC0
+#define VK_OEM_4 0xDB
+#define VK_OEM_5 0xDC
+#define VK_OEM_6 0xDD
+#define VK_OEM_7 0xDE
+#define VK_OEM_8 0xDF
+#define VK_OEM_AX 0xE1
+#define VK_OEM_CLEAR 0xFE
+#define VK_OEM_COMMA 0xBC
+#define VK_OEM_F17 0x80
+#define VK_OEM_F18 0x81
+#define VK_OEM_F19 0x82
+#define VK_OEM_F20 0x83
+#define VK_OEM_F21 0x84
+#define VK_OEM_F22 0x85
+#define VK_OEM_F23 0x86
+#define VK_OEM_F24 0x87
+#define VK_OEM_FJ_00 0xB3
+#define VK_OEM_FJ_000 0xB0
+#define VK_OEM_FJ_DUMMY 0xEF
+#define VK_OEM_FJ_EQUAL 0xB1
+#define VK_OEM_FJ_JISHO 0x92
+#define VK_OEM_FJ_LOYA 0x95
+#define VK_OEM_FJ_MASSHOU 0x93
+#define VK_OEM_FJ_ROYA 0x96
+#define VK_OEM_FJ_TOUROKU 0x94
+#define VK_OEM_MINUS 0xBD
+#define VK_OEM_NEC_DP1 0xE0
+#define VK_OEM_NEC_DP2 0xE1
+#define VK_OEM_NEC_DP3 0xE2
+#define VK_OEM_NEC_DP4 0xE3
+#define VK_OEM_NEC_EQUAL 0x92
+#define VK_OEM_NEC_SEPARATE 0x6C
+#define VK_OEM_OAS_1 0xB4
+#define VK_OEM_OAS_10 0xC4
+#define VK_OEM_OAS_11 0xC5
+#define VK_OEM_OAS_12 0xC6
+#define VK_OEM_OAS_13 0xC7
+#define VK_OEM_OAS_14 0xC8
+#define VK_OEM_OAS_15 0xC9
+#define VK_OEM_OAS_16 0xCA
+#define VK_OEM_OAS_17 0xCB
+#define VK_OEM_OAS_18 0xCC
+#define VK_OEM_OAS_19 0xCD
+#define VK_OEM_OAS_2 0xB5
+#define VK_OEM_OAS_20 0xCE
+#define VK_OEM_OAS_21 0xCF
+#define VK_OEM_OAS_22 0xD0
+#define VK_OEM_OAS_23 0xD1
+#define VK_OEM_OAS_24 0xD2
+#define VK_OEM_OAS_25 0xD3
+#define VK_OEM_OAS_26 0xD4
+#define VK_OEM_OAS_27 0xD5
+#define VK_OEM_OAS_28 0xD6
+#define VK_OEM_OAS_29 0xD7
+#define VK_OEM_OAS_3 0xB6
+#define VK_OEM_OAS_4 0xB7
+#define VK_OEM_OAS_5 0xB8
+#define VK_OEM_OAS_6 0xB9
+#define VK_OEM_OAS_7 0xC1
+#define VK_OEM_OAS_8 0xC2
+#define VK_OEM_OAS_9 0xC3
+#define VK_OEM_PERIOD 0xBE
+#define VK_OEM_PLUS 0xBB
+#define VK_OEM_SCROLL 0x91
+#define VK_OFF 0xDF
+#define VK_P 50
+#define VK_PA1 0xFD
+#define VK_PACKET 0xE7
+#define VK_PAUSE 13
+#define VK_PLAY 0xFA
 #define VK_PRINT 42
+#define VK_PRIOR 21
+#define VK_Q 51
+#define VK_R 52
+#define VK_RBUTTON 02
+#define VK_RCONTROL 0xA3
+#define VK_RETURN 0x0D
+#define VK_RIGHT 27
+#define VK_RMENU 0xA5
+#define VK_RONTROL 0xA3
+#define VK_RSHIFT 0xA1
+#define VK_RWIN 0x5C
+#define VK_S 53
+#define VK_SCROLL 91
+#define VK_SELECT 29
+#define VK_SEPARATOR 0x6C
+#define VK_SHIFT 10
 #define VK_SLEEP 0x5F
+#define VK_SNAPSHOT 0x2C
+#define VK_SPACE 20
+#define VK_SUBTRACT 0x6D
+#define VK_T 54
+#define VK_TAB 09
+#define VK_U 55
+#define VK_UP 26
+#define VK_V 56
 #define VK_VOLUME_DOWN 0xAE
 #define VK_VOLUME_MUTE 0xAD
 #define VK_VOLUME_UP 0xAF
+#define VK_W 57
+#define VK_X 58
 #define VK_XBUTTON1 5
 #define VK_XBUTTON2 6
+#define VK_Y 59
+#define VK_ZOOM 0xFB
 #define WA_ACTIVE 1
 #define WA_CLICKACTIVE 2
 #define WA_INACTIVE 0
@@ -2420,6 +2704,7 @@
 #define WM_GETOBJECT 0x003D
 #define WM_GETTEXT 0x000D
 #define WM_GETTEXTLENGTH 0x000E
+#define WM_GRAPHNOTIFY WM_APP+1
 #define WM_HANDHELDFIRST 856
 #define WM_HANDHELDLAST 863
 #define WM_HELP 83
@@ -2710,274 +2995,6 @@
 #define VK_H 48
 #define VK_O 4F
 #endif /* _WIN32_WCE */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213)) /* CE 2.11..2.12 */
-#define SPI_SETAPCAUDIO 0x000100104
-#define SPI_SETAPCFEEDBACK 0x000100108
-#define SPI_SETAPCGLOBALGRAMMAR 0x00010010a
-#define SPI_SETAPCLOCALE 0x000100106
-#define SPI_SETAPCSCREENSAVER 0x000100102
-#define SPI_SETAPCSHELL 0x000100100
-#endif /* _WIN32_WCE */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 3.0..399 */
-#define VK_0 30
-#define VK_1 31
-#define VK_2 32
-#define VK_3 33
-#define VK_4 34
-#define VK_5 35
-#define VK_6 36
-#define VK_7 37
-#define VK_8 38
-#define VK_9 39
-#define VK_A 41
-#define VK_B 42
-#define VK_BACK 08
-#define VK_C 43
-#define VK_CANCEL 03
-#define VK_CAPITAL 14
-#define VK_CONTROL 11
-#define VK_D 44
-#define VK_DBE_ALPHANUMERIC 0x0f0
-#define VK_DBE_CODEINPUT 0x0fa
-#define VK_DBE_DBCSCHAR 0x0f4
-#define VK_DBE_DETERMINESTRING 0x0fc
-#define VK_DBE_ENTERDLGCONVERSIONMODE 0x0fd
-#define VK_DBE_ENTERIMECONFIGMODE 0x0f8
-#define VK_DBE_ENTERWORDREGISTERMODE 0x0f7
-#define VK_DBE_FLUSHSTRING 0x0f9
-#define VK_DBE_HIRAGANA 0x0f2
-#define VK_DBE_KATAKANA 0x0f1
-#define VK_DBE_NOCODEINPUT 0x0fb
-#define VK_DBE_NOROMAN 0x0f6
-#define VK_DBE_ROMAN 0x0f5
-#define VK_DBE_SBCSCHAR 0x0f3
-#define VK_DOWN 28
-#define VK_E 45
-#define VK_END 23
-#define VK_F 46
-#define VK_F1 70
-#define VK_F10 79
-#define VK_F2 71
-#define VK_F3 72
-#define VK_F4 73
-#define VK_F5 74
-#define VK_F6 75
-#define VK_F7 76
-#define VK_F8 77
-#define VK_F9 78
-#define VK_G 47
-#define VK_HOME 24
-#define VK_I 49
-#define VK_ICO_00 0xE4
-#define VK_ICO_CLEAR 0xE6
-#define VK_LBUTTON 01
-#define VK_LCONTROL 0xA2
-#define VK_LEFT 25
-#define VK_LMENU 0xA4
-#define VK_LSHIFT 0xA0
-#define VK_MBUTTON 04
-#define VK_MENU 12
-#define VK_NEXT 22
-#define VK_NUMLOCK 90
-#define VK_NUMPAD0 60
-#define VK_NUMPAD1 61
-#define VK_NUMPAD2 62
-#define VK_NUMPAD3 63
-#define VK_NUMPAD4 64
-#define VK_NUMPAD5 65
-#define VK_NUMPAD6 66
-#define VK_NUMPAD7 67
-#define VK_NUMPAD8 68
-#define VK_NUMPAD9 69
-#define VK_OEM_1 0xBA
-#define VK_OEM_102 0xE2
-#define VK_OEM_2 0xBF
-#define VK_OEM_3 0xC0
-#define VK_OEM_4 0xDB
-#define VK_OEM_5 0xDC
-#define VK_OEM_6 0xDD
-#define VK_OEM_7 0xDE
-#define VK_OEM_8 0xDF
-#define VK_OEM_AX 0xE1
-#define VK_OEM_COMMA 0xBC
-#define VK_OEM_FJ_00 0xB3
-#define VK_OEM_FJ_000 0xB0
-#define VK_OEM_FJ_DUMMY 0xEF
-#define VK_OEM_FJ_EQUAL 0xB1
-#define VK_OEM_FJ_LOYA 0x95
-#define VK_OEM_FJ_MASSHOU 0x93
-#define VK_OEM_FJ_ROYA 0x96
-#define VK_OEM_FJ_TOUROKU 0x94
-#define VK_OEM_MINUS 0xBD
-#define VK_OEM_NEC_DP1 0xE0
-#define VK_OEM_NEC_DP2 0xE1
-#define VK_OEM_NEC_DP3 0xE2
-#define VK_OEM_NEC_DP4 0xE3
-#define VK_OEM_NEC_EQUAL 0x92
-#define VK_OEM_OAS_1 0xB4
-#define VK_OEM_OAS_10 0xC4
-#define VK_OEM_OAS_11 0xC5
-#define VK_OEM_OAS_12 0xC6
-#define VK_OEM_OAS_13 0xC7
-#define VK_OEM_OAS_14 0xC8
-#define VK_OEM_OAS_15 0xC9
-#define VK_OEM_OAS_16 0xCA
-#define VK_OEM_OAS_17 0xCB
-#define VK_OEM_OAS_18 0xCC
-#define VK_OEM_OAS_19 0xCD
-#define VK_OEM_OAS_2 0xB5
-#define VK_OEM_OAS_20 0xCE
-#define VK_OEM_OAS_21 0xCF
-#define VK_OEM_OAS_22 0xD0
-#define VK_OEM_OAS_23 0xD1
-#define VK_OEM_OAS_24 0xD2
-#define VK_OEM_OAS_25 0xD3
-#define VK_OEM_OAS_26 0xD4
-#define VK_OEM_OAS_27 0xD5
-#define VK_OEM_OAS_28 0xD6
-#define VK_OEM_OAS_29 0xD7
-#define VK_OEM_OAS_3 0xB6
-#define VK_OEM_OAS_4 0xB7
-#define VK_OEM_OAS_5 0xB8
-#define VK_OEM_OAS_6 0xB9
-#define VK_OEM_OAS_7 0xC1
-#define VK_OEM_OAS_8 0xC2
-#define VK_OEM_OAS_9 0xC3
-#define VK_OEM_PERIOD 0xBE
-#define VK_OEM_PLUS 0xBB
-#define VK_OEM_SCROLL 0x91
-#define VK_P 50
-#define VK_PAUSE 13
-#define VK_PRIOR 21
-#define VK_Q 51
-#define VK_R 52
-#define VK_RBUTTON 02
-#define VK_RIGHT 27
-#define VK_RMENU 0xA5
-#define VK_RONTROL 0xA3
-#define VK_RSHIFT 0xA1
-#define VK_S 53
-#define VK_SCROLL 91
-#define VK_SELECT 29
-#define VK_SHIFT 10
-#define VK_SPACE 20
-#define VK_T 54
-#define VK_TAB 09
-#define VK_U 55
-#define VK_UP 26
-#define VK_V 56
-#define VK_W 57
-#define VK_X 58
-#define VK_Y 59
-#define WM_GRAPHNOTIFY WM_APP+1
-#endif /* _WIN32_WCE */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
-#define COLOR_3DDKSHADOW 21
-#define COLOR_3DLIGHT 22
-#define COLOR_ACTIVEBORDER 10
-#define COLOR_ACTIVECAPTION 2
-#define COLOR_APPWORKSPACE 12
-#define COLOR_BACKGROUND 1
-#define COLOR_BTNFACE 15
-#define COLOR_BTNHIGHLIGHT 20
-#define COLOR_BTNSHADOW 16
-#define COLOR_BTNTEXT 18
-#define COLOR_CAPTIONTEXT 9
-#define COLOR_GRADIENTACTIVECAPTION 27
-#define COLOR_GRADIENTINACTIVECAPTION 28
-#define COLOR_GRAYTEXT 17
-#define COLOR_HIGHLIGHT 13
-#define COLOR_HIGHLIGHTTEXT 14
-#define COLOR_INACTIVEBORDER 11
-#define COLOR_INACTIVECAPTION 3
-#define COLOR_INACTIVECAPTIONTEXT 19
-#define COLOR_INFOBK 24
-#define COLOR_INFOTEXT 23
-#define COLOR_MENU 4
-#define COLOR_MENUTEXT 7
-#define COLOR_SCROLLBAR 0
-#define COLOR_STATIC 25
-#define COLOR_STATICTEXT 26
-#define COLOR_WINDOW 5
-#define COLOR_WINDOWFRAME 6
-#define COLOR_WINDOWTEXT 8
-#define KBDI_KEYBOARD_ALPHA_NUM 0x0008
-#define KBDI_KEYBOARD_ENABLED 0x0002
-#define KBDI_KEYBOARD_ENTER_ESC 0x0004
-#define KBDI_KEYBOARD_PRESENT 0x0001
-#define MB_LEN_MAX 2
-#define VK_APP1 0xC1
-#define VK_APP2 0xC2
-#define VK_APP3 0xC3
-#define VK_APP4 0xC4
-#define VK_APP5 0xC5
-#define VK_APP6 0xC6
-#define VK_ERICSSON_BASE 0xE8
-#define VK_ICO_HELP 0xE3
-#define VK_OEM_F17 0x80
-#define VK_OEM_F18 0x81
-#define VK_OEM_F19 0x82
-#define VK_OEM_F20 0x83
-#define VK_OEM_F21 0x84
-#define VK_OEM_F22 0x85
-#define VK_OEM_F23 0x86
-#define VK_OEM_F24 0x87
-#define VK_OEM_FJ_JISHO 0x92
-#define VK_OEM_NEC_SEPARATE 0x6C
-#define VK_RCONTROL 0xA3
-#endif /* _WIN32_WCE */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-#define IDC_BUTTON1 100
-#define IDC_BUTTON2 101
-#define IDC_BUTTON3 102
-#define IDC_BUTTON4 103
-#define IDC_BUTTON5 104
-#define IDC_LISTBOX 202
-#define IDC_MENUBAR 200
-#define IDC_STATUSREGION 201
-#define VK_ADD 0x6B
-#define VK_APPS 0x5D
-#define VK_ATTN 0xF6
-#define VK_CLEAR 0x0C
-#define VK_CRSEL 0xF7
-#define VK_DECIMAL 0x6E
-#define VK_DELETE 0x2E
-#define VK_DIVIDE 0x6F
-#define VK_EREOF 0xF9
-#define VK_ESCAPE 0x1B
-#define VK_EXECUTE 0x2B
-#define VK_EXSEL 0xF8
-#define VK_F11 0x7A
-#define VK_F12 0x7B
-#define VK_F13 0x7C
-#define VK_F14 0x7D
-#define VK_F15 0x7E
-#define VK_F16 0x7F
-#define VK_F17 0x80
-#define VK_F18 0x81
-#define VK_F19 0x82
-#define VK_F20 0x83
-#define VK_F21 0x84
-#define VK_F22 0x85
-#define VK_F23 0x86
-#define VK_F24 0x87
-#define VK_HELP 0x2F
-#define VK_INSERT 0x2D
-#define VK_LWIN 0x5B
-#define VK_MULTIPLY 0x6A
-#define VK_NONAME 0xFC
-#define VK_OEM_CLEAR 0xFE
-#define VK_OFF 0xDF
-#define VK_PA1 0xFD
-#define VK_PACKET 0xE7
-#define VK_PLAY 0xFA
-#define VK_RETURN 0x0D
-#define VK_RWIN 0x5C
-#define VK_SEPARATOR 0x6C
-#define VK_SNAPSHOT 0x2C
-#define VK_SUBTRACT 0x6D
-#define VK_ZOOM 0xFB
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * base types -- fundamental Windows type definitions
@@ -3202,6 +3219,19 @@ typedef struct {
  WCHAR font[fontLen];
 } DLGTEMPLATEEX;
 
+/* DRAWITEMSTRUCT  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+typedef struct tagDRAWITEMSTRUCT { 
+ UINT CtlType; 
+ UINT CtlID; 
+ UINT itemID; 
+ UINT itemAction; 
+ UINT itemState; 
+ HWND hwndItem; 
+ HDC hDC; 
+ RECT rcItem; 
+ ULONG_PTR itemData; 
+} DRAWITEMSTRUCT;
+
 /* INPUT  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
 typedef struct tagINPUT {
  DWORD type;
@@ -3237,6 +3267,26 @@ typedef struct tagTPMPARAMS {
  UINT cbSize; 
  RECT rcExclude; 
 } TPMPARAMS, FAR* LPTPMPARAMS;
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
+
+/* MONITORINFO  [struct; shared; CE 3.0..699] */
+typedef struct tagMONITORINFO {
+ DWORD cbSize;
+ RECT rcMonitor;
+ RECT rcWork;
+ DWORD dwFlags;
+} MONITORINFO, *LPMONITORINFO;
+
+/* MONITORINFOEX  [struct; shared; CE 3.0..699; A/W MONITORINFOEXA,MONITORINFOEXW (CE is W-side)] */
+typedef struct tagMONITORINFOEX {
+ DWORD cbSize;
+ RECT rcMonitor;
+ RECT rcWork;
+ DWORD dwFlags;
+ TCHAR szDevice [CCHDEVICENAME];
+} MONITORINFOEX, *LPMONITORINFOEX;
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
@@ -3354,6 +3404,22 @@ LB_SELITEMRANGE wParam = (WPARAM)(BOOL) fSelect;
 /* WM_DRAWITEM  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
 WM_DRAWITEM idCtl = (UINT) wParam; 
  lpdis = (LPDRAWITEMSTRUCT) lParam;
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
+
+/* GetMouseMovePoints  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Uibase.lib, uibase.lib, Wmgr_c.lib, wmgr_c.lib] */
+BOOL WINAPI GetMouseMovePoints(
+ PPOINT pptBuf,
+ UINT nBufPoints,
+ UINT* pnPointsRetrieved 
+);
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 200 && _WIN32_WCE < 210)) /* CE 2.0..209 */
+
+/* CWnd::OnWinIniChange  [function; ce-only; CE 2.0..209] */
+afx_msg void OnWinIniChange ( LPCTSTR lpszSection );
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213)) /* CE 2.11..2.12 */
@@ -3717,8 +3783,85 @@ BOOL DrawMenuBar(
  HWND hWnd 
 );
 
+/* EM_FMTLINES  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+EM_FMTLINES 
+ wParam = (WPARAM)(BOOL) fAddEOL; 
+ lParam = 0;
+
+/* EM_REPLACESEL  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+EM_REPLACESEL 
+ wParam = (WPARAM) fCanUndo; 
+ lParam = (LPARAM)(LPCTSTR) lpszReplace;
+
+/* EM_SCROLL  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+EM_SCROLL 
+ wParam = (WPARAM)(INT) nScroll; 
+ lParam = 0;
+
+/* EM_SETMODIFY  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+EM_SETMODIFY 
+ wParam = (WPARAM)(UINT) fModified; 
+ lParam = 0;
+
+/* EM_SETPASSWORDCHAR  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+EM_SETPASSWORDCHAR 
+ wParam = (WPARAM)(UINT) ch; 
+ lParam = 0;
+
+/* EM_SETREADONLY  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+EM_SETREADONLY 
+ wParam = (WPARAM)(BOOL) fReadOnly;
+ lParam = 0L;
+
+/* EM_SETSEL  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+EM_SETSEL 
+ wParam = (WPARAM)(INT) nStart; 
+ lParam = (LPARAM)(INT) nEnd;
+
 /* EmptyClipboard  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Clipbd.lib, clipbd.lib] */
 BOOL EmptyClipboard(void);
+
+/* EN_CHANGE  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+EN_CHANGE 
+ idEditCtrl = (int) LOWORD (wParam);
+ hwndEditCtrl = (HWND) lParam;
+
+/* EN_ERRSPACE  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+EN_ERRSPACE 
+ idEditCtrl = (int) LOWORD (wParam);
+ hwndEditCtrl = (HWND) lParam;
+
+/* EN_HSCROLL  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+EN_HSCROLL 
+ idEditCtrl = (int) LOWORD (wParam);
+ hwndEditCtrl = (HWND) lParam;
+
+/* EN_KILLFOCUS  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+EN_KILLFOCUS 
+ idEditCtrl = (int) LOWORD (wParam);
+ wNotifyCode = HIWORD (wParam); 
+ hwndEditCtrl = (HWND) lParam;
+
+/* EN_MAXTEXT  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+EN_MAXTEXT 
+ idEditCtrl = (int) LOWORD (wParam);
+ hwndEditCtrl = (HWND) lParam;
+
+/* EN_SETFOCUS  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+EN_SETFOCUS 
+ idEditCtrl = (int) LOWORD (wParam);
+ wNotifyCode = HIWORD (wParam); 
+ hwndEditCtrl = (HWND) lParam;
+
+/* EN_UPDATE  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+EN_UPDATE 
+ idEditCtrl = (int) LOWORD (wParam);
+ hwndEditCtrl = (HWND) lParam;
+
+/* EN_VSCROLL  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+EN_VSCROLL 
+ idEditCtrl = (int) LOWORD (wParam);
+ hwndEditCtrl = (HWND) lParam;
 
 /* EnableMenuItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Menu.lib, menu.lib] */
 BOOL EnableMenuItem(
@@ -4208,6 +4351,14 @@ int MapWindowPoints(
  UINT cPoints
 );
 
+/* MessageBox  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Msgbox.lib, msgbox.lib; A/W MessageBoxA,MessageBoxW (CE is W-side)] */
+int MessageBox(
+ HWND hWnd, 
+ LPCTSTR lpText, 
+ LPCTSTR lpCaption, 
+ UINT uType
+);
+
 /* MoveWindow  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib] */
 BOOL MoveWindow( 
  HWND hWnd, 
@@ -4324,6 +4475,17 @@ BOOL ScreenToClient(
  LPPOINT lpPoint
 );
 
+/* ScrollDC  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Mgwinmgr.lib, mgwinmgr.lib] */
+BOOL ScrollDC(
+ HDC hDC, 
+ int dx, 
+ int dy, 
+ const RECT* lprcScroll, 
+ const RECT* lprcClip, 
+ HRGN hrgnUpdate, 
+ LPRECT lprcUpdate 
+);
+
 /* ScrollWindowEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Winmgr.lib, winmgr.lib] */
 int ScrollWindowEx( 
  HWND hWnd, 
@@ -4410,6 +4572,13 @@ BOOL SetDlgItemText(
  HWND hDlg, 
  int nIDDlgItem, 
  LPCTSTR lpString
+);
+
+/* SetDlgMsgResult  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+SetDlgMsgResult( 
+ HWND hwnd, 
+ int msg, 
+ LONG result 
 );
 
 /* SetFocus  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Caret.lib, caret.lib, Foregnd.lib, foregnd.lib] */
@@ -4648,6 +4817,11 @@ WM_CTLCOLORBTN hdcButton = (HDC) wParam;
 WM_CTLCOLORDLG hdcDlg = (HDC) wParam; 
  hwndDlg = (HWND) lParam;
 
+/* WM_CTLCOLOREDIT  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+WM_CTLCOLOREDIT 
+ hdcEdit = (HDC) wParam; 
+ hwndEdit = (HWND) lParam;
+
 /* WM_CTLCOLORLISTBOX  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
 WM_CTLCOLORLISTBOX hdcLB = (HDC) wParam; 
  hwndLB = (HWND) lParam;
@@ -4719,6 +4893,9 @@ WM_NEXTDLGCTL wCtlFocus = wParam;
 /* WM_NOTIFY  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
 WM_NOTIFY idCtrl = (int) wParam; 
  pnmh = (LPNMHDR) lParam;
+
+/* WM_PALETTECHANGED  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+WM_PALETTECHANGED hwndPalChg = (HWND) wParam;
 
 /* WM_QUIT  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
 WM_QUIT nExitCode = (int) wParam;
@@ -4814,6 +4991,18 @@ BOOL DrawIconEx(
  UINT diFlags
 );
 
+/* DrawText  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Mgdrwtxt.lib, mgdrwtxt.lib; A/W DrawTextA,DrawTextW (CE is W-side)] */
+int DrawText(
+ HDC hDC, 
+ LPCTSTR lpString, 
+ int nCount, 
+ LPRECT lpRect, 
+ UNIT uFormat
+);
+
+/* GetCapture  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Foregnd.lib, foregnd.lib] */
+HWND GetCapture(void);
+
 /* GetClipCursor  [function; shared; CE 2.11..2.12, 3.0..699; Cursor.lib, cursor.lib, Mcursor.lib, mcursor.lib] */
 BOOL GetClipCursor( 
  LPRECT lpRect
@@ -4827,6 +5016,364 @@ BOOL GetCursorPos(
  LPPOINT lpPoint
 );
 
+/* GetDoubleClickTime  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Wmbase.lib, wmbase.lib] */
+UINT GetDoubleClickTime(void);
+
+/* ImmAssociateContext  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+HIMC ImmAssociateContext(
+ HWND hWnd, 
+ HIMC hIMC
+);
+
+/* ImmAssociateContextEx  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmAssociateContextEx( 
+ HWND hWnd, 
+ HINC hIMC, 
+ DWORD dwFlags
+);
+
+/* ImmConfigureIME  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmConfigureIMEA,ImmConfigureIMEW (CE is W-side)] */
+BOOL ImmConfigureIME( 
+ HKL hKL, 
+ HWND hWnd, 
+ DWORD dwMode, 
+ LPVOID lpData
+);
+
+/* ImmCreateContext  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+HIMC ImmCreateContext(void);
+
+/* ImmCreateIMCC  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+HIMCC WINAPI ImmCreateIMCC( 
+ DWORD dwSize
+);
+
+/* ImmDestroyContext  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmDestroyContext( 
+ HIMC hIMC
+);
+
+/* ImmDestroyIMCC  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+HIMCC WINAPI ImmDestroyIMCC( 
+ HIMCC hIMCC
+);
+
+/* ImmDisableIME  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmDisableIME( 
+ DWORD idThread
+);
+
+/* ImmEnumRegisterWord  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmEnumRegisterWordA,ImmEnumRegisterWordW (CE is W-side)] */
+UINT ImmEnumRegisterWord( 
+ HKL hKL, 
+ REGISTERWORDENUMPROC lpfnEnumProc, 
+ LPCTSTR lpszReading, 
+ DWORD dwStyle, 
+ LPCTSTR lpszRegister, 
+ LPVOID lpData
+);
+
+/* ImmEscape  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmEscapeA,ImmEscapeW (CE is W-side)] */
+LRESULT ImmEscape( 
+ HKL hKL, 
+ HIMC hIMC, 
+ UINT uEscape, 
+ LPVOID lpData
+);
+
+/* ImmGenerateMessage  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL WINAPI ImmGenerateMessage( 
+ HIMC hIMC
+);
+
+/* ImmGetCandidateList  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetCandidateListA,ImmGetCandidateListW (CE is W-side)] */
+DWORD ImmGetCandidateList(
+ HIMC hIMC, 
+ DWORD deIndex, 
+ LPCANDIDATELIST lpCandList, 
+ DWORD dwBufLen 
+);
+
+/* ImmGetCandidateListCount  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetCandidateListCountA,ImmGetCandidateListCountW (CE is W-side)] */
+DWORD ImmGetCandidateListCount(
+ HIMC hIMC, 
+ LPDWORD lpdwListCount
+);
+
+/* ImmGetCandidateWindow  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmGetCandidateWindow(
+ HIMC hIMC, 
+ DWORD dwIndex, 
+ LPCANDIDATEFORM lpCandidate
+);
+
+/* ImmGetCompositionFont  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetCompositionFontA,ImmGetCompositionFontW (CE is W-side)] */
+BOOL ImmGetCompositionFont( 
+ HIMC hIMC, 
+ LPLOGFONT lplf
+);
+
+/* ImmGetCompositionString  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetCompositionStringA,ImmGetCompositionStringW (CE is W-side)] */
+LONG ImmGetCompositionString(
+ HIMC hIMC, 
+ DWORD dwIndex, 
+ LPVOID lpBuf, 
+ DWORD dwBufLen
+);
+
+/* ImmGetCompositionWindow  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmGetCompositionWindow(
+ HIMC hIMC, 
+ LPCOMPOSITIONFORM lpCompForm
+);
+
+/* ImmGetContext  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+HIMC ImmGetContext(
+ HWND hWnd
+);
+
+/* ImmGetConversionList  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetConversionListA,ImmGetConversionListW (CE is W-side)] */
+UINT ImmGetConversionList(
+ HKL hKL, 
+ HIMC hIMC, 
+ LPCTSTR lpSrc, 
+ LPCANDIDATELIST lpDst, 
+ DWORD dwBufLen, 
+ UINT uFlag
+);
+
+/* ImmGetConversionStatus  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmGetConversionStatus(
+ HIMC hIMC, 
+ LPDWORD lpfdwConversion, 
+ LPDWORD lpfdwSentence
+);
+
+/* ImmGetDefaultIMEWnd  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+HWND ImmGetDefaultIMEWnd(
+ HWND hWnd
+);
+
+/* ImmGetDescription  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetDescriptionA,ImmGetDescriptionW (CE is W-side)] */
+UINT ImmGetDescription( 
+ HKL hKL, 
+ LPTSTR lpszDescription, 
+ UINT uBufLen
+);
+
+/* ImmGetGuideLine  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetGuideLineA,ImmGetGuideLineW (CE is W-side)] */
+DWORD ImmGetGuideLine( 
+ HIMC hIMC, 
+ DWORD dwIndex, 
+ LPTSTR lpBuf, 
+ DWORD dwBufLen
+);
+
+/* ImmGetHotKey  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL WINAPI ImmGetHotKey( 
+ DWORD dwHotKeyID,
+ LPUINT lpuModifiers,
+ LPUINT lpuVKey,
+ LPHKL lphKL
+);
+
+/* ImmGetIMCCLockCount  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+DWORD WINAPI ImmGetIMCCLockCount( 
+ HIMCC hIMCC
+);
+
+/* ImmGetIMCCSize  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+DWORD WINAPI ImmGetIMCCSize( 
+ HIMCC hIMCC
+);
+
+/* ImmGetIMCLockCount  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+DWORD WINAPI ImmGetIMCLockCount( 
+ HIMC hIMC
+);
+
+/* ImmGetIMEFileName  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetIMEFileNameA,ImmGetIMEFileNameW (CE is W-side)] */
+BOOL ImmGetIMEFileName( 
+ HKL hKL, 
+ LPTSTR lpszFileName, 
+ UINT uBufLen
+);
+
+/* ImmGetImeMenuItems  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetImeMenuItemsA,ImmGetImeMenuItemsW (CE is W-side)] */
+DWORD WINAPI ImmGetImeMenuItems( 
+ HIMC hIMC, 
+ DWORD dwFlags, 
+ DWORD dwType, 
+ LPIMEMENUITEMINFO lpImeParentMenu, 
+ LPIMEMENUITEMINFO lpImeMenu, 
+ DWORD dwSize
+);
+
+/* ImmGetOpenStatus  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL WINAPI ImmGetOpenStatus(
+ HIMC hIMC
+);
+
+/* ImmGetProperty  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmGetProperty(
+ HKL hKL, 
+ DWORD fdwIndex 
+);
+
+/* ImmGetRegisterWordStyle  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetRegisterWordStyleA,ImmGetRegisterWordStyleW (CE is W-side)] */
+UINT ImmGetRegisterWordStyle( 
+ HKL hKL, 
+ UINT nItem, 
+ LPSTYLEBUF lpStyleBuf
+);
+
+/* ImmGetStatusWindowPos  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmGetStatusWindowPos( 
+ HIMC hIMC, 
+ LPPOINT lpptPos
+);
+
+/* ImmGetVirtualKey  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+UINT ImmGetVirtualKey( 
+ HWND hWnd
+);
+
+/* ImmIsIME  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmIsIME( 
+ HKL hKL
+);
+
+/* ImmIsUIMessage  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmIsUIMessageA,ImmIsUIMessageW (CE is W-side)] */
+BOOL ImmIsUIMessage(
+ HWND hWndIME, 
+ UINT msg, 
+ WPARAM wParam, 
+ LPARAM lParam
+);
+
+/* ImmLockIMC  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+LPINPUTCONTEXT WINAPI ImmLockIMC( 
+ HIMC hIMC
+);
+
+/* ImmLockIMCC  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+LPVOID WINAPI ImmLockIMCC( 
+ HIMCC hIMCC
+);
+
+/* ImmNotifyIME  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmNotifyIME(
+ HIMC hIMC, 
+ DWORD dwAction, 
+ DWORD dwIndex, 
+ DWORD dwValue
+);
+
+/* ImmRegisterWord  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmRegisterWordA,ImmRegisterWordW (CE is W-side)] */
+BOOL ImmRegisterWord( 
+ HKL hKL, 
+ LPCTSR lpszReading, 
+ DWORD dwStyle, 
+ LPCTSTR lpszRegister
+);
+
+/* ImmReleaseContext  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmReleaseContext(
+ HWND hWnd, 
+ HIMC hIMC
+);
+
+/* ImmReSizeIMCC  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+HIMCC WINAPI ImmReSizeIMCC( 
+ HIMCC hIMCC, 
+ DWORD dwSize
+);
+
+/* ImmSetCandidateWindow  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmSetCandidateWindow(
+ HIMC hIMC, 
+ LPCANDIDATEFORM lpCandidate
+);
+
+/* ImmSetCompositionFont  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmSetCompositionFontA,ImmSetCompositionFontW (CE is W-side)] */
+BOOL ImmSetCompositionFont( 
+ HIMC hIMC, 
+ LPLOGFONT lplf
+);
+
+/* ImmSetCompositionString  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmSetCompositionStringA,ImmSetCompositionStringW (CE is W-side)] */
+BOOL ImmSetCompositionString(
+ HIMC hIMC, 
+ DWORD dwIndex, 
+ LPCVOID lpComp, 
+ DWORD dwCompLen, 
+ LPCVOID lpRead, 
+ DWORD dwReadLen
+);
+
+/* ImmSetCompositionWindow  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmSetCompositionWindow(
+ HIMC hIMC, 
+ LPCOMPOSITIONFORM lpCompForm
+);
+
+/* ImmSetConversionStatus  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmSetConversionStatus(
+ HIMC hIMC, 
+ DWORD fdwConversion, 
+ DWORD fdwSentence
+);
+
+/* ImmSetHotKey  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL WINAPI ImmSetHotKey( 
+ DWORD dwHotKeyID,
+ UINT uModifiers,
+ UINT uVKey,
+ HKL hKL
+);
+
+/* ImmSetOpenStatus  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmSetOpenStatus(
+ HIMC hIMC,
+ BOOL fOpen
+);
+
+/* ImmSetStatusWindowPos  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmSetStatusWindowPos( 
+ HIMC hIMC,
+ LPPOINT lpptPos
+);
+
+/* ImmSimulateHotKey  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmSimulateHotKey(
+ HWND hWnd,
+ DWORD dwHotKeyID
+);
+
+/* ImmSIPanelState  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmSIPanelState(
+ UINT dwCmd, 
+ LPVOID pValue
+);
+
+/* ImmUnlockIMC  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL WINAPI ImmUnlockIMC( 
+ HIMC hIMC
+);
+
+/* ImmUnlockIMCC  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL WINAPI ImmUnlockIMCC( 
+ HIMCC hIMCC
+);
+
+/* ImmUnregisterWord  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmUnregisterWordA,ImmUnregisterWordW (CE is W-side)] */
+BOOL ImmUnregisterWord( 
+ HKL hKL,
+ LPCTSTR lpszReading,
+ DWORD dwStyle,
+ LPCTSTR lpszUnregister
+);
+
 /* LoadCursor  [function; shared; CE 2.11..2.12, 3.0..699; Cursor.lib, cursor.lib, Mcursor.lib, mcursor.lib; A/W LoadCursorA,LoadCursorW (CE is W-side)] */
 HCURSOR LoadCursor( 
  HINSTANCE hInstance, 
@@ -4837,6 +5384,23 @@ HCURSOR LoadCursor(
 HICON LoadIcon(
  HINSTANCE hInstance, 
  LPCTSTR lpIconName
+);
+
+/* mouse_event  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Uibase.lib, uibase.lib, Wmgr_c.lib, wmgr_c.lib] */
+VOID mouse_event(
+ DWORD dwFlags, 
+ DWORD dx, 
+ DWORD dy, 
+ DWORD dwData, 
+ DWORD dwExtraInfo 
+);
+
+/* ReleaseCapture  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Foregnd.lib, foregnd.lib] */
+BOOL ReleaseCapture(void);
+
+/* SetCapture  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Foregnd.lib, foregnd.lib] */
+HWND SetCapture(
+ HWND hWnd 
 );
 
 /* SetCursor  [function; shared; CE 2.11..2.12, 3.0..699; Cursor.lib, cursor.lib, Mcursor.lib, mcursor.lib] */
@@ -4854,6 +5418,9 @@ BOOL SetCursorPos(
 int ShowCursor( 
  BOOL bShow
 );
+
+/* WM_CAPTURECHANGED  [function; ce-only; CE 2.11..2.12, 3.0..699] */
+WM_CAPTURECHANGED hwndNewCapture = (HWND) lParam;
 
 /* WM_GETICON  [function; ce-only; CE 2.11..2.12, 3.0..699] */
 WM_GETICON fType = (BOOL) wParam;
@@ -4888,6 +5455,49 @@ int SetWindowRgn(
  HWND hWnd, 
  HRGN hRgn, 
  BOOL bRedraw
+);
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
+
+/* EnumDisplayMonitors  [function; shared; CE 3.0..699; Coredll.lib, coredll.lib, User32.lib] */
+BOOL EnumDisplayMonitors(
+ HDC hdc,
+ LPCRECT lprcClip,
+ MONITORENUMPROC lpfnEnum,
+ LPARAM dwData
+);
+
+/* GetMonitorInfo  [function; shared; CE 3.0..699; Coredll.lib, coredll.lib, User32.lib; A/W GetMonitorInfoA,GetMonitorInfoW (CE is W-side)] */
+BOOL GetMonitorInfo(
+ HMONITOR hMonitor, 
+ LPMONITORINFO lpmi 
+);
+
+/* MonitorEnumProc  [function, callback; shared; CE 3.0..699; Coredll.lib, coredll.lib] */
+BOOL CALLBACK MonitorEnumProc(
+ HMONITOR hMonitor,
+ HDC hdcMonitor,
+ LPRECT lprcMonitor,
+ LPARAM dwData
+);
+
+/* MonitorFromPoint  [function; shared; CE 3.0..699; Coredll.lib, coredll.lib, User32.lib] */
+HMONITOR MonitorFromPoint(
+ POINT pt,
+ DWORD dwFlags
+);
+
+/* MonitorFromRect  [function; shared; CE 3.0..699; Coredll.lib, coredll.lib, User32.lib] */
+HMONITOR MonitorFromRect(
+ LPCRECT lprc,
+ DWORD dwFlags
+);
+
+/* MonitorFromWindow  [function; shared; CE 3.0..699; Coredll.lib, coredll.lib, User32.lib] */
+HMONITOR MonitorFromWindow(
+ HWND hwnd,
+ DWORD dwFlags
 );
 #endif /* _WIN32_WCE */
 
@@ -4962,95 +5572,38 @@ typedef struct tagMENUITEMINFO {UINT cbSize; UINT fMask; UINT fType; UINT fState
 typedef struct tagMyData { };
 
 /* function */
-VOID WINAPI BeginPaint_I( HWND hwndThis, PPAINTSTRUCT pps );
-VOID WINAPI ChildWindowFromPoint_I( HWND hwndThis, POINT pt );
-VOID WINAPI ClientToScreen_I( HWND hwndThis, POINT* pPoint );
 HRESULT CopyRects( IDirect3DMobileSurface* pSourceSurface, CONST RECT* pSourceRectsArray, UINT cRects, IDirect3DMobileSurface* pDestinationSurface, CONST POINT* pDestPointsArray );
-VOID WINAPI DefWindowProcW_I( HWND hwndThis, UINT msg, WPARAM wParam, LPARAM lParam );
-VOID WINAPI DestroyWindow_I( HWND hwndThis );
-VOID WINAPI DrawEdge_I( HDC hdc, RECT* qrc, unsigned int edge, unsigned int grfFlags );
-VOID WINAPI DrawFocusRect_I( HDC hDC, const RECT* lprc );
-VOID WINAPI DrawTextW_I( HDC hDC, const WCHAR* lpString, int nCount, RECT* lpRect, unsigned int uFormat );
 BOOL EnableScrollBar( UINT nArrowFlags = ESB_ENABLE_BOTH );
-VOID WINAPI EnableWindow_I( HWND hwndThis, BOOL bEnable );
-VOID WINAPI EndPaint_I( HWND hwndThis, PPAINTSTRUCT pps );
-VOID WINAPI FillRect_I( HDC hDC, CONST RECT* lprc, HBRUSH hbr );
 void FrameRect( LPCRECT lpRect, CBrush* pBrush );
-VOID WINAPI GetClientRect_I( HWND hwndThis, LPRECT prc );
-VOID WINAPI GetDCEx_I( HWND hwndThis, HRGN hrgnClip, DWORD flags );
-VOID WINAPI GetDC_I( HWND hwndThis );
 HRESULT GetFocusRect(  RECT *pRect  );
-virtual HRESULT STDMETHODCALLTYPE GetFocusedElement( IXRFrameworkElement** ppFocused ) = 0;
 HRESULT GetMenu( IDVDMenu** ppMenu );
-UINT GetMenuItemCount( ) const;
-UINT GetMenuItemID( int nPos ) const;
 HRESULT GetMenuLanguageInfo( UNIT16* plangcount, UINT16* pLCBuffer, UINT8* pFlagsBuffer );
-UINT GetMenuState( UINT nID, UINT nFlags ) const;
-int GetMenuString( UINT nIDItem, LPTSTR lpString, int nMaxCount, UINT nFlags ) const;
-virtual void GetMessageString( UINT nID, CString& rMessage ) const;
 HRESULT GetMessageText( BSTR* pbstrMessage );
 HRESULT GetMessageType( WSDUdpMessageType* pMessageType );
 HRESULT GetParentFrame(  IUnknown **ppunkParent  );
 HTREEITEM GetParentItem( HTREEITEM hItem );
 HRESULT GetParentManagementInfo( IDVDParentalManagementTable** ppTable );
-VOID WINAPI GetParent_I( HWND hwndThis );
-int GetScrollPos( int nBar ) const;
-BOOL GetScrollRange( int nBar, LPINT lpMinPos, LPINT lpMaxPos ) const;
-VOID WINAPI GetSysColorBrush_I( int nIndex );
 HRESULT GetWindowContext( IOleInPlaceFrame **ppFrame, IOleInPlaceUIWindow **ppDoc, LPRECT lprcPosRect, LPRECT lprcClipRect, LPOLEINPLACEFRAMEINFO lpFrameInfo);
-VOID WINAPI GetWindowDC_I( HWND hwndThis );
 HDC GetWindowHDC( );
 HWND GetWindowHWND( );
 HRESULT GetWindowHandle( HWND *pHwnd);
 LONG GetWindowHeight( );
-VOID WINAPI GetWindowLongW_I( HWND hwndThis, int nIndex );
 HRESULT GetWindowPosition( long *pLeft, long *pTop, long *pWidth, long *pHeight);
-VOID WINAPI GetWindowRect_I( HWND hwndThis, PRECT prc );
-VOID WINAPI GetWindowRgn_I( HWND hwndThis, HRGN hrgn );
-VOID WINAPI GetWindowTextLengthW_I( HWND hwndThis );
-VOID WINAPI GetWindowTextW_I( HWND hwndThis, LPTSTR psz, int cchMax );
-VOID WINAPI GetWindowThreadProcessId_I( HWND hwndThis, LPDWORD lpdwProcessId );
 LONG GetWindowWidth( );
-VOID WINAPI GetWindow_I( HWND hwndThis, UINT32 relation );
-VOID WINAPI InvalidateRect_I( HWND hwndThis, LPCRECT prc, BOOL fErase );
-VOID WINAPI InvertRect_I( HDC hdc, const RECT* lprc );
-VOID WINAPI IsWindowEnabled_I( HWND hwndThis );
-VOID WINAPI IsWindowVisible_I( HWND hwndThis );
-VOID WINAPI IsWindow_I( HWND hwndThis );
-BOOL LoadBitmaps( LPCTSTR lpszBitmapResource, LPCTSTR lpszBitmapResourceSel = NULL, LPCTSTR lpszBitmapResourceFocus = NULL, LPCTSTR lpszBitmapResourceDisabled = NULL );
-virtual HRESULT STDMETHODCALLTYPE LoadImageFromFile( const WCHAR* pFileName, IBitmapImage** ppImage ) = 0;
-virtual HRESULT STDMETHODCALLTYPE LoadImageFromResource( HINSTANCE hInstResource, const WCHAR* pResourceName, const WCHAR* pResourceType, IBitmapImage** ppImage ) = 0;
 HRESULT LoadMenuResource(OLE_HANDLE hFC, long wRsrcID, IDispatch **ppMenu);
-int MessageBoxW(int hWnd, String text, String caption, uint type);
-VOID WINAPI MoveWindow_I( HWND hwndThis, int X, int Y, int nWidth, int nHeight, BOOL bRepaint );
 HRESULT PostMessageToApp( long uMsg, long wParam, long lParam );
 HRESULT RegisterClassHelper( const CLSID& clsid, LPCTSTR lpszProgID, LPCTSTR lpszVerIndProgID, UINT nDescID, DWORD dwFlags );
 HRESULT RegisterClassImplCategories( REFCLSID rclsid, ULONG cCategories, CATID rgcatid[] );
 HRESULT RegisterClassObjects( DWORD dwClsContext, DWORD* dwFlags );
 HRESULT RegisterClassReqCategories( REFCLSID rclsid, ULONG cCategories, CATID rgcatid[] );
-VOID WINAPI ReleaseDC_I( HWND hwndThis, HDC hdc );
-VOID WINAPI ScreenToClient_I( HWND hwndThis, POINT* pPoint );
-VOID WINAPI ScrollDC_I( HDC hdc, int dx, int dy, const RECT* lprcScroll, const RECT* lprcClip, HRGN hrgnUpdate, RECT* lprcUpdate );
-void ScrollWindow( int xAmount, int yAmount, LPCRECT lpRect = NULL, LPCRECT lpClipRect = NULL );
-VOID WINAPI ScrollWindowEx_I( HWND hwndThis, int dx, int dy, CONST RECT* prcScroll, CONST RECT* prcClip, HRGN hrgnUpdate, LPRECT prcUpdate, UINT flags );
 HRESULT SendMessageStatus( RTC_MESSAGING_USER_STATUS enUserStatus, LONG_PTR lCookie );
-void SendMessageToDescendants( UINT message, WPARAM wParam = 0, LPARAM lParam = 0, BOOL bDeep = TRUE, BOOL bOnlyPerm = FALSE );
 void SetCursorPosition( UINT XScreenSpace, UINT YScreenSpace, DWORD Flags );
 HRESULT SetCursorProperties( UINT XHotSpot, UINT YHotSpot, IDirect3DSurface8* pCursorBitmap );
 HRESULT SetFocusNext( void );
 HRESULT SetFocusPrev( void );
-VOID WINAPI SetParent_I( HWND hwndThis, HWND hwndNewParent );
 BOOL SetRectInContainer( LPRECT lpRect );
 void SetRectNP( LPCRECT lpRect );
-VOID WINAPI SetRectRgn_I( HRGN hrgn, int nLeftRect, int nTopRect, int nRightRect, int nBottomRect );
-VOID WINAPI SetWindowLongW_I( HWND hwndThis, int nIndex, LONG lNewLong );
-VOID WINAPI SetWindowPos_I( HWND hwndThis, HWND hwndInsertAfter, int x, int y, int cx, int cy, UINT fuFlags );
 HRESULT SetWindowPosition( long Left, long Top, long Width, long Height);
-VOID WINAPI SetWindowTextW_I( HWND hwndThis, LPCTSTR psz );
-void ShowScrollBar( BOOL bShow = TRUE );
-VOID WINAPI ShowWindow_I( HWND hwndThis, INT nCmdShow );
 HRESULT UnregisterClassHelper( const CLSID& clsid, LPCTSTR lpszProgID, LPCTSTR lpszVerIndProgID );
-VOID WINAPI UpdateWindow_I( HWND hwndThis );
-VOID WINAPI ValidateRect_I( HWND hwndThis, CONST RECT* lpRect );
 
 #endif /* _WINUSER_ */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 162 constants, 19 declarations, 0 outlines, 1 base types, 0 extra macros, 5 extra decls
+ * 163 constants, 21 declarations, 0 outlines, 1 base types, 0 extra macros, 5 extra decls
  */
 #ifndef _SHELLAPI_
 #define _SHELLAPI_
@@ -32,8 +32,12 @@
 #define ABM_SETAUTOHIDEBAR 8
 #define ABM_SETPOS 3
 #define ABM_WINDOWPOSCHANGED 9
+#define ABN_EXIT_USING_VOICE 0x0004
 #define ABN_FULLSCREENAPP 2
 #define ABN_POSCHANGED 1
+#define ABN_RECORDS_ADDED 0x0001
+#define ABN_RECORDS_DELETED 0x0002
+#define ABN_RESORT_DB 0x0008
 #define ABN_STATECHANGE 0
 #define ABN_WINDOWARRANGE 3
 #define ABS_ALWAYSONTOP 2
@@ -63,6 +67,8 @@
 #define ERRORONDEST 0x10000
 #define FO_COPY 2
 #define FO_DELETE 3
+#define FO_DONE_ONE_VOL 0x00000002
+#define FO_MORE_VOLUME 0x00000001
 #define FO_MOVE 1
 #define FO_RENAME 4
 #define FOF_ALLOWUNDO 64
@@ -122,6 +128,7 @@
 #define SE_ERR_OOM 8
 #define SE_ERR_PNF 3
 #define SE_ERR_SHARE 26
+#define SE_UNKNOWN_OBJECT_TYPE 0
 #define SEE_MASK_ASYNCOK 0x00100000
 #define SEE_MASK_CLASSKEY 0x00000003
 #define SEE_MASK_CLASSNAME 0x00000001
@@ -204,16 +211,6 @@
 #define SHIL_SYSSMALL 0x3
 #define SIP_UP 0
 #define WINSHELLAPI DECLSPEC_IMPORT
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 212 && _WIN32_WCE < 400)) /* CE 2.12..399 */
-#define ABN_EXIT_USING_VOICE 0x0004
-#define ABN_RECORDS_ADDED 0x0001
-#define ABN_RECORDS_DELETED 0x0002
-#define ABN_RESORT_DB 0x0008
-#endif /* _WIN32_WCE */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
-#define FO_DONE_ONE_VOL 0x00000002
-#define FO_MORE_VOLUME 0x00000001
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * base types -- fundamental Windows type definitions
@@ -361,10 +358,22 @@ WINSHELLAPI DWORD WINAPI SHGetFileInfo(
  UINT uFlags 
 );
 
+/* SHGetMalloc  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Ceshell.lib, ceshell.lib] */
+HRESULT SHGetMalloc(
+ LPMALLOC* ppMalloc 
+);
+
 /* SHGetPathFromIDList  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Ceshell.lib, ceshell.lib; A/W SHGetPathFromIDListA,SHGetPathFromIDListW (CE is W-side)] */
 WINSHELLAPI BOOL WINAPI SHGetPathFromIDList( 
  LPCITEMIDLIST pidl, 
  LPSTR pszPath 
+);
+
+/* SHGetSpecialFolderLocation  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Ceshell.lib, ceshell.lib] */
+WINSHELLAPI HRESULT WINAPI SHGetSpecialFolderLocation(
+ HWND hwndOwner, 
+ int nFolder, 
+ LPITEMIDLIST* ppidl 
 );
 #endif /* _WIN32_WCE */
 

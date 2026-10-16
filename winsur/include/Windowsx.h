@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2 constants, 3 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 2 constants, 2 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDOWSX_
 #define _WINDOWSX_
@@ -38,13 +38,6 @@ MapWindowRect(
  HWND hwndFrom, 
  HWND hwndTo, 
  LPRECT lprc 
-);
-
-/* SetDlgMsgResult  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-SetDlgMsgResult( 
- HWND hwnd, 
- int msg, 
- LONG result 
 );
 #endif /* _WIN32_WCE */
 

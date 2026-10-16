@@ -20,6 +20,7 @@
 #define RAS_SIZE 128
 #define RASADFUNC RASADFUNCW
 #define RASCS_DONE 0x2000
+#define RASCS_OpenPort 0
 #define RASCS_PAUSED 0x1000
 #define RASDIALEVENT "RasDialEvent"
 #define RASDT_SW56 TEXT("SW56")
@@ -37,20 +38,15 @@
 #define RASLCPO_DES_56 0x00000008
 #define RASLCPO_PFC 0x00000001
 #define RASLCPO_SSHF 0x00000004
-#define WM_RASDIALEVENT 0xCCCD
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 3.0..399 */
-#define RASCS_OpenPort 0
 #define RASP_Amb 0x10000
+#define RASP_PppCcp 0x80FD
 #define RASP_PppIp 0x8021
+#define RASP_PppIpV6 0x8057
 #define RASP_PppIpx 0x802B
+#define RASP_PppLcp 0xC021
 #define RASP_PppNbf 0x803F
 #define RASP_Slip 0x20000
-#endif /* _WIN32_WCE */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
-#define RASP_PppCcp 0x80FD
-#define RASP_PppIpV6 0x8057
-#define RASP_PppLcp 0xC021
-#endif /* _WIN32_WCE */
+#define WM_RASDIALEVENT 0xCCCD
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

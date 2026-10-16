@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1520 constants, 44 declarations, 29 outlines, 21 base types, 0 extra macros, 4 extra decls
+ * 1520 constants, 46 declarations, 29 outlines, 21 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _WINNT_
 #define _WINNT_
@@ -39,6 +39,7 @@
 #define ANSI_NULL '\0'
 #define ANYSIZE_ARRAY 1
 #define APPLICATION_ERROR_MASK 0x20000000
+#define ARM 0x1801
 #define COMPRESSION_ENGINE_HIBER (0x0200)
 #define COMPRESSION_ENGINE_MAXIMUM (0x0100)
 #define COMPRESSION_ENGINE_STANDARD (0x0000)
@@ -58,6 +59,11 @@
 #define CONTEXT_SEGMENTS (CONTEXT_i386|0x00000004L)
 #define CONTEXT_SH3 0x00000040
 #define CONTEXT_SH4 0x000000c0
+#define CONTEXT_TYPE_EnterScope 2
+#define CONTEXT_TYPE_ExitScope 3
+#define CONTEXT_TYPE_None 0
+#define CONTEXT_TYPE_NoScope 4
+#define CONTEXT_TYPE_Text 1
 #define DACL_SECURITY_INFORMATION 0x00000004
 #define DBG_CONTINUE 0x00010002L
 #define DBG_CONTROL_BREAK 0x40010008
@@ -98,6 +104,9 @@
 #define ES_DISPLAY_REQUIRED 0x00000002
 #define ES_SYSTEM_REQUIRED 0x00000001
 #define ES_USER_PRESENT 0x00000004
+#define EVENT_PACKET 4
+#define EXCEPTION_CONTINUE_EXECUTION 0xffffffff
+#define EXCEPTION_CONTINUE_SEARCH 0x0
 #define EXCEPTION_DEBUG_EVENT 1
 #define EXCEPTION_MAXIMUM_PARAMETERS 15
 #define EXCEPTION_NONCONTINUABLE 1
@@ -823,10 +832,22 @@
 #define MAXSHORT 0x7fff
 #define MAXWORD 0xffff
 #define MEM_4MB_PAGES 0x80000000
+#define MEM_CAP_16BIT 0x0010
+#define MEM_CAP_8BIT 0x0008
+#define MEM_CAP_BASE_ALIGN 0x0020
+#define MEM_CAP_ENABLE_WIN 0x0004
+#define MEM_CAP_OFF_ALIGN 0x0080
+#define MEM_CAP_PAGING_EN 0x0400
+#define MEM_CAP_PAGING_HW 0x0100
+#define MEM_CAP_PAGING_SH 0x0200
+#define MEM_CAP_PRG_BASE 0x0001
+#define MEM_CAP_PRG_SIZE 0x0002
+#define MEM_CAP_WRITE_PROT 0x0800
 #define MEM_COALESCE_PLACEHOLDERS 0x00000001
 #define MEM_COMMIT 0x00001000
 #define MEM_DECOMMIT 0x00004000
 #define MEM_FREE 0x10000
+#define MEM_HEIGHT 1000
 #define MEM_IMAGE 0x1000000
 #define MEM_LARGE_PAGES 0x20000000
 #define MEM_MAPPED 0x40000
@@ -838,6 +859,7 @@
 #define MEM_RESET 0x00080000
 #define MEM_RESET_UNDO 0x1000000
 #define MEM_TOP_DOWN 0x00100000
+#define MEM_WIDTH_IN_PIXELS 640
 #define MEM_WRITE_WATCH 0x00200000
 #define MESSAGE_RESOURCE_UNICODE 1
 #define MIN_ACL_REVISION 2
@@ -1515,36 +1537,6 @@
 #define WT_EXECUTELONGFUNCTION 0x00000010
 #define WT_EXECUTEONLYONCE 0x00000008
 #define WT_TRANSFER_IMPERSONATION 0x00000100
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 3.0..399 */
-#define ARM 0x1801
-#define MEM_HEIGHT 1000
-#define MEM_WIDTH_IN_PIXELS 640
-#endif /* _WIN32_WCE */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 500)) /* CE 4.0..499 */
-#define EVENT_PACKET 4
-#define MEM_CAP_16BIT 0x0010
-#define MEM_CAP_8BIT 0x0008
-#define MEM_CAP_BASE_ALIGN 0x0020
-#define MEM_CAP_ENABLE_WIN 0x0004
-#define MEM_CAP_OFF_ALIGN 0x0080
-#define MEM_CAP_PAGING_EN 0x0400
-#define MEM_CAP_PAGING_HW 0x0100
-#define MEM_CAP_PAGING_SH 0x0200
-#define MEM_CAP_PRG_BASE 0x0001
-#define MEM_CAP_PRG_SIZE 0x0002
-#define MEM_CAP_WRITE_PROT 0x0800
-#endif /* _WIN32_WCE */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
-#define CONTEXT_TYPE_EnterScope 2
-#define CONTEXT_TYPE_ExitScope 3
-#define CONTEXT_TYPE_None 0
-#define CONTEXT_TYPE_NoScope 4
-#define CONTEXT_TYPE_Text 1
-#endif /* _WIN32_WCE */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-#define EXCEPTION_CONTINUE_EXECUTION 0xffffffff
-#define EXCEPTION_CONTINUE_SEARCH 0x0
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * base types -- fundamental Windows type definitions
@@ -1562,8 +1554,9 @@ typedef char CCHAR;
 typedef char CHAR;
 
 /* HALF_PTR
+ * CE is 32-bit: pointer-sized integer
  * source: win32/common/windows-data-types.md */
-typedef int HALF_PTR;
+typedef short HALF_PTR;
 
 /* HANDLE [CE-SPECIFIC]
  * Generic handle type
@@ -1599,22 +1592,6 @@ typedef DWORD LGRPID;
  * source: win32/common/windows-data-types.md */
 typedef long LONG;
 
-/* LPCWSTR [CE-SPECIFIC]
- * Pointer to const wide string
- * Primary string type on CE
- * source: CE SDK reference */
-typedef const WCHAR *LPCWSTR;
-
-/* LPWSTR [CE-SPECIFIC]
- * Pointer to wide string
- * Primary mutable string type on CE
- * source: CE SDK reference */
-typedef WCHAR *LPWSTR;
-
-/* PCTSTR
- * source: win32/common/windows-data-types.md */
-typedef LPCWSTR PCTSTR;
-
 /* PLCID
  * source: win32/common/windows-data-types.md */
 typedef PDWORD PLCID;
@@ -1626,10 +1603,6 @@ typedef HANDLE SERVICE_STATUS_HANDLE;
 /* SSIZE_T
  * source: win32/common/windows-data-types.md */
 typedef LONG_PTR SSIZE_T;
-
-/* TBYTE
- * source: win32/common/windows-data-types.md */
-typedef WCHAR TBYTE;
 
 /* ULONG [CE-SPECIFIC]
  * 32-bit unsigned integer
@@ -1650,6 +1623,26 @@ typedef LONGLONG USN;
  * Always 16-bit on CE (UTF-16LE)
  * source: win32/common/windows-data-types.md */
 typedef wchar_t WCHAR;
+
+/* LPCWSTR [CE-SPECIFIC]
+ * Pointer to const wide string
+ * Primary string type on CE
+ * source: CE SDK reference */
+typedef const WCHAR *LPCWSTR;
+
+/* LPWSTR [CE-SPECIFIC]
+ * Pointer to wide string
+ * Primary mutable string type on CE
+ * source: CE SDK reference */
+typedef WCHAR *LPWSTR;
+
+/* PCTSTR
+ * source: win32/common/windows-data-types.md */
+typedef LPCWSTR PCTSTR;
+
+/* TBYTE
+ * source: win32/common/windows-data-types.md */
+typedef WCHAR TBYTE;
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
@@ -1741,29 +1734,11 @@ WORD PRIMARYLANGID(
  * declaration body no page prints
  * ================================================================ */
 
-/* CHAR  [typedef; shared; entity-headers; win32-reference] */
-typedef char CHAR;
-
-/* HANDLE  [typedef; shared; entity-headers; win32-reference] */
-typedef PVOID HANDLE;
-
-/* LANGID  [typedef; shared; entity-headers; win32-reference] */
-typedef WORD LANGID;
-
-/* LONG  [typedef; shared; entity-headers; win32-reference] */
-typedef long LONG;
-
 /* LPCSTR  [typedef; shared; entity-headers; win32-reference] */
 typedef __nullterminated CONST CHAR *LPCSTR;
 
-/* LPCWSTR  [typedef; shared; entity-headers; win32-reference] */
-typedef CONST WCHAR *LPCWSTR;
-
 /* LPSTR  [typedef; shared; entity-headers; win32-reference] */
 typedef CHAR *LPSTR;
-
-/* LPWSTR  [typedef; shared; entity-headers; win32-reference] */
-typedef WCHAR *LPWSTR;
 
 /* PCHAR  [typedef; shared; entity-headers; win32-reference] */
 typedef CHAR *PCHAR;
@@ -1776,9 +1751,6 @@ typedef CONST WCHAR *PCWSTR;
 
 /* PHANDLE  [typedef; shared; entity-headers; win32-reference] */
 typedef HANDLE *PHANDLE;
-
-/* PLCID  [typedef; shared; entity-headers; win32-reference] */
-typedef PDWORD PLCID;
 
 /* PLONG  [typedef; shared; entity-headers; win32-reference] */
 typedef LONG *PLONG;
@@ -1806,9 +1778,6 @@ typedef WCHAR *PWSTR;
 
 /* SHORT  [typedef; shared; entity-headers; win32-reference] */
 typedef short SHORT;
-
-/* WCHAR  [typedef; shared; entity-headers; win32-reference] */
-typedef wchar_t WCHAR;
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
 
@@ -1864,6 +1833,16 @@ typedef struct _FILE_NOTIFY_INFORMATION {
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 200 && _WIN32_WCE < 210) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.0..209, 2.11..2.12, 3.0..699 */
+
+/* CONTAINING_RECORD  [function; shared; CE 2.0..209, 2.11..2.12, 3.0..699] */
+PCHAR CONTAINING_RECORD(
+ PCHAR Address,
+ TYPE Type,
+ PCHAR Field
+);
+#endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 600)) /* CE 4.0..599 */
 
@@ -1923,6 +1902,12 @@ LONG InterlockedExchange(
 
 /* LPCTSTR  [function, typedef; shared; CE 5.0..699; entity-headers] */
 operator LPCTSTR();
+
+/* SecureZeroMemory  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
+PVOID SecureZeroMemory(
+ PVOID ptr,
+ SIZE_T cnt
+);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

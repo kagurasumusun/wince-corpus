@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define CONFIG_DATA_EXCHANGE_HTTPPROXY 0x0400
 #define CONFIG_DATA_EXCHANGE_OWASERVER 0x0200
 #define CONFIG_DATA_PHONE_INFO_AREACODES 0x0002
@@ -32,7 +31,6 @@
 #define CONFIG_DATA_PRESENCE_SERVER 0x1000
 #define CONFIG_DATA_PRESENCE_URI 0x0800
 #define CONFIG_DATA_UPDATE_SMSSERVER 0x2000
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

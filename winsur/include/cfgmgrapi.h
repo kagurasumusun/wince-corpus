@@ -17,10 +17,8 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 #define CFGFLAG_METADATA 0x0002
 #define CFGFLAG_PROCESS 0x0001
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

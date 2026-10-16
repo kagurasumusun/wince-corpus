@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 #define LINECAPSCLASS_ALL 0x000000FF
 #define LINECAPSCLASS_ASYNCDATA 0x00000020
 #define LINECAPSCLASS_DATA 0x00000002
@@ -44,7 +43,6 @@
 #define LINESYSTEMTYPE_IS95B 0x00000002
 #define LINESYSTEMTYPE_NONE 0x00000000
 #define LINESYSTEMTYPE_UMTS 0x00000100
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

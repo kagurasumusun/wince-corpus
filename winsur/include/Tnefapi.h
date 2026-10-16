@@ -17,9 +17,7 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213)) /* CE 2.11..2.12 */
 #define CODE_NONE 0
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

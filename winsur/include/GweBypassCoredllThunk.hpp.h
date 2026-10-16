@@ -410,20 +410,6 @@ HICON WINAPI LoadIconW_I(
  * ================================================================ */
 
 /* function */
-VOID WINAPI BringWindowToTop_I( HWND hwndThis );
-int EnumPropsEx_I( HWND hWnd, PROPENUMPROCEX lpEnumFunc, LPARAM lParam HPROCESS hProcCallingContext );
-VOID WINAPI GetAssociatedMenu_I( HWND hwndThis );
-VOID WINAPI GetClassLongW_I( HWND hwndThis, INT nIndex );
-VOID WINAPI GetClassNameW_I( HWND hwndThis, PTSTR szClassName, int cchClassName );
-HANDLE GetProp_I( HWND hWnd, LPCTSTR lpString );
 static ScrollBarInfoInternal* GetSBInfoInternal(  HWND hwnd,  BOOL fVert  );
-VOID WINAPI GetUpdateRect_I( HWND hwndThis, LPRECT lpRect, BOOL bErase );
-VOID WINAPI GetUpdateRgn_I( HWND hwndThis, HRGN hRgn, BOOL bErase );
-VOID WINAPI IsChild_I( HWND hwndThis, HWND hWnd );
-HANDLE RemoveProp_I( HWND hWnd, LPCTSTR lpString );
-VOID WINAPI SetAssociatedMenu_I( HWND hwndThis, HMENU hmenu );
-VOID WINAPI SetClassLongW_I( HWND hwndThis, INT nIndex, LONG lNewValue );
-BOOL SetProp_I( HWND hWnd, LPCTSTR lpString, HANDLE hData );
-VOID WINAPI SetWindowRgn_I( HWND hwndThis, HRGN hrgn, BOOL bRedraw );
 
 #endif /* _GWEBYPASSCOREDLLTHUNK_HPP_ */

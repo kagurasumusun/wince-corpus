@@ -18,10 +18,6 @@
  * chains with the evidence after the #endif)
  * ================================================================ */
 #define AMDDS_ ALL
-#define SIZE_EGA_PALETTE (16*sizeof(RGBQUAD))
-#define SIZE_MASKS (3*sizeof(DWORD))
-#define SIZE_PALETTE (256*sizeof(RGBQUAD))
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define AMDDS_DCIPS 0x01
 #define AMDDS_DEFAULT 0xFF
 #define AMDDS_NONE 0x00
@@ -35,7 +31,9 @@
 #define AMDDS_YUVFLP 0x80
 #define AMDDS_YUVOFF 0x20
 #define AMDDS_YUVOVR 0x08
-#endif /* _WIN32_WCE */
+#define SIZE_EGA_PALETTE (16*sizeof(RGBQUAD))
+#define SIZE_MASKS (3*sizeof(DWORD))
+#define SIZE_PALETTE (256*sizeof(RGBQUAD))
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

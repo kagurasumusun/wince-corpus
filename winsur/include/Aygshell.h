@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 59 constants, 46 declarations, 1 outlines, 0 base types, 3 extra macros, 7 extra decls
+ * 59 constants, 49 declarations, 1 outlines, 0 base types, 3 extra macros, 7 extra decls
  */
 #ifndef _AYGSHELL_
 #define _AYGSHELL_
@@ -33,6 +33,7 @@
 #define NMN_INVOKECOMMAND 1103
 #define NMN_NEWMENUDESTROY 1102
 #define NOMENU 0xFFFF
+#define SHCIDS_COLUMNMASK 0x0000FFFF
 #define SHCMBF_COLORBK 0x08
 #define SHCMBF_EMPTYBAR 0x01
 #define SHCMBF_HIDDEN 0x02
@@ -61,6 +62,7 @@
 #define SHIDIF_SIPDOWN 0x0008
 #define SHIDIF_SIZEDLG 0x0002
 #define SHIDIF_SIZEDLGFULLSCREEN 0x0004
+#define SHIDIM_FLAGS 0x0001
 #define SHMBOF_NODEFAULT 0x00000001
 #define SHMBOF_NOTIFY 0x00000002
 #define SHNF_CRITICAL 2
@@ -69,15 +71,11 @@
 #define SHNF_SILENT 32
 #define SHNF_STRAIGHTTOTRAY 1
 #define SHRG_RETURNCMD 0x0001
+#define SHRT_MAX 32767
+#define SHRT_MIN -32768
 #define VK_TBACK VK_ESCAPE
 #define WC_SIPPREF L"SIPPREF"
 #define WS_NONAVDONEBUTTON WS_MINIMIZEBOX
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
-#define SHCIDS_COLUMNMASK 0x0000FFFF
-#define SHIDIM_FLAGS 0x0001
-#define SHRT_MAX 32767
-#define SHRT_MIN -32768
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * macros -- supplementary #define from CE pages
@@ -302,6 +300,17 @@ BOOL SHFreeContextMenuExtensions(
  HANDLE hCMExtensions
 );
 
+/* SHFullScreen  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
+BOOL SHFullScreen(
+ HWND hwndRequester,
+ DWORD dwState
+);
+
+/* SHGetAutoRunPath  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
+BOOL SHGetAutoRunPath(
+ LPTSTR pAutoRunPath
+);
+
 /* SHGetEmergencyCallList  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
 HRESULT SHGetEmergencyCallList(
  TCHAR* pwszBuffer,
@@ -331,6 +340,11 @@ WINSHELLAPI BOOL SHHandleWMSettingChange(
  WPARAM wParam,
  LPARAM lParam,
  SHACTIVATEINFO * psai
+);
+
+/* SHInitDialog  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
+BOOL SHInitDialog(
+ PSHINITDLGINFO pshidi
 );
 
 /* SHInputDialog  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */

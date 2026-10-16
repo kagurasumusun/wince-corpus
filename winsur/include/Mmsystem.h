@@ -140,6 +140,7 @@
 #define JOYSTICKID2 1
 #define MAX_JOYSTICKOEMVXDNAME 260
 #define MAXERRORLENGTH 256
+#define MAXPNAMELEN 32
 #define MCI_ALL_DEVICE_ID ((MCIDEVICEID)-1)
 #define MCI_ANIM_GETDEVCAPS_CAN_REVERSE 0x4001
 #define MCI_ANIM_GETDEVCAPS_CAN_STRETCH 0x4007
@@ -876,9 +877,6 @@
 #define WOM_CLOSE MM_WOM_CLOSE
 #define WOM_DONE MM_WOM_DONE
 #define WOM_OPEN MM_WOM_OPEN
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
-#define MAXPNAMELEN 32
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

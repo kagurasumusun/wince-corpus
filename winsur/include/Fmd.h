@@ -17,10 +17,8 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 #define OEM_BLOCK_READONLY 0x02
 #define OEM_BLOCK_RESERVED 0x01
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

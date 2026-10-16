@@ -1,4 +1,4 @@
-/* Shobjidl.idl -- Windows CE unified surface
+/* Shobjvidl.h -- Windows CE unified surface
  *
  * ONE tree for every CE generation.  Version differences use
  * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
@@ -7,8 +7,8 @@
  * tools/gen-include-def.py --unified.
  * 0 constants, 1 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
-#ifndef _SHOBJIDL_IDL_
-#define _SHOBJIDL_IDL_
+#ifndef _SHOBJVIDL_
+#define _SHOBJVIDL_
 
 
 /* ==================================================================
@@ -27,4 +27,4 @@ HRESULT SetNameOf(
 );
 #endif /* _WIN32_WCE */
 
-#endif /* _SHOBJIDL_IDL_ */
+#endif /* _SHOBJVIDL_ */

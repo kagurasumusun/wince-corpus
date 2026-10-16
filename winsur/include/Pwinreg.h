@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 16 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 15 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _PWINREG_
 #define _PWINREG_
@@ -72,12 +72,6 @@ BOOL SetCurrentUser(
  LPBYTE lpbUserSecret, 
  DWORD dwDataSize, 
  BOOL bCreateIfNew 
-);
-
-/* SetUserData  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-BOOL SetUserData( 
- LPBYTE lpbUserData, 
- DWORD dwDataSize 
 );
 #endif /* _WIN32_WCE */
 

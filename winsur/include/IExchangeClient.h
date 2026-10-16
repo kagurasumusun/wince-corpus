@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define e_ecrsPending 0
 #define e_ecrtInvalid 0
 #define OWAEC_E_ALREADYINITIALIZED 0x80bb0006
@@ -26,7 +25,6 @@
 #define OWAEC_E_NOSERVER 0x80bb0002
 #define OWAEC_E_NOTINITIALIZED 0x80bb0001
 #define OWAEC_E_NOUSER 0x80bb0003
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

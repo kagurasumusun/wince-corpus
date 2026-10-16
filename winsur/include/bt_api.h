@@ -17,13 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
-#define RFCOMM_PORT_FLAGS_AUTHENTICATE 0x00000004
-#define RFCOMM_PORT_FLAGS_ENCRYPT 0x00000008
-#define RFCOMM_PORT_FLAGS_KEEP_DCD 0x00000002
-#define RFCOMM_PORT_FLAGS_REMOTE_DCB 0x00000001
-#endif /* _WIN32_WCE */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 #define ACTIVE 0x00
 #define BT_AVDTP_STATE_DISCONNECTED 0
 #define BT_AVDTP_STATE_STREAMING 2
@@ -32,7 +25,10 @@
 #define BTE_CLASS_DEVICE 4
 #define BTE_CLASS_PAIRING 2
 #define BTE_CLASS_STACK 8
-#endif /* _WIN32_WCE */
+#define RFCOMM_PORT_FLAGS_AUTHENTICATE 0x00000004
+#define RFCOMM_PORT_FLAGS_ENCRYPT 0x00000008
+#define RFCOMM_PORT_FLAGS_KEEP_DCD 0x00000002
+#define RFCOMM_PORT_FLAGS_REMOTE_DCB 0x00000001
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

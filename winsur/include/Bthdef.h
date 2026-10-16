@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define BTH_CONTROL_DEVICEONLY 0x00001000
 #define BTH_CONTROL_ROUTE_ALL 0x00000001
 #define BTH_CONTROL_ROUTE_BY_ADDR 0x00000010
@@ -58,7 +57,6 @@
 #define BTH_STACK_NONE 0
 #define BTH_STACK_RESET 1
 #define BTH_STACK_UP 3
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

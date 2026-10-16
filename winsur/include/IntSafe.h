@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 1 declarations, 2 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 1 declarations, 12 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _INTSAFE_
 #define _INTSAFE_
@@ -15,10 +15,30 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
+/* CRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
+
 /* DWORD  [typedef, macro; shared; entity-headers; win32-reference] */
 typedef unsigned long DWORD;
 
 /* EDITSTREAM  [macro, typedef; ce-only; heuristic-prefix] */
+
+/* HIMAGELIST  [typedef; ce-only; heuristic-prefix] */
+
+/* HIMC  [typedef; ce-only; heuristic-prefix] */
+
+/* LPCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
+
+/* LUID  [typedef; ce-only; heuristic-prefix] */
+
+/* PCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
+
+/* PCWCH  [typedef; ce-only; heuristic-prefix] */
+
+/* PLUID  [typedef; ce-only; heuristic-prefix] */
+
+/* REGSAM  [typedef; ce-only; heuristic-prefix] */
+
+/* UNSIGNED  [typedef; ce-only; heuristic-prefix] */
 
 /* VIEWATTRIBUTES  [macro, typedef; ce-only; heuristic-prefix] */
 

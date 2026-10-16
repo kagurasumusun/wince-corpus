@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define BINDF_ASYNCHRONOUS 0x00000001
 #define BINDF_ASYNCSTORAGE 0x00000002
 #define BINDF_DIRECT_READ 0x00020000
@@ -139,7 +138,6 @@
 #define ZAFLAGS_REQUIRE_VERIFICATION 0x00000004
 #define ZAFLAGS_SUPPORTS_VERIFICATION 0x00000040
 #define ZAFLAGS_UNC_AS_INTRANET 0x00000080
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 18 constants, 28 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 18 constants, 36 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _PWINUSER_
 #define _PWINUSER_
@@ -17,14 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define GID_BEGIN 1
-#define GID_END 2
-#define GID_PAN 4
-#define GID_PRESSANDTAP 7
-#define GID_ROTATE 5
-#define GID_TWOFINGERTAP 6
-#define GID_ZOOM 3
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 #define ARG_SCROLL_DOWN 1
 #define ARG_SCROLL_LEFT 2
 #define ARG_SCROLL_NONE 0
@@ -33,10 +25,16 @@
 #define GF_BEGIN 0x00000001
 #define GF_END 0x00000004
 #define GF_INERTIA 0x00000002
+#define GID_BEGIN 1
+#define GID_END 2
 #define GID_MAX 63
+#define GID_PAN 4
+#define GID_PRESSANDTAP 7
+#define GID_ROTATE 5
+#define GID_TWOFINGERTAP 6
+#define GID_ZOOM 3
 #define TGF_SCOPE_PROCESS 1
 #define TGF_SCOPE_WINDOW 0
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -91,6 +89,33 @@ typedef struct tagGESTUREMETRICS {
  DWORD dwAngularTolerance;
  DWORD dwExtraInfo;
 } GESTUREMETRICS, *LPGESTUREMETRICS;
+
+/* PHYSICSENGINEINIT  [struct; ce-only; CE 6.0..699] */
+typedef struct tagPHYSICSENGINEINIT {
+ DWORD cbSize;
+ DWORD dwEngineType;
+ DWORD dwFlags;
+ LONG lInitialVelocity; 
+ DWORD dwInitialAngle;
+ BYTE bXAxisMovementMode;
+ BYTE bXAxisBoundaryMode;
+ BYTE bYAxisMovementMode;
+ BYTE bYAxisBoundaryMode;
+ RECT rcBoundary;
+ SIZE sizeView;
+ POINT ptInitialPosition;
+ SIZE sizeItem;
+} PHYSICSENGINEINIT;
+
+/* PHYSICSENGINESTATE  [struct; ce-only; CE 6.0..699] */
+typedef struct tagPHYSICSENGINESTATE {
+ DWORD cbSize; 
+ DWORD dwTime;
+ POINT ptPosition;
+ LONG lVelocityX;
+ LONG lVelocityY;
+ BOOL fComplete;
+} PHYSICSENGINESTATE;
 
 /* WAGINFO  [struct; ce-only; CE 6.0..699] */
 typedef struct tagWAGI {
@@ -154,6 +179,18 @@ BOOL RegisterTaskBar(
 
 /* GwesPowerOffSystem  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
 void GwesPowerOffSystem(void);
+
+/* NLedGetDeviceInfo  [function; ce-only; CE 4.0..699; Coredll.dll, coredll.dll] */
+BOOL WINAPI NLedGetDeviceInfo(
+ UINT nInfoId,
+ void* pOutput
+);
+
+/* NLedSetDevice  [function; ce-only; CE 4.0..699; Coredll.dll, coredll.dll] */
+BOOL WINAPI NLedSetDevice(
+ UINT nDeviceId,
+ void* pInput
+);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
@@ -208,6 +245,17 @@ BOOL CloseGestureInfoHandle (
  HGESTUREINFO hGestureInfo
 );
 
+/* CreatePhysicsEngine  [function; ce-only; CE 6.0..699] */
+HRESULT CreatePhysicsEngine(
+ __in const PHYSICSENGINEINIT* pEngineInit,
+ __out HPHYSICSENGINE* phResult
+);
+
+/* DestroyPhysicsEngine  [function; ce-only; CE 6.0..699] */
+HRESULT DestroyPhysicsEngine(
+ HPHYSICSENGINE hEngine
+);
+
 /* Gesture  [function; ce-only; CE 6.0..699; TouchGesture.lib] */
 BOOL WINAPI Gesture(
  HWND hwnd,
@@ -249,10 +297,22 @@ BOOL QueryGestures (
  PULONGLONG pullFlags
 );
 
+/* QueryPhysicsEngine  [function; ce-only; CE 6.0..699] */
+HRESULT QueryPhysicsEngine(
+ HPHYSICSENGINE hEngine,
+ __out PHYSICSENGINESTATE* pState
+);
+
 /* RegisterGesture  [function; ce-only; CE 6.0..699; TouchGesture.lib] */
 BOOL RegisterGesture (
  LPCWSTR pszName,
  PDWORD_PTR pdwID
+);
+
+/* SetPhysicsEngineUserTime  [function; ce-only; CE 6.0..699] */
+HRESULT SetPhysicsEngineUserTime(
+ HPHYSICSENGINE hEngine,
+ DWORD dwTime
 );
 
 /* SetWindowAutoGesture  [function; ce-only; CE 6.0..699] */

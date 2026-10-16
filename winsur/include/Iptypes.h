@@ -26,6 +26,7 @@
 #define IF_OTHER_ADAPTERTYPE 0
 #define IF_PPP_ADAPTERTYPE 4
 #define IF_TOKEN_RING_ADAPTERTYPE 2
+#define IfOperStatusUp 1
 #define IP_ADAPTER_ADDRESS_DNS_ELIGIBLE 0x00000001
 #define IP_ADAPTER_ADDRESS_TRANSIENT 0x00000002
 #define IP_ADAPTER_DDNS_ENABLED 0x00000001
@@ -34,6 +35,9 @@
 #define IP_ADAPTER_NO_MULTICAST 0x00000010
 #define IP_ADAPTER_RECEIVE_ONLY 0x00000008
 #define IP_ADAPTER_REGISTER_ADAPTER_SUFFIX 0x00000002
+#define IpDadStateInvalid 0
+#define IpPrefixOriginOther 0
+#define IpSuffixOriginOther 0
 #define MAX_ADAPTER_ADDRESS_LENGTH 8
 #define MAX_ADAPTER_DESCRIPTION_LENGTH 128
 #define MAX_ADAPTER_NAME_LENGTH 256
@@ -42,11 +46,6 @@
 #define MAX_SCOPE_ID_LEN 256
 #define MIXED_NODETYPE 4
 #define PEER_TO_PEER_NODETYPE 2
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
-#define IfOperStatusUp 1
-#define IpDadStateInvalid 0
-#define IpPrefixOriginOther 0
-#define IpSuffixOriginOther 0
 #define ScopeLevelAdmin 4
 #define ScopeLevelGlobal 14
 #define ScopeLevelInterface 1
@@ -54,7 +53,6 @@
 #define ScopeLevelOrganization 8
 #define ScopeLevelSite 5
 #define ScopeLevelSubnet 3
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

@@ -17,19 +17,15 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
+#define ABCD 1
+#define BCD 1
+#define CD 1
 #define MAX_LOCALE_NAME 32
 #define MAX_MIMECP_NAME 64
 #define MAX_MIMECSET_NAME 50
 #define MAX_MIMEFACE_NAME 32
 #define MAX_RFC1766_NAME 6
 #define MAX_SCRIPT_NAME 48
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-#define D 1
-#endif /* _WIN32_WCE */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
-#define ABCD 1
-#define BCD 1
-#define CD 1
 #define MIMECONTF_BROWSER 0x00000002
 #define MIMECONTF_EXPORT 0x00000400
 #define MIMECONTF_IMPORT 0x00000008
@@ -66,6 +62,8 @@
 #define SCRIPTCONTF_SCRIPT_HIDE 0x00020000
 #define SCRIPTCONTF_SCRIPT_SYSTEM 0x00040000
 #define SCRIPTCONTF_SCRIPT_USER 0x00010000
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+#define D 1
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

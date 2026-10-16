@@ -17,12 +17,10 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define TLEF_ABSOLUTE 0x00000031
 #define TLEF_INCLUDE_UNINVOKEABLE 0x00000040
 #define TLEF_RELATIVE_BACK 0x00000010
 #define TLEF_RELATIVE_FORE 0x00000020
 #define TLEF_RELATIVE_INCLUDE_CURRENT 0x00000001
-#endif /* _WIN32_WCE */
 
 #endif /* _TLOGSTG_ */

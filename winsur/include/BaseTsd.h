@@ -41,10 +41,6 @@ typedef unsigned int DWORD32;
  * source: win32/common/windows-data-types.md */
 typedef unsigned __int64 DWORDLONG;
 
-/* DWORD_PTR
- * source: win32/common/windows-data-types.md */
-typedef ULONG_PTR DWORD_PTR;
-
 /* HACCEL
  * source: win32/common/windows-data-types.md */
 typedef HANDLE HACCEL;
@@ -74,18 +70,13 @@ typedef signed int LONG32;
 typedef __int64 LONGLONG;
 
 /* LONG_PTR
+ * CE is 32-bit: pointer-sized integer
  * source: win32/common/windows-data-types.md */
-typedef __int64 LONG_PTR;
+typedef long LONG_PTR;
 
 /* SHORT
  * source: win32/common/windows-data-types.md */
 typedef short SHORT;
-
-/* SIZE_T [CE-SPECIFIC]
- * Size type for memory operations
- * Pointer-sized (32-bit on 32-bit CE platforms)
- * source: win32/common/windows-data-types.md */
-typedef ULONG_PTR SIZE_T;
 
 /* UCHAR
  * source: win32/common/windows-data-types.md */
@@ -104,8 +95,9 @@ typedef unsigned int UINT32;
 typedef unsigned  char UINT8;
 
 /* UINT_PTR
+ * CE is 32-bit: pointer-sized integer
  * source: win32/common/windows-data-types.md */
-typedef unsigned __int64 UINT_PTR;
+typedef unsigned long UINT_PTR;
 
 /* ULONG32
  * source: win32/common/windows-data-types.md */
@@ -116,8 +108,20 @@ typedef unsigned int ULONG32;
 typedef unsigned __int64 ULONGLONG;
 
 /* ULONG_PTR
+ * CE is 32-bit: pointer-sized integer
  * source: win32/common/windows-data-types.md */
-typedef unsigned __int64 ULONG_PTR;
+typedef unsigned long ULONG_PTR;
+
+/* DWORD_PTR
+ * CE is 32-bit: pointer-sized integer
+ * source: win32/common/windows-data-types.md */
+typedef unsigned long DWORD_PTR;
+
+/* SIZE_T [CE-SPECIFIC]
+ * Size type for memory operations
+ * Pointer-sized (32-bit on 32-bit CE platforms)
+ * source: win32/common/windows-data-types.md */
+typedef ULONG_PTR SIZE_T;
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
@@ -151,41 +155,20 @@ typedef unsigned __int64 ULONG_PTR;
  * declaration body no page prints
  * ================================================================ */
 
-/* DWORD32  [typedef; shared; entity-headers; win32-reference] */
-typedef unsigned int DWORD32;
-
 /* DWORD64  [typedef; shared; entity-headers; win32-reference] */
 typedef unsigned __int64 DWORD64;
-
-/* DWORD_PTR  [typedef; shared; entity-headers; win32-reference] */
-typedef ULONG_PTR DWORD_PTR;
-
-/* INT32  [typedef; shared; entity-headers; win32-reference] */
-typedef signed int INT32;
 
 /* INT64  [typedef; shared; entity-headers; win32-reference] */
 typedef signed __int64 INT64;
 
-/* LONG32  [typedef; shared; entity-headers; win32-reference] */
-typedef signed int LONG32;
-
 /* LONG64  [typedef; shared; entity-headers; win32-reference] */
 typedef __int64 LONG64;
-
-/* SIZE_T  [typedef; shared; entity-headers; win32-reference] */
-typedef ULONG_PTR SIZE_T;
 
 /* SSIZE_T  [typedef; shared; entity-headers; win32-reference] */
 typedef LONG_PTR SSIZE_T;
 
-/* UINT32  [typedef; shared; entity-headers; win32-reference] */
-typedef unsigned int UINT32;
-
 /* UINT64  [typedef; shared; entity-headers; win32-reference] */
 typedef unsigned __int64 UINT64;
-
-/* ULONG32  [typedef; shared; entity-headers; win32-reference] */
-typedef unsigned int ULONG32;
 
 /* ULONG64  [typedef; shared; entity-headers; win32-reference] */
 typedef unsigned __int64 ULONG64;

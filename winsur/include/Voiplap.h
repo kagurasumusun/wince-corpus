@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define VOIPLAP_E_BUSY 6008
 #define VOIPLAP_E_CANTAUTHENTICATESERVER 6004
 #define VOIPLAP_E_CANTCONNECT 6003
@@ -28,7 +27,6 @@
 #define VOIPLAP_E_TRANSMISSIONFAILED 6005
 #define VOIPLAP_S_PCLOCKED 1
 #define VOIPLAP_S_PCUNLOCKED 0
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

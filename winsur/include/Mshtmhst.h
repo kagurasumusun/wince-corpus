@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define DOCHOSTUIDBLCLK_DEFAULT 0
 #define DOCHOSTUIDBLCLK_SHOWCODE 2
 #define DOCHOSTUIDBLCLK_SHOWPROPERTIES 1
@@ -49,7 +48,6 @@
 #define FOCUS_NONE 0
 #define FOCUS_RIGHT 4
 #define FOCUS_UP 1
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

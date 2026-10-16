@@ -17,11 +17,9 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 #define RIL_PARAM_NITZ_DAYLIGHTSAVINGOFFSET 0x00000004
 #define RIL_PARAM_NITZ_SYSTEMTIME 0x00000001
 #define RIL_PARAM_NITZ_TIMEZONEOFFSET 0x00000002
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

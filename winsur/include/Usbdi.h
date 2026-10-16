@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define USB_BIT_STUFFING_ERROR 0x00000002
 #define USB_BUFFER_OVERRUN_ERROR 0x0000000C
 #define USB_BUFFER_UNDERRUN_ERROR 0x0000000D
@@ -31,7 +30,6 @@
 #define USB_PID_CHECK_FAILURE_ERROR 0x00000006
 #define USB_STALL_ERROR 0x00000004
 #define USB_UNEXPECTED_PID_ERROR 0x00000007
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

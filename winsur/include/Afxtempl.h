@@ -191,19 +191,12 @@ throw( CMemoryException );
  * ================================================================ */
 
 /* function */
-CList( int nBlockSize = 10 );
 CMap( int nBlockSize = 10 );
 TYPE& ElementAt( int nIndex );
-POSITION FindIndex( int nIndex ) const;
 void FreeExtra( );
-TYPE GetAt( int nIndex ) const;
-UINT GetHashTableSize( ) const;
-void GetNextAssoc( POSITION& rNextPosition, KEY& rKey, VALUE& rValue ) const;
-int GetUpperBound( ) const;
 void InitHashTable( UINT hashSize );
 POSITION InsertAfter( POSITION position, ARG_TYPE newElement );
 POSITION InsertBefore( POSITION position, ARG_TYPE newElement );
-BOOL Lookup( ARG_KEY key, VALUE& rValue ) const;
 BOOL RemoveKey( ARG_KEY key );
 void SetAt( int nIndex, ARG_TYPE newElement );
 void SetAtGrow( int nIndex, ARG_TYPE newElement ); throw( CMemoryException );

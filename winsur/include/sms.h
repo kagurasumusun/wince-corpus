@@ -17,8 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define SMS_MAX_ADDRESS_LENGTH 256
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 #define BPSGS_UNKNOWN 0
 #define NOTIFICATIONPSIT_LINE1 1
 #define NOTIFICATIONPSIT_LINE2 2
@@ -58,6 +56,7 @@
 #define SMS_E_UNASSIGNEDNUMBER 0x010d
 #define SMS_E_UNIDENTIFIEDSUBCRIBER 0x010f
 #define SMS_E_UNKNOWNSCADDRESS 0x010e
+#define SMS_MAX_ADDRESS_LENGTH 256
 #define SMS_MSGPROTOCOL_DEPERSONALIZATION 0x00000025
 #define SMS_MSGPROTOCOL_EMAIL 0x00000012
 #define SMS_MSGPROTOCOL_ERMES 0x00000007
@@ -108,7 +107,6 @@
 #define TEXTPSPRI_NORMAL 1
 #define WCMPPSMT_UNSUPPORTED 0
 #define WDPPSPA_8_BIT_PORT_NUMBERS 0
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

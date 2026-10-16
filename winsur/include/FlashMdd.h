@@ -17,13 +17,11 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 #define FLASH_PARTITION_FLAG_DIRECT_MAP 0x00000001
 #define FLASH_PARTITION_FLAG_READ_ONLY 0x00000002
 #define FLASH_PARTITION_FLAG_RESERVED 0x00000004
 #define FLASH_SECTOR_REQUEST_FLAG_ATOMIC 0x00000001
 #define FLASH_SECTOR_REQUEST_FLAG_WRITE_THROUGH 0x00000002
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

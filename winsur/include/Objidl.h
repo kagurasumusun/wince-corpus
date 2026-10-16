@@ -17,8 +17,25 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
+#define ADVF_DATAONSTOP 64
+#define ADVF_NODATA 1
+#define ADVF_ONLYONCE 4
+#define ADVF_PRIMEFIRST 2
+#define ADVFCACHE_FORCEBUILTIN 16
+#define ADVFCACHE_NOHANDLER 8
+#define ADVFCACHE_ONSAVE 32
 #define COLE_DEFAULT_AUTHINFO (
 #define COLE_DEFAULT_PRINCIPAL (
+#define DATADIR_GET 1
+#define DATADIR_SET 2
+#define DVASPECT_CONTENT 1
+#define DVASPECT_DOCPRINT 8
+#define DVASPECT_ICON 4
+#define DVASPECT_OPAQUE 16
+#define DVASPECT_THUMBNAIL 2
+#define DVASPECT_TRANSPARENT 32
+#define EXTCONN_STRONG 0x0001
+#define MKRREDUCE_ALL 0
 #define PIDDSI_BYTECOUNT 0x00000004
 #define PIDDSI_CATEGORY 0x00000002
 #define PIDDSI_COMPANY 0x0000000F
@@ -55,32 +72,11 @@
 #define PRSPEC_INVALID 0xFFFFFFFF
 #define PRSPEC_LPWSTR 0x00000000
 #define PRSPEC_PROPID 0x00000001
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 3.0..399 */
-#define DVASPECT_CONTENT 1
-#define DVASPECT_DOCPRINT 8
-#define DVASPECT_ICON 4
-#define DVASPECT_THUMBNAIL 2
-#define EXTCONN_STRONG 0x0001
 #define TYMED_FILE 2
 #define TYMED_HGLOBAL 1
 #define TYMED_ISTORAGE 8
 #define TYMED_ISTREAM 4
 #define TYMED_NULL 0
-#endif /* _WIN32_WCE */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
-#define ADVF_DATAONSTOP 64
-#define ADVF_NODATA 1
-#define ADVF_ONLYONCE 4
-#define ADVF_PRIMEFIRST 2
-#define ADVFCACHE_FORCEBUILTIN 16
-#define ADVFCACHE_NOHANDLER 8
-#define ADVFCACHE_ONSAVE 32
-#define DATADIR_GET 1
-#define DATADIR_SET 2
-#define DVASPECT_OPAQUE 16
-#define DVASPECT_TRANSPARENT 32
-#define MKRREDUCE_ALL 0
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

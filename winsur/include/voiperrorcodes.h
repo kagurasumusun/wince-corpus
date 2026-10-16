@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define VOIP_E_ALREADYINITIALIZED 0x80cc0003
 #define VOIP_E_BUSY 0x80cc0006
 #define VOIP_E_ENUMOUTOFDATE 0x80cc0000
@@ -32,6 +31,5 @@
 #define VOIP_E_TIMENOTSET 0x80cc0008
 #define VOIP_E_TOOMANYCONFERENCEPARTICIPANTS 0x80cc000d
 #define VOIP_S_DONT_TERMINATE 0x00040000
-#endif /* _WIN32_WCE */
 
 #endif /* _VOIPERRORCODES_ */

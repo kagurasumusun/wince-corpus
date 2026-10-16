@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 424 constants, 40 declarations, 10 outlines, 2 base types, 0 extra macros, 1 extra decls
+ * 424 constants, 40 declarations, 0 outlines, 2 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _WINNLS_
 #define _WINNLS_
@@ -17,9 +17,43 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
+#define C1_ALPHA 0x0100
+#define C1_BLANK 0x0040
+#define C1_CNTRL 0x0020
 #define C1_DEFINED 0x0200
+#define C1_DIGIT 0x0004
+#define C1_LOWER 0x0002
+#define C1_PUNCT 0x0010
+#define C1_SPACE 0x0008
+#define C1_UPPER 0x0001
+#define C1_XDIGIT 0x0080
+#define C2_ARABICNUMBER 0x0006
+#define C2_BLOCKSEPARATOR 0x0008
+#define C2_COMMONSEPARATOR 0x0007
+#define C2_EUROPENUMBER 0x0003
+#define C2_EUROPESEPARATOR 0x0004
+#define C2_EUROPETERMINATOR 0x0005
+#define C2_LEFTTORIGHT 0x0001
+#define C2_NOTAPPLICABLE 0x0000
+#define C2_OTHERNEUTRAL 0x000B
+#define C2_RIGHTTOLEFT 0x0002
+#define C2_SEGMENTSEPARATOR 0x0009
+#define C2_WHITESPACE 0x000A
+#define C3_ALPHA 0x8000
+#define C3_DIACRITIC 0x0002
+#define C3_FULLWIDTH 0x0080
+#define C3_HALFWIDTH 0x0040
 #define C3_HIGHSURROGATE 0x0800
+#define C3_HIRAGANA 0x0020
+#define C3_IDEOGRAPH 0x0100
+#define C3_KASHIDA 0x0200
+#define C3_KATAKANA 0x0010
+#define C3_LEXICAL 0x0400
 #define C3_LOWSURROGATE 0x1000
+#define C3_NONSPACING 0x0001
+#define C3_NOTAPPLICABLE 0x0000
+#define C3_SYMBOL 0x0008
+#define C3_VOWELMARK 0x0004
 #define CAL_GREGORIAN 1
 #define CAL_GREGORIAN_ARABIC 10
 #define CAL_GREGORIAN_ME_FRENCH 9
@@ -87,8 +121,15 @@
 #define CALINFO_ENUMPROC CALINFO_ENUMPROCW
 #define CALINFO_ENUMPROCEX CALINFO_ENUMPROCEXW
 #define CODEPAGE_ENUMPROC CODEPAGE_ENUMPROCW
+#define CP_ACP 0
 #define CP_INSTALLED 1
+#define CP_MACCP 2
+#define CP_OEMCP 1
 #define CP_SUPPORTED 2
+#define CP_SYMBOL 42
+#define CP_THREAD_ACP 3
+#define CP_UTF7 65000
+#define CP_UTF8 65001
 #define CSTR_EQUAL 2
 #define CSTR_GREATER_THAN 3
 #define CSTR_LESS_THAN 1
@@ -207,6 +248,7 @@
 #define CTRY_VIET_NAM 84
 #define CTRY_YEMEN 967
 #define CTRY_ZIMBABWE 263
+#define DATE 9
 #define DATE_LONGDATE 2
 #define DATE_LTRREADING 16
 #define DATE_RTLREADING 32
@@ -317,6 +359,13 @@
 #define LOCALE_SCOUNTRY 6
 #define LOCALE_SCURRENCY 20
 #define LOCALE_SDATE 29
+#define LOCALE_SDAYNAME1 0
+#define LOCALE_SDAYNAME2 1
+#define LOCALE_SDAYNAME3 2
+#define LOCALE_SDAYNAME4 3
+#define LOCALE_SDAYNAME5 4
+#define LOCALE_SDAYNAME6 5
+#define LOCALE_SDAYNAME7 6
 #define LOCALE_SDECIMAL 14
 #define LOCALE_SENGCOUNTRY 0x1002
 #define LOCALE_SENGCURRNAME 0x1007
@@ -396,59 +445,6 @@
 #define WC_DISCARDNS 16
 #define WC_NO_BEST_FIT_CHARS 1024
 #define WC_SEPCHARS 32
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 3.0..399 */
-#define C1_ALPHA 0x0100
-#define C1_BLANK 0x0040
-#define C1_CNTRL 0x0020
-#define C1_DIGIT 0x0004
-#define C1_LOWER 0x0002
-#define C1_PUNCT 0x0010
-#define C1_SPACE 0x0008
-#define C1_UPPER 0x0001
-#define C1_XDIGIT 0x0080
-#define C2_ARABICNUMBER 0x0006
-#define C2_BLOCKSEPARATOR 0x0008
-#define C2_COMMONSEPARATOR 0x0007
-#define C2_EUROPENUMBER 0x0003
-#define C2_EUROPESEPARATOR 0x0004
-#define C2_EUROPETERMINATOR 0x0005
-#define C2_LEFTTORIGHT 0x0001
-#define C2_NOTAPPLICABLE 0x0000
-#define C2_OTHERNEUTRAL 0x000B
-#define C2_RIGHTTOLEFT 0x0002
-#define C2_SEGMENTSEPARATOR 0x0009
-#define C2_WHITESPACE 0x000A
-#define C3_ALPHA 0x8000
-#define C3_DIACRITIC 0x0002
-#define C3_FULLWIDTH 0x0080
-#define C3_HALFWIDTH 0x0040
-#define C3_HIRAGANA 0x0020
-#define C3_IDEOGRAPH 0x0100
-#define C3_KASHIDA 0x0200
-#define C3_KATAKANA 0x0010
-#define C3_LEXICAL 0x0400
-#define C3_NONSPACING 0x0001
-#define C3_NOTAPPLICABLE 0x0000
-#define C3_SYMBOL 0x0008
-#define C3_VOWELMARK 0x0004
-#define LOCALE_SDAYNAME1 0
-#define LOCALE_SDAYNAME2 1
-#define LOCALE_SDAYNAME3 2
-#define LOCALE_SDAYNAME4 3
-#define LOCALE_SDAYNAME5 4
-#define LOCALE_SDAYNAME6 5
-#define LOCALE_SDAYNAME7 6
-#endif /* _WIN32_WCE */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
-#define CP_ACP 0
-#define CP_MACCP 2
-#define CP_OEMCP 1
-#define CP_SYMBOL 42
-#define CP_THREAD_ACP 3
-#define CP_UTF7 65000
-#define CP_UTF8 65001
-#define DATE 9
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * base types -- fundamental Windows type definitions
@@ -464,37 +460,10 @@ typedef DWORD LCID;
 typedef DWORD LCTYPE;
 
 /* ==================================================================
- * macros -- the macro/#define blocks the pages print (verbatim)
- * ================================================================ */
-
-/* CRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
-
-/* HIMAGELIST  [typedef; ce-only; heuristic-prefix] */
-
-/* HIMC  [typedef; ce-only; heuristic-prefix] */
-
-/* LPCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
-
-/* LUID  [typedef; ce-only; heuristic-prefix] */
-
-/* PCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
-
-/* PCWCH  [typedef; ce-only; heuristic-prefix] */
-
-/* PLUID  [typedef; ce-only; heuristic-prefix] */
-
-/* REGSAM  [typedef; ce-only; heuristic-prefix] */
-
-/* UNSIGNED  [typedef; ce-only; heuristic-prefix] */
-
-/* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
-
-/* LCTYPE  [typedef; shared; entity-headers; win32-reference] */
-typedef DWORD LCTYPE;
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
 
@@ -823,13 +792,5 @@ BOOL GetStringTypeW(
  LPWORD lpCharType 
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-HRESULT STDMETHODCALLTYPE SetLocale( DWORDin_dwLangID);
 
 #endif /* _WINNLS_ */

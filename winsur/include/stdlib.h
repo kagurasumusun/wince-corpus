@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1 constants, 130 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 1 constants, 129 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _STDLIB_
 #define _STDLIB_
@@ -17,9 +17,7 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define DIV 0x0465
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -93,11 +91,6 @@ int getchar( void );wint_t getwchar( void );
 
 /* gets  [function; ce-only; CE 3.0..399, 5.0..599; coredll.dll, coresioa.lib] */
 char *gets( char*buffer);wchar_t *_getws( wchar_t*buffer);
-
-/* memchr  [function; ce-only; CE 3.0..399, 5.0..599; coredll.dll, coremain.lib] */
-void *memchr( const void*buf, int c, size_tcount);inline wchar_t *wmemset( wchar_t*buf, 
- wchar_tc,
- size_tcount);
 
 /* printf  [function; ce-only; CE 3.0..399, 5.0..599; coredll.dll, coresioa.lib] */
 int printf( const char*format [,argument]... 

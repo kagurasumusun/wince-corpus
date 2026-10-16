@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 16 constants, 11 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 16 constants, 17 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _SERVICE_
 #define _SERVICE_
@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define SERVICE_INIT_CONFIGURE_CONNECT 0x4
 #define SERVICE_INIT_CONFIGURE_NO_CONNECT 0x2
 #define SERVICE_INIT_CONFIGURE_PENDING_CONNECT 0x3
@@ -34,7 +33,6 @@
 #define SERVICE_STATE_UNINITIALIZED 5
 #define SERVICE_STATE_UNKNOWN 0xffffffff
 #define SERVICE_STATE_UNLOADING 4
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
@@ -138,6 +136,31 @@ BOOL ServiceIoControl(
 BOOL ServiceUnbindPorts(
  HANDLE hService
 );
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 420 && _WIN32_WCE < 600)) /* CE 4.2..599 */
+
+/* IPMService::ConfigureServiceUI  [function; ce-only; CE 4.2..599] */
+HRESULT ConfigureServiceUI( 
+ IPMBootableDevice* piBootableDevice, 
+ IPMServiceInfo* piServiceInfo, 
+ VARIANT hWnd 
+);
+
+/* IPMService::Id  [function; ce-only; CE 4.2..599] */
+HRESULT Id(BSTR* pbstrServiceCLSID);
+
+/* IPMService::InitService  [function; ce-only; CE 4.2..599] */
+HRESULT InitService(IPMBootableDevice* piBootableDevice,IPMServiceInfo* piServiceInfo);
+
+/* IPMService::IsServiceReleaseable  [function; ce-only; CE 4.2..599] */
+HRESULT IsServiceReleaseable(VARIANT_BOOL* pBool);
+
+/* IPMService::Name  [function; ce-only; CE 4.2..599] */
+HRESULT Name(BSTR* pbstrServiceName);
+
+/* IPMServiceCategory::Id  [function; ce-only; CE 4.2..599] */
+HRESULT Id(BSTR* pbstrServiceCategoryId);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define FWA_ALLOW 0x02
 #define FWA_ALLOW_RESPONSE 0x03
 #define FWA_BLOCK 0x01
@@ -32,7 +31,6 @@
 #define FWD_WEDNESDAY 0x08
 #define FWD_WEEKDAY 0x3E
 #define FWD_WEEKEND 0x41
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -244,9 +242,7 @@ BOOL IsInterfaceFirewalled(
 
 /* struct */
 typedef struct _FW_IP_ADDRESS { USHORT Family; union { IN6_ADDR AddressIPv6; IN_ADDR AddressIPv4; };} FW_IP_ADDRESS, *PFW_IP_ADDRESS;
-typedef struct _FIREWALL_LOG_ENTRY { FW_IP_ADDRESS PrivateHost; FW_IP_ADDRESS PublicHost; INT Protocol; FW_ACTIONS Action; FW_DIRECTIONS Direction; union { struct { ushort tcp_src; ushort tcp_dest; int tcp_seq; int tcp_ack; ushort tcp_flags; ushort tcp_window; ushort tcp_xsum; ushort tcp_urgent; }TCPHeader; struct { ushort Source; ushort Dest; ushort Length; ushort Checksum; }UDPHeader; struct { uchar ich_type; uchar ich_code; ushort ich_xsum; ulong ich_param; }ICMPHeader; struct { uchar Type; uchar Code; ushort Checksum; }ICMPv6Header; };}FW_LOG_ENTRY, *PFW_LOG_ENTRY;
 typedef struct _FIREWALL_RULE{ DWORD dwSize; HRULE hRule; DWORD dwFlags; DWORD dwMask; LPCWSTR wszDescription; FW_IP_ADDRESS PrivateHost; FW_IP_ADDRESS PublicHost; union { UINT PublicHostPrefixLength; IN_ADDR PublicHostMask; }; INT Protocol; FW_ACTIONS Action; WORD wHourStart, wHourEnd; WORD wDayOfWeek; WORD wDay; WORD wMonth; union { { USHORT PortMin; USHORT PortMax; }; struct { UCHAR Type; UCHAR Code; }; };}FW_RULE, *PFW__RULE;
-typedef struct _FIREWALL_LOG_ENTRY { FW_IP_ADDRESS PrivateHost; FW_IP_ADDRESS PublicHost; INT Protocol; FW_ACTIONS Action; FW_DIRECTIONS Direction; union { struct { ushort tcp_src; ushort tcp_dest; int tcp_seq; int tcp_ack; ushort tcp_flags; ushort tcp_window; ushort tcp_xsum; ushort tcp_urgent; }TCPHeader;
 typedef struct _FIREWALL_RULE { DWORD dwSize; HRULE hRule; DWORD dwFlags; DWORD dwMask; LPCWSTR wszDescription; FW_IP_ADDRESS PrivateHost; FW_IP_ADDRESS PublicHost; union { UINT PublicHostPrefixLength; IN_ADDR PublicHostMask; };
 typedef struct _FW_IP_ADDRESS { USHORT Family; union { IN6_ADDR AddressIPv6; IN_ADDR AddressIPv4; };
 

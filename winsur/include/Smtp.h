@@ -17,10 +17,8 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213)) /* CE 2.11..2.12 */
 #define TRANSPORT_CONN_LOST WM_USER + 1
 #define TRANSPORT_REFRESH WM_USER + 2
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

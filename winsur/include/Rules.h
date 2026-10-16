@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define FWM_ACTION 0x40
 #define FWM_CODE 0x10
 #define FWM_DAY 0x200
@@ -31,7 +30,6 @@
 #define FWM_PUBLIC_HOST_PREFIX 0x1000
 #define FWM_TIME_OF_DAY 0x80
 #define FWM_TYPE 0x08
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

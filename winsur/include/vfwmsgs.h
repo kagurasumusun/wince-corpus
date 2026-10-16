@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 3.0..399 */
 #define VFW_E_ADVISE_ALREADY_SET 0x80040236
 #define VFW_E_ALREADY_CANCELLED 0x80040234
 #define VFW_E_ALREADY_COMMITTED 0x8004020F
@@ -129,6 +128,5 @@
 #define VFW_S_STATE_INTERMEDIATE 0x00040237
 #define VFW_S_STREAM_OFF 0x00040267
 #define VFW_S_VIDEO_NOT_RENDERED 0x00040257
-#endif /* _WIN32_WCE */
 
 #endif /* _VFWMSGS_ */

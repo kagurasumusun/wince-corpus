@@ -66,8 +66,6 @@ virtual BOOL Unlock( ) = 0;
  * ================================================================ */
 
 /* function */
-CEvent( BOOL bInitiallyOwn = FALSE, BOOL bManualReset = FALSE, LPCTSTR lpszName = NULL, LPSECURITY_ATTRIBUTES lpsaAttribute = NULL );
-CSingleLock( CSyncObject* pObject, BOOL bInitialLock = FALSE );
 CSyncObject( LPCTSTR pstrName );
 BOOL IsLocked( );
 

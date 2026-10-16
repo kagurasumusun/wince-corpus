@@ -17,32 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define DISPID_COLLECT (-8)
-#define DISPID_CONSTRUCTOR (-6)
-#define DISPID_DESTRUCTOR (-7)
-#define DISPID_EVALUATE (-5)
-#define DISPID_NEWENUM (-4)
-#define DISPID_PROPERTYPUT (-3)
-#define DISPID_UNKNOWN (-1)
-#define DISPID_VALUE (0)
-#define FADF_CREATEVECTOR (0x2000)
-#define FADF_DATADELETED (0x1000)
-#define FADF_HAVEIID 0x0040
-#define FADF_HAVEVARTYPE 0x0080
-#define FADF_RECORD 0x0020
-#define IDLFLAG_FIN PARAMFLAG_FIN
-#define IDLFLAG_FLCID PARAMFLAG_FLCID
-#define IDLFLAG_FOUT PARAMFLAG_FOUT
-#define IDLFLAG_FRETVAL PARAMFLAG_FRETVAL
-#define IDLFLAG_NONE PARAMFLAG_NONE
-#define PARAMFLAG_FHASDEFAULT (32)
-#define PARAMFLAG_FIN (1)
-#define PARAMFLAG_FLCID (4)
-#define PARAMFLAG_FOPT (16)
-#define PARAMFLAG_FOUT (2)
-#define PARAMFLAG_FRETVAL (8)
-#define PARAMFLAG_NONE (0)
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 3.0..399 */
 #define CC_CDECL 1
 #define CC_MACPASCAL 3
 #define CC_MAX 9
@@ -52,33 +26,28 @@
 #define CC_RESERVED 5
 #define CC_STDCALL 4
 #define CC_SYSCALL 6
+#define DISPID_COLLECT (-8)
+#define DISPID_CONSTRUCTOR (-6)
+#define DISPID_DESTRUCTOR (-7)
+#define DISPID_EVALUATE (-5)
+#define DISPID_NEWENUM (-4)
+#define DISPID_PROPERTYPUT (-3)
+#define DISPID_UNKNOWN (-1)
+#define DISPID_VALUE (0)
 #define FADF_AUTO 0x0001
 #define FADF_BSTR 0x0100
+#define FADF_CREATEVECTOR (0x2000)
+#define FADF_DATADELETED (0x1000)
 #define FADF_DISPATCH 0x0400
 #define FADF_EMBEDDED 0x0004
 #define FADF_FIXEDSIZE 0x0010
+#define FADF_HAVEIID 0x0040
+#define FADF_HAVEVARTYPE 0x0080
+#define FADF_RECORD 0x0020
 #define FADF_RESERVED 0xF0E8
 #define FADF_STATIC 0x0002
 #define FADF_UNKNOWN 0x0200
 #define FADF_VARIANT 0x0800
-#define TKIND_ENUM 0
-#define VT_BOOL 11
-#define VT_BSTR 8
-#define VT_CY 6
-#define VT_DATE 7
-#define VT_DISPATCH 9
-#define VT_EMPTY 0
-#define VT_ERROR 10
-#define VT_I2 2
-#define VT_I4 3
-#define VT_NULL 1
-#define VT_R4 4
-#define VT_R8 5
-#define VT_UI1 17
-#define VT_UNKNOWN 13
-#define VT_VARIANT 12
-#endif /* _WIN32_WCE */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define FUNCFLAG_FBINDABLE 0x4
 #define FUNCFLAG_FDEFAULTBIND 0x20
 #define FUNCFLAG_FDEFAULTCOLLELEM 0x100
@@ -92,11 +61,24 @@
 #define FUNCFLAG_FSOURCE 0x2
 #define FUNCFLAG_FUIDEFAULT 0x200
 #define FUNCFLAG_FUSESGETLASTERROR 0x80
+#define IDLFLAG_FIN PARAMFLAG_FIN
+#define IDLFLAG_FLCID PARAMFLAG_FLCID
+#define IDLFLAG_FOUT PARAMFLAG_FOUT
+#define IDLFLAG_FRETVAL PARAMFLAG_FRETVAL
+#define IDLFLAG_NONE PARAMFLAG_NONE
 #define IMPLTYPEFLAG_FDEFAULT 0x1
 #define IMPLTYPEFLAG_FDEFAULTVTABLE 0x8
 #define IMPLTYPEFLAG_FRESTRICTED 0x4
 #define IMPLTYPEFLAG_FSOURCE 0x2
+#define PARAMFLAG_FHASDEFAULT (32)
+#define PARAMFLAG_FIN (1)
+#define PARAMFLAG_FLCID (4)
+#define PARAMFLAG_FOPT (16)
+#define PARAMFLAG_FOUT (2)
+#define PARAMFLAG_FRETVAL (8)
+#define PARAMFLAG_NONE (0)
 #define SYS_WIN16 0
+#define TKIND_ENUM 0
 #define TYPEFLAG_FAGGREGATABLE 0x400
 #define TYPEFLAG_FAPPOBJECT 0x01
 #define TYPEFLAG_FCANCREATE 0x02
@@ -115,32 +97,44 @@
 #define VT_ARRAY 0x2000
 #define VT_BLOB 65
 #define VT_BLOBOBJECT 70
+#define VT_BOOL 11
+#define VT_BSTR 8
 #define VT_BSTR_BLOB 0xfff
 #define VT_BYREF 0x4000
 #define VT_CF 71
 #define VT_CLSID 72
+#define VT_CY 6
+#define VT_DATE 7
 #define VT_DECIMAL 14
+#define VT_DISPATCH 9
+#define VT_EMPTY 0
+#define VT_ERROR 10
 #define VT_FILETIME 64
 #define VT_I1 16
+#define VT_I2 2
+#define VT_I4 3
 #define VT_I8 20
 #define VT_INT 22
 #define VT_LPSTR 30
 #define VT_LPWSTR 31
+#define VT_NULL 1
+#define VT_R4 4
+#define VT_R8 5
+#define VT_RESERVED 0x8000
 #define VT_STORAGE 67
 #define VT_STORED_OBJECT 69
 #define VT_STREAM 66
 #define VT_STREAMED_OBJECT 68
 #define VT_TYPEMASK 0xFFF
+#define VT_UI1 17
 #define VT_UI2 18
 #define VT_UI4 19
 #define VT_UI8 21
 #define VT_UINT 23
+#define VT_UNKNOWN 13
+#define VT_VARIANT 12
 #define VT_VECTOR 0x1000
 #define VT_VERSIONED_STREAM 73
-#endif /* _WIN32_WCE */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-#define VT_RESERVED 0x8000
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

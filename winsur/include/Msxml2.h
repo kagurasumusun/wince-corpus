@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define COMPLETED 4
 #define INTERACTIVE 3
 #define LOADED 2
@@ -57,7 +56,6 @@
 #define XML_REQUIRED_NDATA 0xC00CE005L
 #define XML_ROOT_NAME_MISMATCH 0xC00CE013L
 #define XML_XMLNS_FIXED 0xC00CE01E
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

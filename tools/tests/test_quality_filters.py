@@ -72,5 +72,35 @@ class GluedPrototypeTests(unittest.TestCase):
             "HANDLE CreateFile(LPCTSTR lpFileName);"))
 
 
+class ToolchainCTests(unittest.TestCase):
+    def test_keeps_c_messagebox(self):
+        text = ("int MessageBox(HWND hWnd, LPCTSTR lpText, "
+                "LPCTSTR lpCaption, UINT uType);")
+        self.assertTrue(q.is_c_toolchain_declaration(text, "MessageBox",
+                                                     "function"))
+
+    def test_drops_csharp_and_cpp(self):
+        self.assertFalse(q.is_c_toolchain_declaration(
+            "int MessageBoxW(int hWnd, String text, String caption, uint type);",
+            "MessageBoxW", "function"))
+        self.assertFalse(q.is_c_toolchain_declaration(
+            "virtual HRESULT STDMETHODCALLTYPE GetFocusedElement("
+            "IXRFrameworkElement** ppFocused) = 0;",
+            "GetFocusedElement", "function"))
+        self.assertTrue(q.is_cpp_or_managed(
+            "void ShowScrollBar(BOOL bShow = TRUE);", "ShowScrollBar"))
+        self.assertFalse(q.is_c_toolchain_declaration(
+            "VOID WINAPI GetDC_I(HWND hwndThis);", "GetDC_I", "function"))
+        self.assertTrue(q.is_cpp_or_managed(
+            "int GetMenuString(UINT nIDItem, LPTSTR lpString, "
+            "int nMaxCount, UINT nFlags) const;", "GetMenuString"))
+
+    def test_keeps_c_enum_zero(self):
+        text = ("typedef enum _BUS_DATA_TYPE { "
+                "ConfigurationSpaceUndefined = -1, Cmos } BUS_DATA_TYPE;")
+        self.assertTrue(q.is_c_toolchain_declaration(
+            text, "BUS_DATA_TYPE", "enum"))
+
+
 if __name__ == "__main__":
     unittest.main()

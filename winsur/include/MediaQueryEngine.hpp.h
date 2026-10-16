@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define Attr_Title 0
 #define DETACHED 0
 #define MQE_EVENT_NETWORKAVAILABLE 0
@@ -25,7 +24,6 @@
 #define SearchBy_None 0
 #define SortBy_None 0
 #define UnInitialized 0
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

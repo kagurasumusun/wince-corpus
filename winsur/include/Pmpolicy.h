@@ -17,12 +17,10 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define PPN_APPBUTTONPRESSED 0x0006
 #define PPN_POWERCHANGE 0x0002
 #define PPN_REEVALUATESTATE 0x0001
 #define PPN_SUSPENDKEYRELEASED 0x0005
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 10 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 9 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _ACMDRV_
 #define _ACMDRV_
@@ -44,13 +44,6 @@ BOOL ACM_IOControl(
  PBYTE pBufOut,
  DWORD dwLenOut,
  PDWORD pdwActualOut
-);
-
-/* ACM_Open  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Acmdwrap.lib] */
-PVOID ACM_Open(
- DWORD dwData,
- DWORD dwAccess,
- DWORD dwShareMode
 );
 
 /* ACM_PowerDown  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Acmdwrap.lib] */

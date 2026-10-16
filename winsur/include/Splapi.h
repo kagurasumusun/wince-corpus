@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 3.0..399 */
 #define SPL_LIMIT_ADD 35
 #define SPL_LIMIT_ADD_DOUBLE_CONSONANT 14
 #define SPL_LIMIT_ADD_DOUBLE_VOWEL 16
@@ -32,7 +31,6 @@
 #define SPL_LIMIT_TRANSPOSE 19
 #define SPL_LIMIT_TRANSPOSE_CONSONANT 18
 #define SPL_LIMIT_TRANSPOSE_VOWEL 15
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

@@ -182,6 +182,7 @@
 #define PD_ENABLESETUPTEMPLATE 0x00008000
 #define PD_ENABLESETUPTEMPLATEHANDLE 0x00020000
 #define PD_EXCLUSIONFLAGS 0x01000000
+#define PD_FORCE_SWITCH 0x00010000
 #define PD_HIDEPRINTTOFILE 0x00100000
 #define PD_NOCURRENTPAGE 0x00800000
 #define PD_NONETWORKBUTTON 0x00200000
@@ -254,9 +255,6 @@
 #define WM_PSD_MINMARGINRECT (WM_USER+2)
 #define WM_PSD_PAGESETUPDLG WM_USER
 #define WM_PSD_YAFULLPAGERECT (WM_USER+6)
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
-#define PD_FORCE_SWITCH 0x00010000
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

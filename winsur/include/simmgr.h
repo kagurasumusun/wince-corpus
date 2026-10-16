@@ -58,9 +58,6 @@
 #define SIM_E_SVCPUKREQUIRED 0
 #define SIM_E_UNDETERMINED 0
 #define SIM_E_UNSUPPORTED 0
-#define SIM_SMSSTORAGE_BROADCAST 0
-#define SIM_SMSSTORAGE_SIM 0
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 #define SIM_INIT_SIMCARD_NOTIFICATIONS 0x00000001
 #define SIM_RECORDTYPE_CYCLIC 0x00000002
 #define SIM_RECORDTYPE_DEDICATED 0x00000005
@@ -68,7 +65,8 @@
 #define SIM_RECORDTYPE_MASTER 0x00000004
 #define SIM_RECORDTYPE_TRANSPARENT 0x00000001
 #define SIM_RECORDTYPE_UNKNOWN 0x00000000
-#endif /* _WIN32_WCE */
+#define SIM_SMSSTORAGE_BROADCAST 0
+#define SIM_SMSSTORAGE_SIM 0
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

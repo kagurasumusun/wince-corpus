@@ -177,47 +177,18 @@ virtual BOOL SplitRow( int cyBefore );
  * ================================================================ */
 
 /* function */
-virtual void ActivateNext( BOOL bPrev = FALSE );
-BOOL AutoLoad( UINT nID, CWnd* pParent );
 CCtrlView( LPCTSTR lpszClass, DWORD dwStyle )
 CFormView( LPCTSTR lpszTemplateName );
-virtual BOOL CanActivateNext( BOOL bPrev = FALSE );
-virtual BOOL CreateScrollBarCtrl( DWORD dwStyle, UINT nID );
-BOOL CreateStatic( CWnd* pParentWnd, int nRows, int nCols, DWORD dwStyle = WS_CHILD | WS_VISIBLE, UINT nID = AFX_IDW_PANE_FIRST );
-virtual void DeleteRow( int rowDelete );
-virtual void DeleteView( int row, int col );
-virtual BOOL DoKeyboardSplit( );
-virtual BOOL DoScroll( CView* pViewFrom, UINT nScrollCode, BOOL bDoScroll = TRUE );
-virtual BOOL DoScrollBy( CView* pViewFrom, CSize sizeScroll, BOOL bDoScroll = TRUE );
-virtual void DrawTrackerRect( LPCRECT lpRect, CWnd* pWndClipTo, CDC* pDC, CWnd* pWnd );
-virtual CWnd* GetActivePane(int* pRow = NULL, int* pCol = NULL);
-UINT GetBufferLength( ) const;
 int GetColumnCount( );
 void GetColumnInfo( int col, int& cxCur, int& cxMin );
-virtual UINT GetHandleMask( ) const;
-CWnd* GetPane( int row, int col );
 int GetRowCount( );
 void GetRowInfo( int row, int& cyCur, int& cyMin );
-DWORD GetScrollStyle( ) const;
-void GetTrueRect( LPRECT lpTrueRect ) const;
 int IdFromRowCol( int row, int col );
-BOOL IsChildPane( CWnd* pWnd, int& row, int& col );
-LPCTSTR LockBuffer( ) const;
-int NormalizeHit( int nHandle ) const;
-virtual void OnChangedRect( const CRect& rectOld );
-virtual void OnDrawSplitter( CDC* pDC, ESplitType nType, const CRect& rect );
-virtual void OnInvertTracker( const CRect& rect );
 void RecalcLayout( );
 void SerializeRaw( CArchive& ar );
-virtual void SetActivePane( int row, int col, CWnd* pWnd = NULL );
 void SetColumnInfo( int col, int cxIdeal, int cxMin );
 void SetRowInfo( int row, int cyIdeal, int cyMin );
 void SetScrollStyle( DWORD dwStyle );
 void SizeToContent( );
-virtual BOOL SplitColumn( int cxBefore );
-virtual BOOL SplitRow( int cyBefore );
-BOOL Track( CWnd* pWnd, CPoint point, BOOL bAllowInvert = FALSE, CWnd* pWndClipTo = NULL );
-BOOL TrackRubberBand( CWnd* pWnd, CPoint point, BOOL bAllowInvert = TRUE );
-void UnlockBuffer( ) const;
 
 #endif /* _AFXEXT_ */

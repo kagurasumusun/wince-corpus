@@ -38,12 +38,4 @@ void ProgressBarView_t::SetBorder(
 );
 #endif /* _WIN32_WCE */
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-void ProgressBarView_t::SetBorder(  int* piWndStyle,  LONG* plBorderStyle  );
-
 #endif /* _PROGRESSVIEW_HPP_ */

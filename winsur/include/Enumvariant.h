@@ -1,4 +1,4 @@
-/* shellsdk.h -- Windows CE unified surface
+/* Enumvariant.h -- Windows CE unified surface
  *
  * ONE tree for every CE generation.  Version differences use
  * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
@@ -7,26 +7,21 @@
  * tools/gen-include-def.py --unified.
  * 0 constants, 2 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
-#ifndef _SHELLSDK_
-#define _SHELLSDK_
+#ifndef _ENUMVARIANT_
+#define _ENUMVARIANT_
 
 
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 420 && _WIN32_WCE < 600)) /* CE 4.2..599 */
 
-/* SHFullScreen  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-BOOL SHFullScreen(
- HWND hwndRequester,
- DWORD dwState
-);
+/* IEnumVariant::Count  [function; ce-only; CE 4.2..599] */
+HRESULT Count(long* pVal);
 
-/* SHInitDialog  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-BOOL SHInitDialog(
- PSHINITDLGINFO pshidi
-);
+/* IEnumVariant::Item  [function; ce-only; CE 4.2..599] */
+HRESULT Item(long Index,VARIANT* pVariant)
 #endif /* _WIN32_WCE */
 
-#endif /* _SHELLSDK_ */
+#endif /* _ENUMVARIANT_ */

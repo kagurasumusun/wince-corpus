@@ -17,11 +17,9 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 #define FLASH_BLOCK_STATUS_BAD 0x1
 #define FLASH_BLOCK_STATUS_RESERVED 0x2
 #define FLASH_READ_STATUS_ECC_CORRECTION_REQUIRED 0x1
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

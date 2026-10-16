@@ -154,37 +154,13 @@ void SetTitle( UINT nStyle, LPCTSTR lpszText );
 
 /* function */
 void AddPage( CPropertyPage *pPage );
-CFileDialog( BOOL bOpenFileDialog, LPCTSTR lpszDefExt = NULL, LPCTSTR lpszFileName = NULL, DWORD dwFlags = OFN_HIDEREADONLY | OFN_OVERWRITEPROMPT, LPCTSTR lpszFilter = NULL, CWnd* pParentWnd = NULL );
 void CancelToClose( );
 void Construct( UINT nIDTemplate, UINT nIDCaption = 0 );
-int GetActiveIndex( ) const;
 static CFindReplaceDialog* PASCAL GetNotifier( LPARAM lParam );
-CPropertyPage* GetPage( int nPage ) const;
 int GetPageCount( );
-int GetPageIndex( CPropertyPage* pPage ) const;
-BOOL GetReadOnlyPref( ) const;
-BOOL IsTerminating( ) const;
-BOOL MatchCase( ) const;
-BOOL MatchWholeWord( ) const;
-virtual void OnApply( );
-virtual void OnFileNameChange( );
-virtual BOOL OnFileNameOK( );
-virtual void OnFolderChange( );
-virtual void OnInitDone( );
-virtual BOOL OnKillActive( );
-virtual void OnLBSelChangedNotify( UINT nIDBox, UINT iCurSel, UINT nCode);
-virtual BOOL OnQueryCancel( );
-virtual void OnReset( );
-virtual BOOL OnSetActive( );
-virtual UINT OnShareViolation( LPCTSTR lpszPathName );
-virtual void OnTypeChange( );
 BOOL PressButton( int nButton );
 LRESULT QuerySiblings( WPARAM wParam, LPARAM lParam );
 void RemovePage( CPropertyPage *pPage );
-BOOL ReplaceAll( ) const;
-BOOL ReplaceCurrent( ) const;
-BOOL SearchDown( ) const;
 BOOL SetActivePage( int nPage );
-void SetModified( BOOL bChanged = TRUE );
 
 #endif /* _AFXDLGS_ */

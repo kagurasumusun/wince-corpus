@@ -121,6 +121,13 @@ class GeneratorApiTests(unittest.TestCase):
         ])
         self.assertEqual(targets[0]["header"].lower(), "raserror.h")
 
+    def test_header_preference_ce_over_umbrella(self):
+        gen = self._load()
+        self.assertLess(gen.header_preference("winuser.h"),
+                        gen.header_preference("windows.h"))
+        self.assertLess(gen.header_preference("windef.h"),
+                        gen.header_preference("gdiplustypes.h"))
+
     def test_pick_constant_prefers_h_over_hpp(self):
         gen = self._load()
         targets = gen.pick_constant_targets("ANSI_CHARSET", [

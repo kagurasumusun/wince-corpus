@@ -432,6 +432,16 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: コンパイラが通る面（第9弾）
+
+コピーはしない。CeGCC が依拠したのは MSDN（既存コーパス）と、公開ドメインで書き直したヘッダ。追加の出所はライセンス済みのものだけ。
+
+- `Windows.h` に API を書いてから傘で消していたのをやめた（`MessageBox` / `MSG` が消えていた）。CE の `Winuser.h` / `WinDef.h` を、デスクトップ分割ヘッダや umbrella より優先。
+- `WinDef.h` を先に include できるよう `HANDLE` などを依存順で出す。CE は 32-bit なので `LONG_PTR` は `long`（desktop の `__int64` 行は使わない）。
+- `TRUE` / `FALSE` / 統合 KB の定数を世代 `#if` の外へ。
+- C++ / C# / ATL のゴミ（`String`, `virtual STDMETHOD`, デフォルト引数, `*_I`）をヘッダに出さない。
+- 穴埋めの順位: CE 頁 → Win32 CC-BY-4.0 → CeGCC w32api パブリックドメイン（名前だけ） → MIT `dotnet/pinvoke`（整数のみ）。ヘッダファイルのコピーはしない。Wine / ReactOS / mingw-w64 は使わない。
+
 ### 2026-10-16: コンパイラ/リンカ面（第8弾）
 
 アプリ/ドライバが `#include "Windows.h"` して `coredll.def` でリンクできることを目標にした。

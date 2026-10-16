@@ -99,12 +99,6 @@ typedef LPVOID SC_LOCK;
  * declaration body no page prints
  * ================================================================ */
 
-/* SC_HANDLE  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE SC_HANDLE;
-
-/* SC_LOCK  [typedef; shared; entity-headers; win32-reference] */
-typedef LPVOID SC_LOCK;
-
 /* SERVICE_STATUS_HANDLE  [typedef; shared; entity-headers; win32-reference] */
 typedef HANDLE SERVICE_STATUS_HANDLE;
 

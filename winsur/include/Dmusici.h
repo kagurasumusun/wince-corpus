@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 500)) /* CE 4.0..499 */
 #define DMUS_NOTEF_NOTEON 1
 #define DMUS_PLAYMODE_CHORD_INTERVALS 8
 #define DMUS_PLAYMODE_CHORD_ROOT 2
@@ -61,7 +60,6 @@
 #define DMUS_TRACKF_LOOP 2
 #define DMUS_TRACKF_SEEK 1
 #define DMUS_TRACKF_START 4
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

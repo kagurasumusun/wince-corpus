@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define CRED_FLAGS_PROMPT_NOW 2
 #define CRED_PERSIST_LOCAL_MACHINE 2
 #define CRED_PERSIST_SESSION 1
@@ -27,7 +26,6 @@
 #define CRED_TYPE_GENERIC 1
 #define CRED_TYPE_KERBEROS_PASSWORD 6
 #define CRED_TYPE_NTLM_PASSWORD 5
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

@@ -27,12 +27,4 @@ BOOL CreateStream( LPSTORAGE lpStorage, LPCTSTR lpszName, DWORD nOpenFlags = mod
 BOOL OpenStream( LPSTORAGE lpStorage, LPCTSTR lpszName, DWORD nOpenFlags = modeReadWrite|shareExclusive, CFileException* pError = NULL );
 #endif /* _WIN32_WCE */
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-BOOL CreateMemoryStream( CFileException* pError = NULL );
-
 #endif /* _AFXOLE_ */

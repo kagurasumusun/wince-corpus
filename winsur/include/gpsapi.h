@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 #define GPS_DATA_FLAGS_HARDWARE_OFF 0x00000001
 #define GPS_FIX_QUALITY_UNKNOWN 0
 #define GPS_FIX_SELECTION_UNKNOWN 0
@@ -43,7 +42,6 @@
 #define GPS_VALID_SPEED 0x00000008
 #define GPS_VALID_UTC_TIME 0x00000001
 #define GPS_VALID_VERTICAL_DILUTION_OF_PRECISION 0x00000400
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

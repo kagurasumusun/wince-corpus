@@ -17,8 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 #define SYSGEN_VOIP_VIDEO 1
-#endif /* _WIN32_WCE */
 
 #endif /* _CECONFIG_ */

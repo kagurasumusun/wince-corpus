@@ -112,29 +112,4 @@ STDMETHOD ShowHideStatusWnd(
 STDMETHOD UninitializeUIWindows(VOID);
 #endif /* _WIN32_WCE */
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-STDMETHOD GetCandWndPos(  LONG* px,  LONG* py  );
-STDMETHOD GetCompWndPos(  LONG* px,  LONG* py  );
-STDMETHOD GetCompoitionFont(  DWORD dwSize,  BYTE* pLogFont  );
-STDMETHOD GetStatusWndPos(  LONG* px,  LONG* py  );
-STDMETHOD InitializeUIWindows(VOID);
-STDMETHOD RedrawCandWnd(VOID);
-STDMETHOD RedrawCompWnd(VOID);
-STDMETHOD RedrawStatusWnd(VOID);
-STDMETHOD SetCandData(  DWORD dwSize,  BYTE* lpCandList  );
-STDMETHOD SetCandWndPos(  DWORD dwFlag,  RECT* pRect,  LONG x,  LONG y  );
-STDMETHOD SetCompData(  DWORD dwCompLen,  WCHAR* lpCompStr  );
-STDMETHOD SetCompWndPos(  LONG x,  LONG y  );
-STDMETHOD SetStatusData(  DWORD dwState  );
-STDMETHOD SetStatusWndPos(  LONG x,  LONG y  );
-STDMETHOD ShowHideCandWnd(  int bShow  );
-STDMETHOD ShowHideCompWnd(  int bShow  );
-STDMETHOD ShowHideStatusWnd(  int bShow  );
-STDMETHOD UninitializeUIWindows(VOID);
-
 #endif /* _KOREANIMEUI_ */

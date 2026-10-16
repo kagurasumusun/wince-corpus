@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 #define CS_CompressionCaps_CanBFrame 8
 #define CS_CompressionCaps_CanCrunch 2
 #define CS_CompressionCaps_CanKeyFrame 4
@@ -29,7 +28,6 @@
 #define CS_VideoControlFlag_FlipHorizontal 0x0001
 #define CS_VideoControlFlag_FlipVertical 0x0002
 #define CS_VideoControlFlag_Trigger 0x0008
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

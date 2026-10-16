@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 2 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 1 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _NTDDK_
 #define _NTDDK_
@@ -28,20 +28,6 @@ typedef struct String {
  WORD Padding[];
  WORD Value[];
 } String;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 200 && _WIN32_WCE < 210) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.0..209, 2.11..2.12, 3.0..699 */
-
-/* CONTAINING_RECORD  [function; shared; CE 2.0..209, 2.11..2.12, 3.0..699] */
-PCHAR CONTAINING_RECORD(
- PCHAR Address,
- TYPE Type,
- PCHAR Field
-);
 #endif /* _WIN32_WCE */
 
 #endif /* _NTDDK_ */

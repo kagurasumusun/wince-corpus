@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define RSF_AUTO_COMBINE 0x00000200
 #define RSF_COMBINE 0x00000008
 #define RSF_CONFLICT_OBJECT 0x00000001
@@ -32,7 +31,6 @@
 #define RSF_SYNC_DESKTOP_ONLY 0x00000020
 #define RSF_SYNC_DEVICE_ONLY 0x00000010
 #define RSF_UPDATED_HANDLE 0x00000040
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

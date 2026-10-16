@@ -17,10 +17,8 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 3.0..399 */
 #define ddgpePixelFormat_1bpp 0
 #define ddgpePixelFormat_CustomFormat 0x1000
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
@@ -508,8 +506,6 @@ struct GPEModeEx
 };
 
 /* function */
-virtual SCODE AllocBackBuffer( LPDDRAWI_DDRAWSURFACE_LCL lpDDSurface );
-virtual LPDDRAWI_DDRAWSURFACE_LCL GetDirectDrawSurface(void);
 void SetOverlay();
 void SetRotation( int width, int height, int iRotate );
 int SurfaceSize();

@@ -17,17 +17,15 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define SCARD_PROVIDER_CARD_MODULE 0x80000001
-#define SCARD_PROVIDER_CSP 2
-#define SCARD_PROVIDER_KSP 3
-#define SCARD_PROVIDER_PRIMARY 1
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define SCARD_F_COMM_ERROR 0x80100013L
 #define SCARD_F_INTERNAL_ERROR 0x80100001L
 #define SCARD_F_UNKNOWN_ERROR 0x80100014L
 #define SCARD_F_WAITED_TOO_LONG 0x80100007L
 #define SCARD_P_SHUTDOWN 0x80100018L
-#endif /* _WIN32_WCE */
+#define SCARD_PROVIDER_CARD_MODULE 0x80000001
+#define SCARD_PROVIDER_CSP 2
+#define SCARD_PROVIDER_KSP 3
+#define SCARD_PROVIDER_PRIMARY 1
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

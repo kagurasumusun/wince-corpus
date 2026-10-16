@@ -17,13 +17,7 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 500)) /* CE 4.0..499 */
 #define DVD_AUDIO_TYPE_AC3 2
-#define DVD_DISPLAY_ASPECT_16x9 0x3
-#define DVD_DISPLAY_ASPECT_4x3 0
-#define HIGHLIGHT_SELECT 1
-#endif /* _WIN32_WCE */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 #define DVD_AUDIOCAP_AC3 0x4000
 #define DVD_AUDIOCAP_AC3_KARAOKE 0x0040
 #define DVD_AUDIOCAP_DTS 0x0800
@@ -33,7 +27,9 @@
 #define DVD_AUDIOCAP_MPEG_KARAOKE 0x0010
 #define DVD_AUDIOCAP_SDDS 0x0400
 #define DVD_AUDIOCAP_SDDS_KARAOKE 0x0004
-#endif /* _WIN32_WCE */
+#define DVD_DISPLAY_ASPECT_16x9 0x3
+#define DVD_DISPLAY_ASPECT_4x3 0
+#define HIGHLIGHT_SELECT 1
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define MEDIA_STATE_CONNECTED 0
 #define MEDIA_STATE_DISCONNECTED 0
 #define MEDIA_STATE_UNKNOWN -1
@@ -52,7 +51,6 @@
 #define NUIOO_RESET_IN_PROGRESS 0x00000100
 #define NUIOO_UNBIND_FLAGS 0x10000000
 #define NUIOO_UNBIND_RECEIVED 0x10000000
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

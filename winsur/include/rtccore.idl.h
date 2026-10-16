@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 39 declarations, 0 outlines, 0 base types, 0 extra macros, 18 extra decls
+ * 0 constants, 33 declarations, 0 outlines, 0 base types, 0 extra macros, 18 extra decls
  */
 #ifndef _RTCCORE_IDL_
 #define _RTCCORE_IDL_
@@ -208,30 +208,6 @@ HRESULT Subscription(
 HRESULT SubscriptionState(
  RTC_SUBSCRIPTION_STATE* pSubscriptionState
 );
-
-/* IRTCUnsolicitedSubscription::AcceptedContentType  [function; ce-only; CE 6.0..699; uuid.lib] */
-HRESULT AcceptedContentType (
- BSTR* pbstrAcceptedContentType
-);
-
-/* IRTCUnsolicitedSubscription::Disable  [function; ce-only; CE 6.0..699; uuid.lib] */
-HRESULT Disable ();
-
-/* IRTCUnsolicitedSubscription::Enable  [function; ce-only; CE 6.0..699; uuid.lib] */
-HRESULT Enable ();
-
-/* IRTCUnsolicitedSubscription::EventPackage  [function; ce-only; CE 6.0..699; uuid.lib] */
-HRESULT EventPackage(
- BSTR* pbstrEventPackage
-);
-
-/* IRTCUnsolicitedSubscription::IsEnabled  [function; ce-only; CE 6.0..699; uuid.lib] */
-HRESULT IsEnabled (
- VARIENT_BOOL pfEnabled
-);
-
-/* IRTCUnsolicitedSubscription::Unregister  [function; ce-only; CE 6.0..699; uuid.lib] */
-HRESULT Unregister ();
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

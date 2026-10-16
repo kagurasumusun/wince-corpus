@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define CSC_NAVIGATEBACK 0x00000002
 #define CSC_NAVIGATEFORWARD 0x00000001
 #define CSC_UPDATECOMMANDS 0xFFFFFFFF
@@ -37,16 +36,13 @@
 #define secureLockIcon56Bit 0x4
 #define secureLockIconFortezza 0x5
 #define secureLockIconMixed 0x1
-#define secureLockIconUnknownBits 0x2
-#define secureLockIconUnsecure 0
-#endif /* _WIN32_WCE */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 #define secureLockIconSecure128Bit 0x6
 #define secureLockIconSecure40Bit 0x3
 #define secureLockIconSecure56Bit 0x4
 #define secureLockIconSecureFortezza 0x5
 #define secureLockIconSecureUnknownBits 0x2
-#endif /* _WIN32_WCE */
+#define secureLockIconUnknownBits 0x2
+#define secureLockIconUnsecure 0
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -476,7 +472,5 @@ void WindowSetLeft( long lLeft );
 void WindowSetResizable( VARIANT_BOOL vbResizable );
 void WindowSetTop( long lTop );
 void WindowSetWidth( long lWidth );
-HRESULT IWebBrowser2::put_Offline( VARIANT_BOOL bOffline );
-HRESULT IWebBrowser2::put_StatusBar( VARIANT_BOOL Value );
 
 #endif /* _EXDISP_ */

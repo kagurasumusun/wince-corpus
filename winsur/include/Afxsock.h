@@ -120,22 +120,12 @@ CSocketFile( CSocket* pSocket, BOOL bArchiveCompatible = TRUE );
  * ================================================================ */
 
 /* function */
-CSocketFile( CSocket* pSocket, BOOL bArchiveCompatible = TRUE );
 void CancelBlockingCall( );
 static CAsyncSocket* PASCAL FromHandle( SOCKET hSocket );
-BOOL GetPeerName( CString& rPeerAddress, UINT& rPeerPort );
-BOOL GetSockName( CString& rSocketAddress, UINT& rSocketPort );
 BOOL GetSockOpt( int nOptionName, void* lpOptionValue, int* lpOptionLen, int nLevel = SOL_SOCKET );
 BOOL IOCtl( long lCommand, DWORD* lpArgument );
 BOOL IsBlocking( );
 BOOL Listen( int nConnectionBacklog = 5 );
-virtual void OnAccept ( int nErrorCode );
-virtual BOOL OnMessagePending( );
-virtual void OnOutOfBandData( int nErrorCode );
-virtual void OnReceive( int nErrorCode );
-virtual void OnSend( int nErrorCode );
-int ReceiveFrom( void* lpBuf, int nBufLen, CString& rSocketAddress, UINT& rSocketPort, int nFlags = 0 );
-int SendTo( const void* lpBuf, int nBufLen, UINT nHostPort, LPCTSTR lpszHostAddress = NULL, int nFlags = 0 );
 BOOL SetSockOpt( int nOptionName, const void* lpOptionValue, int nOptionLen, int nLevel = SOL_SOCKET );
 BOOL ShutDown( int nHow = sends );
 

@@ -11,11 +11,11 @@ the SAME tree, marked 'Win32 reference' -- never a second tree.
 ## What was generated
 
 * entities in scope: **29,161** (by surface: `ce-only` 24,666, `shared` 4,495)
-* header fragments: **689** under `include/`, each
+* header fragments: **701** under `include/`, each
   with its documented constants first, then the macros, the types
   and the functions; quoted text is verbatim, the `#define`
   keyword and the header/constant filing are derived and say so
-* derived `#define` lines written: **29,787**
+* derived `#define` lines written: **29,829**
 * derived member outlines (structures whose body no page prints):
   **366** -- marked DERIVED in the fragment
 * constants whose pages disagree / overlap: **33** name(s) examined in `kb/constant-conflicts.tsv`

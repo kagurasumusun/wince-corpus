@@ -1,11 +1,11 @@
-/* shlobj.h -- Windows CE unified surface
+/* Shlobj.h -- Windows CE unified surface
  *
  * ONE tree for every CE generation.  Version differences use
  * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 333 constants, 9 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 335 constants, 6 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _SHLOBJ_
 #define _SHLOBJ_
@@ -99,6 +99,7 @@
 #define CMIC_VALID_SEE_FLAGS SEE_VALID_CMIC_FLAGS
 #define CSIDL_ADMINTOOLS 48
 #define CSIDL_ALTSTARTUP 29
+#define CSIDL_APPDATA 0x001A
 #define CSIDL_BITBUCKET 10
 #define CSIDL_CDBURN_AREA 59
 #define CSIDL_COMMON_ADMINTOOLS 47
@@ -119,28 +120,42 @@
 #define CSIDL_CONNECTIONS 49
 #define CSIDL_CONTROLS 3
 #define CSIDL_COOKIES 33
+#define CSIDL_DESKTOP 0x0000
+#define CSIDL_DESKTOPDIRECTORY 0x0010
 #define CSIDL_DRIVES 17
+#define CSIDL_FAVORITES 0x0006
 #define CSIDL_FLAG_CREATE 0x8000
 #define CSIDL_FLAG_DONT_VERIFY 0x4000
 #define CSIDL_FLAG_MASK 0xFF00
+#define CSIDL_FONTS 0x0014
 #define CSIDL_HISTORY 34
 #define CSIDL_INTERNET 1
 #define CSIDL_INTERNET_CACHE 32
 #define CSIDL_LOCAL_APPDATA 28
+#define CSIDL_MYMUSIC 0x000d
+#define CSIDL_MYPICTURES 0x0027
+#define CSIDL_MYVIDEO 0x000e
 #define CSIDL_NETHOOD 19
 #define CSIDL_NETWORK 18
+#define CSIDL_PERSONAL 0x0005
 #define CSIDL_PRINTERS 4
 #define CSIDL_PRINTHOOD 27
+#define CSIDL_PROFILE 0x0028
+#define CSIDL_PROGRAM_FILES 0x0026
 #define CSIDL_PROGRAM_FILES_COMMON 43
 #define CSIDL_PROGRAM_FILES_COMMONX86 44
 #define CSIDL_PROGRAM_FILESX86 42
+#define CSIDL_PROGRAMS 0x0002
+#define CSIDL_RECENT 0x0008
 #define CSIDL_RESOURCES 56
 #define CSIDL_RESOURCES_LOCALIZED 57
 #define CSIDL_SENDTO 9
 #define CSIDL_STARTMENU 11
+#define CSIDL_STARTUP 0x0007
 #define CSIDL_SYSTEM 37
 #define CSIDL_SYSTEMX86 41
 #define CSIDL_TEMPLATES 21
+#define CSIDL_WINDOWS 0x0024
 #define DVASPECT_SHORTNAME 2
 #define FCIDM_BROWSERFIRST 0xa000
 #define FCIDM_BROWSERLAST 0xbf00
@@ -173,6 +188,8 @@
 #define FVSIF_NEWFILE 0x80000000
 #define FVSIF_PINNED 2
 #define FVSIF_RECT 1
+#define FWF_DISABLED 0x20
+#define FWF_LOG 0x04
 #define GCS_HELPTEXT GCS_HELPTEXTW
 #define GCS_HELPTEXTA 1
 #define GCS_HELPTEXTW 5
@@ -217,8 +234,33 @@
 #define SBSP_REDIRECT 0x40000000
 #define SBSP_RELATIVE 0x1000
 #define SBSP_SAMEBROWSER 1
+#define SFGAO_BROWSABLE 0x08000000
+#define SFGAO_CANCOPY 0x00000001
+#define SFGAO_CANDELETE 0x00000020
+#define SFGAO_CANLINK 0x00000004
+#define SFGAO_CANMONIKER 0x00400000
+#define SFGAO_CANMOVE 0x00000002
+#define SFGAO_CANRENAME 0x00000010
+#define SFGAO_CAPABILITYMASK 0x00000177
+#define SFGAO_COMPRESSED 0x04000000
+#define SFGAO_CONTENTSMASK 0x80000000
+#define SFGAO_DISPLAYATTRMASK 0x000F0000
+#define SFGAO_DROPTARGET 0x00000100
+#define SFGAO_FILESYSANCESTOR 0x10000000
+#define SFGAO_FILESYSTEM 0x40000000
+#define SFGAO_FOLDER 0x20000000
+#define SFGAO_GHOSTED 0x00080000
+#define SFGAO_HASPROPSHEET 0x00000040
+#define SFGAO_HASSUBFOLDER 0x80000000
 #define SFGAO_HIDDEN 0x00080000L
 #define SFGAO_ISSLOW 0x00004000L
+#define SFGAO_LINK 0x00010000
+#define SFGAO_NEWCONTENT 0x00200000
+#define SFGAO_NONENUMERATED 0x00100000
+#define SFGAO_READONLY 0x00040000
+#define SFGAO_REMOVABLE 0x02000000
+#define SFGAO_SHARE 0x00020000
+#define SFGAO_VALIDATE 0x01000000
 #define SHARD_PATH SHARD_PATHW
 #define SHCNE_ALLEVENTS 0x7FFFFFFF
 #define SHCNE_ASSOCCHANGED 0x8000000
@@ -281,6 +323,8 @@
 #define SHGDFIL_DESCRIPTIONID 3
 #define SHGDFIL_FINDDATA 1
 #define SHGDFIL_NETRESOURCE 2
+#define SHGFP_TYPE_CURRENT 0
+#define SHGFP_TYPE_DEFAULT 1
 #define SSF_DESKTOPHTML 0x200
 #define SSF_DONTPRETTYPATH 0x800
 #define SSF_DOUBLECLICKINWEBVIEW 0x80
@@ -308,50 +352,6 @@
 #define SVSI_ENSUREVISIBLE 8
 #define SVSI_FOCUSED 16
 #define SVSI_SELECT 1
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
-#define CSIDL_APPDATA 0x001A
-#define CSIDL_DESKTOP 0x0000
-#define CSIDL_DESKTOPDIRECTORY 0x0010
-#define CSIDL_FAVORITES 0x0006
-#define CSIDL_FONTS 0x0014
-#define CSIDL_MYMUSIC 0x000d
-#define CSIDL_MYPICTURES 0x0027
-#define CSIDL_MYVIDEO 0x000e
-#define CSIDL_PERSONAL 0x0005
-#define CSIDL_PROFILE 0x0028
-#define CSIDL_PROGRAM_FILES 0x0026
-#define CSIDL_PROGRAMS 0x0002
-#define CSIDL_RECENT 0x0008
-#define CSIDL_STARTUP 0x0007
-#define CSIDL_WINDOWS 0x0024
-#define FWF_DISABLED 0x20
-#define FWF_LOG 0x04
-#define SFGAO_BROWSABLE 0x08000000
-#define SFGAO_CANCOPY 0x00000001
-#define SFGAO_CANDELETE 0x00000020
-#define SFGAO_CANLINK 0x00000004
-#define SFGAO_CANMONIKER 0x00400000
-#define SFGAO_CANMOVE 0x00000002
-#define SFGAO_CANRENAME 0x00000010
-#define SFGAO_CAPABILITYMASK 0x00000177
-#define SFGAO_COMPRESSED 0x04000000
-#define SFGAO_CONTENTSMASK 0x80000000
-#define SFGAO_DISPLAYATTRMASK 0x000F0000
-#define SFGAO_DROPTARGET 0x00000100
-#define SFGAO_FILESYSANCESTOR 0x10000000
-#define SFGAO_FILESYSTEM 0x40000000
-#define SFGAO_FOLDER 0x20000000
-#define SFGAO_GHOSTED 0x00080000
-#define SFGAO_HASPROPSHEET 0x00000040
-#define SFGAO_HASSUBFOLDER 0x80000000
-#define SFGAO_LINK 0x00010000
-#define SFGAO_NEWCONTENT 0x00200000
-#define SFGAO_NONENUMERATED 0x00100000
-#define SFGAO_READONLY 0x00040000
-#define SFGAO_REMOVABLE 0x02000000
-#define SFGAO_SHARE 0x00020000
-#define SFGAO_VALIDATE 0x01000000
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -387,21 +387,6 @@ typedef struct _browseinfo {
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* SHGetMalloc  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Ceshell.lib, ceshell.lib] */
-HRESULT SHGetMalloc(
- LPMALLOC* ppMalloc 
-);
-
-/* SHGetSpecialFolderLocation  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Ceshell.lib, ceshell.lib] */
-WINSHELLAPI HRESULT WINAPI SHGetSpecialFolderLocation(
- HWND hwndOwner, 
- int nFolder, 
- LPITEMIDLIST* ppidl 
-);
-#endif /* _WIN32_WCE */
-
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
 
 /* BrowseCallbackProc  [function; ce-only; CE 5.0..699; Ceshell.lib, ceshell.lib] */
@@ -428,14 +413,6 @@ LPITEMIDLIST WINAPI SHBrowseForFolder(
 /* SHGetDesktopFolder  [function; shared; CE 5.0..699; Ceshell.lib, ceshell.lib] */
 HRESULT SHGetDesktopFolder(
  IShellFolder** ppshf
-);
-
-/* WM_FILECHANGEINFO  [function; ce-only; CE 5.0..699; Ceshell.lib, ceshell.lib] */
-LRESULT CALLBACK WindowProc(
- HWND hwnd,
- UINT msg,
- WPARAM wParam,
- LPARAM lParam
 );
 #endif /* _WIN32_WCE */
 

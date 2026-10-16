@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 201 constants, 94 declarations, 1 outlines, 0 base types, 0 extra macros, 21 extra decls
+ * 201 constants, 95 declarations, 1 outlines, 0 base types, 0 extra macros, 21 extra decls
  */
 #ifndef _WINSOCK2_
 #define _WINSOCK2_
@@ -24,6 +24,14 @@
 #define AF_IRDA 26
 #define AF_NETBIOS 17
 #define AF_UNSPEC 0
+#define COMP_EQUAL 0
+#define DSCPAudio 5
+#define DSCPBackground 2
+#define DSCPBestEffort 1
+#define DSCPControl 6
+#define DSCPExcellentEffort 3
+#define DSCPTypeNotSet 0
+#define DSCPVideo 4
 #define IPPROTO_ICMP 1
 #define IPPROTO_ICMPV6 58
 #define IPPROTO_IGMP 2
@@ -46,6 +54,7 @@
 #define LUP_RETURN_QUERY_STRING 0x0800
 #define LUP_RETURN_TYPE 0x0020
 #define LUP_RETURN_VERSION 0x0040
+#define NumDSCPTrafficTypes 6
 #define PF_3DNOW_INSTRUCTIONS_AVAILABLE 7
 #define PF_ARM_64BIT_LOADSTORE_ATOMIC 25
 #define PF_ARM_DIVIDE_INSTRUCTION_AVAILABLE 24
@@ -147,26 +156,6 @@
 #define WSA_FLAG_MULTIPOINT_D_ROOT 0x08
 #define WSA_FLAG_NO_HANDLE_INHERIT 0x80
 #define WSA_FLAG_OVERLAPPED 0x01
-#define XP1_CONNECT_DATA 0x00000080
-#define XP1_CONNECTIONLESS 0x00000001
-#define XP1_DISCONNECT_DATA 0x00000100
-#define XP1_EXPEDITED_DATA 0x00000040
-#define XP1_GRACEFUL_CLOSE 0x00000020
-#define XP1_GUARANTEED_DELIVERY 0x00000002
-#define XP1_GUARANTEED_ORDER 0x00000004
-#define XP1_IFS_HANDLES 0x00020000
-#define XP1_MESSAGE_ORIENTED 0x00000008
-#define XP1_MULTIPOINT_CONTROL_PLANE 0x00000800
-#define XP1_MULTIPOINT_DATA_PLANE 0x00001000
-#define XP1_PARTIAL_MESSAGE 0x00040000
-#define XP1_PSEUDO_STREAM 0x00000010
-#define XP1_QOS_SUPPORTED 0x00002000
-#define XP1_SAN_SUPPORT_SDP 0x00080000
-#define XP1_SUPPORT_BROADCAST 0x00000200
-#define XP1_SUPPORT_MULTIPOINT 0x00000400
-#define XP1_UNI_RECV 0x00010000
-#define XP1_UNI_SEND 0x00008000
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define WSAEACCES 10013
 #define WSAEADDRINUSE 10048
 #define WSAEADDRNOTAVAIL 10049
@@ -210,18 +199,25 @@
 #define WSATRY_AGAIN 11002
 #define WSATYPE_NOT_FOUND 10109
 #define WSAVERNOTSUPPORTED 10092
-#endif /* _WIN32_WCE */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-#define COMP_EQUAL 0
-#define DSCPAudio 5
-#define DSCPBackground 2
-#define DSCPBestEffort 1
-#define DSCPControl 6
-#define DSCPExcellentEffort 3
-#define DSCPTypeNotSet 0
-#define DSCPVideo 4
-#define NumDSCPTrafficTypes 6
-#endif /* _WIN32_WCE */
+#define XP1_CONNECT_DATA 0x00000080
+#define XP1_CONNECTIONLESS 0x00000001
+#define XP1_DISCONNECT_DATA 0x00000100
+#define XP1_EXPEDITED_DATA 0x00000040
+#define XP1_GRACEFUL_CLOSE 0x00000020
+#define XP1_GUARANTEED_DELIVERY 0x00000002
+#define XP1_GUARANTEED_ORDER 0x00000004
+#define XP1_IFS_HANDLES 0x00020000
+#define XP1_MESSAGE_ORIENTED 0x00000008
+#define XP1_MULTIPOINT_CONTROL_PLANE 0x00000800
+#define XP1_MULTIPOINT_DATA_PLANE 0x00001000
+#define XP1_PARTIAL_MESSAGE 0x00040000
+#define XP1_PSEUDO_STREAM 0x00000010
+#define XP1_QOS_SUPPORTED 0x00002000
+#define XP1_SAN_SUPPORT_SDP 0x00080000
+#define XP1_SUPPORT_BROADCAST 0x00000200
+#define XP1_SUPPORT_MULTIPOINT 0x00000400
+#define XP1_UNI_RECV 0x00010000
+#define XP1_UNI_SEND 0x00008000
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
@@ -381,6 +377,15 @@ int sendto(
  const struct sockaddr FAR* to,
  int tolen
 );
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
+
+/* BLOB  [struct; shared; CE 3.0..699] */
+typedef struct _BLOB {
+ ULONG cbSize; 
+ BYTE* pBlobData; 
+} BLOB, LPBLOB;
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */

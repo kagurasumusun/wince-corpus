@@ -18,10 +18,8 @@
  * chains with the evidence after the #endif)
  * ================================================================ */
 #define SN_ACTIVEAPPLICATION_ROOT HKEY_CURRENT_USER
-#define SN_PHONENOSIM_ROOT HKEY_LOCAL_MACHINE
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 #define SN_PHONENOSIM_BITMASK 2
-#endif /* _WIN32_WCE */
+#define SN_PHONENOSIM_ROOT HKEY_LOCAL_MACHINE
 
 /* ==================================================================
  * macros -- supplementary #define from CE pages

@@ -47,6 +47,5 @@ BOOL CTransport::Uninit();
 
 /* function */
 CTransport *CreateTransport();
-BOOL CTransport::Uninit();
 
 #endif /* _TRANS_ */

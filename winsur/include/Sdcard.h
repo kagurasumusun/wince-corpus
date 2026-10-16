@@ -17,13 +17,11 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define SDCARD_ZONE_ERROR 15
 #define SDCARD_ZONE_FUNC 11
 #define SDCARD_ZONE_INFO 12
 #define SDCARD_ZONE_INIT 13
 #define SDCARD_ZONE_WARN 14
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

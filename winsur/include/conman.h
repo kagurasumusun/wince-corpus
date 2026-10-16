@@ -66,18 +66,4 @@ BSTR in_bstrRegistryRoot
 );
 #endif /* _WIN32_WCE */
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-HRESULT STDMETHODCALLTYPE CreateNewServerGuid( ICcDevice* in_piDevice, BSTR in_bstrEndPoint, GUID* out_pguidServer);
-HRESULT STDMETHODCALLTYPE EnumerateServerGuids( DWORD in_ArraySize, DWORD* out_pNoOfServerGuids,GUID out_ArrayOfServerGuids[ ],BOOL* out_pbMoreServerGuids);
-HRESULT STDMETHODCALLTYPE GetDeviceFromServerGuid( REFGUIDin_guidServer,ICcDevice** out_ppiDevice);
-HRESULT STDMETHODCALLTYPE GetServerFromServerGuid( REFGUIDin_guidServer, IConManServer** out_ppunkServer);
-HRESULT STDMETHODCALLTYPE GetServerGuidInfo( REFGUID in_guidServer, BSTR* out_pbstrEndPoint);
-HRESULT STDMETHODCALLTYPE SetRegistryRoot( BSTR in_bstrRegistryRoot);
-HRESULT STDMETHODCALLTYPE get_Datastore( ICcDatastore** out_ppiDatastore);
-
 #endif /* _CONMAN_ */

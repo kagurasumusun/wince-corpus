@@ -168,51 +168,9 @@ BOOL ContrastControl(
  * ================================================================ */
 
 /* struct */
-struct GPEBltParms {SCODE (GPE::* pBlt)(GPEBltParms* );GPESurf* pDst;GPESurf* pSrc;GPESurf* pMask;GPESurf* pBrush;RECTL* prclDst;RECTL* prclSrc;RECTL* prclClip;COLOR solidColor;unsigned long bltFlags;ROP4 rop4;RECTL* prclMask;POINTL* pptlBrush;int xPositive;int yPositive;unsigned long* pLookup;unsigned long (ColorConverter::* pConvert)(unsigned long);ColorConverter* pColorConverter; int iMode; BLENDFUNCTION blendFunction; GenBltSignature bltSig;};
 struct GPEMode {int modeId;int width;int height;int Bpp;int frequency;EGPEFormat format;};
-struct GPELineParms {
-  SCODE (GPE::*pLine)(GPELineParms *);
-  long xStart;
-  long yStart;
-  int cPels;
-  unsigned long dM;
-  unsigned long dN;
-  long llGamma;
-  int iDir;
-  unsigned long style;
-  int styleState;
-  GPESurf *pDst;
-  COLOR solidColor;
-  RECTL *prclClip;
-  unsigned short mix;
-};
-struct GPEBltParms {
-  SCODE (GPE::*pBlt)(GPEBltParms *);
-  GPESurf *pDst;
-  GPESurf *pSrc;
-  GPESurf *pMask;
-  GPESurf *pBrush;
-  RECTL *prclDst;
-  RECTL *prclSrc;
-  RECTL *prclClip;
-  COLOR solidColor;
-  unsigned long bltFlags;
-  ROP4 rop4;
-  RECTL *prclMask;
-  POINTL *pptlBrush;
-  int xPositive;
-  int yPositive;
-  unsigned long *pLookup;
-  unsigned long (ColorConverter::*pConvert)(unsigned long);
-  ColorConverter *pColorConverter;
-};
-struct GPELineParms {SCODE(GPE::* pLine)(GPELineParms* );long xStart;long yStart;int cPels;unsigned long dM;unsigned long dN;long llGamma;int iDir;unsigned long style;int styleState;GPESurf* pDst;COLOR solidColor;RECTL* prclClip;unsigned shortmix; };
 
 /* function */
-SCODE GPE::AllocSurface(  GPESurf **ppSurf,  int width,  int height,  EGPEFormat format,  int surfaceFlags );
-GPESurf::GPESurf( int width, int height, EGPEFormat format);
-SCODE GPE::MovePointer(  int x,  int y );
 int NumModes();
-SCODE GPE::SetPointerShape(  GPESurf *pMask,  GPESurf *pColorSurf,  int xHot,  int yHot,  int cx,  int cy );
 
 #endif /* _GPE_ */

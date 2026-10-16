@@ -84,27 +84,4 @@ HRESULT IDccManSink::OnLogListen(void);
 HRESULT IDccManSink::OnLogTerminated(void);
 #endif /* _WIN32_WCE */
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-HRESULT STDMETHODIMP IDccMan::AutoconnectDisable(void);
-HRESULT STDMETHODIMP IDccMan::AutoconnectEnable(void) );
-HRESULT STDMETHODIMP IDccMan::ConectNow(void) );
-HRESULT STDMETHODIMP IDccMan::DisconectNow(void);
-STDMETHODIMP IDccManSink::OnLogActive( void );
-STDMETHODIMP IDccManSink::OnLogAnswered( void );
-STDMETHODIMP IDccManSink::OnLogDisconnection( void);
-STDMETHODIMP IDccManSink::OnLogError( void );
-STDMETHODIMP IDccManSink::OnLogInactive( void );
-STDMETHODIMP IDccManSink::OnLogIpAddr(  DWORD dwIpAddr);
-STDMETHODIMP IDccManSink::OnLogListen( void );
-HRESULT STDMETHODIMP IDccManSink::OnLogTerminated(void);
-HRESULT STDMETHODIMP IDccMan::SetIconDataNoTransferring (void);
-HRESULT STDMETHODIMP IDccMan::SetIconDataTransferring (void);
-HRESULT STDMETHODIMP IDccMan::SetIconError(void);
-HRESULT STDMETHODIMP IDccMan::ShowCommSettings(void);
-
 #endif /* _DCCOLE_ */

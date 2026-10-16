@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define SPRIO_NONE 0
 #define SPRT_CFG 0
 #define SPRT_PROPRIETARY 2
@@ -25,7 +24,6 @@
 #define SPVES_CONTINUE 0
 #define SPWIO_NONE 0
 #define SPWIO_WANT_TEXT 1
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -718,7 +716,6 @@ HRESULT CompileStream( IStream* pSource, IStream* pDest, IStream* pHeader, IUnkn
 HRESULT CompleteSkip( long ulNumSkipped );
 HRESULT CreateReoccurringTask( ISpTask* pTask, void* pvTaskData, HANDLE hCompEvent, ISpNotifySink** ppTaskCtrl );
 HRESULT DataAvailable( ULONG* pcb );
-virtual HRESULT STDMETHODCALLTYPE Execute(  void* pvTaskData,  volatile const BOOL* pfContinueProcessing  );
 DWORD GetActions(void);
 HRESULT GetContextMaxAlternates( SPRECOCONTEXTHANDLE hContext, ULONG* pulNumAlts );
 HRESULT GetInputAudioFormat( const GUID* pguidSourceFormatId, const WAVEFORMATEX* pSourceWaveFormatEx, GUID* pguidDesiredFormatId, WAVEFORMATEX** ppCoMemDesiredWaveFormatEx, );
@@ -736,7 +733,6 @@ HRESULT GetWordInfo( SPWORDENTRY* pWordEntry, SPWORDINFOOPT Options );
 HRESULT ITNPhrase( ISpPhraseBuilder* pPhrase );
 HRESULT InitFromBinaryGrammar( const SPBINARYGRAMMAR* pBinaryData );
 HRESULT InitGrammar( const WCHAR* pszGrammarName, const void** pvGrammarData );
-virtual HRESULT STDMETHODCALLTYPE InitThread(  void* pvTaskData,  HWND hwnd  ) = 0;
 HRESULT Interpret( ISpPhraseBuilder* pPhrase, const ULONG ulFirstElement, const ULONG ulCountOfElements, ISpCFGInterpreterSite* pSite );
 HRESULT IsAlternate( SPRULEHANDLE hPriRule, SPRULEHANDLE hAltRule );
 HRESULT LoadITNGrammar( WCHAR* pszCLSID );

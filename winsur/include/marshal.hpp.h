@@ -64,7 +64,6 @@ public:
 
 /* function */
 HRESULT Allocate( PVOID pSrcMarshalled, DWORD cbSrc, DWORD ArgumentDescriptor );
-HRESULT Marshal( PVOID pSrcUnmarshalled, DWORD cbSrc, DWORD ArgumentDescriptor, BOOL ForceDuplicate = TRUE, BOOL Asynchronous = FALSE );
 HRESULT Unmarshal();
 
 #endif /* _MARSHAL_HPP_ */

@@ -20,15 +20,6 @@
 #define EVENT_PULSE 1
 #define EVENT_RESET 2
 #define EVENT_SET 3
-#define SYS_HANDLE_BASE 64
-#define SYSHANDLE_OFFSET 0x004
-#define TLS_FUNCALLOC 0
-#define TLS_FUNCFREE 1
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 3.0..399 */
-#define OEM_CERTIFY_RUN 1
-#define OEM_CERTIFY_TRUST 2
-#endif /* _WIN32_WCE */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 #define HT_AFSVOLUME 16
 #define HT_APISET 6
 #define HT_CRITSEC 12
@@ -42,6 +33,8 @@
 #define HT_SEMAPHORE 13
 #define HT_SOCKET 11
 #define HT_WNETENUM 15
+#define OEM_CERTIFY_RUN 1
+#define OEM_CERTIFY_TRUST 2
 #define SH_COMM 83
 #define SH_CPROG 88
 #define SH_CURPROC 2
@@ -58,7 +51,10 @@
 #define SH_WIN32 0
 #define SH_WMGR 81
 #define SH_WNET 82
-#endif /* _WIN32_WCE */
+#define SYS_HANDLE_BASE 64
+#define SYSHANDLE_OFFSET 0x004
+#define TLS_FUNCALLOC 0
+#define TLS_FUNCFREE 1
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

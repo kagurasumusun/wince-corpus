@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 500)) /* CE 4.0..499 */
 #define COMMAND_PACKET 1
 #define DATA_PACKET_ACL 2
 #define DATA_PACKET_SCO 3
@@ -25,12 +24,9 @@
 #define HCI_FLAGS_NOLOCALNAME 0x00000002
 #define HCI_FLAGS_NORESET 0x00000001
 #define HCI_FLAGS_NOROLESWITCH 0x00000004
-#endif /* _WIN32_WCE */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define HCI_HARDWARE_VERSION_V_1_0_A 0
 #define HCI_HARDWARE_VERSION_V_1_0_B 1
 #define HCI_HARDWARE_VERSION_V_1_1 2
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

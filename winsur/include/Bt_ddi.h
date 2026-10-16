@@ -17,11 +17,9 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 #define WODM_PARAM_CLOSE_A2DP 0
 #define WODM_PARAM_OPEN_A2DP 1
 #define WODM_PARAM_OPENASYNC_A2DP 2
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

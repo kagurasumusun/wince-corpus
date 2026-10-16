@@ -17,12 +17,10 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define KITL_FL_CLEANBOOT 0x08
 #define KITL_FL_DBGMSG 0x01
 #define KITL_FL_KDBG 0x04
 #define KITL_FL_PPSH 0x02
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

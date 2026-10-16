@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 63 constants, 229 declarations, 0 outlines, 0 base types, 0 extra macros, 15 extra decls
+ * 63 constants, 228 declarations, 0 outlines, 0 base types, 0 extra macros, 15 extra decls
  */
 #ifndef _OLEAUTO_
 #define _OLEAUTO_
@@ -1425,12 +1425,6 @@ HRESULT SafeArrayUnaccessData(
 /* SafeArrayUnlock  [function; shared; CE 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
 HRESULT SafeArrayUnlock(
  SAFEARRAY FAR* psa 
-);
-
-/* SetErrorInfo  [function; shared; CE 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT SetErrorInfo( 
- DWORD dwReserved, 
- IErrorInfo* perrinfo 
 );
 
 /* SysAllocString  [function; shared; CE 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */

@@ -17,6 +17,8 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
+#define D0 0
+#define DX 176
 #define PBT_RESUME 2
 #define POWER_FORCE (DWORD)(0x00001000)
 #define POWER_NAME (DWORD)(0x00000001)
@@ -30,13 +32,7 @@
 #define POWER_STATE_SUSPEND (DWORD)(0x00200000)
 #define POWER_STATE_UNATTENDED (DWORD)(0x00400000)
 #define POWER_STATE_USERIDLE (DWORD)(0x01000000)
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 500)) /* CE 4.0..499 */
-#define D0 0
 #define PwrDeviceUnspecified -1
-#endif /* _WIN32_WCE */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-#define DX 176
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

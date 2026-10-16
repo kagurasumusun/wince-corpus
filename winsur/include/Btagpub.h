@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define NETWORK_FLAGS_DROP_ACTIVE 0x01
 #define NETWORK_FLAGS_DROP_ALL 0x0f
 #define NETWORK_FLAGS_DROP_HOLD 0x02
@@ -27,7 +26,6 @@
 #define NETWORK_FLAGS_STATE_HOLD 0x02
 #define NETWORK_FLAGS_STATE_OFFERING 0x04
 #define NETWORK_FLAGS_STATE_OUTGOING 0x08
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

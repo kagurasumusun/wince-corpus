@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 20 constants, 16 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
+ * 20 constants, 18 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _TLHELP32_
 #define _TLHELP32_
@@ -135,6 +135,20 @@ BOOL WINAPI CloseToolhelp32Snapshot(
 HANDLE WINAPI CreateToolhelp32Snapshot(
  DWORD dwFlags,
  DWORD th32ProcessID
+);
+
+/* Heap32First  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib] */
+BOOL WINAPI Heap32First(
+ HANDLE hSnapshot,
+ LPHEAPENTRY32 lphe,
+ DWORD th32ProcessID,
+ DWORD th32HeapID
+);
+
+/* Heap32ListFirst  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib] */
+BOOL WINAPI Heap32ListFirst(
+ HANDLE hSnapshot,
+ LPHEAPLIST32 lphl
 );
 
 /* Heap32ListNext  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib] */

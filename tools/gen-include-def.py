@@ -124,6 +124,7 @@ import html_clean  # noqa: E402
 import header_map  # noqa: E402
 import quality_filters  # noqa: E402
 import w32api_gaps  # noqa: E402
+import pinvoke_gaps  # noqa: E402
 
 KB = os.path.join(ROOT, "knowledge", "kb")
 
@@ -1360,7 +1361,9 @@ def apply_unified_constants(const_rows, unified):
         source = rec.get("source") if isinstance(rec.get("source"), dict) else {}
         source = dict(source)
         source.setdefault("path", source.get("path") or "knowledge/unified/constants.jsonl")
-        source.setdefault("set", source.get("set") or "unified")
+        # One value for the whole CE surface -- do not version-gate
+        # TRUE/MAX_PATH behind the single generation that printed it.
+        source["set"] = "unified"
         source.setdefault("layer", rec.get("layer") or "ce")
         source.setdefault("title", name)
         source.setdefault("page_id", source.get("page_id") or "")
@@ -1687,9 +1690,139 @@ _WINDOWS_UMBRELLA = (
     "Wingdi.h", "Winreg.h", "Commctrl.h", "Winioctl.h", "Winsock2.h",
 )
 
+# Pages often name Windows.h (the umbrella) or a desktop-split SDK
+# header.  Prefer the CE header the same entity also names.
+CE_CORE_HEADERS = {
+    "windef.h", "winnt.h", "basetsd.h", "winbase.h", "winuser.h",
+    "wingdi.h", "winerror.h", "winreg.h", "winioctl.h", "commctrl.h",
+    "commdlg.h", "winsock.h", "winsock2.h", "ceddk.h", "winddi.h",
+    "pkfuncs.h", "kfuncs.h", "excpt.h", "pwinuser.h", "nkintr.h",
+    "shellapi.h", "aygshell.h", "tlhelp32.h", "windev.h",
+}
+DESKTOP_SPLIT_HEADERS = {
+    "processthreadsapi.h", "fileapi.h", "errhandlingapi.h",
+    "minwinbase.h", "gdiplustypes.h", "libloaderapi.h", "sysinfoapi.h",
+    "synchapi.h", "memoryapi.h", "handleapi.h", "timezoneapi.h",
+    "stringapiset.h", "debugapi.h", "fibersapi.h", "ioapiset.h",
+    "namedpipeapi.h", "securitybaseapi.h", "heapapi.h", "jobapi.h",
+    "processenv.h", "profileapi.h", "realtimeapiset.h",
+    "threadpoollegacyapiset.h", "wow64apiset.h", "interlockedapi.h",
+}
+
+
+def header_preference(key):
+    """Lower is better for the file a C compiler should actually include."""
+    k = (key or "").lower()
+    if k in ("windows.h",):
+        return 50
+    if k.endswith(".idl") or k.endswith(".hpp") or ".idl." in k:
+        return 40
+    if k in DESKTOP_SPLIT_HEADERS:
+        return 20
+    if k in CE_CORE_HEADERS:
+        return 0
+    return 10
+
+
+# Desktop windows-data-types.md also prints the 64-bit spelling.
+# Windows CE is 32-bit; use the 32-bit row of the same page family.
+_CE_PTR_TYPES = {
+    "LONG_PTR": "typedef long LONG_PTR;",
+    "ULONG_PTR": "typedef unsigned long ULONG_PTR;",
+    "UINT_PTR": "typedef unsigned long UINT_PTR;",
+    "DWORD_PTR": "typedef unsigned long DWORD_PTR;",
+    "HALF_PTR": "typedef short HALF_PTR;",
+    "UHALF_PTR": "typedef unsigned short UHALF_PTR;",
+}
+
+_WINDEF_NEED = (
+    "BYTE", "WORD", "DWORD", "BOOL", "UINT", "INT", "LONG", "ULONG",
+    "SHORT", "CHAR", "FLOAT", "WCHAR", "PVOID", "LPVOID", "HANDLE",
+    "HWND", "HINSTANCE", "HMODULE", "HDC", "HMENU", "HKEY", "HBITMAP",
+    "HFONT", "HPEN", "HBRUSH", "HRGN", "HICON", "HCURSOR",
+    "LPSTR", "LPCSTR", "LPWSTR", "LPCWSTR", "LPTSTR", "LPCTSTR",
+    "LONG_PTR", "UINT_PTR", "ULONG_PTR", "DWORD_PTR",
+    "WPARAM", "LPARAM", "LRESULT", "ATOM", "COLORREF", "TCHAR",
+)
+
+
+def _ident_tokens(text):
+    return set(re.findall(r"\b[A-Z][A-Z0-9_]*\b", text or ""))
+
+
+def order_base_types(rows):
+    """Emit typedefs so a name is defined before it is used."""
+    by_name = {}
+    for row in rows:
+        by_name[row["type"]] = row
+    pending = list(by_name)
+    emitted, known = [], set()
+    skip = {"TYPEDEF", "STRUCT", "UNION", "ENUM", "CONST", "VOID", "INT",
+            "CHAR", "SHORT", "LONG", "UNSIGNED", "SIGNED", "FLOAT",
+            "DOUBLE", "UNICODE", "IFDEF", "IFNDEF", "ENDIF", "ELSE",
+            "DEFINED", "INCLUDE"}
+    while pending:
+        rest, progress = [], False
+        for name in pending:
+            deps = _ident_tokens(by_name[name]["definition"]) - {name} - skip
+            if all(d in known or d not in by_name for d in deps):
+                emitted.append(by_name[name])
+                known.add(name)
+                progress = True
+            else:
+                rest.append(name)
+        if not progress:
+            for name in rest:
+                emitted.append(by_name[name])
+            break
+        pending = rest
+    return emitted
+
+
+def enrich_windef_base_types(base_types_by_header):
+    """WinDef.h is included first; pull HANDLE and friends into it."""
+    all_rows = {}
+    for rows in base_types_by_header.values():
+        for row in rows:
+            all_rows.setdefault(row["type"], row)
+    windef = list(base_types_by_header.get("windef.h") or [])
+    have = {r["type"] for r in windef}
+    for name in _WINDEF_NEED:
+        if name not in have and name in all_rows:
+            windef.append(all_rows[name])
+            have.add(name)
+    for name, defn in _CE_PTR_TYPES.items():
+        if name not in have:
+            windef.append({
+                "type": name, "definition": defn, "header": "WinDef.h",
+                "ce_specific": "yes",
+                "ce_note": "32-bit CE pointer-sized integer",
+                "ce_value_note": "",
+                "source": "win32/common/windows-data-types.md (32-bit row)",
+            })
+            have.add(name)
+    base_types_by_header["windef.h"] = windef
+
 
 def _write_windows_umbrella(include_dir):
-    """Replace Windows.h with an include of the core CE headers."""
+    """Replace Windows.h with an include of the core CE headers.
+
+    Declarations a page filed only under Windows.h are kept as
+    WindowsApis.h and pulled in at the end, so the umbrella does not
+    delete MessageBox / MSG.
+    """
+    existing = os.path.join(include_dir, "Windows.h")
+    leftover = os.path.join(include_dir, "WindowsApis.h")
+    if os.path.isfile(existing):
+        text = read_text(existing)
+        if "Windows CE unified surface" in text:
+            text = text.replace("Windows.h --", "WindowsApis.h --", 1)
+            text = text.replace("#ifndef _WINDOWS_", "#ifndef _WINDOWSAPIS_", 1)
+            text = text.replace("#define _WINDOWS_", "#define _WINDOWSAPIS_", 1)
+            text = text.replace("#endif /* _WINDOWS_ */",
+                                "#endif /* _WINDOWSAPIS_ */", 1)
+            _write_lines(leftover, text.splitlines())
+        os.remove(existing)
     present = {name.lower(): name for name in os.listdir(include_dir)
                if name.lower().endswith(".h")}
     includes = []
@@ -1697,6 +1830,8 @@ def _write_windows_umbrella(include_dir):
         hit = present.get(name.lower())
         if hit:
             includes.append(hit)
+    if os.path.isfile(leftover):
+        includes.append("WindowsApis.h")
     if not includes:
         return
     lines = [
@@ -1704,6 +1839,7 @@ def _write_windows_umbrella(include_dir):
         " *",
         " * #include this file.  It pulls in the core CE headers this",
         " * tree actually generated.  Values stay in those headers.",
+        " * Drivers also #include \"CEDDK.h\" (not part of the app umbrella).",
         " */",
         "#ifndef _WINDOWS_",
         "#define _WINDOWS_",
@@ -1730,6 +1866,7 @@ def run_unified(args):
     pinvoke_apis = load_pinvoke_aux(PINVOKE_APIS)
     pinvoke_consts = load_pinvoke_aux(PINVOKE_CONSTANTS)
     base_types_by_header = load_base_types()
+    enrich_windef_base_types(base_types_by_header)
     extra_defines, extra_declarations = load_extra_surface()
     heuristic_rows = load_heuristic_headers()
     modules_ce_headers = load_modules_ce_headers()
@@ -1822,6 +1959,7 @@ def run_unified(args):
         if header_cands:
             primary_key = sorted(
                 header_cands, key=lambda k: (
+                    header_preference(k),
                     -header_cands[k]["newest"], -len(header_cands[k]["sets"]),
                     k))[0]
             primary = header_cands[primary_key]["printed"]
@@ -2042,23 +2180,32 @@ def run_unified(args):
             unified_consts.pop("NULL", None)
     ce_named = load_ce_documented_names()
     already = set(const_rows)
-    for name, rec in w32api_gaps.parse_defines(ce_named, already).items():
+    def _gap_into(name, rec, tag, origin, license_id):
         unified_consts[name] = rec
         source = rec.get("source") or {}
         const_rows[name] = {"gap": {
-            "id": "w32api:" + name,
+            "id": tag + ":" + name,
             "name": name,
             "value": rec["value"],
             "decimal": None,
-            "origin": "w32api-cegcc-public-domain",
+            "origin": origin,
             "headers": [rec["header"]] if rec.get("header") else [],
             "layer": "ce",
             "row": f"{name} {rec['value']}",
-            "license": "w32api-public-domain",
+            "license": license_id,
             "source": source if isinstance(source, dict) else {
-                "path": "sources/w32api-cegcc", "set": "w32api-cegcc",
+                "path": tag, "set": tag,
                 "layer": "reference", "title": name, "page_id": ""},
         }}
+
+    for name, rec in w32api_gaps.parse_defines(ce_named, already).items():
+        _gap_into(name, rec, "w32api", "w32api-cegcc-public-domain",
+                  "w32api-public-domain")
+        already.add(name)
+    for name, rec in pinvoke_gaps.parse_constants(ce_named, already).items():
+        _gap_into(name, rec, "pinvoke", "dotnet-pinvoke-mit",
+                  "dotnet-pinvoke-mit")
+        already.add(name)
     defines = conflicts = unsupported_written = no_header = 0
     conflicts_resolved = 0
     const_entries = collections.defaultdict(list)   # header lower -> [entry]
@@ -2311,6 +2458,18 @@ def run_unified(args):
             f"#define _{guard_name}",
             "",
         ]
+        if key.lower() == "windef.h":
+            lines += [
+                "#include <stddef.h>",
+                "/* CE's Win32 API surface is Unicode (LPWSTR). */",
+                "#ifndef UNICODE",
+                "#define UNICODE",
+                "#endif",
+                "#ifndef _UNICODE",
+                "#define _UNICODE",
+                "#endif",
+                "",
+            ]
 
         if entries:
             lines += ["", "/* " + "=" * 66,
@@ -2447,6 +2606,7 @@ def run_unified(args):
                 defines += len(members)
         # Base types section: typedef definitions for fundamental Windows types
         # These are critical for CE development as some have CE-specific values
+        emitted_type_names = set()
         base_types_for_header = base_types_by_header.get(key.lower(), [])
         if base_types_for_header:
             lines.append("")
@@ -2454,7 +2614,11 @@ def run_unified(args):
             lines.append(" * base types -- fundamental Windows type definitions")
             lines.append(" * CE-specific types are marked; verify sizes for your platform")
             lines.append(" * " + "=" * 64 + " */")
-            for bt in sorted(base_types_for_header, key=lambda x: x["type"]):
+            for bt in order_base_types(base_types_for_header):
+                tname = bt["type"]
+                if tname in emitted_type_names:
+                    continue
+                emitted_type_names.add(tname)
                 lines.append("")
                 ce_mark = " [CE-SPECIFIC]" if bt["ce_specific"] == "yes" else ""
                 lines.append(f"/* {bt['type']}{ce_mark}")
@@ -2462,9 +2626,12 @@ def run_unified(args):
                     lines.append(f" * {bt['ce_note']}")
                 if bt["ce_value_note"]:
                     lines.append(f" * {bt['ce_value_note']}")
+                defn = bt["definition"]
+                if tname in _CE_PTR_TYPES:
+                    defn = _CE_PTR_TYPES[tname]
+                    lines.append(" * CE is 32-bit: pointer-sized integer")
                 lines.append(f" * source: {bt['source']} */")
-                # Handle multi-line definitions (e.g., TCHAR with #ifdef)
-                defn_lines = bt["definition"].split("\\n")
+                defn_lines = defn.split("\\n")
                 for defn_line in defn_lines:
                     lines.append(defn_line)
         # Extra macros filed into this header (quality-filtered, not
@@ -2534,6 +2701,8 @@ def run_unified(args):
             lines.append(" * " + "=" * 64 + " */")
             for info in items:
                 entity = info["entity"]
+                if bucket_key == "types" and entity.get("name") in emitted_type_names:
+                    continue
                 declaration = info["declaration"]
                 libs = ", ".join(
                     name for names in info["modules"].values()
@@ -2579,7 +2748,12 @@ def run_unified(args):
         if open_decl_guard is not None:
             close_guard(lines, open_decl_guard)
         # Extra declarations filed into this header (not already emitted).
-        extra_ds = extra_decls_by_header.get(key.lower(), [])
+        extra_ds = [
+            d for d in extra_decls_by_header.get(key.lower(), [])
+            if quality_filters.is_c_toolchain_declaration(
+                d.get("declaration") or "", d.get("name") or "",
+                d.get("type") or "")
+        ]
         if extra_ds:
             by_type = collections.defaultdict(list)
             for d in extra_ds:
@@ -2721,7 +2895,8 @@ def run_unified(args):
             
             for decl in decls:
                 decl_text = decl.get('declaration', '').strip()
-                if decl_text:
+                if decl_text and quality_filters.is_c_toolchain_declaration(
+                        decl_text, decl.get("name") or "", dtype):
                     extra_decl_lines.append(decl_text)
                     if not args.minimal_comments:
                         extra_decl_lines.append("")

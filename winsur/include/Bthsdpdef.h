@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define NODECONTAINERTYPESEQUENCE 0
 #define SDP_ATTRIB_PROTOCOL_DESCRIPTOR_LIST 0x4
 #define SDP_CHANNEL_OFFSET 32
@@ -46,7 +45,6 @@
 #define SDP_TYPE_UINT 0x01
 #define SDP_TYPE_URL 0x08
 #define SDP_TYPE_UUID 0x03
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

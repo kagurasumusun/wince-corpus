@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 #define TS_PERF_DISABLE_CURSOR_SHADOW 0x00000020
 #define TS_PERF_DISABLE_CURSORSETTINGS 0x00000040
 #define TS_PERF_DISABLE_FULLWINDOWDRAG 0x00000002
@@ -26,7 +25,6 @@
 #define TS_PERF_DISABLE_THEMING 0x00000008
 #define TS_PERF_DISABLE_WALLPAPER 0x00000001
 #define TS_PERF_ENABLE_ENHANCED_GRAPHICS 0x00000010
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks
@@ -539,14 +537,9 @@ HRESULT get_BitmapVirtualCacheSize( LONG *pbitmapVirtualCacheSize );
 HRESULT get_DedicatedTerminal( LONG *pdedicatedTerminal );
 HRESULT get_DisableCtrlAltDel( LONG *pdisableCtrlAltDel );
 HRESULT get_DisplayConnectionBar( VARIANT_BOOL *pDisplayConnectionBar );
-HRESULT STDMETHODCALLTYPE get_DoubleClickDetect(  LONG *pdoubleClickDetect );
-HRESULT STDMETHODCALLTYPE get_EnableMouse(  LONG *penableMouse );
-HRESULT STDMETHODCALLTYPE get_EnableWindowsKey(  LONG *penableWindowsKey );
 HRESULT get_GrabFocusOnConnect( VARIANT_BOOL *pfGrabFocusOnConnect );
 HRESULT get_HotKeyAltShiftTab( LONG *photKeyAltShiftTab );
 HRESULT get_HotKeyAltSpace( LONG *photKeyAltSpace );
-HRESULT STDMETHODCALLTYPE get_HotKeyAltTab(  LONG *photKeyAltTab );
-HRESULT STDMETHODCALLTYPE get_HotKeyCtrlAltDel(  LONG *photKeyCtrlAltDel );
 HRESULT get_HotKeyCtrlEsc( LONG *photKeyCtrlEsc );
 HRESULT get_HotKeyFullScreen( LONG *photKeyFullScreen );
 HRESULT get_InputEventsAtOnce( LONG *pinputEventsAtOnce );
@@ -614,12 +607,10 @@ HRESULT put_RdpdrLocalPrintingDocName( BSTR localPrintingDocName );
 HRESULT put_RedirectPorts( VARIANT_BOOL redirectPorts );
 HRESULT put_RedirectPrinters( VARIANT_BOOL redirectPrinters );
 HRESULT put_RedirectSmartCards( VARIANT_BOOL redirectSmartCards );
-HRESULT STDMETHODCALLTYPE put_ScaleBitmapCachesByBPP(  LONG bScale );
 HRESULT put_ShadowBitmap( LONG shadowBitmap );
 HRESULT put_SmartSizing( VARIANT_BOOL fSmartSizing );
 HRESULT put_SmoothScroll( LONG smoothScroll );
 HRESULT put_keepAliveInterval( LONG keepAliveInterval );
-HRESULT STDMETHODCALLTYPE put_maxEventCount(  LONG maxEventCount );
 HRESULT put_minInputSendInterval( LONG minInputSendInterval );
 HRESULT put_orderDrawThreshold( LONG orderDrawThreshold );
 HRESULT put_overallConnectionTimeout( LONG overallConnectionTimeout );

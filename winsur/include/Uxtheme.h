@@ -174,6 +174,7 @@
 #define TMT_TEXT 0x0C81
 #define TMT_TEXTBORDERCOLOR 0x0EE9
 #define TMT_TEXTBORDERSIZE 0x096E
+#define TMT_TEXTCOLOR 3803
 #define TMT_TEXTSHADOWCOLOR 0x0EEA
 #define TMT_TEXTSHADOWOFFSET 0x0D4A
 #define TMT_TEXTSHADOWTYPE 0x0FAA
@@ -192,9 +193,6 @@
 #define TMT_WINDOWFRAME 0x0647
 #define TMT_WINDOWTEXT 0x0649
 #define TMT_XMLNAME 0x057A
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
-#define TMT_TEXTCOLOR 3803
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

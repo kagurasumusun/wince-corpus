@@ -17,11 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define NDIS_ERROR_CODE ULONG
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 500)) /* CE 4.0..499 */
-#define NdisRingStateOpened 1
-#endif /* _WIN32_WCE */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 #define Ndis802_11RadioPowerState_Off 0
 #define Ndis802_11RadioPowerState_On 1
 #define NDIS_802_11_AUTH_REQUEST_GROUP_ERROR 0x0E
@@ -29,7 +24,8 @@
 #define NDIS_802_11_AUTH_REQUEST_PAIRWISE_ERROR 0x06
 #define NDIS_802_11_AUTH_REQUEST_REAUTH 0x01
 #define NDIS_802_11_PMKID_CANDIDATE_PREAUTH_ENABLED 0x01
-#endif /* _WIN32_WCE */
+#define NDIS_ERROR_CODE ULONG
+#define NdisRingStateOpened 1
 
 /* ==================================================================
  * macros -- supplementary #define from CE pages

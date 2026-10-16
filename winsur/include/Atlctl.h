@@ -517,8 +517,6 @@ HRESULT GetAmbientAutoClip( BOOL& bAutoClip );
 
 /* function */
 CComControlBase( HWND h );
-virtual HRESULT ControlQueryInterface( const IID& iid, void** ppv );
-virtual HWND CreateControlWindow( HWND hWndParent, RECT& rcPos );
 HRESULT DoVerbDiscardUndo( LPCRECT prcPosRect, HWND hwndParent );
 HRESULT DoVerbHide( LPCRECT prcPosRect, HWND hwndParent );
 HRESULT DoVerbInPlaceActivate( LPCRECT prcPosRect, HWND hwndParent );
@@ -562,12 +560,9 @@ HRESULT GetPredefinedValue( DISPID dispID, DWORD dwCookie, VARIANT* pVarOut );
 HRESULT GetSite( REFIID riid, void **ppvSite );
 void GetZoomInfo( ATL_DRAWINFO& di );
 HRESULT HandsOffStorage( );
-HRESULT InPlaceActivate( LONG iVerb, const RECT* prcPosRect = NULL );
 HRESULT InPlaceDeactivate( HWND* phwnd );
 HRESULT MapPropertyToPage( DISPID dispID, CLSID* pClsid );
 HRESULT OnAmbientPropertyChange( DISPID dispid );
-virtual HRESULT OnDraw( ATL_DRAWINFO& di );
-virtual HRESULT OnDrawAdvanced( ATL_DRAWINFO& di );
 LRESULT OnGetDlgCode( UINT nMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled );
 HRESULT OnInactiveMouseMove( LPCRECT pRectBounds, long x, long y, DWORD dwMouseMsg );
 HRESULT OnInactiveSetCursor( LPCRECT pRectBounds, long x, long y, DWORD dwMouseMsg, BOOL fSetAlways);

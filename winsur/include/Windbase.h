@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 7 constants, 82 declarations, 14 outlines, 0 base types, 0 extra macros, 4 extra decls
+ * 7 constants, 47 declarations, 13 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _WINDBASE_
 #define _WINDBASE_
@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 #define CEDB_NOCOMPRESS 0x00010000
 #define CEDB_VALIDCREATE 0x0017
 #define CEDB_VALIDDBFLAGS 0x0010
@@ -25,7 +24,6 @@
 #define CEDB_VALIDNAME 0x0001
 #define CEDB_VALIDSORTSPEC 0x0004
 #define CEDB_VALIDTYPE 0x0002
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
@@ -57,72 +55,13 @@
 
 /* CEVT_UI4  [typedef; ce-only; heuristic-prefix] */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* TypeFromPropID  [macro; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Fsdbase.lib] */
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* CHECK_INVALIDGUID  [macro, function; ce-only; CE 2.11..2.12, 3.0..699] */
-#define CHECK_INVALIDGUID(pguid) \
-!~((pguid)->Data1&(pguid)->Data2&(pguid)->Data3&(pguid)->Data4)
-
-/* CHECK_SYSTEMGUID  [macro, function; ce-only; CE 2.11..2.12, 3.0..699; Fsdbase.lib] */
-#define CHECK_SYSTEMGUID(pguid) \
-!((pguid)->Data1|(pguid)->Data2|(pguid)->Data3|(pguid)->Data4)
-#endif /* _WIN32_WCE */
-
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* SORTORDERSPEC  [struct; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _SORTORDERSPEC {
- CEPROPID propid;
- DWORD dwFlags;
-} SORTORDERSPEC;
-#endif /* _WIN32_WCE */
-
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* CEBLOB  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct _CEBLOB {
- DWORD dwCount;
- LPBYTE lpb;
-} CEBLOB;
-
-/* CEDBASEINFO  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct _CEDBASEINFO {
- DWORD dwFlags; 
- WCHAR szDbaseName[CEDB_MAXDBASENAMELEN];
- DWORD dwDbaseType;
- WORD wNumRecords;
- WORD wNumSortOrder;
- DWORD dwSize;
- FILETIME ftLastModified;
- SORTORDERSPEC rgSortSpecs[CEDB_MAXSORTORDER];
-} CEDBASEINFO;
-
-/* CEDIRINFO  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct _CEDIRINFO {
- DWORD dwAttributes; 
- CEOID oidParent; 
- WCHAR szDirName[MAX_PATH]; 
-} CEDIRINFO;
-
-/* CEFILEINFO  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct _CEFILEINFO {
- DWORD dwAttributes; 
- CEOID oidParent; 
- WCHAR szFileName[MAX_PATH]; 
- FILETIME ftLastChanged; 
- DWORD dwLength; 
-} CEFILEINFO;
 
 /* CENOTIFICATION  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
 typedef struct _CENOTIFICATION {
@@ -142,45 +81,6 @@ typedef struct _CENOTIFYREQUEST {
  HANDLE hHeap;
  DWORD dwParam;
 } CENOTIFYREQUEST;
-
-/* CEOIDINFO  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct _CEOIDINFO { 
- WORD wObjType;
- WORD wPad;
- union {
- CEFILEINFO infFile;
- CEDIRINFO infDirectory;
- CEDBASEINFO infDatabase;
- CERECORDINFO infRecord;
- };
-} CEOIDINFO;
-
-/* CEPROPVAL  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct _CEPROPVAL { 
- CEPROPID propid;
- WORD wLenData;
- WORD wFlags;
- CEVALUNION val;
-} CEPROPVAL;
-typedef CEPROPVAL *PCEPROPVAL;
-
-/* CERECORDINFO  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct _CERECORDINFO {
- CEOID oidParent; 
-} CERECORDINFO;
-
-/* CEVALUNION  [typedef; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef union _CEVALUNION {
- short iVal; 
- USHORT uiVal; 
- long lVal; 
- ULONG ulVal; 
- FILETIME filetime;
- LPWSTR lpwstr; 
- CEBLOB blob; 
- BOOL boolVal;
- double dblVal;
-} CEVALUNION;
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
@@ -257,176 +157,6 @@ typedef struct CESORTORDERSPECEX {
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* CheckPassword  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, Fspass.lib, fspass.lib] */
-BOOL CheckPassword(
- LPWSTR lpszPassword 
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
-
-/* CeDeleteDatabase  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-BOOL CeDeleteDatabase(
- CEOID oidDbase
-);
-
-/* CeDeleteRecord  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-BOOL CeDeleteRecord(
- HANDLE hDatabase,
- CEOID oidRecord
-);
-
-/* CeReadRecordProps  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-CEOID CeReadRecordProps(
- HANDLE hDbase, 
- DWORD dwFlags, 
- LPWORD lpcPropID, 
- CEPROPID* rgPropID, 
- LPBYTE* lplpBuffer, 
- LPDWORD lpcbBuffer
-);
-
-/* CeSeekDatabase  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-CEOID CeSeekDatabase(
- HANDLE hDatabase, 
- DWORD dwSeekType, 
- DWORD dwValue, 
- LPDWORD lpdwIndex
-);
-
-/* CeSetDatabaseInfo  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-BOOL CeSetDatabaseInfo(
- CEOID oidDbase, 
- CEDBASEINFO* pNewInfo
-);
-
-/* CeWriteRecordProps  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-CEOID CeWriteRecordProps(
- HANDLE hDatabase,
- CEOID oidRecord,
- WORD cPropID,
- CEPROPVAL* prgPropVal
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* CeCreateDatabaseEx  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-CEOID CeCreateDatabaseEx( 
- PCEGUID pceguid, 
- CEDBASEINFO* lpCEDBInfo
-);
-
-/* CeDeleteDatabaseEx  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-BOOL CeDeleteDatabase( 
- PCEGUID pGuid
- CEOID oid
-);
-
-/* CeEnumDBVolumes  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-BOOL CeEnumDBVolumes( 
- PCEGUID pceguid, 
- LPWSTR lpBuf,
- DWORD dwNumChars
-);
-
-/* CeFindFirstDatabaseEx  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-HANDLE CeFindFirstDatabaseEx( 
- PCEGUID pceguid, 
- DWORD dwDbaseType
-);
-
-/* CeFindNextDatabaseEx  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-CEOID CeFindNextDatabaseEx(
- HANDLE hEnum,
- PCEGUID pGuid
-);
-
-/* CeFlushDBVol  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, rapi.lib] */
-BOOL CeFlushDBVol( 
- PCEGUID pceguid
-);
-
-/* CeFreeNotification  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib] */
-BOOL CeFreeNotification(
- CENOTIFYREQUEST* pRequest,
- CENOTIFICATION* pNotification
-);
-
-/* CeMountDBVol  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-BOOL CeMountDBVol( 
- PCEGUID pceguid, 
- LPWSTR lpszDBVol,
- DWORD dwFlags
-);
-
-/* CeOidGetInfoEx  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Rapi.lib, rapi.lib] */
-BOOL CeOidGetInfoEx( 
- PCEGUID pceguid, 
- CEOID oid,
- CEOIDINFO* poidInfo
-);
-
-/* CeOpenDatabaseEx  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-HANDLE CeOpenDatabaseEx( 
- PCEGUID pceguid, 
- PCEOID poid,
- LPWSTR lpszName, 
- CEPROPID propid, 
- DWORD dwFlags,
- CENOTIFYREQUEST* pReq
-);
-
-/* CeReadRecordPropsEx  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-CEOID CeReadRecordPropsEx( 
- HANDLE hDbase, 
- DWORD dwFlags,
- LPWORD lpcPropID, 
- CEPROPID* rgPropID, 
- LPBYTE* lplpBuffer,
- LPDWORD lpcbBuffer, 
- HANDLE hHeap
-);
-
-/* CeSetDatabaseInfoEx  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-BOOL CeSetDatabaseInfoEx( 
- PCEGUID pceguid, 
- CEOID oidDbase,
- CEDBASEINFO* pNewInfo
-);
-
-/* CeUnmountDBVol  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-BOOL CeUnmountDBVol( 
- PCEGUID pceguid
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-
-/* CeChangeDatabaseLCID  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-VOID CeChangeDatabaseLCID( 
- PCEGUID pceguid, 
- DWORD LCID 
-);
-
-/* GetPasswordActive  [function; ce-only; CE 3.0..399, 5.0..699; fspass.lib] */
-BOOL GetPasswordActive(void);
-
-/* SetPassword  [function; ce-only; CE 3.0..399, 5.0..699; fspass.lib] */
-BOOL SetPassword(
- LPWSTR lpszOldPassword, 
- LPWSTR lpszNewPassword 
-);
-
-/* SetPasswordActive  [function; ce-only; CE 3.0..399, 5.0..699; fspass.lib] */
-BOOL SetPasswordActive(
- BOOL bActive, 
- LPWSTR lpszPassword 
-);
-#endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
 

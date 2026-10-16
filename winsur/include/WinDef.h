@@ -5,10 +5,19 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 29 constants, 65 declarations, 9 outlines, 44 base types, 1 extra macros, 1 extra decls
+ * 29 constants, 67 declarations, 9 outlines, 59 base types, 1 extra macros, 1 extra decls
  */
 #ifndef _WINDEF_
 #define _WINDEF_
+
+#include <stddef.h>
+/* CE's Win32 API surface is Unicode (LPWSTR). */
+#ifndef UNICODE
+#define UNICODE
+#endif
+#ifndef _UNICODE
+#define _UNICODE
+#endif
 
 
 /* ==================================================================
@@ -34,29 +43,23 @@
 #define DUMMYUNIONNAME6 u6
 #define DUMMYUNIONNAME7 u7
 #define DUMMYUNIONNAME8 u8
+#define FALSE 0
 #define FASTCALL __fastcall
 #define HMONITOR_DECLARED 1
 #define NULL 0
 #define PACKED __attribute__((packed))
 #define STDCALL __stdcall
 #define STRICT 1
+#define TRUE 1
 #define VOID void
 #define WINAPI __stdcall
 #define WINAPIV __cdecl
 #define WINVER 0x0400
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 3.0..399 */
-#define FALSE 0
-#define TRUE 1
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * base types -- fundamental Windows type definitions
  * CE-specific types are marked; verify sizes for your platform
  * ================================================================ */
-
-/* ATOM
- * source: win32/common/windows-data-types.md */
-typedef WORD ATOM;
 
 /* BOOL [CE-SPECIFIC]
  * Boolean (TRUE/FALSE)
@@ -64,19 +67,11 @@ typedef WORD ATOM;
  * source: win32/common/windows-data-types.md */
 typedef int BOOL;
 
-/* BOOLEAN
- * source: win32/common/windows-data-types.md */
-typedef BYTE BOOLEAN;
-
 /* BYTE [CE-SPECIFIC]
  * 8-bit unsigned integer
  * Always 8-bit
  * source: win32/common/windows-data-types.md */
 typedef unsigned char BYTE;
-
-/* COLORREF
- * source: win32/common/windows-data-types.md */
-typedef DWORD COLORREF;
 
 /* DWORD [CE-SPECIFIC]
  * 32-bit unsigned integer (same as desktop)
@@ -92,6 +87,133 @@ typedef unsigned __int64 DWORD64;
  * source: win32/common/windows-data-types.md */
 typedef float FLOAT;
 
+/* HFILE
+ * source: win32/common/windows-data-types.md */
+typedef int HFILE;
+
+/* INT [CE-SPECIFIC]
+ * Signed integer
+ * Platform-dependent (32-bit on most CE platforms)
+ * source: win32/common/windows-data-types.md */
+typedef int INT;
+
+/* LONG64
+ * source: win32/common/windows-data-types.md */
+typedef __int64 LONG64;
+
+/* UHALF_PTR
+ * CE is 32-bit: pointer-sized integer
+ * source: win32/common/windows-data-types.md */
+typedef unsigned short UHALF_PTR;
+
+/* UINT [CE-SPECIFIC]
+ * Unsigned integer
+ * Platform-dependent (32-bit on most CE platforms)
+ * source: win32/common/windows-data-types.md */
+typedef unsigned int UINT;
+
+/* UINT64
+ * source: win32/common/windows-data-types.md */
+typedef unsigned __int64 UINT64;
+
+/* WORD [CE-SPECIFIC]
+ * 16-bit unsigned integer
+ * Always 16-bit
+ * source: win32/common/windows-data-types.md */
+typedef unsigned short WORD;
+
+/* LONG [CE-SPECIFIC]
+ * 32-bit signed integer
+ * Always 32-bit on CE
+ * source: win32/common/windows-data-types.md */
+typedef long LONG;
+
+/* ULONG [CE-SPECIFIC]
+ * 32-bit unsigned integer
+ * Always 32-bit on CE
+ * source: win32/common/windows-data-types.md */
+typedef unsigned long ULONG;
+
+/* SHORT
+ * source: win32/common/windows-data-types.md */
+typedef short SHORT;
+
+/* CHAR [CE-SPECIFIC]
+ * 8-bit ANSI character
+ * Always 8-bit; limited use on CE (prefer WCHAR)
+ * source: win32/common/windows-data-types.md */
+typedef char CHAR;
+
+/* WCHAR [CE-SPECIFIC]
+ * 16-bit Unicode character
+ * Always 16-bit on CE (UTF-16LE)
+ * source: win32/common/windows-data-types.md */
+typedef wchar_t WCHAR;
+
+/* HANDLE [CE-SPECIFIC]
+ * Generic handle type
+ * Pointer-sized on CE (32-bit on ARM, SHx; varies by platform)
+ * source: win32/common/windows-data-types.md */
+typedef void *HANDLE;
+
+/* HDC
+ * source: win32/common/windows-data-types.md */
+typedef HANDLE HDC;
+
+/* HPEN
+ * source: win32/common/windows-data-types.md */
+typedef HANDLE HPEN;
+
+/* LPWSTR [CE-SPECIFIC]
+ * Pointer to wide string
+ * Primary mutable string type on CE
+ * source: CE SDK reference */
+typedef WCHAR *LPWSTR;
+
+/* LPCWSTR [CE-SPECIFIC]
+ * Pointer to const wide string
+ * Primary string type on CE
+ * source: CE SDK reference */
+typedef const WCHAR *LPCWSTR;
+
+/* LONG_PTR
+ * CE is 32-bit: pointer-sized integer
+ * source: win32/common/windows-data-types.md */
+typedef long LONG_PTR;
+
+/* UINT_PTR
+ * CE is 32-bit: pointer-sized integer
+ * source: win32/common/windows-data-types.md */
+typedef unsigned long UINT_PTR;
+
+/* ULONG_PTR
+ * CE is 32-bit: pointer-sized integer
+ * source: win32/common/windows-data-types.md */
+typedef unsigned long ULONG_PTR;
+
+/* DWORD_PTR
+ * CE is 32-bit: pointer-sized integer
+ * source: win32/common/windows-data-types.md */
+typedef unsigned long DWORD_PTR;
+
+/* HALF_PTR [CE-SPECIFIC]
+ * 32-bit CE pointer-sized integer
+ * CE is 32-bit: pointer-sized integer
+ * source: win32/common/windows-data-types.md (32-bit row) */
+typedef short HALF_PTR;
+
+/* ATOM
+ * source: win32/common/windows-data-types.md */
+typedef WORD ATOM;
+
+/* BOOLEAN
+ * source: win32/common/windows-data-types.md */
+typedef BYTE BOOLEAN;
+
+/* COLORREF
+ * source: win32/common/windows-data-types.md */
+typedef DWORD COLORREF;
+
 /* HBITMAP
  * source: win32/common/windows-data-types.md */
 typedef HANDLE HBITMAP;
@@ -104,10 +226,6 @@ typedef HANDLE HBRUSH;
  * source: win32/common/windows-data-types.md */
 typedef HANDLE HCONVLIST;
 
-/* HCURSOR
- * source: win32/common/windows-data-types.md */
-typedef HICON HCURSOR;
-
 /* HDDEDATA
  * source: win32/common/windows-data-types.md */
 typedef HANDLE HDDEDATA;
@@ -119,10 +237,6 @@ typedef HANDLE HDWP;
 /* HENHMETAFILE
  * source: win32/common/windows-data-types.md */
 typedef HANDLE HENHMETAFILE;
-
-/* HFILE
- * source: win32/common/windows-data-types.md */
-typedef int HFILE;
 
 /* HFONT
  * source: win32/common/windows-data-types.md */
@@ -194,16 +308,6 @@ typedef HANDLE HSZ;
  * source: win32/common/windows-data-types.md */
 typedef HANDLE HWND;
 
-/* INT [CE-SPECIFIC]
- * Signed integer
- * Platform-dependent (32-bit on most CE platforms)
- * source: win32/common/windows-data-types.md */
-typedef int INT;
-
-/* LONG64
- * source: win32/common/windows-data-types.md */
-typedef __int64 LONG64;
-
 /* LPARAM [CE-SPECIFIC]
  * Message parameter (signed)
  * Pointer-sized on CE
@@ -220,35 +324,19 @@ typedef LONG_PTR LRESULT;
  * source: win32/common/windows-data-types.md */
 typedef LPWSTR PTSTR;
 
-/* UHALF_PTR
- * source: win32/common/windows-data-types.md */
-typedef unsigned int UHALF_PTR;
-
-/* UINT [CE-SPECIFIC]
- * Unsigned integer
- * Platform-dependent (32-bit on most CE platforms)
- * source: win32/common/windows-data-types.md */
-typedef unsigned int UINT;
-
-/* UINT64
- * source: win32/common/windows-data-types.md */
-typedef unsigned __int64 UINT64;
-
 /* WINSTA
  * source: win32/common/windows-data-types.md */
 typedef HANDLE WINSTA;
-
-/* WORD [CE-SPECIFIC]
- * 16-bit unsigned integer
- * Always 16-bit
- * source: win32/common/windows-data-types.md */
-typedef unsigned short WORD;
 
 /* WPARAM [CE-SPECIFIC]
  * Message parameter (unsigned)
  * Pointer-sized on CE
  * source: CE SDK reference */
 typedef UINT_PTR WPARAM;
+
+/* HCURSOR
+ * source: win32/common/windows-data-types.md */
+typedef HICON HCURSOR;
 
 /* ==================================================================
  * macros -- supplementary #define from CE pages
@@ -297,98 +385,14 @@ typedef UINT_PTR WPARAM;
  * declaration body no page prints
  * ================================================================ */
 
-/* ATOM  [typedef; shared; entity-headers; win32-reference] */
-typedef WORD ATOM;
-
-/* BOOL  [typedef; shared; entity-headers; win32-reference] */
-typedef int BOOL;
-
-/* BYTE  [typedef; shared; entity-headers; win32-reference] */
-typedef unsigned char BYTE;
-
-/* FLOAT  [typedef; shared; entity-headers; win32-reference] */
-typedef float FLOAT;
-
 /* HACCEL  [typedef; shared; entity-headers; win32-reference] */
 typedef HANDLE HACCEL;
-
-/* HBITMAP  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HBITMAP;
-
-/* HBRUSH  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HBRUSH;
-
-/* HCURSOR  [typedef; shared; entity-headers; win32-reference] */
-typedef HICON HCURSOR;
-
-/* HDC  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HDC;
 
 /* HDESK  [typedef; shared; entity-headers; win32-reference] */
 typedef HANDLE HDESK;
 
-/* HENHMETAFILE  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HENHMETAFILE;
-
-/* HFILE  [typedef; shared; entity-headers; win32-reference] */
-typedef int HFILE;
-
-/* HFONT  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HFONT;
-
-/* HGDIOBJ  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HGDIOBJ;
-
-/* HGLOBAL  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HGLOBAL;
-
-/* HHOOK  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HHOOK;
-
-/* HICON  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HICON;
-
-/* HINSTANCE  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HINSTANCE;
-
-/* HKEY  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HKEY;
-
-/* HKL  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HKL;
-
-/* HLOCAL  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HLOCAL;
-
-/* HMENU  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HMENU;
-
-/* HMETAFILE  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HMETAFILE;
-
-/* HMODULE  [typedef; shared; entity-headers; win32-reference] */
-typedef HINSTANCE HMODULE;
-
-/* HMONITOR  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HMONITOR;
-
-/* HPALETTE  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HPALETTE;
-
-/* HPEN  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HPEN;
-
-/* HRGN  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HRGN;
-
 /* HRSRC  [typedef; shared; entity-headers; win32-reference] */
 typedef HANDLE HRSRC;
-
-/* HWND  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HWND;
-
-/* LPARAM  [typedef; shared; entity-headers; win32-reference] */
-typedef LONG_PTR LPARAM;
 
 /* LPBOOL  [typedef; shared; entity-headers; win32-reference] */
 typedef BOOL far *LPBOOL;
@@ -419,9 +423,6 @@ typedef void *LPVOID;
 
 /* LPWORD  [typedef; shared; entity-headers; win32-reference] */
 typedef WORD *LPWORD;
-
-/* LRESULT  [typedef; shared; entity-headers; win32-reference] */
-typedef LONG_PTR LRESULT;
 
 /* PBOOL  [typedef; shared; entity-headers; win32-reference] */
 typedef BOOL *PBOOL;
@@ -459,20 +460,8 @@ typedef WORD *PWORD;
 /* UCHAR  [typedef; shared; entity-headers; win32-reference] */
 typedef unsigned char UCHAR;
 
-/* UINT  [typedef; shared; entity-headers; win32-reference] */
-typedef unsigned int UINT;
-
-/* ULONG  [typedef; shared; entity-headers; win32-reference] */
-typedef unsigned long ULONG;
-
 /* USHORT  [typedef, struct; shared; entity-headers; win32-reference] */
 typedef unsigned short USHORT;
-
-/* WORD  [typedef; shared; entity-headers; win32-reference] */
-typedef unsigned short WORD;
-
-/* WPARAM  [typedef; shared; entity-headers; win32-reference] */
-typedef UINT_PTR WPARAM;
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
 
@@ -489,6 +478,12 @@ typedef struct _RECT {
  LONG right; 
  LONG bottom; 
 } RECT;
+
+/* SIZE  [struct, function, library; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
+typedef struct tagSIZE { 
+ LONG cx; 
+ LONG cy; 
+} SIZE;
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 210) || (_WIN32_WCE >= 211 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..209, 2.11..399, 5.0..699 */

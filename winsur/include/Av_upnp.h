@@ -17,12 +17,10 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define BIT_AV_ERROR 0
 #define BIT_AV_TRACE 2
 #define BIT_AV_WARN 1
 #define SUCCESS_AV 0
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -905,79 +903,11 @@ struct MediaInfo{ unsigned long nNrTracks; wstring strMediaDuration; wstring str
 bool AddNamespaceMapping(  LPCWSTR pszNamespace,  LPCWSTR pszPrefix  );
 DWORD AddSinkProtocol( LPCWSTR pszProtocolInfo );
 DWORD AddSourceProtocol( LPCWSTR pszProtocolInfo );
-virtual DWORD BrowseChildren(  LPCWSTR pszObjectID,  LPCWSTR pszFilter,  unsigned long StartingIndex,  unsigned long RequestedCount,  LPCWSTR pszSortCriteria,  wstring* pstrResult,  unsigned long* pNumberReturned,  unsigned long* pTotalMatches,  unsigned long* pUpdateID  ) = 0;
-virtual DWORD BrowseMetadata(  LPCWSTR pszObjectID,  LPCWSTR pszFilter,  wstring* pstrResult,  unsigned long* pUpdateID  ) = 0;
-virtual DWORD ConnectionComplete(  long ConnectionID  ) = 0;
-virtual DWORD CreateConnection(  LPCWSTR pszRemoteProtocolInfo,  DIRECTION Direction,  long ConnectionID,  IAVTransport** ppAVTransport,  IRenderingControl** ppRenderingControl  ) = 0;
-virtual DWORD CreateObject(  LPCWSTR pszContainerID,  LPCWSTR pszElements,  wstring* pstrObjectID,  wstring* pstrResult  ) = 0;
-virtual DWORD CreateReference(  LPCWSTR pszContainerID,  LPCWSTR pszObjectID,  wstring* pstrNewID  ) = 0;
-virtual DWORD DeleteResource(  LPCWSTR pszResourceURI  ) = 0;
-virtual DWORD DestroyObject(  LPCWSTR pszObjectID  ) = 0;
-virtual DWORD EndConnection(  long ConnectionID  ) = 0;
-virtual DWORD ExportResource(  LPCWSTR pszSourceURI,  LPCWSTR pszDestinationURI,  unsigned long* pTransferID  ) = 0;
-virtual DWORD GetBlueVideoBlackLevel(  unsigned short* pBlueVideoBlackLevel  ) = 0;
-virtual DWORD GetBlueVideoGain(  unsigned short* pBlueVideoGain  ) = 0;
-virtual DWORD GetBrightness(  unsigned short* pBrightness  ) = 0;
-virtual DWORD GetColorTemperature(  unsigned short* pColorTemperature  ) = 0;
 DWORD GetConnectionManager( IConnectionManager** ppConnectionManager, wstring* pstrConnectionmanager );
 DWORD GetContentDirectory( IContentDirectory** ppContentDirectory );
-virtual DWORD GetContrast(  unsigned short* pContrast  ) = 0;
-virtual DWORD GetCurrentConnectionInfo(  long ConnectionID,  ConnectionInfo* pConnectionInfo  ) = 0;
-virtual DWORD GetCurrentTransportActions(  TransportActions* pActions  ) = 0;
-virtual DWORD GetDeviceCapabilities(  DeviceCapabilities* pDeviceCapabilities  ) = 0;
-virtual DWORD GetFirstConnectionID(  long* pConnectionID  ) = 0;
 bool GetFirstObject(  LPCWSTR pszXml,  object* pObj  );
-virtual DWORD GetGreenVideoBlackLevel(  unsigned short* pGreenVideoBlackLevel  ) = 0;
-virtual DWORD GetGreenVideoGain(  unsigned short* pGreenVideoGain  ) = 0;
-virtual DWORD GetHorizontalKeystone(  short* pHorizontalKeystone  ) = 0;
-virtual DWORD GetLoudness(  LPCWSTR pszChannel,  bool* pLoudness  ) = 0;
-virtual DWORD GetMediaInfo(  MediaInfo* pMediaInfo  ) = 0;
-virtual DWORD GetMute(  LPCWSTR pszChannel,  bool* pMute  ) = 0;
-virtual DWORD GetNextConnectionID(  long* pConnectionID  ) = 0;
 bool GetNextObject(  object* pObj  );
-virtual DWORD GetPositionInfo(  PositionInfo* pPositionInfo  ) = 0;
-virtual DWORD GetProtocolInfo(  wstring* pstrSourceProtocolInfo,  wstring* pstrSinkProtocolInfo  ) = 0;
-virtual DWORD GetRedVideoBlackLevel(  unsigned short* pRedVideoBlackLevel  ) = 0;
-virtual DWORD GetRedVideoGain(  unsigned short* pRedVideoGain  ) = 0;
-virtual DWORD GetSearchCapabilities(  wstring* pstrSearchCaps  ) = 0;
-virtual DWORD GetSharpness(  unsigned short* pSharpness  ) = 0;
-virtual DWORD GetSortCapabilities(  wstring* pstrSortCaps  ) = 0;
-virtual DWORD GetSystemUpdateID(  unsigned long* pId  ) = 0;
-virtual DWORD GetTransferProgress(  unsigned long TransferID,  wstring* pstrTransferStatus,  wstring* pstrTransferLength,  wstring* pstrTransferTotal  ) = 0;
-virtual DWORD GetTransportInfo(  TransportInfo* pTransportInfo  ) = 0;
-virtual DWORD GetTransportSettings(  TransportSettings* pTransportSettings  ) = 0;
-virtual DWORD GetVerticalKeystone(  short* pVerticalKeystone  ) = 0;
-virtual DWORD GetVolumeDB(  LPCWSTR pszChannel,  short* pVolumeDB  ) = 0;
-virtual DWORD GetVolumeDBRange(  LPCWSTR pszChannel,  short* pMinValue,  short* pMaxValue  ) = 0;
-virtual DWORD ImportResource(  LPCWSTR pszSourceURI,  LPCWSTR pszDestinationURI,  unsigned long* pTransferID  ) = 0;
-virtual DWORD InvokeVendorAction(  LPCWSTR pszActionName,  DISPPARAMS* pdispparams,  VARIANT* pvarResult  ) = 0;
-virtual DWORD ListPresets(  wstring* pstrPresetNameList  ) = 0;
-virtual DWORD PrepareForConnection(  LPCWSTR pszRemoteProtocolInfo,  LPCWSTR pszPeerConnectionManager,  long PeerConnectionID,  DIRECTION Direction,  long* pConnectionID,  IAVTransport** ppAVTransport,  IRenderingControl** ppRenderingControl  ) = 0;
-virtual DWORD Previous() = 0;
 DWORD RemoveSinkProtocol( LPCWSTR pszProtocolInfo );
 DWORD RemoveSourceProtocol( LPCWSTR pszProtocolInfo );
-virtual DWORD Search(  LPCWSTR pszContainerID,  LPCWSTR pszSearchCriteria,  LPCWSTR pszFilter,  unsigned long StartingIndex,  unsigned long RequestedCount,  LPCWSTR pszSortCriteria,  wstring* pstrResult,  unsigned long* pNumberReturned,  unsigned long* pTotalMatches,  unsigned long* pUpdateID  ) = 0;
-virtual DWORD SelectPreset(  LPCWSTR pszPresetName  ) = 0;
-virtual DWORD SetAVTransportURI(  LPCWSTR pszCurrentURI,  LPCWSTR pszCurrentURIMetaData  ) = 0;
-virtual DWORD SetBlueVideoBlackLevel(  unsigned short BlueVideoBlackLevel  ) = 0;
-virtual DWORD SetBlueVideoGain(  unsigned short BlueVideoGain  ) = 0;
-virtual DWORD SetBrightness(  unsigned short Brightness  ) = 0;
-virtual DWORD SetColorTemperature(  unsigned short ColorTemperature  ) = 0;
-virtual DWORD SetContrast(  unsigned short Contrast  ) = 0;
-virtual DWORD SetGreenVideoBlackLevel(  unsigned short GreenVideoBlackLevel  ) = 0;
-virtual DWORD SetGreenVideoGain(  unsigned short GreenVideoGain  ) = 0;
-virtual DWORD SetHorizontalKeystone(  short HorizontalKeystone  ) = 0;
-virtual DWORD SetLoudness(  LPCWSTR pszChannel,  bool Loudness  ) = 0;
-virtual DWORD SetMute(  LPCWSTR pszChannel,  bool Mute  ) = 0;
-virtual DWORD SetNextAVTransportURI(  LPCWSTR pszNextURI,  LPCWSTR pszNextURIMetaData  ) = 0;
-virtual DWORD SetPlayMode(  LPCWSTR pszNewPlayMode  ) = 0;
-virtual DWORD SetRecordQualityMode(  LPCWSTR pszNewRecordQualityMode  ) = 0;
-virtual DWORD SetRedVideoBlackLevel(  unsigned short RedVideoBlackLevel  ) = 0;
-virtual DWORD SetRedVideoGain(  unsigned short RedVideoGain  ) = 0;
-virtual DWORD SetSharpness(  unsigned short Sharpness  ) = 0;
-virtual DWORD SetVerticalKeystone(  short VerticalKeystone  ) = 0;
-virtual DWORD SetVolumeDB(  LPCWSTR pszChannel,  short VolumeDB  ) = 0;
-virtual DWORD StopTransferResource(  unsigned long TransferID  ) = 0;
-virtual DWORD UpdateObject(  LPCWSTR pszObjectID,  LPCWSTR pszCurrentTagValue,  LPCWSTR pszNewTagValue  ) = 0;
 
 #endif /* _AV_UPNP_ */

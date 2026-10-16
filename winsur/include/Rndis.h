@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define REMOTE_NDIS_HALT_MSG 0x00000003
 #define REMOTE_NDIS_INDICATE_STATUS_MSG 0x00000007
 #define REMOTE_NDIS_INITIALIZE_CMPLT 0x80000002
@@ -39,7 +38,6 @@
 #define RNDIS_STATUS_NOT_SUPPORTED 0xC00000BB
 #define RNDIS_STATUS_RESOURCES 0xC000009AL
 #define RNDIS_STATUS_SUCCESS 0x00000000
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

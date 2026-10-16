@@ -2,6 +2,7 @@
  *
  * #include this file.  It pulls in the core CE headers this
  * tree actually generated.  Values stay in those headers.
+ * Drivers also #include "CEDDK.h" (not part of the app umbrella).
  */
 #ifndef _WINDOWS_
 #define _WINDOWS_
@@ -16,6 +17,7 @@
 #include "Commctrl.h"
 #include "Winioctl.h"
 #include "Winsock2.h"
+#include "WindowsApis.h"
 
 #endif /* _WINDOWS_ */
 

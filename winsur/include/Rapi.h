@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 12 constants, 68 declarations, 0 outlines, 0 base types, 0 extra macros, 7 extra decls
+ * 12 constants, 63 declarations, 0 outlines, 0 base types, 0 extra macros, 7 extra decls
  */
 #ifndef _RAPI_
 #define _RAPI_
@@ -23,14 +23,12 @@
 #define NID_INTEGRATED_TOUCH 0x01
 #define NID_MULTI_INPUT 0x40
 #define NID_READY 0x80
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 #define RAPI_CONNECTION_IR 1
 #define RAPI_CONNECTION_NETWORK 3
 #define RAPI_CONNECTION_SERIAL 2
 #define RAPI_CONNECTION_USB 0
 #define RAPI_DEVICE_CONNECTED 1
 #define RAPI_DEVICE_DISCONNECTED 0
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -424,39 +422,6 @@ BOOL CeWriteFile(
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
-
-/* CeCreateDatabase  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-CEOID CeCreateDatabase(
- LPWSTR lpszName, 
- DWORD dwDbaseType, 
- WORD wNumSortOrder, 
- SORTORDERSPEC* rgSortSpecs
-);
-
-/* CeFindFirstDatabase  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-HANDLE CeFindFirstDatabase(
- DWORD dwDbaseType
-);
-
-/* CeFindNextDatabase  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-CEOID CeFindNextDatabase(
- HANDLE hEnum
-);
-
-/* CeOidGetInfo  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Rapi.lib, rapi.lib] */
-BOOL CeOidGetInfo(
- CEOID oid, 
- CEOIDINFO* poidInfo
-);
-
-/* CeOpenDatabase  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-HANDLE CeOpenDatabase(
- PCEOID poid, 
- LPWSTR lpszName, 
- CEPROPID propid, 
- DWORD dwFlags, 
- HWND hwndNotify
-);
 
 /* IRAPIStream::GetRapiStat  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Rapi.lib, rapi.lib] */
 HRESULT GetRapiStat(

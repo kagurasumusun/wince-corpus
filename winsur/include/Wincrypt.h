@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 579 constants, 203 declarations, 0 outlines, 0 base types, 0 extra macros, 77 extra decls
+ * 580 constants, 202 declarations, 0 outlines, 0 base types, 0 extra macros, 77 extra decls
  */
 #ifndef _WINCRYPT_
 #define _WINCRYPT_
@@ -243,6 +243,7 @@
 #define CERT_PUBKEY_ALG_PARA_PROP_ID 22
 #define CERT_PUBKEY_HASH_RESERVED_PROP_ID 8
 #define CERT_PVK_FILE_PROP_ID 12
+#define CERT_REVOKED 0x00000001
 #define CERT_SET_KEY_CONTEXT_PROP_ID 0x00000001
 #define CERT_SET_KEY_PROV_HANDLE_PROP_ID 0x00000001
 #define CERT_SHA1_HASH_PROP_ID 3
@@ -264,6 +265,8 @@
 #define CERT_STORE_SAVE_TO_FILENAME_A 3
 #define CERT_STORE_SAVE_TO_FILENAME_W 4
 #define CERT_STORE_SAVE_TO_MEMORY 2
+#define CERT_STORE_UNKNOWN 0x00000002
+#define CERT_STORE_VALID 0x00000004
 #define CERT_SUBJECT_NAME_MD5_HASH_PROP_ID 29
 #define CERT_SUBJECT_PUBLIC_KEY_MD5_HASH_PROP_ID 25
 #define CERT_SYSTEM_STORE_LOCAL_MACHINE 131072
@@ -306,6 +309,7 @@
 #define CERT_TRUST_NO_ISSUANCE_CHAIN_POLICY 0x02000000
 #define CERT_TRUST_REVOCATION_STATUS_UNKNOWN 0x00000040
 #define CERT_UNICODE_IS_RDN_ATTRS_FLAG 1
+#define CERT_UNKNOWN 0x00000000
 #define CERT_V1 0
 #define CERT_V2 1
 #define CERT_V3 2
@@ -499,6 +503,7 @@
 #define PP_APPLI_CERT 18
 #define PP_CERTCHAIN 9
 #define PP_CHANGE_PASSWORD 7
+#define PP_CLIENT_HWND 0x1
 #define PP_CONTAINER 6
 #define PP_ENUMALGS 1
 #define PP_ENUMALGS_EX 22
@@ -608,12 +613,6 @@
 #define X509_SEQUENCE_OF_ANY (LPCSTR)
 #define X509_UNICODE_NAME (LPCSTR)
 #define X509_UNICODE_NAME_VALUE (LPCSTR)
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-#define CERT_REVOKED 0x00000001
-#define CERT_STORE_UNKNOWN 0x00000002
-#define CERT_STORE_VALID 0x00000004
-#define CERT_UNKNOWN 0x00000000
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
@@ -647,12 +646,6 @@ typedef const CRYPT_OID_INFO CCRYPT_OID_INFO, *PCCRYPT_OID_INFO;
 
 /* ALG_ID  [typedef; ce-only; CE 3.0..699] */
 typedef unsigned int ALG_ID;
-
-/* BLOB  [struct; shared; CE 3.0..699] */
-typedef struct _BLOB {
- ULONG cbSize; 
- BYTE* pBlobData; 
-} BLOB, LPBLOB;
 
 /* CERT_ACCESS_DESCRIPTION  [struct; shared; CE 3.0..699] */
 typedef struct _CERT_ACCESS_DESCRIPTION {

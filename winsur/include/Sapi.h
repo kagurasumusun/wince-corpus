@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define SP_VISEME_0 0
 #define SPAF_ALL 0x0F
 #define SPAF_CONSUME_LEADING_SPACES 0x08
@@ -72,7 +71,6 @@
 #define SPWP_KNOWN_WORD_PRONOUNCEABLE 2
 #define SPWP_UNKNOWN_WORD_PRONOUNCEABLE 1
 #define SPWP_UNKNOWN_WORD_UNPRONOUNCEABLE 0
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

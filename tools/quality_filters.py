@@ -203,6 +203,42 @@ def is_define_only_block(text: str) -> bool:
     return all(ln.startswith("#") for ln in lines)
 
 
+_CPP_OR_MANAGED = re.compile(
+    r"(?:"
+    r"\bvirtual\b|\bSTDMETHODCALLTYPE\b|\bSTDMETHOD\b|\bTHIS_\b|"
+    r"\bCString\b|\bCWnd\b|\bCObject\b|\bCList\b|\btemplate\s*<|"
+    r"\bclass\s+[A-Z]|\bnamespace\b|"
+    r"::|"
+    r"=\s*(?:NULL|TRUE|FALSE|nullptr)\s*[,)]|"  # C++ default args
+    r"\)\s*const\s*;"  # C++ member
+    r")"
+)
+_MANAGED_TYPES = re.compile(r"\b(String|uint|ushort|ulong)\b")
+
+
+def is_cpp_or_managed(text: str, name: str = "") -> bool:
+    """C++ / C# / ATL / MFC / thunks -- not a C WinCE API prototype."""
+    if name and (name.endswith("_I") or "::" in name or "." in name):
+        return True
+    body = strip_markup(text or "")
+    if not body:
+        return True
+    if _CPP_OR_MANAGED.search(body):
+        return True
+    if _MANAGED_TYPES.search(body):
+        return True
+    return False
+
+
+def is_c_toolchain_declaration(text: str, name: str = "",
+                               dtype: str = "") -> bool:
+    """A declaration a C compiler can parse as WinCE C."""
+    if is_cpp_or_managed(text, name):
+        return False
+    cleaned = sanitize_declaration(text, name, dtype)
+    return bool(cleaned)
+
+
 def looks_like_c_declaration(text: str) -> bool:
     """True if *text* is a prototype / typedef / struct, not a usage snippet."""
     text = strip_markup(text or "")

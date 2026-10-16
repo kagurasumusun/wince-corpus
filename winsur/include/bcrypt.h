@@ -17,8 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 212 && _WIN32_WCE < 400)) /* CE 2.12..399 */
 #define None 0
-#endif /* _WIN32_WCE */
 
 #endif /* _BCRYPT_ */

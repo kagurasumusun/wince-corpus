@@ -17,8 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define WSDAPI_OPTION_MAX_INBOUND_MESSAGE_SIZE 0x0001
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 #define ONE_WAY 0
 #define TWO_WAY 1
 #define WSD_PT_ALL 0xff
@@ -26,12 +24,12 @@
 #define WSD_PT_HTTPS 0x04
 #define WSD_PT_NONE 0x00
 #define WSD_PT_UDP 0x01
+#define WSDAPI_OPTION_MAX_INBOUND_MESSAGE_SIZE 0x0001
 #define WSDET_INCOMING_FAULT 2
 #define WSDET_INCOMING_MESSAGE 1
 #define WSDET_NONE 0
 #define WSDET_RESPONSE_TIMEOUTWSDET_RESPONSE_TIMEOUT 4
 #define WSDET_TRANSMISSION_FAILURE 3
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

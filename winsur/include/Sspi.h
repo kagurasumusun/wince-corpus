@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 39 constants, 31 declarations, 0 outlines, 0 base types, 0 extra macros, 6 extra decls
+ * 39 constants, 30 declarations, 0 outlines, 0 base types, 0 extra macros, 6 extra decls
  */
 #ifndef _SSPI_
 #define _SSPI_
@@ -26,12 +26,16 @@
 #define QUERY_CREDENTIALS_ATTRIBUTES_FN QUERY_CREDENTIALS_ATTRIBUTES_FN_W
 #define QUERY_SECURITY_PACKAGE_INFO_FN QUERY_SECURITY_PACKAGE_INFO_FN_W
 #define SECBUFFER_ATTRMASK 0xf0000000
+#define SECBUFFER_DATA 2
+#define SECBUFFER_EMPTY 4
 #define SECBUFFER_EXTRA 5
 #define SECBUFFER_MISSING 4
 #define SECBUFFER_PADDING 9
 #define SECBUFFER_PKG_PARAMS 3
 #define SECBUFFER_READONLY 0x80000000
 #define SECBUFFER_STREAM 10
+#define SECBUFFER_STREAM_HEADER 1
+#define SECBUFFER_STREAM_TRAILER 3
 #define SECBUFFER_TOKEN 2
 #define SECBUFFER_VERSION 0
 #define SECPKG_ATTR_AUTHORITY 6
@@ -52,12 +56,6 @@
 #define UNISP_NAME UNISP_NAME_W
 #define UNISP_NAME_A "Microsoft
 #define UNISP_NAME_W L"Microsoft
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 3.0..399 */
-#define SECBUFFER_DATA 2
-#define SECBUFFER_EMPTY 4
-#define SECBUFFER_STREAM_HEADER 1
-#define SECBUFFER_STREAM_TRAILER 3
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -266,13 +264,6 @@ SECURITY_STATUS SEC_ENTRY MakeSignature(
  ULONG fQOP, 
  PSecBufferDesc pMessage, 
  ULONG MessageSeqNo 
-);
-
-/* QueryContextAttributes  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Schannel.lib, schannel.lib, Secur32.lib, secur32.lib; A/W QueryContextAttributesA,QueryContextAttributesW (CE is W-side)] */
-SECURITY_STATUS SEC_ENTRY QueryContextAttributes( 
- PCtxtHandle phContext,
- ULONG ulAttribute, 
- void SEC_FAR* pBuffer 
 );
 
 /* QueryCredentialsAttributes  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Schannel.lib, Secur32.lib, secur32.lib; A/W QueryCredentialsAttributesA,QueryCredentialsAttributesW (CE is W-side)] */

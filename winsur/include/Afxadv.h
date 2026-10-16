@@ -49,8 +49,5 @@ virtual void WriteList( );
 
 /* function */
 CRecentFileList( UINT nStart, LPCTSTR lpszSection, LPCTSTR lpszEntryFormat, int nSize, int nMaxDispLen = AFX_ABBREV_FILENAME_LEN );
-virtual void ReadList( );
-virtual void UpdateMenu( CCmdUI* pCmdUI );
-virtual void WriteList( );
 
 #endif /* _AFXADV_ */

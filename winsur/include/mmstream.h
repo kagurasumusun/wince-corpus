@@ -17,11 +17,9 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 3.0..399 */
 #define COMPSTAT_ABORT 0x04
 #define COMPSTAT_NOUPDATEOK 0x01
 #define COMPSTAT_WAIT 0x02
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 78 constants, 24 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 78 constants, 35 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _MSHTML_
 #define _MSHTML_
@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define BEHAVIORLAYOUTINFO_FULLDELEGATION 1
 #define BEHAVIORLAYOUTINFO_MAPSIZE 4
 #define BEHAVIORLAYOUTINFO_MODIFYNATURAL 2
@@ -96,7 +95,6 @@
 #define SELECTION_TYPE_Control 3
 #define SELECTION_TYPE_None 0
 #define SELECTION_TYPE_Text 2
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -296,18 +294,67 @@ typedef enum _SELECTION_TYPE {
  * functions and callbacks
  * ================================================================ */
 
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+
+/* IOleControlNavigation2::ActivateRect  [function; ce-only; CE 4.0..699; Mshtml.dll, mshtml.dll] */
+HRESULT STDMETHODCALLTYPE ActivateRect(
+ DWORD rectToActivate
+);
+
+/* IOleControlNavigation2::DeactivateRect  [function; ce-only; CE 4.0..699; Mshtml.dll, mshtml.dll] */
+HRESULT STDMETHODCALLTYPE DectivateRect(VOID);
+
+/* IOleControlNavigation2::GetControlNavigationCapabilities  [function; ce-only; CE 4.0..699; Mshtml.dll, mshtml.dll] */
+HRESULT GetControlNavigationCapabilities(
+ DWORD* navigationFlags
+);
+
+/* IOleControlNavigation2::GetCurrentRectIndex  [function; ce-only; CE 4.0..699; Mshtml.dll, mshtml.dll] */
+HRESULT STDMETHODCALLTYPE GetCurrentRectIndex(
+ DWORD __RPC_FAR* current
+);
+
+/* IOleControlNavigation2::GetNavigationRectCount  [function; ce-only; CE 4.0..699; Mshtml.dll, mshtml.dll] */
+HRESULT GetNavigationRectCount(
+ DWORD __RPC_FAR* rectCount
+);
+
+/* IOleControlNavigation2::GetNavigationRects  [function; ce-only; CE 4.0..699; Mshtml.dll, mshtml.dll] */
+virtual HRESULT STDMETHODCALLTYPE GetNavigationRects(
+ DWORD rectCount,
+ RECT __RPC_FAR rects[ ]
+);
+
+/* IOleControlNavigation2::NavigateInControl  [function; ce-only; CE 4.0..699; Mshtml.dll, mshtml.dll] */
+HRESULT STDMETHODCALLTYPE NavigateInControl(
+ RECT lastRect,
+ NVFOCUS_DIRECTION direction
+);
+
+/* IOleControlNavigation2AdviseSink::NavigateOutControl  [function; ce-only; CE 4.0..699; Mshtml.dll, mshtml.dll] */
+HRESULT STDMETHODCALLTYPE NavigateOutControl( 
+ RECT currentRect, 
+ NVFOCUS_DIRECTION direction
+);
+
+/* IOleControlNavigation2AdviseSink::OnFocusRectChange  [function; ce-only; CE 4.0..699; Mshtml.dll, mshtml.dll] */
+HRESULT STDMETHODCALLTYPE OnFocusRectChange(
+ RECT* newRect
+);
+
+/* IOleControlNavigation2AdviseSink::OnNavigationStatusChange  [function; ce-only; CE 4.0..699; Mshtml.dll, mshtml.dll] */
+virtual HRESULT STDMETHODCALLTYPE OnNavigationStatusChange( 
+ DWORD navigationStatus
+);
+
+/* IOleControlNavigation2AdviseSink::OnRectsChange  [function; ce-only; CE 4.0..699; Mshtml.dll, mshtml.dll] */
+HRESULT STDMETHODCALLTYPE OnRectsChange();
+#endif /* _WIN32_WCE */
+
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 
 /* IHTMLTable::caption  [function; ce-only; CE 5.0..599; mshtml.dll] */
 HRESULT IHTMLTable::get_caption(BSTR v);
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-HRESULT IHTMLTable::get_caption(BSTR v);
 
 #endif /* _MSHTML_ */

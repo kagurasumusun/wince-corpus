@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define DCRP_VALID_DOMAIN 0x00000008
 #define DCRP_VALID_PASSWORD 0x00000002
 #define DCRP_VALID_USERNAME 0x00000001
@@ -34,7 +33,6 @@
 #define VMS_REGISTERED 0x00000002
 #define VMS_REREGISTERING 0x00000040
 #define VMS_SHUTTING_DOWN 0x00000004
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

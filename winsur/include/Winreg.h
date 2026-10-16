@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 36 constants, 18 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 43 constants, 18 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _WINREG_
 #define _WINREG_
@@ -50,17 +50,22 @@
 #define REG_OPTION_CREATE_LINK 0x00000002L
 #define REG_OPTION_NON_VOLATILE 0x00000000L
 #define REG_OPTION_VOLATILE 0x00000001L
+#define REG_PINFLAG_B_MANY 0x4
+#define REG_PINFLAG_B_OUTPUT 0x8
+#define REG_PINFLAG_B_RENDERER 0x2
+#define REG_PINFLAG_B_ZERO 0x1
 #define REG_QWORD 11
 #define REG_QWORD_LITTLE_ENDIAN 11
 #define REG_RESOURCE_LIST 8
 #define REG_RESOURCE_REQUIREMENTS_LIST 10
 #define REG_SZ 1
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 3.0..399 */
-#define REG_PINFLAG_B_MANY 0x4
-#define REG_PINFLAG_B_OUTPUT 0x8
-#define REG_PINFLAG_B_RENDERER 0x2
-#define REG_PINFLAG_B_ZERO 0x1
-#endif /* _WIN32_WCE */
+#define SC_ACTION_NONE 0
+#define SC_ACTION_REBOOT 2
+#define SC_ACTION_RESTART 1
+#define SC_ACTION_RUN_COMMAND 3
+#define SC_STATUS_PROCESS_INFO 0
+#define TokenPrimary 1
+#define TokenUser 1
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

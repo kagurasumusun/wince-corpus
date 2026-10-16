@@ -18,7 +18,6 @@
  * chains with the evidence after the #endif)
  * ================================================================ */
 #define MK_ALT 32
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define OLEUPDATE_ALWAYS 1
 #define OLEUPDATE_ONCALL 3
 #define OLEVERBATTRIB_NEVERDIRTIES 1
@@ -26,7 +25,6 @@
 #define OLEWHICHMK_CONTAINER 1
 #define OLEWHICHMK_OBJFULL 3
 #define OLEWHICHMK_OBJREL 2
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
@@ -523,8 +521,6 @@ HRESULT BindIfRunning(void);
 HRESULT BindToSource( DWORD bindflags, IBindCtx* pbc );
 HRESULT CanInPlaceActivate();
 HRESULT ContextSensitiveHelp( BOOL fEnterMode);
-HRESULT IOleInPlaceSite::DeactivateAndUndo();
-HRESULT IOleInPlaceSite::DiscardUndoState();
 HRESULT DoVerb( LONG iVerb, LPMSG lpmsg, IOleClientSite * pActiveSite, LONG lindex, HWND hwndParent, LPCRECT lprcPosRect );
 HRESULT DragEnter( IDataObject* pDataObject, DWORD grfKeyState, POINTL pt, DWORD* pdwEffect );
 HRESULT DragLeave(void);
@@ -552,7 +548,6 @@ HRESULT OnInPlaceActivate();
 HRESULT OnInPlaceDeactivate();
 HRESULT OnPosRectChange( LPCRECT lprcPosRect);
 HRESULT OnShowWindow( BOOL fShow);
-HRESULT IOleInPlaceSite::OnUIActivate();
 HRESULT OnUIDeactivate( BOOL fUndoable);
 HRESULT RequestNewObjectLayout();
 HRESULT RequestNewObjectlayout();

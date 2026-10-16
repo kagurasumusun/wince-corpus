@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1786 constants, 493 declarations, 2 outlines, 0 base types, 0 extra macros, 50 extra decls
+ * 1786 constants, 495 declarations, 2 outlines, 0 base types, 0 extra macros, 50 extra decls
  */
 #ifndef _COMMCTRL_
 #define _COMMCTRL_
@@ -2968,6 +2968,16 @@ TVM_GETITEMRECT wParam = (WPARAM)(BOOL) fItemRect;
  lParam = (LPARAM)(RECT FAR*) prc;
 #endif /* _WIN32_WCE */
 
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 200 && _WIN32_WCE < 210) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.0..209, 2.11..2.12, 3.0..699 */
+
+/* ACM_Open  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Acmdwrap.lib] */
+PVOID ACM_Open(
+ DWORD dwData,
+ DWORD dwAccess,
+ DWORD dwShareMode
+);
+#endif /* _WIN32_WCE */
+
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213)) /* CE 2.11..2.12 */
 
 /* TreeView_GetDropHilite  [function; ce-only; CE 2.11..2.12] */
@@ -4856,6 +4866,14 @@ TTN_SHOW idTT = (int) wParam;
 /* TVM_SETITEMSPACING  [function; ce-only; CE 5.0..699] */
 TVM_SETITEMSPACING wParam = 0; 
  lParam = (LPARAM)(int)iSpacing;
+
+/* WM_FILECHANGEINFO  [function; ce-only; CE 5.0..699; Ceshell.lib, ceshell.lib] */
+LRESULT CALLBACK WindowProc(
+ HWND hwnd,
+ UINT msg,
+ WPARAM wParam,
+ LPARAM lParam
+);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */

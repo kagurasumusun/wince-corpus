@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define DMO_E_INVALIDSTREAMINDEX 0x80040201
 #define DMO_E_INVALIDTYPE 0x80040202
 #define DMO_E_NO_MORE_ITEMS 0x80040206
@@ -46,7 +45,6 @@
 #define DMO_SET_TYPEF_CLEAR 0x00000002
 #define DMO_SET_TYPEF_TEST_ONLY 0x00000001
 #define DMO_VOSF_NEEDS_PREVIOUS_SAMPLE 0x00000001
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

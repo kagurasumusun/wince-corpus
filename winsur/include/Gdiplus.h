@@ -21,32 +21,4 @@ enum ImageFlags { ImageFlagsNone = 0, ImageFlagsScalable = 0x0001, ImageFlagsHas
 enum ImageLockMode { ImageLockModeRead = 0x0001, ImageLockModeWrite = 0x0002, ImageLockModeUserInputBuf = 0x0004};
 enum ImageCodecFlags { ImageCodecFlagsEncoder = 0x00000001, ImageCodecFlagsDecoder = 0x00000002, ImageCodecFlagsSupportBitmap = 0x00000004, ImageCodecFlagsSupportVector = 0x00000008, ImageCodecFlagsSeekableEncode = 0x00000010, ImageCodecFlagsBlockingDecode = 0x00000020, ImageCodecFlagsBuiltin = 0x00010000, ImageCodecFlagsSystem = 0x00020000, ImageCodecFlagsUser = 0x00040000};
 
-/* function */
-class EncoderParameters { public: UINT Count; EncoderParameter Parameter[1];};
-class BitmapData {
-  public:
-  UINT Width;
-  UINT Height;
-  INT Stride;
-  PixelFormat PixelFormat;
-  VOID* Scan0;
-  UINT_PTR Reserved;
-};
-class ImageCodecInfo {
-  public:
-  CLSID Clsid;
-  GUID FormatID;
-  const WCHAR* CodecName;
-  const WCHAR* DllName;
-  const WCHAR* FormatDescription;
-  const WCHAR* FilenameExtension;
-  const WCHAR* MimeType;
-  DWORD Flags;
-  DWORD Version;
-  DWORD SigCount;
-  DWORD SigSize;
-  const BYTE* SigPattern;
-  const BYTE* SigMask;
-};
-
 #endif /* _GDIPLUS_ */

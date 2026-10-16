@@ -276,8 +276,6 @@ const IID& iid = GUID_NULL, HRESULT hRes = 0 );
 CComAggObject( void* pv );
 CComCachedTearOffObject( void* pv );
 CComContainedObject( void* pv );
-CComObject( void* = NULL );
-CComObjectNoLock( void* = NULL );
 CComPolyObject( void* pv );
 CComTearOffObject( void* p);
 HRESULT FinalConstruct( );

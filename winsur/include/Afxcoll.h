@@ -194,7 +194,6 @@ void SetPadding( CSize size );
 /* function */
 CMapStringToOb( int nBlockSize = 10 );
 CObList( int nBlockSize = 10 );
-int GetCurFocus( ) const;
 void RemoveImage( int nImage );
 CSize SetItemSize( CSize size );
 

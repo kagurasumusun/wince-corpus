@@ -18,8 +18,6 @@
  * chains with the evidence after the #endif)
  * ================================================================ */
 #define MAX_NERR (NERR_BASE+899)
-#define NERR_BASE 2100
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 3.0..399 */
 #define NERR_AccountExpired 2239
 #define NERR_AccountUndefined 2238
 #define NERR_AcctLimitExceeded 2434
@@ -57,6 +55,7 @@
 #define NERR_BadTransactConfig 2141
 #define NERR_BadUasConfig 2450
 #define NERR_BadUsername 2202
+#define NERR_BASE 2100
 #define NERR_BrowserConfiguredToNotRun 2550
 #define NERR_BrowserNotStarted 2139
 #define NERR_BrowserTableIncomplete 2319
@@ -308,6 +307,5 @@
 #define NERR_WkstaInconsistentState 2137
 #define NERR_WkstaNotStarted 2138
 #define NERR_WriteFault 2295
-#endif /* _WIN32_WCE */
 
 #endif /* _LMERR_ */

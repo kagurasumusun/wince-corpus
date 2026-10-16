@@ -1,11 +1,11 @@
-/* nled.h -- Windows CE unified surface
+/* Nled.h -- Windows CE unified surface
  *
  * ONE tree for every CE generation.  Version differences use
  * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 6 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
+ * 0 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _NLED_
 #define _NLED_
@@ -58,21 +58,6 @@ BOOL NLedDriverDllEntry(
 HANDLE hinstDll, 
 DWORD fdwReason, 
 LPVOID lpvReserved );
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* NLedGetDeviceInfo  [function; ce-only; CE 4.0..699; Coredll.dll, coredll.dll] */
-BOOL WINAPI NLedGetDeviceInfo(
- UINT nInfoId,
- void* pOutput
-);
-
-/* NLedSetDevice  [function; ce-only; CE 4.0..699; Coredll.dll, coredll.dll] */
-BOOL WINAPI NLedSetDevice(
- UINT nDeviceId,
- void* pInput
-);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

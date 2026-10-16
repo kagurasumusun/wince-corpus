@@ -17,8 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
-#define FINDFRAME_INTERNAL 0x80000000
 #define FINDFRAME_JUSTTESTEXISTENCE 1
 #define FINDFRAME_NONE 0
 #define FRAMEOPTIONS_BROWSERBAND 0x00000040
@@ -28,6 +26,8 @@
 #define FRAMEOPTIONS_SCROLL_AUTO 0x00000004
 #define FRAMEOPTIONS_SCROLL_NO 0x00000002
 #define FRAMEOPTIONS_SCROLL_YES 0x00000001
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
+#define FINDFRAME_INTERNAL 0x80000000
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

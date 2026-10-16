@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 #define SD_INFO_REGISTER_OCR 0
 #define SD_IO_FUNCTION_ENABLE 0
 #define SDCardBeginSelectDeselect 4
@@ -26,7 +25,6 @@
 #define SDCardEjected 1
 #define SDCardSelected 2
 #define SDCardSelectRequest 6
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

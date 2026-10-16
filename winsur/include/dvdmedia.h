@@ -19,12 +19,10 @@
  * ================================================================ */
 #define AMCONTROL_COLORINFO_PRESENT 0x00000008
 #define AMCONTROL_USED 0x00000001
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define KS_AM_RATE_ExactRateChange 2
 #define KS_AM_RATE_MaxFullDataRate 3
 #define KS_AM_RATE_SimpleRateChange 1
 #define KS_AM_RATE_Step 4
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

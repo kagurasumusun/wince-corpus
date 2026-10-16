@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define DecoderInitFlagBuiltIn1st 0x0002
 #define DecoderInitFlagNoBlock 0x0001
 #define DecoderInitFlagNone 0
@@ -62,7 +61,6 @@
 #define SinkFlagsMultipass 0x00080000
 #define SinkFlagsTopDown 0x00010000
 #define SinkFlagsWantProps 0x00200000
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

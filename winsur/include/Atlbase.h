@@ -342,7 +342,6 @@ void CComAutoCriticalSection( );
 ULONG CComPtr( VOID );
 ULONG CComQIPtr( VOID );
 CComVariant( ); CComVariant( const CComVariant& varSrc); CComVariant( const VARIANT& varSrc); CComVariant( LPCOLESTR lpsz ); CComVariant( LPCSTR lpsz ); CComVariant( BSTR bstrSrc ); CComVariant( bool bSrc ); CComVariant( int nSrc ); CComVariant( BYTE nSrc ); CComVariant( short nSrc ); CComVariant( long nSrc, VARTYPE vtSrc = VT_I4 ); CComVariant( float fltSrc ); CComVariant( double dblSrc ); CComVariant( CY cySrc ); CComVariant( IDispatch* pSrc ); CComVariant( IUnknown* pSrc );
-HRESULT ChangeType( VARTYPE vtNew, const VARIANT* pSrc = NULL);
 static ULONG Decrement( LPLONG p);
 LONG DeleteSubKey( LPCTSTR lpszSubKey );
 void Empty( );
@@ -353,11 +352,8 @@ HINSTANCE GetTypeLibInstance( );
 static ULONG Increment( LPLONG p);
 LONG QueryValue( DWORD& dwValue, LPCTSTR lpszValueName );
 LONG RecurseDeleteKey( LPCTSTR lpszKey );
-HRESULT RegisterServer( BOOL bRegTypeLib = FALSE, const CLSID* pCLSID = NULL );
 HRESULT RevokeClassObjects( );
-LONG SetKeyValue( LPCTSTR lpszKeyName, LPCTSTR lpszValue, LPCTSTR lpszValueName = NULL );
 void Term( );
-HRESULT UnregisterServer( const CLSID* pCLSID = NULL );
 HRESULT UpdateRegistryClass( const CLSID& clsid, LPCTSTR lpszProgID, LPCTSTR lpszVerIndProgID, UINT nDescID, DWORD dwFlags, BOOL bRegister );
 
 #endif /* _ATLBASE_ */

@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 #define INTFCAP_MAX_CIPHER_MASK 0x000000ff
 #define INTFCAP_SSN 0x00000100
 #define INTFCTL_8021XSUPP 0x1000
@@ -32,7 +31,6 @@
 #define WZCCTL_VOLATILE 0x0004
 #define WZCCTL_WEPK_PRESENT 0x0001
 #define WZCCTL_WEPK_XFORMAT 0x0002
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

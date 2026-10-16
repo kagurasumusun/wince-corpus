@@ -768,23 +768,8 @@ int SetStretchBltMode(
  * ================================================================ */
 
 /* function */
-VOID WINAPI CeRemoveFontResource_I( CEOID oid );
-VOID WINAPI CreateDCW_I( const WCHAR* lpszDriver, const WCHAR* lpszDevice, const WCHAR* lpszOutput, const DEVMODEW* lpInitData );
-VOID WINAPI CreateDIBPatternBrushPt_I( const void* lpPackedDIB, unsigned int iUsage );
 VOID WINAPI CreatePermanentDIBSection( HDC hdc, CONST BITMAPINFO* pbmi, UINT iUsage, void** ppvBits, HANDLE hSection, DWORD dwOffset );
-VOID WINAPI DeleteDC_I( HDC hdc );
 int DibByteWidth( unsigned int N, unsigned int W );
 int DibSize( unsigned int N, unsigned int W, int H );
-VOID WINAPI EnableEUDC_I( BOOL fEnableEUDC );
-VOID WINAPI EnumDisplayMonitors_I( HDC hdcPaint, LPCRECT lprcPaint, MONITORENUMPROC lpfnEnum, LPARAM lData HPROCESS hProcCallingContext );
-BOOL GdiSetObjectOwner_I( HGDIOBJ hgdiobj, HPROCESS hprc );
-VOID WINAPI GetClipRgn_I( HDC hdc, HRGN hrgn );
-VOID WINAPI GetMonitorInfo_I( HMONITOR hMonitor, LPMONITORINFO lpmi );
-VOID WINAPI GetRegionData_I( HRGN hRgn, DWORD dwCount, RGNDATA* lpRgnData );
-VOID WINAPI MonitorFromPoint_I( POINT pt, DWORD dwFlag );
-VOID WINAPI MonitorFromRect_I( LPCRECT lprc, DWORD dwFlag );
-VOID WINAPI MonitorFromWindow_I( HWND hwnd, DWORD dwFlag );
-VOID WINAPI RectVisible_I( HDC hdc, CONST RECT* lprc );
-VOID WINAPI etTextMetricsW_I( HDC hdc, TEXTMETRIC* lptm );
 
 #endif /* _GDI_HPP_ */

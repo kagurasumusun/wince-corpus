@@ -226,19 +226,4 @@ STDMETHODIMP IPegasusFileFilterSite::ReportProgress(
 );
 #endif /* _WIN32_WCE */
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-STDMETHODIMP ICeFileFilterSite::CloseDestinationFile(  BOOL bKeepFile,  LPUNKNOWN pObj);
-STDMETHODIMP ICeFileFilter::FilterOptions(  HWND hwndParent);
-STDMETHODIMP ICeFileFilter::NextConvertFile(  int nConversion,  PFF_CONVERTINFO *pci,  PFF_SOURCEFILE *psf,  PFF_DESTINATIONFILE *pdf,  volatile BOOL *pbCancel,  PR_ERROR *perr);
-STDMETHODIMP ICeFileFilterSite::OpenDestinationFile(  int nHowToOpenFile,  LPCSTR pszFullpath,  LPVOID *ppObj);
-STDMETHODIMP ICeFileFilterSite::OpenSourceFile(  int nHowToOpenFile,  LPVOID *ppObj);
-STDMETHODIMP ICeFileFilterSite::ReportLoss(  DWORD dw,  LPCTSTR psz,  va_list *Arguments);
-STDMETHOD(FormatMessage) (  THIS_ DWORD dwFlags,  DWORD dwMessageId,  DWORD dwLanguageId,  LPTSTR lpBuffer,  DWORD nSize,  va_list *Arguments,  DWORD *pcb) PURE;
-HRESULT ICeFileFilterOptions::SetFilterOptions(  CFF_CONVERTOPTIONS *pco);
-
 #endif /* _REPLFILT_ */

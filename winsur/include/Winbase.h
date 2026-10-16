@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 559 constants, 274 declarations, 1 outlines, 0 base types, 0 extra macros, 26 extra decls
+ * 566 constants, 325 declarations, 2 outlines, 0 base types, 0 extra macros, 26 extra decls
  */
 #ifndef _WINBASE_
 #define _WINBASE_
@@ -138,6 +138,8 @@
 #define DEVICE_COUNTER_2 4
 #define DEVICE_ID_LENGTH 20
 #define DEVICE_LIST_LEN 10
+#define DEVICE_STATE_CONNECTED 1
+#define DEVICE_STATE_DISCONNECTED 0
 #define DISABLE_MAX_PRIVILEGE 1
 #define DOCKINFO_DOCKED 2
 #define DOCKINFO_UNDOCKED 1
@@ -291,7 +293,14 @@
 #define INFINITE 0xFFFFFFFF
 #define INVALID_ATOM ((ATOM)0)
 #define INVALID_FILE_SIZE 0xFFFFFFFF
+#define INVALID_HANDLE_VALUE 0xFFFFFFFF
 #define INVALID_SET_FILE_POINTER ((DWORD)-1)
+#define JobObjectAssociateCompletionPortInformation 7
+#define JobObjectBasicLimitInformation 2
+#define JobObjectBasicUIRestrictions 4
+#define JobObjectEndOfJobTimeInformation 6
+#define JobObjectExtendedLimitInformation 9
+#define JobObjectSecurityLimitInformation 5
 #define LHND 0x0042
 #define LMEM_DISCARDABLE 3840
 #define LMEM_DISCARDED 16384
@@ -328,6 +337,7 @@
 #define MAX_PROFILE_LEN 80
 #define MAXIMUM_SUSPEND_COUNT 0x7F
 #define MAXIMUM_WAIT_OBJECTS 64
+#define MAXINTATOM 0xC000
 #define MOVEFILE_COPY_ALLOWED 2
 #define MOVEFILE_DELAY_UNTIL_REBOOT 4
 #define MOVEFILE_REPLACE_EXISTING 1
@@ -431,6 +441,10 @@
 #define REALTIME_PRIORITY_CLASS 0x00000100
 #define REPLACEFILE_IGNORE_MERGE_ERRORS 0x00000002
 #define REPLACEFILE_WRITE_THROUGH 0x00000001
+#define RESMGR_BASE_OEM 0x00080000
+#define RESMGR_IOSPACE 0x00002
+#define RESMGR_IRQ 0x00001
+#define RESMGR_MAX_OEM 0x000FFFFF
 #define RTS_CONTROL_DISABLE 0x00
 #define RTS_CONTROL_ENABLE 0x01
 #define RTS_CONTROL_HANDSHAKE 0x02
@@ -457,6 +471,7 @@
 #define SEM_NOOPENFILEERRORBOX 0x8000
 #define SEMAPHORE_ALL_ACCESS 0x1f0003
 #define SEMAPHORE_MODIFY_STATE 2
+#define SERIAL_LSR_FE 0x08
 #define SET_TAPE_DRIVE_INFORMATION 1
 #define SET_TAPE_MEDIA_INFORMATION 0
 #define SETBREAK 8
@@ -549,8 +564,10 @@
 #define THREAD_PRIORITY_NORMAL 0
 #define THREAD_PRIORITY_TIME_CRITICAL 15
 #define TIME_ZONE_ID_INVALID 0xFFFFFFFF
+#define TLS_OUT_OF_INDEXES 0xFFFFFFFF
 #define TRUNCATE_EXISTING 5
 #define TWOSTOPBITS 2
+#define VER_PLATFORM_WIN32s 0
 #define VOLUME_NAME_DOS 0x0
 #define VOLUME_NAME_GUID 0x1
 #define VOLUME_NAME_NONE 0x4
@@ -560,27 +577,13 @@
 #define WAIT_FAILED ((DWORD)0xFFFFFFFF)
 #define WAIT_IO_COMPLETION 0x000000C0L
 #define WAIT_OBJECT_0 0x00000000L
+#define WAIT_TIMEOUT 258
 #define WINADVAPI DECLSPEC_IMPORT
 #define WINBASEAPI DECLSPEC_IMPORT
 #define WRITE_RESTRICTED 8
 #define WRITE_WATCH_FLAG_RESET 1
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..599 */
 #define UNICODE compile
-#endif /* _WIN32_WCE */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
-#define DEVICE_STATE_CONNECTED 1
-#define DEVICE_STATE_DISCONNECTED 0
-#define INVALID_HANDLE_VALUE 0xFFFFFFFF
-#define MAXINTATOM 0xC000
-#define RESMGR_BASE_OEM 0x00080000
-#define RESMGR_IOSPACE 0x00002
-#define RESMGR_IRQ 0x00001
-#define RESMGR_MAX_OEM 0x000FFFFF
-#endif /* _WIN32_WCE */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-#define SERIAL_LSR_FE 0x08
-#define TLS_OUT_OF_INDEXES 0xFFFFFFFF
-#define WAIT_TIMEOUT 258
 #endif /* _WIN32_WCE */
 
 /* ==================================================================
@@ -590,6 +593,19 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* CONTEXT  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+
+/* TypeFromPropID  [macro; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Fsdbase.lib] */
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
+
+/* CHECK_INVALIDGUID  [macro, function; ce-only; CE 2.11..2.12, 3.0..699] */
+#define CHECK_INVALIDGUID(pguid) \
+!~((pguid)->Data1&(pguid)->Data2&(pguid)->Data3&(pguid)->Data4)
+
+/* CHECK_SYSTEMGUID  [macro, function; ce-only; CE 2.11..2.12, 3.0..699; Fsdbase.lib] */
+#define CHECK_SYSTEMGUID(pguid) \
+!((pguid)->Data1|(pguid)->Data2|(pguid)->Data3|(pguid)->Data4)
 #endif /* _WIN32_WCE */
 
 /* ==================================================================
@@ -678,6 +694,12 @@ typedef struct _OSVERSIONINFO{
 
 /* PROCESS_INFORMATION  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
 typedef struct _PROCESS_INFORMATION {- // pi
+
+/* SORTORDERSPEC  [struct; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
+typedef struct _SORTORDERSPEC {
+ CEPROPID propid;
+ DWORD dwFlags;
+} SORTORDERSPEC;
 
 /* SYSTEM_INFO  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
 typedef struct _SYSTEM_INFO {-
@@ -860,6 +882,73 @@ typedef struct _BY_HANDLE_FILE_INFORMATION {
  DWORD nFileIndexLow;
  DWORD dwOID;
 } BY_HANDLE_FILE_INFORMATION;
+
+/* CEDBASEINFO  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
+typedef struct _CEDBASEINFO {
+ DWORD dwFlags; 
+ WCHAR szDbaseName[CEDB_MAXDBASENAMELEN];
+ DWORD dwDbaseType;
+ WORD wNumRecords;
+ WORD wNumSortOrder;
+ DWORD dwSize;
+ FILETIME ftLastModified;
+ SORTORDERSPEC rgSortSpecs[CEDB_MAXSORTORDER];
+} CEDBASEINFO;
+
+/* CEDIRINFO  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
+typedef struct _CEDIRINFO {
+ DWORD dwAttributes; 
+ CEOID oidParent; 
+ WCHAR szDirName[MAX_PATH]; 
+} CEDIRINFO;
+
+/* CEFILEINFO  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
+typedef struct _CEFILEINFO {
+ DWORD dwAttributes; 
+ CEOID oidParent; 
+ WCHAR szFileName[MAX_PATH]; 
+ FILETIME ftLastChanged; 
+ DWORD dwLength; 
+} CEFILEINFO;
+
+/* CEOIDINFO  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
+typedef struct _CEOIDINFO { 
+ WORD wObjType;
+ WORD wPad;
+ union {
+ CEFILEINFO infFile;
+ CEDIRINFO infDirectory;
+ CEDBASEINFO infDatabase;
+ CERECORDINFO infRecord;
+ };
+} CEOIDINFO;
+
+/* CEPROPVAL  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
+typedef struct _CEPROPVAL { 
+ CEPROPID propid;
+ WORD wLenData;
+ WORD wFlags;
+ CEVALUNION val;
+} CEPROPVAL;
+typedef CEPROPVAL *PCEPROPVAL;
+
+/* CERECORDINFO  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
+typedef struct _CERECORDINFO {
+ CEOID oidParent; 
+} CERECORDINFO;
+
+/* CEVALUNION  [typedef; ce-only; CE 2.11..2.12, 3.0..699] */
+typedef union _CEVALUNION {
+ short iVal; 
+ USHORT uiVal; 
+ long lVal; 
+ ULONG ulVal; 
+ FILETIME filetime;
+ LPWSTR lpwstr; 
+ CEBLOB blob; 
+ BOOL boolVal;
+ double dblVal;
+} CEVALUNION;
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
@@ -941,6 +1030,11 @@ typedef struct _WIN32_FILE_ATTRIBUTE_DATA{
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
 
+/* CheckPassword  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, Fspass.lib, fspass.lib] */
+BOOL CheckPassword(
+ LPWSTR lpszPassword 
+);
+
 /* DeregisterDevice  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, device.lib] */
 BOOL DeregisterDevice(
  Handle hDevice
@@ -982,6 +1076,82 @@ void SetDaylightTime(
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
+
+/* CeCreateDatabase  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
+CEOID CeCreateDatabase(
+ LPWSTR lpszName, 
+ DWORD dwDbaseType, 
+ WORD wNumSortOrder, 
+ SORTORDERSPEC* rgSortSpecs
+);
+
+/* CeDeleteDatabase  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
+BOOL CeDeleteDatabase(
+ CEOID oidDbase
+);
+
+/* CeDeleteRecord  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
+BOOL CeDeleteRecord(
+ HANDLE hDatabase,
+ CEOID oidRecord
+);
+
+/* CeFindFirstDatabase  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
+HANDLE CeFindFirstDatabase(
+ DWORD dwDbaseType
+);
+
+/* CeFindNextDatabase  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
+CEOID CeFindNextDatabase(
+ HANDLE hEnum
+);
+
+/* CeOidGetInfo  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Rapi.lib, rapi.lib] */
+BOOL CeOidGetInfo(
+ CEOID oid, 
+ CEOIDINFO* poidInfo
+);
+
+/* CeOpenDatabase  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
+HANDLE CeOpenDatabase(
+ PCEOID poid, 
+ LPWSTR lpszName, 
+ CEPROPID propid, 
+ DWORD dwFlags, 
+ HWND hwndNotify
+);
+
+/* CeReadRecordProps  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
+CEOID CeReadRecordProps(
+ HANDLE hDbase, 
+ DWORD dwFlags, 
+ LPWORD lpcPropID, 
+ CEPROPID* rgPropID, 
+ LPBYTE* lplpBuffer, 
+ LPDWORD lpcbBuffer
+);
+
+/* CeSeekDatabase  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
+CEOID CeSeekDatabase(
+ HANDLE hDatabase, 
+ DWORD dwSeekType, 
+ DWORD dwValue, 
+ LPDWORD lpdwIndex
+);
+
+/* CeSetDatabaseInfo  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
+BOOL CeSetDatabaseInfo(
+ CEOID oidDbase, 
+ CEDBASEINFO* pNewInfo
+);
+
+/* CeWriteRecordProps  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
+CEOID CeWriteRecordProps(
+ HANDLE hDatabase,
+ CEOID oidRecord,
+ WORD cPropID,
+ CEPROPVAL* prgPropVal
+);
 
 /* CreateFileForMapping  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
 HANDLE CreateFileForMapping( 
@@ -1074,6 +1244,12 @@ BOOL ClearCommError(
  HANDLE hFile,
  LPDWORD lpErrors,
  LPCOMSTAT lpStat
+);
+
+/* CompareFileTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coremain.lib, Nkstub.lib] */
+LONG CompareFileTime( 
+ const FILETIME* lpFileTime1,
+ const FILETIME* lpFileTime2
 );
 
 /* ContinueDebugEvent  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
@@ -1630,6 +1806,13 @@ BOOL PurgeComm(
  DWORD dwFlags
 );
 
+/* QueryContextAttributes  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Schannel.lib, schannel.lib, Secur32.lib, secur32.lib; A/W QueryContextAttributesA,QueryContextAttributesW (CE is W-side)] */
+SECURITY_STATUS SEC_ENTRY QueryContextAttributes( 
+ PCtxtHandle phContext,
+ ULONG ulAttribute, 
+ void SEC_FAR* pBuffer 
+);
+
 /* QueryPerformanceCounter  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, nk.lib] */
 BOOL QueryPerformanceCounter(
  LARGE_INTEGER* lpPerformanceCount
@@ -1952,6 +2135,95 @@ int wvsprintf(
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
 
+/* CeCreateDatabaseEx  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
+CEOID CeCreateDatabaseEx( 
+ PCEGUID pceguid, 
+ CEDBASEINFO* lpCEDBInfo
+);
+
+/* CeDeleteDatabaseEx  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
+BOOL CeDeleteDatabase( 
+ PCEGUID pGuid
+ CEOID oid
+);
+
+/* CeEnumDBVolumes  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
+BOOL CeEnumDBVolumes( 
+ PCEGUID pceguid, 
+ LPWSTR lpBuf,
+ DWORD dwNumChars
+);
+
+/* CeFindFirstDatabaseEx  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
+HANDLE CeFindFirstDatabaseEx( 
+ PCEGUID pceguid, 
+ DWORD dwDbaseType
+);
+
+/* CeFindNextDatabaseEx  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
+CEOID CeFindNextDatabaseEx(
+ HANDLE hEnum,
+ PCEGUID pGuid
+);
+
+/* CeFlushDBVol  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, rapi.lib] */
+BOOL CeFlushDBVol( 
+ PCEGUID pceguid
+);
+
+/* CeFreeNotification  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib] */
+BOOL CeFreeNotification(
+ CENOTIFYREQUEST* pRequest,
+ CENOTIFICATION* pNotification
+);
+
+/* CeMountDBVol  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
+BOOL CeMountDBVol( 
+ PCEGUID pceguid, 
+ LPWSTR lpszDBVol,
+ DWORD dwFlags
+);
+
+/* CeOidGetInfoEx  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Rapi.lib, rapi.lib] */
+BOOL CeOidGetInfoEx( 
+ PCEGUID pceguid, 
+ CEOID oid,
+ CEOIDINFO* poidInfo
+);
+
+/* CeOpenDatabaseEx  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
+HANDLE CeOpenDatabaseEx( 
+ PCEGUID pceguid, 
+ PCEOID poid,
+ LPWSTR lpszName, 
+ CEPROPID propid, 
+ DWORD dwFlags,
+ CENOTIFYREQUEST* pReq
+);
+
+/* CeReadRecordPropsEx  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
+CEOID CeReadRecordPropsEx( 
+ HANDLE hDbase, 
+ DWORD dwFlags,
+ LPWORD lpcPropID, 
+ CEPROPID* rgPropID, 
+ LPBYTE* lplpBuffer,
+ LPDWORD lpcbBuffer, 
+ HANDLE hHeap
+);
+
+/* CeSetDatabaseInfoEx  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
+BOOL CeSetDatabaseInfoEx( 
+ PCEGUID pceguid, 
+ CEOID oidDbase,
+ CEDBASEINFO* pNewInfo
+);
+
+/* CeUnmountDBVol  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
+BOOL CeUnmountDBVol( 
+ PCEGUID pceguid
+);
+
 /* CloseHandle  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
 BOOL CloseHandle(
  HANDLE hObject
@@ -2023,6 +2295,12 @@ BOOL FlushViewOfFile(
  LPCVOID lpBaseAddress, 
  DWORD dwNumberOfBytesToFlush 
 );
+
+/* SetErrorInfo  [function; shared; CE 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
+HRESULT SetErrorInfo( 
+ DWORD dwReserved, 
+ IErrorInfo* perrinfo 
+);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 3.0..399 */
@@ -2030,6 +2308,14 @@ BOOL FlushViewOfFile(
 /* WaitForVerticalBlank  [function; ce-only; CE 3.0..399; heuristic-prefix] */
 DWORD __stdcall WaitForVerticalBlank( 
 LPDDHAL_WAITFORVERTICALBLANKDATA pwfvbd );
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 3.0..399, 5.0..599 */
+
+/* memchr  [function; ce-only; CE 3.0..399, 5.0..599; coredll.dll, coremain.lib] */
+void *memchr( const void*buf, int c, size_tcount);inline wchar_t *wmemset( wchar_t*buf, 
+ wchar_tc,
+ size_tcount);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
@@ -2040,6 +2326,33 @@ HANDLE ActivateDevice(
  DWORD dwClientInfo
 );
 
+/* CeClearReplChangeBitsEx  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
+BOOL CeClearReplChangeBitsEx(
+ PCEGUID pguid,
+ CEOID oid,
+ DWORD mask
+);
+
+/* CeGetReplChangeBitsEx  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
+BOOL CeGetReplChangeBitsEx(
+ PCEGUID pguid,
+ CEOID oid,
+ LPDWORD lpbits,
+ DWORD dwFlags
+);
+
+/* CeGetReplChangeMask  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
+BOOL CeGetReplChangeMask(
+ LPDWORD lpmask
+);
+
+/* CeGetReplOtherBitsEx  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
+BOOL CeGetReplOtherBitsEx(
+ PCEGUID pguid,
+ CEOID oid,
+ LPDWORD lpbits
+);
+
 /* CeGetThreadPriority  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
 int CeGetThreadPriority(
  HANDLE hThread
@@ -2048,6 +2361,30 @@ int CeGetThreadPriority(
 /* CeGetThreadQuantum  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
 DWORD CeGetThreadQuantum(
  HANDLE hThread
+);
+
+/* CeRegisterReplNotification  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
+BOOL CeRegisterReplNotification(
+ CENOTIFYREQUEST* pRequest
+);
+
+/* CeSetReplChangeBitsEx  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
+BOOL CeSetReplChangeBitsEx(
+ PCEGUID pguid,
+ CEOID oid,
+ DWORD mask
+);
+
+/* CeSetReplChangeMask  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
+BOOL CeSetReplChangeMask(
+ DWORD mask
+);
+
+/* CeSetReplOtherBitsEx  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
+BOOL CeSetReplOtherBitsEx(
+ PCEGUID pguid,
+ CEOID oid,
+ DWORD bits
 );
 
 /* CeSetThreadPriority  [function; ce-only; CE 3.0..399, 5.0..699; Nk.lib, nk.lib] */
@@ -2111,6 +2448,9 @@ DWORD GetFileVersionInfoSize(
 /* GetIdleTime  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
 DWORD GetIdleTime (void);
 
+/* GetPasswordActive  [function; ce-only; CE 3.0..399, 5.0..699; fspass.lib] */
+BOOL GetPasswordActive(void);
+
 /* GetTempFileName  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib; A/W GetTempFileNameA,GetTempFileNameW (CE is W-side)] */
 UINT GetTempFileName(
  LPCTSTR lpPathName, 
@@ -2144,6 +2484,18 @@ BOOL ReleaseSemaphore(
  HANDLE hSemaphore,
  LONG lReleaseCount,
  LPLONG lpPreviousCount
+);
+
+/* SetPassword  [function; ce-only; CE 3.0..399, 5.0..699; fspass.lib] */
+BOOL SetPassword(
+ LPWSTR lpszOldPassword, 
+ LPWSTR lpszNewPassword 
+);
+
+/* SetPasswordActive  [function; ce-only; CE 3.0..399, 5.0..699; fspass.lib] */
+BOOL SetPasswordActive(
+ BOOL bActive, 
+ LPWSTR lpszPassword 
 );
 
 /* SignalStarted  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
@@ -2216,6 +2568,12 @@ HANDLE FindFirstChangeNotification(
 /* FindNextChangeNotification  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib] */
 BOOL FindNextChangeNotification(
  HANDLE hChangeHandle
+);
+
+/* SetUserData  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
+BOOL SetUserData( 
+ LPBYTE lpbUserData, 
+ DWORD dwDataSize 
 );
 #endif /* _WIN32_WCE */
 
