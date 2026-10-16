@@ -40,6 +40,8 @@ EXACT_TO_HEADER = {
     "SHGetSpecialFolderPath": "shellapi.h",
     "ShellExecuteEx": "shellapi.h",
     "SHELLEXECUTEINFO": "shellapi.h",
+    "AdjustWindowRectEx": "Winuser.h",
+    "GetDoubleClickTime": "Winuser.h",
     "INVALID_HANDLE_VALUE": "Winbase.h",
     "INVALID_FILE_SIZE": "Winbase.h",
     "INVALID_SET_FILE_POINTER": "Winbase.h",

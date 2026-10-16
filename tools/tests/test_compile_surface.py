@@ -93,6 +93,8 @@ int WINAPI WinMain(HINSTANCE h, HINSTANCE p, LPWSTR cmd, int show) {
     FindCloseStore(NULL);
     CeSetUserNotification(NULL, NULL, NULL, NULL);
     WriteDebugLED(0, 0);
+    AdjustWindowRectEx(NULL, 0, 0, 0);
+    GetDoubleClickTime();
     return 0;
 }
 '''

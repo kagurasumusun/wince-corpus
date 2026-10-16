@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 21 constants, 45 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 21 constants, 44 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _RAS_
 #define _RAS_
@@ -319,17 +319,6 @@ DWORD RasGetEapUserData(
  PDWORD pdwSizeofEapData
 );
 
-/* RasIOControl  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-RasIOControl IMPLICIT_DECL(
- LPVOID hRasConn,
- DWORD dwCode,
- PBYTE pBufIn,
- DWORD dwLenIn,
- PBYTE pBufOut,
- DWORD dwLenOut,
- PDWORD pdwActualOut
-);
-
 /* RasSetEapConnectionData  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
 DWORD RasSetEapConnectionData (
  LPCTSTR pszPhonebook,
@@ -347,13 +336,5 @@ DWORD RasSetEapUserData(
  DWORD dwSizeofEapData
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-RasIOControl IMPLICIT_DECL(  LPVOID hRasConn,  DWORD dwCode,  PBYTE pBufIn,  DWORD dwLenIn,  PBYTE pBufOut,  DWORD dwLenOut,  PDWORD pdwActualOut  );
 
 #endif /* _RAS_ */

@@ -1,5 +1,5 @@
 /* ExtraDeclarations.h -- declarations without header assignment
- * 5951 unassigned declarations
+ * 5633 unassigned declarations
  */
 #ifndef _EXTRADECLARATIONS_H_
 #define _EXTRADECLARATIONS_H_
@@ -2968,9 +2968,9 @@ Private Sub object_OpenComplete()
 Private Sub object_StateChange(ByVal oldState As Long, ByVal newState As Long)
 Unable to Start Up ConPMon (earlier conpmon could be shutting down)
 DWORD CALLBACK OpenPerformanceData(  LPWSTR lpDeviceNames  );
+~CBasePropertyPage(void);
 RESULT GetSourceURL(  DWORD dwSourceIndex,  BSTR* pbstrURL  );
 HRESULT CreateBitmapFromBuffer(  BitmapData* bitmapData,  IBitmapImage** bitmap  )
-The following code example shows how to do a search to retrieve all attributes and all values under the entry, ou=PNS, o=USSA, c =US.  ULONG CallValue;  int SearchScope, AttrsOnly, CallValue;  TCHAR SearchBase[128], SearchFilter[128], **Attrs;  _tcscpy(SearchBase, _T("ou = PNS, o = USSA, c = US"));  SearchScope = LDAP_SCOPE_SUBTREE;  _tcscpy(SearchFilter, _T("(objectclass=*)")); // get all entries  Attrs = NULL; // get all attributes  AttrsOnly = 0; // get values as well as attributes  CallValue = ldap_search(ld, SearchBase, SearchScope, SearchFilter, Attrs, AttrsOnly );
 HRESULT FindBehavior(  BSTR bstrBehavior,  BSTR bstrBehaviorUrl,  IElementBehaviorSite *pSite,  IElementBehavior **ppBehavior  );
 HRESULT GetFocusRect(  RECT *pRect  );
 HRESULT GetLayoutInfo(  LONG *plLayoutInfo  );
@@ -3734,6 +3734,7 @@ Private Sub commandbar_ComboBoxChange(combobox)
 Private Sub commandbar_ComboBoxClick(combobox)
 Private Sub winsock_ConnectionRequest( )
 BOOL CMPRegister ( DWORD dwProcessId, DWORD dwNotifyInterval, DWORD dwRecoverFlags, WCHAR *pCommandLine, PCPMCALLBACK pfnCPMCallBack, DWORD dwRecoverFailFlags );
+CTransInPlaceInputPin *InputPin( );
 Private Sub winsock_DataArrival(bytesTotal)
 Private Sub combo_DropDown( )
 void WINAPI (

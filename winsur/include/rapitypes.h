@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 6 declarations, 1 outlines, 0 base types, 0 extra macros, 4 extra decls
+ * 0 constants, 6 declarations, 1 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _RAPITYPES_
 #define _RAPITYPES_
@@ -70,18 +70,5 @@ typedef RAPISTREAMFLAG *PRAPISTREAMFLAG, *LPRAPISTREAMFLAG;
 
 /* CENOTIREQUEST  [extra struct] */
 typedef struct _CENOTIFYREQUEST { DWORD dwSize; HWND hwnd; DWORD dwFlags; HANDLE hHeap; DWORD dwParam; } CENOTIREQUEST;
-
-/* Reserved3  [extra struct] */
-typedef struct _SYSTEM_POWER_STATUS_EX {
-  BYTE ACLineStatus;
-  BYTE BatteryFlag;
-  BYTE BatteryLifePercent;
-  BYTE Reserved1;
-  DWORD BatteryLifeTime;
-  DWORD BatteryFullLifeTime;
-  BYTE Reserved2;
-  BYTE BackupBatteryFlag;
-  BYTE BackupBatteryLifePercent;
-  BYTE Reserved3; };
 
 #endif /* _RAPITYPES_ */

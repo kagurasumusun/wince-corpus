@@ -19,6 +19,12 @@ class DefineTests(unittest.TestCase):
         self.assertNotIn("<", line)
         self.assertIn("MAKEINTRESOURCE", line)
 
+    def test_message_crack_wparam_is_broken(self):
+        self.assertTrue(q.is_broken_c(
+            "TCM_REMOVEIMAGE | wParam = (WPARAM)(int) iImage;"))
+        self.assertFalse(q.looks_like_c_declaration(
+            "TCM_REMOVEIMAGE | wParam = (WPARAM)(int) iImage;"))
+
     def test_broken_assertmsg_define_dropped(self):
         self.assertIsNone(q.sanitize_define_line(
             "#define ASSERTMSG(\n message,\n Condition\n);",

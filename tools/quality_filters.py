@@ -245,7 +245,10 @@ def is_broken_c(text: str) -> bool:
         return True
     if is_glued_prototype(body):
         return True
-    if "SEC_ENTRY" in body or "IMPLICIT_CALL" in body:
+    if "SEC_ENTRY" in body or "IMPLICIT_CALL" in body or "IMPLICIT_DECL" in body:
+        return True
+    # Message-crack PRE: ``TCM_REMOVEIMAGE | wParam = ...`` is not a prototype.
+    if re.search(r"\bwParam\s*=", body) or re.search(r"\blParam\s*=", body):
         return True
     if body.count("{") != body.count("}"):
         return True
@@ -344,6 +347,8 @@ def looks_like_c_declaration(text: str) -> bool:
     first = text.lstrip()
     head = first.lower()
     if is_glued_prototype(text):
+        return False
+    if is_broken_c(text):
         return False
     if _ASSIGNMENT.match(first):
         return False

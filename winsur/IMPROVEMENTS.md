@@ -432,6 +432,10 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: wParam スニペットと Fsdmgr（第29弾）
+
+コピーはしない。harvest **105,096** 頁。`TCM_REMOVEIMAGE | wParam =` を関数と誤認。AdjustWindowRectEx / GetDoubleClickTime を載せる。Fsdmgr.h を Windows.h へ。harvest 宣言 53,961。gcc 通過。
+
 ### 2026-10-16: Notify/Dbgapi/winioctl を Windows.h へ（第28弾）
 
 コピーはしない。harvest **105,096** 頁を生で開いた。壊れた `#define ASSERTMSG(` をマクロとして出していた。同じ `CE_NOTIFICATION_TRIGGER` を二回出していた。winioctl の IOCTL 定数は既にあったが umbrella から見えない読み落とし。gcc 通過。

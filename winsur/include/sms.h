@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 80 constants, 35 declarations, 1 outlines, 0 base types, 0 extra macros, 8 extra decls
+ * 80 constants, 35 declarations, 1 outlines, 0 base types, 0 extra macros, 7 extra decls
  */
 #ifndef _SMS_
 #define _SMS_
@@ -292,14 +292,6 @@ enum SMS_DATA_ENCODING {
   SMSDE_GSM,
   SMSDE_UCS2,
 };
-
-/* TEXTPSPRI_EMERGENCY  [extra enum] */
-enum TEXT_PROVIDER_SPECIFIC_PRIORITY_TYPE {
-  TEXTPSPRI_NONE = 0,
-  TEXTPSPRI_NORMAL = 1,
-  TEXTPSPRI_INTERACTIVE,
-  TEXTPSPRI_URGENT,
-  TEXTPSPRI_EMERGENCY, };
 
 /* WDPPSPA_16_BIT_PORT_NUMBERS  [extra enum] */
 enum WDP_PROVIDER_SPECIFIC_PORT_ADDRESSING { WDPPSPA_8_BIT_PORT_NUMBERS = 0, WDPPSPA_16_BIT_PORT_NUMBERS, };

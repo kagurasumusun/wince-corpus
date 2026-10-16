@@ -24,6 +24,7 @@
 #include "winioctl.h"
 #include "Notify.h"
 #include "Dbgapi.h"
+#include "Fsdmgr.h"
 
 #endif /* _WINDOWS_ */
 

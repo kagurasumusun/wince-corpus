@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 11 constants, 81 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 11 constants, 85 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _FSDMGR_
 #define _FSDMGR_
@@ -58,6 +58,24 @@ typedef VOID(*PEMPTYLOCKCONTAINER)(
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
+
+/* FSDMGR_CachedRead  [function; ce-only; unified-kb; unified-kb] */
+DWORD FSDMGR_CachedRead(
+ DWORD dwCacheId,
+ DWORD dwBlockNum,
+ DWORD dwNumBlocks,
+ PVOID pBuffer,
+ DWORD dwReadFlags
+);
+
+/* FSDMGR_CachedWrite  [function; ce-only; unified-kb; unified-kb] */
+DWORD FSDMGR_CachedWrite(
+ DWORD dwCacheId,
+ DWORD dwBlockNum,
+ DWORD dwNumBlocks,
+ PVOID pBuffer,
+ DWORD dwWriteFlags
+);
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
@@ -141,24 +159,6 @@ DWORD ResizeCache(
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
-
-/* FSDMGR_CachedRead  [function; ce-only; CE 6.0..699; Fsdmgr.lib] */
-DWORD FSDMGR_CachedRead(
- DWORD dwCacheId,
- DWORD dwBlockNum,
- DWORD dwNumBlocks,
- PVOID pBuffer,
- DWORD dwReadFlags
-);
-
-/* FSDMGR_CachedWrite  [function; ce-only; CE 6.0..699; Fsdmgr.lib] */
-DWORD FSDMGR_CachedWrite(
- DWORD dwCacheId,
- DWORD dwBlockNum,
- DWORD dwNumBlocks,
- PVOID pBuffer,
- DWORD dwWriteFlags
-);
 
 /* FSDMGR_CacheIoControl  [function; ce-only; CE 6.0..699; Fsdmgr.lib] */
 BOOL FSDMGR_CacheIoControl(

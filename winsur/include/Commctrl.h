@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1786 constants, 327 declarations, 18 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 1786 constants, 326 declarations, 18 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _COMMCTRL_
 #define _COMMCTRL_
@@ -3081,10 +3081,6 @@ void TabCtrl_SetPadding(
  int cx, 
  int cy 
 );
-
-/* TCM_REMOVEIMAGE  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-TCM_REMOVEIMAGE | wParam = (WPARAM)(int) iImage; 
- lParam = 0;
 
 /* TreeView_DeleteAllItems  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
 BOOL TreeView_DeleteAllItems( 
