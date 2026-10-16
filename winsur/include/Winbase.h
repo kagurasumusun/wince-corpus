@@ -1952,6 +1952,13 @@ BOOL VirtualProtect(
  PDWORD lpflOldProtect
 );
 
+/* VirtualQuery  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, nk.lib] */
+DWORD VirtualQuery(
+ LPCVOID lpAddress,
+ PMEMORY_BASIC_INFORMATION lpBuffer,
+ DWORD dwLength
+);
+
 /* WaitCommEvent  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
 BOOL WaitCommEvent(
  HANDLE hFile,
@@ -2602,6 +2609,14 @@ BOOL VirtualProtectEx(
  DWORD dwSize,
  DWORD flNewProtect,
  PDWORD lpflOldProtect
+);
+
+/* VirtualQueryEx  [function; shared; CE 6.0..699; coredll.lib] */
+DWORD VirtualQueryEx(
+ HANDLE hProcess,
+ LPCVOID lpAddress,
+ PMEMORY_BASIC_INFORMATION lpBuffer,
+ DWORD dwLength
 );
 #endif /* _WIN32_WCE */
 

@@ -182,10 +182,11 @@ def is_keepable_unassigned_macro(name: str, value: str, definition: str) -> bool
 
 
 _GLUED = re.compile(
+    # HANDLECreateFile / DWORDdwFlag -- not INT inside INTERNET / INTEGER.
     r"\b(?:HANDLE|HMODULE|HINSTANCE|HWND|HDC|HMENU|HKEY|HBITMAP|HFONT|"
-    r"BOOL(?!EAN)|DWORD|UINT|ULONG(?!LONG)|LONG(?!LONG)|WORD|BYTE|LPVOID|LPCVOID|LPSTR|LPCSTR|"
+    r"BOOL|DWORD|UINT|ULONG|LONG|WORD|BYTE|LPVOID|LPCVOID|LPSTR|LPCSTR|"
     r"LPWSTR|LPCWSTR|LPTSTR|LPCTSTR|HRESULT|LRESULT|NTSTATUS|"
-    r"VOID|INT(?!ERFACE|EGER)|SHORT|CHAR(?!SET))[A-Za-z]|"
+    r"VOID|INT|SHORT|CHAR)(?:[A-Z][a-z]|[a-z])|"
     r"\b(?:struct|enum|union)_[A-Z]"
 )
 
@@ -321,17 +322,18 @@ def looks_like_c_declaration(text: str) -> bool:
     if _HTML_LEFTOVER.search(text):
         text = strip_markup(text)
     first = text.lstrip()
+    head = first.lower()
     if is_glued_prototype(text):
         return False
     if _ASSIGNMENT.match(first):
         return False
     if re.match(r"[A-Z][A-Z0-9_]*\s+\w+\s*=", first):
         return False
-    if first.startswith(("if ", "if(", "for ", "for(", "while ", "while(",
+    if head.startswith(("if ", "if(", "for ", "for(", "while ", "while(",
                          "switch ", "return ", "else", "case ", "goto ",
-                         "printf", "TRACE", "DEBUGMSG", "ASSERT", "NKDbg")):
+                         "printf", "trace", "debugmsg", "assert", "nkdbg")):
         return False
-    if first.startswith(("#define", "#pragma", "typedef", "struct", "enum",
+    if head.startswith(("#define", "#pragma", "typedef", "struct", "enum",
                          "union", "interface", "class")):
         return True
     if re.search(r"\b(WINAPI|STDAPI|CALLBACK|APIENTRY|HRESULT|BOOL|DWORD|"
@@ -339,7 +341,7 @@ def looks_like_c_declaration(text: str) -> bool:
                  r"WCHAR|TCHAR|LPWSTR|LPCWSTR|LPTSTR|LPCTSTR)\b", first):
         if "(" in first:
             return True
-        if first.strip().endswith(";") and "typedef" in first:
+        if first.strip().endswith(";") and "typedef" in head:
             return True
     # "Type Name(args);" with a type token before the name.
     # Some CE PRE blocks omit the trailing ';' (`READ_PORT_UCHAR ( PUCHAR Port )`).

@@ -1,5 +1,5 @@
 /* ExtraDeclarations.h -- declarations without header assignment
- * 5930 unassigned declarations
+ * 5939 unassigned declarations
  */
 #ifndef _EXTRADECLARATIONS_H_
 #define _EXTRADECLARATIONS_H_
@@ -482,7 +482,6 @@ HRESULT ChangeChordMap( IDirectMusicSegment* pSegment, BOOL fTrackScale, IDirect
 BOOL Check(void);
 HRESULT CheckCapabilities( DWORD * pCapabilities );
 HRESULT CheckConnect( IPin *pPin);
-VOID WINAPI CheckDlgButton( HWND hDlg, int nIDButton, UINT uCheck );
 HRESULT CheckMediaType( const CMediaType *pmt );
 BOOL CheckReady(void);
 BOOL CheckRequest( DWORD *pParam);
@@ -3987,6 +3986,7 @@ MMRESULT SetRate(HWAVEOUT hwo, double rate)
 #define DDGPEBLTPARMS_VERSION0(0)#define DDGPEBLTPARMS_CURRENTVERSION(DDGPEBLTPARMS_VERSION0) struct DDGPEBltParms {GPEBltParms gpeBltParms;DDGPEStandardHeader};
 #define GPEMODEEX_VERSION0(0)#define GPEMODEEX_CURRENTVERSION(GPEMODEEX_VERSION0) struct GPEModeEx {GPEMode modeInfo;DDGPEStandardHeader;EDDGPEPixelFormat ePixelFormat;DWORD dwPixelFourCC;DWORD dwPixelFormatData;LONG lPitch;DWORD dwFlags;DWORD dwRBitMask;DWORD dwGBitMask;DWORD dwBBitMask;DWORD dwAlphaBitMask };
 #define LOC_HKL_DEFAULT ""
+#define CACHE_ENTRY_BUFFER_SIZE (1024*5) DWORD dwBufferSize=0; LPINTERNET_CACHE_ENTRY_INFO lpCacheEntry; dwBufferSize = CACHE_ENTRY_BUFFER_SIZE; lpCacheEntry = (LPINTERNET_CACHE_ENTRY_INFO)LocalAlloc(LPTR,CACHE_ENTRY_BUFFER_SIZE); BOOL bValue = GetUrlCacheEntryInfo(lpszUrl,lpCacheEntry,&dwBufferSize);
 #define variable_name [variable_value]
 #define DISABLEFAULTS() (UTlsPtr () [TLSSLOT_KERNEL] |= (TLSKERN_NOFAULTMSG | TLSKERN_NOFAULT))
 #define ENABLEFAULTS() (UTlsPtr () [TLSSLOT_KERNEL] &= ~(TLSKERN_NOFAULTMSG | TLSKERN_NOFAULT))
@@ -4077,7 +4077,6 @@ CS_DATARANGE_VIDEO DCAM_StreamMode = {
 #define OEM_BLOCK_RESERVED 0x01 #define OEM_BLOCK_READONLY 0x02
 #define DRVM_MAPPER 0x2000 #define DRVM_MAPPER_PREFERRED_GET (DRVM_MAPPER+21)  #define DRVM_MAPPER_PREFERRED_SET (DRVM_MAPPER+22)
 #define OEM_FLASH_PARAMETER_GUID 0A0C7E46-3399-4021-90C8-FA6D389C4BA2
-#define CACHE_ENTRY_BUFFER_SIZE (1024*5) DWORD dwBufferSize=0; LPINTERNET_CACHE_ENTRY_INFO lpCacheEntry; dwBufferSize = CACHE_ENTRY_BUFFER_SIZE; lpCacheEntry = (LPINTERNET_CACHE_ENTRY_INFO)LocalAlloc(LPTR,CACHE_ENTRY_BUFFER_SIZE); BOOL bValue = GetUrlCacheEntryInfo(lpszUrl,lpCacheEntry,&dwBufferSize);
 #define LINE_GPRSCLASS dwParam1 = LINE_GPRSCLASS; dwParam2; dwParam3;
 #define _OLE2_H_ #define NOIME
 #define WINAPI __declspec(nothrow) __stdcall 

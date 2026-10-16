@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 4 constants, 16 declarations, 4 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 4 constants, 20 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WZCSAPI_
 #define _WZCSAPI_
@@ -23,22 +23,23 @@
 #define TMMS_DEFAULT_TR 0x00000bb8
 
 /* ==================================================================
- * macros -- the macro/#define blocks the pages print (verbatim)
- * ================================================================ */
-
-/* INTF_80211_CAPABILITY  [struct; ce-only] */
-
-/* INTF_ENTRY_EX  [struct; ce-only] */
-
-/* INTF_KEY_ENTRY  [struct; ce-only] */
-
-/* INTFS_KEY_TABLE  [struct; ce-only] */
-
-/* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
+
+/* INTF_KEY_ENTRY  [struct; ce-only] */
+typedef struct
+{
+ LPWSTR wszGuid;
+} INTF_KEY_ENTRY, *PINTF_KEY_ENTRY;
+
+/* INTFS_KEY_TABLE  [struct; ce-only] */
+typedef struct
+{
+ DWORD dwNumIntfs;
+ PINTF_KEY_ENTRY pIntfs;
+} INTFS_KEY_TABLE, *PINTFS_KEY_TABLE;
 
 /* WZC_CONTEXT  [struct; ce-only] */
 typedef struct _wzc_context_t
@@ -64,6 +65,15 @@ typedef struct _WZC_EAPOL_PARAMS
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
+
+/* WZCEnumInterfaces  [function; ce-only; CE 4.0..699; Wzcsapi.lib] */
+DWORD WZCEnumInterfaces(
+ LPWSTR pSrvAddr,
+ PINTFS_KEY_TABLE pIntfs
+);
+#endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 61 constants, 29 declarations, 19 outlines, 0 base types, 0 extra macros, 100 extra decls
+ * 61 constants, 30 declarations, 19 outlines, 0 base types, 0 extra macros, 100 extra decls
  */
 #ifndef _OAIDL_
 #define _OAIDL_
@@ -339,6 +339,16 @@ typedef struct tagELEMDESC {
     IDLDESC idldesc;
     PARAMDESC paramdesc;};
   } ELEMDES, *LPELEMDESC;
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
+
+/* DISPID  [?; ce-only; CE 4.0..699] */
+Typedef LONG DISPID;
+#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

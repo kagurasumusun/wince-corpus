@@ -116,6 +116,17 @@ class GluedPrototypeTests(unittest.TestCase):
         self.assertFalse(q.is_glued_prototype(text))
         self.assertTrue(q.looks_like_c_declaration(text))
 
+    def test_internet_name_is_not_glued(self):
+        text = ("typedef struct { DWORD dwResult; DWORD dwError; } "
+                "INTERNET_ASYNC_RESULT, *LPINTERNET_ASYNC_RESULT;")
+        self.assertFalse(q.is_glued_prototype(text))
+        self.assertTrue(q.looks_like_c_declaration(text))
+
+    def test_capital_t_typedef_is_kept(self):
+        text = ("Typedef struct _tagCOMPOSITIONFORM { DWORD dwStyle; "
+                "POINT ptCurrentPos; RECT rcArea; } COMPOSITIONFORM;")
+        self.assertTrue(q.looks_like_c_declaration(text))
+
     def test_wsprintf_is_kept(self):
         text = "int wsprintf(LPTSTR lpOut, LPCTSTR lpFmt, ...);"
         self.assertTrue(q.looks_like_c_declaration(text))

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 192 constants, 95 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 192 constants, 96 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINSOCK2_
 #define _WINSOCK2_
@@ -209,12 +209,6 @@
 #define XP1_SUPPORT_MULTIPOINT 0x00000400
 #define XP1_UNI_RECV 0x00010000
 #define XP1_UNI_SEND 0x00008000
-
-/* ==================================================================
- * macros -- the macro/#define blocks the pages print (verbatim)
- * ================================================================ */
-
-/* NDIS_PACKET_8021Q_INFO  [struct; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

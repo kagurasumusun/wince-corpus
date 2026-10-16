@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 30 constants, 67 declarations, 9 outlines, 118 base types, 0 extra macros, 0 extra decls
+ * 30 constants, 67 declarations, 19 outlines, 119 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDEF_
 #define _WINDEF_
@@ -543,6 +543,11 @@ typedef struct tWAVEFORMATEX WAVEFORMATEX, *PWAVEFORMATEX, *LPWAVEFORMATEX;
  * source: win32/common/windows-data-types.md */
 typedef struct ULARGE_INTEGER { ULONGLONG QuadPart; } ULARGE_INTEGER, *PULARGE_INTEGER;
 
+/* LPABC [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef struct _ABC *LPABC;
+
 /* ATOM
  * source: win32/common/windows-data-types.md */
 typedef WORD ATOM;
@@ -724,6 +729,10 @@ typedef HICON HCURSOR;
 
 /* HIBYTE  [macro; shared] */
 
+/* HIMAGELIST  [typedef; ce-only; heuristic-prefix] */
+
+/* HIMC  [typedef; ce-only; heuristic-prefix] */
+
 /* HIWORD  [macro; shared] */
 
 /* HWINSTA  [typedef; shared; entity-headers] */
@@ -732,6 +741,10 @@ typedef HICON HCURSOR;
 
 /* LOWORD  [macro; shared] */
 
+/* LPCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
+
+/* LUID  [typedef; ce-only; heuristic-prefix] */
+
 /* MAKELONG  [macro; shared] */
 #define MAKELONG(a, b) \ 
  ((LONG) (((WORD) (a)) | ((DWORD) ((WORD) (b))) << 16));
@@ -739,6 +752,16 @@ typedef HICON HCURSOR;
 /* MAKEWORD  [macro; shared] */
 #define MAKEWORD(a, b) \ 
  ((WORD) (((BYTE) (a)) | ((WORD) ((BYTE) (b))) << 8));
+
+/* PCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
+
+/* PCWCH  [typedef; ce-only; heuristic-prefix] */
+
+/* PLUID  [typedef; ce-only; heuristic-prefix] */
+
+/* REGSAM  [typedef; ce-only; heuristic-prefix] */
+
+/* UNSIGNED  [typedef; ce-only; heuristic-prefix] */
 
 /* WINAPI  [typedef, macro; shared; entity-headers] */
 

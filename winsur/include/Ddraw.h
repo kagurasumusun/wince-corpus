@@ -232,6 +232,7 @@ HRESULT GetColorKey( DWORD dwFlags, LPDDCOLORKEY lpDDColorKey);
 HRESULT GetDDInterface( LPVOID FAR *lplpDD);
 HRESULT GetDeviceIdentifier( LPDDDEVICEIDENTIFIER lpdddi, DWORD dwFlags);
 HRESULT GetDisplayMode( LPDDSURFACEDESC2 lpDDSurfaceDesc2);
+HRESULT GetEntries( DWORD dwFlags, DWORD dwBase, DWORD dwNumEntries, LPPALETTEENTRY lpEntries);
 HRESULT GetFourCCCodes( LPDWORD lpNumCodes, LPDWORD lpCodes);
 HRESULT GetHWnd( HWND FAR *lphWnd);
 HRESULT GetMonitorFrequency( LPDWORD lpdwFrequency);

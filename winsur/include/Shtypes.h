@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 1 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 2 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _SHTYPES_
 #define _SHTYPES_
@@ -23,10 +23,5 @@ typedef struct _SHITEMID {
  BYTE abID[1]; 
  } SHITEMID;
 typedef SHITEMID *PSHITEMID, *LPSHITEMID;
-
-/* STRRET  [struct; shared] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   uType */
-/*   DUMMYUNIONNAME */
 
 #endif /* _SHTYPES_ */

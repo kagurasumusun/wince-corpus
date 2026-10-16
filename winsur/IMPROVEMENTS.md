@@ -432,6 +432,10 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: 全コーパス PRE と harvest ヘッダ落ち（第20弾）
+
+コピーはしない。harvest-visits の **105,096** 頁を生で開き PRE 82,775。`INT` が `INTERNET_*` に誤 glue。`Typedef` 大文字始まりを宣言と見ない。harvest に header が無く overlay が捨てていた。壊れた `{- // mbi` が MEMORY_BASIC 本文を塞いでいた。VirtualQuery / GetCharABCWidths / ABC / LPABC（GetCharABCWidths PRE）を載せる。harvest 55,114。gcc 通過。
+
 ### 2026-10-16: INTEGER 誤 glue と DCB/ストア（第19弾）
 
 コピーはしない。`INT(?!ERFACE)` が `ULARGE_INTEGER` / `ULONGLONG` を glued と誤認し、CE 3.0 `ULARGE_INTEGER` PRE（`ULONGLONG QuadPart`）を落としていた。壊れた `typedef struct _DCB {-` が harvest 本文を塞いでいた。DCB / STORE_INFORMATION / GetCommState / GetStoreInformation / GetDiskFreeSpaceEx を載せる。harvest 54,962。NLS/fonts HTML と serial 頁を生で開いた。gcc でこれらが通る。

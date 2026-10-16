@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 63 constants, 188 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 63 constants, 189 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _OLEAUTO_
 #define _OLEAUTO_
@@ -108,9 +108,6 @@ typedef struct VarFileInfo {
  Var Children[];
 } VarFileInfo;
 typedef VarFileInfo *PVarFileInfo, *LPVarFileInfo;
-
-/* MEMBERID  [extra typedef] */
-typedef [public] long MEMBERID;
 
 /* ==================================================================
  * functions and callbacks

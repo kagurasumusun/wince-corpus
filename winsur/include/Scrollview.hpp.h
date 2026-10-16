@@ -29,6 +29,17 @@ enum SCROLL_STATE {
  SCROLL_NEXT_FREE
 };
 
+/* ScrollBarInfoInternal  [struct; ce-only] */
+struct ScrollBarInfoInternal {
+ SCROLLINFO si;
+ BOOL bInSetSBInfo;
+ int nThumbPos;
+ SCROLL_STATE dwState;
+ UINT nTrackStart;
+ UINT fnBar;
+ UINT idTimer;
+};
+
 /* SCROLL_NEXT_FREE  [extra enum] */
 enum SCROLL_STATE {
   SCROLL_NO_PRESS,

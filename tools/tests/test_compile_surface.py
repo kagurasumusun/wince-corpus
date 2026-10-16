@@ -47,6 +47,15 @@ int WINAPI WinMain(HINSTANCE h, HINSTANCE p, LPWSTR cmd, int show) {
     GetCommState(NULL, NULL);
     GetStoreInformation(NULL);
     GetDiskFreeSpaceEx(NULL, NULL, NULL, NULL);
+    GetCommTimeouts(NULL, NULL);
+    SetCommTimeouts(NULL, NULL);
+    GetScrollInfo(NULL, 0, NULL);
+    SetScrollInfo(NULL, 0, NULL, 0);
+    BeginPaint(NULL, NULL);
+    EndPaint(NULL, NULL);
+    VirtualQuery(NULL, NULL, 0);
+    GetCharABCWidths(NULL, 0, 0, NULL);
+    GetObject(NULL, 0, NULL);
     return 0;
 }
 '''

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1520 constants, 40 declarations, 14 outlines, 21 base types, 0 extra macros, 0 extra decls
+ * 1520 constants, 41 declarations, 14 outlines, 21 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINNT_
 #define _WINNT_
@@ -1723,6 +1723,19 @@ typedef struct _FILE_NOTIFY_INFORMATION {
  WCHAR FileName[1]; 
 } FILE_NOTIFY_INFORMATION, *PFILE_NOTIFY_INFORMATION;
 
+/* MEMORY_BASIC_INFORMATION  [struct; ce-only; harvest-kb; harvest-kb] */
+typedef struct _MEMORY_BASIC_INFORMATION { 
+PVOID BaseAddress; 
+PVOID AllocationBase; 
+DWORD AllocationProtect; 
+DWORD RegionSize; 
+DWORD State; 
+DWORD Protect; 
+DWORD Type; 
+} MEMORY_BASIC_INFORMATION; 
+typedef MEMORY_BASIC_INFORMATION *PMEMORY_BASIC_INFORMATION;
+typedef MEMORY_BASIC_INFORMATION *PMEMORY_BASIC_INFORMATION, *LPMEMORY_BASIC_INFORMATION;
+
 /* PCWSTR  [typedef; shared; entity-headers; win32-reference] */
 typedef CONST WCHAR *PCWSTR;
 
@@ -1743,16 +1756,6 @@ typedef WCHAR *PWSTR;
 /*   ExceptionAddress */
 /*   NumberParameters */
 /*   ExceptionInformation */
-
-/* MEMORY_BASIC_INFORMATION  [struct; shared] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   BaseAddress */
-/*   AllocationBase */
-/*   AllocationProtect */
-/*   RegionSize */
-/*   State */
-/*   Protect */
-/*   Type */
 
 /* ==================================================================
  * functions and callbacks

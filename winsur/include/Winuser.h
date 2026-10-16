@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2457 constants, 309 declarations, 6 outlines, 1 base types, 0 extra macros, 0 extra decls
+ * 2457 constants, 310 declarations, 6 outlines, 1 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINUSER_
 #define _WINUSER_
@@ -3313,6 +3313,9 @@ typedef WNDCLASS *PWNDCLASS, *LPWNDCLASS;
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
+
+/* CheckDlgButton  [function; ce-only; harvest-kb; harvest-kb] */
+BOOL CheckDlgButton( int nIDButton, UINT nCheck );
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
 

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 29 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 32 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _NKINTR_
 #define _NKINTR_
@@ -50,6 +50,12 @@ BOOL HookInterrupt(
  int hwIntNumber,
  FARPROC pfnHandler
 );
+
+/* INTERRUPTS_OFF  [function; ce-only; CE 3.0..399, 5.0..699; Nk.lib] */
+VOID INTERRUPTS_OFF (void);
+
+/* INTERRUPTS_ON  [function; ce-only; CE 3.0..399, 5.0..699; Nk.lib] */
+VOID INTERRUPTS_ON (void);
 
 /* KCompareFileTime  [function; ce-only; CE 3.0..399, 5.0..699; Nk.lib, Nkstub.lib] */
 LONG KCompareFileTime(
@@ -158,6 +164,11 @@ void OEMWriteDebugString(
 /* CeSetPowerOnEvent  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL CeSetPowerOnEvent(
  HANDLE hEvt
+);
+
+/* INTERRUPTS_ENABLE  [function; ce-only; CE 5.0..699; Nk.lib] */
+BOOL INTERRUPTS_ENABLE(
+ BOOL fEnable
 );
 
 /* NKCallIntChain  [function; ce-only; CE 5.0..699; Nk.lib, Nkstub.lib] */

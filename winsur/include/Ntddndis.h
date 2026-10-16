@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1 constants, 38 declarations, 0 outlines, 0 base types, 1 extra macros, 0 extra decls
+ * 1 constants, 39 declarations, 0 outlines, 0 base types, 1 extra macros, 0 extra decls
  */
 #ifndef _NTDDNDIS_
 #define _NTDDNDIS_
@@ -263,5 +263,15 @@ typedef struct _NDIS_802_11_CONFIGURATION {
  ULONG DSConfig;
  NDIS_802_11_CONFIGURATION_FH FHConfig;
 } NDIS_802_11_CONFIGURATION, *PNDIS_802_11_CONFIGURATION;
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
+
+/* OID_802_11_BSSID  [?; ce-only; CE 4.0..699] */
+Typedef UCHAR NDIS_802_11_MAC_ADDRESS[6];
+#endif /* _WIN32_WCE */
 
 #endif /* _NTDDNDIS_ */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 236 constants, 13 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 236 constants, 14 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _IMM_
 #define _IMM_
@@ -291,6 +291,13 @@ typedef struct _tagCANDIDATELIST {
 } CANDIDATELIST;
 typedef CANDIDATELIST *PCANDIDATELIST, *LPCANDIDATELIST;
 
+/* COMPOSITIONFORM  [struct, typedef; shared] */
+Typedef struct _tagCOMPOSITIONFORM {
+ DWORD dwStyle;
+ POINT ptCurrentPos;
+ RECT rcArea;
+} COMPOSITIONFORM;
+
 /* COMPOSITIONSTR  [struct; ce-only] */
 typedef struct tagCOMPOSITIONSTR { 
  DWORD dwSize; 
@@ -376,12 +383,6 @@ typedef struct _tagSTYLEBUF {
  CHAR szDescription[32];
 } STYLEBUF;
 typedef STYLEBUF *PSTYLEBUF, *LPSTYLEBUF;
-
-/* COMPOSITIONFORM  [struct, typedef; shared] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   dwStyle */
-/*   ptCurrentPos */
-/*   rcArea */
 
 /* ==================================================================
  * functions and callbacks

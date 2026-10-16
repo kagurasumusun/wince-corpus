@@ -18,6 +18,10 @@ import re
 # Exact names that a prefix would mis-file or that have no prefix.
 EXACT_TO_HEADER = {
     "INFINITE": "Winbase.h",
+    # CE 3.0 MEMORY_BASIC_INFORMATION page: Include Winnt.
+    "MEMORY_BASIC_INFORMATION": "Winnt.h",
+    # GetCharABCWidths is Wingdi; ABC page names the Windows.h umbrella.
+    "ABC": "Wingdi.h",
     "INVALID_HANDLE_VALUE": "Winbase.h",
     "INVALID_FILE_SIZE": "Winbase.h",
     "INVALID_SET_FILE_POINTER": "Winbase.h",

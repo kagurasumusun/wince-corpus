@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 39 constants, 47 declarations, 2 outlines, 0 base types, 0 extra macros, 37 extra decls
+ * 39 constants, 48 declarations, 2 outlines, 0 base types, 0 extra macros, 37 extra decls
  */
 #ifndef _URLMON_
 #define _URLMON_

@@ -274,6 +274,14 @@ HRESULT WINAPI ScriptGetFontProperties(
  SCRIPT_FONTPROPERTIES* sfp 
 );
 
+/* ScriptGetGlyphABCWidth  [function; shared; CE 5.0..699; Uspce.lib] */
+HRESULT WINAPI ScriptGetGlyphABCWidth(
+ HDC hdc, 
+ SCRIPT_CACHE* psc,
+ WORD wGlyph,
+ ABC* pABC,
+);
+
 /* ScriptGetLogicalWidths  [function; shared; CE 5.0..699; Uspce.lib] */
 HRESULT WINAPI ScriptGetLogicalWidths(
  const SCRIPT_ANALYSIS *psa,
@@ -325,6 +333,19 @@ HRESULT WINAPI ScriptLayout(
  const BYTE* pbLevel, 
  int* piVisualToLogical, 
  int* piLogicalToVisual 
+);
+
+/* ScriptPlace  [function; shared; CE 5.0..699; Uspce.lib] */
+HRESULT WINAPI ScriptPlace(
+ HDC hdc, 
+ SCRIPT_CACHE* psc, 
+ const WORD* pwGlyphs, 
+ int cGlyphs, 
+ const SCRIPT_VISATTR* psva, 
+ SCRIPT_ANALYSIS* psa, 
+ int* piAdvance, 
+ GOFFSET* pGoffset, 
+ ABC* pABC 
 );
 
 /* ScriptRecordDigitSubstitution  [function; shared; CE 5.0..699; Uspce.lib] */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 105 constants, 42 declarations, 17 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 105 constants, 41 declarations, 17 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDOWSAPIS_
 #define _WINDOWSAPIS_
@@ -177,13 +177,6 @@ LPTSTR MAKEINTATOM(
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
-
-/* ABC  [struct; shared] */
-typedef struct _ABC {
- int abcA; 
- UINT abcB; 
- int abcC; 
-} ABC, *PABC;
 
 /* BLENDFUNCTION  [struct; shared] */
 typedef struct _BLENDFUNCTION {

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1265 constants, 143 declarations, 4 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 1265 constants, 144 declarations, 4 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINGDI_
 #define _WINGDI_
@@ -1394,6 +1394,13 @@ typedef struct tagLOGFONT {
  * declaration body no page prints
  * ================================================================ */
 
+/* ABC  [struct; shared; +not-umbrella] */
+typedef struct _ABC {
+ int abcA; 
+ UINT abcB; 
+ int abcC; 
+} ABC, *PABC;
+
 /* BITMAP  [struct, library; shared] */
 typedef struct tagBITMAP {
  LONG bmType; 
@@ -2180,6 +2187,14 @@ int StartPage(
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
+/* GetCharABCWidths  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib; +not-umbrella; A/W GetCharABCWidthsA,GetCharABCWidthsW (CE is W-side)] */
+BOOL GetCharABCWidths(
+ HDC hdc,
+ UINT uFirstChar,
+ UINT uLastChar,
+ LPABC lpabc
+);
+
 /* GetCharWidth32  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib; +not-umbrella; A/W GetCharWidth32A,GetCharWidth32W (CE is W-side)] */
 WINGDIAPI BOOL WINAPI GetCharWidth32(
  HDC hdc,
@@ -2215,6 +2230,15 @@ int EnumFontFamiliesEx(
  FONTENUMPROC lpEnumFontFamExProc, // callback function
  LPARAM lParam, // additional data
  DWORD dwFlags // not used; must be 0
+);
+
+/* GetCharABCWidthsI  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
+BOOL GetCharABCWidthsI(
+ HDC hdc,
+ UINT giFirst,
+ UINT cgi,
+ LPWORD pgi,
+ LPABC lpabc
 );
 
 /* GetROP2  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */

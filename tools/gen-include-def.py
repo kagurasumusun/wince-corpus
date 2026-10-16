@@ -1635,7 +1635,10 @@ def overlay_unified_surface(by_header, printed_forms, by_module, all_entities):
                         and not name.startswith(("READ_", "WRITE_")):
                     continue
                 hdr = rec.get("header") or name_to_header.get(name)
-                if not hdr:
+                if not hdr or hdr.lower() in ("windows.h",):
+                    mapped = header_map.header_for_entity(name, [kind])
+                    hdr = mapped or hdr
+                if not hdr or hdr.lower() in ("windows.h",):
                     continue
                 hl = hdr.lower()
                 if hl in DESKTOP_SPLIT_HEADERS:
@@ -1930,6 +1933,14 @@ _OVERLAY_NAMED = {
     "DCB", "GetCommState", "SetCommState",
     "STORE_INFORMATION", "GetStoreInformation",
     "ULARGE_INTEGER", "GetDiskFreeSpaceEx",
+    "COMMTIMEOUTS", "GetCommTimeouts", "SetCommTimeouts",
+    "SCROLLINFO", "GetScrollInfo",
+    "PALETTEENTRY", "GetPaletteEntries",
+    "MEMORY_BASIC_INFORMATION",
+    "BITMAP", "GetObject",
+    "COMSTAT", "LOGBRUSH", "LOGPEN",
+    "ABC", "GetCharABCWidths",
+    "ACCEL",
 }
 
 _OVERLAY_HEADERS = {
@@ -2098,6 +2109,8 @@ _CORE_TYPEDEFS = (
     ("ULARGE_INTEGER",
      "typedef struct ULARGE_INTEGER { ULONGLONG QuadPart; } "
      "ULARGE_INTEGER, *PULARGE_INTEGER;"),
+    # GetCharABCWidths PRE names LPABC; ABC PRE only prints *PABC.
+    ("LPABC", "typedef struct _ABC *LPABC;"),
 )
 
 _WINDEF_NEED = (
@@ -2156,6 +2169,17 @@ _C_KNOWN_TYPES = {
     "ULARGE_INTEGER", "PULARGE_INTEGER",
     "DCB", "LPDCB", "PDCB",
     "STORE_INFORMATION", "LPSTORE_INFORMATION",
+    "MEMORY_BASIC_INFORMATION", "PMEMORY_BASIC_INFORMATION",
+    "ABC", "PABC", "LPABC",
+    "COMMTIMEOUTS", "LPCOMMTIMEOUTS",
+    "SCROLLINFO", "LPSCROLLINFO",
+    "PAINTSTRUCT", "LPPAINTSTRUCT",
+    "PALETTEENTRY", "LPPALETTEENTRY",
+    "BITMAP", "PBITMAP", "LPBITMAP",
+    "COMSTAT", "LPCOMSTAT",
+    "LOGBRUSH", "LPLOGBRUSH",
+    "LOGPEN", "LPLOGPEN",
+    "ACCEL", "LPACCEL",
 }
 
 
@@ -3423,7 +3447,7 @@ def run_unified(args):
                 for info in items:
                     decl = info.get("declaration") or {}
                     text = decl.get("text") if isinstance(decl, dict) else ""
-                    if text:
+                    if text and not quality_filters.is_broken_c(text):
                         with_body.append(info)
                     else:
                         outlines.append(info)

@@ -17,6 +17,12 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* SERIAL_DEV_STATUS  [struct; ce-only] */
+typedef struct _SERIAL_DEV_STATUS {
+ DWORD Errors;
+ COMSTAT ComStat;
+} SERIAL_DEV_STATUS, *PSERIAL_DEV_STATUS;
+
 /* SERIAL_QUEUE_SIZES  [struct; ce-only] */
 typedef struct _SERIAL_QUEUE_SIZES {
  DWORD cbInQueue;
