@@ -432,6 +432,10 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: connmgr.h を Windows.h へ（第36弾）
+
+コピーはしない。ConnMgrApiReadyEvent は既に生成済み。umbrella 読み落とし。
+
 ### 2026-10-16: 引数間のカンマ欠落（第35弾）
 
 コピーはしない。`DWORD ArgumentDescriptor BOOL ForceDuplicate` をプロトタイプと誤認。harvest 全頁。

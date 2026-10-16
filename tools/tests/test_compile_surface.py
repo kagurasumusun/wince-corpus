@@ -100,6 +100,7 @@ int WINAPI WinMain(HINSTANCE h, HINSTANCE p, LPWSTR cmd, int show) {
     SipShowIM(0);
     InitHTMLControl(NULL);
     GetServiceHandle(NULL, NULL, 0);
+    ConnMgrApiReadyEvent();
     return 0;
 }
 '''
