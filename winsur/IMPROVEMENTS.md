@@ -432,6 +432,10 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: MAKELONG 引数と typedef_struct_（第31弾）
+
+コピーはしない。DateTime_SetMonthCalFont の `LPARAM MAKELONG(fRedraw, 0)` はマクロ呼び出し。`typedef_struct_RASENTRY` はスペース落ち。harvest 53,949。gcc 通過。
+
 ### 2026-10-16: Halether/Fwapi を Windows.h へ（第30弾）
 
 コピーはしない。Halether.h（OEMEth*）と Fwapi.h（Firewall*）は既に生成済みで gcc できるのに umbrella から見えない読み落とし。

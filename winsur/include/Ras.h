@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 21 constants, 44 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
+ * 21 constants, 43 declarations, 1 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _RAS_
 #define _RAS_
@@ -42,6 +42,8 @@
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
+
+/* RASENTRY  [typedef, function; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -222,38 +224,6 @@ RASPPPIPV6
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
-
-/* RASENTRY  [typedef, function; ce-only] */
-typedef_struct_RASENTRY {
- DWORD dwSize;
- DWORD dwfOptions;
- DWORD dwCountryID;
- DWORD dwCountryCode;
- TCHAR szAreaCode[ RAS_MaxAreaCode + 1 ];
- TCHAR szLocalPhoneNumber[ RAS_MaxPhoneNumber + 1 ];
- DWORD dwAlternatesOffset;
- RASIPADDR ipaddr;
- RASIPADDR ipaddrDns;
- RASIPADDR ipaddrDnsAlt;
- RASIPADDR ipaddrWins;
- RASIPADDR ipaddrWinsAlt;
- DWORD dwFrameSize;
- DWORD dwfNetProtocols;
- DWORD dwFramingProtocol;
- TCHAR szScript[ MAX_PATH ];
- TCHAR szAutoDialDll[ MAX_PATH ];
- TCHAR szAutoDialFunc[ MAX_PATH ];
- TCHAR szDeviceType[ RAS_MaxDeviceType + 1 ];
- TCHAR szDeviceName[ RAS_MaxDeviceName + 1 ];
- TCHAR szX25PadType[ RAS_MaxPadType + 1 ];
- TCHAR szX25Address[ RAS_MaxX25Address + 1 ];
- TCHAR szX25Facilities[ RAS_MaxFacilities + 1 ];
- TCHAR szX25UserData[ RAS_MaxUserData + 1 ];
- DWORD dwChannels;
- DWORD dwReserved1;
- DWORD dwReserved2;
- DWORD dwCustomAuthKey;
-} RASENTRY;
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
 

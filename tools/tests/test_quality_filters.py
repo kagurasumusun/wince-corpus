@@ -19,6 +19,14 @@ class DefineTests(unittest.TestCase):
         self.assertNotIn("<", line)
         self.assertIn("MAKEINTRESOURCE", line)
 
+    def test_makelong_as_parameter_is_broken(self):
+        self.assertTrue(q.is_broken_c(
+            "void DateTime_SetMonthCalFont(HWND hwndDP, HFONT hFont, "
+            "LPARAM MAKELONG(fRedraw, 0));"))
+
+    def test_typedef_struct_glued_is_glued(self):
+        self.assertTrue(q.is_glued_prototype("typedef_struct_RASENTRY { DWORD dwSize; }"))
+
     def test_message_crack_wparam_is_broken(self):
         self.assertTrue(q.is_broken_c(
             "TCM_REMOVEIMAGE | wParam = (WPARAM)(int) iImage;"))

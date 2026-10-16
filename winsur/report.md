@@ -17,7 +17,7 @@ the SAME tree, marked 'Win32 reference' -- never a second tree.
   keyword and the header/constant filing are derived and say so
 * derived `#define` lines written: **28,747**
 * derived member outlines (structures whose body no page prints):
-  **563** -- marked DERIVED in the fragment
+  **564** -- marked DERIVED in the fragment
 * constants whose pages disagree / overlap: **33** name(s) examined in `kb/constant-conflicts.tsv`
   (2 of them reach a header fragment in this build;
   **0** resolved by the review in
@@ -40,7 +40,7 @@ the SAME tree, marked 'Win32 reference' -- never a second tree.
   tree, every one marked 'verify against the CE SDK'; a number a
   CE page prints always wins
 * spacing-only repairs across CE generations: **0**
-* pages behind this output: 8,330
+* pages behind this output: 8,328
 
 ## Constant/header linkage (kb/constant-headers.tsv)
 
@@ -97,8 +97,8 @@ every `#define` number above is a CE documentation quotation.
 
 | reason | entities |
 |--------|----------|
-| no declaration in the corpus | 20,578 |
-| declaration is not a C declaration | 17,066 |
+| no declaration in the corpus | 20,580 |
+| declaration is not a C declaration | 17,068 |
 | no header stated | 5,510 |
 | no CE version evidence | 1,504 |
 

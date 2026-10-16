@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1786 constants, 326 declarations, 18 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 1786 constants, 325 declarations, 18 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _COMMCTRL_
 #define _COMMCTRL_
@@ -2410,13 +2410,6 @@ COLORREF DateTime_SetMonthCalColor(
  HWND hwndDP, 
  int iColor, 
  COLORREF clr
-);
-
-/* DateTime_SetMonthCalFont  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-void DateTime_SetMonthCalFont(
- HWND hwndDP, 
- HFONT hFont, 
- LPARAM MAKELONG(fRedraw, 0)
 );
 
 /* DateTime_SetRange  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */

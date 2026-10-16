@@ -195,7 +195,8 @@ _GLUED = re.compile(
     r"\bint(?!eger|erface|ernal)[a-z]|"
     r"\bchar(?!acter|set)[a-z]|"
     r"\blong(?!long)[a-z]|"
-    r"\b(?:struct|enum|union)_[A-Z]"
+    r"\b(?:struct|enum|union)_[A-Z]|"
+    r"typedef_struct_"
 )
 
 
@@ -249,6 +250,10 @@ def is_broken_c(text: str) -> bool:
         return True
     # Message-crack PRE: ``TCM_REMOVEIMAGE | wParam = ...`` is not a prototype.
     if re.search(r"\bwParam\s*=", body) or re.search(r"\blParam\s*=", body):
+        return True
+    # ``LPARAM MAKELONG(fRedraw, 0)`` -- a macro call printed as a parameter.
+    if re.search(r"\b(?:MAKELONG|MAKEWORD|MAKEINTRESOURCE)\s*\(", body) \
+            and not body.lstrip().startswith("#"):
         return True
     if body.count("{") != body.count("}"):
         return True
