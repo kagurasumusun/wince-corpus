@@ -1902,7 +1902,7 @@ _WINDOWS_UMBRELLA = (
     "Wingdi.h", "Winreg.h", "Commdlg.h", "Winnls.h",
     "Tlhelp32.h", "shellapi.h", "Mmsystem.h", "Aygshell.h",
     "Storemgr.h", "winioctl.h", "Notify.h", "Dbgapi.h",
-    "Fsdmgr.h",
+    "Fsdmgr.h", "Halether.h", "Fwapi.h",
 )
 
 # Pages often name Windows.h (the umbrella) or a desktop-split SDK
@@ -1988,7 +1988,7 @@ _OVERLAY_HEADERS = {
     "winreg.h", "winerror.h", "winioctl.h", "mmsystem.h", "imm.h",
     "winnls.h", "windbase.h", "dbgapi.h", "commdlg.h",
     "aygshell.h", "tlhelp32.h", "shellapi.h", "storemgr.h",
-    "notify.h", "dbgapi.h", "fsdmgr.h",
+    "notify.h", "dbgapi.h", "fsdmgr.h", "halether.h", "fwapi.h",
 }
 _APP_OVERLAY_HEADERS = {
     "windef.h", "winnt.h", "winerror.h", "winbase.h", "winuser.h",

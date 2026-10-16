@@ -432,6 +432,10 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: Halether/Fwapi を Windows.h へ（第30弾）
+
+コピーはしない。Halether.h（OEMEth*）と Fwapi.h（Firewall*）は既に生成済みで gcc できるのに umbrella から見えない読み落とし。
+
 ### 2026-10-16: wParam スニペットと Fsdmgr（第29弾）
 
 コピーはしない。harvest **105,096** 頁。`TCM_REMOVEIMAGE | wParam =` を関数と誤認。AdjustWindowRectEx / GetDoubleClickTime を載せる。Fsdmgr.h を Windows.h へ。harvest 宣言 53,961。gcc 通過。

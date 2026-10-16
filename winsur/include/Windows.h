@@ -25,6 +25,8 @@
 #include "Notify.h"
 #include "Dbgapi.h"
 #include "Fsdmgr.h"
+#include "Halether.h"
+#include "Fwapi.h"
 
 #endif /* _WINDOWS_ */
 
