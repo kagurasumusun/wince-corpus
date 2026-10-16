@@ -41,19 +41,4 @@
 #define PROTO_IP_OTHER 0x00000001
 #define PROTO_IP_RIP 0x00000008
 
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-
-/* MIB_BEST_IF  [struct; shared; CE 3.0..399, 5.0..699] */
-typedef struct _MIB_BEST_IF {
- DWORD dwDestAddr; 
- DWORD dwIfIndex; 
-} MIB_BEST_IF*, PMIB_BEST_IF;
-#endif /* _WIN32_WCE */
-
 #endif /* _ROUTPROT_ */

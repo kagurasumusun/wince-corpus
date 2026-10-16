@@ -12,22 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* OAL_ARGS_HEADER  [struct; ce-only; CE 5.0..699] */
-typedef struct {
- UINT32 signature;
- UINT16 oalVersion;
- UINT16 bspVersion;
-} OAL_ARGS_HEADER;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

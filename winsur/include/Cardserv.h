@@ -51,46 +51,8 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 200 && _WIN32_WCE < 210) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.0..209, 2.11..2.12, 3.0..699 */
-
-/* CARD_CLIENT_HANDLE  [typedef; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699] */
+/* CARD_CLIENT_HANDLE  [typedef; ce-only] */
 typedef PVOID CARD_CLIENT_HANDLE;
-
-/* CARD_EVENT  [typedef; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699] */
-typedef UINT32 CARD_EVENT;
-
-/* CARD_ISR  [callback; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699] */
-typedef void (*CARD_ISR)( 
- UINT32 uISRContextData 
-);
-
-/* CLIENT_CALLBACK  [callback; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Cardserv.lib] */
-typedef STATUS (*CLIENT_CALLBACK)( 
- CARD_EVENT CardEvent; 
- CARD_SOCKET_HANDLE hSocket; 
- PCARD_EVENT_PARMS pCardEventParms 
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* CARD_SOCKET_HANDLE  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct { 
- UINT8 uSocket; 
- UINT8 uFunction; 
-} CARD_SOCKET_HANDLE, *PCARD_SOCKET_HANDLE;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 500)) /* CE 4.0..499 */
-
-/* PFN_DETECT_ENTRY  [callback; ce-only; CE 4.0..499; Cardserv.lib] */
-typedef LPTSTR (*PFN_DETECT_ENTRY)(
- CARD_SOCKET_HANDLE hSocket,
- UCHAR uDeviceType,
- LPTSTR pKeyName,
- DWORD dwNumofChars
-);
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks
@@ -138,9 +100,6 @@ STATUS CardRequestConfiguration(
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
-
-/* typedef */
-typedef STATUS (*CLIENT_CALLBACK)(CARD_EVENT CardEvent;
 
 /* struct */
 typedef struct {

@@ -58,8 +58,9 @@ typedef signed int INT32;
 typedef signed char INT8;
 
 /* INT_PTR
+ * CE is 32-bit: pointer-sized integer
  * source: win32/common/windows-data-types.md */
-typedef __int64 INT_PTR;
+typedef long INT_PTR;
 
 /* LONG32
  * source: win32/common/windows-data-types.md */
@@ -127,27 +128,9 @@ typedef ULONG_PTR SIZE_T;
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-/* INT_PTR  [typedef; shared; entity-headers; win32-reference] */
-#if defined(_WIN64) 
- typedef __int64 INT_PTR; 
-#else 
- typedef int INT_PTR;
-#endif
-
-/* LONG_PTR  [typedef; shared; entity-headers] */
-
 /* POINTER_32  [typedef, macro; shared; entity-headers] */
 
 /* POINTER_64  [typedef, macro; shared; entity-headers] */
-
-/* UINT_PTR  [typedef; shared; entity-headers; win32-reference] */
-#if defined(_WIN64)
- typedef unsigned __int64 UINT_PTR;
-#else
- typedef unsigned int UINT_PTR;
-#endif
-
-/* ULONG_PTR  [typedef; shared; entity-headers] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -163,9 +146,6 @@ typedef signed __int64 INT64;
 
 /* LONG64  [typedef; shared; entity-headers; win32-reference] */
 typedef __int64 LONG64;
-
-/* SSIZE_T  [typedef; shared; entity-headers; win32-reference] */
-typedef LONG_PTR SSIZE_T;
 
 /* UINT64  [typedef; shared; entity-headers; win32-reference] */
 typedef unsigned __int64 UINT64;

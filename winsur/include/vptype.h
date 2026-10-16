@@ -11,22 +11,4 @@
 #define _VPTYPE_
 
 
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-
-/* AMVP_MODE  [enum, typedef; shared; CE 3.0..399, 5.0..699; entity-headers] */
-typedef enum _AMVP_MODE {
- AMVP_MODE_WEAVE,
- AMVP_MODE_BOBINTERLEAVED,
- AMVP_MODE_BOBNONINTERLEAVED,
- AMVP_MODE_SKIPEVEN,
- AMVP_MODE_SKIPODD
-} AMVP_MODE;
-#endif /* _WIN32_WCE */
-
 #endif /* _VPTYPE_ */

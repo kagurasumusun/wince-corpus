@@ -33,98 +33,6 @@
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
 
-/* KITL_SERIAL_INFO  [struct; ce-only; CE 5.0..699] */
-typedef struct {
- UINT8* pAddress;
- UINT32 baudRate;
- UINT32 dataBits;
- UINT32 stopBits;
- UINT32 parity;
- UINT32 bestSize;
-} KITL_SERIAL_INFO;
-
-/* OAL_KITL_ARGS  [struct; ce-only; CE 5.0..699] */
-typedef struct {
- UINT32 flags;
- DEVICE_LOCATION devLoc;
- union {
- struct {
- UINT32 baudRate;
- UINT32 dataBits;
- UINT32 stopBits;
- UINT32 parity;
- };
- struct {
- UINT16 mac[3];
- UINT32 ipAddress;
- UINT32 ipMask;
- UINT32 ipRoute;
- };
- };
-} OAL_KITL_ARGS;
-
-/* OAL_KITL_DEVICE  [struct; ce-only; CE 5.0..699] */
-typedef struct {
- LPCWSTR name;
- UINT32 ifcType;
- UINT32 id;
- UINT32 resource;
- OAL_KITL_TYPE type;
- VOID *pDriver;
-} OAL_KITL_DEVICE;
-
-/* OAL_KITL_ETH_DRIVER  [struct; ce-only; CE 5.0..699] */
-typedef struct {
- OAL_KITLETH_INIT pfnInit;
- OAL_KITLETH_INIT_DMABUFFER pfnInitDmaBuffer;
- OAL_KITLETH_DEINIT pfnDeinit;
- OAL_KITLETH_SEND_FRAME pfnSendFrame;
- OAL_KITLETH_GET_FRAME pfnGetFrame;
- OAL_KITLETH_ENABLE_INTS pfnEnableInts;
- OAL_KITLETH_DISABLE_INTS pfnDisableInts;
- OAL_KITLETH_POWER_OFF pfnPowerOff;
- OAL_KITLETH_POWER_ON pfnPowerOn;
- OAL_KITLETH_CURRENT_PACKET_FILTER pfnCurrentPacketFilter;
- OAL_KITLETH_MULTICAST_LIST pfnMulticastList;
-} OAL_KITL_ETH_DRIVER;
-
-/* OAL_KITL_FLAGS  [enum; ce-only; CE 5.0..699] */
-typedef enum {
- OAL_KITL_FLAGS_ENABLED = 0x0001,
- OAL_KITL_FLAGS_PASSIVE = 0x0002,
- OAL_KITL_FLAGS_DHCP = 0x0004,
- OAL_KITL_FLAGS_VMINI = 0x0008,
- OAL_KITL_FLAGS_POLL = 0x0010,
- OAL_KITL_FLAGS_EXTNAME = 0x0020
-} OAL_KITL_FLAGS;
-
-/* OAL_KITL_SERIAL_DRIVER  [struct; ce-only; CE 5.0..699] */
-typedef struct {
- OAL_KITLSERIAL_INIT pfnInit;
- OAL_KITLSERIAL_DEINIT pfnDeinit;
- OAL_KITLSERIAL_SEND pfnSend;
- OAL_KITLSERIAL_SENDCOMPLETE pfnSendComplete;
- OAL_KITLSERIAL_RECV pfnRecv;
- OAL_KITLSERIAL_ENABLE_INTS pfnEnableInts;
- OAL_KITLSERIAL_DISABLE_INTS pfnDisableInts;
- OAL_KITLSERIAL_POWER_OFF pfnPowerOff;
- OAL_KITLSERIAL_POWER_ON pfnPowerOn;
- OAL_KITLSERIAL_FLOW_CONTROL pfnFlowControl;
-} OAL_KITL_SERIAL_DRIVER;
-
-/* OAL_KITL_TYPE  [enum; ce-only; CE 5.0..699] */
-typedef enum {
- OAL_KITL_TYPE_NONE = 0,
- OAL_KITL_TYPE_SERIAL,
- OAL_KITL_TYPE_ETH,
- OAL_KITL_TYPE_FLASH
-} OAL_KITL_TYPE;
-
-/* OAL_KITLETH_CURRENT_PACKET_FILTER  [callback; ce-only; CE 5.0..699] */
-typedef VOID (*OAL_KITLETH_CURRENT_PACKET_FILTER)(
- UINT32 filter
-);
-
 /* OAL_KITLETH_DEINIT  [callback; ce-only; CE 5.0..699] */
 typedef BOOL (*OAL_KITLETH_DEINIT)();
 
@@ -134,42 +42,11 @@ typedef VOID (*OAL_KITLETH_DISABLE_INTS)();
 /* OAL_KITLETH_ENABLE_INTS  [callback; ce-only; CE 5.0..699] */
 typedef VOID (*OAL_KITLETH_ENABLE_INTS)();
 
-/* OAL_KITLETH_GET_FRAME  [callback; ce-only; CE 5.0..699] */
-typedef UINT16 (*OAL_KITLETH_GET_FRAME)(
- UINT8 *pData,
- UINT16 *pSize
-);
-
-/* OAL_KITLETH_INIT  [callback; ce-only; CE 5.0..699] */
-typedef BOOL (*OAL_KITLETH_INIT)(
- UINT8 *pAddress,
- UINT32 offset,
- UINT16 mac[3]
-);
-
-/* OAL_KITLETH_INIT_DMABUFFER  [callback; ce-only; CE 5.0..699] */
-typedef BOOL (*OAL_KITLETH_INIT_DMABUFFER)(
- UINT32 address,
- UINT32 size
-);
-
-/* OAL_KITLETH_MULTICAST_LIST  [callback; ce-only; CE 5.0..699] */
-typedef BOOL (*OAL_KITLETH_MULTICAST_LIST)(
- UINT8 *pAddresses,
- UINT32 count
-);
-
 /* OAL_KITLETH_POWER_OFF  [callback; ce-only; CE 5.0..699] */
 typedef VOID (*OAL_KITLETH_POWER_OFF)();
 
 /* OAL_KITLETH_POWER_ON  [callback; ce-only; CE 5.0..699] */
 typedef VOID (*OAL_KITLETH_POWER_ON)();
-
-/* OAL_KITLETH_SEND_FRAME  [callback; ce-only; CE 5.0..699] */
-typedef UINT16 (*OAL_KITLETH_SEND_FRAME)(
- UINT8 *pData,
- UINT32 size
-);
 
 /* OAL_KITLSERIAL_DEINIT  [callback; ce-only; CE 5.0..699] */
 typedef VOID (*OAL_KITLSERIAL_DEINIT)();
@@ -185,33 +62,11 @@ typedef VOID (*OAL_KITLSERIAL_FLOW_CONTROL) (
  BOOL fOn
 );
 
-/* OAL_KITLSERIAL_INIT  [callback; ce-only; CE 5.0..699] */
-typedef BOOL (*OAL_KITLSERIAL_INIT)(
- KITL_SERIAL_INFO *pInfo
-);
-
 /* OAL_KITLSERIAL_POWER_OFF  [callback; ce-only; CE 5.0..699] */
 typedef VOID (*OAL_KITLSERIAL_POWER_OFF)();
 
 /* OAL_KITLSERIAL_POWER_ON  [callback; ce-only; CE 5.0..699] */
 typedef VOID (*OAL_KITLSERIAL_POWER_ON)();
-
-/* OAL_KITLSERIAL_RECV  [callback; ce-only; CE 5.0..699] */
-typedef UINT16 (*OAL_KITLSERIAL_RECV)(
- UINT8 *pData,
- UINT16 size
-);
-
-/* OAL_KITLSERIAL_SEND  [callback; ce-only; CE 5.0..699] */
-typedef UINT16 (*OAL_KITLSERIAL_SEND)(
- UINT8 *pData,
- UINT16 size
-);
-
-/* OAL_KITLSERIAL_SENDCOMPLETE  [callback; ce-only; CE 5.0..699] */
-typedef VOID (*OAL_KITLSERIAL_SENDCOMPLETE)(
- UINT16 size
-);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

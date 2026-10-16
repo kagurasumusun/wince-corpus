@@ -1,11 +1,11 @@
-/* Winnt.h -- Windows CE unified surface
+/* WinNT.h -- Windows CE unified surface
  *
  * ONE tree for every CE generation.  Version differences use
  * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1520 constants, 46 declarations, 29 outlines, 21 base types, 0 extra macros, 4 extra decls
+ * 1520 constants, 42 declarations, 16 outlines, 21 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINNT_
 #define _WINNT_
@@ -1648,85 +1648,33 @@ typedef WCHAR TBYTE;
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
+/* _IMAGE_ALPHA_RUNTIME_FUNCTION_ENTRY  [typedef; ce-only] */
+
 /* BOOLEAN  [typedef; shared; entity-headers] */
 
-/* definition  [typedef; ce-only; heuristic-prefix] */
-
-/* firstChild  [typedef; ce-only; heuristic-prefix] */
-
-/* lastChild  [typedef; ce-only; heuristic-prefix] */
-
-/* LONGLONG  [typedef; shared; entity-headers] */
-
-/* LPTSTR  [typedef; shared; entity-headers] */
-
-/* namespaceURI  [typedef; ce-only; heuristic-prefix] */
-
-/* nextSibling  [typedef; ce-only; heuristic-prefix] */
-
-/* nodeName  [typedef; ce-only; heuristic-prefix] */
-
-/* nodeType  [typedef; ce-only; heuristic-prefix] */
-
-/* nodeTypedValue  [typedef; ce-only; heuristic-prefix] */
-
-/* nodeTypeString  [typedef; ce-only; heuristic-prefix] */
-
-/* nodeValue  [typedef; ce-only; heuristic-prefix] */
-
-/* ownerDocument  [typedef; ce-only; heuristic-prefix] */
-
-/* parentNode  [typedef; ce-only; heuristic-prefix] */
-
-/* parsed  [typedef; ce-only; heuristic-prefix] */
-
-/* PBOOLEAN  [typedef; shared; entity-headers] */
-
-/* PCTSTR  [typedef; shared; entity-headers] */
-
-/* prefix  [typedef; ce-only; heuristic-prefix] */
-
-/* previousSibling  [typedef; ce-only; heuristic-prefix] */
-
-/* PTSTR  [typedef; shared; entity-headers] */
-
-/* specified  [typedef; ce-only; heuristic-prefix] */
-
-/* TBYTE  [typedef; shared; entity-headers] */
-
-/* TCHAR  [typedef; shared; entity-headers] */
-
-/* ULONGLONG  [typedef; shared; entity-headers] */
-
-/* VOID  [typedef, macro; shared; entity-headers] */
-
-/* xml  [typedef; ce-only; heuristic-prefix] */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* TEXT  [macro, typedef, function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* MAKELANGID  [macro, function; shared; CE 2.11..2.12, 3.0..699] */
+/* MAKELANGID  [macro, function; shared] */
 WORD MAKELANGID( 
  USHORT usPrimaryLanguage, 
  USHORT usSubLanguage 
 );
 
-/* MAKELCID  [macro, function; shared; CE 2.11..2.12, 3.0..699] */
+/* MAKELCID  [macro, function; shared] */
 #define MAKELCID(lgid, srtid) \ 
  ((DWORD)((((DWORD)((WORD )(srtid))) << 16) | \ 
  ((DWORD)((WORD )(lgid)))))
 
-/* PRIMARYLANGID  [macro, function; shared; CE 2.11..2.12, 3.0..699] */
+/* PBOOLEAN  [typedef; shared; entity-headers] */
+
+/* PRIMARYLANGID  [macro, function; shared] */
 WORD PRIMARYLANGID( 
  WORD lgid 
 );
 
-/* SUBLANGID  [macro, function; shared; CE 2.11..2.12, 3.0..699] */
-#endif /* _WIN32_WCE */
+/* SUBLANGID  [macro, function; shared] */
+
+/* TEXT  [macro, typedef, function; shared] */
+
+/* VOID  [typedef, macro; shared; entity-headers] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -1734,11 +1682,8 @@ WORD PRIMARYLANGID(
  * declaration body no page prints
  * ================================================================ */
 
-/* LPCSTR  [typedef; shared; entity-headers; win32-reference] */
-typedef __nullterminated CONST CHAR *LPCSTR;
-
-/* LPSTR  [typedef; shared; entity-headers; win32-reference] */
-typedef CHAR *LPSTR;
+/* LCID  [typedef; shared; entity-headers] */
+typedef unsigned long LCID;
 
 /* PCHAR  [typedef; shared; entity-headers; win32-reference] */
 typedef CHAR *PCHAR;
@@ -1746,11 +1691,8 @@ typedef CHAR *PCHAR;
 /* PCSTR  [typedef; shared; entity-headers; win32-reference] */
 typedef CONST CHAR *PCSTR;
 
-/* PCWSTR  [typedef; shared; entity-headers; win32-reference] */
-typedef CONST WCHAR *PCWSTR;
-
-/* PHANDLE  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE *PHANDLE;
+/* PDATA_EH  [struct; ce-only] */
+struct PDATA_EH { unsigned int* pHandler; unsigned int* pHandlerData;};
 
 /* PLONG  [typedef; shared; entity-headers; win32-reference] */
 typedef LONG *PLONG;
@@ -1761,14 +1703,17 @@ typedef SHORT *PSHORT;
 /* PSTR  [typedef; shared; entity-headers; win32-reference] */
 typedef CHAR *PSTR;
 
-/* PTBYTE  [typedef; shared; entity-headers; win32-reference] */
-typedef TBYTE *PTBYTE;
-
 /* PTCHAR  [typedef; shared; entity-headers; win32-reference] */
 typedef TCHAR *PTCHAR;
 
-/* PVOID  [typedef; shared; entity-headers; win32-reference] */
-typedef void *PVOID;
+/* SHORT  [typedef; shared; entity-headers; win32-reference] */
+typedef short SHORT;
+
+/* PCWSTR  [typedef; shared; entity-headers; win32-reference] */
+typedef CONST WCHAR *PCWSTR;
+
+/* PHANDLE  [typedef; shared; entity-headers; win32-reference] */
+typedef HANDLE *PHANDLE;
 
 /* PWCHAR  [typedef; shared; entity-headers; win32-reference] */
 typedef WCHAR *PWCHAR;
@@ -1776,59 +1721,24 @@ typedef WCHAR *PWCHAR;
 /* PWSTR  [typedef, struct; shared; entity-headers; win32-reference] */
 typedef WCHAR *PWSTR;
 
-/* SHORT  [typedef; shared; entity-headers; win32-reference] */
-typedef short SHORT;
+/* EXCEPTION_RECORD  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   ExceptionCode */
+/*   ExceptionFlags */
+/*   ExceptionRecord */
+/*   ExceptionAddress */
+/*   NumberParameters */
+/*   ExceptionInformation */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* EXCEPTION_RECORD  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _EXCEPTION_RECORD {- // exr
-
-/* MEMORY_BASIC_INFORMATION  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _MEMORY_BASIC_INFORMATION {- // mbi
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
-
-/* IMAGE_DATA_DIRECTORY  [struct; shared; CE 3.0..699] */
-typedef struct _IMAGE_DATA_DIRECTORY {
- DWORD VirtualAddress;
- DWORD Size;
-} IMAGE_DATA_DIRECTORY, *PIMAGE_DATA_DIRECTORY;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* _IMAGE_CE_RUNTIME_FUNCTION_ENTRY  [struct; ce-only; CE 4.0..699] */
-typedef struct _IMAGE_CE_RUNTIME_FUNCTION_ENTRY {
- unsigned int FuncStart : 32;
- unsigned int PrologLen : 8;
- unsigned int FuncLen : 22;
- unsigned int ThirtyTwoBit : 1;
- unsigned int ExceptionFlag : 1;
-} IMAGE_CE_RUNTIME_FUNCTION_ENTRY,
-*PIMAGE_CE_RUNTIME_FUNCTION_ENTRY;
-
-/* LCID  [typedef; shared; CE 4.0..699; entity-headers] */
-typedef unsigned long LCID;
-
-/* PDATA_EH  [struct; ce-only; CE 4.0..699] */
-struct PDATA_EH { unsigned int* pHandler; unsigned int* pHandlerData;};
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* _IMAGE_ALPHA_RUNTIME_FUNCTION_ENTRY  [typedef; ce-only; CE 5.0..699] */
-typedef struct_IMAGE_ALPHA_RUNTIME_FUNCTION_ENTRY { ULONG BeginAddress; ULONG EndAddress; PVOID ExceptionHandler; PVOID HandlerData; ULONG PrologEndAddress;} IMAGE_ALPHA_RUNTIME_FUNCTION_ENTRY,*PIMAGE_ALPHA_RUNTIME_FUNCTIONG_ENTRY;
-
-/* FILE_NOTIFY_INFORMATION  [struct; shared; CE 5.0..699] */
-typedef struct _FILE_NOTIFY_INFORMATION {
- DWORD NextEntryOffset; 
- DWORD Action; 
- DWORD FileNameLength; 
- WCHAR FileName[1]; 
-} FILE_NOTIFY_INFORMATION, *PFILE_NOTIFY_INFORMATION;
-#endif /* _WIN32_WCE */
+/* MEMORY_BASIC_INFORMATION  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   BaseAddress */
+/*   AllocationBase */
+/*   AllocationProtect */
+/*   RegionSize */
+/*   State */
+/*   Protect */
+/*   Type */
 
 /* ==================================================================
  * functions and callbacks
@@ -1900,29 +1810,11 @@ LONG InterlockedExchange(
  LONG Value
 );
 
-/* LPCTSTR  [function, typedef; shared; CE 5.0..699; entity-headers] */
-operator LPCTSTR();
-
 /* SecureZeroMemory  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 PVOID SecureZeroMemory(
  PVOID ptr,
  SIZE_T cnt
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* typedef */
-typedef struct_IMAGE_ALPHA_RUNTIME_FUNCTION_ENTRY { ULONGBeginAddress; ULONGEndAddress;PVOIDExceptionHandler;PVOIDHandlerData; ULONGPrologEndAddress;} IMAGE_ALPHA_RUNTIME_FUNCTION_ENTRY,*PIMAGE_ALPHA_RUNTIME_FUNCTIONG_ENTRY;
-
-/* struct */
-typedef struct _IMAGE_CE_RUNTIME_FUNCTION_ENTRY { unsigned int FuncStart : 32; unsigned int PrologLen : 8; unsigned int FuncLen : 22; unsigned int ThirtyTwoBit : 1; unsigned int ExceptionFlag : 1;} IMAGE_CE_RUNTIME_FUNCTION_ENTRY,*PIMAGE_CE_RUNTIME_FUNCTION_ENTRY;
-struct PDATA_EH { unsigned int* pHandler; unsigned int* pHandlerData;};
-
-/* function */
-BOOL SEC_ENTRY ( IN LPTSTR pszUser // user name to delete );
 
 #endif /* _WINNT_ */

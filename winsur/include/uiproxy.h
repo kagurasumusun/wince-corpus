@@ -11,22 +11,4 @@
 #define _UIPROXY_
 
 
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* PFN_UIENTRYPOINT  [callback; ce-only; CE 6.0..699; coredll.lib] */
-typedef BOOL (*PFN_UIENTRYPOINT)(
- LPVOID lpInBuffer,
- DWORD nInBufferSize,
- LPVOID lpOutBuffer,
- DWORD nOutBufferSize,
- PDWORD pBytesReturned
-);
-#endif /* _WIN32_WCE */
-
 #endif /* _UIPROXY_ */

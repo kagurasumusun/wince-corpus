@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 48 constants, 91 declarations, 0 outlines, 0 base types, 0 extra macros, 65 extra decls
+ * 48 constants, 14 declarations, 0 outlines, 0 base types, 0 extra macros, 67 extra decls
  */
 #ifndef _IMAGING_
 #define _IMAGING_
@@ -66,9 +66,7 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* MAKEARGB  [macro; ce-only; CE 5.0..699] */
+/* MAKEARGB  [macro; ce-only] */
 #define ALPHA_SHIFT 24
 #define RED_SHIFT 16
 #define GREEN_SHIFT 8
@@ -79,7 +77,6 @@
  ((ARGB) ((r) & 0xff) << RED_SHIFT) | \
  ((ARGB) ((g) & 0xff) << GREEN_SHIFT)| \
  ((ARGB) ((b) & 0xff) << BLUE_SHIFT))
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -87,18 +84,10 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-
-/* PixelFormat  [typedef, function; ce-only; CE 3.0..399, 5.0..699] */
-typedef INT PixelFormat;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* ARGB  [typedef; ce-only; CE 5.0..699] */
+/* ARGB  [typedef; ce-only] */
 typedef DWORD ARGB;
 
-/* BufferDisposalFlag  [enum; ce-only; CE 5.0..699] */
+/* BufferDisposalFlag  [enum; ce-only] */
 enum BufferDisposalFlag {
  BufferDisposalFlagNone,
  BufferDisposalFlagGlobalFree,
@@ -106,21 +95,21 @@ enum BufferDisposalFlag {
  BufferDisposalFlagUnmapView
 };
 
-/* ColorPalette  [struct, typedef; shared; CE 5.0..699] */
+/* ColorPalette  [struct, typedef; shared] */
 typedef struct tagColorPalette {
  UINT Flags;
  UINT Count;
  ARGB Entries[1];
 } ColorPalette;
 
-/* DecoderInitFlag  [enum; ce-only; CE 5.0..699] */
+/* DecoderInitFlag  [enum; ce-only] */
 enum DecoderInitFlag {
  DecoderInitFlagNone = 0,
  DecoderInitFlagNoBlock = 0x0001,
  DecoderInitFlagBuiltIn1st = 0x0002
 };
 
-/* EncoderParameterValueType  [enum; shared; CE 5.0..699] */
+/* EncoderParameterValueType  [enum; shared] */
 enum EncoderParameterValueType {
  EncoderParameterValueTypeByte = 1,
  EncoderParameterValueTypeASCII = 2,
@@ -132,7 +121,7 @@ enum EncoderParameterValueType {
  EncoderParameterValueTypeRationalRange = 8
 };
 
-/* EncoderValue  [enum; shared; CE 5.0..699] */
+/* EncoderValue  [enum; shared] */
 enum EncoderValue {
  EncoderValueColorTypeCMYK,
  EncoderValueColorTypeYCCK,
@@ -160,7 +149,7 @@ enum EncoderValue {
  EncoderValueFrameDimensionPage
 };
 
-/* ImageCodecFlags  [enum; shared; CE 5.0..699] */
+/* ImageCodecFlags  [enum; shared] */
 enum ImageCodecFlags {
  ImageCodecFlagsEncoder = 0x00000001,
  ImageCodecFlagsDecoder = 0x00000002,
@@ -173,7 +162,7 @@ enum ImageCodecFlags {
  ImageCodecFlagsUser = 0x00040000
 };
 
-/* ImageFlags  [enum; shared; CE 5.0..699] */
+/* ImageFlags  [enum; shared] */
 enum ImageFlags {
  ImageFlagsNone = 0,
  ImageFlagsScalable = 0x0001,
@@ -192,14 +181,14 @@ enum ImageFlags {
  ImageFlagsValid = 0x00030000
 };
 
-/* ImageLockMode  [enum; shared; CE 5.0..699] */
+/* ImageLockMode  [enum; shared] */
 enum ImageLockMode {
  ImageLockModeRead = 0x0001,
  ImageLockModeWrite = 0x0002,
  ImageLockModeUserInputBuf = 0x0004
 };
 
-/* InterpolationHint  [enum; ce-only; CE 5.0..699] */
+/* InterpolationHint  [enum; ce-only] */
 enum InterpolationHint {
  InterpolationHintDefault,
  InterpolationHintNearestNeighbor,
@@ -208,10 +197,13 @@ enum InterpolationHint {
  InterpolationHintBicubic
 };
 
-/* PixelFormatID  [typedef; ce-only; CE 5.0..699] */
+/* PixelFormat  [typedef, function; ce-only] */
+typedef INT PixelFormat;
+
+/* PixelFormatID  [typedef; ce-only] */
 typedef PixelFormat PixelFormatID;
 
-/* SinkFlags  [enum; ce-only; CE 5.0..699] */
+/* SinkFlags  [enum; ce-only] */
 enum SinkFlags {
  SinkFlagsScalable = ImageFlagsScalable,
  SinkFlagsHasAlpha = ImageFlagsHasAlpha,
@@ -223,488 +215,6 @@ enum SinkFlags {
  SinkFlagsComposite = 0x00100000,
  SinkFlagsWantProps = 0x00200000
 };
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* BitmapData  [library; shared; CE 5.0..699; Gdiplus.lib; lib:win32-reference] */
-class BitmapData {
- public:
- UINT Width;
- UINT Height;
- INT Stride;
- PixelFormat PixelFormat;
- VOID* Scan0;
- UINT_PTR Reserved;
-};
-
-/* EncoderParameter  [library; shared; CE 5.0..699; Gdiplus.lib; lib:win32-reference] */
-class EncoderParameter {
- public:
- GUID Guid;
- ULONG NumberOfValues;
- ULONG Type;
- VOID* Value;
-};
-
-/* EncoderParameters  [library; shared; CE 5.0..699; Gdiplus.lib; lib:win32-reference] */
-class EncoderParameters {
- public:
- UINT Count;
- EncoderParameter Parameter[1];
-};
-
-/* IBasicBitmapOps::AdjustBrightness  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT AdjustBrightness(
- FLOAT percent
-);
-
-/* IBasicBitmapOps::AdjustContrast  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT AdjustContrast(
- FLOAT shadow,
- FLOAT highlight
-);
-
-/* IBasicBitmapOps::AdjustGamma  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT AdjustGamma(
- FLOAT gamma
-);
-
-/* IBasicBitmapOps::Clone  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT Clone(
- OPTIONAL const RECT* rect,
- IBitmapImage** outbmp,
- BOOL bNeedCloneProperty
-);
-
-/* IBasicBitmapOps::Flip  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT Flip(
- BOOL flipX,
- BOOL flipY,
- IBitmapImage** outbmp
-);
-
-/* IBasicBitmapOps::Resize  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT Resize(
- UINT newWidth,
- UINT newHeight,
- PixelFormatID pixelFormat,
- InterpolationHint hints,
- IBitmapImage** outbmp
-);
-
-/* IBasicBitmapOps::Rotate  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT Rotate(
- FLOAT angle,
- InterpolationHint hints,
- IBitmapImage** outbmp
-);
-
-/* IBitmapImage::GetPalette  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT GetPalette(
- ColorPalette** palette
-);
-
-/* IBitmapImage::GetPixelFormatID  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT GetPixelFormatID(
- PixelFormatID* pixelFormat
-);
-
-/* IBitmapImage::GetSize  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT GetSize(
- SIZE* size
-);
-
-/* IBitmapImage::LockBits  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT LockBits(
- const RECT* rect,
- UINT flags,
- PixelFormatID pixelFormat,
- BitmapData* lockedBitmapData
-);
-
-/* IBitmapImage::SetPalette  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT SetPalette(
- const ColorPalette* palette
-);
-
-/* IBitmapImage::UnlockBits  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT UnlockBits(
- const BitmapData* lockedBitmapData
-);
-
-/* IImage::Draw  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT Draw(
- HDC hdc,
- const RECT* dstRect,
- OPTIONAL const RECT* srcRect
-);
-
-/* IImage::GetImageInfo  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT GetImageInfo(
- ImageInfo* imageInfo
-);
-
-/* IImage::GetPhysicalDimension  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT GetPhysicalDimension(
- SIZE* size
-);
-
-/* IImage::GetThumbnail  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT GetThumbnail(
- OPTIONAL UINT thumbWidth,
- OPTIONAL UINT thumbHeight,
- IImage** thumbImage
-);
-
-/* IImage::PushIntoSink  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT PushIntoSink(
- IImageSink* sink
-);
-
-/* IImage::SetImageFlags  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT SetImageFlags(
- UINT flags
-);
-
-/* IImageDecoder::BeginDecode  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT BeginDecode(
- IImageSink* sink,
- OPTIONAL IPropertySetStorage* newPropSet
-);
-
-/* IImageDecoder::Decode  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT Decode();
-
-/* IImageDecoder::EndDecode  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT EndDecode(
- HRESULT statusCode
-);
-
-/* IImageDecoder::GetAllPropertyItems  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT GetAllPropertyItems(
- UINT totalBufferSize,
- UINT numProperties,
- PropertyItem* allItems
-);
-
-/* IImageDecoder::GetFrameCount  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT GetFrameCount(
- const GUID* dimensionID,
- UINT* count
-);
-
-/* IImageDecoder::GetFrameDimensionsCount  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT GetFrameDimensionsCount(
- UINT* count
-);
-
-/* IImageDecoder::GetFrameDimensionsList  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT GetFrameDimensionsList(
- GUID* dimensionIDs,
- UINT count
-);
-
-/* IImageDecoder::GetImageInfo  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT GetImageInfo(
- ImageInfo* imageInfo
-);
-
-/* IImageDecoder::GetPropertyCount  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT GetPropertyCount(
- UINT* numOfProperty
-);
-
-/* IImageDecoder::GetPropertyIdList  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT GetPropertyIdList(
- UINT numOfProperty,
- PROPID* list
-);
-
-/* IImageDecoder::GetPropertyItem  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT GetPropertyItem(
- PROPID propId,
- UINT propSize,
- PropertyItem* buffer
-);
-
-/* IImageDecoder::GetPropertyItemSize  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT GetPropertyItemSize(
- PROPID propId, 
- UINT* size
-);
-
-/* IImageDecoder::GetPropertySize  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT GetPropertySize(
- UINT* totalBufferSize,
- UINT* numProperties
-);
-
-/* IImageDecoder::GetThumbnail  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT GetThumbnail(
- OPTIONAL UINT thumbWidth,
- OPTIONAL UINT thumbHeight,
- IImage** thumbImage
-);
-
-/* IImageDecoder::InitDecoder  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT InitDecoder(
- IStream* stream,
- DecoderInitFlag flags
-);
-
-/* IImageDecoder::QueryDecoderParam  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT QueryDecoderParam(
- GUID Guid
-);
-
-/* IImageDecoder::RemovePropertyItem  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT RemovePropertyItem(
- PROPID propId
-);
-
-/* IImageDecoder::SelectActiveFrame  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT SelectActiveFrame(
- const GUID* dimensionID,
- UINT frameIndex
-);
-
-/* IImageDecoder::SetDecoderParam  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT SetDecoderParam(
- GUID Guid,
- UINT Length,
- PVOID Value
-);
-
-/* IImageDecoder::SetPropertyItem  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT SetPropertyItem(
- PropertyItem item
-);
-
-/* IImageDecoder::TerminateDecoder  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT TerminateDecoder();
-
-/* IImageEncoder::GetEncoderParameterList  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT GetEncoderParameterList(
- UINT size,
- EncoderParameters* Params
-);
-
-/* IImageEncoder::GetEncoderParameterListSize  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT GetEncoderParameterListSize(
- UINT* size
-);
-
-/* IImageEncoder::GetEncodeSink  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT GetEncodeSink(
- IImageSink** sink
-);
-
-/* IImageEncoder::InitEncoder  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT InitEncoder(
- IStream* stream
-);
-
-/* IImageEncoder::SetEncoderParameters  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT SetEncoderParameters(
- const EncoderParameters* Param
-);
-
-/* IImageEncoder::SetFrameDimension  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT SetFrameDimension(
- const GUID* dimensionID
-);
-
-/* IImageEncoder::TerminateEncoder  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT TerminateEncoder();
-
-/* IImageSink::BeginSink  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT BeginSink(
- ImageInfo* imageInfo,
- OPTIONAL RECT* subarea
-);
-
-/* IImageSink::EndSink  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT EndSink(
- HRESULT statusCode
-);
-
-/* IImageSink::GetPixelDataBuffer  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT GetPixelDataBuffer(
- const RECT* rect,
- PixelFormatID pixelFormat,
- BOOL lastPass,
- BitmapData* bitmapData
-);
-
-/* IImageSink::GetPropertyBuffer  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT GetPropertyBuffer(
- UINT uiTotalBufferSize,
- PropertyItem** ppBuffer
-);
-
-/* IImageSink::NeedRawProperty  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT NeedRawProperty();
-
-/* IImageSink::NeedTransform  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT NeedTransform(
- UINT* rotation
-);
-
-/* IImageSink::PushPixelData  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT PushPixelData(
- const RECT* rect,
- const BitmapData* bitmapData,
- BOOL lastPass
-);
-
-/* IImageSink::PushPropertyItems  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT PushPropertyItems(
- UINT numOfItems,
- UINT uiTotalBufferSize,
- PropertyItem* item
-);
-
-/* IImageSink::PushRawData  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT PushRawData(
- const VOID* buffer,
- UINT bufsize
-);
-
-/* IImageSink::PushRawInfo  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT PushRawInfo(
- void* info
-);
-
-/* IImageSink::ReleasePixelDataBuffer  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT ReleasePixelDataBuffer(
- const BitmapData* bitmapData
-);
-
-/* IImageSink::SetPalette  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT SetPalette(
- const ColorPalette* palette
-);
-
-/* IImagingFactory::CreateBitmapFromBuffer  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT CreateBitmapFromBuffer(
- BitmapData* bitmapData,
- IBitmapImage** bitmap
-)
-
-/* IImagingFactory::CreateBitmapFromImage  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT CreateBitmapFromImage(
- IImage* image,
- OPTIONAL UINT width,
- OPTIONAL UINT height,
- OPTIONAL PixelFormatID pixelFormat,
- InterpolationHint hints,
- IBitmapImage** bitmap
-);
-
-/* IImagingFactory::CreateImageDecoder  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT CreateImageDecoder(
- IStream* stream,
- DecoderInitFlag flags,
- IImageDecoder** decoder
-);
-
-/* IImagingFactory::CreateImageEncoderToFile  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT CreateImageEncoderToFile(
- const CLSID* clsid,
- const WCHAR* filename,
- IImageEncoder** encoder
-);
-
-/* IImagingFactory::CreateImageEncoderToStream  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT CreateImageEncoderToStream(
- const CLSID* clsid,
- IStream* stream,
- IImageEncoder** encoder
-);
-
-/* IImagingFactory::CreateImageFromBuffer  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT CreateImageFromBuffer(
- const VOID* buf,
- UINT size,
- BufferDisposalFlag disposalFlag,
- IImage** image
-);
-
-/* IImagingFactory::CreateImageFromFile  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT CreateImageFromFile(
- const WCHAR* filename,
- IImage** image
-);
-
-/* IImagingFactory::CreateImageFromStream  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT CreateImageFromStream(
- IStream* stream,
- IImage** image
-);
-
-/* IImagingFactory::CreateNewBitmap  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT CreateNewBitmap(
- UINT width,
- UINT height,
- PixelFormatID pixelFormat,
- IBitmapImage** bitmap
-);
-
-/* IImagingFactory::GetInstalledDecoders  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT GetInstalledDecoders(
- UINT* count,
- ImageCodecInfo** decoders
-);
-
-/* IImagingFactory::GetInstalledEncoders  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT GetInstalledEncoders(
- UINT* count,
- ImageCodecInfo** encoders
-);
-
-/* IImagingFactory::InstallImageCodec  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT InstallImageCodec(
- const ImageCodecInfo* codecInfo
-);
-
-/* IImagingFactory::UninstallImageCodec  [function; ce-only; CE 5.0..699; Imaging.lib] */
-HRESULT UninstallImageCodec(
- const WCHAR* codecName,
- UINT flags
-);
-
-/* ImageCodecInfo  [library; shared; CE 5.0..699; Gdiplus.lib; lib:win32-reference] */
-class ImageCodecInfo {
- public: 
- CLSID Clsid;
- GUID FormatID;
- const WCHAR* CodecName;
- const WCHAR* DllName;
- const WCHAR* FormatDescription;
- const WCHAR* FilenameExtension;
- const WCHAR* MimeType;
- DWORD Flags;
- DWORD Version;
- DWORD SigCount;
- DWORD SigSize;
- const BYTE* SigPattern;
- const BYTE* SigMask;
-};
-
-/* PropertyItem  [library; shared; CE 5.0..699; Gdiplus.lib; lib:win32-reference] */
-class PropertyItem {
- public:
- PROPID id;
- ULONG length;
- WORD type;
- UNALIGNED VOID* value;
-};
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

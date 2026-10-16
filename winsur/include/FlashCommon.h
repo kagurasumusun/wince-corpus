@@ -28,14 +28,11 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+/* BLOCK_RUN  [struct; ce-only] */
 
-/* BLOCK_RUN  [struct; ce-only; CE 6.0..699] */
+/* FLASH_REGION_INFO  [struct; ce-only] */
 
-/* FLASH_REGION_INFO  [struct; ce-only; CE 6.0..699] */
-
-/* SECTOR_RUN  [struct; ce-only; CE 6.0..699] */
-#endif /* _WIN32_WCE */
+/* SECTOR_RUN  [struct; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -43,24 +40,11 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* FLASH_REGION_INFO_FLAGS  [enum; ce-only; CE 6.0..699] */
-enum FLASH_REGION_INFO_FLAGS {
- FLASH_FLAG_NAND = 0x00000001,
- FLASH_FLAG_NOR = 0x00000002,
- FLASH_FLAG_REQUIRE_SEQ_PAGE_PROGRAM = 0x00000004,
- FLASH_FLAG_SUPPORTS_COPY = 0x00000008,
- FLASH_FLAG_SUPPORTS_XIP = 0x00000010,
- FLASH_FLAG_SUPPORTS_LOCKING = 0x00000020,
-};
-
-/* PARTITION_ID  [struct; ce-only; CE 6.0..699] */
+/* PARTITION_ID  [struct; ce-only] */
 typedef struct __PARTITION_ID {
  WORD RegionIndex;
  WORD PartitionIndex;
 } PARTITION_ID;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

@@ -12,27 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* CHANNEL_DEF  [struct; ce-only; CE 4.0..699] */
-typedef struct tagCHANNEL_DEF {
- char name[CHANNEL_NAME_LEN + 1];
- ULONG options;
-} CHANNEL_DEF, *PCHANNEL_DEF, **PPCHANNEL_DEF;
-
-/* CHANNEL_PDU_HEADER  [struct; shared; CE 4.0..699] */
-typedef struct tagCHANNEL_PDU_HEADER {
- UINT32 length;
- UINT32 flags;
-} CHANNEL_PDU_HEADER, *PCHANNEL_PDU_HEADER;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */

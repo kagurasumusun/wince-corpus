@@ -12,29 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* INQUIRY_DATA  [struct; ce-only; CE 4.0..699] */
-typedef struct _INQUIRY_DATA {
- UCHAR inqDevType; 
- UCHAR inqRMB; 
- UCHAR inqVersion; 
- UCHAR inqAtapiVersion; 
- UCHAR inqLength; 
- UCHAR inqReserved[3]; 
- UCHAR inqVendor[8]; 
- UCHAR inqProdID[16]; 
- UCHAR inqRev[4]; 
- UCHAR inqReserved2[60]; 
-} INQUIRY_DATA, *PINQUIRY_DATA;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */

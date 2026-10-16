@@ -12,23 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
-
-/* WINDOWINFO  [struct; shared; CE 3.0..699] */
-typedef struct { 
- HWND hwnd; 
- LPCTSTR szWindowName; 
- UINT32 fToBeClosed; 
- UINT32 fToBeTerminated;
-} WINDOWINFO;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

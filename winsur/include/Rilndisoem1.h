@@ -15,9 +15,6 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* OEMNDISEVENTTYPE  [enum; ce-only; CE 6.0..699] */
-#endif /* _WIN32_WCE */
+/* OEMNDISEVENTTYPE  [enum; ce-only] */
 
 #endif /* _RILNDISOEM1_ */

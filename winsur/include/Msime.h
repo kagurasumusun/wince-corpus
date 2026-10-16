@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 41 declarations, 0 outlines, 0 base types, 0 extra macros, 32 extra decls
+ * 0 constants, 6 declarations, 0 outlines, 0 base types, 0 extra macros, 32 extra decls
  */
 #ifndef _MSIME_
 #define _MSIME_
@@ -17,9 +17,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* IMESHF  [struct; shared; CE 4.0..699] */
+/* IMESHF  [struct; shared] */
 typedef struct {
  WORD cbShf; 
  WORD verDic;
@@ -28,40 +26,11 @@ typedef struct {
  CHAR szCopyright[128]; 
 } IMESHF;
 
-/* IMEWRD  [struct; shared; CE 4.0..699] */
-typedef struct _IMEWRD {
- WCHAR* pwchReading;
- WCHAR* pwchDisplay;
- Union { 
- ULONG ulPos;
- Struct {
- WORD nPos1; 
- WORD nPos2; 
- };
- };
- ULONG* rgulAttrs[2];
- INT cbComment;
- IMEUCT uct;
- VOID* pvComment;
-} IMEWRD, *PIMEWRD;
-
-/* IPCANDIDATE  [struct; ce-only; CE 4.0..699] */
-typedef struct tagIPCANDIDATE {
- DWORD dwSize;
- DWORD dwFlags;
- INT iSelIndex;
- INT nCandidate;
- DWORD dwPrivateDataOffset;
- DWORD dwPrivateDataSize;
- DWORD dwOffset[1];
-} IPCANDIDATE, *PIPCANDIDATE;
-
-/* POSTBL  [struct; shared; CE 4.0..699] */
+/* POSTBL  [struct; shared] */
 typedef struct _POSTBL {
  WORD nPos; 
  BYTE* szName; 
 } POSTBL;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks
@@ -79,222 +48,6 @@ HRESULT CreateIImeIPointInstance(
  REFCLSID clsid,
  VOID** ppvObj
 );
-
-/* IFEDictionary::Close  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT IFEDictionary::Close(void);
-
-/* IFEDictionary::Create  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT IFEDictionary::Create(
- CHAR* pchFileName,
- IMESHF* pShf
-);
-
-/* IFEDictionary::ExistWord  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT::ExistWord(
- IMEWRD* pWrd
-);
-
-/* IFEDictionary::GetHeader  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT IFEDictionary::GetHeader(
- CHAR* pchFileName,
- IMESHF* pShf,
- IMEFMT* pjfmt,
- ULONG* pdicat
-);
-
-/* IFEDictionary::GetPosTable  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT IFEDictionary::GetPosTable(
- POSTBL** prgPosTbl,
- int* pcPosTbl
-);
-
-/* IFEDictionary::GetWords  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT IFEDictionary::GetWords(
- WCHAR* pwchFirst,
- WCHAR* pwchLast,
- WCHAR* pwchDisplay,
- ULONG ulPos,
- ULONG ulSelect,
- ULONG ulWordSrc,
- UCHAR* pchBuffer,
- ULONG cbBuffer,
- ULONG* pcWrd
-);
-
-/* IFEDictionary::NextWords  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT IFEDictionary::NextWords(
- UCHAR* pchBuffer,
- ULONG cbBuffer,
- ULONG* pcWrd
-);
-
-/* IFEDictionary::Open  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT IFEDictionary::Open(
- CHAR* pchFileName,
- IMESHF* pShf
-);
-
-/* IFEDictionary::RegisterWord  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT::RegisterWord(
- IMEREG reg,
- IMEWRD* pWrd
-);
-
-/* IImeIPoint2::ControlIME  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
-STDMETHOD ControlIME(
- DWORD dwIMEFuncID,
- LPARAM lparam
-);
-
-/* IImeIPoint2::DeleteCompString  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
-STDMETHOD DeleteCompString(
- INT iPos,
- INT cchSzDel
-);
-
-/* IImeIPoint2::GetAllCompositionInfo  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
-STDMETHOD GetAllCompositionInfo(
- WCHAR** ppwSzCompStr,
- DWORD** ppdwCharID,
- INT* pcchCompStr,
- INT* piIPPos,
- INT* piStartUndetStrPos,
- INT* pcchUndetStr,
- INT* piEditStart,
- INT* piEditLen
-);
-
-/* IImeIPoint2::Initialize  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
-STDMETHOD UpdateContext(
- VOID* pCallBack
-);
-
-/* IImeIPoint2::InsertImeItem  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
-STDMETHOD InsertImeItem(
- IPCANDIDATE* pImeItem,
- INT iPos,
- DWORD* lpdwCharId
-);
-
-/* IImeIPoint2::InsertStringEx  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
-STDMETHOD InsertStringEx(
- WCHAR* pwSzInsert,
- INT cchSzInsert,
- DWORD* lpdwCharId
-);
-
-/* IImeIPoint2::ReplaceCompString  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
-STDMETHOD ReplaceCompString(
- INT iPos,
- INT iTargetLen,
- WCHAR* pwSzInsert,
- INT cchSzInsert,
- DWORD* lpdwCharId
-);
-
-/* IImeIPoint2::SelectIpCandidate  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
-STDMETHOD SelectIpCandidate(
- DWORD dwCharId,
- INT iselno
-);
-
-/* IImeIPoint2::UpdateContext  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
-UpdateContext(
- BOOL fGenerateMessage
-);
-
-/* IImeIPointNotifySink::GenerateMessage  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT GenerateMessage(void);
-
-/* IImeIPointNotifySink::IsReadingHalfKana  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT IsReadingHalfKana(void);
-
-/* IImeIPointNotifySink::SetCandidateSelection  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT SetCandidateSelection(
- UINT iciCandidate
-);
-
-/* IImeIPointNotifySink::SetCandidateStr  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT SetCandidateStr(
- UINT ciCandidate,
- WCHAR* pwsz,
- UINT cbData
-);
-
-/* IImeIPointNotifySink::SetCompositionAttr  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT SetCompositionAttr(
- UINT ciAtr,
- BYTE* pb
-);
-
-/* IImeIPointNotifySink::SetCompositionClause  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT SetCompositionClause(
- UINT ciCls,
- DWORD* pdw
-);
-
-/* IImeIPointNotifySink::SetCompositionReadAttr  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT SetCompositionReadAttr(
- UINT ciAtr,
- BYTE* pb
-);
-
-/* IImeIPointNotifySink::SetCompositionReadClause  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT SetCompositionReadClause(
- UINT ciCls,
- DWORD* pdw
-);
-
-/* IImeIPointNotifySink::SetCompositionReadStr  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT SetCompositionReadStr(
- UINT cwch,
- WCHAR* pwsz
-);
-
-/* IImeIPointNotifySink::SetCompositionStr  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT SetCompositionStr(
- UINT cwch,
- WCHAR* pwsz
-);
-
-/* IImeIPointNotifySink::SetCursorPos  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT SetCursorPos(
- UINT uiCursorPos
-);
-
-/* IImeIPointNotifySink::SetDeltaPos  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT SetDeltaPos(
- UINT iDelta
-);
-
-/* IImeIPointNotifySink::SetResultClause  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT SetResultClause(
- UINT ciCls,
- DWORD* pdw
-);
-
-/* IImeIPointNotifySink::SetResultReadClause  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT SetResultReadClause(
- UINT ciCls,
- DWORD* pdw
-);
-
-/* IImeIPointNotifySink::SetResultReadStr  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT SetResultReadStr(
- UINT cwch,
- WCHAR* pwsz
-);
-
-/* IImeIPointNotifySink::SetResultStr  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT SetResultStr(
- UINT cwch,
- WCHAR* pwsz
-);
-
-/* IImeIPointNotifySink::SetTargetClause  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT SetResultReadClause(
- UINT uiTarget
-);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================
@@ -305,7 +58,6 @@ HRESULT SetResultReadClause(
 /* struct */
 typedef struct _IMEWRD {WCHAR* pwchReading;WCHAR* pwchDisplay;Union{ULONGulPos;Struct{ WORDnPos1; WORDnPos2;};};ULONG* rgulAttrs[2];INTcbComment;IMEUCTuct;VOID* pvComment;}IMEWRD, *PIMEWRD;
 typedef struct tagIPCANDIDATE {DWORD dwSize;DWORD dwFlags;INT iSelIndex;INT nCandidate;DWORD dwPrivateDataOffset;DWORD dwPrivateDataSize;DWORD dwOffset[1];} IPCANDIDATE, *PIPCANDIDATE;
-typedef struct _IMEWRD {WCHAR* pwchReading;WCHAR* pwchDisplay;Union{ULONGulPos;Struct{ WORDnPos1; WORDnPos2;};
 
 /* function */
 HRESULT GenerateMessage(void);

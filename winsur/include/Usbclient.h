@@ -12,30 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* REG_VALUE_DESCR  [struct; ce-only; CE 5.0..699] */
-typedef struct _REG_VALUE_DESCR {
- LPWSTR Name;
- DWORD Type;
- DWORD Size;
- PBYTE Data;
-} REG_VALUE_DESCR, *PREG_VALUE_DESCR;
-
-/* REMOVE_LOCK  [struct; ce-only; CE 5.0..699] */
-typedef struct _REMOVE_LOCK {
- BOOL Removed;
- LONG IoCount;
- HANDLE RemoveEvent;
-} REMOVE_LOCK, *PREMOVE_LOCK;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

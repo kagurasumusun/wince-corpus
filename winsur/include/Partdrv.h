@@ -5,43 +5,17 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 19 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 0 constants, 18 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _PARTDRV_
 #define _PARTDRV_
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
+ * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* PD_PARTINFO  [struct; ce-only; CE 5.0..699] */
-typedef struct _PD_PARTINFO {
- DWORD cbSize;
- TCHAR szPartitionName[PARTITIONNAMESIZE];
- SECTORNUM snNumSectors;
- FILETIME ftCreated;
- FILETIME ftLastModified;
- DWORD dwAttributes;
- BYTE bPartType;
-} PD_PARTINFO, *PPD_PARTINFO;
-
-/* PD_STOREINFO  [struct; ce-only; CE 5.0..699] */
-typedef struct _PD_STOREINFO {
- DWORD cbSize;
- SECTORNUM snNumSectors;
- DWORD dwBytesPerSector;
- SECTORNUM snFreeSectors;
- SECTORNUM snBiggestPartCreatable;
- FILETIME ftCreated;
- FILETIME ftLastModified;
- DWORD dwAttributes;
-} PD_STOREINFO, *PPD_STOREINFO;
-#endif /* _WIN32_WCE */
+/* PD_PARTINFO  [struct; ce-only] */
 
 /* ==================================================================
  * functions and callbacks

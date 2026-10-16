@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 42 constants, 86 declarations, 0 outlines, 0 base types, 0 extra macros, 11 extra decls
+ * 42 constants, 73 declarations, 0 outlines, 0 base types, 0 extra macros, 24 extra decls
  */
 #ifndef _OBJBASE_
 #define _OBJBASE_
@@ -64,13 +64,10 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
-
-/* CoInitialize  [macro, function; shared; CE 3.0..699; Ole232.lib, Ole32.lib] */
+/* CoInitialize  [macro, function; shared; Ole232.lib, Ole32.lib] */
 HRESULT CoInitialize(
  LPVOID pvReserved 
 );
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -78,9 +75,7 @@ HRESULT CoInitialize(
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213)) /* CE 2.11..2.12 */
-
-/* AUTH_IDENTITY  [struct; ce-only; CE 2.11..2.12] */
+/* AUTH_IDENTITY  [struct; ce-only] */
 typedef struct _AUTH_IDENTITY {
  [size_is(UserLength+1)] USHORT *User;
  ULONG UserLength;
@@ -89,7 +84,6 @@ typedef struct _AUTH_IDENTITY {
  [size_is(DomainLength+1)] USHORT *Password;
  ULONG Flags;
 } AUTH_IDENTITY;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks
@@ -262,12 +256,6 @@ HRESULT BindMoniker(
 /* CoAddRefServerProcess  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
 ULONG CoAddRefServerProcess(void);
 
-/* CoCopyProxy  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
-HRESULT CoCopyProxy(
- IUnknown* pProxy,
- IUnknown** ppCopy
-);
-
 /* CoCreateFreeThreadedMarshaler  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
 HRESULT CoCreateFreeThreadedMarshaler(
  LPUNKNOWN punkOuter,
@@ -277,22 +265,6 @@ HRESULT CoCreateFreeThreadedMarshaler(
 /* CoCreateGuid  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
 HRESULT CoCreateGuid(
  GUID* pguid
-);
-
-/* CoCreateInstanceEx  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
-HRESULT CoCreateInstanceEx(
- REFCLSID rclsid,
- IUnknown* punkOuter,
- DWORD dwClsCtx,
- COSERVERINFO* pServerInfo,
- ULONG cmq,
- MULTI_QI* pResults
-);
-
-/* CoDisconnectObject  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
-STDAPI CoDisconnectObject(
- IUnknown* pUnk,
- DWORD dwReserved
 );
 
 /* CoFileTimeNow  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
@@ -312,43 +284,10 @@ HRESULT CoGetCallContext(
 /* CoGetCurrentProcess  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
 DWORD CoGetCurrentProcess(void);
 
-/* CoGetInstanceFromFile  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
-HRESULT CoGetInstanceFromFile(
- COSERVERINFO* pServerInfo,
- CLSID* pclsid,
- IUnknown* punkOuter,
- DWORD dwClsCtx,
- DWORD grfMode,
- OLECHAR* szName,
- ULONG cmq,
- MULTI_QI* rgmqResults
-);
-
-/* CoGetInstanceFromIStorage  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
-HRESULT CoGetInstanceFromIStorage(
- COSERVERINFO* pServerInfo,
- CLSID* pclsid,
- IUnknown* punkOuter,
- DWORD dwClsCtx,
- IStorage* pstg,
- ULONG cmq,
- MULTI_QI* rgmqResults
-);
-
 /* CoGetMalloc  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
 HRESULT CoGetMalloc(
  DWORD dwMemContext,
  LPMALLOC* ppMalloc
-);
-
-/* CoGetMarshalSizeMax  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
-STDAPI CoGetMarshalSizeMax(
- ULONG* pulSize,
- REFIID riid,
- IUnknown* pUnk,
- DWORD dwDestContext,
- LPVOID pvDestContext,
- DWORD mshlflags
 );
 
 /* CoGetObject  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
@@ -363,16 +302,6 @@ WINOLEAPI CoGetObject(
 WINOLEAPI CoGetPSClsid(
  REFIID riid,
  CLSID* pclsid
-);
-
-/* CoGetStandardMarshal  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
-STDAPI CoGetStandardMarshal(
- REFIID riid,
- IUnknown* pUnk,
- DWORD dwDestContext,
- LPVOID pvDestContext,
- DWORD mshlflags,
- LPMARSHAL* ppMarshal
 );
 
 /* CoGetTreatAsClass  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
@@ -407,27 +336,10 @@ BOOL CoIsOle1Class(
  REFCLSID rclsid
 );
 
-/* CoLockObjectExternal  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
-STDAPI CoLockObjectExternal(
- IUnknown* pUnk,
- BOOL fLock,
- BOOL fLastUnlockReleases
-);
-
 /* CoMarshalHresult  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
 STDAPI CoMarshalHresult(
  IStream* pStm,
  HRESULT hresult
-);
-
-/* CoMarshalInterface  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
-STDAPI CoMarshalInterface(
- IStream* pStm,
- REFIID riid,
- IUnknown* pUnk,
- DWORD dwDestContext,
- void* pvDestContext,
- DWORD mshlflags
 );
 
 /* CoQueryAuthenticationServices  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
@@ -445,27 +357,6 @@ HRESULT CoQueryClientBlanket(
  DWORD* pImpLevel,
  RPC_AUTHZ_HANDLE* pPrivs,
  DWORD** pCapabilities
-);
-
-/* CoQueryProxyBlanket  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
-HRESULT CoQueryProxyBlanket(
- IUnknown* pProxy,
- DWORD* pAuthnSvc,
- DWORD* pAuthzSvc,
- OLECHAR** pServerPrincName,
- DWORD* pAuthnLevel,
- DWORD* pImpLevel,
- RPC_AUTH_IDENTITY_HANDLE* ppAuthInfo,
- DWORD* pCapabilities
-);
-
-/* CoRegisterClassObject  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
-STDAPI CoRegisterClassObject(
- REFCLSID rclsid,
- IUnknown* pUnk,
- DWORD dwClsContext,
- DWORD flags,
- LPDWORD lpdwRegister
 );
 
 /* CoRegisterMallocSpy  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
@@ -512,26 +403,8 @@ HRESULT CoRevokeClassObject(
 /* CoRevokeMallocSpy  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
 HRESULT CoRevokeMallocSpy( );
 
-/* CoSetProxyBlanket  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
-HRESULT CoSetProxyBlanket(
- IUnknown* pProxy,
- DWORD dwAuthnSvc,
- DWORD dwAuthzSvc,
- WCHAR* pServerPrincName,
- DWORD dwAuthnLevel,
- DWORD dwImpLevel,
- RPC_AUTH_IDENTITY_HANDLE pAuthInfo,
- DWORD dwCapabilities
-);
-
 /* CoSuspendClassObjects  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
 WINOLEAPI CoSuspendClassObjects(void);
-
-/* CoSwitchCallContext  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
-HRESULT CoSwitchCallContext(
- IUnknown* pNewObject,
- IUnknown** ppOldObject
-);
 
 /* CoTreatAsClass  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
 STDAPI CoTreatAsClass(
@@ -653,8 +526,21 @@ void CoFreeUnusedLibrariesEx(
  * ================================================================ */
 
 /* function */
+HRESULT CoCopyProxy( IUnknown *pProxy, IUnknown **ppCopy );
+HRESULT CoCreateInstanceEx( REFCLSID rclsid, IUnknown *punkOuter, DWORD dwClsCtx, COSERVERINFO *pServerInfo, ULONG cmq, MULTI_QI *pResults );
+VOID STDAPI CoDisconnectObject( IUnknown *pUnk, DWORD dwReserved );
+HRESULT CoGetInstanceFromFile( COSERVERINFO *pServerInfo, CLSID *pclsid, IUnknown *punkOuter, DWORD dwClsCtx, DWORD grfMode, OLECHAR *szName, ULONG cmq, MULTI_QI *rgmqResults );
+HRESULT CoGetInstanceFromIStorage( COSERVERINFO *pServerInfo, CLSID *pclsid, IUnknown *punkOuter, DWORD dwClsCtx, IStorage *pstg, ULONG cmq, MULTI_QI *rgmqResults );
+VOID STDAPI CoGetMarshalSizeMax( ULONG *pulSize, REFIID riid, IUnknown *pUnk, DWORD dwDestContext, LPVOID pvDestContext, DWORD mshlflags );
+VOID STDAPI CoGetStandardMarshal( REFIID riid, IUnknown *pUnk, DWORD dwDestContext, LPVOID pvDestContext, DWORD mshlflags, LPMARSHAL *ppMarshal );
 HRESULT CoInternetGetSecurityURL( LPCWSTR pwzUrl, LPWSTR* ppwzSecUrl, PSUACTION psuAction, DWORD dwReserved );
+VOID STDAPI CoLockObjectExternal( IUnknown *pUnk, BOOL fLock, BOOL fLastUnlockReleases );
+VOID STDAPI CoMarshalInterface( IStream *pStm, REFIID riid, IUnknown *pUnk, DWORD dwDestContext, void *pvDestContext, DWORD mshlflags );
+HRESULT CoQueryProxyBlanket( IUnknown *pProxy, DWORD *pAuthnSvc, DWORD *pAuthzSvc, OLECHAR **pServerPrincName, DWORD *pAuthnLevel, DWORD *pImpLevel, RPC_AUTH_IDENTITY_HANDLE *ppAuthInfo, DWORD *pCapabilities );
+VOID STDAPI CoRegisterClassObject( REFCLSID rclsid, IUnknown *pUnk, DWORD dwClsContext, DWORD flags, LPDWORD lpdwRegister );
 WINOLEAPI CoRegisterPSCLsid(REFIID riid,REFCLSID rclsid);
+HRESULT CoSetProxyBlanket( IUnknown *pProxy, DWORD dwAuthnSvc, DWORD dwAuthzSvc, WCHAR *pServerPrincName, DWORD dwAuthnLevel, DWORD dwImpLevel, RPC_AUTH_IDENTITY_HANDLE pAuthInfo, DWORD dwCapabilities );
+HRESULT CoSwitchCallContext( IUnknown *pNewObject, IUnknown **ppOldObject );
 HRESULT CreateInstance( IUnknown *pUnkOuter, REFIID riid, void **ppvObject);
 HRESULT Flush( void );
 HRESULT LockRegion( ULARGE_INTEGER libOffset, ULARGE_INTEGER cb, DWORD dwLockType );

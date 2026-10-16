@@ -22,35 +22,6 @@
 #define CSPROPERTY_BUFFER_DRIVER 1
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* BUFFER_COMMANDS  [enum; ce-only; CE 6.0..699] */
-typedef enum {
- CS_ALLOCATE,
- CS_ENQUEUE,
- CS_DEALLOCATE
-} BUFFER_COMMANDS;
-
-/* CS_STREAM_DESCRIPTOR  [struct; ce-only; CE 6.0..699] */
-typedef struct _tagStreamDescriptor {
- CSSTREAM_HEADER CsStreamHeader;
- CS_FRAME_INFO CsFrameInfo;
-} CS_STREAM_DESCRIPTOR, * PCS_STREAM_DESCRIPTOR;
-
-/* CSPROPERTY_BUFFER_MODE  [enum; ce-only; CE 6.0..699] */
-typedef enum {
- CSPROPERTY_BUFFER_DRIVER = 1,
- CSPROPERTY_BUFFER_CLIENT_LIMITED = 2,
- CSPROPERTY_BUFFER_CLIENT_UNLIMITED = 4
-} CSPROPERTY_BUFFER_MODE;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */

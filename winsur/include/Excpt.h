@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 1 constants, 3 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _EXCPT_
 #define _EXCPT_
@@ -25,11 +25,10 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* EXCEPTION_POINTERS  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _EXCEPTION_POINTERS {- // exp
-#endif /* _WIN32_WCE */
+/* EXCEPTION_POINTERS  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   ExceptionRecord */
+/*   ContextRecord */
 
 /* ==================================================================
  * functions and callbacks

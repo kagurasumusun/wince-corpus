@@ -15,40 +15,19 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* ListView_GetNumberOfWorkAreas  [macro, function; shared; CE 5.0..699] */
+/* ListView_GetNumberOfWorkAreas  [macro, function; shared] */
 #define ListView_GetNumberOfWorkAreas(hwnd, pnWorkAreas) \
  (BOOL)SNDMSG((hwnd), LVM_GETNUMBEROFWORKAREAS, 0, \
  (LPARAM)(UINT *)(pnWorkAreas))
 
-/* ListView_GetWorkAreas  [macro, function; shared; CE 5.0..699] */
+/* ListView_GetWorkAreas  [macro, function; shared] */
 #define ListView_GetWorkAreas(hwnd, nWorkAreas, prc) \
  (BOOL)SNDMSG((hwnd), LVM_GETWORKAREAS, (WPARAM)(int)nWorkAreas, \
  (LPARAM)(RECT FAR*)(prc))
 
-/* ListView_SetWorkAreas  [macro, function; shared; CE 5.0..699] */
+/* ListView_SetWorkAreas  [macro, function; shared] */
 #define ListView_SetWorkAreas(hwnd, nWorkAreas, prc) \
  (BOOL)SNDMSG((hwnd), LVM_SETWORKAREAS, (WPARAM)(int)nWorkAreas, \
  (LPARAM)(RECT FAR*)(prc))
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* DPA  [struct; ce-only; CE 4.0..699] */
-typedef struct _DPA {
- int cp;
- void FAR* FAR* pp;
- HANDLE hheap;
- int cpAlloc;
- int cpGrow;
-} DPA;
-#endif /* _WIN32_WCE */
 
 #endif /* _PCOMMCTRL_ */

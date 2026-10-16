@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 566 constants, 325 declarations, 2 outlines, 0 base types, 0 extra macros, 26 extra decls
+ * 566 constants, 314 declarations, 12 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINBASE_
 #define _WINBASE_
@@ -590,23 +590,29 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
+/* CEDBASEINFO  [struct; ce-only] */
 
-/* CONTEXT  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* CEDIRINFO  [struct; ce-only] */
 
-/* TypeFromPropID  [macro; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Fsdbase.lib] */
-#endif /* _WIN32_WCE */
+/* CEFILEINFO  [struct; ce-only] */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* CHECK_INVALIDGUID  [macro, function; ce-only; CE 2.11..2.12, 3.0..699] */
+/* CHECK_INVALIDGUID  [macro, function; ce-only] */
 #define CHECK_INVALIDGUID(pguid) \
 !~((pguid)->Data1&(pguid)->Data2&(pguid)->Data3&(pguid)->Data4)
 
-/* CHECK_SYSTEMGUID  [macro, function; ce-only; CE 2.11..2.12, 3.0..699; Fsdbase.lib] */
+/* CHECK_SYSTEMGUID  [macro, function; ce-only; Fsdbase.lib] */
 #define CHECK_SYSTEMGUID(pguid) \
 !((pguid)->Data1|(pguid)->Data2|(pguid)->Data3|(pguid)->Data4)
-#endif /* _WIN32_WCE */
+
+/* CONTEXT  [struct; shared] */
+
+/* DEVMGR_DEVICE_INFORMATION  [struct; ce-only] */
+
+/* STORE_INFORMATION  [struct; ce-only] */
+
+/* SYSTEM_POWER_STATUS_EX  [struct; ce-only] */
+
+/* TypeFromPropID  [macro; ce-only; Fsdbase.lib] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -614,9 +620,12 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
+/* CERECORDINFO  [struct; ce-only] */
+typedef struct _CERECORDINFO {
+ CEOID oidParent; 
+} CERECORDINFO;
 
-/* COMMPROP  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
+/* COMMPROP  [struct; shared] */
 typedef struct _COMMPROP {
  WORD wPacketLength;
  WORD wPacketVersion;
@@ -638,109 +647,7 @@ typedef struct _COMMPROP {
  WCHAR wcProvChar[1];
 } COMMPROP;
 
-/* COMMTIMEOUTS  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _COMMTIMEOUTS {
- DWORD ReadIntervalTimeout;
- DWORD ReadTotalTimeoutMultiplier;
- DWORD ReadTotalTimeoutConstant;
- DWORD WriteTotalTimeoutMultiplier;
- DWORD WriteTotalTimeoutConstant;
-} COMMTIMEOUTS,*LPCOMMTIMEOUTS;
-
-/* COMSTAT  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _COMSTAT {
- DWORD fCtsHold :1;
- DWORD fDsrHold :1;
- DWORD fRlsdHold :1;
- DWORD fXoffHold :1;
- DWORD fXoffSent :1;
- DWORD fEof :1;
- DWORD fTxim :1;
- DWORD fReserved :25;
- DWORD cbInQue;
- DWORD cbOutQue;
-} COMSTAT, *LPCOMSTAT;
-
-/* DCB  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _DCB {- // dcb
-
-/* FILETIME  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _FILETIME {
- DWORD dwLowDateTime;
- DWORD dwHighDateTime;
-} FILETIME;
-
-/* MEMORYSTATUS  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _MEMORYSTATUS {
- DWORD dwLength;
- DWORD dwMemoryLoad;
- DWORD dwTotalPhys;
- DWORD dwAvailPhys;
- DWORD dwTotalPageFile;
- DWORD dwAvailPageFile;
- DWORD dwTotalVirtual;
- DWORD dwAvailVirtual;
-} MEMORYSTATUS, *LPMEMORYSTATUS;
-
-/* OSVERSIONINFO  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; A/W OSVERSIONINFOA,OSVERSIONINFOW (CE is W-side)] */
-typedef struct _OSVERSIONINFO{
- DWORD dwOSVersionInfoSize;
- DWORD dwMajorVersion;
- DWORD dwMinorVersion;
- DWORD dwBuildNumber;
- DWORD dwPlatformId;
- TCHAR szCSDVersion[128];
-} OSVERSIONINFO;
-
-/* PROCESS_INFORMATION  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _PROCESS_INFORMATION {- // pi
-
-/* SORTORDERSPEC  [struct; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _SORTORDERSPEC {
- CEPROPID propid;
- DWORD dwFlags;
-} SORTORDERSPEC;
-
-/* SYSTEM_INFO  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _SYSTEM_INFO {-
-
-/* SYSTEM_POWER_STATUS_EX  [struct; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _SYSTEM_POWER_STATUS_EX {-
-
-/* SYSTEMTIME  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _SYSTEMTIME {
- WORD wYear;
- WORD wMonth;
- WORD wDayOfWeek;
- WORD wDay;
- WORD wHour;
- WORD wMinute;
- WORD wSecond;
- WORD wMilliseconds;
-} SYSTEMTIME;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
-
-/* STORE_INFORMATION  [struct; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699] */
-typedef struct STORE_INFORMATION {-
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..399, 5.0..699 */
-
-/* OVERLAPPED  [struct; shared; CE 1.0..199, 2.11..399, 5.0..699] */
-typedef struct _OVERLAPPED {
- ULONG_PTR Internal; 
- ULONG_PTR InternalHigh; 
- DWORD Offset; 
- DWORD OffsetHigh; 
- HANDLE hEvent; 
-} OVERLAPPED;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* CREATE_PROCESS_DEBUG_INFO  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* CREATE_PROCESS_DEBUG_INFO  [struct; shared] */
 typedef struct _CREATE_PROCESS_DEBUG_INFO { 
  HANDLE hFile; 
  HANDLE hProcess; 
@@ -754,48 +661,51 @@ typedef struct _CREATE_PROCESS_DEBUG_INFO {
  WORD fUnicode; 
 } CREATE_PROCESS_DEBUG_INFO;
 
-/* CREATE_THREAD_DEBUG_INFO  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* CREATE_THREAD_DEBUG_INFO  [struct; shared] */
 typedef struct _CREATE_THREAD_DEBUG_INFO { 
  HANDLE hThread; 
  LPVOID lpThreadLocalBase; 
  LPTHREAD_START_ROUTINE lpStartAddress; 
 } CREATE_THREAD_DEBUG_INFO;
 
-/* DEBUG_EVENT  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _DEBUG_EVENT { 
- DWORD dwDebugEventCode; 
- DWORD dwProcessId; 
- DWORD dwThreadId; 
- union { 
- EXCEPTION_DEBUG_INFO Exception; 
- CREATE_THREAD_DEBUG_INFO CreateThread; 
- CREATE_PROCESS_DEBUG_INFO CreateProcessInfo; 
- EXIT_THREAD_DEBUG_INFO ExitThread; 
- EXIT_PROCESS_DEBUG_INFO ExitProcess; 
- LOAD_DLL_DEBUG_INFO LoadDll; 
- UNLOAD_DLL_DEBUG_INFO UnloadDll; 
- OUTPUT_DEBUG_STRING_INFO DebugString; 
- RIP_INFO RipInfo; 
- } u; 
-} DEBUG_EVENT;
+/* DeviceSearchType  [enum; ce-only] */
+typedef enum {
+ DeviceSearchByLegacyName, 
+ DeviceSearchByDeviceName, 
+ DeviceSearchByBusName, 
+ DeviceSearchByGuid, 
+ DeviceSearchByParent 
+} DeviceSearchType;
 
-/* EXCEPTION_DEBUG_INFO  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _EXCEPTION_DEBUG_INFO { 
- EXCEPTION_RECORD ExceptionRecord; 
- DWORD dwFirstChance; 
-} EXCEPTION_DEBUG_INFO;
-
-/* EXIT_PROCESS_DEBUG_INFO  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* EXIT_PROCESS_DEBUG_INFO  [struct; shared] */
 typedef struct _EXIT_PROCESS_DEBUG_INFO { 
  DWORD dwExitCode; 
 } EXIT_PROCESS_DEBUG_INFO;
 
-/* EXIT_THREAD_DEBUG_INFO  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* EXIT_THREAD_DEBUG_INFO  [struct; shared] */
 typedef struct _EXIT_THREAD_DEBUG_INFO { 
  DWORD dwExitCode; 
 } EXIT_THREAD_DEBUG_INFO;
 
-/* LOAD_DLL_DEBUG_INFO  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* FINDEX_INFO_LEVELS  [enum; shared] */
+typedef enum _FINDEX_INFO_LEVELS {
+ FindExInfoStandard,
+ FindExInfoMaxInfoLevel
+} FINDEX_INFO_LEVELS;
+
+/* FINDEX_SEARCH_OPS  [enum; shared] */
+typedef enum _FINDEX_SEARCH_OPS { 
+ FindExSearchNameMatch, 
+ FindExSearchLimitToDirectories, 
+ FindExSearchLimitToDevices 
+} FINDEX_SEARCH_OPS;
+
+/* GET_FILEEX_INFO_LEVELS  [enum; shared] */
+typedef enum _GET_FILEEX_INFO_LEVELS { 
+ GetFileExInfoStandard 
+} GET_FILEEX_INFO_LEVELS;
+
+/* LOAD_DLL_DEBUG_INFO  [struct; shared] */
 typedef struct _LOAD_DLL_DEBUG_INFO { 
  HANDLE hFile; 
  LPVOID lpBaseOfDll; 
@@ -805,39 +715,39 @@ typedef struct _LOAD_DLL_DEBUG_INFO {
  WORD fUnicode; 
 } LOAD_DLL_DEBUG_INFO;
 
-/* OUTPUT_DEBUG_STRING_INFO  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* OSVERSIONINFO  [struct; shared; A/W OSVERSIONINFOA,OSVERSIONINFOW (CE is W-side)] */
+typedef struct _OSVERSIONINFO{
+ DWORD dwOSVersionInfoSize;
+ DWORD dwMajorVersion;
+ DWORD dwMinorVersion;
+ DWORD dwBuildNumber;
+ DWORD dwPlatformId;
+ TCHAR szCSDVersion[128];
+} OSVERSIONINFO;
+
+/* OUTPUT_DEBUG_STRING_INFO  [struct; shared] */
 typedef struct _OUTPUT_DEBUG_STRING_INFO { 
  LPSTR lpDebugStringData; 
  WORD fUnicode; 
  WORD nDebugStringLength; 
 } OUTPUT_DEBUG_STRING_INFO;
 
-/* SYSTEM_POWER_STATUS_EX2  [struct; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _SYSTEM_POWER_STATUS_EX2 {
- BYTE ACLineStatus;
- BYTE BatteryFlag;
- BYTE BatteryLifePercent;
- BYTE Reserved1;
- DWORD BatteryLifeTime;
- DWORD BatteryFullLifeTime;
- BYTE Reserved2;
- BYTE BackupBatteryFlag;
- BYTE BackupBatteryLifePercent;
- BYTE Reserved3;
- DWORD BackupBatteryLifeTime;
- DWORD BackupBatteryFullLifeTime;
- DWORD BatteryVoltage;
- DWORD BatteryCurrent;
- DWORD BatteryAverageCurrent;
- DWORD BatteryAverageInterval;
- DWORD BatterymAHourConsumed;
- DWORD BatteryTemperature;
- DWORD BackupBatteryVoltage;
- BYTE BatteryChemistry;
- // Add any extra information after the BatteryChemistry member.
-} SYSTEM_POWER_STATUS_EX2, *PSYSTEM_POWER_STATUS_EX2, *LPSYSTEM_POWER_STATUS_EX2;
+/* OVERLAPPED  [struct; shared] */
+typedef struct _OVERLAPPED {
+ ULONG_PTR Internal; 
+ ULONG_PTR InternalHigh; 
+ DWORD Offset; 
+ DWORD OffsetHigh; 
+ HANDLE hEvent; 
+} OVERLAPPED;
 
-/* TIME_ZONE_INFORMATION  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* SORTORDERSPEC  [struct; ce-only] */
+typedef struct _SORTORDERSPEC {
+ CEPROPID propid;
+ DWORD dwFlags;
+} SORTORDERSPEC;
+
+/* TIME_ZONE_INFORMATION  [struct; shared] */
 typedef struct _TIME_ZONE_INFORMATION {
  LONG Bias;
  WCHAR StandardName[32];
@@ -848,117 +758,12 @@ typedef struct _TIME_ZONE_INFORMATION {
  LONG DaylightBias;
 } TIME_ZONE_INFORMATION;
 
-/* UNLOAD_DLL_DEBUG_INFO  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* UNLOAD_DLL_DEBUG_INFO  [struct; shared] */
 typedef struct _UNLOAD_DLL_DEBUG_INFO { 
  LPVOID lpBaseOfDll; 
 } UNLOAD_DLL_DEBUG_INFO;
 
-/* WIN32_FIND_DATA  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W WIN32_FIND_DATAA,WIN32_FIND_DATAW (CE is W-side)] */
-typedef struct _WIN32_FIND_DATA { 
- DWORD dwFileAttributes; 
- FILETIME ftCreationTime; 
- FILETIME ftLastAccessTime; 
- FILETIME ftLastWriteTime; 
- DWORD nFileSizeHigh; 
- DWORD nFileSizeLow; 
- DWORD dwOID; 
- TCHAR cFileName[MAX_PATH]; 
-} WIN32_FIND_DATA;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* BY_HANDLE_FILE_INFORMATION  [struct; shared; CE 2.11..2.12, 3.0..699] */
-typedef struct _BY_HANDLE_FILE_INFORMATION { 
- DWORD dwFileAttributes; 
- FILETIME ftCreationTime; 
- FILETIME ftLastAccessTime; 
- FILETIME ftLastWriteTime; 
- DWORD dwVolumeSerialNumber; 
- DWORD nFileSizeHigh; 
- DWORD nFileSizeLow; 
- DWORD nNumberOfLinks; 
- DWORD nFileIndexHigh; 
- DWORD nFileIndexLow;
- DWORD dwOID;
-} BY_HANDLE_FILE_INFORMATION;
-
-/* CEDBASEINFO  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct _CEDBASEINFO {
- DWORD dwFlags; 
- WCHAR szDbaseName[CEDB_MAXDBASENAMELEN];
- DWORD dwDbaseType;
- WORD wNumRecords;
- WORD wNumSortOrder;
- DWORD dwSize;
- FILETIME ftLastModified;
- SORTORDERSPEC rgSortSpecs[CEDB_MAXSORTORDER];
-} CEDBASEINFO;
-
-/* CEDIRINFO  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct _CEDIRINFO {
- DWORD dwAttributes; 
- CEOID oidParent; 
- WCHAR szDirName[MAX_PATH]; 
-} CEDIRINFO;
-
-/* CEFILEINFO  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct _CEFILEINFO {
- DWORD dwAttributes; 
- CEOID oidParent; 
- WCHAR szFileName[MAX_PATH]; 
- FILETIME ftLastChanged; 
- DWORD dwLength; 
-} CEFILEINFO;
-
-/* CEOIDINFO  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct _CEOIDINFO { 
- WORD wObjType;
- WORD wPad;
- union {
- CEFILEINFO infFile;
- CEDIRINFO infDirectory;
- CEDBASEINFO infDatabase;
- CERECORDINFO infRecord;
- };
-} CEOIDINFO;
-
-/* CEPROPVAL  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct _CEPROPVAL { 
- CEPROPID propid;
- WORD wLenData;
- WORD wFlags;
- CEVALUNION val;
-} CEPROPVAL;
-typedef CEPROPVAL *PCEPROPVAL;
-
-/* CERECORDINFO  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct _CERECORDINFO {
- CEOID oidParent; 
-} CERECORDINFO;
-
-/* CEVALUNION  [typedef; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef union _CEVALUNION {
- short iVal; 
- USHORT uiVal; 
- long lVal; 
- ULONG ulVal; 
- FILETIME filetime;
- LPWSTR lpwstr; 
- CEBLOB blob; 
- BOOL boolVal;
- double dblVal;
-} CEVALUNION;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-
-/* GET_FILEEX_INFO_LEVELS  [enum; shared; CE 3.0..399, 5.0..699] */
-typedef enum _GET_FILEEX_INFO_LEVELS { 
- GetFileExInfoStandard 
-} GET_FILEEX_INFO_LEVELS;
-
-/* VS_FIXEDFILEINFO  [struct; shared; CE 3.0..399, 5.0..699] */
+/* VS_FIXEDFILEINFO  [struct; shared] */
 struct VS_FIXEDFILEINFO { 
 DWORD dwSignature; 
 DWORD dwStrucVersion; 
@@ -973,56 +778,88 @@ DWORD dwFileType;
 DWORD dwFileSubtype; 
 DWORD dwFileDateMS; 
 DWORD dwFileDateLS; };
-#endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
-
-/* FINDEX_INFO_LEVELS  [enum; shared; CE 3.0..699] */
-typedef enum _FINDEX_INFO_LEVELS {
- FindExInfoStandard,
- FindExInfoMaxInfoLevel
-} FINDEX_INFO_LEVELS;
-
-/* FINDEX_SEARCH_OPS  [enum; shared; CE 3.0..699] */
-typedef enum _FINDEX_SEARCH_OPS { 
- FindExSearchNameMatch, 
- FindExSearchLimitToDirectories, 
- FindExSearchLimitToDevices 
-} FINDEX_SEARCH_OPS;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* DeviceSearchType  [enum; ce-only; CE 5.0..699] */
-typedef enum {
- DeviceSearchByLegacyName, 
- DeviceSearchByDeviceName, 
- DeviceSearchByBusName, 
- DeviceSearchByGuid, 
- DeviceSearchByParent 
-} DeviceSearchType;
-
-/* DEVMGR_DEVICE_INFORMATION  [struct; ce-only; CE 5.0..699] */
-typedef struct _DevmgrDeviceInformation_tag {
- DWORD dwSize;
- HANDLE hDevice;
- HANDLE hParentDevice;
- WCHAR szLegacyName[6];
- WCHAR szDeviceKey[MAX_PATH];
- WCHAR szDeviceName[MAX_PATH];
- WCHAR szBusName[MAX_PATH];
-} DEVMGR_DEVICE_INFORMATION, *PDEVMGR_DEVICE_INFORMATION;
-
-/* WIN32_FILE_ATTRIBUTE_DATA  [struct; shared; CE 5.0..699] */
-typedef struct _WIN32_FILE_ATTRIBUTE_DATA{ 
+/* BY_HANDLE_FILE_INFORMATION  [struct; shared] */
+typedef struct _BY_HANDLE_FILE_INFORMATION { 
  DWORD dwFileAttributes; 
  FILETIME ftCreationTime; 
  FILETIME ftLastAccessTime; 
  FILETIME ftLastWriteTime; 
+ DWORD dwVolumeSerialNumber; 
  DWORD nFileSizeHigh; 
  DWORD nFileSizeLow; 
-} WIN32_FILE_ATTRIBUTE_DATA, *LPWIN32_FILE_ATTRIBUTE_DATA;
-#endif /* _WIN32_WCE */
+ DWORD nNumberOfLinks; 
+ DWORD nFileIndexHigh; 
+ DWORD nFileIndexLow;
+ DWORD dwOID;
+} BY_HANDLE_FILE_INFORMATION;
+
+/* DCB  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   DCBlength */
+/*   BaudRate */
+/*   fBinary */
+/*   fParity */
+/*   fOutxCtsFlow */
+/*   fOutxDsrFlow */
+/*   fDtrControl */
+/*   fDsrSensitivity */
+/*   fTXContinueOnXoff */
+/*   fOutX */
+/*   fInX */
+/*   fErrorChar */
+/*   fNull */
+/*   fRtsControl */
+/*   fAbortOnError */
+/*   fDummy2 */
+/*   wReserved */
+/*   XonLim */
+/*   XoffLim */
+/*   ByteSize */
+/*   Parity */
+/*   StopBits */
+/*   XonChar */
+/*   XoffChar */
+/*   ErrorChar */
+/*   EofChar */
+/*   EvtChar */
+/*   wReserved1 */
+
+/* PROCESS_INFORMATION  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   hProcess */
+/*   hThread */
+/*   dwProcessId */
+/*   dwThreadId */
+
+/* SYSTEM_INFO  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   DUMMYUNIONNAME */
+/*   dwPageSize */
+/*   lpMinimumApplicationAddress */
+/*   lpMaximumApplicationAddress */
+/*   dwActiveProcessorMask */
+/*   dwNumberOfProcessors */
+/*   dwProcessorType */
+/*   dwAllocationGranularity */
+/*   wProcessorLevel */
+/*   wProcessorRevision */
+
+/* WIN32_FIND_DATA  [struct; shared; A/W WIN32_FIND_DATAA,WIN32_FIND_DATAW (CE is W-side)] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   dwFileAttributes */
+/*   ftCreationTime */
+/*   ftLastAccessTime */
+/*   ftLastWriteTime */
+/*   nFileSizeHigh */
+/*   nFileSizeLow */
+/*   dwReserved0 */
+/*   dwReserved1 */
+/*   cFileName */
+/*   cAlternateFileName */
+/*   dwFileType */
+/*   dwCreatorType */
+/*   wFinderFlags */
 
 /* ==================================================================
  * functions and callbacks
@@ -1804,13 +1641,6 @@ BOOL PulseEvent(
 BOOL PurgeComm(
  HANDLE hFile,
  DWORD dwFlags
-);
-
-/* QueryContextAttributes  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Schannel.lib, schannel.lib, Secur32.lib, secur32.lib; A/W QueryContextAttributesA,QueryContextAttributesW (CE is W-side)] */
-SECURITY_STATUS SEC_ENTRY QueryContextAttributes( 
- PCtxtHandle phContext,
- ULONG ulAttribute, 
- void SEC_FAR* pBuffer 
 );
 
 /* QueryPerformanceCounter  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, nk.lib] */
@@ -2922,42 +2752,5 @@ DWORD VirtualQueryEx(
  DWORD dwLength
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* enum */
-enum ButtonControlRectangleStyle_t {CBR_CLIENTRECT, CBR_CHECKBOX, CBR_CHECKTEXT, CBR_GROUPTEXT, CBR_GROUPFRAME, CBR_PUSHBUTTON};
-enum HCI_EVENT {DEVICE_UP,DEVICE_DOWN,DEVICE_ERROR};
-
-/* struct */
-typedef struct _COMMTIMEOUTS { DWORD ReadIntervalTimeout; DWORD ReadTotalTimeoutMultiplier; DWORD ReadTotalTimeoutConstant; DWORD WriteTotalTimeoutMultiplier; DWORD WriteTotalTimeoutConstant; } COMMTIMEOUTS,*LPCOMMTIMEOUTS;
-typedef struct _COMSTAT {DWORD fCtsHold :1;DWORD fDsrHold :1;DWORD fRlsdHold :1;DWORD fXoffHold :1;DWORD fXoffSent :1;DWORD fEof :1;DWORD fTxim :1;DWORD fReserved :25;DWORD cbInQue;DWORD cbOutQue;} COMSTAT, *LPCOMSTAT;
-typedef struct _DCB {DWORD DCBlength;DWORD BaudRate; DWORD fBinary :1;DWORD fParity :1;DWORD fOutxCtsFlow :1;DWORD fOutxDsrFlow :1;DWORD fDtrControl :2;DWORD fDsrSensitivity :1;DWORD fTXContinueOnXoff :1;DWORD fOutX :1;DWORD fInX :1;DWORD fErrorChar :1;DWORD fNull :1; DWORD fRtsControl :2; DWORD fAbortOnError :1;DWORD fDummy2 :17;WORD wReserved;WORD XonLim; WORD XoffLim;BYTE ByteSize; BYTE Parity; BYTE StopBits;char XonChar; char XoffChar; char ErrorChar;char EofChar; char EvtChar; WORD wReserved1; } DCB, *LPDCB;
-typedef struct _MEMORYSTATUS { DWORD dwLength; DWORD dwMemoryLoad; DWORD dwTotalPhys; DWORD dwAvailPhys; DWORD dwTotalPageFile; DWORD dwAvailPageFile; DWORD dwTotalVirtual; DWORD dwAvailVirtual; } MEMORYSTATUS, *LPMEMORYSTATUS;
-typedef struct _TRIVERTEX { LONG x; LONG y; COLOR16 Red; COLOR16 Green; COLOR16 Blue; COLOR16 Alpha;} TRIVERTEX,*PTRIVERTEX,*LPTRIVERTEX;
-typedef struct _DevmgrDeviceInformation_tag { DWORD dwSize; HANDLE hDevice; HANDLE hParentDevice; WCHAR szLegacyName[6]; WCHAR szDeviceKey[MAX_PATH]; WCHAR szDeviceName[MAX_PATH]; WCHAR szBusName[MAX_PATH];} DEVMGR_DEVICE_INFORMATION, *PDEVMGR_DEVICE_INFORMATION;
-
-/* function */
-VOID CREATE_INVALIDGUID(  PCEGUID pceguid);
-VOID CREATE_SYSTEMGUID(  PCEGUID pceguid);
-HRESULT CreateEventObject(  IHTMLEventObj **ppEventObject  );
-HRESULT CreateThreadControl( ISpThreadTask* pTask, void* pvTaskData, long nPriority, ISpThreadControl** ppThreadCtrl );
-HANDLE ExitThreadEvent(void);
-HRESULT GetCurrentProcessAndThread( DWORD dwCpuNum, IOsAxsProcess**ppiproc, IOsAxsThread**ppithrd);
-InterlockedCompareExchange64( LPLONG Destination, LONG Exchange, LONG Comparand );
-BOOL ReadFileScatter( HANDLEhFile, FILE_SEGMENT_ELEMENTaSegmentArray, DWORDnNumberOfBytesToRead, LPDWORDlpReserved, LPOVERLAPPEDlpOverlapped );
-HRESULT SetEventingStatusCallback( IWSDEventingStatus* pStatus );
-HRESULT WaitForCompletion( long msTimeout, long *pEvCode);
-HRESULT WaitForNext( DWORD dwTimeout, IMediaSample **ppSample, DWORD *pdwUser );
-HRESULT WaitForNotifyEvent( DWORD dwMilliseconds );
-void WaitForReceiveToComplete( );
-HRESULT WaitForRenderTime(void);
-HRESULT WaitForSync( DWORD dwFlags, DWORD dwLine, DWORD dwTimeout);
-HRESULT WaitForThreadDone( BOOL fForceStop, HRESULT* phrThreadResult, ULONG msTimeOut );
-BOOL WaitForThreadExit( LPDWORD lpdwExitCode );
-BOOL WriteFileGather( HANDLEhFile, FILE_SEGMENT_ELEMENTaSegmentArray[], DWORDnNumberOfBytesToWrite, LPDWORDlpReserved, LPOVERLAPPEDlpOverlapped);
 
 #endif /* _WINBASE_ */

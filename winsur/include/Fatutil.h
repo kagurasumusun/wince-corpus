@@ -17,23 +17,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* DEFRAG_PARAMS  [struct; ce-only; CE 5.0..699] */
-typedef struct _DEFRAG_PARAMS {
- DWORD cbSize;
- DEFRAG_OPTIONS dopt;
- DEFRAG_RESULTS dr;
- PFN_PROGRESS pfnProgress;
- PFN_MESSAGE pfnMessage;
-} DEFRAG_PARAMS, *PDEFRAG_PARAMS;
-
-/* DEFRAG_RESULTS  [struct; ce-only; CE 5.0..699] */
-typedef struct _DEFRAG_RESULTS {
- SCAN_RESULTS sr;
-} DEFRAG_RESULTS, *PDEFRAG_RESULTS;
-
-/* FORMAT_OPTIONS  [struct; ce-only; CE 5.0..699] */
+/* FORMAT_OPTIONS  [struct; ce-only] */
 typedef struct _FORMAT_OPTIONS {
  DWORD dwClusSize;
  DWORD dwRootEntries;
@@ -41,49 +25,6 @@ typedef struct _FORMAT_OPTIONS {
  DWORD dwNumFats;
  DWORD dwFlags;
 } FORMAT_OPTIONS;
-
-/* FORMAT_PARAMS  [struct; ce-only; CE 5.0..699] */
-typedef struct _FORMAT_PARAMS {
- DWORD cbSize;
- FORMAT_OPTIONS fo;
- FORMAT_RESULTS fr;
- PFN_PROGRESS pfnProgress;
- PFN_MESSAGE pfnMessage;
-} FORMAT_PARAMS, *PFORMAT_PARAMS;
-
-/* FORMAT_RESULTS  [struct; ce-only; CE 5.0..699] */
-typedef struct _FORMAT_RESULTS{
- DWORD dwSectorsPerFat;
- DWORD dwReservedSectors;
- DWORD dwSectorsPerCluster;
- DWORD dwRootSectors;
- DWORD dwTotalSectors;
- DWORD dwNumFats;
- DWORD dwFatVersion;
-} FORMAT_RESULTS, *PFORMAT_RESULTS;
-
-/* SCAN_PARAMS  [struct; ce-only; CE 5.0..699] */
-typedef struct _SCAN_PARAMS {
- DWORD cbSize;
- SCAN_OPTIONS so;
- SCAN_RESULTS sr;
- PFN_PROGRESS pfnProgress;
- PFN_MESSAGE pfnMessage;
-} SCAN_PARAMS, *PSCAN_PARAMS;
-
-/* SCAN_RESULTS  [struct; ce-only; CE 5.0..699] */
-typedef struct _SCAN_RESULTS {
- DWORD dwLostClusters;
- DWORD dwInvalidClusters;
- DWORD dwLostChains;
- DWORD dwInvalidDirs;
- DWORD dwInvalidFiles;
- DWORD dwTotalErrors;
- DWORD dwPercentFrag;
- BOOL fConsistentFats;
- BOOL fErrorNotFixed;
-} SCAN_RESULTS, *PSCAN_RESULTS;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

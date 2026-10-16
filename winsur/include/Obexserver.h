@@ -17,9 +17,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* OBEXCOMMAND  [struct; ce-only; CE 5.0..699] */
+/* OBEXCOMMAND  [struct; ce-only] */
 typedef struct _obex_command {
  unsigned int uiOp;
  unsigned int uiResp;
@@ -30,7 +28,7 @@ typedef struct _obex_command {
  ObexVariant * aPropVar;
 } ObexCommand;
 
-/* OBEXTRANSACTION  [struct; ce-only; CE 5.0..699] */
+/* OBEXTRANSACTION  [struct; ce-only] */
 typedef struct _obex_transaction {
  unsigned int uiConnectionId;
  unsigned int uiTransactionId;
@@ -41,18 +39,17 @@ typedef struct _obex_transaction {
  ServerCallback ObexExecute;
 } ObexTransaction;
 
-/* ServerCallback  [struct; ce-only; CE 5.0..699] */
+/* ServerCallback  [struct; ce-only] */
 typedef int (*ServerCallback)(
  unsigned int uiOp,
  unsigned int uiId,
  struct _obex_command * pCommand 
 );
 
-/* ServiceCallback  [struct; ce-only; CE 5.0..699] */
+/* ServiceCallback  [struct; ce-only] */
 typedef int (*ServiceCallback)(
  struct _obex_transaction * pTrans 
 );
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

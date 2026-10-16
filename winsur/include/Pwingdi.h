@@ -17,24 +17,11 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-
-/* VIDEO_POWER_MANAGEMENT  [struct; ce-only; CE 3.0..399, 5.0..699] */
-typedef struct VIDEOPOWER_MANAGEMENT {
- ULONG Length;
- ULONG DPMSVersion;
- ULONG PowerState;
-} VIDEO_POWER_MANAGEMENT,* PVIDEO_POWER_MANAGEMENT;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
-
-/* ContrastCmdInputParm  [struct; ce-only; CE 3.0..699] */
+/* ContrastCmdInputParm  [struct; ce-only] */
 struct ContrastCmdInputParm {
  int command;
  int parm;
 };
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

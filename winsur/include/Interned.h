@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 3 declarations, 26 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 2 declarations, 26 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _INTERNED_
 #define _INTERNED_
@@ -20,6 +20,8 @@
 /* blur  [typedef; ce-only; heuristic-prefix] */
 
 /* clearTimeout  [typedef; ce-only; heuristic-prefix] */
+
+/* Close  [function, typedef; ce-only; heuristic-prefix] */
 
 /* confirm  [typedef; ce-only; heuristic-prefix] */
 
@@ -37,6 +39,8 @@
 
 /* Method  [typedef; ce-only; heuristic-prefix] */
 
+/* Name  [function, typedef; ce-only; heuristic-prefix] */
+
 /* navigate  [typedef; ce-only; heuristic-prefix] */
 
 /* navigator  [typedef; ce-only; heuristic-prefix] */
@@ -51,6 +55,8 @@
 
 /* screen  [typedef; ce-only; heuristic-prefix] */
 
+/* Scroll  [function, typedef; ce-only; heuristic-prefix] */
+
 /* scrollTo  [typedef; ce-only; heuristic-prefix] */
 
 /* self  [typedef; ce-only; heuristic-prefix] */
@@ -61,41 +67,20 @@
 
 /* window  [typedef; ce-only; heuristic-prefix] */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 200 && _WIN32_WCE < 210) || (_WIN32_WCE >= 212 && _WIN32_WCE < 400)) /* CE 2.0..209, 2.12..399 */
-
-/* Close  [function, typedef; ce-only; CE 2.0..209, 2.12..399; heuristic-prefix] */
-
-/* Scroll  [function, typedef; ce-only; CE 2.0..209, 2.12..399; heuristic-prefix] */
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 212 && _WIN32_WCE < 400) || (_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 2.12..399, 6.0..699 */
-
-/* Name  [function, typedef; ce-only; CE 2.12..399, 6.0..699; heuristic-prefix] */
-#endif /* _WIN32_WCE */
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* BeforeWindowOpen  [function; ce-only; CE 5.0..699] */
-HRESULT BeforeWindowOpen(
- BSTR url,
- BSTR urlContext,
- BSTR name,
- BSTR features,
- IUnknown* punkEvents
-);
-
-/* Count  [function; ce-only; CE 5.0..699] */
-HRESULT Count(long *pCount);
-
-/* EVENT  [function, typedef; ce-only; CE 5.0..699] */
+/* EVENT  [function, typedef; ce-only] */
 HRESULT Event(
  int index, 
  DWORD *pdispidEvt
 );
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+
+/* Count  [function; ce-only; CE 5.0..699] */
+HRESULT Count(long *pCount);
 #endif /* _WIN32_WCE */
 
 #endif /* _INTERNED_ */

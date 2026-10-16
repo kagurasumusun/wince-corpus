@@ -30,9 +30,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* _BucketResponse  [struct; ce-only; CE 6.0..699; DwUI.dll] */
+/* _BucketResponse  [struct; ce-only; DwUI.dll] */
 typedef struct _BucketResponse {
  BOOL fUploadSucceeded;
  DWORD dwUploadError;
@@ -42,6 +40,8 @@ typedef struct _BucketResponse {
  char* pchResponse;
  int iResponseType;
 } BucketResponse;
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 
 /* iResponseType  [?; ce-only; CE 6.0..699; DwUI.dll] */
 enum {

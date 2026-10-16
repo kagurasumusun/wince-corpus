@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 660 constants, 137 declarations, 0 outlines, 0 base types, 0 extra macros, 29 extra decls
+ * 660 constants, 136 declarations, 1 outlines, 0 base types, 0 extra macros, 29 extra decls
  */
 #ifndef _TAPI_
 #define _TAPI_
@@ -688,542 +688,66 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
-
-/* LINECALLINFO  [struct, typedef; shared; CE 1.0..199, 2.11..2.12, 3.0..699] */
-typedef struct linecallinfo_tag {
- DWORD dwTotalSize;
- DWORD dwNeededSize;
- DWORD dwUsedSize;
- HLINE hLine;
- DWORD dwLineDeviceID;
- DWORD dwAddressID;
- DWORD dwBearerMode;
- DWORD dwRate;
- DWORD dwMediaMode;
- DWORD dwAppSpecific;
- DWORD dwCallID;
- DWORD dwRelatedCallID;
- DWORD dwCallParamFlags;
- DWORD dwCallStates;
- DWORD dwMonitorDigitModes;
- DWORD dwMonitorMediaModes;
- LINEDIALPARAMS DialParams;
- DWORD dwOrigin;
- DWORD dwReason;
- DWORD dwCompletionID;
- DWORD dwNumOwners;
- DWORD dwNumMonitors;
- DWORD dwCountryCode;
- DWORD dwTrunk;
- DWORD dwCallerIDFlags;
- DWORD dwCallerIDSize;
- DWORD dwCallerIDOffset;
- DWORD dwCallerIDNameSize;
- DWORD dwCallerIDNameOffset;
- DWORD dwCalledIDFlags;
- DWORD dwCalledIDSize;
- DWORD dwCalledIDOffset;
- DWORD dwCalledIDNameSize;
- DWORD dwCalledIDNameOffset;
- DWORD dwConnectedIDFlags;
- DWORD dwConnectedIDSize;
- DWORD dwConnectedIDOffset;
- DWORD dwConnectedIDNameSize;
- DWORD dwConnectedIDNameOffset;
- DWORD dwRedirectionIDFlags;
- DWORD dwRedirectionIDSize;
- DWORD dwRedirectionIDOffset;
- DWORD dwRedirectionIDNameSize;
- DWORD dwRedirectionIDNameOffset;
- DWORD dwRedirectingIDFlags;
- DWORD dwRedirectingIDSize;
- DWORD dwRedirectingIDOffset;
- DWORD dwRedirectingIDNameSize;
- DWORD dwRedirectingIDNameOffset;
- DWORD dwAppNameSize;
- DWORD dwAppNameOffset;
- DWORD dwDisplayableAddressSize; 
- DWORD dwDisplayableAddressOffset; 
- DWORD dwCalledPartySize;
- DWORD dwCalledPartyOffset;
- DWORD dwCommentSize;
- DWORD dwCommentOffset;
- DWORD dwDisplaySize;
- DWORD dwDisplayOffset;
- DWORD dwUserUserInfoSize;
- DWORD dwUserUserInfoOffset;
- DWORD dwHighLevelCompSize;
- DWORD dwHighLevelCompOffset;
- DWORD dwLowLevelCompSize;
- DWORD dwLowLevelCompOffset;
- DWORD dwChargingInfoSize;
- DWORD dwChargingInfoOffset;
- DWORD dwTerminalModesSize;
- DWORD dwTerminalModesOffset;
- DWORD dwDevSpecificSize;
- DWORD dwDevSpecificOffset;
-} LINECALLINFO, FAR* LPLINECALLINFO;
-
-/* LINECALLPARAMS  [struct, typedef; shared; CE 1.0..199, 2.11..2.12, 3.0..699] */
-typedef struct linecallparams_tag {
- DWORD dwTotalSize; 
- DWORD dwBearerMode;
- DWORD dwMinRate; 
- DWORD dwMaxRate; 
- DWORD dwMediaMode;
- DWORD dwCallParamFlags;
- DWORD dwAddressMode;
- DWORD dwAddressID;
- LINEDIALPARAMS DialParams;
- DWORD dwOrigAddressSize;
- DWORD dwOrigAddressOffset;
- DWORD dwDisplayableAddressSize; 
- DWORD dwDisplayableAddressOffset;
- DWORD dwCalledPartySize; 
- DWORD dwCalledPartyOffset;
- DWORD dwCommentSize; 
- DWORD dwCommentOffset;
- DWORD dwUserUserInfoSize; 
- DWORD dwUserUserInfoOffset;
- DWORD dwHighLevelCompSize; 
- DWORD dwHighLevelCompOffset;
- DWORD dwLowLevelCompSize; 
- DWORD dwLowLevelCompOffset;
- DWORD dwDevSpecificSize; 
- DWORD dwDevSpecificOffset;
- DWORD dwPredictiveAutoTransferStates;
- DWORD dwTargetAddressSize;
- DWORD dwTargetAddressOffset;
- DWORD dwSendingFlowspecSize;
- DWORD dwSendingFlowspecOffset;
- DWORD dwReceivingFlowspecSize;
- DWORD dwReceivingFlowspecOffset;
- DWORD dwDeviceClassSize;
- DWORD dwDeviceClassOffset;
- DWORD dwDeviceConfigSize;
- DWORD dwDeviceConfigOffset;
- DWORD dwCallDataSize;
- DWORD dwCallDataOffset;
- DWORD dwNoAnswerTimeout;
- DWORD dwCallingPartyIDSize;
- DWORD dwCallingPartyIDOffset;
- DWORD dwAddressType;
-} LINECALLPARAMS, FAR* LPLINECALLPARAMS;
-
-/* LINEDEVCAPS  [struct, typedef; shared; CE 1.0..199, 2.11..2.12, 3.0..699] */
-typedef struct linedevcaps_tag {
- DWORD dwTotalSize;
- DWORD dwNeededSize;
- DWORD dwUsedSize;
- DWORD dwProviderInfoSize;
- DWORD dwProviderInfoOffset;
- DWORD dwSwitchInfoSize;
- DWORD dwSwitchInfoOffset;
- DWORD dwPermanentLineID;
- DWORD dwLineNameSize;
- DWORD dwLineNameOffset;
- DWORD dwStringFormat; 
- DWORD dwAddressModes;
- DWORD dwNumAddresses;
- DWORD dwBearerModes;
- DWORD dwMaxRate;
- DWORD dwMediaModes;
- DWORD dwGenerateToneModes;
- DWORD dwGenerateToneMaxNumFreq;
- DWORD dwGenerateDigitModes;
- DWORD dwMonitorToneMaxNumFreq;
- DWORD dwMonitorToneMaxNumEntries;
- DWORD dwMonitorDigitModes;
- DWORD dwGatherDigitsMinTimeout;
- DWORD dwGatherDigitsMaxTimeout;
- DWORD dwMedCtlDigitMaxListSize;
- DWORD dwMedCtlMediaMaxListSize;
- DWORD dwMedCtlToneMaxListSize;
- DWORD dwMedCtlCallStateMaxListSize;
- DWORD dwDevCapFlags;
- DWORD dwMaxNumActiveCalls;
- DWORD dwAnswerMode;
- DWORD dwRingModes;
- DWORD dwLineStates;
- DWORD dwUUIAcceptSize;
- DWORD dwUUIAnswerSize;
- DWORD dwUUIMakeCallSize;
- DWORD dwUUIDropSize;
- DWORD dwUUISendUserUserInfoSize;
- DWORD dwUUICallInfoSize;
- LINEDIALPARAMS MinDialParams;
- LINEDIALPARAMS MaxDialParams;
- LINEDIALPARAMS DefaultDialParams;
- DWORD dwNumTerminals;
- DWORD dwTerminalCapsSize;
- DWORD dwTerminalCapsOffset;
- DWORD dwTerminalTextEntrySize;
- DWORD dwTerminalTextSize;
- DWORD dwTerminalTextOffset;
- DWORD dwDevSpecificSize;
- DWORD dwDevSpecificOffset
- DWORD dwLineFeatures;
- DWORD dwSettableDevStatus;
- DWORD dwDeviceClassesSize;
- DWORD dwDeviceClassesOffset;
-} LINEDEVCAPS, Far* LPLINEDEVCAPS;
-
-/* LINEDEVSTATUS  [struct, typedef; shared; CE 1.0..199, 2.11..2.12, 3.0..699] */
-typedef struct linedevstatus_tag {
- DWORD dwTotalSize;
- DWORD dwNeededSize;
- DWORD dwUsedSize;
- DWORD dwNumOpens;
- DWORD dwOpenMediaModes;
- DWORD dwNumActiveCalls;
- DWORD dwNumOnHoldCalls;
- DWORD dwNumOnHoldPendCalls;
- DWORD dwLineFeatures;
- DWORD dwNumCallCompletions;
- DWORD dwRingMode;
- DWORD dwSignalLevel;
- DWORD dwBatteryLevel;
- DWORD dwRoamMode;
- DWORD dwDevStatusFlags;
- DWORD dwTerminalModesSize;
- DWORD dwTerminalModesOffset;
- DWORD dwDevSpecificSize;
- DWORD dwDevSpecificOffset;
-} LINEDEVSTATUS, FAR* LPLINEDEVSTATUS;
-
-/* LINETRANSLATECAPS  [struct, typedef; shared; CE 1.0..199, 2.11..2.12, 3.0..699] */
-typedef struct linetranslatecaps_tag {
- DWORD dwTotalSize;
- DWORD dwNeededSize;
- DWORD dwUsedSize;
- DWORD dwNumLocations;
- DWORD dwLocationListSize;
- DWORD dwLocationListOffset;
- DWORD dwCurrentLocationID;
- DWORD dwNumCards;
- DWORD dwCardListSize;
- DWORD dwCardListOffset;
- DWORD dwCurrentPreferredCardID;
-} LINETRANSLATECAPS, FAR* LPLINETRANSLATECAPS;
-
-/* LINETRANSLATEOUTPUT  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..699] */
-typedef struct linetranslateoutput_tag {
- DWORD dwTotalSize;
- DWORD dwNeededSize;
- DWORD dwUsedSize;
- DWORD dwDialableStringSize;
- DWORD dwDialableStringOffset;
- DWORD dwDisplayableStringSize;
- DWORD dwDisplayableStringOffset;
- DWORD dwCurrentCountry;
- DWORD dwDestCountry;
- DWORD dwTranslateResults;
-} LINETRANSLATEOUTPUT, *LPLINETRANSLATEOUTPUT;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 1.0..199, 4.0..699 */
-
-/* LINEEXTENSIONID  [struct; shared; CE 1.0..199, 4.0..699] */
-typedef struct lineextensionid_tag {
- DWORD dwExtensionID0;
- DWORD dwExtensionID1;
- DWORD dwExtensionID2;
- DWORD dwExtensionID3;
-} LINEEXTENSIONID, FAR* LPLINEEXTENSIONID;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* VARSTRING  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct varstring_tag {
- DWORD dwTotalSize;
- DWORD dwNeededSize;
- DWORD dwUsedSize;
- DWORD dwStringFormat;
- DWORD dwStringSize;
- DWORD dwStringOffset;
-} VARSTRING, FAR* LPVARSTRING;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* LINELOCATIONENTRY  [struct; shared; CE 2.11..2.12, 3.0..699] */
-typedef struct linelocationentry_tag {
- DWORD dwPermanentLocationID;
- DWORD dwLocationNameSize;
- DWORD dwLocationNameOffset;
- DWORD dwCountryCode;
- DWORD dwCityCodeSize; 
- DWORD dwCityCodeOffset;
- DWORD dwPreferredCardID;
- DWORD dwLocalAccessCodeSize;
- DWORD dwLocalAccessCodeOffset;
- DWORD dwLongDistanceAccessCodeSize;
- DWORD dwLongDistanceAccessCodeOffset;
- DWORD dwTollPrefixListSize;
- DWORD dwTollPrefixListOffset;
- DWORD dwCountryID;
- DWORD dwOptions;
- DWORD dwCancelCallWaitingSize;
- DWORD dwCancelCallWaitingOffset;
-} LINELOCATIONENTRY, FAR* LPLINELOCATIONENTRY;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
-
-/* LINECALLSTATUS  [struct; shared; CE 3.0..699] */
-typedef struct linecallstatus_tag {
- DWORD dwTotalSize;
- DWORD dwNeededSize;
- DWORD dwUsedSize;
- DWORD dwCallState;
- DWORD dwCallStateMode;
- DWORD dwCallPrivilege;
- DWORD dwCallFeatures;
- DWORD dwDevSpecificSize;
- DWORD dwDevSpecificOffset;
- DWORD dwCallFeatures2;
- SYSTEMTIME tStateEntryTime;
-} LINECALLSTATUS, FAR* LPLINECALLSTATUS;
-
-/* LINEDIALPARAMS  [struct; shared; CE 3.0..699] */
-typedef struct linedialparams_tag {
- DWORD dwDialPause; 
- DWORD dwDialSpeed; 
- DWORD dwDigitDuration; 
- DWORD dwWaitForDialtone; 
- } LINEDIALPARAMS, FAR* LPLINEDIALPARAMS;
-
-/* lineForward  [function, struct; shared; CE 3.0..699; Coredll.lib, coredll.lib; A/W lineForwardA,lineForwardW (CE is W-side)] */
-LONG WINAPI lineForward(
- HLINE hLine,
- DWORD bAllAddresses,
- DWORD dwAddressID,
- LPLINEFORWARDLIST const lpForwardList,
- DWORD dwNumRingsNoAnswer,
- LPHCALL lphConsultCall,
- LPLINECALLPARAMS const lpCallParams 
-);
-
-/* lineGenerateTone  [function, struct; shared; CE 3.0..699; Coredll.lib, coredll.lib] */
-LONG WINAPI lineGenerateTone(
- HCALL hCall,
- DWORD dwToneMode,
- DWORD dwDuration,
- DWORD dwNumTones,
- LPLINEGENERATETONE const lpTones 
-);
-
-/* LINEINITIALIZEEXPARAMS  [struct; shared; CE 3.0..699] */
-typedef struct lineinitializeexparams_tag {
- DWORD dwTotalSize;
- DWORD dwNeededSize;
- DWORD dwUsedSize;
- DWORD dwOptions;
- union {
- HANDLE hEvent;
- HANDLE hCompletionPort;
- } Handles;
- DWORD dwCompletionKey;
-} LINEINITIALIZEEXPARAMS, FAR* LPLINEINITIALIZEEXPARAMS;
-
-/* LINEMESSAGE  [struct; shared; CE 3.0..699] */
-typedef struct linemessage_tag {
- DWORD hDevice;
- DWORD dwMessageID;
- DWORD_PTR dwCallbackInstance;
- DWORD_PTR dwParam1;
- DWORD_PTR dwParam2;
- DWORD_PTR dwParam3;
-} LINEMESSAGE, FAR* LPLINEMESSAGE;
-
-/* PHONEINITIALIZEEXPARAMS  [struct; shared; CE 3.0..699] */
-typedef struct phoneinitializeexparams_tag {
- DWORD dwTotalSize;
- DWORD dwNeededSize;
- DWORD dwUsedSize;
- DWORD dwOptions;
- union {
- HANDLE hEvent;
- HANDLE hCompletionPort;
- } Handles;
- DWORD dwCompletionKey;
-} PHONEINITIALIZEEXPARAMS, FAR* LPPHONEINITIALIZEEXPARAMS;
-
-/* PHONEMESSAGE  [struct; shared; CE 3.0..699] */
-typedef struct phonemessage_tag {
- DWORD hDevice;
- DWORD dwMessageID;
- DWORD dwCallbackInstance;
- DWORD dwParam1;
- DWORD dwParam2;
- DWORD dwParam3;
-} PHONEMESSAGE, FAR* LPPHONEMESSAGE;
-
-/* PHONESTATUS  [struct; shared; CE 3.0..699] */
-typedef struct phonestatus_tag {
- DWORD dwTotalSize;
- DWORD dwNeededSize;
- DWORD dwUsedSize;
- DWORD dwStatusFlags; 
- DWORD dwNumOwners;
- DWORD dwNumMonitors;
- DWORD dwRingMode;
- DWORD dwRingVolume;
- DWORD dwHandsetHookSwitchMode;
- DWORD dwHandsetVolume;
- DWORD dwHandsetGain;
- DWORD dwSpeakerHookSwitchMode;
- DWORD dwSpeakerVolume;
- DWORD dwSpeakerGain;
- DWORD dwHeadsetHookSwitchMode;
- DWORD dwHeadsetVolume;
- DWORD dwHeadsetGain;
- DWORD dwDisplaySize;
- DWORD dwDisplayOffset;
- DWORD dwLampModesSize;
- DWORD dwLampModesOffset;
- DWORD dwOwnerNameSize;
- DWORD dwOwnerNameOffset;
- DWORD dwDevSpecificSize;
- DWORD dwDevSpecificOffset;
- DWORD dwPhoneFeatures;
-} PHONESTATUS, FAR* LPPHONESTATUS;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* LINEADDRESSCAPS  [struct; shared; CE 4.0..699] */
-typedef struct lineaddresscaps_tag {
- DWORD dwTotalSize;
- DWORD dwNeededSize;
- DWORD dwUsedSize;
- DWORD dwLineDeviceID;
- DWORD dwAddressSize;
- DWORD dwAddressOffset;
- DWORD dwDevSpecificSize;
- DWORD dwDevSpecificOffset;
- DWORD dwAddressSharing;
- DWORD dwAddressStates;
- DWORD dwCallInfoStates;
- DWORD dwCallerIDFlags;
- DWORD dwCalledIDFlags;
- DWORD dwConnectedIDFlags;
- DWORD dwRedirectionIDFlags;
- DWORD dwRedirectingIDFlags;
- DWORD dwCallStates;
- DWORD dwDialToneModes;
- DWORD dwBusyModes;
- DWORD dwSpecialInfo;
- DWORD dwDisconnectModes;
- DWORD dwMaxNumActiveCalls;
- DWORD dwMaxNumOnHoldCalls;
- DWORD dwMaxNumOnHoldPendingCalls;
- DWORD dwMaxNumConference;
- DWORD dwMaxNumTransConf;
- DWORD dwAddrCapFlags;
- DWORD dwCallFeatures;
- DWORD dwRemoveFromConfCaps;
- DWORD dwRemoveFromConfState;
- DWORD dwTransferModes;
- DWORD dwParkModes;
- DWORD dwForwardModes;
- DWORD dwMaxForwardEntries;
- DWORD dwMaxSpecificEntries;
- DWORD dwMinFwdNumRings;
- DWORD dwMaxFwdNumRings;
- DWORD dwMaxCallCompletions;
- DWORD dwCallCompletionConds;
- DWORD dwCallCompletionModes;
- DWORD dwNumCompletionMessages;
- DWORD dwCompletionMsgTextEntrySize;
- DWORD dwCompletionMsgTextSize;
- DWORD dwCompletionMsgTextOffset;
- DWORD dwAddressFeatures;
- DWORD dwPredictiveAutoTransferStates;
- DWORD dwNumCallTreatments;
- DWORD dwCallTreatmentListSize;
- DWORD dwCallTreatmentListOffset;
- DWORD dwDeviceClassesSize;
- DWORD dwDeviceClassesOffset;
- DWORD dwMaxCallDataSize;
- DWORD dwCallFeatures2;
- DWORD dwMaxNoAnswerTimeout;
- DWORD dwConnectedModes;
- DWORD dwOfferingModes;
- DWORD dwAvailableMediaModes;
-} LINEADDRESSCAPS, FAR* LPLINEADDRESSCAPS;
-
-/* LINEADDRESSSTATUS  [struct; shared; CE 4.0..699] */
-typedef struct lineaddressstatus_tag {
- DWORD dwTotalSize;
- DWORD dwNeededSize;
- DWORD dwUsedSize;
- DWORD dwNumInUse;
- DWORD dwNumActiveCalls;
- DWORD dwNumOnHoldCalls;
- DWORD dwNumOnHoldPendCalls;
- DWORD dwAddressFeatures;
- DWORD dwNumRingsNoAnswer;
- DWORD dwForwardNumEntries;
- DWORD dwForwardSize;
- DWORD dwForwardOffset;
- DWORD dwTerminalModesSize;
- DWORD dwTerminalModesOffset;
- DWORD dwDevSpecificSize;
- DWORD dwDevSpecificOffset;
-} LINEADDRESSSTATUS, FAR* LPLINEADDRESSSTATUS;
-
-/* LINECALLLIST  [struct; shared; CE 4.0..699] */
-typedef struct linecalllist_tag {
- DWORD dwTotalSize;
- DWORD dwNeededSize;
- DWORD dwUsedSize;
- DWORD dwCallsNumEntries;
- DWORD dwCallsSize;
- DWORD dwCallsOffset;
-} LINECALLLIST, FAR* LPLINECALLLIST;
-
-/* LINECALLTREATMENTENTRY  [struct; shared; CE 4.0..699] */
-typedef struct linecalltreatmententry_tag {
- DWORD dwCallTreatmentID;
- DWORD dwCallTreatmentNameSize;
- DWORD dwCallTreatmentNameOffset;
-} LINECALLTREATMENTENTRY, FAR* LPLINECALLTREATMENTENTRY;
-
-/* LINEFORWARDLIST  [struct; shared; CE 4.0..699] */
-typedef struct lineforwardlist_tag {
- DWORD dwTotalSize;
- DWORD dwNumEntries;
- LINEFORWARD ForwardList[1];
-} LINEFORWARDLIST, FAR* LPLINEFORWARDLIST;
-
-/* LINEPROVIDERENTRY  [struct; shared; CE 4.0..699] */
-typedef struct lineproviderentry_tag {
- DWORD dwPermanentProviderID;
- DWORD dwProviderFilenameSize;
- DWORD dwProviderFilenameOffset;
-} LINEPROVIDERENTRY, FAR* LPLINEPROVIDERENTRY;
-
-/* LINEPROVIDERLIST  [struct; shared; CE 4.0..699] */
-typedef struct lineproviderlist_tag {
- DWORD dwTotalSize;
- DWORD dwNeededSize;
- DWORD dwUsedSize;
- DWORD dwNumProviders;
- DWORD dwProviderListSize;
- DWORD dwProviderListOffset;
-} LINEPROVIDERLIST, FAR* LPLINEPROVIDERLIST;
-
-/* PHONEEXTENSIONID  [struct; shared; CE 4.0..699] */
-typedef struct phoneextensionid_tag {
- DWORD dwExtensionID0;
- DWORD dwExtensionID1;
- DWORD dwExtensionID2;
- DWORD dwExtensionID3;
-} PHONEEXTENSIONID, FAR* LPPHONEEXTENSIONID;
-#endif /* _WIN32_WCE */
+/* LINEDEVCAPS  [struct, typedef; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   dwTotalSize */
+/*   dwNeededSize */
+/*   dwUsedSize */
+/*   dwProviderInfoSize */
+/*   dwProviderInfoOffset */
+/*   dwSwitchInfoSize */
+/*   dwSwitchInfoOffset */
+/*   dwPermanentLineID */
+/*   dwLineNameSize */
+/*   dwLineNameOffset */
+/*   dwStringFormat */
+/*   dwAddressModes */
+/*   dwNumAddresses */
+/*   dwBearerModes */
+/*   dwMaxRate */
+/*   dwMediaModes */
+/*   dwGenerateToneModes */
+/*   dwGenerateToneMaxNumFreq */
+/*   dwGenerateDigitModes */
+/*   dwMonitorToneMaxNumFreq */
+/*   dwMonitorToneMaxNumEntries */
+/*   dwMonitorDigitModes */
+/*   dwGatherDigitsMinTimeout */
+/*   dwGatherDigitsMaxTimeout */
+/*   dwMedCtlDigitMaxListSize */
+/*   dwMedCtlMediaMaxListSize */
+/*   dwMedCtlToneMaxListSize */
+/*   dwMedCtlCallStateMaxListSize */
+/*   dwDevCapFlags */
+/*   dwMaxNumActiveCalls */
+/*   dwAnswerMode */
+/*   dwRingModes */
+/*   dwLineStates */
+/*   dwUUIAcceptSize */
+/*   dwUUIAnswerSize */
+/*   dwUUIMakeCallSize */
+/*   dwUUIDropSize */
+/*   dwUUISendUserUserInfoSize */
+/*   dwUUICallInfoSize */
+/*   MinDialParams */
+/*   MaxDialParams */
+/*   DefaultDialParams */
+/*   dwNumTerminals */
+/*   dwTerminalCapsSize */
+/*   dwTerminalCapsOffset */
+/*   dwTerminalTextEntrySize */
+/*   dwTerminalTextSize */
+/*   dwTerminalTextOffset */
+/*   dwDevSpecificSize */
+/*   dwDevSpecificOffset */
+/*   dwLineFeatures */
+/*   dwSettableDevStatus */
+/*   dwDeviceClassesSize */
+/*   dwDeviceClassesOffset */
+/*   PermanentLineGuid */
+/*   dwAddressTypes */
+/*   ProtocolGuid */
+/*   dwAvailableTracking */
 
 /* ==================================================================
  * functions and callbacks
@@ -2102,7 +1626,6 @@ LINE_NEWCALL
  * ================================================================ */
 
 /* struct */
-typedef struct lineinitializeexparams_tag { DWORD dwTotalSize; DWORD dwNeededSize; DWORD dwUsedSize; DWORD dwOptions; union { HANDLE hEvent; HANDLE hCompletionPort; } Handles;
 typedef struct lineaddresscaps_tag {DWORD dwTotalSize;DWORD dwNeededSize;DWORD dwUsedSize;DWORD dwLineDeviceID;DWORD dwAddressSize;DWORD dwAddressOffset;DWORD dwDevSpecificSize;DWORD dwDevSpecificOffset;DWORD dwAddressSharing;DWORD dwAddressStates;DWORD dwCallInfoStates;DWORD dwCallerIDFlags;DWORD dwCalledIDFlags;DWORD dwConnectedIDFlags;DWORD dwRedirectionIDFlags;DWORD dwRedirectingIDFlags;DWORD dwCallStates;DWORD dwDialToneModes;DWORD dwBusyModes;DWORD dwSpecialInfo;DWORD dwDisconnectModes;DWORD dwMaxNumActiveCalls;DWORD dwMaxNumOnHoldCalls;DWORD dwMaxNumOnHoldPendingCalls;DWORD dwMaxNumConference;DWORD dwMaxNumTransConf;DWORD dwAddrCapFlags;DWORD dwCallFeatures;DWORD dwRemoveFromConfCaps;DWORD dwRemoveFromConfState;DWORD dwTransferModes;DWORD dwParkModes;DWORD dwForwardModes;DWORD dwMaxForwardEntries;DWORD dwMaxSpecificEntries;DWORD dwMinFwdNumRings;DWORD dwMaxFwdNumRings;DWORD dwMaxCallCompletions;DWORD dwCallCompletionConds;DWORD dwCallCompletionModes;DWORD dwNumCompletionMessages;DWORD dwCompletionMsgTextEntrySize;DWORD dwCompletionMsgTextSize;DWORD dwCompletionMsgTextOffset;DWORD dwAddressFeatures;DWORD dwPredictiveAutoTransferStates;DWORD dwNumCallTreatments;DWORD dwCallTreatmentListSize;DWORD dwCallTreatmentListOffset;DWORD dwDeviceClassesSize;DWORD dwDeviceClassesOffset;DWORD dwMaxCallDataSize;DWORD dwCallFeatures2;DWORD dwMaxNoAnswerTimeout;DWORD dwConnectedModes;DWORD dwOfferingModes;DWORD dwAvailableMediaModes;} LINEADDRESSCAPS, FAR* LPLINEADDRESSCAPS;
 typedef struct lineaddressstatus_tag {DWORD dwTotalSize;DWORDdwNeededSize;DWORDdwUsedSize;DWORDdwNumInUse;DWORDdwNumActiveCalls;DWORDdwNumOnHoldCalls;DWORDdwNumOnHoldPendCalls;DWORDdwAddressFeatures;DWORDdwNumRingsNoAnswer;DWORDdwForwardNumEntries;DWORDdwForwardSize;DWORDdwForwardOffset;DWORDdwTerminalModesSize;DWORDdwTerminalModesOffset;DWORDdwDevSpecificSize;DWORDdwDevSpecificOffset;} LINEADDRESSSTATUS, FAR* LPLINEADDRESSSTATUS;
 typedef struct linecallinfo_tag {DWORD dwTotalSize;DWORD dwNeededSize;DWORD dwUsedSize;HLINE hLine;DWORD dwLineDeviceID;DWORD dwAddressID;DWORD dwBearerMode;DWORD dwRate;DWORD dwMediaMode;DWORD dwAppSpecific;DWORD dwCallID;DWORD dwRelatedCallID;DWORD dwCallParamFlags;DWORD dwCallStates;DWORD dwMonitorDigitModes;DWORD dwMonitorMediaModes;LINEDIALPARAMS DialParams;DWORD dwOrigin;DWORD dwReason;DWORD dwCompletionID;DWORD dwNumOwners;DWORD dwNumMonitors;DWORD dwCountryCode;DWORD dwTrunk;DWORD dwCallerIDFlags;DWORD dwCallerIDSize;DWORD dwCallerIDOffset;DWORD dwCallerIDNameSize;DWORDdwCallerIDNameOffset;DWORD dwCalledIDFlags;DWORD dwCalledIDSize;DWORD dwCalledIDOffset;DWORD dwCalledIDNameSize;DWORD dwCalledIDNameOffset;DWORD dwConnectedIDFlags;DWORD dwConnectedIDSize;DWORD dwConnectedIDOffset;DWORD dwConnectedIDNameSize;DWORD dwConnectedIDNameOffset;DWORD dwRedirectionIDFlags;DWORD dwRedirectionIDSize;DWORD dwRedirectionIDOffset;DWORD dwRedirectionIDNameSize;DWORDdwRedirectionIDNameOffset;DWORD dwRedirectingIDFlags;DWORD dwRedirectingIDSize;DWORD dwRedirectingIDOffset;DWORD dwRedirectingIDNameSize;DWORD dwRedirectingIDNameOffset;DWORD dwAppNameSize;DWORD dwAppNameOffset;DWORD dwDisplayableAddressSize; DWORD dwDisplayableAddressOffset; DWORD dwCalledPartySize;DWORDdwCalledPartyOffset;DWORD dwCommentSize;DWORD dwCommentOffset;DWORD dwDisplaySize;DWORD dwDisplayOffset;DWORD dwUserUserInfoSize;DWORD dwUserUserInfoOffset;DWORD dwHighLevelCompSize;DWORD dwHighLevelCompOffset;DWORD dwLowLevelCompSize;DWORD dwLowLevelCompOffset;DWORD dwChargingInfoSize;DWORD dwChargingInfoOffset;DWORD dwTerminalModesSize;DWORD dwTerminalModesOffset;DWORD dwDevSpecificSize;DWORD dwDevSpecificOffset;} LINECALLINFO, FAR* LPLINECALLINFO;

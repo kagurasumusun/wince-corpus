@@ -8,16 +8,12 @@
 #define _WINDOWS_
 
 #include "WinDef.h"
-#include "Winnt.h"
+#include "WinNT.h"
 #include "winerror.h"
 #include "Winbase.h"
 #include "Winuser.h"
 #include "Wingdi.h"
 #include "Winreg.h"
-#include "Commctrl.h"
-#include "Winioctl.h"
-#include "Winsock2.h"
-#include "WindowsApis.h"
 
 #endif /* _WINDOWS_ */
 

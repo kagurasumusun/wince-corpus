@@ -25,23 +25,6 @@
 #define KS_AM_RATE_Step 4
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* KS_AM_KSPROPSETID_TSRateChange  [enum; ce-only; CE 5.0..699] */
-typedef enum {
- KS_AM_RATE_SimpleRateChange=1,
- KS_AM_RATE_ExactRateChange=2,
- KS_AM_RATE_MaxFullDataRate=3,
- KS_AM_RATE_Step=4
-} KS_AM_PROPERTY_TS_RATE_CHANGE;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */

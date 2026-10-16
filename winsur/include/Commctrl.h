@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1786 constants, 495 declarations, 2 outlines, 0 base types, 0 extra macros, 50 extra decls
+ * 1786 constants, 465 declarations, 16 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _COMMCTRL_
 #define _COMMCTRL_
@@ -1809,9 +1809,7 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* FORWARD_WM_NOTIFY  [macro, function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* FORWARD_WM_NOTIFY  [macro, function; shared] */
 VOID FORWARD_WM_NOTIFY( 
  hwnd, 
  idFrom, 
@@ -1819,88 +1817,107 @@ VOID FORWARD_WM_NOTIFY(
  fn 
 );
 
-/* HANDLE_WM_NOTIFY  [macro, function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* HANDLE_WM_NOTIFY  [macro, function; shared] */
 #define HANDLE_WM_NOTIFY(hwnd, wParam, lParam, fn) \ 
  (fn)((hwnd), (int)(wParam), (NMHDR FAR*)(lParam))
 
-/* Header_CreateDragImage  [function, macro; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+/* HD_ITEM  [struct; ce-only] */
+
+/* Header_CreateDragImage  [function, macro; shared; Commctrl.lib] */
 HIMAGELIST Header_CreateDragImage( 
 HWND hwndHD, 
 int iIndex);
 
-/* Header_DeleteItem  [macro, function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+/* Header_DeleteItem  [macro, function; shared; Commctrl.lib] */
 #define Header_DeleteItem(hwndHD, i) \
  (BOOL)SNDMSG((hwndHD), HDM_DELETEITEM, (WPARAM)(int)(i), 0L)
 
-/* Header_GetImageList  [function, macro; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+/* Header_GetImageList  [function, macro; shared; Commctrl.lib] */
 HIMAGELIST Header_GetImageList( 
 HWND hwndHD);
 
-/* Header_GetItem  [macro, function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+/* Header_GetItem  [macro, function; shared; Commctrl.lib] */
 #define Header_GetItem(hwndHD, i, phdi) \
  (BOOL)SNDMSG((hwndHD), HDM_GETITEM, (WPARAM)(int)(i), \
  (LPARAM)(HD_ITEM FAR*)(phdi))
 
-/* Header_GetItemCount  [macro, function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+/* Header_GetItemCount  [macro, function; shared; Commctrl.lib] */
 #define Header_GetItemCount(hwndHD) \
  (int)SNDMSG((hwndHD), HDM_GETITEMCOUNT, 0, 0L)
 
-/* Header_GetItemRect  [function, macro; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+/* Header_GetItemRect  [function, macro; shared; Commctrl.lib] */
 BOOL Header_GetItemRect( 
 HWND hwndHD, 
 int iIndex, 
 LPRECT lpItemRect );
 
-/* Header_GetOrderArray  [function, macro; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+/* Header_GetOrderArray  [function, macro; shared; Commctrl.lib] */
 BOOL Header_GetOrderArray( 
 HWND hwndHD, 
 int iSize, 
 int *lpiArray );
 
-/* Header_InsertItem  [macro, function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+/* Header_InsertItem  [macro, function; shared; Commctrl.lib] */
 #define Header_InsertItem(hwndHD, i, phdi) \
  (int)SNDMSG((hwndHD), HDM_INSERTITEM, (WPARAM)(int)(i), \
  (LPARAM)(const HD_ITEM FAR*)(phdi))
 
-/* Header_Layout  [macro, function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+/* Header_Layout  [macro, function; shared; Commctrl.lib] */
 #define Header_Layout(hwndHD, playout) \
  (BOOL)SNDMSG((hwndHD), HDM_LAYOUT, 0, \
  (LPARAM)(HD_LAYOUT FAR*)(playout))
 
-/* Header_OrderToIndex  [function, macro; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+/* Header_OrderToIndex  [function, macro; shared; Commctrl.lib] */
 int Header_OrderToIndex( 
 HWND hwndHD, 
 int iOrder );
 
-/* Header_SetHotDivider  [function, macro; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+/* Header_SetHotDivider  [function, macro; shared; Commctrl.lib] */
 int Header_SetHotDivider( 
 HWND hwndHD, 
 BOOL flag, 
 DWORD dwInputValue );
 
-/* Header_SetImageList  [function, macro; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+/* Header_SetImageList  [function, macro; shared; Commctrl.lib] */
 HIMAGELIST Header_SetImageList( 
 HWND hwndHD, 
 HIMAGELIST himl );
 
-/* Header_SetItem  [function, macro; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+/* Header_SetItem  [function, macro; shared; Commctrl.lib] */
 BOOL Header_SetItem( hwndHD, i, phdi );
 
-/* Header_SetOrderArray  [function, macro; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+/* Header_SetOrderArray  [function, macro; shared; Commctrl.lib] */
 BOOL Header_SetOrderArray( 
 HWND hwndHD, 
 int iSize, 
 int *lpiArray );
 
-/* ImageList_AddIcon  [macro, function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, Imgctl.lib, imgctl.lib] */
+/* ImageList_AddIcon  [macro, function; shared; Commctrl.lib, Imgctl.lib, imgctl.lib] */
 
-/* INDEXTOOVERLAYMASK  [macro, function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* INDEXTOOVERLAYMASK  [macro, function; shared] */
 
-/* INDEXTOSTATEIMAGEMASK  [macro, function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* INDEXTOSTATEIMAGEMASK  [macro, function; shared] */
 UINT INDEXTOSTATEIMAGEMASK( 
  UINT i 
 );
-#endif /* _WIN32_WCE */
+
+/* LV_COLUMN  [struct; ce-only] */
+
+/* LV_ITEM  [struct; ce-only] */
+
+/* TBNOTIFY  [typedef; ce-only] */
+
+/* TC_ITEM  [struct; ce-only] */
+
+/* TC_ITEMHEADER  [struct; ce-only] */
+
+/* TV_HITTESTINFO  [struct; ce-only] */
+
+/* TV_INSERTSTRUCT  [struct; ce-only] */
+
+/* TV_ITEM  [struct; ce-only] */
+
+/* TV_SORTCB  [struct; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -1908,165 +1925,21 @@ UINT INDEXTOSTATEIMAGEMASK(
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213)) /* CE 1.0..199, 2.11..2.12 */
-
-/* HD_ITEM  [struct; ce-only; CE 1.0..199, 2.11..2.12] */
-typedef struct _HD_ITEM {- hdi
-
-/* LV_COLUMN  [struct; ce-only; CE 1.0..199, 2.11..2.12] */
-typedef struct _LV_COLUMN {-
-
-/* LV_ITEM  [struct; ce-only; CE 1.0..199, 2.11..2.12] */
-typedef struct _LV_ITEM {-
-
-/* TC_ITEM  [struct; ce-only; CE 1.0..199, 2.11..2.12] */
-typedef struct _TC_ITEM {-
-
-/* TC_ITEMHEADER  [struct; ce-only; CE 1.0..199, 2.11..2.12] */
-typedef struct _TC_ITEMHEADER {-
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* InitCommonControlsEx  [function, struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib] */
-BOOL InitCommonControlsEx(
- LPINITCOMMONCONTROLSEX lpInitCtrls 
-);
-
-/* TBBUTTON  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _TBBUTTON { 
- int iBitmap; 
- int idCommand; 
- BYTE fsState; 
- BYTE fsStyle; 
- DWORD dwData; 
- int iString; 
-} TBBUTTON, NEAR* PTBBUTTON, FAR* LPTBBUTTON;
-typedef const TBBUTTON FAR* LPCTBBUTTON;
-
-/* TCM_SETITEM  [function, struct; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-TCM_SETITEM wParam = (WPARAM)(int) iItem; 
- lParam = (LPARAM)(TCITEM FAR *) pitem;
-
-/* TV_ITEM  [struct; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _TV_ITEM {- tvi
-
-/* UDACCEL  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct {
- int nSec; 
- int nInc; 
-} UDACCEL;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
-
-/* ICONINFO  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..699] */
-typedef struct _ICONINFO {
- BOOL fIcon;
- DWORD xHotspot;
- DWORD yHotspot;
- HBITMAP hbmMask;
- HBITMAP hbmColor;
-} ICONINFO;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213)) /* CE 2.11..2.12 */
-
-/* HD_HITTESTINFO  [struct; ce-only; CE 2.11..2.12] */
+/* HD_HITTESTINFO  [struct; ce-only] */
 typedef struct _HD_HITTESTINFO {
  POINT pt; 
  UINT flags; 
  int iItem; 
 } HD_HITTESTINFO;
 
-/* HD_LAYOUT  [struct; ce-only; CE 2.11..2.12] */
-typedef struct _HD_LAYOUT { 
- RECT FAR *prc; 
- WINDOWPOS FAR *pwpos; 
-} HD_LAYOUT;
-
-/* HD_NOTIFY  [struct; ce-only; CE 2.11..2.12] */
-typedef struct _HD_NOTIFY { 
- NMHDR hdr; 
- int iItem; 
- int iButton; 
- HD_ITEM FAR *pitem; 
-} HD_NOTIFY;
-
-/* LV_HITTESTINFO  [struct; ce-only; CE 2.11..2.12] */
-typedef struct _LV_HITTESTINFO {
- POINT pt; 
- UINT flags; 
- int iItem; 
-} LV_HITTESTINFO;
-
-/* LV_KEYDOWN  [struct; ce-only; CE 2.11..2.12] */
-typedef struct tagLV_KEYDOWN {
- NMHDR hdr; 
- WORD wVKey; 
- UINT flags; 
-} LV_KEYDOWN;
-
-/* NM_LISTVIEW  [struct; ce-only; CE 2.11..2.12] */
-typedef struct tagNM_LISTVIEW {
- NMHDR hdr; 
- int iItem; 
- int iSubItem; 
- UINT uNewState; 
- UINT uOldState; 
- UINT uChanged; 
- POINT ptAction; 
-} NM_LISTVIEW;
-
-/* NM_UPDOWN  [struct; ce-only; CE 2.11..2.12] */
-typedef struct _NM_UPDOWN { 
- NMHDR hdr; 
- int iPos; 
- int iDelta; 
-} NM_UPDOWNW;
-
-/* TBNOTIFY  [typedef; ce-only; CE 2.11..2.12] */
-typedef struct_TBNOTIFY {
- NMHDR hdr;
- INT iItem;
- TBBUTTON tbButton;
- INT cchText;
- LPTSTR pszText;
-} TBNOTIFY, FAR* LPTBNOTIFY;
-
-/* TC_HITTESTINFO  [struct; ce-only; CE 2.11..2.12] */
-typedef struct _TC_HITTESTINFO { 
- POINT pt; 
- UINT flags; 
-} TC_HITTESTINFO;
-
-/* TC_KEYDOWN  [struct; ce-only; CE 2.11..2.12] */
-typedef struct _TC_KEYDOWN { 
- NMHDR hdr; 
- WORD wVKey; 
- UINT flags; 
-} TC_KEYDOWN;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* COMMANDBANDSRESTOREINFO  [struct; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagCOMMANDBANDSRESTOREINFO {
- UINT cbSize;
- UINT wID;
- UINT fStyle;
- UINT cxRestored;
- BOOL fMaximized;
-} COMMANDBANDSRESTOREINFO, *LPCOMMANDBANDSRESTOREINFO;
-
-/* HDHITTESTINFO  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* HDHITTESTINFO  [struct; shared] */
 typedef struct _HD_HITTESTINFO { 
  POINT pt; 
  UINT flags; 
  int iItem; 
 } HD_HITTESTINFO;
 
-/* HDITEM  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W HDITEMA,HDITEMW (CE is W-side)] */
+/* HDITEM  [struct; shared; A/W HDITEMA,HDITEMW (CE is W-side)] */
 typedef struct _HDITEM {
  UINT mask; 
  int cxy; 
@@ -2079,50 +1952,16 @@ typedef struct _HDITEM {
  int iOrder;
 } HDITEM;
 
-/* HDLAYOUT  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _HD_LAYOUT {
- RECT FAR* prc; 
- WINDOWPOS FAR* pwpos; 
-} HD_LAYOUT;
+/* ICONINFO  [struct; shared] */
+typedef struct _ICONINFO {
+ BOOL fIcon;
+ DWORD xHotspot;
+ DWORD yHotspot;
+ HBITMAP hbmMask;
+ HBITMAP hbmColor;
+} ICONINFO;
 
-/* IMAGEINFO  [struct, typedef; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagImageInfo {
- GUID RawDataFormat;
- PixelFormatID PixelFormat;
- UINT Width;
- UINT Height;
- UINT TileWidth;
- UINT TileHeight;
- double Xdpi;
- double Ydpi;
- UINT Flags;
-} ImageInfo;
-
-/* IMAGELISTDRAWPARAMS  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _IMAGELISTDRAWPARAMS {
- DWORD cbSize;
- HIMAGELIST himl;
- int i;
- HDC hdcDst;
- int x;
- int y;
- int cx;
- int cy;
- int xBitmap;
- int yBitmap;
- COLORREF rgbBk;
- COLORREF rgbFg;
- UINT fStyle;
- DWORD dwRop;
-} IMAGELISTDRAWPARAMS, FAR * LPIMAGELISTDRAWPARAMS;
-
-/* LV_DISPINFO  [struct; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tag LV_DISPINFO {
- NMHDR hdr; 
- LVITEM item; 
-} LV_DISPINFO;
-
-/* LV_FINDINFO  [struct; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* LV_FINDINFO  [struct; ce-only] */
 typedef struct _LV_FINDINFO {
  UINT flags; 
  LPCSTR psz; 
@@ -2131,7 +1970,14 @@ typedef struct _LV_FINDINFO {
  UINT vkDirection; 
 } LV_FINDINFO;
 
-/* LVCOLUMN  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W LVCOLUMNA,LVCOLUMNW (CE is W-side)] */
+/* LV_HITTESTINFO  [struct; ce-only] */
+typedef struct _LV_HITTESTINFO {
+ POINT pt; 
+ UINT flags; 
+ int iItem; 
+} LV_HITTESTINFO;
+
+/* LVCOLUMN  [struct; shared; A/W LVCOLUMNA,LVCOLUMNW (CE is W-side)] */
 typedef struct _LVCOLUMN { 
  UINT mask; 
  int fmt; 
@@ -2143,16 +1989,7 @@ typedef struct _LVCOLUMN {
  int iImage;
 } LVCOLUMN;
 
-/* LVFINDINFO  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W LVFINDINFOA,LVFINDINFOW (CE is W-side)] */
-typedef struct tagLVFINDINFO {
- UINT flags;
- LPCTSTR psz;
- LPARAM lParam;
- POINT pt;
- UINT vkDirection;
-} LVFINDINFO, FAR* LPFINDINFO;
-
-/* LVHITTESTINFO  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* LVHITTESTINFO  [struct; shared] */
 typedef struct _LVHITTESTINFO { 
  POINT pt; 
  UINT flags; 
@@ -2160,7 +1997,7 @@ typedef struct _LVHITTESTINFO {
  int iSubItem;
 } LVHITTESTINFO;
 
-/* LVITEM  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W LVITEMA,LVITEMW (CE is W-side)] */
+/* LVITEM  [struct; shared; A/W LVITEMA,LVITEMW (CE is W-side)] */
 typedef struct _LVITEM { 
 UINT mask; 
 int iItem; 
@@ -2174,299 +2011,19 @@ LPARAM lParam;
 int iIndent; } 
 LVITEM;
 
-/* MCHITTESTINFO  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct {
- UINT cbSize;
- POINT pt;
- UINT uHit; 
- SYSTEMTIME st;
-} MCHITTESTINFO, *PMCHITTESTINFO;
+/* TC_HITTESTINFO  [struct; ce-only] */
+typedef struct _TC_HITTESTINFO { 
+ POINT pt; 
+ UINT flags; 
+} TC_HITTESTINFO;
 
-/* NM_TREEVIEW  [struct; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _NM_TREEVIEW { 
- NMHDR hdr; 
- UINT action; 
- TV_ITEM itemOld; 
- TV_ITEM itemNew; 
- POINT ptDrag; 
-} NM_TREEVIEW;
-typedef NM_TREEVIEW FAR* LPNM_TREEVIEW;
+/* TCHITTESTINFO  [struct; shared] */
+typedef struct _TCHITTESTINFO { 
+ POINT pt; 
+ UINT flags; 
+} TCHITTESTINFO;
 
-/* NMCUSTOMDRAW  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagNMCUSTOMDRAWINFO {
- NMHDR hdr;
- DWORD dwDrawStage;
- HDC hdc;
- RECT rc;
- DWORD dwItemSpec;
- UINT uItemState;
- LPARAM lItemlParam 
-} NMCUSTOMDRAW, FAR* LPNMCUSTOMDRAW;
-
-/* NMDATETIMECHANGE  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagNMDATETIMECHANGE {
- NMHDR nmhdr;
- DWORD dwFlags;
- SYSTEMTIME st;
-} NMDATETIMECHANGE, FAR* LPNMDATETIMECHANGE;
-
-/* NMDATETIMEFORMAT  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W NMDATETIMEFORMATA,NMDATETIMEFORMATW (CE is W-side)] */
-typedef struct tagNMDATETIMEFORMAT{
- NMHDR nmhdr;
- LPCTSTR pszFormat;
- SYSTEMTIME st;
- LPCTSTR pszDisplay;
- TCHAR szDisplay[64];
-} NMDATETIMEFORMAT, FAR* LPNMDATETIMEFORMAT;
-
-/* NMDATETIMEFORMATQUERY  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W NMDATETIMEFORMATQUERYA,NMDATETIMEFORMATQUERYW (CE is W-side)] */
-typedef struct tagNMDATETIMEFORMATQUERY{
- NMHDR nmhdr;
- LPCTSTR pszFormat;
- SIZE szMax;
-} NMDATETIMEFORMATQUERY, FAR* LPNMDATETIMEFORMATQUERY;
-
-/* NMDATETIMESTRING  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W NMDATETIMESTRINGA,NMDATETIMESTRINGW (CE is W-side)] */
-typedef struct tagNMDATETIMESTRING{
- NMHDR nmhdr;
- LPCTSTR pszUserString;
- SYSTEMTIME st;
- DWORD dwFlags;
-} NMDATETIMESTRING, FAR* LPNMDATETIMESTRING;
-
-/* NMDATETIMEWMKEYDOWN  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W NMDATETIMEWMKEYDOWNA,NMDATETIMEWMKEYDOWNW (CE is W-side)] */
-typedef struct tagNMDATETIMEWMKEYDOWN{
- NMHDR nmhdr;
- int nVirtKey;
- LPCTSTR pszFormat;
- SYSTEMTIME st;
-} NMDATETIMEWMKEYDOWN, FAR* LPNMDATETIMEWMKEYDOWN;
-
-/* NMDAYSTATE  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagNMDAYSTATE {
- NMHDR nmhdr;
- SYSTEMTIME stStart;
- int cDayState;
- LPMONTHDAYSTATE prgDayState; 
-} NMDAYSTATE, FAR* LPNMDAYSTATE;
-
-/* NMHDDISPINFO  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W NMHDDISPINFOA,NMHDDISPINFOW (CE is W-side)] */
-typedef struct tagNMHDDISPINFO {
- NMHDR hdr;
- int iItem;
- UINT mask;
- LPTSTR pszText;
- int cchTextMax;
- int iImage;
- LPARAM lParam;
-} NMHDDISPINFO, FAR* LPNMHDDISPINFO;
-
-/* NMHEADER  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W NMHEADERA,NMHEADERW (CE is W-side)] */
-typedef struct tagNMHEADER {
- NMHDR hdr;
- int iItem;
- int iButton;
- HDITEM FAR* pItem;
-} NMHEADER, FAR* LPNMHEADER;
-
-/* NMKEY  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagNMKEY {
- NMHDR hdr;
- WORD wVKey;
- UINT flags;
-} NMKEY, FAR* LPNMKEY;
-
-/* NMLISTVIEW  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagNMLISTVIEW {
- NMHDR hdr;
- int iItem;
- int iSubItem;
- UINT uNewState;
- UINT uOldState;
- UINT uChanged;
- POINT ptAction;
- LPARAM lParam;
-} NMLISTVIEW, FAR* LPNMLISTVIEW;
-
-/* NMLVCACHEHINT  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagNMLVCACHEHINT {
- NMHDR hdr;
- int iFrom;
- int iTo;
-} NMLVCACHEHINT, *PNMLVCACHEHINT;
-
-/* NMLVCUSTOMDRAW  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagNMLVCUSTOMDRAW { 
-NMCUSTOMDRAW nmcd; 
-COLORREF clrText; 
-COLORREF clrTextBk;} 
-NMLVCUSTOMDRAW, *LPNMLVCUSTOMDRAW;
-
-/* NMLVFINDITEM  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W NMLVFINDITEMA,NMLVFINDITEMW (CE is W-side)] */
-typedef struct _NMLVFINDITEM {
- NMHDR hdr;
- int iStart;
- LVFINDINFO lvfi;
-} NMLVFINDITEM, *PNMLVFINDITEM;
-
-/* NMLVKEYDOWN  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagLVKEYDOWN {
- NMHDR hdr;
- WORD wVKey;
- UINT flags;
-} NMLVKEYDOWN, FAR* LPNMLVKEYDOWN;
-
-/* NMLVODSTATECHANGE  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagNMLVODSTATECHANGE {
- NMHDR hdr;
- int iFrom;
- int iTo;
- UINT uNewState;
- UINT uOldState;
-} NMLVODSTATECHANGE, FAR* LPNMLVODSTATECHANGE;
-
-/* NMMOUSE  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagNMMOUSE {
- NMHDR hdr;
- DWORD dwItemSpec;
- DWORD dwItemData;
- POINT pt;
-} NMMOUSE, FAR* LPNMMOUSE;
-
-/* NMRBAUTOSIZE  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagNMRBAUTOSIZE {
- NMHDR hdr;
- BOOL fChanged;
- RECT rcTarget;
- RECT rcActual;
-} NMRBAUTOSIZE, *LPNMRBAUTOSIZE;
-
-/* NMREBAR  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagNMREBAR {
- NMHDR hdr;
- UINT uBand;
- UINT wID;
- UINT cyChild;
- UINT cyBand;
-} NMREBAR, *LPNMREBAR;
-
-/* NMSELCHANGE  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagNMSELCHANGE {
- NMHDR nmhdr;
- SYSTEMTIME stSelStart;
- SYSTEMTIME stSelEnd;
-} NMSELCHANGE, FAR* LPNMSELCHANGE;
-
-/* NMTCKEYDOWN  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagNMTCKEYDOWN {
- NMHDR hdr;
- WORD wVKey;
- UINT flags;
-} NMTCKEYDOWN;
-
-/* NMTOOLBAR  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W NMTOOLBARA,NMTOOLBARW (CE is W-side)] */
-typedef struct tagNMTOOLBAR {
- NMHDR hdr;
- int iItem;
- TBBUTTON tbButton;
- int cchText;
- LPTSTR pszText;
-} NMTOOLBAR, FAR* LPNMTOOLBAR;
-
-/* NMTVCUSTOMDRAW  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagNMTVCUSTOMDRAW {
- NMCUSTOMDRAW nmcd;
- COLORREF clrText;
- COLORREF clrTextBk;
-} NMTVCUSTOMDRAW, *LPNMTVCUSTOMDRAW;
-
-/* NMTVKEYDOWN  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagTVKEYDOWN {
- NMHDR hdr;
- WORD wVKey;
- UINT flags;
-} NMTVKEYDOWN, FAR* LPNMTVKEYDOWN;
-
-/* NMUPDOWN  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _NM_UPDOWN {
- NMHDR hdr;
- int iPos;
- int iDelta;
-} NMUPDOWN, FAR* LPNMUPDOWN;
-
-/* PBRANGE  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct {
- int iLow;
- int iHigh; 
-} PBRANGE, *PPBRANGE;
-
-/* RBHITTESTINFO  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _RB_HITTESTINFO {
- POINT pt;
- UINT flags;
- int iBand;
-} RBHITTESTINFO, FAR* LPRBHITTESTINFO;
-
-/* REBARBANDINFO  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W REBARBANDINFOA,REBARBANDINFOW (CE is W-side)] */
-typedef struct tagREBARBANDINFO {
- UINT cbSize;
- UINT fMask;
- UINT fStyle;
- COLORREF clrFore;
- COLORREF clrBack;
- LPTSTR lpText;
- UINT cch;
- int iImage;
- HWND hwndChild;
- UINT cxMinChild;
- UINT cyMinChild;
- UINT cx;
- HBITMAP hbmBack;
- UINT wID;
- UINT cyChild; 
- UINT cyMaxChild;
- UINT cyIntegral;
- UINT cxIdeal;
- LPARAM lParam;
-} REBARBANDINFO, FAR* LPREBARBANDINFO;
-
-/* REBARINFO  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagREBARINFO{
- UINT cbSize;
- UINT fMask;
- HIMAGELIST himl;} 
-REBARINFO, FAR* LPREBARINFO;
-
-/* TBADDBITMAP  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct { 
- INSTANCE hInst; 
- INT nID; 
-} TBADDBITMAP, *LPTBADDBITMAP;
-
-/* TBBUTTONINFO  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W TBBUTTONINFOA,TBBUTTONINFOW (CE is W-side)] */
-typedef struct {
- UINT cbSize;
- DWORD dwMask;
- int idCommand;
- int iImage;
- BYTE fsState;
- BYTE fsStyle;
- WORD cx;
- DWORD lParam;
- LPTSTR pszText;
- int cchText;
-} TBBUTTONINFOA, *LPTBBUTTONINFOA;
-
-/* TBREPLACEBITMAP  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct {
- HINSTANCE hInstOld;
- UINT nIDOld;
- HINSTANCE hInstNew;
- UINT nIDNew;
- int nButtons;
-} TBREPLACEBITMAP, *LPTBREPLACEBITMAP;
-
-/* TCITEM  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W TCITEMA,TCITEMW (CE is W-side)] */
+/* TCITEM  [struct; shared; A/W TCITEMA,TCITEMW (CE is W-side)] */
 typedef struct tagTCITEM { 
  UINT mask;
  DWORD dwState;
@@ -2477,208 +2034,42 @@ typedef struct tagTCITEM {
  LPARAM lParam;
 } TCITEM;
 
-/* TCITEMHEADER  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W TCITEMHEADERA,TCITEMHEADERW (CE is W-side)] */
-typedef struct tagTCITEMHEADER{
- UINT mask;
- UINT lpReserved1;
- UINT lpReserved2;
- LPTSTR pszText;
- int cchTextMax;
- int iImage;
-} TCITEMHEADER, FAR* LPTCITEMHEADER;
+/* UDACCEL  [struct; shared] */
+typedef struct {
+ int nSec; 
+ int nInc; 
+} UDACCEL;
 
-/* TV_DISPINFO  [struct; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _TV_DISPINFO { 
- NMHDR hdr; 
- TV_ITEM item; 
-} TV_DISPINFO;
+/* TVHITTESTINFO  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   pt */
+/*   flags */
+/*   hItem */
 
-/* TV_HITTESTINFO  [struct; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _TVHITTESTINFO { 
- POINT pt; 
- UINT flags; 
- HTREEITEM hItem; 
-} TV_HITTESTINFO, FAR* LPTV_HITTESTINFO;
+/* TVINSERTSTRUCT  [struct; shared; A/W TVINSERTSTRUCTA,TVINSERTSTRUCTW (CE is W-side)] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   hParent */
+/*   hInsertAfter */
+/*   DUMMYUNIONNAME */
 
-/* TV_INSERTSTRUCT  [struct; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _TV_INSERTSTRUCT { 
- HTREEITEM hParent; 
- HTREEITEM hInsertAfter; 
- TV_ITEM item; 
-} TV_INSERTSTRUCT, FAR* LPTV_INSERTSTRUCT;
+/* TVITEM  [struct; shared; A/W TVITEMA,TVITEMW (CE is W-side)] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   mask */
+/*   hItem */
+/*   state */
+/*   stateMask */
+/*   pszText */
+/*   cchTextMax */
+/*   iImage */
+/*   iSelectedImage */
+/*   cChildren */
+/*   lParam */
 
-/* TV_KEYDOWN  [struct; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _TV_KEYDOWN { 
- NMHDR hdr; 
- WORD wVKey; 
- UINT flags; 
-} TV_KEYDOWN;
-
-/* TV_SORTCB  [struct; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _TV_SORTCB { tvscb
- HTREEITEM hParent; 
- PFNTVCOMPARE lpfnCompare; 
- LPARAM lParam; 
-} TV_SORTCB, FAR* LPTV_SORTCB;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 3.0..399, 5.0..599 */
-
-/* TVINSERTSTRUCT  [struct; shared; CE 3.0..399, 5.0..599; A/W TVINSERTSTRUCTA,TVINSERTSTRUCTW (CE is W-side)] */
-typedef struct _TVINSERTSTRUCT { 
- HTREEITEM hParent; 
- HTREEITEM hInsertAfter; 
- TV_ITEM item; 
-} TVINSERTSTRUCT, FAR* LPTVINSERTSTRUCT;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-
-/* TCHITTESTINFO  [struct; shared; CE 3.0..399, 5.0..699] */
-typedef struct _TCHITTESTINFO { 
- POINT pt; 
- UINT flags; 
-} TCHITTESTINFO;
-
-/* TVHITTESTINFO  [struct; shared; CE 3.0..399, 5.0..699] */
-typedef struct _TVHITTESTINFO { 
- POINT pt; 
- UINT flags; 
- HTREEITEM hItem; 
-} TVHITTESTINFO, FAR* LPTVHITTESTINFO;
-
-/* TVITEM  [struct; shared; CE 3.0..399, 5.0..699; A/W TVITEMA,TVITEMW (CE is W-side)] */
-typedef struct _TVITEM { 
- tvi UINT mask; 
- HTREEITEM hItem; 
- UINT state; 
- UINT stateMask; 
- LPSTR pszText; 
- int cchTextMax; 
- int iImage; 
- int iSelectedImage; 
- int cChildren; 
- LPARAM lParam; 
-} TVITEM, FAR* LPTVITEM;
-
-/* TVSORTCB  [struct; shared; CE 3.0..399, 5.0..699] */
-typedef struct _TVSORTCB { 
- HTREEITEM hParent; 
- PFNTVCOMPARE lpfnCompare; 
- LPARAM lParam; 
-} TVSORTCB, FAR* LPTVSORTCB;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* FILECHANGENOTIFY  [struct; ce-only; CE 5.0..699; ceshell.lib] */
-typedef struct tagFILECHANGENOTIFY {
- DWORD dwRefCount;
- FILECHANGEINFO fci;
-} FILECHANGENOTIFY;
-
-/* LVBKIMAGE  [struct; shared; CE 5.0..699; A/W LVBKIMAGEA,LVBKIMAGEW (CE is W-side)] */
-typedef struct tagLVBKIMAGE {
- ULONG ulFlags;
- HBITMAP hbm;
- LPTSTR pszImage;
- UINT cchImageMax;
- int xOffsetPercent;
- int yOffsetPercent;
-} LVBKIMAGE, *LPLVBKIMAGE;
-
-/* LVGROUP  [struct; shared; CE 5.0..699] */
-typedef struct LVGROUP {
- UINT cbSize;
- UINT mask;
- LPWSTR pszHeader;
- int cchHeader;
- LPWSTR pszFooter;
- int cchFooter;
- int iGroupId;
- UINT stateMask;
- UINT state;
- UINT uAlign;
-} LVGROUP, *PLVGROUP;
-
-/* LVGROUPMETRICS  [struct; shared; CE 5.0..699] */
-typedef struct LVGROUPMETRICS {
- UINT cbSize;
- UINT mask;
- UINT Left;
- UINT Top;
- UINT Right;
- UINT Bottom;
- COLORREF crLeft;
- COLORREF crTop;
- COLORREF crRight;
- COLORREF crBottom;
- COLORREF crRightHeader;
- COLORREF crFooter;
-} LVGROUPMETRICS, *PLVGROUPMETRICS;
-
-/* LVINSERTGROUPSORTED  [struct; shared; CE 5.0..699] */
-typedef struct LVINSERTGROUPSORTED {
- PFNLVGROUPCOMPARE pfnGroupCompare;
- LPVOID *pvData;
- LVGROUP lvGroup;
-} LVINSERTGROUPSORTED, *PLVINSERTGROUPSORTED;
-
-/* LVSETINFOTIP  [struct; shared; CE 5.0..699] */
-typedef struct LVSETINFOTIP {
- UINT cbSize;
- DWORD dwFlags;
- LPWSTR pszText;
- int iItem;
- int iSubItem;
-} LVSETINFOTIP, *PLVSETINFOTIP;
-
-/* NMLVGETINFOTIP  [struct; shared; CE 5.0..699; A/W NMLVGETINFOTIPA,NMLVGETINFOTIPW (CE is W-side)] */
-typedef struct tagNMLVGETINFOTIP {
- NMHDR hdr;
- DWORD dwFlags;
- LPTSTR pszText;
- int cchTextMax;
- int iItem;
- int iSubItem;
- LPARAM lParam;
-} NMLVGETINFOTIP, *LPNMLVGETINFOTIP;
-
-/* NMTTCUSTOMDRAW  [struct; shared; CE 5.0..699] */
-typedef struct tagNMTTCUSTOMDRAW {
- NMCUSTOMDRAW nmcd;
- UINT uDrawFlags;
-} NMTTCUSTOMDRAW, FAR* LPNMTTCUSTOMDRAW;
-
-/* NMTTDISPINFO  [struct; shared; CE 5.0..699; A/W NMTTDISPINFOA,NMTTDISPINFOW (CE is W-side)] */
-typedef struct tagNMTTDISPINFO {
- NMHDR hdr;
- LPTSTR lpszText;
- TCHAR szText[80];
- HINSTANCE hinst;
- UINT uFlags;
- LPARAM lParam;
-} NMTTDISPINFO, FAR* LPNMTTDISPINFO;
-
-/* TOOLINFO  [struct; ce-only; CE 5.0..699] */
-typedef struct tagTOOLINFO {
- UINT cbSize;
- UINT uFlags;
- HWND hwnd;
- UINT uId;
- RECT rect;
- HINSTANCE hinst;
- LPTSTR lpszText;
- LPARAM lParam;
-} TTTOOLINFO, NEAR* PTOOLINFO, FAR* LPTTTOOLINFO;
-
-/* TTHITTESTINFO  [struct; shared; CE 5.0..699; A/W TTHITTESTINFOA,TTHITTESTINFOW (CE is W-side)] */
-typedef struct _TT_HITTESTINFO {
- HWND hwnd;
- POINT pt;
- TTTOOLINFO ti;
-} TTHITTESTINFO, FAR* LPTTHITTESTINFO;
-#endif /* _WIN32_WCE */
+/* TVSORTCB  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   hParent */
+/*   lpfnCompare */
+/*   lParam */
 
 /* ==================================================================
  * functions and callbacks
@@ -2976,12 +2367,6 @@ PVOID ACM_Open(
  DWORD dwAccess,
  DWORD dwShareMode
 );
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213)) /* CE 2.11..2.12 */
-
-/* TreeView_GetDropHilite  [function; ce-only; CE 2.11..2.12] */
-HTREEITEM TreeView_GetDropHilite( hwnd );
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
@@ -4403,12 +3788,6 @@ BOOL TreeView_Expand(
  flag 
 );
 
-/* TreeView_GetChild  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-HTREEITEM TreeView_GetChild( 
- hwnd, 
- hitem 
-);
-
 /* TreeView_GetCount  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
 UINT TreeView_GetCount(
  hwnd 
@@ -4416,11 +3795,6 @@ UINT TreeView_GetCount(
 
 /* TreeView_GetEditControl  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
 HWND TreeView_GetEditControl( 
- hwnd 
-);
-
-/* TreeView_GetFirstVisible  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-HTREEITEM TreeView_GetFirstVisible( 
  hwnd 
 );
 
@@ -4455,68 +3829,9 @@ BOOL TreeView_GetItemRect(
  fItemRect 
 );
 
-/* TreeView_GetNextItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-HTREEITEM TreeView_GetNextItem( 
- hwnd, 
- hitem, 
- flag 
-);
-
-/* TreeView_GetNextSibling  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-HTREEITEM TreeView_GetNextSibling( 
- hwnd, 
- hitem 
-);
-
-/* TreeView_GetNextVisible  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-HTREEITEM TreeView_GetNextVisible( 
- hwnd, 
- hitem 
-);
-
-/* TreeView_GetParent  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-HTREEITEM TreeView_GetParent( 
- hwnd, 
- hitem 
-);
-
-/* TreeView_GetPrevSibling  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-HTREEITEM TreeView_GetPrevSibling( 
- hwnd, 
- hitem 
-);
-
-/* TreeView_GetPrevVisible  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-HTREEITEM TreeView_GetPrevVisible( 
- hwnd, 
- hitem 
-);
-
-/* TreeView_GetRoot  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-HTREEITEM TreeView_GetRoot( 
- hwnd 
-);
-
-/* TreeView_GetSelection  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-HTREEITEM TreeView_GetSelection( 
- hwnd 
-);
-
 /* TreeView_GetVisibleCount  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
 UINT TreeView_GetVisibleCount( 
  hwnd 
-);
-
-/* TreeView_HitTest  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-HTREEITEM TreeView_HitTest( 
- hwnd, 
- lpht 
-);
-
-/* TreeView_InsertItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-HTREEITEM TreeView_InsertItem( 
- hwnd, 
- lpis 
 );
 
 /* TreeView_Select  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
@@ -4581,14 +3896,6 @@ BOOL TreeView_SortChildrenCB(
 TVM_ENDEDITLABELNOW wParam = (WPARAM)(BOOL) fCancel; 
  lParam = 0;
 
-/* TVM_EXPAND  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-TVM_EXPAND wParam = (WPARAM)(UINT) flag; 
- lParam = (LPARAM)(HTREEITEM) hitem;
-
-/* TVM_GETNEXTITEM  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-TVM_GETNEXTITEM wParam = (WPARAM)(UINT) flag; 
- lParam = (LPARAM)(HTREEITEM) hitem;
-
 /* UDM_SETBUDDY  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
 UDM_SETBUDDY wParam = (WPARAM)(HWND) hwndBuddy; 
  lParam = 0;
@@ -4603,11 +3910,6 @@ UDM_SETRANGE32 wParam = (WPARAM)(int) iLow;
 /* PSM_SETWIZBUTTONS  [function; ce-only; CE 3.0..399, 5.0..699] */
 PSM_SETWIZBUTTONS wParam = 0; 
  lParam = (LPARAM)(DWORD) dwFlags;
-
-/* TreeView_GetDropHilight  [function; shared; CE 3.0..399, 5.0..699] */
-HTREEITEM TreeView_GetDropHilight(
- hwnd
-);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
@@ -4882,66 +4184,5 @@ LRESULT CALLBACK WindowProc(
 UDM_SETPOS32 wParam = 0; 
  lParam = (LPARAM) (INT)nPos;
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* typedef */
-typedef const TBBUTTON FAR* LPCTBBUTTON;
-typedef NM_TREEVIEW FAR *LPNM_TREEVIEW;
-
-/* struct */
-typedef struct tagINITCOMMONCONTROLSEX {  DWORD dwSize;  DWORD dwICC;}  INITCOMMONCONTROLSEX, *LPINITCOMMONCONTROLSEX;
-typedef struct tagImageInfo { GUID RawDataFormat; PixelFormatID PixelFormat; UINT Width; UINT Height; UINT TileWidth; UINT TileHeight; double Xdpi; double Ydpi; UINT Flags; } ImageInfo;
-typedef struct tagINITCOMMONCONTROLSEX {  DWORD dwSize;  DWORD dwICC;  } INITCOMMONCONTROLSEX, *LPINITCOMMONCONTROLSEX;
-typedef struct tagNMTTCUSTOMDRAW {NMCUSTOMDRAW nmcd;UINT uDrawFlags;} NMTTCUSTOMDRAW, FAR* LPNMTTCUSTOMDRAW;
-typedef struct tagNMTTDISPINFO {NMHDR hdr;LPTSTR lpszText;TCHAR szText[80];HINSTANCE hinst;UINT uFlags;LPARAM lParam;} NMTTDISPINFO, FAR* LPNMTTDISPINFO;
-typedef struct _NM_UPDOWN {NMHDR hdr;int iPos;int iDelta;} NMUPDOWN, FAR* LPNMUPDOWN;
-typedef struct { INSTANCE hInst; INT nID; } TBADDBITMAP, *LPTBADDBITMAP;
-typedef struct _TT_HITTESTINFO {HWND hwnd;POINT pt;TTTOOLINFO ti;} TTHITTESTINFO, FAR* LPTTHITTESTINFO;
-typedef struct tagTOOLINFO {UINT cbSize;UINT uFlags;HWND hwnd;UINT uId;RECT rect;HINSTANCE hinst;LPTSTR lpszText;LPARAM lParam;} TTTOOLINFO, NEAR* PTOOLINFO, FAR* LPTTTOOLINFO;
-typedef struct _TVHITTESTINFO { POINT pt; UINT flags; HTREEITEM hItem; } TVHITTESTINFO, FAR* LPTVHITTESTINFO;
-typedef struct _TVITEM { tviUINT mask; HTREEITEM hItem; UINT state; UINT stateMask; LPSTR pszText; int cchTextMax; int iImage; int iSelectedImage; int cChildren; LPARAM lParam; } TVITEM, FAR* LPTVITEM;
-typedef struct _TVSORTCB { HTREEITEM hParent; PFNTVCOMPARE lpfnCompare; LPARAM lParam; } TVSORTCB, FAR* LPTVSORTCB;
-typedef struct _TV_INSERTSTRUCT { HTREEITEM hParent; HTREEITEM hInsertAfter; TV_ITEM item; } TV_INSERTSTRUCT, FAR* LPTV_INSERTSTRUCT;
-typedef struct _TV_ITEM { tviUINT mask; HTREEITEM hItem; UINT state; UINT stateMask; LPSTR pszText; int cchTextMax; int iImage; int iSelectedImage; int cChildren; LPARAM lParam; } TV_ITEM, FAR* LPTV_ITEM;
-typedef struct _NM_UPDOWN { NMHDR hdr; int iPos; int iDelta; } NM_UPDOWNW;
-typedef struct LVGROUP { UINT cbSize; UINT mask; LPWSTR pszHeader; int cchHeader; LPWSTR pszFooter; int cchFooter; int iGroupId; UINT stateMask; UINT state; UINT uAlign;} LVGROUP, *PLVGROUP;
-typedef struct LVGROUPMETRICS { UINT cbSize; UINT mask; UINT Left; UINT Top; UINT Right; UINT Bottom; COLORREF crLeft; COLORREF crTop; COLORREF crRight; COLORREF crBottom; COLORREF crRightHeader; COLORREF crFooter;} LVGROUPMETRICS, *PLVGROUPMETRICS;
-typedef struct LVINSERTGROUPSORTED { PFNLVGROUPCOMPARE pfnGroupCompare; LPVOID *pvData; LVGROUP lvGroup;} LVINSERTGROUPSORTED, *PLVINSERTGROUPSORTED;
-typedef struct LVSETINFOTIP { UINT cbSize; DWORD dwFlags; LPWSTR pszText; int iItem; int iSubItem;} LVSETINFOTIP, *PLVSETINFOTIP;
-
-/* function */
-typedefstructtagCOMMANDBANDSRESTOREINFO{UINTcbSize;UINTwID;UINTfStyle;UINTcxRestored;BOOLfMaximized;}COMMANDBANDSRESTOREINFO,*LPCOMMANDBANDSRESTOREINFO;
-typedefstruct_IMAGELISTDRAWPARAMS{DWORDcbSize;HIMAGELISThiml;inti;HDChdcDst;intx;inty;intcx;intcy;intxBitmap;intyBitmap;COLORREFrgbBk;COLORREFrgbFg;UINTfStyle;DWORDdwRop;}IMAGELISTDRAWPARAMS,FAR*LPIMAGELISTDRAWPARAMS;
-typedefstructtagNMCUSTOMDRAWINFO{NMHDRhdr;DWORDdwDrawStage;HDChdc;RECTrc;DWORDdwItemSpec;UINTuItemState;LPARAMlItemlParam} NMCUSTOMDRAW,FAR* LPNMCUSTOMDRAW;
-typedefstructtagNMDATETIMECHANGE{NMHDRnmhdr;DWORDdwFlags;SYSTEMTIMEst;}NMDATETIMECHANGE,FAR* LPNMDATETIMECHANGE;
-typedefstructtagNMDATETIMEFORMAT{NMHDRnmhdr;LPCTSTRpszFormat;SYSTEMTIMEst;LPCTSTRpszDisplay;TCHARszDisplay[64];}NMDATETIMEFORMAT,FAR* LPNMDATETIMEFORMAT;
-typedefstructtagNMDATETIMEFORMATQUERY{NMHDRnmhdr;LPCTSTRpszFormat;SIZEszMax;}NMDATETIMEFORMATQUERY,FAR* LPNMDATETIMEFORMATQUERY;
-typedefstructtagNMDATETIMESTRING{NMHDRnmhdr;LPCTSTRpszUserString;SYSTEMTIMEst;DWORDdwFlags;}NMDATETIMESTRING,FAR* LPNMDATETIMESTRING;
-typedefstructtagNMDATETIMEWMKEYDOWN{NMHDR nmhdr;int nVirtKey;LPCTSTRpszFormat;SYSTEMTIMEst;}NMDATETIMEWMKEYDOWN,FAR* LPNMDATETIMEWMKEYDOWN;
-typedefstructtagNMDAYSTATE{NMHDRnmhdr;SYSTEMTIMEstStart;intcDayState;LPMONTHDAYSTATEprgDayState;}NMDAYSTATE,FAR* LPNMDAYSTATE;
-typedefstructtagNMHDDISPINFO{ NMHDRhdr; intiItem; UINTmask; LPTSTRpszText; intcchTextMax; intiImage; LPARAMlParam;}NMHDDISPINFO,FAR* LPNMHDDISPINFO;
-typedefstructtagNMKEY{NMHDRhdr;WORDwVKey;UINTflags;}NMKEY,FAR* LPNMKEY;
-typedefstructtagNMLISTVIEW {NMHDRhdr;intiItem;intiSubItem;UINTuNewState;UINTuOldState;UINTuChanged;POINTptAction;LPARAMlParam;}NMLISTVIEW,FAR* LPNMLISTVIEW;
-typedefstructtagLVKEYDOWN{NMHDRhdr;WORDwVKey;UINTflags;}NMLVKEYDOWN,FAR* LPNMLVKEYDOWN;
-typedefstructtagNMLVODSTATECHANGE{NMHDRhdr;intiFrom;intiTo;UINTuNewState;UINTuOldState;}NMLVODSTATECHANGE,FAR* LPNMLVODSTATECHANGE;
-typedefstructtagNMMOUSE{NMHDRhdr;DWORDdwItemSpec;DWORDdwItemData;POINTpt;}NMMOUSE,FAR* LPNMMOUSE;
-typedefstructtagNMRBAUTOSIZE{NMHDRhdr;BOOLfChanged;RECTrcTarget;RECTrcActual;}NMRBAUTOSIZE,*LPNMRBAUTOSIZE;
-typedefstructtagNMREBAR{NMHDRhdr;UINTuBand;UINTwID;UINTcyChild;UINTcyBand;}NMREBAR,*LPNMREBAR;
-typedefstructtagNMSELCHANGE {NMHDR nmhdr;SYSTEMTIMEstSelStart;SYSTEMTIMEstSelEnd;}NMSELCHANGE,FAR* LPNMSELCHANGE;
-typedefstructtagNMTVCUSTOMDRAW{NMCUSTOMDRAWnmcd;COLORREFclrText;COLORREFclrTextBk;}NMTVCUSTOMDRAW,*LPNMTVCUSTOMDRAW;
-typedefstructtagTVKEYDOWN{NMHDRhdr;WORDwVKey;UINTflags;}NMTVKEYDOWN,FAR* LPNMTVKEYDOWN;
-typedefstruct_RB_HITTESTINFO{POINTpt;UINTflags;intiBand;}RBHITTESTINFO,FAR* LPRBHITTESTINFO;
-typedefstructtagREBARBANDINFO {UINTcbSize;UINTfMask;UINTfStyle;COLORREFclrFore;COLORREFclrBack;LPTSTRlpText;UINTcch;intiImage;HWNDhwndChild;UINTcxMinChild;UINTcyMinChild;UINTcx;HBITMAPhbmBack;UINTwID;UINTcyChild;UINTcyMaxChild;UINTcyIntegral;UINTcxIdeal;LPARAMlParam;}REBARBANDINFO,FAR* LPREBARBANDINFO;
-typedefstructtagREBARINFO{UINTcbSize;UINTfMask;HIMAGELISThiml;}REBARINFO,FAR* LPREBARINFO;
-typedefstruct{UINTcbSize;DWORDdwMask;intidCommand;intiImage;BYTEfsState;BYTEfsStyle;WORDcx;DWORDlParam;LPTSTRpszText;intcchText;}TBBUTTONINFOA,*LPTBBUTTONINFOA;
-typedefstruct{HINSTANCEhInstOld;UINTnIDOld;HINSTANCEhInstNew;UINTnIDNew;intnButtons;}TBREPLACEBITMAP,*LPTBREPLACEBITMAP;
-typedefstruct{UINTcbSize;POINTpt;UINTuHit;SYSTEMTIMEst;}MCHITTESTINFO,*PMCHITTESTINFO;
-typedefstructtagNMLVCACHEHINT{NMHDRhdr;intiFrom;intiTo;}NMLVCACHEHINT,*PNMLVCACHEHINT;
-typedefstruct{intiLow;intiHigh;}PBRANGE,*PPBRANGE;
-intCommandBar_AddBitmap(HWNDhwndCB, HINSTANCEhInst, intidBitmap, intiNumImages, int iImageWidth,intiImageHeight);
 
 #endif /* _COMMCTRL_ */

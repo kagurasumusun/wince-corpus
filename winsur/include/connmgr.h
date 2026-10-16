@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2 constants, 16 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 2 constants, 14 declarations, 2 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _CONNMGR_
 #define _CONNMGR_
@@ -23,55 +23,24 @@
 #endif /* _WIN32_WCE */
 
 /* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* CONNMGR_DESTINATION_INFO  [struct; ce-only] */
+
+/* SCHEDULEDCONNECTIONINFO  [struct; ce-only] */
+
+/* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* CONNMGR_CONNECTIONINFO  [struct; ce-only; CE 6.0..699] */
-typedef struct {
- DWORD cbSize;
- DWORD dwParams;
- DWORD dwFlags;
- DWORD dwPriority;
- BOOL bExclusive;
- BOOL bDisabled;
- GUID guidDestNet;
- HWND hWnd;
- UINT uMsg;
- LPARAM lParam;
- ULONG ulMaxCost;
- ULONG ulMinRcvBw;
- ULONG ulMaxConnLatency
-} CONNMGR_CONNECTIONINFO;
-
-/* CONNMGR_DESTINATION_INFO  [struct; ce-only; CE 6.0..699] */
-typedef struct {
- GUID guid;
- TCHAR szDescription[CONNMGR_MAX_DESC];
- BOOL fSecure;
-} CONNMGR_DESTINATION_INFO;
-
-/* ConnMgrConRefTypeEnum  [enum; ce-only; CE 6.0..699] */
+/* ConnMgrConRefTypeEnum  [enum; ce-only] */
 typedef enum _ConnMgrConRefTypeEnum{
  ConRefType_NAP = 0,
  ConRefType_PROXY
 } ConnMgrConRefTypeEnum;
-
-/* SCHEDULEDCONNECTIONINFO  [struct; ce-only; CE 6.0..699] */
-typedef struct {
- GUID guidDest;
- UINT64 uiStartTime;
- UINT64 uiEndTime;
- UINT64 uiPeriod;
- TCHAR szAppName[MAX_PATH];
- TCHAR szCmdLine[MAX_PATH];
- TCHAR szToken[32];
- BOOL bPiggyback;
-} SCHEDULEDCONNECTIONINFO;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

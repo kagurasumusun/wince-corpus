@@ -12,40 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* CONNMGR_CONNECTION_DETAILED_STATUS  [struct; ce-only; CE 6.0..699] */
-typedef struct _CONNMGR_CONNECTION_DETAILED_STATUS{
- struct _CONNMGR_CONNECTION_DETAILED_STATUS* pNext;
- DWORD dwVer; 
- DWORD dwParams;
- DWORD dwType; 
- DWORD dwSubtype;
- DWORD dwFlags; 
- DWORD dwSecure;
- GUID guidDestNet;
- GUID guidSourceNet; 
- TCHAR* szDescription;
- TCHAR* szAdapterName;
- DWORD dwConnectionStatus; 
- SYSTEMTIME LastConnectTime;
- DWORD dwSignalQuality; 
- CONNMGR_CONNECTION_IPADDR* pIPAddr;
-} CONNMGR_CONNECTION_DETAILED_STATUS;
-
-/* CONNMGR_CONNECTION_IPADDR  [struct; ce-only; CE 6.0..699] */
-typedef struct _CONNMGR_CONNECTION_IPADDR{
- DWORD cIPAddr;
- SOCKADDR_STORAGE IPAddr[1]
-} CONNMGR_CONNECTION_IPADDR;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

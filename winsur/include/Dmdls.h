@@ -5,11 +5,17 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 8 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 7 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _DMDLS_
 #define _DMDLS_
 
+
+/* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* DMUS_OFFSETTABLE  [struct; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -17,73 +23,11 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 500)) /* CE 4.0..499 */
-
-/* DMUS_MSCPARAMS  [struct; ce-only; CE 4.0..499] */
-typedef struct {
- PERCENT ptDefaultPan;
-} DMUS_MSCPARAMS;
-
-/* DMUS_NOTERANGE  [struct; ce-only; CE 4.0..499] */
-typedef struct _DMUS_NOTERANGE {
-DWORD dwLowNote;
-DWORD dwHighNote;
-} DMUS_NOTERANGE, *LPDMUS_NOTERANGE;
-
-/* DMUS_OFFSETTABLE  [struct; ce-only; CE 4.0..499] */
-typedef struct _DMUS_OFFSETTABLE {
- ULONG ulOffsetTable[DMUS_DEFAULT_SIZE_OFFSETTABLE];
-} DMUS_OFFSETTABLE;
-
-/* DMUS_PEGPARAMS  [struct; ce-only; CE 4.0..499] */
-typedef struct {
- TCENT tcAttack;
- TCENT tcDecay;
- PERCENT ptSustain;
- TCENT tcRelease;
- TCENT tcVel2Attack;
- TCENT tcKey2Decay;
- PCENT pcRange;
-} DMUS_PEGPARAMS;
-
-/* DMUS_REGION  [struct; ce-only; CE 4.0..499] */
-typedef struct {
- RGNRANGE RangeKey;
- RGNRANGE RangeVelocity;
- USHORT fusOptions;
- USHORT usKeyGroup;
- ULONG ulRegionArtIdx;
- ULONG ulNextRegionIdx;
- ULONG ulFirstExtCkIdx;
- WAVELINK WaveLink;
- WSMPL WSMP;
- WLOOP WLOOP[1];
-} DMUS_REGION;
-
-/* DMUS_VEGPARAMS  [struct; ce-only; CE 4.0..499] */
-typedef struct {
- TCENT tcAttack;
- TCENT tcDecay;
- PERCENT ptSustain;
- TCENT tcRelease;
- TCENT tcVel2Attack;
- TCENT tcKey2Decay;
-} DMUS_VEGPARAMS;
-
-/* DMUS_WAVE  [struct; ce-only; CE 4.0..499] */
-typedef struct {
- ULONG ulFirstExtCkIdx;
- ULONG ulCopyrightIdx;
- ULONG ulWaveDataIdx;
- WAVEFORMATEX WaveformatEx;
-} DMUS_WAVE;
-
-/* DMUS_WAVEDATA  [struct; ce-only; CE 4.0..499] */
+/* DMUS_WAVEDATA  [struct; ce-only] */
 typedef struct {
  ULONG cbSize;
  BYTE byData[ ];
 } DMUS_WAVEDATA;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

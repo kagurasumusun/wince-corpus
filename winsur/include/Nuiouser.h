@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 34 constants, 5 declarations, 2 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 34 constants, 4 declarations, 3 outlines, 0 base types, 0 extra macros, 5 extra decls
  */
 #ifndef _NUIOUSER_
 #define _NUIOUSER_
@@ -56,68 +56,11 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+/* NDISUIO_DEVICE_NOTIFICATION  [struct; ce-only] */
 
-/* NIC_STATISTICS  [struct; ce-only; CE 4.0..699] */
-#endif /* _WIN32_WCE */
+/* NDISUIO_OPEN_CONTEXT  [struct; ce-only] */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* NDISUIO_OPEN_CONTEXT  [struct; ce-only; CE 5.0..699] */
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* NDISUIO_QUERY_OID  [struct; ce-only; CE 4.0..699] */
-typedef struct _NDISUIO_QUERY_OID {
- NDIS_OID Oid;
- #ifdef UNDER_CE
- PTCHAR ptcDeviceName;
- #endif
- UCHAR Data[sizeof(ULONG)];
-} NDISUIO_QUERY_OID, *PNDISUIO_QUERY_OID;
-
-/* NDISUIO_SET_OID  [struct; ce-only; CE 4.0..699] */
-typedef struct _NDISUIO_SET_OID {
- NDIS_OID Oid;
- #ifdef UNDER_CE
- PTCHAR ptcDeviceName;
- #endif
- UCHAR Data[sizeof(ULONG)];
-} NDISUIO_SET_OID, *PNDISUIO_SET_OID;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* NDISUIO_DEVICE_NOTIFICATION  [struct; ce-only; CE 5.0..699] */
-typedef struct {
- DWORD dwNotificationType;
- TCHAR ptcDeviceName[MAX_PATH];
- UINT uiOffsetToStatusBuffer;
- UINT uiStatusBufferSize;
-} NDISUIO_DEVICE_NOTIFICATION, *PNDISUIO_DEVICE_NOTIFICATION;
-
-/* NDISUIO_QUERY_BINDING  [struct; ce-only; CE 5.0..699] */
-typedef struct _NDISUIO_QUERY_BINDING {
- ULONG BindingIndex;
- ULONG DeviceNameOffset;
- ULONG DeviceNameLength;
- ULONG DeviceDescrOffset;
- ULONG DeviceDescrLength;
-} NDISUIO_QUERY_BINDING, *PNDISUIO_QUERY_BINDING;
-
-/* NDISUIO_REQUEST_NOTIFICATION  [struct; ce-only; CE 5.0..699] */
-typedef struct{
- HANDLE hMsgQueue;
- DWORD dwNotificationTypes;
-}NDISUIO_REQUEST_NOTIFICATION, *PNDISUIO_REQUEST_NOTIFICATION;
-#endif /* _WIN32_WCE */
+/* NIC_STATISTICS  [struct; ce-only] */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

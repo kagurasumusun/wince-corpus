@@ -21,27 +21,6 @@
 #define L2TP_IPSEC_AUTH_SIGNATURE 0x1
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* L2TP_CONFIG_DATA  [struct; ce-only; CE 5.0..699] */
-typedef struct _L2TP_CONFIG_DATA{
- DWORD dwVersion;
- DWORD dwAuthType;
- DWORD dwFlags; 
- DWORD cbKey;
- DWORD dwOffsetKey;
- DWORD cMyCerts;
- DWORD cRootCerts;
- DWORD dwOffsetCertHashes;
-} L2TP_CONFIG_DATA, *PL2TP_CONFIG_DATA;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */

@@ -15,43 +15,21 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 200 && _WIN32_WCE < 210) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699 */
+/* ASSERT  [function, macro; shared] */
 
-/* ASSERT  [function, macro; shared; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699] */
-
-/* ASSERTMSG  [function, macro; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699] */
+/* ASSERTMSG  [function, macro; ce-only] */
 #define ASSERTMSG(
  message,
  Condition
 )
-#endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
+/* DEBUGZONE  [macro, function; ce-only] */
 
-/* DEBUGZONE  [macro, function; ce-only; CE 3.0..399, 5.0..699] */
-
-/* ERRORMSG  [function, macro; ce-only; CE 3.0..399, 5.0..699] */
+/* ERRORMSG  [function, macro; ce-only] */
 #define ERRORMSG(
  cond,
  printf_exp
 )
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* DBGPARAM  [struct; ce-only; CE 5.0..699] */
-typedef struct _DBGPARAM {
- WCHAR lpszName[32];
- WCHAR rglpszZones[16][32];
- ULONG ulZoneMask;
-} DBGPARAM, *LPDBGPARAM;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

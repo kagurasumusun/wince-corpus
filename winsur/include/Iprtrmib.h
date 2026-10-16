@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 26 constants, 19 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 26 constants, 11 declarations, 8 outlines, 0 base types, 0 extra macros, 5 extra decls
  */
 #ifndef _IPRTRMIB_
 #define _IPRTRMIB_
@@ -45,204 +45,18 @@
 #define MIB_USE_CURRENT_TTL ((DWORD)-1)
 
 /* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* MIB_IPNETROW  [struct; ce-only] */
+
+/* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-
-/* MIB_ICMP  [struct, typedef; shared; CE 3.0..399, 5.0..699] */
-typedef struct _MIB_ICMP {
- MIBICMPINFO stats; 
-} MIB_ICMP, *PMIB_ICMP;
-
-/* MIB_IFROW  [struct; shared; CE 3.0..399, 5.0..699] */
-typedef struct _MIB_IFROW {
- WCHAR wszName[MAX_INTERFACE_NAME_LEN];
- DWORD dwIndex; 
- DWORD dwType; 
- DWORD dwMtu; 
- DWORD dwSpeed; 
- DWORD dwPhysAddrLen; 
- BYTE bPhysAddr[MAXLEN_PHYSADDR]; 
- DWORD dwAdminStatus; 
- DWORD dwOperStatus; 
- DWORD dwLastChange; 
- DWORD dwInOctets; 
- DWORD dwInUcastPkts; 
- DWORD dwInNUcastPkts; 
- DWORD dwInDiscards; 
- DWORD dwInErrors; 
- DWORD dwInUnknownProtos; 
- DWORD dwOutOctets; 
- DWORD dwOutUcastPkts; 
- DWORD dwOutNUcastPkts; 
- DWORD dwOutDiscards; 
- DWORD dwOutErrors; 
- DWORD dwOutQLen; 
- DWORD dwDescrLen; 
- BYTE bDescr[MAXLEN_IFDESCR]; 
-} MIB_IFROW, *PMIB_IFROW;
-
-/* MIB_IFTABLE  [struct; shared; CE 3.0..399, 5.0..699] */
-typedef struct _MIB_IFTABLE {
- DWORD dwNumEntries; 
- MIB_IFROW table[ANY_SIZE]; 
-} MIB_IFTABLE, *PMIB_IFTABLE;
-
-/* MIB_IPADDRROW  [struct; ce-only; CE 3.0..399, 5.0..699] */
-typedef struct _MIB_IPADDRROW {
- DWORD dwAddr; 
- DWORD dwIndex; 
- DWORD dwMask; 
- DWORD dwBCastAddr; 
- DWORD dwReasmSize; 
- unsigned short unused1; 
- unsigned short unused2; 
-} MIB_IPADDRROW, *PMIB_IPADDRROW;
-
-/* MIB_IPADDRTABLE  [struct; shared; CE 3.0..399, 5.0..699] */
-typedef struct _MIB_IPADDRTABLE {
- DWORD dwNumEntries; 
- MIB_IPADDRROW table[ANY_SIZE]; 
-} MIB_IPADDRTABLE, *PMIB_IPADDRTABLE;
-
-/* MIB_IPFORWARDROW  [struct; shared; CE 3.0..399, 5.0..699] */
-typedef struct _MIB_IPFORWARDROW {
- DWORD dwForwardDest; 
- DWORD dwForwardMask; 
- DWORD dwForwardPolicy; 
- DWORD dwForwardNextHop; 
- DWORD dwForwardIfIndex; 
- DWORD dwForwardType; 
- DWORD dwForwardProto; 
- DWORD dwForwardAge; 
- DWORD dwForwardNextHopAS; 
- DWORD dwForwardMetric1; 
- DWORD dwForwardMetric2; 
- DWORD dwForwardMetric3; 
- DWORD dwForwardMetric4; 
- DWORD dwForwardMetric5; 
-} MIB_IPFORWARDROW, *PMIB_IPFORWARDROW;
-
-/* MIB_IPFORWARDTABLE  [struct; shared; CE 3.0..399, 5.0..699] */
-typedef struct _MIB_IPFORWARDTABLE {
- DWORD dwNumEntries; 
- MIB_IPFORWARDROW table[ANY_SIZE]; 
-} MIB_IPFORWARDTABLE, *PMIB_IPFORWARDTABLE;
-
-/* MIB_IPNETROW  [struct; ce-only; CE 3.0..399, 5.0..699] */
-typedef struct _MIB_IPNETROW {
- DWORD dwIndex; 
- DWORD dwPhysAddrLen; 
- BYTE bPhysAddr[MAXLEN_PHYSADDR]; 
- DWORD dwAddr; 
- DWORD dwType; 
-} MIB_IPNETROW, *PMIB_IPNETROW;
-
-/* MIB_IPNETTABLE  [struct; shared; CE 3.0..399, 5.0..699] */
-typedef struct _MIB_IPNETTABLE {
- DWORD dwNumEntries; 
- MIB_IPNETROW table[ANY_SIZE]; 
-} MIB_IPNETTABLE, *PMIB_IPNETTABLE;
-
-/* MIB_IPSTATS  [struct; ce-only; CE 3.0..399, 5.0..699] */
-typedef struct _MIB_IPSTATS {
- DWORD dwForwarding; 
- DWORD dwDefaultTTL; 
- DWORD dwInReceives; 
- DWORD dwInHdrErrors; 
- DWORD dwInAddrErrors; 
- DWORD dwForwDatagrams; 
- DWORD dwInUnknownProtos; 
- DWORD dwInDiscards; 
- DWORD dwInDelivers; 
- DWORD dwOutRequests; 
- DWORD dwRoutingDiscards; 
- DWORD dwOutDiscards; 
- DWORD dwOutNoRoutes; 
- DWORD dwReasmTimeout; 
- DWORD dwReasmReqds; 
- DWORD dwReasmOks; 
- DWORD dwReasmFails; 
- DWORD dwFragOks; 
- DWORD dwFragFails; 
- DWORD dwFragCreates; 
- DWORD dwNumIf; 
- DWORD dwNumAddr; 
- DWORD dwNumRoutes; 
-} MIB_IPSTATS, *PMIB_IPSTATS;
-
-/* MIB_PROXYARP  [struct; shared; CE 3.0..399, 5.0..699] */
-typedef struct _MIB_PROXYARP {
- DWORD dwAddress; 
- DWORD dwMask; 
- DWORD dwIfIndex; 
-} MIB_PROXYARP, *PMIB_PROXYARP;
-
-/* MIB_TCPROW  [struct; ce-only; CE 3.0..399, 5.0..699] */
-typedef struct _MIB_TCPROW {
- DWORD dwState; 
- DWORD dwLocalAddr; 
- DWORD dwLocalPort; 
- DWORD dwRemoteAddr; 
- DWORD dwRemotePort; 
-} MIB_TCPROW, *PMIB_TCPROW;
-
-/* MIB_TCPSTATS  [struct; ce-only; CE 3.0..399, 5.0..699] */
-typedef struct _MIB_TCPSTATS {
- DWORD dwRtoAlgorithm; 
- DWORD dwRtoMin; 
- DWORD dwRtoMax; 
- DWORD dwMaxConn; 
- DWORD dwActiveOpens; 
- DWORD dwPassiveOpens; 
- DWORD dwAttemptFails; 
- DWORD dwEstabResets; 
- DWORD dwCurrEstab; 
- DWORD dwInSegs; 
- DWORD dwOutSegs; 
- DWORD dwRetransSegs; 
- DWORD dwInErrs; 
- DWORD dwOutRsts; 
- DWORD dwNumConns; 
-} MIB_TCPSTATS, *PMIB_TCPSTATS;
-
-/* MIB_TCPTABLE  [struct; shared; CE 3.0..399, 5.0..699] */
-typedef struct _MIB_TCPTABLE {
- DWORD dwNumEntries; 
- MIB_TCPROW table[ANY_SIZE]; 
-} MIB_TCPTABLE, *PMIB_TCPTABLE;
-
-/* MIB_UDPROW  [struct; shared; CE 3.0..399, 5.0..699] */
-typedef struct _MIB_UDPROW {
- DWORD dwLocalAddr; 
- DWORD dwLocalPort; 
-} MIB_UDPROW, *PMIB_UDPROW;
-
-/* MIB_UDPSTATS  [struct; shared; CE 3.0..399, 5.0..699] */
-typedef struct _MIB_UDPSTATS {
- DWORD dwInDatagrams; 
- DWORD dwNoPorts; 
- DWORD dwInErrors; 
- DWORD dwOutDatagrams; 
- DWORD dwNumAddrs; 
-} MIB_UDPSTATS, *PMIB_UDPSTATS;
-
-/* MIB_UDPTABLE  [struct; shared; CE 3.0..399, 5.0..699] */
-typedef struct _MIB_UDPTABLE {
- DWORD dwNumEntries; 
- MIB_UDPROW table[ANY_SIZE]; 
-} MIB_UDPTABLE, *PMIB_UDPTABLE;
-
-/* MIBICMPINFO  [struct; shared; CE 3.0..399, 5.0..699] */
-typedef struct _MIBICMPINFO {
- MIBICMPSTATS icmpInStats; 
- MIBICMPSTATS icmpOutStats; 
-} MIBICMPINFO;
-
-/* MIBICMPSTATS  [struct; shared; CE 3.0..399, 5.0..699] */
+/* MIBICMPSTATS  [struct; shared] */
 typedef struct _MIBICMPSTATS {
  DWORD dwMsgs; 
  DWORD dwErrors; 
@@ -258,7 +72,69 @@ typedef struct _MIBICMPSTATS {
  DWORD dwAddrMasks; 
  DWORD dwAddrMaskReps; 
 } MIBICMPSTATS;
-#endif /* _WIN32_WCE */
+
+/* MIBICMPINFO  [struct; shared] */
+typedef struct _MIBICMPINFO {
+ MIBICMPSTATS icmpInStats; 
+ MIBICMPSTATS icmpOutStats; 
+} MIBICMPINFO;
+
+/* MIB_IFROW  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   wszName */
+/*   dwIndex */
+/*   dwType */
+/*   dwMtu */
+/*   dwSpeed */
+/*   dwPhysAddrLen */
+/*   bPhysAddr */
+/*   dwAdminStatus */
+/*   dwOperStatus */
+/*   dwLastChange */
+/*   dwInOctets */
+/*   dwInUcastPkts */
+/*   dwInNUcastPkts */
+/*   dwInDiscards */
+/*   dwInErrors */
+/*   dwInUnknownProtos */
+/*   dwOutOctets */
+/*   dwOutUcastPkts */
+/*   dwOutNUcastPkts */
+/*   dwOutDiscards */
+/*   dwOutErrors */
+/*   dwOutQLen */
+/*   dwDescrLen */
+/*   bDescr */
+
+/* MIB_IFTABLE  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   dwNumEntries */
+/*   table */
+
+/* MIB_IPADDRTABLE  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   dwNumEntries */
+/*   table */
+
+/* MIB_IPFORWARDTABLE  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   dwNumEntries */
+/*   table */
+
+/* MIB_IPNETTABLE  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   dwNumEntries */
+/*   table */
+
+/* MIB_TCPTABLE  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   dwNumEntries */
+/*   table */
+
+/* MIB_UDPTABLE  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   dwNumEntries */
+/*   table */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

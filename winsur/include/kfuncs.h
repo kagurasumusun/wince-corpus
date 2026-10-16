@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 38 constants, 10 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 38 constants, 10 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _KFUNCS_
 #define _KFUNCS_
@@ -60,14 +60,11 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* WaitForAPIReady  [function, macro; ce-only; CE 6.0..699; coredll.dll] */
+/* WaitForAPIReady  [function, macro; ce-only; coredll.dll] */
 DWORD WaitForAPIReady(
 DWORD dwAPISlotIndex,
 DWORD dwTimeout
 );
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks
@@ -109,13 +106,5 @@ DWORD CeGetCallerTrust (void);
 /* CeGetCurrentTrust  [function; ce-only; CE 3.0..399, 5.0..699; Nk.lib, nk.lib] */
 DWORD CeGetCurrentTrust (void);
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-BOOL KernelIOControl(UINT32 code, VOID* pInpBuffer, UINT32 inpSize, VOID* pOutBuffer, UINT32 outSize, UINT32 *pOutSize);
 
 #endif /* _KFUNCS_ */

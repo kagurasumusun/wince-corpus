@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 7 constants, 47 declarations, 13 outlines, 0 base types, 0 extra macros, 4 extra decls
+ * 7 constants, 45 declarations, 15 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _WINDBASE_
 #define _WINDBASE_
@@ -28,6 +28,8 @@
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
+
+/* CEDBASEINFOEX  [struct; ce-only; Coredll.lib, coredll.lib] */
 
 /* CEVT_AUTO_I4  [typedef; ce-only; heuristic-prefix] */
 
@@ -55,25 +57,15 @@
 
 /* CEVT_UI4  [typedef; ce-only; heuristic-prefix] */
 
+/* SORTORDERSPECEX  [struct; ce-only; Coredll.lib, coredll.lib] */
+
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* CENOTIFICATION  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct _CENOTIFICATION {
- DWORD dwSize; 
- DWORD dwParam;
- UINT uType;
- CEGUID guid;
- CEOID oid;
- CEOID oidParent;
-} CENOTIFICATION;
-
-/* CENOTIFYREQUEST  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
+/* CENOTIFYREQUEST  [struct; ce-only] */
 typedef struct _CENOTIFYREQUEST {
  DWORD dwSize;
  HWND hwnd; 
@@ -81,48 +73,8 @@ typedef struct _CENOTIFYREQUEST {
  HANDLE hHeap;
  DWORD dwParam;
 } CENOTIFYREQUEST;
-#endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* BY_HANDLE_DB_INFORMATION  [struct; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-typedef struct BY_HANDLE_DB_INFORMATION {
- WORD wVersion;
- WORD wReserved;
- CEGUID guidVol;
- CEOID oidDbase;
- CEDBASEINFOEX infDatabase;
-}BY_HANDLE_DB_INFORMATION;
-
-/* CEDBASEINFOEX  [struct; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-typedef struct CEDBASEINFOEX {
- WORD wVersion;
- WORD wNumSortOrder;
- DWORD dwFlags;
- WCHAR szDbaseName[CEDB_MAXDBASENAMELEN]; 
- DWORD dwDbaseType;
- DWORD dwNumRecords;
- DWORD dwSize;
- FILETIME ftLastModified; 
- SORTORDERSPECEX rgSortSpecs[CEDB_MAXSORTORDER];
-} CEDBASEINFOEX;
-
-/* CEOIDINFOEX  [struct; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-typedef struct _CEOIDINFOEX { 
- WORD wVersion;
- WORD wObjType;
- union {
- CEFILEINFO infFile;
- CEDIRINFO infDirectory;
- CEDBASEINFOEX infDatabase;
- CERECORDINFO infRecord;
- };
-} CEOIDINFOEX;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* CEPROPSPEC  [struct; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
+/* CEPROPSPEC  [struct; ce-only; Coredll.lib, coredll.lib] */
 typedef struct CEPROPSPEC {
  WORD wVersion;
  CEPROPID propid;
@@ -130,29 +82,6 @@ typedef struct CEPROPSPEC {
  LPWSTR pwszPropName;
  DWORD cchPropName;
 } CEPROPSPEC;
-
-/* CEVOLUMEOPTIONS  [struct; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-typedef struct CEVOLUMEOPTIONS {
- WORD wVersion;
- DWORD cbBufferPool;
- DWORD dwAutoShrinkPercent;
- DWORD dwFlushInterval;
- DWORD cMaxNotifyChanges;
- DWORD dwDefaultTimeout;
- WCHAR wszPassword[CCH_MAX_PASSWORD + 1];
- DWORD dwFlags;
-} CEVOLUMEOPTIONS;
-
-/* SORTORDERSPECEX  [struct; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-typedef struct CESORTORDERSPECEX {
- WORD wVersion;
- WORD wNumProps;
- WORD wKeyFlags;
- WORD wReserved;
- CEPROPID rgPropID[CEDB_MAXSORTPROP];
- DWORD rgdwFlags[CEDB_MAXSORTPROP];
-} CESORTORDERSPECEX;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks
@@ -463,7 +392,6 @@ typedef struct _BY_HANDLE_DB_INFORMATION {
   CEOID oidDbase;
   CEDBASEINFOEX infDatabase;
 } BY_HANDLE_DB_INFORMATION, *LPBY_HANDLE_DB_INFORMATION;
-typedef struct _CEOIDINFOEX { WORD wVersion; WORD wObjType; union { CEFILEINFO infFile; CEDIRINFO infDirectory; CEDBASEINFOEX infDatabase; CERECORDINFO infRecord; };
 
 /* function */
 CEOIDCeSeekDatabaseEx(HANDLE hDatabase,DWORDdwSeekType, DWORDdwValue, WORD wNumVals,LPDWORDlpdwIndex);

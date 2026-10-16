@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 18 constants, 36 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 18 constants, 36 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _PWINUSER_
 #define _PWINUSER_
@@ -42,25 +42,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* GET_FOREGROUND_INFO  [struct; ce-only; CE 5.0..699] */
-typedef struct tagGetForegroundInfo {
- HWND hwndActive;
- HWND hwndFocus;
- HWND hwndMenu;
- HWND hwndKeyboardDest;
- DWORD fdwConversion;
- DWORD fdwSentence;
- BOOL fOpen;
- DWORD dwCompStrLen;
- HKL KeyboardLayoutHandle;
-} GET_FOREGROUND_INFO;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* ANIMATEMESSAGEINFO  [struct; ce-only; CE 6.0..699] */
+/* ANIMATEMESSAGEINFO  [struct; ce-only] */
 typedef struct tagANIMATEMESSAGEINFO {
  size_t cbSize;
  DWORD dwAnimationID;
@@ -68,29 +50,7 @@ typedef struct tagANIMATEMESSAGEINFO {
  int nHPixelPosition;
 } ANIMATEMESSAGEINFO
 
-/* GESTUREINFO  [struct; shared; CE 6.0..699] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   cbSize */
-/*   dwFlags */
-/*   dwID */
-/*   hwndTarget */
-/*   ptsLocation */
-/*   dwInstanceID */
-/*   dwSequenceID */
-/*   ullArguments */
-/*   cbExtraArgs */
-
-/* GESTUREMETRICS  [struct; ce-only; CE 6.0..699] */
-typedef struct tagGESTUREMETRICS {
- UINT cbSize;
- DWORD dwID;
- DWORD dwTimeout;
- DWORD dwDistanceTolerance; 
- DWORD dwAngularTolerance;
- DWORD dwExtraInfo;
-} GESTUREMETRICS, *LPGESTUREMETRICS;
-
-/* PHYSICSENGINEINIT  [struct; ce-only; CE 6.0..699] */
+/* PHYSICSENGINEINIT  [struct; ce-only] */
 typedef struct tagPHYSICSENGINEINIT {
  DWORD cbSize;
  DWORD dwEngineType;
@@ -107,7 +67,7 @@ typedef struct tagPHYSICSENGINEINIT {
  SIZE sizeItem;
 } PHYSICSENGINEINIT;
 
-/* PHYSICSENGINESTATE  [struct; ce-only; CE 6.0..699] */
+/* PHYSICSENGINESTATE  [struct; ce-only] */
 typedef struct tagPHYSICSENGINESTATE {
  DWORD cbSize; 
  DWORD dwTime;
@@ -117,7 +77,7 @@ typedef struct tagPHYSICSENGINESTATE {
  BOOL fComplete;
 } PHYSICSENGINESTATE;
 
-/* WAGINFO  [struct; ce-only; CE 6.0..699] */
+/* WAGINFO  [struct; ce-only] */
 typedef struct tagWAGI {
  size_t cbSize;
  DWORD dwFlags;
@@ -130,14 +90,17 @@ typedef struct tagWAGI {
  BYTE bVerticalExtent;
 } WAGINFO
 
-/* XRGestureEventArgs  [struct; ce-only; CE 6.0..699] */
-struct XRGestureEventArgs : XREventArgs
-{
- BOOL Handled;
- HWND hWnd;
- GESTUREINFO GestureInfo;
-};
-#endif /* _WIN32_WCE */
+/* GESTUREINFO  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   cbSize */
+/*   dwFlags */
+/*   dwID */
+/*   hwndTarget */
+/*   ptsLocation */
+/*   dwInstanceID */
+/*   dwSequenceID */
+/*   ullArguments */
+/*   cbExtraArgs */
 
 /* ==================================================================
  * functions and callbacks
@@ -321,26 +284,5 @@ BOOL SetWindowAutoGesture(
  LPWAGINFO lpAutoGestureInfo
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-struct XRGestureEventArgs : XREventArgs
-{
-  BOOL Handled;
-  HWND hWnd;
-  GESTUREINFO GestureInfo;
-};
-typedef struct tagGESTUREMETRICS {
-  UINT cbSize;
-  DWORD dwID;
-  DWORD dwTimeout;
-  DWORD dwDistanceTolerance;
-  DWORD dwAngularTolerance;
-  DWORD dwExtraInfo;
-} GESTUREMETRICS, *LPGESTUREMETRICS;
 
 #endif /* _PWINUSER_ */

@@ -26,29 +26,6 @@ typedef BOOL (*PFN_KEYBD_DRIVER_GET_INFO)(
  LPVOID lpOutput
 );
 
-/* PFN_KEYBD_DRIVER_INIT_STATES  [callback; ce-only; CE 5.0..699; LayoutManager.lib, layoutmanager.lib] */
-typedef BOOL (*PFN_KEYBD_DRIVER_INIT_STATES)(
- INT iKeybdId,
- KEY_STATE KeyState,
- void *pKeybdDriverState
-);
-
-/* PFN_KEYBD_DRIVER_INITIALIZE  [callback; ce-only; CE 5.0..699; LayoutManager.lib, layoutmanager.lib] */
-typedef void (*PFN_KEYBD_DRIVER_INITIALIZE)(
- PFN_KEYBD_EVENT_CALLBACK pfnKeybdEventCallback
-);
-
-/* PFN_KEYBD_DRIVER_INITIALIZE_EX  [callback; ce-only; CE 5.0..699; LayoutManager.lib, layoutmanager.lib] */
-typedef void (*PFN_KEYBD_DRIVER_INITIALIZE_EX)(
- PFN_KEYBD_EVENT_CALLBACK_EX pfnKeybdEventCallbackEx
-);
-
-/* PFN_KEYBD_DRIVER_MAP_VIRTUAL_KEY  [callback; ce-only; CE 5.0..699; LayoutManager.lib, layoutmanager.lib] */
-typedef UINT32 (*PFN_KEYBD_DRIVER_MAP_VIRTUAL_KEY)(
- UINT32 uCode,
- UINT32 uMapType
-);
-
 /* PFN_KEYBD_DRIVER_POWER_HANDLER  [callback; ce-only; CE 5.0..699; LayoutManager.lib, layoutmanager.lib] */
 typedef void (*PFN_KEYBD_DRIVER_POWER_HANDLER)(
  BOOL bOff
@@ -61,48 +38,6 @@ typedef BOOL (*PFN_KEYBD_DRIVER_SET_MODE)(
  LPVOID lpInput
 );
 
-/* PFN_KEYBD_DRIVER_VKEY_TO_UNICODE  [callback; ce-only; CE 5.0..699; LayoutManager.lib, layoutmanager.lib] */
-typedef UINT32 (*PFN_KEYBD_DRIVER_VKEY_TO_UNICODE)(
- UINT32 VKey,
- KEY_STATE_FLAGS KeyEventFlags,
- KEY_STATE KeyState,
- void *KeybdDriverState,
- UINT32 cBufferSize,
- UINT32 *pcCharacters,
- KEY_STATE_FLAGS *pShiftStateBuffer,
- UINT32 *pCharacterBuffer
-);
-
-/* PFN_KEYBD_EVENT_CALLBACK  [callback; ce-only; CE 5.0..699; LayoutManager.lib, layoutmanager.lib] */
-typedef BOOL (*PFN_KEYBD_EVENT_CALLBACK)(
- UINT32 VirtualKey,
- KEY_STATE_FLAGS KeyEvent 
-);
-
-/* PFN_KEYBD_EVENT_CALLBACK_EX  [callback; ce-only; CE 5.0..699; LayoutManager.lib, layoutmanager.lib] */
-typedef BOOL (*PFN_KEYBD_EVENT_CALLBACK_EX)(
- UINT32 VirtualKey,
- UINT32 ScanCode,
- KEY_STATE_FLAGS KeyEvent
-);
-
-/* PFN_LAYOUT_MGR_ACTIVATE_KEYBOARD_LAYOUT  [callback; ce-only; CE 5.0..699; LayoutManager.lib, layoutmanager.lib] */
-typedef HKL (*PFN_LAYOUT_MGR_ACTIVATE_KEYBOARD_LAYOUT)(
- HKL hkl,
- UINT Flags
-);
-
-/* PFN_LAYOUT_MGR_GET_KEYBOARD_LAYOUT  [callback; ce-only; CE 5.0..699; LayoutManager.lib, layoutmanager.lib] */
-typedef HKL (*PFN_LAYOUT_MGR_GET_KEYBOARD_LAYOUT)(
- DWORD idThread
-);
-
-/* PFN_LAYOUT_MGR_GET_KEYBOARD_LAYOUT_LIST  [callback; ce-only; CE 5.0..699; LayoutManager.lib, layoutmanager.lib] */
-typedef UINT (*PFN_LAYOUT_MGR_GET_KEYBOARD_LAYOUT_LIST)(
- int nBuf,
- HKL FAR *lpList
-);
-
 /* PFN_LAYOUT_MGR_GET_KEYBOARD_LAYOUT_NAME  [callback; ce-only; CE 5.0..699; LayoutManager.lib, layoutmanager.lib] */
 typedef BOOL (*PFN_LAYOUT_MGR_GET_KEYBOARD_LAYOUT_NAME)(
  WCHAR *pNameBuf
@@ -111,12 +46,6 @@ typedef BOOL (*PFN_LAYOUT_MGR_GET_KEYBOARD_LAYOUT_NAME)(
 /* PFN_LAYOUT_MGR_GET_KEYBOARD_TYPE  [callback; ce-only; CE 5.0..699; LayoutManager.lib, layoutmanager.lib] */
 typedef int (*PFN_LAYOUT_MGR_GET_KEYBOARD_TYPE)(
  int nTypeFlag
-);
-
-/* PFN_LAYOUT_MGR_LOAD_KEYBOARD_LAYOUT  [callback; ce-only; CE 5.0..699; LayoutManager.lib, layoutmanager.lib] */
-typedef HKL (*PFN_LAYOUT_MGR_LOAD_KEYBOARD_LAYOUT)(
- LPCWSTR pwszKLID,
- UINT Flags
 );
 #endif /* _WIN32_WCE */
 

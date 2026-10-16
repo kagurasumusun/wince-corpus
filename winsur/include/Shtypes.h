@@ -17,18 +17,15 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* SHITEMID  [struct; shared; CE 5.0..699] */
+/* SHITEMID  [struct; shared] */
 typedef struct _SHITEMID { 
  USHORT cb; 
  BYTE abID[1]; 
  } SHITEMID;
 
-/* STRRET  [struct; shared; CE 5.0..699] */
+/* STRRET  [struct; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   uType */
 /*   DUMMYUNIONNAME */
-#endif /* _WIN32_WCE */
 
 #endif /* _SHTYPES_ */

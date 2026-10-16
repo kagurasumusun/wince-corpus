@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 50 constants, 37 declarations, 0 outlines, 0 base types, 0 extra macros, 12 extra decls
+ * 50 constants, 30 declarations, 7 outlines, 0 base types, 0 extra macros, 12 extra decls
  */
 #ifndef _SIMMGR_
 #define _SIMMGR_
@@ -69,6 +69,24 @@
 #define SIM_SMSSTORAGE_SIM 0
 
 /* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* SIMCAPS  [struct; ce-only] */
+
+/* SIMFILEREFRESH  [struct; ce-only] */
+
+/* SIMMESSAGE  [struct; ce-only] */
+
+/* SIMPHONEBOOKADDITIONALNUMBER  [struct; ce-only] */
+
+/* SIMPHONEBOOKEMAILADDRESS  [struct; ce-only] */
+
+/* SIMPHONEBOOKENTRY  [struct; ce-only; cellcore.lib] */
+
+/* SIMPHONEBOOKENTRYEX  [struct; ce-only] */
+
+/* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
@@ -83,141 +101,6 @@ typedef void (*SIMCALLBACK) (
  DWORD dwDataSize,
  DWORD dwParam
 );
-
-/* SIMCAPS  [struct; ce-only; CE 6.0..699] */
-typedef struct simcaps_tag {
- DWORD cbSize;
- DWORD dwParams;
- DWORD dwPBStorages;
- DWORD dwMinPBIndex;
- DWORD dwMaxPBIndex;
- DWORD dwMaxPBEAddressLength;
- DWORD dwMaxPBETextLength;
- DWORD dwLockFacilities;
- DWORD dwReadMsgStorages;
- DWORD dwWriteMsgStorages;
- DWORD dwNumLockingPwdLengths;
- SIMLOCKINGPWDLENGTH rgLockingPwdLengths[SIM_NUMLOCKFACILITIES];
-} SIMCAPS, FAR *LPSIMCAPS;
-
-/* SIMFILEREFRESH  [struct; ce-only; CE 6.0..699] */
-typedef struct simfilerefresh_tag {
- DWORD cbSize;
- DWORD dwParams;
- DWORD dwFlags;
- DWORD dwFileCount;
- DWORD rgdwAddress[MAX_FILES];
-} SIMFILEREFRESH, FAR *LPSIMFILEREFRESH;
-
-/* SIMLOCKINGPWDLENGTH  [struct; ce-only; CE 6.0..699] */
-typedef struct simlockingpwdlength {
- DWORD dwFacility;
- DWORD dwPasswordLength;
-} SIMLOCKINGPWDLENGTH, FAR *LPSIMLOCKINGPWDLENGTH;
-
-/* SIMMESSAGE  [struct; ce-only; CE 6.0..699] */
-typedef struct simmessage_tag {
- DWORD cbSize;
- DWORD dwParams;
- TCHAR lpszAddress[MAX_LENGTH_ADDRESS];
- DWORD dwAddressType;
- DWORD dwNumPlan;
- SYSTEMTIME stReceiveTime;
- DWORD cbHdrLength;
- BYTE rgbHeader[MAX_LENGTH_HEADER];
- TCHAR lpszMessage[MAX_LENGTH_MESSAGE];
-} SIMMESSAGE, FAR *LPSIMMESSAGE;
-
-/* SIMMESSAGECHANGE  [struct; ce-only; CE 6.0..699] */
-typedef struct simmessagechange_tag {
- DWORD dwEntry;
- DWORD dwStorage;
-} SIMMESSAGECHANGE, FAR *LPSIMMESSAGECHANGE;
-
-/* SIMPBECHANGE  [struct; ce-only; CE 6.0..699] */
-typedef struct simpbechange_tag {
- DWORD dwEntry;
- DWORD dwStorage;
-} SIMPBECHANGE, FAR *LPSIMPBECHANGE;
-
-/* SIMPHONEBOOKADDITIONALNUMBER  [struct; ce-only; CE 6.0..699] */
-typedef struct simphonebookadditionalnumber_tag {
- DWORD cbSize;
- DWORD dwParams;
- TCHAR lpszAddress[MAX_LENGTH_ADDRESS];
- DWORD dwAddressType;
- DWORD dwNumPlan;
- DWORD dwNumId;
-} SIMPHONEBOOKADDITIONALNUMBER, *LPSIMPHONEADDITIONALNUMBER;
-
-/* SIMPHONEBOOKCAPS  [struct; ce-only; CE 6.0..699] */
-typedef struct simphonebookcaps_tag {
- DWORD cbSize;
- DWORD dwParams;
- DWORD dwStorages;
- DWORD dwMinIndex;
- DWORD dwMaxIndex;
- DWORD dwMaxAddressLength;
- DWORD dwMaxTextLength;
- DWORD dwMaxSecondNameLength;
- DWORD dwMaxAdditionalNumberLength;
- DWORD dwMaxEmailAddressLength;
- DWORD dwMaxGroupTagLength;
- DWORD dwMaxAdditionalNumberTagLength;
- DWORD dwAdditionalNumberCount;
- DWORD dwEmailAddressCount;
- DWORD dwMaxGroupTags;
- DWORD dwMaxAdditionalNumberTags;
- BOOL fHidden;
- BOOL fUid;
- DWORD dwMaxGroupIdCount;
-} SIMPHONEBOOKCAPS, FAR *LPPHONEBOOKSIMCAPS;
-
-/* SIMPHONEBOOKEMAILADDRESS  [struct; ce-only; CE 6.0..699] */
-typedef struct simphonebookemailaddress_tag {
- DWORD cbSize;
- DWORD dwParams;
- TCHAR lpszAddress[MAX_LENGTH_PHONEBOOKENTRYTEXT];
-} SIMPHONEBOOKEMAILADDRESS, *LPSIMPHONEBOOKEMAILADDRESS;
-
-/* SIMPHONEBOOKENTRY  [struct; ce-only; CE 6.0..699; cellcore.lib] */
-typedef struct simphonebookentry_tag {
- DWORD cbSize;
- DWORD dwParams;
- TCHAR lpszAddress[MAX_LENGTH_ADDRESS];
- DWORD dwAddressType;
- DWORD dwNumPlan;
- TCHAR lpszText[MAX_LENGTH_PHONEBOOKENTRYTEXT];
-} SIMPHONEBOOKENTRY, *LPSIMPHONEBOOKENTRY;
-
-/* SIMPHONEBOOKENTRYEX  [struct; ce-only; CE 6.0..699] */
-typedef struct simphonebookentryex_tag {
- DWORD cbSize;
- DWORD dwParams;
- TCHAR lpszAddress[MAX_LENGTH_ADDRESS];
- DWORD dwAddressType;
- DWORD dwNumPlan;
- TCHAR lpszText[MAX_LENGTH_PHONEBOOKENTRYTEXT];
- TCHAR lpszSecondName[MAX_LENGTH_PHONEBOOKENTRYTEXT];
- DWORD dwIndex;
- BOOL fHidden;
- DWORD dwGroupIdCount;
- DWORD rgdwGroupId[MAX_NUM_GROUPS];
- DWORD dwUid;
- DWORD dwAdditionalNumberCount;
- LPSIMPHONEBOOKADDITIONALNUMBER lpAdditionalNumbers;
- DWORD dwEmailCount;
- LPSIMPHONEBOOKEMAILADDRESS lpEmailAddresses;
-} SIMPHONEBOOKENTRYEX, *LPSIMPHONEBOOKENTRYEX;
-
-/* SIMRECORDINFO  [struct; ce-only; CE 6.0..699] */
-typedef struct simrecordinfo_tag {
- DWORD cbSize;
- DWORD dwParams;
- DWORD dwRecordType;
- DWORD dwItemCount;
- DWORD dwSize;
-} SIMRECORDINFO, FAR *LPSIMRECORDINFO;
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

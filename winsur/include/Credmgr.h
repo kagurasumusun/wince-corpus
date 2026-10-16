@@ -28,26 +28,6 @@
 #define CRED_TYPE_NTLM_PASSWORD 5
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* CREDENTIAL  [struct; shared; CE 5.0..699; A/W CREDENTIALA,CREDENTIALW (CE is W-side)] */
-typedef struct _CREDENTIAL {
- DWORD Flags;
- DWORD Type;
- FILETIME LastWritten;
- DWORD CredentialBlobSize;
- LPBYTE CredentialBlob;
- DWORD Persist;
- LPTSTR UserName;
-} CREDENTIAL, *PCREDENTIAL;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

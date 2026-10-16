@@ -35,65 +35,6 @@
 #define PwrDeviceUnspecified -1
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* CEDEVICE_POWER_STATE  [enum; ce-only; CE 4.0..699] */
-typedef enum _CEDEVICE_POWER_STATE {
- PwrDeviceUnspecified = -1,
- D0 = 0,
- D1,
- D2,
- D3,
- D4,
- PwrDeviceMaximum
-} CEDEVICE_POWER_STATE, *PCEDEVICE_POWER_STATE;
-
-/* POWER_BROADCAST  [struct; ce-only; CE 4.0..699] */
-struct {
- DWORD Message;
- DWORD Flags;
- DWORD Length;
- WCHAR SystemPowerState[1];
-} POWER_BROADCAST, *PPOWER_BROADCAST;
-
-/* POWER_BROADCAST_POWER_INFO  [struct; ce-only; CE 4.0..699] */
-typedef struct _POWER_BROADCAST_POWER_INFO {
- DWORD dwBatteryLifeTime;
- DWORD dwBatteryFullLifeTime;
- DWORD dwBackupBatteryLifeTime;
- DWORD dwBackupBatteryFullLifeTime;
- BYTE bACLineStatus;
- BYTE bBatteryFlag;
- BYTE bBatteryLifePercent;
- BYTE bBackupBatteryFlag;
- BYTE bBackupBatteryLifePercent;
-} POWER_BROADCAST_POWER_INFO, *PPOWER_BROADCAST_POWER_INFO;
-
-/* POWER_CAPABILITIES  [struct; ce-only; CE 4.0..699] */
-typedef struct _POWER_CAPABILITIES {
- UCHAR DeviceDx;
- UCHAR WakeFromDx;
- UCHAR InrushDx;
- DWORD Power[5];
- DWORD Latency[5];
- DWORD Flags;
-} POWER_CAPABILITIES, *PPOWER_CAPABILITIES;
-
-/* POWER_RELATIONSHIP  [struct; ce-only; CE 4.0..699] */
-typedef struct _POWER_RELATIONSHIP {
- HANDLE hParent;
- LPCWSTR pwsParent;
- HANDLE hChild;
- LPCWSTR pwsChild;
-} POWER_RELATIONSHIP, *PPOWER_RELATIONSHIP;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
@@ -180,9 +121,6 @@ DWORD StopPowerNotifications(
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
-
-/* typedef */
-typedef ULONGLONG bt_addr, *pbt_addr, BT_ADDR, *PBT_ADDR;
 
 /* enum */
 typedef enum _CEDEVICE_POWER_STATE {PwrDeviceUnspecified = -1,D0 = 0,D1,D2,D3,D4,PwrDeviceMaximum} CEDEVICE_POWER_STATE, *PCEDEVICE_POWER_STATE;

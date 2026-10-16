@@ -5,102 +5,22 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 6 extra decls
+ * 0 constants, 6 declarations, 1 outlines, 0 base types, 0 extra macros, 6 extra decls
  */
 #ifndef _CDIOCTL_
 #define _CDIOCTL_
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
+ * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* CD_SENSE_DATA  [struct; ce-only; CE 4.0..699] */
-typedef struct _CD_SENSE_DATA {
- BYTE sd_ErrCode; 
- BYTE sd_SegNum; 
- BYTE sd_ILI_Key; 
- BYTE sd_Info[4]; 
- BYTE sd_Length; 
- BYTE sd_CmdInfo[4]; 
- BYTE sd_SenseCode; 
- BYTE sd_Qualifier; 
- BYTE sd_UnitCode; 
- BYTE sd_Key1; 
- BYTE sd_Key2; 
- BYTE sd_Key3; 
-} CD_SENSE_DATA, *PCD_SENSE_DATA;
-
-/* CDROM_DISCINFO  [struct, typedef; ce-only; CE 4.0..699] */
-typedef struct CDROM_DISCINFO {
- ULONG Reserved; 
- ULONG FirstTrack; 
- ULONG LastTrack; 
- MSF_ADDR LeadOutTrackAddr; 
- UCHAR FirstSession; 
- UCHAR LastSession; 
- UCHAR ReqSession; 
- UCHAR RetSession; 
- UCHAR LogicStartAddr; 
-} CDROM_DISCINFO, *PCDROM_DISCINFO;
-
-/* CDROM_PLAY_AUDIO_MSF  [struct, typedef; ce-only; CE 4.0..699] */
-typedef struct _CDROM_PLAY_AUDIO_MSF {
- UCHAR StartingM; 
- UCHAR StartingS; 
- UCHAR StartingF; 
- UCHAR EndingM; 
- UCHAR EndingS; 
- UCHAR EndingF; 
-} CDROM_PLAY_AUDIO_MSF, *PCDROM_PLAY_AUDIO_MSF;
-
-/* CDROM_READ  [struct, typedef; ce-only; CE 4.0..699] */
-typedef struct CDROM_READ { 
- CDROM_ADDR StartAddr; 
- DWORD TransferLength; 
- BOOL bRawMode; 
- TRACK_MODE_TYPE TrackMode; 
- DWORD sgcount; 
- SGX_BUF sglist[1]; 
-} CDROM_READ, *PCDROM_READ;
-
-/* CDROM_TESTUNITREADY  [struct; ce-only; CE 4.0..699] */
-typedef struct CDROM_TESTUNITREADY {
- ULONG Reserved; 
- BOOL bUnitReady; 
-} CDROM_TESTUNITREADY, *PCDROM_TESTUNITREADY;
-
-/* CDROM_TOC  [struct; ce-only; CE 4.0..699] */
-typedef struct _CDROM_TOC {
- UCHAR Length[2]; 
- UCHAR FirstTrack; 
- UCHAR LastTrack; 
- TRACK_DATA TrackData[MAXIMUM_NUMBER_TRACKS]; 
-} CDROM_TOC, *PCDROM_TOC;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* SGX_BUF  [struct; ce-only; CE 5.0..699] */
-typedef struct _SGX_BUF {
- PUCHAR sb_buf; 
- DWORD sb_len; 
-} SGX_BUF, *PSGX_BUF;
-#endif /* _WIN32_WCE */
+/* CDROM_TOC  [struct; ce-only] */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
-
-/* typedef */
-typedef structCDROM_DISCINFO{ULONGReserved; ULONGFirstTrack; ULONGLastTrack; MSF_ADDRLeadOutTrackAddr; UCHARFirstSession; UCHARLastSession; UCHARReqSession; UCHARRetSession; UCHARLogicStartAddr; } CDROM_DISCINFO, *PCDROM_DISCINFO;
-typedef struct_CDROM_PLAY_AUDIO_MSF{UCHARStartingM; UCHARStartingS; UCHARStartingF; UCHAREndingM; UCHAREndingS; UCHAREndingF; } CDROM_PLAY_AUDIO_MSF, *PCDROM_PLAY_AUDIO_MSF;
-typedef structCDROM_READ{ CDROM_ADDRStartAddr; DWORDTransferLength; BOOLbRawMode; TRACK_MODE_TYPETrackMode; DWORDsgcount; SGX_BUFsglist[1]; } CDROM_READ, *PCDROM_READ;
 
 /* struct */
 typedef struct _CDROM_TOC{UCHARLength[2]; UCHARFirstTrack; UCHARLastTrack; TRACK_DATATrackData[MAXIMUM_NUMBER_TRACKS]; } CDROM_TOC, *PCDROM_TOC;

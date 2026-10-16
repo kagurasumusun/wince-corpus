@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 115 constants, 72 declarations, 1 outlines, 0 base types, 0 extra macros, 26 extra decls
+ * 115 constants, 72 declarations, 18 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDOWSAPIS_
 #define _WINDOWSAPIS_
@@ -137,19 +137,50 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+/* definition  [typedef; ce-only; heuristic-prefix] */
 
-/* MAKEINTATOM  [macro, function; shared; CE 5.0..699] */
+/* firstChild  [typedef; ce-only; heuristic-prefix] */
+
+/* lastChild  [typedef; ce-only; heuristic-prefix] */
+
+/* MAKEINTATOM  [macro, function; shared] */
 LPTSTR MAKEINTATOM(
  WORD wInteger
 );
 
-/* PALETTEINDEX2BPP  [macro; ce-only; CE 5.0..699] */
+/* namespaceURI  [typedef; ce-only; heuristic-prefix] */
+
+/* nextSibling  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeName  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeType  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeTypedValue  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeTypeString  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeValue  [typedef; ce-only; heuristic-prefix] */
+
+/* ownerDocument  [typedef; ce-only; heuristic-prefix] */
+
+/* PALETTEINDEX2BPP  [macro; ce-only] */
 #define PALETTEINDEX2BPP (i) \
  (((i)==0)?0x00000000: \
  (((i)==1)?0x00808080: \
  (((i)==2)?0x00C0C0C0:0x00FFFFFF)))
-#endif /* _WIN32_WCE */
+
+/* parentNode  [typedef; ce-only; heuristic-prefix] */
+
+/* parsed  [typedef; ce-only; heuristic-prefix] */
+
+/* prefix  [typedef; ce-only; heuristic-prefix] */
+
+/* previousSibling  [typedef; ce-only; heuristic-prefix] */
+
+/* specified  [typedef; ce-only; heuristic-prefix] */
+
+/* xml  [typedef; ce-only; heuristic-prefix] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -157,55 +188,12 @@ LPTSTR MAKEINTATOM(
  * declaration body no page prints
  * ================================================================ */
 
-/* COMMCONFIG  [struct; shared; entity-headers] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   dwSize */
-/*   wVersion */
-/*   wReserved */
-/*   dcb */
-/*   dwProviderSubType */
-/*   dwProviderOffset */
-/*   dwProviderSize */
-/*   wcProviderData */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200)) /* CE 1.0..199 */
-
-/* SECURITY_DESCRIPTOR  [typedef, struct; shared; CE 1.0..199; entity-headers] */
-typedef PVOID PSECURITY_DESCRIPTOR;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* ABC  [struct; shared; CE 4.0..699] */
-typedef struct _ABC {
- int abcA; 
- UINT abcB; 
- int abcC; 
-} ABC, *PABC;
-
-/* EXTENDED_NAME_FORMAT  [enum; shared; CE 4.0..699] */
-typedef enum {
- NameUnknown = 0,
- NameFullyQualifiedDN = 1,
- NameSamCompatible = 2,
- NameDisplay = 3,
- NameUniqueId = 6,
- NameCanonical = 7,
- NameUserPrincipal = 8,
- NameCanonicalEx = 9,
- NameServicePrincipal = 10,
- NameWindowsCeLocal = 0x80000001
-} EXTENDED_NAME_FORMAT, *PEXTENDED_NAME_FORMAT;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 420 && _WIN32_WCE < 700)) /* CE 4.2..699 */
-
-/* PERF_COUNTER_BLOCK  [struct, typedef; shared; CE 4.2..699] */
+/* PERF_COUNTER_BLOCK  [struct, typedef; shared] */
 typedef struct _PERF_COUNTER_BLOCK {
  DWORD ByteLength;
 } PERF_COUNTER_BLOCK;
 
-/* PERF_COUNTER_DEFINITION  [struct, typedef; shared; CE 4.2..699] */
+/* PERF_COUNTER_DEFINITION  [struct, typedef; shared] */
 typedef struct _PERF_COUNTER_DEFINITION {
  DWORD ByteLength;
  DWORD CounterNameTitleIndex;
@@ -219,25 +207,7 @@ typedef struct _PERF_COUNTER_DEFINITION {
  DWORD CounterOffset;
 } PERF_COUNTER_DEFINITION;
 
-/* PERF_DATA_BLOCK  [struct, typedef; shared; CE 4.2..699] */
-typedef struct _PERF_DATA_BLOCK {
- WCHAR Signature[4];
- DWORD LittleEndian;
- DWORD Version;
- DWORD Revision;
- DWORD TotalByteLength;
- DWORD HeaderLength;
- DWORD NumObjectTypes;
- DWORD DefaultObject;
- SYSTEMTIME SystemTime;
- LARGE_INTEGER PerfTime;
- LARGE_INTEGER PerfFreq;
- LARGE_INTEGER PerfTime100nSec;
- DWORD SystemNameLength;
- DWORD SystemNameOffset;
-} PERF_DATA_BLOCK;
-
-/* PERF_INSTANCE_DEFINITION  [struct, typedef; shared; CE 4.2..699] */
+/* PERF_INSTANCE_DEFINITION  [struct, typedef; shared] */
 typedef struct _PERF_INSTANCE_DEFINITION {
  DWORD ByteLength;
  DWORD ParentObjectTitleIndex;
@@ -247,97 +217,16 @@ typedef struct _PERF_INSTANCE_DEFINITION {
  DWORD NameLength;
 } PERF_INSTANCE_DEFINITION;
 
-/* PERF_OBJECT_TYPE  [struct, typedef; shared; CE 4.2..699] */
-typedef struct _PERF_OBJECT_TYPE {
- DWORD TotalByteLength;
- DWORD DefinitionLength;
- DWORD HeaderLength;
- DWORD ObjectNameTitleIndex;
- LPWSTR ObjectNameTitle;
- DWORD ObjectHelpTitleIndex;
- LPWSTR ObjectHelpTitle;
- DWORD DetailLevel;
- DWORD NumCounters;
- DWORD DefaultCounter;
- DWORD NumInstances;
- DWORD CodePage;
- LARGE_INTEGER PerfTime;
- LARGE_INTEGER PerfFreq;
-} PERF_OBJECT_TYPE;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* BLENDFUNCTION  [struct; shared; CE 5.0..699] */
-typedef struct _BLENDFUNCTION {
- BYTE BlendOp;
- BYTE BlendFlags;
- BYTE SourceConstantAlpha;
- BYTE AlphaFormat;
-}BLENDFUNCTION, *PBLENDFUNCTION, *LPBLENDFUNCTION;
-
-/* DISPLAY_DEVICE  [struct; shared; CE 5.0..699; A/W DISPLAY_DEVICEA,DISPLAY_DEVICEW (CE is W-side)] */
-typedef struct _DISPLAY_DEVICE {
- DWORD cb;
- WCHAR DeviceName[32];
- WCHAR DeviceString[128];
- DWORD StateFlags;
- WCHAR DeviceID[128];
- WCHAR DeviceKey[128];
-} DISPLAY_DEVICE, *PDISPLAY_DEVICE;
-
-/* GRADIENT_RECT  [struct; shared; CE 5.0..699] */
-typedef struct _GRADIENT_RECT {
- ULONG UpperLeft;
- ULONG LowerRight;
-}GRADIENT_RECT, *PGRADIENT_RECT;
-
-/* OUTLINETEXTMETRICW  [struct; shared; CE 5.0..699] */
-typedef struct _OUTLINETEXTMETRICW {
- UINT otmSize; 
- TEXTMETRIC otmTextMetrics; 
- BYTE otmFiller; 
- PANOSE otmPanoseNumber; 
- UINT otmfsSelection; 
- UINT otmfsType; 
- int otmsCharSlopeRise; 
- int otmsCharSlopeRun; 
- int otmItalicAngle; 
- UINT otmEMSquare; 
- int otmAscent; 
- int otmDescent; 
- UINT otmLineGap; 
- UINT otmsCapEmHeight; 
- UINT otmsXHeight; 
- RECT otmrcFontBox; 
- int otmMacAscent; 
- int otmMacDescent; 
- UINT otmMacLineGap; 
- UINT otmusMinimumPPEM; 
- POINT otmptSubscriptSize; 
- POINT otmptSubscriptOffset; 
- POINT otmptSuperscriptSize; 
- POINT otmptSuperscriptOffset; 
- UINT otmsStrikeoutSize; 
- int otmsStrikeoutPosition; 
- int otmsUnderscoreSize; 
- int otmsUnderscorePosition; 
- PSTR otmpFamilyName; 
- PSTR otmpFaceName; 
- PSTR otmpStyleName; 
- PSTR otmpFullName; 
-} OUTLINETEXTMETRICW, *POUTLINETEXTMETRICW;
-
-/* TRIVERTEX  [struct; shared; CE 5.0..699] */
-typedef struct _TRIVERTEX {
- LONG x;
- LONG y;
- COLOR16 Red;
- COLOR16 Green;
- COLOR16 Blue;
- COLOR16 Alpha;
-} TRIVERTEX,*PTRIVERTEX,*LPTRIVERTEX;
-#endif /* _WIN32_WCE */
+/* COMMCONFIG  [struct; shared; entity-headers] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   dwSize */
+/*   wVersion */
+/*   wReserved */
+/*   dcb */
+/*   dwProviderSubType */
+/*   dwProviderOffset */
+/*   dwProviderSize */
+/*   wcProviderData */
 
 /* ==================================================================
  * functions and callbacks
@@ -765,42 +654,5 @@ BOOL WINAPI ValidateRgn(
  HRGN hRgn
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* typedef */
-typedef SCROLLINFO FAR *LPSCROLLINFO;
-typedef MEMORY_BASIC_INFORMATION *PMEMORY_BASIC_INFORMATION;
-
-/* struct */
-typedef struct tagACCESSTIMEOUT{UINT cbSize;DWORD dwFlags;DWORDiTimeOutMSec;} ACCESSTIMEOUT, *LPACCESSTIMEOUT;
-typedef struct _BLENDFUNCTION { BYTE BlendOp; BYTE BlendFlags; BYTE SourceConstantAlpha; BYTE AlphaFormat;}BLENDFUNCTION, *PBLENDFUNCTION, *LPBLENDFUNCTION;
-typedef struct tagCOMBOBOXINFO { DWORD cbSize; RECT rcItem; RECT rcButton; DWORD stateButton; HWND hwndCombo; HWND hwndItem; HWND hwndList;} COMBOBOXINFO, *PCOMBOBOXINFO, *LPCOMBOBOXINFO;
-typedef struct tagHIGHCONTRAST{UINT cbSize;DWORD dwFlags;LPTSTR lpszDefaultScheme;} HIGHCONTRAST, FAR* LPHIGHCONTRAST;
-typedef struct tagINPUT {DWORD type;union{ MOUSEINPUT mi;KEYBDINPUT ki;HARDWAREINPUT hi; };} INPUT, *PINPUT, FAR* LPINPUT;
-typedef struct tagMONITORINFO {DWORD cbSize;RECT rcMonitor;RECT rcWork;DWORD dwFlags;} MONITORINFO, *LPMONITORINFO;
-typedef struct tagMONITORINFOEX {DWORD cbSize;RECT rcMonitor;RECT rcWork;DWORD dwFlags;TCHAR szDevice [CCHDEVICENAME];} MONITORINFOEX, *LPMONITORINFOEX;
-typedef struct tagMOUSEKEYS{UINT cbSize;DWORD dwFlags;DWORD iMaxSpeed;DWORD iTimeToMaxSpeed;DWORD iCtrlSpeed;DWORD dwReserved1;DWORD dwReserved2;} MOUSEKEYS, *LPMOUSEKEYS;
-typedef struct tagSOUNDSENTRY{UINT cbSize;DWORD dwFlags;DWORD iFSTextEffect;DWORD iFSTextEffectMSec;DWORD iFSTextEffectColorBits;DWORD iFSGrafEffect;DWORD iFSGrafEffectMSec;DWORD iFSGrafEffectColor;DWORD iWindowsEffect;DWORD iWindowsEffectMSec;LPTSTR lpszWindowsEffectDLL;DWORD iWindowsEffectOrdinal;} SOUNDSENTRY, *LPSOUNDSENTRY;
-typedef struct tagSTICKYKEYS{UINT cbSize;DWORD dwFlags;} STICKYKEYS, *LPSTICKYKEYS;
-typedef struct tagSTYLESTRUCT { DWORD styleOld; DWORD styleNew; } STYLESTRUCT, *LPSTYLESTRUCT;
-typedef struct tagTOGGLEKEYS{UINT cbSize;DWORD dwFlags;} TOGGLEKEYS, *LPTOGGLEKEYS;
-typedef struct tagTPMPARAMS { UINT cbSize; RECT rcExclude; } TPMPARAMS, FAR* LPTPMPARAMS;
-typedef struct _ABC { int abcA; UINT abcB; int abcC; } ABC, *PABC;
-typedef struct _DISPLAY_DEVICE { DWORD cb; WCHAR DeviceName[32]; WCHAR DeviceString[128]; DWORD StateFlags; WCHAR DeviceID[128]; WCHAR DeviceKey[128];} DISPLAY_DEVICE, *PDISPLAY_DEVICE;
-typedef struct _FILE_NOTIFY_INFORMATION {DWORD NextEntryOffset; DWORD Action; DWORD FileNameLength; WCHAR FileName[1]; } FILE_NOTIFY_INFORMATION, *PFILE_NOTIFY_INFORMATION;
-typedef struct _GRADIENT_RECT { ULONG UpperLeft; ULONG LowerRight;}GRADIENT_RECT, *PGRADIENT_RECT;
-typedef struct _IMAGE_DATA_DIRECTORY {DWORD VirtualAddress;DWORD Size;} IMAGE_DATA_DIRECTORY, *PIMAGE_DATA_DIRECTORY;
-typedef struct tagKEYBDINPUT { WORD wVk; WORD wScan; DWORD dwFlags; DWORD time; ULONG_PTR dwExtraInfo;} KEYBDINPUT, *PKEYBDINPUT;
-typedef struct tagMOUSEINPUT { LONG dx; LONG dy; DWORD mouseData; DWORD dwFlags; DWORD time; ULONG_PTR dwExtraInfo;} MOUSEINPUT, *PMOUSEINPUT;
-typedef struct _OUTLINETEXTMETRICW { UINT otmSize; TEXTMETRIC otmTextMetrics; BYTE otmFiller; PANOSE otmPanoseNumber; UINT otmfsSelection; UINT otmfsType; int otmsCharSlopeRise; int otmsCharSlopeRun; int otmItalicAngle; UINT otmEMSquare; int otmAscent; int otmDescent; UINT otmLineGap; UINT otmsCapEmHeight; UINT otmsXHeight; RECT otmrcFontBox; int otmMacAscent; int otmMacDescent; UINT otmMacLineGap; UINT otmusMinimumPPEM; POINT otmptSubscriptSize; POINT otmptSubscriptOffset; POINT otmptSuperscriptSize; POINT otmptSuperscriptOffset; UINT otmsStrikeoutSize; int otmsStrikeoutPosition; int otmsUnderscoreSize; int otmsUnderscorePosition; PSTR otmpFamilyName; PSTR otmpFaceName; PSTR otmpStyleName; PSTR otmpFullName; } OUTLINETEXTMETRICW, *POUTLINETEXTMETRICW;
-typedef struct tagINPUT { DWORD type; union {MOUSEINPUT mi; KEYBDINPUT ki; HARDWAREINPUT hi;};
-
-/* function */
-LANGIDGetSystemDefaultLangID(void);
-LCIDGetSystemDefaultLCID(void);
 
 #endif /* _WINDOWSAPIS_ */

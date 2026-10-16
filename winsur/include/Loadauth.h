@@ -25,23 +25,6 @@
 #define WIN_CERT_TYPE_X509 0x0001
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
-
-/* WIN_CERTIFICATE  [struct; shared; CE 3.0..699] */
-typedef struct WIN_CERTIFICATE {
- DWORD dwLength;
- WORD wRevision;
- WORD wCertificateType;
- BYTE bCertificate[];
-} WIN_CERTIFICATE, *LPWIN_CERTIFICATE;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */

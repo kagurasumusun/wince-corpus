@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2 constants, 47 declarations, 2 outlines, 0 base types, 0 extra macros, 3 extra decls
+ * 2 constants, 46 declarations, 3 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _CEDDK_
 #define _CEDDK_
@@ -24,134 +24,11 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+/* DMA_ADAPTER_OBJECT  [struct; ce-only] */
 
-/* DMA_ADAPTER_OBJECT  [struct; ce-only; CE 4.0..699] */
+/* INTERFACE_TYPE  [enum; ce-only] */
 
-/* INTERFACE_TYPE  [enum; ce-only; CE 4.0..699] */
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* BUS_DATA_TYPE  [enum; ce-only; CE 4.0..699] */
-typedef enum _BUS_DATA_TYPE {
- ConfigurationSpaceUndefined = -1,
- Cmos,
- EisaConfiguration,
- Pos,
- CbusConfiguration,
- PCIConfiguration,
- VMEConfiguration,
- NuBusConfiguration,
- PCMCIAConfiguration,
- MPIConfiguration,
- MPSAConfiguration,
- PNPISAConfiguration,
- MaximumBusDataType
-} BUS_DATA_TYPE, *PBUS_DATA_TYPE;
-
-/* PCI_COMMON_CONFIG  [struct; ce-only; CE 4.0..699] */
-typedef struct _PCI_COMMON_CONFIG {
- USHORT VendorID; 
- USHORT DeviceID; 
- USHORT Command; 
- USHORT Status;
- UCHAR RevisionID; 
- UCHAR ProgIf; 
- UCHAR SubClass; 
- UCHAR BaseClass; 
- UCHAR CacheLineSize; 
- UCHAR LatencyTimer; 
- UCHAR HeaderType; 
- UCHAR BIST; 
- union {
- struct _PCI_HEADER_TYPE_0 {
- ULONG BaseAddresses[PCI_TYPE0_ADDRESSES];
- ULONG CIS;
- USHORT SubVendorID;
- USHORT SubSystemID;
- ULONG ROMBaseAddress;
- ULONG Reserved2[2];
- UCHAR InterruptLine; 
- UCHAR InterruptPin; 
- UCHAR MinimumGrant; 
- UCHAR MaximumLatency; 
- } type0;
- struct _PCI_HEADER_TYPE_1 {
- ULONG BaseAddresses[PCI_TYPE1_ADDRESSES];
- UCHAR PrimaryBusNumber;
- UCHAR SecondaryBusNumber;
- UCHAR SubordinateBusNumber;
- UCHAR SecondaryLatencyTimer;
- UCHAR IOBase;
- UCHAR IOLimit;
- USHORT SecondaryStatus;
- USHORT MemoryBase;
- USHORT MemoryLimit;
- USHORT PrefetchableMemoryBase;
- USHORT PrefetchableMemoryLimit;
- ULONG PrefetchableMemoryBaseUpper32;
- ULONG PrefetchableMemoryLimitUpper32;
- USHORT IOBaseUpper;
- USHORT IOLimitUpper;
- ULONG Reserved2;
- ULONG ExpansionROMBase;
- UCHAR InterruptLine;
- UCHAR InterruptPin;
- USHORT BridgeControl;
- } type1;
- struct _PCI_HEADER_TYPE_2 {
- ULONG BaseAddress;
- UCHAR CapabilitiesPtr;
- UCHAR Reserved2;
- USHORT SecondaryStatus;
- UCHAR PrimaryBusNumber;
- UCHAR CardbusBusNumber;
- UCHAR SubordinateBusNumber;
- UCHAR CardbusLatencyTimer;
- ULONG MemoryBase0;
- ULONG MemoryLimit0;
- ULONG MemoryBase1;
- ULONG MemoryLimit1;
- USHORT IOBase0_LO;
- USHORT IOBase0_HI;
- USHORT IOLimit0_LO;
- USHORT IOLimit0_HI;
- USHORT IOBase1_LO;
- USHORT IOBase1_HI;
- USHORT IOLimit1_LO;
- USHORT IOLimit1_HI;
- UCHAR InterruptLine;
- UCHAR InterruptPin;
- USHORT BridgeControl;
- USHORT SubVendorID;
- USHORT SubSystemID;
- ULONG LegacyBaseAddress;
- UCHAR Reserved3[56];
- ULONG SystemControl;
- UCHAR MultiMediaControl;
- UCHAR GeneralStatus;
- UCHAR Reserved4[2];
- UCHAR GPIO0Control;
- UCHAR GPIO1Control;
- UCHAR GPIO2Control;
- UCHAR GPIO3Control;
- ULONG IRQMuxRouting;
- UCHAR RetryStatus;
- UCHAR CardControl;
- UCHAR DeviceControl;
- UCHAR Diagnostic;
- } type2;
- } u;
- UCHAR DeviceSpecific[108];
-} PCI_COMMON_CONFIG , *PPCI_COMMON_CONFIG;
-#endif /* _WIN32_WCE */
+/* PCI_COMMON_CONFIG  [struct; ce-only] */
 
 /* ==================================================================
  * functions and callbacks
@@ -482,17 +359,5 @@ BOOL CeDriverPerformCallback(
  LPOVERLAPPED lpOverlapped
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* enum */
-typedef enum _BUS_DATA_TYPE {ConfigurationSpaceUndefined = -1,Cmos,EisaConfiguration,Pos,CbusConfiguration,PCIConfiguration,VMEConfiguration,NuBusConfiguration,PCMCIAConfiguration,MPIConfiguration,MPSAConfiguration,PNPISAConfiguration,MaximumBusDataType} BUS_DATA_TYPE, *PBUS_DATA_TYPE;
-
-/* struct */
-typedef struct _PCI_COMMON_CONFIG {USHORT VendorID; USHORT DeviceID; USHORT Command; USHORT Status;UCHAR RevisionID; UCHAR ProgIf; UCHAR SubClass; UCHAR BaseClass; UCHAR CacheLineSize; UCHAR LatencyTimer; UCHAR HeaderType; UCHAR BIST; union { struct _PCI_HEADER_TYPE_0 { ULONG BaseAddresses[PCI_TYPE0_ADDRESSES]; ULONG CIS; USHORT SubVendorID;USHORT SubSystemID;ULONG ROMBaseAddress;ULONG Reserved2[2];UCHAR InterruptLine; UCHAR InterruptPin; UCHAR MinimumGrant; UCHAR MaximumLatency; } type0;struct _PCI_HEADER_TYPE_1 { ULONG BaseAddresses[PCI_TYPE1_ADDRESSES]; UCHAR PrimaryBusNumber; UCHAR SecondaryBusNumber; UCHAR SubordinateBusNumber;UCHAR SecondaryLatencyTimer; UCHAR IOBase; UCHAR IOLimit;USHORT SecondaryStatus; USHORT MemoryBase; USHORT MemoryLimit;USHORT PrefetchableMemoryBase; USHORT PrefetchableMemoryLimit; ULONG PrefetchableMemoryBaseUpper32;ULONG PrefetchableMemoryLimitUpper32; USHORT IOBaseUpper; USHORT IOLimitUpper;ULONG Reserved2; ULONG ExpansionROMBase; UCHAR InterruptLine;UCHAR InterruptPin; USHORT BridgeControl;} type1;struct _PCI_HEADER_TYPE_2 { ULONG BaseAddress; UCHAR CapabilitiesPtr;UCHAR Reserved2; USHORT SecondaryStatus; UCHAR PrimaryBusNumber;UCHAR CardbusBusNumber; UCHAR SubordinateBusNumber; UCHAR CardbusLatencyTimer;ULONG MemoryBase0; ULONG MemoryLimit0; ULONG MemoryBase1;ULONG MemoryLimit1; USHORT IOBase0_LO; USHORT IOBase0_HI; USHORT IOLimit0_LO;USHORT IOLimit0_HI; USHORT IOBase1_LO; USHORT IOBase1_HI;USHORT IOLimit1_LO; USHORT IOLimit1_HI; UCHAR InterruptLine;UCHAR InterruptPin; USHORT BridgeControl; USHORT SubVendorID;USHORT SubSystemID; ULONG LegacyBaseAddress; UCHAR Reserved3[56];ULONG SystemControl; UCHAR MultiMediaControl; UCHAR GeneralStatus;UCHAR Reserved4[2]; UCHAR GPIO0Control; UCHAR GPIO1Control;UCHAR GPIO2Control; UCHAR GPIO3Control; ULONG IRQMuxRouting;UCHAR RetryStatus; UCHAR CardControl; UCHAR DeviceControl;UCHAR Diagnostic;} type2;} u; UCHAR DeviceSpecific[108];} PCI_COMMON_CONFIG , *PPCI_COMMON_CONFIG;
-typedef struct _PCI_COMMON_CONFIG {USHORT VendorID; USHORT DeviceID; USHORT Command; USHORT Status;UCHAR RevisionID; UCHAR ProgIf; UCHAR SubClass; UCHAR BaseClass; UCHAR CacheLineSize; UCHAR LatencyTimer; UCHAR HeaderType; UCHAR BIST; union { struct _PCI_HEADER_TYPE_0 { ULONG BaseAddresses[PCI_TYPE0_ADDRESSES]; ULONG CIS; USHORT SubVendorID;USHORT SubSystemID;ULONG ROMBaseAddress;ULONG Reserved2[2];UCHAR InterruptLine; UCHAR InterruptPin; UCHAR MinimumGrant; UCHAR MaximumLatency; } type0;
 
 #endif /* _CEDDK_ */

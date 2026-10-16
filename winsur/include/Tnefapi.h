@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1 constants, 11 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 1 constants, 10 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _TNEFAPI_
 #define _TNEFAPI_
@@ -20,31 +20,10 @@
 #define CODE_NONE 0
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
+ * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213)) /* CE 2.11..2.12 */
-
-/* INETENCODE  [struct; ce-only; CE 2.11..2.12] */
-typedef struct enum {
- CODE_NONE = 0,
- CODE_UU,
- CODE_B64,
- CODE_QP
- CODE_QPH,
-} INETENCODE;
-
-/* TNEFINFO  [struct; ce-only; CE 2.11..2.12] */
-typedef struct _tnefinfo{
- INETENCODE wContentEncoding;
- BOOL fAttHdrs;
- HANDLE hHeap
- LPWSTR szTnefCorrelator;
- WCHAR szTnefFileName[MAX_PATH]
-} TNEFINFO;
-#endif /* _WIN32_WCE */
+/* TNEFINFO  [struct; ce-only] */
 
 /* ==================================================================
  * functions and callbacks

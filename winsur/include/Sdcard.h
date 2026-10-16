@@ -27,9 +27,7 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* SD_DEBUG_INSTANTIATE_ZONES  [macro; ce-only; CE 5.0..699] */
+/* SD_DEBUG_INSTANTIATE_ZONES  [macro; ce-only] */
 #define SD_DEBUG_INSTANTIATE_ZONES(
  TCHAR ModuleName,
  DWORD InitialValue,
@@ -45,7 +43,6 @@
  TCHAR Slot9,
  TCHAR Slot10
 );
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

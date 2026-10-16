@@ -62,28 +62,6 @@
 #define DS_WRITABLE_REQUIRED 0x00001000
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* DOMAIN_CONTROLLER_INFO  [struct; shared; CE 5.0..699; A/W DOMAIN_CONTROLLER_INFOA,DOMAIN_CONTROLLER_INFOW (CE is W-side)] */
-typedef struct _DOMAIN_CONTROLLER_INFO {
- LPTSTR DomainControllerName;
- LPTSTR DomainControllerAddress;
- ULONG DomainControllerAddressType;
- GUID DomainGuid;
- LPTSTR DomainName;
- LPTSTR DnsForestName;
- ULONG Flags;
- LPTSTR DcSiteName;
- LPTSTR ClientSiteName;
-} DOMAIN_CONTROLLER_INFO, *PDOMAIN_CONTROLLER_INFO;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

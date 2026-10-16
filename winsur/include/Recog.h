@@ -12,38 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* HWXGUIDE  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct tagHWXGUIDE {
- UINT cHorzBox;
- UINT cVertBox;
- INT xOrigin;
- INT yOrigin;
- UINT cxBox;
- UINT cyBox;
- UINT cxOffset;
- UINT cyOffset;
- UINT cxWriting;
- UINT cyWriting;
- UINT cyMid;
- UINT cyBase;
- UINT nDir; 
-} HWXGUIDE, *PHWXGUIDE;
-
-/* HWXRESULTS  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct tagHWXRESULTS {
- USHORT indxBox;
- WCHAR rgChar[1] 
-} HWXRESULTS, *PHWXRESULTS;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

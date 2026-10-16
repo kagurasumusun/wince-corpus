@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
+ * 0 constants, 1 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _RTCVIDEOPLUGIN_
 #define _RTCVIDEOPLUGIN_
@@ -17,9 +17,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* RTCRTPHeader  [struct; ce-only; CE 6.0..699] */
+/* RTCRTPHeader  [struct; ce-only] */
 struct _RTCRTPHeader {
  double dReceptionTime;
  DWORD dwSequenceNumber;
@@ -29,47 +27,6 @@ struct _RTCRTPHeader {
  BOOL fMarkerBitSet;
  BOOL fIsRedundancy;
 } RTCRTPHeader;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* IRTCPluggableVideoDecoder::ReadRTPPacket  [function; ce-only; CE 6.0..699] */
-HRESULT ReadRTPPacket(
- IUnknown *pDecoder,
- const CHAR *szFmtp,
- BYTE *pbRTPPayload,
- DWORD dwRTPPayloadSize,
- RTCRTPHeader *pRTPHeader,
- BYTE *pbEncodedFrame,
- DWORD dwEncodedFrameSize,
- DWORD *pdwFrameStartBitOffset,
- DWORD *pdwFrameEndBitOffset,
- BOOL *pfLastPacket
-);
-
-/* IRTCPluggableVideoEncoder::WriteRTPPayloadHeader  [function; ce-only; CE 6.0..699] */
-HRESULT WriteRTPPayloadHeader(
- IUnknown *pEncoder,
- const CHAR *szFmtp,
- PBYTE pbEncodedFrame,
- DWORD dwEncodedSize,
- DWORD *pdwFrameStartBitOffset,
- DWORD *pdwFrameEndBitOffset,
- BOOL fKeyFrame,
- BYTE *pbPayloadHeader,
- DWORD *pdwPayloadHeaderLength,
- BOOL *pfLastPacket
-);
-
-/* IRTCSDPValidator::CheckAcceptableFmtp  [function; ce-only; CE 6.0..699] */
-HRESULT CheckAcceptableFmtp(
- const CHAR *szFmtp
-);
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

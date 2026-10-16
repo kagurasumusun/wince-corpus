@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 424 constants, 40 declarations, 0 outlines, 2 base types, 0 extra macros, 1 extra decls
+ * 424 constants, 39 declarations, 1 outlines, 2 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _WINNLS_
 #define _WINNLS_
@@ -465,9 +465,7 @@ typedef DWORD LCTYPE;
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
-
-/* CURRENCYFMT  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..699; A/W CURRENCYFMTA,CURRENCYFMTW (CE is W-side)] */
+/* CURRENCYFMT  [struct; shared; A/W CURRENCYFMTA,CURRENCYFMTW (CE is W-side)] */
 typedef struct _currencyfmt { 
  UINT NumDigits; 
  UINT LeadingZero; 
@@ -479,7 +477,7 @@ typedef struct _currencyfmt {
  LPTSTR lpCurrencySymbol;
 } CURRENCYFMT;
 
-/* NUMBERFMT  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..699; A/W NUMBERFMTA,NUMBERFMTW (CE is W-side)] */
+/* NUMBERFMT  [struct; shared; A/W NUMBERFMTA,NUMBERFMTW (CE is W-side)] */
 typedef struct _numberfmt { 
  UINT NumDigits; 
  UINT LeadingZero; 
@@ -488,17 +486,12 @@ typedef struct _numberfmt {
  LPTSTR lpThousandSep; 
  UINT NegativeOrder; 
 } NUMBERFMT;
-#endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* CPINFO  [struct; shared; CE 2.11..2.12, 3.0..699] */
-typedef struct _cpinfo { 
- UINT MaxCharSize; 
- BYTE DefaultChar[MAX_DEFAULTCHAR]; 
- BYTE LeadByte[MAX_LEADBYTES]; 
-} CPINFO;
-#endif /* _WIN32_WCE */
+/* CPINFO  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   MaxCharSize */
+/*   DefaultChar */
+/*   LeadByte */
 
 /* ==================================================================
  * functions and callbacks

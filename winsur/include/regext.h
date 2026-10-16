@@ -12,50 +12,19 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* NOTIFICATIONCONDITION  [struct; ce-only; CE 6.0..699] */
-typedef struct tagNOTIFICATIONCONDITION {
- REG_COMPARISONTYPE ctComparisonType;
- DWORD dwMask;
- union TargetValue {
- LPCTSTR psz;
- DWORD dw; 
- };
-} NOTIFICATIONCONDITION;
-
-/* NOTIFYMSGQUEUEPACKET  [struct; ce-only; CE 6.0..699] */
-typedef struct tagNOTIFYMSGQUEUEPACKET
-{
- HREGNOTIFY hNotify;
- DWORD dwUserData;
- UINT cbData;
- BYTE rgData[1];
-} NOTIFYMSGQUEUEPACKET;
-
-/* REG_COMPARISONTYPE  [enum; ce-only; CE 6.0..699] */
-typedef enum tagREG_COMPARISONTYPE { 
- REG_CT_ANYCHANGE,
- REG_CT_EQUAL,
- REG_CT_NOT_EQUAL,
- REG_CT_GREATER,
- REG_CT_GREATER_OR_EQUAL,
- REG_CT_LESS,
- REG_CT_LESS_OR_EQUAL,
- REG_CT_CONTAINS,
- REG_CT_STARTS_WITH,
- REG_CT_ENDS_WITH
-} REG_COMPARISONTYPE;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
+
+/* RegistryNotifyCallback  [function, typedef; ce-only; aygshell.lib] */
+HRESULT WINAPI RegistryNotifyCallback(
+ HKEY hKey,
+ LPCTSTR pszSubKey,
+ LPCTSTR pszValueName,
+ REGISTRYNOTIFYCALLBACK pfnRegistryNotifyCallback,
+ DWORD dwUserData,
+ NOTIFICATIONCONDITION * pCondition,
+ HREGNOTIFY * phNotify
+);
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 
@@ -107,17 +76,6 @@ HRESULT WINAPI RegistryNotifyApp(
  UINT msg,
  DWORD dwFlags,
  NOTIFICATIONCONDITION* pCondition
-);
-
-/* RegistryNotifyCallback  [function, typedef; ce-only; CE 6.0..699; aygshell.lib] */
-HRESULT WINAPI RegistryNotifyCallback(
- HKEY hKey,
- LPCTSTR pszSubKey,
- LPCTSTR pszValueName,
- REGISTRYNOTIFYCALLBACK pfnRegistryNotifyCallback,
- DWORD dwUserData,
- NOTIFICATIONCONDITION * pCondition,
- HREGNOTIFY * phNotify
 );
 
 /* RegistryNotifyMsgQueue  [function; ce-only; CE 6.0..699; aygshell.lib] */
@@ -181,9 +139,6 @@ HRESULT WINAPI RegistryTestExchangeDWORD(
 
 /* typedef */
 typedef void REGISTRYNOTIFYCALLBACK( HREGNOTIFY hNotify, DWORD dwUserData, const PBYTE pData, const UINT cbData );
-
-/* struct */
-typedef struct tagNOTIFICATIONCONDITION { REG_COMPARISONTYPE ctComparisonType; DWORD dwMask; union TargetValue { LPCTSTR psz; DWORD dw; };
 
 /* function */
 void AdjustPowerConsumption(HREGNOTIFY hNotify, DWORD dwUserData, const PBYTE pData, const UINT cbData);

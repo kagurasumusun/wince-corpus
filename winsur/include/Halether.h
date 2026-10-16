@@ -17,26 +17,20 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 3.0..399 */
+/* EDBG_ADDR  [struct; ce-only] */
+typedef struct _EDBG_ADDR{
+ DWORD dwIP;
+ USHORT wMAC[3];
+ USHORT wPort;
+} EDBG_ADDR;
 
-/* EDBG_ADAPTER  [struct; ce-only; CE 3.0..399] */
+/* EDBG_ADAPTER  [struct; ce-only] */
 typedef struct { 
 EDBG_ADDR Addr; 
 DWORD SysIntrVal; 
 DWORD DHCPLeaseTime; 
 DWORD EdbgFlags;} 
 EDBG_ADAPTER;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
-
-/* EDBG_ADDR  [struct; ce-only; CE 3.0..699] */
-typedef struct _EDBG_ADDR{
- DWORD dwIP;
- USHORT wMAC[3];
- USHORT wPort;
-} EDBG_ADDR;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

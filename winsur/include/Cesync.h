@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 14 constants, 58 declarations, 0 outlines, 0 base types, 0 extra macros, 42 extra decls
+ * 14 constants, 17 declarations, 4 outlines, 0 base types, 0 extra macros, 42 extra decls
  */
 #ifndef _CESYNC_
 #define _CESYNC_
@@ -33,138 +33,32 @@
 #define RSF_UPDATED_HANDLE 0x00000040
 
 /* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* CONFINFO  [struct; ce-only] */
+
+/* OBJNOTIFY  [struct; ce-only] */
+
+/* OBJUIDATA  [struct; ce-only] */
+
+/* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* CONFINFO  [struct; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagConfInfo{
- UINT cbStruct;
- HREPLFLD hFolder;
- HREPLITEM hLocalItem;
- HREPLITEM hRemoteItem;
- char szLocalName[MAX_OBJTYPE_NAME];
- char szLocalDesc[512];
- char szRemoteName[MAX_OBJTYPE_NAME];
- char szRemoteDesc[512];
-} CONFINFO, *PCONFINFO;
-
-/* DEVINFO  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagDevInfo {
- DWORD pid;
- char szName[MAX_PATH];
- char szType[80];
- char szPath[MAX_PATH];
-} DEVINFO, *PDEVINFO;
-
-/* HREPLFLD  [struct; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _REPLFLD FAR* HREPLFLD;
-
-/* HREPLITEM  [struct; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _REPLITEM FAR* HREPLITEM;
-
-/* HREPLOBJ  [struct; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _REPLOBJ FAR* HREPLOBJ;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* OBJNOTIFY  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct tagObjNotify {
- UINT cbStruct;
- OBJTYPENAME szObjType[MAX_OBJTYPE_NAME];
- UINT uFlags;
- UINT uPartnerBit;
- CEOID oidObject;
- CEOIDINFO oidInfo;
- UINT cOidChg;
- UINT cOidDel;
- UINT* poid;
-} OBJNOTIFY, *POBJNOTIFY;
-
-/* OBJTYPEINFO  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct tagObjTypeInfo {
- UINT cbStruct;
- OBJTYPENAMEW szObjType;
- UINT uFlags;
- WCHAR szName[80];
- UINT cObjects;
- UINT cbAllObj;
- FILETIME ftLastModified;
-} OBJTPYEINFO, *POBJTYPEINFO;
-
-/* OBJUIDATA  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct tagObjUIData {
- UINT cbStruct;
- HICON hIconLarge;
- HICON hIconSmall;
- char szName[MAX_PATH];
- char szSyncText[MAX_PATH];
- char szTypeText[80];
- char szPlTypeText[80];
-} OBJUIDATA, *POBJUIDATA;
-
-/* REPLSETUP  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct tagReplSetup {
- UINT cbStruct;
- BOOL fRead;
- DWORD dwFlags;
- HRESULT hr;
- OBJTYPENAME szObjType;
- IReplNotify * pNotify;
- DWORD oid;
- DWORD oidNew;
- IReplStore * pStore;
- HREPLFLD hFolder;
- HREPLITEM hItem;
- LPBYTE lpbVolumeID;
- UINT cbVolumeID;
-} REPLSETUP, * PREPLSETUP;
-
-/* STOREINFO  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct tagStoreInfo {
- UINT cbStruct;
- UINT uFlags;
- TCHAR szProgId[ 256 ];
- TCHAR szStoreDesc[ 200 ];
- UINT uTimerRes;
- UINT cbMaxStoreId;
- UINT cbStoreId;
- LPBYTE lpbStoreId;
-} STOREINFO, *PSTOREINFO;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* FINDOBJINFO  [struct; ce-only; CE 5.0..699] */
-typedef struct tagFindObjInfo {
- UINT uFlags;
- OBJTYPENAME szObjType;
- UINT * poid;
- UINT cUnChg;
- UINT cChg;
- LPBYTE lpbVolumeID;
- UINT cbVolumeID;
- LPVOID lpvUser;
-} FINDOBJINFO, *PFINDOBJINFO;
-
-/* ReplDialogs  [enum; ce-only; CE 5.0..699] */
-enum ReplDialogs {
- OPTIONS_DIALOG
-};
-
-/* SDREQUEST  [struct; ce-only; CE 5.0..699] */
-typedef struct SDREQUEST {
- OBJTYPENAME szObjType;
- BOOL fSet;
- UINT uCode;
- LPBYTE lpbData;
- UINT cbData;
-} SDREQUEST, *PSDREQUEST;
-#endif /* _WIN32_WCE */
+/* DEVINFO  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   flGraphicsCaps */
+/*   lfDefaultFont */
+/*   lfAnsiVarFont */
+/*   lfAnsiFixFont */
+/*   cFonts */
+/*   iDitherFormat */
+/*   cxDither */
+/*   hpalDefault */
+/*   flGraphicsCaps2 */
 
 /* ==================================================================
  * functions and callbacks
@@ -177,224 +71,6 @@ BOOL (*PREPORTSTATUS)(
  LPWSTR lpszObjType,
  UINT uCode,
  UINT uParam 
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
-
-/* IEnumReplItem::Clone  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-HRESULT Clone(
- IEnumReplItem FAR* FAR* ppEnum
-);
-
-/* IEnumReplItem::Next  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-HRESULT Next(
- unsigned long celt,
- HREPLITEM* phItem,
- unsigned long FAR* pCeltFetched
-);
-
-/* IEnumReplItem::Skip  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-HRESULT Skip(
- unsigned long celt
-);
-
-/* IReplNotify::GetWindow  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-HWND GetWindow(
- UINT uFlags
-);
-
-/* IReplNotify::OnItemCompleted  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-HRESULT OnObjectCompleted(
- PREPLSETUP pSetup
-);
-
-/* IReplNotify::OnItemNotify  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-HRESULT OnItemNotify(
- UINT uCode,
- LPSTR lpszProgId,
- LPSTR lpszObjType,
- HREPLITEM hItem,
- ULONG ulFlags
-);
-
-/* IReplNotify::QueryDevice  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-void QueryDevice(
- UINT uCode,
- LPVOID* ppvData
-);
-
-/* IReplNotify::SetStatusText  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-HRESULT SetStatusText(
- LPSTR lpszText
-);
-
-/* IReplObjHandler::DeleteObj  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-HRESULT DeleteObj(
- PREPLSETUP pSetup
-);
-
-/* IReplObjHandler::GetPacket  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-HRESULT GetPacket(
- LPBYTE* lppbData,
- DWORD* pcbData,
- DWORD cbRecommend
-);
-
-/* IReplObjHandler::Reset  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-HRESULT Reset(
- PREPLSETUP pSetup
-);
-
-/* IReplObjHandler::SetPacket  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-HRESULT SetPacket(
- LPBYTE lpbData,
- DWORD cbData
-);
-
-/* IReplObjHandler::Setup  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-HRESULT Setup(
- PREPLSETUP pSetup
-);
-
-/* IReplStore::ActivateDialog  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-HRESULT ActivateDialog(
- UINT uDlg,
- HWND hwndParent,
- HREPLFLD hFolder,
- IEnumReplItem* penum
-);
-
-/* IReplStore::BytesToObject  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-HREPLOBJ BytesToObject(
- LPBYTE lpb,
- UINT cb
-);
-
-/* IReplStore::CompareItem  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-int CompareItem(
- HREPLITEM hItem1,
- HREPLITEM hItem2
-);
-
-/* IReplStore::CompareStoreIDs  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-HRESULT CompareStoreIDs(
- LPBYTE lpbID1,
- UINT cbID1,
- LPBYTE lpbID2,
- UINT cbID2
-);
-
-/* IReplStore::CopyObject  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-BOOL CopyObject(
- HREPLOBJ hObjSrc,
- HREPLOBJ hObjDst
-);
-
-/* IReplStore::FindFirstItem  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-HRESULT FindFirstItem(
- HREPLFLD hFolder,
- HREPLITEM* phItem,
- BOOL* pfExist
-);
-
-/* IReplStore::FindItemClose  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-HRESULT FindItemClose(
- HREPLFLD hFolder
-);
-
-/* IReplStore::FindNextItem  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-HRESULT FindNextItem(
- HREPLFLD hFolder,
- HREPLITEM* phItem,
- BOOL* pfExist
-);
-
-/* IReplStore::FreeObject  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-void FreeObject(
- HREPLOBJ hObject
-);
-
-/* IReplStore::GetConflictInfo  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-HRESULT GetConflictInfo(
- PCONFINFO pConfInfo
-);
-
-/* IReplStore::GetFolderInfo  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-HRESULT GetFolderInfo(
- LPSTR lpszName,
- HREPLFLD* phFolder,
- IUnknown** ppObjHandler
-);
-
-/* IReplStore::GetObjTypeUIData  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-HRESULT GetObjTypeUIData(
- HREPLFLD hFolder,
- POBJUIDATA pData
-);
-
-/* IReplStore::GetStoreInfo  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-HRESULT GetStoreInfo(
- PSTOREINFO pInfo
-);
-
-/* IReplStore::Initialize  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-HRESULT Initialize(
- IReplNotify* pReplNotify,
- UINT uFlags
-);
-
-/* IReplStore::IsFolderChanged  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-HRESULT IsFolderChanged(
- HREPLFLD hFolder,
- BOOL* pfChanged
-);
-
-/* IReplStore::IsItemChanged  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-BOOL IsItemChanged(
- HREPLFLD hFolder,
- HREPLITEM hItem,
- HREPLITEM hItemComp
-);
-
-/* IReplStore::IsItemReplicated  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-BOOL IsItemReplicated(
- HREPLIFLD hFolder,
- HREPLITEM hItem
-);
-
-/* IReplStore::IsValidObject  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-HRESULT IsValidObject(
- HREPLFLD hFolder,
- HREPLITEM hItem,
- UINT uFlags
-);
-
-/* IReplStore::ObjectToBytes  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-UINT ObjectToBytes(
- HREPLOBJ hObject,
- LPBYTE lpb
-);
-
-/* IReplStore::RemoveDuplicates  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-HRESULT RemoveDuplicates(
- LPSTR lpszObjType,
- UINT uFlags
-);
-
-/* IReplStore::ReportStatus  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Store.dll, store.dll] */
-HRESULT ReportStatus(
- HREPLFLD hFolder,
- HREPLITEM hItem,
- UINT uStatus,
- UINT uParam
-);
-
-/* IReplStore::UpdateItem  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-void UpdateItem(
- HREPLFLD hFolder,
- HREPLITEM hItemDst,
- HREPLITEM hItemSrc
 );
 #endif /* _WIN32_WCE */
 
@@ -414,15 +90,6 @@ BOOL (*PINITOBJPROC)(
 BOOL (*PGETOBJTYPEINFO)(
  POBJTYPEINFO pInfo
 );
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* IEnumReplItem::GetFolderHandle  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-hHREPLFLD GetFolderHandle( );
-
-/* IEnumReplItem::Reset  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-HRESULT Reset();
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */

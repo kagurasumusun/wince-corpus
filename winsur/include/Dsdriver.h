@@ -17,142 +17,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 500)) /* CE 4.0..499 */
-
-/* DSDM_CREATEBUFFER  [struct; ce-only; CE 4.0..499] */
-typedef struct {
- DWORD dwMsg;
- PDWORD pdwInstance;
- DWORD dwDeviceIndex;
- LPCDSBUFFERDESC pDesc;
-} DSDMP_CREATEBUFFER;
-
-/* DSDM_DELETEBUFFER  [struct; ce-only; CE 4.0..499] */
-typedef struct {
- DWORD dwMsg; 
- PDWORD dwInstance;
-} DSDMP_DELETEBUFFER;
-
-/* DSDM_DUPLICATEBUFFER  [struct; ce-only; CE 4.0..499] */
-typedef struct {
- DWORD dwMsg; 
- DWORD dwInstance; 
- PDWORD pdwInstance;
-} DSDMP_DUPLICATEBUFFER;
-
-/* DSDM_GETPOSITION  [struct; ce-only; CE 4.0..499] */
-typedef struct {
- DWORD dwMsg;
- DWORD dwInstance;
- PDWORD pdwPlay;
- PDWORD pdwWrite;
-} DSDMP_GETPOSITION;
-
-/* DSDM_GETPROP  [struct; ce-only; CE 4.0..499] */
-typedef struct {
- DWORD dwMsg;
- DWORD dwInstance;
- LPGUID pGUID;
- ULONG ulPropId;
- PVOID pParams;
- ULONG cbParams;
- PVOID pData;
- ULONG cbData;
- PULONG pcbReturnedData;
-} DSDMP_GETPROP;
-
-/* DSDM_GETSTATUS  [struct; ce-only; CE 4.0..499] */
-typedef struct {
- DWORD dwMsg;
- DWORD dwInstance;
- PDWORD pdwStatus;
-} DSDMP_GETSTATUS;
-
-/* DSDM_LOCK  [struct; ce-only; CE 4.0..499] */
-typedef struct {
- DWORD dwMsg;
- DWORD dwInstance;
- DWORD dwOffset;
- DWORD dwCount;
- LPVOID* ppBuffer1;
- LPDWORD pdwCount1;
- LPVOID* ppBuffer2;
- LPDWORD pdwCount2;
- DWORD dwFlags;
-} DSDMP_LOCK;
-
-/* DSDM_PLAY  [struct; ce-only; CE 4.0..499] */
-typedef struct {
- DWORD dwMsg;
- DWORD dwInstance;
- DWORD dwFlags;
-} DSDMP_PLAY;
-
-/* DSDM_QUERYPROP  [struct; ce-only; CE 4.0..499] */
-typedef struct {
- DWORD dwMsg;
- DWORD dwInstance;
- LPGUID pGUID;
- ULONG ulPropId;
- PULONG pulSupport;
-} DSDMP_QUERYPROP;
-
-/* DSDM_SETFORMAT  [struct; ce-only; CE 4.0..499] */
-typedef struct {
- DWORD dwMsg;
- DWORD dwInstance;
- LPWAVEFORMATEX pWFX;
-} DSDMP_SETFORMAT;
-
-/* DSDM_SETFREQUENCY  [struct; ce-only; CE 4.0..499] */
-typedef struct {
- DWORD dwMsg;
- DWORD dwInstance;
- DWORD dwFreq;
-} DSDMP_SETFREQUENCY;
-
-/* DSDM_SETNOTIFICATIONS  [struct; ce-only; CE 4.0..499] */
-typedef struct {
- DWORD dwMsg;
- DWORD dwInstance;
- DWORD dwCount;
- LPCDSBPOSITIONNOTIFY pDSNP;
-} DSDMP_SET_NOTIFICATIONS;
-
-/* DSDM_SETPOSITION  [struct; ce-only; CE 4.0..499] */
-typedef struct {
- DWORD dwMsg;
- DWORD dwInstance;
- DWORD dwPosition;
-} DSDMP_SETPOSITION;
-
-/* DSDM_SETPROP  [struct; ce-only; CE 4.0..499] */
-typedef struct {
- DWORD dwMsg;
- DWORD dwInstance;
- LPGUID pGUID;
- ULONG ulPropId;
- PVOID pParams;
- ULONG cbParams;
- PVOID pData;
- ULONG cbData;
-} DSDMP_SETPROP;
-
-/* DSDM_SETVOLUMEPAN  [struct; ce-only; CE 4.0..499] */
-typedef struct {
- DWORD dwMsg;
- DWORD dwInstance;
- LONG lVolume;
- LONG lPan;
-} DSDMP_SETVOLUMEPAN;
-
-/* DSDM_STOP  [struct; ce-only; CE 4.0..499] */
-typedef struct {
- DWORD dwMsg;
- DWORD dwInstance;
-} DSDMP_STOP;
-
-/* DSDM_UNLOCK  [struct; ce-only; CE 4.0..499] */
+/* DSDM_UNLOCK  [struct; ce-only] */
 typedef struct {
  DWORD dwMsg;
  DWORD dwInstance;
@@ -162,42 +27,16 @@ typedef struct {
  DWORD dwCount2;
 } DSDM_UNLOCK;
 
-/* DSDMP_MSG  [struct; ce-only; CE 4.0..499] */
+/* DSDMP_MSG  [struct; ce-only] */
 typedef struct _DSDMP_MSG {
  DWORD dwMsg;
  DWORD dwInstance;
 } DSDMP_MSG;
 
-/* DSDVR_MESSAGE_PARAMS  [typedef; ce-only; CE 4.0..499] */
-typedef union {
- DSDMP_MSG msg;
- DSDMP_CREATEBUFFER crb;
- DSDMP_DUPLICATEBUFFER dpb;
- DSDMP_DELETEBUFFER dlt;
- DSDMP_LOCK lck;
- DSDMP_UNLOCK ulk;
- DSDMP_SETFORMAT sfo;
- DSDMP_SETFREQUENCY sfr;
- DSDMP_SETVOLUMEPAN svp;
- DSDMP_SETPOSITION sps;
- DSDMP_GETPOSITION gps;
- DSDMP_PLAY ply;
- DSDMP_STOP stp;
- DSDMP_GETSTATUS gst;
- DSDMP_SETNOTIFICATIONS snp;
- DSDMP_QUERYPROP qpr;
- DSDMP_GETPROP gpr;
- DSDMP_SETPROP spr;
-} DSDVR_MESSAGE_PARAMS;
-#endif /* _WIN32_WCE */
-
 /* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
-
-/* typedef */
-typedef union { DSDMP_MSG msg;
 
 /* struct */
 typedef struct {

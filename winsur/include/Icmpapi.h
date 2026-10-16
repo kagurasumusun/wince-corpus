@@ -49,58 +49,6 @@
 #define IP_TTL_EXPIRED_TRANSIT 11013
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
-
-/* ICMP_ECHO_REPLY  [struct; shared; CE 3.0..699] */
-struct icmp_echo_reply {
- IPAddr Address;
- unsigned long Status;
- unsigned long RoundTripTime;
- unsigned short DataSize; 
- unsigned short Reserved; 
- void FAR* Data;
- struct ip_option_information Options; 
-} ICMP_ECHO_REPLY;
-
-/* IP_OPTION_INFORMATION  [struct; shared; CE 3.0..699] */
-typedef struct IP_OPTION_INFORMATION {
- unsigned char Ttl;
- unsigned char Tos;
- unsigned char Flags;
- unsigned char OptionsSize;
- unsigned char FAR* OptionsData;
-} IP_OPTION_INFORMATION;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* Icmp6SendEcho2  [struct, function; shared; CE 4.0..699; Icmplib.lib, Iphlpapi.dll, Iphlpapi.lib] */
-DWORD WINAPI Icmp6SendEcho2(
- HANDLE IcmpHandle,
- HANDLE Event,
- #ifdef PIO_APC_ROUTINE_DEFINED
- PIO_APC_ROUTINE ApcRoutine,
- #else
- FARPROC ApcRoutine,
- #endif
- PVOID ApcContext,
- struct sockaddr_in6* SourceAddress,
- struct sockaddr_in6* DestinationAddress,
- LPVOID RequestData,
- WORD RequestSize,
- PIP_OPTION_INFORMATION RequestOptions,
- LPVOID ReplyBuffer,
- DWORD ReplySize,
- DWORD Timeout
-);
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

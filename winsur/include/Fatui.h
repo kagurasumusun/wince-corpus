@@ -17,23 +17,10 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 3.0..399 */
-
-/* FATUIDATA  [struct; ce-only; CE 3.0..399] */
-struct _FATUIDATA { 
-DWORD dwSize; 
-DWORD dwFlags; 
-DWORD idsEvent; 
-DWORD idsEventCaption; 
-DWORD cuiParams; 
-UIPARAM auiParams[4]; }; 
-typedef struct _FATUIDATA FATUIDATA, *PFATUIDATA;
-
-/* UIPARAM  [struct; ce-only; CE 3.0..399] */
+/* UIPARAM  [struct; ce-only] */
 struct _UIPARAM { 
 DWORD dwType, 
 DWORD dwValue };
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

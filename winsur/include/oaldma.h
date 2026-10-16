@@ -23,37 +23,9 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+/* CE_DMA_ADAPTER  [struct; ce-only] */
 
-/* CE_DMA_ADAPTER  [struct; ce-only; CE 6.0..699] */
-
-/* DEVICE_DMA_REQUIREMENT_INFO  [struct; ce-only; CE 6.0..699] */
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* CE_DMA_BUFFER_BLOCK  [struct; ce-only; CE 6.0..699] */
-typedef struct _CE_DMA_BUFFER_BLOCK {
- DWORD dwLength;
- PVOID virtualAddress;
- PHYSICAL_ADDRESS physicalAddress;
-} CE_DMA_BUFFER_BLOCK, *PCE_DMA_BUFFER_BLOCK;
-
-/* DMA_STATUS_CODE  [enum; ce-only; CE 6.0..699] */
-typedef enum _DMA_STATUS {
- DMA_TRANSFER_COMPLETE = 0,
- DMA_TRANSFER_IN_PROGRESS,
- DMA_TRANSFER_IN_QUEUE,
- DMA_TRANSFER_COMPLETE_WITH_ERROR,
- DMA_TRANSFER_COMPLETE_WITH_CANCELED
-} DMA_STATUS_CODE, *PDMA_STATUS_CODE;
-#endif /* _WIN32_WCE */
+/* DEVICE_DMA_REQUIREMENT_INFO  [struct; ce-only] */
 
 /* ==================================================================
  * functions and callbacks

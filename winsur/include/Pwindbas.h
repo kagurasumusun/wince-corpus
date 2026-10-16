@@ -17,9 +17,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* REPLCHANGEINFO  [struct; ce-only; CE 5.0..699] */
+/* REPLCHANGEINFO  [struct; ce-only] */
 struct REPLCHANGEINFO {
  WORD wVersion;
  WORD wStatus;
@@ -27,7 +25,6 @@ struct REPLCHANGEINFO {
  CEOID oidChanged;
  CEOID oidDbase;
 };
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

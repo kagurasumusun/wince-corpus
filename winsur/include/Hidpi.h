@@ -15,30 +15,27 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+/* HIDP_BUTTON_CAPS  [struct; ce-only] */
 
-/* HIDP_BUTTON_CAPS  [struct; ce-only; CE 4.0..699] */
+/* HIDP_DATA  [struct; ce-only] */
 
-/* HIDP_DATA  [struct; ce-only; CE 4.0..699] */
-
-/* HidP_GetButtons  [macro; ce-only; CE 4.0..699] */
+/* HidP_GetButtons  [macro; ce-only] */
 #define HidP_GetButtons(Rty, UPa, LCo, ULi, ULe, Ppd, Rep, RLe) \
  HidP_GetUsages(Rty, UPa, LCo, ULi, ULe, Ppd, Rep, RLe)
 
-/* HidP_GetButtonsEx  [macro; ce-only; CE 4.0..699] */
+/* HidP_GetButtonsEx  [macro; ce-only] */
 #define HidP_GetButtonsEx(Rty, LCo, BLi, ULe, Ppd, Rep, RLe) \
  HidP_GetUsagesEx(Rty, LCo, BLi, ULe, Ppd, Rep, RLe)
 
-/* HidP_SetButtons  [macro; ce-only; CE 4.0..699] */
+/* HidP_SetButtons  [macro; ce-only] */
 #define HidP_SetButtons(Rty, Up, Lco, ULi, ULe, Ppd, Rep, Rle) \
  HidP_SetUsages(Rty, Up, Lco, ULi, ULe, Ppd, Rep, Rle)
 
-/* HidP_UnsetButtons  [macro; ce-only; CE 4.0..699] */
+/* HidP_UnsetButtons  [macro; ce-only] */
 #define HidP_UnsetButtons(Rty, Up, Lco, ULi, ULe, Ppd, Rep, Rle) \
  HidP_UnsetUsages(Rty, Up, Lco, ULi, ULe, Ppd, Rep, Rle)
 
-/* HIDP_VALUE_CAPS  [struct; ce-only; CE 4.0..699] */
-#endif /* _WIN32_WCE */
+/* HIDP_VALUE_CAPS  [struct; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -46,79 +43,18 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* HIDP_CAPS  [struct; ce-only; CE 4.0..699] */
-typedef struct _HIDP_CAPS {
- USAGE Usage;
- USAGE UsagePage;
- USHORT InputReportByteLength;
- USHORT OutputReportByteLength;
- USHORT FeatureReportByteLength;
- USHORT Reserved[17];
- USHORT NumberLinkCollectionNodes;
- USHORT NumberInputButtonCaps;
- USHORT NumberInputValueCaps;
- USHORT NumberInputDataIndices;
- USHORT NumberOutputButtonCaps;
- USHORT NumberOutputValueCaps;
- USHORT NumberOutputDataIndices;
- USHORT NumberFeatureButtonCaps;
- USHORT NumberFeatureValueCaps;
- USHORT NumberFeatureDataIndices;
-} HIDP_CAPS, * PHIDP_CAPS;
-
-/* HIDP_EXTENDED_ATTRIBUTES  [struct; ce-only; CE 4.0..699] */
-typedef struct _HIDP_EXTENDED_ATTRIBUTES {
- UCHAR NumGlobalUnknowns;
- UCHAR Reserved[3];
- PHIDP_UNKNOWN_TOKEN GlobalUnknowns;
- ULONG Data[1];
-} HIDP_EXTENDED_ATTRIBUTES, * PHIDP_EXTENDED_ATTRIBUTES;
-
-/* HIDP_KEYBOARD_DIRECTION  [enum; ce-only; CE 4.0..699] */
+/* HIDP_KEYBOARD_DIRECTION  [enum; ce-only] */
 typedef enum _HIDP_KEYBOARD_DIRECTION {
  HidP_Keyboard_Break,
  HidP_Keyboard_Make
 } HIDP_KEYBOARD_DIRECTION;
 
-/* HIDP_LINK_COLLECTION_NODE  [struct; ce-only; CE 4.0..699] */
-typedef struct _HIDP_LINK_COLLECTION_NODE {
- USAGE LinkUsage;
- USAGE LinkUsagePage;
- USHORT Parent;
- USHORT NumberOfChildren;
- USHORT NextSibling;
- USHORT FirstChild;
- ULONG CollectionType: 8;
- ULONG IsAlias: 1;
- ULONG Reserved: 23;
- PVOID UserContext;
-} HIDP_LINK_COLLECTION_NODE, * PHIDP_LINK_COLLECTION_NODE;
-
-/* HIDP_REPORT_TYPE  [enum; ce-only; CE 4.0..699] */
+/* HIDP_REPORT_TYPE  [enum; ce-only] */
 typedef enum _HIDP_REPORT_TYPE {
  HidP_Input,
  HidP_Output,
  HidP_Feature
 } HIDP_REPORT_TYPE;
-
-/* HIDP_UNKNOWN_TOKEN  [struct; ce-only; CE 4.0..699] */
-typedef struct _HIDP_UNKNOWN_TOKEN {
- UCHAR Token;
- UCHAR Reserved[3];
- ULONG BitField;
-} HIDP_UNKNOWN_TOKEN, * PHIDP_UNKNOWN_TOKEN;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* USAGE_AND_PAGE  [struct; ce-only; CE 5.0..699] */
-typedef struct _USAGE_AND_PAGE {
- USAGE Usage;
- USAGE UsagePage;
-} USAGE_AND_PAGE, * PUSAGE_AND_PAGE;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

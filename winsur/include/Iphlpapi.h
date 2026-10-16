@@ -93,41 +93,9 @@
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
 
-/* GetBestInterface  [function, interface; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
-DWORD GetBestInterface(
- IPAddr dwDestAddr, 
- PDWORD pdwBestIfIndex 
-);
-
 /* GetFriendlyIfIndex  [function, interface; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
 DWORD GetFriendlyIfIndex(
  DWORD IfIndex 
-);
-
-/* GetIfEntry  [function, interface; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
-DWORD GetIfEntry(
- PMIB_IFROW pIfRow
-);
-
-/* GetPerAdapterInfo  [function, interface; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
-DWORD GetPerAdapterInfo( 
- ULONG IfIndex, 
- PIP_PER_ADAPTER_INFO pPerAdapterInfo, 
- PULONG pOutBufLen 
-);
-
-/* SetIfEntry  [function, interface; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
-DWORD SetIfEntry( 
- PMIB_IFROW pIfRow 
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* GetBestInterfaceEx  [struct, function; shared; CE 4.0..699; Iphlpapi.lib] */
-DWORD GetBestInterfaceEX(
- struct sockaddr* pDestAddr, 
- PDWORD pdwBestIfIndex 
 );
 #endif /* _WIN32_WCE */
 
@@ -397,9 +365,6 @@ DWORD GetUdpStatisticsEx(
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
-
-/* typedef */
-typedef struct_MIB_ICMP {MIBICMPINFOstats;} MIB_ICMP, *PMIB_ICMP;
 
 /* struct */
 typedef struct mib_entry { AsnObjectIdentifier Oid; void * Storage; BYTE Type; UINT Access; UINT (*MibFunc) (UINT, struct mib_entry *, RFC1157VarBind *); struct mib_entry * MibNext; } MIB_ENTRY;

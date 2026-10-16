@@ -25,9 +25,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* PH_APPLICATION  [enum; ce-only; CE 6.0..699; PhCommon.dll] */
+/* PH_APPLICATION  [enum; ce-only; PhCommon.dll] */
 typedef enum _PH_APPLICATION
 {
  phaPhoneApp = 0,
@@ -36,7 +34,6 @@ typedef enum _PH_APPLICATION
  phaContactsApp,
  phaLast, 
 } PH_APPLICATION;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

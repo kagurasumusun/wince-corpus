@@ -137,69 +137,6 @@
 #define WIZ_CYDLG 140
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* PROPSHEETHEADER  [struct; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _PROPSHEETHEADER { 
- DWORD dwSize; 
- DWORD dwFlags; 
- HWND hwndParent; 
- HINSTANCE hInstance; 
- union {
- HICON hIcon; 
- LPCWSTR pszIcon; 
- };
- LPCWSTR pszCaption; 
- UINT nPages; 
- union {
- UINT nStartPage; 
- LPCWSTR pStartPage; 
- };
- union {
- LPCPROPSHEETPAGE ppsp; 
- HPROPSHEETPAGE FAR* phpage; 
- };
- PFNPROPSHEETCALLBACK pfnCallback;
-} PROPSHEETHEADER, FAR* LPPROPSHEETHEADER;
-typedef const PROPSHEETHEADER FAR* LPCPROPSHEETHEADER;
-
-/* PROPSHEETPAGE  [struct; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _PROPSHEETPAGE { 
- DWORD dwSize; 
- DWORD dwFlags; 
- HINSTANCE hInstance; 
- union {
- LPCSTR pszTemplate; 
- LPCDLGTEMPLATE pResource; 
- };
- union {
- HICON hIcon; 
- LPCSTR pszIcon; 
- };
- LPCSTR pszTitle; 
- DLGPROC pfnDlgProc; 
- LPARAM lParam; 
- LPFNPSPCALLBACK pfnCallback; 
- UINT FAR* pcRefParent; 
-} PROPSHEETPAGE, FAR* LPPROPSHEETPAGE;
-typedef const PROPSHEETPAGE FAR* LPCPROPSHEETPAGE;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* PSHNOTIFY  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _PSHNOTIFY { 
- NMHDR hdr; 
- LPARAM lParam; 
-} PSHNOTIFY, FAR* LPPSHNOTIFY;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
@@ -348,7 +285,5 @@ int CALLBACK PropSheetProc(
 
 /* struct */
 typedef struct _PSHNOTIFY { NMHDR hdr; LPARAM lParam; } PSHNOTIFY, FAR* LPPSHNOTIFY;
-typedef struct _PROPSHEETHEADER { DWORD dwSize; DWORD dwFlags; HWND hwndParent; HINSTANCE hInstance; union { HICON hIcon; LPCWSTR pszIcon; };
-typedef struct _PROPSHEETPAGE { DWORD dwSize; DWORD dwFlags; HINSTANCE hInstance; union { LPCSTR pszTemplate; LPCDLGTEMPLATE pResource; };
 
 #endif /* _PRSHT_ */

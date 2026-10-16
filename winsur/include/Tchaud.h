@@ -17,9 +17,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 2.11..2.12, 3.0..399 */
-
-/* TOUCHPANEL_POINT_SAMPLE  [struct; ce-only; CE 2.11..2.12, 3.0..399] */
+/* TOUCHPANEL_POINT_SAMPLE  [struct; ce-only] */
 typedef struct { 
 USHORT XSample; 
 USHORT XzaSample; 
@@ -28,6 +26,5 @@ USHORT YSample;
 USHORT YzaSample; 
 USHORT YzbSample; 
 } TOUCHPANEL_POINT_SAMPLE;
-#endif /* _WIN32_WCE */
 
 #endif /* _TCHAUD_ */

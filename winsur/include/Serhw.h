@@ -15,28 +15,9 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
+/* HW_VTBL  [struct; ce-only] */
 
-/* HW_VTBL  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-
-/* HWOBJ  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* DEVICE_LIST  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct __DEVICE_LIST {
- LPSTR DllName;
- ULONG NumberOfDevices;
- PHWOBJ* DeviceArray;
-} DEVICE_LIST, *PDEVICE_LIST;
-#endif /* _WIN32_WCE */
+/* HWOBJ  [struct; ce-only] */
 
 /* ==================================================================
  * functions and callbacks

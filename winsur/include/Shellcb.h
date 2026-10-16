@@ -12,22 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* SHELLCALLBACKS  [struct; ce-only; CE 4.0..699] */
-typedef struct {
- DWORD dwSize;
- PFNSHELL_NOTIFYICON pfnShell_NotifyIcon;
- PFNSHHADDTORECENTDOCS pfnSHAddToRecentDocs;
-} SHELLCALLBACKS;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

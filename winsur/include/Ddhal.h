@@ -11,19 +11,4 @@
 #define _DDHAL_
 
 
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* DDHAL_SET_PALETTE  [struct; ce-only; CE 5.0..699] */
-typedef struct {
- UINT16 firstEntry;
- UINT16 entries;
-} DDHAL_SET_PALETTE;
-#endif /* _WIN32_WCE */
-
 #endif /* _DDHAL_ */

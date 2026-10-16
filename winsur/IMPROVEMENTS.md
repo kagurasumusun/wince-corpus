@@ -432,6 +432,15 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: gcc が通るアプリ/ドライバ面（第10弾）
+
+コピーはしない。CeGCC 以外は MSDN（既存コーパス）と CC-BY data-types、MIT pinvoke。
+
+- `WinDef.h` にコンパイラ用プレリュード（`CONST`/`FAR`/`__int64`=`long long`、Unicode の `TCHAR`/`LPCTSTR`、`WNDPROC`、`FILETIME`）。ヘッダファイルのコピーではない。
+- 壊れた引用（`;` 抜け、`operator LPCTSTR`、配列マクロ未定義）と COM/C++ をコアヘッダに出さない。
+- `Windows.h` 傘は WinDef/WinNT/winerror/Winbase/Winuser/Wingdi/Winreg。Winsock2/Commctrl は使う側が include。
+- `gcc -fsyntax-only` で `WinMain` アプリと `DllMain`+`CEDDK.h` ドライバが通る。
+
 ### 2026-10-16: コンパイラが通る面（第9弾）
 
 コピーはしない。CeGCC が依拠したのは MSDN（既存コーパス）と、公開ドメインで書き直したヘッダ。追加の出所はライセンス済みのものだけ。

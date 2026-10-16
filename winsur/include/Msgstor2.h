@@ -17,9 +17,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213)) /* CE 2.11..2.12 */
-
-/* TransportCheckForNewMailInfo  [struct; ce-only; CE 2.11..2.12] */
+/* TransportCheckForNewMailInfo  [struct; ce-only] */
 typedef struct TransportCheckForNewMailInfo{
  TransportFolderList* ptfl;
  BOOL fFree;
@@ -27,19 +25,11 @@ typedef struct TransportCheckForNewMailInfo{
  DWORD dwReserverd;
 } TransportCheckForNewMailInfo, *lpTransportCheckForNewMailInfo;
 
-/* TransportFolderInfo  [struct; ce-only; CE 2.11..2.12] */
-typedef struct TransportFolderInfo_s {
- LPWSTR szFriendlyName;
- LPWSTR szServiceID;
- FID fidStoreID;
-} TransportFolderInfo, *lpTransportFolderInfo;
-
-/* TransportFolderList  [struct; ce-only; CE 2.11..2.12] */
+/* TransportFolderList  [struct; ce-only] */
 typedef struct TransportFolderList_s {
  UINT uiCount;
  lpTransportFolderInfo FolderArray[];
 } TransportFolderList, *lpTransportFolderList;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

@@ -12,21 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* CS_DATAFORMAT_VIDEOINFOHEADER  [struct; ce-only; CE 6.0..699] */
-typedef struct tagCS_DATAFORMAT_VIDEOINFOHEADER {
- CSDATAFORMAT DataFormat;
- CS_VIDEOINFOHEADER VideoInfoHeader;
-} CS_DATAFORMAT_VIDEOINFOHEADER, *PCS_DATAFORMAT_VIDEOINFOHEADER;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */

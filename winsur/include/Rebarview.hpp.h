@@ -5,40 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 3 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _REBARVIEW_HPP_
 #define _REBARVIEW_HPP_
 
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* RebarView_t::DrawGripper  [function; ce-only; CE 4.0..699] */
-static BOOL DrawGripper(
- HDC hdc,
- LPRECT lprc
-);
-
-/* RebarView_t::InitSpacingValues  [function; ce-only; CE 4.0..699] */
-static void InitSpacingValues(
- int* pstartspace,
- int* pgripperwidth,
- int* pinterspace
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* RebarView_t::SetEdgeBorderType  [function; ce-only; CE 5.0..699] */
-void SetEdgeBorderType(
- UINT* puEdgeType,
- UINT* puBorderType
-);
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

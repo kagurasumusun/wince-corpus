@@ -17,18 +17,6 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 600)) /* CE 4.0..599 */
-
-/* TRANPORTINFOSTRUCT  [struct; ce-only; CE 4.0..599] */
-typedef struct _TRANPORTINFOSTRUCT {
- WORD cbData;
- WORD wVersion;
- WORD wTranGuid;
- WORD wFlags;
- DWORD dwBandWidth;
-} TRANPORTINFOSTRUCT, *PTRANPORTINFOSTRUCT;
-#endif /* _WIN32_WCE */
-
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
 
 /* PFN_EnumProc  [callback; ce-only; CE 4.0..699] */
@@ -36,18 +24,6 @@ typedef BOOL (* PFN_EnumProc)(
  LPCWSTR pszDevName,
  LPVOID pData
 );
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* TRANPORTINFOSTRUCT_deleted  [struct; ce-only; CE 6.0..699] */
-typedef struct _TRANPORTINFOSTRUCT {
- WORD cbData;
- WORD wVersion;
- WORD wTranGuid;
- WORD wFlags;
- DWORD dwBandWidth;
-} TRANPORTINFOSTRUCT, *PTRANPORTINFOSTRUCT;
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

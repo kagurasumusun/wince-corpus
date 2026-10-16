@@ -5,29 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 2 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _ADDAUTO_
 #define _ADDAUTO_
 
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 600)) /* CE 4.0..599 */
-
-/* IDSAddIn::OnConnection  [function; ce-only; CE 4.0..599] */
-HRESULT OnConnection (
- IApplication* pApp,
- VARIANT BOOL bFirstTime,
- Long dwCookie 
- VARIANT_BOOL* OnConnection
-);
-
-/* IDSAddIn::OnDisconnection  [function; ce-only; CE 4.0..599] */
-HRESULT OnDisconnection ( VARIANT_BOOL bLastTime);
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

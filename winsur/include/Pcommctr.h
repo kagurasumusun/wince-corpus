@@ -15,10 +15,7 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* DPA_FastGetPtr  [macro, function; shared; CE 4.0..699] */
-#endif /* _WIN32_WCE */
+/* DPA_FastGetPtr  [macro, function; shared] */
 
 /* ==================================================================
  * functions and callbacks

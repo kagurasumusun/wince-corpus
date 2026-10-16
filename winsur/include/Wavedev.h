@@ -17,9 +17,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 200 && _WIN32_WCE < 210) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* ACMDRV_MESSAGE_PARAMS  [struct; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699] */
+/* ACMDRV_MESSAGE_PARAMS  [struct; ce-only] */
 typedef struct { 
  DWORD dwDeviceID;
  HANDLE hDriver;
@@ -27,11 +25,8 @@ typedef struct {
  LPARAM lParam1;
  LPARAM lParam2;
 } ACMDRV_MESSAGE_PARAMS;
-#endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* MMDRV_MESSAGE_PARAMS  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
+/* MMDRV_MESSAGE_PARAMS  [struct; ce-only] */
 typedef struct {
  UINT uDeviceId;
  UINT uMsg;
@@ -39,7 +34,6 @@ typedef struct {
  DWORD dwParam1;
  DWORD dwParam2;
 } MMDRV_MESSAGE_PARAMS;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

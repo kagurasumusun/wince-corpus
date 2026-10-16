@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 27 constants, 31 declarations, 1 outlines, 0 base types, 0 extra macros, 26 extra decls
+ * 27 constants, 30 declarations, 2 outlines, 0 base types, 0 extra macros, 26 extra decls
  */
 #ifndef _WINDNS_
 #define _WINDNS_
@@ -49,9 +49,7 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* DNS_RECORD  [struct, macro; shared; CE 5.0..699; A/W DNS_RECORDA,DNS_RECORDW (CE is W-side)] */
+/* DNS_RECORD  [struct, macro; shared; A/W DNS_RECORDA,DNS_RECORDW (CE is W-side)] */
 typedef struct _DnsRecord {
  struct _DnsRecord* pNext;
  LPTSTR pName;
@@ -85,7 +83,6 @@ typedef struct _DnsRecord {
  DNS_WINSR_DATA WINSR, WinsR, NBSTAT, Nbstat;
  } Data;
 } DNS_RECORD, *PDNS_RECORD;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -93,98 +90,7 @@ typedef struct _DnsRecord {
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* DNS_A_DATA  [struct; shared; CE 5.0..699] */
-typedef struct {
- IP4_ADDRESS IpAddress;
-} DNS_A_DATA, *PDNS_A_DATA;
-
-/* DNS_AAAA_DATA  [struct; shared; CE 5.0..699] */
-typedef struct {
- DNS_IP6_ADDRESS Ip6Address;
-} DNS_AAAA_DATA, *PDNS_AAAA_DATA;
-
-/* DNS_ATMA_DATA  [struct; shared; CE 5.0..699] */
-typedef struct {
- BYTE AddressType;
- BYTE Address[DNS_ATMA_MAX_ADDR_LENGTH];
-} DNS_ATMA_DATA, *PDNS_ATMA_DATA;
-
-/* DNS_HEADER  [struct; shared; CE 5.0..699] */
-typedef struct _DNS_HEADER {
- WORD Xid;
- BYTE RecursionDesired;
- BYTE Truncation;
- BYTE Authoritative;
- BYTE Opcode;
- BYTE IsResponse;
- BYTE ResponseCode;
- BYTE Reserved;
- BYTE RecursionAvailable;
- WORD QuestionCount;
- WORD AnswerCount;
- WORD NameServerCount;
- WORD AdditionalCount;
-} DNS_HEADER, *PDNS_HEADER;
-
-/* DNS_KEY_DATA  [struct; shared; CE 5.0..699] */
-typedef struct {
- WORD wFlags;
- BYTE chProtocol;
- BYTE chAlgorithm;
- BYTE Key[1];
-} DNS_KEY_DATA, *PDNS_KEY_DATA;
-
-/* DNS_LOC_DATA  [struct; shared; CE 5.0..699] */
-typedef struct {
- WORD wVersion;
- WORD wSize;
- WORD wHorPrec;
- WORD wVerPrec;
- DWORD dwLatitude;
- DWORD dwLongitude;
- DWORD dwAltitude;
-} DNS_LOC_DATA, *PDNS_LOC_DATA;
-
-/* DNS_MESSAGE_BUFFER  [struct; shared; CE 5.0..699] */
-typedef struct _DNS_MESSAGE_BUFFER {
- DNS_HEADER MessageHead;
- CHAR MessageBody[1];
-} DNS_MESSAGE_BUFFER, *PDNS_MESSAGE_BUFFER;
-
-/* DNS_MINFO_DATA  [struct; shared; CE 5.0..699; A/W DNS_MINFO_DATAA,DNS_MINFO_DATAW (CE is W-side)] */
-typedef struct {
- LPTSTR pNameMailbox;
- LPTSTR pNameErrorsMailbox;
-} DNS_MINFO_DATA, *PDNS_MINFO_DATA;
-
-/* DNS_MX_DATA  [struct; shared; CE 5.0..699; A/W DNS_MX_DATAA,DNS_MX_DATAW (CE is W-side)] */
-typedef struct {
- LPTSTR pNameExchange;
- WORD wPreference;
- WORD Pad;
-} DNS_MX_DATA, *PDNS_MX_DATA;
-
-/* DNS_NULL_DATA  [struct; shared; CE 5.0..699] */
-typedef struct {
- DWORD dwByteCount;
- BYTE Data[1];
-} DNS_NULL_DATA, *PDNS_NULL_DATA;
-
-/* DNS_NXT_DATA  [struct; shared; CE 5.0..699; A/W DNS_NXT_DATAA,DNS_NXT_DATAW (CE is W-side)] */
-typedef struct {
- LPTSTR pNameNext;
- WORD wNumTypes;
- WORD wTypes[1];
-} DNS_NXT_DATA, *PDNS_NXT_DATA;
-
-/* DNS_PTR_DATA  [struct; shared; CE 5.0..699; A/W DNS_PTR_DATAA,DNS_PTR_DATAW (CE is W-side)] */
-typedef struct {
- LPTSTR pNameHost;
-} DNS_PTR_DATA, *PDNS_PTR_DATA;
-
-/* DNS_RECORD_FLAGS  [struct; shared; CE 5.0..699] */
+/* DNS_RECORD_FLAGS  [struct; shared] */
 typedef struct _DnsRecordFlags {
  DWORD Section :2;
  DWORD Delete :1;
@@ -193,63 +99,12 @@ typedef struct _DnsRecordFlags {
  DWORD Reserved :24;
 } DNS_RECORD_FLAGS;
 
-/* DNS_RRSET  [struct; shared; CE 5.0..699] */
-typedef struct _DnsRRSet {
- PDNS_RECORD pFirstRR;
- PDNS_RECORD pLastRR;
-} DNS_RRSET, *PDNS_RRSET;
+/* DNS_ATMA_DATA  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   AddressType */
+/*   Address */
 
-/* DNS_SIG_DATA  [struct; shared; CE 5.0..699; A/W DNS_SIG_DATAA,DNS_SIG_DATAW (CE is W-side)] */
-typedef struct {
- LPTSTR pNameSigner;
- WORD wTypeCovered;
- BYTE chAlgorithm;
- BYTE chLabelCount;
- DWORD dwOriginalTtl;
- DWORD dwExpiration;
- DWORD dwTimeSigned;
- WORD wKeyTag;
- WORD Pad;
- BYTE Signature[1];
-} DNS_SIG_DATA, *PDNS_SIG_DATA;
-
-/* DNS_SOA_DATA  [struct; shared; CE 5.0..699; A/W DNS_SOA_DATAA,DNS_SOA_DATAW (CE is W-side)] */
-typedef struct {
- LPTSTR pNamePrimaryServer;
- LPTSTR pNameAdministrator;
- DWORD dwSerialNo;
- DWORD dwRefresh;
- DWORD dwRetry;
- DWORD dwExpire;
- DWORD dwDefaultTtl;
-} DNS_SOA_DATA, *PDNS_SOA_DATA;
-
-/* DNS_SRV_DATA  [struct; shared; CE 5.0..699; A/W DNS_SRV_DATAA,DNS_SRV_DATAW (CE is W-side)] */
-typedef struct {
- LPTSTR pNameTarget;
- WORD wPriority;
- WORD wWeight;
- WORD wPort;
- WORD Pad;
-} DNS_SRV_DATA, *PDNS_SRV_DATA;
-
-/* DNS_TKEY_DATA  [struct; shared; CE 5.0..699; A/W DNS_TKEY_DATAA,DNS_TKEY_DATAW (CE is W-side)] */
-typedef struct {
- LPTSTR pNameAlgorithm;
- PBYTE pAlgorithmPacket;
- PBYTE pKey;
- PBYTE pOtherData;
- DWORD dwCreateTime;
- DWORD dwExpireTime;
- WORD wMode;
- WORD wError;
- WORD wKeyLength;
- WORD wOtherLength;
- UCHAR cAlgNameLength;
- BOOL bPacketPointers;
-} DNS_TKEY_DATA, *PDNS_TKEY_DATA;
-
-/* DNS_TSIG_DATA  [struct; shared; CE 5.0..699; A/W DNS_TSIG_DATAA,DNS_TSIG_DATAW (CE is W-side)] */
+/* DNS_TSIG_DATA  [struct; shared; A/W DNS_TSIG_DATAA,DNS_TSIG_DATAW (CE is W-side)] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   pNameAlgorithm */
 /*   pAlgorithmPacket */
@@ -263,62 +118,6 @@ typedef struct {
 /*   wOtherLength */
 /*   cAlgNameLength */
 /*   bPacketPointers */
-
-/* DNS_TXT_DATA  [struct; shared; CE 5.0..699; A/W DNS_TXT_DATAA,DNS_TXT_DATAW (CE is W-side)] */
-typedef struct {
- DWORD dwStringCount;
- LPTSTR pStringArray[1];
-} DNS_TXT_DATA, *PDNS_TXT_DATA;
-
-/* DNS_WINS_DATA  [struct; shared; CE 5.0..699] */
-typedef struct {
- DWORD dwMappingFlag;
- DWORD dwLookupTimeout;
- DWORD dwCacheTimeout;
- DWORD cWinsServerCount;
- IP4_ADDRESS WinsServers[1];
-} DNS_WINS_DATA, *PDNS_WINS_DATA;
-
-/* DNS_WINSR_DATA  [struct; shared; CE 5.0..699; A/W DNS_WINSR_DATAA,DNS_WINSR_DATAW (CE is W-side)] */
-typedef struct {
- DWORD dwMappingFlag;
- DWORD dwLookupTimeout;
- DWORD dwCacheTimeout;
- LPTSTR pNameResultDomain;
-} DNS_WINSR_DATA, *PDNS_WINSR_DATA;
-
-/* DNS_WIRE_QUESTION  [struct; shared; CE 5.0..699] */
-typedef struct _DNS_WIRE_QUESTION {
- WORD QuestionType;
- WORD QuestionClass;
-} DNS_WIRE_QUESTION, *PDNS_WIRE_QUESTION;
-
-/* DNS_WIRE_RECORD  [struct; shared; CE 5.0..699] */
-typedef struct _DNS_WIRE_RECORD {
- WORD RecordType;
- WORD RecordClass;
- DWORD TimeToLive;
- WORD DataLength;
-} DNS_WIRE_RECORD, *PDNS_WIRE_RECORD;
-
-/* DNS_WKS_DATA  [struct; shared; CE 5.0..699] */
-typedef struct {
- IP4_ADDRESS IpAddress;
- UCHAR chProtocol;
- BYTE BitMask[1];
-} DNS_WKS_DATA, *PDNS_WKS_DATA;
-
-/* IP4_ARRAY  [struct; shared; CE 5.0..699] */
-typedef struct _IP4_ARRAY {
- DWORD AddrCount;
- IP4_ADDRESS AddrArray[1];
-} IP4_ARRAY, *PIP4_ARRAY;
-
-/* IP6_ADDRESS  [struct; shared; CE 5.0..699] */
-typedef struct {
- DWORD IP6Dword[4];
-} IP6_ADDRESS, *PIP6_ADDRESS;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

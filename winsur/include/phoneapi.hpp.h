@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1 constants, 5 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 1 constants, 4 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _PHONEAPI_HPP_
 #define _PHONEAPI_HPP_
@@ -20,23 +20,10 @@
 #define MPCF_DEFAULT 0x00000000
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
+ * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* PH_MAKEPHONECALL_PARAMETERS  [struct; ce-only; CE 6.0..699; PhCommon.dll] */
-typedef struct _PH_MAKEPHONECALL_PARAMETERS{
- DWORD StructSize; // Struct size in bytes
- DWORD Flags; // Flags
- WCHAR DestAddress[MAX_PATH]; 
- WCHAR ApplicationName[MAX_PATH]; 
- WCHAR CalledParty[MAX_PATH]; 
- WCHAR Comment[MAX_PATH]; 
-} PH_MAKEPHONECALL_PARAMETERS;
-#endif /* _WIN32_WCE */
+/* PH_MAKEPHONECALL_PARAMETERS  [struct; ce-only; PhCommon.dll] */
 
 /* ==================================================================
  * functions and callbacks

@@ -17,32 +17,12 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* OEMProfilerData  [struct; ce-only; CE 5.0..699] */
+/* OEMProfilerData  [struct; ce-only] */
 typedef struct OEMProfilerData {
  DWORD ra;
  DWORD dwBufSize;
  BYTE buf[0];
 } OEMProfilerData;
-
-/* ProfilerControl  [struct; ce-only; CE 5.0..699] */
-typedef struct ProfilerControl {
- DWORD dwVersion;
- DWORD dwOptions;
- DWORD dwReserved;
- union {
- struct {
- DWORD dwUSecInterval;
- } Kernel;
- struct {
- DWORD dwProcessorType;
- DWORD dwControlSize;
- BYTE bHardwareSpecificSettings[0];
- } OEM;
- };
-} ProfilerControl;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks
@@ -94,13 +74,5 @@ VOID ProfileStartEx(
  ProfilerControl* pControl
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct ProfilerControl {DWORDdwVersion;DWORDdwOptions;DWORDdwReserved; union { struct { DWORDdwUSecInterval; } Kernel;
 
 #endif /* _PROFILER_ */

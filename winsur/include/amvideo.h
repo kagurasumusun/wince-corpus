@@ -40,9 +40,6 @@
  * parser did not turn into an entity declaration
  * ================================================================ */
 
-/* struct */
-typedef struct tagVIDEOINFO { RECT rcSource, RECT rcTarget, DWORD dwBitRate, DWORD dwBitErrorRate, REFERENCE_TIME AvgTimePerFrame; BITMAPINFOHEADER bmiHeader; union { RGBQUAD bmiColors[iPALETTE_COLORS]; DWORD dwBitMasks[iMASK_COLORS]; TRUECOLORINFO TrueColorInfo; };
-
 /* function */
 HRESULT CanUseOverlayStretch( long *UseOverlayStretch);
 HRESULT CanUseScanLine( long *UseScanLine);

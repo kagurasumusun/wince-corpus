@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 176 constants, 0 declarations, 0 outlines, 0 base types, 1 extra macros, 1 extra decls
+ * 176 constants, 0 declarations, 0 outlines, 0 base types, 1 extra macros, 0 extra decls
  */
 #ifndef _WINIOCTL_
 #define _WINIOCTL_
@@ -198,13 +198,5 @@
  * macros -- supplementary #define from CE pages
  * ================================================================ */
 #define IOCTL_SERIAL_GET_STATISTICS CTL_CODE(FILE_DEVICE_SERIAL_PORT,24,METHOD_BUFFERED,
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-HKEY_LOCAL_MACHINE  [Drivers]  [PCMCIA]  [MyDriver]  SZ: Prefix = DSK  SZ: Dll = MyDriver.DLL  SZ: IOCTL = (DWORD)4  SZ: FSD = FATFS.DLL  SZ: Folder = My Folder  [Detect]  [20]  SZ: Dll = MyDriver.DLL  SZ: Entry = MyDriverDetectdisk
 
 #endif /* _WINIOCTL_ */

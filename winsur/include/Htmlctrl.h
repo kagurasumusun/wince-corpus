@@ -12,60 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213)) /* CE 2.11..2.12 */
-
-/* HTMLCONTEXT  [struct; ce-only; CE 2.11..2.12] */
-typedef struct tagHTMLCONTEXT {
- NMHDR hdr; 
- POINT pt;
- UINT uTypeFlags;
- LPSTR szLinkHREF;
- LPSTR szImageSrc;
- HBITMAP hbmImage;
- DWORD dwImageCookie;
-} HTMLCONTEXT;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 2.11..2.12, 3.0..399 */
-
-/* INLINEIMAGEINFO  [struct, typedef; ce-only; CE 2.11..2.12, 3.0..399] */
-typedef struct tagINLINEIMAGEINFO { 
-DWORD dwCookie; 
-int iOrigHeight; 
-int iOrigWidth; 
-HBITMAP hbm; 
-BOOL bOwnBitmap; 
-} INLINEIMAGEINFO, *LPINLINEIMAGEINFO;
-
-/* NM_HTMLVIEW  [struct, typedef; ce-only; CE 2.11..2.12, 3.0..399] */
-typedef struct tagNM_HTMLVIEW { 
-NMHDR hdr; 
-LPSTR szTarget; 
-LPSTR szData; 
-DWORD dwCookie; 
-} NM_HTMLVIEW;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 3.0..399 */
-
-/* NM_HTMLCONTEXT  [struct; ce-only; CE 3.0..399] */
-typedef struct tagNM_HTMLCONTEXT { 
-NMHDR hdr; 
-POINT pt; 
-UINT uTypeFlags; 
-LPSTR szLinkHREF; 
-LPSTR szImageSrc; 
-HBITMAP hbmImage; 
-DWORD dwImageCookie; 
-} NM_HTMLCONTEXT;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

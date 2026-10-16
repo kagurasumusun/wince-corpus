@@ -5,35 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 3 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _VOIPPROV_IDL_
 #define _VOIPPROV_IDL_
 
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 600)) /* CE 4.0..599 */
-
-/* IVoIPDirectoryClient::RegistrationParameters  [function; ce-only; CE 4.0..599; Voipguid.lib] */
-HRESULT put_RegistrationParameters( 
- DirectoryClientRegParams* pdcrp 
-);
-
-/* IVoIPDirectoryClient::SipPassword  [function; ce-only; CE 4.0..599; Voipguid.lib] */
-HRESULT put_SipPassword( 
- BSTR bstrSipPassword 
-);
-
-/* IVoIPDirectoryClient::SipServerParameters  [function; ce-only; CE 4.0..599; Voipguid.lib] */
-HRESULT get_SipServerParameters( 
- BSTR* pbstrMyURI, 
- BSTR* pbstrMyServer, 
- BSTR* pbstrProfileString 
-);
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

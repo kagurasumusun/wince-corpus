@@ -12,36 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* PROXY_HTTP_INFORMATION  [struct; ce-only; CE 5.0..699] */
-typedef struct _PROXY_HTTP_INFORMATION {
- DWORD dwSize;
- DWORD dwProxyVersion;
-} PROXY_HTTP_INFORMATION, *PPROXY_HTTP_INFORMATION;
-
-/* PROXY_HTTP_REQUEST  [struct; ce-only; CE 5.0..699] */
-typedef struct _PROXY_HTTP_REQUEST {
- DWORD dwSize;
- const SOCKADDR_STORAGE* psaClient;
- int cbsaClient
- const char* szUser;
- int cchUser;
- const char* szURL;
- int cchURL;
- char* szURLOut;
- int cbURLOut;
- const SOCKADDR_STORAGE* psaProxy;
- int cbsaProxy;
-} PROXY_HTTP_REQUEST, *PPROXY_HTTP_REQUEST;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

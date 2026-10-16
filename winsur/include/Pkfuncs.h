@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 19 constants, 116 declarations, 1 outlines, 0 base types, 0 extra macros, 9 extra decls
+ * 19 constants, 113 declarations, 3 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _PKFUNCS_
 #define _PKFUNCS_
@@ -41,22 +41,15 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+/* IsCeLogEnabled  [macro; ce-only] */
 
-/* IsCeLogEnabled  [macro; ce-only; CE 5.0..699] */
-#define IsCeLogEnabled(Status, ZoneCE)
- (IsCeLogStatus(Status) && ((UserKInfo[KINX_CELOGSTATUS] & (ZoneCE)) != 0))
+/* IsCeLogStatus  [macro; ce-only] */
 
-/* IsCeLogStatus  [macro; ce-only; CE 5.0..699] */
-#define IsCeLogStatus(Status)
- ((UserKInfo[KINX_CELOGSTATUS] & (Status)) != 0)
-
-/* IsCeLogZoneEnabled  [macro; ce-only; CE 5.0..699] */
+/* IsCeLogZoneEnabled  [macro; ce-only] */
 #define IsCeLogZoneEnabled(ZoneCE)
  (IsCeLogEnabled(CELOGSTATUS_ENABLED_GENERAL, (ZoneCE)))
 
-/* IsInPwrHdlr  [macro; ce-only; CE 5.0..699] */
-#endif /* _WIN32_WCE */
+/* IsInPwrHdlr  [macro; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -64,84 +57,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-
-/* KD_BPINFO  [struct; ce-only; CE 3.0..399, 5.0..699] */
-typedef struct _KD_BPINFO {
- int nVersion; 
- ULONG ulFlags; 
- ULONG ulAddress; 
- ULONG ulHandle; 
- ULONG ulCount;
-} KD_BPINFO, *PKD_BPINFO;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
-
-/* DEVICE_ID  [struct; ce-only; CE 3.0..699] */
-typedef struct _DEVICE_ID {
- DWORD dwSize;
- DWORD dwPresetIDOffset;
- DWORD dwPresetIDBytes;
- DWORD dwPlatformIDOffset;
- DWORD dwPlatformIDBytes;
-} DEVICE_ID, *PDEVICE_ID;
-
-/* PHYSICAL_BASIC_INFORMATION  [struct; ce-only; CE 3.0..699] */
-typedef struct _PHYSICAL_BASIC_INFORMATION { 
- PVOID lpBaseAddress; 
- DWORD dwRegionSize; 
- DWORD dwType; 
-} PHYSICAL_BASIC_INFORMATION; 
-typedef PHYSICAL_BASIC_INFORMATION* PPHYSICAL_BASIC_INFORMATION;
-
-/* PROCESSOR_INFO  [typedef; ce-only; CE 3.0..699] */
-typedef __PROCESSOR_INFO {
- WORD wVersion; 
- WCHAR szProcessCore[40];
- WORD wCoreRevision;
- WCHAR szProcessorName[40];
- WORD wProcessorRevision;
- WCAHR szCatalogNumber[100];
- WCHAR szVendor[100];
- DWORD dwInstructionSet;
- DWORD dwClockSpeed;
-} PROCESSOR_INFO, *PPROCESSOR_INFO;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* CeLogExportTable  [struct; ce-only; CE 4.0..699] */
-typedef struct _CeLogExportTable {
- DWORD dwVersion;
- PFNVOID pfnCeLogData;
- PFNVOID pfnCeLogInterrupt;
- PFNVOID pfnCeLogSetZones;
- FARPROC pfnCeLogQueryZones;
- DWORD dwCeLogTimerFrequency;
-} CeLogExportTable;
-
-/* DEVICE_LOCATION  [struct; ce-only; CE 4.0..699] */
-typedef struct _DEVICE_LOCATION {
- DWORD IfcType;
- DWORD BusNumber;
- DWORD LogicalLoc;
- PVOID PhysicalLoc;
- DWORD Pin;
-} DEVICE_LOCATION, *PDEVICE_LOCATION;
-
-/* DEVICE_PSL_NOTIFY  [struct; ce-only; CE 4.0..699] */
-typedef struct _DEVICE_PSL_NOTIFY {
- DWORD dwSize;
- DWORD dwFlags;
- HANDLE hProc;
- HANDLE hThread;
-} DEVICE_PSL_NOTIFY, *PDEVICE_PSL_NOTIFY;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* CacheInfo  [struct; ce-only; CE 5.0..699] */
+/* CacheInfo  [struct; ce-only] */
 typedef struct _CacheInfo {
  DWORD dwL1Flags;
  DWORD dwL1ICacheSize;
@@ -159,12 +75,21 @@ typedef struct _CacheInfo {
  DWORD dwL2DCacheNumWays;
 } CacheInfo, *PCacheInfo;
 
-/* CallSnapshot  [struct; ce-only; CE 5.0..699] */
+/* CallSnapshot  [struct; ce-only] */
 typedef struct _CallSnapshot {
  DWORD dwReturnAddr;
 } CallSnapshot;
 
-/* CallSnapshotEx  [struct; ce-only; CE 5.0..699] */
+/* CallSnapshot3  [struct; ce-only] */
+typedef struct _CallSnapshot3 {
+ DWORD dwReturnAddr;
+ DWORD dwFramePtr;
+ DWORD dwActvProc;
+ DWORD dwVMProc;
+ DWORD dwParams[4];
+} CallSnapshot3;
+
+/* CallSnapshotEx  [struct; ce-only] */
 typedef struct _CallSnapshotEx {
  DWORD dwReturnAddr;
  DWORD dwFramePtr;
@@ -172,7 +97,7 @@ typedef struct _CallSnapshotEx {
  DWORD dwParams[4];
 } CallSnapshotEx;
 
-/* CeLogImportTable  [struct; ce-only; CE 5.0..699] */
+/* CeLogImportTable  [struct; ce-only] */
 typedef struct _CeLogImportTable {
  DWORD dwVersion;
  FARPROC pCreateEventW;
@@ -200,27 +125,7 @@ typedef struct _CeLogImportTable {
  DWORD dwDefaultThreadQuantum;
 } CeLogImportTable;
 
-/* KD_EXCEPTION_INFO  [struct; ce-only; CE 5.0..699] */
-typedef struct _KD_EXCEPTION_INFO {
- int nVersion; 
- ULONG ulFlags; 
- ULONG ulAddress; 
- ULONG ulExceptionCode; 
-} KD_EXCEPTION_INFO, *PKD_EXCEPTION_INFO;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* CallSnapshot3  [struct; ce-only; CE 6.0..699] */
-typedef struct _CallSnapshot3 {
- DWORD dwReturnAddr;
- DWORD dwFramePtr;
- DWORD dwActvProc;
- DWORD dwVMProc;
- DWORD dwParams[4];
-} CallSnapshot3;
-
-/* NKPagePoolParameters  [struct; ce-only; CE 6.0..699] */
+/* NKPagePoolParameters  [struct; ce-only] */
 typedef struct {
  WORD NKVersion;
  WORD OEMVersion;
@@ -228,7 +133,7 @@ typedef struct {
  PagePoolParameters File;
 } NKPagePoolParameters;
 
-/* NKPagePoolState  [struct; ce-only; CE 6.0..699] */
+/* NKPagePoolState  [struct; ce-only] */
 typedef struct {
  WORD Version;
  WORD Reserved;
@@ -238,7 +143,7 @@ typedef struct {
  PagePoolState FileState;
 } NKPagePoolState;
 
-/* PagePoolParameters  [struct; ce-only; CE 6.0..699] */
+/* PagePoolParameters  [struct; ce-only] */
 typedef struct {
  DWORD Target;
  DWORD Maximum;
@@ -248,7 +153,7 @@ typedef struct {
  WORD CriticalPriority256;
 } PagePoolParameters;
 
-/* PagePoolState  [struct; ce-only; CE 6.0..699] */
+/* PagePoolState  [struct; ce-only] */
 typedef struct {
  DWORD CurrentSize;
  DWORD TrimCount;
@@ -257,6 +162,8 @@ typedef struct {
  DWORD CriticalTime;
  DWORD FailCount;
 } PagePoolState;
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 
 /* PFNAPIERRHANDLER  [callback; ce-only; CE 6.0..699; coredll.lib] */
 typedef DWORD (*PFNAPIERRHANDLER)(DWORD);
@@ -805,15 +712,6 @@ BOOL CeImpersonateCurrentProcess (
  void
 );
 
-/* CeOpenCallerBuffer  [function; ce-only; CE 6.0..699; coredll.lib] */
-HRESULT CeOpenCallerBuffer(
- PVOID * ppDestMarshalled,
- PVOID pSrcUnmarshalled,
- DWORD cbSrc,
- DWORD ArgumentDescriptor
- BOOL ForceDuplicate
-);
-
 /* CeRemoteHeapCreate  [function; ce-only; CE 6.0..699; coredll.lib] */
 HANDLE CeRemoteHeapCreate (
  DWORD dwProcessId,
@@ -899,23 +797,5 @@ BOOL VirtualCopyEx(
  DWORD fdwProtect
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* typedef */
-typedef PHYSICAL_BASIC_INFORMATION *PPHYSICAL_BASIC_INFORMATION;
-typedef __PROCESSOR_INFO {WORDwVersion;WCHARszProcessCore[40];WORDwCoreRevision;WCHARszProcessorName[40];WORDwProcessorRevision;WCAHRszCatalogNumber[100];WCHARszVendor[100];DWORDdwInstructionSet;DWORDdwClockSpeed;} PROCESSOR_INFO, *PPROCESSOR_INFO;
-typedef __PROCESSOR_INFO {WORDwVersion;
-typedef __PROCESSOR_INFO { WORD wVersion;
-
-/* struct */
-typedef struct _CacheInfo { DWORD dwL1Flags; DWORD dwL1ICacheSize; DWORD dwL1ICacheLineSize; DWORD dwL1ICacheNumWays; DWORD dwL1DCacheSize; DWORD dwL1DCacheLineSize; DWORD dwL1DCacheNumWays; DWORD dwL2Flags; DWORD dwL2ICacheSize; DWORD dwL2ICacheLineSize; DWORD dwL2ICacheNumWays; DWORD dwL2DCacheSize; DWORD dwL2DCacheLineSize; DWORD dwL2DCacheNumWays;} CacheInfo, *PCacheInfo;
-typedef struct _DEVICE_ID {DWORD dwSize;DWORD dwPresetIDOffset;DWORD dwPresetIDBytes;DWORD dwPlatformIDOffset;DWORD dwPlatformIDBytes;} DEVICE_ID, *PDEVICE_ID;
-typedef struct _DEVICE_PSL_NOTIFY { DWORD dwSize; DWORD dwFlags; HANDLE hProc;HANDLEhThread;} DEVICE_PSL_NOTIFY, *PDEVICE_PSL_NOTIFY;
-typedef struct _KD_BPINFO {intnVersion;ULONGulFlags;ULONGulAddress; ULONGulHandle;ULONGulCount;} KD_BPINFO, *PKD_BPINFO;
-typedef struct _KD_EXCEPTION_INFO {intnVersion;ULONGulFlags;ULONGulAddress; ULONGulExceptionCode;} KD_EXCEPTION_INFO, *PKD_EXCEPTION_INFO;
 
 #endif /* _PKFUNCS_ */

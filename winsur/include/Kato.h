@@ -5,117 +5,17 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 33 declarations, 0 outlines, 0 base types, 0 extra macros, 14 extra decls
+ * 0 constants, 19 declarations, 0 outlines, 0 base types, 0 extra macros, 14 extra decls
  */
 #ifndef _KATO_
 #define _KATO_
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* KATOCALLBACKSTRUCT  [struct; ce-only; CE 5.0..699; Kato.lib, kato.lib] */
-typedef struct _KATOCALLBACKSTRUCT {
- LPARAM lParam;
- HKATO hKato;
- DWORD dwThreadID;
- DWORD dwTickCount;
- DWORD dwLevel;
- DWORD dwLevelID;
- DWORD dwVerbosity;
- LPCTSTR szLog;
-} KATOCALLBACKSTRUCT, *LPKATOCALLBACKSTRUCT;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* CKato::BeginLevel  [function; ce-only; CE 5.0..699; Kato.lib, kato.lib] */
-INT BeginLevel(
- DWORD dwLevelID,
- LPCTSTR szFormat
-);
-
-/* CKato::BeginLevelV  [function; ce-only; CE 5.0..699; Kato.lib, kato.lib] */
-INT BeginLevelV(
- DWORD dwLevelID,
- LPCTSTR szFormat,
- va_list pArgs
-);
-
-/* CKato::CKato  [function; ce-only; CE 5.0..699; Kato.lib, kato.lib] */
-CKato(
- LPCTSTR szName
-);
-
-/* CKato::Comment  [function; ce-only; CE 5.0..699; Kato.lib, kato.lib] */
-BOOL Comment(
- DWORD dwVerbosity,
- LPCTSTR szFormat
-);
-
-/* CKato::CommentV  [function; ce-only; CE 5.0..699; Kato.lib, kato.lib] */
-BOOL CommentV(
- DWORD dwVerbosity,
- LPCTSTR szFormat,
- va_list pArgs
-);
-
-/* CKato::EndLevel  [function; ce-only; CE 5.0..699; Kato.lib, kato.lib] */
-INT EndLevel(
- LPCTSTR szFormat
-);
-
-/* CKato::EndLevelV  [function; ce-only; CE 5.0..699; Kato.lib, kato.lib] */
-INT EndLevelV(
- LPCTSTR szFormat,
- va_list pArgs
-);
-
-/* CKato::GetCurrentLevel  [function; ce-only; CE 5.0..699; Kato.lib, kato.lib] */
-DWORD GetCurrentLevel ();
-
-/* CKato::GetItemData  [function; ce-only; CE 5.0..699; Kato.lib, kato.lib] */
-DWORD GetItemData (void);
-
-/* CKato::GetVerbosityCount  [function; ce-only; CE 5.0..699; Kato.lib, kato.lib] */
-INT GetVerbosityCount(
- DWORD dwVerbosity,
- DWORD dwLevel
-);
-
-/* CKato::Log  [function; ce-only; CE 5.0..699; Kato.lib, kato.lib] */
-BOOL Log(
- DWORD dwVerbosity,
- LPCTSTR szFormat
-);
-
-/* CKato::LogV  [function; ce-only; CE 5.0..699; Kato.lib, kato.lib] */
-BOOL LogV(
- DWORD dwVerbosity,
- LPCTSTR szFormat,
- va_list pArgs
-);
-
-/* CKato::SendSystemData  [function; ce-only; CE 5.0..699; Kato.lib, kato.lib] */
-BOOL SendSystemData(
- DWORD dwSystemID,
- LPCVOID lpcvBuffer,
- DWORD dwSize
-);
-
-/* CKato::SetItemData  [function; ce-only; CE 5.0..699; Kato.lib, kato.lib] */
-BOOL SetItemData(
- DWORD dwItemData
-);
 
 /* KatoBeginLevel  [function; ce-only; CE 5.0..699; Kato.lib, kato.lib] */
 INT KatoBeginLevel(

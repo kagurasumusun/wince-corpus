@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 860 constants, 86 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 860 constants, 80 declarations, 6 outlines, 0 base types, 0 extra macros, 5 extra decls
  */
 #ifndef _MMSYSTEM_
 #define _MMSYSTEM_
@@ -884,9 +884,35 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
+/* MIXERCONTROLDETAILS  [struct; shared] */
+typedef struct { 
+ DWORD cbStruct; 
+ DWORD dwControlID; 
+ DWORD cChannels; 
+ union { 
+ HWND hwndOwner; 
+ DWORD cMultipleItems; 
+ }; 
+ DWORD cbDetails; 
+ LPVOID paDetails; 
+} MIXERCONTROLDETAILS;
 
-/* MMTIME  [struct; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* MIXERCONTROLDETAILS_BOOLEAN  [struct, typedef; shared] */
+typedef struct { 
+ LONG fValue; 
+} MIXERCONTROLDETAILS_BOOLEAN;
+
+/* MIXERCONTROLDETAILS_SIGNED  [struct, typedef; shared] */
+typedef struct { 
+ LONG lValue; 
+} MIXERCONTROLDETAILS_SIGNED;
+
+/* MIXERCONTROLDETAILS_UNSIGNED  [struct, typedef; shared] */
+typedef struct { 
+ DWORD dwValue; 
+} MIXERCONTROLDETAILS_UNSIGNED;
+
+/* MMTIME  [struct; ce-only] */
 typedef struct mmtime_tag {
  UINT wType; 
  union {
@@ -909,7 +935,18 @@ typedef struct mmtime_tag {
  } u; 
 } MMTIME;
 
-/* WAVEHDR  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* WAVEFORMATEX  [struct; shared] */
+typedef struct WAVEFORMATEX{
+ WORD wFormatTag;
+ WORD nChannels;
+ DWORD nSamplesPerSec;
+ DWORD nAvgBytesPerSec;
+ WORD nBlockAlign;
+ WORD wBitsPerSample;
+ WORD cbSize;
+} WAVEFORMATEX;
+
+/* WAVEHDR  [struct; shared] */
 typedef struct {
  LPSTR lpData;
  DWORD dwBufferLength;
@@ -921,176 +958,67 @@ typedef struct {
  DWORD reserved;}
 WAVEHDR;
 
-/* WAVEINCAPS  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W WAVEINCAPSA,WAVEINCAPSW (CE is W-side)] */
-typedef struct {
- WORD wMid; 
- WORD wPid; 
- MMVERSION vDriverVersion; 
- CHAR szPname[MAXPNAMELEN]; 
- DWORD dwFormats; 
- WORD wChannels; 
- WORD wReserved1;} 
-WAVEINCAPS;
+/* MIXERCAPS  [struct; shared; A/W MIXERCAPSA,MIXERCAPSW (CE is W-side)] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   wMid */
+/*   wPid */
+/*   vDriverVersion */
+/*   szPname */
+/*   fdwSupport */
+/*   cDestinations */
 
-/* WAVEOUTCAPS  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W WAVEOUTCAPSA,WAVEOUTCAPSW (CE is W-side)] */
-typedef struct {
- WORD wMid; 
- WORD wPid; 
- MMVERSION vDriverVersion; 
- CHAR szPname[MAXPNAMELEN]; 
- DWORD dwFormats; 
- WORD wChannels; 
- WORD wReserved1; 
- DWORD dwSupport;
-} WAVEOUTCAPS;
-#endif /* _WIN32_WCE */
+/* MIXERCONTROL  [struct; shared; A/W MIXERCONTROLA,MIXERCONTROLW (CE is W-side)] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   cbStruct */
+/*   dwControlID */
+/*   dwControlType */
+/*   fdwControl */
+/*   cMultipleItems */
+/*   szShortName */
+/*   szName */
+/*   Bounds */
+/*   Metrics */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
+/* MIXERCONTROLDETAILS_LISTTEXT  [struct, typedef; shared; A/W MIXERCONTROLDETAILS_LISTTEXTA,MIXERCONTROLDETAILS_LISTTEXTW (CE is W-side)] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   dwParam1 */
+/*   dwParam2 */
+/*   szName */
 
-/* WAVEFORMATEX  [struct; shared; CE 2.11..2.12, 3.0..699] */
-typedef struct WAVEFORMATEX{
- WORD wFormatTag;
- WORD nChannels;
- DWORD nSamplesPerSec;
- DWORD nAvgBytesPerSec;
- WORD nBlockAlign;
- WORD wBitsPerSample;
- WORD cbSize;
-} WAVEFORMATEX;
-#endif /* _WIN32_WCE */
+/* MIXERLINE  [struct; shared; A/W MIXERLINEA,MIXERLINEW (CE is W-side)] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   cbStruct */
+/*   dwDestination */
+/*   dwSource */
+/*   dwLineID */
+/*   fdwLine */
+/*   dwUser */
+/*   dwComponentType */
+/*   cChannels */
+/*   cConnections */
+/*   cControls */
+/*   szShortName */
+/*   szName */
+/*   Target */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
+/* WAVEINCAPS  [struct; shared; A/W WAVEINCAPSA,WAVEINCAPSW (CE is W-side)] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   wMid */
+/*   wPid */
+/*   vDriverVersion */
+/*   szPname */
+/*   dwFormats */
+/*   wChannels */
 
-/* MIXERCAPS  [struct; shared; CE 3.0..399, 5.0..699; A/W MIXERCAPSA,MIXERCAPSW (CE is W-side)] */
-typedef struct { 
- WORD wMid; 
- WORD wPid; 
- MMVERSION vDriverVersion; 
- TCHAR szPname[MAXPNAMELEN]; 
- DWORD fdwSupport; 
- DWORD cDestinations; 
-} MIXERCAPS;
-
-/* MIXERCONTROL  [struct; shared; CE 3.0..399, 5.0..699; A/W MIXERCONTROLA,MIXERCONTROLW (CE is W-side)] */
-typedef struct { 
- DWORD cbStruct; 
- DWORD dwControlID; 
- DWORD dwControlType; 
- DWORD fdwControl; 
- DWORD cMultipleItems; 
- CHAR szShortName[MIXER_SHORT_NAME_CHARS]; 
- CHAR szName[MIXER_LONG_NAME_CHARS]; 
- union { 
- struct { 
- LONG lMinimum; 
- LONG lMaximum; 
- }; 
- struct { 
- DWORD dwMinimum; 
- DWORD dwMaximum; 
- }; 
- DWORD dwReserved[6]; 
- } Bounds; 
- union { 
- DWORD cSteps; 
- DWORD cbCustomData; 
- DWORD dwReserved[6]; 
- } Metrics; 
-} MIXERCONTROL, *PMIXERCONTROL, FAR* LPMIXERCONTROL;
-
-/* MIXERCONTROLDETAILS  [struct; shared; CE 3.0..399, 5.0..699] */
-typedef struct { 
- DWORD cbStruct; 
- DWORD dwControlID; 
- DWORD cChannels; 
- union { 
- HWND hwndOwner; 
- DWORD cMultipleItems; 
- }; 
- DWORD cbDetails; 
- LPVOID paDetails; 
-} MIXERCONTROLDETAILS;
-
-/* MIXERCONTROLDETAILS_BOOLEAN  [struct, typedef; shared; CE 3.0..399, 5.0..699] */
-typedef struct { 
- LONG fValue; 
-} MIXERCONTROLDETAILS_BOOLEAN;
-
-/* MIXERCONTROLDETAILS_LISTTEXT  [struct, typedef; shared; CE 3.0..399, 5.0..699; A/W MIXERCONTROLDETAILS_LISTTEXTA,MIXERCONTROLDETAILS_LISTTEXTW (CE is W-side)] */
-typedef struct { 
- DWORD dwParam1; 
- DWORD dwParam2; 
- CHAR szName[MIXER_LONG_NAME_CHARS]; 
-} MIXERCONTROLDETAILS_LISTTEXT;
-
-/* MIXERCONTROLDETAILS_SIGNED  [struct, typedef; shared; CE 3.0..399, 5.0..699] */
-typedef struct { 
- LONG lValue; 
-} MIXERCONTROLDETAILS_SIGNED;
-
-/* MIXERCONTROLDETAILS_UNSIGNED  [struct, typedef; shared; CE 3.0..399, 5.0..699] */
-typedef struct { 
- DWORD dwValue; 
-} MIXERCONTROLDETAILS_UNSIGNED;
-
-/* MIXERLINE  [struct; shared; CE 3.0..399, 5.0..699; A/W MIXERLINEA,MIXERLINEW (CE is W-side)] */
-typedef struct { 
- DWORD cbStruct; 
- DWORD dwDestination; 
- DWORD dwSource; 
- DWORD dwLineID; 
- DWORD fdwLine; 
- DWORD dwUser; 
- DWORD dwComponentType; 
- DWORD cChannels; 
- DWORD cConnections; 
- DWORD cControls; 
- CHAR szShortName[MIXER_SHORT_NAME_CHARS]; 
- CHAR szName[MIXER_LONG_NAME_CHARS]; 
- struct { 
- DWORD dwType; 
- DWORD dwDeviceID; 
- WORD wMid; 
- WORD wPid; 
- MMVERSION vDriverVersion; 
- CHAR szPname[MAXPNAMELEN]; 
- } Target; 
-} MIXERLINE;
-
-/* MIXERLINECONTROLS  [struct; shared; CE 3.0..399, 5.0..699; A/W MIXERLINECONTROLSA,MIXERLINECONTROLSW (CE is W-side)] */
-typedef struct { 
- DWORD cbStruct; 
- DWORD dwLineID; 
- union { 
- DWORD dwControlID; 
- DWORD dwControlType; 
- }; 
- DWORD cControls; 
- DWORD cbmxctrl; 
- LPMIXERCONTROL pamxctrl; 
-} MIXERLINECONTROLS;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* AUDIOGAINCLASS  [struct; ce-only; CE 5.0..699] */
-typedef struct tagAUDIOGAINCLASS {
- DWORD dwPriority;
- DWORD dwRelativeGain;
-} AUDIOGAINCLASS, * PAUDIOGAINCLASS;
-
-/* STREAMPROPS  [struct; ce-only; CE 5.0..699] */
-typedef struct tagSTREAMPROPS {
- DWORD dwClassID;
- DWORD dwFlags;
-} STREAMPROPS, *PSTREAMPROPS;
-
-/* TIMECAPS  [struct; shared; CE 5.0..699] */
-typedef struct timecaps_tag {
- UINT wPeriodMin; 
- UINT wPeriodMax; 
-} TIMECAPS, *PTIMECAPS;
-#endif /* _WIN32_WCE */
+/* WAVEOUTCAPS  [struct; shared; A/W WAVEOUTCAPSA,WAVEOUTCAPSW (CE is W-side)] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   wMid */
+/*   wPid */
+/*   vDriverVersion */
+/*   szPname */
+/*   dwFormats */
+/*   wChannels */
+/*   dwSupport */
 
 /* ==================================================================
  * functions and callbacks
@@ -1559,6 +1487,5 @@ typedef TIMECALLBACK FAR *LPTIMECALLBACK;
 typedef struct tagAUDIOGAINCLASS { DWORD dwPriority; DWORD dwRelativeGain;} AUDIOGAINCLASS, * PAUDIOGAINCLASS;
 typedef struct tagSTREAMPROPS { DWORD dwClassID; DWORD dwFlags;} STREAMPROPS, *PSTREAMPROPS;
 typedef struct timecaps_tag {UINT wPeriodMin; UINT wPeriodMax; } TIMECAPS, *PTIMECAPS;
-typedef struct mmtime_tag { UINT wType; union { DWORD ms; DWORD sample; DWORD cb; DWORD ticks; struct { BYTE hour; BYTE min; BYTE sec; BYTE frame; BYTE fps; BYTE dummy; BYTE pad[2] } smpte;
 
 #endif /* _MMSYSTEM_ */

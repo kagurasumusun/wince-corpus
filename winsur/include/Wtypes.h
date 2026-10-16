@@ -31,47 +31,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* COAUTHINFO  [struct; shared; CE 2.11..2.12, 3.0..699] */
-typedef struct _COAUTHINFO { 
- DWORD dwAuthnSvc; 
- DWORD dwAuthzSvc; 
- LPWSTR pwszServerPrincName; 
- DWORD dwAuthnLevel; 
- DWORD dwImpersonationLevel; 
- COAUTHIDENTITY __RPC_FAR* pAuthIdentityData; 
- DWORD dwCapabilities; 
-} COAUTHINFO;
-
-/* COSERVERINFO  [struct; shared; CE 2.11..2.12, 3.0..699] */
-typedef struct _COSERVERINFO {
- DWORD dwReserved1;
- LPWSTR pwszName;
- COAUTHINFO* pAuthInfo;
- DWORD dwReserved2;
-} COSERVERINFO;
-
-/* DVASPECT  [enum; shared; CE 2.11..2.12, 3.0..699] */
-typedef enum tagDVASPECT { 
- DVASPECT_CONTENT = 1,
- DVASPECT_THUMBNAIL = 2,
- DVASPECT_ICON = 4,
- DVASPECT_DOCPRINT = 8
-} DVASPECT;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* CLSCTX  [enum; shared; CE 4.0..699] */
-typedef enum tagCLSCTX {
- CLSCTX_INPROC_SERVER = 0x1,
- CLSCTX_INPROC_HANDLER = 0x2,
- CLSCTX_LOCAL_SERVER = 0x4,
- CLSCTX_REMOTE_SERVER = 0x10
-} CLSCTX;
-
-/* COAUTHIDENTITY  [struct; shared; CE 4.0..699] */
+/* COAUTHIDENTITY  [struct; shared] */
 typedef struct _COAUTHIDENTITY {
  USHORT* User; 
  ULONG UserLength; 
@@ -82,13 +42,23 @@ typedef struct _COAUTHIDENTITY {
  ULONG Flags; 
 } COAUTHIDENTITY;
 
-/* STGC  [enum; shared; CE 4.0..699] */
-typedef enum tagSTGC { 
- STGC_DEFAULT = 0, 
- STGC_OVERWRITE = 1, 
- STGC_ONLYIFCURRENT = 2, 
- STGC_DANGEROUSLYCOMMITMERELYTODISKCACHE = 4, 
-} STGC;
-#endif /* _WIN32_WCE */
+/* COAUTHINFO  [struct; shared] */
+typedef struct _COAUTHINFO { 
+ DWORD dwAuthnSvc; 
+ DWORD dwAuthzSvc; 
+ LPWSTR pwszServerPrincName; 
+ DWORD dwAuthnLevel; 
+ DWORD dwImpersonationLevel; 
+ COAUTHIDENTITY __RPC_FAR* pAuthIdentityData; 
+ DWORD dwCapabilities; 
+} COAUTHINFO;
+
+/* COSERVERINFO  [struct; shared] */
+typedef struct _COSERVERINFO {
+ DWORD dwReserved1;
+ LPWSTR pwszName;
+ COAUTHINFO* pAuthInfo;
+ DWORD dwReserved2;
+} COSERVERINFO;
 
 #endif /* _WTYPES_ */

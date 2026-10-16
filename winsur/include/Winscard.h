@@ -33,34 +33,11 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
-
-/* SCARD_IO_REQUEST  [struct; ce-only; CE 3.0..699] */
+/* SCARD_IO_REQUEST  [struct; ce-only] */
 typedef struct {
  DWORD dwProtocol;
  DWORD cbPciLength;
 } SCARD_IO_REQUEST;
-
-/* SCARD_READERSTATE  [struct; shared; CE 3.0..699; A/W SCARD_READERSTATEA,SCARD_READERSTATEW (CE is W-side)] */
-typedef struct {
- LPCTSTR szReader;
- LPVOID pvUserData;
- DWORD dwCurrentState;
- DWORD dwEventState;
- DWORD cbAtr;
- BYTE rgbAtr[36];
-} SCARD_READERSTATE, *PSCARD_READERSTATE, *LPSCARD_READERSTATE;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* SCARD_ATRMASK  [struct; shared; CE 4.0..699] */
-typedef struct _SCARD_ATRMASK {
- DWORD cbAtr; 
- BYTE rgbAtr[36]; 
- BYTE rgbMask[36]; 
-} SCARD_ATRMASK, *PSCARD_ATRMASK, *LPSCARD_ATRMASK;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

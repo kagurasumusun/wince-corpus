@@ -5,59 +5,21 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 0 constants, 1 declarations, 3 outlines, 0 base types, 0 extra macros, 5 extra decls
  */
 #ifndef _STATCTLVIEW_HPP_
 #define _STATCTLVIEW_HPP_
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
+ * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+/* StaticControlView_t::DrawStaticImage  [enum; ce-only] */
 
-/* StaticControlType  [enum; ce-only; CE 4.0..699] */
-enum StaticControlType {
- sctLeft = SS_LEFT,
- sctCenter = SS_CENTER,
- sctRight = SS_RIGHT,
- sctIcon = SS_ICON,
- sctLeftNoWordWrap = SS_LEFTNOWORDWRAP,
- sctBitmap = SS_BITMAP,
- sctIconCenter = SS_ICON,
- sctBitmapCenter = SS_BITMAP 
-};
+/* StaticControlView_t::DrawStaticText  [enum; ce-only] */
 
-/* StaticControlView_t::DrawStaticImage  [enum; ce-only; CE 4.0..699] */
-static void DrawStaticImage(
- HWND hwnd,
- enum StaticControlType sct,
- HDC hdc,
- HBRUSH hbrBk,
- HANDLE hImage
-);
-
-/* StaticControlView_t::DrawStaticText  [enum; ce-only; CE 4.0..699] */
-static void DrawStaticText(
- HWND hwnd,
- unsigned int Style,
- enum StaticControlType sct,
- HDC hdc,
- HBRUSH hbrBk
-);
-
-/* StaticControlView_t::ResizeRectToImage  [enum; ce-only; CE 4.0..699] */
-static bool ResizeRectToImage(
- HWND hwnd,
- unsigned int Style,
- enum StaticControlType sct,
- HANDLE hImage,
- RECT* prc
-);
-#endif /* _WIN32_WCE */
+/* StaticControlView_t::ResizeRectToImage  [enum; ce-only] */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

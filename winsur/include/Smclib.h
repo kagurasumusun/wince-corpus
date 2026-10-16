@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 19 declarations, 1 outlines, 0 base types, 0 extra macros, 7 extra decls
+ * 0 constants, 18 declarations, 2 outlines, 0 base types, 0 extra macros, 7 extra decls
  */
 #ifndef _SMCLIB_
 #define _SMCLIB_
@@ -15,110 +15,9 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
+/* SCARD_CARD_CAPABILITIES  [struct; ce-only] */
 
-/* SCARD_CARD_CAPABILITIES  [struct; ce-only; CE 3.0..699] */
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-
-/* SCARD_VENDOR_ATTR  [struct; ce-only; CE 3.0..399, 5.0..699] */
-typedef struct _VENDOR_ATTR {
- struct {
- USHORT Length;
- UCHAR Buffer[MAXIMUM_ATTR_STRING_LENGTH];
- } VendorName;
- struct {
- USHORT Length;
- UCHAR Buffer[MAXIMUM_ATTR_STRING_LENGTH];
- } IfdType;
- ULONG UnitNo;
- struct {
- USHORT BuildNumber;
- UCHAR VersionMinor;
- UCHAR VersionMajor;
- } IfdVersion;
- struct {
- USHORT Length;
- UCHAR Buffer[MAXIMUM_ATTR_STRING_LENGTH];
- } IfdSerialNo;
- ULONG Reserved[25];
-} VENDOR_ATTR, *PVENDOR_ATTR;
-
-/* SMARTCARD_EXTENSION  [struct; ce-only; CE 3.0..399, 5.0..699] */
-typedef struct _SMARTCARD_EXTENSION {
- ULONG Version;
- VENDOR_ATTR VendorAttr;
- NTSTATUS (*ReaderFunction[16])(PSMARTCARD_EXTENSION);
- SCARD_CARD_CAPABILITIES CardCapabilities;
- ULONG LastError;
- struct {
- PULONG Information;
- PUCHAR RequestBuffer;
- ULONG RequestBufferLength;
- PUCHAR ReplyBuffer;
- ULONG ReplyBufferLength;
- } IoRequest;
- ULONG MajorIoControlCode;
- ULONG MinorIoControlCode;
- POS_DEP_DATA OsData;
- SCARD_READER_CAPABILITIES ReaderCapabilities;
- PREADER_EXTENSION ReaderExtension;
- SMARTCARD_REPLY SmartcardReply;
- SMARTCARD_REQUEST SmartcardRequest;
- T0_DATA T0;
- T1_DATA T1;
- ULONG Reserved[25];
-} SMARTCARD_EXTENSION, *PSMARTCARD_EXTENSION;
-
-/* T1_DATA  [struct; ce-only; CE 3.0..399, 5.0..699] */
-typedef struct _T1_DATA {
- UCHAR InfSize;
- ULONG BytesReceived;
- ULONG BytesSent;
- ULONG BytesToSend;
- UCHAR LastError;
- UCHAR NAD;
- ULONG PrevState;
- UCHAR Resend;
- UCHAR Resynch;
- UCHAR SSN;
- ULONG State;
- UCHAR Wtx;
-} T1_DATA, *PT1_DATA;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
-
-/* SCARD_READER_CAPABILITIES  [struct; ce-only; CE 3.0..699] */
-typedef struct _SCARD_READER_CAPABILITIES {
- struct {
- ULONG Async;
- ULONG Sync;
- } SupportedProtocols;
- ULONG ReaderType;
- ULONG MechProperties;
- ULONG CurrentState;
- ULONG Channel;
- struct {
- ULONG Default;
- ULONG Max;
- } CLKFrequency;
- struct {
- ULONG Default;
- ULONG Max;
- } DataRate;
- ULONG MaxIFSD;
- ULONG PowerMgmtSupport;
- ULONG Reserved[25];
-} SCARD_READER_CAPABILITIES, *PSCARD_READER_CAPABILITIES;
-#endif /* _WIN32_WCE */
+/* SCARD_VENDOR_ATTR  [struct; ce-only] */
 
 /* ==================================================================
  * functions and callbacks
@@ -217,7 +116,6 @@ ULONG MapNtStatusToWinError(
  * ================================================================ */
 
 /* struct */
-typedef struct _SMARTCARD_EXTENSION { ULONG Version; VENDOR_ATTR VendorAttr; NTSTATUS (*ReaderFunction[16])(PSMARTCARD_EXTENSION); SCARD_CARD_CAPABILITIES CardCapabilities; ULONG LastError; struct { PULONG Information; PUCHAR RequestBuffer; ULONG RequestBufferLength; PUCHAR ReplyBuffer; ULONG ReplyBufferLength; } IoRequest;
 typedef struct _SCARD_READER_CAPABILITIES {
   struct {
     ULONG Async;
@@ -298,7 +196,5 @@ typedef struct _VENDOR_ATTR {
   } IfdSerialNo;
   ULONG Reserved[25];
 } VENDOR_ATTR, *PVENDOR_ATTR;
-typedef struct _SCARD_READER_CAPABILITIES { struct { ULONG Async; ULONG Sync; } SupportedProtocols;
-typedef struct _VENDOR_ATTR { struct { USHORT Length; UCHAR Buffer[MAXIMUM_ATTR_STRING_LENGTH]; } VendorName;
 
 #endif /* _SMCLIB_ */

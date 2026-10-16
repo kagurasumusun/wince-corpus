@@ -27,42 +27,6 @@
 #define REQ_ID_VENDOR_ID 0x80000001
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* DATA_WRAPPER  [struct; ce-only; CE 4.0..699] */
-typedef struct _DATA_WRAPPER {
- LIST_ENTRY Link;
- UCHAR* pucData;
- DWORD dwDataSize;
-} DATA_WRAPPER, *PDATA_WRAPPER;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* SendRndisMessageHandler  [callback; ce-only; CE 5.0..699] */
-typedef void(* PFN_PDD_SEND_RNDIS_MESSAGE)(
- PDATA_WRAPPER pDataWrapper
-);
-
-/* SendRndisPacketHandler  [callback; ce-only; CE 5.0..699] */
-typedef void (* PFN_PDD_SEND_RNDIS_PACKET)(
- PDATA_WRAPPER pDataWrapper
-);
-
-/* SetHandler  [callback; ce-only; CE 5.0..699] */
-typedef BOOL (* PFN_PDD_SET)(
- UINT uiRequestId,
- PVOID pvData,
- ULONG ulDataLength
-);
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

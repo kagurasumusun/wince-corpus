@@ -17,9 +17,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* PARTENTRY  [struct; ce-only; CE 5.0..699] */
+/* PARTENTRY  [struct; ce-only] */
 typedef struct _PARTENTRY { 
  BYTE Part_BootInd;
  BYTE Part_FirstHead;
@@ -32,7 +30,6 @@ typedef struct _PARTENTRY {
  DWORD Part_StartSector;
  DWORD Part_TotalSectors;
 } PARTENTRY;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

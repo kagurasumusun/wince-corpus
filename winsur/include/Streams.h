@@ -15,9 +15,6 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-
-/* HEADER  [function, struct, typedef; shared; CE 3.0..399, 5.0..699; entity-headers] */
-#endif /* _WIN32_WCE */
+/* HEADER  [function, struct, typedef; shared; entity-headers] */
 
 #endif /* _STREAMS_ */

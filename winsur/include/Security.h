@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 48 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 48 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 22 extra decls
  */
 #ifndef _SECURITY_
 #define _SECURITY_
@@ -78,6 +78,23 @@ typedef struct _SecPkgContext_Lifespan {TimeStamptsStart;TimeStamptsExpiry;} Sec
 typedef struct _SecPkgContext_Sizes {ULONG cbMaxToken;ULONG cbMaxSignature;ULONG cbBlockSize;ULONG cbSecurityTrailer;} SecPkgContext_Sizes, SEC_FAR *PSecPkgContext_Sizes;
 
 /* function */
+SECURITY_STATUS AcceptSecurityContext(  PCredHandle phCredential,  PCtxtHandle phContext,  PSecBufferDesc pInput,  ULONG fContextReq ,  ULONG TargetDataRep,  PCtxtHandle phNewContext,  PSecBufferDesc pOutput,  PULONG pfContextAttr ,  PTimeStamp ptsExpiry );
+SECURITY_STATUS AcquireCredentialsHandle(  SEC_CHAR * pszPrincipal,  SEC_CHAR * pszPackage,  ULONG fCredentialUse,  PLUID pvLogonId,  PVOID pAuthData,  PVOID pGetKeyFn,  VOID pvGetKeyArgument,  PCredHandle phCredential,  PTimeStamp ptsExpiry );
+SECURITY_STATUS ApplyControlToken(  PCtxtHandle phContext,  PSecBufferDesc pInput );
+SECURITY_STATUS CompleteAuthToken(  PCtxtHandle phContext,  PSecBufferDesc pToken );
+SECURITY_STATUS SEC_Entry DecryptMessage(  PCtxtHandle phContext,  PSecBufferDesc pMessage,  ULONG MessageSeqNo,  PULONG pfQOP  );
+SECURITY_STATUS DeleteSecurityContext(  PCtxtHandle phContext );
+SECURITY_STATUS EncryptMessage(  PCtxtHandle phContext,  ULONG fQOP,  PSecBufferDesc pMessage,  ULONG MessageSeqNo  );
+SECURITY_STATUS EnumerateSecurityPackages(  PULONG pcPackages,  PSecPkgInfo *ppPackageInfo );
+SECURITY_STATUS FreeContextBuffer(  PVOID pvContextBuffer );
+SECURITY_STATUS FreeCredentialsHandle(  PCredHandle phCredential );
+PSecurityFunctionTable InitSecurityInterface(VOID);
+SECURITY_STATUS InitializeSecurityContext(  PCredHandle phCredential,  PCtxtHandle phContext,  SEC_CHAR * pszTargetName,  ULONG fContextReq,  ULONG Reserved1,  ULONG TargetDataRep,  PSecBufferDesc pInput,  ULONG Reserved2,  PCtxtHandle phNewContext,  PSecBufferDesc pOutput,  PULONG pfContextAttr,  PTimeStamp ptsExpiry );
+SECURITY_STATUS MakeSignature(  PCtxtHandle phContext,  ULONG fQOP,  PSecBufferDesc pMessage,  ULONG MessageSeqNo );
 typedefstruct _SecPkgContext_StreamSizes {unsignedlongcbHeader;unsignedlongcbTrailer;unsignedlongcbMaximumMessage;unsignedlongcBuffers;unsignedlongcbBlockSize;}SecPkgContext_StreamSizes, *PSecPkgContext_StreamSizes;
+SECURITY_STATUS QueryContextAttributes(  PCtxtHandle phContext,  ULONG ulAttribute,  PVOID pBuffer );
+SECURITY_STATUS QueryCredentialsAttributes(  PCredHandle phCredential,  ULONG ulAttribute,  PVOID pBuffer );
+SECURITY_STATUS QuerySecurityPackageInfo(  SEC_CHAR * pszPackageName,  PSecPkgInfo *ppPackageInfo );
+SECURITY_STATUS VerifySignature(  PCtxtHandle phContext,  PSecBufferDesc pMessage,  ULONG MessageSeqNo,  PULONG pfQOP );
 
 #endif /* _SECURITY_ */

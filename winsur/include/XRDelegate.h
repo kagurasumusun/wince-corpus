@@ -5,30 +5,10 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 2 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _XRDELEGATE_
 #define _XRDELEGATE_
 
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* CreateDelegate  [function; ce-only; CE 6.0..699] */
-template <class T, typename ArgType>
-IXRDelegate<ArgType>* CreateDelegate(
- T* pT, 
- HRESULT (T::*pfn)(IXRDependencyObject*, ArgType*)
-)
-
-/* IXRDelegate<ArgType>::Invoke  [function; ce-only; CE 6.0..699] */
-virtual HRESULT STDMETHODCALLTYPE Invoke(
- IXRDependencyObject* pSender,
- ArgType* EventArg
-) = 0;
-#endif /* _WIN32_WCE */
 
 #endif /* _XRDELEGATE_ */

@@ -33,16 +33,13 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+/* CS_FRAME_INFO  [struct; ce-only] */
 
-/* CS_FRAME_INFO  [struct; ce-only; CE 6.0..699] */
+/* CS_VIDEO_STREAM_CONFIG_CAPS  [struct; ce-only] */
 
-/* CS_VIDEO_STREAM_CONFIG_CAPS  [struct; ce-only; CE 6.0..699] */
+/* CSPROPERTY_DROPPEDFRAMES_CURRENT_S  [struct; ce-only] */
 
-/* CSPROPERTY_DROPPEDFRAMES_CURRENT_S  [struct; ce-only; CE 6.0..699] */
-
-/* CSPROPERTY_VIDEOCONTROL_ACTUAL_FRAME_RATE_S  [struct; ce-only; CE 6.0..699] */
-#endif /* _WIN32_WCE */
+/* CSPROPERTY_VIDEOCONTROL_ACTUAL_FRAME_RATE_S  [struct; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -50,24 +47,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* CS_BITMAPINFOHEADER  [struct; ce-only; CE 6.0..699] */
-typedef struct tagCS_BITMAPINFOHEADER{
- DWORD biSize;
- LONG biWidth;
- LONG biHeight;
- WORD biPlanes;
- WORD biBitCount;
- DWORD biCompression;
- DWORD biSizeImage;
- LONG biXPelsPerMeter;
- LONG biYPelsPerMeter;
- DWORD biClrUsed;
- DWORD biClrImportant;
-} CS_BITMAPINFOHEADER, *PCS_BITMAPINFOHEADER;
-
-/* CS_CompressionCaps  [enum; ce-only; CE 6.0..699] */
+/* CS_CompressionCaps  [enum; ce-only] */
 typedef enum {
  CS_CompressionCaps_CanQuality = 1,
  CS_CompressionCaps_CanCrunch = 2,
@@ -76,51 +56,7 @@ typedef enum {
  CS_CompressionCaps_CanWindow = 0x10,
 } CS_CompressionCaps;
 
-/* CS_DATARANGE_VIDEO  [struct; ce-only; CE 6.0..699] */
-typedef struct tagCS_DATARANGE_VIDEO {
- CSDATARANGE DataRange;
- BOOL bFixedSizeSamples;
- BOOL bTemporalCompression;
- DWORD StreamDescriptionFlags;
- DWORD MemoryAllocationFlags;
- CS_VIDEO_STREAM_CONFIG_CAPS ConfigCaps;
- CS_VIDEOINFOHEADER VideoInfoHeader;
-} CS_DATARANGE_VIDEO, *PCS_DATARANGE_VIDEO;
-
-/* CS_DATARANGE_VIDEO2  [struct; ce-only; CE 6.0..699] */
-typedef struct tagCS_DATARANGE_VIDEO2 {
- CSDATARANGE DataRange;
- BOOL bFixedSizeSamples;
- BOOL bTemporalCompression;
- DWORD StreamDescriptionFlags;
- DWORD MemoryAllocationFlags;
- CS_VIDEO_STREAM_CONFIG_CAPS ConfigCaps;
- CS_VIDEOINFOHEADER2 VideoInfoHeader;
-} CS_DATARANGE_VIDEO2, *PCS_DATARANGE_VIDEO2;
-
-/* CS_MPEG1VIDEOINFO  [struct; ce-only; CE 6.0..699] */
-typedef struct tagCS_MPEG1VIDEOINFO {
- CS_VIDEOINFOHEADER hdr;
- DWORD dwStartTimeCode;
- DWORD cbSequenceHeader;
- BYTE bSequenceHeader[1];
-} CS_MPEG1VIDEOINFO , *PCS_MPEG1VIDEOINFO;
-
-/* CS_RGBQUAD  [struct; ce-only; CE 6.0..699] */
-typedef struct tagCS_RGBQUAD {
- BYTE rgbBlue;
- BYTE rgbGreen;
- BYTE rgbRed;
- BYTE rgbReserved;
-} CS_RGBQUAD, *PCS_RGBQUAD;
-
-/* CS_TRUECOLORINFO  [struct; ce-only; CE 6.0..699] */
-typedef struct tag_CS_TRUECOLORINFO {
- DWORD dwBitMasks[CS_iMASK_COLORS];
- CS_RGBQUAD bmiColors[CS_iPALETTE_COLORS];
-} CS_TRUECOLORINFO, *PCS_TRUECOLORINFO;
-
-/* CS_VideoControlFlags  [enum; ce-only; CE 6.0..699] */
+/* CS_VideoControlFlags  [enum; ce-only] */
 typedef enum {
  CS_VideoControlFlag_FlipHorizontal = 0x0001,
  CS_VideoControlFlag_FlipVertical = 0x0002,
@@ -129,155 +65,6 @@ typedef enum {
  CS_VideoControlFlag_ExternalTriggerEnable = 0x0004,
  CS_VideoControlFlag_Trigger = 0x0008,
 } CS_VideoControlFlags;
-
-/* CS_VIDEOINFOHEADER  [struct; ce-only; CE 6.0..699] */
-typedef struct tagCS_VIDEOINFOHEADER {
- RECT rcSource;
- RECT rcTarget;
- DWORD dwBitRate;
- DWORD dwBitErrorRate;
- REFERENCE_TIME AvgTimePerFrame;
- CS_BITMAPINFOHEADER bmiHeader;
- union {
- DWORD dwBitMasks[CS_iMASK_COLORS];
- CS_TRUECOLORINFO TrueColorInfo;
- };
-} CS_VIDEOINFOHEADER, *PCS_VIDEOINFOHEADER;
-
-/* CS_VIDEOINFOHEADER2  [struct; ce-only; CE 6.0..699] */
-typedef struct tagCS_VIDEOINFOHEADER2 {
- RECT rcSource;
- RECT rcTarget;
- DWORD dwBitRate;
- DWORD dwBitErrorRate;
- REFERENCE_TIME AvgTimePerFrame;
- DWORD dwInterlaceFlags;
- DWORD dwCopyProtectFlags;
- DWORD dwPictAspectRatioX;
- DWORD dwPictAspectRatioY;
- DWORD dwReserved1;
- DWORD dwReserved2;
- CS_BITMAPINFOHEADER bmiHeader;
- union {
- DWORD dwBitMasks[CS_iMASK_COLORS];
- CS_TRUECOLORINFO TrueColorInfo;
- };
-} CS_VIDEOINFOHEADER2, *PCS_VIDEOINFOHEADER2;
-
-/* CSPROPERTY_CAMERACONTROL_S  [struct; ce-only; CE 6.0..699] */
-typedef struct {
- CSPROPERTY Property;
- LONG Value;
- ULONG Flags;
- ULONG Capabilities;
-} CSPROPERTY_CAMERACONTROL_S, *PCSPROPERTY_CAMERACONTROL_S;
-
-/* CSPROPERTY_VIDCAP_CAMERACONTROL  [enum; ce-only; CE 6.0..699] */
-typedef enum {
- CSPROPERTY_CAMERACONTROL_PAN,
- CSPROPERTY_CAMERACONTROL_TILT,
- CSPROPERTY_CAMERACONTROL_ROLL,
- CSPROPERTY_CAMERACONTROL_ZOOM,
- CSPROPERTY_CAMERACONTROL_EXPOSURE,
- CSPROPERTY_CAMERACONTROL_IRIS,
- CSPROPERTY_CAMERACONTROL_FOCUS,
- CSPROPERTY_CAMERACONTROL_FLASH
-} CSPROPERTY_VIDCAP_CAMERACONTROL;
-
-/* CSPROPERTY_VIDCAP_DROPPEDFRAMES  [enum; ce-only; CE 6.0..699] */
-typedef enum {
- CSPROPERTY_DROPPEDFRAMES_CURRENT
-} CSPROPERTY_VIDCAP_DROPPEDFRAMES;
-
-/* CSPROPERTY_VIDCAP_VIDEOCOMPRESSION  [enum; ce-only; CE 6.0..699] */
-typedef enum {
- CSPROPERTY_VIDEOCOMPRESSION_GETINFO,
- CSPROPERTY_VIDEOCOMPRESSION_KEYFRAME_RATE,
- CSPROPERTY_VIDEOCOMPRESSION_PFRAMES_PER_KEYFRAME,
- CSPROPERTY_VIDEOCOMPRESSION_QUALITY,
- CSPROPERTY_VIDEOCOMPRESSION_OVERRIDE_KEYFRAME,
- CSPROPERTY_VIDEOCOMPRESSION_OVERRIDE_FRAME_SIZE,
- CSPROPERTY_VIDEOCOMPRESSION_WINDOWSIZE,
-} CSPROPERTY_VIDCAP_VIDEOCOMPRESSION;
-
-/* CSPROPERTY_VIDCAP_VIDEOCONTROL  [enum; ce-only; CE 6.0..699] */
-typedef enum {
- CSPROPERTY_VIDEOCONTROL_CAPS,
- CSPROPERTY_VIDEOCONTROL_ACTUAL_FRAME_RATE,
- CSPROPERTY_VIDEOCONTROL_FRAME_RATES,
- CSPROPERTY_VIDEOCONTROL_MODE
-} CSPROPERTY_VIDCAP_VIDEOCONTROL;
-
-/* CSPROPERTY_VIDCAP_VIDEOPROCAMP  [enum; ce-only; CE 6.0..699] */
-typedef enum {
- CSPROPERTY_VIDEOPROCAMP_BRIGHTNESS,
- CSPROPERTY_VIDEOPROCAMP_CONTRAST,
- CSPROPERTY_VIDEOPROCAMP_HUE,
- CSPROPERTY_VIDEOPROCAMP_SATURATION,
- CSPROPERTY_VIDEOPROCAMP_SHARPNESS,
- CSPROPERTY_VIDEOPROCAMP_GAMMA,
- CSPROPERTY_VIDEOPROCAMP_COLORENABLE,
- CSPROPERTY_VIDEOPROCAMP_WHITEBALANCE,
- CSPROPERTY_VIDEOPROCAMP_BACKLIGHT_COMPENSATION,
- CSPROPERTY_VIDEOPROCAMP_GAIN,
-} CSPROPERTY_VIDCAP_VIDEOPROCAMP;
-
-/* CSPROPERTY_VIDEOCOMPRESSION_GETINFO_S  [struct; ce-only; CE 6.0..699] */
-typedef struct {
- CSPROPERTY Property;
- ULONG StreamIndex;
- LONG DefaultKeyFrameRate;
- LONG DefaultPFrameRate;
- LONG DefaultQuality;
- LONG NumberOfQualitySettings;
- LONG Capabilities;
-} CSPROPERTY_VIDEOCOMPRESSION_GETINFO_S,
-*PCSPROPERTY_VIDEOCOMPRESSION_GETINFO_S;
-
-/* CSPROPERTY_VIDEOCOMPRESSION_S  [struct; ce-only; CE 6.0..699] */
-typedef struct {
- CSPROPERTY Property;
- ULONG StreamIndex;
- LONG Value;
-} CSPROPERTY_VIDEOCOMPRESSION_S, *PCSPROPERTY_VIDEOCOMPRESSION_S;
-
-/* CSPROPERTY_VIDEOCONTROL_CAPS_S  [struct; ce-only; CE 6.0..699] */
-typedef struct {
- CSPROPERTY Property;
- ULONG StreamIndex;
- ULONG VideoControlCaps;
-} CSPROPERTY_VIDEOCONTROL_CAPS_S, *PCSPROPERTY_VIDEOCONTROL_CAPS_S;
-
-/* CSPROPERTY_VIDEOCONTROL_FRAME_RATES_S  [struct; ce-only; CE 6.0..699] */
-typedef struct {
- CSPROPERTY Property;
- ULONG StreamIndex;
- ULONG RangeIndex;
- SIZE Dimensions;
-} CSPROPERTY_VIDEOCONTROL_FRAME_RATES_S, *PCSPROPERTY_VIDEOCONTROL_FRAME_RATES_S;
-
-/* CSPROPERTY_VIDEOCONTROL_MODE_S  [struct; ce-only; CE 6.0..699] */
-typedef struct {
- CSPROPERTY Property;
- ULONG StreamIndex;
- LONG Mode;
-} CSPROPERTY_VIDEOCONTROL_MODE_S, *PCSPROPERTY_VIDEOCONTROL_MODE_S;
-
-/* CSPROPERTY_VIDEOPROCAMP_S  [struct; ce-only; CE 6.0..699] */
-typedef struct {
- CSPROPERTY Property;
- LONG Value;
- ULONG Flags;
- ULONG Capabilities;
-} CSPROPERTY_VIDEOPROCAMP_S, *PCSPROPERTY_VIDEOPROCAMP_S;
-
-/* CSSTREAM_ALLOCATOR  [struct; ce-only; CE 6.0..699] */
-typedef struct {
- ULONG DesiredCount;
- ULONG ActualCount;
- LPVOID pBuffers;
-} CSSTREAM_ALLOCATOR, * PCSSTREAM_ALLOCATOR;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main
@@ -407,7 +194,5 @@ typedef struct tagCS_VIDEOINFOHEADER2 {
     CS_TRUECOLORINFO TrueColorInfo;
   };
 } CS_VIDEOINFOHEADER2, *PCS_VIDEOINFOHEADER2;
-typedef struct tagCS_VIDEOINFOHEADER { RECT rcSource; RECT rcTarget; DWORD dwBitRate; DWORD dwBitErrorRate; REFERENCE_TIME AvgTimePerFrame; CS_BITMAPINFOHEADER bmiHeader; union { DWORD dwBitMasks[CS_iMASK_COLORS]; CS_TRUECOLORINFO TrueColorInfo; };
-typedef struct tagCS_VIDEOINFOHEADER2 { RECT rcSource; RECT rcTarget; DWORD dwBitRate; DWORD dwBitErrorRate; REFERENCE_TIME AvgTimePerFrame; DWORD dwInterlaceFlags; DWORD dwCopyProtectFlags; DWORD dwPictAspectRatioX; DWORD dwPictAspectRatioY; DWORD dwReserved1; DWORD dwReserved2; CS_BITMAPINFOHEADER bmiHeader; union { DWORD dwBitMasks[CS_iMASK_COLORS]; CS_TRUECOLORINFO TrueColorInfo; };
 
 #endif /* _CSMEDIA_ */

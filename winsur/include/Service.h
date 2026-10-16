@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 16 constants, 17 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 16 constants, 10 declarations, 2 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _SERVICE_
 #define _SERVICE_
@@ -40,28 +40,7 @@
 
 /* SERVICE  [typedef; ce-only; heuristic-prefix] */
 
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* ServicesexeCallbackFunctions  [struct; ce-only; CE 4.0..699] */
-typedef struct _ServicesExeCallbackFunctions {
- PFN_SERVICE_SHUTDOWN pfnServiceShutdown;
-} ServicesExeCallbackFunctions;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* ServicesExeCommandLineParams  [struct; ce-only; CE 5.0..699] */
-typedef struct _ServicesExeCommandLineParams {
- DWORD dwArgs;
- const WCHAR* ppwszArgs[SERVICES_EXE_MAX_CMD_LINE_OPTIONS];
-} ServicesExeCommandLineParams;
-#endif /* _WIN32_WCE */
+/* ServicesExeCommandLineParams  [struct; ce-only] */
 
 /* ==================================================================
  * functions and callbacks
@@ -136,31 +115,6 @@ BOOL ServiceIoControl(
 BOOL ServiceUnbindPorts(
  HANDLE hService
 );
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 420 && _WIN32_WCE < 600)) /* CE 4.2..599 */
-
-/* IPMService::ConfigureServiceUI  [function; ce-only; CE 4.2..599] */
-HRESULT ConfigureServiceUI( 
- IPMBootableDevice* piBootableDevice, 
- IPMServiceInfo* piServiceInfo, 
- VARIANT hWnd 
-);
-
-/* IPMService::Id  [function; ce-only; CE 4.2..599] */
-HRESULT Id(BSTR* pbstrServiceCLSID);
-
-/* IPMService::InitService  [function; ce-only; CE 4.2..599] */
-HRESULT InitService(IPMBootableDevice* piBootableDevice,IPMServiceInfo* piServiceInfo);
-
-/* IPMService::IsServiceReleaseable  [function; ce-only; CE 4.2..599] */
-HRESULT IsServiceReleaseable(VARIANT_BOOL* pBool);
-
-/* IPMService::Name  [function; ce-only; CE 4.2..599] */
-HRESULT Name(BSTR* pbstrServiceName);
-
-/* IPMServiceCategory::Id  [function; ce-only; CE 4.2..599] */
-HRESULT Id(BSTR* pbstrServiceCategoryId);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

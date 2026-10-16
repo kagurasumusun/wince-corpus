@@ -33,38 +33,6 @@
 #define SPL_LIMIT_TRANSPOSE_VOWEL 15
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 500)) /* CE 2.11..2.12, 3.0..499 */
-
-/* SPLBUFFER  [struct; ce-only; CE 2.11..2.12, 3.0..499] */
-typedef struct tagSPLBUFFER{
- const WCHAR* pwszIn;
- WCHAR* pwszOut;
- SPLSUGGEST aspl[8];
- DWORD iwcIn;
- DWORD cwcIn;
- DWORD dwMode;
- DWORD cwcOut;
- DWORD cwcUsed;
- DWORD dwErr;
- DWORD iwcErr;
- DWORD cwcErr;
- DWORD cspl;
-} 
-SPLBUFFER, *PSPLBUFFER;
-
-/* SPLSUGGEST  [struct, function; ce-only; CE 2.11..2.12, 3.0..499; Splusa.lib, splusa.lib] */
-int SplSuggest( 
- HSPL hspl, 
- SPLBUFFER* psb 
-);
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

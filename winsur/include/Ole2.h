@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 18 constants, 16 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 18 constants, 15 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _OLE2_
 #define _OLE2_
@@ -56,14 +56,6 @@ WINOLEAPI OleCreate(
  IOleClientSite* pClientSite, 
  IStorage* pStg, 
  void** ppvObject
-);
-
-/* OleDraw  [function; shared; CE 2.11..2.12, 3.0..699; Ole232.lib, ole232.lib, Ole32.lib, ole32.lib] */
-WINOLEAPI OleDraw( 
- IUnknown* pUnk, 
- DWORD dwAspect, 
- HDC hdcDraw, 
- LPCRECT lprcBounds 
 );
 
 /* OleIsRunning  [function; shared; CE 2.11..2.12, 3.0..699; Ole232.lib, ole232.lib, Ole32.lib, ole32.lib] */
@@ -149,5 +141,13 @@ WINOLEAPI OleSaveToStream(
  IStream* pStm 
 );
 #endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* function */
+WINOLEAPI OleDraw(  IUnknown *pUnk,  DWORD dwAspect,  HDC hdcDraw,  LPCRECT lprcBounds);
 
 #endif /* _OLE2_ */

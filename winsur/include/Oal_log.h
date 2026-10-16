@@ -15,22 +15,19 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+/* OALLED  [macro; ce-only] */
 
-/* OALLED  [macro; ce-only; CE 5.0..699] */
+/* OALLog  [macro; ce-only] */
 
-/* OALLog  [macro; ce-only; CE 5.0..699] */
+/* OALLogV  [macro; ce-only] */
 
-/* OALLogV  [macro; ce-only; CE 5.0..699] */
+/* OALMASK  [macro; ce-only] */
 
-/* OALMASK  [macro; ce-only; CE 5.0..699] */
+/* OALMSG  [macro; ce-only] */
 
-/* OALMSG  [macro; ce-only; CE 5.0..699] */
+/* OALMSGS  [macro; ce-only] */
 
-/* OALMSGS  [macro; ce-only; CE 5.0..699] */
-
-/* OALZONE  [macro; ce-only; CE 5.0..699] */
-#endif /* _WIN32_WCE */
+/* OALZONE  [macro; ce-only] */
 
 /* ==================================================================
  * functions and callbacks

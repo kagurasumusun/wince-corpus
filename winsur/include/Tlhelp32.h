@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 20 constants, 18 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
+ * 20 constants, 16 declarations, 2 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _TLHELP32_
 #define _TLHELP32_
@@ -44,81 +44,31 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
+/* MODULEENTRY32  [struct; shared; A/W MODULEENTRY32W (CE is W-side)] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   dwSize */
+/*   th32ModuleID */
+/*   th32ProcessID */
+/*   GlblcntUsage */
+/*   ProccntUsage */
+/*   modBaseAddr */
+/*   modBaseSize */
+/*   hModule */
+/*   szModule */
+/*   szExePath */
 
-/* HEAPENTRY32  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagHEAPENTRY32 {
- DWORD dwSize;
- HANDLE hHandle;
- DWORD dwAddress;
- DWORD dwBlockSize;
- DWORD dwFlags;
- DWORD dwLockCount;
- DWORD dwResvd;
- DWORD th32ProcessID;
- DWORD th32HeapID;
- } HEAPENTRY32;
- typedef HEAPENTRY32* PHEAPENTRY32;
-typedef HEAPENTRY32* LPHEAPENTRY32;
-
-/* HEAPLIST32  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagHEAPLIST32 { 
- DWORD dwSize; 
- DWORD th32ProcessID; 
- DWORD th32HeapID; 
- DWORD dwFlags; 
- } HEAPLIST32; 
- typedef HEAPLIST32* PHEAPLIST32; 
-typedef HEAPLIST32* LPHEAPLIST32;
-
-/* MODULEENTRY32  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W MODULEENTRY32W (CE is W-side)] */
-typedef struct tagMODULEENTRY32 {
- DWORD dwSize;
- DWORD th32ModuleID;
- DWORD th32ProcessID;
- DWORD GlblcntUsage;
- DWORD ProccntUsage;
- BYTE *modBaseAddr;
- DWORD modBaseSize;
- HMODULE hModule;
- TCHAR szModule[MAX_PATH];
- TCHAR szExePath[MAX_PATH];
- DWORD dwFlags;
-} MODULEENTRY32, *PMODULEENTRY32, *LPMODULEENTRY32;
-
-/* PROCESSENTRY32  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W PROCESSENTRY32W (CE is W-side)] */
-typedef struct tagPROCESSENTRY32 {
- DWORD dwSize;
- DWORD cntUsage;
- DWORD th32ProcessID;
- DWORD th32DefaultHeapID;
- DWORD th32ModuleID;
- DWORD cntThreads;
- DWORD th32ParentProcessID;
- LONG pcPriClassBase;
- DWORD dwFlags;
- TCHAR szExeFile[MAX_PATH];
- DWORD th32MemoryBase;
- DWORD th32AccessKey;
- } PROCESSENTRY32;
- typedef PROCESSENTRY32* PPROCESSENTRY32;
-typedef PROCESSENTRY32* LPPROCESSENTRY32;
-
-/* THREADENTRY32  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagTHREADENTRY32 {
- DWORD dwSize;
- DWORD cntUsage;
- DWORD th32ThreadID;
- DWORD th32OwnerProcessID;
- LONG tpBasePri;
- LONG tpDeltaPri;
- DWORD dwFlags;
- DWORD th32AccessKey;
- DWORD th32CurrentProcessID;
- } THREADENTRY32;
- typedef THREADENTRY32* PTHREADENTRY32;
-typedef THREADENTRY32* LPTHREADENTRY32;
-#endif /* _WIN32_WCE */
+/* PROCESSENTRY32  [struct; shared; A/W PROCESSENTRY32W (CE is W-side)] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   dwSize */
+/*   cntUsage */
+/*   th32ProcessID */
+/*   th32DefaultHeapID */
+/*   th32ModuleID */
+/*   cntThreads */
+/*   th32ParentProcessID */
+/*   pcPriClassBase */
+/*   dwFlags */
+/*   szExeFile */
 
 /* ==================================================================
  * functions and callbacks
@@ -208,16 +158,5 @@ BOOL WINAPI Toolhelp32ReadProcessMemory(
  LPDWORD lpNumberOfBytesRead
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* typedef */
-typedef HEAPENTRY32 *LPHEAPENTRY32;
-typedef HEAPLIST32 *LPHEAPLIST32;
-typedef HEAPENTRY32 *PHEAPENTRY32;
-typedef HEAPLIST32 *PHEAPLIST32;
 
 #endif /* _TLHELP32_ */

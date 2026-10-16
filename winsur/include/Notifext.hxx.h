@@ -17,9 +17,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-
-/* NotifyPacket  [struct; ce-only; CE 3.0..399, 5.0..699] */
+/* NotifyPacket  [struct; ce-only] */
 struct NotifyPacket {
  NotifyPacket* pNext;
  NotifyPacket* pPrev;
@@ -32,7 +30,6 @@ struct NotifyPacket {
  void* pExtraUIData;
  PersistentPacket* sPacket; 
 };
-#endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
 
@@ -71,22 +68,6 @@ union PersistentPacket {
  };
  unsigned char packet_start[1]; 
 };
-
-/* SettingsDialogData  [struct; ce-only; CE 3.0..699] */
-typedef struct tagSettingsDialogData {
- PCE_USER_NOTIFICATION UserNotification;
- TCHAR* MappedSoundBuffer;
- void* pvExtension;
- HWND hParentWindow;
- HWND hLedWindow;
- HWND hVibrateWindow;
- HWND hDialogWindow;
- HWND hSoundWindow;
- HWND hComboWindow;
- HWND hRepeatWindow;
- HICON hIcon;
- BOOL SaveData;
-} SettingsDialogData;
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

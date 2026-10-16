@@ -12,22 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* OAL_ADDRESS_TABLE  [struct; ce-only; CE 5.0..699] */
-typedef struct {
- UINT32 CA;
- UINT32 PA;
- UINT32 size;
-} OAL_ADDRESS_TABLE, *POAL_ADDRESS_TABLE;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

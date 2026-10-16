@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1 constants, 21 declarations, 1 outlines, 0 base types, 0 extra macros, 8 extra decls
+ * 1 constants, 18 declarations, 4 outlines, 0 base types, 0 extra macros, 8 extra decls
  */
 #ifndef _LFAPI_
 #define _LFAPI_
@@ -23,109 +23,13 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+/* LOCATION_REPORT_802_11  [struct; ce-only] */
 
-/* PLUGIN_STATE  [enum; ce-only; CE 6.0..699] */
-#endif /* _WIN32_WCE */
+/* PLUGIN_INFORMATION  [struct; ce-only] */
 
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
+/* PLUGIN_STATE  [enum; ce-only] */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* LOCATION_REPORT_802_11  [struct; ce-only; CE 6.0..699] */
-typedef struct _LOCATION_REPORT_802_11 {
- LOCATION_REPORT_BASE base;
- DWORD numAccessPoints; 
- BYTE BSSID[LOCATION_MAX_ACCESS_POINTS][BSSID_MAX_LEN];
- FLOAT RSSI[LOCATION_MAX_ACCESS_POINTS];
-} LOCATION_REPORT_802_11, *PLOCATION_REPORT_802_11;
-
-/* LOCATION_REPORT_ADDRESS  [struct; ce-only; CE 6.0..699] */
-typedef struct _LOCATION_REPORT_ADDRESS {
- LOCATION_REPORT_BASE base;
- DWORD countryRegionOffset;
- DWORD administrativeDivisionOffset;
- DWORD cityOffset;
- DWORD postalCodeOffset;
- DWORD addressLineOffset;
- DWORD descriptionOffset;
- BYTE data[1];
-} LOCATION_REPORT_ADDRESS, *PLOCATION_REPORT_ADDRESS;
-
-/* LOCATION_REPORT_BASE  [struct; ce-only; CE 6.0..699] */
-typedef struct _LOCATION_REPORT_BASE {
- DWORD version;
- GUID type;
- DWORD size;
- GUID plugin;
- FILETIME creationTime;
- DWORD flags;
-} LOCATION_REPORT_BASE, *PLOCATION_REPORT_BASE;
-
-/* LOCATION_REPORT_BUILDING  [struct; ce-only; CE 6.0..699] */
-typedef struct _LOCATION_REPORT_ADDRESS {
- LOCATION_REPORT_BASE base;
- DWORD buildingNameOffset; 
- DWORD floorOffset;
- DWORD roomOffset;
- DWORD descriptionOffset;
- BYTE data[1];
-} LOCATION_REPORT_ADDRESS, *PLOCATION_REPORT_ADDRESS;
-
-/* LOCATION_REPORT_LATLONG  [struct; ce-only; CE 6.0..699] */
-typedef struct _LOCATION_REPORT_LATLONG {
- LOCATION_REPORT_BASE base;
- DWORD validFields;
- DOUBLE latitude;
- DOUBLE longitude;
- DOUBLE altitudeWRTSeaLevel;
- DOUBLE speed;
- DOUBLE heading;
-} LOCATION_REPORT_LATLONG, *PLOCATION_REPORT_LATLONG;
-
-/* LOCATION_SERVICE_STATE  [struct; ce-only; CE 6.0..699] */
-typedef struct _LOCATION_SERVICE_STATE {
- DWORD serviceState; 
- DWORD numLoadedProviders;
- DWORD numLoadedResolvers;
- DWORD numActiveProviders;
- DWORD numActiveResolvers;
-} LOCATION_SERVICE_STATE, *PLOCATION_SERVICE_STATE;
-
-/* PLUGIN_INFORMATION  [struct; ce-only; CE 6.0..699] */
-typedef struct _PLUGIN_INFORMATION {
- DWORD version;
- GUID guid;
- WCHAR friendlyName[MAX_PLUGIN_FRIENDLY_NAME];
- PLUGIN_STATE pluginState;
- DWORD retryInterval;
- DWORD maximumInitialWait;
- DWORD numReportsGenerated;
- GUID reportsGenerated[MAX_PLUGIN_REPORT_TYPES];
- FILETIME lastUpdate;
- DWORD pluginFlags;
-} PLUGIN_INFORMATION, *PPLUGIN_INFORMATION;
-
-/* PROVIDER_INFORMATION  [struct; ce-only; CE 6.0..699] */
-typedef struct _PROVIDER_INFORMATION {
- PLUGIN_INFORMATION pluginInfo;
- DWORD pollInterval;
- DWORD providerFlags;
-} PROVIDER_INFORMATION, *PPROVIDER_INFORMATION;
-
-/* RESOLVER_INFORMATION  [struct; ce-only; CE 6.0..699] */
-typedef struct _RESOLVER_INFORMATION {
- PLUGIN_INFORMATION pluginInfo;
- DWORD minRequeryInterval;
- DWORD numReportsSupported;
- GUID reportsSupported[MAX_PLUGIN_REPORT_TYPES];
- DWORD resolverFlags;
-} RESOLVER_INFORMATION, *PRESOLVER_INFORMATION;
-#endif /* _WIN32_WCE */
+/* RESOLVER_INFORMATION  [struct; ce-only] */
 
 /* ==================================================================
  * functions and callbacks

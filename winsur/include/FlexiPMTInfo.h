@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 39 constants, 8 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 39 constants, 5 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _FLEXIPMTINFO_
 #define _FLEXIPMTINFO_
@@ -58,14 +58,18 @@
 #define tfiWaitState 9
 
 /* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* PTM_RAW_DATA  [struct; ce-only] */
+
+/* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* FLEXI_GETDATA_TYPE  [struct; ce-only; CE 5.0..699] */
+/* FLEXI_GETDATA_TYPE  [struct; ce-only] */
 typedef struct _FLEXI_GETDATA_TYPE {
  BOOLfGetProcessData;
  BOOL fGetThreadData;
@@ -80,7 +84,7 @@ typedef struct _FLEXI_GETDATA_TYPE {
  DWORD dwModuleIdxEnd;
 } FLEXI_GETDATA_TYPE;
 
-/* MODULE_FIELD_IDS  [enum; ce-only; CE 5.0..699] */
+/* MODULE_FIELD_IDS  [enum; ce-only] */
 typedef enum _MODULE_FIELD_IDS {
  mfiName = 0,
  mfiBasePointer,
@@ -95,7 +99,7 @@ typedef enum _MODULE_FIELD_IDS {
  mfiUserDefined = (-1L)
 } MODULE_FIELD_IDS;
 
-/* PROC_FIELD_IDS  [enum; ce-only; CE 5.0..699] */
+/* PROC_FIELD_IDS  [enum; ce-only] */
 typedef enum _PROC_FIELD_IDS {
  pfiStructAddr = (0L),
  pfiProcessSlot = (1L),
@@ -112,21 +116,7 @@ typedef enum _PROC_FIELD_IDS {
  pfiUserDefined = (-1L) 
 } PROC_FIELD_IDS;
 
-/* PTM_FIELD_DESC  [struct; ce-only; CE 5.0..699] */
-typedef struct _PTM_FIELD_DESC {
- WORD wIdentifier;
- WORD wSize;
- LPOLESTR szLabel;
- LPOLESTR szFormat;
-} PTM_FIELD_DESC;
-
-/* PTM_RAW_DATA  [struct; ce-only; CE 5.0..699] */
-typedef struct _PTM_RAW_DATA {
- DWORD dwSize;
- [size_is (dwSize )] BYTE* pdwRawData;
-PTM_RAW_DATA;
-
-/* THREAD_FIELD_IDS  [enum; ce-only; CE 5.0..699] */
+/* THREAD_FIELD_IDS  [enum; ce-only] */
 typedef enum _THREAD_FIELD_IDS {
  tfiStructAddr = (0L),
  tfiRunState = (1L),
@@ -153,40 +143,6 @@ typedef enum _THREAD_FIELD_IDS {
  tfiPC = (22L),
  tfiUserDefined = (-1L)
 } THREAD_FIELD_IDS;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* IFlexiPTMInfo::GetData  [function; ce-only; CE 5.0..699] */
-HRESULT GetData(
- [in] FLEXI_GETDATA_TYPE
- fgds
-,
- [out, size_is(, *pcProcess)] PTM_RAW_DATA** ppdatProcess,
- [out] DWORD* pcProcess,
- [out] DWORD* pcProcessTotal,
- [out, size_is(, *pcThread)] PTM_RAW_DATA** ppdatThread,
- [out] DWORD* pcThread,
- [out] DWORD* pcThreadTotal,
- [out, size_is(,* pcModule)] PTM_RAW_DATA** ppdatModule,
- [out] DWORD* pcModule,
- [out] DWORD* pcModuleTotal
-);
-
-/* IFlexiPTMInfo::GetDescriptionTables  [function; ce-only; CE 5.0..699] */
-HRESULT GetDescriptionTables(
- [out, size_is(,*pcProcField)] PTM_FIELD_DESC** ppfdProcDescTable,
- [out] DWORD* pcProcField,
- [out, size_is(,*pcThreadField)] PTM_FIELD_DESC** ppfdThreadDescTable,
- [out] DWORD* pcThreadField,
- [out, size_is(, *pcModField)] PTM_FIELD_DESC** ppfdModDescTable,
- [out] DWORD* pcModField
-);
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

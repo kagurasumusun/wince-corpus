@@ -12,25 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* OAL_PCI_LOCATION  [typedef; ce-only; CE 5.0..699] */
-typedef union {
- struct {
- UINT8 fnc;
- UINT8 dev;
- UINT8 bus;
- };
- UINT32 logicalLoc;
-} OAL_PCI_LOCATION, *POAL_PCI_LOCATION;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

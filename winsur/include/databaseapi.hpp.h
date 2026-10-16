@@ -17,16 +17,13 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* PH_SPEEDDIAL_ENTRY  [struct; ce-only; CE 6.0..699; PhCommon.dll] */
+/* PH_SPEEDDIAL_ENTRY  [struct; ce-only; PhCommon.dll] */
 typedef struct tagPH_SPEEDDIAL_ENTRY
 {
  DWORD StructSize;
  WCHAR pName[100];
  WCHAR pNumber[100];
 } PH_SPEEDDIAL_ENTRY;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

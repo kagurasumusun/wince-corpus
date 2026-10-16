@@ -80,24 +80,4 @@
 #define RPC_PROTSEQ_VECTOR RPC_PROTSEQ_VECTORW
 #define SEC_WINNT_AUTH_IDENTITY SEC_WINNT_AUTH_IDENTITY_W
 
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-
-/* SEC_WINNT_AUTH_IDENTITY  [struct; ce-only; CE 3.0..399, 5.0..699] */
-typedef struct _SEC_WINNT_AUTH_IDENTITY {
- unsigned short _RPC_FAR* User;
- unsigned long UserLength;
- unsigned short _RPC_FAR* Domain;
- unsigned long DomainLength;
- unsigned long _RPC_FAR* Password;
- unsigned long PasswordLength;
- unsigned long Flags;
-} SEC_WINNT_AUTH_IDENTITY, *PSEC_WINNT_AUTH_IDENTITY;
-#endif /* _WIN32_WCE */
-
 #endif /* _RPCDCE_ */

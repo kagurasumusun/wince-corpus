@@ -17,9 +17,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213)) /* CE 2.11..2.12 */
-
-/* MailAtt  [struct; ce-only; CE 2.11..2.12] */
+/* MailAtt  [struct; ce-only] */
 typedef struct MailAtt_s {
  UINT uiAttachmentNumber;
  DWORD dwFlags;
@@ -29,14 +27,14 @@ typedef struct MailAtt_s {
  LPWSTR szLocalName;
 } MailAtt, *lpMailAtt;
 
-/* MailAttArray  [struct; ce-only; CE 2.11..2.12] */
+/* MailAttArray  [struct; ce-only] */
 typedef struct MailAttArray_s {
  DWORD dwFlags;
  UINT uiAttCount;
  lpMailAtt AttArray[];
 } MailAttArray, *lpMailAttArray;
 
-/* MailMsg  [struct, typedef; ce-only; CE 2.11..2.12] */
+/* MailMsg  [struct, typedef; ce-only] */
 typedef struct MailMsg {
  DWORD dwMsgId;
  DWORD dwFlags;
@@ -50,29 +48,6 @@ typedef struct MailMsg {
  CEOID oid;
  HANDLE hHeap
 } MailMsg;
-
-/* MailNonIpmInfo  [struct; ce-only; CE 2.11..2.12] */
-typedef struct MailNonIpmInfo_s {
- LPWSTR szMessageClass;
- UINT uiPropcount;
- CEPROPVAL propArray[];
-} MailNonIpmInfo, *lpMailNonIpmInfo;
-
-/* MAILSORTFIELD  [enum; ce-only; CE 2.11..2.12] */
-typedef enum {
- MAIL_SORT_FROM,
- MAIL_SORT_SUBJ,
- MAIL_SORT_DATE,
- MAIL_SORT_SIZE
-} MAILSORTFIELD;
-
-/* MAILSORTINFO  [struct; ce-only; CE 2.11..2.12] */
-typedef struct _MAILSORTINFO {
- MAILSORTFIELD iSort;
- BOOL fAscending;
- int cMsgs;
-} MAILSORTINFO, *PMAILSORTINFO;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 59 constants, 49 declarations, 1 outlines, 0 base types, 3 extra macros, 7 extra decls
+ * 59 constants, 43 declarations, 2 outlines, 0 base types, 3 extra macros, 0 extra decls
  */
 #ifndef _AYGSHELL_
 #define _AYGSHELL_
@@ -88,29 +88,28 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-/* SHORTS  [typedef; ce-only; heuristic-prefix] */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* SHGetMenu  [macro; ce-only; CE 5.0..699] */
+/* SHGetMenu  [macro; ce-only] */
 #define SHGetMenu(hWndMB) (HMENU)SendMessage((hWndMB), \
  SHCMBM_GETMENU, (WPARAM)0, (LPARAM)0);
 
-/* SHGetSubMenu  [macro; ce-only; CE 5.0..699] */
+/* SHGetSubMenu  [macro; ce-only] */
 #define SHGetSubMenu(hWndMB,ID_MENU) (HMENU)SendMessage((hWndMB), \
  SHCMBM_GETSUBMENU, (WPARAM)0, (LPARAM)ID_MENU);
 
-/* SHINITDLGINFO  [struct, macro; ce-only; CE 5.0..699; aygshell.lib] */
+/* SHINITDLGINFO  [struct, macro; ce-only; aygshell.lib] */
 typedef struct tagSHINITDIALOG {
  DWORD dwMask;
  HWND hDlg;
  DWORD dwFlags;
 } SHINITDLGINFO, *PSHINITDLGINFO;
 
-/* SHSetSubMenu  [macro; ce-only; CE 5.0..699] */
+/* SHNOTIFICATIONDATA  [struct; ce-only; aygshell.lib] */
+
+/* SHORTS  [typedef; ce-only; heuristic-prefix] */
+
+/* SHSetSubMenu  [macro; ce-only] */
 #define SHSetSubMenu(hWndMB,ID_MENU) (HMENU)SendMessage((hWndMB), \
  SHCMBM_SETSUBMENU, (WPARAM)0, (LPARAM)ID_MENU);
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -118,81 +117,12 @@ typedef struct tagSHINITDIALOG {
  * declaration body no page prints
  * ================================================================ */
 
-/* NMRGINFO  [struct; ce-only; aygshell.lib] */
-typedef struct tagNMRGINFO { 
-NMHDR hdr; 
-POINT ptAction; 
-DWORD dwItemSpec; 
-} NMRGINFO, *PNMRGINFO;
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* SHACTIVATEINFO  [struct; ce-only; CE 5.0..699; aygshell.lib] */
-typedef struct {
- DWORD cbSize.;
- HWND hwndLastFocus.;
- UINT fSipUp.:1;
- UINT fSipOnDeactivation. :1;
- UINT fActive :1;
- UINT fReserved :29;
-} SHACTIVATEINFO, *PSHACTIVATEINFO;
-
-/* SHCHANGENOTIFYENTRY  [struct; shared; CE 5.0..699; ceshell.lib] */
+/* SHCHANGENOTIFYENTRY  [struct; shared; ceshell.lib] */
 typedef struct tagSHCHANGENOTIFYENTRY {
  DWORD dwEventMask;
  LPTSTR pszWatchDir;
  BOOL fRecursive;
 } SHCHANGENOTIFYENTRY;
-
-/* SHMENUBARINFO  [struct; ce-only; CE 5.0..699; aygshell.lib] */
-typedef struct tagSHMENUBARINFO {
- DWORD cbSize;
- HWND hwndParent;
- DWORD dwFlags;
- UINT nToolBarId;
- HINSTANCE hInstRes;
- int nBmpId;
- int cBmpImages;
- HWND hwndMB;
- COLORREF clrBk;
-} SHMENUBARINFO, *PSHMENUBARINFO;
-
-/* SHNOTIFICATIONDATA  [struct; ce-only; CE 5.0..699; aygshell.lib] */
-typedef struct _SHNOTIFICATIONDATA{
- DWORD cbStruct;
- DWORD dwID;
- SHNP npPriority;
- DWORD csDuration;
- HICON hicon;
- DWORD grfFlags;
- CLSID clsid;
- HWND hwndSink;
- LPCTSTR pszHTML;
- LPCTSTR pszTitle;
- LPARAM lParam;
- union
- {
- SOFTKEYMENU skm;
- SOFTKEYNOTIFY rgskn[NOTIF_NUM_SOFTKEYS];
- }
- LPCTSTR pszTodaySK;
- LPCTSTR pszTodayExec;
-} SHNOTIFICATIONDATA;
-
-/* SHNP  [enum; ce-only; CE 5.0..699] */
-typedef enum _SHNP {
- SHNP_INFORM,
- SHNP_ICONIC
-} SHNP;
-
-/* SHRGINFO  [struct; ce-only; CE 5.0..699; aygshell.lib] */
-typedef struct tagSHRGI {
- DWORD cbSize;
- HWND hwndClient;
- POINT ptDown;
- DWORD dwFlags;
-} SHRGINFO, *PSHRGINFO;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks
@@ -223,31 +153,6 @@ BOOL WINAPI SHSipInfo(
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* INewMenuItemServer::CreateNewItem  [function; ce-only; CE 5.0..699] */
-HRESULT CreateNewItem (
- HWND hwndParent
-);
-
-/* IShellNotificationCallback::OnCommandSelected  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-STDMETHOD(OnCommandSelected)(
- THIS_ DWORD dwID,
- WORD wCmdID
-) PURE;
-
-/* IShellNotificationCallback::OnDismiss  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-STDMETHOD(OnDismiss)(
- THIS_ DWORD dwID,
- BOOL fTimeout,
- LPARAM lParam
-) PURE;
-
-/* IShellNotificationCallback::OnLinkSelected  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-STDMETHOD(OnLinkSelected)(
- THIS_ DWORD dwID,
- LPCTSTR pszLink,
- LPARAM lParam
-) PURE;
 
 /* SHChangeNotifyDeregister  [function; shared; CE 5.0..699; Aygshell.lib, aygshell.lib, ceshell.lib] */
 BOOL WINAPI SHChangeNotifyDeregister(
@@ -361,17 +266,6 @@ BOOL SHInvokeContextMenuCommand(
  HANDLE hCMExtensions
 );
 
-/* SHLoadContextMenuExtensions  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-BOOL SHLoadContextMenuExtensions(
- IUnknown * punkOwner,
- LPCTSTR pszContext,
- LPCTSTR pszClass,
- HMENU hmenu,
- UINT idCmdFirst,
- UINT idCmdLast,
- HANDLE * phCMExtensions
-);
-
 /* SHNavigateBack  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
 void SHNavigateBack(void);
 
@@ -435,27 +329,5 @@ BOOL SHSipPreference(
  SIPSTATE st
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct {DWORD cbSize.;HWND hwndLastFocus.;UINT fSipUp.:1;UINT fSipOnDeactivation. :1;UINT fActive :1;UINT fReserved :29;} SHACTIVATEINFO, *PSHACTIVATEINFO;
-typedef struct tagSHINITDIALOG { DWORD dwMask; HWND hDlg; DWORD dwFlags;} SHINITDLGINFO, *PSHINITDLGINFO;
-typedef struct tagSHMENUBARINFO { DWORD cbSize; HWND hwndParent; DWORD dwFlags; UINT nToolBarId; HINSTANCE hInstRes; int nBmpId; int cBmpImages; HWND hwndMB; COLORREF clrBk;} SHMENUBARINFO, *PSHMENUBARINFO;
-typedef struct tagSHRGI { DWORD cbSize; HWND hwndClient; POINT ptDown; DWORD dwFlags;} SHRGINFO, *PSHRGINFO;
-
-/* function */
-HRESULT CreateNewItem ( HWND hwndParent );
-VOID STDAPI SHGetFolderPath( HWND hwndOwner, int nFolder, HANDLE hToken, DWORD dwReserved, LPTSTR pszPath);
-enum {
-  SHIC_FEATURE_RESTOREDEFAULT = 0,
-  SHIC_FEATURE_AUTOCORRECT = 0x00000001L,
-  SHIC_FEATURE_AUTOSUGGEST = 0x00000002L,
-  SHIC_FEATURE_HAVETRAILER = 0x00000003L,
-  SHIC_FEATURE_CLASS = 0x00000004L
-} SHIC_FEATURE;
 
 #endif /* _AYGSHELL_ */

@@ -5,43 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 8 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 0 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _IPSEC_API_
 #define _IPSEC_API_
 
-
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* IPSEC_API_MODE_INFO  [struct, typedef; ce-only; CE 5.0..699] */
-typedef struct {
- DWORD inAction;
- DWORD outAction;
- DWORD auth;
- PBYTE authInfo;
- DWORD authInfoSize;
- DWORD mmHashMask;
- DWORD mmEncMask;
- DWORD qmHashMask;
- DWORD qmEncMask;
- DWORD dhMask;
- DWORD protocol;
- DWORD scrIP;
-} IPSEC_API_MODE_INFO, *PIPSEC_API_MODE_INFO;
-
-/* IPSEC_API_PARAM  [struct, typedef; ce-only; CE 5.0..699] */
-typedef struct {
- DWORD id;
- PVOID val;
- DWORD valSize;
-} IPSEC_API_PARAM, *PIPSEC_API_PARAM;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks
@@ -51,12 +19,6 @@ typedef struct {
 
 /* IsIPSecRunning  [function; ce-only; CE 5.0..699; Ipsec_api.lib] */
 HRESULT IsIPSecRunning(void);
-
-/* ResetIPSecMode  [function; ce-only; CE 5.0..699; Ipsec_api.lib] */
-HRESULT ResetIPSecMode(
- DWORD srcIP
- DWORD flags
-);
 
 /* SetIPSecConfig  [function; ce-only; CE 5.0..699; Ipsec_api.lib] */
 HRESULT SetIPSecConfig(
@@ -85,5 +47,8 @@ HRESULT StopIPSec(void);
 /* struct */
 typedef struct { DWORD inAction; DWORD outAction; DWORD auth; PBYTE authInfo; DWORD authInfoSize; DWORD mmHashMask; DWORD mmEncMask; DWORD qmHashMask; DWORD qmEncMask; DWORD dhMask; DWORD protocol; DWORD scrIP;} IPSEC_API_MODE_INFO, *PIPSEC_API_MODE_INFO;
 typedef struct { DWORD id; PVOID val; DWORD valSize;} IPSEC_API_PARAM, *PIPSEC_API_PARAM;
+
+/* function */
+HRESULT ResetIPSecMode( DWORD srcIP DWORD flags );
 
 #endif /* _IPSEC_API_ */

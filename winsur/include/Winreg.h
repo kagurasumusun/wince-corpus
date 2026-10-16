@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 43 constants, 18 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 43 constants, 18 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINREG_
 #define _WINREG_
@@ -66,23 +66,6 @@
 #define SC_STATUS_PROCESS_INFO 0
 #define TokenPrimary 1
 #define TokenUser 1
-
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* REG_NOTIFY_INFORMATION  [struct; ce-only; CE 6.0..699] */
-typedef struct _REG_NOTIFY_INFORMATION {
- DWORD NextEntryOffset; 
- DWORD Action; 
- DWORD RegNameLength; 
- WCHAR RegName[1]; 
-} REG_NOTIFY_INFORMATION, *PREG_NOTIFY_INFORMATION;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks
@@ -257,18 +240,5 @@ LONG CeRegTestSetValueW(
  DWORD dwFlags
  );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _REG_NOTIFY_INFORMATION {
-  DWORD NextEntryOffset;
-  DWORD Action;
-  DWORD RegNameLength;
-  WCHAR RegName[1];
-} REG_NOTIFY_INFORMATION, *PREG_NOTIFY_INFORMATION;
 
 #endif /* _WINREG_ */

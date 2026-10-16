@@ -12,26 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
-
-/* ILTIMING_MESSAGE  [struct; ce-only; CE 3.0..699] */
-typedef struct tILTIMING_MESSAGE {
- WORD wMsg;
- WORD wNumInterrupts;
- DWORD dwIsrTime1;
- DWORD dwIsrTime2;
- DWORD dwSPC;
- DWORD dwFrequency;
- PVOID pfnPerfCountSinceTick;
-} ILTIMING_MESSAGE, *PILTIMING_MESSAGE;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */

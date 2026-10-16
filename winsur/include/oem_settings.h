@@ -5,27 +5,17 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 8 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 7 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _OEM_SETTINGS_
 #define _OEM_SETTINGS_
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
+ * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* RDP_TAB_INFO  [struct; ce-only; CE 6.0..699] */
-typedef struct {
- TCHAR szTabName[MAX_PATH];
- DLGPROC pDlgProc;
- UINT uTemplateId;
-} RDP_TAB_INFO, *PRDP_TAB_INFO;
-#endif /* _WIN32_WCE */
+/* RDP_TAB_INFO  [struct; ce-only] */
 
 /* ==================================================================
  * functions and callbacks

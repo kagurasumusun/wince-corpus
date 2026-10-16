@@ -71,30 +71,16 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* GOFFSET  [struct; shared; CE 5.0..699] */
+/* GOFFSET  [struct; shared] */
 typedef struct tagGOFFSET {
  LONG du;
  LONG dv;
 } GOFFSET;
 
-/* SCRIPT_ANALYSIS  [struct; shared; CE 5.0..699] */
-typedef struct tag_SCRIPT_ANALYSIS {
- WORD eScript; 
- WORD fRTL; 
- WORD fLayoutRTL; 
- WORD fLinkBefore; 
- WORD fLinkAfter; 
- WORD fLogicalOrder; 
- WORD fNoGlyphIndex; 
- SCRIPT_STATE s; 
-} SCRIPT_ANALYSIS;
-
-/* SCRIPT_CACHE  [typedef; ce-only; CE 5.0..699] */
+/* SCRIPT_CACHE  [typedef; ce-only] */
 typedef void *SCRIPT_CACHE;
 
-/* SCRIPT_CONTROL  [struct; shared; CE 5.0..699] */
+/* SCRIPT_CONTROL  [struct; shared] */
 typedef struct tag_SCRIPT_CONTROL { 
  DWORD uDefaultLanguage; 
  DWORD fContextDigits; 
@@ -108,7 +94,7 @@ typedef struct tag_SCRIPT_CONTROL {
  DWORD fReserved; 
 } SCRIPT_CONTROL;
 
-/* SCRIPT_DIGITSUBSTITUTE  [struct; shared; CE 5.0..699] */
+/* SCRIPT_DIGITSUBSTITUTE  [struct; shared] */
 typedef struct tag_SCRIPT_DIGITSUBSTITUTE {
  DWORD NationalDigitLanguage;
  DWORD TraditionalDigitLanguage;
@@ -116,7 +102,7 @@ typedef struct tag_SCRIPT_DIGITSUBSTITUTE {
  DWORD dwReserved;
 } SCRIPT_DIGITSUBSTITUTE;
 
-/* SCRIPT_FONTPROPERTIES  [struct; shared; CE 5.0..699] */
+/* SCRIPT_FONTPROPERTIES  [struct; shared] */
 typedef struct {
  int cBytes; 
  WORD wgBlank; 
@@ -126,33 +112,7 @@ typedef struct {
  int iKashidaWidth; 
 } SCRIPT_FONTPROPERTIES;
 
-/* SCRIPT_ITEM  [struct; shared; CE 5.0..699] */
-typedef struct tag_SCRIPT_ITEM { 
- int iCharPos; 
- SCRIPT_ANALYSIS a; 
-} SCRIPT_ITEM;
-
-/* SCRIPT_JUSTIFY  [enum; shared; CE 5.0..699] */
-typedef enum tag_SCRIPT_JUSTIFY { 
- SCRIPT_JUSTIFY_NONE = 0, 
- SCRIPT_JUSTIFY_ARABIC_BLANK = 1, 
- SCRIPT_JUSTIFY_CHARACTER = 2, 
- SCRIPT_JUSTIFY_RESERVED1 = 3, 
- SCRIPT_JUSTIFY_BLANK = 4, 
- SCRIPT_JUSTIFY_RESERVED2 = 5, 
- SCRIPT_JUSTIFY_RESERVED3 = 6, 
- SCRIPT_JUSTIFY_ARABIC_NORMAL = 7, 
- SCRIPT_JUSTIFY_ARABIC_KASHIDA = 8, 
- SCRIPT_JUSTIFY_ARABIC_ALEF = 9, 
- SCRIPT_JUSTIFY_ARABIC_HA = 10, 
- SCRIPT_JUSTIFY_ARABIC_RA = 11, 
- SCRIPT_JUSTIFY_ARABIC_BA = 12, 
- SCRIPT_JUSTIFY_ARABIC_BARA = 13, 
- SCRIPT_JUSTIFY_ARABIC_SEEN = 14, 
- SCRIPT_JUSTIFY_ARABIC_SEEN_M = 15, 
-} SCRIPT_JUSTIFY;
-
-/* SCRIPT_LOGATTR  [struct; shared; CE 5.0..699] */
+/* SCRIPT_LOGATTR  [struct; shared] */
 typedef struct tag_SCRIPT_LOGATTR { 
  BYTE fSoftBreak; 
  BYTE fWhiteSpace; 
@@ -162,7 +122,7 @@ typedef struct tag_SCRIPT_LOGATTR {
  BYTE fReserved; 
 } SCRIPT_LOGATTR;
 
-/* SCRIPT_PROPERTIES  [struct; shared; CE 5.0..699] */
+/* SCRIPT_PROPERTIES  [struct; shared] */
 typedef struct {
  DWORD langid; 
  DWORD fNumeric;
@@ -181,7 +141,7 @@ typedef struct {
  DWORD fRejectInvalid;
 } SCRIPT_PROPERTIES;
 
-/* SCRIPT_STATE  [struct; shared; CE 5.0..699] */
+/* SCRIPT_STATE  [struct; shared] */
 typedef struct tag_SCRIPT_STATE { 
  WORD uBidiLevel; 
  WORD fOverrideDirection; 
@@ -196,10 +156,10 @@ typedef struct tag_SCRIPT_STATE {
  WORD fEngineReserved; 
 } SCRIPT_STATE;
 
-/* SCRIPT_STRING_ANALYSIS  [typedef; ce-only; CE 5.0..699] */
+/* SCRIPT_STRING_ANALYSIS  [typedef; ce-only] */
 typedef void *SCRIPT_STRING_ANALYSIS;
 
-/* SCRIPT_TABDEF  [struct; shared; CE 5.0..699] */
+/* SCRIPT_TABDEF  [struct; shared] */
 typedef struct tag_SCRIPT_TABDEF {
  int cTabStops;
  int iScale;
@@ -207,7 +167,7 @@ typedef struct tag_SCRIPT_TABDEF {
  int iTabOrigin;
 } SCRIPT_TABDEF;
 
-/* SCRIPT_VISATTR  [struct; shared; CE 5.0..699] */
+/* SCRIPT_VISATTR  [struct; shared] */
 typedef struct tag_SCRIPT_VISATTR { 
  WORD uJustification; 
  WORD fClusterStart; 
@@ -216,7 +176,24 @@ typedef struct tag_SCRIPT_VISATTR {
  WORD fReserved; 
  WORD fShapeReserved; 
 } SCRIPT_VISATTR;
-#endif /* _WIN32_WCE */
+
+/* SCRIPT_ANALYSIS  [struct; shared] */
+typedef struct tag_SCRIPT_ANALYSIS {
+ WORD eScript; 
+ WORD fRTL; 
+ WORD fLayoutRTL; 
+ WORD fLinkBefore; 
+ WORD fLinkAfter; 
+ WORD fLogicalOrder; 
+ WORD fNoGlyphIndex; 
+ SCRIPT_STATE s; 
+} SCRIPT_ANALYSIS;
+
+/* SCRIPT_ITEM  [struct; shared] */
+typedef struct tag_SCRIPT_ITEM { 
+ int iCharPos; 
+ SCRIPT_ANALYSIS a; 
+} SCRIPT_ITEM;
 
 /* ==================================================================
  * functions and callbacks

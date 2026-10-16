@@ -19,38 +19,10 @@
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
 
-/* KEYBD_PDD  [struct; ce-only; CE 5.0..699] */
-typedef struct tagKEYBD_PDD {
- WORD wPddMask;
- LPCTSTR pszName;
- PFN_KEYBD_PDD_POWER_HANDLER pfnPowerHandler;
- PFN_KEYBD_PDD_TOGGLE_LIGHTS pfnToggleLights;
-} KEYBD_PDD, *PKEYBD_PDD;
-
-/* PFN_KEYBD_EVENT  [callback; ce-only; CE 5.0..699] */
-typedef void (*PFN_KEYBD_EVENT)(
- UINT uiPddId,
- UINT32 uiScanCode, 
- BOOL fKeyDown
-);
-
-/* PFN_KEYBD_PDD_ENTRY  [callback; ce-only; CE 5.0..699] */
-typedef BOOL (*PFN_KEYBD_PDD_ENTRY)(
- UINT uiPddId, 
- PFN_KEYBD_EVENT pfnKeybdEvent, 
- PKEYBD_PDD *ppKeybdPdd
-);
-
 /* PFN_KEYBD_PDD_POWER_HANDLER  [callback; ce-only; CE 5.0..699] */
 typedef void (*PFN_KEYBD_PDD_POWER_HANDLER)(
  UINT uiPddId,
  BOOL fTurnOff
-);
-
-/* PFN_KEYBD_PDD_TOGGLE_LIGHTS  [callback; ce-only; CE 5.0..699] */
-typedef void (*PFN_KEYBD_PDD_TOGGLE_LIGHTS)(
- UINT uiPddId, 
- KEY_STATE_FLAGS KeyStateFlags
 );
 #endif /* _WIN32_WCE */
 

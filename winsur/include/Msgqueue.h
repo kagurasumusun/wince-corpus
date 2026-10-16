@@ -21,36 +21,6 @@
 #define MSGQUEUE_NOPRECOMMIT 1
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* MSGQUEUEINFO  [typedef; ce-only; CE 5.0..699] */
-typedef MSGQUEUEINFO{
- DWORD dwSize;
- DWORD dwFlags;
- DWORD dwMaxMessages;
- DWORD cbMaxMessage;
- DWORD dwCurrentMessages;
- DWORD dwMaxQueueMessages;
- WORD wNumReaders;
- WORD wNumWriters;
-} MSGQUEUEINFO, *PMSGQUEUEINFO, FAR* LPMSGQUEUEINFO;
-
-/* MSGQUEUEOPTIONS  [typedef; ce-only; CE 5.0..699] */
-typedef MSGQUEUEOPTIONS_OS{
- DWORD dwSize;
- DWORD dwFlags;
- DWORD dwMaxMessages;
- DWORD cbMaxMessage;
- BOOL bReadAccess;
-} MSGQUEUEOPTIONS, FAR* LPMSGQUEUEOPTIONS, *PMSGQUEUEOPTIONS;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
@@ -120,7 +90,6 @@ BOOL ReadMsgQueueEx(
  * ================================================================ */
 
 /* typedef */
-typedef MSGQUEUEINFO{DWORDdwSize;
 typedef MSGQUEUEINFO{DWORDdwSize;DWORDdwFlags;DWORDdwMaxMessages;DWORDcbMaxMessage;DWORDdwCurrentMessages;DWORDdwMaxQueueMessages;WORDwNumReaders;WORDwNumWriters;}MSGQUEUEINFO, *PMSGQUEUEINFO, FAR* LPMSGQUEUEINFO;
 typedef MSGQUEUEOPTIONS_OS{DWORDdwSize;DWORDdwFlags;DWORDdwMaxMessages;DWORDcbMaxMessage;BOOLbReadAccess;} MSGQUEUEOPTIONS, FAR* LPMSGQUEUEOPTIONS, *PMSGQUEUEOPTIONS;
 

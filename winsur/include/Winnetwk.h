@@ -174,18 +174,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* CONNECTDLGSTRUCT  [struct, typedef; shared; CE 2.11..2.12, 3.0..699; A/W CONNECTDLGSTRUCTA,CONNECTDLGSTRUCTW (CE is W-side)] */
-typedef struct {
- DWORD cbStructure;
- HWND hwndOwner;
- LPNETRESOURCE lpConnRes;
- DWORD dwFlags;
- DWORD dwDevNum;
-} CONNECTDLGSTRUCT;
-
-/* DISCDLGSTRUCT  [struct, typedef; shared; CE 2.11..2.12, 3.0..699; A/W DISCDLGSTRUCTA,DISCDLGSTRUCTW (CE is W-side)] */
+/* DISCDLGSTRUCT  [struct, typedef; shared; A/W DISCDLGSTRUCTA,DISCDLGSTRUCTW (CE is W-side)] */
 typedef struct _wcesdk_win32_DISCDLGSTRUCT_str{
  DWORD cbStructure;
  HWND hwndOwner;
@@ -194,7 +183,7 @@ typedef struct _wcesdk_win32_DISCDLGSTRUCT_str{
  DWORD dwFlags;
 } DISCDLGSTRUCT;
 
-/* NETRESOURCE  [struct, typedef; shared; CE 2.11..2.12, 3.0..699; A/W NETRESOURCEA,NETRESOURCEW (CE is W-side)] */
+/* NETRESOURCE  [struct, typedef; shared; A/W NETRESOURCEA,NETRESOURCEW (CE is W-side)] */
 typedef struct _NETRESOURCE {
  DWORD dwScope; 
  DWORD dwType; 
@@ -206,18 +195,17 @@ typedef struct _NETRESOURCE {
  LPTSTR lpProvider; 
 } NETRESOURCE;
 
-/* REMOTE_NAME_INFO  [struct, typedef; shared; CE 2.11..2.12, 3.0..699; A/W REMOTE_NAME_INFOA,REMOTE_NAME_INFOW (CE is W-side)] */
+/* REMOTE_NAME_INFO  [struct, typedef; shared; A/W REMOTE_NAME_INFOA,REMOTE_NAME_INFOW (CE is W-side)] */
 typedef struct _REMOTE_NAME_INFO {
  LPTSTR lpUniversalName; 
  LPTSTR lpConnectionName; 
  LPTSTR lpRemainingPath;
 } REMOTE_NAME_INFO;
 
-/* UNIVERSAL_NAME_INFO  [struct, typedef; shared; CE 2.11..2.12, 3.0..699; A/W UNIVERSAL_NAME_INFOA,UNIVERSAL_NAME_INFOW (CE is W-side)] */
+/* UNIVERSAL_NAME_INFO  [struct, typedef; shared; A/W UNIVERSAL_NAME_INFOA,UNIVERSAL_NAME_INFOW (CE is W-side)] */
 typedef struct _UNIVERSAL_NAME_INFO {
  LPTSTR lpUniversalName;
 } UNIVERSAL_NAME_INFO;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

@@ -49,25 +49,13 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-
-/* POST_INIT_BUF  [struct; ce-only; CE 3.0..399, 5.0..699] */
-struct _POST_INIT_BUF {
- HANDLE p_hDevice;
- HKEY p_hDeviceKey;
-} POST_INIT_BUF, *PPOST_INIT_BUF;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* REGINI  [struct; ce-only; CE 5.0..699] */
+/* REGINI  [struct; ce-only] */
 typedef struct _REGINI {
  LPCWSTR lpszVal;
  LPBYTE pData;
  DWORD dwLen;
  DWORD dwType;
 } REGINI;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

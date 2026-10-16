@@ -12,52 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
-
-/* PEER_ADDRESS  [struct; shared; CE 5.0..599; p2p.lib] */
-typedef struct peer_address_tag { 
- DWORD dwSize; 
- SOCKADDR_IN6 sin6; 
-} PEER_ADDRESS, 
-*PPEER_ADDRESS;
-
-/* PEER_CONNECTION_FLAGS_TAG  [enum; ce-only; CE 5.0..599; p2p.lib] */
-typedef enum peer_connection_flags_tag 
-{ 
- PEER_CONNECTION_NEIGHBOR, 
- PEER_CONNECTION_DIRECT 
-} PEER_CONNECTION_FLAGS;
-
-/* PEER_DATA  [struct; shared; CE 5.0..599; p2p.lib] */
-typedef struct peer_data_tag { 
- ULONG cbData; 
- PBYTE pbData; 
-} PEER_DATA, 
-*PPEER_DATA;
-
-/* PEER_NAME_PAIR_TAG  [struct; ce-only; CE 5.0..599; p2p.lib] */
-typedef struct peer_name_pair_tag { 
- DWORD dwSize; 
- PWSTR pwzPeerName; 
- PWSTR pwzFriendlyName; 
-} PEER_NAME_PAIR, *PPEER_NAME_PAIR;
-
-/* PEER_RECORD_CHANGE_TYPE_TAG  [enum; ce-only; CE 5.0..599; p2p.lib] */
-typedef enum peer_record_change_type_tag 
-{ 
- PEER_RECORD_ADDED, 
- PEER_RECORD_UPDATED, 
- PEER_RECORD_DELETED, 
- PEER_RECORD_EXPIRED 
-} PEER_RECORD_CHANGE_TYPE;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

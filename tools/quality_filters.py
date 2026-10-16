@@ -185,13 +185,54 @@ _GLUED = re.compile(
     r"\b(?:HANDLE|HMODULE|HINSTANCE|HWND|HDC|HMENU|HKEY|HBITMAP|HFONT|"
     r"BOOL|DWORD|UINT|ULONG|LONG|WORD|BYTE|LPVOID|LPCVOID|LPSTR|LPCSTR|"
     r"LPWSTR|LPCWSTR|LPTSTR|LPCTSTR|HRESULT|LRESULT|NTSTATUS|"
-    r"VOID|INT|SHORT|CHAR)[A-Z]"
+    r"VOID|INT|SHORT|CHAR)[A-Z]|"
+    r"\b(?:struct|enum|union)_[A-Z]"
 )
 
 
 def is_glued_prototype(text: str) -> bool:
     """``HANDLECreateFile(`` -- the archived page lost spaces."""
     return bool(_GLUED.search(text or ""))
+
+
+_UNUSABLE = re.compile(
+    r"\[[A-Z][A-Z0-9_]+\]|"
+    r"\b(?:sz_Or_Ord|CBrush|CString|CObject|CWnd|"
+    r"IUnknown|IDispatch|IDirect3D|IDVD|BSTR|HTREEITEM|"
+    r"IOleInPlace|ISpThread|IOsAxs|IHTMLEvent|IWSD|"
+    r"IMediaSample|IHTML)\b"
+)
+
+
+def decl_unusable_for_c(text: str, name: str = "") -> bool:
+    if is_broken_c(text) or is_cpp_or_managed(text, name):
+        return True
+    if _UNUSABLE.search(text or ""):
+        return True
+    return False
+
+
+def is_broken_c(text: str) -> bool:
+    """Unbalanced or SAL/sample junk a C compiler will reject."""
+    body = strip_markup(text or "")
+    if not body:
+        return True
+    if is_glued_prototype(body):
+        return True
+    if "SEC_ENTRY" in body or "IMPLICIT_CALL" in body:
+        return True
+    if body.count("{") != body.count("}"):
+        return True
+    if body.count("(") != body.count(")"):
+        return True
+    # ``WORD biBitCount \\n DWORD biCompression`` -- the page dropped a ';'
+    if re.search(
+            r"\b(?:WORD|DWORD|LONG|BYTE|UINT|INT|SHORT|BOOL|WCHAR|CHAR|"
+            r"TCHAR|HANDLE|HWND|ULONG|USHORT|UCHAR)\s+[A-Za-z_]\w*\s*\n\s*"
+            r"(?:WORD|DWORD|LONG|BYTE|UINT|INT|SHORT|BOOL)",
+            body):
+        return True
+    return False
 
 
 def is_define_only_block(text: str) -> bool:
@@ -207,7 +248,7 @@ _CPP_OR_MANAGED = re.compile(
     r"(?:"
     r"\bvirtual\b|\bSTDMETHODCALLTYPE\b|\bSTDMETHOD\b|\bTHIS_\b|"
     r"\bCString\b|\bCWnd\b|\bCObject\b|\bCList\b|\btemplate\s*<|"
-    r"\bclass\s+[A-Z]|\bnamespace\b|"
+    r"\bclass\s+[A-Z]|\bnamespace\b|\boperator\b|"
     r"::|"
     r"=\s*(?:NULL|TRUE|FALSE|nullptr)\s*[,)]|"  # C++ default args
     r"\)\s*const\s*;"  # C++ member
@@ -234,6 +275,8 @@ def is_c_toolchain_declaration(text: str, name: str = "",
                                dtype: str = "") -> bool:
     """A declaration a C compiler can parse as WinCE C."""
     if is_cpp_or_managed(text, name):
+        return False
+    if is_broken_c(text):
         return False
     cleaned = sanitize_declaration(text, name, dtype)
     return bool(cleaned)

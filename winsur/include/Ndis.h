@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 9 constants, 321 declarations, 4 outlines, 0 base types, 2 extra macros, 43 extra decls
+ * 9 constants, 317 declarations, 4 outlines, 0 base types, 2 extra macros, 47 extra decls
  */
 #ifndef _NDIS_
 #define _NDIS_
@@ -37,77 +37,33 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 200 && _WIN32_WCE < 210) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* NDIS_BUFFER_TO_SPAN_PAGES  [function, macro; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699] */
-ULONG NDIS_BUFFER_TO_SPAN_PAGES( 
-IN PNDIS_BUFFER Buffer );
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 200 && _WIN32_WCE < 210) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.0..209, 2.11..2.12, 3.0..699 */
-
-/* ETH_COPY_NETWORK_ADDRESS  [function, macro; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699] */
+/* ETH_COPY_NETWORK_ADDRESS  [function, macro; ce-only] */
 #define ETH_COPY_NETWORK_ADDRESS(_D, _S) \
 { \
  *((ULONG UNALIGNED *)(_D)) = *((ULONG UNALIGNED *)(_S)); \
  *((USHORT UNALIGNED *)((UCHAR *)(_D)+4)) = *((USHORT UNALIGNED *)((UCHAR *)(_S)+4)); \
 }
 
-/* NDIS_PHYSICAL_ADDRESS_CONST  [function, macro; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699] */
-VOID NDIS_PHYSICAL_ADDRESS_CONST( 
-IN ULONG Low, 
-IN LONG High );
+/* NDIS_BUFFER_TO_SPAN_PAGES  [function, macro; ce-only] */
+ULONG NDIS_BUFFER_TO_SPAN_PAGES( 
+IN PNDIS_BUFFER Buffer );
 
-/* NDIS_SET_PACKET_HEADER_SIZE  [function, macro; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699] */
-NDIS_SET_PACKET_HEADER_SIZE( 
-IN PNDIS_PACKET Packet, 
-IN UINT HdrSize );
-
-/* NDIS_SET_PACKET_MEDIA_SPECIFIC_INFO  [function, macro; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699] */
-NDIS_SET_PACKET_MEDIA_SPECIFIC_INFO( 
-IN PNDIS_PACKET Packet, 
-IN PVOID MediaSpecificInfo, 
-IN UINT SizeMediaSpecificInfo );
-
-/* XXX_Init  [function, macro; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndislib.lib] */
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* NDIS_PACKET_OOB_DATA  [struct; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* NDIS_SET_PACKET_CANCEL_ID  [macro, function; ce-only; CE 4.0..699] */
-ULONG_PTR NDIS_SET_PACKET_CANCEL_ID(
- PNDIS_PACKET _P,
- ULONG_PTR _cId
-);
-
-/* NDIS_TASK_TCP_LARGE_SEND  [struct; ce-only; CE 4.0..699] */
-
-/* NDIS_WORK_ITEM  [struct; ce-only; CE 4.0..699] */
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* NDIS_GET_ORIGINAL_PACKET  [macro, function; ce-only; CE 5.0..699] */
+/* NDIS_GET_ORIGINAL_PACKET  [macro, function; ce-only] */
 PNDIS_PACKET NDIS_GET_ORIGINAL_PACKET(
  PNDIS_PACKET _P
 );
 
-/* NDIS_GET_PACKET_CANCEL_ID  [macro, function; ce-only; CE 5.0..699] */
+/* NDIS_GET_PACKET_CANCEL_ID  [macro, function; ce-only] */
 PVOID NDIS_GET_PACKET_CANCEL_ID(
  PNDIS_PACKET _P
 );
 
-/* NDIS_GET_PACKET_HEADER_SIZE  [macro, function; ce-only; CE 5.0..699] */
+/* NDIS_GET_PACKET_HEADER_SIZE  [macro, function; ce-only] */
 #define NDIS_GET_PACKET_HEADER_SIZE(_Packet) \
 ((PNDIS_PACKET_OOB_DATA)((PUCHAR)(_Packet) + \
 (_Packet)->Private.NdisPacketOobOffset))->HeaderSize
 
-/* NDIS_GET_PACKET_MEDIA_SPECIFIC_INFO  [macro, function; ce-only; CE 5.0..699] */
+/* NDIS_GET_PACKET_MEDIA_SPECIFIC_INFO  [macro, function; ce-only] */
 #define NDIS_GET_PACKET_MEDIA_SPECIFIC_INFO(_Packet, \
  _pMediaSpecificInfo, \
  _pSizeMediaSpecificInfo) \
@@ -127,32 +83,60 @@ PVOID NDIS_GET_PACKET_CANCEL_ID(
  } \
 }
 
-/* NDIS_GET_PACKET_STATUS  [macro, function; ce-only; CE 5.0..699] */
+/* NDIS_GET_PACKET_STATUS  [macro, function; ce-only] */
 #define NDIS_GET_PACKET_STATUS(_Packet) \
  ((PNDIS_PACKET_OOB_DATA)((PUCHAR)(_Packet) + \
  (_Packet)->Private.NdisPacketOobOffset))->Status
 
-/* NDIS_GET_PACKET_TIME_RECEIVED  [macro, function; ce-only; CE 5.0..699] */
+/* NDIS_GET_PACKET_TIME_RECEIVED  [macro, function; ce-only] */
 #define NDIS_GET_PACKET_TIME_RECEIVED(_Packet) \
  ((PNDIS_PACKET_OOB_DATA)((PUCHAR)(_Packet) + \
  (_Packet)->Private.NdisPacketOobOffset))->TimeReceived
 
-/* NDIS_GET_PACKET_TIME_TO_SEND  [function, macro; ce-only; CE 5.0..699] */
+/* NDIS_GET_PACKET_TIME_TO_SEND  [function, macro; ce-only] */
 #define NDIS_GET_PACKET_TIME_SENT(_Packet) \
  ((PNDIS_PACKET_OOB_DATA)((PUCHAR)(_Packet) + \
  (_Packet)->Private.NdisPacketOobOffset))->TimeSent
 
-/* NDIS_OOB_DATA_FROM_PACKET  [macro, function; ce-only; CE 5.0..699] */
+/* NDIS_OOB_DATA_FROM_PACKET  [macro, function; ce-only] */
 PNDIS_PACKET_OOB_DATA NDIS_OOB_DATA_FROM_PACKET(
  PNDIS_PACKET _P
 );
 
-/* NDIS_PACKET_EXTENSION_FROM_PACKET  [macro, function; ce-only; CE 5.0..699] */
+/* NDIS_PACKET_EXTENSION_FROM_PACKET  [macro, function; ce-only] */
 PNDIS_PACKET_EXTENSION NDIS_PACKET_EXTENSION_FROM_PACKET(
  PNDIS_PACKET _P
 );
 
-/* TR_COMPARE_NETWORK_ADDRESSES  [macro, function; ce-only; CE 5.0..699] */
+/* NDIS_PACKET_OOB_DATA  [struct; ce-only] */
+
+/* NDIS_PHYSICAL_ADDRESS_CONST  [function, macro; ce-only] */
+VOID NDIS_PHYSICAL_ADDRESS_CONST( 
+IN ULONG Low, 
+IN LONG High );
+
+/* NDIS_SET_PACKET_CANCEL_ID  [macro, function; ce-only] */
+ULONG_PTR NDIS_SET_PACKET_CANCEL_ID(
+ PNDIS_PACKET _P,
+ ULONG_PTR _cId
+);
+
+/* NDIS_SET_PACKET_HEADER_SIZE  [function, macro; ce-only] */
+NDIS_SET_PACKET_HEADER_SIZE( 
+IN PNDIS_PACKET Packet, 
+IN UINT HdrSize );
+
+/* NDIS_SET_PACKET_MEDIA_SPECIFIC_INFO  [function, macro; ce-only] */
+NDIS_SET_PACKET_MEDIA_SPECIFIC_INFO( 
+IN PNDIS_PACKET Packet, 
+IN PVOID MediaSpecificInfo, 
+IN UINT SizeMediaSpecificInfo );
+
+/* NDIS_TASK_TCP_LARGE_SEND  [struct; ce-only] */
+
+/* NDIS_WORK_ITEM  [struct; ce-only] */
+
+/* TR_COMPARE_NETWORK_ADDRESSES  [macro, function; ce-only] */
 #define TR_COMPARE_NETWORK_ADDRESSES(_A, _B, _Result) \
 { \
  if (*(ULONG UNALIGNED *)&(_A)[2] > \
@@ -181,30 +165,31 @@ PNDIS_PACKET_EXTENSION NDIS_PACKET_EXTENSION_FROM_PACKET(
  } \
 }
 
-/* TR_COPY_NETWORK_ADDRESS  [macro, function; ce-only; CE 5.0..699] */
+/* TR_COPY_NETWORK_ADDRESS  [macro, function; ce-only] */
 VOID TR_COPY_NETWORK_ADDRESS(
  PCHAR _D,
  PCHAR _S
 );
 
-/* TR_IS_BROADCAST  [macro, function; ce-only; CE 5.0..699] */
+/* TR_IS_BROADCAST  [macro, function; ce-only] */
 VOID TR_IS_BROADCAST(
  PUCHAR _Address,
  PBOOLEAN _Result
 );
 
-/* TR_IS_FUNCTIONAL  [macro, function; ce-only; CE 5.0..699] */
+/* TR_IS_FUNCTIONAL  [macro, function; ce-only] */
 VOID TR_IS_FUNCTIONAL(
  PUCHAR _Address,
  PBOOLEAN _Result
 );
 
-/* TR_IS_GROUP  [macro, function; ce-only; CE 5.0..699] */
+/* TR_IS_GROUP  [macro, function; ce-only] */
 VOID TR_IS_GROUP(
  PUCHAR _Address,
  PBOOLEAN _Result
 );
-#endif /* _WIN32_WCE */
+
+/* XXX_Init  [function, macro; ce-only; Ndislib.lib] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -212,270 +197,14 @@ VOID TR_IS_GROUP(
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* NDIS_PACKET  [struct; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _NDIS_PACKET {
- NDIS_PACKET_PRIVATE Private;
- union {
- struct {
- UCHAR MiniportReserved[2*sizeof(PVOID)];
- UCHAR WrapperReserved[2*sizeof(PVOID)];
- };
- struct {
- UCHAR MiniportReservedEx[3*sizeof(PVOID)];
- UCHAR WrapperReservedEx[sizeof(PVOID)];
- };
- struct {
- UCHAR MacReserved[4*sizeof(PVOID)];
- };
- };
- ULONG_PTR Reserved[2];
- UCHAR ProtocolReserved[1];
-} NDIS_PACKET, *PNDIS_PACKET, **PPNDIS_PACKET;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* MediaSpecificInformation  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct MediaSpecificInformation {
- UINT NextEntryOffset;
- NDIS_CLASS_ID ClassId;
- UINT Size;
- UCHAR ClassInformation[1];
-} MEDIA_SPECIFIC_INFORMATION;
-
-/* NDIS_PROTOCOL_CHARACTERISTICS  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct _NDIS_PROTOCOL_CHARACTERISTICS {
- UCHAR MajorNdisVersion;
- UCHAR MinorNdisVersion;
- UINT Reserved;
- OPEN_ADAPTER_COMPLETE_HANDLER OpenAdapterCompleteHandler;
- CLOSE_ADAPTER_COMPLETE_HANDLER CloseAdapterCompleteHandler;
- SEND_COMPLETE_HANDLER SendCompleteHandler;
- TRANSFER_DATA_COMPLETE_HANDLER TransferDataCompleteHandler;
- RESET_COMPLETE_HANDLER ResetCompleteHandler;
- REQUEST_COMPLETE_HANDLER RequestCompleteHandler;
- RECEIVE_HANDLER ReceiveHandler;
- RECEIVE_COMPLETE_HANDLER ReceiveCompleteHandler;
- STATUS_HANDLER StatusHandler;
- STATUS_COMPLETE_HANDLER StatusCompleteHandler;
- NDIS_STRING Name;
- RECEIVE_PACKET_HANDLER ReceivePacketHandler;
- BIND_HANDLER BindAdapterHandler;
- UNBIND_HANDLER UnbindAdapterHandler;
- TRANSLATE_HANDLER TranslateHandler;
- UNLOAD_PROTOCOL_HANDLER UnloadHandler;
-} NDIS_PROTOCOL_CHARACTERISTICS, *PNDIS_PROTOCOL_CHARACTERISTICS
-
-/* NDIS_REQUEST  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct _ NDIS_REQUEST {
- UCHAR MacReserved[16];
- NDIS_REQUEST_TYPE RequestType;
- union _DATA {
- struct QUERY_INFORMATION {
- NDIS_OID Oid;
- PVOID InformationBuffer;
- UINT InformationBufferLength;
- UINT BytesWritten;
- UINT BytesNeeded;
- } QUERY_INFORMATION;
- struct SET_INFORMATION {
- NDIS_OID Oid;
- PVOID InformationBuffer;
- UINT InformationBufferLength;
- UINT BytesRead;
- UINT BytesNeeded;
- } SET_INFORMATION;
- } DATA;
-} NDIS_REQUEST, *PNDIS_REQUEST;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* NDIS_BUFFER  [typedef; ce-only; CE 4.0..699] */
-typedef 
-MDL NDIS_BUFFER, *PNDIS_BUFFER;
-
-/* NDIS_ENCAPSULATION_FORMAT  [struct; ce-only; CE 4.0..699] */
-typedef struct _NDIS_ENCAPSULATION_FORMAT {
- NDIS_ENCAPSULATION Encapsulation;
- struct {
- ULONG FixedHeaderSize:1;
- ULONG Reserved:31;
- } Flags;
- ULONG EncapsulationHeaderSize;
-} NDIS_ENCAPSULATION_FORMAT,*PNDIS_ENCAPSULATION_FORMAT;
-
-/* NDIS_HANDLE  [typedef; ce-only; CE 4.0..699] */
-typedef 
-PVOID NDIS_HANDLE,
-*PNDIS_HANDLE;
-
-/* NDIS_INTERFACE_TYPE  [enum; ce-only; CE 4.0..699] */
-typedef enum _NDIS_INTERFACE_TYPE {
- NdisInterfaceInternal = Internal,
- NdisInterfaceIsa = Isa,
- NdisInterfaceEisa = Eisa,
- NdisInterfaceMca = MicroChannel,
- NdisInterfaceTurboChannel = TurboChannel,
- NdisInterfacePci = PCIBus,
- NdisInterfacePcMcia = PCMCIABus,
- NdisInterfaceCBus = CBus,
- NdisInterfaceMPIBus = MPIBus,
- NdisInterfaceMPSABus = MPSABus,
- NdisInterfaceProcessorInternal = ProcessorInternal,
- NdisInterfaceInternalPowerBus = InternalPowerBus,
- NdisInterfacePNPISABus = PNPISABus,
- NdisInterfacePNPBus = PNPBus,
- NdisMaximumInterfaceType,
-} NDIS_INTERFACE_TYPE, *PNDIS_INTERFACE_TYPE;
-
-/* NDIS_INTERRUPT_MODE  [typedef; ce-only; CE 4.0..699] */
-typedef 
-KINTERRUPT_MODE NDIS_INTERRUPT_MODE, 
-*PNDIS_INTERRUPT_MODE;
-
-/* NDIS_MAC_FRAGMENT  [struct; ce-only; CE 4.0..699] */
-typedef struct _NDIS_MAC_FRAGMENT {
- NDIS_HANDLE 
- NdisLinkContext
- ;
- ULONG
- Errors
- ;
- } NDIS_MAC_FRAGMENT, *PNDIS_MAC_FRAGMENT;
-
-/* NDIS_MINIPORT_CHARACTERISTICS  [struct; ce-only; CE 4.0..699] */
-typedef struct _NDIS_MINIPORT_CHARACTERISTICS {
- UCHAR MajorNdisVersion;
- UCHAR MinorNdisVersion;
- UINT Reserved;
- W_CHECK_FOR_HANG_HANDLER CheckForHangHandler;
- W_DISABLE_INTERRUPT_HANDLER DisableInterruptHandler;
- W_ENABLE_INTERRUPT_HANDLER EnableInterruptHandler;
- W_HALT_HANDLER HaltHandler;
- W_HANDLE_INTERRUPT_HANDLER HandleInterruptHandler;
- W_INITIALIZE_HANDLER InitializeHandler;
- W_ISR_HANDLER ISRHandler;
- W_QUERY_INFORMATION_HANDLER QueryInformationHandler;
- W_RECONFIGURE_HANDLER ReconfigureHandler;
- W_RESET_HANDLER ResetHandler;
- W_SEND_HANDLER SendHandler;
- W_SET_INFORMATION_HANDLER SetInformationHandler;
- W_TRANSFER_DATA_HANDLER TransferDataHandler;
- W_RETURN_PACKET_HANDLER ReturnPacketHandler;
- W_SEND_PACKETS_HANDLER SendPacketsHandler;
- W_ALLOCATE_COMPLETE_HANDLER AllocateCompleteHandler;
- W_CANCEL_SEND_PACKETS_HANDLER CancelSendPacketsHandler;
- W_MINIPORT_SHUTDOWN_HANDLER AdapterShutdownHandler;
-} NDIS_MINIPORT_CHARACTERISTICS, *PNDIS_MINIPORT_CHARACTERISTICS;
-
-/* NDIS_OID  [typedef; ce-only; CE 4.0..699] */
-typedef 
-ULONG NDIS_OID, 
-*PNDIS_OID;
-
-/* NDIS_PACKET_STACK  [struct; ce-only; CE 4.0..699] */
-typedef struct _NDIS_PACKET_STACK {
- ULONG_PTR IMReserved[2];
- ULONG_PTR NdisReserved[4];
-} NDIS_PACKET_STACK, *PNDIS_PACKET_STACK;
-
-/* NDIS_PARAMETER_TYPE  [enum; ce-only; CE 4.0..699] */
-typedef enum _NDIS_PARAMETER_TYPE {
- NdisParameterInteger,
- NdisParameterHexInteger,
- NdisParameterString,
- NdisParameterMultiString,
- NdisParameterBinary,
-} NDIS_PARAMETER_TYPE, *PNDIS_PARAMETER_TYPE;
-
-/* NDIS_PHYSICAL_ADDRESS  [typedef; ce-only; CE 4.0..699] */
-typedef
-PHYSICAL_ADDRESS NDIS_PHYSICAL_ADDRESS, 
-*PNDIS_PHYSICAL_ADDRESS;
-
-/* NDIS_PROC  [struct; ce-only; CE 4.0..699] */
+/* NDIS_PROC  [struct; ce-only] */
 typedef
 VOID (*NDIS_PROC) (
  struct _NDIS_WORK_ITEM *,
  PVOID
 );
 
-/* NDIS_STATUS  [typedef; ce-only; CE 4.0..699] */
-typedef 
-int NDIS_STATUS, 
-*PNDIS_STATUS;
-
-/* NDIS_STRING  [typedef; ce-only; CE 4.0..699] */
-typedef 
-UNICODE_STRING NDIS_STRING, 
-*PNDIS_STRING;
-
-/* NDIS_TASK_OFFLOAD_HEADER  [struct; ce-only; CE 4.0..699] */
-typedef struct _NDIS_TASK_OFFLOAD_HEADER {
- ULONG Version;
- ULONG Size;
- ULONG Reserved;
- ULONG OffsetFirstTask;
- NDIS_ENCAPSULATION_FORMAT EncapsulationFormat;
-} NDIS_TASK_OFFLOAD_HEADER, *PNDIS_TASK_OFFLOAD_HEADER;
-
-/* NDIS_TASK_TCP_IP_CHECKSUM  [struct; ce-only; CE 4.0..699] */
-typedef struct _NDIS_TASK_TCP_IP_CHECKSUM {
- struct {
- ULONG IpOptionsSupported;
- ULONG TcpOptionsSupported;
- ULONG TcpChecksum;
- ULONG UdpChecksum;
- ULONG IpChecksum;
- } V4Transmit;
- struct {
- ULONG IpOptionsSupported;
- ULONG TcpOptionsSupported;
- ULONG TcpChecksum;
- ULONG UdpChecksum;
- ULONG IpChecksum;
- } V4Receive;
- struct {
- ULONG IpOptionsSupported;
- ULONG TcpOptionsSupported;
- ULONG TcpChecksum;
- ULONG UdpChecksum;
- } V6Transmit;
- struct {
- ULONG IpOptionsSupported;
- ULONG TcpOptionsSupported;
- ULONG TcpChecksum;
- ULONG UdpChecksum;
- } V6Receive;
-} NDIS_TASK_TCP_IP_CHECKSUM, *PNDIS_TASK_TCP_IP_CHECKSUM;
-
-/* NDIS_TCP_IP_CHECKSUM_PACKET_INFO  [struct; ce-only; CE 4.0..699] */
-typedef struct _NDIS_TCP_IP_CHECKSUM_PACKET_INFO {
-union {
- struct { 
- ULONG NdisPacketChecksumV4:1;
- ULONG NdisPacketChecksumV6:1;
- ULONG NdisPacketTcpChecksum:1;
- ULONG NdisPacketUdpChecksum:1;
- ULONG NdisPacketIpChecksum:1;
- } Transmit;
- struct {
- ULONG NdisPacketTcpChecksumFailed:1;
- ULONG NdisPacketUdpChecksumFailed:1;
- ULONG NdisPacketIpChecksumFailed:1;
- ULONG NdisPacketTcpChecksumSucceeded:1;
- ULONG NdisPacketUdpChecksumSucceeded:1;
- ULONG NdisPacketIpChecksumSucceeded:1;
- ULONG NdisPacketLoopback:1;
- } Receive;
- ULONG Value;
-};
-} NDIS_TCP_IP_CHECKSUM_PACKET_INFO, *PNDIS_TCP_IP_CHECKSUM_PACKET_INFO;
-
-/* NDIS_WAN_COMPRESS_INFO  [struct; ce-only; CE 4.0..699] */
+/* NDIS_WAN_COMPRESS_INFO  [struct; ce-only] */
 typedef struct _NDIS_WAN_COMPRESS_INFO { 
  UCHAR SessionKey[8]; 
  ULONG MSCompType; 
@@ -492,197 +221,6 @@ typedef struct _NDIS_WAN_COMPRESS_INFO {
  } Public; 
  }; 
 } NDIS_WAN_COMPRESS_INFO;
-
-/* NDIS_WAN_GET_COMP_INFO  [struct; ce-only; CE 4.0..699] */
-typedef struct _NDIS_WAN_GET_COMP_INFO { 
- NDIS_HANDLE NdisLinkHandle; 
- NDIS_WAN_COMPRESS_INFO SendCapabilities; 
- NDIS_WAN_COMPRESS_INFO RecvCapabilities; 
-} NDIS_WAN_GET_COMP_INFO, *PNDIS_WAN_GET_COMP_INFO;
-
-/* NDIS_WAN_GET_LINK_INFO  [struct; ce-only; CE 4.0..699] */
-typedef struct _NDIS_WAN_GET_LINK_INFO { 
- NDIS_HANDLE NdisLinkHandle; 
- ULONG MaxSendFrameSize; 
- ULONG MaxRecvFrameSize; 
- ULONG HeaderPadding; 
- ULONG TailPadding; 
- ULONG SendFramingBits; 
- ULONG RecvFramingBits; 
- ULONG SendCompressionBits; 
- ULONG RecvCompressionBits; 
- ULONG SendACCM; 
- ULONG RecvACCM; 
-} NDIS_WAN_GET_LINK_INFO, *PNDIS_WAN_GET_LINK_INFO;
-
-/* NDIS_WAN_GET_STATS_INFO  [struct; ce-only; CE 4.0..699] */
-typedef struct _NDIS_WAN_GET_STATS_INFO { 
- NDIS_HANDLE NdisLinkHandle; 
- ULONG BytesSent; 
- ULONG BytesRcvd; 
- ULONG FramesSent; 
- ULONG FramesRcvd; 
- ULONG CRCErrors; 
- ULONG TimeoutErrors; 
- ULONG AlignmentErrors; 
- ULONG SerialOverrunErrors; 
- ULONG FramingErrors; 
- ULONG BufferOverrunErrors; 
- ULONG BytesTransmittedUncompressed; 
- ULONG BytesReceivedUncompressed; 
- ULONG BytesTransmittedCompressed; 
- ULONG BytesReceivedCompressed; 
-} NDIS_WAN_GET_STATS_INFO, *PNDIS_WAN_GET_STATS_INFO;
-
-/* NDIS_WAN_INFO  [struct; ce-only; CE 4.0..699] */
-typedef struct _NDIS_WAN_INFO {
- ULONG MaxFrameSize; 
- ULONG MaxTransmit; 
- ULONG HeaderPadding; 
- ULONG TailPadding; 
- ULONG Endpoints; 
- UINT MemoryFlags; 
- NDIS_PHYSICAL_ADDRESS HighestAcceptableAddress; 
- ULONG FramingBits; 
- ULONG DesiredACCM; 
-} NDIS_WAN_INFO, *PNDIS_WAN_INFO;
-
-/* NDIS_WAN_LINE_DOWN  [struct; ce-only; CE 4.0..699] */
-typedef struct _NDIS_WAN_LINE_DOWN {
- UCHAR RemoteAddress[6];
- UCHAR LocalAddress[6];
-} NDIS_WAN_LINE_DOWN, *PNDIS_WAN_LINE_DOWN;
-
-/* NDIS_WAN_LINE_UP  [struct; ce-only; CE 4.0..699] */
-typedef struct _NDIS_WAN_LINE_UP {
- ULONG LinkSpeed;
- ULONG MaximumTotalSize;
- NDIS_WAN_QUALITY Quality;
- USHORT SendWindow;
- UCHAR RemoteAddress[6];
- UCHAR LocalAddress[6];
- ULONG ProtocolBufferLength;
- PUCHAR ProtocolBuffer;
- USHORT ProtocolType;
- NDIS_STRING DeviceName;
-} NDIS_WAN_LINE_UP, *PNDIS_WAN_LINE_UP;
-
-/* NDIS_WAN_PACKET  [struct; ce-only; CE 4.0..699] */
-typedef struct _NDIS_WAN_PACKET {
- LIST_ENTRY WanPacketQueue;
- PUCHAR CurrentBuffer;
- ULONG CurrentLength;
- PUCHAR StartBuffer;
- PUCHAR EndBuffer;
- PVOID ProtocolReserved1;
- PVOID ProtocolReserved2;
- PVOID ProtocolReserved3;
- PVOID ProtocolReserved4;
- PVOID MacReserved1;
- PVOID MacReserved2;
- PVOID MacReserved3;
- PVOID MacReserved4;
-} NDIS_WAN_PACKET, *PNDIS_WAN_PACKET;
-
-/* NDIS_WAN_SET_COMP_INFO  [struct; ce-only; CE 4.0..699] */
-typedef struct _NDIS_WAN_SET_COMP_INFO { 
- NDIS_HANDLE NdisLinkHandle; 
- NDIS_WAN_COMPRESS_INFO SendCapabilities; 
- NDIS_WAN_COMPRESS_INFO RecvCapabilities; 
-} NDIS_WAN_SET_COMP_INFO, *PNDIS_WAN_SET_COMP_INFO;
-
-/* NDIS_WAN_SET_LINK_INFO  [struct; ce-only; CE 4.0..699] */
-typedef struct _NDIS_WAN_SET_LINK_INFO { 
- NDIS_HANDLE NdisLinkHandle; 
- ULONG MaxSendFrameSize; 
- ULONG MaxRecvFrameSize; 
- ULONG HeaderPadding; 
- ULONG TailPadding; 
- ULONG SendFramingBits; 
- ULONG RecvFramingBits; 
- ULONG SendCompressionBits; 
- ULONG RecvCompressionBits; 
- ULONG SendACCM; 
- ULONG RecvACCM; 
-} NDIS_WAN_SET_LINK_INFO, *PNDIS_WAN_SET_LINK_INFO;
-
-/* NDIS_WLAN_BSSID  [struct; ce-only; CE 4.0..699] */
-struct _NDIS_WLAN_BSSID {
- ULONG Length;
- NDIS_802_11_MAC_ADDRESS MacAddress;
- Uchar Reserved[2];
- NDIS_802_11_SSID Ssid;
- ULONG Privacy;
- NDIS_802_11_RSSI Rssi;
- NDIS_802_11_NETWORK_TYPE NetworkTypeInUse;
- NDIS_802_11_CONFIGURATION Configuration;
- NDIS_802_11_NETWORK_INFRASTRUCTURE InfrastructureMode;
- NDIS_802_11_RATES SupportedRates;
-} NDIS_WLAN_BSSID, *PNDIS_WLAN_BSSID;
-
-/* NETWORK_ADDRESS  [struct; ce-only; CE 4.0..699] */
-typedef struct _NETWORK_ADDRESS {
- USHORT AddressLength; 
- USHORT AddressType; 
- UCHAR Address[1]; 
-} NETWORK_ADDRESS, *PNETWORK_ADDRESS;
-
-/* NETWORK_ADDRESS_LIST  [struct; ce-only; CE 4.0..699] */
-typedef struct _NETWORK_ADDRESS_LIST {
- LONG AddressCount; 
- USHORT AddressType; 
- NETWORK_ADDRESS Address[1]; 
-} NETWORK_ADDRESS_LIST, *PNETWORK_ADDRESS_LIST;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* NDIS_CONFIGURATION_PARAMETER  [struct; ce-only; CE 5.0..699] */
-typedef struct _NDIS_CONFIGURATION_PARAMETER {
- NDIS_PARAMETER_TYPE ParameterType;
- union {
- ULONG IntegerData;
- NDIS_STRING StringData;
- BINARY_DATA BinaryData;
- } ParameterData;
-} NDIS_CONFIGURATION_PARAMETER, *PNDIS_CONFIGURATION_PARAMETER;
-
-/* NDIS_MAC_LINE_DOWN  [struct; ce-only; CE 5.0..699] */
-typedef struct _NDIS_MAC_LINE_DOWN {
- NDIS_HANDLE NdisLinkContext;
-} NDIS_MAC_LINE_DOWN, *PNDIS_MAC_LINE_DOWN;
-
-/* NDIS_MAC_LINE_UP  [struct; ce-only; CE 5.0..699] */
-typedef struct _NDIS_MAC_LINE_UP {
- ULONG LinkSpeed;
- NDIS_WAN_QUALITY Quality;
- USHORT SendWindow;
- NDIS_HANDLE ConnectionWrapperID;
- NDIS_HANDLE NdisLinkHandle;
- NDIS_HANDLE NdisLinkContext;
-} NDIS_MAC_LINE_UP, *PNDIS_MAC_LINE_UP;
-
-/* NDIS_PACKET_EXTENSION  [struct; ce-only; CE 5.0..699] */
-typedef struct _NDIS_PACKET_EXTENSION {
- PVOID NdisPacketInfo[MaxPerPacketInfo];
-} NDIS_PACKET_EXTENSION, *PNDIS_PACKET_EXTENSION;
-
-/* NDIS_TASK_OFFLOAD  [struct; ce-only; CE 5.0..699] */
-typedef struct _NDIS_TASK_OFFLOAD {
- ULONG Version;
- ULONG Size;
- NDIS_TASK Task;
- ULONG OffsetNextTask;
- ULONG TaskBufferLength;
- UCHAR TaskBuffer[1];
-} NDIS_TASK_OFFLOAD, *PNDIS_TASK_OFFLOAD;
-
-/* TRANSPORT_HEADER_OFFSET  [struct; ce-only; CE 5.0..699] */
-typedef struct _TRANSPORT_HEADER_OFFSET {
- USHORT ProtocolType; 
- USHORT HeaderOffset; 
-} TRANSPORT_HEADER_OFFSET, *PTRANSPORT_HEADER_OFFSET;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks
@@ -884,11 +422,6 @@ VOID NdisOpenProtocolConfiguration(
  PNDIS_STATUS Status,
  PNDIS_HANDLE ConfigurationHandle,
  PNDIS_STRING ProtocolSection
-);
-
-/* NdisPrintString  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
-ULONG NdisPrintString(
- PNDIS_STRING String
 );
 
 /* NdisQueryBuffer  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
@@ -1297,11 +830,6 @@ VOID NdisFreePacketPool(
  NDIS_HANDLE PoolHandle
 );
 
-/* NdisFreeString  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.lib, ndis.lib, Ndislib.lib] */
-VOID NdisFreeString(
- NDIS_STRING String
-);
-
 /* NdisGetFirstBufferFromPacket  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.lib, ndis.lib, Ndislib.lib] */
 VOID NdisGetFirstBufferFromPacket(
  PNDIS_PACKET Packet,
@@ -1468,23 +996,6 @@ IN PETH_FILTER Filter );
 UINT EthNumberOfOpenFilterAddresses( 
 IN PETH_FILTER Filter, 
 IN NDIS_HANDLE NdisFilterHandle );
-
-/* EthQueryGlobalFilterAddresses  [function; ce-only; CE 2.11..2.12, 3.0..399; Ndislib.lib] */
-VOID EthQueryGlobalFilterAddresses( 
-OUT PNDIS_STATUS Status, 
-IN PETH_FILTER Filter, 
-IN UINT SizeOfArray, 
-OUT PUINT NumberOfAddresses, 
-IN OUT CHAR AddressArray[][ETH_LENGTH_OF_ADDRESS] );
-
-/* EthQueryOpenFilterAddresses  [function; ce-only; CE 2.11..2.12, 3.0..399; Ndislib.lib] */
-VOID EthQueryOpenFilterAddresses( 
-OUT PNDIS_STATUS Status, 
-IN PETH_FILTER Filter, 
-IN NDIS_HANDLE NdisFilterHandle, 
-IN UINT SizeOfArray, 
-OUT PUINT NumberOfAddresses, 
-OUT CHAR AddressArray[][ETH_LENGTH_OF_ADDRESS] );
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 2.11..2.12, 3.0..399, 5.0..599 */
@@ -2524,12 +2035,10 @@ typedef struct _NDIS_PACKET {
   UCHAR ProtocolReserved[1];
 } NDIS_PACKET, *PNDIS_PACKET, **PPNDIS_PACKET;
 typedef struct _TRANSPORT_HEADER_OFFSET { USHORTProtocolType;USHORT HeaderOffset;} TRANSPORT_HEADER_OFFSET, *PTRANSPORT_HEADER_OFFSET;
-typedef struct _NDIS_CONFIGURATION_PARAMETER {NDIS_PARAMETER_TYPE ParameterType;union { ULONG IntegerData; NDIS_STRING StringData; BINARY_DATA BinaryData;} ParameterData;
-typedef struct _ NDIS_REQUEST { UCHAR MacReserved[16]; NDIS_REQUEST _TYPE RequestType; union _DATA { struct QUERY_INFORMATION { NDIS_OID Oid; PVOID InformationBuffer; UINT InformationBufferLength; UINT BytesWritten; UINT BytesNeeded; } QUERY_INFORMATION;
-typedef struct _NDIS_TASK_TCP_IP_CHECKSUM {struct {ULONG IpOptionsSupported;ULONG TcpOptionsSupported;ULONG TcpChecksum;ULONG UdpChecksum;ULONG IpChecksum;} V4Transmit;
-typedef struct _NDIS_PACKET { NDIS_PACKET_PRIVATE Private; union { struct { UCHAR MiniportReserved[8]; UCHAR WrapperReserved[8]; };
 
 /* function */
+VOID EthQueryGlobalFilterAddresses(  OUT PNDIS_STATUS Status,  IN PETH_FILTER Filter,  IN UINT SizeOfArray,  OUT PUINT NumberOfAddresses,  IN OUT CHAR AddressArray[][ETH_LENGTH_OF_ADDRESS] );
+VOID EthQueryOpenFilterAddresses(  OUT PNDIS_STATUS Status,  IN PETH_FILTER Filter,  IN NDIS_HANDLE NdisFilterHandle,  IN UINT SizeOfArray,  OUT PUINT NumberOfAddresses,  OUT CHAR AddressArray[][ETH_LENGTH_OF_ADDRESS] );
 PVOID NDIS_BUFFER_LINKAGE(  IN PNDIS_BUFFER Buffer );
 UINT NDIS_GET_PACKET_PROTOCOL_TYPE(PNDIS_PACKET_Packet_,);
 LONG NDIS_GET_PACKET_TIME_SENT(PNDIS_PACKET_Packet);

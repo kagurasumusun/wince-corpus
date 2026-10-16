@@ -12,18 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 420 && _WIN32_WCE < 600)) /* CE 4.2..599 */
-
-/* PACKAGE_FILE_INFO  [struct; ce-only; CE 4.2..599] */
-typedef struct PACKAGE_FILE_INFO{DEVICE_TYPE dt;WORDwArchitecture;DWORDdwCPUType;WORDwProcessorLevel;DWORDdwPageSize;WORDwMajorVersion;WORDwMinorVersion;DWORDdwLocaleId;DWORDdwFlags;} PACKAGE_FILE_INFO;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */

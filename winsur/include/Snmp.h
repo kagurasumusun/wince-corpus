@@ -138,9 +138,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
-
-/* AsnAny  [struct, typedef; shared; CE 3.0..699; snmp.lib] */
+/* AsnAny  [struct, typedef; shared; snmp.lib] */
 typedef struct {
  BYTE asnType;
  union {
@@ -159,37 +157,36 @@ typedef struct {
  } asnValue;
 } AsnAny;
 
-/* AsnCounter64  [struct, typedef; ce-only; CE 3.0..699; snmp.lib] */
+/* AsnCounter64  [struct, typedef; ce-only; snmp.lib] */
 typedef struct {
  ULONG LowPart;
  ULONG HighPart;
 } AsnCounter64;
 
-/* AsnObjectIdentifier  [struct, typedef; shared; CE 3.0..699; snmp.lib] */
+/* AsnObjectIdentifier  [struct, typedef; shared; snmp.lib] */
 typedef struct {
  UINT idLength;
  UINT* ids;
 } AsnObjectIdentifier;
 
-/* AsnOctetString  [struct, typedef; shared; CE 3.0..699; snmp.lib] */
+/* AsnOctetString  [struct, typedef; shared; snmp.lib] */
 typedef struct {
  BYTE* stream;
  UINT length;
  BOOL dynamic;
 } AsnOctetString;
 
-/* SnmpVarBind  [struct, typedef; shared; CE 3.0..699; snmp.lib] */
+/* SnmpVarBind  [struct, typedef; shared; snmp.lib] */
 typedef struct {
  AsnObjectName name;
  AsnObjectSyntax value;
 }SnmpVarBind;
 
-/* SnmpVarBindList  [struct, typedef; shared; CE 3.0..699; snmp.lib] */
+/* SnmpVarBindList  [struct, typedef; shared; snmp.lib] */
 typedef struct {
  SnmpVarBind* list;
  UINT len;
 }SnmpVarBindList;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

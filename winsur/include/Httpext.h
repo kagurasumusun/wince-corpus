@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 21 constants, 11 declarations, 0 outlines, 0 base types, 0 extra macros, 7 extra decls
+ * 21 constants, 8 declarations, 3 outlines, 0 base types, 0 extra macros, 7 extra decls
  */
 #ifndef _HTTPEXT_
 #define _HTTPEXT_
@@ -40,71 +40,14 @@
 #define HSE_VERSION_MINOR 0
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
+ * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
+/* EXTENSION_CONTROL_BLOCK  [struct; ce-only] */
 
-/* EXTENSION_CONTROL_BLOCK  [struct; ce-only; CE 3.0..399, 5.0..699] */
-typedef struct _EXTENSION_CONTROL_BLOCK{
- DWORD cbSize;
- DWORD dwVersion;
- HCONN ConnID;
- DWORD dwHttpStatusCode;
- CHAR lpszLogData[HSE_LOG_BUFFER_LEN];
- LPSTR lpszMethod;
- LPSTR lpszQueryString;
- LPSTR lpszPathInfo;
- LPSTR lpszPathTranslated;
- DWORD cbTotalBytes;
- DWORD cbAvailable;
- LPBYTE lpbData;
- LPSTR lpszContentType;
- BOOL (WINAPI* GetServerVariable);
- BOOL (WINAPI* WriteClient);
- BOOL (WINAPI* ReadClient);
- BOOL (WINAPI* ServerSupportFunction);
-} EXTENSION_CONTROL_BLOCK, LPEXTENSION_CONTROL_BLOCK;
+/* HSE_URL_MAPEX_INFO  [typedef, struct; ce-only] */
 
-/* HSE_VERSION_INFO  [struct; ce-only; CE 3.0..399, 5.0..699] */
-typedef struct _HSE_VERSION_INFO{
- DWORD dwExtensionVersion; 
- CHAR lpszExtensionDesc[HSE_MAX_EXT_DLL_NAME_LEN]; 
-} HSE_VERSION_INFO, *LPHSE_VERSION_INFO;
-
-/* ServerSupportFunction  [enum, function; ce-only; CE 3.0..399, 5.0..699; httpextn.lib, Httpfilt.lib, httpfilt.lib] */
-BOOL (WINAPI* ServerSupportFunction)( 
- HCONN hConn,
- DWORD dwHSERequest,
- LPVOID lpvBuffer,
- LPDWORD lpdwSize,
- LPDWORD lpdwDataType
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* HSE_SEND_HEADER_EX_INFO  [struct; ce-only; CE 5.0..699] */
-typedef struct _HSE_SEND_HEADER_EX_INFO{
- LPCSTR pszStatus;
- LPCSTR pszHeader;
- DWORD cchStatus;
- DWORD cchHeader;
- BOOL fKeepConn;
-} HSE_SEND_HEADER_EX_INFO, *LPHSE_SEND_HEADER_EX_INFO;
-
-/* HSE_URL_MAPEX_INFO  [typedef, struct; ce-only; CE 5.0..699] */
-typedef struct _HSE_URL_MAPEX_INFO{
- CHAR lpszPath[MAX_PATH];
- DWORD dwFlags;
- DWORD cchMatchingPath;
- DWORD cchMatchingURL;
- DWORD dwReserved1;
- DWORD dwReserved2;
-} HSE_URL_MAPEX_INFO, *LPHSE_URL_MAPEX_INFO;
-#endif /* _WIN32_WCE */
+/* HSE_VERSION_INFO  [struct; ce-only] */
 
 /* ==================================================================
  * functions and callbacks
@@ -155,9 +98,6 @@ BOOL (WINAPI* WriteClient)(
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
-
-/* typedef */
-typedef struct_HSE_URL_MAPEX_INFO{CHARlpszPath[MAX_PATH];DWORDdwFlags;DWORDcchMatchingPath;DWORDcchMatchingURL; DWORDdwReserved1;DWORDdwReserved2;} HSE_URL_MAPEX_INFO, *LPHSE_URL_MAPEX_INFO;
 
 /* enum */
 BOOL (WINAPI* ServerSupportFunction)(PHTTP_FILTER_CONTEXTpfc,enum SF_REQ_TYPE sfReq,PVOID pData,DWORDul1,DWORD ul2);

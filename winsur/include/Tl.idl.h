@@ -23,29 +23,6 @@
 #define TL_KEEPALIVE 0x1
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 420 && _WIN32_WCE < 600)) /* CE 4.2..599 */
-
-/* TL_FLAGS  [?; ce-only; CE 4.2..599] */
-enum { TL_KEEPALIVE = 0x1, TL_DIRECT_CONNECT = 0x2, TL_AUTO_REGISTER = 0x4, TL_AUTO_STARTUP = 0x8};typedef ULONG TL_FLAGS;
-
-/* TLPUBINFO  [struct; ce-only; CE 4.2..599] */
-typedef struct TLPUBINFO { 
- DWORD cbSize; 
- DWORD dwVersion; 
- DWORD dwFlags; 
- DWORD dwConnectTimeOut; 
- DWORD dwKeepAliveTimeOut; 
- DWORD cbDataSize; 
- BYTE pData[1]; 
-} TLPUBINFO, *PTLPUBINFO;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */

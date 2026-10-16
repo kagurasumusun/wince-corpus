@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 63 constants, 228 declarations, 0 outlines, 0 base types, 0 extra macros, 15 extra decls
+ * 63 constants, 191 declarations, 0 outlines, 0 base types, 0 extra macros, 52 extra decls
  */
 #ifndef _OLEAUTO_
 #define _OLEAUTO_
@@ -87,38 +87,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* DISPPARAMS  [struct; shared; CE 2.11..2.12, 3.0..699] */
-typedef struct FARSTRUCT tagDISPPARAMS {
- VARIANTARG FAR* rgvarg;
- DISPID FAR* rgdispidNamedArgs;
- unsigned int cArgs;
- unsigned int cNamedArgs;
-} DISPPARAMS;
-
-/* METHODDATA  [struct; shared; CE 2.11..2.12, 3.0..699] */
-typedef struct FARSTRUCT tagMETHODDATA {
- OLECHAR FAR* zName;
- PARAMDATA FAR* ppData;
- DISPID dispid;
- unsigned int iMeth;
- CALLCONV cc;
- unsigned int cArgs;
- unsigned short wFlags;
- VARTYPE vtReturn;
-} METHODDATA;
-
-/* PARAMDATA  [struct; shared; CE 2.11..2.12, 3.0..699] */
-typedef struct FARSTRUCT tagPARAMDATA {
- OLECHAR FAR* szName;
- VARTYPE vtReturn;
-} PARAMDATA;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-
-/* Var  [struct; ce-only; CE 3.0..399, 5.0..699; heuristic-prefix] */
+/* Var  [struct; ce-only; heuristic-prefix] */
 typedef struct Var {
  WORD wLength;
  WORD wValueLength;
@@ -128,7 +97,7 @@ typedef struct Var {
  DWORD Value[];
 } Var;
 
-/* VarFileInfo  [struct; ce-only; CE 3.0..399, 5.0..699; heuristic-prefix] */
+/* VarFileInfo  [struct; ce-only; heuristic-prefix] */
 typedef struct VarFileInfo {
  WORD wLength;
  WORD wValueLength;
@@ -137,7 +106,6 @@ typedef struct VarFileInfo {
  WORD Padding[];
  Var Children[];
 } VarFileInfo;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks
@@ -160,13 +128,6 @@ HRESULT VarBoolFromDate(
 /* VarBoolFromDec  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
 HRESULT VarBoolFromDec(
  DECIMAL* pdecIn, 
- BOOL* pboolOut 
-);
-
-/* VarBoolFromDisp  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarBoolFromDisp(
- IDispatch* pdispIn, 
- LCID lcid, 
  BOOL* pboolOut 
 );
 
@@ -226,108 +187,12 @@ WINOLEAUTAPI VarBoolFromUI4(
  BOOL* pboolOut 
 );
 
-/* VarBstrFromBool  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarBstrFromBool(
- BOOL boolIn, 
- LCID lcid, 
- ULONG dwFlags, 
- BSTR pbstrOut 
-);
-
-/* VarBstrFromCy  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarBstrFromCy(
- CURRENCY cyIn, 
- LCID lcid, 
- ULONG dwFlags, 
- BSTR pbstrOut 
-);
-
-/* VarBstrFromDate  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarBstrFromDate(
- DATE dateIn,
- LCID lcid,
- ULONG dwFlags,
- BSTR pbstrOut
-);
-
-/* VarBstrFromDec  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarBstrFromDec(
- DECIMAL* pdecIn, 
- LCID lcid, 
- ULONG dwFlags, 
- BSTR* pbstrOut 
-);
-
-/* VarBstrFromDisp  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarBstrFromDisp(
- IDispatch* pdispln, 
- LCID lcid, 
- ULONG dwFlags, 
- BSTR pbstrOut 
-);
-
-/* VarBstrFromI1  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-WINOLEAUTAPI VarBstrFromI1(
- char cIn, 
- LCID lcid, 
- ULONG dwFlags, 
- BSTR pbstrOut 
-);
-
-/* VarBstrFromI2  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarBstrFromI2(
- short iVal, 
- LCID lcid, 
- ULONG dwFlags, 
- BSTR pbstrOut 
-);
-
-/* VarBstrFromI4  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarBstrFromI4(
- long lIn, 
- LCID lcid, 
- ULONG dwFlags, 
- BSTR pbstrOut 
-);
-
-/* VarBstrFromR4  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarBstrFromR4(
- float fltIn, 
- LCID lcid, 
- ULONG dwFlags, 
- BSTR pbstrOut 
-);
-
-/* VarBstrFromR8  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarBstrFromR8(
- double dblIn, 
- LCID lcid, 
- ULONG dwFlags, 
- BSTR pbstrOut 
-);
-
 /* VarBstrFromUI1  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
 HRESULT VarCyFromUI1(
  BYTE bVal, 
  LCID lcid, 
  ULONG dwFlags, 
  CURRENCY* pbstrOut
-);
-
-/* VarBstrFromUI2  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-WINOLEAUTAPI VarBstrFromUI2(
- USHORT uiIn, 
- LCID lcid, 
- ULONG dwFlags, 
- BSTR pbstrOut 
-);
-
-/* VarBstrFromUI4  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-WINOLEAUTAPI VarBstrFromUI4(
- ULONG ulIn, 
- LCID lcid, 
- ULONG dwFlags, 
- BSTR pbstrOut 
 );
 
 /* VarCyFromBool  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
@@ -345,13 +210,6 @@ HRESULT VarCyFromDate(
 /* VarCyFromDec  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
 HRESULT VarCyFromDec(
  DECIMAL* pdecIn, 
- CURRENCY* pcyOut 
-);
-
-/* VarCyFromDisp  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarCyFromDisp(
- IDispatch* pdispIn,
- LCID lcid, 
  CURRENCY* pcyOut 
 );
 
@@ -426,13 +284,6 @@ HRESULT VarDateFromCy(
 /* VarDateFromDec  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
 HRESULT VarDateFromDec(
  DECIMAL* pdecIn, 
- DATE* pdateOut 
-);
-
-/* VarDateFromDisp  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarDateFromDisp(
- IDispatch* pdispIn, 
- LCID lcid, 
  DATE* pdateOut 
 );
 
@@ -517,13 +368,6 @@ HRESULT VarDecFromDate(
  DECIMAL* pdecOut 
 );
 
-/* VarDecFromDisp  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarDecFromDisp(
- IDispatch* pdispIn, 
- LCID lcid, 
- DECIMAL* pdecOut 
-);
-
 /* VarDecFromI1  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
 WINOLEAUTAPI VarDecFromI1(
  char cIn, 
@@ -598,13 +442,6 @@ WINOLEAUTAPI VarI1FromDec(
  char* pcOut 
 );
 
-/* VarI1FromDisp  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-WINOLEAUTAPI VarI1FromDisp(
- IDispatch* pdispIn, 
- LCID lcid, 
- char* pcOut 
-);
-
 /* VarI1FromI2  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
 WINOLEAUTAPI VarI1FromI2(
  short sIn, 
@@ -626,14 +463,6 @@ WINOLEAUTAPI VarI1FromR4(
 /* VarI1FromR8  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
 WINOLEAUTAPI VarI1FromR8(
  double dblIn, 
- char* pcOut 
-);
-
-/* VarI1FromStr  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-WINOLEAUTAPI VarI1FromStr(
- BSTR strIn, 
- LCID lcid, 
- ULONG dwFlags, 
  char* pcOut 
 );
 
@@ -676,13 +505,6 @@ HRESULT VarI2FromDate(
 /* VarI2FromDec  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
 HRESULT VarI2FromDec(
  DECIMAL* pdecIn, 
- short* psOut 
-);
-
-/* VarI2FromDisp  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarI2FromDisp(
- IDispatch* pdispIn, 
- LCID lcid, 
  short* psOut 
 );
 
@@ -760,13 +582,6 @@ HRESULT VarI4FromDec(
  long* plOut 
 );
 
-/* VarI4FromDisp  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarI4FromDisp(
- IDispatch* pdispIn, 
- LCID lcid, 
- long* plOut 
-);
-
 /* VarI4FromI1  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
 WINOLEAUTAPI VarI4FromI1(
  CHAR cIn, 
@@ -838,13 +653,6 @@ HRESULT VarR4FromDate(
 /* VarR4FromDec  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
 HRESULT VarR4FromDec(
  DECIMAL* pdecIn, 
- float* pfltOut 
-);
-
-/* VarR4FromDisp  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarR4FromDisp(
- IDispatch* pdispIn,
- LCID lcid,
  float* pfltOut 
 );
 
@@ -922,13 +730,6 @@ HRESULT VarR8FromDec(
  double* pdblOut 
 );
 
-/* VarR8FromDisp  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarR8FromDips(
- IDispatch* pdispIn, 
- LCID lcid, 
- double* pdblOut 
-);
-
 /* VarR8FromI1  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
 WINOLEAUTAPI VarR8FromI1(
  char cIn, 
@@ -1000,13 +801,6 @@ HRESULT VarUI1FromDate(
 /* VarUI1FromDec  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
 HRESULT VarUI1FromDec(
  DECIMAL* pdecIn, 
- BYTE* pbOut 
-);
-
-/* VarUI1FromDisp  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarUI1FromDisp(
- IDispatch* pdispIn, 
- LCID lcid, 
  BYTE* pbOut 
 );
 
@@ -1084,13 +878,6 @@ WINOLEAUTAPI VarUI2FromDec(
  USHORT* puiOut 
 );
 
-/* VarUI2FromDisp  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-WINOLEAUTAPI VarUI2FromDisp(
- IDispatch* pdispIn, 
- LCID lcid, 
- USHORT* puiOut 
-);
-
 /* VarUI2FromI1  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
 WINOLEAUTAPI VarUI2FromI1(
  char cIn, 
@@ -1118,14 +905,6 @@ WINOLEAUTAPI VarUI2FromR4(
 /* VarUI2FromR8  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
 WINOLEAUTAPI VarUI2FromR8(
  double dblIn, 
- USHORT* puiOut 
-);
-
-/* VarUI2FromStr  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-WINOLEAUTAPI VarUI2FromStr(
- BSTR strIn, 
- LCID lcid, 
- ULONG dwFlags, 
  USHORT* puiOut 
 );
 
@@ -1165,13 +944,6 @@ WINOLEAUTAPI VarUI4FromDec(
  ULONG* pulOut 
 );
 
-/* VarUI4FromDisp  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-WINOLEAUTAPI VarUI4FromDisp(
- IDispatch* pdispIn, 
- LCID lcid, 
- ULONG* pulOut 
-);
-
 /* VarUI4FromI1  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
 WINOLEAUTAPI VarUI4FromI1(
  char cIn, 
@@ -1202,14 +974,6 @@ WINOLEAUTAPI VarUI4FromR8(
  ULONG* pulOut 
 );
 
-/* VarUI4FromStr  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-WINOLEAUTAPI VarUI4FromStr(
- BSTR strIn, 
- LCID lcid, 
- ULONG dwFlags, 
- ULONG* pulOut 
-);
-
 /* VarUI4FromUI1  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
 WINOLEAUTAPI VarUI4FromUI1(
  BYTE bIn, 
@@ -1224,15 +988,6 @@ WINOLEAUTAPI VarUI4FromUI2(
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* BstrFromVector  [function; shared; CE 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT BstrFromVector(
- SAFEARRAY FAR* 
- psa
- ,
- BSTR FAR* 
- pbstr 
- );
 
 /* CreateErrorInfo  [function; shared; CE 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
 HRESULT CreateErrorInfo(
@@ -1427,51 +1182,6 @@ HRESULT SafeArrayUnlock(
  SAFEARRAY FAR* psa 
 );
 
-/* SysAllocString  [function; shared; CE 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-BSTR SysAllocString(
- OLECHAR FAR* sz
-);
-
-/* SysAllocStringByteLen  [function; shared; CE 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-BSTR SysAllocStringByteLen(
- char FAR* psz, 
- unsigned int len 
-);
-
-/* SysAllocStringLen  [function; shared; CE 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-BSTR SysAllocStringLen(
- OLECHAR FAR* pch, 
- unsigned int cch 
-);
-
-/* SysFreeString  [function; shared; CE 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT SysFreeString(
- BSTR bstr 
-);
-
-/* SysReAllocString  [function; shared; CE 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT SysReAllocString(
- BSTR FAR* pbstr, 
- OLECHAR FAR* sz 
-);
-
-/* SysReAllocStringLen  [function; shared; CE 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT SysReAllocStringLen(
- BSTR FAR* pbstr,
- OLECHAR FAR* pch,
- unsigned int cch 
-);
-
-/* SysStringByteLen  [function; shared; CE 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT SysStringByteLen(
- BSTR bstr 
-);
-
-/* SysStringLen  [function; shared; CE 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-UINT SysStringLen(
- BSTR bstr 
-);
-
 /* SystemTimeToVariantTime  [function; shared; CE 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
 int SystemTimeToVariantTime(
  SYSTEMTIME lpSystemTime, 
@@ -1552,12 +1262,6 @@ HRESULT VarUdateFromDate(
  unsigned long dwFlags, 
  UDATE* pudateOut 
 );
-
-/* VectorFromBstr  [function; shared; CE 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VectorFromBstr(
- BSTR bstr, 
- SAFEARRAY FAR* FAR* ppsa 
-);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 3.0..399 */
@@ -1584,7 +1288,44 @@ HRESULT UnRegisterTypeLib(
  * ================================================================ */
 
 /* function */
+HRESULT BstrFromVector( SAFEARRAY FAR *psa, BSTR FAR *pbstr );
+BSTR SysAllocString(  OLECHAR FAR *sz );
+BSTR SysAllocStringByteLen(  char FAR *psz,  unsigned int len );
+BSTR SysAllocStringLen(  OLECHAR FAR *pch,  unsigned int cch );
+HRESULT SysFreeString( BSTR bstr );
+HRESULT SysReAllocString( BSTR FAR *pbstr, OLECHAR FAR *sz );
+HRESULT SysReAllocStringLen( BSTR FAR *pbstr, OLECHAR FAR *pch, unsigned int cch );
+HRESULT SysStringByteLen( BSTR bstr );
+HRESULT SysStringLen( BSTR bstr );
+HRESULT VarBoolFromDisp( [in] IDispatch *pdispIn, [in] LCID lcid, [out] BOOL *pboolOut );
+HRESULT VarBstrFromBool( [in] BOOL boolIn, [in] LCID lcid, [in] ULONG dwFlags, [out] BSTR pbstrOut );
+HRESULT VarBstrFromCy( [in] CURRENCY cyIn, [in] LCID lcid, [in] ULONG dwFlags, [out] BSTR pbstrOut );
+HRESULT VarBstrFromDate( [in] DATE dateIn, [in] LCID lcid, in] ULONG dwFlags, out] BSTR pbstrOut );
+HRESULT VarBstrFromDec( [in] DECIMAL *pdecIn, [in] LCID lcid, [in] ULONG dwFlags, [out] BSTR pbstrOut );
+HRESULT VarBstrFromDisp( [in] IDispatch *pdispln, [in] LCID lcid, [in] ULONG dwFlags, [out] BSTR pbstrOut );
+WINOLEAUTAPI VarBstrFromI1(  [in] char cIn,  [in] LCID lcid,  [in] ULONG dwFlags,  [out] BSTR pbstrOut );
+HRESULT VarBstrFromI2( [in] short iVal, [in] LCID lcid, [in] ULONG dwFlags, [out] BSTR pbstrOut );
+HRESULT VarBstrFromI4( [in] long lIn, [in] LCID lcid, [in] ULONG dwFlags, [out] BSTR pbstrOut );
+HRESULT VarBstrFromR4( [in] float fltIn, [in] LCID lcid, [in] ULONG dwFlags, [out] BSTR pbstrOut );
+HRESULT VarBstrFromR8( [in] double dblIn, [in] LCID lcid, [in] ULONG dwFlags, [out] BSTR pbstrOut );
+WINOLEAUTAPI VarBstrFromUI2(  [in] USHORT uiIn,  [in] LCID lcid,  [in] ULONG dwFlags,  [out] BSTR pbstrOut );
+WINOLEAUTAPI VarBstrFromUI4(  [in] ULONG ulIn,  [in] LCID lcid,  [in] ULONG dwFlags,  [out] BSTR pbstrOut );
+HRESULT VarCyFromDisp( [in] IDispatch *pdispIn, [in] LCID lcid, [out] CURRENCY *pcyOut );
+HRESULT VarDateFromDisp( [in] IDispatch *pdispIn, [in] LCID lcid, [out] DATE *pdateOut );
+HRESULT VarDecFromDisp( [in] IDispatch *pdispIn, [in] LCID lcid, [out] DECIMAL *pdecOut );
+WINOLEAUTAPI VarI1FromDisp(  [in] IDispatch *pdispIn,  [in] LCID lcid,  [out] char *pcOut );
+WINOLEAUTAPI VarI1FromStr(  [in] BSTR strIn,  [in] LCID lcid,  [in] ULONG dwFlags,  [out] char *pcOut );
+HRESULT VarI2FromDisp( [in] IDispatch *pdispIn, [in] LCID lcid, [out] short *psOut );
+HRESULT VarI4FromDisp( [in] IDispatch *pdispIn, [in] LCID lcid, [out] long *plOut );
+HRESULT VarR4FromDisp( [in] IDispatch *pdispIn, [in] LCID lcid, [out] float *pfltOut );
 HRESULT VarR8FromDips( [in] IDispatch *pdispIn, [in] LCID lcid, [out] double *pdblOut );
+HRESULT VarR8FromDips(  [in] IDispatch *pdispIn,  [in] LCID lcid,  [out] double *pdblOut );
+HRESULT VarUI1FromDisp( [in] IDispatch *pdispIn, [in] LCID lcid, [out] BYTE *pbOut );
+WINOLEAUTAPI VarUI2FromDisp(  [in] IDispatch *pdispIn,  [in] LCID lcid,  [out] USHORT *puiOut );
+WINOLEAUTAPI VarUI2FromStr(  [in] BSTR strIn,  [in] LCID lcid,  [in] ULONG dwFlags,  [out] USHORT *puiOut );
+WINOLEAUTAPI VarUI4FromDisp(  [in] IDispatch *pdispIn,  [in] LCID lcid,  [out] ULONG *pulOut );
+WINOLEAUTAPI VarUI4FromStr(  [in] BSTR strIn,  [in] LCID lcid,  [in] ULONG dwFlags,  [out] ULONG *pulOut );
+HRESULT VectorFromBstr( BSTR bstr, SAFEARRAY FAR *FAR *ppsa );
 WINOLEAUTAPIVarBoolFromUI2( USHORT uiIn, BOOL* pboolOut );
 WINOLEAUTAPIVarCyFromI1( char cIn, CURRENCY* pcyOut );
 WINOLEAUTAPIVarDecFromI1( char cIn, DECIMAL* pdecOut );

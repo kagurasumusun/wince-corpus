@@ -5,77 +5,23 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 23 declarations, 0 outlines, 0 base types, 0 extra macros, 6 extra decls
+ * 0 constants, 19 declarations, 4 outlines, 0 base types, 0 extra macros, 6 extra decls
  */
 #ifndef _NETUI_
 #define _NETUI_
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
+ * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
+/* ADDCONNECT_DLGPARAMS  [struct; ce-only] */
 
-/* ADDCONNECT_DLGPARAMS  [struct; ce-only; CE 3.0..699] */
-typedef struct ADDCONNECT_DLGPARAMS {
- WCHAR LocalName[RMLEN + 10];
- WCHAR RemoteName[RMLEN];
- BOOL bReadOnly;
-} ADDCONNECT_DLGPARAMS, *PADDCONNECT_DLGPARAMS;
+/* GETDRIVERNAMEPARMS  [struct; ce-only] */
 
-/* GETDRIVERNAMEPARMS  [struct; ce-only; CE 3.0..699] */
-typedef struct _GETDRIVERNAMEPARMS {
- WCHAR DriverName[DRIVER_NAME_LEN];
- DWORD Socket;
- DWORD PCCardType;
-} GETDRIVERNAME PARMS, *PGETDRIVERNAMEPARMS;
+/* NETUI_RESPWD  [struct; ce-only] */
 
-/* LINECONFIGDATA  [struct; ce-only; CE 3.0..699] */
-typedef struct _LINECONFIGDATA {
- DWORD dwVersion;
- DWORD dwBaudRate;
- DWORD dwSettableBaud;
- BYTE bByteSize;
- BYTE bParity;
- BYTE bStopBits;
- BYTE bReserved;
- WORD wSettableData;
- WORD wWaitBong;
- DWORD dwCallSetupFailTimer;
- DWORD dwModemOptions;
- DWORD dwTermOptions;
- DWORD dwDdevCapFlags;
- DWORD dwModMaxLen;
- TCHAR szDialModifier[NETUI_LCD_DIAL_MOD_LEN + 1];
- WORD wSettableStopParity;
-} LINECONFIGDATA, *PLINECONFIGDATA;
-
-/* NETUI_RESPWD  [struct; ce-only; CE 3.0..699] */
-typedef struct _NETUI_RESPWD {
- TCHAR szPassword[PWLEN +1];
- TCHAR szResourceName[RMLEN];
-} NETUI_RESPWD, *PNETUI_RESPWD;
-
-/* NETUI_USERPWD  [struct; ce-only; CE 3.0..699] */
-typedef struct _NETUI_USERPWD {
- TCHAR szUserName[UNLEN + 1];
- TCHAR szPassword[PWLEN + 1];
- TCHAR szDomain[DNLEN +1];
- DWORD dwFlags;
- TCHAR szResourceName[RMLEN];
-} NETUI_USERPWD, *PNETUI_USERPWD;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* NETUI_NEWPWD  [struct; ce-only; CE 5.0..699] */
-typedef struct _NETUI_NEWPWD{
- TCHAR szNewPassword[PWLEN+1];
-} NETUI_NEWPWD, *PNETUI_NEWPWD;
-#endif /* _WIN32_WCE */
+/* NETUI_USERPWD  [struct; ce-only] */
 
 /* ==================================================================
  * functions and callbacks

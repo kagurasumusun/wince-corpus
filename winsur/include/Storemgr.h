@@ -5,60 +5,21 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 26 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
+ * 0 constants, 23 declarations, 3 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _STOREMGR_
 #define _STOREMGR_
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
+ * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+/* CE_VOLUME_INFO  [struct; ce-only] */
 
-/* CE_VOLUME_INFO  [struct; ce-only; CE 5.0..699] */
-typedef struct _CE_VOLUME_INFO{
- DWORD cbSize;
- DWORD dwAttributes;
- DWORD dwFlags;
- DWORD dwBlockSize;
- TCHAR szStoreName[STORENAMESIZE];
- TCHAR szPartitionName[PARTITIONNAMESIZE];
-} CE_VOLUME_INFO, *PCE_VOLUME_INFO, *LPCE_VOLUME_INFO;
+/* PARTINFO  [struct; ce-only] */
 
-/* PARTINFO  [struct; ce-only; CE 5.0..699] */
-typedef struct {
- DWORD cbSize;
- TCHAR szPartitionName[PARTITIONNAMESIZE];
- TCHAR szFileSys[FILESYSNAMESIZE];
- TCHAR szVolumeName[VOLUMENAMESIZE];
- SECTORNUM snNumSectors;
- FILETIME ftCreated;
- FILETIME ftLastModified;
- DWORD dwAttributes;
- BYTE bPartType;
-} PARTINFO, *PPARTINFO;
-
-/* STORAGECONTEXT  [struct; ce-only; CE 5.0..699] */
-typedef struct tagSTORAGECONTEXT {
- DWORD cbSize;
- STOREINFO StoreInfo;
- PARTINFO PartInfo;
- DWORD dwFlags;
-} STORAGECONTEXT, *PSTORAGECONTEXT;
-
-/* STORAGEDEVICEINFO  [struct; ce-only; CE 5.0..699] */
-typedef struct tagSTORAGEDEVICEINFO {
- DWORD cbSize;
- TCHAR szProfile[PROFILENAMESIZE];
- DWORD dwDeviceClass;
- DWORD dwDeviceType;
- DWORD dwDeviceFlags;
-} STORAGEDEVICEINFO, *PSTORAGEDEVICEINFO;
-#endif /* _WIN32_WCE */
+/* STORAGEDEVICEINFO  [struct; ce-only] */
 
 /* ==================================================================
  * functions and callbacks

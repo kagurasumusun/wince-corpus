@@ -17,26 +17,11 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 500)) /* CE 4.0..499 */
-
-/* DMUS_MUTE_PARAM  [struct; ce-only; CE 4.0..499] */
+/* DMUS_MUTE_PARAM  [struct; ce-only] */
 typedef struct _DMUS_MUTE_PARAM {
  DWORD dwPChannel;
  DWORD dwPChannelMap;
  BOOL fMute;
  } DMUS_MUTE_PARAM;
-
-/* DMUS_RHYTHM_PARAM  [struct; ce-only; CE 4.0..499] */
-typedef struct {
- DMUS_TIMESIGNATURE TimeSig;
- DWORD dwRhythmPattern;
-} DMUS_RHYTHM_PARAM;
-
-/* DMUS_TEMPO_PARAM  [struct; ce-only; CE 4.0..499] */
-typedef struct _DMUS_TEMPO_PARAM {
- MUSIC_TIME mtTime;
- double dblTempo;
-} DMUS_TEMPO_PARAM;
-#endif /* _WIN32_WCE */
 
 #endif /* _DMUSICF_ */

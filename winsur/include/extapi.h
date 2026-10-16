@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 26 constants, 43 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
+ * 26 constants, 42 declarations, 1 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _EXTAPI_
 #define _EXTAPI_
@@ -48,99 +48,49 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* LINE_CURRENTLINECHANGE  [macro; ce-only; CE 6.0..699] */
+/* LINE_CURRENTLINECHANGE  [macro; ce-only] */
 #define LINE_CURRENTLINECHANGE
  dwParam1 = LINE_CURRENTLINECHANGE;
  dwParam2;
  dwParam3;
 
-/* LINE_CURRENTSYSTEMCHANGE  [macro; ce-only; CE 6.0..699] */
+/* LINE_CURRENTSYSTEMCHANGE  [macro; ce-only] */
 #define LINE_CURRENTSYSTEMCHANGE
  dwParam1 = LINE_CURRENTSYSTEMCHANGE;
  dwParam2;
  dwParam3;
 
-/* LINE_GPRSCLASS  [macro; ce-only; CE 6.0..699] */
+/* LINE_GPRSCLASS  [macro; ce-only] */
 #define LINE_GPRSCLASS
  dwParam1 = LINE_GPRSCLASS;
  dwParam2;
  dwParam3;
 
-/* LINE_GPRSREGISTERSTATE  [macro; ce-only; CE 6.0..699] */
+/* LINE_GPRSREGISTERSTATE  [macro; ce-only] */
 #define LINE_GPRSREGISTERSTATE
  dwParam1 = LINE_GPRSREGISTERSTATE;
  dwParam2;
  dwParam3;
 
-/* LINE_RADIOPRESENCE  [macro; ce-only; CE 6.0..699] */
+/* LINE_RADIOPRESENCE  [macro; ce-only] */
 #define LINE_RADIOPRESENCE
  dwParam1 = LINE_RADIOPRESENCE;
  dwParam2;
  dwParam3;
 
-/* LINE_REGISTERSTATE  [macro; ce-only; CE 6.0..699] */
+/* LINE_REGISTERSTATE  [macro; ce-only] */
 #define LINE_REGISTERSTATE
  dwParam1 = LINE_REGISTERSTATE;
  dwParam2;
  dwParam3;
 
-/* LINE_USSD  [macro; ce-only; CE 6.0..699] */
+/* LINE_USSD  [macro; ce-only] */
 #define LINE_USSD
  dwParam1 = LINE_USSD;
  dwParam2;
  dwParam3;
-#endif /* _WIN32_WCE */
 
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* LINEGENERALINFO  [struct; ce-only; CE 6.0..699] */
-typedef struct linegeneralinfo_tag {
- DWORD dwTotalSize;
- DWORD dwNeededSize;
- DWORD dwUsedSize;
- DWORD dwManufacturerSize;
- DWORD dwManufacturerOffset;
- DWORD dwModelSize;
- DWORD dwModelOffset;
- DWORD dwRevisionSize;
- DWORD dwRevisionOffset;
- DWORD dwSerialNumberSize;
- DWORD dwSerialNumberOffset;
- DWORD dwSubscriberNumberSize;
- DWORD dwSubscriberNumberOffset;
-} LINEGENERALINFO, * LPLINEGENERALINFO;
-
-/* LINEOPERATOR  [struct; ce-only; CE 6.0..699] */
-typedef struct lineoperator_tag {
- DWORD dwIndex;
- DWORD dwValidFields;
- DWORD dwStatus;
- TCHAR lpszLongName[MAX_LENGTH_OPERATOR_LONG];
- TCHAR lpszShortName[MAX_LENGTH_OPERATOR_SHORT];
- TCHAR lpszNumName[MAX_LENGTH_OPERATOR_NUMERIC];
-} LINEOPERATOR, * LPLINEOPERATOR;
-
-/* LINEOPERATORSTATUS  [struct; ce-only; CE 6.0..699] */
-typedef struct lineoperatorstatus_tag {
- DWORD dwTotalSize;
- DWORD dwNeededSize;
- DWORD dwUsedSize;
- DWORD dwPreferredCount;
- DWORD dwPreferredSize;
- DWORD dwPreferredOffset;
- DWORD dwAvailableCount;
- DWORD dwAvailableSize;
- DWORD dwAvailableOffset;
-} LINEOPERATORSTATUS, * LPLINEOPERATORSTATUS;
-#endif /* _WIN32_WCE */
+/* LINEOPERATOR  [struct; ce-only] */
 
 /* ==================================================================
  * functions and callbacks

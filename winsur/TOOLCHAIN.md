@@ -8,10 +8,13 @@ tree.
 ## How to include
 
 ```c
-#include "Windows.h"   /* umbrella: WinDef, WinNT, winerror, Winbase, Winuser, Wingdi, … */
+#include "Windows.h"   /* WinDef, WinNT, winerror, Winbase, Winuser, Wingdi, Winreg */
+#include "CEDDK.h"     /* drivers */
+#include "Winsock2.h"  /* sockets, not in the umbrella */
+#include "Commctrl.h"  /* common controls, not in the umbrella */
 ```
 
-Drivers also `#include "CEDDK.h"` (kept out of the app umbrella).
+A GCC syntax check of `WinMain` + `CreateFile`/`MessageBox` and of `DllMain` + `CEDDK.h` is `tools/tests/test_compile_surface.py`.
 
 Link with `link/coredll.def` (and the other module `.def` files you actually import).
 

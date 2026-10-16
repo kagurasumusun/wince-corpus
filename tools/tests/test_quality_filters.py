@@ -94,6 +94,15 @@ class ToolchainCTests(unittest.TestCase):
         self.assertTrue(q.is_cpp_or_managed(
             "int GetMenuString(UINT nIDItem, LPTSTR lpString, "
             "int nMaxCount, UINT nFlags) const;", "GetMenuString"))
+        self.assertTrue(q.is_cpp_or_managed("operator LPCTSTR();", "LPCTSTR"))
+
+    def test_drops_glued_struct_and_unbalanced(self):
+        self.assertTrue(q.is_broken_c(
+            "typedef struct_IMAGE_ALPHA_RUNTIME_FUNCTION_ENTRY { ULONG x;"))
+        self.assertTrue(q.is_broken_c(
+            "BOOL SEC_ENTRY ( IN LPTSTR pszUser );"))
+        self.assertFalse(q.is_broken_c(
+            "typedef struct _RECT { LONG left; LONG top; } RECT;"))
 
     def test_keeps_c_enum_zero(self):
         text = ("typedef enum _BUS_DATA_TYPE { "

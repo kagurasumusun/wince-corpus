@@ -11,22 +11,4 @@
 #define _SAPIDDK_IDL_
 
 
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* SPCFGNOTIFY  [enum; ce-only; CE 4.0..699] */
-typedef enum SPCFGNOTIFY{
- SPCFGN_ADD,
- SPCFGN_REMOVE,
- SPCFGN_INVALIDATE,
- SPCFGN_ACTIVATE,
- SPCFGN_DEACTIVATE
-} SPCFGNOTIFY;
-#endif /* _WIN32_WCE */
-
 #endif /* _SAPIDDK_IDL_ */

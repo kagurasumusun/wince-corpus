@@ -26,57 +26,13 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+/* INTF_80211_CAPABILITY  [struct; ce-only] */
 
-/* INTF_KEY_ENTRY  [struct; ce-only; CE 5.0..699] */
+/* INTF_ENTRY_EX  [struct; ce-only] */
 
-/* INTFS_KEY_TABLE  [struct; ce-only; CE 5.0..699] */
-#endif /* _WIN32_WCE */
+/* INTF_KEY_ENTRY  [struct; ce-only] */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* INTF_80211_CAPABILITY  [struct; ce-only; CE 6.0..699] */
-
-/* INTF_ENTRY_EX  [struct; ce-only; CE 6.0..699] */
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* WZC_802_11_CONFIG_LIST  [struct; ce-only; CE 5.0..699] */
-typedef struct
-{
- ULONG NumberOfItems;
- ULONG Index;
- WZC_WLAN_CONFIG Config[1];
-} WZC_802_11_CONFIG_LIST, *PWZC_802_11_CONFIG_LIST;
-
-/* WZC_CONTEXT  [struct; ce-only; CE 5.0..699] */
-typedef struct _wzc_context_t
-{
- DWORD dwFlags; 
- DWORD tmTr; 
- DWORD tmTc; 
- DWORD tmTp; 
- DWORD tmTf; 
- DWORD tmTd; 
-} WZC_CONTEXT, *PWZC_CONTEXT;
-
-/* WZC_EAPOL_PARAMS  [struct; ce-only; CE 5.0..699] */
-typedef struct _WZC_EAPOL_PARAMS
-{
- BOOL bEnable8021x;
- DWORD dwEapFlags;
- DWORD dwEapType;
- DWORD dwAuthDataLen;
- BYTE *pbAuthData;
-}WZC_EAPOL_PARAMS, *PWZC_EAPOL_PARAMS;
-#endif /* _WIN32_WCE */
+/* INTFS_KEY_TABLE  [struct; ce-only] */
 
 /* ==================================================================
  * functions and callbacks

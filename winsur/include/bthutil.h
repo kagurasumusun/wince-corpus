@@ -12,22 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* BTH_RADIO_MODE  [enum; ce-only; CE 6.0..699] */
-enum BTH_RADIO_MODE {
- BTH_POWER_OFF,
- BTH_CONNECTABLE,
- BTH_DISCOVERABLE
-};
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

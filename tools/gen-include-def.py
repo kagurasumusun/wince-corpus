@@ -1687,7 +1687,7 @@ def wrap_comment(prefix, text, width=64):
 
 _WINDOWS_UMBRELLA = (
     "WinDef.h", "WinNT.h", "winerror.h", "Winbase.h", "Winuser.h",
-    "Wingdi.h", "Winreg.h", "Commctrl.h", "Winioctl.h", "Winsock2.h",
+    "Wingdi.h", "Winreg.h",
 )
 
 # Pages often name Windows.h (the umbrella) or a desktop-split SDK
@@ -1707,6 +1707,7 @@ DESKTOP_SPLIT_HEADERS = {
     "namedpipeapi.h", "securitybaseapi.h", "heapapi.h", "jobapi.h",
     "processenv.h", "profileapi.h", "realtimeapiset.h",
     "threadpoollegacyapiset.h", "wow64apiset.h", "interlockedapi.h",
+    "wtypesbase.h", "minwindef.h", "winnt.h.bak",
 }
 
 
@@ -1731,9 +1732,52 @@ _CE_PTR_TYPES = {
     "ULONG_PTR": "typedef unsigned long ULONG_PTR;",
     "UINT_PTR": "typedef unsigned long UINT_PTR;",
     "DWORD_PTR": "typedef unsigned long DWORD_PTR;",
+    "INT_PTR": "typedef long INT_PTR;",
     "HALF_PTR": "typedef short HALF_PTR;",
     "UHALF_PTR": "typedef unsigned short UHALF_PTR;",
 }
+
+# windows-data-types.md (CC-BY) + CE Unicode notes.  Not copied from
+# any SDK/w32api file.  TCHAR follows UNICODE, which this tree defines.
+_CORE_TYPEDEFS = (
+    ("UCHAR", "typedef unsigned char UCHAR;"),
+    ("USHORT", "typedef unsigned short USHORT;"),
+    ("PVOID", "typedef void *PVOID;"),
+    ("LPVOID", "typedef void *LPVOID;"),
+    ("LPCVOID", "typedef CONST void *LPCVOID;"),
+    ("LPSTR", "typedef CHAR *LPSTR;"),
+    ("LPCSTR", "typedef CONST CHAR *LPCSTR;"),
+    ("TCHAR", "typedef WCHAR TCHAR;"),
+    ("LPTSTR", "typedef LPWSTR LPTSTR;"),
+    ("LPCTSTR", "typedef LPCWSTR LPCTSTR;"),
+    ("PTSTR", "typedef LPWSTR PTSTR;"),
+    ("PCTSTR", "typedef LPCWSTR PCTSTR;"),
+    ("LONGLONG", "typedef __int64 LONGLONG;"),
+    ("ULONGLONG", "typedef unsigned __int64 ULONGLONG;"),
+    ("HRESULT", "typedef LONG HRESULT;"),
+    ("NTSTATUS", "typedef LONG NTSTATUS;"),
+    ("SIZE_T", "typedef ULONG_PTR SIZE_T;"),
+    ("SSIZE_T", "typedef LONG_PTR SSIZE_T;"),
+    ("WNDPROC",
+     "typedef LRESULT (CALLBACK *WNDPROC)(HWND, UINT, WPARAM, LPARAM);"),
+    ("FARPROC", "typedef INT_PTR (WINAPI *FARPROC)(void);"),
+    ("NEARPROC", "typedef INT_PTR (WINAPI *NEARPROC)(void);"),
+    ("PROC", "typedef INT_PTR (WINAPI *PROC)(void);"),
+    ("SECURITY_ATTRIBUTES",
+     "typedef struct _SECURITY_ATTRIBUTES SECURITY_ATTRIBUTES, "
+     "*PSECURITY_ATTRIBUTES, *LPSECURITY_ATTRIBUTES;"),
+    ("FILETIME",
+     "typedef struct _FILETIME { DWORD dwLowDateTime; DWORD dwHighDateTime; } "
+     "FILETIME, *PFILETIME, *LPFILETIME;"),
+    ("SYSTEMTIME",
+     "typedef struct _SYSTEMTIME { WORD wYear; WORD wMonth; WORD wDayOfWeek; "
+     "WORD wDay; WORD wHour; WORD wMinute; WORD wSecond; WORD wMilliseconds; } "
+     "SYSTEMTIME, *PSYSTEMTIME, *LPSYSTEMTIME;"),
+    ("CEOID", "typedef DWORD CEOID;"),
+    ("CEPROPID", "typedef DWORD CEPROPID;"),
+    ("LPTHREAD_START_ROUTINE",
+     "typedef DWORD (WINAPI *LPTHREAD_START_ROUTINE)(LPVOID);"),
+)
 
 _WINDEF_NEED = (
     "BYTE", "WORD", "DWORD", "BOOL", "UINT", "INT", "LONG", "ULONG",
@@ -1748,6 +1792,73 @@ _WINDEF_NEED = (
 
 def _ident_tokens(text):
     return set(re.findall(r"\b[A-Z][A-Z0-9_]*\b", text or ""))
+
+
+_C_KNOWN_TYPES = {
+    "DWORD", "BOOL", "BYTE", "WORD", "UINT", "INT", "LONG", "ULONG", "SHORT",
+    "CHAR", "WCHAR", "TCHAR", "FLOAT", "VOID", "CONST", "HANDLE", "HWND",
+    "HDC", "HINSTANCE", "HMODULE", "HMENU", "HICON", "HBITMAP", "HBRUSH",
+    "HFONT", "HPEN", "HRGN", "HKEY", "PVOID", "LPVOID", "LPCVOID", "LPSTR",
+    "LPCSTR", "LPWSTR", "LPCWSTR", "LPTSTR", "LPCTSTR", "LPARAM", "WPARAM",
+    "LRESULT", "UINT_PTR", "LONG_PTR", "ULONG_PTR", "DWORD_PTR", "INT_PTR",
+    "SIZE_T", "SSIZE_T", "HRESULT", "NTSTATUS", "ATOM", "COLORREF",
+    "FILETIME", "SYSTEMTIME", "RECT", "POINT", "SIZE", "MSG", "UCHAR",
+    "USHORT", "LONGLONG", "ULONGLONG", "CEOID", "CEPROPID",
+    "SECURITY_ATTRIBUTES", "LPSECURITY_ATTRIBUTES", "PSECURITY_ATTRIBUTES",
+    "WNDPROC", "FARPROC", "NEARPROC", "PROC", "LPBYTE", "LPDWORD", "LPWORD",
+    "LPLONG", "LPBOOL", "LPHANDLE", "DWORD64", "UINT64", "LONG64", "INT64",
+    "BOOLEAN", "LPTHREAD_START_ROUTINE", "PFILETIME", "LPFILETIME",
+    "PRECT", "LPRECT", "LPCRECT", "PPOINT", "LPPOINT", "PSIZE", "LPSIZE",
+    "HCURSOR", "HACCEL", "HRSRC", "HGLOBAL", "HLOCAL", "HDWP", "HGDIOBJ",
+}
+
+
+def order_type_infos(items):
+    """Emit structure bodies after the types they mention in this header."""
+    by = {}
+    unnamed = []
+    for info in items:
+        name = (info.get("entity") or {}).get("name")
+        if name:
+            by[name] = info
+        else:
+            unnamed.append(info)
+    pending = list(by)
+    emitted, known = [], set()
+    skip = {"TYPEDEF", "STRUCT", "UNION", "ENUM", "CONST", "VOID", "INT",
+            "CHAR", "SHORT", "LONG", "UNSIGNED", "SIGNED", "FLOAT"}
+    while pending:
+        rest, progress = [], False
+        for name in pending:
+            decl = by[name].get("declaration") or {}
+            text = decl.get("text") if isinstance(decl, dict) else ""
+            deps = _ident_tokens(text) - {name} - skip
+            if all(d in known or d not in by for d in deps):
+                emitted.append(by[name])
+                known.add(name)
+                progress = True
+            else:
+                rest.append(name)
+        if not progress:
+            emitted.extend(by[n] for n in rest)
+            break
+        pending = rest
+    return unnamed + emitted
+
+
+def type_mentions_unknown(text, local_names):
+    """True if a struct body names a type this header does not define."""
+    skip = {"TYPEDEF", "STRUCT", "UNION", "ENUM", "CONST", "VOID", "INT",
+            "CHAR", "SHORT", "LONG", "UNSIGNED", "SIGNED", "FLOAT", "DOUBLE"}
+    for tok in _ident_tokens(text) - skip:
+        if tok in _C_KNOWN_TYPES or tok in local_names:
+            continue
+        if re.match(r"^[A-Z][A-Z0-9_]+$", tok) and len(tok) >= 3:
+            return True
+        if re.match(r"^[A-Z][A-Za-z0-9]+$", tok) and tok.endswith(
+                ("INFO", "STRUCT", "HEADER", "ENTRY", "PROC", "INPUT")):
+            return True
+    return False
 
 
 def order_base_types(rows):
@@ -1801,6 +1912,23 @@ def enrich_windef_base_types(base_types_by_header):
                 "source": "win32/common/windows-data-types.md (32-bit row)",
             })
             have.add(name)
+    for name, defn in _CORE_TYPEDEFS:
+        row = {
+            "type": name, "definition": defn, "header": "WinDef.h",
+            "ce_specific": "yes",
+            "ce_note": "CE Unicode / 32-bit data-types row",
+            "ce_value_note": "",
+            "source": "win32/common/windows-data-types.md",
+        }
+        if name not in have:
+            windef.append(row)
+            have.add(name)
+        else:
+            for existing in windef:
+                if existing["type"] == name and (
+                        existing.get("definition", "").startswith("#ifdef")
+                        or "\\n" in (existing.get("definition") or "")):
+                    existing.update(row)
     base_types_by_header["windef.h"] = windef
 
 
@@ -1830,8 +1958,8 @@ def _write_windows_umbrella(include_dir):
         hit = present.get(name.lower())
         if hit:
             includes.append(hit)
-    if os.path.isfile(leftover):
-        includes.append("WindowsApis.h")
+    # WindowsApis.h is the leftover dump of pages that only named
+    # Windows.h.  It is not included here: it redeclares core types.
     if not includes:
         return
     lines = [
@@ -1909,7 +2037,15 @@ def run_unified(args):
                        or quality_filters.is_define_only_block(
                            chosen.get("text") or "")
                        or quality_filters.is_glued_prototype(
-                           chosen.get("text") or "")):
+                           chosen.get("text") or "")
+                       or quality_filters.is_broken_c(
+                           chosen.get("text") or "")
+                       or quality_filters.is_cpp_or_managed(
+                           chosen.get("text") or "",
+                           entity.get("name") or "")
+                       or quality_filters.decl_unusable_for_c(
+                           chosen.get("text") or "",
+                           entity.get("name") or "")):
             skipped["declaration is not a C declaration"] += 1
             chosen = None
             borrowed_from = ""
@@ -2056,6 +2192,11 @@ def run_unified(args):
                     "source": ((chosen.get("source") or {}).get("path") or ""),
                 })
         guard, merged = wce_guard(versions)
+        kinds_now = set(entity.get("kinds") or [])
+        # Types and macros are the same C on every CE generation; gating
+        # them behind one book's _WIN32_WCE made HIWORD/TCHAR vanish.
+        if kinds_now & {"struct", "enum", "typedef", "macro", "union"}:
+            guard, merged = None, []
         if not versions and not neutral_ce:
             skipped["no CE version evidence"] += 1
         if primary and not chosen and not outline:
@@ -2321,6 +2462,11 @@ def run_unified(args):
             continue
         hdr = _pick_header_for_extra(name, d.get("source") or "",
                                      [d.get("type") or ""])
+        # Extra scan junk must not land in the headers a compiler includes
+        # first (WinDef/Winuser/…).  Keep it in ExtraDeclarations.h.
+        if hdr and hdr.lower() in CE_CORE_HEADERS | {"windows.h", "windowsapis.h"}:
+            leftover_decls.append(d)
+            continue
         if hdr:
             printed_forms.setdefault(hdr.lower(), hdr)
             extra_decls_by_header[hdr.lower()].append(d)
@@ -2467,6 +2613,74 @@ def run_unified(args):
                 "#endif",
                 "#ifndef _UNICODE",
                 "#define _UNICODE",
+                "#endif",
+                "",
+                "/* compiler surface: empty 16-bit keywords + SAL, GCC __int64.",
+                " * These expand to nothing / long long.  Not copied from an SDK. */",
+                "#ifndef CONST",
+                "#define CONST const",
+                "#endif",
+                "#ifndef FAR",
+                "#define FAR",
+                "#endif",
+                "#ifndef NEAR",
+                "#define NEAR",
+                "#endif",
+                "#ifndef far",
+                "#define far",
+                "#endif",
+                "#ifndef near",
+                "#define near",
+                "#endif",
+                "#ifndef PASCAL",
+                "#define PASCAL",
+                "#endif",
+                "#ifndef IN",
+                "#define IN",
+                "#endif",
+                "#ifndef OUT",
+                "#define OUT",
+                "#endif",
+                "#ifndef OPTIONAL",
+                "#define OPTIONAL",
+                "#endif",
+                "#ifndef UNALIGNED",
+                "#define UNALIGNED",
+                "#endif",
+                "#ifndef __nullterminated",
+                "#define __nullterminated",
+                "#endif",
+                "#ifndef __nullnullterminated",
+                "#define __nullnullterminated",
+                "#endif",
+                "#ifndef _MSC_VER",
+                "#ifndef __int64",
+                "#define __int64 long long",
+                "#endif",
+                "#ifndef __stdcall",
+                "#define __stdcall",
+                "#endif",
+                "#ifndef __cdecl",
+                "#define __cdecl",
+                "#endif",
+                "#ifndef _cdecl",
+                "#define _cdecl",
+                "#endif",
+                "#ifndef __fastcall",
+                "#define __fastcall",
+                "#endif",
+                "#ifndef __declspec",
+                "#define __declspec(x)",
+                "#endif",
+                "#endif /* _MSC_VER */",
+                "#ifndef TEXT",
+                "#define TEXT(s) L ## s",
+                "#endif",
+                "#ifndef __TEXT",
+                "#define __TEXT(s) L ## s",
+                "#endif",
+                "#ifndef _T",
+                "#define _T(s) TEXT(s)",
                 "#endif",
                 "",
             ]
@@ -2689,6 +2903,32 @@ def run_unified(args):
         open_decl_guard = None
         for bucket_key, bucket_title in sections:
             items = buckets.get(bucket_key) or []
+            if bucket_key == "types":
+                items = order_type_infos(items)
+                with_body, outlines = [], []
+                for info in items:
+                    decl = info.get("declaration") or {}
+                    text = decl.get("text") if isinstance(decl, dict) else ""
+                    if text:
+                        with_body.append(info)
+                    else:
+                        outlines.append(info)
+                kept = with_body
+                while True:
+                    local = {(i.get("entity") or {}).get("name")
+                             for i in kept}
+                    local.discard(None)
+                    new = []
+                    for info in kept:
+                        text = ((info.get("declaration") or {}).get("text")
+                                or "")
+                        if type_mentions_unknown(text, local):
+                            continue
+                        new.append(info)
+                    if len(new) == len(kept):
+                        break
+                    kept = new
+                items = kept + outlines
             if not items:
                 continue
             if open_decl_guard is not None:
@@ -2701,8 +2941,14 @@ def run_unified(args):
             lines.append(" * " + "=" * 64 + " */")
             for info in items:
                 entity = info["entity"]
-                if bucket_key == "types" and entity.get("name") in emitted_type_names:
+                ename = entity.get("name")
+                if ename in emitted_type_names:
                     continue
+                if key.lower() != "windef.h" and ename in {
+                        n for n, _d in _CORE_TYPEDEFS}:
+                    continue
+                if bucket_key == "types" and ename:
+                    emitted_type_names.add(ename)
                 declaration = info["declaration"]
                 libs = ", ".join(
                     name for names in info["modules"].values()
@@ -2748,9 +2994,13 @@ def run_unified(args):
         if open_decl_guard is not None:
             close_guard(lines, open_decl_guard)
         # Extra declarations filed into this header (not already emitted).
+        already_decl_names = emitted_type_names | {
+            (info.get("entity") or {}).get("name") for info in decls
+        }
         extra_ds = [
             d for d in extra_decls_by_header.get(key.lower(), [])
-            if quality_filters.is_c_toolchain_declaration(
+            if d.get("name") not in already_decl_names
+            and quality_filters.is_c_toolchain_declaration(
                 d.get("declaration") or "", d.get("name") or "",
                 d.get("type") or "")
         ]
@@ -2774,6 +3024,13 @@ def run_unified(args):
                     text = d.get("declaration") or ""
                     if text:
                         lines.append(text)
+        if key.lower() == "windef.h":
+            lines += [
+                "typedef RECT *PRECT, *LPRECT;",
+                "typedef CONST RECT *LPCRECT;",
+                "typedef POINT *PPOINT, *LPPOINT;",
+                "typedef SIZE *PSIZE, *LPSIZE;",
+            ]
         # Close the include guard
         lines.append("")
         lines.append(f"#endif /* _{guard_name} */")

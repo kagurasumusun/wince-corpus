@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 4 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 4 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _CCKITL_
 #define _CCKITL_
@@ -21,32 +21,6 @@
 #define KITL_FL_DBGMSG 0x01
 #define KITL_FL_KDBG 0x04
 #define KITL_FL_PPSH 0x02
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* ICcKitl::BootFlags  [function; ce-only; CE 5.0..699] */
-HRESULT BootFlags (
- DWORD dwBootFlags
-);
-HRESULT BootFlags (
- DWORD* pdwBootFlags
-);
-
-/* ICcKitl::DebugBreak  [function; ce-only; CE 5.0..699] */
-HRESULT DebugBreak()
-
-/* ICcKitl::Reset  [function; ce-only; CE 5.0..699] */
-HRESULT Reset()
-
-/* ICcKitl::TransportId  [function; ce-only; CE 5.0..699] */
-HRESULT TransportId (
- DWORD* pdwTransportId
-);
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

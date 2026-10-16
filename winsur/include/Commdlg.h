@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 230 constants, 16 declarations, 0 outlines, 0 base types, 0 extra macros, 12 extra decls
+ * 230 constants, 16 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _COMMDLG_
 #define _COMMDLG_
@@ -262,114 +262,13 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* OPENFILENAME  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; A/W OPENFILENAMEA,OPENFILENAMEW (CE is W-side)] */
-typedef struct tagOFN { /* ofn */
- DWORD lStructSize;
- HWND hwndOwner;
- HINSTANCE hInstance;
- LPCSTR lpstrFilter;
- LPSTR lpstrCustomFilter;
- DWORD nMaxCustFilter;
- DWORD nFilterIndex;
- LPSTR lpstrFile;
- DWORD nMaxFile;
- LPSTR lpstrFileTitle;
- DWORD nMaxFileTitle;
- LPSTR lpstrInitialDir;
- LPCSTR lpstrTitle;
- DWORD Flags;
- WORD nFileOffset;
- WORD nFileExtension;
- LPCSTR lpstrDefExt;
- DWORD lCustData;
- LPOFNHOOKPROC lpfnHook;
- LPCSTR lpTemplateName;
-} OPENFILENAME;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 200 && _WIN32_WCE < 210)) /* CE 2.0..209 */
-
-/* FINDREPLACE  [struct; shared; CE 2.0..209; A/W FINDREPLACEA,FINDREPLACEW (CE is W-side)] */
-typedef struct {
-DWORD lStructSize; 
-HWND hwndOwner; 
-HINSTANCE hInstance; 
-DWORD Flags; 
-LPTSTR lpstrFindWhat; 
-LPTSTR lpstrReplaceWith; 
-WORD wFindWhatLen; 
-WORD wReplaceWithLen; 
-LPARAM lCustData; 
-LPFRHOOKPROC lpfnHook; 
-LPCTSTR lpTemplateName; 
-} FINDREPLACE;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* CHOOSECOLOR  [struct, function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commdlg.lib, commdlg.lib; A/W ChooseColorA,ChooseColorW (CE is W-side)] */
-BOOL ChooseColor(
- LPCHOOSECOLOR lpcc
-);
-
-/* DEVNAMES  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* DEVNAMES  [struct; shared] */
 typedef struct tagDEVNAMES {
  WORD wDriverOffset; 
  WORD wDeviceOffset; 
  WORD wOutputOffset; 
  WORD wDefault; 
 } DEVNAMES;
-
-/* OFNOTIFY  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W OFNOTIFYA,OFNOTIFYW (CE is W-side)] */
-typedef struct _OFNOTIFY { 
- NMHDR hdr; 
- LPOPENFILENAME lpOFN; 
- LPTSTR pszFile; 
-} OFNOTIFY, FAR* LPOFNOTIFY;
-
-/* PAGESETUPDLG  [struct, function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commdlg.lib, commdlg.lib; A/W PageSetupDlgA,PageSetupDlgW (CE is W-side)] */
-typedef struct tagPSD { 
- DWORD lStructSize; 
- HWND hwndOwner; 
- HGLOBAL hDevMode; 
- HGLOBAL hDevNames; 
- DWORD Flags; 
- POINT ptPaperSize; 
- RECT rtMinMargin; 
- RECT rtMargin; 
- HINSTANCE hInstance; 
- LPARAM lCustData; 
- LPPAGESETUPHOOK lpfnPageSetupHook; 
- LPPAGEPAINTHOOK lpfnPagePaintHook; 
- LPCTSTR lpPageSetupTemplateName; 
- HGLOBAL hPageSetupTemplate; 
-} PAGESETUPDLG, *LPPAGESETUPDLG;
-
-/* PRINTDLG  [struct, function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commdlg.lib, commdlg.lib; A/W PrintDlgA,PrintDlgW (CE is W-side)] */
-typedef struct tagPD {
- DWORD cbStruct;
- HWND hwndOwner;
- HDC hdc;
- DWORD dwFlags;
- RECT rcMinMargin;
- RECT rcMargin;
- HINSTANCE hinst;
- LPARAM lCustData;
- LPPRINTHOOKPROC pfnPrintHook;
- LPCTSTR pszPrintTemplateName;
- HGLOBAL hglbPrintTemplateResource;
-} PRINTDLG , *LPPRINTDLG;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* CHOOSEFONT  [struct, function; shared; CE 5.0..699; A/W ChooseFontA,ChooseFontW (CE is W-side)] */
-BOOL APIENTRY ChooseFont(
- LPCHOOSEFONT lpcf
-);
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks
@@ -439,80 +338,5 @@ UINT (APIENTRY* LPCFHOOKPROC)(
  LPARAM lParam
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct tagCHOOSECOLOR {
-  DWORD lStructSize;
-  HWND hwndOwner;
-  HINSTANCE hInstance;
-  COLORREF rgbResult;
-  COLORREF* lpCustColors;
-  DWORD Flags;
-  LPARAM lCustData;
-  LPCCHOOKPROC lpfnHook;
-  LPCTSTR lpTemplateName;
-} CHOOSECOLOR, *LPCHOOSECOLOR;
-typedef struct tagCHOOSEFONT {
-  DWORD lStructSize;
-  HWND hwndOwner;
-  HDC hDC;
-  LPLOGFONTW lpLogFont;
-  INT iPointSize;
-  DWORD Flags;
-  COLORREF rgbColors;
-  LPARAM lCustData;
-  LPCFHOOKPROC lpfnHook;
-  LPCWSTR lpTemplateName;
-  HINSTANCE hInstance;
-  LPWSTR lpszStyle;
-  WORD nFontType;
-  WORD ___MISSING_ALIGNMENT__;
-  INT nSizeMin;
-  INT nSizeMax;
-} CHOOSEFONTW, *LPCHOOSEFONTW;
-typedef struct _OFNOTIFY { NMHDR hdr; LPOPENFILENAME lpOFN;LPTSTR pszFile;} OFNOTIFY, FAR* LPOFNOTIFY;
-typedef struct tagPSD {
-  DWORD lStructSize;
-  HWND hwndOwner;
-  HGLOBAL hDevMode;
-  HGLOBAL hDevNames;
-  DWORD Flags;
-  POINT ptPaperSize;
-  RECT rtMinMargin;
-  RECT rtMargin;
-  HINSTANCE hInstance;
-  LPARAM lCustData;
-  LPPAGESETUPHOOK lpfnPageSetupHook;
-  LPPAGEPAINTHOOK lpfnPagePaintHook;
-  LPCTSTR lpPageSetupTemplateName;
-  HGLOBAL hPageSetupTemplate;
-} PAGESETUPDLG, *LPPAGESETUPDLG;
-typedef struct tagPD {
-  DWORD cbStruct;
-  HWND hwndOwner;
-  HDC hdc;
-  DWORD dwFlags;
-  RECT rcMinMargin;
-  RECT rcMargin;
-  HINSTANCE hinst;
-  LPARAM lCustData;
-  LPPRINTHOOKPROC pfnPrintHook;
-  LPCTSTR pszPrintTemplateName;
-  HGLOBAL hglbPrintTemplateResource;
-} PRINTDLG , *LPPRINTDLG;
-
-/* function */
-BOOL ChooseColor( LPCHOOSECOLOR lpcc);
-HRESULT ChooseColorDlg(  VARIANT initColor,  VARIANT *rgbColor  );
-BOOL APIENTRY ChooseFont(  LPCHOOSEFONT lpcf  );
-HRESULT FindText(  OLECHAR *pchFindText,  DWORD dwFlags,  IMarkupPointer *pIEndMatch,  IMarkupPointer *pIEndSearch  );
-HRESULT FindTextFragFromMarkupPointer(  IMarkupPointer *pPointerFind,  long *piFrag,  BOOL *pfFragFound  );
-BOOL PageSetupDlg( LPPAGESETUPDLG lppsd);
-BOOL PrintDlg( LPPRINTDLG lppd);
 
 #endif /* _COMMDLG_ */

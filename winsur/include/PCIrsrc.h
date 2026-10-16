@@ -12,31 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* PCI_RSRC  [struct; ce-only; CE 4.0..699] */
-typedef struct _PCI_RSRC {
- DWORD Bus;
- DWORD Device;
- DWORD Function;
- DWORD Offset;
- DWORD Base;
- DWORD Size;
- BOOL Bridge;
- DWORD SecBus;
- BOOL Placed;
- PPCI_CFG_INFO ConfigInfo;
- struct _PCI_RSRC* Next;
- struct _PCI_RSRC* Prev;
-} PCI_RSRC, *PPCI_RSRC;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */

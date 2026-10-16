@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 29 constants, 67 declarations, 9 outlines, 59 base types, 1 extra macros, 1 extra decls
+ * 29 constants, 67 declarations, 9 outlines, 87 base types, 1 extra macros, 0 extra decls
  */
 #ifndef _WINDEF_
 #define _WINDEF_
@@ -17,6 +17,74 @@
 #endif
 #ifndef _UNICODE
 #define _UNICODE
+#endif
+
+/* compiler surface: empty 16-bit keywords + SAL, GCC __int64.
+ * These expand to nothing / long long.  Not copied from an SDK. */
+#ifndef CONST
+#define CONST const
+#endif
+#ifndef FAR
+#define FAR
+#endif
+#ifndef NEAR
+#define NEAR
+#endif
+#ifndef far
+#define far
+#endif
+#ifndef near
+#define near
+#endif
+#ifndef PASCAL
+#define PASCAL
+#endif
+#ifndef IN
+#define IN
+#endif
+#ifndef OUT
+#define OUT
+#endif
+#ifndef OPTIONAL
+#define OPTIONAL
+#endif
+#ifndef UNALIGNED
+#define UNALIGNED
+#endif
+#ifndef __nullterminated
+#define __nullterminated
+#endif
+#ifndef __nullnullterminated
+#define __nullnullterminated
+#endif
+#ifndef _MSC_VER
+#ifndef __int64
+#define __int64 long long
+#endif
+#ifndef __stdcall
+#define __stdcall
+#endif
+#ifndef __cdecl
+#define __cdecl
+#endif
+#ifndef _cdecl
+#define _cdecl
+#endif
+#ifndef __fastcall
+#define __fastcall
+#endif
+#ifndef __declspec
+#define __declspec(x)
+#endif
+#endif /* _MSC_VER */
+#ifndef TEXT
+#define TEXT(s) L ## s
+#endif
+#ifndef __TEXT
+#define __TEXT(s) L ## s
+#endif
+#ifndef _T
+#define _T(s) TEXT(s)
 #endif
 
 
@@ -196,11 +264,147 @@ typedef unsigned long ULONG_PTR;
  * source: win32/common/windows-data-types.md */
 typedef unsigned long DWORD_PTR;
 
+/* INT_PTR [CE-SPECIFIC]
+ * 32-bit CE pointer-sized integer
+ * CE is 32-bit: pointer-sized integer
+ * source: win32/common/windows-data-types.md (32-bit row) */
+typedef long INT_PTR;
+
 /* HALF_PTR [CE-SPECIFIC]
  * 32-bit CE pointer-sized integer
  * CE is 32-bit: pointer-sized integer
  * source: win32/common/windows-data-types.md (32-bit row) */
 typedef short HALF_PTR;
+
+/* UCHAR [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef unsigned char UCHAR;
+
+/* USHORT [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef unsigned short USHORT;
+
+/* PVOID [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef void *PVOID;
+
+/* LPVOID [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef void *LPVOID;
+
+/* LPCVOID [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef CONST void *LPCVOID;
+
+/* LPSTR [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef CHAR *LPSTR;
+
+/* LPCSTR [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef CONST CHAR *LPCSTR;
+
+/* TCHAR [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef WCHAR TCHAR;
+
+/* LPTSTR [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef LPWSTR LPTSTR;
+
+/* LPCTSTR [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef LPCWSTR LPCTSTR;
+
+/* PCTSTR [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef LPCWSTR PCTSTR;
+
+/* LONGLONG [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef __int64 LONGLONG;
+
+/* ULONGLONG [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef unsigned __int64 ULONGLONG;
+
+/* HRESULT [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef LONG HRESULT;
+
+/* NTSTATUS [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef LONG NTSTATUS;
+
+/* SIZE_T [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef ULONG_PTR SIZE_T;
+
+/* SSIZE_T [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef LONG_PTR SSIZE_T;
+
+/* FARPROC [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef INT_PTR (WINAPI *FARPROC)(void);
+
+/* NEARPROC [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef INT_PTR (WINAPI *NEARPROC)(void);
+
+/* PROC [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef INT_PTR (WINAPI *PROC)(void);
+
+/* SECURITY_ATTRIBUTES [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef struct _SECURITY_ATTRIBUTES SECURITY_ATTRIBUTES, *PSECURITY_ATTRIBUTES, *LPSECURITY_ATTRIBUTES;
+
+/* FILETIME [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef struct _FILETIME { DWORD dwLowDateTime; DWORD dwHighDateTime; } FILETIME, *PFILETIME, *LPFILETIME;
+
+/* SYSTEMTIME [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef struct _SYSTEMTIME { WORD wYear; WORD wMonth; WORD wDayOfWeek; WORD wDay; WORD wHour; WORD wMinute; WORD wSecond; WORD wMilliseconds; } SYSTEMTIME, *PSYSTEMTIME, *LPSYSTEMTIME;
+
+/* CEOID [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef DWORD CEOID;
+
+/* CEPROPID [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef DWORD CEPROPID;
+
+/* LPTHREAD_START_ROUTINE [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef DWORD (WINAPI *LPTHREAD_START_ROUTINE)(LPVOID);
 
 /* ATOM
  * source: win32/common/windows-data-types.md */
@@ -334,6 +538,11 @@ typedef HANDLE WINSTA;
  * source: CE SDK reference */
 typedef UINT_PTR WPARAM;
 
+/* WNDPROC [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef LRESULT (CALLBACK *WNDPROC)(HWND, UINT, WPARAM, LPARAM);
+
 /* HCURSOR
  * source: win32/common/windows-data-types.md */
 typedef HICON HCURSOR;
@@ -351,33 +560,25 @@ typedef HICON HCURSOR;
 
 /* CONST  [struct, typedef, macro; shared; entity-headers] */
 
+/* HIBYTE  [macro; shared] */
+
+/* HIWORD  [macro; shared] */
+
 /* HWINSTA  [typedef; shared; entity-headers] */
 
-/* WINAPI  [typedef, macro; shared; entity-headers] */
+/* LOBYTE  [macro; shared] */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 2.11..2.12, 3.0..399 */
+/* LOWORD  [macro; shared] */
 
-/* HIBYTE  [macro; shared; CE 2.11..2.12, 3.0..399] */
-
-/* HIWORD  [macro; shared; CE 2.11..2.12, 3.0..399] */
-
-/* LOBYTE  [macro; shared; CE 2.11..2.12, 3.0..399] */
-
-/* LOWORD  [macro; shared; CE 2.11..2.12, 3.0..399] */
-
-/* MAKELONG  [macro; shared; CE 2.11..2.12, 3.0..399] */
+/* MAKELONG  [macro; shared] */
 #define MAKELONG(a, b) \ 
  ((LONG) (((WORD) (a)) | ((DWORD) ((WORD) (b))) << 16))
 
-/* MAKEWORD  [macro; shared; CE 2.11..2.12, 3.0..399] */
+/* MAKEWORD  [macro; shared] */
 #define MAKEWORD(a, b) \ 
  ((WORD) (((BYTE) (a)) | ((WORD) ((BYTE) (b))) << 8))
-#endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 212 && _WIN32_WCE < 400)) /* CE 2.12..399 */
-
-/* INT  [typedef, function; shared; CE 2.12..399; entity-headers] */
-#endif /* _WIN32_WCE */
+/* WINAPI  [typedef, macro; shared; entity-headers] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -403,9 +604,6 @@ typedef BYTE far *LPBYTE;
 /* LPCOLORREF  [typedef; shared; entity-headers; win32-reference] */
 typedef DWORD *LPCOLORREF;
 
-/* LPCVOID  [typedef; shared; entity-headers; win32-reference] */
-typedef CONST void *LPCVOID;
-
 /* LPDWORD  [typedef; shared; entity-headers; win32-reference] */
 typedef DWORD *LPDWORD;
 
@@ -417,12 +615,6 @@ typedef int *LPINT;
 
 /* LPLONG  [typedef; shared; entity-headers; win32-reference] */
 typedef long *LPLONG;
-
-/* LPVOID  [typedef; shared; entity-headers; win32-reference] */
-typedef void *LPVOID;
-
-/* LPWORD  [typedef; shared; entity-headers; win32-reference] */
-typedef WORD *LPWORD;
 
 /* PBOOL  [typedef; shared; entity-headers; win32-reference] */
 typedef BOOL *PBOOL;
@@ -442,6 +634,35 @@ typedef HKEY *PHKEY;
 /* PINT  [typedef; shared; entity-headers; win32-reference] */
 typedef int *PINT;
 
+/* POINT  [struct, function, library; shared] */
+typedef struct tagPOINT {
+ LONG x;
+ LONG y;
+} POINT;
+
+/* POINTS  [struct; shared] */
+typedef struct tagPOINTS { 
+ SHORT x;
+ SHORT y; 
+} POINTS;
+
+/* RECT  [struct, library; shared] */
+typedef struct _RECT { 
+ LONG left; 
+ LONG top; 
+ LONG right; 
+ LONG bottom; 
+} RECT;
+
+/* SIZE  [struct, function, library; shared] */
+typedef struct tagSIZE { 
+ LONG cx; 
+ LONG cy; 
+} SIZE;
+
+/* LPWORD  [typedef; shared; entity-headers; win32-reference] */
+typedef WORD *LPWORD;
+
 /* PUCHAR  [typedef; shared; entity-headers; win32-reference] */
 typedef UCHAR *PUCHAR;
 
@@ -456,62 +677,9 @@ typedef USHORT *PUSHORT;
 
 /* PWORD  [typedef; shared; entity-headers; win32-reference] */
 typedef WORD *PWORD;
-
-/* UCHAR  [typedef; shared; entity-headers; win32-reference] */
-typedef unsigned char UCHAR;
-
-/* USHORT  [typedef, struct; shared; entity-headers; win32-reference] */
-typedef unsigned short USHORT;
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* POINTS  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagPOINTS { 
- SHORT x;
- SHORT y; 
-} POINTS;
-
-/* RECT  [struct, library; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _RECT { 
- LONG left; 
- LONG top; 
- LONG right; 
- LONG bottom; 
-} RECT;
-
-/* SIZE  [struct, function, library; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagSIZE { 
- LONG cx; 
- LONG cy; 
-} SIZE;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 210) || (_WIN32_WCE >= 211 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..209, 2.11..399, 5.0..699 */
-
-/* POINT  [struct, function, library; shared; CE 1.0..209, 2.11..399, 5.0..699] */
-typedef struct tagPOINT {
- LONG x;
- LONG y;
-} POINT;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-
-/* RECTL  [struct; shared; CE 3.0..399, 5.0..699] */
-typedef struct _RECTL { 
- LONG left; 
- LONG top; 
- LONG right; 
- LONG bottom; 
-} RECTL, *PRECTL;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _RECTL { LONG left; LONG top; LONG right; LONG bottom; } RECTL, *PRECTL;
+typedef RECT *PRECT, *LPRECT;
+typedef CONST RECT *LPCRECT;
+typedef POINT *PPOINT, *LPPOINT;
+typedef SIZE *PSIZE, *LPSIZE;
 
 #endif /* _WINDEF_ */

@@ -576,10 +576,7 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-
-/* INTERNET_STATUS_CALLBACK  [typedef, callback; shared; CE 3.0..399, 5.0..699; Wininet.lib] */
-#endif /* _WIN32_WCE */
+/* INTERNET_STATUS_CALLBACK  [typedef, callback; shared; Wininet.lib] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -587,14 +584,31 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-
-/* INTERNET_ASYNC_RESULT  [struct; shared; CE 3.0..399, 5.0..699; Wininet.lib] */
+/* INTERNET_ASYNC_RESULT  [struct; shared; Wininet.lib] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   dwResult */
 /*   dwError */
 
-/* INTERNET_CACHE_ENTRY_INFO  [struct; shared; CE 3.0..399, 5.0..699; Wininet.lib; A/W INTERNET_CACHE_ENTRY_INFOA,INTERNET_CACHE_ENTRY_INFOW (CE is W-side)] */
+/* INTERNET_AUTH_NOTIFY_DATA  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   cbStruct */
+/*   dwOptions */
+/*   dwContext */
+
+/* INTERNET_BUFFERS  [struct; shared; A/W INTERNET_BUFFERSA,INTERNET_BUFFERSW (CE is W-side)] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   dwStructSize */
+/*   Next */
+/*   lpcszHeader */
+/*   dwHeadersLength */
+/*   dwHeadersTotal */
+/*   lpvBuffer */
+/*   dwBufferLength */
+/*   dwBufferTotal */
+/*   dwOffsetLow */
+/*   dwOffsetHigh */
+
+/* INTERNET_CACHE_ENTRY_INFO  [struct; shared; Wininet.lib; A/W INTERNET_CACHE_ENTRY_INFOA,INTERNET_CACHE_ENTRY_INFOW (CE is W-side)] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   dwStructSize */
 /*   lpszSourceUrlName */
@@ -613,7 +627,49 @@
 /*   lpszFileExtension */
 /*   dwReserved */
 
-/* INTERNET_SCHEME  [enum; shared; CE 3.0..399, 5.0..699; Wininet.lib] */
+/* INTERNET_CACHE_TIMESTAMPS  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   ftExpires */
+/*   ftLastModified */
+
+/* INTERNET_CERTIFICATE_INFO  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   ftExpiry */
+/*   ftStart */
+/*   lpszSubjectInfo */
+/*   lpszIssuerInfo */
+/*   lpszProtocolName */
+/*   lpszSignatureAlgName */
+/*   lpszEncryptionAlgName */
+/*   dwKeySize */
+
+/* INTERNET_CONNECTED_INFO  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   dwConnectedState */
+/*   dwFlags */
+
+/* INTERNET_PER_CONN_OPTION  [struct; shared; A/W INTERNET_PER_CONN_OPTIONA,INTERNET_PER_CONN_OPTIONW (CE is W-side)] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   dwOption */
+/*   Value */
+/*   dwValue */
+/*   ftValue */
+
+/* INTERNET_PER_CONN_OPTION_LIST  [struct; shared; A/W INTERNET_PER_CONN_OPTION_LISTA,INTERNET_PER_CONN_OPTION_LISTW (CE is W-side)] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   dwSize */
+/*   pszConnection */
+/*   dwOptionCount */
+/*   dwOptionError */
+/*   pOptions */
+
+/* INTERNET_PROXY_INFO  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   dwAccessType */
+/*   lpszProxy */
+/*   lpszProxyBypass */
+
+/* INTERNET_SCHEME  [enum; shared; Wininet.lib] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   INTERNET_SCHEME_FTP */
 /*   INTERNET_SCHEME_GOPHER */
@@ -629,7 +685,12 @@
 /*   INTERNET_SCHEME_FIRST */
 /*   INTERNET_SCHEME_LAST */
 
-/* URL_COMPONENTS  [struct; shared; CE 3.0..399, 5.0..699; Wininet.lib; A/W URL_COMPONENTSA,URL_COMPONENTSW (CE is W-side)] */
+/* INTERNET_VERSION_INFO  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   dwMajorVersion */
+/*   dwMinorVersion */
+
+/* URL_COMPONENTS  [struct; shared; Wininet.lib; A/W URL_COMPONENTSA,URL_COMPONENTSW (CE is W-side)] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   dwStructSize */
 /*   lpszScheme */
@@ -646,93 +707,6 @@
 /*   dwUrlPathLength */
 /*   lpszExtraInfo */
 /*   dwExtraInfoLength */
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* HTTP_VERSION_INFO  [struct; shared; CE 5.0..699] */
-typedef struct {
- DWORD dwMajorVersion;
- DWORD dwMinorVersion;
-} HTTP_VERSION_INFO, *LPHTTP_VERSION_INFO;
-
-/* INTERNET_AUTH_NOTIFY_DATA  [struct; shared; CE 5.0..699] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   cbStruct */
-/*   dwOptions */
-/*   dwContext */
-
-/* INTERNET_BUFFERS  [struct; shared; CE 5.0..699; A/W INTERNET_BUFFERSA,INTERNET_BUFFERSW (CE is W-side)] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   dwStructSize */
-/*   Next */
-/*   lpcszHeader */
-/*   dwHeadersLength */
-/*   dwHeadersTotal */
-/*   lpvBuffer */
-/*   dwBufferLength */
-/*   dwBufferTotal */
-/*   dwOffsetLow */
-/*   dwOffsetHigh */
-
-/* INTERNET_CACHE_TIMESTAMPS  [struct; shared; CE 5.0..699] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   ftExpires */
-/*   ftLastModified */
-
-/* INTERNET_CERTIFICATE_INFO  [struct; shared; CE 5.0..699] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   ftExpiry */
-/*   ftStart */
-/*   lpszSubjectInfo */
-/*   lpszIssuerInfo */
-/*   lpszProtocolName */
-/*   lpszSignatureAlgName */
-/*   lpszEncryptionAlgName */
-/*   dwKeySize */
-
-/* INTERNET_CONNECTED_INFO  [struct; shared; CE 5.0..699] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   dwConnectedState */
-/*   dwFlags */
-
-/* INTERNET_PER_CONN_OPTION  [struct; shared; CE 5.0..699; A/W INTERNET_PER_CONN_OPTIONA,INTERNET_PER_CONN_OPTIONW (CE is W-side)] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   dwOption */
-/*   Value */
-/*   dwValue */
-/*   ftValue */
-
-/* INTERNET_PER_CONN_OPTION_LIST  [struct; shared; CE 5.0..699; A/W INTERNET_PER_CONN_OPTION_LISTA,INTERNET_PER_CONN_OPTION_LISTW (CE is W-side)] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   dwSize */
-/*   pszConnection */
-/*   dwOptionCount */
-/*   dwOptionError */
-/*   pOptions */
-
-/* INTERNET_PROXY_INFO  [struct; shared; CE 5.0..699] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   dwAccessType */
-/*   lpszProxy */
-/*   lpszProxyBypass */
-
-/* INTERNET_VERSION_INFO  [struct; shared; CE 5.0..699] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   dwMajorVersion */
-/*   dwMinorVersion */
-
-/* InternetCookieState  [enum; shared; CE 5.0..699] */
-typedef enum InternetCookieState {
- COOKIE_STATE_UNKNOWN = 0x0,
- COOKIE_STATE_ACCEPT = 0x1,
- COOKIE_STATE_PROMPT = 0x2,
- COOKIE_STATE_LEASH = 0x3,
- COOKIE_STATE_DOWNGRADE = 0x4,
- COOKIE_STATE_REJECT = 0x5,
- COOKIE_STATE_MAX = COOKIE_STATE_REJECT
-} InternetCookieState;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks
@@ -1382,13 +1356,6 @@ DWORD PrivacyGetZonePreferenceW(
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
-
-/* typedef */
-typedef void (CALLBACK* INTERNET_STATUS_CALLBACK) (HINTERNEThInternet,DWORD_PTRdwContext,DWORDdwInternetStatus,LPVOIDlpvStatusInformation,DWORDdwStatusInformationLength);
-typedef void (CALLBACK* INTERNET_STATUS_CALLBACK) ( HINTERNET hInternet, DWORD_PTR dwContext, DWORD dwInternetStatus, LPVOID lpvStatusInformation, DWORD dwStatusInformationLength );
-
-/* struct */
-typedef struct _INTERNET_CACHE_ENTRY_INFO { DWORD dwStructSize; LPTSTR lpszSourceUrlName; LPTSTR lpszLocalFileName; DWORD CacheEntryType; DWORD dwUseCount; DWORD dwHitRate; DWORD dwSizeLow; DWORD dwSizeHigh; FILETIME LastModifiedTime; FILETIME ExpireTime; FILETIME LastAccessTime; FILETIME LastSyncTime; LPBYTE lpHeaderInfo; DWORD dwHeaderInfoSize; LPTSTR lpszFileExtension; union { DWORD dwReserved; DWORD dwExemptDelta; };
 
 /* function */
 BOOL WINAPIInternetCrackUrl(LPCTSTRlpszUrl,DWORDdwUrlLength,DWORDdwFlags,LPURL_COMPONENTSlpUrlComponents);

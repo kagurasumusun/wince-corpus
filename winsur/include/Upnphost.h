@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 12 declarations, 5 outlines, 0 base types, 0 extra macros, 8 extra decls
+ * 0 constants, 0 declarations, 5 outlines, 0 base types, 0 extra macros, 8 extra decls
  */
 #ifndef _UPNPHOST_
 #define _UPNPHOST_
@@ -26,103 +26,6 @@
 /* IUPnPRegistrar  [interface; shared; CE 5.0..599; Uuid.lib] */
 
 /* IUPnPReregistrar  [interface; shared; CE 5.0..599; Uuid.lib] */
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* IUPnPDeviceControl::GetServiceObject  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT GetServiceObject(
- BSTR bstrUDN,
- BSTR bstrServiceId,
- IDispatch** ppdispService
-);
-
-/* IUPnPDeviceControl::Initialize  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT Initialize(
- BSTR bstrXMLDesc,
- BSTR bstrDeviceIdentifier,
- BSTR bstrInitString
-);
-
-/* IUPnPEventSink::OnStateChanged  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT OnStateChanged(
- DWORD cChanges,
- DISPID rgdispidChanges[]
-);
-
-/* IUPnPEventSink::OnStateChangedSafe  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT OnStateChangedSafe(
- VARIANT varsadispidChanges
-);
-
-/* IUPnPEventSource::Advise  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT Advise(
- IUnknown* punkSubscriber
-);
-
-/* IUPnPEventSource::Unadvise  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT Unadvise(
- IUnknown* punkSubscriber
-);
-
-/* IUPnPRegistrar::GetUniqueDeviceName  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT GetUniqueDeviceName(
- BSTR bstrDeviceIdentifier,
- BSTR bstrTemplateUDN,
- BSTR* pbstrUDN
-);
-
-/* IUPnPRegistrar::RegisterDevice  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT RegisterDevice(
- BSTR bstrXMLDesc,
- BSTR bstrProgIDDeviceControlClass,
- BSTR bstrInitString,
- BSTR bstrContainerId,
- BSTR bstrResourcePath,
- LONG nLifeTime,
- BSTR* pbstrDeviceIdentifier
-);
-
-/* IUPnPRegistrar::RegisterRunningDevice  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
-RegisterRunningDevice(
- BSTR bstrXMLDesc,
- IUnknown* punkDeviceControl,
- BSTR bstrInitString,
- BSTR bstrResourcePath,
- LONG nLifeTime,
- BSTR* pbstrDeviceIdentifier
-);
-
-/* IUPnPRegistrar::UnregisterDevice  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
-UnregisterDevice(
- BSTR bstrDeviceIdentifier, 
- BOOL fPermanent
-);
-
-/* IUPnPReregistrar::ReregisterDevice  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT ReregisterDevice(
- BSTR bstrDeviceIdentifier,
- BSTR bstrXMLDesc,
- BSTR bstrProgIDDeviceControlClass,
- BSTR bstrInitString,
- BSTR bstrContainerId,
- BSTR bstrResourcePath,
- LONG nLifeTime
-);
-
-/* IUPnPReregistrar::ReregisterRunningDevice  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
-HRESULT ReregisterRunningDevice(
- BSTR bstrDeviceIdentifier,
- BSTR bstrXMLDesc,
- IUnknown* punkDeviceControl,
- BSTR bstrInitString,
- BSTR bstrResourcePath,
- LONG nLifeTime
-);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

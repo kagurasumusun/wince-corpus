@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 36 constants, 10 declarations, 5 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 36 constants, 8 declarations, 7 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _IPTYPES_
 #define _IPTYPES_
@@ -58,18 +58,15 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+/* IP_ADAPTER_ADDRESSES  [struct; ce-only] */
 
-/* IP_ADAPTER_ADDRESSES  [struct; ce-only; CE 4.0..699] */
+/* IP_ADAPTER_ANYCAST_ADDRESS  [struct; ce-only] */
 
-/* IP_ADAPTER_ANYCAST_ADDRESS  [struct; ce-only; CE 4.0..699] */
+/* IP_ADAPTER_MULTICAST_ADDRESS  [struct; ce-only] */
 
-/* IP_ADAPTER_MULTICAST_ADDRESS  [struct; ce-only; CE 4.0..699] */
+/* IP_ADAPTER_PREFIX  [struct; ce-only] */
 
-/* IP_ADAPTER_PREFIX  [struct; ce-only; CE 4.0..699] */
-
-/* IP_ADAPTER_UNICAST_ADDRESS  [struct; ce-only; CE 4.0..699] */
-#endif /* _WIN32_WCE */
+/* IP_ADAPTER_UNICAST_ADDRESS  [struct; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -77,55 +74,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-
-/* FIXED_INFO  [struct; ce-only; CE 3.0..399, 5.0..699] */
-typedef struct {
- char HostName [MAX_HOSTNAME_LEN + 4];
- char DomainName [MAX_DOMAIN_NAME_LEN + 4];
- PIP_ADDR_STRING CurrentDnsServer;
- IP_ADDR_STRING DnsServerList; 
- UINT NodeType;
- char ScopeId [MAX_SCOPE_ID_LEN + 4];
- UINT EnableRouting;
- UINT EnableProxy;
- UINT EnableDns;
-} FIXED_INFO, *PFIXED_INFO;
-
-/* IP_ADAPTER_INFO  [struct; shared; CE 3.0..399, 5.0..699] */
-typedef struct _IP_ADAPTER_INFO {
- struct _IP_ADAPTER_INFO* Next;
- DWORD ComboIndex;
- Char AdapterName[MAX_ADAPTER_NAME_LENGTH + 4];
- char Description[MAX_ADAPTER_DESCRIPTION_LENGTH + 4];
- UINT AddressLength;
- BYTE Address[MAX_ADAPTER_ADDRESS_LENGTH];
- DWORD Index;
- UINT Type;
- UINT DhcpEnabled;
- PIP_ADDR_STRING CurrentIpAddress;
- IP_ADDR_STRING IpAddressList;
- IP_ADDR_STRING GatewayList;
- IP_ADDR_STRING DhcpServer;
- BOOL HaveWins;
- IP_ADDR_STRING PrimaryWinsServer;
- IP_ADDR_STRING SecondaryWinsServer;
- time_t LeaseObtained;
- time_t LeaseExpires;
-} IP_ADAPTER_INFO, *PIP_ADAPTER_INFO;
-
-/* IP_PER_ADAPTER_INFO  [struct; ce-only; CE 3.0..399, 5.0..699] */
-typedef struct _IP_PER_ADAPTER_INFO {
- UINT AutoconfigEnabled;
- UINT AutoconfigActive;
- PIP_ADDR_STRING CurrentDnsServer;
- IP_ADDR_STRING DnsServerList;
-} IP_PER_ADAPTER_INFO, *PIP_PER_ADAPTER_INFO;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* IF_OPER_STATUS  [enum; shared; CE 4.0..699] */
+/* IF_OPER_STATUS  [enum; shared] */
 typedef enum {
  IfOperStatusUp = 1, 
  IfOperStatusDown, 
@@ -136,20 +85,7 @@ typedef enum {
  IfOperStatusLowerLayerDown
 } IF_OPER_STATUS;
 
-/* IP_ADDR_STRING  [struct; shared; CE 4.0..699] */
-typedef struct _IP_ADDR_STRING {
- struct _IP_ADDR_STRING* Next;
- IP_ADDRESS_STRING IpAddress;
- IP_MASK_STRING IpMask;
- DWORD Context;
-} IP_ADDR_STRING, *PIP_ADDR_STRING;
-
-/* IP_ADDRESS_STRING  [struct; shared; CE 4.0..699] */
-typedef struct {
- char String[4 * 4];
-} IP_ADDRESS_STRING, *PIP_ADDRESS_STRING, IP_MASK_STRING, *PIP_MASK_STRING;
-
-/* IP_DAD_STATE  [enum; ce-only; CE 4.0..699] */
+/* IP_DAD_STATE  [enum; ce-only] */
 typedef enum {
  IpDadStateInvalid = 0, 
  IpDadStateTentative, 
@@ -158,7 +94,7 @@ typedef enum {
  IpDadStatePreferred
 } IP_DAD_STATE;
 
-/* IP_PREFIX_ORIGIN  [enum; ce-only; CE 4.0..699] */
+/* IP_PREFIX_ORIGIN  [enum; ce-only] */
 typedef enum {
  IpPrefixOriginOther = 0, 
  IpPrefixOriginManual, 
@@ -167,7 +103,7 @@ typedef enum {
  IpPrefixOriginRouterAdvertisement
 } IP_PREFIX_ORIGIN;
 
-/* IP_SUFFIX_ORIGIN  [enum; ce-only; CE 4.0..699] */
+/* IP_SUFFIX_ORIGIN  [enum; ce-only] */
 typedef enum {
  IpSuffixOriginOther = 0, 
  IpSuffixOriginManual, 
@@ -177,7 +113,7 @@ typedef enum {
  IpSuffixOriginRandom
 } IP_SUFFIX_ORIGIN;
 
-/* SCOPE_LEVEL  [enum; shared; CE 4.0..699] */
+/* SCOPE_LEVEL  [enum; shared] */
 typedef enum {
  ScopeLevelInterface = 1, 
  ScopeLevelLink = 2, 
@@ -187,7 +123,31 @@ typedef enum {
  ScopeLevelOrganization = 8, 
  ScopeLevelGlobal = 14
 } SCOPE_LEVEL;
-#endif /* _WIN32_WCE */
+
+/* IP_ADAPTER_INFO  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   Next */
+/*   ComboIndex */
+/*   AdapterName */
+/*   Description */
+/*   AddressLength */
+/*   Address */
+/*   Index */
+/*   Type */
+/*   DhcpEnabled */
+/*   CurrentIpAddress */
+/*   IpAddressList */
+/*   GatewayList */
+/*   DhcpServer */
+/*   HaveWins */
+/*   PrimaryWinsServer */
+/*   SecondaryWinsServer */
+/*   LeaseObtained */
+/*   LeaseExpires */
+
+/* IP_ADDRESS_STRING  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   String */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

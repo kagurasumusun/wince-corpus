@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 78 constants, 35 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 78 constants, 23 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _MSHTML_
 #define _MSHTML_
@@ -102,55 +102,20 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
-
-/* BEHAVIOR_LAYOUT_INFO  [enum; ce-only; CE 5.0..599] */
-typedef enum _BEHAVIOR_LAYOUT_INFO { 
- BEHAVIORLAYOUTINFO_FULLDELEGATION = 1, 
- BEHAVIORLAYOUTINFO_MODIFYNATURAL = 2, 
- BEHAVIORLAYOUTINFO_MAPSIZE = 4 
-} BEHAVIOR_LAYOUT_INFO;
-
-/* BEHAVIOR_LAYOUT_MODE  [enum; ce-only; CE 5.0..599] */
-typedef enum _BEHAVIOR_LAYOUT_MODE { 
- BEHAVIORLAYOUTMODE_NATURAL = 0x0001, 
- BEHAVIORLAYOUTMODE_MINWIDTH = 0x0002, 
- BEHAVIORLAYOUTMODE_MAXWIDTH = 0x0004, 
- BEHAVIORLAYOUTMODE_MEDIA_RESOLUTION = 0x4000, 
- BEHAVIORLAYOUTMODE_FINAL_PERCENT = 0x8000 
-} BEHAVIOR_LAYOUT_MODE;
-
-/* CARET_DIRECTION  [enum; ce-only; CE 5.0..599] */
-typedef enum _CARET_DIRECTION { 
- CARET_DIRECTION_INDETERMINATE = 0, 
- CARET_DIRECTION_SAME = 1, 
- CARET_DIRECTION_BACKWARD = 2, 
- CARET_DIRECTION_FORWARD = 3 
-} CARET_DIRECTION;
-
-/* COORD_SYSTEM  [enum; ce-only; CE 5.0..599] */
-typedef enum _COORD_SYSTEM { 
- COORD_SYSTEM_GLOBAL = 0, 
- COORD_SYSTEM_PARENT = 1, 
- COORD_SYSTEM_CONTAINER = 2, 
- COORD_SYSTEM_CONTENT = 3, 
- COORD_SYSTEM_FRAME = 4 
-} COORD_SYSTEM;
-
-/* DISPLAY_BREAK  [enum; ce-only; CE 5.0..599] */
+/* DISPLAY_BREAK  [enum; ce-only] */
 typedef enum _DISPLAY_BREAK { 
  DISPLAY_BREAK_None = 0x0, 
  DISPLAY_BREAK_Block = 0x1, 
  DISPLAY_BREAK_Break = 0x2 
 } DISPLAY_BREAK;
 
-/* DISPLAY_GRAVITY  [enum; ce-only; CE 5.0..599] */
+/* DISPLAY_GRAVITY  [enum; ce-only] */
 typedef enum _DISPLAY_GRAVITY { 
  DISPLAY_GRAVITY_PreviousLine = 1, 
  DISPLAY_GRAVITY_NextLine = 2 
 } DISPLAY_GRAVITY;
 
-/* DISPLAY_MOVEUNIT  [enum; ce-only; CE 5.0..599] */
+/* DISPLAY_MOVEUNIT  [enum; ce-only] */
 typedef enum _DISPLAY_MOVEUNIT { 
  DISPLAY_MOVEUNIT_PreviousLine = 1, 
  DISPLAY_MOVEUNIT_NextLine = 2, 
@@ -160,69 +125,17 @@ typedef enum _DISPLAY_MOVEUNIT {
  DISPLAY_MOVEUNIT_BottomOfWindow = 6 
 } DISPLAY_MOVEUNIT;
 
-/* ELEMENT_CORNER  [enum; ce-only; CE 5.0..599] */
-typedef enum _ELEMENT_CORNER { 
- ELEMENT_CORNER_NONE = 0, 
- ELEMENT_CORNER_TOP = 1, 
- ELEMENT_CORNER_LEFT = 2, 
- ELEMENT_CORNER_BOTTOM = 3, 
- ELEMENT_CORNER_RIGHT = 4, 
- ELEMENT_CORNER_TOPLEFT = 5, 
- ELEMENT_CORNER_TOPRIGHT = 6, 
- ELEMENT_CORNER_BOTTOMLEFT = 7, 
- ELEMENT_CORNER_BOTTOMRIGHT = 8 
-} ELEMENT_CORNER;
-
-/* ELEMENTDESCRIPTOR_FLAGS  [enum; ce-only; CE 5.0..599] */
-typedef enum _ELEMENTDESCRIPTOR_FLAGS { 
- ELEMENTDESCRIPTORFLAGS_LITERAL = 1, 
- ELEMENTDESCRIPTORFLAGS_NESTED_LITERAL = 2, 
- ELEMENTDESCRIPTOR_FLAGS_Max = 2147483647L 
-} ELEMENTDESCRIPTOR_FLAGS;
-
-/* ELEMENTNAMESPACE_FLAGS  [enum; ce-only; CE 5.0..599] */
-typedef enum _ELEMENTNAMESPACE_FLAGS { 
- ELEMENTNAMESPACEFLAGS_ALLOWANYTAG = 0x1, 
- ELEMENTNAMESPACEFLAGS_QUERYFORUNKNOWNTAGS = 0x2 
-} ELEMENTNAMESPACE_FLAGS;
-
-/* HT_OPTIONS  [enum; ce-only; CE 5.0..599] */
+/* HT_OPTIONS  [enum; ce-only] */
 typedef enum _HT_OPTIONS { 
  HT_OPT_AllowAfterEOL = 1 
 } HT_OPTIONS;
 
-/* HT_RESULTS  [enum; ce-only; CE 5.0..599] */
+/* HT_RESULTS  [enum; ce-only] */
 typedef enum _HT_RESULTS { 
  HT_RESULTS_Glyph = 1 
 } HT_RESULTS;
 
-/* HTML_PAINT_DRAW_FLAGS  [enum; ce-only; CE 5.0..599] */
-typedef enum _HTML_PAINT_DRAW_FLAGS { 
- HTMLPAINT_DRAW_UPDATEREGION = 0x000001, 
- HTMLPAINT_DRAW_USE_XFORM = 0x000002 
-} HTML_PAINT_DRAW_FLAGS;
-
-/* HTML_PAINT_DRAW_INFO  [struct; ce-only; CE 5.0..599] */
-typedef struct _HTML_PAINT_DRAW_INFO { 
- RECT rcViewport; 
- HRGN hrgnUpdate; 
- HTML_PAINT_XFORM xform; 
-} HTML_PAINT_DRAW_INFO;
-
-/* HTML_PAINT_DRAW_INFO_FLAGS  [enum; ce-only; CE 5.0..599] */
-typedef enum _HTML_PAINT_DRAW_INFO_FLAGS { 
- HTMLPAINT_DRAWINFO_VIEWPORT = 0x000001, 
- HTMLPAINT_DRAWINFO_UPDATEREGION = 0x000002, 
- HTMLPAINT_DRAWINFO_XFORM = 0x000004 
-} HTML_PAINT_DRAW_INFO_FLAGS;
-
-/* HTML_PAINT_EVENT_FLAGS  [enum; ce-only; CE 5.0..599] */
-typedef enum _HTML_PAINT_EVENT_FLAGS { 
- HTMLPAINT_EVENT_TARGET = 0x0001, 
- HTMLPAINT_EVENT_SETCURSOR = 0x0002 
-} HTML_PAINT_EVENT_FLAGS;
-
-/* HTML_PAINT_XFORM  [struct; ce-only; CE 5.0..599] */
+/* HTML_PAINT_XFORM  [struct; ce-only] */
 typedef struct _HTML_PAINT_XFORM { 
  FLOAT eM11; 
  FLOAT eM12; 
@@ -232,129 +145,30 @@ typedef struct _HTML_PAINT_XFORM {
  FLOAT eDy; 
 } HTML_PAINT_XFORM;
 
-/* HTML_PAINT_ZORDER  [enum; ce-only; CE 5.0..599] */
-typedef enum _HTML_PAINT_ZORDER { 
- HTMLPAINT_ZORDER_NONE = 0, 
- HTMLPAINT_ZORDER_REPLACE_ALL = 1, 
- HTMLPAINT_ZORDER_REPLACE_CONTENT = 2, 
- HTMLPAINT_ZORDER_REPLACE_BACKGROUND = 3, 
- HTMLPAINT_ZORDER_BELOW_CONTENT = 4, 
- HTMLPAINT_ZORDER_BELOW_FLOW = 5, 
- HTMLPAINT_ZORDER_ABOVE_FLOW = 6, 
- HTMLPAINT_ZORDER_ABOVE_CONTENT = 7, 
- HTMLPAINT_ZORDER_WINDOW_TOP = 8 
-} HTML_PAINT_ZORDER;
-
-/* HTML_PAINTER  [enum; ce-only; CE 5.0..599] */
-typedef enum _HTML_PAINTER { 
- HTMLPAINTER_OPAQUE = 0x000001, 
- HTMLPAINTER_TRANSPARENT = 0x000002, 
- HTMLPAINTER_ALPHA = 0x000004, 
- HTMLPAINTER_COMPLEX = 0x000008, 
- HTMLPAINTER_OVERLAY = 0x000010, 
- HTMLPAINTER_HITTEST = 0x000020, 
- HTMLPAINTER_SURFACE = 0x000100, 
- HTMLPAINTER_3DSURFACE = 0x000200, 
- HTMLPAINTER_NOBAND = 0x000400, 
- HTMLPAINTER_NODC = 0x001000, 
- HTMLPAINTER_NOPHYSICALCLIP = 0x002000, 
- HTMLPAINTER_NOSAVEDC = 0x004000, 
- HTMLPAINTER_SUPPORTS_XFORM = 0x008000 
-} HTML_PAINTER;
-
-/* HTML_PAINTER_INFO  [struct; ce-only; CE 5.0..599] */
-typedef struct _HTML_PAINTER_INFO { 
- LONG lFlags; 
- LONG lZOrder; 
- IID iidDrawObject; 
- RECT rcExpand; 
-} HTML_PAINTER_INFO;
-
-/* LINE_DIRECTION  [enum; ce-only; CE 5.0..599] */
+/* LINE_DIRECTION  [enum; ce-only] */
 typedef enum _LINE_DIRECTION { 
  LINE_DIRECTION_RightToLeft = 1, 
  LINE_DIRECTION_LeftToRight = 2 
 } LINE_DIRECTION;
 
-/* SAVE_SEGMENTS_FLAGS  [enum; ce-only; CE 5.0..599] */
+/* SAVE_SEGMENTS_FLAGS  [enum; ce-only] */
 typedef enum _SAVE_SEGMENTS_FLAGS { 
  SAVE_SEGMENTS_NoIE4SelectionCompat = 1 
 } SAVE_SEGMENTS_FLAGS;
 
-/* SELECTION_TYPE  [enum; ce-only; CE 5.0..599] */
+/* SELECTION_TYPE  [enum; ce-only] */
 typedef enum _SELECTION_TYPE { 
  SELECTION_TYPE_None = 0, 
  SELECTION_TYPE_Caret = 1, 
  SELECTION_TYPE_Text = 2, 
  SELECTION_TYPE_Control = 3 
 } SELECTION_TYPE;
-#endif /* _WIN32_WCE */
 
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* IOleControlNavigation2::ActivateRect  [function; ce-only; CE 4.0..699; Mshtml.dll, mshtml.dll] */
-HRESULT STDMETHODCALLTYPE ActivateRect(
- DWORD rectToActivate
-);
-
-/* IOleControlNavigation2::DeactivateRect  [function; ce-only; CE 4.0..699; Mshtml.dll, mshtml.dll] */
-HRESULT STDMETHODCALLTYPE DectivateRect(VOID);
-
-/* IOleControlNavigation2::GetControlNavigationCapabilities  [function; ce-only; CE 4.0..699; Mshtml.dll, mshtml.dll] */
-HRESULT GetControlNavigationCapabilities(
- DWORD* navigationFlags
-);
-
-/* IOleControlNavigation2::GetCurrentRectIndex  [function; ce-only; CE 4.0..699; Mshtml.dll, mshtml.dll] */
-HRESULT STDMETHODCALLTYPE GetCurrentRectIndex(
- DWORD __RPC_FAR* current
-);
-
-/* IOleControlNavigation2::GetNavigationRectCount  [function; ce-only; CE 4.0..699; Mshtml.dll, mshtml.dll] */
-HRESULT GetNavigationRectCount(
- DWORD __RPC_FAR* rectCount
-);
-
-/* IOleControlNavigation2::GetNavigationRects  [function; ce-only; CE 4.0..699; Mshtml.dll, mshtml.dll] */
-virtual HRESULT STDMETHODCALLTYPE GetNavigationRects(
- DWORD rectCount,
- RECT __RPC_FAR rects[ ]
-);
-
-/* IOleControlNavigation2::NavigateInControl  [function; ce-only; CE 4.0..699; Mshtml.dll, mshtml.dll] */
-HRESULT STDMETHODCALLTYPE NavigateInControl(
- RECT lastRect,
- NVFOCUS_DIRECTION direction
-);
-
-/* IOleControlNavigation2AdviseSink::NavigateOutControl  [function; ce-only; CE 4.0..699; Mshtml.dll, mshtml.dll] */
-HRESULT STDMETHODCALLTYPE NavigateOutControl( 
- RECT currentRect, 
- NVFOCUS_DIRECTION direction
-);
-
-/* IOleControlNavigation2AdviseSink::OnFocusRectChange  [function; ce-only; CE 4.0..699; Mshtml.dll, mshtml.dll] */
-HRESULT STDMETHODCALLTYPE OnFocusRectChange(
- RECT* newRect
-);
-
-/* IOleControlNavigation2AdviseSink::OnNavigationStatusChange  [function; ce-only; CE 4.0..699; Mshtml.dll, mshtml.dll] */
-virtual HRESULT STDMETHODCALLTYPE OnNavigationStatusChange( 
- DWORD navigationStatus
-);
-
-/* IOleControlNavigation2AdviseSink::OnRectsChange  [function; ce-only; CE 4.0..699; Mshtml.dll, mshtml.dll] */
-HRESULT STDMETHODCALLTYPE OnRectsChange();
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
-
-/* IHTMLTable::caption  [function; ce-only; CE 5.0..599; mshtml.dll] */
-HRESULT IHTMLTable::get_caption(BSTR v);
-#endif /* _WIN32_WCE */
+/* HTML_PAINT_DRAW_INFO  [struct; ce-only] */
+typedef struct _HTML_PAINT_DRAW_INFO { 
+ RECT rcViewport; 
+ HRGN hrgnUpdate; 
+ HTML_PAINT_XFORM xform; 
+} HTML_PAINT_DRAW_INFO;
 
 #endif /* _MSHTML_ */

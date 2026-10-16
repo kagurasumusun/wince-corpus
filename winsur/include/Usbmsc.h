@@ -12,31 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* TRANSPORT_COMMAND  [struct; ce-only; CE 5.0..699] */
-typedef struct _TRANSPORT_COMMAND {
- DWORD Flags;
- DWORD Timeout;
- DWORD Length;
- DWORD dwLun;
- PVOID CommandBlock;
-} TRANSPORT_COMMAND, *PTRANSPORT_COMMAND;
-
-/* TRANSPORT_DATA  [struct; ce-only; CE 5.0..699] */
-typedef struct _TRANSPORT_DATA_BUFFER {
- DWORD RequestLength;
- DWORD TransferLength;
- PVOID DataBlock;
-} TRANSPORT_DATA, *PTRANSPORT_DATA;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */

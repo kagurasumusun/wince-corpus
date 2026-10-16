@@ -12,37 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* OAL_CACHE_INFO  [struct; ce-only; CE 5.0..699] */
-typedef struct {
- UINT32 L1Flags;
- UINT32 L1ISetsPerWay;
- UINT32 L1INumWays;
- UINT32 L1ILineSize;
- UINT32 L1ISize;
- UINT32 L1DSetsPerWay;
- UINT32 L1DNumWays;
- UINT32 L1DLineSize;
- UINT32 L1DSize;
- UINT32 L2Flags;
- UINT32 L2ISetsPerWay;
- UINT32 L2INumWays;
- UINT32 L2ILineSize;
- UINT32 L2ISize;
- UINT32 L2DSetsPerWay;
- UINT32 L2DNumWays;
- UINT32 L2DLineSize;
- UINT32 L2DSize;
-} OAL_CACHE_INFO;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

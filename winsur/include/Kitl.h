@@ -5,11 +5,17 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 27 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 26 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _KITL_
 #define _KITL_
 
+
+/* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* KITLTRANSPORT  [struct; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -18,25 +24,6 @@
  * ================================================================ */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* KITLTRANSPORT  [struct; ce-only; CE 4.0..699] */
-typedef struct _KITLTRANSPORT{
- DWORD dwBootFlags; 
- char szName[KITL_MAX_DEV_NAMELEN];
- UCHAR Interrupt;
- UCHAR WindowSize;
- UCHAR FrmHdrSize;
- UCHAR FrmTlrSize;
- DWORD dwPhysBuffer;
- DWORD dwPhysBufLen;
- PFN_ENCODE pfnEncode;
- PFN_DECODE pfnDecode;
- PFN_SENDFRAME pfnSend;
- PFN_RECVFRAME pfnRecv;
- PFN_ENABLEINT pfnEnableInt;
- PFN_GETDEVCFG pfnGetDevCfg;
- PFN_SETHOSTCFG pfnSetHostCfg;
-} KITLTRANSPORT, *PKITLTRANSPORT;
 
 /* PFN_KITLTIMERCB  [callback; ce-only; CE 4.0..699; Kitl.lib] */
 typedef void( *PFN_KITLTIMERCB)(

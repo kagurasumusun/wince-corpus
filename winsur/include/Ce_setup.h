@@ -28,31 +28,28 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* codeINSTALL_EXIT  [enum; ce-only; CE 6.0..699] */
+/* codeINSTALL_EXIT  [enum; ce-only] */
 typedef enum {
  codeINSTALL_EXIT_DONE = 0, 
  codeINSTALL_EXIT_UNINSTALL 
 } codeINSTALL_EXIT;
 
-/* codeINSTALL_INIT  [enum; ce-only; CE 6.0..699] */
+/* codeINSTALL_INIT  [enum; ce-only] */
 typedef enum {
  codeINSTALL_INIT_CONTINUE = 0,
  codeINSTALL_INIT_CANCEL
 } codeINSTALL_INIT;
 
-/* codeUNINSTALL_EXIT  [enum; ce-only; CE 6.0..699] */
+/* codeUNINSTALL_EXIT  [enum; ce-only] */
 typedef enum {
  codeUNINSTALL_EXIT_DONE = 0 
 } codeUNINSTALL_EXIT;
 
-/* codeUNINSTALL_INIT  [enum; ce-only; CE 6.0..699] */
+/* codeUNINSTALL_INIT  [enum; ce-only] */
 typedef enum {
  codeUNINSTALL_INIT_CONTINUE = 0,
  codeUNINSTALL_INIT_CANCEL
 } codeUNINSTALL_INIT;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

@@ -15,23 +15,10 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 500)) /* CE 4.0..499 */
+/* D3DLVERTEX  [typedef; ce-only] */
 
-/* D3DLVERTEX  [typedef; ce-only; CE 4.0..499] */
+/* D3DTLVERTEX  [typedef; ce-only] */
 
-/* D3DTLVERTEX  [typedef; ce-only; CE 4.0..499] */
-
-/* D3DVERTEX  [typedef; ce-only; CE 4.0..499] */
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _D3DLVERTEX { union { D3DVALUE x; D3DVALUE dvX; };
-typedef struct _D3DTLVERTEX { union { D3DVALUE sx; D3DVALUE dvSX; };
-typedef struct _D3DVERTEX { union { D3DVALUE x; D3DVALUE dvX; };
+/* D3DVERTEX  [typedef; ce-only] */
 
 #endif /* _D3DTYPES_ */

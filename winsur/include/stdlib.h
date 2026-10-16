@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1 constants, 129 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 1 constants, 128 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _STDLIB_
 #define _STDLIB_
@@ -25,11 +25,8 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
-
-/* _cabs  [struct; ce-only; CE 5.0..599; coredll.dll] */
+/* _cabs  [struct; ce-only; coredll.dll] */
 double _cabs( struct _complexz);
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks
@@ -160,9 +157,6 @@ int _flushall( void );
 
 /* _fpclass  [function; ce-only; CE 5.0..599; coredll.dll] */
 int _fpclass( doublex);
-
-/* _fpieee_flt  [function; ce-only; CE 5.0..599; coredll.dll] */
-int _fpieee_flt( unsigned longexc_code,struct_EXCEPTION_POINTERS*exc_info,inthandler(_FPIEEE_RECORD *) );
 
 /* _fpreset  [function; ce-only; CE 5.0..599; coredll.dll] */
 void _fpreset( void );

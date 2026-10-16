@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 3 constants, 9 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 3 constants, 8 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _FLASHPDD_
 #define _FLASHPDD_
@@ -22,68 +22,21 @@
 #define FLASH_READ_STATUS_ECC_CORRECTION_REQUIRED 0x1
 
 /* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* FLASH_IDENTITY_INFO  [struct; ce-only] */
+
+/* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* FLASH_BLOCK_STATUS  [enum; ce-only; CE 6.0..699] */
-enum FLASH_BLOCK_STATUS {
- FLASH_BLOCK_STATUS_BAD = 0x1,
- FLASH_BLOCK_STATUS_RESERVED = 0x2
-};
-
-/* FLASH_GET_BLOCK_STATUS_REQUEST  [struct; ce-only; CE 6.0..699] */
-typedef struct __FLASH_GET_BLOCK_STATUS_REQUEST {
- BLOCK_RUN BlockRun;
- BOOL IsInitialFlash;
-} FLASH_GET_BLOCK_STATUS_REQUEST;
-
-/* FLASH_GET_PHYSICAL_SECTOR_ADDRESS_REQUEST  [struct; ce-only; CE 6.0..699] */
-typedef struct __FLASH_GET_PHYSICAL_SECTOR_ADDRESS_REQUEST {
- DWORD RegionIndex;
- SECTOR_RUN SectorRun;
-} FLASH_GET_PHYSICAL_SECTOR_ADDRESS_REQUEST;
-
-/* FLASH_IDENTITY_INFO  [struct; ce-only; CE 6.0..699] */
-typedef struct __FLASH_IDENTITY_INFO {
- CHAR ManufacturerId[MAX_FLASH_MANUFACTURER_ID_CHARS];
- CHAR SerialNumber[MAX_FLASH_SERIAL_NUMBER_CHARS];
-} FLASH_IDENTITY_INFO;
-
-/* FLASH_LIFE_CYCLE_INFO  [struct; ce-only; CE 6.0..699] */
+/* FLASH_LIFE_CYCLE_INFO  [struct; ce-only] */
 typedef struct __FLASH_LIFE_CYCLE_INFO {
  DWORD ErasePerBlock;
 } FLASH_LIFE_CYCLE_INFO;
-
-/* FLASH_PDD_COPY  [struct; ce-only; CE 6.0..699] */
-typedef struct __FLASH_PDD_COPY {
- DWORD RegionIndex;
- SECTOR_RUN SourceSectorRun;
- SECTOR_RUN DestinationSectorRun;
-} FLASH_PDD_COPY;
-
-/* FLASH_PDD_TRANSFER  [struct; ce-only; CE 6.0..699] */
-typedef struct __FLASH_PDD_TRANSFER {
- DWORD RegionIndex;
- SECTOR_RUN SectorRun;
- BYTE* pData;
- BYTE* pSpare;
-} FLASH_PDD_TRANSFER;
-
-/* FLASH_READ_STATUS  [enum; ce-only; CE 6.0..699] */
-enum FLASH_READ_STATUS {
- FLASH_READ_STATUS_ECC_CORRECTION_REQUIRED = 0x1
-};
-
-/* FLASH_SET_BLOCK_STATUS_REQUEST  [struct; ce-only; CE 6.0..699] */
-typedef struct __FLASH_SET_BLOCK_STATUS_REQUEST {
- BLOCK_RUN BlockRun;
- ULONG BlockStatus;
-} FLASH_SET_BLOCK_STATUS_REQUEST;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

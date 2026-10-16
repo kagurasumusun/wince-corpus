@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 14 constants, 19 declarations, 0 outlines, 0 base types, 0 extra macros, 6 extra decls
+ * 14 constants, 18 declarations, 1 outlines, 0 base types, 0 extra macros, 6 extra decls
  */
 #ifndef _FWAPI_
 #define _FWAPI_
@@ -33,136 +33,10 @@
 #define FWD_WEEKEND 0x41
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
+ * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* FW_ACTIONS  [enum; ce-only; CE 4.0..699] */
-typedef enum _FW_ACTIONS {
- FWA_BLOCK = 0x01,
- FWA_ALLOW = 0x02,
- FWA_ALLOW_RESPONSE = 0x03,
-} FW_ACTIONS;
-
-/* FW_DAYS  [enum; ce-only; CE 4.0..699] */
-typedef enum _FW_DAYS {
- FWD_SUNDAY = 0x01,
- FWD_MONDAY = 0x02,
- FWD_TUESDAY = 0x04,
- FWD_WEDNESDAY = 0x08,
- FWD_THURSDAY = 0x10,
- FWD_FRIDAY = 0x20,
- FWD_SATURDAY = 0x40,
- FWD_WEEKDAY = 0x3E,
- FWD_WEEKEND = 0x41,
-} FW_DAYS;
-
-/* FW_DIRECTIONS  [enum; ce-only; CE 4.0..699] */
-typedef enum _FW_DIRECTIONS {
- FWD_INBOUND = 0x08,
- FWD_OUTBOUND = 0x10,
-} FW_DIRECTIONS;
-
-/* FW_IP_ADDRESS  [struct; ce-only; CE 4.0..699] */
-typedef struct _FW_IP_ADDRESS {
- USHORT Family;
- union
- {
- IN6_ADDR AddressIPv6;
- IN_ADDR AddressIPv4;
- };
-} FW_IP_ADDRESS, *PFW_IP_ADDRESS;
-
-/* FW_LOG_ENTRY  [struct; ce-only; CE 4.0..699] */
-typedef struct _FIREWALL_LOG_ENTRY {
- FW_IP_ADDRESS PrivateHost;
- FW_IP_ADDRESS PublicHost;
- INT Protocol;
- FW_ACTIONS Action;
- FW_DIRECTIONS Direction;
- union
- {
- struct 
- {
- ushort tcp_src;
- ushort tcp_dest;
- int tcp_seq;
- int tcp_ack;
- ushort tcp_flags;
- ushort tcp_window;
- ushort tcp_xsum;
- ushort tcp_urgent;
- }TCPHeader;
- struct
- {
- ushort Source;
- ushort Dest; 
- ushort Length;
- ushort Checksum;
- }UDPHeader;
- struct {
- uchar ich_type;
- uchar ich_code;
- ushort ich_xsum; 
- ulong ich_param;
- }ICMPHeader;
- struct
- {
- uchar Type; 
- uchar Code;
- ushort Checksum; 
- }ICMPv6Header;
- };
-}FW_LOG_ENTRY, *PFW_LOG_ENTRY;
-
-/* FW_RULE  [struct; ce-only; CE 4.0..699] */
-typedef struct _FIREWALL_RULE
-{
- DWORD dwSize;
- HRULE hRule;
- DWORD dwFlags;
- DWORD dwMask;
- LPCWSTR wszDescription;
- FW_IP_ADDRESS PrivateHost;
- FW_IP_ADDRESS PublicHost;
- union
- {
- UINT PublicHostPrefixLength;
- IN_ADDR PublicHostMask;
- };
- INT Protocol;
- FW_ACTIONS Action;
- WORD wHourStart, wHourEnd;
- WORD wDayOfWeek;
- WORD wDay;
- WORD wMonth;
- union
- {
- {
- USHORT PortMin;
- USHORT PortMax;
- };
- struct
- {
- UCHAR Type;
- UCHAR Code;
- };
- };
-}FW_RULE, *PFW__RULE;
-
-/* FW_RULE_FLAGS  [enum; ce-only; CE 4.0..699] */
-typedef enum _FW_RULE_FLAGS {
- FWF_BLOCK = FWA_BLOCK,
- FWF_ALLOW = FWA_ALLOW,
- FWF_LOG = 0x04,
- FWF_INBOUND = FWD_INBOUND,
- FWF_OUTBOUND = FWD_OUTBOUND,
- FWF_DISABLED = 0x20
-} FW_RULE_FLAGS;
-#endif /* _WIN32_WCE */
+/* FW_LOG_ENTRY  [struct; ce-only] */
 
 /* ==================================================================
  * functions and callbacks
@@ -243,7 +117,5 @@ BOOL IsInterfaceFirewalled(
 /* struct */
 typedef struct _FW_IP_ADDRESS { USHORT Family; union { IN6_ADDR AddressIPv6; IN_ADDR AddressIPv4; };} FW_IP_ADDRESS, *PFW_IP_ADDRESS;
 typedef struct _FIREWALL_RULE{ DWORD dwSize; HRULE hRule; DWORD dwFlags; DWORD dwMask; LPCWSTR wszDescription; FW_IP_ADDRESS PrivateHost; FW_IP_ADDRESS PublicHost; union { UINT PublicHostPrefixLength; IN_ADDR PublicHostMask; }; INT Protocol; FW_ACTIONS Action; WORD wHourStart, wHourEnd; WORD wDayOfWeek; WORD wDay; WORD wMonth; union { { USHORT PortMin; USHORT PortMax; }; struct { UCHAR Type; UCHAR Code; }; };}FW_RULE, *PFW__RULE;
-typedef struct _FIREWALL_RULE { DWORD dwSize; HRULE hRule; DWORD dwFlags; DWORD dwMask; LPCWSTR wszDescription; FW_IP_ADDRESS PrivateHost; FW_IP_ADDRESS PublicHost; union { UINT PublicHostPrefixLength; IN_ADDR PublicHostMask; };
-typedef struct _FW_IP_ADDRESS { USHORT Family; union { IN6_ADDR AddressIPv6; IN_ADDR AddressIPv4; };
 
 #endif /* _FWAPI_ */

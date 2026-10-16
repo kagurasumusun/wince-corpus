@@ -12,27 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* OAL_TIMER_STATE  [struct; ce-only; CE 5.0..699] */
-typedef struct {
- UINT32 countsPerMSec;
- UINT32 countsMargin;
- UINT32 maxPeriodMSec;
- UINT32 msecPerSysTick;
- UINT32 countsPerSysTick;
- UINT32 actualMSecPerSysTick;
- UINT32 actualCountsPerSysTick;
- volatile UINT64 curCounts;
-} OAL_TIMER_STATE, *POAL_TIMER_STATE;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

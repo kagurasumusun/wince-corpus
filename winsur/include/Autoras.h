@@ -12,21 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* DIALER_NOTIFICATION  [struct; ce-only; CE 4.0..699] */
-typedef struct { 
- DWORD dwNotificationId; 
- DWORD dwNotificationParam; 
-} DIALER_NOTIFICATION, PDIALER_NOTIFICATION;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */

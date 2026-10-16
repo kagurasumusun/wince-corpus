@@ -12,33 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 3.0..399, 5.0..599 */
-
-/* SHELLFILECHANGEFUNC_t  [callback; ce-only; CE 3.0..399, 5.0..599] */
-typedef BOOL (*SHELLFILECHANGEFUNC_t) { LPCFILECHANGEINFO lpfci};
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-
-/* FILECHANGEINFO  [struct; ce-only; CE 3.0..399, 5.0..699; ceshell.lib] */
-struct _FILECHANGEINFO {
- DWORD cbSize;
- LONG wEventId;
- ULONG uFlags;
- DWORD dwItem1;
- DWORD dwItem2;
- DWORD dwAttributes;
- FILETIME ftModified;
- ULONG nFileSize;
-} FILECHANGEINFO, *LPFILECHANGEINFO;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */

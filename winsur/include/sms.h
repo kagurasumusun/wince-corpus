@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 90 constants, 36 declarations, 0 outlines, 0 base types, 0 extra macros, 13 extra decls
+ * 90 constants, 31 declarations, 5 outlines, 0 base types, 0 extra macros, 13 extra decls
  */
 #ifndef _SMS_
 #define _SMS_
@@ -109,202 +109,18 @@
 #define WDPPSPA_8_BIT_PORT_NUMBERS 0
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
+ * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+/* RAW_PROVIDER_SPECIFIC_DATA  [struct; ce-only] */
 
-/* BROADCAST_PROVIDER_SPECIFIC_DATA  [struct; ce-only; CE 6.0..699] */
-typedef struct broadcast_provider_specific_data_tag {
- WORD wMessageID;
- WORD wMessageCode;
- BROADCAST_PROVIDER_SPECIFIC_GEOGRAPHICAL_SCOPE bpsgsGeographicalScope;
- WORD wUpdateNumber;
-} BROADCAST_PROVIDER_SPECIFIC_DATA;
+/* SMS_ADDRESS  [struct; ce-only] */
 
-/* BROADCAST_PROVIDER_SPECIFIC_GEOGRAPHICAL_SCOPE  [enum; ce-only; CE 6.0..699] */
-enum BROADCAST_PROVIDER_SPECIFIC_GEOGRAPHICAL_SCOPE {
-BPSGS_UNKNOWN = 0,
-BPSGS_CELL_DISPLAY_IMMEDIATE,
-BPSGS_CELL,
-BPSGS_PLMN,
-BPSGS_LOCATION_AREA,
-};
+/* SMSREGISTRATIONDATA  [struct; ce-only] */
 
-/* NOTIFICATION_PROVIDER_SPECIFIC_DATA  [struct; ce-only; CE 6.0..699] */
-typedef struct notification_provider_specific_data_tag {
- DWORD dwMessageOptions;
- PROVIDER_SPECIFIC_MESSAGE_CLASS psMessageClass;
- PROVIDER_SPECIFIC_REPLACE_OPTION psReplaceOption;
- NOTIFICATION_PROVIDER_SPECIFIC_MSG_WAITING_TYPE npsMsgWaitingType;
- int iNumberOfMessagesWaiting;
- NOTIFICATION_PROVIDER_SPECIFIC_INDICATOR_TYPE npsIndicatorType;
-} NOTIFICATION_PROVIDER_SPECIFIC_DATA;
+/* TEXT_PROVIDER_SPECIFIC_DATA  [struct; ce-only] */
 
-/* NOTIFICATION_PROVIDER_SPECIFIC_INDICATOR_TYPE  [enum; ce-only; CE 6.0..699] */
-enum NOTIFICATION_PROVIDER_SPECIFIC_INDICATOR_TYPE {
-NOTIFICATIONPSIT_NONE = 0,
-NOTIFICATIONPSIT_LINE1 = 1,
-NOTIFICATIONPSIT_LINE2 = 2,
-};
-
-/* NOTIFICATION_PROVIDER_SPECIFIC_MSG_WAITING_TYPE  [enum; ce-only; CE 6.0..699] */
-enum NOTIFICATION_PROVIDER_SPECIFIC_MSG_WAITING_TYPE { 
-NOTIFICATIONPSMWT_NONE = 0,
-NOTIFICATIONPSMWT_GENERIC,
-NOTIFICATIONPSMWT_VOICEMAIL,
-NOTIFICATIONPSMWT_FAX,
-NOTIFICATIONPSMWT_EMAIL,
-NOTIFICATIONPSMWT_OTHER,
-};
-
-/* PROVIDER_SPECIFIC_MESSAGE_CLASS  [enum; ce-only; CE 6.0..699] */
-enum PROVIDER_SPECIFIC_MESSAGE_CLASS {
-PS_MESSAGE_CLASS0 = 0,
-PS_MESSAGE_CLASS1,
-PS_MESSAGE_CLASS2,
-PS_MESSAGE_CLASS3,
-PS_MESSAGE_CLASSUNSPECIFIED,
-};
-
-/* PROVIDER_SPECIFIC_REPLACE_OPTION  [enum; ce-only; CE 6.0..699] */
-enum PROVIDER_SPECIFIC_REPLACE_OPTION {
-PSRO_NONE = 0,
-PSRO_REPLACE_TYPE1,
-PSRO_REPLACE_TYPE2,
-PSRO_REPLACE_TYPE3,
-PSRO_REPLACE_TYPE4,
-PSRO_REPLACE_TYPE5,
-PSRO_REPLACE_TYPE6,
-PSRO_REPLACE_TYPE7,
-PSRO_RETURN_CALL,
-PSRO_DEPERSONALIZATION,
-};
-
-/* RAW_PROVIDER_SPECIFIC_DATA  [struct; ce-only; CE 6.0..699] */
-typedef struct raw_provider_specific_data_tag {
- DWORD dwHeaderDataSize;
- BYTE pbHeaderData[SMS_DATAGRAM_SIZE];
-} RAW_PROVIDER_SPECIFIC_DATA;
-
-/* SMS_ADDRESS  [struct; ce-only; CE 6.0..699] */
-typedef struct sms_address_tag {
- SMS_ADDRESS_TYPE smsatAddressType;
- TCHAR ptsAddress[SMS_MAX_ADDRESS_LENGTH];
-} SMS_ADDRESS, *LPSMS_ADDRESS;
-
-/* SMS_ADDRESS_TYPE  [enum; ce-only; CE 6.0..699] */
-enum SMS_ADDRESS_TYPE {
-SMSAT_UNKNOWN=0,
-SMSAT_INTERNATIONAL,
-SMSAT_NATIONAL,
-SMSAT_NETWORKSPECIFIC,
-SMSAT_SUBSCRIBER,
-SMSAT_ALPHANUMERIC,
-SMSAT_ABBREVIATED
-};
-
-/* SMS_BROADCAST_RANGES  [struct; ce-only; CE 6.0..699] */
-typedef struct sms_broadcast_ranges_tag {
-DWORD cbSize;
-DWORD dwParams;
-DWORD dwNumRanges;
-DWORD dwBroadcastMsgLangs;
-BOOL bAccept;
-SMS_RANGE smsrBroadcastRanges[];
-} SMS_BROADCAST_RANGES, *LPSMS_BROADCAST_RANGES;
-
-/* SMS_DATA_ENCODING  [enum; ce-only; CE 6.0..699] */
-enum SMS_DATA_ENCODING {
-SMSDE_OPTIMAL=0,
-SMSDE_GSM,
-SMSDE_UCS2,
-};
-
-/* SMS_RANGE  [struct; ce-only; CE 6.0..699] */
-typedef struct sms_range_tag {
- DWORD dwMinimum;
- DWORD dwMaximum;
-} SMS_RANGE, *LPSMS_RANGE;
-
-/* SMS_STATUS_INFORMATION  [struct; ce-only; CE 6.0..699] */
-typedef struct sms_status_information_tag {
- SMS_MESSAGE_ID smsmidMessageID;
- DWORD dwMessageStatus0;
- DWORD dwMessageStatus1;
- SMS_ADDRESS smsaRecipientAddress;
- SYSTEMTIME stServiceCenterTimeStamp;
- SYSTEMTIME stDischargeTime;
-} SMS_STATUS_INFORMATION, *LPSMS_STATUS_INFORMATION;
-
-/* SMSREGISTRATIONDATA  [struct; ce-only; CE 6.0..699] */
-typedef struct smsregistrationdata_tag {
- DWORD cbSize;
- TCHAR tszAppName[SMS_MAX_APPNAME_LENGTH];
- TCHAR tszParams[SMS_MAX_PARAMS_LENGTH];
- TCHAR tszProtocolName[SMS_MAX_PROTOCOLNAME_LENGTH];
-} SMSREGISTRATIONDATA, *LPSMSREGISTRATIONDATA;
-
-/* STATUS_PROVIDER_SPECIFIC_DATA  [struct; ce-only; CE 6.0..699] */
-typedef struct status_provider_specific_data_tag {
-SMS_STATUS_INFORMATION smssiStatusInformation;
-} STATUS_PROVIDER_SPECIFIC_DATA;
-
-/* TEXT_PROVIDER_SPECIFIC_DATA  [struct; ce-only; CE 6.0..699] */
-typedef struct text_provider_specific_data_tag {
- DWORD dwMessageOptions;
- PROVIDER_SPECIFIC_MESSAGE_CLASS psMessageClass;
- PROVIDER_SPECIFIC_REPLACE_OPTION psReplaceOption;
- DWORD dwHeaderDataSize;
- BYTE pbHeaderData[SMS_DATAGRAM_SIZE];
- BOOL fMessageContainsEMSHeaders;
- DWORD dwProtocolID;
- DWORD dwExtParams;
- TEXT_PROVIDER_SPECIFIC_PRIORITY_TYPE tpsPriority;
- SMS_ADDRESS smsaCallBack;
-} TEXT_PROVIDER_SPECIFIC_DATA;
-
-/* TEXT_PROVIDER_SPECIFIC_PRIORITY_TYPE  [enum; ce-only; CE 6.0..699] */
-enum TEXT_PROVIDER_SPECIFIC_PRIORITY_TYPE {
-TEXTPSPRI_NONE = 0,
-TEXTPSPRI_NORMAL = 1,
-TEXTPSPRI_INTERACTIVE,
-TEXTPSPRI_URGENT,
-TEXTPSPRI_EMERGENCY,
-
-/* WCMP_PROVIDER_SPECIFIC_DATA  [struct; ce-only; CE 6.0..699] */
-typedef struct wcmp_provider_specific_data_tag {
- WCMP_PROVIDER_SPECIFIC_MESSAGE_TYPE wcmppsMessageType;
- WORD wParam1;
- WORD wParam2;
- WORD wParam3;
- SMS_ADDRESS smsaAddress;
-} WCMP_PROVIDER_SPECIFIC_DATA;
-
-/* WCMP_PROVIDER_SPECIFIC_MESSAGE_TYPE  [enum; ce-only; CE 6.0..699] */
-enum WCMP_PROVIDER_SPECIFIC_MESSAGE_TYPE {
-WCMPPSMT_UNSUPPORTED = 0,
-WCMPPSMT_PORT_UNREACHABLE,
-WCMPPSMT_MESSAGE_TOO_BIG,
-WCMPPSMT_ECHO_REQUEST,
-WCMPPSMT_ECHO_REPLY,
-};
-
-/* WDP_PROVIDER_SPECIFIC_DATA  [struct; ce-only; CE 6.0..699] */
-typedef struct wdp_provider_specific_data_tag {
- WDP_PROVIDER_SPECIFIC_PORT_ADDRESSING wdppsPortAddressing;
- WORD wDestinationPort;
- WORD wOriginatorPort;
-} WDP_PROVIDER_SPECIFIC_DATA;
-
-/* WDP_PROVIDER_SPECIFIC_PORT_ADDRESSING  [enum; ce-only; CE 6.0..699] */
-enum WDP_PROVIDER_SPECIFIC_PORT_ADDRESSING {
-WDPPSPA_8_BIT_PORT_NUMBERS = 0,
-WDPPSPA_16_BIT_PORT_NUMBERS,
-};
-#endif /* _WIN32_WCE */
+/* TEXT_PROVIDER_SPECIFIC_PRIORITY_TYPE  [enum; ce-only] */
 
 /* ==================================================================
  * functions and callbacks

@@ -354,36 +354,6 @@
 #define SVSI_SELECT 1
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* ITEMIDLIST  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _ITEMIDLIST { 
- SHITEMID mkid;
-} ITEMIDLIST, *LPITEMIDLIST; 
-typedef const ITEMIDLIST* LPCITEMIDLIST;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* BROWSEINFO  [struct; shared; CE 5.0..699; A/W BROWSEINFOA,BROWSEINFOW (CE is W-side)] */
-typedef struct _browseinfo {
- HWND hwndOwner;
- LPCITEMIDLIST pidlRoot;
- LPTSTR pszDisplayName;
- LPCTSTR lpszTitle;
- UINT ulFlags;
- BFFCALLBACK lpfn;
- LPARAM lParam;
- int iImage;
-} BROWSEINFO, *PBROWSEINFO, *LPBROWSEINFO;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

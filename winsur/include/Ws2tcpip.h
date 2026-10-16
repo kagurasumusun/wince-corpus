@@ -15,9 +15,7 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* getnameinfo  [struct, macro, function; shared; CE 4.0..699; Ws2.lib; A/W GetNameInfoW (CE is W-side)] */
+/* getnameinfo  [struct, macro, function; shared; Ws2.lib; A/W GetNameInfoW (CE is W-side)] */
 int getnameinfo(
  const struct sockaddr FAR* sa,
  socklen_t salen,
@@ -27,7 +25,6 @@ int getnameinfo(
  DWORD servlen,
  int flags
 );
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -35,9 +32,7 @@ int getnameinfo(
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* addrinfo  [struct; shared; CE 4.0..699; A/W ADDRINFOA,ADDRINFOW (CE is W-side)] */
+/* addrinfo  [struct; shared; A/W ADDRINFOA,ADDRINFOW (CE is W-side)] */
 struct addrinfo {
  int ai_flags;
  int ai_family;
@@ -49,23 +44,7 @@ struct addrinfo {
  struct addrinfo* ai_next;
 };
 
-/* freeaddrinfo  [struct, function; shared; CE 4.0..699; Ws2.lib; A/W FreeAddrInfoW (CE is W-side)] */
-void freeaddrinfo(
- struct addrinfo FAR* ai
-);
-
-/* getaddrinfo  [struct, function; shared; CE 4.0..699; Ws2.lib; A/W GetAddrInfoW (CE is W-side)] */
-int getaddrinfo(
- const char FAR* nodename,
- const char FAR* servname,
- const struct addrinfo FAR* hints,
- struct addrinfo FAR* FAR* res
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* in6_addr  [struct; shared; CE 5.0..699] */
+/* in6_addr  [struct; shared] */
 struct in6_addr {
  union {
  u_char Byte[16];
@@ -73,7 +52,7 @@ struct in6_addr {
  } u;
 };
 
-/* sockaddr_in6  [struct; ce-only; CE 5.0..699] */
+/* sockaddr_in6  [struct; ce-only] */
 struct sockaddr_in6 {
  short sin6_family;
  u_short sin6_port;
@@ -81,7 +60,6 @@ struct sockaddr_in6 {
  struct in6_addr sin6_addr;
  u_long sin6_scope_id;
 };
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

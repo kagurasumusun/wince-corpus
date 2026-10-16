@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 1 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WCESOCK_
 #define _WCESOCK_
@@ -19,15 +19,6 @@
 
 /* AfxGetCeSocketWindow  [function; ce-only; CE 2.0..209] */
 HWND AfxGetCeSocketWindow();
-
-/* CCeSocket::Create  [function; ce-only; CE 2.0..209] */
-virtual BOOL Create ( UINT nSocketPort=0 );
-
-/* CCeSocket::OnAccept  [function; ce-only; CE 2.0..209] */
-virtual void OnAccept( int nErrorCode );
-
-/* CCeSocket::OnConnect  [function; ce-only; CE 2.0..209] */
-virtual void OnConnect ( int nErrorCode );
 #endif /* _WIN32_WCE */
 
 #endif /* _WCESOCK_ */

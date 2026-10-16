@@ -5,27 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 35 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 35 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _NKINTR_
 #define _NKINTR_
 
-
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* MEMORY_SECTION  [struct; ce-only; CE 4.0..699] */
-typedef struct _MEMORY_SECTION {
- DWORD dwFlags;
- DWORD dwStart;
- DWORD dwLen;
-} MEMORY_SECTION, *PMEMORY_SECTION;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks
@@ -207,13 +191,5 @@ DWORD OEMEnumExtensionDRAM(
  DWORD cMemSections
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _MEMORY_SECTION {DWORD dwFlags;DWORD dwStart;DWORD dwLen;} MEMORY_SECTION, *PMEMORY_SECTION;
 
 #endif /* _NKINTR_ */

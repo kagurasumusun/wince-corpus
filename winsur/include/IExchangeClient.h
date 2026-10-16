@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 8 constants, 38 declarations, 0 outlines, 0 base types, 0 extra macros, 32 extra decls
+ * 8 constants, 5 declarations, 6 outlines, 0 base types, 0 extra macros, 32 extra decls
  */
 #ifndef _IEXCHANGECLIENT_
 #define _IEXCHANGECLIENT_
@@ -27,20 +27,34 @@
 #define OWAEC_E_NOUSER 0x80bb0003
 
 /* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* IExchangeClient::RequestContacts  [struct; ce-only; OWAExchangeClient.lib] */
+
+/* IExchangeClient::RequestFreeBusyData  [struct; ce-only; OWAExchangeClient.lib] */
+
+/* IExchangeClient::RequestGALSearch  [struct; ce-only; OWAExchangeClient.lib] */
+
+/* IExchangeClientRequest::GetStatus  [enum; ce-only; OWAExchangeClient.lib] */
+
+/* IExchangeClientRequest::GetType  [enum; ce-only; OWAExchangeClient.lib] */
+
+/* IExchangeClientRequestCallback::OnRequestProgress  [enum; ce-only; OWAExchangeClient.lib] */
+
+/* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* ContactsSearchCriteria  [struct; ce-only; CE 5.0..699] */
+/* ContactsSearchCriteria  [struct; ce-only] */
 struct ContactsSearchCriteria {
  WCHAR* wszFirstName;
  WCHAR* wszLastName;
 };
 
-/* ExchangeClientRequestStatus  [enum; ce-only; CE 5.0..699] */
+/* ExchangeClientRequestStatus  [enum; ce-only] */
 enum ExchangeClientRequestStatus
 {
  e_ecrsPending = 0,
@@ -57,7 +71,7 @@ enum ExchangeClientRequestStatus
  e_ecrsNoCredentials
 };
 
-/* ExchangeClientRequestType  [enum; ce-only; CE 5.0..699] */
+/* ExchangeClientRequestType  [enum; ce-only] */
 enum ExchangeClientRequestType
 {
  e_ecrtInvalid = 0,
@@ -66,205 +80,18 @@ enum ExchangeClientRequestType
  e_ecrtFreeBusy
 };
 
-/* FreeBusyCriteria  [struct; ce-only; CE 5.0..699] */
+/* FreeBusyCriteria  [struct; ce-only] */
 struct FreeBusyCriteria {
  WCHAR* wszAlias;
  SYSTEMTIME* pstStart;
 };
 
-/* GALSearchCriteria  [struct; ce-only; CE 5.0..699] */
+/* GALSearchCriteria  [struct; ce-only] */
 struct GALSearchCriteria {
  WCHAR* wszAlias;
  WCHAR* wszFirstName;
  WCHAR* wszLastName;
 };
-
-/* IExchangeClient::RequestContacts  [struct; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT RequestContacts(
- struct ContactsSearchCriteria* pCriteria,
- IExchangeClientRequest** ppiRequest
-);
-
-/* IExchangeClient::RequestFreeBusyData  [struct; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT RequestFreeBusyData(
- struct FreeBusyCriteria* pCriteria,
- IExchangeClientRequest** ppiRequest
-);
-
-/* IExchangeClient::RequestGALSearch  [struct; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT RequestGALSearch(
- struct GALSearchCriteria* pCriteria,
- IExchangeClientRequest** ppiRequest
-);
-
-/* IExchangeClientRequest::GetStatus  [enum; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT GetStatus(
- enum ExchangeClientRequestStatus* pStatus
-);
-
-/* IExchangeClientRequest::GetType  [enum; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT GetType(
- enum ExchangeClientRequestType* pecrt
-);
-
-/* IExchangeClientRequestCallback::OnRequestProgress  [enum; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT OnRequestProgress(
- IExchangeClientRequest* pRequest,
- enum ExchangeClientRequestStatus status
-);
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* IExchangeClient::CancelPendingRequests  [function; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT CancelPendingRequests();
-
-/* IExchangeClient::GetServer  [function; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT GetServer(
- WCHAR* wszBuffer, 
- UINT cchBuffer
-);
-
-/* IExchangeClient::Initialize  [function; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT Initialize(
- IExchangeClientRequestCallback* piCallback
-);
-
-/* IExchangeClient::SetCredentials  [function; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT SetCredentials(
- const WCHAR* c_wszUsername,
- const WCHAR* c_wszPassword
-);
-
-/* IExchangeClient::SetServer  [function; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT SetServer(
- const WCHAR* c_wszServername
-);
-
-/* IExchangeClient::Uninitialize  [function; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT Uninitialize();
-
-/* IExchangeClientContactInformation::GetDisplayName  [function; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT GetDisplayName(
- WCHAR* wszNameBuffer,
- UINT cchNameBuffer
-);
-
-/* IExchangeClientContactInformation::GetEmailAddress  [function; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT GetEmailAddress(
- WCHAR* wszBuffer,
- UINT cchBuffer
-);
-
-/* IExchangeClientContactInformation::GetHomeAddress  [function; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT GetHomeAddress(
- WCHAR* wszBuffer,
- UINT cchBuffer
-);
-
-/* IExchangeClientContactInformation::GetHomePhoneNumber  [function; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT GetHomePhoneNumber(
- WCHAR* wszNumberBuffer,
- UINT cchNumberBuffer
-);
-
-/* IExchangeClientContactInformation::GetMobilePhoneNumber  [function; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT GetMobilePhoneNumber(
- WCHAR* wszBuffer,
- UINT cchBuffer
-);
-
-/* IExchangeClientContactInformation::GetWorkAddress  [function; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT GetWorkAddress(
- WCHAR* wszBuffer,
- UINT cchBuffer
-);
-
-/* IExchangeClientContactInformation::GetWorkPhoneNumber  [function; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT GetWorkPhoneNumber(
- WCHAR* wszBuffer,
- UINT cchBuffer
-);
-
-/* IExchangeClientDataItemArray::GetItemAt  [function; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT GetItemAt(
- UINT idxItem,
- IUnknown** ppiItem
-);
-
-/* IExchangeClientDataItemArray::GetItemCount  [function; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT GetItemCount(
- UINT* pcItems
-);
-
-/* IExchangeClientFreeBusyInformation::GetDisplayName  [function; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT GetDisplayName(
- WCHAR* wszNameBuffer,
- UINT cchNameBuffer
-);
-
-/* IExchangeClientFreeBusyInformation::GetEmailAddress  [function; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT GetEmailAddress(
- WCHAR* wszAddressBuffer,
- UINT cchAddressBuffer
-);
-
-/* IExchangeClientFreeBusyInformation::GetFreeBusyData  [function; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT GetFreeBusyData(
- WCHAR* wszDataBuffer,
- UINT cchDataBuffer
-);
-
-/* IExchangeClientGALSearchInformation::GetAlias  [function; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT GetAlias(
- WCHAR* wszBuffer,
- UINT cchBuffer
-);
-
-/* IExchangeClientGALSearchInformation::GetDisplayName  [function; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT GetDisplayName(
- WCHAR* wszNameBuffer,
- UINT cchNameBuffer
-);
-
-/* IExchangeClientGALSearchInformation::GetOffice  [function; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT GetOffice(
- WCHAR* wszBuffer,
- UINT cchBuffer
-);
-
-/* IExchangeClientGALSearchInformation::GetPhoneNumber  [function; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT GetPhoneNumber(
- WCHAR* wszNumberBuffer,
- UINT cchNumberBuffer
-);
-
-/* IExchangeClientGALSearchInformation::GetSMTPAddress  [function; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT GetSMTPAddress(
- WCHAR* wszBuffer,
- UINT cchBuffer
-);
-
-/* IExchangeClientRequest::Cancel  [function; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT Cancel();
-
-/* IExchangeClientRequest::GetDataItemArray  [function; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT GetDataItemArray(
- IExchangeClientDataItemArray** ppiArray
-);
-
-/* IExchangeClientRequest::GetHttpStatus  [function; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT GetHttpStatus(
- LONG* plHttpStatus
-);
-
-/* IExchangeClientRequestCallback::OnShutdown  [function; ce-only; CE 5.0..699; OWAExchangeClient.lib] */
-HRESULT OnShutdown();
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

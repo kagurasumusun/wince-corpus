@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1265 constants, 125 declarations, 3 outlines, 0 base types, 0 extra macros, 104 extra decls
+ * 1265 constants, 119 declarations, 9 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINGDI_
 #define _WINGDI_
@@ -1349,48 +1349,26 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
+/* DLGITEMTEMPLATEEX  [struct; ce-only] */
 
-/* LOGFONT  [struct, macro; shared; CE 1.0..199, 2.11..2.12, 3.0..699; A/W LOGFONTA,LOGFONTW (CE is W-side)] */
-typedef struct tagLOGFONT { 
- LONG lfHeight; 
- LONG lfWidth; 
- LONG lfEscapement; 
- LONG lfOrientation; 
- LONG lfWeight; 
- BYTE lfItalic; 
- BYTE lfUnderline; 
- BYTE lfStrikeOut; 
- BYTE lfCharSet; 
- BYTE lfOutPrecision; 
- BYTE lfClipPrecision; 
- BYTE lfQuality; 
- BYTE lfPitchAndFamily; 
- TCHAR lfFaceName[LF_FACESIZE]; 
-} LOGFONT;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* GetBValue  [macro, function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* GetBValue  [macro, function; shared] */
 BYTE GetBValue( 
  DWORD rgb 
 );
 
-/* GetGValue  [macro, function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* GetGValue  [macro, function; shared] */
 
-/* GetRValue  [macro, function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* GetRValue  [macro, function; shared] */
 BYTE GetRValue( 
  DWORD rgb
 );
 
-/* PALETTERGB  [macro, function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* PALETTERGB  [macro, function; shared] */
 
-/* RGB  [macro, function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* RGB  [macro, function; shared] */
 #define RGB(r, g ,b) ((DWORD) (((BYTE) (r) | \ 
  ((WORD) (g) << 8)) | \ 
  (((DWORD) (BYTE) (b)) << 16)))
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -1398,9 +1376,27 @@ BYTE GetRValue(
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
+/* BITMAP  [struct, library; shared] */
+typedef struct tagBITMAP {
+ LONG bmType; 
+ LONG bmWidth; 
+ LONG bmHeight; 
+ LONG bmWidthBytes; 
+ WORD bmPlanes; 
+ WORD bmBitsPixel; 
+ LPVOID bmBits; 
+} BITMAP;
 
-/* BITMAPFILEHEADER  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
+/* BITMAPCOREHEADER  [struct; shared] */
+typedef struct tagBITMAPCOREHEADER { 
+ DWORD bcSize; 
+ WORD bcWidth; 
+ WORD bcHeight; 
+ WORD bcPlanes; 
+ WORD bcBitCount; 
+} BITMAPCOREHEADER;
+
+/* BITMAPFILEHEADER  [struct; shared] */
 typedef struct tagBITMAPFILEHEADER {
  WORD bfType; 
  DWORD bfSize; 
@@ -1409,61 +1405,68 @@ typedef struct tagBITMAPFILEHEADER {
  DWORD bfOffBits; 
 } BITMAPFILEHEADER;
 
-/* BITMAPINFOHEADER  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagBITMAPINFOHEADER { 
- DWORD biSize; 
- LONG biWidth; 
- LONG biHeight; 
- WORD biPlanes; 
- WORD biBitCount 
- DWORD biCompression; 
- DWORD biSizeImage; 
- LONG biXPelsPerMeter; 
- LONG biYPelsPerMeter; 
- DWORD biClrUsed; 
- DWORD biClrImportant; 
-} BITMAPINFOHEADER;
+/* DOCINFO  [struct; shared; A/W DOCINFOA,DOCINFOW (CE is W-side)] */
+typedef struct { 
+ int cbSize; 
+ LPCTSTR lpszDocName; 
+ LPCTSTR lpszOutput; 
+ LPCTSTR lpszDatatype; 
+ DWORD fwType;
+} DOCINFO;
 
-/* RGBQUAD  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
+/* FONTSIGNATURE  [struct; shared] */
+typedef struct tagFONTSIGNATURE {
+ DWORD fsUsb[4];
+ DWORD fsCsb [2];
+} FONTSIGNATURE;
+
+/* LOGBRUSH  [struct; shared] */
+typedef struct tagLOGBRUSH { 
+ UINT lbStyle; 
+ COLORREF lbColor; 
+ LONG lbHatch; 
+} LOGBRUSH;
+
+/* LOGPEN  [struct; shared] */
+typedef struct tagLOGPEN { 
+ UINT lopnStyle; 
+ POINT lopnWidth; 
+ COLORREF lopnColor; 
+} LOGPEN;
+
+/* PALETTEENTRY  [struct; shared] */
+typedef struct tagPALETTEENTRY {
+ BYTE peRed;
+ BYTE peGreen;
+ BYTE peBlue;
+ BYTE peFlags;
+} PALETTEENTRY;
+
+/* RGBQUAD  [struct; shared] */
 typedef struct tagRGBQUAD { 
  BYTE rgbBlue;
  BYTE rgbGreen;
  BYTE rgbRed;
  BYTE rgbReserved;
 } RGBQUAD;
-#endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
+/* RGBTRIPLE  [struct; shared] */
+typedef struct tagRGBTRIPLE { 
+ BYTE rgbtBlue; 
+ BYTE rgbtGreen; 
+ BYTE rgbtRed; 
+} RGBTRIPLE;
 
-/* NEWTEXTMETRIC  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..699; A/W NEWTEXTMETRICA,NEWTEXTMETRICW (CE is W-side)] */
-typedef struct tagNEWTEXTMETRIC {
- LONG tmHeight; 
- LONG tmAscent; 
- LONG tmDescent; 
- LONG tmInternalLeading; 
- LONG tmExternalLeading; 
- LONG tmAveCharWidth; 
- LONG tmMaxCharWidth; 
- LONG tmWeight; 
- LONG tmOverhang; 
- LONG tmDigitizedAspectX; 
- LONG tmDigitizedAspectY; 
- BCHAR tmFirstChar; 
- BCHAR tmLastChar; 
- BCHAR tmDefaultChar; 
- BCHAR tmBreakChar; 
- BYTE tmItalic; 
- BYTE tmUnderlined; 
- BYTE tmStruckOut; 
- BYTE tmPitchAndFamily; 
- BYTE tmCharSet;
- DWORD ntmFlags; 
- UINT ntmSizeEM; 
- UINT ntmCellHeight; 
- UINT ntmAvgWidth; 
-} NEWTEXTMETRIC;
+/* RGNDATAHEADER  [struct; shared] */
+typedef struct _RGNDATAHEADER { 
+ DWORD dwSize; 
+ DWORD iType; 
+ DWORD nCount; 
+ DWORD nRgnSize; 
+ RECT rcBound; 
+} RGNDATAHEADER;
 
-/* TEXTMETRIC  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..699; A/W TEXTMETRICA,TEXTMETRICW (CE is W-side)] */
+/* TEXTMETRIC  [struct; shared; A/W TEXTMETRICA,TEXTMETRICW (CE is W-side)] */
 typedef struct tagTEXTMETRIC {
  LONG tmHeight; 
  LONG tmAscent; 
@@ -1486,251 +1489,128 @@ typedef struct tagTEXTMETRIC {
  BYTE tmPitchAndFamily; 
  BYTE tmCharSet; 
 } TEXTMETRIC;
-#endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* BITMAP  [struct, library; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagBITMAP {
- LONG bmType; 
- LONG bmWidth; 
- LONG bmHeight; 
- LONG bmWidthBytes; 
- WORD bmPlanes; 
- WORD bmBitsPixel; 
- LPVOID bmBits; 
-} BITMAP;
-
-/* BITMAPCOREHEADER  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagBITMAPCOREHEADER { 
- DWORD bcSize; 
- WORD bcWidth; 
- WORD bcHeight; 
- WORD bcPlanes; 
- WORD bcBitCount; 
-} BITMAPCOREHEADER;
-
-/* BITMAPCOREINFO  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* BITMAPCOREINFO  [struct; shared] */
 typedef struct _BITMAPCOREINFO { 
  BITMAPCOREHEADER bmciHeader; 
  RGBTRIPLE bmciColors[1]; 
 } BITMAPCOREINFO;
 
-/* BITMAPINFO  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagBITMAPINFO { 
- BITMAPINFOHEADER bmiHeader; 
- RGBQUAD bmiColors[1]; 
-} BITMAPINFO;
-
-/* CHARSETINFO  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   ciCharset */
-/*   ciACP */
-/*   fs */
-
-/* DEVMODE  [typedef; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W DEVMODEA (CE is W-side)] */
-typedef struct_devicemode { 
- WCHAR dmDeviceName[CCHDEVICENAME]; 
- WORD dmSpecVersion; 
- WORD dmDriverVersion; 
- WORD dmSize; 
- WORD dmDriverExtra; 
- DWORD dmFields; 
- short dmOrientation; 
- short dmPaperSize; 
- short dmPaperLength; 
- short dmPaperWidth; 
- short dmScale; 
- short dmCopies; 
- short dmDefaultSource; 
- short dmPrintQuality; 
- short dmColor; 
- short dmDuplex; 
- short dmYResolution; 
- short dmTTOption; 
- short dmCollate; 
- BCHAR dmFormName[CCHFORMNAME]; 
- WORD dmLogPixels; 
- DWORD dmBitsPerPel; 
- DWORD dmPelsWidth; 
- DWORD dmPelsHeight; 
- DWORD dmDisplayFlags; 
- DWORD dmDisplayFrequency; 
- DWORD dmDisplayOrientation;
-} DEVMODE;
-
-/* DIBSECTION  [struct, typedef; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagDIBSECTION { 
- BITMAP dsBm; 
- BITMAPINFOHEADER dsBmih; 
- DWORD dsBitfields[3]; 
- HANDLE dshSection; 
- DWORD dsOffset; 
-} DIBSECTION;
-
-/* DLGITEMTEMPLATEEX  [struct; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct { 
- DWORD helpID; 
- DWORD dwExtendedStyle; 
- DWORD style; 
- short x; 
- short y; 
- short cx; 
- short cy; 
- WORD id; 
- sz_Or_Ord windowClass; 
- sz_Or_Ord title; 
- WORD extraCount; 
-} DLGITEMTEMPLATEEX;
-
-/* FONTSIGNATURE  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagFONTSIGNATURE {
- DWORD fsUsb[4];
- DWORD fsCsb [2];
-} FONTSIGNATURE;
-
-/* LOGBRUSH  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagLOGBRUSH { 
- UINT lbStyle; 
- COLORREF lbColor; 
- LONG lbHatch; 
-} LOGBRUSH;
-
-/* LOGPALETTE  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* LOGPALETTE  [struct; shared] */
 typedef struct tagLOGPALETTE { 
  WORD palVersion; 
  WORD palNumEntries; 
  PALETTEENTRY palPalEntry[1]; 
 } LOGPALETTE;
 
-/* LOGPEN  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagLOGPEN { 
- UINT lopnStyle; 
- POINT lopnWidth; 
- COLORREF lopnColor; 
-} LOGPEN;
-
-/* PALETTEENTRY  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagPALETTEENTRY {
- BYTE peRed;
- BYTE peGreen;
- BYTE peBlue;
- BYTE peFlags;
-} PALETTEENTRY;
-
-/* RGBTRIPLE  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct tagRGBTRIPLE { 
- BYTE rgbtBlue; 
- BYTE rgbtGreen; 
- BYTE rgbtRed; 
-} RGBTRIPLE;
-
-/* RGNDATA  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* RGNDATA  [struct; shared] */
 typedef struct _RGNDATA { 
  RGNDATAHEADER rdh; 
  char Buffer[1]; 
 } RGNDATA;
 
-/* RGNDATAHEADER  [struct; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _RGNDATAHEADER { 
- DWORD dwSize; 
- DWORD iType; 
- DWORD nCount; 
- DWORD nRgnSize; 
- RECT rcBound; 
-} RGNDATAHEADER;
-#endif /* _WIN32_WCE */
+/* BITMAPINFOHEADER  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   biSize */
+/*   biWidth */
+/*   biHeight */
+/*   biPlanes */
+/*   biBitCount */
+/*   biCompression */
+/*   biSizeImage */
+/*   biXPelsPerMeter */
+/*   biYPelsPerMeter */
+/*   biClrUsed */
+/*   biClrImportant */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
+/* CHARSETINFO  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   ciCharset */
+/*   ciACP */
+/*   fs */
 
-/* DOCINFO  [struct; shared; CE 2.11..2.12, 3.0..699; A/W DOCINFOA,DOCINFOW (CE is W-side)] */
-typedef struct { 
- int cbSize; 
- LPCTSTR lpszDocName; 
- LPCTSTR lpszOutput; 
- LPCTSTR lpszDatatype; 
- DWORD fwType;
-} DOCINFO;
+/* DEVMODE  [typedef; shared; A/W DEVMODEA (CE is W-side)] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   dmDeviceName */
+/*   dmSpecVersion */
+/*   dmDriverVersion */
+/*   dmSize */
+/*   dmDriverExtra */
+/*   dmFields */
+/*   DUMMYUNIONNAME */
+/*   dmColor */
+/*   dmDuplex */
+/*   dmYResolution */
+/*   dmTTOption */
+/*   dmCollate */
+/*   dmFormName */
+/*   dmLogPixels */
+/*   dmBitsPerPel */
+/*   dmPelsWidth */
+/*   dmPelsHeight */
+/*   DUMMYUNIONNAME2 */
+/*   dmDisplayFrequency */
+/*   dmICMMethod */
+/*   dmICMIntent */
+/*   dmMediaType */
+/*   dmDitherType */
+/*   dmReserved1 */
+/*   dmReserved2 */
+/*   dmPanningWidth */
+/*   dmPanningHeight */
 
-/* ENUMLOGFONT  [struct; shared; CE 2.11..2.12, 3.0..699; A/W ENUMLOGFONTA,ENUMLOGFONTW (CE is W-side)] */
-typedef struct tagENUMLOGFONT {
- LOGFONT elfLogFont; 
- TCHAR elfFullName[LF_FULLFACESIZE]; 
- TCHAR elfStyle[LF_FACESIZE]; 
-} ENUMLOGFONT;
-#endif /* _WIN32_WCE */
+/* DEVMODEW  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   dmDeviceName */
+/*   dmSpecVersion */
+/*   dmDriverVersion */
+/*   dmSize */
+/*   dmDriverExtra */
+/*   dmFields */
+/*   DUMMYUNIONNAME */
+/*   dmColor */
+/*   dmDuplex */
+/*   dmYResolution */
+/*   dmTTOption */
+/*   dmCollate */
+/*   dmFormName */
+/*   dmLogPixels */
+/*   dmBitsPerPel */
+/*   dmPelsWidth */
+/*   dmPelsHeight */
+/*   DUMMYUNIONNAME2 */
+/*   dmDisplayFrequency */
+/*   dmICMMethod */
+/*   dmICMIntent */
+/*   dmMediaType */
+/*   dmDitherType */
+/*   dmReserved1 */
+/*   dmReserved2 */
+/*   dmPanningWidth */
+/*   dmPanningHeight */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+/* ENUMLOGFONT  [struct; shared; A/W ENUMLOGFONTA,ENUMLOGFONTW (CE is W-side)] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   elfLogFont */
+/*   elfFullName */
+/*   elfStyle */
 
-/* DEVMODEW  [struct; shared; CE 4.0..699] */
-typedef struct _devicemodew {
- WCHAR dmDeviceName[CCHDEVICENAME];
- WORD dmSpecVersion;
- WORD dmDriverVersion;
- WORD dmSize;
- WORD dmDriverExtra;
- DWORD dmFields;
- short dmOrientation;
- short dmPaperSize;
- short dmPaperLength;
- short dmPaperWidth;
- short dmScale;
- short dmCopies;
- short dmDefaultSource;
- short dmPrintQuality;
- short dmColor;
- short dmDuplex;
- short dmYResolution;
- short dmTTOption;
- short dmCollate;
- WCHAR dmFormName[CCHFORMNAME];
- WORD dmLogPixels;
- DWORD dmBitsPerPel;
- DWORD dmPelsWidth;
- DWORD dmPelsHeight;
- DWORD dmDisplayFlags;
- DWORD dmDisplayFrequency;
- DWORD dmDisplayOrientation;
-} DEVMODEW,* PDEVMODEW,* NPDEVMODEW,* LPDEVMODEW;
-
-/* GDIINFO  [struct; shared; CE 4.0..699] */
-typedef struct tagGDIINFO {
- ULONG ulVersion;
- ULONG ulTechnology;
- ULONG ulHorzSize;
- ULONG ulVertSize;
- ULONG ulHorzRes;
- ULONG ulVertRes;
- ULONG cBitsPixel;
- ULONG cPlanes;
- ULONG ulNumBrushes;
- ULONG flRaster;
- ULONG ulLogPixelsX;
- ULONG ulLogPixelsY;
- ULONG flTextCaps;
- ULONG ulDACRed;
- ULONG ulDACGreen;
- ULONG ulDACBlue;
- ULONG ulAspectX;
- ULONG ulAspectY;
- ULONG ulAspectXY;
- LONG xStyleStep;
- LONG yStyleStep;
- LONG denStyleStep;
- POINTL ptlPhysOffset;
- SIZEL szlPhysSize;
- ULONG ulNumPalReg;
- ULONG ulDevicePelsDPI;
- ULONG ulPrimaryOrder;
- ULONG ulHTPatternSize;
- ULONG ulHTOutputFormat;
- ULONG flHTFlags;
- ULONG ulVRefresh;
- ULONG ulBltAlignment;
- ULONG ulPanningHorzRes;
- ULONG ulPanningVertRes;
-} GDIINFO;
-#endif /* _WIN32_WCE */
+/* LOGFONT  [struct, macro; shared; A/W LOGFONTA,LOGFONTW (CE is W-side)] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   lfHeight */
+/*   lfWidth */
+/*   lfEscapement */
+/*   lfOrientation */
+/*   lfWeight */
+/*   lfItalic */
+/*   lfUnderline */
+/*   lfStrikeOut */
+/*   lfCharSet */
+/*   lfOutPrecision */
+/*   lfClipPrecision */
+/*   lfQuality */
+/*   lfPitchAndFamily */
+/*   lfFaceName */
 
 /* ==================================================================
  * functions and callbacks
@@ -2437,60 +2317,5 @@ int SetTextCharacterExtra(
  int nCharExtra // extra-space value
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* enum */
-enum PROVIDER_SPECIFIC_MESSAGE_CLASS {
-  PS_MESSAGE_CLASS0 = 0,
-  PS_MESSAGE_CLASS1,
-  PS_MESSAGE_CLASS2,
-  PS_MESSAGE_CLASS3,
-  PS_MESSAGE_CLASSUNSPECIFIED,
-};
-
-/* struct */
-typedef struct _devicemodew { WCHAR dmDeviceName[CCHDEVICENAME]; WORD dmSpecVersion; WORD dmDriverVersion; WORD dmSize; WORD dmDriverExtra; DWORD dmFields; short dmOrientation; short dmPaperSize; short dmPaperLength; short dmPaperWidth; short dmScale; short dmCopies; short dmDefaultSource; short dmPrintQuality; short dmColor; short dmDuplex; short dmYResolution; short dmTTOption; short dmCollate; WCHAR dmFormName[CCHFORMNAME]; WORD dmLogPixels; DWORD dmBitsPerPel; DWORD dmPelsWidth; DWORD dmPelsHeight; DWORD dmDisplayFlags; DWORD dmDisplayFrequency; DWORD dmDisplayOrientation;} DEVMODEW,* PDEVMODEW,* NPDEVMODEW,* LPDEVMODEW;
-
-/* function */
-HRESULT Architecture( int* pwArchitecture );
-HRESULT CreateBitmapFromBuffer(  BitmapData* bitmapData,  IBitmapImage** bitmap  )
-HRESULT CreateBitmapFromImage( IImage* image, OPTIONAL UINT width, OPTIONAL UINT height, OPTIONAL PixelFormatID pixelFormat, InterpolationHint hints, IBitmapImage** bitmap );
-BOOL CreateBitmapIndirect( LPBITMAP lpBitmap );
-BOOL CreateBrushIndirect( LPLOGBRUSH lpLogBrush );
-BOOL CreateFont( int nHeight, int nWidth, int nEscapement, int nOrientation, int nWeight, BYTE bItalic, BYTE bUnderline, BYTE cStrikeOut, BYTE nCharSet, BYTE nOutPrecision, BYTE nClipPrecision, BYTE nQuality, BYTE nPitchAndFamily, LPCTSTR lpszFacename );
-BOOL DM_DevDeviceIoControl(
-fsopendev_t *fsodev,
-DWORD dwIoControlCode,
-LPVOID lpInBuf,
-DWORD nInBufSize,
-LPVOID lpOutBuf,
-DWORD nOutBufSize,
-LPDWORD lpBytesReturned,
-LPOVERLAPPED lpOverlapped)
-{
-  BOOL retval = FALSE;
-  DWORD dodec = 0;
-  LPEXCEPTION_POINTERS pep;
-  lpInBuf = MapCallerPtr(lpInBuf,nInBufSize);
-  lpOutBuf = MapCallerPtr(lpOutBuf,nOutBufSize);
-}
-static LPCTSTR WINAPI GetObjectDescription( );
-HRESULT GetObjectParam( LPOLESTR pszKey, IUnknown** ppunk );
-UINT GetObjectSchema( );
-HRESULT GetObjectStorage( LPOLESTR pszItem, IBindCtx* pbc, REFIID riid, void** ppvStorage );
-HRESULT GetObjectToken( ISpObjectToken** ppToken );
-HRESULT GetPath( LPCWSTR* ppszPath );
-HRESULT GetPixelDataBuffer( const RECT* rect, PixelFormatID pixelFormat, BOOL lastPass, BitmapData* bitmapData );
-HRESULT GetPixelFormat( LPDDPIXELFORMAT lpDDPixelFormat);
-HRESULT GetPixelFormatID( PixelFormatID* pixelFormat );
-BOOL PolyPolygon ( LPPOINT lpPoints, LPINT lpPolyCounts, int nCount );
-BOOL PolyPolyline( const POINT* lpPoints, const DWORD* lpPolyPoints, int nCount );
-BOOL PolylineTo( const POINT* lpPoints, int nCount );
-CSize SetBitmapDimension( int nWidth, int nHeight );
-CPoint SetBrushOrg( int x, int y );
 
 #endif /* _WINGDI_ */

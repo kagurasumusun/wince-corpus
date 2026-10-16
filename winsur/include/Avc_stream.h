@@ -25,79 +25,49 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 600)) /* CE 4.0..599 */
-
-/* AUDIO_SampleFrequency  [enum; ce-only; CE 4.0..599] */
+/* AUDIO_SampleFrequency  [enum; ce-only] */
 typedef enum { AUDIO_SampleFrequency_32Khz = 0, AUDIO_SampleFrequency_44_1Khz, AUDIO_SampleFrequency_48Khz, AUDIO_SampleFrequency_88_2Khz, AUDIO_SampleFrequency_96Khz, AUDIO_SampleFrequency_176_4Khz, AUDIO_SampleFrequency_192Khz} AUDIO_SampleFrequency;
-#endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
-
-/* STREAM_AttachBuffers_Request  [struct; ce-only; CE 5.0..599] */
-typedef struct { STREAM_SESSION_ID sab_Session; ULONG sab_NumberOfBuffers; struct { PVOID sabb_Memory; ULONG sabb_Length; } sab_Buffers[1];} STREAM_AttachBuffers_Request;
-
-/* STREAM_AttachBuffers_Response  [struct; ce-only; CE 5.0..599] */
-typedef struct { ULONG sab_NumberOfIds; STREAM_BUFFER_ID sab_BufferIds[1]; } STREAM_AttachBuffers_Response;
-
-/* STREAM_CreateLocalPlug_Request  [struct; ce-only; CE 5.0..599] */
+/* STREAM_CreateLocalPlug_Request  [struct; ce-only] */
 typedef struct { ULONG sclp_PlugDirection; STREAM_MediaType sclp_MediaType; ULONG sclp_Direction; union { ULONG sclp_MaximumThroughput; struct { ULONG sclp_ClusterDimension; ULONG sclp_SampleFrequency; }; };} STREAM_CreateLocalPlug_Request;
 
-/* STREAM_CreateLocalPlug_Response  [struct; ce-only; CE 5.0..599] */
+/* STREAM_CreateLocalPlug_Response  [struct; ce-only] */
 typedef struct { HANDLE sclp_Plug; ULONG sclp_PlugNumber;} STREAM_CreateLocalPlug_Response;
 
-/* STREAM_DeleteLocalPlug_Request  [struct; ce-only; CE 5.0..599] */
+/* STREAM_DeleteLocalPlug_Request  [struct; ce-only] */
 typedef struct { HANDLE sdlp_Plug;} STREAM_DeleteLocalPlug_Request;
 
-/* STREAM_DereferenceRemotePlug_Request  [struct; ce-only; CE 5.0..599] */
+/* STREAM_DereferenceRemotePlug_Request  [struct; ce-only] */
 typedef struct { ULONG sdrp_Direction; ULONG sdrp_SubunitPlugID; ULONG sdrp_PlugNumber; PVOID sdrp_PlugToken;} STREAM_DereferenceRemotePlug_Request;
 
-/* STREAM_DetachBuffers_Request  [struct; ce-only; CE 5.0..599] */
-typedef struct { STREAM_SESSION_ID sdb_Session; ULONG sdb_NumberOfIds; STREAM_BUFFER_ID sdb_BufferIds[1];} STREAM_DetachBuffers_Request;
-
-/* STREAM_GetMediaSize_Request  [struct; ce-only; CE 5.0..599] */
+/* STREAM_GetMediaSize_Request  [struct; ce-only] */
 typedef struct { STREAM_MediaType sgms_MediaType;} STREAM_GetMediaSize_Request;
 
-/* STREAM_GetMediaSize_Response  [struct; ce-only; CE 5.0..599] */
+/* STREAM_GetMediaSize_Response  [struct; ce-only] */
 typedef struct { ULONG sgms_PacketSize; ULONG sgms_FrameSize;} STREAM_GetMediaSize_Response;
 
-/* STREAM_GetRemotePlugHandle_Request  [struct; ce-only; CE 5.0..599] */
+/* STREAM_GetRemotePlugHandle_Request  [struct; ce-only] */
 typedef struct { ULONG sgrph_PlugNumber; ULONG sgrph_PlugDirection;} STREAM_GetRemotePlugHandle_Request;
 
-/* STREAM_GetRemotePlugHandle_Response  [struct; ce-only; CE 5.0..599] */
+/* STREAM_GetRemotePlugHandle_Response  [struct; ce-only] */
 typedef struct { HANDLE sgrph_Plug;} STREAM_GetRemotePlugHandle_Response;
 
-/* STREAM_LocateRemotePlug_Request  [struct; ce-only; CE 5.0..599] */
+/* STREAM_LocateRemotePlug_Request  [struct; ce-only] */
 typedef struct { ULONG slrp_MediaType; ULONG slrp_Direction; ULONG slrp_SubunitPlugID;} STREAM_LocateRemotePlug_Request;
 
-/* STREAM_LocateRemotePlug_Response  [struct; ce-only; CE 5.0..599] */
+/* STREAM_LocateRemotePlug_Response  [struct; ce-only] */
 typedef struct { ULONG slrp_PlugNumber; PVOID slrp_PlugToken;} STREAM_LocateRemotePlug_Response;
 
-/* STREAM_MediaType  [enum; ce-only; CE 5.0..599] */
+/* STREAM_MediaType  [enum; ce-only] */
 typedef enum { STREAM_MediaType_MPEG = 0, STREAM_MediaType_MPEG_TimeShifted, STREAM_MediaType_DSS, STREAM_MediaType_DSS_TimeShifted, STREAM_MediaType_Audio_AM824, STREAM_MediaType_Audio_24x4Pack, STREAM_MediaType_Audio_32fp, STREAM_MediaType_DV_SD_625_50Hz, STREAM_MediaType_DV_SD_525_60Hz, STREAM_MediaType_DV_SDL_625_50Hz, STREAM_MediaType_DV_SDL_525_60Hz, STREAM_MediaType_DV_HD_1250_50Hz, STREAM_MediaType_DV_HD_1125_60Hz, STREAM_MediaType_Default=0xFFFF} STREAM_MediaType;
 
-/* STREAM_QueryBufferState_Request  [struct; ce-only; CE 5.0..599] */
-typedef struct { STREAM_SESSION_ID sqbs_Session; ULONG sqbs_Flags;} STREAM_QueryBufferState_Request;
-
-/* STREAM_QueryBufferState_Response  [struct; ce-only; CE 5.0..599] */
-typedef struct { ULONG sqbs_NumberOfIds; STREAM_BUFFER_ID sqbs_BufferIds[1]; } STREAM_QueryBufferState_Response;
-
-/* STREAM_SetMediaSize_Request  [struct; ce-only; CE 5.0..599] */
+/* STREAM_SetMediaSize_Request  [struct; ce-only] */
 typedef struct { STREAM_MediaType ssms_MediaType; ULONG ssms_FrameSize;} STREAM_SetMediaSize_Request;
 
-/* STREAM_StartReceiveSession_Request  [struct; ce-only; CE 5.0..599] */
+/* STREAM_StartReceiveSession_Request  [struct; ce-only] */
 typedef struct { HANDLE ssrs_LocalPlug; HANDLE ssrs_RemotePlug; STREAM_MediaType ssrs_MediaType; union { struct { ULONG ssrs_ClusterDimension; }; };} STREAM_StartReceiveSession_Request;
 
-/* STREAM_StartReceiveSession_Response  [struct; ce-only; CE 5.0..599] */
-typedef struct { STREAM_SESSION_ID ssrs_Session;} STREAM_StartReceiveSession_Response;
-
-/* STREAM_StartTransmitSession_Request  [struct; ce-only; CE 5.0..599] */
+/* STREAM_StartTransmitSession_Request  [struct; ce-only] */
 typedef struct { HANDLE ssts_LocalPlug; HANDLE ssts_RemotePlug; STREAM_MediaType ssts_MediaType; union { ULONG ssts_MaximumThroughput; struct { ULONG ssts_SampleFrequency; ULONG ssts_ClusterDimension; }; };} STREAM_StartTransmitSession_Request;
-
-/* STREAM_StartTransmitSession_Response  [struct; ce-only; CE 5.0..599] */
-typedef struct { STREAM_SESSION_ID ssts_Session;} STREAM_StartTransmitSession_Response;
-
-/* STREAM_StopSession_Request  [struct; ce-only; CE 5.0..599] */
-typedef struct { STREAM_SESSION_ID sss_Session;} STREAM_StopSession_Request;
-#endif /* _WIN32_WCE */
 
 #endif /* _AVC_STREAM_ */

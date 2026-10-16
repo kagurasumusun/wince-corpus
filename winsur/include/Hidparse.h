@@ -17,10 +17,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* HIDP_PREPARSED_DATA  [struct; ce-only; CE 5.0..699] */
+/* HIDP_PREPARSED_DATA  [struct; ce-only] */
 typedef struct _HIDP_PREPARSED_DATA HIDP_PREPARSED_DATA;
-#endif /* _WIN32_WCE */
 
 #endif /* _HIDPARSE_ */

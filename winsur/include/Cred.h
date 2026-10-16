@@ -12,28 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* CRED  [struct; ce-only; CE 5.0..699] */
-typedef struct _CRED {
- DWORD dwVersion;
- DWORD dwType;
- WSTR wszUser;
- DWORD dwUserLen;
- WSTR wszTarget;
- DWORD dwTargetLen;
- PBYTE pBlob;
- DWORD dwBlobSize;
- DWORD dwFlags;
-} CRED, *PCRED,**PPCRED;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

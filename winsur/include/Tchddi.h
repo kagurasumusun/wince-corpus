@@ -30,9 +30,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* enumTouchPanelSampleFlags  [enum; ce-only; CE 4.0..699] */
+/* enumTouchPanelSampleFlags  [enum; ce-only] */
 enum enumTouchPanelSampleFlags {
  TouchSampleValidFlag = 0x01,
  TouchSampleDownFlag = 0x02,
@@ -41,14 +39,8 @@ enum enumTouchPanelSampleFlags {
  TouchSampleIgnore = 0x10,
  TouchSampleMouse = 0x40000000
 };
-#endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* TOUCH_PANEL_SAMPLE_FLAGS  [typedef; ce-only; CE 5.0..699] */
-typedef UINT32 TOUCH_PANEL_SAMPLE_FLAGS, *PTOUCH_PANEL_SAMPLE_FLAGS;
-
-/* TPDC_CALIBRATION_POINT  [struct; ce-only; CE 5.0..699] */
+/* TPDC_CALIBRATION_POINT  [struct; ce-only] */
 struct TPDC_CALIBRATION_POINT {
  INT PointNumber;
  INT cDisplayWidth;
@@ -57,19 +49,12 @@ struct TPDC_CALIBRATION_POINT {
  INT CalibrationY;
 };
 
-/* TPDC_CALIBRATION_POINT_COUNT  [struct; ce-only; CE 5.0..699] */
-struct TPDC_CALIBRATION_POINT_COUNT {
- DDI_TOUCH_PANEL_CALIBRATION_FLAGS flags;
- INT cCalibrationPoints;
-};
-
-/* TPDC_SAMPLE_RATE  [struct; ce-only; CE 5.0..699] */
+/* TPDC_SAMPLE_RATE  [struct; ce-only] */
 struct TPDC_SAMPLE_RATE {
  INT SamplesPerSecondLow;
  INT SamplesPerSecondHigh;
  INT CurrentSampleRateSetting; 
 };
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

@@ -51,53 +51,6 @@
 #define PUN_VIBRATE 2
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* CE_USER_NOTIFICATION  [struct; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct UserNotificationType {
- DWORD ActionFlags;
- TCHAR* pwszDialogTitle;
- TCHAR* pwszDialogText;
- TCHAR* pwszSound;
- DWORD nMaxSound;
- DWORD dwReserved;
-} CE_USER_NOTIFICATION, *PCE_USER_NOTIFICATION;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 3.0..399 */
-
-/* UserNotificationTrigger  [struct; ce-only; CE 3.0..399] */
-typedef struct UserNotificationTrigger { 
-DWORD dwSize; 
-DWORD dwType; 
-DWORD dwEvent; 
-WCHAR *lpszApplication; 
-WCHAR *lpszArguments; 
-SYSTEMTIME stStartTime; 
-SYSTEMTIME stEndTime; 
-} CE_NOTIFICATION_TRIGGER, *PCE_NOTIFICATION_TRIGGER;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* CE_NOTIFICATION_INFO_HEADER  [struct; ce-only; CE 5.0..699] */
-typedef struct UserNotificationInfoHeader {
- HANDLE hNotification;
- DWORD dwStatus;
- CE_NOTIFICATION_TRIGGER* pcent;
- CE_USER_NOTIFICATION* pceun;
-} CE_NOTIFICATION_INFO_HEADER, *PCE_NOTIFICATION_INFO_HEADER;
-
-/* CE_NOTIFICATION_TRIGGER  [struct; ce-only; CE 5.0..699] */
-typedef struct UserNotificationTrigger { DWORD dwSize; DWORD dwType; DWORD dwEvent; WCHAR* lpszApplication; WCHAR* lpszArguments; SYSTEMTIME stStartTime; SYSTEMTIME stEndTime;} CE_NOTIFICATION_TRIGGER, *PCE_NOTIFICATION_TRIGGER;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 25 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 15 declarations, 0 outlines, 0 base types, 0 extra macros, 10 extra decls
  */
 #ifndef _SPHELPER_
 #define _SPHELPER_
@@ -29,24 +29,6 @@ inline HRESULT SpConvertStreamFormatEnum(
  WAVEFORMATEX** ppCoMemWaveFormatEx
 );
 
-/* SpCreateBestObject  [function; ce-only; CE 4.0..699; Sapilib.lib, sapilib.lib] */
-HRESULT SpCreateBestObject(
- const WCHAR* pszCategoryId,
- const WCHAR* pszReqAttribs,
- const WCHAR* pszOptAttribs,
- T** ppObject,
- IUnknown* pUnkOuter = NULL,
- DWORD dwClsCtxt = CLSCTX_ALL,
-);
-
-/* SpCreateDefaultObjectFromCategoryId  [function; ce-only; CE 4.0..699; Sapilib.lib, sapilib.lib] */
-HRESULT SpCreateDefaultObjectFromCategoryId(
- const WCHAR* pszCategoryId,
- T** ppObject,
- IUnknown* pUnkOuter = NULL,
- DWORD dwClsCtxt = CLSCTX_ALL
-);
-
 /* SpCreateNewToken  [function; ce-only; CE 4.0..699; Sapilib.lib, sapilib.lib] */
 inline HRESULT SpCreateNewToken(
  const WCHAR* pszTokenId,
@@ -63,31 +45,6 @@ inline HRESULT SpCreateNewTokenEx(
  const WCHAR* pszLangDependentName,
  ISpObjectToken** ppToken,
  ISpDataKey** ppDataKeyAttribs
-);
-
-/* SpCreateObjectFromSubToken  [function; ce-only; CE 4.0..699; Sapilib.lib, sapilib.lib] */
-HRESULT SpCreateObjectFromSubToken(
- ISpObjectToken* pToken,
- const WCHAR* pszSubKeyName,
- T** ppObject,
- IUnknown pUnkOuter = NULL,
- DWORD* dwClsCtxt = CLSCTX_ALL
-);
-
-/* SpCreateObjectFromToken  [function; ce-only; CE 4.0..699; Sapilib.lib, sapilib.lib] */
-HRESULT SpCreateObjectFromToken(
- ISpObjectToken* pToken,
- T** ppObject,
- IUnknown* pUnkOuter = NULL,
- DWORD dwClsCtxt = CLSCTX_ALL
-);
-
-/* SpCreateObjectFromTokenId  [function; ce-only; CE 4.0..699; Sapilib.lib, sapilib.lib] */
-HRESULT SpCreateObjectFromTokenId(
- const WCHAR* pszTokenId,
- T** ppObject,
- IUnknown* pUnkOuter = NULL,
- DWORD dwClsCtxt = CLSCTX_ALL
 );
 
 /* SpCreatePhoneConverter  [function; ce-only; CE 4.0..699; Sapilib.lib, sapilib.lib] */
@@ -119,20 +76,6 @@ inline HRESULT SpFindBestToken(
  ISpObjectToken** ppObjectToken
 );
 
-/* SpGetCategoryFromId  [function; ce-only; CE 4.0..699; Sapilib.lib, sapilib.lib] */
-inline HRESULT SpGetCategoryFromId(
- const WCHAR* pszCategoryId,
- ISpObjectTokenCategory** ppCategory,
- BOOL fCreateIfNotExist = FALSE
-);
-
-/* SpGetDefaultTokenFromCategoryId  [function; ce-only; CE 4.0..699; Sapilib.lib, sapilib.lib] */
-inline HRESULT SpGetDefaultTokenFromCategoryId(
- const WCHAR* pszCategoryId,
- ISpObjectToken** ppToken,
- BOOL fCreateCategoryIfNotExist = TRUE
-);
-
 /* SpGetDefaultTokenIdFromCategoryId  [function; ce-only; CE 4.0..699; Sapilib.lib, sapilib.lib] */
 inline HRESULT SpGetDefaultTokenIdFromCategoryId(
  const WCHAR* pszCategoryId,
@@ -144,21 +87,6 @@ inline HRESULT SpGetDescription(
  ISpObjectToken* pObjToken,
  WCHAR** ppszDescription,
  LANGID* Language = SpGetUserDefaultUILanguage()
-);
-
-/* SpGetSubTokenFromToken  [function; ce-only; CE 4.0..699; Sapilib.lib, sapilib.lib] */
-inline HRESULT SpGetSubTokenFromToken(
- ISpObjectToken* pToken,
- const WCHAR* pszSubKeyName,
- ISpObjectToken** ppToken,
- BOOL fCreateIfNotExist = FALSE
-);
-
-/* SpGetTokenFromId  [function; ce-only; CE 4.0..699; Sapilib.lib, sapilib.lib] */
-inline HRESULT SpGetTokenFromId(
- const WCHAR* pszTokenId,
- ISpObjectToken** ppToken,
- BOOL* fCreateIfNotExist = FALSE
 );
 
 /* SpGetUserDefaultUILanguage  [function; ce-only; CE 4.0..699; Sapilib.lib, sapilib.lib] */
@@ -189,14 +117,6 @@ inline HRESULT SpSetDefaultTokenForCategoryId(
 inline HRESULT SpSetDefaultTokenIdForCategoryId(
  const WCHAR* pszCategoryId,
  const WCHAR* pszTokenId
-);
-
-/* SpSetDescription  [function; ce-only; CE 4.0..699; Sapilib.lib, sapilib.lib] */
-inline HRESULT SpSetDescription(
- ISpObjectToken* pObjToken,
- const WCHAR* pszDescription,
- LANGID Language = SpGetUserDefaultUILanguage(),
- BOOL fSetLangIndependentId = TRUE
 );
 #endif /* _WIN32_WCE */
 

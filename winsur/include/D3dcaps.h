@@ -12,47 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 500)) /* CE 4.0..499 */
-
-/* D3DLIGHTINGCAPS  [struct, typedef; ce-only; CE 4.0..499] */
-typedef struct _D3DLIGHTINGCAPS {
- DWORD dwSize;
- DWORD dwCaps;
- DWORD dwLightingModel; 
- DWORD dwNumLights;
-} D3DLIGHTINGCAPS, *LPD3DLIGHTINGCAPS;
-
-/* D3DPRIMCAPS  [struct, typedef; ce-only; CE 4.0..499] */
-typedef struct _D3DPrimCaps {
- DWORD dwSize;
- DWORD dwMiscCaps; 
- DWORD dwRasterCaps;
- DWORD dwZCmpCaps;
- DWORD dwSrcBlendCaps;
- DWORD dwDestBlendCaps;
- DWORD dwAlphaCmpCaps;
- DWORD dwShadeCaps;
- DWORD dwTextureCaps;
- DWORD dwTextureFilterCaps;
- DWORD dwTextureBlendCaps;
- DWORD dwTextureAddressCaps;
- DWORD dwStippleWidth; 
- DWORD dwStippleHeight; 
-} D3DPRIMCAPS, *LPD3DPRIMCAPS;
-
-/* D3DTRANSFORMCAPS  [struct, typedef; ce-only; CE 4.0..499] */
-typedef struct _D3DTRANSFORMCAPS {
- DWORD dwSize;
- DWORD dwCaps;
-} D3DTRANSFORMCAPS, *LPD3DTRANSFORMCAPS;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */

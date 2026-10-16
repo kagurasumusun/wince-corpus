@@ -15,10 +15,7 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* NodeDataUnion  [typedef; ce-only; CE 4.0..699] */
-#endif /* _WIN32_WCE */
+/* NodeDataUnion  [typedef; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -26,22 +23,11 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* NodeData  [struct; ce-only; CE 4.0..699] */
+/* NodeData  [struct; ce-only] */
 typedef struct NodeData {
  USHORT type;
  USHORT specificType;
  NodeDataUnion u;
 } NodeData;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* typedef */
-typedef union NodeDataUnion { DP_LARGE_INTEGER_16 int128;
 
 #endif /* _BTHAPI_IDL_ */

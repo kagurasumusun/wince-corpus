@@ -12,69 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* PUPNPCALLBACK  [callback; ce-only; CE 4.0..699; Upnpcapi.lib] */
-typedef DWORD (*PUPNPCALLBACK) (
- UPNPCB_ID callbackId,
- PVOID pvUserContext,
- PVOID pvSvcParam
-);
-
-/* UPNPCB_ID  [enum; ce-only; CE 4.0..699] */
-typedef enum {
- UPNPCB_INIT,
- UPNPCB_SUBSCRIBING,
- UPNPCB_UNSUBSCRIBING,
- UPNPCB_CONTROL,
- UPNPCB_IDLE,
- UPNPCB_WAKEUP,
- UPNPCB_SHUTDOWN
-} UPNPCB_ID;
-
-/* UPNPDEVICEINFO  [struct; ce-only; CE 4.0..699] */
-typedef struct {
- DWORD cbStruct;
- PWSTR pszDeviceDescription;
- PWSTR pszDeviceName;
- PWSTR pszUDN;
- DWORD cachecontrol;
- PUPNPCALLBACK pfCallback;
- PVOID pvUserDevContext; 
-} UPNPDEVICEINFO;
-
-/* UPNPPARAM  [struct; ce-only; CE 4.0..699] */
-typedef struct {
- PCWSTR pszName;
- PCWSTR pszValue;
-} UPNPPARAM;
-
-/* UPNPSERVICECONTROL  [struct; ce-only; CE 4.0..699] */
-typedef struct {
- PCWSTR pszRequestXML;
- PCWSTR pszSID;
- PCWSTR pszServiceType;
- PCWSTR pszAction;
- PCWSTR pszUDN;
- DWORD iAction;
- DWORD cInArgs;
- UPNPPARAM* pInArgs;
- PVOID Reserved1; 
-} UPNPSERVICECONTROL;
-
-/* UPNPSUBSCRIPTION  [struct; ce-only; CE 4.0..699] */
-typedef struct {
- PCWSTR pszUDN;
- PCWSTR pszSID;
-} UPNPSUBSCRIPTION, *PUNPNSUBSCRIPTION;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

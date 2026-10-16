@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 11 constants, 82 declarations, 0 outlines, 0 base types, 0 extra macros, 9 extra decls
+ * 11 constants, 81 declarations, 1 outlines, 0 base types, 0 extra macros, 9 extra decls
  */
 #ifndef _FSDMGR_
 #define _FSDMGR_
@@ -30,116 +30,10 @@
 #define FSD_FLAG_WFSC_SUPPORTED 0x4
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
+ * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* FSD_BUFFER_INFO  [struct; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _FSD_BUFFER_INFO{
- PBYTE pBuffer;
- DWORD cbBuffer;
-} FSD_BUFFER_INFO, *PFBI;
-
-/* FSD_DISK_INFO  [struct; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _FSD_DISK_INFO{ 
- DWORD cSectors;
- DWORD cbSector;
- DWORD cCylinders;
- DWORD cHeadsPerCylinder;
- DWORD cSectorsPerTrack;
- DWORD dwFlags;
-} FSD_DISK_INFO, *PFDI;
-
-/* FSD_SCATTER_GATHER_INFO  [struct; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _FSD_SCATTER_GATHER_INFO{
- DWORD dwFlags;
- DWORD idDsk;
- DWORD dwSector;
- DWORD cSectors;
- PFDI pfdi;
- DWORD cfbi;
- PFBI pfbi;
- PFNFSG pfnCallBack;
-} FSD_SCATTER_GATHER_INFO, *PFSGI;
-
-/* FSD_SCATTER_GATHER_RESULTS  [struct; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct _FSD_SCATTER_GATHER_RESULTS{
- DWORD dwFlags;
- DWORD cSectorsTransferred;
-} FSD_SCATTER_GATHER_RESULTS, *PFSGR;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* FILTERHOOK  [struct; ce-only; CE 4.0..699] */
-typedef struct tagFILTERHOOK {
- DWORD cbSize;
- DWORD hVolume;
- PCLOSEVOLUME pCloseVolume;
- PCREATEDIRECTORYW pCreateDirectoryW; 
- PREMOVEDIRECTORYW pRemoveDirectoryW;
- PGETFILEATTRIBUTESW pGetFileAttributesW;
- PSETFILEATTRIBUTESW pSetFileAttributesW;
- PDELETEFILEW pDeleteFileW;
- PMOVEFILEW pMoveFileW;
- PDELETEANDRENAMEFILEW pDeleteAndRenameFileW;
- PGETDISKFREESPACEW pGetDiskFreeSpaceW;
- PNOTIFY pNotify;
- PREGISTERFILESYSTEMFUNCTION pRegisterFileSystemFunction;
- PFINDFIRSTFILEW pFindFirstFileW;
- PFINDNEXTFILEW pFindNextFileW;
- PFINDCLOSE pFindClose;
- PCREATEFILEW pCreateFileW;
- PREADFILE pReadFile;
- PREADFILEWITHSEEK pReadFileWithSeek;
- PWRITEFILE pWriteFile;
- PWRITEFILEWITHSEEK pWriteFileWithSeek;
- PSETFILEPOINTER pSetFilePointer;
- PGETFILESIZE pGetFileSize;
- PGETFILEINFORMATIONBYHANDLE pGetFileInformationByHandle;
- PFLUSHFILEBUFFERS pFlushFileBuffers;
- PGETFILETIME pGetFileTime;
- PSETFILETIME pSetFileTime;
- PSETENDOFFILE pSetEndOfFile;
- PDEVICEIOCONTROL pDeviceIoControl;
- PCLOSEFILE pCloseFile;
- PREFRESHVOLUME pRefreshVolume;
-} FILTERHOOK, *PFILTERHOOK;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* FILELOCKSTATE  [struct; ce-only; CE 5.0..699; Fsdmgr.lib] */
-typedef struct _FILELOCKSTATE {
- DWORD dwPosLow;
- DWORD dwPosHigh;
- DWORD dwAccess;
- LPCRITICAL_SECTION lpcs;
- BOOL fTerminal;
- HANDLE hevUnlock;
- DWORD cQueue;
- PVOID pvLockContainer;
-} FILELOCKSTATE, * PFILELOCKSTATE;
-
-/* FSD_VOLUME_INFO  [struct; ce-only; CE 5.0..699] */
-typedef struct _FSD_VOLUME_INFO {
- DWORD cbSize;
- DWORD dwFSVersion; 
- TCHAR szFSDDesc[MAX_FSD_DESCRIPTOR];
- TCHAR szFSDSubType[MAX_FSD_DESCRIPTOR];
- DWORD dwAttributes;
- DWORD dwBlockSize;
- DWORD dwFlags;
-} FSD_VOLUME_INFO, *PFSD_VOLUME_INFO;
-
-/* PEMPTYLOCKCONTAINER  [callback; ce-only; CE 5.0..699; Fsdmgr.lib] */
-typedef VOID(*PEMPTYLOCKCONTAINER)(
- PFILELOCKSTATE pFileLockState
-);
-#endif /* _WIN32_WCE */
+/* FSD_VOLUME_INFO  [struct; ce-only] */
 
 /* ==================================================================
  * functions and callbacks
@@ -729,9 +623,6 @@ DWORD FSDMGR_SyncCache(
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
-
-/* typedef */
-typedef union _FILE_SEGMENT_ELEMENT { PVOID64 Buffer;
 
 /* struct */
 typedef struct _FSD_BUFFER_INFO{PBYTE pBuffer;DWORD cbBuffer;} FSD_BUFFER_INFO, *PFBI;

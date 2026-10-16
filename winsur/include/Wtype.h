@@ -15,9 +15,6 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 2.11..2.12, 3.0..399 */
-
-/* ULARGE_INTEGER  [struct; ce-only; CE 2.11..2.12, 3.0..399] */
-#endif /* _WIN32_WCE */
+/* ULARGE_INTEGER  [struct; ce-only] */
 
 #endif /* _WTYPE_ */

@@ -27,9 +27,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* AuthenticationResult_e  [enum; ce-only; CE 6.0..699; PhCommon.dll] */
+/* AuthenticationResult_e  [enum; ce-only; PhCommon.dll] */
 enum AuthenticationResult_e
 {
  AuthCanceled = 0,
@@ -37,7 +35,7 @@ enum AuthenticationResult_e
  AuthSucceeded,
 };
 
-/* PH_AUTHENTICATE_USER_PARAMETERS  [struct; ce-only; CE 6.0..699; PhCommon.dll] */
+/* PH_AUTHENTICATE_USER_PARAMETERS  [struct; ce-only; PhCommon.dll] */
 typedef struct tagPH_AUTHENTICATE_USER_PARAMETERS
 {
  UINT StructSize; 
@@ -46,7 +44,7 @@ typedef struct tagPH_AUTHENTICATE_USER_PARAMETERS
  AuthenticationResult_e Result; 
 } PH_AUTHENTICATE_USER_PARAMETERS;
 
-/* PHActiveVolumeMode  [enum; ce-only; CE 6.0..699; PhCommon.dll] */
+/* PHActiveVolumeMode  [enum; ce-only; PhCommon.dll] */
 enum PHActiveVolumeMode
 {
  SpeakerVolumeMode = 0,
@@ -54,7 +52,7 @@ enum PHActiveVolumeMode
  LastVolumeMode, 
 };
 
-/* PHSetting  [enum; ce-only; CE 6.0..699; PhCommon.dll] */
+/* PHSetting  [enum; ce-only; PhCommon.dll] */
 enum PHSetting
 {
  phsDoNotDisturb = 0,
@@ -73,7 +71,7 @@ enum PHSetting
  phsLockPhoneAfterUpdatingPIN, 
 };
 
-/* PHVolumeSetting  [enum; ce-only; CE 6.0..699; PhCommon.dll] */
+/* PHVolumeSetting  [enum; ce-only; PhCommon.dll] */
 enum PHVolumeSetting
 {
  phvsSpeakerVolume,
@@ -81,7 +79,6 @@ enum PHVolumeSetting
  phvsHandsetVolume,
  phvsMicrophoneVolume,
 };
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

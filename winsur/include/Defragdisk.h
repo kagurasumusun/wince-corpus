@@ -12,31 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* DEFRAG_OPTIONS  [struct; ce-only; CE 5.0..699] */
-typedef struct _DEFRAG_OPTIONS {
- DWORD dwFatToUse;
- DWORD dwFlags;
-} DEFRAG_OPTIONS, *PDEFRAG_OPTIONS;
-
-/* FRAGNODE  [struct; ce-only; CE 5.0..699] */
-typedef struct _FRAGNODE {
- DWORD dwStartCluster;
- DWORD dwLength;
- DWORD dwPrevCluster;
- DWORD dwNextCluster;
- DWORD dwDirEntryOffset;
- _FRAGNODE* pNext;
-} FRAGNODE, *PFRAGNODE;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

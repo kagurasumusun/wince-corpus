@@ -17,16 +17,14 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* ITERATION_INFO  [struct; ce-only; CE 5.0..699] */
+/* ITERATION_INFO  [struct; ce-only] */
 typedef struct {
  UINT cbSize;
  int index;
  int iteration;
 } ITERATION_INFO;
 
-/* MODULE_PARAMS  [struct; ce-only; CE 5.0..699] */
+/* MODULE_PARAMS  [struct; ce-only] */
 typedef struct {
  DWORD dwDuration;
  DWORD dwLoggingZones;
@@ -38,7 +36,6 @@ typedef struct {
  LPTSTR tszReserved;
  LPTSTR tszUser;
 } MODULE_PARAMS;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

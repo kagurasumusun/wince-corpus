@@ -15,12 +15,9 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* CTL_CODE  [macro, function; ce-only; CE 4.0..699] */
+/* CTL_CODE  [macro, function; ce-only] */
 #define CTL_CODE( DeviceType, Function, Method, Access) (
  ((DeviceType) << 16) | ((Access) << 14) | ((Function) << 2) | (Method))
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

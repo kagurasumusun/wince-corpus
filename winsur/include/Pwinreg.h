@@ -17,35 +17,32 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* HiveRAMInfo  [struct; ce-only; CE 4.0..699] */
+/* HiveRAMInfo  [struct; ce-only] */
 typedef struct HiveRAMInfo {
  WORD wVersion;
  WORD wFlags;
  HiveRAMRegion SystemRegion;
 } HiveRAMInfo;
 
-/* HiveRAMRegion  [struct; ce-only; CE 4.0..699] */
+/* HiveRAMRegion  [struct; ce-only] */
 typedef struct HiveRAMRegion {
  LPVOID lpStart;
  DWORD dwLength;
  DWORD dwVirtCopyFlags;
 } HiveRAMRegion;
 
-/* RegSecureKey  [struct; ce-only; CE 4.0..699] */
+/* RegSecureKey  [struct; ce-only] */
 typedef struct RegSecureKey {
  WORD wRoots;
  WORD wLen;
  LPWSTR pName;
 } RegSecureKey;
 
-/* RegSecureKeyList  [struct; ce-only; CE 4.0..699] */
+/* RegSecureKeyList  [struct; ce-only] */
 typedef struct RegSecureKeyList {
  DWORD dwNumKeys;
  RegSecureKey* pList;
 } RegSecureKeyList;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

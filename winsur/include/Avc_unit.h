@@ -17,38 +17,32 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
-
-/* UNIT_AllocateLocalPlug_Request  [struct; ce-only; CE 5.0..599] */
+/* UNIT_AllocateLocalPlug_Request  [struct; ce-only] */
 typedef struct {PVOID ualp_RegistrationToken;STREAM_MediaType ualp_MediaType;ULONG ualp_Direction;ULONG ualp_Flags;ULONG ualp_SubunitPlugID;union { ULONG ualp_MaximumThroughput; struct {ULONG ualp_ClusterDimension;ULONG ualp_SampleFrequency; }; };} UNIT_AllocateLocalPlug_Request;
 
-/* UNIT_AllocateLocalPlug_Response  [struct; ce-only; CE 5.0..599] */
+/* UNIT_AllocateLocalPlug_Response  [struct; ce-only] */
 typedef struct {HANDLE ualp_Plug;ULONG ualp_PlugNumber;} UNIT_AllocateLocalPlug_Response;
 
-/* UNIT_ConnectionRequestProcessed_Request  [struct; ce-only; CE 5.0..599] */
+/* UNIT_ConnectionRequestProcessed_Request  [struct; ce-only] */
 typedef struct {PVOID ucrp_RegistrationToken;PVOID ucrp_Request;NTSTATUS ucrp_Status;} UNIT_ConnectionRequestProcessed_Request;
 
-/* UNIT_DereferenceConnectionPlug_Request  [struct; ce-only; CE 5.0..599] */
+/* UNIT_DereferenceConnectionPlug_Request  [struct; ce-only] */
 typedef struct {PVOID udcp_RegistrationToken;HANDLE udcp_Plug;} UNIT_DereferenceConnectionPlug_Request;
 
-/* UNIT_FreeLocalPlug_Request  [struct; ce-only; CE 5.0..599] */
+/* UNIT_FreeLocalPlug_Request  [struct; ce-only] */
 typedef struct {PVOID uflp_RegistrationToken;HANDLE uflp_Plug;} UNIT_FreeLocalPlug_Request;
 
-/* UNIT_ProcessRegistryPlugs_Request  [struct; ce-only; CE 5.0..599] */
+/* UNIT_ProcessRegistryPlugs_Request  [struct; ce-only] */
 typedef struct {PVOID uprp_RegistrationToken;HANDLE uprp_RootKey;} UNIT_ProcessRegistryPlugs_Request;
 
-/* UNIT_QueryLocalPlugs_Request  [struct; ce-only; CE 5.0..599] */
+/* UNIT_QueryLocalPlugs_Request  [struct; ce-only] */
 typedef struct {PVOID uqlp_RegistrationToken;ULONG uqlp_Flags;} UNIT_QueryLocalPlugs_Request;
 
-/* UNIT_QueryLocalPlugs_Response  [struct; ce-only; CE 5.0..599] */
+/* UNIT_QueryLocalPlugs_Response  [struct; ce-only] */
 typedef struct {BOOL uqlp_PlugState;ULONG uqlp_PlugNumber;ULONG uqlp_Direction;ULONG uqlp_MediaType;HANDLE uqlp_Plug;} UNIT_QueryLocalPlugs_Response;
 
-/* UNIT_RegisterSubunit_Request  [struct; ce-only; CE 5.0..599] */
-typedef struct {ULONG urs_SubunitType;PVOID urs_Context;PDEVICE_OBJECT urs_ParentDeviceObject;UNIT_AllocateLocalPlugCB* urs_AllocateLocalPlug;UNIT_FreeLocalPlugCB* urs_FreeLocalPlug;UNIT_ConnectToRemotePlugCB* urs_ConnectToRemotePlug;UNIT_DisconnectFromRemotePlugCB* urs_DisconnectFromRemotePlug;} UNIT_RegisterSubunit_Request;
-
-/* UNIT_RegisterSubunit_Response  [struct; ce-only; CE 5.0..599] */
+/* UNIT_RegisterSubunit_Response  [struct; ce-only] */
 typedef struct {PVOID urs_RegistrationToken;} UNIT_RegisterSubunit_Response;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

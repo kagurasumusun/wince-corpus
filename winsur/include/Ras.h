@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 30 constants, 46 declarations, 0 outlines, 0 base types, 0 extra macros, 13 extra decls
+ * 30 constants, 45 declarations, 1 outlines, 0 base types, 0 extra macros, 13 extra decls
  */
 #ifndef _RAS_
 #define _RAS_
@@ -52,9 +52,9 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
+/* RASCNTL_SERVERUSERCREDENTIALS  [struct; ce-only] */
 
-/* RASPPPIP  [struct; ce-only; CE 3.0..699] */
+/* RASPPPIP  [struct; ce-only] */
 #define RASPPPIPW struct tagRASPPPIPW
 RASPPPIPW
 {
@@ -68,11 +68,8 @@ RASPPPIPW
  DWORD dwServerOptions;
 };
 #define RASPPPIP RASPPPIPW
-#endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* RASPPPIPV6  [struct, macro; ce-only; CE 4.0..699] */
+/* RASPPPIPV6  [struct, macro; ce-only] */
 #define RASPPPIPV6 struct tagRASPPPIPV6
 RASPPPIPV6
 {
@@ -84,7 +81,6 @@ RASPPPIPV6
  BYTE PeerCompressionProtocol[2];
 };
 #define LPRASPPPIPV6 RASPPPIPV6*
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -92,84 +88,20 @@ RASPPPIPV6
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
-
-/* RASDIALPARAMS  [struct, typedef; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699] */
-typedef struct _RASDIALPARAMS { 
- DWORD dwSize; 
- TCHAR szEntryName[ RAS_MaxEntryName + 1 ]; 
- TCHAR szPhoneNumber[ RAS_MaxPhoneNumber + 1 ]; 
- TCHAR szCallbackNumber[ RAS_MaxCallbackNumber + 1 ]; 
- TCHAR szUserName[ UNLEN + 1 ]; 
- TCHAR szPassword[ PWLEN + 1 ]; 
- TCHAR szDomain[ DNLEN + 1 ]; 
-} RASDIALPARAMS;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* RASCONN  [struct, typedef; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct _RASCONN { 
- DWORD dwSize; 
- HRASCONN hrasconn; 
- TCHAR szEntryName[ RAS_MaxEntryName + 1 ]; 
-} RASCONN;
-
-/* RASCONNSTATE  [enum, typedef; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef enum _RASCONNSTATE { 
- RASCS_OpenPort = 0, 
- RASCS_PortOpened, 
- RASCS_ConnectDevice, 
- RASCS_DeviceConnected, 
- RASCS_AllDevicesConnected, 
- RASCS_Authenticate, 
- RASCS_AuthNotify, 
- RASCS_AuthRetry, 
- RASCS_AuthCallback, 
- RASCS_AuthChangePassword, 
- RASCS_AuthProject, 
- RASCS_AuthLinkSpeed, 
- RASCS_AuthAck, 
- RASCS_ReAuthenticate, 
- RASCS_Authenticated, 
- RASCS_PrepareForCallback, 
- RASCS_WaitForModemReset, 
- RASCS_WaitForCallback,
- RASCS_Projected, 
- RASCS_Interactive = RASCS_PAUSED, 
- RASCS_RetryAuthentication, 
- RASCS_CallbackSetByCaller, 
- RASCS_PasswordExpired, 
- RASCS_Connected = RASCS_DONE, 
- RASCS_Disconnected 
-} RASCONNSTATE;
-
-/* RASCONNSTATUS  [struct, typedef; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct _RASCONNSTATUS { 
- DWORD dwSize; 
- RASCONNSTATE rasconnstate; 
- DWORD dwError; 
- TCHAR szDeviceType[ RAS_MaxDeviceType + 1 ]; 
- TCHAR szDeviceName[ RAS_MaxDeviceName + 1 ]; 
-} RASCONNSTATUS;
-
-/* RASENTRYNAME  [struct, typedef; ce-only; CE 2.11..2.12, 3.0..699] */
-typedef struct _RASENTRYNAME {
- DWORD dwSize;
- TCHAR szEntryName[ RAS_MaxEntryName + 1 ];
-} RASENTRYNAME;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
-
-/* RASDEVINFO  [struct; ce-only; CE 3.0..699] */
+/* RASDEVINFO  [struct; ce-only] */
 typedef struct tagRASDEVINFO {
  DWORD dwSize;
  CHAR szDeviceType[ RAS_MaxDeviceType + 1 ];
  CHAR szDeviceName[ RAS_MaxDeviceName + 1 ];
 } RASDEVINFO;
 
-/* RASIPADDR  [struct; ce-only; CE 3.0..699] */
+/* RASENTRYNAME  [struct, typedef; ce-only] */
+typedef struct _RASENTRYNAME {
+ DWORD dwSize;
+ TCHAR szEntryName[ RAS_MaxEntryName + 1 ];
+} RASENTRYNAME;
+
+/* RASIPADDR  [struct; ce-only] */
 typedef struct RASIPADDR {
  BYTE a;
  BYTE b;
@@ -177,7 +109,7 @@ typedef struct RASIPADDR {
  BYTE d;
 } RASIPADDR;
 
-/* RASPROJECTION  [enum; ce-only; CE 3.0..699] */
+/* RASPROJECTION  [enum; ce-only] */
 typedef enum _RASPROJECTION { 
  RASP_Amb = 0x10000, 
  RASP_PppNbf = 0x803F, 
@@ -188,140 +120,12 @@ typedef enum _RASPROJECTION {
  RASP_PppLcp = 0xC021,
  RASP_Slip = 0x20000
 } RASPROJECTION;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* RAS_STATS  [struct; shared; CE 4.0..699] */
-typedef struct _RAS_STATS {
- DWORD dwSize;
- DWORD dwBytesXmited;
- DWORD dwBytesRcved;
- DWORD dwFramesXmited;
- DWORD dwFramesRcved;
- DWORD dwCrcErr;
- DWORD dwTimeoutErr;
- DWORD dwAlignmentErr;
- DWORD dwHardwareOverrunErr;
- DWORD dwFramingErr;
- DWORD dwBufferOverrunErr;
- DWORD dwCompressionRatioIn;
- DWORD dwCompressionRatioOut;
- DWORD dwBps;
- DWORD dwConnectDuration;
-} RAS_STATS, *PRAS_STATS;
-
-/* RASCNTL_SERVERLINE  [struct; ce-only; CE 4.0..699] */
-typedef struct tagRasCntlServerLine {
- RASDEVINFO rasDevInfo;
- BOOL bEnable;
- DWORD bmFlags;
- UINT DisconnectIdleSeconds;
- DWORD dwDevConfigSize;
- BYTE DevConfig[1];
-} RASCNTL_SERVERLINE, *PRASCNTL_SERVERLINE;
-
-/* RASCNTL_SERVERSTATUS  [struct; ce-only; CE 4.0..699] */
-typedef struct tagRasCntlServerStatus {
- BOOL bEnable;
- DWORD bmFlags;
- BOOL bUseDhcpAddresses;
- DWORD dwStaticIpAddrStart;
- DWORD dwStaticIpAddrCount;
- DWORD bmAuthenticationMethods;
- DWORD dwNumLines;
-} RASCNTL_SERVERSTATUS, *PRASCNTL_SERVERSTATUS;
-
-/* RASCNTL_SERVERUSERCREDENTIALS  [struct; ce-only; CE 4.0..699] */
-typedef struct tagRasCntlServerUser{
- TCHAR tszUserName[UNLEN + 1];
- TCHAR tszDomainName[DNLEN + 1];
- BYTE password[PWLEN];
- DWORD cbPassword;
-} RASCNTL_SERVERUSERCREDENTIALS, *PRASCNTL_SERVERUSERCREDENTIALS;
-
-/* RasCntlEnum  [enum; ce-only; CE 4.0..699] */
-typedef enum tagRasCntlEnum {
- RASCNTL_SERVER_GET_STATUS,
- RASCNTL_SERVER_ENABLE,
- RASCNTL_SERVER_DISABLE,
- RASCNTL_SERVER_GET_PARAMETERS,
- RASCNTL_SERVER_SET_PARAMETERS,
- RASCNTL_SERVER_LINE_ADD,
- RASCNTL_SERVER_LINE_REMOVE,
- RASCNTL_SERVER_LINE_ENABLE,
- RASCNTL_SERVER_LINE_DISABLE,
- RASCNTL_SERVER_LINE_GET_PARAMETERS,
- RASCNTL_SERVER_LINE_SET_PARAMETERS,
- RASCNTL_SERVER_USER_SET_CREDENTIALS,
- RASCNTL_SERVER_USER_DELETE_CREDENTIALS,
- RASCNTL_SERVER_GET_IPV6_NET_PREFIX
- RASCNTL_SERVER_SET_IPV6_NET_PREFIX
- RASCNTL_SERVER_LINE_GET_CONNECTION_INFO
-} RasCntlEnum;
-
-/* RasFreeBuffer  [typedef; ce-only; CE 4.0..699; Ppp.lib] */
-typedef DWORD (APIENTRY *PFNRASFREEBUFFER)(
- PBYTE pBuffer 
-);
-
-/* RasGetBuffer  [typedef, function; ce-only; CE 4.0..699; Ppp.lib] */
-typedef DWORD (APIENTRY *PFNRASGETBUFFER)(
- PBYTE* ppBuffer, 
- PDWORD pdwSize 
-);
-
-/* RasReceiveBuffer  [typedef; ce-only; CE 4.0..699; Ppp.lib] */
-typedef DWORD (APIENTRY *PFNRASRECEIVEBUFFER)(
- HANDLE hPort,
- PBYTE pBuffer,
- PDWORD pdwSize,
- DWORD dwTimeout,
- HANDLE hEvent
-);
-
-/* RasRetrieveBuffer  [typedef; ce-only; CE 4.0..699; Ppp.lib] */
-typedef DWORD (APIENTRY *PFNRASRETRIEVEBUFFER)(
- HANDLE hPort,
- PBYTE pBuffer,
- PDWORD pdwSize
-);
-
-/* RasSendBuffer  [typedef; ce-only; CE 4.0..699; Ppp.lib] */
-typedef DWORD (APIENTRY *PFNRASSENDBUFFER)(
- HANDLE hPort,
- PBYTE pBuffer,
- PDWORD dwSize
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* RASCNTL_SERVER_IPV6_NET_PREFIX  [struct; ce-only; CE 5.0..699] */
-typedef struct tagRasCntlServerIPV6NetPrefix {
- BYTE IPV6NetPrefix[16];
- DWORD IPV6NetPrefixBitLength;
- DWORD IPV6NetPrefixCount;
-} RASCNTL_SERVER_IPV6_NET_PREFIX, *PRASCNTL_SERVER_IPV6_NET_PREFIX;
-
-/* RASCNTL_SERVERCONNECTION  [struct; ce-only; CE 5.0..699] */
-typedef struct tagRasCntlServerConnection {
- RASDEVINFO rasDevInfo;
- HRASCONN hrasconn;
- DWORD dwServerIpAddress;
- DWORD dwClientIpAddress;
- RASCONNSTATE RasConnState;
- TCHAR tszUserName[DNLEN + 1 + UNLEN + 1];
-} RASCNTL_SERVERCONNECTION, *PRASCNTL_SERVERCONNECTION;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
-
-/* RASENTRY  [typedef, function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699] */
+/* RASENTRY  [typedef, function; ce-only] */
 typedef_struct_RASENTRY {
  DWORD dwSize;
  DWORD dwfOptions;
@@ -352,7 +156,6 @@ typedef_struct_RASENTRY {
  DWORD dwReserved2;
  DWORD dwCustomAuthKey;
 } RASENTRY;
-#endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
 

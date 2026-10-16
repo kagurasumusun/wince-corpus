@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 25 constants, 9 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 25 constants, 7 declarations, 2 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _GPSAPI_
 #define _GPSAPI_
@@ -44,76 +44,12 @@
 #define GPS_VALID_VERTICAL_DILUTION_OF_PRECISION 0x00000400
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
+ * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+/* GPS_DEVICE  [struct; ce-only] */
 
-/* GPS_DEVICE  [struct; ce-only; CE 6.0..699] */
-typedef struct _GPS_DEVICE {
- DWORD dwVersion;
- DWORD dwSize;
- DWORD dwServiceState;
- DWORD dwDeviceState;
- FILETIME ftLastDataReceived;
- WCHAR szGPSDriverPrefix[GPS_MAX_PREFIX_NAME];
- WCHAR szGPSMultiplexPrefix[GPS_MAX_PREFIX_NAME];
- WCHAR szGPSFriendlyName[GPS_MAX_FRIENDLY_NAME];
- GPS_DEVICE_STATUS gdsDeviceStatus;
-} *PGPS_DEVICE, GPS_DEVICE;
-
-/* GPS_FIX_QUALITY  [enum; ce-only; CE 6.0..699] */
-typedef enum {
- GPS_FIX_QUALITY_UNKNOWN = 0,
- GPS_FIX_QUALITY_GPS,
- GPS_FIX_QUALITY_DGPS
-} GPS_FIX_QUALITY;
-
-/* GPS_FIX_SELECTION  [enum; ce-only; CE 6.0..699] */
-typedef enum {
- GPS_FIX_SELECTION_UNKNOWN = 0,
- GPS_FIX_SELECTION_AUTO,
- GPS_FIX_SELECTION_MANUAL
-} GPS_FIX_SELECTION;
-
-/* GPS_FIX_TYPE  [enum; ce-only; CE 6.0..699] */
-typedef enum {
- GPS_FIX_UNKNOWN = 0,
- GPS_FIX_2D,
- GPS_FIX_3D
-} GPS_FIX_TYPE;
-
-/* GPS_POSITION  [struct; ce-only; CE 6.0..699] */
-typedef struct _GPS_POSITION {
- DWORD dwVersion;
- DWORD dwSize;
- DWORD dwValidFields;
- DWORD dwFlags;
- SYSTEMTIME stUTCTime;
- double dblLatitude;
- double dblLongitude;
- float flSpeed;
- float flHeading;
- double dblMagneticVariation;
- float flAltitudeWRTSeaLevel;
- float flAltitudeWRTEllipsoid;
- GPS_FIX_QUALITY FixQuality;
- GPS_FIX_TYPE FixType;
- GPS_FIX_SELECTION SelectionType;
- float flPositionDilutionOfPrecision;
- float flHorizontalDilutionOfPrecision;
- float flVerticalDilutionOfPrecision;
- DWORD dwSatelliteCount;
- DWORD rgdwSatellitesUsedPRNs[GPS_MAX_SATELLITES];
- DWORD dwSatellitesInView;
- DWORD rgdwSatellitesInViewPRNs[GPS_MAX_SATELLITES];
- DWORD rgdwSatellitesInViewElevation[GPS_MAX_SATELLITES];
- DWORD rgdwSatellitesInViewAzimuth[GPS_MAX_SATELLITES];
- DWORD rgdwSatellitesInViewSignalToNoiseRatio[GPS_MAX_SATELLITES];
-} GPS_POSITION, *PGPS_POSITION;
-#endif /* _WIN32_WCE */
+/* GPS_POSITION  [struct; ce-only] */
 
 /* ==================================================================
  * functions and callbacks

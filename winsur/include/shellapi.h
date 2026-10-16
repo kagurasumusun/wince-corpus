@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 163 constants, 21 declarations, 0 outlines, 1 base types, 0 extra macros, 5 extra decls
+ * 163 constants, 20 declarations, 1 outlines, 1 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _SHELLAPI_
 #define _SHELLAPI_
@@ -230,74 +230,13 @@ typedef HANDLE HDESK;
 /* HDROP  [typedef; shared; entity-headers; win32-reference] */
 typedef HANDLE HDROP;
 
-/* SIPSTATE  [?; ce-only; aygshell.lib] */
-enum { 
- SIP_UP = 0, 
- SIP_DOWN, 
- SIP_FORCEDOWN, 
- SIP_UNCHANGED, 
- SIP_INPUTDIALOG 
-} SIPSTATE;
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* NOTIFYICONDATA  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; A/W NOTIFYICONDATAA,NOTIFYICONDATAW (CE is W-side)] */
-typedef struct _NOTIFYICONDATA { 
- DWORD cbSize;
- HWND hWnd; 
- UINT uID; 
- UINT uFlags; 
- UINT uCallbackMessage; 
- HICON hIcon; 
- WCHAR szTip[64]; 
-} NOTIFYICONDATA, *PNOTIFYICONDATA;
-
-/* SHELLEXECUTEINFO  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; A/W SHELLEXECUTEINFOA,SHELLEXECUTEINFOW (CE is W-side)] */
-typedef struct _SHELLEXECUTEINFO { 
- DWORD cbSize; 
- ULONG fMask; 
- HWND hwnd; 
- LPCTSTR lpVerb; 
- LPCTSTR lpFile; 
- LPCTSTR lpParameters; 
- LPCTSTR lpDirectory; 
- int nShow; 
- HINSTANCE hInstApp; 
- LPVOID lpIDList; 
- LPCTSTR lpClass; 
- HKEY hkeyClass; 
- DWORD dwHotKey; 
- union {
- HANDLE hIcon;
- HANDLE hMonitor;
- } DUMMYUNIONNAME;
- HANDLE hProcess; 
-} SHELLEXECUTEINFO, FAR* LPSHELLEXECUTEINFO;
-
-/* SHFILEINFO  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; A/W SHFILEINFOA,SHFILEINFOW (CE is W-side)] */
-typedef struct _SHFILEINFO { 
- HICON hIcon; 
- int iIcon; 
- DWORD dwAttributes; 
- TCHAR szDisplayName[MAX_PATH]; 
- TCHAR szTypeName[80]; 
-} SHFILEINFO;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* SHFILEOPSTRUCT  [struct; shared; CE 5.0..699; A/W SHFILEOPSTRUCTA,SHFILEOPSTRUCTW (CE is W-side)] */
-typedef struct _SHFILEOPSTRUCT {
- HWND hwnd;
- UINT wFunc;
- LPCWSTR pFrom;
- LPCWSTR pTo;
- FILEOP_FLAGS fFlags;
- BOOL fAnyOperationsAborted;
- LPVOID hNameMappings;
- LPCWSTR lpszProgressTitle;
-} SHFILEOPSTRUCT, *LPSHFILEOPSTRUCT;
-#endif /* _WIN32_WCE */
+/* SHFILEINFO  [struct; shared; A/W SHFILEINFOA,SHFILEINFOW (CE is W-side)] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   hIcon */
+/*   iIcon */
+/*   dwAttributes */
+/*   szDisplayName */
+/*   szTypeName */
 
 /* ==================================================================
  * functions and callbacks
@@ -415,19 +354,5 @@ int SHFileOperation(
  LPSHFILEOPSTRUCT lpFileOp
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _SHELLEXECUTEINFO { DWORD cbSize; ULONG fMask; HWND hwnd; LPCTSTR lpVerb; LPCTSTR lpFile; LPCTSTR lpParameters; LPCTSTR lpDirectory; int nShow; HINSTANCE hInstApp; LPVOID lpIDList; LPCTSTR lpClass; HKEY hkeyClass; DWORD dwHotKey; union { HANDLE hIcon; HANDLE hMonitor; } DUMMYUNIONNAME;
-typedef struct _SHELLEXECUTEINFO { DWORD cbSize; ULONG fMask; HWND hwnd; LPCTSTR lpVerb; LPCTSTR lpFile; LPCTSTR lpParameters; LPCTSTR lpDirectory; int nShow; HINSTANCE hInstApp; LPVOID lpIDList; LPCTSTR lpClass; HKEY hkeyClass; DWORD dwHotKey; union { HANDLE hIcon; HANDLE hMonitor; } DUMMYUNIONNAME; HANDLE hProcess; } SHELLEXECUTEINFO, FAR* LPSHELLEXECUTEINFO;
-typedef struct _SHFILEOPSTRUCT { HWND hwnd; UINT wFunc; LPCWSTR pFrom; LPCWSTR pTo; FILEOP_FLAGS fFlags; BOOL fAnyOperationsAborted; LPVOID hNameMappings; LPCWSTR lpszProgressTitle;} SHFILEOPSTRUCT, *LPSHFILEOPSTRUCT;
-typedef struct _NOTIFYICONDATA { DWORD cbSize; HWND hWnd; UINT uID; UINT uFlags; UINT uCallbackMessage; HICON hIcon; WCHAR szTip[64]; } NOTIFYICONDATA, *PNOTIFYICONDATA;
-
-/* function */
-DWORD WINAPISHCreateShortcut(LPTSTRszShortcut, LPTSTRszTarget );
 
 #endif /* _SHELLAPI_ */

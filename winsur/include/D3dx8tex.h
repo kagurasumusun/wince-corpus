@@ -12,24 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 500)) /* CE 4.0..499 */
-
-/* D3DXIMAGE_INFO  [struct; ce-only; CE 4.0..499] */
-typedef struct _D3DXIMAGE_INFO {
- UINT Width;
- UINT Height;
- UINT Depth;
- UINT MipLevels;
- D3DFORMAT Format;
-} D3DXIMAGE_INFO;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

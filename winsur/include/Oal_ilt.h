@@ -12,26 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* OAL_ILT_STATE  [struct; ce-only; CE 5.0..699] */
-typedef struct {
- BOOL active;
- UINT16 interrupts;
- UINT32 isrTime1;
- UINT32 isrTime2;
- UINT32 savedPC;
- UINT32 counter;
- UINT32 counterSet;
-} OAL_ILT_STATE, *POAL_ILT_STATE;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

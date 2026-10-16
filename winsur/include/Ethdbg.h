@@ -21,30 +21,6 @@
 #define EDBG_CURRENT_BOOTME_VERSION 2
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 3.0..399 */
-
-/* EDBG_BOOTME_DATA  [struct; ce-only; CE 3.0..399] */
-typedef struct _EDBG_BOOTME_DATA { 
-UCHAR VersionMajor; 
-UCHAR VersionMinor; 
-USHORT MACAddr[3]; 
-DWORD IPAddr; 
-UCHAR PlatformId[EDBG_MAX_DEV_NAMELEN+1]; 
-UCHAR DeviceName[EDBG_MAX_DEV_NAMELEN+1]; 
-UCHAR CPUId; 
-UCHAR uBootmeVer; 
-DWORD dwBootFlags; 
-USHORT wDownloadPort; 
-USHORT wSvcPort; 
-} EDBG_BOOTME_DATA, *PEDBG_BOOTME_DATA;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

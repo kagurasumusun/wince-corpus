@@ -17,14 +17,12 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* NLED_COUNT_INFO  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
+/* NLED_COUNT_INFO  [struct; ce-only] */
 struct NLED_COUNT_INFO {
  UINT cLeds; 
 };
 
-/* NLED_SETTINGS_INFO  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
+/* NLED_SETTINGS_INFO  [struct; ce-only] */
 struct NLED_SETTINGS_INFO {
  UINT LedNum;
  INT OffOnBlink;
@@ -35,7 +33,7 @@ struct NLED_SETTINGS_INFO {
  INT MetaCycleOff; 
 };
 
-/* NLED_SUPPORTS_INFO  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
+/* NLED_SUPPORTS_INFO  [struct; ce-only] */
 struct NLED_SUPPORTS_INFO {
  UINT LedNum;
  LONG lCycleAdjust;
@@ -45,7 +43,6 @@ struct NLED_SUPPORTS_INFO {
  BOOL fMetaCycleOn;
  BOOL fMetaCycleOff; 
 };
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

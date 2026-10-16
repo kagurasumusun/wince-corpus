@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 12 constants, 63 declarations, 0 outlines, 0 base types, 0 extra macros, 7 extra decls
+ * 12 constants, 60 declarations, 1 outlines, 0 base types, 0 extra macros, 7 extra decls
  */
 #ifndef _RAPI_
 #define _RAPI_
@@ -31,28 +31,10 @@
 #define RAPI_DEVICE_DISCONNECTED 0
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
+ * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 1.0..199, 2.11..2.12, 3.0..399 */
-
-/* PEG_USER_NOTIFICATION  [struct; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399] */
-typedef struct UserNotificationType {-
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* RAPIEXT  [typedef; ce-only; CE 5.0..699; rapi.lib] */
-typedef HRESULT (STDAPICALLTYPE RAPIEXT)(
- DWORD cbInput,
- BYTE * pInput,
- DWORD * pcbOutput,
- BYTE ** ppOutput,
- IRAPIStream * pIRAPIStream 
-);
-#endif /* _WIN32_WCE */
+/* PEG_USER_NOTIFICATION  [struct; ce-only] */
 
 /* ==================================================================
  * functions and callbacks
@@ -418,21 +400,6 @@ BOOL CeWriteFile(
  DWORD nNumberOfBytesToWrite, 
  LPDWORD lpNumberOfBytesWritten, 
  LPOVERLAPPED lpOverlapped 
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
-
-/* IRAPIStream::GetRapiStat  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Rapi.lib, rapi.lib] */
-HRESULT GetRapiStat(
- RAPISTREAMFLAG Flag,
- DWORD * pdwValue
-);
-
-/* IRAPIStream::SetRapiStat  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Rapi.lib, rapi.lib] */
-HRESULT SetRapiStat(
- RAPISTREAMFLAG Flag,
- DWORD dwValue
 );
 #endif /* _WIN32_WCE */
 

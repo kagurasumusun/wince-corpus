@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 11 constants, 3 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 11 constants, 2 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _IPEXPORT_
 #define _IPEXPORT_
@@ -35,26 +35,10 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-
-/* IP_ADAPTER_INDEX_MAP  [struct; shared; CE 3.0..399, 5.0..699] */
-typedef struct _IP_ADAPTER_INDEX_MAP {
- ULONG Index; 
- WCHAR Name[MAX_ADAPTER_NAME]; 
-} IP_ADAPTER_INDEX_MAP, *PIP_ADAPTER_INDEX_MAP;
-
-/* IP_INTERFACE_INFO  [struct; shared; CE 3.0..399, 5.0..699] */
-typedef struct _IP_INTERFACE_INFO {
- LONG NumAdapters; 
- IP_ADAPTER_INDEX_MAP Adapter[1]; 
-} IP_INTERFACE_INFO, *PIP_INTERFACE_INFO;
-
-/* IP_UNIDIRECTIONAL_ADAPTER_ADDRESS  [struct; shared; CE 3.0..399, 5.0..699] */
-typedef struct _IP_UNIDIRECTIONAL_ADAPTER_ADDRESS {
- ULONG NumAdapters;
- IPAddr Address[1];
-} IP_UNIDIRECTIONAL_ADAPTER_ADDRESS*, PIP_UNIDIRECTIONAL_ADAPTER_ADDRESS;
-#endif /* _WIN32_WCE */
+/* IP_ADAPTER_INDEX_MAP  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   Index */
+/*   Name */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

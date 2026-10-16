@@ -17,9 +17,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* USB_CONFIGURATION_DESCRIPTOR  [struct; ce-only; CE 5.0..699] */
+/* USB_CONFIGURATION_DESCRIPTOR  [struct; ce-only] */
 typedef struct {
  UCHAR bLength;
  UCHAR bDescriptorType;
@@ -31,7 +29,7 @@ typedef struct {
  UCHAR MaxPower;
 } USB_CONFIGURATION_DESCRIPTOR;
 
-/* USB_DEVICE_DESCRIPTOR  [struct; ce-only; CE 5.0..699] */
+/* USB_DEVICE_DESCRIPTOR  [struct; ce-only] */
 typedef struct {
  UCHAR bLength;
  UCHAR bDescriptorType;
@@ -47,17 +45,6 @@ typedef struct {
  UCHAR iSerialNumber;
  UCHAR bNumConfigurations;
 } USB_DEVICE_DESCRIPTOR;
-
-/* USB_ENDPOINT_DESCRIPTOR  [struct; ce-only; CE 5.0..699] */
-typedef struct {
- UCHAR bLength;
- UCHAR bDescriptorType;
- UCHAR bEndpointAddress;
- UCHAR bmAttributes;
- USHORT wMaxPacketSize;
- UCHAR bInterval;
-} USB_ENDPOINT;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

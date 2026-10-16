@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 201 constants, 95 declarations, 1 outlines, 0 base types, 0 extra macros, 21 extra decls
+ * 201 constants, 92 declarations, 4 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINSOCK2_
 #define _WINSOCK2_
@@ -223,10 +223,7 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* NDIS_PACKET_8021Q_INFO  [struct; ce-only; CE 6.0..699] */
-#endif /* _WIN32_WCE */
+/* NDIS_PACKET_8021Q_INFO  [struct; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -234,32 +231,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* hostent  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-struct hostent {
- char FAR* h_name;
- char FAR* FAR* h_aliases;
- short h_addrtype;
- short h_length;
- char FAR* FAR* h_addr_list;
-};
-
-/* WSADATA  [struct, typedef; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-typedef struct WSAData {
- WORD wVersion;
- WORD wHighVersion;
- char szDescription[WSADESCRIPTION_LEN+1];
- char szSystemStatus[WSASYS_STATUS_LEN+1];
- unsigned short iMaxSockets;
- unsigned short iMaxUdpDg;
- char FAR* lpVendorInfo;
-} WSADATA, *LPWSADATA;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* IN_ADDR  [struct, typedef; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* IN_ADDR  [struct, typedef; shared] */
 struct in_addr {
  union {
  struct { u_char s_b1,s_b2,s_b3,s_b4; } S_un_b;
@@ -268,235 +240,13 @@ struct in_addr {
  } S_un;
 };
 
-/* LINGER  [struct, typedef; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+/* LINGER  [struct, typedef; shared] */
 struct linger {
  u_short l_onoff;
  u_short l_linger;
 };
 
-/* SOCKADDR  [struct, typedef; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-struct sockaddr {
- u_short sa_family;
- char sa_data[14];
-};
-
-/* SOCKADDR_IN  [struct, typedef; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-struct sockaddr_in{
- short sin_family;
- unsigned short sin_port;
- IN_ADDR sin_addr;
- char sin_zero[8];
-};
-
-/* SOCKADDR_IRDA  [struct, typedef; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-struct sockaddr_irda { 
- u_short irdaAddressFamily; 
- u_char irdaDeviceID[4]; 
- char irdaServiceName[25];};
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* accept  [struct, function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-SOCKET accept(
- SOCKET s,
- struct sockaddr FAR* addr,
- int FAR* addrlen
-);
-
-/* bind  [struct, function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-int bind(
- SOCKET s,
- const struct sockaddr FAR* name,
- int namelen
-);
-
-/* connect  [struct, function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-int connect(
- SOCKET s,
- const struct sockaddr FAR* name,
- int namelen
-);
-
-/* gethostbyaddr  [struct, function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-struct hostent FAR* gethostbyaddr(
- const char FAR* addr,
- int len,
- int type
-);
-
-/* gethostbyname  [struct, function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-struct hostent FAR* gethostbyname(
- const char FAR* name 
-);
-
-/* getpeername  [struct, function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-int getpeername(
- SOCKET s,
- struct sockaddr FAR* name,
- int FAR* namelen
-);
-
-/* getsockname  [struct, function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-int getsockname(
- SOCKET s,
- struct sockaddr FAR* name,
- int FAR* namelen
-);
-
-/* inet_ntoa  [struct, function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-char FAR* inet_ntoa(
- struct in_addr in
-);
-
-/* recvfrom  [struct, function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-int recvfrom(
- SOCKET s,
- char FAR* buf,
- int len,
- int flags,
- struct sockaddr FAR* from,
- int FAR* fromlen
-);
-
-/* select  [struct, function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-int select(
- int nfds,
- fd_set FAR* readfds,
- fd_set FAR* writefds,
- fd_set FAR* exceptfds,
- const struct timeval FAR* timeout
-);
-
-/* sendto  [struct, function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-int sendto(
- SOCKET s,
- const char FAR* buf, 
- int len,
- int flags,
- const struct sockaddr FAR* to,
- int tolen
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
-
-/* BLOB  [struct; shared; CE 3.0..699] */
-typedef struct _BLOB {
- ULONG cbSize; 
- BYTE* pBlobData; 
-} BLOB, LPBLOB;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* AFPROTOCOLS  [struct; shared; CE 4.0..699] */
-typedef struct _AFPROTOCOLS {
- INT iAddressFamily;
- INT iProtocol;
-} AFPROTOCOLS, *PAFPROTOCOLS, *LPAFPROTOCOLS;
-
-/* CSADDR_INFO  [struct; shared; CE 4.0..699] */
-typedef struct _CSADDR_INFO { 
- SOCKET_ADDRESS LocalAddr; 
- SOCKET_ADDRESS RemoteAddr; 
- INT iSocketType; 
- INT iProtocol; 
-} CSADDR_INFO;
-
-/* fd_set  [struct, function; shared; CE 4.0..699] */
-typedef struct fd_set {
- u_int fd_count;
- SOCKET fd_array[FD_SETSIZE];
-} fd_set;
-
-/* WSAAccept  [struct, function; shared; CE 4.0..699; Ws2.lib] */
-SOCKET WSAAccept(
- SOCKET s,
- struct sockaddr FAR* addr,
- LPINT addrlen,
- LPCONDITIONPROC lpfnCondition,
- DWORD dwCallbackData
-);
-
-/* WSAConnect  [struct, function; shared; CE 4.0..699; Ws2.lib] */
-int WSAConnect(
- SOCKET s,
- const struct sockaddr FAR* name,
- int namelen,
- LPWSABUF lpCallerData,
- LPWSABUF lpCalleeData,
- LPQOS lpSQOS,
- LPQOS lpGQOS 
-);
-
-/* WSAJoinLeaf  [struct, function; shared; CE 4.0..699; Ws2.lib] */
-SOCKET WSAJoinLeaf(
- SOCKET s,
- const struct sockaddr FAR* name,
- int namelen,
- LPWSABUF lpCallerData,
- LPWSABUF lpCalleeData,
- LPQOS lpSQOS,
- LPQOS lpGQOS,
- DWORD dwFlags
-);
-
-/* WSAQUERYSET  [struct; shared; CE 4.0..699; A/W WSAQUERYSETA,WSAQUERYSETW (CE is W-side)] */
-typedef struct _WSAQuerySet {
- DWORD dwSize;
- LPTSTR lpszServiceInstanceName;
- LPGUID lpServiceClassId;
- LPWSAVERSION lpVersion;
- LPTSTR lpszComment;
- DWORD dwNameSpace;
- LPGUID lpNSProviderId;
- LPTSTR lpszContext;
- DWORD dwNumberOfProtocols;
- LPAFPROTOCOLS lpafpProtocols;
- LPTSTR lpszQueryString;
- DWORD dwNumberOfCsAddrs;
- LPCSADDR_INFO lpcsaBuffer;
- DWORD dwOutputFlags;
- LPBLOB lpBlob;
-} WSAQUERYSET, *PWSAQUERYSETW;
-
-/* WSARecvFrom  [struct, function; shared; CE 4.0..699; Ws2.lib] */
-int WSARecvFrom(
- SOCKET s,
- LPWSABUF lpBuffers,
- DWORD dwBufferCount,
- LPDWORD lpNumberOfBytesRecvd,
- LPDWORD lpFlags,
- struct sockaddr FAR* lpFrom,
- LPINT lpFromlen,
- LPWSAOVERLAPPED lpOverlapped,
- LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine
-);
-
-/* WSASendTo  [struct, function; shared; CE 4.0..699; Ws2.lib] */
-int WSASendTo(
- SOCKET s,
- LPWSABUF lpBuffers,
- DWORD dwBufferCount,
- LPDWORD lpNumberOfBytesSent,
- DWORD dwFlags,
- const struct sockaddr FAR* lpTo,
- int iToLen,
- LPWSAOVERLAPPED lpOverlapped,
- LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* NS_SERVICE_INFO  [struct; shared; CE 5.0..699; A/W NS_SERVICE_INFOA,NS_SERVICE_INFOW (CE is W-side)] */
-typedef struct _NS_SERVICE_INFO { 
- DWORD dwNameSpace; 
- SERVICE_INFO ServiceInfo; 
-} NS_SERVICE_INFO;
-
-/* PROTOCOL_INFO  [struct; shared; CE 5.0..699; A/W PROTOCOL_INFOA,PROTOCOL_INFOW (CE is W-side)] */
+/* PROTOCOL_INFO  [struct; shared; A/W PROTOCOL_INFOA,PROTOCOL_INFOW (CE is W-side)] */
 typedef struct _PROTOCOL_INFO { 
  DWORD dwServiceFlags; 
  INT iAddressFamily; 
@@ -508,22 +258,7 @@ typedef struct _PROTOCOL_INFO {
  LPTSTR lpProtocol;
 } PROTOCOL_INFO;
 
-/* protoent  [struct; shared; CE 5.0..699] */
-struct protoent {
- char FAR* p_name;
- char FAR* FAR* p_aliases;
- short p_proto;
-};
-
-/* servent  [struct; shared; CE 5.0..699] */
-struct servent {
- char FAR* s_name;
- char FAR* FAR* s_aliases;
- short s_port;
- char FAR* s_proto;
-};
-
-/* SERVICE_ADDRESS  [struct; shared; CE 5.0..699] */
+/* SERVICE_ADDRESS  [struct; shared] */
 typedef struct _SERVICE_ADDRESS { 
  DWORD dwAddressType; 
  DWORD dwAddressFlags; 
@@ -533,34 +268,13 @@ typedef struct _SERVICE_ADDRESS {
  BYTE* lpPrincipal; 
 } SERVICE_ADDRESS;
 
-/* SERVICE_ADDRESSES  [struct; shared; CE 5.0..699] */
+/* SERVICE_ADDRESSES  [struct; shared] */
 typedef struct _SERVICE_ADDRESSES { 
  DWORD dwAddressCount; 
  SERVICE_ADDRESS Addresses[1]; 
 } SERVICE_ADDRESSES;
 
-/* SERVICE_INFO  [struct; shared; CE 5.0..699; A/W SERVICE_INFOA,SERVICE_INFOW (CE is W-side)] */
-typedef struct _SERVICE_INFO { 
- LPGUID lpServiceType; 
- LPTSTR lpServiceName; 
- LPTSTR lpComment; 
- LPTSTR lpLocale; 
- DWORD dwDisplayHint; 
- DWORD dwVersion; 
- DWORD dwTime; 
- LPTSTR lpMachineName; 
- LPSERVICE_ADDRESSES lpServiceAddress; 
- BLOB ServiceSpecificInfo; 
-} SERVICE_INFO;
-
-/* SERVICE_TYPE_INFO_ABS  [struct; shared; CE 5.0..699; A/W SERVICE_TYPE_INFO_ABSA,SERVICE_TYPE_INFO_ABSW (CE is W-side)] */
-typedef struct _SERVICE_TYPE_INFO_ABS { 
- LPTSTR lpTypeName; 
- DWORD dwValueCount; 
- SERVICE_TYPE_VALUE_ABS Values[1]; 
-} SERVICE_TYPE_INFO_ABS;
-
-/* SERVICE_TYPE_VALUE_ABS  [struct; shared; CE 5.0..699; A/W SERVICE_TYPE_VALUE_ABSA,SERVICE_TYPE_VALUE_ABSW (CE is W-side)] */
+/* SERVICE_TYPE_VALUE_ABS  [struct; shared; A/W SERVICE_TYPE_VALUE_ABSA,SERVICE_TYPE_VALUE_ABSW (CE is W-side)] */
 typedef struct _SERVICE_TYPE_VALUE_ABS { 
  DWORD dwNameSpace; 
  DWORD dwValueType; 
@@ -569,27 +283,33 @@ typedef struct _SERVICE_TYPE_VALUE_ABS {
  PVOID lpValue; 
 } SERVICE_TYPE_VALUE_ABS;
 
-/* SOCKADDR_STORAGE  [struct; ce-only; CE 5.0..699] */
-typedef struct sockaddr_storage {
- short ss_family;
- char __ss_pad1[_SS_PAD1SIZE];
- __int64 __ss_align;
- char __ss_pad2[_SS_PAD2SIZE];
-} SOCKADDR_STORAGE, *PSOCKADDR_STORAGE;
+/* SOCKADDR  [struct, typedef; shared] */
+struct sockaddr {
+ u_short sa_family;
+ char sa_data[14];
+};
 
-/* SOCKET_ADDRESS  [struct; shared; CE 5.0..699] */
-typedef struct _SOCKET_ADDRESS {
- LPSOCKADDR lpSockaddr;
- INT iSockaddrLength;
-} SOCKET_ADDRESS, *PSOCKET_ADDRESS;
+/* SOCKADDR_IN  [struct, typedef; shared] */
+struct sockaddr_in{
+ short sin_family;
+ unsigned short sin_port;
+ IN_ADDR sin_addr;
+ char sin_zero[8];
+};
 
-/* timeval  [struct; shared; CE 5.0..699] */
+/* SOCKADDR_IRDA  [struct, typedef; shared] */
+struct sockaddr_irda { 
+ u_short irdaAddressFamily; 
+ u_char irdaDeviceID[4]; 
+ char irdaServiceName[25];};
+
+/* timeval  [struct; shared] */
 struct timeval {
  long tv_sec;
  long tv_usec;
 };
 
-/* TRANSMIT_FILE_BUFFERS  [struct; shared; CE 5.0..699] */
+/* TRANSMIT_FILE_BUFFERS  [struct; shared] */
 typedef struct _TRANSMIT_FILE_BUFFERS { 
  PVOID Head; 
  DWORD HeadLength; 
@@ -597,119 +317,27 @@ typedef struct _TRANSMIT_FILE_BUFFERS {
  DWORD TailLength; 
 } TRANSMIT_FILE_BUFFERS;
 
-/* WSABUF  [struct; shared; CE 5.0..699] */
-typedef struct __WSABUF {
- u_long len;
- char FAR* buf;
-} WSABUF, FAR* LPWSABUF;
+/* SERVICE_TYPE_INFO_ABS  [struct; shared; A/W SERVICE_TYPE_INFO_ABSA,SERVICE_TYPE_INFO_ABSW (CE is W-side)] */
+typedef struct _SERVICE_TYPE_INFO_ABS { 
+ LPTSTR lpTypeName; 
+ DWORD dwValueCount; 
+ SERVICE_TYPE_VALUE_ABS Values[1]; 
+} SERVICE_TYPE_INFO_ABS;
 
-/* WSACOMPLETION  [struct; shared; CE 5.0..699] */
-typedef struct _WSACOMPLETION {
- WSACOMPLETIONTYPE Type;
- union {
- struct {
- HWND hWnd;
- UINT uMsg;
- WPARAM context;
- } WindowMessage;
- struct {
- LPWSAOVERLAPPED lpOverlapped;
- } Event;
- struct {
- LPWSAOVERLAPPED lpOverlapped;
- LPWSAOVERLAPPED_COMPLETION_ROUTINE lpfnCompletionProc;
- } Apc;
- struct {
- LPWSAOVERLAPPED lpOverlapped;
- HANDLE hPort;
- ULONG_PTR Key;
- } Port;
- } Parameters;
-} WSACOMPLETION, *PWSACOMPLETION, FAR *LPWSACOMPLETION;
+/* fd_set  [struct, function; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   fd_count */
+/*   fd_array */
 
-/* WSAECOMPARATOR  [enum; shared; CE 5.0..699] */
-typedef enum _WSAEcomparator {
- COMP_EQUAL = 0,
- COMP_NOTLESS
-} WSAECOMPARATOR, *PWSAECOMPARATOR;
+/* WSANETWORKEVENTS  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   lNetworkEvents */
+/*   iErrorCode */
 
-/* WSANAMESPACE_INFO  [struct; shared; CE 5.0..699; A/W WSANAMESPACE_INFOA,WSANAMESPACE_INFOW (CE is W-side)] */
-typedef struct _WSANAMESPACE_INFO {
- GUID NSProviderId;
- DWORD dwNameSpace;
- BOOL fActive;
- DWORD dwVersion;
- LPTSTR lpszIdentifier;
-} WSANAMESPACE_INFO, *PWSANAMESPACE_INFO;
-
-/* WSANETWORKEVENTS  [struct; shared; CE 5.0..699] */
-typedef struct _WSANETWORKEVENTS {
- long lNetworkEvents;
- int iErrorCode[FD_MAX_EVENTS];
-} WSANETWORKEVENTS, *LPWSANETWORKEVENTS;
-
-/* WSAOVERLAPPED  [struct; shared; CE 5.0..699] */
-typedef struct _WSAOVERLAPPED {
- DWORD Internal;
- DWORD InternalHigh;
- DWORD Offset;
- DWORD OffsetHigh;
- WSAEVENT hEvent;
-} WSAOVERLAPPED, *LPWSAOVERLAPPED;
-
-/* WSAPROTOCOL_INFO  [struct; shared; CE 5.0..699; A/W WSAPROTOCOL_INFOA,WSAPROTOCOL_INFOW (CE is W-side)] */
-typedef struct _WSAPROTOCOL_INFO {
- DWORD dwServiceFlags1;
- DWORD dwServiceFlags2;
- DWORD dwServiceFlags3;
- DWORD dwServiceFlags4;
- DWORD dwProviderFlags;
- GUID ProviderId;
- DWORD dwCatalogEntryId;
- WSAPROTOCOLCHAIN ProtocolChain;
- int iVersion;
- int iAddressFamily;
- int iMaxSockAddr;
- int iMinSockAddr;
- int iSocketType;
- int iProtocol;
- int iProtocolMaxOffset;
- int iNetworkByteOrder;
- int iSecurityScheme;
- DWORD dwMessageSize;
- DWORD dwProviderReserved;
- TCHAR szProtocol[WSAPROTOCOL_LEN+1];
-} WSAPROTOCOL_INFO, *LPWSAPROTOCOL_INFO;
-
-/* WSAPROTOCOLCHAIN  [struct; shared; CE 5.0..699] */
-typedef struct _WSAPROTOCOLCHAIN {
- int ChainLen;
- DWORD ChainEntries[MAX_PROTOCOL_CHAIN];
-} WSAPROTOCOLCHAIN, *LPWSAPROTOCOLCHAIN;
-
-/* WSASERVICECLASSINFO  [struct; shared; CE 5.0..699; A/W WSASERVICECLASSINFOA,WSASERVICECLASSINFOW (CE is W-side)] */
-typedef struct _WSAServiceClassInfo {
- LPGUID lpServiceClassId;
- LPTSTR lpszServiceClassName;
- DWORD dwCount;
- LPWSANSCLASSINFOW lpClassInfos;
-} WSASERVICECLASSINFO, *PWSASERVICECLASSINFOW;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* _DSCP_TRAFFIC_TYPE  [enum; ce-only; CE 6.0..699] */
-typedef enum _DSCP_TRAFFIC_TYPE {
- DSCPTypeNotSet = 0,
- DSCPBestEffort = 1,
- DSCPBackground = 2,
- DSCPExcellentEffort = 3,
- DSCPVideo = 4,
- DSCPAudio = 5,
- DSCPControl = 6,
- NumDSCPTrafficTypes = 6
-} DSCP_TRAFFIC_TYPE
-#endif /* _WIN32_WCE */
+/* WSAPROTOCOLCHAIN  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   ChainLen */
+/*   ChainEntries */
 
 /* ==================================================================
  * functions and callbacks
@@ -1033,46 +661,5 @@ DWORD WSAAPI WSAWaitForMultipleEvents(
  BOOL fAlertable
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* enum */
-typedef enum _DSCP_TRAFFIC_TYPE {
-  DSCPTypeNotSet = 0,
-  DSCPBestEffort = 1,
-  DSCPBackground = 2,
-  DSCPExcellentEffort = 3,
-  DSCPVideo = 4,
-  DSCPAudio = 5,
-  DSCPControl = 6,
-  NumDSCPTrafficTypes = 6
-} DSCP_TRAFFIC_TYPE;
-typedef enum _WSAEcomparator {COMP_EQUAL = 0,COMP_NOTLESS} WSAECOMPARATOR, *PWSAECOMPARATOR;
-
-/* struct */
-SOCKET WSAAccept(SOCKETs,struct sockaddr FAR* addr,LPINTaddrlen,LPCONDITIONPROClpfnCondition,DWORDdwCallbackData);
-typedef struct _AFPROTOCOLS{INTiAddressFamily;INTiProtocol;} AFPROTOCOLS, *PAFPROTOCOLS, *LPAFPROTOCOLS;
-typedef struct __WSABUF {u_long len;char FAR* buf;} WSABUF, FAR* LPWSABUF;
-typedef struct _WSACOMPLETION { WSACOMPLETIONTYPE Type; union { struct { HWND hWnd; UINT uMsg; WPARAM context; } WindowMessage; struct { LPWSAOVERLAPPED lpOverlapped; } Event; struct { LPWSAOVERLAPPED lpOverlapped; LPWSAOVERLAPPED_COMPLETION_ROUTINE lpfnCompletionProc; } Apc; struct { LPWSAOVERLAPPED lpOverlapped; HANDLE hPort; ULONG_PTR Key; } Port; } Parameters;} WSACOMPLETION, *PWSACOMPLETION, FAR *LPWSACOMPLETION;
-typedef struct _WSANETWORKEVENTS {long lNetworkEvents;int iErrorCode[FD_MAX_EVENTS];} WSANETWORKEVENTS, *LPWSANETWORKEVENTS;
-typedef struct _WSAOVERLAPPED {DWORD Internal;DWORD InternalHigh;DWORD Offset;DWORD OffsetHigh;WSAEVENT hEvent;} WSAOVERLAPPED, *LPWSAOVERLAPPED;
-typedef struct _WSAPROTOCOLCHAIN {int ChainLen;DWORD ChainEntries[MAX_PROTOCOL_CHAIN];} WSAPROTOCOLCHAIN, *LPWSAPROTOCOLCHAIN;
-typedef struct _WSAPROTOCOL_INFO {DWORD dwServiceFlags1;DWORD dwServiceFlags2;DWORD dwServiceFlags3;DWORD dwServiceFlags4;DWORD dwProviderFlags;GUID ProviderId;DWORD dwCatalogEntryId;WSAPROTOCOLCHAIN ProtocolChain;int iVersion;int iAddressFamily;int iMaxSockAddr;int iMinSockAddr;int iSocketType;int iProtocol;int iProtocolMaxOffset;int iNetworkByteOrder;int iSecurityScheme;DWORD dwMessageSize;DWORD dwProviderReserved;TCHAR szProtocol[WSAPROTOCOL_LEN+1];} WSAPROTOCOL_INFO, *LPWSAPROTOCOL_INFO;
-typedef struct sockaddr_storage {short ss_family;char __ss_pad1[_SS_PAD1SIZE];__int64 __ss_align;char __ss_pad2[_SS_PAD2SIZE];} SOCKADDR_STORAGE, *PSOCKADDR_STORAGE;
-typedef struct _SOCKET_ADDRESS {LPSOCKADDR lpSockaddr;INT iSockaddrLength;} SOCKET_ADDRESS, *PSOCKET_ADDRESS;
-typedef struct _WSANAMESPACE_INFO {GUID NSProviderId;DWORD dwNameSpace;BOOL fActive;DWORD dwVersion;LPTSTR lpszIdentifier;} WSANAMESPACE_INFO, *PWSANAMESPACE_INFO;
-typedef struct _WSAQuerySet {DWORD dwSize;LPTSTR lpszServiceInstanceName;LPGUID lpServiceClassId;LPWSAVERSION lpVersion;LPTSTR lpszComment;DWORD dwNameSpace;LPGUID lpNSProviderId;LPTSTR lpszContext;DWORD dwNumberOfProtocols;LPAFPROTOCOLS lpafpProtocols;LPTSTR lpszQueryString;DWORD dwNumberOfCsAddrs;LPCSADDR_INFO lpcsaBuffer;DWORD dwOutputFlags;LPBLOB lpBlob;} WSAQUERYSET, *PWSAQUERYSETW;
-typedef struct _WSAServiceClassInfo {LPGUID lpServiceClassId;LPTSTR lpszServiceClassName;DWORD dwCount;LPWSANSCLASSINFOW lpClassInfos;} WSASERVICECLASSINFO, *PWSASERVICECLASSINFOW;
-typedef struct _WSACOMPLETION { WSACOMPLETIONTYPE Type; union { struct { HWND hWnd; UINT uMsg; WPARAM context; } WindowMessage;
-SOCKET WSAAccept( SOCKET s, struct SOCK_ADDR* addr, LPINT addrlen, LPCONDITIONPROC lpfnCondition, DWORD dwCallbackData );
-SOCKET WSAJoinLeaf(SOCKET s,const struct sockaddr FAR* name,int namelen,LPWSABUF lpCallerData,LPWSABUF lpCalleeData,LPQOS lpSQOS,LPQOS lpGQOS,DWORD dwFlags);
-int WSARecvFrom(SOCKET s,LPWSABUF lpBuffers,DWORD dwBufferCount,LPDWORD lpNumberOfBytesRecvd,LPDWORD lpFlags,struct sockaddr FAR* lpFrom,LPINT lpFromlen,LPWSAOVERLAPPED lpOverlapped,LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine);
-int WSAConnect(SOCKET s,const struct sockaddr FAR* name,int namelen,LPWSABUF lpCallerData,LPWSABUF lpCalleeData,LPQOS lpSQOS,LPQOS lpGQOS);
-
-/* function */
-void WSASetLastError ( int iError );
 
 #endif /* _WINSOCK2_ */

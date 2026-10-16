@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 5 constants, 2 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 5 constants, 0 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _DOCOBJ_
 #define _DOCOBJ_
@@ -30,23 +30,6 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
 
 /* IContinueCallback  [interface; shared; CE 5.0..599] */
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* IContinueCallback::FContinue  [function; shared; CE 4.0..699] */
-HRESULT FContinue(void);
-
-/* IContinueCallback::FContinuePrinting  [function; shared; CE 4.0..699] */
-HRESULT FContinuePrinting(
- LONG cPagesPrinted, 
- LONG nCurrentPage, 
- LPOLESTR pszPrintStatus 
-);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

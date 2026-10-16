@@ -11,34 +11,4 @@
 #define _EXDI_
 
 
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-/* DEBUG_ACCESS_CAPABILITIES_STRUCT  [struct; ce-only] */
-typedef struct _DEBUG_ACCESS_CAPABILITIES_STRUCT{
- BOOL fWriteCBPWhileRunning;
- BOOL fReadCBPWhileRunning;
- BOOL fWriteDBPWhileRunning;
- BOOL fReadDBPWhileRunning;
- BOOL fWriteVMWhileRunning;
- BOOL fReadVMWhileRunning;
- BOOL fWritePMWhileRunning;
- BOOL fReadPMWhileRunning;
- BOOL fWriteRegWhileRunning;
- BOOL fReadRegWhileRunning;
-}
-DEBUG_ACCESS_CAPABILITIES_STRUCT, *PDEBUG_ACCESS_CAPABILITIES_STRUCT;
-
-/* GLOBAL_TARGET_INFO_STRUCT  [struct; ce-only] */
-typedef struct _GLOBAL_TARGET_INFO_STRUCT{
- DWORD TargetProcessorFamily;
- DEBUG_ACCESS_CAPABILITIES_STRUCT dbc;
- LPOLESTR szTargetName;
- LPOLESTR szProbeName;
-}
-GLOBAL_TARGET_INFO_STRUCT, *PGLOBAL_TARGET_INFO_STRUCT;
-
 #endif /* _EXDI_ */

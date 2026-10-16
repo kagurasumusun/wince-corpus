@@ -17,9 +17,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 2.11..2.12, 3.0..399 */
-
-/* BATTERY_STATUS  [struct; ce-only; CE 2.11..2.12, 3.0..399] */
+/* BATTERY_STATUS  [struct; ce-only] */
 typedef struct { 
 BYTE ACLineStatus; 
 BYTE BatteryFlag; 
@@ -34,17 +32,6 @@ BYTE fBatteriesChangedSinceLastCall;
 DWORD BackupBatteryLifeTime; 
 DWORD BackupBatteryFullLifeTime; 
 } BATTERY_STATUS;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* BATTERYLIFETIMEINFO  [struct; ce-only; CE 4.0..699] */
-typedef struct _BatteryLifetimeInfo_tag {
- SYSTEMTIME stLastChange;
- DWORD cmsCpuUsage;
- DWORD cmsPreviousCpuUsage;
-} BATTERYLIFETIMEINFO, *PBATTERYLIFETIMEINFO;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

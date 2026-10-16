@@ -17,14 +17,11 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* InitLAP  [function, struct; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
+/* InitLAP  [function, struct; ce-only; Coredll.lib, coredll.lib] */
 typedef struct _InitLap {
  DWORD size;
  DWORD capabilities;
 } InitLap;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

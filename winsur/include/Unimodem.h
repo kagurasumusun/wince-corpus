@@ -17,9 +17,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* PHONECAPS  [struct; shared; CE 4.0..699] */
+/* PHONECAPS  [struct; shared] */
 typedef struct phonecaps_tag{
  DWORD dwTotalSize;
  DWORD dwNeededSize;
@@ -67,23 +65,6 @@ typedef struct phonecaps_tag{
  DWORD dwMonitoredSpeakerHookSwitchModes;
  DWORD dwMonitoredHeadsetHookSwitchModes;
 } PHONECAPS;
-
-/* UNIMDM_CHG_DEVCFG  [struct; ce-only; CE 4.0..699] */
-typedef struct _UNIMDM_CHG_DEVCFG {
- DWORD dwCommand; 
- LPCWSTR lpszDeviceClass; 
- LPVARSTRING lpDeviceConfig; 
- DWORD dwOption; 
- DWORD dwValue; 
-} UNIMDM_CHG_DEVCFG;
-
-/* UNIMODEM_INFO  [struct; ce-only; CE 4.0..699] */
-typedef struct UNIMODEM_INFO_tag {
- WORD wDeviceType; 
- WORD wActive; 
- DWORD dwPPPMTU; 
-} UNIMODEM_INFO, * PUNIMODEM_INFO;
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

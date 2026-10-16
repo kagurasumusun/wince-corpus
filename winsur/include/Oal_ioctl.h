@@ -12,22 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* OAL_IOCTL_HANDLER  [struct; ce-only; CE 5.0..699] */
-typedef struct {
- UINT32 code;
- UINT32 flags;
- BOOL (*pfnHandler) (UINT32, VOID*, UINT32, VOID*, UINT32, UINT32*);
-} OAL_IOCTL_HANDLER, *POAL_IOCTL_HANDLER;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
