@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 16 constants, 10 declarations, 2 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 16 constants, 18 declarations, 2 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _SERVICE_
 #define _SERVICE_
@@ -46,13 +46,20 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
-
-/* ActivateService  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-HANDLE ActivateService(
- LPCWSTR lpszDevKey,
- DWORD dwClientInfo
+/* ActivateService  [function; ce-only; unified-kb; unified-kb] */
+HANDLE ActivateService( 
+ LPCWSTR lpszDevKey, 
+ DWORD dwClientInfo 
 );
+
+/* GetServiceHandle  [function; ce-only; unified-kb; unified-kb] */
+HANDLE GetServiceHandle( 
+ LPWSTR szPrefix, 
+ LPWSTR szDllName, 
+ DWORD pdwDllBuf 
+);
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* DeregisterService  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
 BOOL DeregisterService(
@@ -64,13 +71,6 @@ BOOL EnumServices(
  PBYTE pBuffer,
  DWORD pdwServiceEntries,
  DWORD pdwBufferLen
-);
-
-/* GetServiceHandle  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-HANDLE GetServiceHandle(
- LPWSTR szPrefix,
- LPWSTR szDllName,
- DWORD pdwDllBuf
 );
 
 /* RegisterService  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */

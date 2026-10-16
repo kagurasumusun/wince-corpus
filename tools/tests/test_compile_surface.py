@@ -99,6 +99,7 @@ int WINAPI WinMain(HINSTANCE h, HINSTANCE p, LPWSTR cmd, int show) {
     GetSystemPowerState(NULL, 0, NULL);
     SipShowIM(0);
     InitHTMLControl(NULL);
+    GetServiceHandle(NULL, NULL, 0);
     return 0;
 }
 '''

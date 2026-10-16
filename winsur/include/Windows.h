@@ -30,6 +30,7 @@
 #include "Pm.h"
 #include "Sipapi.h"
 #include "Htmlctrl.h"
+#include "Service.h"
 
 #endif /* _WINDOWS_ */
 

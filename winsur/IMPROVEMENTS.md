@@ -432,6 +432,10 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: Service.h を Windows.h へ（第34弾）
+
+コピーはしない。GetServiceHandle / ActivateService は既に生成済み。umbrella 読み落とし。
+
 ### 2026-10-16: Sipapi/Htmlctrl を Windows.h へ（第33弾）
 
 コピーはしない。SipShowIM と InitHTMLControl は既に生成済み。umbrella 読み落とし。
