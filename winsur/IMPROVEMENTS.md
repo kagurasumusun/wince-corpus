@@ -432,6 +432,10 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: Tlhelp32/shellapi を Windows.h へ（第25弾）
+
+コピーはしない。harvest **105,096** 頁を生で開いた。CreateToolhelp32Snapshot / SHGetSpecialFolderPath は既にヘッダにあったが umbrella から見えない読み落とし。SetLocaleInfo PRE は `LPWTSTR` のまま（書き換えない）。gcc 通過。
+
 ### 2026-10-16: Winnls を Windows.h へ（第24弾）
 
 コピーはしない。harvest **105,096** 頁を生で開いた。`typedef struct _numberfmt {- };` を broken と見ない誤判定。GetACP は Winnls.h に居たが umbrella から見えない読み落とし。Winnls.h を Windows.h に入れる。GetACP / GetOEMCP / IsDBCSLeadByte。gcc 通過。

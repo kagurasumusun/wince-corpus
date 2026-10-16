@@ -1900,6 +1900,7 @@ def wrap_comment(prefix, text, width=64):
 _WINDOWS_UMBRELLA = (
     "WinDef.h", "WinNT.h", "winerror.h", "Winbase.h", "Winuser.h",
     "Wingdi.h", "Winreg.h", "Commdlg.h", "Winnls.h",
+    "Tlhelp32.h", "shellapi.h",
 )
 
 # Pages often name Windows.h (the umbrella) or a desktop-split SDK
@@ -1966,6 +1967,10 @@ _OVERLAY_NAMED = {
     "GetSystemInfo", "SYSTEM_INFO",
     "FindCloseUrlCache",
     "GetACP", "GetOEMCP", "IsDBCSLeadByte", "IsDBCSLeadByteEx",
+    "CreateToolhelp32Snapshot", "Process32First", "Process32Next",
+    "Module32First", "Module32Next", "CloseToolhelp32Snapshot",
+    "PROCESSENTRY32", "MODULEENTRY32",
+    "SHGetSpecialFolderPath", "ShellExecuteEx", "SHELLEXECUTEINFO",
 }
 
 _OVERLAY_HEADERS = {
@@ -2197,6 +2202,9 @@ _C_KNOWN_TYPES = {
     "LCID", "PDWORD", "PUINT", "LPINT", "PINT", "PUSHORT", "PBYTE",
     "PLONG", "PULONG",
     "SYSTEM_INFO", "LPSYSTEM_INFO",
+    "PROCESSENTRY32", "LPPROCESSENTRY32", "PPROCESSENTRY32",
+    "MODULEENTRY32", "LPMODULEENTRY32", "PMODULEENTRY32",
+    "SHELLEXECUTEINFO", "LPSHELLEXECUTEINFO",
     "BLENDFUNCTION", "PBLENDFUNCTION", "LPBLENDFUNCTION",
     "WNDENUMPROC", "FONTENUMPROC",
     "TEXTMETRIC", "PTEXTMETRIC", "LPTEXTMETRIC",

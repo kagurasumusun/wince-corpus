@@ -80,6 +80,9 @@ int WINAPI WinMain(HINSTANCE h, HINSTANCE p, LPWSTR cmd, int show) {
     GetOEMCP();
     IsDBCSLeadByte(0);
     IsDBCSLeadByteEx(0, 0);
+    CreateToolhelp32Snapshot(0, 0);
+    Process32First(NULL, NULL);
+    SHGetSpecialFolderPath(NULL, NULL, 0, 0);
     return 0;
 }
 '''
