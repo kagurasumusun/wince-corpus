@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 9 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 14 extra decls
+ * 9 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 13 extra decls
  */
 #ifndef _DVDDRVR_IDL_
 #define _DVDDRVR_IDL_
@@ -101,7 +101,6 @@ HRESULT AbortAllTransfers();
 HRESULT GetAudioCaps(DWORD* pdwCaps);
 HRESULT GetDMAChannelCount(DWORD* pdwChannels);
 HRESULT GetHighlightedButton(BYTE* buttonNumber);
-HRESULT GetLabeledDMAChannel(REFGUIDguidLabelSystem,WCHAR* plabelBuf,IDMAChannel** ppDMAChannel);
 HRESULT GetMaxOutstandingTransfers(DWORD* pdwTransfers,DWORD* pdwMaxSize);
 HRESULT GetPendingTransfersCount(DWORD* pdwPending);
 HRESULT OnDiscontinuity();

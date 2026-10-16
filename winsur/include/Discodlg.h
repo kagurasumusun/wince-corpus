@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 38 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 35 extra decls
  */
 #ifndef _DISCODLG_
 #define _DISCODLG_
@@ -28,8 +28,6 @@ VOID OnRequestContainerMinimize();
 VOID OnWarning(  long warningCode  );
 HRESULT RequestClose( ControlCloseStatus* pCloseStatus );
 HRESULT ResetPassword();
-HRESULT get_AdvancedSettings( IMsTscAdvancedSettings** ppAdvancedSettings );
-HRESULT get_AdvancedSettings2( IMsRdpClientAdvancedSettings *ppAdvSettings) ;
 HRESULT get_BitmapPeristence( long* pBitmapPersistence );
 HRESULT get_CipherStrength( LONG* pCipherStrength );
 HRESULT get_Compress( long* pCompress );
@@ -41,7 +39,6 @@ HRESULT get_DisableRdpdr( BOOL* pDisableRdpdr );
 HRESULT get_ExtendedDisconnectReason( ExtendedDisconnectReasonCode* pExtendedDisconnectReason );
 HRESULT get_HorizontalScrollBarVisible( BOOL* pfHScrollVisible );
 HRESULT get_KeyboardHookMode( LONG *pkeyboardHookMode );
-HRESULT get_SecuredSettings2( IMsTscSecuredSettings** ppSecuredSettings );
 HRESULT get_VerticalScrollBarVisible( BOOL* pfVScrollVisible );
 HRESULT get_allowBackgroundInput( long* pallowBackgroundInput );
 HRESULT put_AudioRedirectionMode( LONG audioRedirectionMode );

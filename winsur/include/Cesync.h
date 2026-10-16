@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 14 constants, 12 declarations, 4 outlines, 0 base types, 0 extra macros, 39 extra decls
+ * 14 constants, 10 declarations, 5 outlines, 0 base types, 0 extra macros, 36 extra decls
  */
 #ifndef _CESYNC_
 #define _CESYNC_
@@ -42,11 +42,25 @@
 
 /* OBJUIDATA  [struct; ce-only] */
 
+/* REPLSETUP  [struct; ce-only] */
+
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
+
+/* HREPLFLD  [struct; ce-only] */
+typedef struct _REPLFLD FAR* HREPLFLD;
+typedef HREPLFLD *PHREPLFLD, *LPHREPLFLD;
+
+/* HREPLITEM  [struct; ce-only] */
+typedef struct _REPLITEM FAR* HREPLITEM;
+typedef HREPLITEM *PHREPLITEM, *LPHREPLITEM;
+
+/* HREPLOBJ  [struct; ce-only] */
+typedef struct _REPLOBJ FAR* HREPLOBJ;
+typedef HREPLOBJ *PHREPLOBJ, *LPHREPLOBJ;
 
 /* ReplDialogs  [enum; ce-only] */
 enum ReplDialogs {
@@ -86,12 +100,23 @@ enum ReplDialogs {OPTIONS_DIALOG };
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
-/* DoOptionsDialog  [function; ce-only; CE 6.0..699] */
-HRESULT DoOptionsDialog (
- HWND hwndParent, 
- LPCSTR lpszObjType, 
- IReplNotify* pntfy
-);
+/* OnSSPDisable  [function; ce-only; CE 6.0..699] */
+HRESULT
+ WINAPI
+ OnSSPDisable
+ (
+ HWND
+ hwndParent
+ );
+
+/* OnSSPEnable  [function; ce-only; CE 6.0..699] */
+HRESULT
+ WINAPI
+ OnSSPEnable
+ (
+ HWND
+ hwndParent
+ );
 #endif /* _WIN32_WCE */
 
 /* ==================================================================
@@ -100,8 +125,8 @@ HRESULT DoOptionsDialog (
  * ================================================================ */
 
 /* function */
-HRESULT ActivateDialog( UINT uDlg, HWND hwndParent, HREPLFLD hFolder, IEnumReplItem *penum);
 HREPLOBJ BytesToObject(  LPBYTE lpb,  UINT cb);
+HRESULT Clone( IEnumReplItem FAR *FAR *ppEnum);
 int CompareItem( HREPLITEM hItem1, HREPLITEM hItem2);
 HRESULT CompareStoreIDs( LPBYTE lpbID1, UINT cbID1, LPBYTE lpbID2, UINT cbID2);
 BOOL CopyObject( HREPLOBJ hObjSrc, HREPLOBJ hObjDst);
@@ -115,10 +140,10 @@ hHREPLFLD GetFolderHandle ( );
 BOOL GetObjTypeInfo (POBJTYPEINFO pObjTypeInfo);
 HRESULT GetObjTypeUIData( HREPLFLD hFolder, POBJUIDATA pData);
 HRESULT GetPacket( LPBYTE *lppbData, DWORD *pcbData, DWORD cbRecommend);
-BOOL InitObjType ( LPWSTR lpszObjType, IReplObjHandler *ppObjHandler, UINT uPartnerBit);
 HRESULT IsFolderChanged( HREPLFLD hFolder, BOOL *pfChanged);
 BOOL IsItemChanged( HREPLFLD hFolder, HREPLITEM hItem, HREPLITEM hItemComp);
 HRESULT IsValidObject( HREPLFLD hFolder, HREPLITEM hItem, UINT uFlags);
+HRESULT Next( unsigned long celt, HREPLITEM *phItem, unsigned long FAR *pCeltFetched);
 BOOL ObjectNotify( POBJNOTIFY pNotify);
 UINT ObjectToBytes( HREPLOBJ hObject, LPBYTE lpb);
 HRESULT OnItemNotify( UINT uCode, LPSTR lpszProgId, LPSTR lpszObjType, HREPLITEM hItem, ULONG ulFlags);

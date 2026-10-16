@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 45 constants, 16 declarations, 33 outlines, 0 base types, 0 extra macros, 86 extra decls
+ * 45 constants, 12 declarations, 37 outlines, 0 base types, 0 extra macros, 70 extra decls
  */
 #ifndef _OBJIDL_
 #define _OBJIDL_
@@ -76,6 +76,14 @@
 /* IClassActivator  [interface; shared; CE 3.0..399, 5.0..599; Ole32.lib, Uuid.lib] */
 
 /* IClientSecurity  [interface; shared; CE 3.0..399, 5.0..599; Ole32.lib, Uuid.lib] */
+
+/* IEnumMoniker  [function, interface; shared; CE 3.0..399, 5.0..599; Ole32.lib, Uuid.lib] */
+
+/* IEnumSTATDATA  [function, interface; shared; CE 3.0..399, 5.0..599; Ole32.lib, Uuid.lib] */
+
+/* IEnumSTATSTG  [function, interface; shared; CE 3.0..399, 5.0..599; Ole32.lib, Uuid.lib] */
+
+/* IEnumString  [function, interface; shared; CE 3.0..399, 5.0..599; Ole32.lib, Uuid.lib] */
 
 /* IExternalConnection  [interface; shared; CE 3.0..399, 5.0..599; Ole32.lib, Uuid.lib] */
 
@@ -217,24 +225,6 @@ typedef enum tagTYMED {
 } TYMED;
 typedef TYMED *PTYMED, *LPTYMED;
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 3.0..399, 5.0..599 */
-
-/* IEnumMoniker  [function, interface; shared; CE 3.0..399, 5.0..599; Ole32.lib, Uuid.lib] */
-HRESULT Next( 
- ULONG celt, 
- IMoniker_com_IMoniker *rgelt, 
- ULONG *pceltFetched 
-); 
-HRESULT Skip( 
- ULONG celt 
-); 
-HRESULT Reset(void) 
-HRESULT Clone( 
- IEnumMoniker **ppenum 
-);
-#endif /* _WIN32_WCE */
-
-
 /* MULTI_QI  [struct; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   pIID */
@@ -249,18 +239,10 @@ HRESULT Clone(
 /* function */
 HRESULT AddConnection( DWORD exconn, DWORD dwreserved );
 HRESULT Commit( DWORD grfCommitFlags );
-HRESULT CreateStorage( const WCHAR *pwcsName, DWORD grfMode, DWORD reserved1, DWORD reserved2, IStorage **ppstg );
-HRESULT CreateStream( const WCHAR *pwcsName, DWORD grfMode, DWORD reserved1, DWORD *reserved2, IStream *ppstm );
-HRESULT DAdvise( FORMATETC* pFormatetc, DWORD advf, IAdviseSink* pAdvSink, DWORD* pdwConnection );
 HRESULT DUnadvise( DWORD dwConnection );
 HRESULT DestroyElement( WCHAR *pwcsName );
 int DidAlloc( void* pv );
 HRESULT DisconnectObject( DWORD dwReserved );
-HRESULT EnumDAdvise( IEnumSTATDATA** ppenumAdvise );
-HRESULT EnumElement( DWORD reserved1, void *reserved2, DWORD reserved3, IEnumSTATSTG **ppenum );
-HRESULT EnumFormatEtc( DWORD dwDirection, IEnumFORMATETC** ppenumFormatetc );
-HRESULT EnumObjectParam( IEnumString** ppenum );
-HRESULT EnumRunning( IEnumMoniker **ppenumMoniker );
 HRESULT FillAppend( void const *pv, ULONG cb, ULONG *pcbWritten );
 HRESULT FreeSurrogate();
 HRESULT GetBindOptions( BIND_OPTS* pbindopts );
@@ -270,13 +252,10 @@ HRESULT GetData( FORMATETC* pFormatetc, STGMEDIUM* pmedium );
 HRESULT GetDataHere( FORMATETC* pFormatetc, STGMEDIUM* pmedium );
 HRESULT HandsOfStorage(void);
 void HeapMinimize();
-HRESULT InitNew( IStorage *pStg);
 HRESULT IsDirty(void);
 HRESULT LockRunning( BOOL fLock, BOOL fLastUnlockCloses );
-HRESULT MoveElementTo( const WCHAR *pwcsName, IStorage *pstgDest, LPWSTR pwcsNewName, DWORD grfFlags );
 HRESULT NoteChangeTime( DWORD dwRegister, FILETIME *pfiletime );
 HRESULT OnProgress( DWORD dwProgressCurrent, DWORD dwProgressMaximum, BOOL fAccurate, BOOL fOwner );
-HRESULT OpenStream( const WCHAR *pwcsName, void *reserved1, DWORD grfMode, DWORD reserved2, IStream **ppstm );
 void* PostAlloc(  void* pActual  );
 int PostDidAlloc( void* pRequest, BOOL fSpyed, int fActual );
 void PostFree( BOOL fSpyed );
@@ -294,7 +273,6 @@ HRESULT QueryMultipleInterfaces( ULONG cMQIs, MULTI_QI *pMQIs );
 HRESULT Read( void *pv, ULONG cb, ULONG *pcbRead );
 void* Realloc(  void* pv,  ULONG cb  );
 HRESULT ReleaseBoundObjects(void);
-HRESULT ReleaseMarshalData( IStream *pStm );
 HRESULT RenameElement( const WCHAR *pwcsOldName, const WCHAR *pwcsNewName );
 HRESULT Revert( void );
 HRESULT Revoke( DWORD dwRegister );

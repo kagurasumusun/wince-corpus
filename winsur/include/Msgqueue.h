@@ -21,6 +21,24 @@
 #define MSGQUEUE_NOPRECOMMIT 1
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* MSGQUEUEINFO  [typedef; ce-only] */
+typedef MSGQUEUEINFO{
+ DWORD dwSize;
+ DWORD dwFlags;
+ DWORD dwMaxMessages;
+ DWORD cbMaxMessage;
+ DWORD dwCurrentMessages;
+ DWORD dwMaxQueueMessages;
+ WORD wNumReaders;
+ WORD wNumWriters;
+} MSGQUEUEINFO, *PMSGQUEUEINFO, FAR* LPMSGQUEUEINFO;
+
+/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
@@ -29,6 +47,12 @@
 /* CloseMsgQueue  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL CloseMsgQueue(
  HANDLE hMsgQ
+);
+
+/* GetMsgQueueInfo  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
+BOOL GetMsgQueueInfo(
+ HANDLE hMsgQ,
+ LPMSGQUEUEINFO lpInfo
 );
 
 /* ReadMsgQueue  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 3 declarations, 0 outlines, 0 base types, 0 extra macros, 16 extra decls
+ * 0 constants, 3 declarations, 0 outlines, 0 base types, 0 extra macros, 15 extra decls
  */
 #ifndef _ATLWIN_
 #define _ATLWIN_
@@ -36,7 +36,6 @@ ATOM RegisterWndSuperClass( );
 BOOL RemoveChainEntry( DWORD dwChainID );
 BOOL SetChainEntry( DWORD dwChainID, CMessageMap* pObject, DWORD dwMsgMapID = 0 );
 int SetDlgCtrlID( int nID );
-HRESULT SetExternalUIHandler( IDocHostUIHandlerDispatch* pUIHandler );
 BOOL SubclassWindow( HWND hWnd);
 void SwitchMessageMap( DWORD dwMsgMapID);
 HWND UnsubclassWindow( );

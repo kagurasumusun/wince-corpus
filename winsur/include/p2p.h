@@ -49,4 +49,16 @@ typedef enum peer_record_change_type_tag { PEER_RECORD_ADDED, PEER_RECORD_UPDATE
 /* PPEER_NAME_PAIR  [extra struct] */
 typedef struct peer_name_pair_tag { DWORD dwSize; PWSTR pwzPeerName; PWSTR pwzFriendlyName;} PEER_NAME_PAIR, *PPEER_NAME_PAIR;
 
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 5.0..599 */
+
+/* PeerFreeData  [function; shared; CE 5.0..599; p2p.lib] */
+VOID WINAPI PeerFreeData( 
+ PVOID pvData 
+);
+#endif /* _WIN32_WCE */
+
 #endif /* _P2P_ */

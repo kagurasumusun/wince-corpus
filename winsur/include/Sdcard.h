@@ -44,4 +44,21 @@
  TCHAR Slot10
 );
 
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
+
+/* BUILD_IO_RW_EXTENDED_ARG  [function; ce-only; CE 5.0..699] */
+DWORD BUILD_IO_RW_EXTENDED_ARG(
+ Read_Write,
+ BlockMode,
+ Function,
+ Address,
+ IncrementAddress,
+ Count
+);
+#endif /* _WIN32_WCE */
+
 #endif /* _SDCARD_ */

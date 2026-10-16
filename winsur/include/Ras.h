@@ -300,6 +300,17 @@ DWORD RasGetEapUserData(
  PDWORD pdwSizeofEapData
 );
 
+/* RasIOControl  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
+RasIOControl IMPLICIT_DECL(
+ LPVOID hRasConn,
+ DWORD dwCode,
+ PBYTE pBufIn,
+ DWORD dwLenIn,
+ PBYTE pBufOut,
+ DWORD dwLenOut,
+ PDWORD pdwActualOut
+);
+
 /* RasSetEapConnectionData  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
 DWORD RasSetEapConnectionData (
  LPCTSTR pszPhonebook,

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1 constants, 7 declarations, 10 outlines, 0 base types, 0 extra macros, 46 extra decls
+ * 1 constants, 7 declarations, 10 outlines, 0 base types, 0 extra macros, 32 extra decls
  */
 #ifndef _OLEIDL_
 #define _OLEIDL_
@@ -110,20 +110,12 @@ typedef OLEWHICHMK *POLEWHICHMK, *LPOLEWHICHMK;
 
 /* function */
 HRESULT BindIfRunning(void);
-HRESULT BindToSource( DWORD bindflags, IBindCtx* pbc );
 HRESULT CanInPlaceActivate();
 HRESULT ContextSensitiveHelp( BOOL fEnterMode);
 HRESULT DragLeave(void);
-HRESULT EnumAdvise( IENumSTATDATA *ppEnumAdvise,);
-HRESULT EnumVerbs( IEnumOleVerb **ppEnumOleVerb);
 HRESULT Freeze( DWORD dwAspect, LONG lindex, void *pvAspect, DWORD *pdwFreeze);
-HRESULT GetAdvise( DWORD * pdwAspect, DWORD * padvf, IAdviseSink **ppAdvSink);
 HRESULT GetMiscStatus( DWORD dwAspect, DWORD *pdwStatus);
-HRESULT GetMoinker( DWORD dwAssign, DWORD dwWhichMoniker , IMoniker ** ppmk );
-HRESULT GetMoniker( DWORD dwAssign, DWORD dwWhichMoniker, IMoniker **ppmk);
-HRESULT GetSourceMoniker( IMoniker** ppmk );
 HRESULT GetUpdateOptions( DWORD* pdwUpdateOpt );
-HRESULT InitFromData( IDataObject *pDataObject, BOOL fCreation, DWORD dwReserved);
 HRESULT IsUpToDate();
 HRESULT OnInPlaceActivate();
 HRESULT OnInPlaceDeactivate();
@@ -133,8 +125,6 @@ HRESULT OnUIDeactivate( BOOL fUndoable);
 HRESULT RequestNewObjectLayout();
 HRESULT RequestNewObjectlayout();
 HRESULT SaveObject( void );
-HRESULT SendOnRename( IMoniker *pmk,);
-HRESULT SetAdvise( DWORD dwAspect, DWORD advf, IAdviseSink *pAdvSink);
 HRESULT SetUpdateOptions( DWORD dwUpdateOpt );
 HRESULT ShowObject();
 HRESULT UnbindSource(void);

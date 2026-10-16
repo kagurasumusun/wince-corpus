@@ -246,6 +246,27 @@ typedef struct _BLOB {
  BYTE* pBlobData; 
 } BLOB, LPBLOB;
 
+/* gethostbyaddr  [struct, function; shared; winsock.lib, Ws2.lib] */
+struct hostent FAR* gethostbyaddr(
+ const char FAR* addr,
+ int len,
+ int type
+);
+
+/* gethostbyname  [struct, function; shared; winsock.lib, Ws2.lib] */
+struct hostent FAR* gethostbyname(
+ const char FAR* name 
+);
+
+/* hostent  [struct; shared] */
+struct hostent {
+ char FAR* h_name;
+ char FAR* FAR* h_aliases;
+ short h_addrtype;
+ short h_length;
+ char FAR* FAR* h_addr_list;
+};
+
 /* IN_ADDR  [struct, typedef; shared] */
 struct in_addr {
  union {
@@ -254,6 +275,11 @@ struct in_addr {
  u_long S_addr;
  } S_un;
 };
+
+/* inet_ntoa  [struct, function; shared; winsock.lib, Ws2.lib] */
+char FAR* inet_ntoa(
+ struct in_addr in
+);
 
 /* LINGER  [struct, typedef; shared] */
 struct linger {
@@ -273,6 +299,30 @@ typedef struct _PROTOCOL_INFO {
  LPTSTR lpProtocol;
 } PROTOCOL_INFO;
 typedef PROTOCOL_INFO *PPROTOCOL_INFO, *LPPROTOCOL_INFO;
+
+/* protoent  [struct; shared] */
+struct protoent {
+ char FAR* p_name;
+ char FAR* FAR* p_aliases;
+ short p_proto;
+};
+
+/* select  [struct, function; shared; winsock.lib, Ws2.lib] */
+int select(
+ int nfds,
+ fd_set FAR* readfds,
+ fd_set FAR* writefds,
+ fd_set FAR* exceptfds,
+ const struct timeval FAR* timeout
+);
+
+/* servent  [struct; shared] */
+struct servent {
+ char FAR* s_name;
+ char FAR* FAR* s_aliases;
+ short s_port;
+ char FAR* s_proto;
+};
 
 /* SERVICE_ADDRESS  [struct; shared] */
 typedef struct _SERVICE_ADDRESS { 
@@ -351,6 +401,12 @@ typedef struct _TRANSMIT_FILE_BUFFERS {
 } TRANSMIT_FILE_BUFFERS;
 typedef TRANSMIT_FILE_BUFFERS *PTRANSMIT_FILE_BUFFERS, *LPTRANSMIT_FILE_BUFFERS;
 
+/* WSABUF  [struct; shared] */
+typedef struct __WSABUF {
+ u_long len;
+ char FAR* buf;
+} WSABUF, FAR* LPWSABUF;
+
 /* WSAECOMPARATOR  [enum; shared] */
 typedef enum _WSAEcomparator {
  COMP_EQUAL = 0,
@@ -401,6 +457,12 @@ int WSACleanup (void);
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
 
+/* gethostname  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib; A/W GetHostNameW (CE is W-side)] */
+int gethostname(
+ char FAR* name,
+ int namelen
+);
+
 /* htonl  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
 u_long htonl(
  u_long hostlong
@@ -409,6 +471,11 @@ u_long htonl(
 /* htons  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
 u_short htons(
  u_short hostshort
+);
+
+/* inet_addr  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
+unsigned long inet_addr(
+ const char FAR* cp
 );
 
 /* ntohl  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */

@@ -67,6 +67,18 @@ typedef struct _HSE_SEND_HEADER_EX_INFO{
 } HSE_SEND_HEADER_EX_INFO, *LPHSE_SEND_HEADER_EX_INFO;
 
 /* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
+
+/* TerminateExtension  [function; ce-only; CE 3.0..399, 5.0..699] */
+BOOL WINAPI TerminateExtension(
+ DWORD dwFlags 
+);
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */

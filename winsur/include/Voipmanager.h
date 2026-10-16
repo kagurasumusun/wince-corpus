@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 16 constants, 4 declarations, 2 outlines, 0 base types, 0 extra macros, 23 extra decls
+ * 16 constants, 4 declarations, 2 outlines, 0 base types, 0 extra macros, 12 extra decls
  */
 #ifndef _VOIPMANAGER_
 #define _VOIPMANAGER_
@@ -103,26 +103,15 @@ typedef VoIPSystemEvent *PVoIPSystemEvent, *LPVoIPSystemEvent;
  * ================================================================ */
 
 /* function */
-HRESULT AddParticipantToConference( IVoIPCurrentCall *piCall );
 HRESULT Hangup();
 HRESULT Ignore();
-HRESULT OnCallEvent( VoIPCallEvent vceEvent, IVoIPCurrentCall* piCurrentCall );
 HRESULT OnSystemEvent( VoIPSystemEvent vseEvent, INT_PTR iptrParam );
 HRESULT RegisterWithSIPServer( SIPServerRegistrationParameters *pParams );
 HRESULT Reregister( VoIPMgrParameters* pvmpMgrParams );
 HRESULT Unhold();
-HRESULT get_ActiveCurrentCall( IVoIPCurrentCall** ppiCall );
-HRESULT get_CallLogDB( IVoIPCallLogDB** piCallLogDB );
-HRESULT get_CallerInfoDB( IVoIPCallerInfoDB** ppiCallerInfoDB );
-HRESULT get_ConferenceHost( [in] IVoIPCurrentCall **ppiConferenceCall );
-HRESULT get_ConferenceParticipants( [out, retval] IVoIPCurrentCallEnumerator **ppiCallEnum );
-HRESULT get_CurrentCallEnumerator( IVoIPCurrentCallEnumerator** ppiEnum );
 HRESULT get_MissedCallTimeout( UINT* pnTimeoutMilliseconds );
 HRESULT get_NetworkStatus( LONG* plStatus );
 HRESULT get_Parameters( VoIPMgrParameters* pvmpUsed );
-HRESULT get_RTCClient( IRTCClient** ppiRTCClient );
-HRESULT get_RTCParticipant( IRTCParticipant** piparticipant );
-HRESULT get_RTCSession( IRTCSession** piSession );
 HRESULT put_MissedCallTimeout( UINT nTimeoutMilliseconds );
 
 #endif /* _VOIPMANAGER_ */

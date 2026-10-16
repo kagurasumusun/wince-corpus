@@ -17,6 +17,7 @@
  * ================================================================ */
 
 /* function */
+HRESULT AddCommand( BSTRszCmdName,BSTRszMethodName,longnBitmapOffset,longdwCookieVARIANT_BOOL FAR* pbResult);
 HRESULT AddCommandBarButton( longnButtonType, BSTRszCmdName, longdwCookie);
 
 #endif /* _APPDEFS_ */

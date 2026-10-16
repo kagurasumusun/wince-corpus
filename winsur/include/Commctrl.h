@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1786 constants, 327 declarations, 17 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 1786 constants, 325 declarations, 18 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _COMMCTRL_
 #define _COMMCTRL_
@@ -2093,6 +2093,36 @@ typedef struct {
  int iHigh; 
 } PBRANGE, *PPBRANGE;
 
+/* RBHITTESTINFO  [struct; shared] */
+typedef struct _RB_HITTESTINFO {
+ POINT pt;
+ UINT flags;
+ int iBand;
+} RBHITTESTINFO, FAR* LPRBHITTESTINFO;
+
+/* REBARBANDINFO  [struct; shared; A/W REBARBANDINFOA,REBARBANDINFOW (CE is W-side)] */
+typedef struct tagREBARBANDINFO {
+ UINT cbSize;
+ UINT fMask;
+ UINT fStyle;
+ COLORREF clrFore;
+ COLORREF clrBack;
+ LPTSTR lpText;
+ UINT cch;
+ int iImage;
+ HWND hwndChild;
+ UINT cxMinChild;
+ UINT cyMinChild;
+ UINT cx;
+ HBITMAP hbmBack;
+ UINT wID;
+ UINT cyChild; 
+ UINT cyMaxChild;
+ UINT cyIntegral;
+ UINT cxIdeal;
+ LPARAM lParam;
+} REBARBANDINFO, FAR* LPREBARBANDINFO;
+
 /* TBREPLACEBITMAP  [struct; shared] */
 typedef struct {
  HINSTANCE hInstOld;
@@ -2128,12 +2158,30 @@ typedef struct tagTCITEM {
 } TCITEM;
 typedef TCITEM *PTCITEM, *LPTCITEM;
 
+/* TCITEMHEADER  [struct; shared; A/W TCITEMHEADERA,TCITEMHEADERW (CE is W-side)] */
+typedef struct tagTCITEMHEADER{
+ UINT mask;
+ UINT lpReserved1;
+ UINT lpReserved2;
+ LPTSTR pszText;
+ int cchTextMax;
+ int iImage;
+} TCITEMHEADER, FAR* LPTCITEMHEADER;
+
 /* UDACCEL  [struct; shared] */
 typedef struct {
  int nSec; 
  int nInc; 
 } UDACCEL;
 typedef UDACCEL *PUDACCEL, *LPUDACCEL;
+
+/* IMAGEINFO  [struct, typedef; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   hbmImage */
+/*   hbmMask */
+/*   Unused1 */
+/*   Unused2 */
+/*   rcImage */
 
 /* TVHITTESTINFO  [struct; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
@@ -2178,15 +2226,44 @@ BOOL CommandBands_IsVisible (HWND hwndCmdBands);
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
 
+/* CommandBands_AddAdornments  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
+BOOL CommandBands_AddAdornments(
+ HWND hwndCmdBands, 
+ HINSTANCE hinst, 
+ DWORD dwFlags, 
+ LPREBARBANDINFO prbbi
+);
+
+/* CommandBands_AddBands  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
+BOOL CommandBands_AddBands(
+ HWND hwndCmdBands, 
+ HINSTANCE hinst, 
+ UINT cBands, 
+ LPREBARBANDINFO prbbi
+);
+
 /* CommandBands_GetCommandBar  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
 HWND CommandBands_GetCommandBar(
  HWND hwndCmdBands, 
  UINT uBand
 );
 
+/* CommandBands_GetRestoreInformation  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
+BOOL WINAPI CommandBands_GetRestoreInformation(
+ HWND hwndCmdBands, 
+ UINT uBand, 
+ LPCOMMANDBANDSRESTOREINFO pcbri
+);
+
 /* CommandBands_Height  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib] */
 UINT CommandBands_Height(
  HWND hwndCmdBands
+);
+
+/* CommandBands_Show  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
+BOOL WINAPI CommandBands_Show(
+ HWND hwndCmdBands, 
+ BOOL fShow
 );
 
 /* CommandBar_AddAdornments  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
@@ -2362,6 +2439,13 @@ COLORREF DateTime_SetMonthCalColor(
  COLORREF clr
 );
 
+/* DateTime_SetMonthCalFont  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+void DateTime_SetMonthCalFont(
+ HWND hwndDP, 
+ HFONT hFont, 
+ LPARAM MAKELONG(fRedraw, 0)
+);
+
 /* DateTime_SetRange  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
 BOOL DateTime_SetRange(
  HWND hwndDT, 
@@ -2383,6 +2467,32 @@ void DrawStatusText(
  LPCWSTR pszText, 
  UINT uFlags 
 );
+
+/* ImageList_DragEnter  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib, Imgctl.lib, imgctl.lib] */
+BOOL WINAPI ImageList_DragEnter(
+ HWND hwndLock, 
+ int x, 
+ int y 
+);
+
+/* ImageList_DragLeave  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib, Imgctl.lib, imgctl.lib] */
+BOOL WINAPI ImageList_DragLeave(
+ HWND hwndLock 
+);
+
+/* ImageList_DragMove  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib, Imgctl.lib, imgctl.lib] */
+BOOL WINAPI ImageList_DragMove(
+ int x, 
+ int y 
+);
+
+/* ImageList_DragShowNolock  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib, Imgctl.lib, imgctl.lib] */
+BOOL WINAPI ImageList_DragShowNolock(
+ BOOL fShow 
+);
+
+/* ImageList_EndDrag  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib, Imgctl.lib, imgctl.lib] */
+BOOL WINAPI ImageList_EndDrag(void);
 
 /* InitCommonControls  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib] */
 void InitCommonControls(void);
@@ -2429,6 +2539,13 @@ BOOL ListView_EnsureVisible(
  HWND hwnd, 
  int i, 
  BOOL fPartialOK 
+);
+
+/* ListView_FindItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+int ListView_FindItem( 
+ HWND hwnd, 
+ int iStart, 
+ const LV_FINDINFO FAR* plvfi 
 );
 
 /* ListView_GetBkColor  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
@@ -2486,15 +2603,52 @@ BOOL ListView_GetISearchString(
  LPSTR lpsz 
 );
 
+/* ListView_GetItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+BOOL ListView_GetItem( 
+ HWND hwnd, 
+ LVITEM FAR* pitem 
+);
+
 /* ListView_GetItemCount  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
 int ListView_GetItemCount( 
  HWND hwnd 
+);
+
+/* ListView_GetItemPosition  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+BOOL ListView_GetItemPosition( 
+ HWND hwnd, 
+ int i, 
+ POINT FAR* ppt 
+);
+
+/* ListView_GetItemRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+BOOL ListView_GetItemRect( 
+ HWND hwnd, 
+ int i, 
+ RECT FAR* prc, 
+ int code 
 );
 
 /* ListView_GetItemSpacing  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
 DWORD ListView_GetItemSpacing( 
  HWND hwnd, 
  BOOL fSmall 
+);
+
+/* ListView_GetItemState  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+UINT WINAPI ListView_GetItemState( 
+ HWND hwnd, 
+ int i, 
+ UINT mask 
+);
+
+/* ListView_GetItemText  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+void WINAPI ListView_GetItemText( 
+ HWND hwnd, 
+ int iItem, 
+ int iSubItem,
+ LPSTR pszText, 
+ int cchTextMax 
 );
 
 /* ListView_GetNextItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
@@ -2550,6 +2704,24 @@ int ListView_GetTopIndex(
  HWND hwnd 
 );
 
+/* ListView_GetViewRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+BOOL ListView_GetViewRect( 
+ HWND hwnd, 
+ RECT FAR* prc 
+);
+
+/* ListView_HitTest  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+int ListView_HitTest( 
+ HWND hwnd, 
+ LV_HITTESTINFO FAR* pinfo 
+);
+
+/* ListView_InsertItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+int ListView_InsertItem( 
+ HWND hwnd, 
+ const LVITEM FAR* pitem 
+);
+
 /* ListView_RedrawItems  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
 BOOL ListView_RedrawItems( 
  HWND hwnd, 
@@ -2603,6 +2775,12 @@ DWORD ListView_SetIconSpacing(
  int cy 
 );
 
+/* ListView_SetItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+BOOL ListView_SetItem( 
+ HWND hwnd, 
+ const LVITEM FAR* pitem 
+);
+
 /* ListView_SetItemCount  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
 void ListView_SetItemCount( 
  HWND hwndLV, 
@@ -2630,6 +2808,22 @@ void ListView_SetItemPosition32(
  int iItem, 
  int x, 
  int y 
+);
+
+/* ListView_SetItemState  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+void WINAPI ListView_SetItemState( 
+ HWND hwnd, 
+ int i, 
+ UINT state, 
+ UINT mask 
+);
+
+/* ListView_SetItemText  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+void WINAPI ListView_SetItemText( 
+ HWND hwnd, 
+ int i, 
+ int iSubItem, 
+ LPCSTR pszText 
 );
 
 /* ListView_SetSelectionMark  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
@@ -2781,6 +2975,13 @@ void MonthCal_SetToday(
  LPSYSTEMTIME lpSysTime 
 );
 
+/* TabCtrl_AdjustRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+void TabCtrl_AdjustRect( 
+ HWND hwnd, 
+ BOOL fLarger, 
+ RECT FAR* prc 
+);
+
 /* TabCtrl_DeleteAllItems  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
 BOOL TabCtrl_DeleteAllItems( 
  HWND hwnd 
@@ -2813,9 +3014,23 @@ DWORD TabCtrl_GetExtendedStyle(
  HWND hwndTab
 );
 
+/* TabCtrl_GetItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+BOOL TabCtrl_GetItem( 
+ HWND hwnd, 
+ int iItem, 
+ TCITEM FAR* pitem 
+);
+
 /* TabCtrl_GetItemCount  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
 int TabCtrl_GetItemCount( 
  HWND hwnd 
+);
+
+/* TabCtrl_GetItemRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+BOOL TabCtrl_GetItemRect( 
+ HWND hwnd, 
+ int iItem, 
+ RECT FAR* prc 
 );
 
 /* TabCtrl_GetRowCount  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
@@ -2828,6 +3043,19 @@ BOOL TabCtrl_HighlightItem(
  HWND hwndTab, 
  INT idItem, 
  WORD fHighlight 
+);
+
+/* TabCtrl_HitTest  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+int TabCtrl_HitTest( 
+ HWND hwnd, 
+ TC_HITTESTINFO FAR* pinfo 
+);
+
+/* TabCtrl_InsertItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+int TabCtrl_InsertItem( 
+ HWND hwnd, 
+ int iItem, 
+ const TCITEM FAR* pitem 
 );
 
 /* TabCtrl_RemoveImage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
@@ -2846,6 +3074,13 @@ VOID TabCtrl_SetCurFocus(
 int TabCtrl_SetCurSel( 
  HWND hwnd, 
  int iItem 
+);
+
+/* TabCtrl_SetItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+BOOL TabCtrl_SetItem( 
+ HWND hwnd, 
+ int iItem, 
+ TCITEM FAR* pitem 
 );
 
 /* TabCtrl_SetItemExtra  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
@@ -2873,6 +3108,10 @@ void TabCtrl_SetPadding(
  int cx, 
  int cy 
 );
+
+/* TCM_REMOVEIMAGE  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+TCM_REMOVEIMAGE | wParam = (WPARAM)(int) iImage; 
+ lParam = 0;
 
 /* TreeView_DeleteAllItems  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
 BOOL TreeView_DeleteAllItems( 
@@ -3155,6 +3394,14 @@ HWND ListView_SetToolTips(
 BOOL SHGetDocumentsFolder(
  LPCTSTR pszVolume,
  LPTSTR pszDocs
+);
+
+/* WM_FILECHANGEINFO  [function; ce-only; CE 5.0..699; Ceshell.lib, ceshell.lib] */
+LRESULT CALLBACK WindowProc(
+ HWND hwnd,
+ UINT msg,
+ WPARAM wParam,
+ LPARAM lParam
 );
 #endif /* _WIN32_WCE */
 

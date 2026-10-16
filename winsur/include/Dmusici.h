@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 23 declarations, 2 outlines, 0 base types, 0 extra macros, 70 extra decls
+ * 0 constants, 23 declarations, 2 outlines, 0 base types, 0 extra macros, 44 extra decls
  */
 #ifndef _DMUSICI_
 #define _DMUSICI_
@@ -141,6 +141,12 @@ typedef enum enumDMUS_TRACKF_FLAGS {
 } DMUS_TRACKF_FLAGS;
 typedef DMUS_TRACKF_FLAGS *PDMUS_TRACKF_FLAGS, *LPDMUS_TRACKF_FLAGS;
 
+/* DMUS_VERSION  [struct; ce-only] */
+typedef struct _DMUS_VERSION {
+ DWORD dwVersionMS;
+ DWORD dwVersionLS;
+} DMUS_VERSION, FAR *LPDMUS_VERSION;
+
 /* LPDMUS_BAND  [extra typedef] */
 typedef IDirectMusicBand __RPC_FAR *LPDMUS_BAND;
 
@@ -156,42 +162,19 @@ typedef IDirectMusicObject __RPC_FAR *LPDMUS_OBJECT;
  * ================================================================ */
 
 /* function */
-HRESULT AddPort( IDirectMusicPort* pPort );
 HRESULT AllocPMsg( ULONG cb, DMUS_PMSG** ppPMSG );
-HRESULT AssignPChannel( DWORD dwPChannel, IDirectMusicPort* pPort, DWORD dwGroup, DWORD dwMChannel );
-HRESULT AssignPChannelBlock( DWORD dwBlockNum, IDirectMusicPort* pPort, DWORD dwGroup );
-HRESULT AutoTransition( IDirectMusicPerformance* pPerformance, IDirectMusicSegment* pToSeg, WORD wCommand, DWORD dwFlags, IDirectMusicChordMap* pChordMap, IDirectMusicSegment** ppTransSeg, IDirectMusicSegmentState** ppToSegState, IDirectMusicSegmentState** ppTransSegState );
-HRESULT CacheObject( IDirectMusicObject* pObject );
-HRESULT ChangeChordMap( IDirectMusicSegment* pSegment, BOOL fTrackScale, IDirectMusicChordMap* pChordMap );
 HRESULT CloseDown();
-HRESULT ComposeSegmentFromShape( IDirectMusicStyle* pStyle, WORD wNumMeasures, WORD wShape, WORD wActivity, BOOL fIntro, BOOL fEnd, IDirectMusicChordMap* pChordMap, IDirectMusicSegment** ppSegment );
-HRESULT ComposeSegmentFromTemplate( IDirectMusicStyle* pStyle, IDirectMusicSegment* pTemplate, WORD wActivity, IDirectMusicChordMap* pChordMap, IDirectMusicSegment** ppSegment );
-HRESULT ComposeTemplateFromShape( WORD wNumMeasures, WORD wShape, BOOL fIntro, BOOL fEnd, WORD wEndLength, IDirectMusicSegment** ppTemplate );
-HRESULT CreateSegment( IDirectMusicSegment** ppSegment );
 HRESULT FreePMsg( DMUS_PMSG* pPMSG );
 HRESULT GetBumperLength( DWORD* pdwMilliSeconds );
-HRESULT GetGraph( IDirectMusicGraph** ppGraph );
-HRESULT GetLoader( IDirectMusicLoader** ppLoader );
 HRESULT GetNotificationPMsg( DMUS_NOTIFICATION_PMSG** ppNotificationPMsg );
 HRESULT GetPatch( DWORD* pdwPatch );
 HRESULT GetPrepareTime( DWORD* pdwMilliSeconds );
 HRESULT GetRepeats( DWORD* pdwRepeats );
 HRESULT GetScale( DWORD* pdwScale );
-HRESULT GetSegment( IDirectMusicSegment** ppSegment );
-HRESULT GetTool( DWORD dwIndex, IDirectMusicTool** ppTool );
-HRESULT InsertTool( IDirectMusicTool* pTool, DWORD* pdwPChannels, DWORD cPChannels, LONG lIndex );
-HRESULT IsPlaying( IDirectMusicSegment* pSegment, IDirectMusicSegmentState* pSegState );
-HRESULT PChannelInfo( DWORD dwPChannel, IDirectMusicPort** ppPort, DWORD* pdwGroup, DWORD* pdwMChannel );
-HRESULT PlaySegment( IDirectMusicSegment* pSegment, DWORD dwFlags, __int64 i64StartTime, IDirectMusicSegmentState** ppSegmentState );
-HRESULT ReleaseObject( IDirectMusicObject* pObject );
-HRESULT RemovePort( IDirectMusicPort* pPort );
-HRESULT RemoveTool( IDirectMusicTool* pTool );
 HRESULT SendPMsg( DMUS_PMSG* pPMSG );
 HRESULT SetBumperLength( DWORD dwMilliSeconds );
 HRESULT SetDescriptor( LPDMUS_OBJECTDESC pDesc );
-HRESULT SetGraph( IDirectMusicGraph* pGraph );
 HRESULT SetPrepareTime( DWORD dwMilliSeconds );
 HRESULT StampPMsg( DMUS_PMSG* pPMSG );
-HRESULT Unload( IDirectMusicPerformance* pPerformance );
 
 #endif /* _DMUSICI_ */

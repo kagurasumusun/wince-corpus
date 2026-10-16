@@ -432,6 +432,10 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: 誤判定を潰して DDK/アプリ API を載せる（第13弾）
+
+コピーはしない。`READ_PORT_UCHAR` を未知型と誤認していた（宣言中の関数名）。`lplf lplf` のような引数名の型化、COM の `IImage*` を落とす。corpus に `lstrlen` の原型ページは無い。`gcc` で READ_PORT_UCHAR / EndPaint / HalGetBusData が通る。
+
 ### 2026-10-16: アプリ/ドライバ API を unified/harvest から載せる（第12弾）
 
 コピーはしない。`GetMessage` / `ReadFile` / `BeginPaint` / `HalGetBusData` などは KB に C の引用があるのに、LPMSG を未知型扱いして落としていた。ポインタ型は基底型に従う。enum の列挙子は型ではない。`INTERFACE_TYPE` を glued と誤認しない。コアヘッダへ載せる unified 引用はドライバ面と、アプリに必要な名前だけ。`gcc -Werror=implicit-function-declaration` で GetMessage/ReadFile/HalGetBusData が通る。

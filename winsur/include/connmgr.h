@@ -42,4 +42,39 @@ typedef enum _ConnMgrConRefTypeEnum{
 } ConnMgrConRefTypeEnum;
 typedef ConnMgrConRefTypeEnum *PConnMgrConRefTypeEnum, *LPConnMgrConRefTypeEnum;
 
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
+
+/* ConnMgrApiReadyEvent  [function; ce-only; CE 6.0..699; cellcore.lib] */
+HANDLE WINAPI ConnMgrApiReadyEvent (
+ void
+);
+
+/* ConnMgrConnectionStatus  [function; ce-only; CE 6.0..699; cellcore.lib] */
+HRESULT WINAPI ConnMgrConnectionStatus(
+ HANDLE hConnection,
+ DWORD *pdwStatus
+);
+
+/* ConnMgrReleaseConnection  [function; ce-only; CE 6.0..699; cellcore.lib] */
+HRESULT WINAPI ConnMgrReleaseConnection(
+ HANDLE hConnection,
+ LONG lCache 
+);
+
+/* ConnMgrSetConnectionPriority  [function; ce-only; CE 6.0..699; cellcore.lib] */
+HRESULT WINAPI ConnMgrSetConnectionPriority(
+ HANDLE hConnection,
+ DWORD dwPriority
+);
+
+/* ConnMgrUnregisterScheduledConnection  [function; ce-only; CE 6.0..699; cellcore.lib] */
+HRESULT WINAPI ConnMgrUnregisterScheduledConnection(
+ LPCWSTR pwszToken
+);
+#endif /* _WIN32_WCE */
+
 #endif /* _CONNMGR_ */

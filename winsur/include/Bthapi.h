@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 24 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 22 extra decls
  */
 #ifndef _BTHAPI_
 #define _BTHAPI_
@@ -27,12 +27,10 @@ HRESULT GetNodeCount(ULONG* pNodeCount);
 HRESULT GetNodeStringData(ULONG nodeIndex,NodeData* pData);
 HRESULT GetStreamSize( ULONG* pSize );
 HRESULT LockContainer(UCHAR lock);
-HRESULT RetrieveRecords( UCHAR* pStream, ULONG size, ISdpRecord** ppSdpRecords, ULONG* pNumRecords );
 HRESULT SetAttribute( USHORT attribute, NodeData* pNode );
 HRESULT SetAttributeFromStream( USHORT attribute, UCHAR* pStream, ULONG size );
 HRESULT SetNode(ULONG nodeIndex,NodeData* pData);
 HRESULT Validate( UCHAR* pStream, ULONG size, ULONG_PTR* pErrorByte );
-HRESULT Walk( ISdpWalk* pWalk );
 HRESULT WalkStream( UCHAR elementType, ULONG elementSize, UCHAR* pStream );
 HRESULT WriteStream( UCHAR* pStream, ULONG* pNumBytesWritten );
 HRESULT WriteToStream( UCHAR** ppStream, ULONG* pStreamSize, ULONG preSize, ULONG postSize );

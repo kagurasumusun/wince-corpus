@@ -118,6 +118,15 @@ typedef struct tagWAGI {
  * functions and callbacks
  * ================================================================ */
 
+#if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 4.0..699 */
+
+/* BatteryNotifyOfTimeChange  [function; ce-only; CE 1.0..199, 4.0..699; Coredll.lib, coredll.lib] */
+void WINAPI BatteryNotifyOfTimeChange(
+ BOOL fForward,
+ FILETIME *pftDelta
+);
+#endif /* _WIN32_WCE */
+
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* NotifyWinUserSystem  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
@@ -145,12 +154,30 @@ BOOL RegisterTaskBar(
 
 /* GwesPowerOffSystem  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
 void GwesPowerOffSystem(void);
+
+/* NLedGetDeviceInfo  [function; ce-only; CE 4.0..699; Coredll.dll, coredll.dll] */
+BOOL WINAPI NLedGetDeviceInfo(
+ UINT nInfoId,
+ void* pOutput
+);
+
+/* NLedSetDevice  [function; ce-only; CE 4.0..699; Coredll.dll, coredll.dll] */
+BOOL WINAPI NLedSetDevice(
+ UINT nDeviceId,
+ void* pInput
+);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* GetForegroundKeyboardTarget  [function; ce-only; CE 5.0..699] */
 HWND GetForegroundKeyboardTarget(void);
+
+/* ImmGetConversionStatusForeground  [function; ce-only; CE 5.0..699] */
+BOOL WINAPI ImmGetConversionStatusForeground(
+ DWORD* pfdwConversion,
+ DWORD* pfdwSentence
+);
 
 /* KeybdGetDeviceInfo  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL KeybdGetDeviceInfo(
@@ -168,6 +195,9 @@ BOOL RegisterTaskBarEx(
  HWND hwndTaskbar,
  BOOL bTaskBarOnTop
 );
+
+/* TouchCalibrate  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
+BOOL WINAPI TouchCalibrate(void);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */

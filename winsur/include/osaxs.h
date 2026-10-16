@@ -11,4 +11,13 @@
 #define _OSAXS_
 
 
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+/* OsAxSSetImageName  [function; ce-only] */
+HRESULT WINAPI OsAxSSetImageName(
+ LPCWSTR szImageName
+);
+
 #endif /* _OSAXS_ */

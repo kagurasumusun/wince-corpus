@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 42 constants, 70 declarations, 0 outlines, 0 base types, 0 extra macros, 10 extra decls
+ * 42 constants, 61 declarations, 0 outlines, 0 base types, 0 extra macros, 10 extra decls
  */
 #ifndef _OBJBASE_
 #define _OBJBASE_
@@ -148,13 +148,11 @@ void CoFreeAllLibraries( );
 /* CoGetCurrentProcess  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
 DWORD CoGetCurrentProcess(void);
 
-/* CoRegisterSurrogate  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
-HRESULT CoRegisterSurrogate(
- ISurrogate* pSurrogate
-);
-
 /* CoReleaseServerProcess  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
 ULONG CoReleaseServerProcess(void);
+
+/* CoResumeClassObjects  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
+WINOLEAPI CoResumeClassObjects(void);
 
 /* CoRevokeClassObject  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
 HRESULT CoRevokeClassObject(
@@ -163,6 +161,12 @@ HRESULT CoRevokeClassObject(
 
 /* CoRevokeMallocSpy  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
 HRESULT CoRevokeMallocSpy( );
+
+/* CoSuspendClassObjects  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
+WINOLEAPI CoSuspendClassObjects(void);
+
+/* DllCanUnloadNow  [function; shared; CE 3.0..699; Oleaut32.lib, oleaut32.lib] */
+STDAPI DllCanUnloadNow(void);
 
 /* UpdateDCOMSettings  [function; ce-only; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
 void UpdateDCOMSettings(void);

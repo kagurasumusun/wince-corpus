@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1 constants, 0 declarations, 10 outlines, 0 base types, 0 extra macros, 16 extra decls
+ * 1 constants, 0 declarations, 10 outlines, 0 base types, 0 extra macros, 9 extra decls
  */
 #ifndef _UPNP_
 #define _UPNP_
@@ -53,17 +53,11 @@
 
 /* function */
 HRESULT CancelAsyncFind( LONG lFindData );
-HRESULT DeviceAdded( LONG lFindData, IUPnPDevice* pDevice );
 HRESULT LoadComplete( HRESULT hrLoadResult );
-HRESULT RootDevice( IUPnPDevice** ppudRootDevice );
 HRESULT SearchComplete( LONG lFindData );
-HRESULT ServiceInstanceDied( IUPnPService* pus );
 HRESULT StartAsyncFind( LONG lFindData );
 HRESULT get_LastTransportStatus( long* plValue );
 HRESULT get_LoadResult( long* phrError );
-HRESULT get_ParentDevice( IUPnPDevice** ppudDeviceParent );
 HRESULT get_ReadyState( LONG* plReadyState );
-HRESULT get_RootDevice( IUPnPDevice** ppudRootDevice );
-HRESULT get_Services( IUPnPServices** ppusServices );
 
 #endif /* _UPNP_ */

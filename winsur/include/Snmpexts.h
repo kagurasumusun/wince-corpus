@@ -11,4 +11,31 @@
 #define _SNMPEXTS_
 
 
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
+
+/* SnmpTfxClose  [function; ce-only; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
+VOID WINAPI SnmpTfxClose(
+ SnmpTfxHandle tfxHandle 
+);
+
+/* SnmpTfxOpen  [function; ce-only; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
+SnmpTfxHandle WINAPI SnmpTfxOpen(
+ DWORD numViews, 
+ SnmpMibView* supportedViews 
+);
+
+/* SnmpTfxQuery  [function; ce-only; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
+BOOL WINAPI SnmpTfxQuery(
+ SnmpTfxHandle tfxHandle, 
+ BYTE RequestType, 
+ RFC1157VarBindList* pVarBindList, 
+ AsnInteger* pErrorStatus, 
+ AsnInteger* pErrorIndex 
+);
+#endif /* _WIN32_WCE */
+
 #endif /* _SNMPEXTS_ */

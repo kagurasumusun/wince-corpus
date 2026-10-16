@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 2 declarations, 0 outlines, 0 base types, 0 extra macros, 19 extra decls
+ * 0 constants, 2 declarations, 0 outlines, 0 base types, 0 extra macros, 14 extra decls
  */
 #ifndef _SIP_
 #define _SIP_
@@ -36,11 +36,7 @@ typedef LMDATA *PLMDATA, *LPLMDATA;
 /* function */
 HRESULT Deselect( void );
 HRESULT GetImData( DWORD dwSize, void *pvImData);
-HRESULT GetInfo( IMINFO *pimi);
 HRESULT Hiding( void );
-HRESULT RegisterCallback( IIMCallback *pIMCallback);
-HRESULT RegisterCallback2( IIMCallback2 *pIMCallback2);
-HRESULT RegisterCallbackEx (IIMCallback* pIMCallback);
 HRESULT Select( HWND hwndSip);
 HRESULT SendAlternatives (LMDATA* plmd);
 HRESULT SendAlternatives2( LMDATA *plmd);
@@ -49,7 +45,6 @@ HRESULT SendString( LPTSTR ptszStr, DWORD dwSize);
 HRESULT SendVirtualKey( BYTE bVk, DWORD dwFlags);
 HRESULT SetIMMActiveContext ( HWND hwnd, BOOL bOpen, DWORD dwConversion, DWORD dwSentence, DWORD hkl);
 HRESULT SetImData( DWORD dwSize, void *pvImData);
-HRESULT SetImInfo( IMINFO *pimi);
 HRESULT Showing( void );
 HRESULT UserOptionsDlg( [in] HWND hwndParent);
 

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 63 constants, 190 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 63 constants, 188 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _OLEAUTO_
 #define _OLEAUTO_
@@ -300,11 +300,6 @@ HRESULT VarUI1FromR8(
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* CreateErrorInfo  [function; shared; CE 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT CreateErrorInfo(
- ICreateErrorInfo** pperrinfo 
-);
 
 /* GetErrorInfo  [function; shared; CE 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
 HRESULT GetErrorInfo( 

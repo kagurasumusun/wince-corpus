@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 61 constants, 29 declarations, 19 outlines, 0 base types, 0 extra macros, 119 extra decls
+ * 61 constants, 29 declarations, 19 outlines, 0 base types, 0 extra macros, 105 extra decls
  */
 #ifndef _OAIDL_
 #define _OAIDL_
@@ -358,37 +358,43 @@ VT_ARRAY = 0x2000;
  * ================================================================ */
 
 /* function */
+HRESULT AddFuncDesc( unsigned int index, FUNCDESC FAR *pFuncDesc);
 HRESULT AddImplType( unsigned int index, HREFTYPE hRefType);
-HRESULT CommonPrefixWith( IMoniker *pmkOther, IMoniker **ppmkPrefix);
-HRESULT ComposeWith( IMoniker *pmkRight, BOOL fOnlyIfNotGeneric, IMoniker **ppmkComposite);
+HRESULT AddRefTypeInfo( ITypeInfo FAR *pTInfo, HREFTYPE FAR *phRefType);
+HRESULT AddVarDesc( unsigned int index, VARDESC FAR *pVarDesc);
 HRESULT DeleteFuncDesc( unsigned int index);
 HRESULT DeleteImplType( unsigned int index);
 HRESULT DeleteVarDesc( unsigned int index);
-HRESULT Enum( IEnumMoniker **ppenumMoniker);
 HRESULT GetAllCustData( CUSTDATA *pCustData );
 HRESULT GetAllFuncCustData( unsigned int index, CUSTDATA *pCustData );
 HRESULT GetAllImplTypeCustData( unsigned int index, CUSTDATA *pCustData );
 HRESULT GetAllParamCustData( unsigned int indexFunc, unsigned int indexParam, CUSTDATA *pCustData);
 HRESULT GetAllVarCustData( unsigned int index, CUSTDATA *pCustData);
-HRESULT GetDisplayName( IBindCtx *pbc, IMoniker *pmkToLeft, LPOlESTR * ppszDisplayName);
+HRESULT GetContainingTypeLib( ITypeLib FAR *FAR *ppTLib, unsigned int FAR *pIndex );
+HRESULT GetFuncDesc( unsigned int index, FUNCDESC FAR *FAR *ppFuncDesc );
 HRESULT GetHelpContext( DWORD *pdwHelpContext );
 HRESULT GetImplTypeFlags( unsigned int index, int *pImplTypeFlags );
+HRESULT GetLibAttr( TLIBATTR FAR *FAR *ppTLibAttrr );
 HRESULT GetLibStatistics( unsigned long *pcUniqueNames, unsigned long *pcchUniqueNames );
-HRESULT GetTimeOfLastChange( IBindCtx *pbc, IMoniker *pmkToLeft, FILETIME *pFileTime);
+HRESULT GetRefTypeInfo( HREFTYPE hRefType, ITypeInfo FAR *FAR *ppTInfo );
+HRESULT GetRefTypeOfImplType( unsigned int index, HREFTYPE FAR *pRefType );
+HRESULT GetTypeAttr( TYPEATTR FAR *FAR *ppTypeAttr );
+HRESULT GetTypeComp( ITypeComp FAR *FAR *ppTComp );
 HRESULT GetTypeFlags( unsigned long *pTypeFlags);
+HRESULT GetTypeInfoCount( unsigned int FAR *pctinfo);
+HRESULT GetTypeInfoType( unsigned int index, TYPEKIND FAR *pTKind );
 HRESULT GetTypeKind( TYPEKIND *pTypeKind);
+HRESULT GetVarDesc( unsigned int index, VARDESC FAR *FAR *ppVarDesc );
 HRESULT Hash( DWORD *pdwHash);
-HRESULT Inverse( IMoniker **ppmk);
-HRESULT IsEqual( IMoniker *pmkOtherMoniker);
-HRESULT IsRunning( IBindCtx *pbc, IMoniker *pmkToLeft, IMoniker *pmkNewlyRunning);
 HRESULT IsSystemMoniker( DWORD *pdwMksys);
 HRESULT LayOut();
 void OnClose();
-void OnRename( IMoniker *pmk);
 void OnSave();
 void OnViewChange( DWORD dwAspect, LONG lindex);
-HRESULT Reduce( IBindCtx *pbc, DWORD dwReduceHowFar, IMoniker **ppmkReduced);
-HRESULT RelativePathTo( IMoniker *pmkOther, IMoniker **ppmkRelPath);
+HRESULT ReleaseFuncDesc( FUNCDESC FAR *pFuncDesc );
+HRESULT ReleaseTLibAttr( TLIBATTR FAR *pTLibAttr );
+HRESULT ReleaseTypeAttr( TYPEATTR FAR *pTypeAttr );
+HRESULT ReleaseVarDesc( VARDESC FAR *pVarDesc );
 HRESULT SetAlignment( unsigned short cbAlignment);
 HRESULT SetFuncHelpContext( unsigned int index, unsigned long dwHelpContext);
 HRESULT SetFuncHelpStringContext( unsigned int index, DWORD dwHelpStringContext);
@@ -396,6 +402,7 @@ HRESULT SetHelpContext( DWORD dwHelpContext);
 HRESULT SetHelpStringContext( DWORD *dwHelpStringContext);
 HRESULT SetImplTypeFlags( unsigned int index, int implTypeFlags);
 HRESULT SetLibFlags( unsigned int uLibFlags);
+HRESULT SetTypeDescAlias( TYPEDESC FAR *pTDescAlias);
 HRESULT SetTypeFlags( unsigned int uTypeFlags);
 HRESULT SetVarHelpContext( unsigned int index, unsigned long dwHelpContext);
 HRESULT SetVarHelpStringContext( unsigned int index, DWORD dwHelpStringContext);

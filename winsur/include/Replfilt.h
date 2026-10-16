@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 7 declarations, 2 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 5 declarations, 4 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _REPLFILT_
 #define _REPLFILT_
@@ -14,6 +14,10 @@
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
+
+/* CFF_CONVERTINFO  [struct; ce-only] */
+
+/* PFF_CONVERTINFO  [struct; ce-only] */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 1.0..199, 3.0..399, 5.0..599 */
 
@@ -27,15 +31,6 @@
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
-
-/* CFF_CONVERTINFO  [struct; ce-only] */
-typedef struct tagCFF_CONVERTINFO {
- BOOL bImport;
- HWND hwndParent;
- BOOL bYesToAll;
- ICeFileFilterSite* pffs;
-} CFF_CONVERTINFO;
-typedef CFF_CONVERTINFO *PCFF_CONVERTINFO, *LPCFF_CONVERTINFO;
 
 /* CFF_CONVERTOPTIONS  [struct; ce-only] */
 typedef struct tagCFF_CONVERTOPTIONS {
@@ -64,15 +59,6 @@ typedef struct tagCFF_SOURCEFILE {
  FILETIME ftModified;
 } CFF_SOURCEFILE;
 typedef CFF_SOURCEFILE *PCFF_SOURCEFILE, *LPCFF_SOURCEFILE;
-
-/* PFF_CONVERTINFO  [struct; ce-only] */
-typedef struct tagPFF_CONVERTINFO {
- BOOL bImport;
- HWND hwndParent;
- BOOL bYesToAll;
- IPegasusFileFilterSite* pffs;
-} PFF_CONVERTINFO;
-typedef PFF_CONVERTINFO *PPFF_CONVERTINFO, *LPPFF_CONVERTINFO;
 
 /* PFF_DESTINATIONFILE  [struct; ce-only] */
 typedef struct tagPFF_DESTINATIONFILE {

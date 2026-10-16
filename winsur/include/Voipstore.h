@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 2 declarations, 0 outlines, 0 base types, 0 extra macros, 17 extra decls
+ * 0 constants, 2 declarations, 0 outlines, 0 base types, 0 extra macros, 9 extra decls
  */
 #ifndef _VOIPSTORE_
 #define _VOIPSTORE_
@@ -40,18 +40,10 @@ enum {
  * ================================================================ */
 
 /* function */
-HRESULT CreateRecord( VoIPCallType vct, IVoIPCallRecord** ppiRecord );
 HRESULT DeleteFromDB();
-HRESULT FindCallerInfoBySpeedDialEntry( INT idxSpeedDial, IVoIPCallerInfoRecord** ppiRecord );
 HRESULT get_CallType( VoIPCallType* pvctType );
 HRESULT get_Capacity( int* cRecords );
-HRESULT get_Enumerator( IVoIPCallerInfoDBEnum** ppiEnum );
-HRESULT get_FriendlyNameEnumerator( IVoIPCallerInfoDBEnum** ppiEnum );
-HRESULT get_IncomingEnumerator( IVoIPCallLogDBEnum** ppiEnum );
-HRESULT get_MissedEnumerator( IVoIPCallLogDBEnum** ppiEnum );
-HRESULT get_OutgoingEnumerator( IVoIPCallLogDBEnum** ppiEnum );
 HRESULT get_SpeedDialEntry( int* pidxSpeedDial );
-HRESULT get_SpeedDialEnumerator( IVoIPCallerInfoDBEnum** ppiEnum );
 HRESULT put_CallType( VoIPCallType vctType );
 HRESULT put_Capacity( int cRecords );
 HRESULT put_SpeedDialEntry( int idxSpeedDial );

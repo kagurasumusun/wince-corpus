@@ -30,4 +30,20 @@
  (BOOL)SNDMSG((hwnd), LVM_SETWORKAREAS, (WPARAM)(int)nWorkAreas, \
  (LPARAM)(RECT FAR*)(prc))
 
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* DPA  [struct; ce-only] */
+typedef struct _DPA {
+ int cp;
+ void FAR* FAR* pp;
+ HANDLE hheap;
+ int cpAlloc;
+ int cpGrow;
+} DPA;
+typedef DPA *PDPA, *LPDPA;
+
 #endif /* _PCOMMCTRL_ */

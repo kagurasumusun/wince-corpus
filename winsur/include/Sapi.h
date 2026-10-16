@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 59 declarations, 12 outlines, 0 base types, 0 extra macros, 106 extra decls
+ * 0 constants, 59 declarations, 12 outlines, 0 base types, 0 extra macros, 103 extra decls
  */
 #ifndef _SAPI_
 #define _SAPI_
@@ -568,7 +568,6 @@ HRESULT DeleteKey( const WCHAR* pszSubKeyName );
 HRESULT DeleteValue( const WCHAR* pszValueName );
 HRESULT Discard( DWORD dwValueTypes );
 HRESULT EnumKeys( ULONG Index, WCHAR** ppszSubKeyName );
-HRESULT EnumTokens( const WCHAR* pszReqAttribs, const WCHAR* pszOptAttribs, IEnumSpObjectTokens** ppEnum );
 HRESULT EnumValues( ULONG Index, WCHAR** ppszValueName );
 HANDLE EventHandle(void);
 HRESULT GetAlertBoundary( SPEVENTENUM* peBoundary );
@@ -609,7 +608,6 @@ HRESULT LoadDictation( const WCHAR* pszTopicName, SPLOADOPTIONS Options );
 HRESULT MatchesAttributes( const WCHAR* pszAttributes, BOOL* pfMatches );
 HRESULT NotifyCallback( WPARAM wParam, LPARAM lParam );
 HRESULT ResetSeekPosition(void);
-HRESULT SaveCmd( IStream* pSaveStream, WCHAR** ppCoMemErrorText );
 HRESULT Serialize( SPSERIALIZEDRESULT** ppCoMemSerializedResult );
 HRESULT SetAdaptationData( const WCHAR* pAdaptationData, const ULONG cch );
 HRESULT SetAlertBoundary( SPEVENTENUM eBoundary );
@@ -636,7 +634,6 @@ HRESULT SetTextSelection( const SPTEXTSELECTIONINFO* pInfo );
 HRESULT SetWordSequenceData( const WCHAR* pText, ULONG cchText, const SPTEXTSELECTIONINFO* pInfo );
 HRESULT SpeakAudio( ULONG ulStartElement, ULONG cElements, DWORD dwFlags, ULONG* pulStreamNumber );
 HANDLE SpeakCompleteEvent(void);
-HRESULT SpeakStream( IStream* pStream, DWORD dwFlags, ULONG* pulStreamNumber );
 HRESULT UnloadDictation(void);
 HRESULT WaitUntilDone( ULONG msTimeout );
 

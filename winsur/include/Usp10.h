@@ -211,4 +211,248 @@ typedef struct tag_SCRIPT_ITEM {
 } SCRIPT_ITEM;
 typedef SCRIPT_ITEM *PSCRIPT_ITEM, *LPSCRIPT_ITEM;
 
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
+
+/* ScriptApplyDigitSubstitution  [function; shared; CE 5.0..699; Uspce.lib] */
+HRESULT WINAPI ScriptApplyDigitSubstitution(
+ const SCRIPT_DIGITSUBSTITUTE* psds, 
+ SCRIPT_CONTROL* psc, 
+ SCRIPT_STATE* pss
+);
+
+/* ScriptBreak  [function; shared; CE 5.0..699; Uspce.lib] */
+HRESULT WINAPI ScriptBreak( 
+ const WCHAR* pwcChars, 
+ int cChars, 
+ const SCRIPT_ANALYSIS* psa, 
+ SCRIPT_LOGATTR* psla 
+);
+
+/* ScriptCacheGetHeight  [function; shared; CE 5.0..699; Uspce.lib] */
+HRESULT WINAPI ScriptCacheGetHeight(
+ HDC hdc, 
+ SCRIPT_CACHE* psc, 
+ long* tmHeight 
+);
+
+/* ScriptCPtoX  [function; shared; CE 5.0..699; Uspce.lib] */
+HRESULT WINAPI ScriptCPtoX( 
+ int iCP, 
+ BOOL fTrailing, 
+ int cChars, 
+ int cGlyphs, 
+ const WORD* pwLogClust, 
+ const SCRIPT_VISATTR* psva, 
+ const int* piAdvance, 
+ const SCRIPT_ANALYSIS* psa, 
+ int* piX 
+);
+
+/* ScriptFreeCache  [function; shared; CE 5.0..699; Uspce.lib] */
+HRESULT WINAPI ScriptFreeCache(
+ SCRIPT_CACHE *psc 
+);
+
+/* ScriptGetCMap  [function; shared; CE 5.0..699; Uspce.lib] */
+HRESULT WINAPI ScriptGetCMap(
+ HDC hdc, 
+ SCRIPT_CACHE *psc, 
+ const WCHAR *pwcInChars, 
+ int cChars, 
+ DWORD dwFlags, 
+ WORD *pwOutGlyphs 
+);
+
+/* ScriptGetFontProperties  [function; shared; CE 5.0..699; Uspce.lib] */
+HRESULT WINAPI ScriptGetFontProperties(
+ HDC hdc, 
+ SCRIPT_CACHE* psc, 
+ SCRIPT_FONTPROPERTIES* sfp 
+);
+
+/* ScriptGetLogicalWidths  [function; shared; CE 5.0..699; Uspce.lib] */
+HRESULT WINAPI ScriptGetLogicalWidths(
+ const SCRIPT_ANALYSIS *psa,
+ int cChars,
+ int cGlyphs,
+ const int* piGlyphWidth,
+ const WORD* pwLogClust,
+ const SCRIPT_VISATTR* psva,
+ int* piDx,
+);
+
+/* ScriptGetProperties  [function; shared; CE 5.0..699; Uspce.lib] */
+HRESULT WINAPI ScriptGetProperties(
+ const SCRIPT_PROPERTIES*** ppSp, 
+ int* piNumScripts 
+);
+
+/* ScriptIsComplex  [function; shared; CE 5.0..699; Uspce.lib] */
+HRESULT WINAPI ScriptIsComplex(
+ const WCHAR* pwcInChars,
+ int cInChars,
+ DWORD dwFlags
+);
+
+/* ScriptItemize  [function; shared; CE 5.0..699; Uspce.lib] */
+HRESULT WINAPI ScriptItemize(
+ const WCHAR* pwcInChars, 
+ int cInChars, 
+ int cMaxItems, 
+ const SCRIPT_CONTROL* psControl, 
+ const SCRIPT_STATE* psState, 
+ SCRIPT_ITEM* pItems, 
+ int* pcItems 
+);
+
+/* ScriptJustify  [function; shared; CE 5.0..699; Uspce.lib] */
+HRESULT WINAPI ScriptJustify(
+ const SCRIPT_VISATTR* psva, 
+ const int* piAdvance, 
+ int cGlyphs, 
+ int iDx, 
+ int iMinKashida, 
+ int* piJustify 
+);
+
+/* ScriptLayout  [function; shared; CE 5.0..699; Uspce.lib] */
+HRESULT WINAPI ScriptLayout(
+ int cRuns, 
+ const BYTE* pbLevel, 
+ int* piVisualToLogical, 
+ int* piLogicalToVisual 
+);
+
+/* ScriptShape  [function; shared; CE 5.0..699; Uspce.lib] */
+HRESULT WINAPI ScriptShape(
+ HDC hdc, 
+ SCRIPT_CACHE* psc, 
+ const WCHAR* pwcChars, 
+ int cChars, 
+ int cMaxGlyphs, 
+ SCRIPT_ANALYSIS* psa, 
+ WORD* pwOutGlyphs, 
+ WORD* pwLogClust, 
+ SCRIPT_VISATTR* psva, 
+ int* pcGlyphs 
+);
+
+/* ScriptString_pcOutChars  [function; shared; CE 5.0..699; Uspce.lib] */
+const int* WINAPI ScriptString_pcOutChars(
+ SCRIPT_STRING_ANALYSIS ssa 
+);
+
+/* ScriptString_pLogAttr  [function; shared; CE 5.0..699; Uspce.lib] */
+const SCRIPT_LOGATTR* WINAPI ScriptString_pLogAttr(
+ SCRIPT_STRING_ANALYSIS ssa 
+);
+
+/* ScriptString_pSize  [function; shared; CE 5.0..699; Uspce.lib] */
+const SIZE* WINAPI ScriptString_pSize(
+ SCRIPT_STRING_ANALYSIS ssa
+);
+
+/* ScriptStringAnalyse  [function; shared; CE 5.0..699; Uspce.lib] */
+HRESULT WINAPI ScriptStringAnalyse(
+ HDC hdc,
+ const void* pString,
+ int cString,
+ int cGlyphs,
+ int iCharset,
+ DWORD dwFlags,
+ int iReqWidth,
+ SCRIPT_CONTROL* psControl,
+ SCRIPT_STATE* psState,
+ const int* piDx,
+ SCRIPT_TABDEF* pTabdef,
+ const BYTE* pbInClass,
+ SCRIPT_STRING_ANALYSIS* pssa
+);
+
+/* ScriptStringCPtoX  [function; shared; CE 5.0..699; Uspce.lib] */
+HRESULT WINAPI ScriptStringCPtoX(
+ SCRIPT_STRING_ANALYSIS ssa, 
+ int icp, 
+ BOOL fTrailing, 
+ int* pX 
+);
+
+/* ScriptStringFree  [function; shared; CE 5.0..699; Uspce.lib] */
+HRESULT WINAPI ScriptStringFree(
+ SCRIPT_STRING_ANALYSIS* pssa
+);
+
+/* ScriptStringGetLogicalWidths  [function; shared; CE 5.0..699; Uspce.lib] */
+HRESULT WINAPI ScriptStringGetLogicalWidths(
+ SCRIPT_STRING_ANALYSIS ssa, 
+ int* piDx 
+);
+
+/* ScriptStringGetOrder  [function; shared; CE 5.0..699; Uspce.lib] */
+HRESULT WINAPI ScriptStringGetOrder(
+ SCRIPT_STRING_ANALYSIS ssa, 
+ UINT *puOrder 
+);
+
+/* ScriptStringOut  [function; shared; CE 5.0..699; Uspce.lib] */
+HRESULT WINAPI ScriptStringOut(
+ SCRIPT_STRING_ANALYSIS ssa, 
+ int iX, 
+ int iY, 
+ UINT uOptions, 
+ const RECT* prc, 
+ int iMinSel, 
+ int iMaxSel, 
+ BOOL fDisabled 
+);
+
+/* ScriptStringValidate  [function; shared; CE 5.0..699; Uspce.lib] */
+HRESULT WINAPI ScriptStringValidate(
+ SCRIPT_STRING_ANALYSIS ssa 
+);
+
+/* ScriptStringXtoCP  [function; shared; CE 5.0..699; Uspce.lib] */
+HRESULT WINAPI ScriptStringXtoCP(
+ SCRIPT_STRING_ANALYSIS ssa, 
+ int iX, 
+ int* piCh, 
+ int* piTrailing 
+);
+
+/* ScriptTextOut  [function; shared; CE 5.0..699; Uspce.lib] */
+HRESULT WINAPI ScriptTextOut(
+ const HDC hdc, 
+ SCRIPT_CACHE* psc, 
+ int x, 
+ int y, 
+ UINT fuOptions, 
+ const RECT* lprc, 
+ const SCRIPT_ANALYSIS* psa, 
+ const WCHAR* pwcReserved, 
+ int iReserved, 
+ const WORD* pwGlyphs, 
+ int cGlyphs, 
+ const int* piAdvance, 
+ const int* piJustify, 
+ const GOFFSET* pGoffset 
+);
+
+/* ScriptXtoCP  [function; shared; CE 5.0..699; Uspce.lib] */
+HRESULT WINAPI ScriptXtoCP(
+ int iX, 
+ int cChars, 
+ int cGlyphs, 
+ const WORD* pwLogClust, 
+ const SCRIPT_VISATTR* psva, 
+ const int* piAdvance, 
+ const SCRIPT_ANALYSIS* psa, 
+ int* piCP, 
+ int* piTrailing 
+);
+#endif /* _WIN32_WCE */
+
 #endif /* _USP10_ */

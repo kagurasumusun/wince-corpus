@@ -11,4 +11,17 @@
 #define _CONNMGR_STATUS_
 
 
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
+
+/* ConnMgrRegisterForStatusChangeNotification  [function; ce-only; CE 6.0..699; cellcore.lib] */
+HRESULT WINAPI ConnMgrRegisterForStatusChangeNotification(
+ BOOL fEnable,
+ HWND hWnd
+);
+#endif /* _WIN32_WCE */
+
 #endif /* _CONNMGR_STATUS_ */

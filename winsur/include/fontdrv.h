@@ -11,4 +11,22 @@
 #define _FONTDRV_
 
 
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
+
+/* FDQUERYFONTFILE  [function; ce-only; CE 6.0..699] */
+LONG FDQUERYFONTFILE(
+ ULONG_PTR iFile,
+ ULONG ulMode,
+ ULONG cjBuf,
+ ULONG *pulBuf
+);
+
+/* FDUNLOADFONTFILE  [function; ce-only; CE 6.0..699] */
+BOOL FDUNLOADFONTFILE(ULONG_PTR iFile);
+#endif /* _WIN32_WCE */
+
 #endif /* _FONTDRV_ */

@@ -32,6 +32,16 @@ typedef struct _WSATHREADID {
  DWORD Reserved;
 } WSATHREADID, *LPWSATHREADID;
 
+/* WSPSelect  [struct; ce-only; Ws2.lib] */
+int WSPSelect(
+ int nfds,
+ fd_set FAR* readfds,
+ fd_set FAR* writefds,
+ fd_set FAR* exceptfds,
+ const struct timeval FAR* timeout,
+ LPINT lpErrno 
+);
+
 /* lpErrno  [extra struct] */
 SOCKET WSPAccept(SOCKET s,struct sockaddr FAR* addr,LPINT addrlen,LPCONDITIONPROC lpfnCondition,DWORD dwCallbackData,LPINT lpErrno );
 

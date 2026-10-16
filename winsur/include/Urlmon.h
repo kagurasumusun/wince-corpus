@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 39 constants, 60 declarations, 3 outlines, 0 base types, 0 extra macros, 50 extra decls
+ * 39 constants, 46 declarations, 3 outlines, 0 base types, 0 extra macros, 37 extra decls
  */
 #ifndef _URLMON_
 #define _URLMON_
@@ -401,11 +401,29 @@ HRESULT CoInternetCombineUrl(
  DWORD dwReserved
 );
 
+/* CoInternetGetProtocolFlags  [function; ce-only; CE 4.0..699; Urlmon.lib, urlmon.lib] */
+STDAPI CoInternetGetProtocolFlags(
+ LPCWSTR pwzUrl,
+ DWORD* pdwFlags,
+ DWORD dwReserved
+);
+
 /* CoInternetGetSecurityUrl  [function; ce-only; CE 4.0..699; Urlmon.lib, urlmon.lib] */
 HRESULT CoInternetGetSecurityURL(
  LPCWSTR pwzUrl,
  LPWSTR* ppwzSecUrl,
  PSUACTION psuAction,
+ DWORD dwReserved
+);
+
+/* CoInternetParseUrl  [function; ce-only; CE 4.0..699; Urlmon.lib, urlmon.lib] */
+STDAPI CoInternetParseUrl(
+ LPCWSTR pwzUrl,
+ PARSEACTION ParseAction,
+ DWORD dwFlags,
+ LPWSTR pszResult,
+ DWORD cchResult,
+ DWORD* pcchResult,
  DWORD dwReserved
 );
 
@@ -420,47 +438,9 @@ HRESULT CoInternetQueryInfo(
  DWORD dwReserved
 );
 
-/* CreateAsyncBindCtx  [function; shared; CE 4.0..699; Urlmon.lib, urlmon.lib] */
-HRESULT CreateAsyncBindCtx(
- DWORD dwReserved,
- IBindStatusCallback* pbsc,
- IEnumFORMATETC* penumfmtetc,
- IBindCtx** ppbc
-);
-
-/* CreateAsyncBindCtxEx  [function; ce-only; CE 4.0..699; Urlmon.lib, urlmon.lib] */
-HRESULT CreateAsyncBindCtxEx(
- IBindCtx* pbc,
- DWORD dwOptions,
- IBindStatusCallback* pBSCb,
- IEnumFORMATETC* pEnum,
- IBindCtx** ppBC,
- DWORD reserved
-);
-
-/* CreateURLMoniker  [function; ce-only; CE 4.0..699; Urlmon.lib, urlmon.lib] */
-HRESULT CreateURLMoniker(
- IMoniker* pmkContext,
- LPWSTR szURL,
- IMoniker** ppmk
-);
-
-/* IsAsyncMoniker  [function; ce-only; CE 4.0..699; Urlmon.lib, urlmon.lib] */
-HRESULT IsAsyncMoniker(
- IMoniker* pmk
-);
-
 /* IsLoggingEnabled  [function; ce-only; CE 4.0..699; Urlmon.lib, urlmon.lib] */
 BOOL IsLoggingEnabled(
  LPCTSTR pszUrl
-);
-
-/* MkParseDisplayNameEx  [function; ce-only; CE 4.0..699; Urlmon.lib, urlmon.lib] */
-HRESULT MkParseDisplayNameEx(
- IBindCtx* pbc,
- LPWSTR szDisplayName,
- ULONG* pcchEaten,
- IMoniker** ppmk
 );
 
 /* ObtainUserAgentString  [function; ce-only; CE 4.0..699; Urlmon.lib, urlmon.lib] */
@@ -468,20 +448,6 @@ HRESULT ObtainUserAgentString(
  DWORD dwOption,
  LPCSTR pcszUAOut,
  DWORD* cbSize
-);
-
-/* RegisterBindStatusCallback  [function; ce-only; CE 4.0..699; Urlmon.lib, urlmon.lib] */
-HRESULT RegisterBindStatusCallback(
- IBindCtx* pbc,
- IBindStatusCallback* pbsc,
- IBindStatusCallback** ppbscPrevious,
- DWORD dwReserved
-);
-
-/* RevokeBindStatusCallback  [function; ce-only; CE 4.0..699; Urlmon.lib, urlmon.lib] */
-HRESULT RevokeBindStatusCallback(
- IBindCtx* pbc,
- IBindStatusCallback* pbsc
 );
 
 /* UrlMkGetSessionOption  [function; ce-only; CE 4.0..699; Urlmon.lib, urlmon.lib] */
@@ -507,23 +473,6 @@ BOOL WriteHitLogging (
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
-
-/* CoInternetCreateSecurityManager  [function; ce-only; CE 6.0..699; urlmon.lib] */
-HRESULT CoInternetCreateSecurityManager(
- IServiceProvider* pSP,
- IInternetSecurityManager** ppSM,
- DWORD dwReserved
-);
-
-/* CoInternetCreateZoneManager  [function; ce-only; CE 6.0..699; urlmon.lib] */
-HRESULT CoInternetCreateSecurityManager(
- IServiceProvider *pSP,
- IInternetZoneManager **ppSM,
- DWORD dwReserved
-);
-#endif /* _WIN32_WCE */
-
 /* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
@@ -539,17 +488,13 @@ HRESULT Continue( PROTOCOLDATA* pProtocolData );
 HRESULT CreateZoneEnumerator( DWORD* pdwEnum, DWORD* pdwCount, DWORD dwFlags );
 HRESULT DestroyZoneEnumerator( DWORD dwEnum );
 HRESULT GetBindInfo( DWORD* grfBINDF, BINDINFO* pbindinfo );
-HRESULT GetCurMoniker( IMoniker** ppimkName );
 HRESULT GetSecurityId( BYTE* pbSecurityId, DWORD* pcbSecurityId, DWORD_PTR dwReserved );
-HRESULT GetSecuritySite( IInternetSecurityMgrSite** ppSite );
 HRESULT GetZoneActionPolicy( DWORD dwZone, DWORD dwAction, BYTE* pPolicy, DWORD cbPolicy, URLZONEREG urlZoneReg );
 HRESULT GetZoneAt( DWORD dwEnum, DWORD dwIndex, DWORD* pdwZone );
 HRESULT GetZoneAttributes( DWORD dwZone, ZONEATTRIBUTES* pZoneAttributes );
-HRESULT GetZoneMappings( DWORD dwZone, IEnumString** ppenumString, DWORD dwFlags );
 HRESULT MapUrlToZone( LPCWSTR pwszUrl, DWORD* pdwZone, DWORD dwFlags );
 HRESULT OnResponse( DWORD dwResponseCode, LPCWSTR szResponseHeaders, LPCWSTR szRequestHeaders, LPWSTR* pszAdditionalRequestHeaders );
 HRESULT OnSecurityProblem( DWORD dwProblem );
-HRESULT OnStartBinding( DWORD dwReserved, IBinding* pib );
 HRESULT OnStopBinding( HRESULT hresult, LPCWSTR szError );
 HRESULT ParseUrl( LPCWSTR pwzUrl, PARSEACTION ParseAction, DWORD dwParseFlags, LPWSTR pwzResult, DWORD cchResult, DWORD* pcchResult, DWORD dwReserved );
 HRESULT ProcessUrlAction( DWORD dwAction, BYTE* pPolicy, DWORD cbPolicy, BYTE* pContext, DWORD cbContext, DWORD dwFlags, DWORD dwReserved );
@@ -560,14 +505,10 @@ HRESULT ReportData( DWORD grfBSCF, ULONG ulProgress, ULONG ulProgressMax );
 HRESULT ReportProgress( ULONG ulStatusCode, LPCWSTR szStatusText );
 HRESULT ReportResult( HRESULT hrResult, DWORD dwError, LPCWSTR szResult );
 HRESULT RollbackSwitch(VOID);
-HRESULT SetSecuritySite( IInternetSecurityMgrSite* pSite );
 HRESULT SetZoneActionPolicy( DWORD dwZone, DWORD dwAction, BYTE* pPolicy, DWORD cbPolicy, URLZONEREG urlZoneReg );
 HRESULT SetZoneAttributes( DWORD dwZone, ZONEATTRIBUTES* pZoneAttributes );
 HRESULT SetZoneMapping( DWORD dwZone, LPCWSTR lpszPattern, DWORD dwFlags );
 HRESULT Switch( PROTOCOLDATA* pProtocolData );
-HRESULT SwitchSink( IInternetProtocolSink* pOIProtSink );
 HRESULT UnlockRequest(VOID);
-HRESULT UnregisterMimeFilter( IClassFactory* pCF, LPCWSTR pwzType );
-HRESULT UnregisterNameSpace( IClassFactory* pCF, LPCWSTR pszProtocol );
 
 #endif /* _URLMON_ */

@@ -635,6 +635,7 @@
 /* function */
 HRESULT AddDirtyRect( CONST RECT* pDirtyRect );
 HRESULT BeginScene();
+VOID WINAPI Direct3DMobileCreate( UINT SDKVersion );
 HRESULT EndScene();
 UINT GetAdapterCount();
 UINT GetAdapterModeCount( UINT Adapter );

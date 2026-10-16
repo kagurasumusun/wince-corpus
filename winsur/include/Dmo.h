@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 6 constants, 22 declarations, 7 outlines, 0 base types, 0 extra macros, 35 extra decls
+ * 6 constants, 20 declarations, 8 outlines, 0 base types, 0 extra macros, 34 extra decls
  */
 #ifndef _DMO_
 #define _DMO_
@@ -118,6 +118,13 @@ enum _DMO_VIDEO_OUTPUT_STREAM_FLAGS {
 /*   pUnk */
 /*   cbFormat */
 /*   pbFormat */
+
+/* DMO_OUTPUT_DATA_BUFFER  [struct, typedef; shared; Dmoguid.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   pBuffer */
+/*   dwStatus */
+/*   rtTimestamp */
+/*   rtTimelength */
 
 /* x00000008  [extra enum] */
 enum _DMO_INPUT_STREAM_INFO_FLAGS { DMO_INPUT_STREAMF_WHOLE_SAMPLES = 0x00000001, DMO_INPUT_STREAMF_SINGLE_SAMPLE_PER_BUFFER = 0x00000002, DMO_INPUT_STREAMF_FIXED_SAMPLE_SIZE = 0x00000004, DMO_INPUT_STREAMF_HOLDS_BUFFERS = 0x00000008};

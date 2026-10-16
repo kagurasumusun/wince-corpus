@@ -1551,6 +1551,8 @@ def overlay_unified_surface(by_header, printed_forms, by_module, all_entities):
         if hl in DESKTOP_SPLIT_HEADERS:
             hdr = "Winbase.h"
             hl = "winbase.h"
+        if kind == "macro" or text.lstrip().startswith("#"):
+            continue
         if hl in {"ceddk.h", "pkfuncs.h", "kfuncs.h", "nkintr.h", "winddi.h"}:
             pass
         elif name in _OVERLAY_NAMED and hl in {
@@ -1624,6 +1626,8 @@ def overlay_unified_surface(by_header, printed_forms, by_module, all_entities):
                 if hl in DESKTOP_SPLIT_HEADERS:
                     hdr = "Winbase.h"
                     hl = "winbase.h"
+                if kind == "macro" or text.lstrip().startswith("#"):
+                    continue
                 if hl in {"ceddk.h", "pkfuncs.h", "kfuncs.h", "nkintr.h",
                           "winddi.h"}:
                     pass
@@ -1899,6 +1903,14 @@ _OVERLAY_NAMED = {
     "LOGFONT", "WNDCLASS", "TranslateMessage", "DispatchMessage",
     "DefWindowProc", "PostQuitMessage", "RegisterClass", "CreateWindowEx",
     "ShowWindow", "UpdateWindow", "GetClientRect", "InvalidateRect",
+    "EndPaint", "DrawText", "CreateProcess", "CopyFileEx", "VirtualQuery",
+    "SetTimer", "SetSysColors", "SetScrollInfo", "SetMenuItemInfo",
+    "TrackPopupMenuEx", "SendInput", "CheckDlgButton", "CreateDialog",
+    "DialogBox", "CreateFontIndirect", "CreateDIBSection", "SelectPalette",
+    "SetPaletteEntries", "SetTextAlign", "StretchDIBits", "SetDIBitsToDevice",
+    "CreateBitmapIndirect", "CreateBrushIndirect", "SetCommState",
+    "WaitForDebugEvent", "SystemIdleTimerReset", "AdvertiseInterface",
+    "RequestDeviceNotifications", "DllMain", "WinMain",
 }
 
 CE_CORE_HEADERS = {
@@ -2083,16 +2095,25 @@ def _type_token_known(tok, local_names):
     return False
 
 
-def type_mentions_unknown(text, local_names):
+def type_mentions_unknown(text, local_names, self_name=None):
     """True if a struct/function names a type this header does not define.
 
     Enumerator names inside ``typedef enum`` are values, not types.
+    The identifier being declared (``READ_PORT_UCHAR(``) is not a type.
     """
     body = text or ""
     if re.search(r"\btypedef\s+enum\b|\benum\s+\w+\s*\{", body):
         return False
+    if body.lstrip().startswith("#"):
+        return False
     skip = {"TYPEDEF", "STRUCT", "UNION", "ENUM", "CONST", "VOID", "INT",
-            "CHAR", "SHORT", "LONG", "UNSIGNED", "SIGNED", "FLOAT", "DOUBLE"}
+            "CHAR", "SHORT", "LONG", "UNSIGNED", "SIGNED", "FLOAT", "DOUBLE",
+            "IN", "OUT", "OPTIONAL", "FAR", "NEAR", "PASCAL", "WINAPI",
+            "CALLBACK", "APIENTRY", "WINGDIAPI", "WINOLEAPI", "STDAPI",
+            "CDECL", "STDCALL"}
+    if self_name:
+        skip.add(self_name)
+    skip.update(re.findall(r"\b([A-Z][A-Z0-9_]*)\s*\(", body))
     for tok in _ident_tokens(body) - skip:
         if _type_token_known(tok, local_names):
             continue
@@ -3230,7 +3251,7 @@ def run_unified(args):
                     if ename and (ename in seen_fn or ename in global_fn_names
                                   or cname in global_fn_names):
                         continue
-                    if type_mentions_unknown(text, local):
+                    if type_mentions_unknown(text, local, ename):
                         continue
                     filtered.append(info)
                     if ename:
@@ -3258,7 +3279,8 @@ def run_unified(args):
                     for info in kept:
                         text = ((info.get("declaration") or {}).get("text")
                                 or "")
-                        if type_mentions_unknown(text, local):
+                        if type_mentions_unknown(text, local,
+                                (info.get("entity") or {}).get("name")):
                             continue
                         new.append(info)
                     if len(new) == len(kept):
@@ -3366,7 +3388,8 @@ def run_unified(args):
             and not quality_filters.decl_unusable_for_c(
                 d.get("declaration") or "", d.get("name") or "")
             and not type_mentions_unknown(
-                d.get("declaration") or "", already_decl_names)
+                d.get("declaration") or "", already_decl_names,
+                d.get("name") or "")
         ]
         if extra_ds:
             by_type = collections.defaultdict(list)

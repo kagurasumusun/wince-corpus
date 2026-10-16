@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 64 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 62 extra decls
  */
 #ifndef _MQOAI_
 #define _MQOAI_
@@ -44,7 +44,6 @@ HRESULT get_Priority( long* plPriority );
 HRESULT get_PrivLevel( long* plPrivLevel );
 HRESULT get_QueueInfo( MSMQQueue** ppinfo );
 HRESULT get_Quota( long* plQuota );
-HRESULT get_ResponseQueueInfo( IMSQQueueInfo** ppinfoResponse );
 HRESULT get_SenderIdType( long* plSenderIdType );
 HRESULT get_ShareMode( long* plShareMode );
 HRESULT get_Trace( long* plTrace );
@@ -66,6 +65,5 @@ HRESULT put_Quota( long lQuota );
 HRESULT put_SenderIdType( long lSenderIdType );
 HRESULT put_Trace( long lTrace );
 HRESULT putref_AdminQueueInfo( MSMQQueueInfo* pinfoAdmin );
-HRESULT putref_ResponseQueueInfo( IMSQQueueInfo* pinfoResponse );
 
 #endif /* _MQOAI_ */

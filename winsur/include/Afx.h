@@ -40,6 +40,7 @@ TCHAR m_szFullName[_MAX_PATH];
  * ================================================================ */
 
 /* function */
+static int PASCAL ErrnoToException( int nErrno );
 LPTSTR GetBufferSetLength( int nNewLength ); throw( CMemoryException );
 void GrowFile( DWORD dwNewLen );
 void HexDump( LPCTSTR lpszLine, BYTE* pby, int nBytes, int nWidth ); throw( CFileException );
@@ -47,7 +48,9 @@ void MakeLower( );
 void MakeReverse( );
 void MakeUpper( );
 BYTE * Memcpy( BYTE* lpMemTarget, BYTE* lpMemSource, UINT nBytes );
+static int PASCAL OsErrorToException( LONG lOsError );
 DWORD ReadHuge( void* lpBuffer, DWORD dwCount ); throw( CFileException );
+static void PASCAL Rename( LPCTSTR lpszOldName, LPCTSTR lpszNewName ); throw( CFileException );
 void SeekToBegin( ); throw( CFileException );
 DWORD SeekToEnd( ); throw( CFileException );
 void SerializeClass( const CRuntimeClass* pRuntimeClass );
@@ -55,6 +58,7 @@ void SetDepth( int nNewDepth );
 void SetLoadParams( UINT nGrowBy = 1024 );
 void SetObjectSchema( UINT nSchema );
 void SetStoreParams( UINT nHashSize = 2053, UINT nBlockSize = 128 );
+static void PASCAL ThrowErrno( int nErrno );
 void TrimLeft( );
 void TrimRight( );
 void WriteClass( const CRuntimeClass* pClassRef );

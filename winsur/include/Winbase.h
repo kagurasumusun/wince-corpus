@@ -963,6 +963,13 @@ BOOL CheckPassword(
 /* GetTickCount  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, nk.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
 DWORD GetTickCount(void);
 
+/* InterlockedTestExchange  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
+LONG WINAPI InterlockedTestExchange(
+ LPLONG Target,
+ LONG OldValue,
+ LONG NewValue
+);
+
 /* RegisterDevice  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, device.lib] */
 HANDLE RegisterDevice(
  LPCWSTR lpszType,
@@ -1189,6 +1196,13 @@ BOOL DeviceIoControl(
  LPOVERLAPPED lpOverlapped
 );
 
+/* DllMain  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib] */
+BOOL WINAPI DllMain(
+ HANDLE hinstDLL,
+ DWORD dwReason,
+ LPVOID lpvReserved
+);
+
 /* EnterCriticalSection  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coremain.lib, coremain.lib] */
 void EnterCriticalSection(
  LPCRITICAL_SECTION lpCriticalSection
@@ -1303,6 +1317,13 @@ DWORD GetLastError(void);
 /* GetLocalTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, coremain.lib] */
 void GetLocalTime(
  LPSYSTEMTIME lpSystemTime
+);
+
+/* GetModuleFileName  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib; A/W GetModuleFileNameA,GetModuleFileNameW (CE is W-side)] */
+WINAPI DWORD GetModuleFileName(
+ HMODULE hModule,
+ LPWSTR lpFilename,
+ DWORD nSize
 );
 
 /* GetModuleHandle  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib; A/W GetModuleHandleA,GetModuleHandleW (CE is W-side)] */
@@ -1795,6 +1816,14 @@ BOOL TerminateThread(
  DWORD dwExitCode
 );
 
+/* TimerProc  [function, callback; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+void CALLBACK TimerProc(
+ HWND hwnd, 
+ UINT uMsg, 
+ UINT idEvent, 
+ DWORD dwTime 
+);
+
 /* TlsFree  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Coremain.lib] */
 BOOL TlsFree(
  DWORD dwTlsIndex
@@ -1958,6 +1987,11 @@ BOOL DeleteFile(
 /* FindClose  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
 BOOL FindClose(
  HANDLE hFindFile
+);
+
+/* FlushFileBuffers  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsmain.lib, fsmain.lib] */
+BOOL WINAPI FlushFileBuffers(
+ HANDLE hFile 
 );
 
 /* FlushViewOfFile  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
@@ -2220,6 +2254,16 @@ LPVOID CeZeroPointer(
  LPVOID ptr
 );
 
+/* ConvertThreadToFiber  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
+LPVOID WINAPI ConvertThreadToFiber(
+ LPVOID lpParameter
+);
+
+/* DeleteFiber  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
+VOID WINAPI DeleteFiber(
+ LPVOID lpFiber
+);
+
 /* FreeLibraryAndExitThread  [function; shared; CE 5.0..699; Coredll.dll, coredll.dll] */
 VOID FreeLibraryAndExitThread(
  HMODULE hModule,
@@ -2238,6 +2282,9 @@ void GetCurrentFT(
 DWORD GetDllVersion(
  HMODULE hMod
 );
+
+/* GetFiberData  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
+LPVOID WINAPI GetFiberData(void);
 
 /* GetProcessVersion  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 DWORD GetProcessVersion(
@@ -2348,6 +2395,11 @@ BOOL ResourceRequestEx (
 /* StopDeviceNotifications  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL StopDeviceNotifications(
  HANDLE h
+);
+
+/* SwitchToFiber  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
+VOID WINAPI SwitchToFiber(
+ LPVOID lpFiber
 );
 
 /* UnlockFileEx  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */

@@ -30,6 +30,7 @@ DWORD GetOneDimSize( );
 void GetUBound( DWORD dwDim, long* pUBound );
 void PtrOfIndex( long* rgIndices, void** ppvData );
 void PutElement( long* rgIndices, LPVOID pvData );
+static BOOL PASCAL RegisterAll( );
 void ReleaseDispatch( );
 void ResizeOneDim( DWORD dwElements );
 void SetCurrency( long nUnits, long nFractionalUnits );
@@ -37,5 +38,6 @@ int SetDate( int nYear, int nMonth, int nDay );
 int SetDateTime( int nYear, int nMonth, int nDay, int nHour, int nMin, int nSec );
 void SetDateTimeSpan( long lDays, int nHours, int nMins, int nSecs );
 void UnaccessData( );
+static void PASCAL UpdateRegistryAll( );
 
 #endif /* _AFXDISP_ */

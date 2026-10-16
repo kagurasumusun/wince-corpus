@@ -80,4 +80,12 @@ DWORD fdwReason,
 LPVOID lpvReserved );
 #endif /* _WIN32_WCE */
 
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* function */
+VOID WINAPI NLedDriverDeInitialize(VOID);
+
 #endif /* _NLED_ */

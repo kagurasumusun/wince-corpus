@@ -202,6 +202,11 @@ _UNUSABLE = re.compile(
     r"BSTR|HTREEITEM)\b|"
     r"\b(?:IUnknown|IDispatch|IDirect3D|IDVD|IOle|"
     r"ISp|IOsAxs|IHTML|IWSD|IMediaSample|IErrorInfo|CSize|CPoint)|"
+    r"\bI[A-Z][A-Za-z0-9]*\s*\*|"
+    r"\bWSD[A-Z]|"
+    r"\bPixelFormat|"
+    r"\bBitmapData\b|"
+    r"\bInterpolationHint\b|"
     r"\bTYPE\s+Type\b|"
     r"\bint64\b|"
     r"unsigned__int64|"
@@ -211,7 +216,8 @@ _UNUSABLE = re.compile(
     r"size_tcount|"
     r"va_listargptr|"
     r"LPDWORDlpc|"
-    r"\bPFN_"
+    r"\bPFN_|"
+    r"\b__inline\b"
 )
 
 
@@ -238,6 +244,9 @@ def is_broken_c(text: str) -> bool:
         return True
     # ``InterlockedExchangeAdd(`` -- the page dropped the return type.
     if re.match(r"[A-Za-z_]\w*\s*\(", body.lstrip()):
+        return True
+    # ``lplf lplf`` -- the page printed the argument name as the type.
+    if re.search(r"\b(lp[a-z]{2,12})\s+\1\b", body):
         return True
     # Prototype whose last non-space is not ';' (``GetCursor(void)``).
     stripped = body.rstrip()

@@ -37,6 +37,16 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* LPDEVICE_NOTIFY_ROUTINE  [typedef; ce-only] */
+typedef BOOL (WINAPI *LPDEVICE_NOTIFY_ROUTINE)(
+ LPVOID lpvNotifyParameter,
+ DWORD dwCode,
+ LPDWORD* dwInfo1,
+ LPDWORD* dwInfo2,
+ LPDWORD* dwInfo3,
+ LPDWORD* dwInfo4
+);
+
 /* USB_DRIVER_SETTINGS  [struct; ce-only] */
 typedef struct {
  DWORD dwCount;

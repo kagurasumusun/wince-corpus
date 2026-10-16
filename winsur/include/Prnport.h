@@ -11,4 +11,39 @@
 #define _PRNPORT_
 
 
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
+
+/* GetPrinterInfo  [function; ce-only; CE 2.11..2.12, 3.0..699] */
+DWORD WINAPI GetPrinterInfo(
+ HANDLE hPrint,
+ DWORD dwOption,
+ PVOID pBuff,
+ PDWORD pBuffLen 
+);
+
+/* PrinterClose  [function; ce-only; CE 2.11..2.12, 3.0..699] */
+VOID WINAPI PrinterClose(
+ HANDLE hPrint 
+);
+
+/* PrinterSend  [function; ce-only; CE 2.11..2.12, 3.0..699] */
+BOOL WINAPI PrinterSend(
+ HANDLE hPrint,
+ LPCVOID lpBuffer,
+ DWORD dwBytes 
+);
+
+/* ReportPrinterStatus  [function; ce-only; CE 2.11..2.12, 3.0..699] */
+BOOL WINAPI ReportPrinterStatus(
+ DWORD dwStatus,
+ LPCTSTR lpPortName,
+ LPCTSTR lpPrinterName,
+ LPARAM lparam 
+);
+#endif /* _WIN32_WCE */
+
 #endif /* _PRNPORT_ */

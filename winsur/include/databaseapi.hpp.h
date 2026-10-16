@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 2 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _DATABASEAPI_HPP_
 #define _DATABASEAPI_HPP_
@@ -35,16 +35,6 @@ typedef PH_SPEEDDIAL_ENTRY *PPH_SPEEDDIAL_ENTRY, *LPPH_SPEEDDIAL_ENTRY;
 /* PHAddSpeedDialEntry  [function; ce-only; CE 6.0..699; PhCommon.dll] */
 HRESULT PHAddSpeedDialEntry(
  PH_SPEEDDIAL_ENTRY* pEntry
-);
-
-/* PHInitCallerInfoDB  [function; ce-only; CE 6.0..699; PhCommon.dll] */
-HRESULT PHInitCallerInfoDB(
- IVoIPCallerInfoDB** piCallerInfoDB
-);
-
-/* PHInitCallLogDB  [function; ce-only; CE 6.0..699; PhCommon.dll] */
-HRESULT PHInitCallerInfoDB(
- IVoIPCallLogDB** piCallLogDB
 );
 #endif /* _WIN32_WCE */
 

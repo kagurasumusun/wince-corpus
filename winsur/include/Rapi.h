@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 12 constants, 60 declarations, 1 outlines, 0 base types, 0 extra macros, 6 extra decls
+ * 12 constants, 58 declarations, 2 outlines, 0 base types, 0 extra macros, 5 extra decls
  */
 #ifndef _RAPI_
 #define _RAPI_
@@ -35,6 +35,8 @@
  * ================================================================ */
 
 /* PEG_USER_NOTIFICATION  [struct; ce-only] */
+
+/* RAPIEXT  [typedef; ce-only; rapi.lib] */
 
 /* ==================================================================
  * functions and callbacks
@@ -149,18 +151,6 @@ HRESULT CeRapiGetError(void);
 
 /* CeRapiInit  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
 HRESULT CeRapiInit ();
-
-/* CeRapiInvoke  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
-HRESULT CeRapiInvoke(
- LPCWSTR pDllPath,
- LPCWSTR pFunctionName,
- DWORD cbInput,
- BYTE* pInput,
- DWORD* pcbOutput,
- BYTE** ppOutput,
- IRAPIStream** ppIRAPIStream,
- DWORD dwReserved
-);
 
 /* CeRapiUninit  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
 HRESULT CeRapiUninit ();

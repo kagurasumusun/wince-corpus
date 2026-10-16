@@ -25,6 +25,7 @@ int WINAPI WinMain(HINSTANCE h, HINSTANCE p, LPWSTR cmd, int show) {
     GetMessage(&m, NULL, 0, 0);
     PeekMessage(&m, NULL, 0, 0, 0);
     BeginPaint(NULL, &ps);
+    EndPaint(NULL, &ps);
     MessageBox(NULL, TEXT("hi"), TEXT("t"), 0);
     GetLastError();
     InitializeCriticalSection(NULL);
@@ -42,6 +43,8 @@ BOOL APIENTRY DllMain(HANDLE h, DWORD reason, LPVOID reserved) {
     MmMapIoSpace(a, 0, FALSE);
     MmUnmapIoSpace(NULL, 0);
     HalGetBusData(0, 0, 0, NULL, 0);
+    READ_PORT_UCHAR(NULL);
+    WRITE_PORT_UCHAR(NULL, 0);
     return TRUE;
 }
 '''

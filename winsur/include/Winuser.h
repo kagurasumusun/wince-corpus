@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2457 constants, 305 declarations, 7 outlines, 1 base types, 0 extra macros, 0 extra decls
+ * 2457 constants, 304 declarations, 7 outlines, 1 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINUSER_
 #define _WINUSER_
@@ -3142,6 +3142,13 @@ typedef DRAWITEMSTRUCT *PDRAWITEMSTRUCT, *LPDRAWITEMSTRUCT;
 /* HDWP  [typedef; shared; entity-headers; win32-reference] */
 typedef HANDLE HDWP;
 
+/* HIGHCONTRAST  [struct; shared; A/W HIGHCONTRASTA,HIGHCONTRASTW (CE is W-side)] */
+typedef struct tagHIGHCONTRAST{
+ UINT cbSize;
+ DWORD dwFlags;
+ LPTSTR lpszDefaultScheme;
+} HIGHCONTRAST, FAR* LPHIGHCONTRAST;
+
 /* KEYBDINPUT  [struct; shared] */
 typedef struct tagKEYBDINPUT {
  WORD wVk;
@@ -3161,6 +3168,21 @@ typedef struct tagMEASUREITEMSTRUCT {
  DWORD itemData; 
 } MEASUREITEMSTRUCT;
 typedef MEASUREITEMSTRUCT *PMEASUREITEMSTRUCT, *LPMEASUREITEMSTRUCT;
+
+/* MENUITEMINFO  [struct; shared; A/W MENUITEMINFOA,MENUITEMINFOW (CE is W-side)] */
+typedef struct tagMENUITEMINFO {
+ UINT cbSize; 
+ UINT fMask; 
+ UINT fType; 
+ UINT fState; 
+ UINT wID; 
+ HMENU hSubMenu; 
+ HBITMAP hbmpChecked; 
+ HBITMAP hbmpUnchecked; 
+ DWORD dwItemData; 
+ LPTSTR dwTypeData; 
+ UINT cch; 
+} MENUITEMINFO, FAR* LPMENUITEMINFO;
 
 /* MONITORINFO  [struct; shared] */
 typedef struct tagMONITORINFO {
@@ -3221,6 +3243,18 @@ typedef struct tagPAINTSTRUCT {
 } PAINTSTRUCT;
 typedef PAINTSTRUCT *PPAINTSTRUCT, *LPPAINTSTRUCT;
 
+/* SCROLLINFO  [struct; shared] */
+typedef struct tagSCROLLINFO {
+ UINT cbSize; 
+ UINT fMask; 
+ int nMin; 
+ int nMax; 
+ UINT nPage; 
+ int nPos; 
+ int nTrackPos; 
+} SCROLLINFO; 
+typedef SCROLLINFO FAR* LPSCROLLINFO;
+
 /* SOUNDSENTRY  [struct, function; shared; User32.dll, User32.lib; lib:win32-reference; A/W SOUNDSENTRYA,SOUNDSENTRYW (CE is W-side)] */
 typedef struct tagSOUNDSENTRY{
  UINT cbSize;
@@ -3254,6 +3288,12 @@ typedef struct tagTOGGLEKEYS{
  UINT cbSize;
  DWORD dwFlags;
 } TOGGLEKEYS, *LPTOGGLEKEYS;
+
+/* TPMPARAMS  [struct; shared] */
+typedef struct tagTPMPARAMS { 
+ UINT cbSize; 
+ RECT rcExclude; 
+} TPMPARAMS, FAR* LPTPMPARAMS;
 
 /* WINDOWPOS  [struct; shared] */
 typedef struct _WINDOWPOS { 
@@ -3305,6 +3345,16 @@ HANDLE GetClipboardDataAlloc(
 
 /* GetMessageSource  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib] */
 UINT GetMessageSource( );
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
+
+/* GetMouseMovePoints  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Uibase.lib, uibase.lib, Wmgr_c.lib, wmgr_c.lib] */
+BOOL WINAPI GetMouseMovePoints(
+ PPOINT pptBuf,
+ UINT nBufPoints,
+ UINT* pnPointsRetrieved 
+);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
@@ -3537,6 +3587,12 @@ UINT EnumClipboardFormats(
  UINT format
 );
 
+/* EnumWindowsProc  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+BOOL CALLBACK EnumWindowsProc(
+ HWND hwnd, 
+ LPARAM lParam 
+);
+
 /* EqualRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Rectapi.lib, rectapi.lib] */
 BOOL EqualRect(
  const RECT* lprc1, 
@@ -3667,6 +3723,14 @@ SHORT GetKeyState(
  int nVirtKey 
 );
 
+/* GetMenuItemInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Menu.lib, menu.lib; A/W GetMenuItemInfoA,GetMenuItemInfoW (CE is W-side)] */
+BOOL GetMenuItemInfo(
+ HMENU hMenu, 
+ UINT uItem, 
+ BOOL fByPosition, 
+ LPMENUITEMINFO lpmii 
+);
+
 /* GetMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib; A/W GetMessageA,GetMessageW (CE is W-side)] */
 BOOL GetMessage(
  LPMSG lpMsg, 
@@ -3704,6 +3768,13 @@ HWND GetParent(
 int GetPriorityClipboardFormat(
  UINT* paFormatPriorityList, 
  int cFormats
+);
+
+/* GetScrollInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Sbcmn.lib, sbcmn.lib] */
+BOOL GetScrollInfo( 
+ HWND hwnd, 
+ int fnBar, 
+ LPSCROLLINFO lpsi 
 );
 
 /* GetSubMenu  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Menu.lib, menu.lib] */
@@ -4133,6 +4204,14 @@ BOOL SetRectEmpty(
  LPRECT lprc
 );
 
+/* SetScrollInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Sbcmn.lib, sbcmn.lib] */
+int SetScrollInfo( 
+ HWND hwnd, 
+ int fnBar, 
+ LPSCROLLINFO lpsi, 
+ BOOL fRedraw 
+);
+
 /* SetScrollPos  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Sbcmn.lib, sbcmn.lib] */
 int SetScrollPos( 
  HWND hWnd, 
@@ -4192,6 +4271,9 @@ BOOL SubtractRect(
  const RECT* lprcSrc2
 );
 
+/* SystemIdleTimerReset  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; idle.lib] */
+void WINAPI SystemIdleTimerReset(void);
+
 /* SystemParametersInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib; A/W SystemParametersInfoA,SystemParametersInfoW (CE is W-side)] */
 /* Windows CE supports only the Unicode version of this function. */
 /* Windows CE supports only the Unicode version of this function. */
@@ -4217,6 +4299,16 @@ BOOL TrackPopupMenu(
  int nReserved, 
  HWND hWnd, 
  const RECT* prcRect 
+);
+
+/* TrackPopupMenuEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Menu.lib, menu.lib] */
+BOOL TrackPopupMenuEx(
+ HMENU hmenu, 
+ UINT uFlags, 
+ int x, 
+ int y, 
+ HWND hwnd, 
+ LPTPMPARAMS lptpm 
 );
 
 /* TranslateAccelerator  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Accel.lib, accel.lib; A/W TranslateAcceleratorA,TranslateAcceleratorW (CE is W-side)] */
@@ -4264,6 +4356,22 @@ BOOL ValidateRect(
 /* WindowFromPoint  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib] */
 HWND WindowFromPoint( 
  POINT Point 
+);
+
+/* WindowProc  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+LRESULT CALLBACK WindowProc(
+ HWND hwnd, 
+ UINT uMsg, 
+ WPARAM wParam, 
+ LPARAM lParam 
+);
+
+/* WinMain  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+int WINAPI WinMain(
+ HINSTANCE hInstance, 
+ HINSTANCE hPrevInstance, 
+ LPWSTR lpCmdLine, 
+ int nShowCmd 
 );
 #endif /* _WIN32_WCE */
 

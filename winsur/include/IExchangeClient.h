@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 8 constants, 5 declarations, 6 outlines, 0 base types, 0 extra macros, 31 extra decls
+ * 8 constants, 5 declarations, 6 outlines, 0 base types, 0 extra macros, 24 extra decls
  */
 #ifndef _IEXCHANGECLIENT_
 #define _IEXCHANGECLIENT_
@@ -93,12 +93,6 @@ struct GALSearchCriteria {
  WCHAR* wszLastName;
 };
 
-/* status  [extra enum] */
-HRESULT OnRequestProgress(  IExchangeClientRequest* pRequest,  enum ExchangeClientRequestStatus status  );
-
-/* ppiRequest  [extra struct] */
-HRESULT RequestContacts(  struct ContactsSearchCriteria* pCriteria,  IExchangeClientRequest** ppiRequest  );
-
 /* pStatus  [extra enum] */
 HRESULT GetStatus(  enum ExchangeClientRequestStatus* pStatus  );
 
@@ -125,7 +119,6 @@ struct GALSearchCriteria { WCHAR* wszAlias; WCHAR* wszFirstName; WCHAR* wszLastN
 /* function */
 HRESULT CancelPendingRequests();
 HRESULT GetAlias( WCHAR* wszBuffer, UINT cchBuffer );
-HRESULT GetDataItemArray( IExchangeClientDataItemArray** ppiArray );
 HRESULT GetEmailAddress( WCHAR* wszBuffer, UINT cchBuffer );
 HRESULT GetFreeBusyData( WCHAR* wszDataBuffer, UINT cchDataBuffer );
 HRESULT GetHomeAddress( WCHAR* wszBuffer, UINT cchBuffer );
@@ -138,11 +131,7 @@ HRESULT GetSMTPAddress( WCHAR* wszBuffer, UINT cchBuffer );
 HRESULT GetServer( WCHAR* wszBuffer, UINT cchBuffer );
 HRESULT GetWorkAddress( WCHAR* wszBuffer, UINT cchBuffer );
 HRESULT GetWorkPhoneNumber( WCHAR* wszBuffer, UINT cchBuffer );
-HRESULT OnRequestProgress( IExchangeClientRequest* pRequest, enum ExchangeClientRequestStatus status );
 HRESULT OnShutdown();
-HRESULT RequestContacts( struct ContactsSearchCriteria* pCriteria, IExchangeClientRequest** ppiRequest );
-HRESULT RequestFreeBusyData( struct FreeBusyCriteria* pCriteria, IExchangeClientRequest** ppiRequest );
-HRESULT RequestGALSearch( struct GALSearchCriteria* pCriteria, IExchangeClientRequest** ppiRequest );
 HRESULT SetCredentials( const WCHAR* c_wszUsername, const WCHAR* c_wszPassword );
 HRESULT SetServer( const WCHAR* c_wszServername );
 HRESULT Uninitialize();

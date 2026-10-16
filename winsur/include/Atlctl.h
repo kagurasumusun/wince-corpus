@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 59 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 58 extra decls
  */
 #ifndef _ATLCTL_
 #define _ATLCTL_
@@ -34,7 +34,6 @@ HRESULT GetActivationPolicy( DWORD* pdwPolicy );
 HRESULT GetAmbientAppearance( short& nAppearance);
 HRESULT GetAmbientAutoClip( BOOL& bAutoClip );
 HRESULT GetAmbientDisplayAsDefault( BOOL& bDisplayAsDefault );
-HRESULT GetAmbientFont( IFont** ppFont );
 HRESULT GetAmbientMessageReflect( BOOL& bMessageReflect );
 HRESULT GetAmbientShowGrabHandles( BOOL& bShowGrabHandles );
 HRESULT GetAmbientShowHatching( BOOL& bShowHatching );

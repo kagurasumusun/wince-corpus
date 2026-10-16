@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 11 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 9 extra decls
  */
 #ifndef _PLAYLIST_
 #define _PLAYLIST_
@@ -18,9 +18,7 @@
 
 /* function */
 HRESULT GetFlags( DWORD* pdwFlags );
-HRESULT GetItem( DWORD dwItemIndex, IAMPlayListItem** ppItem );
 HRESULT GetItemCount( DWORD* pdwItems );
-HRESULT GetNamedEvent( WCHAR pwszEventName, DWORD dwItemIndex, IAMPlayListItem** ppItem, DWORD* pdwFlags );
 HRESULT GetRepeatInfo( DWORD* pdwRepeatCount, DWORD* pdwRepeatStart, DWORD* pdwRepeatEnd );
 HRESULT GetSourceCount( DWORD* pdwSources );
 HRESULT GetSourceEndMarker( DWORD dwSourceIndex, DWORD* pdwMarker );

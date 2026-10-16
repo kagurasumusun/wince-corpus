@@ -28,6 +28,15 @@ typedef struct _NDIS_TAPI_CONFIG_DIALOG {
  CHAR szLibraryName[1]; 
 } NDIS_TAPI_CONFIG_DIALOG, *PNDIS_TAPI_CONFIG_DIALOG;
 
+/* NDIS_TAPI_NEGOTIATE_EXT_VERSION  [struct; ce-only] */
+typedef struct _NDIS_TAPI_NEGOTIATE_EXT_VERSION { 
+ ULONG ulRequestID; 
+ ULONG ulDeviceID; 
+ ULONG ulLowVersion; 
+ ULONG ulHighVersion; 
+ OUT ULONG ulExtVersion; 
+} NDIS_TAPI_NEGOTIATE_EXT_VERSION, *PNDIS_TAPI_NEGOTIATE_EXT_VERSION;
+
 /* NDIS_TAPI_PROVIDER_INITIALIZE  [struct; ce-only] */
 typedef struct _NDIS_TAPI_PROVIDER_INITIALIZE { 
  ULONG ulRequestID; 

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 116 constants, 14 declarations, 24 outlines, 0 base types, 0 extra macros, 26 extra decls
+ * 116 constants, 11 declarations, 24 outlines, 0 base types, 0 extra macros, 15 extra decls
  */
 #ifndef _PIMSTORE_
 #define _PIMSTORE_
@@ -296,46 +296,6 @@ void CePimCommand(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 5.0..599 */
-
-/* IException  [function; ce-only; CE 5.0..599; Pimstore.lib] */
-void GetFirstExceptionItem (IAppointment *pAppt) 
-{ 
- IRecurrencePattern *pRec; 
- IExceptions *pExceptions; 
- IException *pException; 
- // Get the exception item 
- pAppt->GetRecurrencePattern (&pRec); 
- pRec->get_Exceptions (&pExceptions); 
- pExceptions->Item (1, &pException); 
- // Release objects 
- pRec->Release (); 
- pExceptions->Release (); 
- pException->Release (); 
-}
-
-/* IFolder  [function; ce-only; CE 5.0..599; Pimstore.lib] */
-void GetCalendarFolder (IPOutlookApplication *polApp) 
-{ 
- IFolder *pFolder; 
- polApp->GetDefaultFolder (olFolderCalendar, &pFolder); 
- // Release objects 
- pFolder->Release (); 
-}
-
-/* IPOutlookItemCollection  [function; ce-only; CE 5.0..599; Pimstore.lib] */
-void GetAnItemsCollection (IPOutlookApp *polApp) 
-{ 
- IPOutlookItemCollection *pItems; 
- IFolder *pFolder; 
- polApp->GetDefaultFolder (olFolderTasks, &pFolder); 
- pFolder->get_Items (&pItems); 
- // Release objects 
- pItems->Release (); 
- pFolder->Release (); 
-}
-#endif /* _WIN32_WCE */
-
 /* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
@@ -347,41 +307,8 @@ HRESULT ClearReccurencePattern();
 HRESULT ClearRecurrencePattern();
 HRESULT Delete();
 HRESULT Display();
-void GetAnItemsCollection (IPOutlookApp *polApp)
-{
-  IPOutlookItemCollection *pItems;
-  IFolder *pFolder;
-  polApp->GetDefaultFolder (olFolderTasks, &pFolder);
-  pFolder->get_Items (&pItems);
-  pItems->Release ();
-  pFolder->Release ();
-}
-void GetCalendarFolder (IPOutlookApplication *polApp)
-{
-  IFolder *pFolder;
-  polApp->GetDefaultFolder (olFolderCalendar, &pFolder);
-  pFolder->Release ();
-}
-HRESULT GetDefaultFolder( int olFolder, IFolder **ppIFolder );
-void GetFirstExceptionItem(IAppointment *pAppt)
-{
-  IRecurrencePattern *pRec;
-  IExceptions *pExceptions;
-  IException *pException;
-  pAppt->GetRecurrencePattern(&pRec);
-  pRec->get_Exceptions(&pExceptions);
-  pExceptions->Item(1, &pException);
-  pRec->Release();
-  pExceptions->Release();
-  pException->Release();
-}
-HRESULT GetRecurrence( IRecurrencePattern * pRec );
-HRESULT GetRecurrencePattern( IRecurrencePattern * pRec );
-HRESULT GetTimeZoneFromIndex( int iIndex, ITimeZone ** ppTimeZone );
-HRESULT Item( int iIndex, IException ** ppException );
 HRESULT Logoff();
 HRESULT Logon( long hWnd );
-HRESULT ReceiveFromInfrared( IPOutlookItemCollection ** ppolItems );
 HRESULT Remove( int iItem );
 HRESULT Save();
 HRESULT Send();

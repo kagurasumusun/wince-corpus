@@ -183,4 +183,17 @@
 #define VT_YSIZE_HIMETRIC VT_I4
 #define VT_YSIZE_PIXELS VT_I4
 
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
+
+/* DllRegisterServer  [function; shared; CE 3.0..699; Oleaut32.lib, oleaut32.lib] */
+STDAPI DllRegisterServer(void);
+
+/* DllUnregisterServer  [function; shared; CE 3.0..699; Oleaut32.lib, oleaut32.lib] */
+STDAPI DllUnregisterServer(void);
+#endif /* _WIN32_WCE */
+
 #endif /* _OLECTL_ */

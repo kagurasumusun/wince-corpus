@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 81 constants, 41 declarations, 0 outlines, 0 base types, 0 extra macros, 129 extra decls
+ * 81 constants, 41 declarations, 0 outlines, 0 base types, 0 extra macros, 91 extra decls
  */
 #ifndef _RTCCORE_
 #define _RTCCORE_
@@ -533,50 +533,25 @@ typedef RTC_WATCHER_STATE *PRTC_WATCHER_STATE, *LPRTC_WATCHER_STATE;
  * ================================================================ */
 
 /* function */
-HRESULT AddBuddy( IRTCBuddy* pBuddy );
 HRESULT AddStream( long lMediaType, LONG_PTR lCookie );
 HRESULT Answer( );
-HRESULT CreateQuery( IRTCUserSearchQuery** ppQuery );
 HRESULT DisablePresence();
-HRESULT DisableProfile( IRTCProfile* pProfile );
-HRESULT EnableProfile( IRTCProfile* pProfile, long lRegisterFlags );
-HRESULT EnableProfileEx( IRTCProfile* pProfile, long lRegisterFlags, long lRoamingFlags );
-HRESULT EnumerateBuddies( IRTCEnumBuddies** ppEnum );
-HRESULT EnumerateGroups( IRTCEnumGroups** ppEnum );
-HRESULT EnumerateParticipants( IRTCEnumParticipants** ppEnum );
-HRESULT EnumeratePresenceDevices( IRTCEnumPresenceDevices** ppEnumDevices );
-HRESULT EnumerateProfiles( IRTCEnumProfiles** ppEnum );
-HRESULT EnumerateResults( IRTCEnumUserSearchResults** ppEnum );
-HRESULT EnumerateWatchers( IRTCEnumWatchers** ppEnum );
-HRESULT ExecuteSearch( IRTCUserSearchQuery* pQuery, IRTCProfile* pProfile, LONG_PTR lCookie );
 HRESULT GetPortRange( RTC_PORT_TYPE enPortType, long* plMinValue, long* plMaxValue );
 HRESULT Hold( LONG_PTR lCookie );
 HRESULT InitializeEx( long lFlags );
 HRESULT NextRedirectedUser();
 HRESULT PrepareForShutdown();
 HRESULT Reject();
-HRESULT RemoveBuddy( IRTCBuddy* pBuddy );
-HRESULT RemoveGroup( IRTCBuddyGroup* pGroup );
-HRESULT RemoveParticipant( IRTCParticipant* pParticipant );
 HRESULT RemoveStream( long lMediaType, LONG_PTR lCookie );
-HRESULT RemoveWatcher( IRTCWatcher* pWatcher );
-HRESULT ReplacedSession( IRTCSession** ppReplacedSession );
 HRESULT SendDTMF( RTC_DTMF enDTMF );
-HRESULT Session( [out] IRTCSession2** ppSession );
-HRESULT SetPortManager( IRTCPortManager* pPortManager );
 HRESULT SetReferredSessionState( RTC_SESSION_STATE enState );
-HRESULT SetSessionDescriptionManager( IRTCSessionDescriptionManager* pSessionDescriptionManager );
 HRESULT StartT120Applet( RTC_T120_APPLET enApplet );
 HRESULT StopT120Applets();
-HRESULT Subscription ( IRTCUnsolicitedSubscription** ppSubscription );
 HRESULT UnHold( LONG_PTR lCookie );
 HRESULT get_ActiveMedia( long* plMediaType );
 HRESULT get_AllowedAuth( long* plAllowedAuth );
 HRESULT get_AllowedPorts( long lTransport, RTC_LISTEN_MODE* penMode );
 HRESULT get_AnswerMode( RTC_SESSION_TYPE enType, RTC_ANSWER_MODE* penMode );
-HRESULT get_Buddies( IRTCCollection** ppCollection );
-HRESULT get_Buddy( IRTCBuddy** ppBuddy );
-HRESULT get_Client( IRTCClient** ppClient );
 HRESULT get_Cookie( LONG_PTR* plCookie );
 HRESULT get_CurrentMedia( long* plMediaTypes );
 HRESULT get_Direction( RTC_AUDIO_DEVICE* penDirection );
@@ -584,9 +559,6 @@ HRESULT get_EventFilter( long* plFilter );
 HRESULT get_EventReason( RTC_MEDIA_EVENT_REASON* penEventReason );
 HRESULT get_EventType( RTC_BUDDY_EVENT_TYPE* pEventType );
 HRESULT get_FederationFlag( long* plFlags);
-HRESULT get_Group( IRTCBuddyGroup** ppGroup );
-HRESULT get_Groups( IRTCCollection** ppCollection );
-HRESULT get_IVideoWindow( RTC_VIDEO_DEVICE enDevice, IVideoWindow** ppIVideoWindow );
 HRESULT get_Level( long* plLevel );
 HRESULT get_ListenForIncomingSessions( RTC_LISTEN_MODE* penListen );
 HRESULT get_Max( long* plMax );
@@ -597,23 +569,15 @@ HRESULT get_MediaTypes( long* pMediaTypes );
 HRESULT get_Min( long* plMin );
 HRESULT get_NetworkQuality( long* plNetworkQuality );
 HRESULT get_OfferWatcherMode( RTC_OFFER_WATCHER_MODE* penMode );
-HRESULT get_Participant( IRTCParticipant** ppParticipant );
-HRESULT get_Participants( IRTCCollection** ppCollection );
 HRESULT get_PreferredMediaTypes( long* plMediaTypes );
 HRESULT get_PreferredSecurityLevel( RTC_SECURITY_TYPE enSecurityType, RTC_SECURITY_LEVEL* penSecurityLevel );
 HRESULT get_PreferredVolume( RTC_AUDIO_DEVICE enDevice, long* plVolume );
-HRESULT get_PresenceDevices( IRTCCollection** ppDevicesCollection );
 HRESULT get_PrivacyMode( RTC_PRIVACY_MODE* penMode );
-HRESULT get_Profile( IRTCProfile2** ppProfile );
-HRESULT get_Profiles( IRTCCollection** ppCollection );
 HRESULT get_ProposedMedia( long* plMediaTypes );
-HRESULT get_Query( IRTCUserSearchQuery** ppQuery );
 HRESULT get_ReferStatus( RTC_SESSION_REFER_STATUS* penReferStatus );
 HRESULT get_RemotePreferredSecurityLevel( RTC_SECURITY_TYPE enSecurityType, RTC_SECURITY_LEVEL* penSecurityLevel );
-HRESULT get_Results( IRTCCollection** ppCollection );
 HRESULT get_Scope( RTC_ACE_SCOPE* penScope );
 HRESULT get_SearchPreference( RTC_USER_SEARCH_PREFERENCE enPreference, long* plValue );
-HRESULT get_Session( IRTCSession2** ppSession );
 HRESULT get_SessionCapabilities( long* plSupportedSessions );
 HRESULT get_State( RTC_REINVITE_STATE* pState );
 HRESULT get_Status( RTC_PRESENCE_STATUS* penStatus );
@@ -622,7 +586,6 @@ HRESULT get_SubscriptionType( RTC_BUDDY_SUBSCRIPTION_TYPE* penSubscriptionType )
 HRESULT get_TemporalSpatialTradeOff( long* plValue );
 HRESULT get_Type( RTC_SESSION_TYPE* penType );
 HRESULT get_UserStatus( RTC_MESSAGING_USER_STATUS* penUserStatus );
-HRESULT get_Watchers( IRTCCollection** ppCollection );
 HRESULT put_AllowedAuth( long lAllowedAuth );
 HRESULT put_AllowedPorts( long lTransport, RTC_LISTEN_MODE penMode );
 HRESULT put_AnswerMode( RTC_SESSION_TYPE enType, RTC_ANSWER_MODE enMode );

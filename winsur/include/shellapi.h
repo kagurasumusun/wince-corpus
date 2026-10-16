@@ -254,6 +254,12 @@ typedef struct _NOTIFYICONDATA {
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
 
+/* SHCreateShortcut  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Shortcut.lib, shortcut.lib] */
+DWORD WINAPI SHCreateShortcut(
+ LPTSTR szShortcut, 
+ LPTSTR szTarget 
+);
+
 /* SHGetShortcutTarget  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Shortcut.lib, shortcut.lib] */
 BOOL SHGetShortcutTarget(
  LPTSTR szShortcut, 
@@ -273,6 +279,18 @@ int SHShowOutOfMemory(
 );
 #endif /* _WIN32_WCE */
 
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
+
+/* ExtractIconEx  [function; shared; CE 2.11..2.12, 3.0..699; A/W ExtractIconExA,ExtractIconExW (CE is W-side)] */
+HICON ExtractIconEx(
+ LPCTSTR lpszFile, 
+ int nIconIndex,
+ HICON FAR* phiconLarge,
+ HICON FAR* phiconSmall,
+ UINT nIcons
+);
+#endif /* _WIN32_WCE */
+
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* SHGetSpecialFolderPath  [function; shared; CE 3.0..399, 5.0..699; coredll.lib; A/W SHGetSpecialFolderPathA,SHGetSpecialFolderPathW (CE is W-side)] */
@@ -281,6 +299,17 @@ BOOL SHGetSpecialFolderPath(
  LPTSTR lpszPath,
  int nFolder,
  BOOL fCreate 
+);
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
+
+/* SHCreateShortcutEx  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
+DWORD WINAPI SHCreateShortcutEx(
+ LPTSTR lpszDir,
+ LPTSTR lpszTarget,
+ LPTSTR szShortcut,
+ LPDWORD lpcbShortcut
 );
 #endif /* _WIN32_WCE */
 

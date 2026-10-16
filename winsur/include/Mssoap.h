@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 47 constants, 0 declarations, 4 outlines, 0 base types, 0 extra macros, 4 extra decls
+ * 47 constants, 0 declarations, 4 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _MSSOAP_
 #define _MSSOAP_
@@ -76,16 +76,5 @@
 /* Record  [typedef; ce-only; heuristic-prefix] */
 
 /* Volume  [typedef; ce-only; heuristic-prefix] */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-HRESULT get_Fault( IXMLDOMElement** ppElement );
-HRESULT get_FaultActor( IXMLDOMElement** ppElement );
-HRESULT get_FaultCode( IXMLDOMElement** ppElement );
-HRESULT get_FaultString( IXMLDOMElement** ppElement );
 
 #endif /* _MSSOAP_ */

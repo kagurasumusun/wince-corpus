@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 105 constants, 70 declarations, 18 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 105 constants, 68 declarations, 28 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDOWSAPIS_
 #define _WINDOWSAPIS_
@@ -131,7 +131,15 @@
 
 /* firstChild  [typedef; ce-only; heuristic-prefix] */
 
+/* HIMAGELIST  [typedef; ce-only; heuristic-prefix] */
+
+/* HIMC  [typedef; ce-only; heuristic-prefix] */
+
 /* lastChild  [typedef; ce-only; heuristic-prefix] */
+
+/* LPCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
+
+/* LUID  [typedef; ce-only; heuristic-prefix] */
 
 /* MAKEINTATOM  [macro, function; shared] */
 LPTSTR MAKEINTATOM(
@@ -164,11 +172,21 @@ LPTSTR MAKEINTATOM(
 
 /* parsed  [typedef; ce-only; heuristic-prefix] */
 
+/* PCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
+
+/* PCWCH  [typedef; ce-only; heuristic-prefix] */
+
+/* PLUID  [typedef; ce-only; heuristic-prefix] */
+
 /* prefix  [typedef; ce-only; heuristic-prefix] */
 
 /* previousSibling  [typedef; ce-only; heuristic-prefix] */
 
+/* REGSAM  [typedef; ce-only; heuristic-prefix] */
+
 /* specified  [typedef; ce-only; heuristic-prefix] */
+
+/* UNSIGNED  [typedef; ce-only; heuristic-prefix] */
 
 /* xml  [typedef; ce-only; heuristic-prefix] */
 
@@ -311,7 +329,17 @@ typedef PVOID PSECURITY_DESCRIPTOR;
  * functions and callbacks
  * ================================================================ */
 
+/* PALETTEINDEX  [function; shared; entity-headers; win32-reference] */
+COLORREF PALETTEINDEX(
+    WORD i
+);
+
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
+
+/* EnumUILanguagesProc  [function; ce-only; CE 4.0..699; Coreloc.lib] */
+BOOL CALLBACK EnumUILanguagesProc(
+ LPTSTR lpUILanguageString
+);
 
 /* GetCharABCWidths  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib; A/W GetCharABCWidthsA,GetCharABCWidthsW (CE is W-side)] */
 BOOL GetCharABCWidths(
@@ -319,6 +347,25 @@ BOOL GetCharABCWidths(
  UINT uFirstChar,
  UINT uLastChar,
  LPABC lpabc
+);
+
+/* GetCharWidth32  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib; A/W GetCharWidth32A,GetCharWidth32W (CE is W-side)] */
+WINGDIAPI BOOL WINAPI GetCharWidth32(
+ HDC hdc,
+ UINT iFirstChar,
+ UINT iLastChar,
+ LPINT lpBuffer
+);
+
+/* GetTextAlign  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib] */
+WINGDIAPI UINT WINAPI GetTextAlign(
+ HDC hdc
+);
+
+/* SetTextAlign  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib] */
+WINGDIAPI UINT WINAPI SetTextAlign(
+ HDC hdc,
+ UINT fmode
 );
 #endif /* _WIN32_WCE */
 
@@ -358,6 +405,11 @@ BOOL EnumDisplayDevices(
  DWORD dwFlags 
 );
 
+/* FiberProc  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
+VOID CALLBACK FiberProc(
+ PVOID lpParameter
+);
+
 /* GetCharABCWidthsI  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL GetCharABCWidthsI(
  HDC hdc,
@@ -365,6 +417,12 @@ BOOL GetCharABCWidthsI(
  UINT cgi,
  LPWORD pgi,
  LPABC lpabc
+);
+
+/* GetCurrentPositionEx  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
+WINGDIAPI BOOL WINAPI GetCurrentPositionEx(
+ HDC hdc,
+ LPPOINT lpPoint
 );
 
 /* GetFontData  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
@@ -379,6 +437,11 @@ DWORD GetFontData(
 /* GetLayout  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 DWORD GetLayout(
  HDC hdc
+);
+
+/* GetMessageQueueReadyTimeStamp  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
+DWORD WINAPI GetMessageQueueReadyTimeStamp(
+ HWND hWnd
 );
 
 /* GetProp  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W GetPropA,GetPropW (CE is W-side)] */
@@ -425,10 +488,48 @@ LONG InterlockedExchangeAdd(
  LONG Increment
 );
 
+/* InvalidateRgn  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
+BOOL WINAPI InvalidateRgn(
+ HWND hWnd,
+ HRGN hRgn,
+ BOOL fErase
+);
+
 /* InvertRect  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL InvertRect(
  HDC hDC,
  CONST RECT* lprc
+);
+
+/* LineTo  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
+WINGDIAPI BOOL WINAPI LineTo(
+ HDC hdc,
+ int nXEnd,
+ int nYEnd
+);
+
+/* MoveToEx  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
+WINGDIAPI BOOL WINAPI MoveToEx(
+ HDC hdc,
+ int X,
+ int Y,
+ LPPOINT lpPoint
+);
+
+/* PropEnumProcEx  [function; shared; CE 5.0..699; A/W PROPENUMPROCEXA,PROPENUMPROCEXW (CE is W-side)] */
+BOOL CALLBACK PropEnumProcEx(
+ HWND hwnd,
+ LPTSTR lpszString,
+ HANDLE hData,
+ ULONG_PTR dwData
+);
+
+/* RedrawWindow  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
+BOOL WINAPI RedrawWindow(
+ HWND hwnd,
+ CONST RECT* lprcUpdate,
+ HRGN hrgnUpdate,
+ UINT flags
 );
 
 /* RemoveProp  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W RemovePropA,RemovePropW (CE is W-side)] */
@@ -487,6 +588,12 @@ BOOL TransparentBlt(
  int nWidthSrc,
  int nHeightSrc,
  UINT crTransparent
+);
+
+/* ValidateRgn  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
+BOOL WINAPI ValidateRgn(
+ HWND hWnd,
+ HRGN hRgn
 );
 #endif /* _WIN32_WCE */
 

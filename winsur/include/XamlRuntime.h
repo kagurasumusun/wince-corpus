@@ -5,11 +5,19 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 61 declarations, 4 outlines, 0 base types, 0 extra macros, 24 extra decls
+ * 1 constants, 57 declarations, 7 outlines, 0 base types, 0 extra macros, 21 extra decls
  */
 #ifndef _XAMLRUNTIME_
 #define _XAMLRUNTIME_
 
+
+/* ==================================================================
+ * constants (one evidence comment per #define; the
+ * #if of a batch covers every #define in it; values
+ * that differ per generation pool into #if/#elif
+ * chains with the evidence after the #endif)
+ * ================================================================ */
+#define XRS_STRING 0
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
@@ -22,6 +30,12 @@
 /* PFN_TYPE_CONVERTER  [typedef; ce-only] */
 
 /* XRDependencyPropertyMetaData  [struct; ce-only] */
+
+/* XRMouseEventArgs  [struct; ce-only] */
+
+/* XRRoutedEventArgs  [struct; ce-only] */
+
+/* XRXamlSource  [struct; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -254,13 +268,6 @@ struct XRMouseButtonEventArgs : XRMouseEventArgs{
  BOOL Handled;
 };
 
-/* XRMouseEventArgs  [struct; ce-only] */
-struct XRMouseEventArgs : XRRoutedEventArgs{
- XRPoint Position;
- IXRStylusInfo *pStylusInfo;
- IXRStylusPointCollection *pStylusPoints;
-};
-
 /* XROrientation  [enum; ce-only] */
 enum XROrientation{
  XROrientation_Vertical=0,
@@ -306,11 +313,6 @@ struct XRRepeatBehavior{
  float IterationCount;
  XRTimeSpan RepeatDuration;
  RepeatBehaviorType BehaviorType;
-};
-
-/* XRRoutedEventArgs  [struct; ce-only] */
-struct XRRoutedEventArgs : XREventArgs{
- IXRDependencyObject *pSource;
 };
 
 /* XRScrollBarVisibility  [enum; ce-only] */
@@ -463,41 +465,6 @@ enum XRVisibility{
  XRVisibility_Collapsed = 1
 };
 
-/* XRXamlSource  [struct; ce-only] */
-struct XRXamlSource {
- enum SourceType {
- XRS_STRING = 0,
- XRS_FILENAME,
- XRS_RESOURCE,
- XRS_STREAM
- };
- SourceType Type; 
- union{
- const WCHAR *pStr; 
- IStream *pStream;
- struct tagResouce {
- HMODULE hMod;
- const WCHAR *pResType;
- const WCHAR *pResID;
- } Resource;
- } Value;
- Void SetFile(const WCHAR *psz) {
- Type = XRS_FILENAME; Value.pStr = psz;
- }
- void SetString(const WCHAR *psz) {
- Type = XRS_STRING; Value.pStr = psz;
- }
- void SetResource(HMODULE h, const WCHAR *pType, const WCHAR *pID) {
- Type = XRS_RESOURCE;
- Value.Resource.hMod = h;
- Value.Resource.pResType = pType;
- Value.Resource.pResID = pID;
- }
- void SetStream(IStream* p) {
- Type = XRS_STREAM; Value.pStream = p; 
- }
-};
-
 /* DurationType  [extra struct] */
 struct XRDuration{
   enum _DurationType{
@@ -539,13 +506,6 @@ struct XRRepeatBehavior{
 /* Handled  [extra struct] */
 struct XRMouseButtonEventArgs : XRMouseEventArgs{ BOOL Handled; };
 
-/* pStylusPoints  [extra struct] */
-struct XRMouseEventArgs : XRRoutedEventArgs{
-  XRPoint Position;
-  IXRStylusInfo *pStylusInfo;
-  IXRStylusPointCollection *pStylusPoints;
-};
-
 /* HorizontalOffset  [extra struct] */
 struct XRDragStartedEventArgs : XRRoutedEventArgs{ double VerticalOffset; double HorizontalOffset; };
 
@@ -573,9 +533,6 @@ struct XRWindowCreateParams{
   bool AllowsMultipleThreadAccess;
   HWND ParentWindow;
 };
-
-/* pSource  [extra struct] */
-struct XRRoutedEventArgs : XREventArgs{ IXRDependencyObject *pSource; };
 
 /* BottomLeft  [extra struct] */
 struct XRCornerRadius{
@@ -666,11 +623,39 @@ struct XRRect{
 struct XRGridLength{ float UnitValue; XRGridUnitType UnitType; };
 
 /* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
+
+/* FreeXRValue  [function; ce-only; CE 6.0..699] */
+void WINAPI FreeXRValue(
+ XRValue* pValue
+);
+
+/* XamlRuntimeInitialize  [function; ce-only; CE 6.0..699] */
+BOOL WINAPI XamlRuntimeInitialize();
+
+/* XamlRuntimeUninitialize  [function; ce-only; CE 6.0..699] */
+BOOL WINAPI XamlRuntimeUninitialize();
+
+/* XR_HOOKPROC  [function; ce-only; CE 6.0..699] */
+BOOL CALLBACK HostHookProc(
+ VOID* pv,
+ HWND hwnd,
+ UINT Msg,
+ WPARAM wParam,
+ LPARAM lParam,
+ LRESULT* pRetVal
+);
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
 
 /* function */
-void ChangeAnimationDuration(IXRStoryboard* pColorStoryboard);
+BOOL CALLBACK HostHookProc( VOID* pv, HWND hwnd, UINT Msg, WPARAM wParam, LPARAM lParam, LRESULT* pRetVal );
 
 #endif /* _XAMLRUNTIME_ */

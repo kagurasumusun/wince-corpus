@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 13 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 0 constants, 10 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
  */
 #ifndef _TCHDDI_
 #define _TCHDDI_
@@ -77,12 +77,6 @@ VOID TouchPanelPowerHandler(
 
 /* TouchPanelReadCalibrationAbort  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Tchmain.lib] */
 VOID TouchPanelReadCalibrationAbort(void);
-
-/* TouchPanelReadCalibrationPoint  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Tchmain.lib] */
-BOOL TouchPanelReadCalibrationPoint(
- INT* pRawX,
- INT* pRawY 
-);
 
 /* TouchPanelSetMode  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Tchmain.lib] */
 BOOL TouchPanelSetMode(

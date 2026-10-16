@@ -46,4 +46,79 @@ typedef NOTIFICATIONCONDITION *PNOTIFICATIONCONDITION, *LPNOTIFICATIONCONDITION;
 /* cbData  [extra typedef] */
 typedef void REGISTRYNOTIFYCALLBACK( HREGNOTIFY hNotify, DWORD dwUserData, const PBYTE pData, const UINT cbData );
 
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
+
+/* RegistryDeleteValue  [function; ce-only; CE 6.0..699; aygshell.lib] */
+HRESULT WINAPI RegistryDeleteValue( 
+ HKEY hKey
+ LPCTSTR pszSubKey,
+ LPCTSTR pszValueName
+);
+
+/* RegistryGetDWORD  [function; ce-only; CE 6.0..699; aygshell.lib] */
+HRESULT WINAPI RegistryGetDWORD( 
+ HKEY hKey,
+ LPCTSTR pszSubKey,
+ LPCTSTR pszValueName,
+ DWORD* pdwData
+);
+
+/* RegistryGetString  [function; ce-only; CE 6.0..699; aygshell.lib] */
+HRESULT WINAPI RegistryGetString( 
+ HKEY hKey,
+ LPCTSTR pszSubKey,
+ LPCTSTR pszValueName,
+ LPTSTR pszData,
+ UINT cchData 
+);
+
+/* RegistryNotifyApp  [function; ce-only; CE 6.0..699; aygshell.lib] */
+HRESULT WINAPI RegistryNotifyApp( 
+ HKEY hKey,
+ LPCTSTR pszSubKey,
+ LPCTSTR pszValueName,
+ LPCTSTR pszName,
+ LPCTSTR pszApp,
+ LPCTSTR pszClass,
+ LPCTSTR pszWindow,
+ UINT msg,
+ DWORD dwFlags,
+ NOTIFICATIONCONDITION* pCondition
+);
+
+/* RegistrySetDWORD  [function; ce-only; CE 6.0..699; aygshell.lib] */
+HRESULT WINAPI RegistrySetDWORD( 
+ HKEY hKey,
+ LPCTSTR pszSubKey,
+ LPCTSTR pszValueName,
+ DWORD dwData 
+);
+
+/* RegistrySetString  [function; ce-only; CE 6.0..699; aygshell.lib] */
+HRESULT WINAPI RegistrySetString( 
+ HKEY hKey,
+ LPCTSTR pszSubKey,
+ LPCTSTR pszValueName,
+ LPCTSTR pszData 
+);
+
+/* RegistryStopNotification  [function; ce-only; CE 6.0..699; aygshell.lib] */
+HRESULT WINAPI RegistryStopNotification(
+ LPCTSTR pszName
+);
+
+/* RegistryTestExchangeDWORD  [function; ce-only; CE 6.0..699; aygshell.lib] */
+HRESULT WINAPI RegistryTestExchangeDWORD( 
+ HKEY hKey,
+ LPCTSTR pszSubKey,
+ LPCTSTR pszValueName,
+ DWORD dwOldValue,
+ DWORD dwNewValue 
+);
+#endif /* _WIN32_WCE */
+
 #endif /* _REGEXT_ */

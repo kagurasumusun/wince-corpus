@@ -38,6 +38,12 @@ typedef struct _REMOVE_LOCK {
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
+/* AcquireRemoveLock  [function; ce-only; CE 5.0..699] */
+DWORD AcquireRemoveLock(
+ IN PREMOVE_LOCK Lock,
+ IN OPTIONAL PVOID Tag
+);
+
 /* DefaultTransferComplete  [function; ce-only; CE 5.0..699] */
 DWORD DefaultTransferComplete(
  PVOID Context
@@ -54,6 +60,18 @@ BOOL GetSetKeyValues(
 /* InitializeRemoveLock  [function; ce-only; CE 5.0..699] */
 BOOL InitializeRemoveLock(
  IN PREMOVE_LOCK Lock
+);
+
+/* ReleaseRemoveLock  [function; ce-only; CE 5.0..699] */
+VOID ReleaseRemoveLock(
+ IN PREMOVE_LOCK Lock,
+ IN OPTIONAL PVOID Tag
+);
+
+/* ReleaseRemoveLockAndWait  [function; ce-only; CE 5.0..699] */
+VOID ReleaseRemoveLockAndWait(
+ IN PREMOVE_LOCK Lock,
+ IN OPTIONAL PVOID Tag
 );
 #endif /* _WIN32_WCE */
 

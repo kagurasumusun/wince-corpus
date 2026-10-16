@@ -127,6 +127,14 @@ void CeNotifyPublic_NewPacket(
  CEOID oidRecord
 );
 
+/* CeNotifyPublic_UIWndProc  [function; ce-only; CE 3.0..699] */
+LRESULT CALLBACK CeNotifyPublic_UIWndProc(
+ HWND hWnd,
+ UINT message,
+ WPARAM wParam,
+ LPARAM lParam
+);
+
 /* CeNotifyPublic_UserAlarmSignalled  [function; ce-only; CE 3.0..699] */
 void CeNotifyPublic_UserAlarmSignalled (void);
 #endif /* _WIN32_WCE */

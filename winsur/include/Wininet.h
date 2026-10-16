@@ -758,6 +758,23 @@ BOOL FindCloseUrlCache(
  HANDLE hEnumHandle
 );
 
+/* InternetCanonicalizeUrl  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Schannel.lib, schannel.lib, Secur32.lib, secur32.lib, wininet.lib; A/W InternetCanonicalizeUrlA,InternetCanonicalizeUrlW (CE is W-side)] */
+BOOL WINAPI InternetCanonicalizeUrl(
+ LPCTSTR lpszUrl, 
+ LPWSTR lpszBuffer, 
+ LPDWORD lpdwBufferLength, 
+ DWORD dwFlags 
+);
+
+/* InternetCombineUrl  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetCombineUrlA,InternetCombineUrlW (CE is W-side)] */
+BOOL WINAPI InternetCombineUrl(
+ LPCTSTR lpszBaseUrl, 
+ LPCTSTR lpszRelativeUrl, 
+ LPTSTR lpszBuffer, 
+ LPDWORD lpdwBufferLength, 
+ DWORD dwFlags
+);
+
 /* InternetGetCookie  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetGetCookieA,InternetGetCookieW (CE is W-side)] */
 BOOL InternetGetCookie(
  LPCTSTR lpszUrl,
@@ -766,11 +783,26 @@ BOOL InternetGetCookie(
  LPDWORD lpdwSize
 );
 
+/* InternetGetLastResponseInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetGetLastResponseInfoA,InternetGetLastResponseInfoW (CE is W-side)] */
+BOOL WINAPI InternetGetLastResponseInfo( 
+ LPDWORD lpdwError, 
+ LPTSTR lpszBuffer, 
+ LPDWORD lpdwBufferLength
+);
+
 /* InternetSetCookie  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetSetCookieA,InternetSetCookieW (CE is W-side)] */
 BOOL InternetSetCookie(
  LPCTSTR lpszUrl, 
  LPCTSTR lpszCookieName, 
  LPCTSTR lpszCookieData
+);
+
+/* InternetTimeFromSystemTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetTimeFromSystemTimeA,InternetTimeFromSystemTimeW (CE is W-side)] */
+BOOL WINAPI InternetTimeFromSystemTime(
+ CONST SYSTEMTIME* pst, 
+ DWORD dwRFC, 
+ LPTSTR lpszTime, 
+ DWORD cbTime
 );
 
 /* InternetTimeToSystemTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetTimeToSystemTimeA,InternetTimeToSystemTimeW (CE is W-side)] */

@@ -247,6 +247,13 @@ void PropSheet_UnChanged(
  hPropSheetDlg, 
  hwndPage 
 );
+
+/* PropSheetProc  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+int CALLBACK PropSheetProc(
+ HWND hwndDlg, 
+ UINT uMsg, 
+ LPARAM lParam 
+);
 #endif /* _WIN32_WCE */
 
 #endif /* _PRSHT_ */

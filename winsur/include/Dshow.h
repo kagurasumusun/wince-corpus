@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 25 constants, 46 declarations, 3 outlines, 0 base types, 0 extra macros, 87 extra decls
+ * 25 constants, 45 declarations, 4 outlines, 0 base types, 0 extra macros, 69 extra decls
  */
 #ifndef _DSHOW_
 #define _DSHOW_
@@ -193,14 +193,6 @@ typedef enum _PinDirection {
 } PIN_DIRECTION;
 typedef PIN_DIRECTION *PPIN_DIRECTION, *LPPIN_DIRECTION;
 
-/* PIN_INFO  [struct, typedef; shared] */
-typedef struct _PinInfo {
- IBaseFilter* pFilter;
- PIN_DIRECTION dir;
- WCHAR achName[128];
-} PIN_INFO;
-typedef PIN_INFO *PPIN_INFO, *LPPIN_INFO;
-
 /* POSITION  [struct, typedef; ce-only] */
 struct __POSITION { int unused; };
 typedef __POSITION* POSITION;
@@ -263,6 +255,12 @@ typedef VideoProcAmpProperty *PVideoProcAmpProperty, *LPVideoProcAmpProperty;
 /*   cbFormat */
 /*   pbFormat */
 
+/* PIN_INFO  [struct, typedef; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   pFilter */
+/*   dir */
+/*   achName */
+
 /* TIMECODE_SAMPLE  [struct, typedef; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   qwTick */
@@ -310,26 +308,19 @@ HRESULT QueryWriteSync( );
  * ================================================================ */
 
 /* function */
-HRESULT AddFilter( IBaseFilter *pFilter, LPCWSTR pName);
 HRESULT AddSourceFilter( LPCWSTR lpwstrFileName, LPCWSTR lpwstrFilterName, IbaseFilter **ppFilter );
-HRESULT AddSourceFilterForMoniker( IMoniker *pMoniker, IBindCtx *pCtx, LPCWSTR lpcwstrFilterName, IBaseFilter **ppFilter);
 HRESULT AutoTune( long lChannel, long *plFoundSignal);
 HRESULT ChannelMinMax( long *lChannelMin, long *lChannelMax);
 HRESULT CheckMemory( const BYTE *pBuffer);
 DWORD ColorKey (void );
-HRESULT ConnectDirect( IPin *ppinOut, IPin *ppinIn, const AM_MEDIA_TYPE *pmt);
 HRESULT Enable( long lIndex, DWORD dwFlags);
-HRESULT EnumFilters( IEnumFilters **ppEnum);
-HRESULT FindFilterByName( LPCWSTR pName, IBaseFilter **ppFilter);
 HRESULT GetAllocatorProperties( ALLOCATOR_PROPERTIES* pprop );
 HRESULT GetAvailableModes( long *plModes);
 HRESULT GetAverageFrameSize( long* plAverageSize);
 HRESULT GetDefaultColorKey( COLORKEY *pColorKey);
 HRESULT GetDevId( DWORD *pdwDevId);
 HRESULT GetDroppedInfo( long lSize, long* plArray, long* plNumCopied);
-HRESULT GetFiltergraph( IGraphBuilder** ppfg );
 LONG GetMiscFlags(void);
-HRESULT GetMode ( IPin* pPin, long* Mode );
 HRESULT GetNumDropped( long* plDropped);
 HRESULT GetNumNotDropped( long* plNotDropped);
 HRESULT GetNumberOfCapabilities( int* piCount, int* piSize );
@@ -343,19 +334,12 @@ HRESULT OnPositionChange( const RECT *pSourceRect, const RECT *pDestinationRect)
 HRESULT OverrideFrameSize( long FrameNumber, long Size );
 HRESULT OverrideKeyFrame( long FrameNumber );
 HRESULT QueryVersion( LONG *pVersion);
-HRESULT Reconnect( IPin *ppin);
-HRESULT ReconnectEx( IPin *ppin, const AM_MEDIA_TYPE *pmt);
-HRESULT RegisterNotificationCallBack( IAMTunerNotification *pNotify, long lEvents);
-HRESULT RemoveFilter( IBaseFilter *pFilter);
 HRESULT RenderFile( LPCWSTR lpwstrFile, LPCWSTR lpwstrPlayList);
-HRESULT RequestAllocator( IMemAllocator* pPreferred, ALLOCATOR_PROPERTIES* pProps, IMemAllocator ** ppActual);
 HRESULT SetDefaultSyncSource(void);
-HRESULT SetFiltergraph( IGraphBuilder* pfg );
 HRESULT SetLogFile( HANDLE hFile);
 HRESULT SignalPresent( long *plSignalStrength);
 HRESULT StoreAutoTune(void);
 HRESULT SuggestAllocatorProperties( const ALLOCATOR_PROPERTIES* pprop );
-HRESULT UnRegisterNotificationCallBack( IAMTunerNotification *pNotify);
 HRESULT WriteSync( );
 HRESULT get_AudioFrequency( long *lFreq);
 HRESULT get_AvailableTVFormats( long *lAnalogVideoStandard);

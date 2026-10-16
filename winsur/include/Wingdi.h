@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1265 constants, 118 declarations, 9 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 1265 constants, 119 declarations, 9 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINGDI_
 #define _WINGDI_
@@ -1631,6 +1631,12 @@ typedef RGNDATA *PRGNDATA, *LPRGNDATA;
  * functions and callbacks
  * ================================================================ */
 
+/* CreateBitmapIndirect  [function; ce-only; unified-kb; unified-kb] */
+BOOL CreateBitmapIndirect( LPBITMAP lpBitmap );
+
+/* CreateBrushIndirect  [function; ce-only; unified-kb; unified-kb] */
+BOOL CreateBrushIndirect( LPLOGBRUSH lpLogBrush );
+
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* TransparentImage  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Mgblt2.lib, mgblt2.lib] */
@@ -1913,6 +1919,12 @@ int IntersectClipRect(
  int nBottomRect
 );
 
+/* MAKEROP4  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+DWORD MAKEROP4(
+ DWORD fore, 
+ DWORD back
+);
+
 /* MaskBlt  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Mgblt2.lib, mgblt2.lib] */
 BOOL MaskBlt(
  HDC hdcDest, 
@@ -2189,6 +2201,12 @@ int StartPage(
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
+
+/* AbortProc  [function, callback; shared; CE 5.0..699; Mgprint.lib] */
+BOOL CALLBACK AbortProc(
+ HDC hdc, // handle to DC
+ int iError // error value
+);
 
 /* GetTextCharacterExtra  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 int GetTextCharacterExtra(

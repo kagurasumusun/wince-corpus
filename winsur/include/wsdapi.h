@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1 constants, 74 declarations, 9 outlines, 0 base types, 0 extra macros, 68 extra decls
+ * 8 constants, 19 declarations, 51 outlines, 0 base types, 0 extra macros, 61 extra decls
  */
 #ifndef _WSDAPI_
 #define _WSDAPI_
@@ -17,11 +17,20 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
+#define ONE_WAY 0
+#define TWO_WAY 1
 #define WSDAPI_OPTION_MAX_INBOUND_MESSAGE_SIZE 0x0001
+#define WSDET_INCOMING_FAULT 2
+#define WSDET_INCOMING_MESSAGE 1
+#define WSDET_NONE 0
+#define WSDET_RESPONSE_TIMEOUTWSDET_RESPONSE_TIMEOUT 4
+#define WSDET_TRANSMISSION_FAILURE 3
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
+
+/* WSDEventType  [enum; shared; wsdapi.lib] */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
@@ -103,41 +112,6 @@ typedef struct _WSD_URI_LIST {
 } WSD_URI_LIST;
 typedef WSD_URI_LIST *PWSD_URI_LIST, *LPWSD_URI_LIST;
 
-/* WSDEventType  [enum; shared; wsdapi.lib] */
-typedef enum _WSDEventType
-{
- WSDET_NONE = 0,
- WSDET_INCOMING_MESSAGE = 1,
- WSDET_INCOMING_FAULT = 2,
- WSDET_TRANSMISSION_FAILURE = 3,
- WSDET_RESPONSE_TIMEOUTWSDET_RESPONSE_TIMEOUT = 4
-}WSDEventType;
-typedef WSDEventType *PWSDEventType, *LPWSDEventType;
-
-/* WSDUdpMessageType  [enum; shared; wsdapi.lib] */
-typedef enum _WSDUdpMessageType
-{
- ONE_WAY = 0,
- TWO_WAY = 1
-}WSDUdpMessageType;
-typedef WSDUdpMessageType *PWSDUdpMessageType, *LPWSDUdpMessageType;
-
-/* WSDUdpRetransmitParams  [struct; shared; wsdapi.lib] */
-typedef struct _WSDUpdRetransmitParams {
- ULONG ulSendDelay;
- ULONG ulRepeat;
- ULONG ulRepeatMinDelay;
- ULONG ulRepeatMaxDelay;
- ULONG ulRepeatUpperDelay;
-} WSDUdpRetransmitParams, *PWSDUdpRetransmitParams;
-
-/* WSDXML_TYPE  [struct; shared; wsdapi.lib] */
-typedef struct _WSDXML_TYPE {
- WCHAR* Uri;
- BYTE* Table;
-} WSDXML_TYPE;
-typedef WSDXML_TYPE *PWSDXML_TYPE, *LPWSDXML_TYPE;
-
 /* WSD_EVENTING_FILTER_ACTION  [struct; shared; wsdapi.lib] */
 typedef struct _WSD_EVENTING_FILTER_ACTION {
  WSD_URI_LIST* Actions;
@@ -152,278 +126,68 @@ typedef struct _WSD_SCOPES {
 typedef WSD_SCOPES *PWSD_SCOPES, *LPWSD_SCOPES;
 
 /* REQUESTBODY_GetStatus  [struct; shared; wsdapi.lib] */
-typedef struct {
- WSDXML_ELEMENT* Any;
-} REQUESTBODY_GetStatus;
-typedef REQUESTBODY_GetStatus *PREQUESTBODY_GetStatus, *LPREQUESTBODY_GetStatus;
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   Any */
 
 /* REQUESTBODY_Renew  [struct; shared; wsdapi.lib] */
-typedef struct {
- WSD_EVENTING_EXPIRES* Expires;
- WSDXML_ELEMENT* Any;
-} REQUESTBODY_Renew;
-typedef REQUESTBODY_Renew *PREQUESTBODY_Renew, *LPREQUESTBODY_Renew;
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   Expires */
+/*   Any */
 
 /* REQUESTBODY_Subscribe  [struct; shared; wsdapi.lib] */
-typedef struct {
- WSD_ENDPOINT_REFERENCE* EndTo;
- WSD_EVENTING_DELIVERY_MODE* Delivery;
- WSD_EVENTING_EXPIRES* Expires;
- WSD_EVENTING_FILTER* Filter;
- WSDXML_ELEMENT* Any;
-} REQUESTBODY_Subscribe;
-typedef REQUESTBODY_Subscribe *PREQUESTBODY_Subscribe, *LPREQUESTBODY_Subscribe;
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   EndTo */
+/*   Delivery */
+/*   Expires */
+/*   Filter */
+/*   Any */
 
 /* REQUESTBODY_Unsubscribe  [struct; shared; wsdapi.lib] */
-typedef struct {
- WSDXML_ELEMENT* Any;
-} REQUESTBODY_Unsubscribe;
-typedef REQUESTBODY_Unsubscribe *PREQUESTBODY_Unsubscribe, *LPREQUESTBODY_Unsubscribe;
-
-/* RESPONSEBODY_GetMetadata  [struct; shared; wsdapi.lib] */
-typedef struct {
- WSD_METADATA_SECTION_LIST* Metadata;
-} RESPONSEBODY_GetMetadata;
-typedef RESPONSEBODY_GetMetadata *PRESPONSEBODY_GetMetadata, *LPRESPONSEBODY_GetMetadata;
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   any */
 
 /* RESPONSEBODY_GetStatus  [struct; shared; wsdapi.lib] */
-typedef struct {
- WSD_EVENTING_EXPIRES* Expires;
- WSDXML_ELEMENT* Any;
-} RESPONSEBODY_GetStatus;
-typedef RESPONSEBODY_GetStatus *PRESPONSEBODY_GetStatus, *LPRESPONSEBODY_GetStatus;
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   expires */
+/*   any */
 
 /* RESPONSEBODY_Renew  [struct; shared; wsdapi.lib] */
-typedef struct {
- WSD_EVENTING_EXPIRES* Expires;
- WSDXML_ELEMENT* Any;
-} RESPONSEBODY_Renew;
-typedef RESPONSEBODY_Renew *PRESPONSEBODY_Renew, *LPRESPONSEBODY_Renew;
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   expires */
+/*   any */
 
 /* RESPONSEBODY_Subscribe  [struct; shared; wsdapi.lib] */
-typedef struct {
- WSD_ENDPOINT_REFERENCE* SubscriptionManager;
- WSD_EVENTING_EXPIRES* Expires;
- WSDXML_ELEMENT* Any;
-} RESPONSEBODY_Subscribe;
-typedef RESPONSEBODY_Subscribe *PRESPONSEBODY_Subscribe, *LPRESPONSEBODY_Subscribe;
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   SubscriptionManager */
+/*   expires */
+/*   any */
 
-/* WSD_BYE  [struct; shared; wsdapi.lib] */
-typedef struct _WSD_BYE {
- WSD_ENDPOINT_REFERENCE* EndpointReference;
- WSDXML_ELEMENT* Any;
-} WSD_BYE;
-typedef WSD_BYE *PWSD_BYE, *LPWSD_BYE;
-
-/* WSD_ENDPOINT_REFERENCE  [struct; shared; wsdapi.lib] */
-typedef struct _WSD_ENDPOINT_REFERENCE {
- const WCHAR* Address;
- WSD_REFERENCE_PROPERTIES ReferenceProperties;
- WSD_REFERENCE_PARAMETERS ReferenceParameters;
- WSDXML_NAME* PortType;
- WSDXML_NAME* ServiceName;
- WSDXML_ELEMENT* Any;
-} WSD_ENDPOINT_REFERENCE;
-typedef WSD_ENDPOINT_REFERENCE *PWSD_ENDPOINT_REFERENCE, *LPWSD_ENDPOINT_REFERENCE;
-
-/* WSD_ENDPOINT_REFERENCE_LIST  [struct; shared; wsdapi.lib] */
-typedef struct _WSD_ENDPOINT_REFERENCE_LIST {
- WSD_ENDPOINT_REFERENCE_LIST* Next;
- WSD_ENDPOINT_REFERENCE* Element;
-} WSD_ENDPOINT_REFERENCE_LIST;
-typedef WSD_ENDPOINT_REFERENCE_LIST *PWSD_ENDPOINT_REFERENCE_LIST, *LPWSD_ENDPOINT_REFERENCE_LIST;
-
-/* WSD_EVENTING_DELIVERY_MODE_PUSH  [struct; shared; wsdapi.lib] */
-typedef struct _WSD_EVENTING_DELIVERY_MODE_PUSH {
- WSD_ENDPOINT_REFERENCE* NotifyTo;
-} WSD_EVENTING_DELIVERY_MODE_PUSH;
-typedef WSD_EVENTING_DELIVERY_MODE_PUSH *PWSD_EVENTING_DELIVERY_MODE_PUSH, *LPWSD_EVENTING_DELIVERY_MODE_PUSH;
-
-/* WSD_HEADER_RELATESTO  [struct; shared; wsdapi.lib] */
-typedef struct _WSD_HEADER_RELATESTO {
- WSDXML_NAME* RelationshipType;
- const WCHAR* MessageID;
-} WSD_HEADER_RELATESTO;
-typedef WSD_HEADER_RELATESTO *PWSD_HEADER_RELATESTO, *LPWSD_HEADER_RELATESTO;
-
-/* WSD_HOST_METADATA  [struct; shared; wsdapi.lib] */
-typedef struct _WSD_HOST_METADATA {
- WSD_SERVICE_METADATA* Host;
- WSD_SERVICE_METADATA_LIST* Hosted;
-} WSD_HOST_METADATA;
-typedef WSD_HOST_METADATA *PWSD_HOST_METADATA, *LPWSD_HOST_METADATA;
-
-/* WSD_METADATA_SECTION  [struct; shared; wsdapi.lib] */
-typedef struct _WSD_METADATA_SECTION {
- const WCHAR* Dialect;
- const WCHAR* Identifier;
- void* Data;
- WSD_ENDPOINT_REFERENCE* MetadataReference;
- const WCHAR* Location;
- WSDXML_ELEMENT* Any;
-} WSD_METADATA_SECTION;
-typedef WSD_METADATA_SECTION *PWSD_METADATA_SECTION, *LPWSD_METADATA_SECTION;
-
-/* WSD_METADATA_SECTION_LIST  [struct; shared; wsdapi.lib] */
-typedef struct _WSD_METADATA_SECTION_LIST {
- WSD_METADATA_SECTION_LIST* Next;
- WSD_METADATA_SECTION* Element;
-} WSD_METADATA_SECTION_LIST;
-typedef WSD_METADATA_SECTION_LIST *PWSD_METADATA_SECTION_LIST, *LPWSD_METADATA_SECTION_LIST;
-
-/* WSD_NAME_LIST  [struct; shared; wsdapi.lib] */
-typedef struct _WSD_NAME_LIST {
- WSD_NAME_LIST* Next;
- WSDXML_NAME* Element;
-} WSD_NAME_LIST;
-typedef WSD_NAME_LIST *PWSD_NAME_LIST, *LPWSD_NAME_LIST;
-
-/* WSD_PROBE  [struct; shared; wsdapi.lib] */
-typedef struct _WSD_PROBE {
- WSD_NAME_LIST* Types;
- WSD_SCOPES* Scopes;
- WSDXML_ELEMENT* Any;
-} WSD_PROBE;
-typedef WSD_PROBE *PWSD_PROBE, *LPWSD_PROBE;
-
-/* WSD_REFERENCE_PARAMETERS  [struct; shared; wsdapi.lib] */
-typedef struct _WSD_REFERENCE_PARAMETERS {
- WSDXML_ELEMENT* Any;
-} WSD_REFERENCE_PARAMETERS;
-typedef WSD_REFERENCE_PARAMETERS *PWSD_REFERENCE_PARAMETERS, *LPWSD_REFERENCE_PARAMETERS;
-
-/* WSD_REFERENCE_PROPERTIES  [struct; shared; wsdapi.lib] */
-typedef struct _WSD_REFERENCE_PROPERTIES {
- WSDXML_ELEMENT* Any;
-} WSD_REFERENCE_PROPERTIES;
-typedef WSD_REFERENCE_PROPERTIES *PWSD_REFERENCE_PROPERTIES, *LPWSD_REFERENCE_PROPERTIES;
-
-/* WSD_RELATIONSHIP_METADATA  [struct; shared; wsdapi.lib] */
-typedef struct _WSD_RELATIONSHIP_METADATA {
- const WCHAR* Type;
- WSD_HOST_METADATA* Data;
- WSDXML_ELEMENT* Any;
-} WSD_RELATIONSHIP_METADATA;
-typedef WSD_RELATIONSHIP_METADATA *PWSD_RELATIONSHIP_METADATA, *LPWSD_RELATIONSHIP_METADATA;
-
-/* WSD_RESOLVE  [struct; shared; wsdapi.lib] */
-typedef struct _WSD_RESOLVE {
- WSD_ENDPOINT_REFERENCE* EndpointReference;
- WSDXML_ELEMENT* Any;
-} WSD_RESOLVE;
-typedef WSD_RESOLVE *PWSD_RESOLVE, *LPWSD_RESOLVE;
-
-/* WSD_SERVICE_METADATA  [struct; shared; wsdapi.lib] */
-typedef struct _WSD_SERVICE_METADATA {
- WSD_ENDPOINT_REFERENCE_LIST* EndpointReference;
- WSD_NAME_LIST* Types;
- const WCHAR* ServiceId;
- WSDXML_ELEMENT* Any;
-} WSD_SERVICE_METADATA;
-typedef WSD_SERVICE_METADATA *PWSD_SERVICE_METADATA, *LPWSD_SERVICE_METADATA;
-
-/* WSD_SERVICE_METADATA_LIST  [struct; shared; wsdapi.lib] */
-typedef struct _WSD_SERVICE_METADATA_LIST {
- WSD_SERVICE_METADATA_LIST* Next;
- WSD_SERVICE_METADATA* Element;
-} WSD_SERVICE_METADATA_LIST;
-typedef WSD_SERVICE_METADATA_LIST *PWSD_SERVICE_METADATA_LIST, *LPWSD_SERVICE_METADATA_LIST;
-
-/* WSD_SOAP_FAULT_CODE  [struct; shared; wsdapi.lib] */
-typedef struct _WSD_SOAP_FAULT_CODE {
- WSDXML_NAME* Value;
- WSD_SOAP_FAULT_SUBCODE* Subcode;
-} WSD_SOAP_FAULT_CODE;
-typedef WSD_SOAP_FAULT_CODE *PWSD_SOAP_FAULT_CODE, *LPWSD_SOAP_FAULT_CODE;
-
-/* WSD_SOAP_FAULT_SUBCODE  [struct; shared; wsdapi.lib] */
-typedef struct _WSD_SOAP_FAULT_SUBCODE {
- WSDXML_NAME* Value;
- WSD_SOAP_FAULT_SUBCODE* Subcode;
-} WSD_SOAP_FAULT_SUBCODE;
-typedef WSD_SOAP_FAULT_SUBCODE *PWSD_SOAP_FAULT_SUBCODE, *LPWSD_SOAP_FAULT_SUBCODE;
-
-/* WSD_UNKNOWN_LOOKUP  [struct; shared; wsdapi.lib] */
-typedef struct _WSD_UNKNOWN_LOOKUP {
- WSDXML_ELEMENT* Any;
-} WSD_UNKNOWN_LOOKUP;
-typedef WSD_UNKNOWN_LOOKUP *PWSD_UNKNOWN_LOOKUP, *LPWSD_UNKNOWN_LOOKUP;
-
-/* WSDXML_ATTRIBUTE  [struct; shared; wsdapi.lib] */
-typedef struct _WSDXML_ATTRIBUTE {
- WSDXML_ELEMENT* Element;
- WSDXML_ATTRIBUTE* Next;
- WSDXML_NAME* Name;
- WCHAR* Value;
-} WSDXML_ATTRIBUTE;
-typedef WSDXML_ATTRIBUTE *PWSDXML_ATTRIBUTE, *LPWSDXML_ATTRIBUTE;
-
-/* WSDXML_ELEMENT  [struct; shared; wsdapi.lib] */
-typedef struct _WSDXML_ELEMENT {
- WSDXML_NODE Node;
- WSDXML_NAME* Name;
- WSDXML_ATTRIBUTE* FirstAttribute;
- WSDXML_NODE* FirstChild;
- WSDXML_PREFIX_MAPPING* PrefixMappings;
-} WSDXML_ELEMENT;
-typedef WSDXML_ELEMENT *PWSDXML_ELEMENT, *LPWSDXML_ELEMENT;
-
-/* WSDXML_ELEMENT_LIST  [struct; shared; wsdapi.lib] */
-typedef struct _WSDXML_ELEMENT_LIST {
- WSDXML_ELEMENT_LIST* Next;
- WSDXML_ELEMENT* Element;
-} WSDXML_ELEMENT_LIST;
-typedef WSDXML_ELEMENT_LIST *PWSDXML_ELEMENT_LIST, *LPWSDXML_ELEMENT_LIST;
-
-/* WSDXML_NAME  [struct; shared; wsdapi.lib] */
-typedef struct _WSDXML_NAME {
- WSDXML_NAMESPACE* Space;
- WCHAR* LocalName;
-} WSDXML_NAME;
-typedef WSDXML_NAME *PWSDXML_NAME, *LPWSDXML_NAME;
-
-/* WSDXML_NAMESPACE  [struct; shared; wsdapi.lib] */
-typedef struct _WSDXML_NAMESPACE {
- const WCHAR* Uri;
- const WCHAR* PreferredPrefix;
- WSDXML_NAME* Names;
- WORD NamesCount;
- WORD Encoding;
-} WSDXML_NAMESPACE;
-typedef WSDXML_NAMESPACE *PWSDXML_NAMESPACE, *LPWSDXML_NAMESPACE;
-
-/* WSDXML_NODE  [struct; shared; wsdapi.lib] */
-typedef struct _WSDXML_NODE {
- enum {
- ElementType,
- TextType
- } Type;
- WSDXML_ELEMENT* Parent;
- WSDXML_NODE* Next;
-} WSDXML_NODE;
-typedef WSDXML_NODE *PWSDXML_NODE, *LPWSDXML_NODE;
-
-/* WSDXML_PREFIX_MAPPING  [struct; shared; wsdapi.lib] */
-typedef struct _WSDXML_PREFIX_MAPPING {
- DWORD Refs;
- WSDXML_PREFIX_MAPPING* Next;
- WSDXML_NAMESPACE* Space;
- WCHAR* Prefix;
-} WSDXML_PREFIX_MAPPING;
-typedef WSDXML_PREFIX_MAPPING *PWSDXML_PREFIX_MAPPING, *LPWSDXML_PREFIX_MAPPING;
-
-/* WSDXML_TEXT  [struct; shared; wsdapi.lib] */
-typedef struct _WSDXML_TEXT {
- WSDXML_NODE Node;
- WCHAR* Text;
-} WSDXML_TEXT;
-typedef WSDXML_TEXT *PWSDXML_TEXT, *LPWSDXML_TEXT;
+/* RESPONSEBODY_SubscriptionEnd  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   SubscriptionManager */
+/*   Status */
+/*   Reason */
+/*   Any */
 
 /* WSD_APP_SEQUENCE  [struct; shared; wsdapi.lib] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   InstanceId */
 /*   SequenceId */
 /*   MessageNumber */
+
+/* WSD_BYE  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   EndpointReference */
+/*   Any */
+
+/* WSD_ENDPOINT_REFERENCE  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   Address */
+/*   ReferenceProperties */
+/*   ReferenceParameters */
+/*   PortType */
+/*   ServiceName */
+/*   Any */
 
 /* WSD_EVENT  [struct; shared; wsdapi.lib] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
@@ -441,6 +205,11 @@ typedef WSDXML_TEXT *PWSDXML_TEXT, *LPWSDXML_TEXT;
 /*   PVoid */
 /*   Unknown */
 
+/* WSD_HEADER_RELATESTO  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   RelationshipType */
+/*   MessageID */
+
 /* WSD_HELLO  [struct; shared; wsdapi.lib] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   EndpointReference */
@@ -455,6 +224,32 @@ typedef WSDXML_TEXT *PWSDXML_TEXT, *LPWSDXML_TEXT;
 /*   lang */
 /*   String */
 
+/* WSD_METADATA_SECTION  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   Dialect */
+/*   Identifier */
+/*   Data */
+/*   MetadataReference */
+/*   Location */
+/*   Any */
+
+/* WSD_NAME_LIST  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   Next */
+/*   Element */
+
+/* WSD_OPERATION  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   RequestType */
+/*   ResponseType */
+/*   RequestStubFunction */
+
+/* WSD_PROBE  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   Types */
+/*   Scopes */
+/*   Any */
+
 /* WSD_PROBE_MATCH  [struct; shared; wsdapi.lib] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   EndpointReference */
@@ -462,6 +257,30 @@ typedef WSDXML_TEXT *PWSDXML_TEXT, *LPWSDXML_TEXT;
 /*   Scopes */
 /*   XAddrs */
 /*   MetadataVersion */
+/*   Any */
+
+/* WSD_PROBE_MATCHES  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   ProbeMatch */
+/*   Any */
+
+/* WSD_REFERENCE_PARAMETERS  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   Any */
+
+/* WSD_REFERENCE_PROPERTIES  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   Any */
+
+/* WSD_RELATIONSHIP_METADATA  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   Type */
+/*   Data */
+/*   Any */
+
+/* WSD_RESOLVE  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   EndpointReference */
 /*   Any */
 
 /* WSD_RESOLVE_MATCH  [struct; shared; wsdapi.lib] */
@@ -473,6 +292,54 @@ typedef WSDXML_TEXT *PWSDXML_TEXT, *LPWSDXML_TEXT;
 /*   MetadataVersion */
 /*   Any */
 
+/* WSD_RESOLVE_MATCHES  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   ResolveMatch */
+/*   Any */
+
+/* WSD_SERVICE_METADATA  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   EndpointReference */
+/*   Types */
+/*   ServiceId */
+/*   Any */
+
+/* WSD_SOAP_FAULT  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   Code */
+/*   Reason */
+/*   Node */
+/*   Role */
+/*   Detail */
+
+/* WSD_SOAP_FAULT_CODE  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   Value */
+/*   Subcode */
+
+/* WSD_SOAP_FAULT_SUBCODE  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   Value */
+/*   Subcode */
+
+/* WSD_SOAP_HEADER  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   To */
+/*   Action */
+/*   MessageID */
+/*   RelatesTo */
+/*   ReplyTo */
+/*   From */
+/*   FaultTo */
+/*   AppSequence */
+/*   AnyHeaders */
+
+/* WSD_SOAP_MESSAGE  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   Header */
+/*   Body */
+/*   BodyType */
+
 /* WSD_SYNCHRONOUS_RESPONSE_CONTEXT  [struct; shared; wsdapi.lib] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   hr */
@@ -480,34 +347,93 @@ typedef WSDXML_TEXT *PWSDXML_TEXT, *LPWSDXML_TEXT;
 /*   messageParameters */
 /*   results */
 
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
+/* WSD_THIS_DEVICE_METADATA  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   FriendlyName */
+/*   FirmwareVersion */
+/*   SerialNumber */
+/*   Any */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
+/* WSD_THIS_MODEL_METADATA  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   Manufacturer */
+/*   ManufacturerUrl */
+/*   ModelName */
+/*   ModelNumber */
+/*   ModelUrl */
+/*   PresentationUrl */
+/*   Any */
 
-/* WSDAllocateLinkedMemory  [function; shared; CE 6.0..699; wsdapi.lib] */
-void* WSDAllocateLinkedMemory(
- void* pParent,
- size_t cbSize
-);
+/* WSD_UNKNOWN_LOOKUP  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   Any */
 
-/* WSDAttachLinkedMemory  [function; shared; CE 6.0..699; wsdapi.lib] */
-void WSDAttachLinkedMemory (
- void* pParent,
- void* pChild
-);
+/* WSDUdpMessageType  [enum; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   TWO_WAY */
 
-/* WSDDetachLinkedMemory  [function; shared; CE 6.0..699; wsdapi.lib] */
-void WSDDetachLinkedMemory(
- void* pVoid
-);
+/* WSDUdpRetransmitParams  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   ulSendDelay */
+/*   ulRepeat */
+/*   ulRepeatMinDelay */
+/*   ulRepeatMaxDelay */
+/*   ulRepeatUpperDelay */
 
-/* WSDFreeLinkedMemory  [function; shared; CE 6.0..699; wsdapi.lib] */
-void WSDFreeLinkedMemory(
- void* pVoid
-);
-#endif /* _WIN32_WCE */
+/* WSDXML_ATTRIBUTE  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   Element */
+/*   Next */
+/*   Name */
+/*   Value */
+
+/* WSDXML_ELEMENT  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   Node */
+/*   Name */
+/*   FirstAttribute */
+/*   FirstChild */
+/*   PrefixMappings */
+
+/* WSDXML_ELEMENT_LIST  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   Next */
+/*   Element */
+
+/* WSDXML_NAME  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   Space */
+/*   LocalName */
+
+/* WSDXML_NAMESPACE  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   Uri */
+/*   PreferredPrefix */
+/*   Names */
+/*   NamesCount */
+/*   Encoding */
+
+/* WSDXML_NODE  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   Parent */
+/*   Next */
+
+/* WSDXML_PREFIX_MAPPING  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   Refs */
+/*   Next */
+/*   Space */
+/*   Prefix */
+
+/* WSDXML_TEXT  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   Node */
+/*   Text */
+
+/* WSDXML_TYPE  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   Uri */
+/*   Table */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main
@@ -515,14 +441,11 @@ void WSDFreeLinkedMemory(
  * ================================================================ */
 
 /* function */
-HRESULT AddNameToNamespace( const LPCWSTR* pszUri, const LPCWSTR* pszName, WSDXML_NAME** ppName );
-HRESULT AddNamespace( const LPCWSTR* pszUri, const LPCWSTR* pszSuggestedPrefix, WSDXML_NAMESPACE** ppNamespace );
 HRESULT Deserialize( LPCWSTR pszBuffer );
 HRESULT Detach();
 HRESULT GetAllMetadata( WSD_METADATA_SECTION_LIST** ppMetadata );
 HRESULT* GetEndpointReference( WSD_ENDPOINT_REFERENCE** ppEndPointReference );
 HRESULT GetExclusive();
-HRESULT GetExtendedDiscoXML( WSDXML_ELEMENT** ppHeaderAny, WSDXML_ELEMENT** ppBodyAny );
 HRESULT GetFaultInfo( WSD_SOAP_FAULT** ppFault );
 HRESULT GetHostMetadata( WSD_HOST_METADATA** ppHostMetadata );
 HRESULT GetID( LPCWSTR* ppszId );
@@ -533,7 +456,6 @@ HRESULT GetOutboundHttpHeaders( LPCWSTR* ppszHeaders );
 HRESULT GetPort( WORD* pwPort );
 HRESULT GetProbeResolveTag( LPCWSTR* ppszTag );
 HRESULT GetRemoteTransportAddress( LPCWSTR* ppszRemoteTransportAddress );
-HRESULT GetRetransmitParams( WSDUdpRetransmitParams* pParams );
 HRESULT GetScopeRule( LPCWSTR* ppszScopeMatchingRule );
 HRESULT GetScopes( WSD_URI_LIST** ppScopesList );
 HRESULT GetSecure();
@@ -561,11 +483,9 @@ HRESULT SetAddressFamily( DWORD dwAddressFamily );
 HRESULT SetExclusive( BOOL fExclusive );
 HRESULT SetID( LPCWSTR pszId );
 HRESULT SetInboundHttpHeaders( LPCWSTR pszHeaders );
-HRESULT SetMessageType( WSDUdpMessageType messageType );
 HRESULT SetMetadata( const WSD_THIS_MODEL_METADATA* pThisModelMetadata, const WSD_THIS_DEVICE_METADATA* pThisDeviceMetadata, const WSD_HOST_METADATA* pHostMetadata, const WSD_METADATA_SECTION_LIST* pCustomMetadata );
 HRESULT SetOutboundHttpHeaders( LPCWSTR pszHeaders );
 HRESULT SetPort( WORD wPort );
-HRESULT SetRetransmitParams( WSDUdpRetransmitParams* pParams );
 HRESULT SetSecure( BOOL fSecure );
 HRESULT SetServiceDiscoverable( const WCHAR* pszServiceId, BOOL fDiscoverable );
 HRESULT SetTTL( DWORD dwTTL );

@@ -110,4 +110,69 @@ typedef THREADENTRY32* LPTHREADENTRY32;
 /*   dwFlags */
 /*   szExeFile */
 
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
+
+/* CloseToolhelp32Snapshot  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib] */
+BOOL WINAPI CloseToolhelp32Snapshot(
+ HANDLE hSnapshot
+);
+
+/* CreateToolhelp32Snapshot  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib] */
+HANDLE WINAPI CreateToolhelp32Snapshot(
+ DWORD dwFlags,
+ DWORD th32ProcessID
+);
+
+/* Heap32First  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib] */
+BOOL WINAPI Heap32First(
+ HANDLE hSnapshot,
+ LPHEAPENTRY32 lphe,
+ DWORD th32ProcessID,
+ DWORD th32HeapID
+);
+
+/* Heap32ListFirst  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib] */
+BOOL WINAPI Heap32ListFirst(
+ HANDLE hSnapshot,
+ LPHEAPLIST32 lphl
+);
+
+/* Heap32ListNext  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib] */
+BOOL WINAPI Heap32ListNext(
+ HANDLE hSnapshot,
+ LPHEAPLIST32 lphl
+);
+
+/* Heap32Next  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib] */
+BOOL WINAPI Heap32Next(
+ HANDLE hSnapshot,
+ LPHEAPENTRY32 lphe
+);
+
+/* Thread32First  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib] */
+BOOL WINAPI Thread32First(
+ HANDLE hSnapshot,
+ LPTHREADENTRY32 lpte
+);
+
+/* Thread32Next  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib] */
+BOOL WINAPI Thread32Next(
+ HANDLE hSnapshot,
+ LPTHREADENTRY32 lpte
+);
+
+/* Toolhelp32ReadProcessMemory  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib] */
+BOOL WINAPI Toolhelp32ReadProcessMemory(
+ DWORD th32ProcessID,
+ LPCVOID lpBaseAddress,
+ LPVOID lpBuffer,
+ DWORD cbRead,
+ LPDWORD lpNumberOfBytesRead
+);
+#endif /* _WIN32_WCE */
+
 #endif /* _TLHELP32_ */

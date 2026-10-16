@@ -441,6 +441,18 @@ typedef struct rilndispacket_tag {
  const RILNDISBUFFER NDISBuffer[1];
 } RILNDISPACKET, *LPRILNDISPACKET;
 
+/* RILNDISRECEIVECALLBACK  [typedef; ce-only] */
+typedef void (CALLBACK *RILNDISRECEIVECALLBACK)(
+ PVOID pCallbackContext,
+ LPRILNDISPACKET pRilPacket
+);
+
+/* RILNDISTRANSMITCALLBACK  [typedef; ce-only] */
+typedef void (CALLBACK *RILNDISTRANSMITCALLBACK)(
+ PVOID pCallbackContext,
+ LPRILNDISPACKET pRilPacket
+);
+
 /* RILNITZINFO  [struct; ce-only] */
 typedef struct {
  DWORD cbSize;
@@ -451,6 +463,14 @@ typedef struct {
  SYSTEMTIME SysTime;
 } RILNITZINFO;
 typedef RILNITZINFO *PRILNITZINFO, *LPRILNITZINFO;
+
+/* RILNOTIFYCALLBACK  [typedef; ce-only] */
+typedef void (CALLBACK *RILNOTIFYCALLBACK)(
+ DWORD dwCode,
+ const void* lpData,
+ DWORD cbData,
+ DWORD dwParam
+);
 
 /* RILPDPPACKETSUPPORTCAPS  [struct; ce-only; Ril.lib] */
 typedef struct {
@@ -470,6 +490,15 @@ typedef struct {
  DWORD dwTotal;
 } RILPHONEBOOKINFO;
 typedef RILPHONEBOOKINFO *PRILPHONEBOOKINFO, *LPRILPHONEBOOKINFO;
+
+/* RILRESULTCALLBACK  [typedef; ce-only; Ril.lib] */
+typedef void (CALLBACK *RILRESULTCALLBACK)(
+ DWORD dwCode,
+ HRESULT hrCmdID,
+ const void* lpData,
+ DWORD cbData,
+ DWORD dwParam
+);
 
 /* RILRLPINFO  [struct; ce-only] */
 typedef struct {

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _RAPI2_
 #define _RAPI2_
@@ -17,8 +17,6 @@
  * ================================================================ */
 
 /* function */
-HRESULT OnDeviceConnected( IRAPIDevice* pIDevice );
-HRESULT OnDeviceDisconnected( IRAPIDevice* pIDevice );
 HRESULT UnAdvise( DWORD dwContext );
 
 #endif /* _RAPI2_ */

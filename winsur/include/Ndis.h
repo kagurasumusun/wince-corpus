@@ -481,13 +481,33 @@ typedef struct _NDIS_PACKET {
  * functions and callbacks
  * ================================================================ */
 
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x200 && _WIN32_WCE < 0x210)) /* CE 2.0..209 */
+
+/* NdisMInitizlizeWrapper  [function; ce-only; CE 2.0..209] */
+VOID NdisMInitializeWrapper(OUT PNDIS_HANDLE NdisWrapperHandle, IN PVOID SystemSpecific1, IN PVOID SystemSpecific2, 
+IN PVOID SystemSpecific3);
+#endif /* _WIN32_WCE */
+
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x200 && _WIN32_WCE < 0x210) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400)) /* CE 2.0..209, 2.11..2.12, 3.0..399 */
+
+/* ARGUMENT_PRESENT  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399] */
+BOOLEAN ARGUMENT_PRESENT( 
+IN (CHAR *) ArgumentPointer );
 
 /* KdBreakPoint  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399] */
 VOID KdBreakPoint();
 
 /* KdPrint  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399] */
 VOID KdPrint(LPSTR *lpszString);
+
+/* NdisQueryMapRegisterCount  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399; Ndislib.lib] */
+NDIS_STATUS NdisQueryMapRegisterCount( 
+IN NDIS_INTERFACE_TYPE BusType, 
+OUT PUINT MapRegisterCount );
+
+/* NdisResetComplete  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399] */
+VOID NdisReset(OUT PNDIS_STATUS Status, 
+IN NDIS_HANDLE NdisBindingHandle );
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x200 && _WIN32_WCE < 0x210) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699 */
@@ -875,6 +895,14 @@ VOID NdisMoveToMappedMemory(
 VOID NdisIMRevertBack( 
 IN NDIS_HANDLE MiniportAdapterHandle, 
 IN NDIS_HANDLE SwitchHandle );
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
+
+/* NdisIMSwitchToMiniport  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Ndis.lib, ndis.lib, Ndislib.lib] */
+BOOLEAN NdisIMSwitchToMiniport(
+IN NDIS_HANDLE MiniportAdapterHandle, 
+OUT PNDIS_HANDLE SwitchHandle );
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
@@ -1387,6 +1415,10 @@ UINT NdisPacketPoolUsage(
  * ================================================================ */
 
 /* function */
+PVOID NDIS_BUFFER_LINKAGE(  IN PNDIS_BUFFER Buffer );
+UINT NDIS_GET_PACKET_PROTOCOL_TYPE(PNDIS_PACKET_Packet_,);
+LONG NDIS_GET_PACKET_TIME_SENT(PNDIS_PACKET_Packet);
+UINT NDIS_SET_PACKET_HEADER_SIZE(PNDIS_PACKET _Packet,UINT _HdrSize);
 LONG NdisMReadDmaCounter (IN NDIS_HANDLE MiniportDmaHandle);
 
 #endif /* _NDIS_ */

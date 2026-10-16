@@ -44,6 +44,19 @@ struct addrinfo {
  struct addrinfo* ai_next;
 };
 
+/* freeaddrinfo  [struct, function; shared; Ws2.lib; A/W FreeAddrInfoW (CE is W-side)] */
+void freeaddrinfo(
+ struct addrinfo FAR* ai
+);
+
+/* getaddrinfo  [struct, function; shared; Ws2.lib; A/W GetAddrInfoW (CE is W-side)] */
+int getaddrinfo(
+ const char FAR* nodename,
+ const char FAR* servname,
+ const struct addrinfo FAR* hints,
+ struct addrinfo FAR* FAR* res
+);
+
 /* in6_addr  [struct; shared] */
 struct in6_addr {
  union {

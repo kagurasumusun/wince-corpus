@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 13 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 8 declarations, 3 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _MSHTMHST_
 #define _MSHTMHST_
@@ -14,6 +14,10 @@
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
+
+/* SHOWHTMLDIALOGEXFN  [typedef; ce-only; mshtml.dll] */
+
+/* SHOWHTMLDIALOGFN  [typedef; ce-only; mshtml.dll] */
 
 /* SHOWMODELESSHTMLDIALOGFN  [typedef; ce-only; mshtml.dll] */
 
@@ -73,21 +77,5 @@ typedef enum _NvFocusDirection {
  FOCUS_RIGHT = 4,
 } NVFOCUS_DIRECTION;
 typedef NVFOCUS_DIRECTION *PNVFOCUS_DIRECTION, *LPNVFOCUS_DIRECTION;
-
-/* pvarArgOut  [extra typedef] */
-typedef HRESULT (CALLBACK *SHOWHTMLDIALOGEXFN)(  HWND hwndParent,  IMoniker *pMk,  DWORD dwDialogFlags,  VARIANT *pvarArgIn,  TCHAR *pchOptions,  VARIANT *pvarArgOut  );
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 5.0..599 */
-
-/* CreateHTMLPropertyPage  [function; ce-only; CE 5.0..599; mshtml.dll] */
-HRESULT CreateHTMLPropertyPage( 
- IMoniker *pmk, 
- IPropertyPage **ppPP 
-);
-#endif /* _WIN32_WCE */
 
 #endif /* _MSHTMHST_ */

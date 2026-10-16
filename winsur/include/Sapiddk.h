@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 54 extra decls
+ * 0 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 53 extra decls
  */
 #ifndef _SAPIDDK_
 #define _SAPIDDK_
@@ -80,7 +80,6 @@ typedef SPWORDINFOOPT *PSPWORDINFOOPT, *LPSPWORDINFOOPT;
  * ================================================================ */
 
 /* function */
-HRESULT AddTokensFromTokenEnum( IEnumSpObjectTokens* pTokenEnum );
 HRESULT CallEngine( VOID* pCallFrame, ULONG ulCallFrameSize );
 HRESULT CallEngineEx( const void* pInFrame, ULONG ulInFrameSize, void** ppCoMemOutFrame, ULONG* pulOutFrameSize );
 HRESULT CompleteSkip( long ulNumSkipped );

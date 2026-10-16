@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1 constants, 1 declarations, 0 outlines, 0 base types, 0 extra macros, 20 extra decls
+ * 1 constants, 1 declarations, 0 outlines, 0 base types, 0 extra macros, 11 extra decls
  */
 #ifndef _VOIPMEDIAMANAGER_IDL_
 #define _VOIPMEDIAMANAGER_IDL_
@@ -48,18 +48,9 @@ typedef VoIPProgressTone *PVoIPProgressTone, *LPVoIPProgressTone;
  * ================================================================ */
 
 /* function */
-HRESULT AnswerSession( IRTCSession2* piSession );
-HRESULT ConferenceSessions( [in] IRTCSession2* piSessionA, [in] IRTCSession2* piSessionB );
-HRESULT CreatePCToPCSession( IRTCClient2* piClient, IRTCProfile* piProfile, IRTCSession2** ppiSession );
-HRESULT HoldSession( IRTCSession2* piSession );
-HRESULT InitializeRTCClient( IRTCClient2* piClient );
-HRESULT OnReinviteEvent( IRTCReInviteEvent* piReinviteEvent );
-HRESULT OnSessionOperationCompleteEvent( [in] IRTCSessionOperationCompleteEvent* piEvent );
-HRESULT OnSessionStateChangeEvent( IRTCSessionStateChangeEvent* piSSCEvent );
 HRESULT PlayProgressTone( VoIPProgressTone vpt );
 HRESULT StopProgressTone();
 HRESULT StopSound();
-HRESULT UnholdSession( IRTCSession2* piSession );
 HRESULT get_MicrophoneVolume( float* pfpVolume );
 HRESULT get_SpeakerVolume( float* pfpVolume );
 HRESULT put_MicrophoneVolume( float fpVolume );

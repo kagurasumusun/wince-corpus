@@ -584,4 +584,17 @@ typedef struct _D3DMPRESENT_PARAMETERS_ {
 } D3DMPRESENT_PARAMETERS;
 typedef D3DMPRESENT_PARAMETERS *PD3DMPRESENT_PARAMETERS, *LPD3DMPRESENT_PARAMETERS;
 
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
+
+/* D3DM_MAKE_D3DMVALUE  [function; ce-only; CE 5.0..699] */
+inline D3DMVALUE D3DM_MAKE_D3DMVALUE(D3DMVALUE Value);
+inline D3DMVALUE D3DM_MAKE_D3DMVALUE(float Value);
+inline D3DMVALUE D3DM_MAKE_D3DMVALUE(unsigned int Value);
+inline D3DMVALUE D3DM_MAKE_D3DMVALUE(double Value);
+#endif /* _WIN32_WCE */
+
 #endif /* _D3DMTYPES_ */

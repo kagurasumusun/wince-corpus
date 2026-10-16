@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 3 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 11 extra decls
+ * 3 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
  */
 #ifndef _MMSTREAM_
 #define _MMSTREAM_
@@ -27,12 +27,7 @@
  * ================================================================ */
 
 /* function */
-HRESULT AllocateSample( DWORD dwFlags, IStreamSample **ppSample);
 HRESULT CompletionStatus( DWORD dwFlags, DWORD dwMilliseconds);
-HRESULT CreateSharedSample( IStreamSample *pExistingSample, DWORD dwFlags, IStreamSample **ppNewSample);
-HRESULT EnumMediaStreams( long Index, IMediaStream **ppMediaStream);
 HRESULT GetEndOfStreamEventHandle( HANDLE *phEOS);
-HRESULT GetMultiMediaStream( IMultiMediaStream **ppMultiMediaStream);
-HRESULT SetSameFormat( IMediaStream *pStreamThatHasDesiredFormat, DWORD dwFlags);
 
 #endif /* _MMSTREAM_ */

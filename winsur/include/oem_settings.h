@@ -23,6 +23,24 @@
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
+/* OemHelpProc  [function; ce-only; CE 6.0..699] */
+HRESULT WINAPI OemHelpProc(
+ HWND hOwnerWnd
+);
+
+/* OemProcXXX  [function; ce-only; CE 6.0..699] */
+BOOL CALLBACK OemProcXXX(
+ HWND hwnd, 
+ UINT msg, 
+ WPARAM wParam, 
+ LPARAM lParam
+);
+
+/* SetTabDispArea  [function; ce-only; CE 6.0..699] */
+void WINAPI SetTabDispArea(
+ RECT *prect
+);
+
 /* TscSettingsRead  [function; ce-only; CE 6.0..699] */
 HRESULT TscSettingsRead ( 
  UINT uID,

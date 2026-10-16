@@ -563,6 +563,55 @@ LCID ConvertDefaultLocale(
  LCID Locale
 );
 
+/* EnumCalendarInfoProc  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreloc.lib] */
+/* Windows CE supports only the Unicode version of this function. */
+/* Windows CE supports only the Unicode version of this function. */
+/* Windows CE supports only the Unicode version of this function. */
+/* Windows CE supports only the Unicode version of this function. */
+/* Windows Embedded CE supports only the Unicode version of this function. */
+/* Windows CE supports only the Unicode version of this function. */
+BOOL CALLBACK EnumCalendarInfoProc(
+ LPWSTR lpCalendarInfoString
+);
+
+/* EnumCodePagesProc  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreloc.lib] */
+BOOL CALLBACK EnumCodePagesProc( 
+ LPTSTR lpCodePageString
+);
+
+/* EnumDateFormatsProc  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreloc.lib] */
+/* Windows CE supports only the Unicode version of this function. */
+/* Windows CE supports only the Unicode version of this function. */
+/* Windows CE supports only the Unicode version of this function. */
+/* Windows CE supports only the Unicode version of this function. */
+/* Windows Embedded CE supports only the Unicode version of this function. */
+/* Windows CE supports only the Unicode version of this function. */
+BOOL CALLBACK EnumDateFormatsProc(
+ LPWSTR lpDateFormatString
+);
+
+/* EnumLocalesProc  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreloc.lib] */
+/* Windows CE supports only the Unicode version of this function. */
+/* Windows CE supports only the Unicode version of this function. */
+/* Windows CE supports only the Unicode version of this function. */
+/* Windows CE supports only the Unicode version of this function. */
+/* Windows Embedded CE supports only the Unicode version of this function. */
+/* Windows CE supports only the Unicode version of this function. */
+BOOL CALLBACK EnumLocalesProc(
+ LPWSTR lpLocaleString
+);
+
+/* EnumTimeFormatsProc  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreloc.lib] */
+/* Windows CE supports only the Unicode version of this function. */
+/* Windows CE supports only the Unicode version of this function. */
+/* Windows CE supports only the Unicode version of this function. */
+/* Windows CE supports only the Unicode version of this function. */
+/* Windows Embedded CE supports only the Unicode version of this function. */
+/* Windows CE supports only the Unicode version of this function. */
+BOOL CALLBACK EnumTimeFormatsProc(
+ LPWSTR lpTimeFormatString 
+);
+
 /* FoldString  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib; A/W FoldStringA,FoldStringW (CE is W-side)] */
 int FoldString(
  DWORD dwMapFlags, 

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 13 constants, 13 declarations, 9 outlines, 0 base types, 0 extra macros, 20 extra decls
+ * 13 constants, 11 declarations, 11 outlines, 0 base types, 0 extra macros, 15 extra decls
  */
 #ifndef _OCIDL_
 #define _OCIDL_
@@ -44,6 +44,10 @@
 /* IConnectionPoint  [interface; shared; CE 3.0..399, 5.0..599; Ole32.lib, Uuid.lib] */
 
 /* IConnectionPointContainer  [interface; shared; CE 3.0..399, 5.0..599; Ole32.lib, Uuid.lib] */
+
+/* IEnumConnectionPoints  [function, interface; shared; CE 3.0..399, 5.0..599; Ole32.lib, Uuid.lib] */
+
+/* IEnumConnections  [function, interface; shared; CE 3.0..399, 5.0..599; Ole32.lib, Uuid.lib] */
 
 /* IPersistStreamInit  [interface; shared; CE 3.0..399, 5.0..599; Ole32.lib, Uuid.lib] */
 #endif /* _WIN32_WCE */
@@ -127,31 +131,6 @@ typedef enum tagVIEWSTATUS {
 } VIEWSTATUS;
 typedef VIEWSTATUS *PVIEWSTATUS, *LPVIEWSTATUS;
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 3.0..399, 5.0..599 */
-
-/* IEnumConnectionPoints  [function, interface; shared; CE 3.0..399, 5.0..599; Ole32.lib, Uuid.lib] */
-HRESULT Next( 
- ULONG cConnections, //[in]Number of IConnectionPoint values 
- // returned in rgpcn array 
- IConnectionPoint **rgpcn, 
- //[out]Array to receive enumerated connection 
- // points 
- ULONG *pcFetched //[out]Pointer to the actual number of 
- // connection points returned in rgpcn array 
-); 
-HRESULT Skip( 
- ULONG cConnections //[in]Number of elements to skip 
-); 
-HRESULT Reset(void); 
-HRESULT Clone( 
- IEnumConnectionPoints **ppEnum //[out]Address of output variable 
- // that receives the 
- // IEnumConnectionPoints interface 
- // pointer 
-);
-#endif /* _WIN32_WCE */
-
-
 /* CONNECTDATA  [struct; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   pUnk */
@@ -172,9 +151,6 @@ typedef enum tagREADYSTATE {
  * ================================================================ */
 
 /* function */
-HRESULT EnumConnectionPoints( IEnumConnectionPoints **ppEnum );
-HRESULT EnumConnections( IEnumConnections **ppEnum );
-HRESULT GetConnectionPointContainer( IConnectionPointContainer **ppCPC );
 HRESULT GetLicInfo( LICINFO *pLicInfo );
 HRESULT GetPages( CAUUID *pPages //Pointer to structure );
 HRESULT GetViewStatus( DWORD* pdwStatus );

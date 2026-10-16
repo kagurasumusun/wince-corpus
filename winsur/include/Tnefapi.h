@@ -17,4 +17,24 @@
 
 /* TNEFINFO  [struct; ce-only] */
 
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213)) /* CE 2.11..2.12 */
+
+/* ModifiedUTF7ToUnicode  [function; ce-only; CE 2.11..2.12] */
+int WINAPI ModifiedUTF7ToUnicode (LPCSTR lpMultiByteSr, 
+int ccMultiByte, LPWSTR lpWideCharStr, int ccWideChar);
+
+/* TnefConvertToUnicode  [function; ce-only; CE 2.11..2.12] */
+INT WINAPI TnefConvertToUnicode (UINT CodePage, DWORD dwFlags, 
+LPCSTR lpMultiByteStr, int cchMultiByte, LPWSTR lpWideCharStr, 
+int cchWideChar);
+
+/* UnicodeToModifiedUTF7  [function; ce-only; CE 2.11..2.12] */
+int WINAPI UnicodeToModifiedUTF7 (LPCWSTR wszIn, int cchIn, 
+LPSTR pchOut, Int cchOut);
+#endif /* _WIN32_WCE */
+
 #endif /* _TNEFAPI_ */

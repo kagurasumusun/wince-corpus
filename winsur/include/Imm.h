@@ -395,4 +395,19 @@ typedef STYLEBUF *PSTYLEBUF, *LPSTYLEBUF;
 /*   szString */
 /*   hbmpItem */
 
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
+
+/* EnumRegisterWordProc  [function; ce-only; CE 2.11..2.12, 3.0..699] */
+UINT CALLBACK EnumRegisterWordProc(
+ LPCTSTR lpszReading,
+ DWORD dwStyle,
+ LPCTSTR lpszString,
+ LPVOID lpData 
+);
+#endif /* _WIN32_WCE */
+
 #endif /* _IMM_ */

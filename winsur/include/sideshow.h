@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 22 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 21 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _SIDESHOW_
 #define _SIDESHOW_
@@ -30,13 +30,6 @@ BOOL SideShowMgr_FindNextItem(
  BYTE* lpBuffer,
  UINT* lpuiItemSize,
  UINT* lpNextItemSize
-);
-
-/* SideShowMgr_GetAvailableUserNames  [function; ce-only; CE 5.0..599; sideshowapi.lib] */
-BOOL SideShowMgr_GetAvailableUserNames(
- WCHAR* wcNames,
- DWORD dwAllocatedCharacters,
- INT* iCurrentUserIndex
 );
 
 /* SideShowMgr_GetCurrentCacheSize  [function; ce-only; CE 5.0..599; sideshowapi.lib] */

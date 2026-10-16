@@ -49,8 +49,64 @@
 #define IP_TTL_EXPIRED_TRANSIT 11013
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* ICMP_ECHO_REPLY  [struct; shared] */
+struct icmp_echo_reply {
+ IPAddr Address;
+ unsigned long Status;
+ unsigned long RoundTripTime;
+ unsigned short DataSize; 
+ unsigned short Reserved; 
+ void FAR* Data;
+ struct ip_option_information Options; 
+} ICMP_ECHO_REPLY;
+
+/* IP_OPTION_INFORMATION  [struct; shared] */
+typedef struct IP_OPTION_INFORMATION {
+ unsigned char Ttl;
+ unsigned char Tos;
+ unsigned char Flags;
+ unsigned char OptionsSize;
+ unsigned char FAR* OptionsData;
+} IP_OPTION_INFORMATION;
+typedef IP_OPTION_INFORMATION *PIP_OPTION_INFORMATION, *LPIP_OPTION_INFORMATION;
+
+/* ==================================================================
  * functions and callbacks
  * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
+
+/* IcmpCloseHandle  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Icmplib.lib, Iphlpapi.dll, Iphlpapi.lib] */
+BOOL WINAPI IcmpCloseHandle(
+ HANDLE IcmpHandle 
+);
+
+/* IcmpCreateFile  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Icmplib.lib, Iphlpapi.dll, Iphlpapi.lib] */
+HANDLE WINAPI IcmpCreateFile(VOID);
+
+/* IcmpSendEcho  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Icmplib.lib, Iphlpapi.dll, Iphlpapi.lib] */
+DWORD WINAPI IcmpSendEcho(
+ HANDLE IcmpHandle, 
+ IPAddr DestinationAddress,
+ LPVOID RequestData, 
+ WORD RequestSize, 
+ PIP_OPTION_INFORMATION RequestOptions, 
+ LPVOID ReplyBuffer,
+ DWORD ReplySize, 
+ DWORD Timeout 
+);
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
+
+/* Icmp6CreateFile  [function; shared; CE 4.0..699; Icmplib.lib, Iphlpapi.dll, Iphlpapi.lib] */
+HANDLE WINAPI Icmp6CreateFile(VOID);
+#endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 

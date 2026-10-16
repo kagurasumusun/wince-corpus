@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _GCACHEVIEW_HPP_
 #define _GCACHEVIEW_HPP_
@@ -18,7 +18,6 @@
 
 /* function */
 void ComputeMinWindowSize( LONG* pcxMinWinSize, LONG* pcyMinWinSize );
-void GWECacheSetSysColors( int cElements, CONST INT* rgcolor, CONST COLORREF* rgrgb );
 int SystemMetrics( int nIndex );
 
 #endif /* _GCACHEVIEW_HPP_ */

@@ -84,6 +84,10 @@ class GluedPrototypeTests(unittest.TestCase):
         self.assertFalse(q.is_glued_prototype(text))
         self.assertTrue(q.looks_like_c_declaration(text))
 
+    def test_hungarian_arg_as_type_is_broken(self):
+        self.assertTrue(q.is_broken_c(
+            "int CALLBACK EnumFontsProc(lplf lplf, lptm lptm, DWORD dwType, LPARAM lpData);"))
+
     def test_interface_type_is_not_glued(self):
         text = ("BOOL HalTranslateBusAddress(INTERFACE_TYPE InterfaceType, "
                 "ULONG BusNumber, PHYSICAL_ADDRESS BusAddress, "

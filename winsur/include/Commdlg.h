@@ -267,6 +267,11 @@ BOOL ChooseColor(
  LPCHOOSECOLOR lpcc
 );
 
+/* CHOOSEFONT  [struct, function; shared; A/W ChooseFontA,ChooseFontW (CE is W-side)] */
+BOOL APIENTRY ChooseFont(
+ LPCHOOSEFONT lpcf
+);
+
 /* DEVNAMES  [struct; shared] */
 typedef struct tagDEVNAMES {
  WORD wDriverOffset; 
@@ -275,5 +280,44 @@ typedef struct tagDEVNAMES {
  WORD wDefault; 
 } DEVNAMES;
 typedef DEVNAMES *PDEVNAMES, *LPDEVNAMES;
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
+
+/* CCHookProc  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+UINT APIENTRY CCHookProc(
+ HWND hdlg, 
+ UINT uiMsg, 
+ WPARAM wParam, 
+ LPARAM lParam
+);
+
+/* PagePaintHook  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+UINT CALLBACK PagePaintHook(
+ HWND hdlg, 
+ UINT uiMsg, 
+ WPARAM wParam, 
+ LPARAM lParam
+);
+
+/* PageSetupHook  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+UINT CALLBACK PageSetupHook(
+ HWND hdlg, 
+ UINT uiMsg, 
+ WPARAM wParam, 
+ LPARAM lParam
+);
+
+/* PrintHookProc  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+UINT APIENTRY PrintHookProc(
+ HWND hdlg, 
+ UINT uiMsg, 
+ WPARAM wParam, 
+ LPARAM lParam 
+);
+#endif /* _WIN32_WCE */
 
 #endif /* _COMMDLG_ */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 3 constants, 10 declarations, 0 outlines, 0 base types, 0 extra macros, 17 extra decls
+ * 3 constants, 9 declarations, 1 outlines, 0 base types, 0 extra macros, 14 extra decls
  */
 #ifndef _AV_UPNP_
 #define _AV_UPNP_
@@ -20,6 +20,12 @@
 #define BIT_AV_ERROR 0
 #define BIT_AV_TRACE 2
 #define BIT_AV_WARN 1
+
+/* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* ConnectionInfo  [struct, typedef; ce-only; Av_upnp.lib] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -243,32 +249,6 @@ enum UPnPAVError
  ERROR_AV_UPNP_CD_REQUEST_FAILED = 720
 };
 
-/* ConnectionInfo  [struct, typedef; ce-only; Av_upnp.lib] */
-struct ConnectionInfo
- {
- IRenderingControl* 
- pRenderingControl
- ;
- IAVTransport* 
- pAVTransport
- ;
- wstring 
- strRemoteProtocolInfo
- ;
- wstring 
- strPeerConnectionManager
- ;
- long 
- nPeerConnectionID
- ;
- DIRECTION 
- Direction
- ;
- wstring 
- strStatus
- ;
- };
-
 /* shown  [extra struct] */
 struct object
 {
@@ -292,9 +272,6 @@ struct TransportInfo{ wstring strCurrentTransportState; wstring strCurrentTransp
 /* strRecQualityMode  [extra struct] */
 struct TransportSettings{ wstring strPlayMode; wstring strRecQualityMode;};
 
-/* strStatus  [extra struct] */
-struct ConnectionInfo{ IRenderingControl* pRenderingControl; IAVTransport* pAVTransport; wstring strRemoteProtocolInfo; wstring strPeerConnectionManager; long nPeerConnectionID; DIRECTION Direction; wstring strStatus;};
-
 /* strWriteStatus  [extra struct] */
 struct MediaInfo{ unsigned long nNrTracks; wstring strMediaDuration; wstring strCurrentURI; wstring strCurrentURIMetaData; wstring strNextURI; wstring strNextURIMetaData; wstring strPlayMedium; wstring strRecordMedium; wstring strWriteStatus;};
 
@@ -310,8 +287,6 @@ struct PositionInfo{ unsigned long nTrack; wstring strTrackDuration; wstring str
 bool AddNamespaceMapping(  LPCWSTR pszNamespace,  LPCWSTR pszPrefix  );
 DWORD AddSinkProtocol( LPCWSTR pszProtocolInfo );
 DWORD AddSourceProtocol( LPCWSTR pszProtocolInfo );
-DWORD GetConnectionManager( IConnectionManager** ppConnectionManager, wstring* pstrConnectionmanager );
-DWORD GetContentDirectory( IContentDirectory** ppContentDirectory );
 bool GetFirstObject(  LPCWSTR pszXml,  object* pObj  );
 bool GetNextObject(  object* pObj  );
 DWORD RemoveSinkProtocol( LPCWSTR pszProtocolInfo );

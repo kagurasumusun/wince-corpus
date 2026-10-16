@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 8 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
  */
 #ifndef _TL_
 #define _TL_
@@ -17,10 +17,7 @@
  * ================================================================ */
 
 /* function */
-HRESULT Accept( ITransportConnection** ppiTransportConnection );
-HRESULT Configure( HWND hWnd, IRemoteDevice* piDevice );
 HRESULT GetConnectionInfo( DWORD dwMaxSize, BYTE* pData, LPDWORD pdwActualSize );
-HRESULT InitConnection( IRemoteDevice* piDevice );
 HRESULT WriteBytes( DWORD dwSize, BYTE* pData, LPDWORD pdwBytesWritten );
 
 #endif /* _TL_ */

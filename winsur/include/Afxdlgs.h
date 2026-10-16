@@ -20,6 +20,7 @@
 void AddPage( CPropertyPage *pPage );
 void CancelToClose( );
 void Construct( UINT nIDTemplate, UINT nIDCaption = 0 );
+static CFindReplaceDialog* PASCAL GetNotifier( LPARAM lParam );
 int GetPageCount( );
 BOOL PressButton( int nButton );
 LRESULT QuerySiblings( WPARAM wParam, LPARAM lParam );

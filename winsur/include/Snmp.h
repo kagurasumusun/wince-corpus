@@ -304,6 +304,12 @@ LPTSTR SnmpUtilOidToW(
  AsnObjectIdentifier Oid 
 );
 
+/* SnmpUtilPrintToStrAsnAny  [function; ce-only; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
+VOID SnmpUtilPrintToStrAsnAny(
+ OUT TCHAR *szOut,
+ AsnAny *pAny 
+);
+
 /* SnmpUtilVarBindCpy  [function; shared; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
 VOID SnmpUtilVarBindCpy(
  SnmpVarBind* pVbDest, 

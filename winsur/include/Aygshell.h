@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 59 constants, 43 declarations, 2 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 59 constants, 42 declarations, 2 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _AYGSHELL_
 #define _AYGSHELL_
@@ -174,9 +174,28 @@ BYTE SHGetAppKeyAssoc(
 
 /* SHInitExtraControls  [function; ce-only; CE 2.11..2.12, 5.0..699; Aygshell.lib, aygshell.lib] */
 BOOL SHInitExtraControls(void);
+
+/* SHSipInfo  [function; ce-only; CE 2.11..2.12, 5.0..699; Aygshell.lib, aygshell.lib] */
+BOOL WINAPI SHSipInfo(
+ UINT uiAction,
+ UINT uiParam,
+ PVOID pvParam,
+ UINT fWinIni
+);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
+
+/* SHChangeNotifyDeregister  [function; shared; CE 5.0..699; Aygshell.lib, aygshell.lib, ceshell.lib] */
+BOOL WINAPI SHChangeNotifyDeregister(
+ HWND hwnd
+);
+
+/* SHChangeNotifyRegister  [function; shared; CE 5.0..699; Aygshell.lib, aygshell.lib, ceshell.lib] */
+BOOL WINAPI SHChangeNotifyRegister(
+ HWND hwnd,
+ SHCHANGENOTIFYENTRY * pshcne
+);
 
 /* SHCreateMenuBar  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
 BOOL SHCreateMenuBar(
@@ -187,6 +206,11 @@ BOOL SHCreateMenuBar(
 BOOL SHDoneButton(
  HWND hwndRequester,
  DWORD dwState
+);
+
+/* SHFindMenuBar  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
+HWND WINAPI SHFindMenuBar(
+ HWND hwnd
 );
 
 /* SHFreeContextMenuExtensions  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */

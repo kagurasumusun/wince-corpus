@@ -17,6 +17,11 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* LPTRANSFER_NOTIFY_ROUTINE  [typedef; ce-only] */
+typedef DWORD (WINAPI *LPTRANSFER_NOTIFY_ROUTINE)(
+ LPVOID lpvNotifyParameter
+);
+
 /* USB_INTERFACE_DESCRIPTOR  [struct; ce-only] */
 typedef struct {
  UCHAR bLength;

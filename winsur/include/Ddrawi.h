@@ -113,6 +113,51 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* ATTACHLIST  [struct, typedef; ce-only] */
+typedef struct _ATTACHLIST {
+ DWORD dwFlags;
+ struct _ATTACHLIST FAR* lpLink;
+ struct _DDRAWI_DDRAWSURFACE_LCL FAR* lpAttached;
+ struct _DDRAWI_DDRAWSURFACE_INT FAR* lpIAttached;
+} ATTACHLIST;
+typedef ATTACHLIST FAR *LPATTACHLIST;
+
+/* DDHALMODEINFO  [struct, typedef; ce-only] */
+typedef struct _DDHALMODEINFO {
+ DWORD dwWidth;
+ DWORD dwHeight;
+ LONG lPitch;
+ DWORD dwBPP;
+ WORD wFlags;
+ WORD wRefreshRate;
+ DWORD dwRBitMask;
+ DWORD dwGBitMask;
+ DWORD dwBBitMask;
+ DWORD dwAlphaBitMask;
+} DDHALMODEINFO;
+typedef DDHALMODEINFO FAR* LPDDHALMODEINFO;
+
+/* DDMORECAPS  [struct; ce-only] */
+typedef struct _DDMORECAPS 
+{ 
+DWORD dwSize; 
+DWORD dwAlphaCaps; 
+DWORD dwSVBAlphaCaps; 
+DWORD dwVSBAlphaCaps; 
+DWORD dwSSBAlphaCaps; 
+DWORD dwFilterCaps; 
+DWORD dwSVBFilterCaps; 
+DWORD dwVSBFilterCaps; 
+DWORD dwSSBFilterCaps; 
+DWORD dwTransformCaps; 
+DWORD dwSVBTransformCaps; 
+DWORD dwVSBTransformCaps; 
+DWORD dwSSBTransformCaps; 
+DWORD dwBltAffineMinifyLimit; 
+DWORD dwOverlayAffineMinifyLimit; 
+} DDMORECAPS, FAR *LPDDMORECAPS; 
+typedef struct _DDMORECAPS FAR *LPDDMORECAPS;
+
 /* DDCORECAPS  [struct, typedef; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   dwSize */

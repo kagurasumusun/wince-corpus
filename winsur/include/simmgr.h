@@ -92,6 +92,33 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* SIMLOCKINGPWDLENGTH  [struct; ce-only] */
+typedef struct simlockingpwdlength {
+ DWORD dwFacility;
+ DWORD dwPasswordLength;
+} SIMLOCKINGPWDLENGTH, FAR *LPSIMLOCKINGPWDLENGTH;
+
+/* SIMMESSAGECHANGE  [struct; ce-only] */
+typedef struct simmessagechange_tag {
+ DWORD dwEntry;
+ DWORD dwStorage;
+} SIMMESSAGECHANGE, FAR *LPSIMMESSAGECHANGE;
+
+/* SIMPBECHANGE  [struct; ce-only] */
+typedef struct simpbechange_tag {
+ DWORD dwEntry;
+ DWORD dwStorage;
+} SIMPBECHANGE, FAR *LPSIMPBECHANGE;
+
+/* SIMRECORDINFO  [struct; ce-only] */
+typedef struct simrecordinfo_tag {
+ DWORD cbSize;
+ DWORD dwParams;
+ DWORD dwRecordType;
+ DWORD dwItemCount;
+ DWORD dwSize;
+} SIMRECORDINFO, FAR *LPSIMRECORDINFO;
+
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* SIMCALLBACK  [callback; ce-only; CE 6.0..699; cellcore.lib] */

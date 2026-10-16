@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 3 constants, 20 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 3 constants, 18 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _CONTROLDEFINITIONS_
 #define _CONTROLDEFINITIONS_
@@ -33,6 +33,15 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* DIALOG_HOOK_PROC  [typedef; ce-only; PhCommon.dll] */
+typedef BOOL (CALLBACK* DIALOG_HOOK_PROC)(
+ HWND hDialogWnd,
+ UINT Message,
+ WPARAM wParam, 
+ LPARAM lParam,
+ void* pUserData
+);
+
 /* PH_COLOR  [enum; ce-only; PhCommon.dll] */
 typedef enum _PH_COLOR
 {
@@ -48,6 +57,26 @@ typedef enum _PH_COLOR
  phcLast,
 } PH_COLOR;
 typedef PH_COLOR *PPH_COLOR, *LPPH_COLOR;
+
+/* PH_DIALOG_SCREEN_PARAMETERS  [struct; ce-only; PhCommon.dll] */
+typedef struct _PH_DIALOG_SCREEN_PARAMETERS
+{
+ DWORD StructSize; 
+ DWORD Flags; 
+ HWND Owner; 
+ UINT Id; 
+ HINSTANCE Instance; 
+ const WCHAR* pStatusHeader; 
+ const WCHAR* pTitle; 
+ UINT MenuId;
+ DIALOG_HOOK_PROC pDialogHook; 
+ void* pUserData; 
+ union {
+ UINT SelectedId; 
+ HWND Dialog; 
+ } result;
+} PH_DIALOG_SCREEN_PARAMETERS;
+typedef PH_DIALOG_SCREEN_PARAMETERS *PPH_DIALOG_SCREEN_PARAMETERS, *LPPH_DIALOG_SCREEN_PARAMETERS;
 
 /* PH_FONT  [enum; ce-only; PhCommon.dll] */
 typedef enum _PH_FONT
@@ -128,20 +157,9 @@ typedef PH_MENU_SCREEN_PARAMETERS *PPH_MENU_SCREEN_PARAMETERS, *LPPH_MENU_SCREEN
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
-/* PHCreateLabeledEditDisplayItem  [function; ce-only; CE 6.0..699; PhCommon.dll] */
-HRESULT PHCreateLabeledEditDisplayItem(
- WCHAR* pLabelText,
- DWORD EditStyle,
- int EditTextLimit,
- IVoIPDisplayItem** ppItem,
- int DefaultLabelWidth = -1, 
- UINT DefaultInputMode = (UINT)-1 
-);
-
-/* PHCreateTextDisplayItem  [function; ce-only; CE 6.0..699; PhCommon.dll] */
-HRESULT PHCreateTextDisplayItem(
- WCHAR* pText,
- IVoIPDisplayItem** ppItem
+/* PHDialogScreen  [function; ce-only; CE 6.0..699; PhCommon.dll] */
+BOOL PHDialogScreen(
+PH_DIALOG_SCREEN_PARAMETERS* pParameters
 );
 
 /* PHDrawBackground  [function; ce-only; CE 6.0..699; PhCommon.dll] */
