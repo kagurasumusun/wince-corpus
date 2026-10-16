@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 424 constants, 46 declarations, 0 outlines, 2 base types, 0 extra macros, 2 extra decls
+ * 424 constants, 70 declarations, 0 outlines, 2 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINNLS_
 #define _WINNLS_
@@ -497,15 +497,12 @@ typedef struct _numberfmt {
 } NUMBERFMT;
 typedef NUMBERFMT *PNUMBERFMT, *LPNUMBERFMT;
 
-/* _numberfmt  [extra struct] */
-typedef struct _numberfmt {- };
-
-/* _currencyfmt  [extra struct] */
-typedef struct _currencyfmt {- };
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
+
+/* GetACP  [function; shared; unified-kb; unified-kb] */
+UINT GetACP(VOID);
 
 /* GetCPInfo  [function; shared; unified-kb; unified-kb] */
 BOOL GetCPInfo( 
@@ -513,18 +510,21 @@ BOOL GetCPInfo(
  LPCPINFO lpCPInfo 
 );
 
+/* GetOEMCP  [function; shared; unified-kb; unified-kb] */
+UINT GetOEMCP(void);
+
+/* IsDBCSLeadByte  [function; shared; unified-kb; unified-kb] */
+BOOL IsDBCSLeadByte( 
+ BYTE TestChar 
+);
+
+/* IsDBCSLeadByteEx  [function; shared; unified-kb; unified-kb] */
+BOOL IsDBCSLeadByteEx( 
+ UINT CodePage, 
+ BYTE TestChar 
+);
+
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* IsDBCSLeadByte  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, coreloc.lib, locusa.lib] */
-BOOL IsDBCSLeadByte(
- BYTE TestChar
-);
-
-/* IsDBCSLeadByteEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, coreloc.lib, locusa.lib] */
-BOOL IsDBCSLeadByteEx(
- UINT CodePage,
- BYTE TestChar
-);
 
 /* MultiByteToWideChar  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, coreloc.lib, locusa.lib] */
 int MultiByteToWideChar(
@@ -635,9 +635,6 @@ int FoldString(
  int cchDest 
 );
 
-/* GetACP  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib] */
-UINT GetACP(VOID);
-
 /* GetCurrencyFormat  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib; A/W GetCurrencyFormatA,GetCurrencyFormatW (CE is W-side)] */
 int GetCurrencyFormat(
  LCID Locale, 
@@ -675,9 +672,6 @@ int GetNumberFormat(
  LPTSTR lpNumberStr, 
  int cchNumber 
 );
-
-/* GetOEMCP  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib] */
-UINT GetOEMCP(void);
 
 /* GetStringTypeEx  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib; A/W GetStringTypeExW (CE is W-side)] */
 /* Windows CE supports only the Unicode version of GetStringTypeEx, which ignores the Locale parameter. */

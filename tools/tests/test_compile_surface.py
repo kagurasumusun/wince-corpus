@@ -76,6 +76,10 @@ int WINAPI WinMain(HINSTANCE h, HINSTANCE p, LPWSTR cmd, int show) {
     RegCopyFile(NULL);
     GetSystemInfo(NULL);
     FindCloseUrlCache(NULL);
+    GetACP();
+    GetOEMCP();
+    IsDBCSLeadByte(0);
+    IsDBCSLeadByteEx(0, 0);
     return 0;
 }
 '''

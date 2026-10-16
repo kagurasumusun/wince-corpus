@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 0 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WTYPESBASE_
 #define _WTYPESBASE_
@@ -16,8 +16,5 @@
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
-
-/* sa  [extra struct] */
-typedef struct _SECURITY_ATTRIBUTES {- // sa };
 
 #endif /* _WTYPESBASE_ */

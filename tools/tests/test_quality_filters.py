@@ -141,6 +141,10 @@ class GluedPrototypeTests(unittest.TestCase):
                 "POINT ptCurrentPos; RECT rcArea; } COMPOSITIONFORM;")
         self.assertTrue(q.looks_like_c_declaration(text))
 
+    def test_outline_dash_body_is_broken(self):
+        self.assertTrue(q.is_broken_c("typedef struct _numberfmt {- };"))
+        self.assertTrue(q.is_broken_c("typedef struct _SYSTEM_INFO {- // mbi"))
+
     def test_nested_struct_missing_semi_is_broken(self):
         text = ("typedef struct _SYSTEM_INFO {\n DWORD dwOemId;\n"
                 " struct {\n WORD wProcessorArchitecture;\n"

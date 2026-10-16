@@ -1899,7 +1899,7 @@ def wrap_comment(prefix, text, width=64):
 
 _WINDOWS_UMBRELLA = (
     "WinDef.h", "WinNT.h", "winerror.h", "Winbase.h", "Winuser.h",
-    "Wingdi.h", "Winreg.h", "Commdlg.h",
+    "Wingdi.h", "Winreg.h", "Commdlg.h", "Winnls.h",
 )
 
 # Pages often name Windows.h (the umbrella) or a desktop-split SDK
@@ -1965,6 +1965,7 @@ _OVERLAY_NAMED = {
     "RedrawWindow", "ExtTextOut",
     "GetSystemInfo", "SYSTEM_INFO",
     "FindCloseUrlCache",
+    "GetACP", "GetOEMCP", "IsDBCSLeadByte", "IsDBCSLeadByteEx",
 }
 
 _OVERLAY_HEADERS = {

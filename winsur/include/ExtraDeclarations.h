@@ -1,5 +1,5 @@
 /* ExtraDeclarations.h -- declarations without header assignment
- * 5925 unassigned declarations
+ * 5951 unassigned declarations
  */
 #ifndef _EXTRADECLARATIONS_H_
 #define _EXTRADECLARATIONS_H_
@@ -4595,52 +4595,6 @@ DWORD dwSpeed;
 GUID gModeID;
 } VTSITEINFO, *PVTSITEINFO;
 int sendto (SOCKET s, const char *buf, int len, int flags, const struct sockaddr *to, int token);
-typedef struct tagMENUITEMINFO {- };
-typedef struct tagMETAFILEPICT {- // mfp };
-typedef struct tagSTYLESTRUCT {- // ss };
-typedef struct tagNEWTEXTMETRIC {- // ntm };
-typedef struct tagBITMAPFILEHEADER {- // bmfh };
-typedef struct _TBBUTTON {- \\ tbb };
-typedef struct _NOTIFYICONDATA {- // nid };
-typedef struct _TC_ITEM {- };
-typedef struct _PEGDIRINFO {- // pegdi };
-typedef struct tagOFN {- };
-typedef struct _TC_ITEMHEADER {- };
-typedef struct _OSVERSIONINFO{- };
-typedef struct tagTEXTMETRIC {- // tm };
-typedef struct _TV_ITEM {- tvi };
-typedef struct _WINDOWPOS {- // wp };
-typedef struct _WNDCLASS {- // wc };
-struct WSAData {- };
-typedef struct tagBITMAPINFOHEADER{- // bmih };
-typedef struct _ICONINFO {- // ii };
-typedef struct tagACCEL {- // accl };
-typedef struct _CALLBACKINFO{- };
-typedef struct _PEGRECORDINFO {- };
-typedef struct _COMMPROP {- // cmmp };
-typedef struct _COMMTIMEOUTS {- // ctmo };
-typedef struct _PEGBLOB {- // pegblob };
-typedef struct tagPOINTS {- // pts };
-typedef struct _COMSTAT {- // cst };
-typedef struct _PropertyDataStruct {- };
-typedef struct tagCREATESTRUCT {- // cs };
-typedef struct _DCB {- // dcb };
-typedef struct tagLOGFONT {- // lf };
-typedef struct {- // dlit };
-typedef struct _LV_COLUMN {- };
-typedef struct {- // dltt };
-typedef struct tagRGBQUAD {- };
-typedef struct _EXCEPTION_POINTERS {- // exp };
-typedef struct _HD_ITEM {- hdi };
-typedef struct _EXCEPTION_RECORD {- // exr };
-typedef struct _LV_ITEM {- };
-typedef struct tagSCROLLINFO {- // si };
-typedef struct tagMEASUREITEMSTRUCT {- // mis };
-typedef struct _SHELLEXECUTEINFO {- // sei };
-typedef struct _MEMORY_BASIC_INFORMATION {- // mbi };
-typedef struct _SHFILEINFO {- // shfi };
-typedef struct _MEMORYSTATUS {- // mst };
-typedef struct tagCOPYDATASTRUCT {- // cds };
 struct COMMAND_MESSAGE_DATA {
  DWORD dwCommand;
  HPACKET hPacketIn;

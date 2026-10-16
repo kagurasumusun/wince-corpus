@@ -274,6 +274,9 @@ def is_broken_c(text: str) -> bool:
             r"[A-Za-z_]",
             body):
         return True
+    # ``typedef struct _foo {- };`` -- outline leftover, not a body.
+    if re.search(r"\{\s*-", body):
+        return True
     return False
 
 

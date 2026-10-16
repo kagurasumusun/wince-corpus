@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 6 declarations, 1 outlines, 0 base types, 0 extra macros, 6 extra decls
+ * 0 constants, 6 declarations, 1 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _RAPITYPES_
 #define _RAPITYPES_
@@ -89,11 +89,5 @@ typedef struct _SYSTEM_POWER_STATUS_EX {
   BYTE BackupBatteryFlag;
   BYTE BackupBatteryLifePercent;
   BYTE Reserved3; };
-
-/* _SORTORDERSPEC  [extra struct] */
-typedef struct _SORTORDERSPEC {- };
-
-/* _SYSTEM_POWER_STATUS_EX  [extra struct] */
-typedef struct _SYSTEM_POWER_STATUS_EX {- };
 
 #endif /* _RAPITYPES_ */

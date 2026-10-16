@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 105 constants, 39 declarations, 17 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 105 constants, 39 declarations, 27 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDOWSAPIS_
 #define _WINDOWSAPIS_
@@ -131,7 +131,15 @@
 
 /* firstChild  [typedef; ce-only; heuristic-prefix] */
 
+/* HIMAGELIST  [typedef; ce-only; heuristic-prefix] */
+
+/* HIMC  [typedef; ce-only; heuristic-prefix] */
+
 /* lastChild  [typedef; ce-only; heuristic-prefix] */
+
+/* LPCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
+
+/* LUID  [typedef; ce-only; heuristic-prefix] */
 
 /* MAKEINTATOM  [macro, function; shared] */
 LPTSTR MAKEINTATOM(
@@ -164,11 +172,21 @@ LPTSTR MAKEINTATOM(
 
 /* parsed  [typedef; ce-only; heuristic-prefix] */
 
+/* PCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
+
+/* PCWCH  [typedef; ce-only; heuristic-prefix] */
+
+/* PLUID  [typedef; ce-only; heuristic-prefix] */
+
 /* prefix  [typedef; ce-only; heuristic-prefix] */
 
 /* previousSibling  [typedef; ce-only; heuristic-prefix] */
 
+/* REGSAM  [typedef; ce-only; heuristic-prefix] */
+
 /* specified  [typedef; ce-only; heuristic-prefix] */
+
+/* UNSIGNED  [typedef; ce-only; heuristic-prefix] */
 
 /* xml  [typedef; ce-only; heuristic-prefix] */
 

@@ -432,6 +432,10 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: Winnls を Windows.h へ（第24弾）
+
+コピーはしない。harvest **105,096** 頁を生で開いた。`typedef struct _numberfmt {- };` を broken と見ない誤判定。GetACP は Winnls.h に居たが umbrella から見えない読み落とし。Winnls.h を Windows.h に入れる。GetACP / GetOEMCP / IsDBCSLeadByte。gcc 通過。
+
 ### 2026-10-16: SYSTEM_INFO 壊れ PRE と GetSystemInfo（第23弾）
 
 コピーはしない。harvest **105,096** + CE 未訪問 41（sample、harvest 対象外）を生で開いた。入れ子 `} DWORD dwPageSize` を broken と見ない誤判定。GetSystemInfo / 不完全 SYSTEM_INFO / FindCloseUrlCache を載せる。gcc 通過。

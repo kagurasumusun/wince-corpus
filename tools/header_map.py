@@ -29,6 +29,11 @@ EXACT_TO_HEADER = {
     # CE GetSystemInfo / SYSTEM_INFO pages; desktop split is sysinfoapi.h.
     "SYSTEM_INFO": "Winbase.h",
     "GetSystemInfo": "Winbase.h",
+    # CE 5.0 GetACP page: Header Winnls.h.
+    "GetACP": "Winnls.h",
+    "GetOEMCP": "Winnls.h",
+    "IsDBCSLeadByte": "Winnls.h",
+    "IsDBCSLeadByteEx": "Winnls.h",
     "INVALID_HANDLE_VALUE": "Winbase.h",
     "INVALID_FILE_SIZE": "Winbase.h",
     "INVALID_SET_FILE_POINTER": "Winbase.h",

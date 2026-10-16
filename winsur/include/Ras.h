@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 21 constants, 45 declarations, 0 outlines, 0 base types, 0 extra macros, 6 extra decls
+ * 21 constants, 45 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
  */
 #ifndef _RAS_
 #define _RAS_
@@ -255,9 +255,6 @@ typedef DWORD (APIENTRY *PFNRASRECEIVEBUFFER)(  HANDLE hPort,  PBYTE pBuffer,  P
 
 /* PBYTEpBuffer  [extra typedef] */
 typedef DWORD(APIENTRY *PFNRASFREEBUFFER)(PBYTEpBuffer );
-
-/* _RASDIALPARAMS  [extra struct] */
-typedef struct _RASDIALPARAMS {- };
 
 /* ==================================================================
  * functions and callbacks
