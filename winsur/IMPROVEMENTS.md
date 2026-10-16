@@ -432,6 +432,10 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: va_list 誤 unusable と FormatMessage（第22弾）
+
+コピーはしない。harvest-visits **105,096** 頁を生で開いた。`va_list` を unusable にして FormatMessage を落としていた。`int` が `interface` に誤 glue。PLONG は windows-data-types.md（CC-BY）。FormatMessage / SetFilePointer / CommDlgExtendedError / RedrawWindow / ExtTextOut / RegCopyFile を載せる。ISO C の stdarg.h のみ。gcc 通過。
+
 ### 2026-10-16: SetEvent を Windows.h 面へ（第21弾）
 
 コピーはしない。harvest-visits **105,096** 頁を生で再読。`intnNumerator` を glued と判定。kfuncs に居る SetEvent が Winbase overlay を潰していた。AlphaBlend/BLENDFUNCTION（CE 5.0 PRE）、SetEvent/ResetEvent/DebugBreak/GetCurrentThread/GetCurrentProcess/ExitProcess を Windows.h 面に載せる。gcc 通過。

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2457 constants, 311 declarations, 6 outlines, 1 base types, 0 extra macros, 0 extra decls
+ * 2457 constants, 312 declarations, 6 outlines, 1 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINUSER_
 #define _WINUSER_
@@ -4747,6 +4747,14 @@ BOOL InvertRect(
 HKL LoadKeyboardLayout(
  LPCSTR pwszKLID,
  UINT Flags
+);
+
+/* RedrawWindow  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
+BOOL WINAPI RedrawWindow(
+ HWND hwnd,
+ CONST RECT* lprcUpdate,
+ HRGN hrgnUpdate,
+ UINT flags
 );
 #endif /* _WIN32_WCE */
 

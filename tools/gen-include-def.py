@@ -1959,6 +1959,10 @@ _OVERLAY_NAMED = {
     "GetCurrentThread", "GetCurrentThreadId",
     "ExitProcess", "GlobalDeleteAtom",
     "FindClosePartition", "FindCloseStore",
+    "FormatMessage", "SetFilePointer",
+    "CommDlgExtendedError",
+    "RegCopyFile", "RegRestoreFile",
+    "RedrawWindow", "ExtTextOut",
 }
 
 _OVERLAY_HEADERS = {
@@ -2108,6 +2112,8 @@ _CORE_TYPEDEFS = (
     ("LPINT", "typedef int *LPINT;"),
     ("PINT", "typedef int *PINT;"),
     ("PUSHORT", "typedef USHORT *PUSHORT;"),
+    ("PLONG", "typedef LONG *PLONG;"),
+    ("PULONG", "typedef ULONG *PULONG;"),
     ("WNDENUMPROC",
      "typedef BOOL (CALLBACK *WNDENUMPROC)(HWND, LPARAM);"),
     ("WNDENUMPROCW",
@@ -2184,6 +2190,7 @@ _C_KNOWN_TYPES = {
     "OPENFILENAME", "LPOPENFILENAME",
     "DLGTEMPLATE", "LPDLGTEMPLATE", "LPCDLGTEMPLATE",
     "LCID", "PDWORD", "PUINT", "LPINT", "PINT", "PUSHORT", "PBYTE",
+    "PLONG", "PULONG",
     "BLENDFUNCTION", "PBLENDFUNCTION", "LPBLENDFUNCTION",
     "WNDENUMPROC", "FONTENUMPROC",
     "TEXTMETRIC", "PTEXTMETRIC", "LPTEXTMETRIC",
@@ -3116,7 +3123,9 @@ def run_unified(args):
                 "#endif",
                 "",
                 "/* compiler surface: empty 16-bit keywords + SAL, GCC __int64.",
-                " * These expand to nothing / long long.  Not copied from an SDK. */",
+                " * These expand to nothing / long long.  Not copied from an SDK.",
+                " * stdarg.h is ISO C (va_list on FormatMessage). */",
+                "#include <stdarg.h>",
                 "#ifndef CONST",
                 "#define CONST const",
                 "#endif",

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 105 constants, 40 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 105 constants, 39 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDOWSAPIS_
 #define _WINDOWSAPIS_
@@ -302,14 +302,6 @@ BOOL CALLBACK PropEnumProcEx(
  LPTSTR lpszString,
  HANDLE hData,
  ULONG_PTR dwData
-);
-
-/* RedrawWindow  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL WINAPI RedrawWindow(
- HWND hwnd,
- CONST RECT* lprcUpdate,
- HRGN hrgnUpdate,
- UINT flags
 );
 
 /* RemoveProp  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W RemovePropA,RemovePropW (CE is W-side)] */

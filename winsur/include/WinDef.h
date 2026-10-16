@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 30 constants, 67 declarations, 9 outlines, 119 base types, 0 extra macros, 0 extra decls
+ * 30 constants, 67 declarations, 9 outlines, 121 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDEF_
 #define _WINDEF_
@@ -20,7 +20,9 @@
 #endif
 
 /* compiler surface: empty 16-bit keywords + SAL, GCC __int64.
- * These expand to nothing / long long.  Not copied from an SDK. */
+ * These expand to nothing / long long.  Not copied from an SDK.
+ * stdarg.h is ISO C (va_list on FormatMessage). */
+#include <stdarg.h>
 #ifndef CONST
 #define CONST const
 #endif
@@ -518,6 +520,16 @@ typedef int *PINT;
  * source: win32/common/windows-data-types.md */
 typedef USHORT *PUSHORT;
 
+/* PLONG [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef LONG *PLONG;
+
+/* PULONG [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef ULONG *PULONG;
+
 /* LPLOGFONT [CE-SPECIFIC]
  * CE Unicode / 32-bit data-types row
  * source: win32/common/windows-data-types.md */
@@ -835,9 +847,6 @@ typedef WORD *LPWORD;
 
 /* PUCHAR  [typedef; shared; entity-headers; win32-reference] */
 typedef UCHAR *PUCHAR;
-
-/* PULONG  [typedef; shared; entity-headers; win32-reference] */
-typedef ULONG *PULONG;
 
 /* PWORD  [typedef; shared; entity-headers; win32-reference] */
 typedef WORD *PWORD;

@@ -1156,6 +1156,16 @@ VOID NdisIMDeregisterLayeredMiniport(
 NDIS_HANDLE NdisIMGetBindingContext(
  NDIS_HANDLE NdisBindingHandle
 );
+
+/* NdisInterlockedDecrement  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
+LONG NdisInterlockedDecrement(
+ PLONG Addend
+);
+
+/* NdisInterlockedIncrement  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
+LONG NdisInterlockedIncrement(
+ PLONG Addend
+);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */

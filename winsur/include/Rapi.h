@@ -284,6 +284,14 @@ BOOL CeSetFileAttributes(
  DWORD dwFileAttributes 
 );
 
+/* CeSetFilePointer  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
+DWORD CeSetFilePointer( 
+ HANDLE hFile, 
+ LONG lDistanceToMove, 
+ PLONG lpDistanceToMoveHigh, 
+ DWORD dwMoveMethod 
+);
+
 /* CeSetFileTime  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
 BOOL CeSetFileTime (
  HANDLE hFile,

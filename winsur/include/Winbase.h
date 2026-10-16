@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 566 constants, 344 declarations, 8 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 566 constants, 346 declarations, 8 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINBASE_
 #define _WINBASE_
@@ -1356,6 +1356,17 @@ BOOL FlushInstructionCache(
  DWORD dwSize
 );
 
+/* FormatMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Fmtmsg.lib, fmtmsg.lib; A/W FormatMessageA,FormatMessageW (CE is W-side)] */
+DWORD FormatMessage(
+ DWORD dwFlags, 
+ LPCVOID lpSource, 
+ DWORD dwMessageId, 
+ DWORD dwLanguageId, 
+ LPTSTR lpBuffer, 
+ DWORD nSize, 
+ va_list* Arguments
+);
+
 /* FreeLibrary  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
 BOOL FreeLibrary(
  HMODULE hLibModule
@@ -1855,6 +1866,14 @@ BOOL SetFileAttributes(
  DWORD dwFileAttributes
 );
 
+/* SetFilePointer  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Fsmain.lib] */
+DWORD SetFilePointer( 
+ HANDLE hFile, 
+ LONG lDistanceToMove, 
+ PLONG lpDistanceToMoveHigh, 
+ DWORD dwMoveMethod
+);
+
 /* SetFileTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, fsmain.lib] */
 BOOL SetFileTime(
  HANDLE hFile,
@@ -2054,6 +2073,19 @@ int wsprintf(
  LPTSTR lpOut,
  LPCTSTR lpFmt,
  ...
+);
+
+/* wvsprintf  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coreloc.lib; A/W wvsprintfA,wvsprintfW (CE is W-side)] */
+/* Windows CE supports only the Unicode version of wvsprintf. */
+/* Windows CE supports only the Unicode version of wvsprintf. */
+/* Windows CE supports only the Unicode version of wvsprintf. */
+/* Windows Embedded CE supports only the Unicode version of wvsprintf. */
+/* Windows CE supports only the Unicode version of wvsprintf. */
+/* Windows CE Notes Supports only the Unicode version of this function. */
+int wvsprintf(
+ LPTSTR lpOutput,
+ LPCTSTR lpFormat,
+ va_list ArgList
 );
 #endif /* _WIN32_WCE */
 

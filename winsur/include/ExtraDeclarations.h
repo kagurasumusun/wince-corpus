@@ -1,5 +1,5 @@
 /* ExtraDeclarations.h -- declarations without header assignment
- * 5923 unassigned declarations
+ * 5925 unassigned declarations
  */
 #ifndef _EXTRADECLARATIONS_H_
 #define _EXTRADECLARATIONS_H_
@@ -525,7 +525,6 @@ DWORD ColorKeyMask (void );
 HRESULT CommandOther( PVCMDNAME pName, PTSTR pszCommand);
 HRESULT CommandRecognize( DWORD dwID, PVCMDNAME pvCmdName, DWORD dwFlags, DWORD dwActionSize, PVOID pAction, DWORD dwNumLists, PTSTR pszListValues, PTSTR pszCommand);
 HRESULT CommandStart();
-BOOL CommentV( DWORD dwVerbosity, LPCTSTR szFormat, va_list pArgs );
 HRESULT CommitAt( long xDest, long yDest, long xSrc, long ySrc, long dx, long dy );
 HRESULT CommitFrom( long xSrc, long ySrc );
 HRESULT CommonPrefixWith( IMoniker *pmkOther, IMoniker **ppmkPrefix);
@@ -840,7 +839,6 @@ VOID WINAPI FingerWorker(LPVOID lpv);
 HRESULT FlagKeysUsed( long lKeysUsed, long lKeysEaten );
 void Flushing( BOOL bInProgress);
 HRESULT ForceRefresh( );
-DWORD FormatMessage ( DWORD dwFlags, LPCVOID lpSource, DWORD dwMessageId, DWORD dwLanguageId, LPTSTR lpBuffer, DWORD nSize, va_list *Arguments);
 HRESULT Forward( BSTR bstrForwardToURI );
 VOID STDAPI FreeBSTR( BSTR *pstr);
 HRESULT FreeCommand( HPACKET hPacket );
@@ -1246,7 +1244,6 @@ void LogProcessDelete ( DWORD dwProcID );
 void LogThreadCreate ( DWORD dwThreadID, DWORD dwProcID );
 void LogThreadDelete ( DWORD dwThreadID, DWORD dwProcID );
 void LogThreadSwitch ( DWORD dwThreadID, DWORD dwProcID );
-BOOL LogV( DWORD dwVerbosity, LPCTSTR szFormat, va_list pArgs );
 HRESULT LostFocus( void );
 VOID WINAPI LowPriority(HANDLE h);
 VOID WINAPI MBX_TA(void);
@@ -1922,7 +1919,6 @@ int _controlfp_s (__out_opt unsigned int*_CurrentState, __in unsigned int _NewVa
 int _isnanf (float);
 int _snprintf( char *buffer, size_tcount, const char *format [, argument] ... );
 int _snwprintf( wchar_t *buffer, size_tcount, const wchar_t *format [, argument] ... );
-int _vsnprintf(char *buffer, size_t count, const char * format, va_list argptr );
 int _vsnwprintf( wchar_t *buffer, size_tcount, constwchar_t *format, va_listargptr);
 UINT accessor_function ( UINT actID, AsnAny *aryObject, UINT *pErrIndex );
 void add64_64_64 (const FILETIME *lpnum1, LPFILETIME lpnum2, LPFILETIME lpres);
@@ -2840,7 +2836,6 @@ void waveui_AfterDialogBox ( LPVOID pChooseStruct, BOOL fIsFormatDialog);
 void waveui_BeforeDialogBox ( LPVOID pChooseStruct, BOOL fIsFormatDialog);
 void waveui_DeInit (void);
 void waveui_Init (void);
-int wvsprintf( LPTSTR lpOutput, LPCTSTR lpFormat, va_list ArgList );
 VOID EdbgSetDebug(  DWORD DebugZoneMask,  PFN_OutputDebugString pDebugStringFunc );
 WINOLEAPI CreateOleAdviseHolder(  IOleAdviseHolder FAR * FAR *ppOAHolder);
 WINOLEAPI OleCreate(  REFCLSID rclsid,  REFIID riid,  DWORD renderopt,  FORMATETC *pFormatEtc,  IOleClientSite *pClientSite,  IStorage *pStg,  void **ppvObject);
@@ -3225,8 +3220,6 @@ void PrintTemplateInstantiation(  IDispatch *pDisp  );
 void PrintTemplateTeardown(  IDispatch *pDisp  );
 HRESULT ShowBrowserBar(  VARIANT *pvaClsid,  VARIANT *pvarShow,  VARIANT *pvarSize  );
 DWORD IsDialogBoxHandled(  HWND hWnd,  DWORD dwAction,  DWORD dwPermissions,  LPCTSTR lpszText  )
-INT BeginLevelV( DWORD dwLevelID,  LPCTSTR szFormat,  va_list pArgs  );
-INT EndLevelV( LPCTSTR szFormat,  va_list pArgs  );
 BSTR _BuildVersion( void );
 VT_DISPATCH _CreateLogObject( void );
 BSTR _GetCPU( void );
@@ -3275,10 +3268,6 @@ HRESULT ReadRegsFromThdCtx( [in] IeXdi2EnumCpuRegs* piOsAxsEnumCpuRegThreadCtx, 
 HRESULT GetData2( [in] FLEXI_GETDATA_TYPE2 fgds2, [out, size_is(, *pcProcess)] PTM_RAW_DATA **ppdatProcess, [out] DWORD *pcProcess, [out] DWORD *pcProcessTotal, [out, size_is(, *pcThread)] PTM_RAW_DATA **ppdatThread, [out] DWORD *pcThread, [out] DWORD *pcThreadTotal, [out, size_is(, *pcModule)] PTM_RAW_DATA **ppdatModule, [out] DWORD *pcModule, [out] DWORD *pcModuleTotal, [out, size_is(, *pcContext)] PTM_RAW_DATA **ppdatContext, [out] DWORD *pcContext, [out] DWORD *pcContextTotal );
 HRESULT GetDescriptionTables2( [out, size_is(, *pcProcField)] PTM_FIELD_DESC** ppfdProcDescTable, [out] DWORD* pcProcField, [out, size_is(, *pcThreadField)] PTM_FIELD_DESC** ppfdThreadDescTable, [out] DWORD* pcThreadField, [out, size_is(, *pcModField)] PTM_FIELD_DESC** ppfdModDescTable, [out] DWORD* pcModField, [out, size_is(, *pcCtxField)] PTM_FIELD_DESC **ppfdCtxDescTable, [out] DWORD *pcCtxField );
 HRESULT SnapCurrentDeviceState( [in, out] DWORD *pdwDumpType, [in, out] DWORD64 *pdw64DumpTotalSize, [in, out] DWORD *pdwSegmentBufferSize, [out, size_is(,*pdwSegmentBufferSize)] BYTE **ppbSegmentBuffer, [in, out] DWORD64 *pdw64SegmentIndex, [out] BOOL *pfComplete );
-HRESULT StringCbVPrintf( LPTSTR pszDest, size_t cbDest, LPCTSTR pszFormat, va_list argList);
-HRESULT StringCbVPrintfEx( LPTSTR pszDest, size_t cbDest, LPTSTR *ppszDestEnd, size_t *pcbRemaining, DWORD dwFlags, LPCTSTR pszFormat, va_list argList);
-HRESULT StringCchVPrintf( LPTSTR pszDest, size_t cchDest, LPCTSTR pszFormat, va_list argList);
-HRESULT StringCchVPrintfEx( LPTSTR pszDest, size_t cchDest, LPTSTR *ppszDestEnd, size_t *pcchRemaining, DWORD dwFlags, LPCTSTR pszFormat, va_list argList);
 enum {
   CESVC_ROOT_COMMON = 0,
   CESVC_ROOT_MACHINE = CESVC_ROOT_COMMON,
@@ -3653,6 +3642,92 @@ Class ClearTypeBlt : public GPE
 SCODE ClearTypeBltDst16 (GPEBltParms *);
 SCODE ClearTypeBltDst24 (GPEBltParms *);
 SCODE ClearTypeBltDst32 (GPEBltParms *);
+HRESULT hr; 
+IVIO_Device *pEngineRPM; 
+//Create the event sink; CEngineRPMSink is derived from //IVIO_EventSink. 
+IVIO_EventSink *iRpmSink = new CEngineRPMSink; 
+//Create an instance of the engine RPM device and get its 
+//IVIO_Device interface. 
+hr = CoCreateInstance(CLSID_VIO_ENGINE_RPM, NULL, 
+ CLSCTX_INPROC_SERVER, IID_VIODEVICE, 
+ &pEngineRPM); 
+//Set the notification sink to notify every half second. 
+pEngineRPM->SetNotify(NULL, iRpmSink, 500); 
+. 
+. 
+. //Turn off the notification sink. 
+pVehicleSpeed->SetNotify(NULL, NULL, 0); 
+//Release the reference to the event sink. 
+iRpmSink->Release(); 
+//Release the reference to the interface. 
+pEngineRPM->Release();
+HRESULT hr; 
+IVIO_Device *pLatchControl; 
+VARIANT vLatchState; 
+//Initialize the VARIANT. 
+VariantInit(&vLatchState); 
+hr = CoCreateInstance(CLSID_VIO_LATCH_CONTROL, NULL, 
+ CLSCTX_INPROC_SERVER, IID_VIODEVICE, 
+ &pLatchControl); 
+//Set the VARIANT to pop the gas cap switch. 
+vLatchState.vt = VT_UI4; 
+vLatchState.ulVal = VIOLATCH_GAS_CAP; 
+//Send the command to the vehicle. 
+pLatchControl->SetData(&vLatchState, 3000); 
+//Release the reference to the interface. 
+pLatchControl->Release();
+HRESULT hr; 
+IVIO_Device *pLockState; 
+VARIANT vLockInfo; 
+//Initialize the VARIANT. 
+VariantInit(&vLockInfo); 
+hr = CoCreateInstance(CLSID_VIO_LOCK_STATE, NULL, 
+ CLSCTX_INPROC_SERVER, IID_VIODEVICE, 
+ &pLockState); 
+//Set the VARIANT to lock the doors. 
+vLockInfo.vt = VT_UI4; 
+vLockInfo.ulVal = VIOLOCKS_LOCKED; 
+//Send the command to the vehicle. 
+pLatchControl->SetData(&vLatchState, 3000); 
+//Release the reference to the interface. 
+pLockState->Release();
+HRESULT hr; 
+IVIO_Device *pOdometer; 
+//Create an event sink object; iOdometerSink is derived from //IVIO_EventSink. 
+IVIO_EventSink *iOdometerSink = new COdometerSink; 
+//Create an instance of the odometer device and get its 
+//IVIO_Device interface. 
+hr = CoCreateInstance(CLSID_VIO_ODOMETER, NULL, 
+ CLSCTX_INPROC_SERVER, IID_VIODEVICE, 
+ &pOdometer); 
+//Set the notification sink to notify every five seconds. 
+pOdometer->SetNotify(NULL, iOdometerSink, 5000); 
+. . . 
+//Remove the notification sink. 
+pOdometer->SetNotify(NULL, NULL, 0); 
+//Release the reference to the interface. 
+pOdometer->Release(); 
+//Release the event sink object. 
+iOdometerSink->Release();
+HRESULT hr; 
+IVIO_Device *pVehicleSpeed; 
+//Create the event sink - CVehicleSpeedSink is derived from //IVIO_EventSink. 
+IVIO_EventSink *iSpeedSink = new CVehicleSpeedSink; 
+//Create an instance of the vehicle speed device and get its 
+//IVIO_Device interface. 
+hr = CoCreateInstance(CLSID_VIO_VEHICLE_SPEED, NULL, 
+ CLSCTX_INPROC_SERVER, IID_VIODEVICE, 
+ &pVehicleSpeed); 
+//Set the notification sink to notify every half second. 
+pVehicleSpeed->SetNotify(NULL, iSpeedSink, 500); 
+. 
+. 
+//Turn off the notification sink. 
+pVehicleSpeed->SetNotify(NULL, NULL, 0); 
+//Release the reference to the vehicle speed device. 
+pVehicleSpeed->Release(); 
+//Release the reference to the event sink. 
+iSpeedSink->Release();
 Private Sub treeview_Collapse(index)
 Private Sub listview_ColumnClick(index)
 Private Sub commandbar_ComboBoxChange(combobox)
@@ -3748,6 +3823,21 @@ Private Sub object_StateChange(
  ByVal newState As Long
 )
 Private Sub timer_Timer( )
+interface IFst { HRESULT fst(BSTR b); HRESULT fst(long l); };
+#pragma keyword("interface", on)
+#pragma warning(disable:4199)
+interface IX1 {
+  public:
+  [ property(get={0, 1}) ]
+  int Size;
+};
+interface I1 {
+};
+interface I2 {
+};
+interface I3 : I1, I2 {
+};
+interface IX11 { [ property, id(1), helpstring("Help!") ] // id and helpstring not valid on property int Size; };
 #define ARRAYSIZE(hArray) sizeof (hArray) / sizeof (HANDLE)
 enum
 {
@@ -4190,6 +4280,13 @@ void main()
 {
   pA++; // error, size of A not known
   pB++;
+};
+#pragma keyword("interface", on)
+struct IUnknown {
+};
+interface IMyIF {
+  [ property(put=0, put=0) ]
+  int data;
 };
 struct S; union S;
 typedef struct _IMAGE_CE_RUNTIME_FUNCTION_ENTRY { unsigned int FuncStart : 32; unsigned int PrologLen : 8; unsigned int FuncLen : 22; unsigned int ThirtyTwoBit : 1; unsigned int ExceptionFlag : 1;} IMAGE_CE_RUNTIME_FUNCTION_ENTRY,*PIMAGE_CE_RUNTIME_FUNCTION_ENTRY;

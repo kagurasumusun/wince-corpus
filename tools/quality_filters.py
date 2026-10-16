@@ -187,7 +187,10 @@ _GLUED = re.compile(
     r"BOOL|DWORD|UINT|ULONG|LONG|WORD|BYTE|LPVOID|LPCVOID|LPSTR|LPCSTR|"
     r"LPWSTR|LPCWSTR|LPTSTR|LPCTSTR|HRESULT|LRESULT|NTSTATUS|"
     r"VOID|INT|SHORT|CHAR)(?:[A-Z][a-z]|[a-z])|"
-    r"\b(?:int|void|char|long|short)[a-z]|"
+    r"\b(?:void|short)[a-z]|"
+    r"\bint(?!eger|erface|ernal)[a-z]|"
+    r"\bchar(?!acter|set)[a-z]|"
+    r"\blong(?!long)[a-z]|"
     r"\b(?:struct|enum|union)_[A-Z]"
 )
 
@@ -214,7 +217,6 @@ _UNUSABLE = re.compile(
     r"\bint64\b|"
     r"unsigned__int64|"
     r"\bHandle\b|"
-    r"\bva_list\b|"
     r"\bIErrorInfo\b|"
     r"size_tcount|"
     r"va_listargptr|"

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 43 constants, 17 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 43 constants, 19 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINREG_
 #define _WINREG_
@@ -84,6 +84,14 @@ typedef struct _REG_NOTIFY_INFORMATION {
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
+
+/* RegCopyFile  [function; ce-only; unified-kb; unified-kb] */
+BOOL RegCopyFile ( 
+LPCWSTR lpszFile );
+
+/* RegRestoreFile  [function; ce-only; unified-kb; unified-kb] */
+BOOL RegRestoreFile ( 
+LPCWSTR lpszFile );
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
 

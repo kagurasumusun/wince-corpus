@@ -24,6 +24,8 @@ EXACT_TO_HEADER = {
     "ABC": "Wingdi.h",
     # CE 5.0 BLENDFUNCTION / AlphaBlend pages name Windows.h umbrella.
     "BLENDFUNCTION": "Wingdi.h",
+    # CE 5.0 RedrawWindow page names Windows.h umbrella.
+    "RedrawWindow": "Winuser.h",
     "INVALID_HANDLE_VALUE": "Winbase.h",
     "INVALID_FILE_SIZE": "Winbase.h",
     "INVALID_SET_FILE_POINTER": "Winbase.h",

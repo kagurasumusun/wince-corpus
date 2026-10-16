@@ -122,6 +122,10 @@ class GluedPrototypeTests(unittest.TestCase):
         self.assertFalse(q.is_glued_prototype(text))
         self.assertTrue(q.looks_like_c_declaration(text))
 
+    def test_interface_is_not_int_glued(self):
+        text = "typedef interface IFoo { void x; } IFoo;"
+        self.assertFalse(q.is_glued_prototype(text))
+
     def test_int_glued_to_hungarian_is_glued(self):
         text = "int MulDiv( int nNumber,  intnNumerator,  intnDenominator);"
         self.assertTrue(q.is_glued_prototype(text))
@@ -135,6 +139,13 @@ class GluedPrototypeTests(unittest.TestCase):
     def test_capital_t_typedef_is_kept(self):
         text = ("Typedef struct _tagCOMPOSITIONFORM { DWORD dwStyle; "
                 "POINT ptCurrentPos; RECT rcArea; } COMPOSITIONFORM;")
+        self.assertTrue(q.looks_like_c_declaration(text))
+
+    def test_formatmessage_va_list_is_usable(self):
+        text = ("DWORD FormatMessage(DWORD dwFlags, LPCVOID lpSource, "
+                "DWORD dwMessageId, DWORD dwLanguageId, LPTSTR lpBuffer, "
+                "DWORD nSize, va_list *Arguments);")
+        self.assertFalse(q.decl_unusable_for_c(text, "FormatMessage"))
         self.assertTrue(q.looks_like_c_declaration(text))
 
     def test_wsprintf_is_kept(self):

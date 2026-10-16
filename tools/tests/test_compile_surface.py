@@ -69,6 +69,11 @@ int WINAPI WinMain(HINSTANCE h, HINSTANCE p, LPWSTR cmd, int show) {
         AlphaBlend(NULL, 0, 0, 0, 0, NULL, 0, 0, 0, 0, bf);
     }
     DebugBreak();
+    SetFilePointer(NULL, 0, NULL, 0);
+    CommDlgExtendedError();
+    RedrawWindow(NULL, NULL, NULL, 0);
+    ExtTextOut(NULL, 0, 0, 0, NULL, NULL, 0, NULL);
+    RegCopyFile(NULL);
     return 0;
 }
 '''

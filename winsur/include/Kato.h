@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 19 declarations, 0 outlines, 0 base types, 0 extra macros, 8 extra decls
+ * 0 constants, 19 declarations, 0 outlines, 0 base types, 0 extra macros, 12 extra decls
  */
 #ifndef _KATO_
 #define _KATO_
@@ -44,11 +44,15 @@ BOOL KatoSetServer(
 
 /* function */
 INT BeginLevel(  DWORD dwLevelID,  LPCTSTR szFormat );
+INT BeginLevelV( DWORD dwLevelID,  LPCTSTR szFormat,  va_list pArgs  );
 BOOL Comment( DWORD dwVerbosity, LPCTSTR szFormat );
+BOOL CommentV( DWORD dwVerbosity, LPCTSTR szFormat, va_list pArgs );
 INT EndLevel( LPCTSTR szFormat );
+INT EndLevelV( LPCTSTR szFormat,  va_list pArgs  );
 DWORD GetCurrentLevel ();
 DWORD GetItemData (void);
 INT GetVerbosityCount( DWORD dwVerbosity,  DWORD dwLevel  );
+BOOL LogV( DWORD dwVerbosity, LPCTSTR szFormat, va_list pArgs );
 BOOL SendSystemData( DWORD dwSystemID, LPCVOID lpcvBuffer, DWORD dwSize );
 BOOL SetItemData( DWORD dwItemData );
 

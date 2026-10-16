@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1520 constants, 45 declarations, 41 outlines, 21 base types, 0 extra macros, 0 extra decls
+ * 1520 constants, 45 declarations, 31 outlines, 21 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINNT_
 #define _WINNT_
@@ -1652,15 +1652,7 @@ typedef WCHAR TBYTE;
 
 /* firstChild  [typedef; ce-only; heuristic-prefix] */
 
-/* HIMAGELIST  [typedef; ce-only; heuristic-prefix] */
-
-/* HIMC  [typedef; ce-only; heuristic-prefix] */
-
 /* lastChild  [typedef; ce-only; heuristic-prefix] */
-
-/* LPCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
-
-/* LUID  [typedef; ce-only; heuristic-prefix] */
 
 /* MAKELANGID  [macro, function; shared] */
 WORD MAKELANGID( 
@@ -1693,12 +1685,6 @@ WORD MAKELANGID(
 
 /* parsed  [typedef; ce-only; heuristic-prefix] */
 
-/* PCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
-
-/* PCWCH  [typedef; ce-only; heuristic-prefix] */
-
-/* PLUID  [typedef; ce-only; heuristic-prefix] */
-
 /* prefix  [typedef; ce-only; heuristic-prefix] */
 
 /* previousSibling  [typedef; ce-only; heuristic-prefix] */
@@ -1708,15 +1694,11 @@ WORD PRIMARYLANGID(
  WORD lgid 
 );
 
-/* REGSAM  [typedef; ce-only; heuristic-prefix] */
-
 /* specified  [typedef; ce-only; heuristic-prefix] */
 
 /* SUBLANGID  [macro, function; shared] */
 
 /* TEXT  [macro, typedef, function; shared] */
-
-/* UNSIGNED  [typedef; ce-only; heuristic-prefix] */
 
 /* VOID  [typedef, macro; shared; entity-headers] */
 
@@ -1748,9 +1730,6 @@ typedef CONST CHAR *PCSTR;
 
 /* PDATA_EH  [struct; ce-only] */
 struct PDATA_EH { unsigned int* pHandler; unsigned int* pHandlerData;};
-
-/* PLONG  [typedef; shared; entity-headers; win32-reference] */
-typedef LONG *PLONG;
 
 /* PSHORT  [typedef; shared; entity-headers; win32-reference] */
 typedef SHORT *PSHORT;

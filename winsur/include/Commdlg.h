@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 230 constants, 25 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 230 constants, 26 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _COMMDLG_
 #define _COMMDLG_
@@ -280,6 +280,9 @@ BOOL ChooseColor( LPCHOOSECOLOR lpcc);
 
 /* ChooseFont  [function; ce-only; unified-kb; unified-kb] */
 BOOL APIENTRY ChooseFont(  LPCHOOSEFONT lpcf  );
+
+/* CommDlgExtendedError  [function; shared; unified-kb; unified-kb] */
+DWORD CommDlgExtendedError();
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
 
