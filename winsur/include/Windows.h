@@ -8,7 +8,7 @@
 #define _WINDOWS_
 
 #include "WinDef.h"
-#include "Winnt.h"
+#include "WinNT.h"
 #include "winerror.h"
 #include "Winbase.h"
 #include "Winuser.h"
@@ -17,7 +17,7 @@
 #include "Commdlg.h"
 #include "Winnls.h"
 #include "Tlhelp32.h"
-#include "ShellApi.h"
+#include "shellapi.h"
 #include "Mmsystem.h"
 #include "Aygshell.h"
 #include "Storemgr.h"
@@ -35,6 +35,7 @@
 #include "gpsapi.h"
 #include "getdeviceuniqueid.h"
 #include "Cred.h"
+#include "Tapi.h"
 
 #endif /* _WINDOWS_ */
 

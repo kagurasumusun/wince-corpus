@@ -432,6 +432,10 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: Tapi.h を Windows.h へ（第40弾）
+
+コピーはしない。phoneConfigDialog は既に生成済み。umbrella 読み落とし。WINAPIphoneGetStatus は glued extra で overlay しない。
+
 ### 2026-10-16: Cred.h を Windows.h へ（第39弾）
 
 コピーはしない。CredFree は既に生成済み。umbrella 読み落とし。

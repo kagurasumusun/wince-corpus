@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 660 constants, 114 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 660 constants, 120 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _TAPI_
 #define _TAPI_
@@ -1112,6 +1112,13 @@ typedef struct linecallparams_tag {
  * functions and callbacks
  * ================================================================ */
 
+/* phoneConfigDialog  [function; shared; unified-kb; unified-kb] */
+LONG WINAPI phoneConfigDialog( 
+ DWORD dwDeviceID, 
+ HWND hwndOwner, 
+ LPCSTR lpszDeviceClass 
+);
+
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
 
 /* lineAddProvider  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib; A/W lineAddProviderA,lineAddProviderW (CE is W-side)] */
@@ -1199,13 +1206,6 @@ VOID FAR PASCAL phoneCallbackFunc(
  DWORD dwParam1, 
  DWORD dwParam2, 
  DWORD dwParam3
-);
-
-/* phoneConfigDialog  [function; shared; CE 3.0..699; Coredll.lib, coredll.lib; A/W phoneConfigDialogA,phoneConfigDialogW (CE is W-side)] */
-LONG WINAPI phoneConfigDialog(
- DWORD dwDeviceID,
- HWND hwndOwner,
- LPCSTR lpszDeviceClass 
 );
 #endif /* _WIN32_WCE */
 
