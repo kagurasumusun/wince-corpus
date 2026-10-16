@@ -432,6 +432,10 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: gpsapi.h を Windows.h へ（第37弾）
+
+コピーはしない。GPSOpenDevice は既に生成済み。umbrella 読み落とし。
+
 ### 2026-10-16: connmgr.h を Windows.h へ（第36弾）
 
 コピーはしない。ConnMgrApiReadyEvent は既に生成済み。umbrella 読み落とし。

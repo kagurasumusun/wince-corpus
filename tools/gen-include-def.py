@@ -1904,7 +1904,7 @@ _WINDOWS_UMBRELLA = (
     "Storemgr.h", "winioctl.h", "Notify.h", "Dbgapi.h",
     "Fsdmgr.h", "Halether.h", "Fwapi.h",
     "Pm.h", "Sipapi.h", "Htmlctrl.h",
-    "Service.h", "connmgr.h",
+    "Service.h", "connmgr.h", "gpsapi.h",
 )
 
 # Pages often name Windows.h (the umbrella) or a desktop-split SDK
@@ -1987,6 +1987,7 @@ _OVERLAY_NAMED = {
     "SipShowIM", "SipGetInfo", "InitHTMLControl",
     "GetServiceHandle", "ActivateService",
     "ConnMgrApiReadyEvent",
+    "GPSOpenDevice", "GPSCloseDevice", "GPSGetPosition",
 }
 
 _OVERLAY_HEADERS = {
@@ -1996,6 +1997,7 @@ _OVERLAY_HEADERS = {
     "aygshell.h", "tlhelp32.h", "shellapi.h", "storemgr.h",
     "notify.h", "dbgapi.h", "fsdmgr.h", "halether.h", "fwapi.h",
     "pm.h", "sipapi.h", "htmlctrl.h", "service.h", "connmgr.h",
+    "gpsapi.h",
 }
 _APP_OVERLAY_HEADERS = {
     "windef.h", "winnt.h", "winerror.h", "winbase.h", "winuser.h",

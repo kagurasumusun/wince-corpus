@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 22 constants, 9 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 22 constants, 15 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _GPSAPI_
 #define _GPSAPI_
@@ -103,14 +103,12 @@ typedef struct _GPS_POSITION {
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
-
-/* GPSCloseDevice  [function; ce-only; CE 6.0..699; Gpsapi.lib] */
+/* GPSCloseDevice  [function; ce-only; unified-kb; unified-kb] */
 DWORD GPSCloseDevice(
  HANDLE hGPSDevice
 );
 
-/* GPSGetPosition  [function; ce-only; CE 6.0..699; Gpsapi.lib] */
+/* GPSGetPosition  [function; ce-only; unified-kb; unified-kb] */
 DWORD GPSGetPosition(
  HANDLE hGPSDevice,
  GPS_POSITION *pGPSPosition,
@@ -118,14 +116,13 @@ DWORD GPSGetPosition(
  DWORD dwFlags
 );
 
-/* GPSOpenDevice  [function; ce-only; CE 6.0..699; Gpsapi.lib] */
+/* GPSOpenDevice  [function; ce-only; unified-kb; unified-kb] */
 HANDLE GPSOpenDevice(
  HANDLE hNewLocationData,
  HANDLE hDeviceStateChange,
  const WCHAR *szDeviceName,
  DWORD dwFlags
 );
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

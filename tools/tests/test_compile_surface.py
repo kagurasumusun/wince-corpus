@@ -101,6 +101,7 @@ int WINAPI WinMain(HINSTANCE h, HINSTANCE p, LPWSTR cmd, int show) {
     InitHTMLControl(NULL);
     GetServiceHandle(NULL, NULL, 0);
     ConnMgrApiReadyEvent();
+    GPSOpenDevice(NULL, NULL, NULL, 0);
     return 0;
 }
 '''
