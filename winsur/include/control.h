@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 12 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 11 extra decls
  */
 #ifndef _CONTROL_
 #define _CONTROL_
@@ -19,7 +19,6 @@
 /* function */
 HRESULT CancelDefaultHandling( long lEvCode);
 HRESULT FreeEventParams( long lEventCode, long lParam1, long lParam2);
-HRESULT GetNotifyFlags( [out] long *lplNoNotifyFlags);
 HRESULT RestoreDefaultHandling( long lEvCode);
 HRESULT SetNotifyFlags( long lNoNotifyFlags);
 HRESULT StopWhenReady( );

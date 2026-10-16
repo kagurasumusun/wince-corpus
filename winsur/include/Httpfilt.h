@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 15 declarations, 9 outlines, 0 base types, 0 extra macros, 10 extra decls
+ * 0 constants, 16 declarations, 8 outlines, 0 base types, 0 extra macros, 11 extra decls
  */
 #ifndef _HTTPFILT_
 #define _HTTPFILT_
@@ -14,8 +14,6 @@
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
-
-/* HTTP_FILTER_VERSION  [typedef, struct; ce-only] */
 
 /* SF_NOTIFY_ACCESS_DENIED  [function, typedef; ce-only; entity-headers] */
 

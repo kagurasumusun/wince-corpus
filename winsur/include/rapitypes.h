@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 5 declarations, 2 outlines, 0 base types, 0 extra macros, 8 extra decls
+ * 0 constants, 6 declarations, 1 outlines, 0 base types, 0 extra macros, 8 extra decls
  */
 #ifndef _RAPITYPES_
 #define _RAPITYPES_
@@ -15,8 +15,6 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-/* CE_FIND_DATA  [struct; ce-only] */
-
 /* RAPI_DEVICE_PLATFORM  [struct; ce-only; rapi.lib] */
 
 /* ==================================================================
@@ -24,6 +22,18 @@
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
+
+/* CE_FIND_DATA  [struct; ce-only] */
+typedef struct _CE_FIND_DATA {
+ DWORD dwFileAttributes;
+ FILETIME ftCreationTime;
+ FILETIME ftLastAccessTime;
+ FILETIME ftLastWriteTime;
+ DWORD nFileSizeHigh;
+ DWORD nFileSizeLow;
+ DWORD dwOID;
+ WCHAR cFileName[MAX_PATH];
+} CE_FIND_DATA, *LPCE_FIND_DATA;
 
 /* CEGUID  [struct; ce-only] */
 typedef struct _CEGUID {

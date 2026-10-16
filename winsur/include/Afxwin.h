@@ -55,6 +55,7 @@ void FillSolidRect( LPCRECT lpRect, COLORREF clr );
 BOOL FmtLines( BOOL bAddEOL );
 int GetCheckedRadioButton( int nIDFirstButton, int nIDLastButton );
 static const MSG* PASCAL GetCurrentMessage( );
+int GetLogFont( LOGFONT * pLogFont );
 UINT GetProfileInt( LPCTSTR lpszSection, LPCTSTR lpszEntry, int nDefault );
 int GetScrollLimit( );
 void HideApplication( );

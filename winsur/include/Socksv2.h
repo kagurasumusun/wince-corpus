@@ -5,16 +5,10 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 6 declarations, 1 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 0 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 6 extra decls
  */
 #ifndef _SOCKSV2_
 #define _SOCKSV2_
 
-
-/* ==================================================================
- * macros -- the macro/#define blocks the pages print (verbatim)
- * ================================================================ */
-
-/* SS_SOCKET_INFO  [struct; ce-only] */
 
 #endif /* _SOCKSV2_ */

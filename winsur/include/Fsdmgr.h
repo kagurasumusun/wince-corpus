@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 11 constants, 80 declarations, 1 outlines, 0 base types, 0 extra macros, 7 extra decls
+ * 11 constants, 81 declarations, 0 outlines, 0 base types, 0 extra macros, 8 extra decls
  */
 #ifndef _FSDMGR_
 #define _FSDMGR_
@@ -28,12 +28,6 @@
 #define FSD_FLAG_TRANSACT_WRITES 0x2
 #define FSD_FLAG_TRANSACTION_SAFE 0x1
 #define FSD_FLAG_WFSC_SUPPORTED 0x4
-
-/* ==================================================================
- * macros -- the macro/#define blocks the pages print (verbatim)
- * ================================================================ */
-
-/* FSD_VOLUME_INFO  [struct; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

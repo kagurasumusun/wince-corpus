@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 25 constants, 8 declarations, 7 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 25 constants, 9 declarations, 6 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _IPTYPES_
 #define _IPTYPES_
@@ -117,27 +117,6 @@ typedef enum {
  ScopeLevelGlobal = 14
 } SCOPE_LEVEL;
 typedef SCOPE_LEVEL *PSCOPE_LEVEL, *LPSCOPE_LEVEL;
-
-/* IP_ADAPTER_INFO  [struct; shared] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   Next */
-/*   ComboIndex */
-/*   AdapterName */
-/*   Description */
-/*   AddressLength */
-/*   Address */
-/*   Index */
-/*   Type */
-/*   DhcpEnabled */
-/*   CurrentIpAddress */
-/*   IpAddressList */
-/*   GatewayList */
-/*   DhcpServer */
-/*   HaveWins */
-/*   PrimaryWinsServer */
-/*   SecondaryWinsServer */
-/*   LeaseObtained */
-/*   LeaseExpires */
 
 /* IP_ADDRESS_STRING  [struct; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */

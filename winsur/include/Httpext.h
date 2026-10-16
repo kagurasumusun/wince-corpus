@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 21 constants, 4 declarations, 4 outlines, 0 base types, 0 extra macros, 7 extra decls
+ * 21 constants, 7 declarations, 1 outlines, 0 base types, 0 extra macros, 10 extra decls
  */
 #ifndef _HTTPEXT_
 #define _HTTPEXT_
@@ -43,12 +43,6 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-/* EXTENSION_CONTROL_BLOCK  [struct; ce-only] */
-
-/* HSE_URL_MAPEX_INFO  [typedef, struct; ce-only] */
-
-/* HSE_VERSION_INFO  [struct; ce-only] */
-
 /* ServerSupportFunction  [enum, function; ce-only; httpextn.lib, Httpfilt.lib, httpfilt.lib] */
 
 /* ==================================================================
@@ -66,6 +60,22 @@ typedef struct _HSE_SEND_HEADER_EX_INFO{
  BOOL fKeepConn;
 } HSE_SEND_HEADER_EX_INFO, *LPHSE_SEND_HEADER_EX_INFO;
 
+/* HSE_URL_MAPEX_INFO  [typedef, struct; ce-only] */
+typedef struct _HSE_URL_MAPEX_INFO{
+ CHAR lpszPath[MAX_PATH];
+ DWORD dwFlags;
+ DWORD cchMatchingPath;
+ DWORD cchMatchingURL;
+ DWORD dwReserved1;
+ DWORD dwReserved2;
+} HSE_URL_MAPEX_INFO, *LPHSE_URL_MAPEX_INFO;
+
+/* HSE_VERSION_INFO  [struct; ce-only] */
+typedef struct _HSE_VERSION_INFO{
+ DWORD dwExtensionVersion; 
+ CHAR lpszExtensionDesc[HSE_MAX_EXT_DLL_NAME_LEN]; 
+} HSE_VERSION_INFO, *LPHSE_VERSION_INFO;
+
 /* ul2  [extra enum] */
 BOOL WINAPI *ServerSupportFunction(  PHTTP_FILTER_CONTEXT pfc,  enum SF_REQ_TYPE sfReq,  PVOID pData,  DWORD ul1,  DWORD ul2 );
 
@@ -74,6 +84,11 @@ BOOL WINAPI *ServerSupportFunction(  PHTTP_FILTER_CONTEXT pfc,  enum SF_REQ_TYPE
  * ================================================================ */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
+
+/* GetExtensionVersion  [function; ce-only; CE 3.0..399, 5.0..699] */
+BOOL WINAPI GetExtensionVersion(
+ HSE_VERSION_INFO* pVer 
+);
 
 /* TerminateExtension  [function; ce-only; CE 3.0..399, 5.0..699] */
 BOOL WINAPI TerminateExtension(

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 2 declarations, 3 outlines, 0 base types, 0 extra macros, 23 extra decls
+ * 0 constants, 3 declarations, 2 outlines, 0 base types, 0 extra macros, 24 extra decls
  */
 #ifndef _DMUSICC_
 #define _DMUSICC_
@@ -14,8 +14,6 @@
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
-
-/* DMUS_PORTCAPS  [struct; ce-only] */
 
 /* IDirectMusicBuffer  [typedef; ce-only; Dmusic.lib] */
 

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 21 constants, 44 declarations, 1 outlines, 0 base types, 0 extra macros, 11 extra decls
+ * 21 constants, 45 declarations, 0 outlines, 0 base types, 0 extra macros, 12 extra decls
  */
 #ifndef _RAS_
 #define _RAS_
@@ -42,8 +42,6 @@
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
-
-/* RASCNTL_SERVERUSERCREDENTIALS  [struct; ce-only] */
 
 /* RASPPPIP  [struct; ce-only] */
 #define RASPPPIPW struct tagRASPPPIPW
@@ -185,6 +183,18 @@ typedef struct tagRASDEVINFO {
 } RASDEVINFO;
 typedef RASDEVINFO *PRASDEVINFO, *LPRASDEVINFO;
 
+/* RASDIALPARAMS  [struct, typedef; ce-only] */
+typedef struct _RASDIALPARAMS { 
+ DWORD dwSize; 
+ TCHAR szEntryName[ RAS_MaxEntryName + 1 ]; 
+ TCHAR szPhoneNumber[ RAS_MaxPhoneNumber + 1 ]; 
+ TCHAR szCallbackNumber[ RAS_MaxCallbackNumber + 1 ]; 
+ TCHAR szUserName[ UNLEN + 1 ]; 
+ TCHAR szPassword[ PWLEN + 1 ]; 
+ TCHAR szDomain[ DNLEN + 1 ]; 
+} RASDIALPARAMS;
+typedef RASDIALPARAMS *PRASDIALPARAMS, *LPRASDIALPARAMS;
+
 /* RASENTRYNAME  [struct, typedef; ce-only] */
 typedef struct _RASENTRYNAME {
  DWORD dwSize;
@@ -253,6 +263,38 @@ typedef struct _RASDIALPARAMS {- };
  * functions and callbacks
  * ================================================================ */
 
+/* RASENTRY  [typedef, function; ce-only] */
+typedef_struct_RASENTRY {
+ DWORD dwSize;
+ DWORD dwfOptions;
+ DWORD dwCountryID;
+ DWORD dwCountryCode;
+ TCHAR szAreaCode[ RAS_MaxAreaCode + 1 ];
+ TCHAR szLocalPhoneNumber[ RAS_MaxPhoneNumber + 1 ];
+ DWORD dwAlternatesOffset;
+ RASIPADDR ipaddr;
+ RASIPADDR ipaddrDns;
+ RASIPADDR ipaddrDnsAlt;
+ RASIPADDR ipaddrWins;
+ RASIPADDR ipaddrWinsAlt;
+ DWORD dwFrameSize;
+ DWORD dwfNetProtocols;
+ DWORD dwFramingProtocol;
+ TCHAR szScript[ MAX_PATH ];
+ TCHAR szAutoDialDll[ MAX_PATH ];
+ TCHAR szAutoDialFunc[ MAX_PATH ];
+ TCHAR szDeviceType[ RAS_MaxDeviceType + 1 ];
+ TCHAR szDeviceName[ RAS_MaxDeviceName + 1 ];
+ TCHAR szX25PadType[ RAS_MaxPadType + 1 ];
+ TCHAR szX25Address[ RAS_MaxX25Address + 1 ];
+ TCHAR szX25Facilities[ RAS_MaxFacilities + 1 ];
+ TCHAR szX25UserData[ RAS_MaxUserData + 1 ];
+ DWORD dwChannels;
+ DWORD dwReserved1;
+ DWORD dwReserved2;
+ DWORD dwCustomAuthKey;
+} RASENTRY;
+
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
 
 /* RasDeleteEntry  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Ppp.lib, ppp.lib; A/W RasDeleteEntryA,RasDeleteEntryW (CE is W-side)] */
@@ -270,11 +312,25 @@ DWORD RasEnumEntries(
  LPDWORD lpcEntries 
 );
 
+/* RasGetEntryDialParams  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Ppp.lib, ppp.lib; A/W RasGetEntryDialParamsA,RasGetEntryDialParamsW (CE is W-side)] */
+DWORD RasGetEntryDialParams(
+ LPWSTR lpszPhoneBook, 
+ LPRASDIALPARAMS lpRasDialParams, 
+ LPBOOL lpfPassword 
+);
+
 /* RasRenameEntry  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Ppp.lib, ppp.lib; A/W RasRenameEntryA,RasRenameEntryW (CE is W-side)] */
 DWORD RasRenameEntry(
  LPWSTR lpszPhonebook, 
  LPWSTR lpszOldEntry, 
  LPWSTR lpszNewEntry 
+);
+
+/* RasSetEntryDialParams  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Ppp.lib, ppp.lib; A/W RasSetEntryDialParamsA,RasSetEntryDialParamsW (CE is W-side)] */
+DWORD RasSetEntryDialParams(
+ LPWSTR lpszPhoneBook, 
+ LPRASDIALPARAMS lpRasDialParams, 
+ BOOL fRemovePassword 
 );
 
 /* RasValidateEntryName  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Ppp.lib, ppp.lib; A/W RasValidateEntryNameA,RasValidateEntryNameW (CE is W-side)] */

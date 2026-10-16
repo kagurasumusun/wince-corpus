@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 566 constants, 309 declarations, 12 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 566 constants, 315 declarations, 7 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINBASE_
 #define _WINBASE_
@@ -590,12 +590,6 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-/* CEDBASEINFO  [struct; ce-only] */
-
-/* CEDIRINFO  [struct; ce-only] */
-
-/* CEFILEINFO  [struct; ce-only] */
-
 /* CHECK_INVALIDGUID  [macro, function; ce-only] */
 #define CHECK_INVALIDGUID(pguid) \
 !~((pguid)->Data1&(pguid)->Data2&(pguid)->Data3&(pguid)->Data4);
@@ -605,8 +599,6 @@
 !((pguid)->Data1|(pguid)->Data2|(pguid)->Data3|(pguid)->Data4);
 
 /* CONTEXT  [struct; shared] */
-
-/* DEVMGR_DEVICE_INFORMATION  [struct; ce-only] */
 
 /* STORE_INFORMATION  [struct; ce-only] */
 
@@ -619,6 +611,14 @@
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
+
+/* CEDIRINFO  [struct; ce-only] */
+typedef struct _CEDIRINFO {
+ DWORD dwAttributes; 
+ CEOID oidParent; 
+ WCHAR szDirName[MAX_PATH]; 
+} CEDIRINFO;
+typedef CEDIRINFO *PCEDIRINFO, *LPCEDIRINFO;
 
 /* CERECORDINFO  [struct; ce-only] */
 typedef struct _CERECORDINFO {
@@ -704,6 +704,17 @@ typedef enum {
  DeviceSearchByParent 
 } DeviceSearchType;
 typedef DeviceSearchType *PDeviceSearchType, *LPDeviceSearchType;
+
+/* DEVMGR_DEVICE_INFORMATION  [struct; ce-only] */
+typedef struct _DevmgrDeviceInformation_tag {
+ DWORD dwSize;
+ HANDLE hDevice;
+ HANDLE hParentDevice;
+ WCHAR szLegacyName[6];
+ WCHAR szDeviceKey[MAX_PATH];
+ WCHAR szDeviceName[MAX_PATH];
+ WCHAR szBusName[MAX_PATH];
+} DEVMGR_DEVICE_INFORMATION, *PDEVMGR_DEVICE_INFORMATION;
 
 /* EXIT_PROCESS_DEBUG_INFO  [struct; shared] */
 typedef struct _EXIT_PROCESS_DEBUG_INFO { 
@@ -866,6 +877,36 @@ typedef struct _WIN32_FILE_ATTRIBUTE_DATA{
  DWORD nFileSizeLow; 
 } WIN32_FILE_ATTRIBUTE_DATA, *LPWIN32_FILE_ATTRIBUTE_DATA;
 
+/* WIN32_FIND_DATA  [struct; shared; A/W WIN32_FIND_DATAA,WIN32_FIND_DATAW (CE is W-side)] */
+typedef struct _WIN32_FIND_DATA { 
+ DWORD dwFileAttributes; 
+ FILETIME ftCreationTime; 
+ FILETIME ftLastAccessTime; 
+ FILETIME ftLastWriteTime; 
+ DWORD nFileSizeHigh; 
+ DWORD nFileSizeLow; 
+ DWORD dwOID; 
+ TCHAR cFileName[MAX_PATH]; 
+} WIN32_FIND_DATA;
+typedef WIN32_FIND_DATA *PWIN32_FIND_DATA, *LPWIN32_FIND_DATA;
+
+/* WIN32_FIND_DATAW  [struct; win32-spelling; unified-kb; unified-kb] */
+typedef struct _WIN32_FIND_DATAW {
+  DWORD    dwFileAttributes;
+  FILETIME ftCreationTime;
+  FILETIME ftLastAccessTime;
+  FILETIME ftLastWriteTime;
+  DWORD    nFileSizeHigh;
+  DWORD    nFileSizeLow;
+  DWORD    dwReserved0;
+  DWORD    dwReserved1;
+  WCHAR    cFileName[MAX_PATH];
+  WCHAR    cAlternateFileName[14];
+  DWORD    dwFileType; // Obsolete. Do not use.
+  DWORD    dwCreatorType; // Obsolete. Do not use
+  WORD     wFinderFlags; // Obsolete. Do not use
+} WIN32_FIND_DATAW, *PWIN32_FIND_DATAW, *LPWIN32_FIND_DATAW;
+
 /* BY_HANDLE_FILE_INFORMATION  [struct; shared] */
 typedef struct _BY_HANDLE_FILE_INFORMATION { 
  DWORD dwFileAttributes; 
@@ -881,6 +922,16 @@ typedef struct _BY_HANDLE_FILE_INFORMATION {
  DWORD dwOID;
 } BY_HANDLE_FILE_INFORMATION;
 typedef BY_HANDLE_FILE_INFORMATION *PBY_HANDLE_FILE_INFORMATION, *LPBY_HANDLE_FILE_INFORMATION;
+
+/* CEFILEINFO  [struct; ce-only] */
+typedef struct _CEFILEINFO {
+ DWORD dwAttributes; 
+ CEOID oidParent; 
+ WCHAR szFileName[MAX_PATH]; 
+ FILETIME ftLastChanged; 
+ DWORD dwLength; 
+} CEFILEINFO;
+typedef CEFILEINFO *PCEFILEINFO, *LPCEFILEINFO;
 
 /* DCB  [struct; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
@@ -925,22 +976,6 @@ typedef BY_HANDLE_FILE_INFORMATION *PBY_HANDLE_FILE_INFORMATION, *LPBY_HANDLE_FI
 /*   dwAllocationGranularity */
 /*   wProcessorLevel */
 /*   wProcessorRevision */
-
-/* WIN32_FIND_DATA  [struct; shared; A/W WIN32_FIND_DATAA,WIN32_FIND_DATAW (CE is W-side)] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   dwFileAttributes */
-/*   ftCreationTime */
-/*   ftLastAccessTime */
-/*   ftLastWriteTime */
-/*   nFileSizeHigh */
-/*   nFileSizeLow */
-/*   dwReserved0 */
-/*   dwReserved1 */
-/*   cFileName */
-/*   cAlternateFileName */
-/*   dwFileType */
-/*   dwCreatorType */
-/*   wFinderFlags */
 
 /* ==================================================================
  * functions and callbacks
@@ -1996,6 +2031,18 @@ BOOL FindClose(
  HANDLE hFindFile
 );
 
+/* FindFirstFile  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsmain.lib, fsmain.lib; A/W FindFirstFileA,FindFirstFileW (CE is W-side)] */
+HANDLE FindFirstFile(
+ LPCTSTR lpFileName, 
+ LPWIN32_FIND_DATA lpFindFileData 
+);
+
+/* FindNextFile  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsmain.lib, fsmain.lib; A/W FindNextFileA,FindNextFileW (CE is W-side)] */
+BOOL FindNextFile( 
+ HANDLE hFindFile, 
+ LPWIN32_FIND_DATA lpFindFileData 
+);
+
 /* FlushFileBuffers  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsmain.lib, fsmain.lib] */
 BOOL WINAPI FlushFileBuffers(
  HANDLE hFile 
@@ -2271,6 +2318,19 @@ VOID WINAPI DeleteFiber(
  LPVOID lpFiber
 );
 
+/* FindFirstDevice  [function; ce-only; CE 5.0..699] */
+HANDLE FindFirstDevice(
+ DeviceSearchType searchType,
+ LPCVOID pvSearchParam,
+ PDEVMGR_DEVICE_INFORMATION pdi
+);
+
+/* FindNextDevice  [function; ce-only; CE 5.0..699] */
+BOOL FindNextDevice(
+ HANDLE h,
+ PDEVMGR_DEVICE_INFORMATION pdi
+);
+
 /* FreeLibraryAndExitThread  [function; shared; CE 5.0..699; Coredll.dll, coredll.dll] */
 VOID FreeLibraryAndExitThread(
  HMODULE hModule,
@@ -2283,6 +2343,18 @@ LPVOID GetCurrentFiber(void);
 /* GetCurrentFT  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 void GetCurrentFT(
  LPFILETIME lpFileTime
+);
+
+/* GetDeviceInformationByDeviceHandle  [function; ce-only; CE 5.0..699] */
+BOOL GetDeviceInformationByDeviceHandle(
+ HANDLE hDevice,
+ PDEVMGR_DEVICE_INFORMATION pdi
+);
+
+/* GetDeviceInformationByFileHandle  [function; ce-only; CE 5.0..699] */
+BOOL GetDeviceInformationByFileHandle(
+ HANDLE hFile,
+ PDEVMGR_DEVICE_INFORMATION pdi
 );
 
 /* GetDllVersion  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */

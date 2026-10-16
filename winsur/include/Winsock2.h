@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 192 constants, 92 declarations, 4 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 192 constants, 95 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINSOCK2_
 #define _WINSOCK2_
@@ -407,6 +407,17 @@ typedef struct __WSABUF {
  char FAR* buf;
 } WSABUF, FAR* LPWSABUF;
 
+/* WSADATA  [struct, typedef; shared] */
+typedef struct WSAData {
+ WORD wVersion;
+ WORD wHighVersion;
+ char szDescription[WSADESCRIPTION_LEN+1];
+ char szSystemStatus[WSASYS_STATUS_LEN+1];
+ unsigned short iMaxSockets;
+ unsigned short iMaxUdpDg;
+ char FAR* lpVendorInfo;
+} WSADATA, *LPWSADATA;
+
 /* WSAECOMPARATOR  [enum; shared] */
 typedef enum _WSAEcomparator {
  COMP_EQUAL = 0,
@@ -429,21 +440,6 @@ typedef struct _SERVICE_TYPE_INFO_ABS {
  SERVICE_TYPE_VALUE_ABS Values[1]; 
 } SERVICE_TYPE_INFO_ABS;
 typedef SERVICE_TYPE_INFO_ABS *PSERVICE_TYPE_INFO_ABS, *LPSERVICE_TYPE_INFO_ABS;
-
-/* fd_set  [struct, function; shared] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   fd_count */
-/*   fd_array */
-
-/* WSANETWORKEVENTS  [struct; shared] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   lNetworkEvents */
-/*   iErrorCode */
-
-/* WSAPROTOCOLCHAIN  [struct; shared] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   ChainLen */
-/*   ChainEntries */
 
 /* ==================================================================
  * functions and callbacks
@@ -490,6 +486,12 @@ u_short ntohs(
 
 /* WSAGetLastError  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
 int WSAGetLastError(void);
+
+/* WSAStartup  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
+int WSAStartup(
+ WORD wVersionRequested,
+ LPWSADATA lpWSAData
+);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */

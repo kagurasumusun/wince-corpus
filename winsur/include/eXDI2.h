@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 27 constants, 19 declarations, 1 outlines, 0 base types, 0 extra macros, 73 extra decls
+ * 27 constants, 19 declarations, 1 outlines, 0 base types, 0 extra macros, 63 extra decls
  */
 #ifndef _EXDI2_
 #define _EXDI2_
@@ -181,8 +181,6 @@ HRESULT EnumAllCpuRegs( IeXdi2EnumCpuRegs** ppieXdi2EnumCpuRegs);
 HRESULT EnumAllCpuRegsInGroup( DWORD dwGroupIdx, IeXdi2EnumCpuRegs** ppieXdi2EnumCpuRegs );
 HRESULT EnumAllDataBps( TRISTATE_TYPEf3Enabled, IeXdi2EnumDataBp** ppieXdi2EnumDataBp);
 HRESULT GetCurrentExecMode( DWORD dwCpuNum DWORD* pdwExecMode);
-HRESULT GetLinearMemMapList( [out] DWORD *pdwNbTotalMemMapInList, [out, size_is(,*pdwNbTotalMemMapInList)] MEMMAP_DESCRIPTION_TYPE **ppmmdTable);
-HRESULT GetMemAccessExclusionRange( [in] LINEAR_MEM_MAP_TYPE lmt, [out] DWORD* pdwNbTotalExclRange, [out, size_is(,*pdwNbTotalExclRange)] MEM_ACCESS_EXCLUSION_RANGE** ppmaerExclusionList);
 HRESULT GetNbBpAvail( DWORD* pdwNbHwCodeBpAvail, DWORD* pdwNbSwCodeBpAvail, DWORD* pdwNbHwDataBpAvail, DWORD* pdwNbSwDataBpAvail);
 HRESULT InitAndLockHelper( IeXdi2Exec* pieXdi2ExecDownLink, IeXdi2Mem* pieXdi2MemDownLink, IeXdi2ClientNotifyMemChg* pieXdiClientNotifMemChg2UpLink, IeXdi2ClientNotifyRunChg* pieXdiClientNotifRunChg2UpLink, IeXdi2ClientAuthorizeContinuation* pieXdiClientAuthorizeContUpLink, MISC_EXDIACCESS_SERVICE_INFO measInfo);
 HRESULT InitAndLockProbeHandler( IeXdi2ClientNotifyMemChg* pieXdiClientNotifMemChg2UpLink, IeXdi2ClientNotifyRunChg* pieXdiClientNotifRunChg2UpLink, IeXdi2ClientAuthorizeContinuation* pieXdiClientAuthorizeContUpLink, MISC_EXDIACCESS_SERVICE_INFO measInfo);
@@ -194,7 +192,6 @@ HRESULT NotifyCpuRegChange();
 HRESULT NotifyErrorState();
 HRESULT NotifyReset();
 HRESULT NotifyRun();
-HRESULT ReadClientScratchPad( [in] GUIDguidClient, [out] DWORD* pdwBuffOutSize, [out, size_is(,*pdwBuffOutSize)] BYTE** ppbBufferOut);
 HRESULT SingleStep( BOOL fIgnoreCurrentExcept, BOOL fOneCycleOnly );
 HRESULT UnlockHelper ();
 HRESULT UnlockProbe ();

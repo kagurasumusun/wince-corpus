@@ -21,14 +21,46 @@
 #define EDBG_CURRENT_BOOTME_VERSION 2
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* EDBG_BOOTME_DATA  [struct; ce-only] */
+typedef struct _EDBG_BOOTME_DATA { 
+UCHAR VersionMajor; 
+UCHAR VersionMinor; 
+USHORT MACAddr[3]; 
+DWORD IPAddr; 
+UCHAR PlatformId[EDBG_MAX_DEV_NAMELEN+1]; 
+UCHAR DeviceName[EDBG_MAX_DEV_NAMELEN+1]; 
+UCHAR CPUId; 
+UCHAR uBootmeVer; 
+DWORD dwBootFlags; 
+USHORT wDownloadPort; 
+USHORT wSvcPort; 
+} EDBG_BOOTME_DATA, *PEDBG_BOOTME_DATA;
+
+/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400)) /* CE 3.0..399 */
 
+/* EDBG_BOOT_CALLBACK_FUNC  [function; ce-only; CE 3.0..399] */
+void EDBG_BOOT_CALLBACK_FUNC( 
+PVOID pParam, 
+PEDBG_BOOTME_DATA pBootmeData );
+
 /* EdbgDeregisterClient  [function; ce-only; CE 3.0..399; Edbg.dll, Ethdbg.dll, Ethdbg.lib] */
 BOOL EdbgDeregisterClient( 
 UCHAR Id );
+
+/* EdbgGetDeviceInfo  [function; ce-only; CE 3.0..399; Edbg.dll] */
+BOOL EdbgGetDeviceInfo( 
+char *DeviceName, 
+UCHAR Id, 
+EDBG_BOOTME_DATA *pBootMeData );
 
 /* EdbgRecv  [function; ce-only; CE 3.0..399; Edbg.dll, Ethdbg.lib] */
 BOOL EdbgRecv( 

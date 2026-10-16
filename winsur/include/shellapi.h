@@ -1,11 +1,11 @@
-/* ShellApi.h -- Windows CE unified surface
+/* shellapi.h -- Windows CE unified surface
  *
  * ONE tree for every CE generation.  Version differences use
  * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 162 constants, 20 declarations, 11 outlines, 1 base types, 0 extra macros, 0 extra decls
+ * 162 constants, 21 declarations, 0 outlines, 1 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _SHELLAPI_
 #define _SHELLAPI_
@@ -221,28 +221,6 @@
 typedef HANDLE HDESK;
 
 /* ==================================================================
- * macros -- the macro/#define blocks the pages print (verbatim)
- * ================================================================ */
-
-/* HIMAGELIST  [typedef; ce-only; heuristic-prefix] */
-
-/* HIMC  [typedef; ce-only; heuristic-prefix] */
-
-/* LPCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
-
-/* LUID  [typedef; ce-only; heuristic-prefix] */
-
-/* PCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
-
-/* PCWCH  [typedef; ce-only; heuristic-prefix] */
-
-/* PLUID  [typedef; ce-only; heuristic-prefix] */
-
-/* REGSAM  [typedef; ce-only; heuristic-prefix] */
-
-/* UNSIGNED  [typedef; ce-only; heuristic-prefix] */
-
-/* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
@@ -263,12 +241,14 @@ typedef struct _NOTIFYICONDATA {
 } NOTIFYICONDATA, *PNOTIFYICONDATA;
 
 /* SHFILEINFO  [struct; shared; A/W SHFILEINFOA,SHFILEINFOW (CE is W-side)] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   hIcon */
-/*   iIcon */
-/*   dwAttributes */
-/*   szDisplayName */
-/*   szTypeName */
+typedef struct _SHFILEINFO { 
+ HICON hIcon; 
+ int iIcon; 
+ DWORD dwAttributes; 
+ TCHAR szDisplayName[MAX_PATH]; 
+ TCHAR szTypeName[80]; 
+} SHFILEINFO;
+typedef SHFILEINFO *PSHFILEINFO, *LPSHFILEINFO;
 
 /* ==================================================================
  * functions and callbacks

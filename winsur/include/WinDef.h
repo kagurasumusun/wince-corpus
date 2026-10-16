@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 29 constants, 67 declarations, 9 outlines, 95 base types, 0 extra macros, 0 extra decls
+ * 30 constants, 67 declarations, 9 outlines, 97 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDEF_
 #define _WINDEF_
@@ -123,6 +123,7 @@
 #define FALSE 0
 #define FASTCALL __fastcall
 #define HMONITOR_DECLARED 1
+#define MAX_PATH 128
 #ifndef NULL
 #define NULL 0
 #endif
@@ -593,6 +594,16 @@ typedef UINT_PTR WPARAM;
  * CE Unicode / 32-bit data-types row
  * source: win32/common/windows-data-types.md */
 typedef LRESULT (CALLBACK *WNDPROC)(HWND, UINT, WPARAM, LPARAM);
+
+/* TIMERPROC [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef void (CALLBACK *TIMERPROC)(HWND, UINT, UINT, DWORD);
+
+/* DLGPROC [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef INT_PTR (CALLBACK *DLGPROC)(HWND, UINT, WPARAM, LPARAM);
 
 /* HCURSOR
  * source: win32/common/windows-data-types.md */

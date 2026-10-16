@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 10 constants, 14 declarations, 4 outlines, 0 base types, 0 extra macros, 33 extra decls
+ * 10 constants, 18 declarations, 0 outlines, 0 base types, 0 extra macros, 37 extra decls
  */
 #ifndef _MLANG_
 #define _MLANG_
@@ -29,18 +29,6 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 #define D 1
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * macros -- the macro/#define blocks the pages print (verbatim)
- * ================================================================ */
-
-/* MIMECPINFO  [struct; ce-only] */
-
-/* MIMECSETINFO  [struct; ce-only] */
-
-/* RFC1766INFO  [struct; ce-only] */
-
-/* SCRIPTINFO  [struct; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -73,6 +61,27 @@ typedef enum tagMIMECONTF {
  MIMECONTF_MIME_REGISTRY = 0x40000000
 } MIMECONTF;
 typedef MIMECONTF *PMIMECONTF, *LPMIMECONTF;
+
+/* MIMECPINFO  [struct; ce-only] */
+typedef struct tagMIMECPINFO {
+ DWORD dwFlags;
+ UINT uiCodePage;
+ UINT uiFamilyCodePage;
+ WCHAR wszDescription[MAX_MIMECP_NAME];
+ WCHAR wszWebCharset[MAX_MIMECSET_NAME];
+ WCHAR wszHeaderCharset[MAX_MIMECSET_NAME];
+ WCHAR wszBodyCharset[MAX_MIMECSET_NAME];
+ WCHAR wszFixedWidthFont[MAX_MIMEFACE_NAME];
+ WCHAR wszProportionalFont[MAX_MIMEFACE_NAME];
+ BYTE bGDICharset;
+} MIMECPINFO, *PMIMECPINFO;
+
+/* MIMECSETINFO  [struct; ce-only] */
+typedef struct tagMIMECSETINFO {
+ UINT uiCodePage;
+ UINT uiInternetEncoding;
+ WCHAR wszCharset[MAX_MIMECSET_NAME];
+} MIMECSETINFO, *PMIMECSETINFO;
 
 /* MLCONVCHAR  [enum; ce-only] */
 typedef enum tagMLCONVCHARF {

@@ -1,5 +1,5 @@
 /* ExtraDeclarations.h -- declarations without header assignment
- * 6125 unassigned declarations
+ * 6062 unassigned declarations
  */
 #ifndef _EXTRADECLARATIONS_H_
 #define _EXTRADECLARATIONS_H_
@@ -434,6 +434,7 @@ HRESULT BstrFromVector( SAFEARRAY FAR *psa, BSTR FAR *pbstr );
 void BthAGATSetCallback ( PFN_SendATCommand pfn );
 DWORD BthAGSetServiceCallback( PFN_PhoneExtServiceCallback pfn );
 void BufferFree (BD_BUFFER *pBuf);
+HRESULT Buffering( [in] VARIANT_BOOL bBuffering);
 BOOL CAM_Close( DWORD Context );
 BOOL CAM_Deinit( DWORD dwContext );
 BOOL CAM_IOControl( DWORD dwContext, DWORD Ioctl, UCHAR* pInBuf, DWORD InBufLen, UCHAR* pOutBuf, DWORD OutBufLen, DWORD* pdwBytesTransferred );
@@ -910,9 +911,12 @@ HRESULT GetDocumentation( MEMBERID memid, BSTR FAR *pBstrName, BSTR FAR *pBstrDo
 HRESULT GetDocumentation2( [in] MEMID memid, [in] LCID lcid, [out] BSTR FAR *pbstrHelpString, [out] unsigned long FAR *pdwHelpStringContext, BSTR FAR *pbstrHelpStringDll);
 HRESULT GetDomain( UINT16 languageCode, IDVDDomain** ppDomain, UINT8* pExistFlag );
 HRESULT GetDriverDesc( PDSDRIVERDESC pDsDriverDesc );
+HRESULT GetDriverInfoDword( [in] GUID guidQuery, [out] DWORD *pdwInfo);
+HRESULT GetDriverInfoString( [in] GUID guidDriverQuery, [in] LANGID wLangID, [out] LPOLESTR * ppszInfo );
 HRESULT GetEncodeSink( IImageSink** sink );
 HRESULT GetEndpointProxy( IWSDEndpointProxy** ppEndpoint );
 HANDLE GetEvent( );
+HRESULT GetExecModeAtAddress( [in] ADDRESS_TYPE AddrCode, [out] DWORD* pdwExecMode);
 HRESULT GetExtendedControl( IDispatch** ppDisp);
 HRESULT GetExtendedDiscoXML( WSDXML_ELEMENT** ppHeaderAny, WSDXML_ELEMENT** ppBodyAny );
 HRESULT GetFMSystemFont( OLE_HANDLE hFC, BOOL fSmall, IDispatch **ppdispFont);
@@ -925,6 +929,7 @@ HRESULT GetFormDisplayCaps( OLE_HANDLE hFC, LONG nIndex, LONG *pRetInfo);
 HRESULT GetFormsContextHandle( OLE_HANDLE *phFC );
 HRESULT GetFrontBuffer( IDirect3DMobileSurface** pFrontBuffer );
 HRESULT GetGraph( IDirectMusicGraph** ppGraph );
+HRESULT GetHaltReasons(VARIANT dwIndex,VARIANT*pdwHaltReasonCode,VARIANT*ppdwExceptionCode,VARIANT*ppChance,[out] VARIANT*ppieXdiCodeBP,[out] VARIANT*ppieXdiDataBP);
 HRESULT GetHeader( BSTR bstrHeaderName, BSTR** prgValues, UINT* pcValues );
 HRESULT GetHelpFile( BSTR *pBstrHelpFile);
 HRESULT GetHighlightInfo( IDVDHighlightInfo** ppHLI );
@@ -972,6 +977,7 @@ DWORD GetNewLength(PSS_WINDOW_STATE pWindowState, DWORD dwNewOffset);
 DWORD GetNewOffset(PSS_WINDOW_STATE pWindowState, DWORD dwNewOffset);
 BOOL GetNextParameterType( HPACKET hPacket, MANAGED_DATATYPE *pType, DWORD *pSize );
 HRESULT GetNotificationData( BSTR* pbstrContentType, BSTR* pbstrMessageData );
+HRESULT GetNotifyFlags( [out] long *lplNoNotifyFlags);
 HRESULT GetOS( BSTR bstrOSIdOrName, IPMOS** ppiOS );
 HRESULT GetObjectParam( LPOLESTR pszKey, IUnknown** ppunk );
 HRESULT GetObjectStorage( LPOLESTR pszItem, IBindCtx* pbc, REFIID riid, void** ppvStorage );
@@ -1069,6 +1075,7 @@ HRESULT GetTunePolicy( STRMBUF_PLAYBACK_TUNE_POLICY* peStrmbufPlaybackTunePolicy
 HRESULT GetUniqueDeviceName( BSTR bstrDeviceIdentifier, BSTR bstrTemplateUDN, BSTR* pbstrUDN );
 LONG GetUnits(void);
 HRESULT GetVideoPaletteEntries( long StartIndex, long Entries, long *pRetrieved, long *pPalette);
+HRESULT GetVideoPosition( [out] RECT *pSourceRect, [out] RECT *pDestinationRect);
 HRESULT GetVideoSize( long *pWidth, long *pHeight);
 HRESULT GetVirtualChannelOptions( BSTR ChanName, LONG* pChanOptions );
 HRESULT GetVirtualMachineCount( [out, retval] ULONG* numberOfVMs );
@@ -1806,6 +1813,7 @@ HRESULT UpdateRemoteAddress( BSTR bstrRemoteAddress, BSTR bstrInternalLocalAddre
 HRESULT UpdateRemoteAddressEx( BSTR bstrRemoteAddress, long lRemotePort, BSTR bstrInternalLocalAddress, long lInternalLocalPort, BSTR bstrExternalLocalAddress, long lExternalLocalPort );
 HRESULT UpdateRemoteAddressEx2( BSTR bstrRemoteAddress, long lRemotePort, long lTransport, BSTR bstrInternalLocalAddress, long lInternalLocalPort, BSTR bstrExternalLocalAddress, long lExternalLocalPort );
 HRESULT UpdateTexture( IDirect3DMobileBaseTexture* pSourceTexture, IDirect3DMobileBaseTexture* pDestinationTexture );
+HRESULT UserOptionsDlg( [in] HWND hwndParent);
 HRESULT VIOInitialize (LPVOID pvReserved);
 HRESULT VIORegisterDevice( REFCLSID rclsid, BOOL bRegister);
 HRESULT VIORegisterMinidriver( REFCLSID rclsidDevice, REFCLSID rclsidMinidriver, BOOL bRegister );
@@ -2738,6 +2746,7 @@ HRESULT put_String( long index, BSTR bstr );
 HRESULT put_SubCaption( BSTR bstrSubCaption );
 HRESULT put_Subject ([in] BSTR bstrSubject);
 HRESULT put_Suffix ([in] BSTR bstrSuffix);
+HRESULT put_SupportedPlatform( [in] BSTRin_bstrSupportedPlatform);
 HRESULT put_TabColor( OLE_COLOR clr );
 HRESULT put_TabFocusBackColor( OLE_COLOR clr );
 HRESULT put_TabFocusForeColor( OLE_COLOR clr );
@@ -2824,10 +2833,6 @@ WINOLEAPI WriteClassStg(  IStorage *pStg,  REFCLSID rclsid  );
 WINOLEAPI WriteClassStm(  IStream *pStm,  REFCLSID rclsid  );
 VOID CREATE_INVALIDGUID(  PCEGUID pceguid);
 VOID CREATE_SYSTEMGUID(  PCEGUID pceguid);
-NDIS_STATUS EthChangeFilterAddresses(  IN PETH_FILTER Filter,  IN NDIS_HANDLE NdisFilterHandle,  IN PNDIS_REQUEST NdisRequest,  IN UINT AddressCount,  IN CHAR Addresses[][ETH_LENGTH_OF_ADDRESS],  IN BOOLEAN Set );
-VOID EthQueryGlobalFilterAddresses(  OUT PNDIS_STATUS Status,  IN PETH_FILTER Filter,  IN UINT SizeOfArray,  OUT PUINT NumberOfAddresses,  IN OUT CHAR AddressArray[][ETH_LENGTH_OF_ADDRESS] );
-VOID EthQueryOpenFilterAddresses(  OUT PNDIS_STATUS Status,  IN PETH_FILTER Filter,  IN NDIS_HANDLE NdisFilterHandle,  IN UINT SizeOfArray,  OUT PUINT NumberOfAddresses,  OUT CHAR AddressArray[][ETH_LENGTH_OF_ADDRESS] );
-BOOLEAN EthShouldAddressLoopBack(  IN PETH_FILTER Filter,  IN CHAR Address[ETH_LENGTH_OF_ADDRESS] );
 void GetFirstExceptionItem(IAppointment *pAppt)
 {
   IRecurrencePattern *pRec;
@@ -3231,15 +3236,23 @@ long DRM_ND_DeregisterFromService ( BSTR sServerUDN, );
 long DRM_ND_RegisterWithService ( BSTR sOurUDN, BSTR sServerUDN, IUPnPService *pService );
 HRESULT EnumerateProcesses( SAFEARRAY(BSTR)*out_Processes, SAFEARRAY(DWORD)*out_ProcessesId);
 HRESULT SearchFileSystem( LPCOLESTRin_Criteria,LPCOLESTRin_StartingDirectory, SAFEARRAY( BSTR )*out_FileSystems);
-HRESULT VerifyFilesInstalled( DWORD in_ArraySize, [in, size_is(in_ArraySize), length_is(in_ArraySize)] FileVerifyReferencein_InfoArray[], [out, size_is(in_ArraySize), length_is(in_ArraySize)] FileVerifyResultout_ExistenceArray[]);
 HRESULT EnumerateConnections( [in] DWORD dwSizeActual, [out] DWORD* pdwSizeReturned, [out,size_is(dwSizeActual), length_is(d*pdwSizeReturned)] BSTR[] Connections, [out] VARIANT_BOOL* pfMoreEntries);
 HRESULT NotifyRunStateChange( [in] RUN_STATUS_TYPE2 ers2Current, [in] DWORD dwNbOfHaltReasons, [in, size_is (dwNbOfHaltReasons)] HALT_REASON_TYPE2 *pehr2List, [in] ADDRESS_TYPE CurrentExecAddress, [in] DWORD64dw64CycleSinceLastRun);
+HRESULT ReadAll( [in] DWORD dwCpuNum, [out] DWORD *pdwNbRegsInList, [out, size_is(,*pdwNbRegsInList)] REGVAL_TYPE** pprvList);
 HRESULT AddCodeBps( [in] DWORD ccbp, [in, size_is(ccbp)] CODE_BP_TYPE acbp[], [out, size_is(ccbp)] IeXdi2CodeBp *apieXdi2CodeBp[]);
 HRESULT AddDataBps( [in] DWORD cdbp, [in, size_is(cdbp)] DATA_BP_TYPE adbp[], [out, size_is(cdbp)] IeXdi2DataBp*apieXdi2DataBp[] );
 HRESULT UnregisterEmbeddedBpOpCode( [in] DWORD dwOpCodeSizeInByte, [in, size_is(dwOpCodeSizeInByte)] const BYTE *pbOpCode, [in] DWORD dwExecMode);
+HRESULT ReadClientScratchPad( [in] GUIDguidClient, [out] DWORD* pdwBuffOutSize, [out, size_is(,*pdwBuffOutSize)] BYTE** ppbBufferOut);
 HRESULT WriteClientScratchPad( [in] GUID guidClient, [in] DWORD dwBuffInSize, [in, size_is(dwBuffInSize)] const BYTE* pbBufferIn);
 HRESULT CreateCpuRegCustomList( [in] DWORD dwNbRegsInList, [in, size_is(dwNbRegsInList)] LPOLESTR* pszRegName, [out] IeXdi2EnumCpuRegs** ppieXdi2EnumCpuRegs);
+HRESULT EnumAllCpuRegGroups( [out] DWORD* pdwNbGroups, [out, size_is(,*pdwNbGroups)] CPU_REG_GROUP_STRUCT** ppscrg);
+HRESULT GetLinearMemMapList( [out] DWORD *pdwNbTotalMemMapInList, [out, size_is(,*pdwNbTotalMemMapInList)] MEMMAP_DESCRIPTION_TYPE **ppmmdTable);
+HRESULT GetMemAccessExclusionRange( [in] LINEAR_MEM_MAP_TYPE lmt, [out] DWORD* pdwNbTotalExclRange, [out, size_is(,*pdwNbTotalExclRange)] MEM_ACCESS_EXCLUSION_RANGE** ppmaerExclusionList);
 HRESULT SetMemAccessExclusionRange( [in] LINEAR_MEM_MAP_TYPE lmt, [in] DWORD dwNbTotalExclRange, [in, size_is(dwNbTotalExclRange)] MEM_ACCESS_EXCLUSION_RANGE* pmaerExclusionList);
+HRESULT GetAllRoutineData( [out] ULONG*pcelt, [out, size_is( , *pcelt)] ROUTINE_DATA**ppPData);
+HRESULT ReadRegsFromThdCtx( [in] IeXdi2EnumCpuRegs* piOsAxsEnumCpuRegThreadCtx, [out] DWORD* pdwNbRegsInList, [out, size_is(,*pdwNbRegsInList)] REGVAL_TYPE **pprvList);
+HRESULT GetData2( [in] FLEXI_GETDATA_TYPE2 fgds2, [out, size_is(, *pcProcess)] PTM_RAW_DATA **ppdatProcess, [out] DWORD *pcProcess, [out] DWORD *pcProcessTotal, [out, size_is(, *pcThread)] PTM_RAW_DATA **ppdatThread, [out] DWORD *pcThread, [out] DWORD *pcThreadTotal, [out, size_is(, *pcModule)] PTM_RAW_DATA **ppdatModule, [out] DWORD *pcModule, [out] DWORD *pcModuleTotal, [out, size_is(, *pcContext)] PTM_RAW_DATA **ppdatContext, [out] DWORD *pcContext, [out] DWORD *pcContextTotal );
+HRESULT GetDescriptionTables2( [out, size_is(, *pcProcField)] PTM_FIELD_DESC** ppfdProcDescTable, [out] DWORD* pcProcField, [out, size_is(, *pcThreadField)] PTM_FIELD_DESC** ppfdThreadDescTable, [out] DWORD* pcThreadField, [out, size_is(, *pcModField)] PTM_FIELD_DESC** ppfdModDescTable, [out] DWORD* pcModField, [out, size_is(, *pcCtxField)] PTM_FIELD_DESC **ppfdCtxDescTable, [out] DWORD *pcCtxField );
 HRESULT SnapCurrentDeviceState( [in, out] DWORD *pdwDumpType, [in, out] DWORD64 *pdw64DumpTotalSize, [in, out] DWORD *pdwSegmentBufferSize, [out, size_is(,*pdwSegmentBufferSize)] BYTE **ppbSegmentBuffer, [in, out] DWORD64 *pdw64SegmentIndex, [out] BOOL *pfComplete );
 HRESULT StringCbVPrintf( LPTSTR pszDest, size_t cbDest, LPCTSTR pszFormat, va_list argList);
 HRESULT StringCbVPrintfEx( LPTSTR pszDest, size_t cbDest, LPTSTR *ppszDestEnd, size_t *pcbRemaining, DWORD dwFlags, LPCTSTR pszFormat, va_list argList);
@@ -3267,6 +3280,7 @@ char *_strnset( char *string, int c, size_t count );wchar_t *_wcsnset( wchar_t *
 FILE *_wfreopen( const wchar_t*path,constwchar_t*mode,FILE*stream);
 Class ClearTypeBlt : public GPE SCODE ClearTypeBltDst16 (GPEBltParms *); SCODE ClearTypeBltDst24 (GPEBltParms *); SCODE ClearTypeBltDst32 (GPEBltParms *);
 SVSCookie btutil_ScheduleEvent ( LPTHREAD_START_ROUTINE pfn, LPVOID lpParameter, unsigned long ulDelayTime ); int btutil_UnScheduleEvent (SVSCookie ulCookie);
+HRESULT GetDescriptionTables( [out, size_is(, *pcProcField)] PTM_FIELD_DESC**ppfdProcDescTable, [out] DWORD*pcProcField, [out, size_is(,*pcThreadField)] PTM_FIELD_DESC**ppfdThreadDescTable, [out] DWORD*pcThreadField, [out, size_is(, *pcModField)] PTM_FIELD_DESC**ppfdModDescTable, [out] DWORD*pcModField);
 void PrintTimeStamp(
 DWORD dwTimeStamp,
 DWORD dwFrequency
@@ -3341,6 +3355,7 @@ public delegate void CommandTransportTerminatedEventHandler ( Object sender, Eve
 public void AddNode ( PluginNode node )
 public DeviceCommandTransport ( string commandLine )
 public delegate void CommandPacketEventHandler ( Object sender, CommandPacketEventArgs e )
+HRESULT ReadMemoryX( [in] DWORD dwCpuNum, [in] LINEAR_MEM_MAP_TYPElmt, [in] ADDRESS_TYPE Address, [in] DWORD dwNbElemToRead, [in] BYTE bAccessWidthInBytes, [out, size_is(dwNbElemToRead* bAccessWidthInBytes)] BYTE* pbReadBuffer, [out] DWORD* pdwNbElementEffectRead );
 HRESULT WriteRegsToThdCtx( [in] IeXdi2EnumCpuRegs* piOsAxsEnumCpuRegThreadCtx, [in] DWORD dwNbRegsInList, [in, size_is(dwNbRegsInList)] REGVAL_TYPE* prvList );
 HRESULT AddDataBpsInProcAndThd( [in] DWORD ProcID, [in] DWORD ThdID, [in] DWORD cdbp, [in, size_is(cdbp)] DATA_BP_TYPE adbp[], [out, size_is(cdbp)] IeXdi2DataBp* apieXdi2DataBp[] );
 HRESULT RegisterEmbeddedBpOpCode( [in] DWORD dwOpCodeSizeInByte, [in, size_is(dwOpCodeSizeInByte)] const BYTE* pbOpCode, [in] DWORD dwExecMode, [in] BOOL fToBeUsedAsSwBp );
@@ -3351,6 +3366,7 @@ HRESULT SearchMemoryByProc( [in] DWORD ProcID, [in] LINEAR_MEM_MAP_TYPE lmt, [in
 HRESULT GetCallStack( [in] DWORD dwStartingFrameNb, [in] DWORD dwEndingFrameNb, [in] IeXdi2EnumCpuRegs* piOsAxsEnumCpuRegThreadCtx, [in] IOsAxsProcess* piOsAxsCurProc, [out] IeXdi2EnumCpuRegs** ppiOsAxsEnumCpuRegThreadCtxNew, [out] IOsAxsProcess** ppiOsAxsCurProcNew, [out] DWORD* pdwNbActualFramesRead, [out, size_is(,*pdwNbActualFramesRead)] FRAME_TYPE ** ppframeList );
 HRESULT AddCodeBpsInProcAndThd( [in] DWORD ProcID, [in] DWORD ThdID, [in] DWORD ccbp, [in, size_is(ccbp)] CODE_BP_TYPE acbp[], [out, size_is(ccbp)] IeXdi2CodeBp* apieXdi2CodeBp[] );
 HRESULT FillMemoryX( [in] DWORD dwCpuNum, [in] LINEAR_MEM_MAP_TYPE lmt, [in] ADDRESS_TYPE AddressRangeStart, [in] ADDRESS_TYPE AddressRangeEnd, [in] DWORD dwNbElem, [in] BYTE bAccessWidthInBytes, [in, size_is(dwNbElem* bAccessWidthInBytes)] BYTE* pbSequenceToFill );
+HRESULT ReadMemoryByProc( [in] DWORD ProcID, [in] LINEAR_MEM_MAP_TYPE lmt, [in] ADDRESS_TYPE Address, [in] DWORD dwNbElemToRead, [in] BYTE bAccessWidthInBytes, [out, size_is(dwNbElemToRead* bAccessWidthInBytes)] BYTE* pbReadBuffer, [out] DWORD* pdwNbElementEffectRead );
 HRESULT NotifyModule( IOsAxsModule* pmod, BOOL fLoaded );
 HRESULT GetThreadByID ( DWORD dwID, IOsAxsProcess** ppiOsAxsThread );
 HRESULT NotifyProcess( IOsAxsProcess* pproc, BOOL fCreated );
@@ -3911,7 +3927,6 @@ while (iRes == 10);
 #define D3DMPRESENTFLAG_LOCKABLE_BACKBUFFER 0x00000001
 #define IMPLTYPEFLAG_FDEFAULT 0x1  #define IMPLTYPEFLAG_FSOURCE 0x2  #define IMPLTYPEFLAG_FRESTRICTED 0x4  #define IMPLTYPEFLAG_FDEFAULTVTABLE 0x8
 #define DVD_SYSTEM_SPACE_BIT 1 #define DVD_MENU_SPACE_BIT (DVD_SYSTEM_SPACE_BIT << 1) #define DVD_VMG_SPACE_BIT (DVD_MENU_SPACE_BIT << 1) #define DVD_VTS_SPACE_BIT (DVD_VMG_SPACE_BIT << 1) #define DVD_NAVSTATREQ_VOLUME_BIT 1 #define DVD_NAVSTATREQ_HIGHLIGHT_BIT (DVD_NAVSTATREQ_VOLUME_BIT << 1) #define DVD_NAVSTATREQ_PCI_BIT (DVD_NAVSTATREQ_HIGHLIGHT_BIT << 1) #define DVD_PROGRAM_PREVIOUS 0 #define DVD_PROGRAM_NEXT 1 #define DVD_PROGRAM_TOP 2 #define DVD_MENU_TITLE 0 #define DVD_MENU_ROOT 1 #define DVD_MENU_SUBPICTURE 2 #define DVD_MENU_AUDIO 3 #define DVD_MENU_ANGLE 4 #define DVD_MENU_PTT 5 #define DVD_SELECT_UPPER 0 #define DVD_SELECT_RIGHT 1 #define DVD_SELECT_LOWER 2 #define DVD_SELECT_LEFT 3 #define DVD_SCANCAP_FORWARD_SCAN 0x1 #define DVD_SCANCAP_FORWARD_SLOW 0x2 #define DVD_SCANCAP_FORWARD_SINGLE 0x4 #define DVD_SCANCAP_BACKWARD_SCAN 0x8 #define DVD_SCANCAP_BACKWARD_SLOW 0x10 #define DVD_SCANCAP_BACKWARD_SINGLE 0x20 #define SPRM_M_LCD 0 #define SPRM_ASTN 1 #define SPRM_SPSTN 2 #define SPRM_AGLN 3 #define SPRM_TTN 4 #define SPRM_VTS_TTN 5 #define SPRM_TT_PGCN 6 #define SPRM_PTTN 7 #define SPRM_HL_BTNN 8 #define SPRM_NV_TMR 9 #define SPRM_NV_TMR_PGCN 10 #define SPRM_P_AMXMD 11 #define SPRM_CTY_CD 12 #define SPRM_PTL_LVL 13 #define SPRM_P_CFG_VIDEO 14 #define SPRM_P_CFG_AUDIO 15 #define SPRM_INI_LCD_AST 16 #define SPRM_INI_LCD_EXT_AST 17 #define SPRM_INI_LCD_SPST 18 #define SPRM_INI_LCD_EXT_SPST 19 #define SPRM_REGION 20
-#define MAX_PATH 128  typedef [string] WCHAR UNICODE_PATH [MAX_PATH];
 #define ALPHA_SHIFT 24 #define RED_SHIFT 16 #define GREEN_SHIFT 8 #define BLUE_SHIFT 0 #define ALPHA_MASK ((ARGB) 0xff << ALPHA_SHIFT) #define MAKEARGB(a, r, g, b) \ (((ARGB) ((a) & 0xff) << ALPHA_SHIFT)| \ ((ARGB) ((r) & 0xff) << RED_SHIFT) | \ ((ARGB) ((g) & 0xff) << GREEN_SHIFT)| \ ((ARGB) ((b) & 0xff) << BLUE_SHIFT))
 #define LDAP_OPT_SIGN 0x95  #define LDAP_OPT_ENCRYPT 0x96
 #define OBEX_RESP_RESPOND 0x00000001  #define OBEX_RESP_OK 0x00000002  #define OBEX_RESP_ACCEPT 0x00000003  #define OBEX_RESP_REJECT 0x00000004  #define OBEX_RESP_DENY 0x00000005  #define OBEX_RESP_CONTINUE 0x00000006  #define OBEX_RESP_ABORT 0x00000007  #define OBEX_RESP_DISCONNECT 0x00000008  #define OBEX_RESP_HANGUP 0x00000009
@@ -4045,7 +4060,6 @@ CS_DATARANGE_VIDEO DCAM_StreamMode = {
 void WINAPI foo1();
 void __declspec(nothrow) __stdcall foo2();
 void __stdcall foo3() throw();
-typedef struct CESORTORDERSPECEX { WORD wVersion; WORD wNumProps; WORD wKeyFlags; WORD wReserved; CEPROPID rgPropID[CEDB_MAXSORTPROP]; DWROD rgdwFlags[CEDB_MAXSORTPROP]; } CESORTORDERSPECEX;
 typedef struct CVF { D3DMVECTOR position; D3DMVECTOR normal; D3DMCOLOR diffuse; float u, v; // 1st set, 2-D float t; // 2nd set, 1-D } CustomVertexFormat;
 typedef struct _DDHAL_DDEXEBUFCALLBACKS { DWORD dwSize; DWORD dwFlags; LPDDHALEXEBUFCB_CANCREATEEXEBUF CanCreateExecuteBuffer; LPDDHALEXEBUFCB_CREATEEXEBUF CreateExecuteBuffer; LPDDHALEXEBUFCB_DESTROYEXEBUF DestroyExecuteBuffer; LPDDHALEXEBUFCB_LOCKEXEBUF LockExecuteBuffer; LPDDHALEXEBUFCB_UNLOCKEXEBUF UnlockExecuteBuffer; } DDHAL_DDEXEBUFCALLBACKS;
 typedef struct _GUID { DWORD Data1; WORD Data2; WORD Data3; BYTE Data4[8]; } GUID;
@@ -4084,11 +4098,6 @@ typedef struct _ServicesExeCallbackFunctions { PFN_SERVICE_SHUTDOWN pfnServiceSh
 typedef struct StringFileInfo { WORD wLength; WORD wValueLength; WORD wType; WCHAR szKey[]; WORD Padding[]; StringTable Children[]; } StringFileInfo;
 typedef struct tagTZREG { LONG Bias; LONG StandardBias; LONG DaylightBias; SYSTEMTIME StandardDate; SYSTEMTIME DaylightDate; } TZREG;
 typedef struct _WAVEFORMATEX_G711 { WAVEFORMATEX WaveFormatEx; WORD wSamplesPerBlock; } WAVEFORMATEX_G711;
-typedef struct ADDCONNECT_DLGPARAMS {
-  WCHAR LocalName[RMLEN + 10];
-  WCHAR RemoteName[RMLEN];
-  BOOL bReadOnly;
-} ADDCONNECT_DLGPARAMS, *PADDCONNECT_DLGPARAMS;
 typedef struct {
   DWORD dwLength;
   WORD wRevision;
@@ -4097,20 +4106,7 @@ typedef struct {
   BYTE bSignedData[MAX_WIN_CERT_SIGN_DATA_LEN];
   BYTE bSign[MAX_RSA_KEY_BITS/8];
 } PKCS1_MODULE_SIGN ;
-typedef struct _GETDRIVERNAMEPARMS {
-  WCHAR DriverName[DRIVER_NAME_LEN];
-  DWORD Socket;
-  DWORD PCCardType;
-} GETDRIVERNAME PARMS, *PGETDRIVERNAMEPARMS;
 typedef struct _IMAGE_DATA_DIRECTORY {  DWORD VirtualAddress;  DWORD Size;  } IMAGE_DATA_DIRECTORY, *PIMAGE_DATA_DIRECTORY;
-typedef struct _NETUI_RESPWD {  TCHAR szPassword[PWLEN +1];  TCHAR szResourceName[RMLEN];  } NETUI_RESPWD, *PNETUI_RESPWD;
-typedef struct _NETUI_USERPWD {
-  TCHAR szUserName[UNLEN + 1];
-  TCHAR szPassword[PWLEN + 1];
-  TCHAR szDomain[DNLEN +1];
-  DWORD dwFlags;
-  TCHAR szResourceName[RMLEN];
-} NETUI_USERPWD, *PNETUI_USERPWD;
 typedef struct _SYSTEM_POWER_STATUS_EX2 {
   BYTE ACLineStatus;
   BYTE BatteryFlag;
@@ -4407,17 +4403,6 @@ typedef struct tagCHOOSECOLOR {
   LPCCHOOKPROC lpfnHook;
   LPCTSTR lpTemplateName;
 } CHOOSECOLOR, *LPCHOOSECOLOR;
-typedef struct tagIMEMENUITEMINFO {
-  UINT cbSize;
-  UINT fType;
-  UINT fState;
-  UINT wID;
-  HBITMAP hbmpChecked;
-  HBITMAP hbmpUnchecked;
-  DWORD dwItemData;
-  WCHAR szString[IMEMENUITEM_STRING_SIZE];
-  HBITMAP hbmpItem;}
-  IMEMENUITEMINFO, *PIMEMENUITEMINFO, NEAR *NPIMEMENUITEMINFO, FAR *LPIMEMENUITEMINFO;
 typedef struct tagINPUT {
   DWORD type;
   union
@@ -4529,27 +4514,6 @@ int iSelectedImage;
 int cChildren;
 LPARAM lParam; }
 TV_ITEM, FAR *LPTV_ITEM;
-typedef struct _VENDOR_ATTR {
-  struct {
-    USHORT Length;
-    UCHAR Buffer[MAXIMUM_ATTR_STRING_LENGTH];
-  } VendorName;
-  struct {
-    USHORT Length;
-    UCHAR Buffer[MAXIMUM_ATTR_STRING_LENGTH];
-  } IfdType;
-  ULONG UnitNo;
-  struct {
-    USHORT BuildNumber;
-    UCHAR VersionMinor;
-    UCHAR VersionMajor;
-  } IfdVersion;
-  struct {
-    USHORT Length;
-    UCHAR Buffer[MAXIMUM_ATTR_STRING_LENGTH];
-  } IfdSerialNo;
-  ULONG Reserved[25];
-} VENDOR_ATTR, *PVENDOR_ATTR;
 typedef struct _DDHAL_CALLBACKS
 {
   DDHAL_DDCALLBACKS cbDDCallbacks;
@@ -4573,16 +4537,6 @@ typedef struct _DDHAL_CALLBACKS
   DDHAL_DDKERNELCALLBACKS cbDDKernelCallbacks;
   DDHAL_DDKERNELCALLBACKS HALDDKernel;
 } DDHAL_CALLBACKS, far *LPDDHAL_CALLBACKS;
-typedef struct _DDNONLOCALVIDMEMCAPS
-{
-  DWORD dwSize;
-  DWORD dwNLVBCaps;
-  DWORD dwNLVBCaps2;
-  DWORD dwNLVBCKeyCaps;
-  DWORD dwNLVBFXCaps;
-  DWORD dwNLVBRops[DD_ROP_SPACE];
-} DDNONLOCALVIDMEMCAPS;
-typedef struct _DDNONLOCALVIDMEMCAPS FAR *LPDDNONLOCALVIDMEMCAPS;
 typedef struct tagRECT {
   LONG left;
   LONG top;
@@ -4636,65 +4590,6 @@ typedef struct _COMSTAT {
   DWORD cbInQue;
   DWORD cbOutQue;
 } COMSTAT, *LPCOMSTAT;
-typedef struct _DDCAPS {
-  DWORD dwSize;
-  DWORD dwCaps; // driver-specific caps
-  DWORD dwCaps2; // more driver-specific caps
-  DWORD dwCKeyCaps; // color key caps
-  DWORD dwFXCaps; // stretching and effects caps
-  DWORD dwFXAlphaCaps; // alpha caps
-  DWORD dwPalCaps; // palette caps
-  DWORD dwSVCaps; // stereo vision caps
-  DWORD dwAlphaBltConstBitDepths; // alpha bit-depth members
-  DWORD dwAlphaBltPixelBitDepths; // .
-  DWORD dwAlphaBltSurfaceBitDepths; // .
-  DWORD dwAlphaOverlayConstBitDepths; // .
-  DWORD dwAlphaOverlayPixelBitDepths; // .
-  DWORD dwAlphaOverlaySurfaceBitDepths; // .
-  DWORD dwZBufferBitDepths;
-  DWORD dwVidMemTotal; // total video memory
-  DWORD dwVidMemFree; // total free video memory
-  DWORD dwMaxVisibleOverlays; // maximum visible overlays
-  DWORD dwCurrVisibleOverlays; // overlays currently visible
-  DWORD dwNumFourCCCodes; // number of supported FOURCC codes
-  DWORD dwAlignBoundarySrc; // overlay alignment restrictions
-  DWORD dwAlignSizeSrc; // .
-  DWORD dwAlignBoundaryDest; // .
-  DWORD dwAlignSizeDest; // .
-  DWORD dwAlignStrideAlign; // stride alignment
-  DWORD dwRops[DD_ROP_SPACE]; // supported raster ops
-  DWORD dwReservedCaps; // reserved
-  DWORD dwMinOverlayStretch; // overlay stretch factors
-  DWORD dwMaxOverlayStretch; // .
-  DWORD dwMinLiveVideoStretch; // obsolete
-  DWORD dwMaxLiveVideoStretch; // .
-  DWORD dwMinHwCodecStretch; // .
-  DWORD dwMaxHwCodecStretch; // .
-  DWORD dwReserved1; // reserved
-  DWORD dwReserved2; // .
-  DWORD dwReserved3; // .
-  DWORD dwSVBCaps; // system-to-video blit related caps
-  DWORD dwSVBCKeyCaps; // .
-  DWORD dwSVBFXCaps; // .
-  DWORD dwSVBRops[DD_ROP_SPACE]; // .
-  DWORD dwVSBCaps; // video-to-system blit related caps
-  DWORD dwVSBCKeyCaps; // .
-  DWORD dwVSBFXCaps; // .
-  DWORD dwVSBRops[DD_ROP_SPACE]; // .
-  DWORD dwSSBCaps; // system-to-system blit related caps
-  DWORD dwSSBCKeyCaps; // .
-  DWORD dwSSBCFXCaps; // .
-  DWORD dwSSBRops[DD_ROP_SPACE]; // .
-  DWORD dwMaxVideoPorts; // maximum number of live video ports
-  DWORD dwCurrVideoPorts; // current number of live video ports
-  DWORD dwSVBCaps2; // additional system-to-video blit caps
-  DWORD dwNLVBCaps; // nonlocal-to-local video memory blit caps
-  DWORD dwNLVBCaps2; // .
-  DWORD dwNLVBCKeyCaps; // .
-  DWORD dwNLVBFXCaps; // .
-  DWORD dwNLVBRops[DD_ROP_SPACE];// .
-  DDSCAPS2 ddsCaps; // general surface caps
-} DDCAPS,FAR* LPDDCAPS;
 struct hostent {
   char FAR *h_name;
   char FAR *FAR *h_aliases;
@@ -4702,33 +4597,11 @@ struct hostent {
   short h_length;
   char FAR *FAR *h_addr_list;
 };
-typedef struct _HSE_VERSION_INFO {  DWORD dwExtensionVersion; // extension version  CHAR lpszExtensionDesc[HSE_MAX_EXT_DLL_NAME_LEN]; // description  } HSE_VERSION_INFO, *LPHSE_VERSION_INFO;
 typedef struct IDirectSoundBuffer *LPDIRECTSOUNDBUFFER;
 typedef struct IDirectSoundCaptureBuffer *LPDIRECTSOUNDCAPTUREBUFFER;
 typedef struct IDirectSoundCapture *LPDIRECTSOUNDCAPTURE;
 typedef struct IDirectSoundNotify *LPDIRECTSOUNDNOTIFY;
 typedef struct IDirectSound *LPDIRECTSOUND;
-typedef struct _IP_ADAPTER_INDEX_MAP {  ULONG Index // adapter index  WCHAR Name [MAX_ADAPTER_NAME]; // name of the adapter  } IP_ADAPTER_INDEX_MAP, * PIP_ADAPTER_INDEX_MAP;
-typedef struct _IP_ADAPTER_INFO {
-  struct _IP_ADAPTER_INFO* Next;
-  DWORD ComboIndex;
-  Char AdapterName[MAX_ADAPTER_NAME_LENGTH + 4];
-  char Description[MAX_ADAPTER_DESCRIPTION_LENGTH + 4];
-  UINT AddressLength;
-  BYTE Address[MAX_ADAPTER_ADDRESS_LENGTH];
-  DWORD Index;
-  UINT Type;
-  UINT DhcpEnabled;
-  PIP_ADDR_STRING CurrentIpAddress;
-  IP_ADDR_STRING IpAddressList;
-  IP_ADDR_STRING GatewayList;
-  IP_ADDR_STRING DhcpServer;
-  BOOL HaveWins;
-  IP_ADDR_STRING PrimaryWinsServer;
-  IP_ADDR_STRING SecondaryWinsServer;
-  time_t LeaseObtained;
-  time_t LeaseExpires;
-} IP_ADAPTER_INFO, *PIP_ADAPTER_INFO;
 struct linger {  u_short l_onoff;  u_short l_linger; };
 typedef struct _MEMORYSTATUS {
   DWORD dwLength;
@@ -4740,45 +4613,6 @@ typedef struct _MEMORYSTATUS {
   DWORD dwTotalVirtual;
   DWORD dwAvailVirtual;
 } MEMORYSTATUS, *LPMEMORYSTATUS;
-typedef struct _MIB_IFROW {
-  WCHAR wszName[MAX_INTERFACE_NAME_LEN];
-  DWORD dwIndex; // index of the interface
-  DWORD dwType; // type of interface
-  DWORD dwMtu; // max transmission unit
-  DWORD dwSpeed; // speed of the interface
-  DWORD dwPhysAddrLen; // length of physical address
-  BYTE bPhysAddr[MAXLEN_PHYSADDR]; // physical address of adapter
-  DWORD dwAdminStatus; // administrative status
-  DWORD dwOperStatus; // operational status
-  DWORD dwLastChange; // last time operational status changed
-  DWORD dwInOctets; // octets received
-  DWORD dwInUcastPkts; // unicast packets received
-  DWORD dwInNUcastPkts; // non-unicast packets received
-  DWORD dwInDiscards; // received packets discarded
-  DWORD dwInErrors; // erroneous packets received
-  DWORD dwInUnknownProtos; // unknown protocol packets received
-  DWORD dwOutOctets; // octets sent
-  DWORD dwOutUcastPkts; // unicast packets sent
-  DWORD dwOutNUcastPkts; // non-unicast packets sent
-  DWORD dwOutDiscards; // outgoing packets discarded
-  DWORD dwOutErrors; // erroneous packets sent
-  DWORD dwOutQLen; // output queue length
-  DWORD dwDescrLen; // length of bDescr member
-  BYTE bDescr[MAXLEN_IFDESCR]; // interface description
-} MIB_IFROW,*PMIB_IFROW;
-typedef struct _MIB_IFTABLE {  DWORD dwNumEntries // number of entries in table  MIB_IFROW table[ANY_SIZE]; // array of interface entries  } MIB_IFTABLE, *PMIB_IFTABLE;
-typedef struct _MIB_IPADDRTABLE {  DWORD dwNumEntries; // number of entries in the table  MIB_IPADDRROW table[ANY_SIZE]; // array of IP address entries  } MIB_IPADDRTABLE, *PMIB_IPADDRTABLE;
-typedef struct _MIB_IPFORWARDTABLE {  DWORD dwNumEntries; // number of entries in the table  MIB_IPFORWARDROW table[ANY_SIZE]; // array of route entries  } MIB_IPFORWARDTABLE, *PMIB_IPFORWARDTABLE;
-typedef struct _MIB_IPNETROW {
-  DWORD dwIndex; // adapter index
-  DWORD dwPhysAddrLen; // physical address length
-  BYTE bPhysAddr[MAXLEN_PHYSADDR]; // physical address
-  DWORD dwAddr;
-  DWORD dwType;
-} MIB_IPNETROW, *PMIB_IPNETROW;
-typedef struct _MIB_IPNETTABLE {  DWORD dwNumEntries; // number of entries in table  MIB_IPNETROW table[ANY_SIZE]; // array of ARP entries  } MIB_IPNETTABLE, *PMIB_IPNETTABLE;
-typedef struct _MIB_TCPTABLE {  DWORD dwNumEntries; // number of entries in the table  MIB_TCPROW table[ANY_SIZE]; // array of TCP connections  } MIB_TCPTABLE, *PMIB_TCPTABLE;
-typedef struct _MIB_UDPTABLE {  DWORD dwNumEntries; // number of entries in the table  MIB_UDPROW table[ANY_SIZE]; // table of MIB_UDPROW structs  } MIB_UDPTABLE, * PMIB_UDPTABLE;
 typedef struct tagMONITORINFO {
   DWORD cbSize;
   RECT rcMonitor;
@@ -4811,31 +4645,6 @@ int bind(  SOCKET s,  const struct sockaddr *addr,  int namelen);
 struct hostent *gethostbyaddr(  const char *addr,  int len,  int type );
 struct hostent *gethostbyname(  const char *name );
 char *inet_ntoa (  struct in_addr in );
-typedef struct {
-  DWORD cbStruct;
-  DWORD dwControlID;
-  DWORD dwControlType;
-  DWORD fdwControl;
-  DWORD cMultipleItems;
-  CHAR szShortName[MIXER_SHORT_NAME_CHARS];
-  CHAR szName[MIXER_LONG_NAME_CHARS];
-  union {
-    struct {
-      LONG lMinimum;
-      LONG lMaximum;
-    };
-    struct {
-      DWORD dwMinimum;
-      DWORD dwMaximum;
-    };
-    DWORD dwReserved[6];
-  } Bounds;
-  union {
-    DWORD cSteps;
-    DWORD cbCustomData;
-    DWORD dwReserved[6];
-  } Metrics;
-} MIXERCONTROL, *PMIXERCONTROL, FAR *LPMIXERCONTROL;
 int recvfrom (  SOCKET s,  char *buf,  int len,  int flags,  struct sockaddr *from,  int *fromlen );
 int select (  int nfds,  fd_set *readfds,  fd_set *writefds,  fd_set *exceptfds,  const struct timeval *timeout);
 int sendto (  SOCKET s,  const char *buf,  int len,  int flags,  const struct sockaddr *to,  int tolen );
@@ -4893,13 +4702,6 @@ unsigned char *pPacket,
 PacketMarker *pMarker,
 unsigned char cEvent
 );
-typedef struct _BTHNS_RESTRICTIONBLOB {
-  ULONG type;
-  ULONG serviceHandle;
-  SdpQueryUuid uuids[MAX_UUIDS_IN_QUERY];
-  ULONG numRange;
-  SdpAttributeRange pRange[1];
-} BTHNS_RESTRICTIONBLOB, *PBTHNS_RESTRICTIONBLOB;
 typedef struct _DCB {
   DWORD DCBlength;
   DWORD BaudRate;
@@ -4951,59 +4753,12 @@ typedef struct _DMO_OUTPUT_DATA_BUFFER {
   REFERENCE_TIME rtTimestamp;
   REFERENCE_TIME rtTimelength;
 } DMO_OUTPUT_DATA_BUFFER, *PDMO_OUTPUT_DATA_BUFFER;
-typedef struct {
-  SYSTEMTIME stStartTime;
-  SYSTEMTIME stDeltaTime;
-  DWORD dwFlags;
-  TCHAR wzDest [MAX_PATH];
-  TCHAR wzCmdLine [MAX_PATH];
-} DMSDLINFO, *PDMSDLINFO;
-typedef struct {  TCHAR wzPackageID [DEVICE_ID_LEN];  DWORD dwState;  } DMSINVPKGID, *PDMSINVPKGID;
-typedef struct {
-  TCHAR wzPackageID [DEVICE_ID_LEN];
-  TCHAR wzShortText [PACKAGE_SHORT_TEXT_LEN];
-  TCHAR wzLongText [PACKAGE_LONG_TEXT_LEN];
-  TCHAR wzAppName [PACKAGE_APPNAME_TEXT_LEN];
-  DWORD dwPackageSize;
-  DWORD dwState;
-  DMSDLINFO dlInfo;
-  DWORD dwAux;
-} DMSINVRECORD, *PDMSINVRECORD;
 HRESULT RequestContacts(  struct ContactsSearchCriteria* pCriteria,  IExchangeClientRequest** ppiRequest  );
 typedef struct _ABC {
   int abcA;
   UINT abcB;
   int abcC;
 } ABC, *PABC;
-typedef struct tagMIMECPINFO {
-  DWORD dwFlags;
-  UINT uiCodePage;
-  UINT uiFamilyCodePage;
-  WCHAR wszDescription[MAX_MIMECP_NAME];
-  WCHAR wszWebCharset[MAX_MIMECSET_NAME];
-  WCHAR wszHeaderCharset[MAX_MIMECSET_NAME];
-  WCHAR wszBodyCharset[MAX_MIMECSET_NAME];
-  WCHAR wszFixedWidthFont[MAX_MIMEFACE_NAME];
-  WCHAR wszProportionalFont[MAX_MIMEFACE_NAME];
-  BYTE bGDICharset;
-} MIMECPINFO, *PMIMECPINFO;
-typedef struct tagMIMECSETINFO {
-  UINT uiCodePage;
-  UINT uiInternetEncoding;
-  WCHAR wszCharset[MAX_MIMECSET_NAME];
-} MIMECSETINFO, *PMIMECSETINFO;
-typedef struct tagRFC1766INFO {
-  LCID lcid;
-  WCHAR wszRfc1766[MAX_RFC1766_NAME];
-  WCHAR wszLocaleName[MAX_LOCALE_NAME];
-} RFC1766INFO, *PRFC1766INFO;
-typedef struct tagSCRIPINFO {
-  SCRIPT_ID ScriptId;
-  UINT uiCodePage;
-  WCHAR wszDescription[MAX_SCRIPT_NAME];
-  WCHAR wszFixedWidthFont[MAX_MIMEFACE_NAME];
-  WCHAR wszProportionalFont[MAX_MIMEFACE_NAME];
-} SCRIPTINFO, *PSCRIPTINFO;
 typedef struct _INBOX_EVENT_DATA {
   DWORD dwRequest;
   DWORD dwInboxEvent;
@@ -5019,39 +4774,6 @@ typedef struct _OBEX_REQUEST {
   BOOL fStream;
   IStream* pStream;
 } OBEX_REQUEST, *POBEX_REQUEST;
-typedef struct tagRasCntlServerUser{
-  TCHAR tszUserName[UNLEN + 1];
-  TCHAR tszDomainName[DNLEN + 1];
-  BYTE password[PWLEN];
-  DWORD cbPassword;
-} RASCNTL_SERVERUSERCREDENTIALS, *PRASCNTL_SERVERUSERCREDENTIALS;
-typedef struct _CE_VOLUME_INFO{
-  DWORD cbSize;
-  DWORD dwAttributes;
-  DWORD dwFlags;
-  DWORD dwBlockSize;
-  TCHAR szStoreName[STORENAMESIZE];
-  TCHAR szPartitionName[PARTITIONNAMESIZE];
-} CE_VOLUME_INFO, *PCE_VOLUME_INFO, *LPCE_VOLUME_INFO;
-typedef struct {
-  DWORD cbSize;
-  TCHAR szPartitionName[PARTITIONNAMESIZE];
-  TCHAR szFileSys[FILESYSNAMESIZE];
-  TCHAR szVolumeName[VOLUMENAMESIZE];
-  SECTORNUM snNumSectors;
-  FILETIME ftCreated;
-  FILETIME ftLastModified;
-  DWORD dwAttributes;
-  BYTE bPartType;
-} PARTINFO, *PPARTINFO;
-typedef struct tagSTORAGEDEVICEINFO {
-  DWORD cbSize;
-  TCHAR szProfile[PROFILENAMESIZE];
-  DWORD dwDeviceClass;
-  DWORD dwDeviceType;
-  DWORD dwDeviceFlags;
-} STORAGEDEVICEINFO, *PSTORAGEDEVICEINFO;
-typedef struct {  BYTE AddressType;  BYTE Address[DNS_ATMA_MAX_ADDR_LENGTH];  } DNS_ATMA_DATA, *PDNS_ATMA_DATA;
 typedef struct tagTOOLINFO{
   UINT cbSize;
   UINT uFlags;
@@ -5246,20 +4968,8 @@ struct ConnectionInfo
   DIRECTION Direction;
   wstring strStatus;
 };
-typedef struct _ZONEATTRIBUTES {
-  ULONG cbSize;
-  WCHAR szDisplayName[MAX_PATH];
-  WCHAR szDescription[MAX_ZONE_DESCRIPTION];
-  WCHAR szIconPath[MAX_PATH];
-  DWORD dwTemplateMinLevel;
-  DWORD dwTemplateRecommended;
-  DWORD dwTemplateCurrentLevel;
-  DWORD dwFlags;
-} ZONEATTRIBUTES, *LPZONEATTRIBUTES;
-typedef struct _CDROM_TOC{UCHARLength[2]; UCHARFirstTrack; UCHARLastTrack; TRACK_DATATrackData[MAXIMUM_NUMBER_TRACKS]; } CDROM_TOC, *PCDROM_TOC;
 typedef struct tagDrvEnableData{// Version control of this structure is performed by incrementing// DDI_DRIVER_VERSION whenever alterations are made. DHPDEV (* DrvEnablePDEV )( DEVMODEW* pdm, LPWSTR pwszLogAddress, ULONG cPat, HSURF* phsurfPatterns, ULONG cjCaps, ULONG* pdevcaps, ULONG cjDevInfo, DEVINFO* pdi, HDEV hdev, LPWSTR pwszDeviceName, HANDLE hDriver ); VOID (* DrvDisablePDEV )( DHPDEV dhpdev ); HSURF (* DrvEnableSurface )( DHPDEV dhpdev ); VOID (* DrvDisableSurface )( DHPDEV dhpdev ); HBITMAP (* DrvCreateDeviceBitmap )( DHPDEV dhpdev, SIZEL sizl, ULONG iFormat ); VOID (* DrvDeleteDeviceBitmap )( DHSURF dhsurf ); BOOL (* DrvRealizeBrush )( BRUSHOBJ* pbo, SURFOBJ* psoTarget, SURFOBJ* psoPattern, SURFOBJ* psoMask, XLATEOBJ* pxlo, ULONG iHatch ); BOOL (* DrvStrokePath )( SURFOBJ* pso, PATHOBJ* ppo, CLIPOBJ* pco, XFORMOBJ* pxo, BRUSHOBJ* pbo, POINTL* pptlBrushOrg, LINEATTRS* plineattrs, MIX mix ); BOOL (* DrvFillPath )( SURFOBJ* pso, PATHOBJ* ppo, CLIPOBJ* pco, BRUSHOBJ* pbo, POINTL* pptlBrushOrg, MIX mix, FLONG flOptions ); BOOL (* DrvPaint )( SURFOBJ* pso, CLIPOBJ* pco, BRUSHOBJ* pbo, POINTL* pptlBrushOrg, MIX mix ); BOOL (* DrvBitBlt )( SURFOBJ* psoTrg, SURFOBJ* psoSrc, SURFOBJ* psoMask, CLIPOBJ* pco, XLATEOBJ* pxlo, RECTL* prclTrg, POINTL* pptlSrc, POINTL* pptlMask, BRUSHOBJ* pbo, POINTL* pptlBrush, ROP4 rop4 ); BOOL (* DrvCopyBits )( SURFOBJ* psoDest, SURFOBJ* psoSrc, CLIPOBJ* pco, XLATEOBJ* pxlo, RECTL* prclDest, POINTL* pptlSrc ); BOOL (* DrvAnyBlt )( SURFOBJ* psoDest, SURFOBJ* psoSrc, SURFOBJ* psoMask, CLIPOBJ* pco, XLATEOBJ* pxlo, POINTL* pptlHTOrg, RECTL* prclDest, RECTL* prclSrc, POINTL* pptlMask, BRUSHOBJ* pbo, POINTL* pptlBrush, ROP4 rop4, ULONG iMode, ULONG bltFlags ); BOOL (* DrvTransparentBlt )( SURFOBJ* psoDest, SURFOBJ* psoSrc, CLIPOBJ* pco, XLATEOBJ* pxlo, RECTL* prclDest, RECTL* prclSrc, ULONG TransColor ); BOOL (* DrvSetPalette )( DHPDEV dhpdev, PALOBJ* ppalo, FLONG fl, ULONG iStart, ULONG cColors ); ULONG (* DrvSetPointerShape)( SURFOBJ* pso, SURFOBJ* psoMask, SURFOBJ* psoColor, XLATEOBJ* pxlo, LONG xHot, LONG yHot, LONG x, LONG y, RECTL* prcl, FLONG fl ); VOID (* DrvMovePointer)( SURFOBJ* pso, LONG x, LONG y, RECTL* prcl ); ULONG (* DrvGetModes)( HANDLE hDriver, ULONG cjSize, DEVMODEW* pdm ); ULONG (* DrvRealizeColor )( USHORT iDstType, ULONG cEntries, ULONG* pPalette, ULONG rgbColor ); ULONG* (* DrvGetMasks )( DHPDEV dhpdev ); ULONG (* DrvUnrealizeColor )( USHORT iSrcType, ULONG cEntries, ULONG* pPalette, ULONG iRealizedColor ); BOOL (* DrvContrastControl)( DHPDEV dhpdev, ULONG cmd, ULONG* pValue ); VOID (* DrvPowerHandler)( DHPDEV dhpdev, BOOL bOff ); BOOL (* DrvEndDoc )( IN SURFOBJ* pso, IN FLONG fl ); BOOL (* DrvStartDoc )( IN SURFOBJ* pso, IN PWSTR pwszDocName, IN DWORD dwJobId ); BOOL (* DrvStartPage )( IN SURFOBJ* pso ); ULONG (* DrvEscape )( IN DHPDEV dhpdev, IN SURFOBJ* pso, IN ULONG iEsc, IN ULONG cjIn, IN PVOID pvIn, OUT ULONG cjOut, OUT PVOID pvOut ); BOOL (* DrvGradientFill)( SURFOBJ* pso, CLIPOBJ* pco, XLATEOBJ* pxlo, TRIVERTEX* pVertex, ULONG nVertex, PVOID pMesh, ULONG nMesh, RECTL* prclExtents, POINTL* pptlDitherOrg, ULONG ulMode );} DRVENABLEDATA,* PDRVENABLEDATA;
 typedef struct _ENGCALLBACKS { PVOID (* BRUSHOBJ_pvAllocRbrush)( BRUSHOBJ* pbo, ULONG cj ); PVOID (* BRUSHOBJ_pvGetRbrush)( BRUSHOBJ* pbo ); ULONG (* CLIPOBJ_cEnumStart)( CLIPOBJ* pco, BOOL bAll, ULONG iType, ULONG iDirection, ULONG cLimit ); BOOL (* CLIPOBJ_bEnum)( CLIPOBJ* pco, ULONG cj, ULONG* pul ); ULONG (* PALOBJ_cGetColors)( PALOBJ* ppalo, ULONG iStart, ULONG cColors, ULONG* pulColors ); VOID (* PATHOBJ_vEnumStart)( PATHOBJ* ppo ); BOOL (* PATHOBJ_bEnum)( PATHOBJ* ppo, PATHDATA* ppd ); VOID (* PATHOBJ_vGetBounds)( PATHOBJ* ppo, PRECTFX prectfx ); ULONG (* XLATEOBJ_cGetPalette)( XLATEOBJ* pxlo, ULONG iPal, ULONG cPal, ULONG* pPal ); HSURF (* EngCreateDeviceSurface)( DHSURF dhsurf, SIZEL sizl, ULONG iFormatCompat ); BOOL (* EngDeleteSurface)( HSURF hsurf ); HBITMAP (* EngCreateDeviceBitmap)( DHSURF dhsurf, SIZEL sizl, ULONG iFormatCompat ); HPALETTE (* EngCreatePalette)( ULONG iMode, ULONG cColors, PULONG pulColors, FLONG flRed, FLONG flGreen, FLONG flBlue );} ENGCALLBACKS,* PENGCALLBACKS;
-typedef struct{ ULONG Length; DWORD dwCtlFlags; NDIS_802_11_MAC_ADDRESS MacAddress; UCHAR Reserved[2]; NDIS_802_11_SSID Ssid; ULONG Privacy; NDIS_802_11_RSSI Rssi; NDIS_802_11_NETWORK_TYPE NetworkTypeInUse; NDIS_802_11_CONFIGURATION Configuration; NDIS_802_11_NETWORK_INFRASTRUCTURE InfrastructureMode; NDIS_802_11_RATES SupportedRates; ULONG KeyIndex; ULONG KeyLength; UCHAR KeyMaterial[WZCCTL_MAX_WEPK_MATERIAL]; NDIS_802_11_AUTHENTICATION_MODE AuthenticationMode; RAW_DATA rdUserData; WZC_EAPOL_PARAMS EapolParams; RAW_DATA rdNetworkData; ULONG WPAMCastCipher; ULONG ulMediaType;} WZC_WLAN_CONFIG, *PWZC_WLAN_CONFIG;
 struct X { int a[0]; // error, unsized array };
 struct A {
   __declspec(property(get=GetProp)) int prop;
@@ -5318,24 +5028,11 @@ charsin_zero[8];
 typedef struct sockaddr_storage {short ss_family;char __ss_pad1[_SS_PAD1SIZE];__int64 __ss_align;char __ss_pad2[_SS_PAD2SIZE];} SOCKADDR_STORAGE, *PSOCKADDR_STORAGE;
 typedef struct _SOCKET_ADDRESS {LPSOCKADDR lpSockaddr;INT iSockaddrLength;} SOCKET_ADDRESS, *PSOCKET_ADDRESS;
 struct timeval {long tv_sec;long tv_usec;};
-typedef struct _FSD_VOLUME_INFO {
-  DWORD cbSize;
-  DWORD dwFSVersion ;
-  TCHAR szFSDDesc[MAX_FSD_DESCRIPTOR];
-  TCHAR szFSDSubType[MAX_FSD_DESCRIPTOR];
-  DWORD dwAttributes;
-  DWORD dwBlockSize;
-  DWORD dwFlags;
-} FSD_VOLUME_INFO, *PFSD_VOLUME_INFO;
 typedef struct _DEFRAG_PARAMS { DWORD cbSize; DEFRAG_OPTIONS dopt; DEFRAG_RESULTS dr; PFN_PROGRESS pfnProgress; PFN_MESSAGE pfnMessage;} DEFRAG_PARAMS, *PDEFRAG_PARAMS;
 typedef struct _FILE_NOTIFY_INFORMATION {DWORD NextEntryOffset; DWORD Action; DWORD FileNameLength; WCHAR FileName[1]; } FILE_NOTIFY_INFORMATION, *PFILE_NOTIFY_INFORMATION;
 typedef struct _FORMAT_PARAMS { DWORD cbSize; FORMAT_OPTIONS fo; FORMAT_RESULTS fr; PFN_PROGRESS pfnProgress; PFN_MESSAGE pfnMessage;} FORMAT_PARAMS, *PFORMAT_PARAMS;
-typedef struct _PD_PARTINFO {DWORD cbSize;TCHAR szPartitionName[PARTITIONNAMESIZE];SECTORNUM snNumSectors;FILETIME ftCreated;FILETIME ftLastModified;DWORD dwAttributes;BYTE bPartType;} PD_PARTINFO, *PPD_PARTINFO;
 typedef struct _SCAN_PARAMS { DWORD cbSize; SCAN_OPTIONS so; SCAN_RESULTS sr; PFN_PROGRESS pfnProgress; PFN_MESSAGE pfnMessage;} SCAN_PARAMS, *PSCAN_PARAMS;
 struct protoent {char FAR* p_name;char FAR* FAR* p_aliases;short p_proto;};
-typedef struct _DDKISRINFO_tag {DWORD cbSize;DWORD dwIrq;DWORD dwSysintr;WCHAR szIsrDll[DEVDLL_LEN];WCHAR szIsrHandler[DEVENTRY_LEN];} DDKISRINFO, *PDDKISRINFO;
-typedef struct _DDKPCIINFO_tag {DWORD cbSize;DWORD dwDeviceNumber;DWORD dwFunctionNumber;DWORD dwInstanceIndex;DWORD dwWhichIds;DWORD idVals[PCIID_MAXNUMIDS];} DDKPCIINFO, *PDDKPCIINFO;
-typedef struct _DDKWINDOWINFO_tag {DWORD cbSize; DWORD dwBusNumber;DWORD dwInterfaceType;DWORD dwNumIoWindows;DEVICEWINDOW ioWindows[MAX_DEVICE_WINDOWS];DWORD dwNumMemWindows;DEVICEWINDOW memWindows[MAX_DEVICE_WINDOWS];} DDKWINDOWINFO, *PDDKWINDOWINFO;
 typedef struct _DevmgrDeviceInformation_tag { DWORD dwSize; HANDLE hDevice; HANDLE hParentDevice; WCHAR szLegacyName[6]; WCHAR szDeviceKey[MAX_PATH]; WCHAR szDeviceName[MAX_PATH]; WCHAR szBusName[MAX_PATH];} DEVMGR_DEVICE_INFORMATION, *PDEVMGR_DEVICE_INFORMATION;
 typedef struct _devicemodew { WCHAR dmDeviceName[CCHDEVICENAME]; WORD dmSpecVersion; WORD dmDriverVersion; WORD dmSize; WORD dmDriverExtra; DWORD dmFields; short dmOrientation; short dmPaperSize; short dmPaperLength; short dmPaperWidth; short dmScale; short dmCopies; short dmDefaultSource; short dmPrintQuality; short dmColor; short dmDuplex; short dmYResolution; short dmTTOption; short dmCollate; WCHAR dmFormName[CCHFORMNAME]; WORD dmLogPixels; DWORD dmBitsPerPel; DWORD dmPelsWidth; DWORD dmPelsHeight; DWORD dmDisplayFlags; DWORD dmDisplayFrequency; DWORD dmDisplayOrientation;} DEVMODEW,* PDEVMODEW,* NPDEVMODEW,* LPDEVMODEW;
 typedef struct __WSABUF {u_long len;char FAR* buf;} WSABUF, FAR* LPWSABUF;
@@ -5353,7 +5050,6 @@ int WSARecvFrom(SOCKET s,LPWSABUF lpBuffers,DWORD dwBufferCount,LPDWORD lpNumber
 typedef struct _WSAServiceClassInfo {LPGUID lpServiceClassId;LPTSTR lpszServiceClassName;DWORD dwCount;LPWSANSCLASSINFOW lpClassInfos;} WSASERVICECLASSINFO, *PWSASERVICECLASSINFOW;
 typedef struct tagKEYBD_PDD { WORD wPddMask; LPCTSTR pszName; PFN_KEYBD_PDD_POWER_HANDLER pfnPowerHandler; PFN_KEYBD_PDD_TOGGLE_LIGHTS pfnToggleLights;} KEYBD_PDD, *PKEYBD_PDD;
 typedef struct _MEMORY_SECTION {DWORD dwFlags;DWORD dwStart;DWORD dwLen;} MEMORY_SECTION, *PMEMORY_SECTION;
-typedef struct {DWORD dwNotificationType;TCHAR ptcDeviceName[MAX_PATH]; UINT uiOffsetToStatusBuffer; UINT uiStatusBufferSize;} NDISUIO_DEVICE_NOTIFICATION, *PNDISUIO_DEVICE_NOTIFICATION;
 struct A* pA;
 struct B { int i; };
 B* pB;
@@ -5375,11 +5071,6 @@ interface IMyIF {
   [ property(put=0, put=0) ]
   int data;
 };
-typedef struct _PCI_COMMON_CONFIG {USHORT VendorID; USHORT DeviceID; USHORT Command; USHORT Status;UCHAR RevisionID; UCHAR ProgIf; UCHAR SubClass; UCHAR BaseClass; UCHAR CacheLineSize; UCHAR LatencyTimer; UCHAR HeaderType; UCHAR BIST; union { struct _PCI_HEADER_TYPE_0 { ULONG BaseAddresses[PCI_TYPE0_ADDRESSES]; ULONG CIS; USHORT SubVendorID;USHORT SubSystemID;ULONG ROMBaseAddress;ULONG Reserved2[2];UCHAR InterruptLine; UCHAR InterruptPin; UCHAR MinimumGrant; UCHAR MaximumLatency; } type0;struct _PCI_HEADER_TYPE_1 { ULONG BaseAddresses[PCI_TYPE1_ADDRESSES]; UCHAR PrimaryBusNumber; UCHAR SecondaryBusNumber; UCHAR SubordinateBusNumber;UCHAR SecondaryLatencyTimer; UCHAR IOBase; UCHAR IOLimit;USHORT SecondaryStatus; USHORT MemoryBase; USHORT MemoryLimit;USHORT PrefetchableMemoryBase; USHORT PrefetchableMemoryLimit; ULONG PrefetchableMemoryBaseUpper32;ULONG PrefetchableMemoryLimitUpper32; USHORT IOBaseUpper; USHORT IOLimitUpper;ULONG Reserved2; ULONG ExpansionROMBase; UCHAR InterruptLine;UCHAR InterruptPin; USHORT BridgeControl;} type1;struct _PCI_HEADER_TYPE_2 { ULONG BaseAddress; UCHAR CapabilitiesPtr;UCHAR Reserved2; USHORT SecondaryStatus; UCHAR PrimaryBusNumber;UCHAR CardbusBusNumber; UCHAR SubordinateBusNumber; UCHAR CardbusLatencyTimer;ULONG MemoryBase0; ULONG MemoryLimit0; ULONG MemoryBase1;ULONG MemoryLimit1; USHORT IOBase0_LO; USHORT IOBase0_HI; USHORT IOLimit0_LO;USHORT IOLimit0_HI; USHORT IOBase1_LO; USHORT IOBase1_HI;USHORT IOLimit1_LO; USHORT IOLimit1_HI; UCHAR InterruptLine;UCHAR InterruptPin; USHORT BridgeControl; USHORT SubVendorID;USHORT SubSystemID; ULONG LegacyBaseAddress; UCHAR Reserved3[56];ULONG SystemControl; UCHAR MultiMediaControl; UCHAR GeneralStatus;UCHAR Reserved4[2]; UCHAR GPIO0Control; UCHAR GPIO1Control;UCHAR GPIO2Control; UCHAR GPIO3Control; ULONG IRQMuxRouting;UCHAR RetryStatus; UCHAR CardControl; UCHAR DeviceControl;UCHAR Diagnostic;} type2;} u; UCHAR DeviceSpecific[108];} PCI_COMMON_CONFIG , *PPCI_COMMON_CONFIG;
-typedef struct _PCI_DEV_INFO {WCHAR RegPath[DEVKEY_LEN];DWORD Bus;DWORD Device;DWORD Function;PPCI_COMMON_CONFIG Cfg;PCI_RSRC_LIST MemBase;PCI_RSRC_LIST MemLen;PCI_RSRC_LIST IoBase;PCI_RSRC_LIST IoLen;BOOL Matched;BOOL Configure;BOOL ConfigEntry;WCHAR ConfigEntryName[DEVENTRY_LEN];WCHAR ConfigDllName[DEVDLL_LEN];WCHAR DllName[DEVDLL_LEN];DWORD DevFlags;PPCI_CFG_INFO ConfigInfo;DWORD Command;DWORD BridgeControl;DWORD Latency;DWORD SecondaryLatency;} PCI_DEV_INFO, *PPCI_DEV_INFO;
-typedef struct _PCI_REG_INFO {WCHAR RegPath[DEVKEY_LEN];DWORD Bus;DWORD Device;DWORD Function;PCI_COMMON_CONFIG Cfg;PCI_REG_LIST MemBase;PCI_REG_LIST MemLen;PCI_REG_LIST IoBase;PCI_REG_LIST IoLen;DWORD SysIntr;} PCI_REG_INFO, *PPCI_REG_INFO;
-typedef struct _PCI_REG_LIST {DWORD Num;DWORD Reg[PCI_TYPE0_ADDRESSES];} PCI_REG_LIST, *PPCI_REG_LIST;
-typedef struct _SD_COMMAND_RESPONSE {SD_RESPONSE_TYPEResponseType; UCHARResponseBuffer[SDCARD_RESPONSE_BUFFER_BYTES];} SD_COMMAND_RESPONSE, *PSD_COMMAND_RESPONSE;
 typedef struct _SG_REQ {DWORD sr_start;DWORD sr_num_sec;DWORD sr_num_sg;DWORD sr_status;PFN_REQDONE sr_callback;SG_BUF sr_sglist[1];} SG_REQ, *PSG_REQ;
 struct S; union S;
 typedef struct _OUTLINETEXTMETRICW { UINT otmSize; TEXTMETRIC otmTextMetrics; BYTE otmFiller; PANOSE otmPanoseNumber; UINT otmfsSelection; UINT otmfsType; int otmsCharSlopeRise; int otmsCharSlopeRun; int otmItalicAngle; UINT otmEMSquare; int otmAscent; int otmDescent; UINT otmLineGap; UINT otmsCapEmHeight; UINT otmsXHeight; RECT otmrcFontBox; int otmMacAscent; int otmMacDescent; UINT otmMacLineGap; UINT otmusMinimumPPEM; POINT otmptSubscriptSize; POINT otmptSubscriptOffset; POINT otmptSuperscriptSize; POINT otmptSuperscriptOffset; UINT otmsStrikeoutSize; int otmsStrikeoutPosition; int otmsUnderscoreSize; int otmsUnderscorePosition; PSTR otmpFamilyName; PSTR otmpFaceName; PSTR otmpStyleName; PSTR otmpFullName; } OUTLINETEXTMETRICW, *POUTLINETEXTMETRICW;
@@ -5412,19 +5103,6 @@ typedef struct _KITLTRANSPORT{
   PFN_GETDEVCFG pfnGetDevCfg;
   PFN_SETHOSTCFG pfnSetHostCfg;
 } KITLTRANSPORT, *PKITLTRANSPORT;
-typedef struct _DMUS_PORTCAPS {
-  DWORD dwSize;
-  DWORD dwFlags;
-  GUID guidPort;
-  DWORD dwClass;
-  DWORD dwType;
-  DWORD dwMemorySize;
-  DWORD dwMaxChannelGroups;
-  DWORD dwMaxVoices;
-  DWORD dwMaxAudioChannels;
-  DWORD dwEffectFlags;
-  WCHAR wszDescription[DMUS_MAX_DESCRIPTION];
-} DMUS_PORTCAPS, *LPDMUS_PORTCAPS;
 typedef struct _AFPROTOCOLS { INT iAddressFamily; INT iProtocol; } AFPROTOCOLS, *PAFPROTOCOLS, *LPAFPROTOCOLS;
 SOCKET WSAAccept( SOCKET s, struct SOCK_ADDR* addr, LPINT addrlen, LPCONDITIONPROC lpfnCondition, DWORD dwCallbackData );
 typedef struct _NKGLOBAL {
@@ -5500,45 +5178,6 @@ typedef struct _NKGLOBAL {
   LPDWORD pdwCurrVectors;
   #endif
 } NKGLOBAL, *PNKGLOBAL;
-typedef struct tagDMPFILEINFO {
-  WORD wBucketParams;
-  LPWSTR rgwzBucketParams[MAX_BUCKETPARAMS];
-  LPWSTR pwzQueryString;
-  LPWSTR pwzAppName;
-  LPWSTR pwzFilesToKeep;
-  LPWSTR pwzFilesToDelete;
-  BOOL fGenericParams;
-} DMPFILEINFO, *PDMPFILEINFO;
-typedef struct _SDCARD_CLIENT_REGISTRATION_INFO {
-  TCHAR ClientName[MAX_SDCARD_CLIENT_NAME];
-  PSD_SLOT_EVENT_CALLBACK pSlotEventCallBack;
-  DWORD ClientFlags;
-  DWORD Reserved1;
-  DWORD Reserved2;
-} SDCARD_CLIENT_REGISTRATION_INFO, *PSDCARD_CLIENT_REGISTRATION_INFO;
-typedef struct SS_SOCKET_INFO{
-  DWORD dwSocketCaps;
-  DWORD dwSocketIntrCaps;
-  DWORD dwSocketRptCaps;
-  DWORD dwSocketIndCaps;
-  DWORD dwNumOfPowerEntry;
-  DWORD dwNumOfWindows;
-  DWORD dwBusType;
-  DWORD dwBusNumber;
-  BYTE bArrayIrqRouting[IRQ_ROUTINGTABLE_SIZE];
-} SS_SOCKET_INFO, *PSS_SOCKET_INFO;
-typedef struct _XIPCHAIN_ENTRY {
-  LPVOID pvAddr;
-  DWORD dwLength;
-  DWORD dwMaxLength;
-  USHORT usOrder;
-  USHORT usFlags;
-  DWORD dwVersion;
-  CHAR szName[XIP_NAMELEN];
-  DWORD dwAlgoFlags;
-  DWORD dwKeyLen;
-  BYTE byPublicKey[596];
-} XIPCHAIN_ENTRY, *PXIPCHAIN_ENTRY;
 struct RNDIS_PDD_CHARACTERISTICS {
   PFN_PDD_SEND_RNDIS_MESSAGE SendRndisMessageHandler;
   PFN_PDD_SEND_RNDIS_PACKET SendRndisPacketHandler;
@@ -5551,12 +5190,6 @@ struct RNDIS_PDD_CHARACTERISTICS {
   DWORD dwMaxRx;
   DWORD dwBaseAddr;
 };
-typedef struct _ReservedReq {
-  CHAR szName[RESERVED_NAME_LEN];
-  DWORD dwStart;
-  DWORD dwLen;
-  LPBYTE pBuffer;
-} ReservedReq, *PReservedReq;
 typedef struct _FMDInterface {
   DWORD cbSize;
   PFN_INIT pInit;
@@ -5573,82 +5206,6 @@ typedef struct _FMDInterface {
   PFN_GETINFOEX pGetInfoEx;
   PFN_OEMIOCONTROL pOEMIoControl;
 } FMDInterface, *PFMDInterface;
-typedef struct _RESOLVER_INFORMATION {
-  PLUGIN_INFORMATION pluginInfo;
-  DWORD minRequeryInterval;
-  DWORD numReportsSupported;
-  GUID reportsSupported[MAX_PLUGIN_REPORT_TYPES];
-  DWORD resolverFlags;
-} RESOLVER_INFORMATION, *PRESOLVER_INFORMATION;
-typedef struct _FlashLayoutSector {
-  BYTE abFLSSig[FLASH_LAYOUT_SIG_SIZE];
-  DWORD cbReservedEntries;
-  DWORD cbRegionEntries;
-}FlashLayoutSector, *PFlashLayoutSector;
-typedef struct _GPS_POSITION {
-  DWORD dwVersion;
-  DWORD dwSize;
-  DWORD dwValidFields;
-  DWORD dwFlags;
-  SYSTEMTIME stUTCTime;
-  double dblLatitude;
-  double dblLongitude;
-  float flSpeed;
-  float flHeading;
-  double dblMagneticVariation;
-  float flAltitudeWRTSeaLevel;
-  float flAltitudeWRTEllipsoid;
-  GPS_FIX_QUALITY FixQuality;
-  GPS_FIX_TYPE FixType;
-  GPS_FIX_SELECTION SelectionType;
-  float flPositionDilutionOfPrecision;
-  float flHorizontalDilutionOfPrecision;
-  float flVerticalDilutionOfPrecision;
-  DWORD dwSatelliteCount;
-  DWORD rgdwSatellitesUsedPRNs[GPS_MAX_SATELLITES];
-  DWORD dwSatellitesInView;
-  DWORD rgdwSatellitesInViewPRNs[GPS_MAX_SATELLITES];
-  DWORD rgdwSatellitesInViewElevation[GPS_MAX_SATELLITES];
-  DWORD rgdwSatellitesInViewAzimuth[GPS_MAX_SATELLITES];
-  DWORD rgdwSatellitesInViewSignalToNoiseRatio[GPS_MAX_SATELLITES];
-} GPS_POSITION, *PGPS_POSITION;
-typedef struct _PLUGIN_INFORMATION {
-  DWORD version;
-  GUID guid;
-  WCHAR friendlyName[MAX_PLUGIN_FRIENDLY_NAME];
-  PLUGIN_STATE pluginState;
-  DWORD retryInterval;
-  DWORD maximumInitialWait;
-  DWORD numReportsGenerated;
-  GUID reportsGenerated[MAX_PLUGIN_REPORT_TYPES];
-  FILETIME lastUpdate;
-  DWORD pluginFlags;
-} PLUGIN_INFORMATION, *PPLUGIN_INFORMATION;
-typedef struct _LOCATION_REPORT_802_11 {
-  LOCATION_REPORT_BASE base;
-  DWORD numAccessPoints;
-  BYTE BSSID[LOCATION_MAX_ACCESS_POINTS][BSSID_MAX_LEN];
-  FLOAT RSSI[LOCATION_MAX_ACCESS_POINTS];
-} LOCATION_REPORT_802_11, *PLOCATION_REPORT_802_11;
-typedef struct _ReservedEntry {
-  CHAR szName[RESERVED_NAME_LEN];
-  DWORD dwStartBlock;
-  DWORD dwNumBlocks;
-} ReservedEntry, *PReservedEntry;
-typedef struct _RESOLVER_CONTROL_BLOCK {
-  DWORD version;
-  HANDLE resContext;
-  RESOLVER_INFORMATION* pResInfo;
-  LOCATION_REPORT* provReport;
-  GUID typesToResolve[MAX_PLUGIN_REPORT_TYPES];
-  DWORD numTypesToResolve;
-  DWORD (WINAPI* NewResolverReport)(HANDLE resContext, LOCATION_REPORT* pNewReport);
-} RESOLVER_CONTROL_BLOCK, *PRESOLVER_CONTROL_BLOCK;
-typedef struct {
-  TCHAR szTabName[MAX_PATH];
-  DLGPROC pDlgProc;
-  UINT uTemplateId;
-} RDP_TAB_INFO, *PRDP_TAB_INFO;
 typedef struct _REG_NOTIFY_INFORMATION {
   DWORD NextEntryOffset;
   DWORD Action;
@@ -5740,78 +5297,6 @@ typedef struct _FD_DEVICEMETRICS {
   LONG lMinD;
   LONG alReserved[1];
 } FD_DEVICEMETRICS, *PFD_DEVICEMETRICS;
-typedef struct _FILE_COPY_EXTERNAL {
-  DWORD cbSize;
-  DWORD dwDirection;
-  PVOID pUserData;
-  DWORD cbUserDataSize;
-  TCHAR szCancelEventName[MAX_PATH];
-} FILE_COPY_EXTERNAL, *PFILE_COPY_EXTERNAL;
-typedef struct _DDDEVICEIDENTIFIER {
-  wchar_t szDriver[MAX_DDDEVICEID_STRING];
-  wchar_t szDescription[MAX_DDDEVICEID_STRING];
-  LARGE_INTEGER liDriverVersion;
-  DWORD dwVendorId;
-  DWORD dwDeviceId;
-  DWORD dwSubSysId;
-  DWORD dwRevision;
-  GUID guidDeviceIdentifier;
-} DDDEVICEIDENTIFIER, *LPDDDEVICEIDENTIFIER;
-typedef struct _DISK_COPY_EXTERNAL {
-  DWORD cbSize;
-  DWORD dwDirection;
-  PVOID pUserData;
-  DWORD cbUserDataSize;
-  TCHAR szCancelEventName[MAX_PATH];
-  ULARGE_INTEGER ulFileSize;
-  HANDLE hCallerProc;
-  DWORD cbSectorListSize;
-} DISK_COPY_EXTERNAL, *PDISK_COPY_EXTERNAL;
-typedef struct simphonebookadditionalnumber_tag {
-  DWORD cbSize;
-  DWORD dwParams;
-  TCHAR lpszAddress[MAX_LENGTH_ADDRESS];
-  DWORD dwAddressType;
-  DWORD dwNumPlan;
-  DWORD dwNumId;
-} SIMPHONEBOOKADDITIONALNUMBER, *LPSIMPHONEADDITIONALNUMBER;
-typedef struct rilndisgprscontext_tag {
-  DWORD cbSize;
-  DWORD dwParams;
-  DWORD dwContextID;
-  BOOL fContextActivation;
-  TCHAR tszUserName[NDIS_GPRS_USERNAME_MAX_LENGTH];
-  TCHAR tszPassword[NDIS_GPRS_PASSWORD_MAX_LENGTH];
-  TCHAR tszDNS1[NDIS_GRPS_DNS_MAX_LENGTH];
-  TCHAR tszDNS2[NDIS_GRPS_DNS_MAX_LENGTH];
-  RILNDISRECEIVECALLBACK pfnNdisReceive;
-  RILNDISTRANSMITCALLBACK pfnNdisTransmit;
-  RILNDISSTATUSCALLBACK pfnNdisStatus;
-  PVOID pCallbackContext;
-} RILNDISGPRSCONTEXT, *LPRILNDISGPRSCONTEXT;
-typedef struct _CE_FIND_DATA {
-  DWORD dwFileAttributes;
-  FILETIME ftCreationTime;
-  FILETIME ftLastAccessTime;
-  FILETIME ftLastWriteTime;
-  DWORD nFileSizeHigh;
-  DWORD nFileSizeLow;
-  DWORD dwOID;
-  WCHAR cFileName[MAX_PATH];
-} CE_FIND_DATA, *LPCE_FIND_DATA;
-typedef struct rilatrinfo_tag {
-  DWORD cbSize;
-  DWORD dwParams;
-  DWORD dwPhase;
-  DWORD cbATRSize;
-  BYTE rgbATR[MAXLENGTH_ATR];
-} RILATRINFO, *LPRILATRINFO;
-typedef struct smsregistrationdata_tag {
-  DWORD cbSize;
-  TCHAR tszAppName[SMS_MAX_APPNAME_LENGTH];
-  TCHAR tszParams[SMS_MAX_PARAMS_LENGTH];
-  TCHAR tszProtocolName[SMS_MAX_PROTOCOLNAME_LENGTH];
-} SMSREGISTRATIONDATA, *LPSMSREGISTRATIONDATA;
 typedef struct SMSSTOREITEM_TAG{
   UINT cbSize;
   RILMESSAGE rmMessage;
@@ -5820,75 +5305,6 @@ typedef struct SMSSTOREITEM_TAG{
   UINT nTotalParts;
   UINT iPartInde;
 } SMSSTOREITEM, *LPSMSSTOREITEM;
-typedef struct simfilerefresh_tag {
-  DWORD cbSize;
-  DWORD dwParams;
-  DWORD dwFlags;
-  DWORD dwFileCount;
-  DWORD rgdwAddress[MAX_FILES];
-} SIMFILEREFRESH, FAR *LPSIMFILEREFRESH;
-typedef struct lineoperator_tag {
-  DWORD dwIndex;
-  DWORD dwValidFields;
-  DWORD dwStatus;
-  TCHAR lpszLongName[MAX_LENGTH_OPERATOR_LONG];
-  TCHAR lpszShortName[MAX_LENGTH_OPERATOR_SHORT];
-  TCHAR lpszNumName[MAX_LENGTH_OPERATOR_NUMERIC];
-} LINEOPERATOR, * LPLINEOPERATOR;
-typedef struct simphonebookentryex_tag {
-  DWORD cbSize;
-  DWORD dwParams;
-  TCHAR lpszAddress[MAX_LENGTH_ADDRESS];
-  DWORD dwAddressType;
-  DWORD dwNumPlan;
-  TCHAR lpszText[MAX_LENGTH_PHONEBOOKENTRYTEXT];
-  TCHAR lpszSecondName[MAX_LENGTH_PHONEBOOKENTRYTEXT];
-  DWORD dwIndex;
-  BOOL fHidden;
-  DWORD dwGroupIdCount;
-  DWORD rgdwGroupId[MAX_NUM_GROUPS];
-  DWORD dwUid;
-  DWORD dwAdditionalNumberCount;
-  LPSIMPHONEBOOKADDITIONALNUMBER lpAdditionalNumbers;
-  DWORD dwEmailCount;
-  LPSIMPHONEBOOKEMAILADDRESS lpEmailAddresses;
-} SIMPHONEBOOKENTRYEX, *LPSIMPHONEBOOKENTRYEX;
-typedef struct simlocalinfo_tag {
-  DWORD cbSize;
-  DWORD dwParams;
-  DWORD dwLAC;
-  DWORD dwCellId;
-  TCHAR lpszNumName[MAXLEN_OPERATOR_NUMERIC];
-  TCHAR lpszIMEI[MAXLEN_IMEI];
-  BYTE rgbNMR[MAXLEN_NMR];
-  BYTE rgbBCCH[MAXLEN_BCCH * MAXNUM_BCCH];
-  DWORD dwNumBCCH;
-} SIMLOCALINFO, *LPSIMLOCALINFO;
-typedef struct simmessage_tag {
-  DWORD cbSize;
-  DWORD dwParams;
-  TCHAR lpszAddress[MAX_LENGTH_ADDRESS];
-  DWORD dwAddressType;
-  DWORD dwNumPlan;
-  SYSTEMTIME stReceiveTime;
-  DWORD cbHdrLength;
-  BYTE rgbHeader[MAX_LENGTH_HEADER];
-  TCHAR lpszMessage[MAX_LENGTH_MESSAGE];
-} SIMMESSAGE, FAR *LPSIMMESSAGE;
-typedef struct simcaps_tag {
-  DWORD cbSize;
-  DWORD dwParams;
-  DWORD dwPBStorages;
-  DWORD dwMinPBIndex;
-  DWORD dwMaxPBIndex;
-  DWORD dwMaxPBEAddressLength;
-  DWORD dwMaxPBETextLength;
-  DWORD dwLockFacilities;
-  DWORD dwReadMsgStorages;
-  DWORD dwWriteMsgStorages;
-  DWORD dwNumLockingPwdLengths;
-  SIMLOCKINGPWDLENGTH rgLockingPwdLengths[SIM_NUMLOCKFACILITIES];
-} SIMCAPS, FAR *LPSIMCAPS;
 typedef struct SMSROUTERMSGINFO_TAG{
   UINT cbSize;
   UINT cbMessageUID;
@@ -5896,72 +5312,6 @@ typedef struct SMSROUTERMSGINFO_TAG{
   UINT nTotalParts;
   UINT iPartIndex;
 } SMSROUTERMSGINFO, *LPSMSROUTERMSGINFO;
-typedef struct simlanguage_tag {
-  DWORD cbSize;
-  DWORD dwParams;
-  TCHAR lpszLanguage[MAXLEN_LANGUAGE];
-} SIMLANGUAGE, FAR *LPSIMLANGUAGE;
-typedef struct cellgprsconnectioninfo_tag {
-  DWORD dwProtocolType;
-  DWORD dwL2ProtocolType
-  WCHAR wszAccessPointName[CELLDEVCONFIG_MAXLENGTH_GPRSACCESSPOINTNAME];
-  WCHAR wszAddress[CELLDEVCONFIG_MAXLENGTH_GPRSADDRESS];
-  DWORD dwDataCompression;
-  DWORD dwHeaderCompression;
-  char szParameters[CELLDEVCONFIG_MAXLENGTH_GPRSPARAMETERS];
-  BOOL bRequestedQOSSettingsValid;
-  CELLGPRSQOSSETTINGS cgqsRequestedQOSSettings;
-  BOOL bMinimumQOSSettingsValid;
-  CELLGPRSQOSSETTINGS cgqsMinimumQOSSettings;
-} CELLGPRSCONNECTIONINFO, *LPCELLGPRSCONNECTIONINFO;
-typedef struct rilndisipv6addr_tag {
-  union
-  {
-    UCHAR Byte[IPV6_ADDRESS_LENGTH_IN_UCHAR];
-    USHORT Word[IPV6_ADDRESS_LENGTH_IN_USHORT];
-  };
-} RILNDISIPV6ADDR, *LPRILNDISIPV6ADDR;
-typedef struct sms_address_tag { SMS_ADDRESS_TYPE smsatAddressType; TCHAR ptsAddress[SMS_MAX_ADDRESS_LENGTH]; } SMS_ADDRESS, *LPSMS_ADDRESS;
-typedef struct simphonebookentry_tag {
-  DWORD cbSize;
-  DWORD dwParams;
-  TCHAR lpszAddress[MAX_LENGTH_ADDRESS];
-  DWORD dwAddressType;
-  DWORD dwNumPlan;
-  TCHAR lpszText[MAX_LENGTH_PHONEBOOKENTRYTEXT];
-} SIMPHONEBOOKENTRY, *LPSIMPHONEBOOKENTRY;
-typedef struct simphonebookemailaddress_tag {
-  DWORD cbSize;
-  DWORD dwParams;
-  TCHAR lpszAddress[MAX_LENGTH_PHONEBOOKENTRYTEXT];
-} SIMPHONEBOOKEMAILADDRESS, *LPSIMPHONEBOOKEMAILADDRESS;
-typedef struct _EXTENSION_CONTROL_BLOCK{
-  DWORD cbSize;
-  DWORD dwVersion;
-  HCONN ConnID;
-  DWORD dwHttpStatusCode;
-  CHAR lpszLogData[HSE_LOG_BUFFER_LEN];
-  LPSTR lpszMethod;
-  LPSTR lpszQueryString;
-  LPSTR lpszPathInfo;
-  LPSTR lpszPathTranslated;
-  DWORD cbTotalBytes;
-  DWORD cbAvailable;
-  LPBYTE lpbData;
-  LPSTR lpszContentType;
-  BOOL (WINAPI* GetServerVariable);
-  BOOL (WINAPI* WriteClient);
-  BOOL (WINAPI* ReadClient);
-  BOOL (WINAPI* ServerSupportFunction);
-} EXTENSION_CONTROL_BLOCK, LPEXTENSION_CONTROL_BLOCK;
-typedef struct _HSE_URL_MAPEX_INFO{
-  CHAR lpszPath[MAX_PATH];
-  DWORD dwFlags;
-  DWORD cchMatchingPath;
-  DWORD cchMatchingURL;
-  DWORD dwReserved1;
-  DWORD dwReserved2;
-} HSE_URL_MAPEX_INFO, *LPHSE_URL_MAPEX_INFO;
 typedef struct tagGESTUREMETRICS {
   UINT cbSize;
   DWORD dwID;
@@ -5970,12 +5320,6 @@ typedef struct tagGESTUREMETRICS {
   DWORD dwAngularTolerance;
   DWORD dwExtraInfo;
 } GESTUREMETRICS, *LPGESTUREMETRICS;
-typedef struct _HTTP_FILTER_VERSION {
-  DWORD dwServerFilterVersion;
-  DWORD dwFilterVersion;
-  CHAR lpszFilterDesc[SF_MAX_FILTER_DESC_LEN];
-  DWORD dwFlags;
-} HTTP_FILTER_VERSION, *PHTTP_FILTER_VERSION;
 typedef struct _WSDUpdRetransmitParams {
   ULONG ulSendDelay;
   ULONG ulRepeat;
@@ -6322,6 +5666,36 @@ DWORD dwMultiPath;
 BOOL fStereoPresent;
 DWORD dwReserved;
 } SIGNALINFO, *PSIGNALINFO;
+typedef struct SMSROUTERMSGINFO_TAG{
+ UINT cbSize;
+ UINT cbMessageUID;
+ BYTE rgbMessageUID[SMS_MAX_MESSAGEUID_SIZE];
+ UINT nTotalParts;
+ UINT iPartIndex;
+} SMSROUTERMSGINFO, *LPSMSROUTERMSGINFO;
+typedef struct SMSSTOREITEM_TAG{
+ UINT cbSize;
+ RILMESSAGE rmMessage;
+ UINT cbMessageUID;
+ BYTE rgbMessageUID[SMS_MAX_MESSAGEUID_SIZE];
+ UINT nTotalParts;
+ UINT iPartInde;
+} SMSSTOREITEM, *LPSMSSTOREITEM;
+typedef struct { // srmi 
+GUID gEngineID; 
+TCHAR szMfgName[SRMI_NAMELEN]; 
+TCHAR szProductName[SRMI_NAMELEN]; 
+GUID gModeID; 
+TCHAR szModeName[SRMI_NAMELEN]; 
+LANGUAGE language; 
+DWORD dwSequencing; 
+DWORD dwMaxWordsVocab; 
+DWORD dwMaxWordsState; 
+DWORD dwGrammars; 
+DWORD dwFeatures; 
+DWORD dwInterfaces; 
+DWORD dwEngineFeatures;
+} SRMODEINFO, *PSRMODEINFO;
 typedef struct { // srmir
 DWORD dwEngineID;
 DWORD dwMfgName;
@@ -6362,6 +5736,21 @@ DWORD dwSize;
 DWORD dwWordNum;
 TCHAR szWord[ ];
 } SRWORD, *PSRWORD;
+typedef struct { // ttsmi
+GUID gEngineID;
+TCHAR szMfgName[TTSI_NAMELEN];
+TCHAR szProductName[TTSI_NAMELEN];
+GUID gModeID;
+TCHAR szModeName[TTSI_NAMELEN];
+LANGUAGE language;
+TCHAR szSpeaker[TTSI_NAMELEN];
+TCHAR szStyle[TTSI_STYLELEN];
+WORD wGender;
+WORD wAge;
+DWORD dwFeatures;
+DWORD dwInterfaces;
+DWORD dwEngineFeatures;
+} TTSMODEINFO, *PTTSMODEINFO;
 typedef struct { // ttsmir
 DWORD dwEngineID;
 DWORD dwMfgName;
@@ -6421,6 +5810,30 @@ DWORD dwAction;
 DWORD dwActionSize;
 BYTE abData[];
 } VCMDCOMMAND, *PVCMDCOMMAND;
+typedef struct { // vcn
+TCHAR szApplication[VCMD_APPLEN];
+TCHAR szState[VCMD_STATELEN];
+} VCMDNAME, *PVCMDNAME;
+typedef struct { // vcsi
+DWORD dwAutoGainEnable;
+DWORD dwAwakeState;
+DWORD dwThreshold;
+DWORD dwDevice;
+DWORD dwEnable;
+TCHAR szMicrophone[VCMD_MICLEN];
+TCHAR szSpeaker[VCMD_SPEAKERLEN];
+GUID gModeID;
+} VCSITEINFO, *PVCSITEINFO
+typedef struct {
+CLSID clsidDevice;
+TCHAR szDeviceName[VIODEVICENAMESIZE];
+DWORD grfModes;
+VARIANT vRangeLow;
+VARIANT vRangeHigh;
+DWORD dwValueType;
+DWORD dwValueUnits;
+LONG lExponent;
+}
 typedef struct {
 DWORD cbFixed;
 DWORD cbData;

@@ -5,23 +5,42 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 19 declarations, 4 outlines, 0 base types, 0 extra macros, 3 extra decls
+ * 0 constants, 23 declarations, 0 outlines, 0 base types, 0 extra macros, 7 extra decls
  */
 #ifndef _NETUI_
 #define _NETUI_
 
 
 /* ==================================================================
- * macros -- the macro/#define blocks the pages print (verbatim)
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
  * ================================================================ */
 
-/* ADDCONNECT_DLGPARAMS  [struct; ce-only] */
+/* LINECONFIGDATA  [struct; ce-only] */
+typedef struct _LINECONFIGDATA {
+ DWORD dwVersion;
+ DWORD dwBaudRate;
+ DWORD dwSettableBaud;
+ BYTE bByteSize;
+ BYTE bParity;
+ BYTE bStopBits;
+ BYTE bReserved;
+ WORD wSettableData;
+ WORD wWaitBong;
+ DWORD dwCallSetupFailTimer;
+ DWORD dwModemOptions;
+ DWORD dwTermOptions;
+ DWORD dwDdevCapFlags;
+ DWORD dwModMaxLen;
+ TCHAR szDialModifier[NETUI_LCD_DIAL_MOD_LEN + 1];
+ WORD wSettableStopParity;
+} LINECONFIGDATA, *PLINECONFIGDATA;
 
-/* GETDRIVERNAMEPARMS  [struct; ce-only] */
-
-/* NETUI_RESPWD  [struct; ce-only] */
-
-/* NETUI_USERPWD  [struct; ce-only] */
+/* NETUI_NEWPWD  [struct; ce-only] */
+typedef struct _NETUI_NEWPWD{
+ TCHAR szNewPassword[PWLEN+1];
+} NETUI_NEWPWD, *PNETUI_NEWPWD;
 
 /* ==================================================================
  * functions and callbacks
@@ -53,6 +72,12 @@ int GetNetString(
  int cchBufferMax
 );
 
+/* LineConfigEdit  [function; ce-only; CE 3.0..699; Netui.lib, netui.lib] */
+BOOL LineConfigEdit(
+ HWND hParent, 
+ PLINECONFIGDATA pLineConfigData
+);
+
 /* NetMsgBox  [function; ce-only; CE 3.0..699; Netui.lib, netui.lib] */
 BOOL NetMsgBox(
  HWND hParent, 
@@ -75,6 +100,19 @@ int CreateScanDevice(
 /* CloseUsernamePasswordDialog  [function; ce-only; CE 5.0..699; Netui.lib] */
 BOOL CloseUsernamePasswordDialog(
  HWND hDlg
+);
+
+/* GetNewPassword  [function; ce-only; CE 5.0..699; Netui.lib] */
+BOOL WINAPI GetNewPassword (
+ HWND hParent, 
+ OUT PNETUI_NEWPWD pNewPwd
+);
+
+/* GetNewPasswordEx  [function; ce-only; CE 5.0..699; Netui.lib] */
+BOOL WINAPI GetNewPasswordEx (
+ HWND hParent, 
+ OUT PNETUI_NEWPWD pNewPwd, 
+ OUT OPTIONAL HWND* phDlg
 );
 
 /* RegisterIPClass  [function; ce-only; CE 5.0..699; Netui.lib] */

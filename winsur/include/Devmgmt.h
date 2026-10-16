@@ -5,27 +5,26 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 4 declarations, 3 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _DEVMGMT_
 #define _DEVMGMT_
 
 
 /* ==================================================================
- * macros -- the macro/#define blocks the pages print (verbatim)
- * ================================================================ */
-
-/* DMSDLINFO  [struct, typedef; ce-only] */
-
-/* DMSINVPKGID  [struct, typedef; ce-only] */
-
-/* DMSINVRECORD  [struct, typedef; ce-only] */
-
-/* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
+
+/* DMSDLINFO  [struct, typedef; ce-only] */
+typedef struct {
+ SYSTEMTIME stStartTime;
+ SYSTEMTIME stDeltaTime;
+ DWORD dwFlags;
+ TCHAR wzDest [MAX_PATH];
+ TCHAR wzCmdLine [MAX_PATH];
+} DMSDLINFO, *PDMSDLINFO;
 
 /* DMTASKINFO  [struct, typedef; ce-only] */
 typedef struct {

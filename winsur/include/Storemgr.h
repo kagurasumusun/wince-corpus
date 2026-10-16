@@ -5,21 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 23 declarations, 3 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 26 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _STOREMGR_
 #define _STOREMGR_
 
-
-/* ==================================================================
- * macros -- the macro/#define blocks the pages print (verbatim)
- * ================================================================ */
-
-/* CE_VOLUME_INFO  [struct; ce-only] */
-
-/* PARTINFO  [struct; ce-only] */
-
-/* STORAGEDEVICEINFO  [struct; ce-only] */
 
 /* ==================================================================
  * functions and callbacks

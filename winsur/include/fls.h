@@ -5,18 +5,10 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 1 declarations, 2 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 3 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _FLS_
 #define _FLS_
 
-
-/* ==================================================================
- * macros -- the macro/#define blocks the pages print (verbatim)
- * ================================================================ */
-
-/* FlashLayoutSector  [struct; ce-only] */
-
-/* ReservedEntry  [struct; ce-only] */
 
 #endif /* _FLS_ */

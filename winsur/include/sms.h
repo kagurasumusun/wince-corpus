@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 80 constants, 31 declarations, 5 outlines, 0 base types, 0 extra macros, 11 extra decls
+ * 80 constants, 35 declarations, 1 outlines, 0 base types, 0 extra macros, 13 extra decls
  */
 #ifndef _SMS_
 #define _SMS_
@@ -101,14 +101,6 @@
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
-
-/* RAW_PROVIDER_SPECIFIC_DATA  [struct; ce-only] */
-
-/* SMS_ADDRESS  [struct; ce-only] */
-
-/* SMSREGISTRATIONDATA  [struct; ce-only] */
-
-/* TEXT_PROVIDER_SPECIFIC_DATA  [struct; ce-only] */
 
 /* TEXT_PROVIDER_SPECIFIC_PRIORITY_TYPE  [enum; ce-only] */
 
@@ -226,6 +218,12 @@ typedef struct notification_provider_specific_data_tag {
 } NOTIFICATION_PROVIDER_SPECIFIC_DATA;
 typedef NOTIFICATION_PROVIDER_SPECIFIC_DATA *PNOTIFICATION_PROVIDER_SPECIFIC_DATA, *LPNOTIFICATION_PROVIDER_SPECIFIC_DATA;
 
+/* SMS_ADDRESS  [struct; ce-only] */
+typedef struct sms_address_tag {
+ SMS_ADDRESS_TYPE smsatAddressType;
+ TCHAR ptsAddress[SMS_MAX_ADDRESS_LENGTH];
+} SMS_ADDRESS, *LPSMS_ADDRESS;
+
 /* SMS_BROADCAST_RANGES  [struct; ce-only] */
 typedef struct sms_broadcast_ranges_tag {
 DWORD cbSize;
@@ -235,6 +233,16 @@ DWORD dwBroadcastMsgLangs;
 BOOL bAccept;
 SMS_RANGE smsrBroadcastRanges[];
 } SMS_BROADCAST_RANGES, *LPSMS_BROADCAST_RANGES;
+
+/* WCMP_PROVIDER_SPECIFIC_DATA  [struct; ce-only] */
+typedef struct wcmp_provider_specific_data_tag {
+ WCMP_PROVIDER_SPECIFIC_MESSAGE_TYPE wcmppsMessageType;
+ WORD wParam1;
+ WORD wParam2;
+ WORD wParam3;
+ SMS_ADDRESS smsaAddress;
+} WCMP_PROVIDER_SPECIFIC_DATA;
+typedef WCMP_PROVIDER_SPECIFIC_DATA *PWCMP_PROVIDER_SPECIFIC_DATA, *LPWCMP_PROVIDER_SPECIFIC_DATA;
 
 /* WDP_PROVIDER_SPECIFIC_DATA  [struct; ce-only] */
 typedef struct wdp_provider_specific_data_tag {
@@ -331,6 +339,16 @@ HRESULT SmsGetBroadcastMsgRanges (
 const SMS_BROADCAST_RANGES* psmsbrBroadcastRanges
 );
 
+/* SmsGetPhoneNumber  [function; ce-only; CE 6.0..699; sms.lib] */
+HRESULT SmsGetPhoneNumber (
+ const SMS_ADDRESS* psmsaAddress
+);
+
+/* SmsGetSMSC  [function; ce-only; CE 6.0..699; sms.lib] */
+HRESULT SmsGetSMSC (
+ SMS_ADDRESS* psmsaSMSCAddress
+);
+
 /* SmsGetTime  [function; ce-only; CE 6.0..699; sms.lib] */
 HRESULT SmsGetTime (
  const SYSTEMTIME* ptsCurrentTime,
@@ -339,6 +357,10 @@ HRESULT SmsGetTime (
 /* SmsSetBroadcastMsgRanges  [function; ce-only; CE 6.0..699; sms.lib] */
 HRESULT SmsSetBroadcastMsgRanges (
 const SMS_BROADCAST_RANGES* psmsbrBroadcastRanges);
+
+/* SmsSetSMSC  [function; ce-only; CE 6.0..699; sms.lib] */
+HRESULT SmsSetSMSC (
+const SMS_ADDRESS *psmsaSMSCAddress);
 #endif /* _WIN32_WCE */
 
 #endif /* _SMS_ */

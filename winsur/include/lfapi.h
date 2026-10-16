@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1 constants, 18 declarations, 4 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 1 constants, 21 declarations, 1 outlines, 0 base types, 0 extra macros, 8 extra decls
  */
 #ifndef _LFAPI_
 #define _LFAPI_
@@ -23,13 +23,7 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-/* LOCATION_REPORT_802_11  [struct; ce-only] */
-
-/* PLUGIN_INFORMATION  [struct; ce-only] */
-
 /* PLUGIN_STATE  [enum; ce-only] */
-
-/* RESOLVER_INFORMATION  [struct; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

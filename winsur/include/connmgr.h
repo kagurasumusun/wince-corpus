@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1 constants, 14 declarations, 2 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 1 constants, 16 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _CONNMGR_
 #define _CONNMGR_
@@ -20,14 +20,6 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 #define INITGUID must
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * macros -- the macro/#define blocks the pages print (verbatim)
- * ================================================================ */
-
-/* CONNMGR_DESTINATION_INFO  [struct; ce-only] */
-
-/* SCHEDULEDCONNECTIONINFO  [struct; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

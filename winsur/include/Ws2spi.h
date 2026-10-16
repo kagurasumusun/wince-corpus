@@ -32,6 +32,13 @@ typedef struct _WSATHREADID {
  DWORD Reserved;
 } WSATHREADID, *LPWSATHREADID;
 
+/* WSPDATA  [struct; shared] */
+typedef struct WSPData {
+ WORD wVersion;
+ WORD wHighVersion;
+ WCHAR szDescription[WSPDESCRIPTION_LEN+1];
+} WSPDATA, FAR * LPWSPDATA;
+
 /* WSPSelect  [struct; ce-only; Ws2.lib] */
 int WSPSelect(
  int nfds,

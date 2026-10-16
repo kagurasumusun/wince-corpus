@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 236 constants, 12 declarations, 2 outlines, 0 base types, 0 extra macros, 3 extra decls
+ * 236 constants, 13 declarations, 1 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _IMM_
 #define _IMM_
@@ -382,18 +382,6 @@ typedef STYLEBUF *PSTYLEBUF, *LPSTYLEBUF;
 /*   dwStyle */
 /*   ptCurrentPos */
 /*   rcArea */
-
-/* IMEMENUITEMINFO  [struct; shared; A/W IMEMENUITEMINFOA,IMEMENUITEMINFOW (CE is W-side)] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   cbSize */
-/*   fType */
-/*   fState */
-/*   wID */
-/*   hbmpChecked */
-/*   hbmpUnchecked */
-/*   dwItemData */
-/*   szString */
-/*   hbmpItem */
 
 /* ==================================================================
  * functions and callbacks

@@ -5,17 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 6 declarations, 1 outlines, 0 base types, 0 extra macros, 6 extra decls
+ * 0 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 7 extra decls
  */
 #ifndef _CDIOCTL_
 #define _CDIOCTL_
 
-
-/* ==================================================================
- * macros -- the macro/#define blocks the pages print (verbatim)
- * ================================================================ */
-
-/* CDROM_TOC  [struct; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

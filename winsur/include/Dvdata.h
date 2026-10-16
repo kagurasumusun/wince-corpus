@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 45 constants, 16 declarations, 0 outlines, 0 base types, 0 extra macros, 85 extra decls
+ * 45 constants, 17 declarations, 0 outlines, 0 base types, 0 extra macros, 85 extra decls
  */
 #ifndef _DVDATA_
 #define _DVDATA_
@@ -62,6 +62,14 @@
 #define SPRM_TT_PGCN 6
 #define SPRM_TTN 4
 #define SPRM_VTS_TTN 5
+
+/* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* UNICODE_PATH  [macro; ce-only] */
+#define MAX_PATH 128
+typedef [string] WCHAR UNICODE_PATH [MAX_PATH];
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

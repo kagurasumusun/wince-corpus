@@ -5,17 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 59 declarations, 1 outlines, 0 base types, 0 extra macros, 3 extra decls
+ * 0 constants, 60 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _CEDDK_
 #define _CEDDK_
 
-
-/* ==================================================================
- * macros -- the macro/#define blocks the pages print (verbatim)
- * ================================================================ */
-
-/* PCI_COMMON_CONFIG  [struct; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

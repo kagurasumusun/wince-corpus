@@ -85,6 +85,15 @@ class GluedPrototypeTests(unittest.TestCase):
         self.assertFalse(q.is_glued_prototype(text))
         self.assertTrue(q.looks_like_c_declaration(text))
 
+    def test_array_bound_is_not_sal_unusable(self):
+        self.assertFalse(q.decl_unusable_for_c(
+            "typedef struct _WIN32_FIND_DATA {\n"
+            " DWORD dwFileAttributes;\n TCHAR cFileName[MAX_PATH];\n"
+            "} WIN32_FIND_DATA;", "WIN32_FIND_DATA"))
+        self.assertFalse(q.decl_unusable_for_c(
+            "typedef struct tagLOGFONT {\n LONG lfHeight;\n"
+            " TCHAR lfFaceName[LF_FACESIZE];\n} LOGFONT;", "LOGFONT"))
+
     def test_missing_semicolon_port_proto_is_kept(self):
         text = "UCHAR READ_PORT_UCHAR ( PUCHAR Port )"
         self.assertFalse(q.is_broken_c(text))

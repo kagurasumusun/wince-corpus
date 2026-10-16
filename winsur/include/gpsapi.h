@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 22 constants, 7 declarations, 2 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 22 constants, 9 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _GPSAPI_
 #define _GPSAPI_
@@ -41,14 +41,6 @@
 #define GPS_VALID_VERTICAL_DILUTION_OF_PRECISION 0x00000400
 
 /* ==================================================================
- * macros -- the macro/#define blocks the pages print (verbatim)
- * ================================================================ */
-
-/* GPS_DEVICE  [struct; ce-only] */
-
-/* GPS_POSITION  [struct; ce-only] */
-
-/* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
@@ -78,6 +70,35 @@ typedef enum {
 } GPS_FIX_TYPE;
 typedef GPS_FIX_TYPE *PGPS_FIX_TYPE, *LPGPS_FIX_TYPE;
 
+/* GPS_POSITION  [struct; ce-only] */
+typedef struct _GPS_POSITION {
+ DWORD dwVersion;
+ DWORD dwSize;
+ DWORD dwValidFields;
+ DWORD dwFlags;
+ SYSTEMTIME stUTCTime;
+ double dblLatitude;
+ double dblLongitude;
+ float flSpeed;
+ float flHeading;
+ double dblMagneticVariation;
+ float flAltitudeWRTSeaLevel;
+ float flAltitudeWRTEllipsoid;
+ GPS_FIX_QUALITY FixQuality;
+ GPS_FIX_TYPE FixType;
+ GPS_FIX_SELECTION SelectionType;
+ float flPositionDilutionOfPrecision;
+ float flHorizontalDilutionOfPrecision;
+ float flVerticalDilutionOfPrecision;
+ DWORD dwSatelliteCount;
+ DWORD rgdwSatellitesUsedPRNs[GPS_MAX_SATELLITES];
+ DWORD dwSatellitesInView;
+ DWORD rgdwSatellitesInViewPRNs[GPS_MAX_SATELLITES];
+ DWORD rgdwSatellitesInViewElevation[GPS_MAX_SATELLITES];
+ DWORD rgdwSatellitesInViewAzimuth[GPS_MAX_SATELLITES];
+ DWORD rgdwSatellitesInViewSignalToNoiseRatio[GPS_MAX_SATELLITES];
+} GPS_POSITION, *PGPS_POSITION;
+
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
@@ -87,6 +108,14 @@ typedef GPS_FIX_TYPE *PGPS_FIX_TYPE, *LPGPS_FIX_TYPE;
 /* GPSCloseDevice  [function; ce-only; CE 6.0..699; Gpsapi.lib] */
 DWORD GPSCloseDevice(
  HANDLE hGPSDevice
+);
+
+/* GPSGetPosition  [function; ce-only; CE 6.0..699; Gpsapi.lib] */
+DWORD GPSGetPosition(
+ HANDLE hGPSDevice,
+ GPS_POSITION *pGPSPosition,
+ DWORD dwMaximumAge,
+ DWORD dwFlags
 );
 
 /* GPSOpenDevice  [function; ce-only; CE 6.0..699; Gpsapi.lib] */

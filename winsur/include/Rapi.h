@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 12 constants, 58 declarations, 2 outlines, 0 base types, 0 extra macros, 8 extra decls
+ * 12 constants, 58 declarations, 2 outlines, 0 base types, 0 extra macros, 9 extra decls
  */
 #ifndef _RAPI_
 #define _RAPI_

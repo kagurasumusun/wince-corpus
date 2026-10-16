@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2 constants, 15 declarations, 4 outlines, 0 base types, 0 extra macros, 6 extra decls
+ * 2 constants, 16 declarations, 3 outlines, 0 base types, 0 extra macros, 7 extra decls
  */
 #ifndef _FMD_
 #define _FMD_
@@ -27,8 +27,6 @@
 /* FlashInfoEx  [struct; ce-only] */
 
 /* FMDInterface  [struct; ce-only] */
-
-/* ReservedReq  [struct; ce-only] */
 
 /* SectorInfo  [struct, macro; ce-only] */
 

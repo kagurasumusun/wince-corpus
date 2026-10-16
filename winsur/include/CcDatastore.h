@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 12 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 11 extra decls
  */
 #ifndef _CCDATASTORE_
 #define _CCDATASTORE_
@@ -26,6 +26,5 @@ HRESULT RegisterRefreshEvent( BSTRin_bstrEventName);
 HRESULT SetOSImage( BSTRin_bstrOSImage);
 HRESULT SetServiceMap( BSTRin_bstrServiceCategoryID, BSTRin_bstrServiceInfoID);
 HRESULT UnregisterRefreshEvent()
-HRESULT put_SupportedPlatform( [in] BSTRin_bstrSupportedPlatform);
 
 #endif /* _CCDATASTORE_ */

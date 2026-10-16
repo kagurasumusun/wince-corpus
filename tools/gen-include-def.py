@@ -1271,6 +1271,18 @@ def load_ce_documented_names():
                 cells = line.rstrip("\n").split("\t")
                 if cells and cells[0]:
                     names.add(cells[0])
+    harvest = os.path.join(KB, "harvest-declarations.jsonl")
+    if os.path.exists(harvest):
+        import json as _json
+        with open(harvest, encoding="utf-8") as fh:
+            for line in fh:
+                line = line.strip()
+                if not line:
+                    continue
+                rec = _json.loads(line)
+                text = rec.get("declaration") or rec.get("text") or ""
+                for bound in re.findall(r"\[([A-Z][A-Z0-9_]{1,40})\]", text):
+                    names.add(bound)
     return names
 
 
@@ -1514,7 +1526,9 @@ def overlay_unified_surface(by_header, printed_forms, by_module, all_entities):
     have = set()
     for infos in by_header.values():
         for info in infos:
-            if info.get("declaration"):
+            decl = info.get("declaration") or {}
+            text = decl.get("text") if isinstance(decl, dict) else ""
+            if text and str(text).strip():
                 have.add(info["entity"]["name"])
     have_exp = set()
     for wl in by_module.values():
@@ -1563,7 +1577,8 @@ def overlay_unified_surface(by_header, printed_forms, by_module, all_entities):
             pass
         elif name in _OVERLAY_NAMED and hl in {
                 "windef.h", "winnt.h", "winbase.h", "winuser.h", "wingdi.h",
-                "winreg.h", "winerror.h", "winioctl.h"}:
+                "winreg.h", "winerror.h", "winioctl.h", "mmsystem.h", "imm.h",
+                "winnls.h", "windbase.h", "dbgapi.h"}:
             pass
         else:
             continue
@@ -1640,7 +1655,9 @@ def overlay_unified_surface(by_header, printed_forms, by_module, all_entities):
                     pass
                 elif name in _OVERLAY_NAMED and hl in {
                         "windef.h", "winnt.h", "winbase.h", "winuser.h",
-                        "wingdi.h", "winreg.h", "winerror.h", "winioctl.h"}:
+                        "wingdi.h", "winreg.h", "winerror.h", "winioctl.h",
+                        "mmsystem.h", "imm.h", "winnls.h", "windbase.h",
+                        "dbgapi.h"}:
                     pass
                 else:
                     continue
@@ -1918,6 +1935,9 @@ _OVERLAY_NAMED = {
     "CreateBitmapIndirect", "CreateBrushIndirect", "SetCommState",
     "WaitForDebugEvent", "SystemIdleTimerReset", "AdvertiseInterface",
     "RequestDeviceNotifications", "DllMain", "WinMain",
+    "FindFirstFile", "FindNextFile", "WIN32_FIND_DATA", "WIN32_FIND_DATAW",
+    "LOGFONT", "LOGFONTW", "TIMERPROC",
+    "GetCPInfo", "SelectPalette",
 }
 
 CE_CORE_HEADERS = {
@@ -2022,6 +2042,10 @@ _CORE_TYPEDEFS = (
     ("PROCESS_INFORMATION",
      "typedef struct _PROCESS_INFORMATION PROCESS_INFORMATION, "
      "*LPPROCESS_INFORMATION, *PPROCESS_INFORMATION;"),
+    ("TIMERPROC",
+     "typedef void (CALLBACK *TIMERPROC)(HWND, UINT, UINT, DWORD);"),
+    ("DLGPROC",
+     "typedef INT_PTR (CALLBACK *DLGPROC)(HWND, UINT, WPARAM, LPARAM);"),
 )
 
 _WINDEF_NEED = (
@@ -2063,6 +2087,8 @@ _C_KNOWN_TYPES = {
     "LPSECURITY_ATTRIBUTES",
     "STARTUPINFOW", "LPSTARTUPINFOW", "STARTUPINFO", "LPSTARTUPINFO",
     "PROCESS_INFORMATION", "LPPROCESS_INFORMATION", "PPROCESS_INFORMATION",
+    "TIMERPROC", "DLGPROC",
+    "WIN32_FIND_DATA", "LOGFONT", "LOGFONTW", "LPLOGFONT",
 }
 
 
@@ -2111,22 +2137,30 @@ def _type_token_known(tok, local_names):
     return False
 
 
-def type_mentions_unknown(text, local_names, self_name=None):
+def type_mentions_unknown(text, local_names, self_name=None, macros=None):
     """True if a struct/function names a type this header does not define.
 
     Enumerator names inside ``typedef enum`` are values, not types.
     The identifier being declared (``READ_PORT_UCHAR(``) is not a type.
+    Array bounds are constants: keep the quote only when that name is a
+    #define this tree actually emits (MAX_PATH, LF_FACESIZE, ...).
     """
     body = text or ""
     if re.search(r"\btypedef\s+enum\b|\benum\s+\w+\s*\{", body):
         return False
     if body.lstrip().startswith("#"):
         return False
+    known_macros = set(macros or ()) | set(local_names or ())
+    for bound in re.findall(r"\[([A-Z][A-Z0-9_]{1,40})\]", body):
+        if bound not in known_macros:
+            return True
+    # Array bounds ([MAX_PATH], [LF_FACESIZE]) are constants, not types.
+    body = re.sub(r"\[[^\]]*\]", " ", body)
     skip = {"TYPEDEF", "STRUCT", "UNION", "ENUM", "CONST", "VOID", "INT",
             "CHAR", "SHORT", "LONG", "UNSIGNED", "SIGNED", "FLOAT", "DOUBLE",
             "IN", "OUT", "OPTIONAL", "FAR", "NEAR", "PASCAL", "WINAPI",
             "CALLBACK", "APIENTRY", "WINGDIAPI", "WINOLEAPI", "STDAPI",
-            "CDECL", "STDCALL"}
+            "CDECL", "STDCALL", "WINAPIV", "WINAPI_INLINE"}
     if self_name:
         skip.add(self_name)
     skip.update(re.findall(r"\b([A-Z][A-Z0-9_]*)\s*\(", body))
@@ -2640,7 +2674,7 @@ def run_unified(args):
         if quality_filters.is_language_runtime_constant(name):
             no_header += 1
             continue
-        if name in w32api_gaps.NEVER:
+        if name in w32api_gaps.NEVER and name != "MAX_PATH":
             continue
         unified_rec = unified_consts.get(name) or {}
         if unified_rec.get("header"):
@@ -3151,6 +3185,8 @@ def run_unified(args):
                 defines += len(members)
         # Base types section: typedef definitions for fundamental Windows types
         # These are critical for CE development as some have CE-specific values
+        visible_macros = {e["name"] for e in const_entries.get("windef.h", [])}
+        visible_macros.update(e["name"] for e in const_entries.get(key.lower(), []))
         emitted_type_names = set()
         base_types_for_header = base_types_by_header.get(key.lower(), [])
         if base_types_for_header:
@@ -3267,7 +3303,7 @@ def run_unified(args):
                     if ename and (ename in seen_fn or ename in global_fn_names
                                   or cname in global_fn_names):
                         continue
-                    if type_mentions_unknown(text, local, ename):
+                    if type_mentions_unknown(text, local, ename, visible_macros):
                         continue
                     filtered.append(info)
                     if ename:
@@ -3296,7 +3332,8 @@ def run_unified(args):
                         text = ((info.get("declaration") or {}).get("text")
                                 or "")
                         if type_mentions_unknown(text, local,
-                                (info.get("entity") or {}).get("name")):
+                                (info.get("entity") or {}).get("name"),
+                                visible_macros):
                             continue
                         new.append(info)
                     if len(new) == len(kept):
@@ -3409,7 +3446,7 @@ def run_unified(args):
                 d.get("declaration") or "", d.get("name") or "")
             and not type_mentions_unknown(
                 d.get("declaration") or "", already_decl_names,
-                d.get("name") or "")
+                d.get("name") or "", visible_macros)
         ]
         if extra_ds:
             by_type = collections.defaultdict(list)

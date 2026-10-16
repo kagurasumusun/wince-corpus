@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 424 constants, 39 declarations, 1 outlines, 2 base types, 0 extra macros, 2 extra decls
+ * 424 constants, 40 declarations, 0 outlines, 2 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _WINNLS_
 #define _WINNLS_
@@ -465,6 +465,14 @@ typedef DWORD LCTYPE;
  * declaration body no page prints
  * ================================================================ */
 
+/* CPINFO  [struct; shared] */
+typedef struct _cpinfo { 
+ UINT MaxCharSize; 
+ BYTE DefaultChar[MAX_DEFAULTCHAR]; 
+ BYTE LeadByte[MAX_LEADBYTES]; 
+} CPINFO;
+typedef CPINFO *PCPINFO, *LPCPINFO;
+
 /* CURRENCYFMT  [struct; shared; A/W CURRENCYFMTA,CURRENCYFMTW (CE is W-side)] */
 typedef struct _currencyfmt { 
  UINT NumDigits; 
@@ -488,12 +496,6 @@ typedef struct _numberfmt {
  UINT NegativeOrder; 
 } NUMBERFMT;
 typedef NUMBERFMT *PNUMBERFMT, *LPNUMBERFMT;
-
-/* CPINFO  [struct; shared] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   MaxCharSize */
-/*   DefaultChar */
-/*   LeadByte */
 
 /* _numberfmt  [extra struct] */
 typedef struct _numberfmt {- };
@@ -629,6 +631,12 @@ int FoldString(
 
 /* GetACP  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib] */
 UINT GetACP(VOID);
+
+/* GetCPInfo  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib] */
+BOOL GetCPInfo(
+ UINT CodePage, 
+ LPCPINFO lpCPInfo 
+);
 
 /* GetCurrencyFormat  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib; A/W GetCurrencyFormatA,GetCurrencyFormatW (CE is W-side)] */
 int GetCurrencyFormat(

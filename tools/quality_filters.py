@@ -196,8 +196,9 @@ def is_glued_prototype(text: str) -> bool:
 
 
 _UNUSABLE = re.compile(
-    r"\[[A-Z][A-Z0-9_]+\]|"
-    r"\[in,|\bin,\s*optional\]|"
+    # SAL annotations only -- not array bounds like [MAX_PATH] / [LF_FACESIZE]
+    r"\[(?:in|out|in,\s*out|in,out)(?:,\s*optional)?\]|"
+    r"\bin,\s*optional\]|"
     r"\b(?:sz_Or_Ord|CBrush|CString|CObject|CWnd|"
     r"BSTR|HTREEITEM)\b|"
     r"\b(?:IUnknown|IDispatch|IDirect3D|IDVD|IOle|"

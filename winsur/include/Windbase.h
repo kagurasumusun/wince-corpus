@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 7 constants, 45 declarations, 15 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 7 constants, 47 declarations, 13 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _WINDBASE_
 #define _WINDBASE_
@@ -28,8 +28,6 @@
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
-
-/* CEDBASEINFOEX  [struct; ce-only; Coredll.lib, coredll.lib] */
 
 /* CEVT_AUTO_I4  [typedef; ce-only; heuristic-prefix] */
 
@@ -57,8 +55,6 @@
 
 /* CEVT_UI4  [typedef; ce-only; heuristic-prefix] */
 
-/* SORTORDERSPECEX  [struct; ce-only; Coredll.lib, coredll.lib] */
-
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
@@ -84,6 +80,22 @@ typedef struct CEPROPSPEC {
  DWORD cchPropName;
 } CEPROPSPEC;
 typedef CEPROPSPEC *PCEPROPSPEC, *LPCEPROPSPEC;
+
+/* CEVOLUMEOPTIONS  [struct; ce-only; Coredll.lib, coredll.lib] */
+typedef struct CEVOLUMEOPTIONS {
+ WORD wVersion;
+ DWORD cbBufferPool;
+ DWORD dwAutoShrinkPercent;
+ DWORD dwFlushInterval;
+ DWORD cMaxNotifyChanges;
+ DWORD dwDefaultTimeout;
+ WCHAR wszPassword[CCH_MAX_PASSWORD + 1];
+ DWORD dwFlags;
+} CEVOLUMEOPTIONS;
+typedef CEVOLUMEOPTIONS *PCEVOLUMEOPTIONS, *LPCEVOLUMEOPTIONS;
+
+/* CESORTORDERSPECEX  [extra struct] */
+typedef struct CESORTORDERSPECEX { WORD wVersion; WORD wNumProps; WORD wKeyFlags; WORD wReserved; CEPROPID rgPropID[CEDB_MAXSORTPROP]; DWROD rgdwFlags[CEDB_MAXSORTPROP]; } CESORTORDERSPECEX;
 
 /* ==================================================================
  * functions and callbacks

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 80 declarations, 47 outlines, 0 base types, 0 extra macros, 17 extra decls
+ * 0 constants, 83 declarations, 44 outlines, 0 base types, 0 extra macros, 18 extra decls
  */
 #ifndef _DDRAWI_
 #define _DDRAWI_
@@ -77,8 +77,6 @@
 
 /* DDHAL_WAITFORVPORTSYNCDATA  [struct, typedef; ce-only] */
 
-/* DDNONLOCALVIDMEMCAPS  [struct, typedef; ce-only] */
-
 /* DDRAWI_DDRAWCLIPPER_INT  [struct; ce-only] */
 
 /* DDRAWI_DDRAWCLIPPER_LCL  [struct; ce-only] */
@@ -100,8 +98,6 @@
 /* DDRAWI_DDVIDEOPORT_INT  [struct, typedef; ce-only] */
 
 /* DDRAWI_DDVIDEOPORT_LCL  [struct, typedef; ce-only] */
-
-/* DDRAWI_DIRECTDRAW_GBL  [struct; ce-only] */
 
 /* DDRAWI_DIRECTDRAW_INT  [struct; ce-only] */
 
@@ -157,59 +153,5 @@ DWORD dwBltAffineMinifyLimit;
 DWORD dwOverlayAffineMinifyLimit; 
 } DDMORECAPS, FAR *LPDDMORECAPS; 
 typedef struct _DDMORECAPS FAR *LPDDMORECAPS;
-
-/* DDCORECAPS  [struct, typedef; shared] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   dwSize */
-/*   dwCaps */
-/*   dwCaps2 */
-/*   dwCKeyCaps */
-/*   dwFXCaps */
-/*   dwFXAlphaCaps */
-/*   dwPalCaps */
-/*   dwSVCaps */
-/*   dwAlphaBltConstBitDepths */
-/*   dwAlphaBltPixelBitDepths */
-/*   dwAlphaBltSurfaceBitDepths */
-/*   dwAlphaOverlayConstBitDepths */
-/*   dwAlphaOverlayPixelBitDepths */
-/*   dwAlphaOverlaySurfaceBitDepths */
-/*   dwZBufferBitDepths */
-/*   dwVidMemTotal */
-/*   dwVidMemFree */
-/*   dwMaxVisibleOverlays */
-/*   dwCurrVisibleOverlays */
-/*   dwNumFourCCCodes */
-/*   dwAlignBoundarySrc */
-/*   dwAlignSizeSrc */
-/*   dwAlignBoundaryDest */
-/*   dwAlignSizeDest */
-/*   dwAlignStrideAlign */
-/*   dwRops */
-/*   ddsCaps */
-/*   dwMinOverlayStretch */
-/*   dwMaxOverlayStretch */
-/*   dwMinLiveVideoStretch */
-/*   dwMaxLiveVideoStretch */
-/*   dwMinHwCodecStretch */
-/*   dwMaxHwCodecStretch */
-/*   dwReserved1 */
-/*   dwReserved2 */
-/*   dwReserved3 */
-/*   dwSVBCaps */
-/*   dwSVBCKeyCaps */
-/*   dwSVBFXCaps */
-/*   dwSVBRops */
-/*   dwVSBCaps */
-/*   dwVSBCKeyCaps */
-/*   dwVSBFXCaps */
-/*   dwVSBRops */
-/*   dwSSBCaps */
-/*   dwSSBCKeyCaps */
-/*   dwSSBFXCaps */
-/*   dwSSBRops */
-/*   dwMaxVideoPorts */
-/*   dwCurrVideoPorts */
-/*   dwSVBCaps2 */
 
 #endif /* _DDRAWI_ */

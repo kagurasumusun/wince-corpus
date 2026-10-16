@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 3 constants, 222 declarations, 21 outlines, 0 base types, 0 extra macros, 18 extra decls
+ * 3 constants, 242 declarations, 1 outlines, 0 base types, 0 extra macros, 21 extra decls
  */
 #ifndef _RIL_
 #define _RIL_
@@ -25,47 +25,7 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-/* RIL3GQOSPROFILE  [struct; ce-only; Ril.lib] */
-
-/* RILADDRESS  [struct; ce-only] */
-
-/* RILATRINFO  [struct; ce-only] */
-
-/* RILCALLINFO  [struct; ce-only] */
-
-/* RILCELLTOWERINFO  [struct; ce-only] */
-
-/* RILCOSTINFO  [struct; ce-only] */
-
-/* RILEQUIPMENTINFO  [struct; ce-only] */
-
-/* RILGPRSCONTEXT  [struct; ce-only] */
-
-/* RILMESSAGE  [struct; ce-only] */
-
-/* RILMSGCONFIG  [struct; ce-only] */
-
-/* RILNDISGPRSCONTEXT  [struct; ce-only] */
-
 /* RILNDISIPCONFIG  [struct; ce-only] */
-
-/* RILNDISIPV6ADDR  [struct; ce-only] */
-
-/* RILOPERATORNAMES  [struct; ce-only] */
-
-/* RILPHONEBOOKENTRY  [struct; ce-only] */
-
-/* RILPROTOCOLMODE  [struct; ce-only; Ril.lib] */
-
-/* RILREMOTEPARTYINFO  [struct; ce-only] */
-
-/* RILSUBADDRESS  [struct; ce-only] */
-
-/* RILSUBSCRIBERINFO  [struct; ce-only] */
-
-/* RILTRAFFICFLOWTEMPLATE  [struct; ce-only; Ril.lib] */
-
-/* RILVGCSVBSCALLINFO  [struct; ce-only; Ril.lib] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

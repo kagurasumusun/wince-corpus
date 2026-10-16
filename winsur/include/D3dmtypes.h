@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1 constants, 46 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 1 constants, 47 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _D3DMTYPES_
 #define _D3DMTYPES_
@@ -22,8 +22,6 @@
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
-
-/* D3DMADAPTER_IDENTIFIER  [struct, typedef; ce-only] */
 
 /* D3DMCOLOR_ARGB  [macro; ce-only] */
 #define D3DMCOLOR_ARGB(a,r,g,b) \

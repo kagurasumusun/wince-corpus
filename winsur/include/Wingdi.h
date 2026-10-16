@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1265 constants, 119 declarations, 9 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 1265 constants, 123 declarations, 5 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINGDI_
 #define _WINGDI_
@@ -1363,6 +1363,24 @@ BYTE GetRValue(
  DWORD rgb
 );
 
+/* LOGFONT  [struct, macro; shared; A/W LOGFONTA,LOGFONTW (CE is W-side)] */
+typedef struct tagLOGFONT { 
+ LONG lfHeight; 
+ LONG lfWidth; 
+ LONG lfEscapement; 
+ LONG lfOrientation; 
+ LONG lfWeight; 
+ BYTE lfItalic; 
+ BYTE lfUnderline; 
+ BYTE lfStrikeOut; 
+ BYTE lfCharSet; 
+ BYTE lfOutPrecision; 
+ BYTE lfClipPrecision; 
+ BYTE lfQuality; 
+ BYTE lfPitchAndFamily; 
+ TCHAR lfFaceName[LF_FACESIZE]; 
+} LOGFONT;
+
 /* PALETTERGB  [macro, function; shared] */
 
 /* RGB  [macro, function; shared] */
@@ -1417,6 +1435,14 @@ typedef struct {
  DWORD fwType;
 } DOCINFO;
 typedef DOCINFO *PDOCINFO, *LPDOCINFO;
+
+/* ENUMLOGFONT  [struct; shared; A/W ENUMLOGFONTA,ENUMLOGFONTW (CE is W-side)] */
+typedef struct tagENUMLOGFONT {
+ LOGFONT elfLogFont; 
+ TCHAR elfFullName[LF_FULLFACESIZE]; 
+ TCHAR elfStyle[LF_FACESIZE]; 
+} ENUMLOGFONT;
+typedef ENUMLOGFONT *PENUMLOGFONT, *LPENUMLOGFONT;
 
 /* FONTSIGNATURE  [struct; shared] */
 typedef struct tagFONTSIGNATURE {
@@ -1543,89 +1569,6 @@ typedef RGNDATA *PRGNDATA, *LPRGNDATA;
 /*   ciCharset */
 /*   ciACP */
 /*   fs */
-
-/* DEVMODE  [typedef; shared; A/W DEVMODEA (CE is W-side)] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   dmDeviceName */
-/*   dmSpecVersion */
-/*   dmDriverVersion */
-/*   dmSize */
-/*   dmDriverExtra */
-/*   dmFields */
-/*   DUMMYUNIONNAME */
-/*   dmColor */
-/*   dmDuplex */
-/*   dmYResolution */
-/*   dmTTOption */
-/*   dmCollate */
-/*   dmFormName */
-/*   dmLogPixels */
-/*   dmBitsPerPel */
-/*   dmPelsWidth */
-/*   dmPelsHeight */
-/*   DUMMYUNIONNAME2 */
-/*   dmDisplayFrequency */
-/*   dmICMMethod */
-/*   dmICMIntent */
-/*   dmMediaType */
-/*   dmDitherType */
-/*   dmReserved1 */
-/*   dmReserved2 */
-/*   dmPanningWidth */
-/*   dmPanningHeight */
-
-/* DEVMODEW  [struct; shared] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   dmDeviceName */
-/*   dmSpecVersion */
-/*   dmDriverVersion */
-/*   dmSize */
-/*   dmDriverExtra */
-/*   dmFields */
-/*   DUMMYUNIONNAME */
-/*   dmColor */
-/*   dmDuplex */
-/*   dmYResolution */
-/*   dmTTOption */
-/*   dmCollate */
-/*   dmFormName */
-/*   dmLogPixels */
-/*   dmBitsPerPel */
-/*   dmPelsWidth */
-/*   dmPelsHeight */
-/*   DUMMYUNIONNAME2 */
-/*   dmDisplayFrequency */
-/*   dmICMMethod */
-/*   dmICMIntent */
-/*   dmMediaType */
-/*   dmDitherType */
-/*   dmReserved1 */
-/*   dmReserved2 */
-/*   dmPanningWidth */
-/*   dmPanningHeight */
-
-/* ENUMLOGFONT  [struct; shared; A/W ENUMLOGFONTA,ENUMLOGFONTW (CE is W-side)] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   elfLogFont */
-/*   elfFullName */
-/*   elfStyle */
-
-/* LOGFONT  [struct, macro; shared; A/W LOGFONTA,LOGFONTW (CE is W-side)] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   lfHeight */
-/*   lfWidth */
-/*   lfEscapement */
-/*   lfOrientation */
-/*   lfWeight */
-/*   lfItalic */
-/*   lfUnderline */
-/*   lfStrikeOut */
-/*   lfCharSet */
-/*   lfOutPrecision */
-/*   lfClipPrecision */
-/*   lfQuality */
-/*   lfPitchAndFamily */
-/*   lfFaceName */
 
 /* ==================================================================
  * functions and callbacks
@@ -2110,6 +2053,11 @@ int AddFontResource(
  LPCTSTR lpszFilename
 );
 
+/* CreateFontIndirect  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Mgrast.lib, mgrast.lib, Mgtt.lib, mgtt.lib; A/W CreateFontIndirectA,CreateFontIndirectW (CE is W-side)] */
+HFONT CreateFontIndirect(
+ const LOGFONT* lplf
+);
+
 /* EndDoc  [function; shared; CE 2.11..2.12, 3.0..699; Mgprint.lib, mgprint.lib] */
 int EndDoc( 
  HDC hdc
@@ -2118,6 +2066,14 @@ int EndDoc(
 /* EndPage  [function; shared; CE 2.11..2.12, 3.0..699; Mgprint.lib, mgprint.lib] */
 int EndPage( 
  HDC hdc
+);
+
+/* EnumFontFamProc  [function; ce-only; CE 2.11..2.12, 3.0..699] */
+int CALLBACK EnumFontFamProc(
+ const LOGFONT FAR* lpelf, 
+ const TEXTMETRIC FAR* lpntm, 
+ DWORD FontType, 
+ LPARAM lParam
 );
 
 /* ExtTextOut  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Mgrast.lib, mgrast.lib, Mgtt.lib, mgtt.lib; A/W ExtTextOutA,ExtTextOutW (CE is W-side)] */

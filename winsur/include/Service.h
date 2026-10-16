@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 16 constants, 9 declarations, 3 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 16 constants, 10 declarations, 2 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _SERVICE_
 #define _SERVICE_
@@ -41,8 +41,6 @@
 /* SERVICE  [typedef; ce-only; heuristic-prefix] */
 
 /* ServicesexeCallbackFunctions  [struct; ce-only] */
-
-/* ServicesExeCommandLineParams  [struct; ce-only] */
 
 /* ==================================================================
  * functions and callbacks

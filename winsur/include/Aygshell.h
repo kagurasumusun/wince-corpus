@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 59 constants, 42 declarations, 2 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 59 constants, 43 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _AYGSHELL_
 #define _AYGSHELL_
@@ -95,8 +95,6 @@ typedef struct tagSHINITDIALOG {
  HWND hDlg;
  DWORD dwFlags;
 } SHINITDLGINFO, *PSHINITDLGINFO;
-
-/* SHNOTIFICATIONDATA  [struct; ce-only; aygshell.lib] */
 
 /* SHORTS  [typedef; ce-only; heuristic-prefix] */
 

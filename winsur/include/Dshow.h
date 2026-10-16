@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 25 constants, 48 declarations, 4 outlines, 0 base types, 0 extra macros, 69 extra decls
+ * 25 constants, 48 declarations, 4 outlines, 0 base types, 0 extra macros, 68 extra decls
  */
 #ifndef _DSHOW_
 #define _DSHOW_
@@ -349,7 +349,6 @@ HRESULT GetNumNotDropped( long* plNotDropped);
 HRESULT GetNumberOfCapabilities( int* piCount, int* piSize );
 HRESULT GetRange( long Property, long* pMin, long* pMax, long* pSteppingDelta, long* pDefault, long* pCapsFlags );
 HRESULT GetStreamCaps( int iIndex, AM_MEDIA_TYPE** pmt, BYTE* pSCC );
-HRESULT GetVideoPosition( [out] RECT *pSourceRect, [out] RECT *pDestinationRect);
 HRESULT Logout(void);
 HRESULT NotifyGraphChange( );
 HRESULT OnColorKeyChange( COLORKEY *pColorKey);

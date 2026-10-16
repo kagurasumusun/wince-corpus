@@ -32,6 +32,9 @@ int WINAPI WinMain(HINSTANCE h, HINSTANCE p, LPWSTR cmd, int show) {
     Sleep(0);
     LoadLibrary(TEXT("x"));
     CreateProcess(NULL, TEXT("x"), NULL, NULL, FALSE, 0, NULL, NULL, NULL, NULL);
+    FindFirstFile(TEXT("x"), NULL);
+    SetTimer(NULL, 1, 0, NULL);
+    CreateFontIndirect(NULL);
     return 0;
 }
 '''

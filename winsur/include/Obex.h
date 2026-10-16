@@ -37,6 +37,26 @@ typedef enum _OBEX_EVENT {
  OE_DEVICE_UPDATE = OE_DEVICE_DEPARTURE + 1
 } OBEX_EVENT, *LPOBEX_EVENT;
 
+/* OBEX_HEADER  [struct; ce-only] */
+typedef struct _OBEX_HEADER {
+ byte bId;
+ [switch_is(bId & OBEX_HEADER_4BYTE)]
+ union {
+ [case(OBEX_HEADER_UNICODE)]
+ [string] LPWSTR pszData;
+ [case(OBEX_HEADER_4BYTE)]
+ DWORD dwData;
+ [case(OBEX_HEADER_1BYTE)]
+ byte bData;
+ [case(OBEX_HEADER_STREAM)]
+ struct {
+ DWORD dwSize; 
+ [size_is(dwSize)] byte* pbaData;
+ } ba;
+ } value;
+} OBEX_HEADER;
+typedef OBEX_HEADER *POBEX_HEADER, *LPOBEX_HEADER;
+
 /* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration

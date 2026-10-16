@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 26 constants, 11 declarations, 8 outlines, 0 base types, 0 extra macros, 4 extra decls
+ * 26 constants, 19 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
  */
 #ifndef _IPRTRMIB_
 #define _IPRTRMIB_
@@ -45,16 +45,38 @@
 #define MIB_USE_CURRENT_TTL ((DWORD)-1)
 
 /* ==================================================================
- * macros -- the macro/#define blocks the pages print (verbatim)
- * ================================================================ */
-
-/* MIB_IPNETROW  [struct; ce-only] */
-
-/* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
+
+/* MIB_IFROW  [struct; shared] */
+typedef struct _MIB_IFROW {
+ WCHAR wszName[MAX_INTERFACE_NAME_LEN];
+ DWORD dwIndex; 
+ DWORD dwType; 
+ DWORD dwMtu; 
+ DWORD dwSpeed; 
+ DWORD dwPhysAddrLen; 
+ BYTE bPhysAddr[MAXLEN_PHYSADDR]; 
+ DWORD dwAdminStatus; 
+ DWORD dwOperStatus; 
+ DWORD dwLastChange; 
+ DWORD dwInOctets; 
+ DWORD dwInUcastPkts; 
+ DWORD dwInNUcastPkts; 
+ DWORD dwInDiscards; 
+ DWORD dwInErrors; 
+ DWORD dwInUnknownProtos; 
+ DWORD dwOutOctets; 
+ DWORD dwOutUcastPkts; 
+ DWORD dwOutNUcastPkts; 
+ DWORD dwOutDiscards; 
+ DWORD dwOutErrors; 
+ DWORD dwOutQLen; 
+ DWORD dwDescrLen; 
+ BYTE bDescr[MAXLEN_IFDESCR]; 
+} MIB_IFROW, *PMIB_IFROW;
 
 /* MIB_IPADDRROW  [struct; ce-only] */
 typedef struct _MIB_IPADDRROW {
@@ -84,6 +106,15 @@ typedef struct _MIB_IPFORWARDROW {
  DWORD dwForwardMetric4; 
  DWORD dwForwardMetric5; 
 } MIB_IPFORWARDROW, *PMIB_IPFORWARDROW;
+
+/* MIB_IPNETROW  [struct; ce-only] */
+typedef struct _MIB_IPNETROW {
+ DWORD dwIndex; 
+ DWORD dwPhysAddrLen; 
+ BYTE bPhysAddr[MAXLEN_PHYSADDR]; 
+ DWORD dwAddr; 
+ DWORD dwType; 
+} MIB_IPNETROW, *PMIB_IPNETROW;
 
 /* MIB_IPSTATS  [struct; ce-only] */
 typedef struct _MIB_IPSTATS {
@@ -191,62 +222,5 @@ typedef MIBICMPINFO *PMIBICMPINFO, *LPMIBICMPINFO;
 typedef struct _MIB_ICMP {
  MIBICMPINFO stats; 
 } MIB_ICMP, *PMIB_ICMP;
-
-/* MIB_IFROW  [struct; shared] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   wszName */
-/*   dwIndex */
-/*   dwType */
-/*   dwMtu */
-/*   dwSpeed */
-/*   dwPhysAddrLen */
-/*   bPhysAddr */
-/*   dwAdminStatus */
-/*   dwOperStatus */
-/*   dwLastChange */
-/*   dwInOctets */
-/*   dwInUcastPkts */
-/*   dwInNUcastPkts */
-/*   dwInDiscards */
-/*   dwInErrors */
-/*   dwInUnknownProtos */
-/*   dwOutOctets */
-/*   dwOutUcastPkts */
-/*   dwOutNUcastPkts */
-/*   dwOutDiscards */
-/*   dwOutErrors */
-/*   dwOutQLen */
-/*   dwDescrLen */
-/*   bDescr */
-
-/* MIB_IFTABLE  [struct; shared] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   dwNumEntries */
-/*   table */
-
-/* MIB_IPADDRTABLE  [struct; shared] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   dwNumEntries */
-/*   table */
-
-/* MIB_IPFORWARDTABLE  [struct; shared] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   dwNumEntries */
-/*   table */
-
-/* MIB_IPNETTABLE  [struct; shared] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   dwNumEntries */
-/*   table */
-
-/* MIB_TCPTABLE  [struct; shared] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   dwNumEntries */
-/*   table */
-
-/* MIB_UDPTABLE  [struct; shared] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   dwNumEntries */
-/*   table */
 
 #endif /* _IPRTRMIB_ */

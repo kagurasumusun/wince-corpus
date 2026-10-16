@@ -432,6 +432,10 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: 配列サイズ誤判定と KB 構造体本文（第15弾）
+
+コピーはしない。`[MAX_PATH]` / `[LF_FACESIZE]` を SAL と誤認して WIN32_FIND_DATA / LOGFONT を落としていた。空のエンティティ宣言が harvest 本文を塞いでいた。配列境界は `#define` があるときだけ出す。`MAX_PATH` 128 は CE 頁。`LF_FACESIZE` 32 は CE が名前だけ印刷し w32api 公有領域で穴埋め。`TIMERPROC` は TimerProc 頁の原型。gcc で FindFirstFile / SetTimer / CreateFontIndirect が通る。コーパス 122,186 ファイルを1つずつ開いた（読めないもの 0）。DrawText の `UNIT`、DialogBoxParam の `PARAM`、REGSAM、lstrlen は頁が無い／誤植のまま出さない。
+
 ### 2026-10-16: セミコロン無し PRE と CreateProcess 型（第14弾）
 
 コピーはしない。CE 3.0 `READ_PORT_UCHAR` の PRE は `UCHAR READ_PORT_UCHAR ( PUCHAR Port )` で `;` が無い。抽出器が `looks_like` で落としていたので、原型として残し、出すときに `;` だけ足す（型や値は足さない）。`DrawText` 頁は `UNIT uFormat` と印刷しており UINT に直さない。`CreateProcess` 頁が名指しする `STARTUPINFOW` / `PROCESS_INFORMATION` は本文が無いので不完全 typedef。CE 105,096 頁を1つずつ開き harvest 54,625 宣言。`gcc` で Sleep / LoadLibrary / CreateProcess が通る。

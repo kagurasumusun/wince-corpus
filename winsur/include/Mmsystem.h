@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 860 constants, 75 declarations, 6 outlines, 0 base types, 0 extra macros, 4 extra decls
+ * 860 constants, 81 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _MMSYSTEM_
 #define _MMSYSTEM_
@@ -890,6 +890,33 @@ typedef struct tagAUDIOGAINCLASS {
  DWORD dwRelativeGain;
 } AUDIOGAINCLASS, * PAUDIOGAINCLASS;
 
+/* MIXERCONTROL  [struct; shared; A/W MIXERCONTROLA,MIXERCONTROLW (CE is W-side)] */
+typedef struct { 
+ DWORD cbStruct; 
+ DWORD dwControlID; 
+ DWORD dwControlType; 
+ DWORD fdwControl; 
+ DWORD cMultipleItems; 
+ CHAR szShortName[MIXER_SHORT_NAME_CHARS]; 
+ CHAR szName[MIXER_LONG_NAME_CHARS]; 
+ union { 
+ struct { 
+ LONG lMinimum; 
+ LONG lMaximum; 
+ }; 
+ struct { 
+ DWORD dwMinimum; 
+ DWORD dwMaximum; 
+ }; 
+ DWORD dwReserved[6]; 
+ } Bounds; 
+ union { 
+ DWORD cSteps; 
+ DWORD cbCustomData; 
+ DWORD dwReserved[6]; 
+ } Metrics; 
+} MIXERCONTROL, *PMIXERCONTROL, FAR* LPMIXERCONTROL;
+
 /* MIXERCONTROLDETAILS  [struct; shared] */
 typedef struct { 
  DWORD cbStruct; 
@@ -910,6 +937,14 @@ typedef struct {
 } MIXERCONTROLDETAILS_BOOLEAN;
 typedef MIXERCONTROLDETAILS_BOOLEAN *PMIXERCONTROLDETAILS_BOOLEAN, *LPMIXERCONTROLDETAILS_BOOLEAN;
 
+/* MIXERCONTROLDETAILS_LISTTEXT  [struct, typedef; shared; A/W MIXERCONTROLDETAILS_LISTTEXTA,MIXERCONTROLDETAILS_LISTTEXTW (CE is W-side)] */
+typedef struct { 
+ DWORD dwParam1; 
+ DWORD dwParam2; 
+ CHAR szName[MIXER_LONG_NAME_CHARS]; 
+} MIXERCONTROLDETAILS_LISTTEXT;
+typedef MIXERCONTROLDETAILS_LISTTEXT *PMIXERCONTROLDETAILS_LISTTEXT, *LPMIXERCONTROLDETAILS_LISTTEXT;
+
 /* MIXERCONTROLDETAILS_SIGNED  [struct, typedef; shared] */
 typedef struct { 
  LONG lValue; 
@@ -921,6 +956,20 @@ typedef struct {
  DWORD dwValue; 
 } MIXERCONTROLDETAILS_UNSIGNED;
 typedef MIXERCONTROLDETAILS_UNSIGNED *PMIXERCONTROLDETAILS_UNSIGNED, *LPMIXERCONTROLDETAILS_UNSIGNED;
+
+/* MIXERLINECONTROLS  [struct; shared; A/W MIXERLINECONTROLSA,MIXERLINECONTROLSW (CE is W-side)] */
+typedef struct { 
+ DWORD cbStruct; 
+ DWORD dwLineID; 
+ union { 
+ DWORD dwControlID; 
+ DWORD dwControlType; 
+ }; 
+ DWORD cControls; 
+ DWORD cbmxctrl; 
+ LPMIXERCONTROL pamxctrl; 
+} MIXERLINECONTROLS;
+typedef MIXERLINECONTROLS *PMIXERLINECONTROLS, *LPMIXERLINECONTROLS;
 
 /* MMTIME  [struct; ce-only] */
 typedef struct mmtime_tag {
@@ -982,68 +1031,6 @@ typedef struct {
  DWORD reserved;}
 WAVEHDR;
 typedef WAVEHDR *PWAVEHDR, *LPWAVEHDR;
-
-/* MIXERCAPS  [struct; shared; A/W MIXERCAPSA,MIXERCAPSW (CE is W-side)] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   wMid */
-/*   wPid */
-/*   vDriverVersion */
-/*   szPname */
-/*   fdwSupport */
-/*   cDestinations */
-
-/* MIXERCONTROL  [struct; shared; A/W MIXERCONTROLA,MIXERCONTROLW (CE is W-side)] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   cbStruct */
-/*   dwControlID */
-/*   dwControlType */
-/*   fdwControl */
-/*   cMultipleItems */
-/*   szShortName */
-/*   szName */
-/*   Bounds */
-/*   Metrics */
-
-/* MIXERCONTROLDETAILS_LISTTEXT  [struct, typedef; shared; A/W MIXERCONTROLDETAILS_LISTTEXTA,MIXERCONTROLDETAILS_LISTTEXTW (CE is W-side)] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   dwParam1 */
-/*   dwParam2 */
-/*   szName */
-
-/* MIXERLINE  [struct; shared; A/W MIXERLINEA,MIXERLINEW (CE is W-side)] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   cbStruct */
-/*   dwDestination */
-/*   dwSource */
-/*   dwLineID */
-/*   fdwLine */
-/*   dwUser */
-/*   dwComponentType */
-/*   cChannels */
-/*   cConnections */
-/*   cControls */
-/*   szShortName */
-/*   szName */
-/*   Target */
-
-/* WAVEINCAPS  [struct; shared; A/W WAVEINCAPSA,WAVEINCAPSW (CE is W-side)] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   wMid */
-/*   wPid */
-/*   vDriverVersion */
-/*   szPname */
-/*   dwFormats */
-/*   wChannels */
-
-/* WAVEOUTCAPS  [struct; shared; A/W WAVEOUTCAPSA,WAVEOUTCAPSW (CE is W-side)] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   wMid */
-/*   wPid */
-/*   vDriverVersion */
-/*   szPname */
-/*   dwFormats */
-/*   wChannels */
-/*   dwSupport */
 
 /* LPTIMECALLBACK  [extra typedef] */
 typedef TIMECALLBACK FAR *LPTIMECALLBACK;

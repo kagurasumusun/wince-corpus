@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 50 constants, 30 declarations, 7 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 50 constants, 37 declarations, 0 outlines, 0 base types, 0 extra macros, 12 extra decls
  */
 #ifndef _SIMMGR_
 #define _SIMMGR_
@@ -69,24 +69,6 @@
 #define SIM_SMSSTORAGE_SIM 0
 
 /* ==================================================================
- * macros -- the macro/#define blocks the pages print (verbatim)
- * ================================================================ */
-
-/* SIMCAPS  [struct; ce-only] */
-
-/* SIMFILEREFRESH  [struct; ce-only] */
-
-/* SIMMESSAGE  [struct; ce-only] */
-
-/* SIMPHONEBOOKADDITIONALNUMBER  [struct; ce-only] */
-
-/* SIMPHONEBOOKEMAILADDRESS  [struct; ce-only] */
-
-/* SIMPHONEBOOKENTRY  [struct; ce-only; cellcore.lib] */
-
-/* SIMPHONEBOOKENTRYEX  [struct; ce-only] */
-
-/* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
@@ -129,6 +111,16 @@ typedef void (*SIMCALLBACK) (
  DWORD dwParam
 );
 #endif /* _WIN32_WCE */
+
+/* LPSIMPHONEADDITIONALNUMBER  [extra struct] */
+typedef struct simphonebookadditionalnumber_tag {
+  DWORD cbSize;
+  DWORD dwParams;
+  TCHAR lpszAddress[MAX_LENGTH_ADDRESS];
+  DWORD dwAddressType;
+  DWORD dwNumPlan;
+  DWORD dwNumId;
+} SIMPHONEBOOKADDITIONALNUMBER, *LPSIMPHONEADDITIONALNUMBER;
 
 /* LPPHONEBOOKSIMCAPS  [extra struct] */
 typedef struct simphonebookcaps_tag {

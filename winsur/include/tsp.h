@@ -5,17 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 7 declarations, 1 outlines, 0 base types, 0 extra macros, 7 extra decls
+ * 0 constants, 8 declarations, 0 outlines, 0 base types, 0 extra macros, 8 extra decls
  */
 #ifndef _TSP_
 #define _TSP_
 
-
-/* ==================================================================
- * macros -- the macro/#define blocks the pages print (verbatim)
- * ================================================================ */
-
-/* CELLGPRSCONNECTIONINFO  [struct; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

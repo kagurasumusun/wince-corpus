@@ -59,6 +59,11 @@ void WriteDebugLED(
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
+/* NKDbgPrintfW  [function; ce-only; CE 5.0..699] */
+void WINAPIV NKDbgPrintfW(
+ LPCWSTR lpszFmt,...
+);
+
 /* RegisterDbgZones  [function; ce-only; CE 5.0..699] */
 BOOL RegisterDbgZones(
  HMODULE hMod,

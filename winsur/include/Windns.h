@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 27 constants, 30 declarations, 2 outlines, 0 base types, 0 extra macros, 25 extra decls
+ * 27 constants, 31 declarations, 1 outlines, 0 base types, 0 extra macros, 26 extra decls
  */
 #ifndef _WINDNS_
 #define _WINDNS_
@@ -89,6 +89,12 @@ typedef struct _DnsRecord {
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
+
+/* DNS_ATMA_DATA  [struct; shared] */
+typedef struct {
+ BYTE AddressType;
+ BYTE Address[DNS_ATMA_MAX_ADDR_LENGTH];
+} DNS_ATMA_DATA, *PDNS_ATMA_DATA;
 
 /* DNS_HEADER  [struct; shared] */
 typedef struct _DNS_HEADER {
@@ -255,11 +261,6 @@ typedef struct _DNS_WIRE_RECORD {
 typedef struct {
  DWORD IP6Dword[4];
 } IP6_ADDRESS, *PIP6_ADDRESS;
-
-/* DNS_ATMA_DATA  [struct; shared] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   AddressType */
-/*   Address */
 
 /* DNS_TSIG_DATA  [struct; shared; A/W DNS_TSIG_DATAA,DNS_TSIG_DATAW (CE is W-side)] */
 /* DERIVED member outline -- documented order, types/offsets not stated */

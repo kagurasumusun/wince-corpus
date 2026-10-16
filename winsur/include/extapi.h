@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 26 constants, 42 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 26 constants, 43 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _EXTAPI_
 #define _EXTAPI_
@@ -89,8 +89,6 @@
  dwParam1 = LINE_USSD;
  dwParam2;
  dwParam3;
-
-/* LINEOPERATOR  [struct; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

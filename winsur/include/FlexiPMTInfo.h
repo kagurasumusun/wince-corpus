@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 39 constants, 4 declarations, 2 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 39 constants, 4 declarations, 2 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _FLEXIPMTINFO_
 #define _FLEXIPMTINFO_
@@ -133,13 +133,5 @@ typedef enum _THREAD_FIELD_IDS {
  tfiUserDefined = (-1L)
 } THREAD_FIELD_IDS;
 typedef THREAD_FIELD_IDS *PTHREAD_FIELD_IDS, *LPTHREAD_FIELD_IDS;
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-HRESULT GetDescriptionTables( [out, size_is(, *pcProcField)] PTM_FIELD_DESC**ppfdProcDescTable, [out] DWORD*pcProcField, [out, size_is(,*pcThreadField)] PTM_FIELD_DESC**ppfdThreadDescTable, [out] DWORD*pcThreadField, [out, size_is(, *pcModField)] PTM_FIELD_DESC**ppfdModDescTable, [out] DWORD*pcModField);
 
 #endif /* _FLEXIPMTINFO_ */

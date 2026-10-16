@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2457 constants, 305 declarations, 7 outlines, 1 base types, 0 extra macros, 0 extra decls
+ * 2457 constants, 306 declarations, 6 outlines, 1 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINUSER_
 #define _WINUSER_
@@ -3322,11 +3322,6 @@ typedef struct _WNDCLASS {
 } WNDCLASS;
 typedef WNDCLASS *PWNDCLASS, *LPWNDCLASS;
 
-/* MONITORINFOEX  [struct; shared; A/W MONITORINFOEXA,MONITORINFOEXW (CE is W-side)] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   szDevice */
-/*   tagMONITORINFO */
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
@@ -3453,6 +3448,23 @@ BOOL CreateCaret(
  int nHeight
 );
 
+/* CreateDialog  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W CreateDialogA,CreateDialogW (CE is W-side)] */
+HWND CreateDialog( 
+ HINSTANCE hInstance, 
+ LPCTSTR lpTemplate, 
+ HWND hWndParent, 
+ DLGPROC lpDialogFunc
+);
+
+/* CreateDialogParam  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W CreateDialogParamA,CreateDialogParamW (CE is W-side)] */
+HWND CreateDialogParam( 
+ HINSTANCE hInstance, 
+ LPCTSTR lpTemplateName, 
+ HWND hWndParent, 
+ DLGPROC lpDialogFunc, 
+ LPARAM dwInitParam
+);
+
 /* CreateMenu  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Menu.lib, menu.lib] */
 HMENU CreateMenu();
 
@@ -3529,6 +3541,22 @@ BOOL DestroyMenu(
 /* DestroyWindow  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; wmbase.lib] */
 BOOL DestroyWindow( 
  HWND hWnd 
+);
+
+/* DialogBox  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W DialogBoxA,DialogBoxW (CE is W-side)] */
+int DialogBox( 
+ HINSTANCE hInstance, 
+ LPCTSTR lpTemplate, 
+ HWND hWndParent, 
+ DLGPROC lpDialogFunc
+);
+
+/* DialogBoxIndirect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W DialogBoxIndirectA,DialogBoxIndirectW (CE is W-side)] */
+int DialogBoxIndirect( 
+ HINSTANCE hInstance, 
+ LPDLGTEMPLATE lpTemplate, 
+ HWND hWndParent, 
+ DLGPROC lpDialogFunc
 );
 
 /* DispatchMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib; A/W DispatchMessageA,DispatchMessageW (CE is W-side)] */
@@ -4227,6 +4255,14 @@ BOOL SetScrollRange(
  int nMinPos, 
  int nMaxPos, 
  BOOL bRedraw 
+);
+
+/* SetTimer  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; timer.lib] */
+UINT SetTimer(
+ HWND hWnd, 
+ UINT nIDEvent, 
+ UINT uElapse, 
+ TIMERPROC lpTimerFunc 
 );
 
 /* SetWindowLong  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W SetWindowLongA,SetWindowLongW (CE is W-side)] */

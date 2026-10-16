@@ -24,4 +24,27 @@
 #define PRJ_ENUM_HOME_PROJ 0x100
 #define PRJ_ENUM_MEMORY 0x1
 
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213)) /* CE 2.11..2.12 */
+
+/* FindFirstFlashCard  [function; ce-only; CE 2.11..2.12] */
+HANDLE FindFirstFlashCard(LPWIN32_FIND_DATA lpFindFlashData);
+
+/* FindFirstProjectFile  [function; ce-only; CE 2.11..2.12] */
+HANDLE FindFirstProjectFile(LPCTSTR lpFileName, 
+LPWIN32_FIND_DATA lpFindFileData, DWORD dwOidFlash, 
+LPTSTR lpszProj);
+
+/* FindNextFlashCard  [function; ce-only; CE 2.11..2.12] */
+BOOL FindNextFlashCard(HANDLE hFlashCard, 
+LPWIN32_FIND_DATA lpFindFlashData);
+
+/* FindNextProjectFile  [function; ce-only; CE 2.11..2.12] */
+BOOL FindNextProjectFile(HANDLE hHandle, 
+LPWIN32_FIND_DATA lpFindProjData);
+#endif /* _WIN32_WCE */
+
 #endif /* _PROJECTS_ */

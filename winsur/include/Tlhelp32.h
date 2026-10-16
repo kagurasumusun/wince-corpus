@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 20 constants, 16 declarations, 2 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 20 constants, 18 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _TLHELP32_
 #define _TLHELP32_
@@ -69,6 +69,39 @@ typedef struct tagHEAPLIST32 {
  typedef HEAPLIST32* PHEAPLIST32; 
 typedef HEAPLIST32* LPHEAPLIST32;
 
+/* MODULEENTRY32  [struct; shared; A/W MODULEENTRY32W (CE is W-side)] */
+typedef struct tagMODULEENTRY32 {
+ DWORD dwSize;
+ DWORD th32ModuleID;
+ DWORD th32ProcessID;
+ DWORD GlblcntUsage;
+ DWORD ProccntUsage;
+ BYTE *modBaseAddr;
+ DWORD modBaseSize;
+ HMODULE hModule;
+ TCHAR szModule[MAX_PATH];
+ TCHAR szExePath[MAX_PATH];
+ DWORD dwFlags;
+} MODULEENTRY32, *PMODULEENTRY32, *LPMODULEENTRY32;
+
+/* PROCESSENTRY32  [struct; shared; A/W PROCESSENTRY32W (CE is W-side)] */
+typedef struct tagPROCESSENTRY32 {
+ DWORD dwSize;
+ DWORD cntUsage;
+ DWORD th32ProcessID;
+ DWORD th32DefaultHeapID;
+ DWORD th32ModuleID;
+ DWORD cntThreads;
+ DWORD th32ParentProcessID;
+ LONG pcPriClassBase;
+ DWORD dwFlags;
+ TCHAR szExeFile[MAX_PATH];
+ DWORD th32MemoryBase;
+ DWORD th32AccessKey;
+ } PROCESSENTRY32;
+ typedef PROCESSENTRY32* PPROCESSENTRY32;
+typedef PROCESSENTRY32* LPPROCESSENTRY32;
+
 /* THREADENTRY32  [struct; shared] */
 typedef struct tagTHREADENTRY32 {
  DWORD dwSize;
@@ -83,32 +116,6 @@ typedef struct tagTHREADENTRY32 {
  } THREADENTRY32;
  typedef THREADENTRY32* PTHREADENTRY32;
 typedef THREADENTRY32* LPTHREADENTRY32;
-
-/* MODULEENTRY32  [struct; shared; A/W MODULEENTRY32W (CE is W-side)] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   dwSize */
-/*   th32ModuleID */
-/*   th32ProcessID */
-/*   GlblcntUsage */
-/*   ProccntUsage */
-/*   modBaseAddr */
-/*   modBaseSize */
-/*   hModule */
-/*   szModule */
-/*   szExePath */
-
-/* PROCESSENTRY32  [struct; shared; A/W PROCESSENTRY32W (CE is W-side)] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   dwSize */
-/*   cntUsage */
-/*   th32ProcessID */
-/*   th32DefaultHeapID */
-/*   th32ModuleID */
-/*   cntThreads */
-/*   th32ParentProcessID */
-/*   pcPriClassBase */
-/*   dwFlags */
-/*   szExeFile */
 
 /* ==================================================================
  * functions and callbacks
@@ -151,6 +158,30 @@ BOOL WINAPI Heap32ListNext(
 BOOL WINAPI Heap32Next(
  HANDLE hSnapshot,
  LPHEAPENTRY32 lphe
+);
+
+/* Module32First  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib; A/W Module32FirstW (CE is W-side)] */
+BOOL WINAPI Module32First(
+ HANDLE hSnapshot,
+ LPMODULEENTRY32 lpme
+);
+
+/* Module32Next  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib; A/W Module32NextW (CE is W-side)] */
+BOOL WINAPI Module32Next(
+ HANDLE hSnapshot,
+ LPMODULEENTRY32 lpme
+);
+
+/* Process32First  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib; A/W Process32FirstW (CE is W-side)] */
+BOOL WINAPI Process32First(
+ HANDLE hSnapshot,
+ LPPROCESSENTRY32 lppe
+);
+
+/* Process32Next  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib; A/W Process32NextW (CE is W-side)] */
+BOOL WINAPI Process32Next(
+ HANDLE hSnapshot,
+ LPPROCESSENTRY32 lppe
 );
 
 /* Thread32First  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib] */

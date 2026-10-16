@@ -5,17 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 3 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _ROMLDR_
 #define _ROMLDR_
 
-
-/* ==================================================================
- * macros -- the macro/#define blocks the pages print (verbatim)
- * ================================================================ */
-
-/* XIPCHAIN_ENTRY  [struct; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

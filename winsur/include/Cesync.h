@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 14 constants, 10 declarations, 5 outlines, 0 base types, 0 extra macros, 42 extra decls
+ * 14 constants, 14 declarations, 1 outlines, 0 base types, 0 extra macros, 42 extra decls
  */
 #ifndef _CESYNC_
 #define _CESYNC_
@@ -36,12 +36,6 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-/* CONFINFO  [struct; ce-only] */
-
-/* OBJNOTIFY  [struct; ce-only] */
-
-/* OBJUIDATA  [struct; ce-only] */
-
 /* REPLSETUP  [struct; ce-only] */
 
 /* ==================================================================
@@ -49,6 +43,14 @@
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
+
+/* DEVINFO  [struct; shared] */
+typedef struct tagDevInfo {
+ DWORD pid;
+ char szName[MAX_PATH];
+ char szType[80];
+ char szPath[MAX_PATH];
+} DEVINFO, *PDEVINFO;
 
 /* HREPLFLD  [struct; ce-only] */
 typedef struct _REPLFLD FAR* HREPLFLD;
@@ -61,6 +63,17 @@ typedef HREPLITEM *PHREPLITEM, *LPHREPLITEM;
 /* HREPLOBJ  [struct; ce-only] */
 typedef struct _REPLOBJ FAR* HREPLOBJ;
 typedef HREPLOBJ *PHREPLOBJ, *LPHREPLOBJ;
+
+/* OBJUIDATA  [struct; ce-only] */
+typedef struct tagObjUIData {
+ UINT cbStruct;
+ HICON hIconLarge;
+ HICON hIconSmall;
+ char szName[MAX_PATH];
+ char szSyncText[MAX_PATH];
+ char szTypeText[80];
+ char szPlTypeText[80];
+} OBJUIDATA, *POBJUIDATA;
 
 /* ReplDialogs  [enum; ce-only] */
 enum ReplDialogs {
@@ -78,18 +91,6 @@ typedef struct tagStoreInfo {
  UINT cbStoreId;
  LPBYTE lpbStoreId;
 } STOREINFO, *PSTOREINFO;
-
-/* DEVINFO  [struct; shared] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   flGraphicsCaps */
-/*   lfDefaultFont */
-/*   lfAnsiVarFont */
-/*   lfAnsiFixFont */
-/*   cFonts */
-/*   iDitherFormat */
-/*   cxDither */
-/*   hpalDefault */
-/*   flGraphicsCaps2 */
 
 /* OPTIONS_DIALOG  [extra enum] */
 enum ReplDialogs {OPTIONS_DIALOG };
