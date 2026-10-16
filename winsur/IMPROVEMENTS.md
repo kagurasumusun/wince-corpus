@@ -432,6 +432,10 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: Sipapi/Htmlctrl を Windows.h へ（第33弾）
+
+コピーはしない。SipShowIM と InitHTMLControl は既に生成済み。umbrella 読み落とし。
+
 ### 2026-10-16: Pm.h を Windows.h へ（第32弾）
 
 コピーはしない。電源管理 GetSystemPowerState / SetSystemPowerState は既に生成済みで gcc できるのに umbrella から見えない。

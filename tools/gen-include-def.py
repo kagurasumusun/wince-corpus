@@ -1903,7 +1903,7 @@ _WINDOWS_UMBRELLA = (
     "Tlhelp32.h", "shellapi.h", "Mmsystem.h", "Aygshell.h",
     "Storemgr.h", "winioctl.h", "Notify.h", "Dbgapi.h",
     "Fsdmgr.h", "Halether.h", "Fwapi.h",
-    "Pm.h",
+    "Pm.h", "Sipapi.h", "Htmlctrl.h",
 )
 
 # Pages often name Windows.h (the umbrella) or a desktop-split SDK
@@ -1983,6 +1983,7 @@ _OVERLAY_NAMED = {
     "AdjustWindowRectEx", "GetDoubleClickTime",
     "FSDMGR_CachedRead", "FSDMGR_CachedWrite",
     "GetSystemPowerState", "SetSystemPowerState",
+    "SipShowIM", "SipGetInfo", "InitHTMLControl",
 }
 
 _OVERLAY_HEADERS = {
@@ -1991,7 +1992,7 @@ _OVERLAY_HEADERS = {
     "winnls.h", "windbase.h", "dbgapi.h", "commdlg.h",
     "aygshell.h", "tlhelp32.h", "shellapi.h", "storemgr.h",
     "notify.h", "dbgapi.h", "fsdmgr.h", "halether.h", "fwapi.h",
-    "pm.h",
+    "pm.h", "sipapi.h", "htmlctrl.h",
 }
 _APP_OVERLAY_HEADERS = {
     "windef.h", "winnt.h", "winerror.h", "winbase.h", "winuser.h",

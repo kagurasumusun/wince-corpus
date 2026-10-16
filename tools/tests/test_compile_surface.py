@@ -97,6 +97,8 @@ int WINAPI WinMain(HINSTANCE h, HINSTANCE p, LPWSTR cmd, int show) {
     GetDoubleClickTime();
     IsFirewallEnabled(0);
     GetSystemPowerState(NULL, 0, NULL);
+    SipShowIM(0);
+    InitHTMLControl(NULL);
     return 0;
 }
 '''

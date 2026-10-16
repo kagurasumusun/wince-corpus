@@ -28,6 +28,8 @@
 #include "Halether.h"
 #include "Fwapi.h"
 #include "Pm.h"
+#include "Sipapi.h"
+#include "Htmlctrl.h"
 
 #endif /* _WINDOWS_ */
 

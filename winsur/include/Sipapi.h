@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 12 constants, 10 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 12 constants, 22 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _SIPAPI_
 #define _SIPAPI_
@@ -51,12 +51,17 @@ typedef SIPINFO *PSIPINFO, *LPSIPINFO;
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* SipGetInfo  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Coresip.lib, coresip.lib] */
-BOOL SipGetInfo(
- SIPINFO* pSipInfo
+/* SipGetInfo  [function; ce-only; unified-kb; unified-kb] */
+BOOL SipGetInfo( 
+ SIPINFO* pSipInfo 
 );
+
+/* SipShowIM  [function; ce-only; unified-kb; unified-kb] */
+BOOL SipShowIM( 
+ DWORD dwFlag 
+);
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* SipRegisterNotification  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Coresip.lib, coresip.lib] */
 BOOL SipRegisterNotification( 
@@ -71,11 +76,6 @@ BOOL SipSetDefaultRect(
 /* SipSetInfo  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Coresip.lib, coresip.lib] */
 BOOL SipSetInfo( 
  SIPINFO* pSipInfo
-);
-
-/* SipShowIM  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Coresip.lib, coresip.lib] */
-BOOL SipShowIM( 
- DWORD dwFlag
 );
 
 /* SipStatus  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Coresip.lib, coresip.lib] */
