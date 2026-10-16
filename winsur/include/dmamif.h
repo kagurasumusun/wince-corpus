@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 26 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 0 constants, 26 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _DMAMIF_
 #define _DMAMIF_
@@ -169,5 +169,14 @@ typedef DWORD (* LPUpdateFlags)(
  DWORD dwFlags
 );
 #endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* callback */
+typedef PDMA_PDD_CHANNEL_CONTEXT (* LPAllocateChannel)( PDMA_PDD_ADAPTER_CONTEXT lpAdapterContext, PDMA_MDD_CHANNEL_CONTEXT lpDmaMDDChannelContext );
+typedef PDMA_PDD_TRANFER_CONTEXT (* LPCreateDmaPDDTransfer)( PDMA_PDD_CHANNEL_CONTEXT pDmaPDDChannelContext, PDMA_MDD_TRANFER_CONTEXT pDmaMddTransferContext );
 
 #endif /* _DMAMIF_ */

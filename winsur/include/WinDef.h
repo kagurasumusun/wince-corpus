@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 30 constants, 67 declarations, 9 outlines, 99 base types, 0 extra macros, 0 extra decls
+ * 30 constants, 67 declarations, 9 outlines, 103 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDEF_
 #define _WINDEF_
@@ -467,6 +467,26 @@ typedef struct tagBITMAPINFOHEADER BITMAPINFOHEADER, *PBITMAPINFOHEADER, *LPBITM
  * CE Unicode / 32-bit data-types row
  * source: win32/common/windows-data-types.md */
 typedef struct tagBITMAPINFO BITMAPINFO, *PBITMAPINFO, *LPBITMAPINFO;
+
+/* CHOOSECOLOR [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef struct tagCHOOSECOLOR CHOOSECOLOR, *LPCHOOSECOLOR;
+
+/* CHOOSEFONT [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef struct tagCHOOSEFONT CHOOSEFONT, *LPCHOOSEFONT;
+
+/* OPENFILENAME [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef struct tagOPENFILENAME OPENFILENAME, *LPOPENFILENAME;
+
+/* DLGTEMPLATE [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef struct tagDLGTEMPLATE DLGTEMPLATE, *LPDLGTEMPLATE, *LPCDLGTEMPLATE;
 
 /* ATOM
  * source: win32/common/windows-data-types.md */

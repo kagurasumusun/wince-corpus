@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 61 constants, 29 declarations, 19 outlines, 0 base types, 0 extra macros, 105 extra decls
+ * 61 constants, 29 declarations, 19 outlines, 0 base types, 0 extra macros, 99 extra decls
  */
 #ifndef _OAIDL_
 #define _OAIDL_
@@ -329,51 +329,13 @@ typedef struct FARSTRUCT tagPARAMDESC { unsigned long lpVarValue; unsigned short
 /* VARIANT_BOOL  [extra typedef] */
 typedef short VARIANT_BOOL;
 
-/* passed  [extra enum] */
-typedef unsigned short VARTYPE;
-enum VARENUM{
-  VT_EMPTY = 0,
-  VT_NULL = 1,
-  VT_I2 = 2, // 2-byte signed int
-  VT_I4 = 3, // 4-byte signed int
-  VT_R4 = 4, // 4-byte real
-  VT_R8 = 5, // 8-byte real
-  VT_CY = 6,
-  VT_DATE = 7,
-  VT_BSTR = 8,
-  VT_DISPATCH = 9,
-  VT_ERROR = 10,
-  VT_BOOL = 11,
-  VT_VARIANT = 12,
-  VT_UNKNOWN = 13,
-  VT_UI1 = 17,
-};
-VT_RESERVED = (int) 0x8000
-VT_BYREF = (int) 0x4000
-VT_ARRAY = (int) 0x2000;
-
-/* x2000  [extra enum] */
-typedef unsigned short VARTYPE;
-enum VARENUM {
-  VT_EMPTY = 0,
-  VT_NULL = 1,
-  VT_I2 = 2,
-  VT_I4 = 3,
-  VT_R4 = 4,
-  VT_R8 = 5,
-  VT_CY = 6,
-  VT_DATE = 7,
-  VT_BSTR = 8,
-  VT_DISPATCH = 9,
-  VT_ERROR = 10,
-  VT_BOOL = 11,
-  VT_VARIANT = 12,
-  VT_UNKNOWN = 13,
-  VT_UI1 = 17,
-};
-VT_RESERVED = 0x8000
-VT_BYREF = 0x4000
-VT_ARRAY = 0x2000;
+/* ELEMDES  [extra struct] */
+typedef struct tagELEMDESC {
+  TYPEDESC tdesc;
+  union {
+    IDLDESC idldesc;
+    PARAMDESC paramdesc;};
+  } ELEMDES, *LPELEMDESC;
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

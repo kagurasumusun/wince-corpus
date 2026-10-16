@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 14 constants, 14 declarations, 1 outlines, 0 base types, 0 extra macros, 42 extra decls
+ * 14 constants, 14 declarations, 1 outlines, 0 base types, 0 extra macros, 35 extra decls
  */
 #ifndef _CESYNC_
 #define _CESYNC_
@@ -91,6 +91,17 @@ typedef struct tagStoreInfo {
  UINT cbStoreId;
  LPBYTE lpbStoreId;
 } STOREINFO, *PSTOREINFO;
+
+/* OBJTPYEINFO  [extra struct] */
+typedef struct tagObjTypeInfo {
+  UINT cbStruct;
+  OBJTYPENAMEW szObjType;
+  UINT uFlags;
+  WCHAR szName[ 80 ];
+  UINT cObjects;
+  UINT cbAllObj;
+  FILETIME ftLastModified
+} OBJTPYEINFO, *POBJTYPEINFO;
 
 /* OPTIONS_DIALOG  [extra enum] */
 enum ReplDialogs {OPTIONS_DIALOG };

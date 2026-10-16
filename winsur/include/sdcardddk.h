@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 46 declarations, 0 outlines, 0 base types, 0 extra macros, 21 extra decls
+ * 0 constants, 46 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _SDCARDDDK_
 #define _SDCARDDDK_
@@ -213,6 +213,9 @@ typedef struct _SD_CARD_INTERFACE_EX{
  ULONG ClockRate;
  ULONG Reserved[6];
 }SD_CARD_INTERFACE_EX, *PSD_CARD_INTERFACE_EX;
+
+/* SD_DATA_TRANSFER_TRANSFER_CLOCKS  [extra struct] */
+typedef struct _SD_DATA_TRANSFER_CLOCKS { ULONG ReadClocks; ULONG WriteClocks; } SD_DATA_TRANSFER_TRANSFER_CLOCKS, *PSD_DATA_TRANSFER_CLOCKS;
 
 /* ==================================================================
  * functions and callbacks

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 3 constants, 13 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
+ * 3 constants, 13 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _BT_DDI_
 #define _BT_DDI_
@@ -87,20 +87,6 @@ struct InquiryResultBuffer {
   unsigned int class_of_device;
   unsigned short clock_offset;
 };
-
-/* pop  [extra struct] */
-#pragma pack(push, 1)
-typedef struct __bd_addr {
-  union {
-    struct {
-      unsigned int LAP : 24;
-      unsigned int UAP : 8;
-    };
-    unsigned int SAP;
-  };
-  unsigned short NAP;
-} BD_ADDR;
-#pragma pack(pop);
 
 /* ==================================================================
  * functions and callbacks

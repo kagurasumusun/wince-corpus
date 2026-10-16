@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 32 constants, 94 declarations, 1 outlines, 0 base types, 0 extra macros, 63 extra decls
+ * 32 constants, 94 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _CELOG_
 #define _CELOG_
@@ -477,7 +477,7 @@ typedef struct __CEL_MODULE_REFERENCES {
  CEL_PROCESS_REFCOUNT ref[1];
 } CEL_MODULE_REFERENCES, *PCEL_MODULE_REFERENCES;
 
-/* PCEL_EVENT1  [extra struct] */
+/* CEL_EVENT1  [extra struct] */
 typedef struct __CEL_EVENT_CREATE {
   HANDLE hEvent;
   DWORD fManual:1;
@@ -486,7 +486,7 @@ typedef struct __CEL_EVENT_CREATE {
   WCHAR szName[0];
 } CEL_EVENT1, *PCEL_EVENT1;
 
-/* PCEL_CEL_DEBUG_MSG  [extra struct] */
+/* CEL_CEL_DEBUG_MSG  [extra struct] */
 typedef struct __CEL_DEBUG_MSG {
   DWORD pid;
   DWORD tid;

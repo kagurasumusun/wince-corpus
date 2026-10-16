@@ -38,6 +38,10 @@ int WINAPI WinMain(HINSTANCE h, HINSTANCE p, LPWSTR cmd, int show) {
     SelectPalette(NULL, NULL, FALSE);
     CreateDIBSection(NULL, NULL, 0, NULL, NULL, 0);
     StretchDIBits(NULL, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, 0, 0);
+    GetOpenFileName(NULL);
+    ChooseColor(NULL);
+    AppendMenu(NULL, 0, 0, NULL);
+    CreateDialogParam(NULL, NULL, NULL, NULL, 0);
     return 0;
 }
 '''

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 21 constants, 7 declarations, 1 outlines, 0 base types, 0 extra macros, 10 extra decls
+ * 21 constants, 7 declarations, 1 outlines, 0 base types, 0 extra macros, 6 extra decls
  */
 #ifndef _HTTPEXT_
 #define _HTTPEXT_

@@ -3113,18 +3113,6 @@ typedef struct {
 } DLGITEMTEMPLATE;
 typedef DLGITEMTEMPLATE *PDLGITEMTEMPLATE, *LPDLGITEMTEMPLATE;
 
-/* DLGTEMPLATE  [struct; shared] */
-typedef struct {
- DWORD style; 
- DWORD dwExtendedStyle; 
- WORD cdit; 
- short x; 
- short y; 
- short cx; 
- short cy; 
-} DLGTEMPLATE;
-typedef DLGTEMPLATE *PDLGTEMPLATE, *LPDLGTEMPLATE;
-
 /* DRAWITEMSTRUCT  [struct; shared] */
 typedef struct tagDRAWITEMSTRUCT { 
  UINT CtlType; 
@@ -3456,6 +3444,23 @@ HWND CreateDialog(
  DLGPROC lpDialogFunc
 );
 
+/* CreateDialogIndirect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Dlgmgr.lib; A/W CreateDialogIndirectA,CreateDialogIndirectW (CE is W-side)] */
+HWND CreateDialogIndirect( 
+ HINSTANCE hInstance, 
+ LPCDLGTEMPLATE lpTemplate, 
+ HWND hWndParent, 
+ DLGPROC lpDialogFunc
+);
+
+/* CreateDialogIndirectParam  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Dlgmgr.lib, dlgmgr.lib; A/W CreateDialogIndirectParamA,CreateDialogIndirectParamW (CE is W-side)] */
+HWND CreateDialogIndirectParam( 
+ HINSTANCE hInstance, 
+ LPCDLGTEMPLATE lpTemplate, 
+ HWND hWndParent, 
+ DLGPROC lpDialogFunc, 
+ LPARAM lParamInit
+);
+
 /* CreateDialogParam  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W CreateDialogParamA,CreateDialogParamW (CE is W-side)] */
 HWND CreateDialogParam( 
  HINSTANCE hInstance, 
@@ -3557,6 +3562,15 @@ int DialogBoxIndirect(
  LPDLGTEMPLATE lpTemplate, 
  HWND hWndParent, 
  DLGPROC lpDialogFunc
+);
+
+/* DialogBoxIndirectParam  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Dlgmgr.lib, dlgmgr.lib; A/W DialogBoxIndirectParamA,DialogBoxIndirectParamW (CE is W-side)] */
+int DialogBoxIndirectParam( 
+ HINSTANCE hInstance, 
+ LPCDLGTEMPLATE hDialogTemplate, 
+ HWND hWndParent, 
+ DLGPROC lpDialogFunc, 
+ LPARAM dwInitParam
 );
 
 /* DispatchMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib; A/W DispatchMessageA,DispatchMessageW (CE is W-side)] */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 21 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
+ * 0 constants, 21 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _OALDMA_
 #define _OALDMA_
@@ -32,25 +32,6 @@ typedef enum _DMA_STATUS {
  DMA_TRANSFER_COMPLETE_WITH_ERROR,
  DMA_TRANSFER_COMPLETE_WITH_CANCELED
 } DMA_STATUS_CODE, *PDMA_STATUS_CODE;
-
-/* PDEVICE_DMA_REQUIRMENT_INFO  [extra struct] */
-typedef struct _CE_DMA_ADAPTER {
-  ULONG Size;
-  INTERFACE_TYPE InterfaceType;
-  ULONG BusNumber;
-  ULONG DeviceLocation;
-  ULONG DmaAdapter;
-  ULONG MaximunSizeOfMappingRegister;
-  ULONG AddressBoundary;
-  ULONG AddressAlignment;
-  PHYSICAL_ADDRESS DmaSystemMemoryRangeStart;
-  ULONG DmaSystemMemoryRangeLength;
-  CE_REGISTER_ACCESS_WIDTH CeDmaWidth;
-  CE_DMA_SPEED DmaSpeed;
-  BOOLEAN DemandMode;
-  BOOLEAN BusMaster;
-  DWORD dwFlags;
-} DEVICE_DMA_REQUIRMENT_INFO , *PDEVICE_DMA_REQUIRMENT_INFO;
 
 /* ==================================================================
  * functions and callbacks

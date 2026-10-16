@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 63 declarations, 0 outlines, 0 base types, 0 extra macros, 23 extra decls
+ * 0 constants, 63 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _D3DMDDK_
 #define _D3DMDDK_
@@ -281,8 +281,5 @@ typedef DWORD (*D3DM_UNLOCKSURFACE_PTR)(D3DM_UNLOCKSURFACE_DATA *);
 /* D3DM_ValidateDevice  [callback; ce-only; CE 5.0..699] */
 typedef DWORD (*D3DM_VALIDATEDEVICE_PTR)(D3DM_VALIDATEDEVICE_DATA *);
 #endif /* _WIN32_WCE */
-
-/* LPD3DM_DRAWPRIMITIVE  [extra struct] */
-typedef struct _D3DM_DRAWPRIMITIVE { D3DMPRIMITIVETYPE PrimType; DWORD StartVertex; DWORD PrimitiveCount;} D3DM_DRAWPRIMITIVE, * LPD3DM_DRAWPRIMITIVE;
 
 #endif /* _D3DMDDK_ */

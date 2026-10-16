@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 62 constants, 46 declarations, 0 outlines, 0 base types, 1 extra macros, 20 extra decls
+ * 62 constants, 46 declarations, 0 outlines, 0 base types, 1 extra macros, 7 extra decls
  */
 #ifndef _IPHLPAPI_
 #define _IPHLPAPI_
@@ -102,96 +102,8 @@ DWORD GetFriendlyIfIndex(
 /* MIB_ENTRY  [extra struct] */
 typedef struct mib_entry { AsnObjectIdentifier Oid; void * Storage; BYTE Type; UINT Access; UINT (*MibFunc) (UINT, struct mib_entry *, RFC1157VarBind *); struct mib_entry * MibNext; } MIB_ENTRY;
 
-/* PIP_ADAPTER_INFO  [extra struct] */
-typedef struct _IP_ADAPTER_INFO {
-  struct _IP_ADAPTER_INFO* Next;
-  DWORD ComboIndex;
-  Char AdapterName[MAX_ADAPTER_NAME_LENGTH + 4];
-  char Description[MAX_ADAPTER_DESCRIPTION_LENGTH + 4];
-  UINT AddressLength;
-  BYTE Address[MAX_ADAPTER_ADDRESS_LENGTH];
-  DWORD Index;
-  UINT Type;
-  UINT DhcpEnabled;
-  PIP_ADDR_STRING CurrentIpAddress;
-  IP_ADDR_STRING IpAddressList;
-  IP_ADDR_STRING GatewayList;
-  IP_ADDR_STRING DhcpServer;
-  BOOL HaveWins;
-  IP_ADDR_STRING PrimaryWinsServer;
-  IP_ADDR_STRING SecondaryWinsServer;
-  time_t LeaseObtained;
-  time_t LeaseExpires;
-} IP_ADAPTER_INFO, *PIP_ADAPTER_INFO;
-
-/* PMIB_ICMP  [extra struct] */
-typedef struct _MIB_ICMP {  MIBICMPINFO stats // contains ICMP stats  } MIB_ICMP,*PMIB_ICMP;
-
-/* PMIB_IPADDRTABLE  [extra struct] */
-typedef struct _MIB_IPADDRTABLE {  DWORD dwNumEntries; // number of entries in the table  MIB_IPADDRROW table[ANY_SIZE]; // array of IP address entries  } MIB_IPADDRTABLE, *PMIB_IPADDRTABLE;
-
-/* PMIB_IPFORWARDTABLE  [extra struct] */
-typedef struct _MIB_IPFORWARDTABLE {  DWORD dwNumEntries; // number of entries in the table  MIB_IPFORWARDROW table[ANY_SIZE]; // array of route entries  } MIB_IPFORWARDTABLE, *PMIB_IPFORWARDTABLE;
-
-/* PMIB_IPNETTABLE  [extra struct] */
-typedef struct _MIB_IPNETTABLE {  DWORD dwNumEntries; // number of entries in table  MIB_IPNETROW table[ANY_SIZE]; // array of ARP entries  } MIB_IPNETTABLE, *PMIB_IPNETTABLE;
-
-/* PMIB_TCPTABLE  [extra struct] */
-typedef struct _MIB_TCPTABLE {  DWORD dwNumEntries; // number of entries in the table  MIB_TCPROW table[ANY_SIZE]; // array of TCP connections  } MIB_TCPTABLE, *PMIB_TCPTABLE;
-
-/* PMIB_UDPROW  [extra struct] */
-typedef struct _MIB_UDPROW {  DWORD dwLocalAddr; DWORD dwLocalPort; // port number on local computer  } MIB_UDPROW, *PMIB_UDPROW;
-
-/* PMIB_UDPTABLE  [extra struct] */
-typedef struct _MIB_UDPTABLE {  DWORD dwNumEntries; // number of entries in the table  MIB_UDPROW table[ANY_SIZE]; // table of MIB_UDPROW structs  } MIB_UDPTABLE, * PMIB_UDPTABLE;
-
 /* pdwBestIfIndex  [extra struct] */
 DWORD GetBestInterfaceEX(  struct sockaddr* pDestAddr,  PDWORD pdwBestIfIndex  );
-
-/* PIP_ADDR_STRING  [extra struct] */
-typedef struct _IP_ADDR_STRING {
-  struct _IP_ADDR_STRING* Next;
-  IP_ADDRESS_STRING IpAddress;
-  IP_MASK_STRING IpMask;
-  DWORD Context;
-} IP_ADDR_STRING, *PIP_ADDR_STRING;
-
-/* PMIB_BEST_IF  [extra struct] */
-typedef struct _MIB_BEST_IF {  DWORD dwDestAddr;  DWORD dwIfIndex;  } MIB_BEST_IF*, PMIB_BEST_IF;
-
-/* PMIB_IPFORWARDROW  [extra struct] */
-typedef struct _MIB_IPFORWARDROW {
-  DWORD dwForwardDest;
-  DWORD dwForwardMask;
-  DWORD dwForwardPolicy;
-  DWORD dwForwardNextHop;
-  DWORD dwForwardIfIndex;
-  DWORD dwForwardType;
-  DWORD dwForwardProto;
-  DWORD dwForwardAge;
-  DWORD dwForwardNextHopAS;
-  DWORD dwForwardMetric1;
-  DWORD dwForwardMetric2;
-  DWORD dwForwardMetric3;
-  DWORD dwForwardMetric4;
-  DWORD dwForwardMetric5;
-} MIB_IPFORWARDROW, *PMIB_IPFORWARDROW;
-
-/* PMIB_PROXYARP  [extra struct] */
-typedef struct _MIB_PROXYARP {
-  DWORD dwAddress;
-  DWORD dwMask;
-  DWORD dwIfIndex;
-} MIB_PROXYARP, *PMIB_PROXYARP;
-
-/* PMIB_UDPSTATS  [extra struct] */
-typedef struct _MIB_UDPSTATS {
-  DWORD dwInDatagrams;
-  DWORD dwNoPorts;
-  DWORD dwInErrors;
-  DWORD dwOutDatagrams;
-  DWORD dwNumAddrs;
-} MIB_UDPSTATS, *PMIB_UDPSTATS;
 
 /* ==================================================================
  * functions and callbacks
@@ -208,11 +120,6 @@ DWORD AddIPAddress(
  PULONG NTEInstance 
 );
 
-/* CreateIpForwardEntry  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
-DWORD CreateIpForwardEntry( 
- PMIB_IPFORWARDROW pRoute
-);
-
 /* CreateProxyArpEntry  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
 DWORD CreateProxyArpEntry(
  DWORD dwAddress,
@@ -223,11 +130,6 @@ DWORD CreateProxyArpEntry(
 /* DeleteIPAddress  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
 DWORD DeleteIPAddress ( 
 ULONG NTEContext // net table entry context);
-
-/* DeleteIpForwardEntry  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
-DWORD DeleteIpForwardEntry(
- PMIB_IPFORWARDROW pRoute
-);
 
 /* DeleteProxyArpEntry  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
 DWORD DeleteProxyArpEntry(
@@ -247,50 +149,6 @@ DWORD GetAdapterIndex(
  PULONG IfIndex
 );
 
-/* GetAdaptersInfo  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
-DWORD GetAdaptersInfo(
- PIP_ADAPTER_INFO pAdapterInfo,
- PULONG pOutBufLen
-);
-
-/* GetBestRoute  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
-DWORD GetBestRoute(
- DWORD dwDestAddr, 
- DWORD dwSourceAddr, 
- PMIB_IPFORWARDROW pBestRoute 
-);
-
-/* GetIcmpStatistics  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
-DWORD GetIcmpStatistics(
- PMIB_ICMP pStats 
-);
-
-/* GetIpAddrTable  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
-DWORD GetIpAddrTable(
- PMIB_IPADDRTABLE pIpAddrTable, 
- PULONG pdwSize, 
- BOOL bOrder 
-);
-
-/* GetIpForwardTable  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
-DWORD GetIpForwardTable(
- PMIB_IPFORWARDTABLE pIpForwardTable, 
- PULONG pdwSize, 
- BOOL bOrder 
-);
-
-/* GetIpNetTable  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
-DWORD GetIpNetTable(
- PMIB_IPNETTABLE pIpNetTable,
- PULONG pdwSize, 
- BOOL bOrder 
-);
-
-/* GetUdpStatistics  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
-DWORD GetUdpStatistics(
- PMIB_UDPSTATS pStats
-);
-
 /* SendARP  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
 DWORD SendARP(
  IPAddr DestIP, 
@@ -299,29 +157,9 @@ DWORD SendARP(
  PULONG PhyAddrLen 
 );
 
-/* SetIpForwardEntry  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
-DWORD SetIpForwardEntry(
- PMIB_IPFORWARDROW pRoute 
-);
-
 /* SetIpTTL  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
 DWORD SetIpTTL(
  UINT nTTL 
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
-
-/* GetIcmpStatisticsEx  [function; shared; CE 4.0..699; Iphlpapi.lib] */
-DWORD GetIcmpStatisticsEx(
- PMIB_ICMP pStats, 
- DWORD dwFamily
-);
-
-/* GetUdpStatisticsEx  [function; shared; CE 4.0..699; Iphlpapi.lib] */
-DWORD GetUdpStatisticsEx(
- PMIB_UDPSTATS pStats, 
- DWORD dwFamily
 );
 #endif /* _WIN32_WCE */
 

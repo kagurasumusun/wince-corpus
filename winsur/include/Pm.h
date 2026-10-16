@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 14 constants, 16 declarations, 0 outlines, 0 base types, 0 extra macros, 12 extra decls
+ * 14 constants, 16 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _PM_
 #define _PM_
@@ -87,59 +87,6 @@ typedef struct _POWER_RELATIONSHIP {
  HANDLE hChild;
  LPCWSTR pwsChild;
 } POWER_RELATIONSHIP, *PPOWER_RELATIONSHIP;
-
-/* PBT_ROLE_SWITCH_EVENT  [extra struct] */
-typedef struct {
-  DWORD dwSize;
-  BT_ADDR bta;
-  UINT fRole : 1;
-} BT_ROLE_SWITCH_EVENT, *PBT_ROLE_SWITCH_EVENT;
-
-/* PBT_AVDTP_STATE_CHANGE  [extra struct] */
-typedef struct {
-  DWORD dwSize;
-  BT_ADDR bta;
-  DWORD dwState;
-} BT_AVDTP_STATE_CHANGE, *PBT_AVDTP_STATE_CHANGE;
-
-/* PBT_LINK_KEY_EVENT  [extra struct] */
-typedef struct {
-  DWORD dwSize;
-  BT_ADDR bta;
-  UCHAR link_key[16];
-  UCHAR key_type;
-} BT_LINK_KEY_EVENT, *PBT_LINK_KEY_EVENT;
-
-/* PBT_DISCONNECT_EVENT  [extra struct] */
-typedef struct {
-  DWORD dwSize;
-  USHORT hConnection;
-  UCHAR ucReason;
-} BT_DISCONNECT_EVENT, *PBT_DISCONNECT_EVENT;
-
-/* PBT_SERVICE_REQUEST  [extra struct] */
-typedef struct {
-  DWORD dwSize;
-  BT_ADDR btAddr;
-  GUID uuidService;
-} BT_SERVICE_REQUEST, *PBT_SERVICE_REQUEST;
-
-/* PBT_MODE_CHANGE_EVENT  [extra struct] */
-typedef struct {
-  DWORD dwSize;
-  USHORT hConnection;
-  BT_ADDR bta;
-  BYTE bMode;
-  USHORT usInterval;
-} BT_MODE_CHANGE_EVENT, *PBT_MODE_CHANGE_EVENT;
-
-/* PBT_CONNECT_EVENT  [extra struct] */
-typedef struct { DWORD dwSize;
-USHORT hConnection;
-BT_ADDR bta;
-UCHAR ucLinkType;
-UCHAR ucEncryptMode;
-} BT_CONNECT_EVENT, *PBT_CONNECT_EVENT;
 
 /* ==================================================================
  * functions and callbacks

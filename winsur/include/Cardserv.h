@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 27 constants, 10 declarations, 0 outlines, 0 base types, 0 extra macros, 10 extra decls
+ * 27 constants, 10 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _CARDSERV_
 #define _CARDSERV_
@@ -53,82 +53,5 @@
 
 /* CARD_CLIENT_HANDLE  [typedef; ce-only] */
 typedef PVOID CARD_CLIENT_HANDLE;
-
-/* PCARD_CONFIG_INFO  [extra struct] */
-typedef struct {
-  CARD_SOCKET_HANDLE hSocket;
-  UINT16 fAttributes;
-  UINT8 fInterfaceType;
-  UINT8 uVcc; UINT8 uVpp1;
-  UINT8 uVpp2;
-  UINT8 fRegisters;
-  UINT8 uConfigReg;
-  UINT8 uStatusReg;
-  UINT8 uPinReg;
-  UINT8 uCopyReg;
-  UINT8 uExtendedStatus;
-} CARD_CONFIG_INFO, *PCARD_CONFIG_INFO;
-
-/* PCARD_DATA_PARMS  [extra struct] */
-typedef struct {
-  CARD_SOCKET_HANDLE hSocket;
-  UINT16 fAttributes;
-  UINT8 uDesiredTuple;
-  UINT8 uTupleOffset;
-  UINT16 fFlags;
-  UINT32 uLinkOffset;
-  UINT32 uCISOffset;
-  UINT16 uBufLen;
-  UINT16 uDataLen;
-} CARD_DATA_PARMS, *PCARD_DATA_PARMS;
-
-/* PCARD_EVENT_MASK_PARMS  [extra struct] */
-typedef struct {
-  CARD_SOCKET_HANDLE hSocket;
-  UINT16 fAttributes;
-  UINT16 fEventMask;
-} CARD_EVENT_MASK_PARMS, *PCARD_EVENT_MASK_PARMS;
-
-/* PCARD_EVENT_PARMS  [extra struct] */
-typedef struct {
-  UINT32 uClientData;
-  UINT32 Parm1;
-  UINT32 Parm2;
-} CARD_EVENT_PARMS, *PCARD_EVENT_PARMS;
-
-/* PCARD_REGISTER_PARMS  [extra struct] */
-typedef struct {
-  UINT16 fAttributes;
-  UINT16 fEventMask;
-  UINT32 uClientData;
-} CARD_REGISTER_PARMS, *PCARD_REGISTER_PARMS;
-
-/* PCARD_STATUS  [extra struct] */
-typedef struct {
-  CARD_SOCKET_HANDLE hSocket;
-  UINT16 fCardState;
-  UINT16 fSocketState;
-} CARD_STATUS, *PCARD_STATUS;
-
-/* PCARD_TUPLE_PARMS  [extra struct] */
-typedef struct {
-  CARD_SOCKET_HANDLE hSocket;
-  UINT16 fAttributes;
-  UINT8 uDesiredTuple;
-  UINT8 uReserved;
-  UINT16 fFlags;
-  UINT32 uLinkOffset;
-  UINT32 uCISOffset;
-  UINT8 uTupleCode;
-  UINT8 uTupleLink;
-} CARD_TUPLE_PARMS, *PCARD_TUPLE_PARMS;
-
-/* PCARD_WINDOW_PARMS  [extra struct] */
-typedef struct {
-  CARD_SOCKET_HANDLE hSocket;
-  UINT16 fAttributes;
-  UINT32 uWindowSize;
-  UINT8 fAccessSpeed;
-} CARD_WINDOW_PARMS, *PCARD_WINDOW_PARMS;
 
 #endif /* _CARDSERV_ */

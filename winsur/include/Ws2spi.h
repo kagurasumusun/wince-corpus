@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2 constants, 57 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 2 constants, 57 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _WS2SPI_
 #define _WS2SPI_
@@ -42,7 +42,7 @@ typedef struct WSPData {
 /* lpErrno  [extra struct] */
 SOCKET WSPAccept(SOCKET s,struct sockaddr FAR* addr,LPINT addrlen,LPCONDITIONPROC lpfnCondition,DWORD dwCallbackData,LPINT lpErrno );
 
-/* LPNSP_ROUTINE  [extra struct] */
+/* NSP_ROUTINE  [extra struct] */
 typedef struct _NSP_ROUTINE {
   DWORD cbSize;
   DWORD dwMajorVersion;

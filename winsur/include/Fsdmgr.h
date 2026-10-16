@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 11 constants, 81 declarations, 0 outlines, 0 base types, 0 extra macros, 8 extra decls
+ * 11 constants, 81 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _FSDMGR_
 #define _FSDMGR_
@@ -55,52 +55,9 @@ typedef VOID(*PEMPTYLOCKCONTAINER)(
 );
 #endif /* _WIN32_WCE */
 
-/* PFBI  [extra struct] */
-typedef struct _FSD_BUFFER_INFO{  PBYTE pBuffer;  DWORD cbBuffer  } FSD_BUFFER_INFO, *PFBI;
-
-/* PFDI  [extra struct] */
-typedef struct _FSD_DISK_INFO{
-  DWORD cSectors;
-  DWORD cbSector;
-  DWORD cCylinders;
-  DWORD cHeadsPerCylinder;
-  DWORD cSectorsPerTrack;
-  DWORD dwFlags
-} FSD_DISK_INFO, *PFDI;
-
-/* PFSGI  [extra struct] */
-typedef struct _FSD_SCATTER_GATHER_INFO{
-  DWORD dwFlags;
-  DWORD idDsk;
-  DWORD dwSector;
-  DWORD cSectors;
-  PFDI pfdi;
-  DWORD cfbi;
-  PFBI pfbi;
-  PFNFSG pfnCallBack
-} FSD_SCATTER_GATHER_INFO, *PFSGI;
-
-/* PFSGR  [extra struct] */
-typedef struct _FSD_SCATTER_GATHER_RESULTS{  DWORD dwFlags;  DWORD cSectorsTransferred  } FSD_SCATTER_GATHER_RESULTS, *PFSGR;
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* FSDMGR_ReadDiskEx  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Fsdmgr.lib, fsdmgr.lib] */
-DWORD FSDMGR_ReadDiskEx( 
- PFSGI pfsgi, 
- PFSGR pfsgr
-);
-
-/* FSDMGR_WriteDiskEx  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Fsdmgr.lib, fsdmgr.lib] */
-DWORD FSDMGR_WriteDiskEx( 
- PFSGI pfsgi, 
- PFSGR pfsgr
-);
-#endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 

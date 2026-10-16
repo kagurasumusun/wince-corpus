@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 9 constants, 340 declarations, 3 outlines, 0 base types, 2 extra macros, 49 extra decls
+ * 9 constants, 340 declarations, 3 outlines, 0 base types, 2 extra macros, 18 extra decls
  */
 #ifndef _NDIS_
 #define _NDIS_
@@ -463,20 +463,6 @@ typedef struct _TRANSPORT_HEADER_OFFSET {
 /* MEDIA_SPECIFIC_INFORMATION  [extra struct] */
 typedef struct MediaSpecificInformation { UINT NextEntryOffset; NDIS_CLASS_ID ClassId; UINT Size; UCHAR ClassInformation[1]; } MEDIA_SPECIFIC_INFORMATION;
 
-/* PPNDIS_PACKET  [extra struct] */
-typedef struct _NDIS_PACKET {
-  NDIS_PACKET_PRIVATE Private;
-  union {
-    struct {
-      UCHAR MiniportReserved[8];
-      UCHAR WrapperReserved[8];
-    }; struct {
-      UCHAR MacReserved[16];
-    };
-  };
-  UCHAR ProtocolReserved[1];
-} NDIS_PACKET, *PNDIS_PACKET, **PPNDIS_PACKET;
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
@@ -805,13 +791,6 @@ VOID NdisMEthIndicateReceive(
 /* NdisMEthIndicateReceiveComplete  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.dll, ndis.dll, Ndislib.lib] */
 VOID NdisMEthIndicateReceiveComplete(
  NDIS_HANDLE MiniportAdapterHandle
-);
-
-/* NdisMIndicateReceivePacket  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.dll, ndis.dll, Ndislib.lib] */
-VOID NdisMIndicateReceivePacket(
- NDIS_HANDLE MiniportAdapterHandle,
- PPNDIS_PACKET ReceivePackets,
- UINT NumberOfPackets
 );
 
 /* NdisMIndicateStatus  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.dll, ndis.dll, Ndislib.lib] */
@@ -1255,13 +1234,6 @@ VOID NdisReEnumerateProtocolBindings(
 VOID NdisRetrieveUlong(
  PULONG DestinationAddress,
  PULONG SourceAddress
-);
-
-/* NdisSendPackets  [function; ce-only; CE 5.0..699] */
-VOID NdisSendPackets(
- NDIS_HANDLE NdisBindingHandle,
- PPNDIS_PACKET PacketArray,
- UINT NumberOfPackets
 );
 
 /* NdisSetPacketPoolProtocolId  [function; ce-only; CE 5.0..699; Ndis.lib, ndis.lib] */

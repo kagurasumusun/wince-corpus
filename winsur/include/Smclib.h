@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 20 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 0 constants, 20 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _SMCLIB_
 #define _SMCLIB_
@@ -40,7 +40,7 @@ typedef struct _SCARD_READER_CAPABILITIES {
  ULONG Reserved[25];
 } SCARD_READER_CAPABILITIES, *PSCARD_READER_CAPABILITIES;
 
-/* PVENDOR_ATTR  [extra struct] */
+/* VENDOR_ATTR  [extra struct] */
 typedef struct _VENDOR_ATTR {
   struct {
     USHORT Length;

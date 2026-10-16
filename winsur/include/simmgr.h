@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 50 constants, 37 declarations, 0 outlines, 0 base types, 0 extra macros, 12 extra decls
+ * 50 constants, 37 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _SIMMGR_
 #define _SIMMGR_
@@ -111,38 +111,5 @@ typedef void (*SIMCALLBACK) (
  DWORD dwParam
 );
 #endif /* _WIN32_WCE */
-
-/* LPSIMPHONEADDITIONALNUMBER  [extra struct] */
-typedef struct simphonebookadditionalnumber_tag {
-  DWORD cbSize;
-  DWORD dwParams;
-  TCHAR lpszAddress[MAX_LENGTH_ADDRESS];
-  DWORD dwAddressType;
-  DWORD dwNumPlan;
-  DWORD dwNumId;
-} SIMPHONEBOOKADDITIONALNUMBER, *LPSIMPHONEADDITIONALNUMBER;
-
-/* LPPHONEBOOKSIMCAPS  [extra struct] */
-typedef struct simphonebookcaps_tag {
-  DWORD cbSize;
-  DWORD dwParams;
-  DWORD dwStorages;
-  DWORD dwMinIndex;
-  DWORD dwMaxIndex;
-  DWORD dwMaxAddressLength;
-  DWORD dwMaxTextLength;
-  DWORD dwMaxSecondNameLength;
-  DWORD dwMaxAdditionalNumberLength;
-  DWORD dwMaxEmailAddressLength;
-  DWORD dwMaxGroupTagLength;
-  DWORD dwMaxAdditionalNumberTagLength;
-  DWORD dwAdditionalNumberCount;
-  DWORD dwEmailAddressCount;
-  DWORD dwMaxGroupTags;
-  DWORD dwMaxAdditionalNumberTags;
-  BOOL fHidden;
-  BOOL fUid;
-  DWORD dwMaxGroupIdCount;
-} SIMPHONEBOOKCAPS, FAR *LPPHONEBOOKSIMCAPS;
 
 #endif /* _SIMMGR_ */

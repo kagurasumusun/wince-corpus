@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 21 constants, 45 declarations, 0 outlines, 0 base types, 0 extra macros, 12 extra decls
+ * 21 constants, 45 declarations, 0 outlines, 0 base types, 0 extra macros, 6 extra decls
  */
 #ifndef _RAS_
 #define _RAS_
@@ -234,6 +234,19 @@ typedef struct tagRasCntlServerLine {
  BYTE DevConfig[1];
 } RASCNTL_SERVERLINE, *PRASCNTL_SERVERLINE;
 
+/* define  [extra struct] */
+#define RASPPPIPV6 struct tagRASPPPIPV6
+RASPPPIPV6
+{
+  DWORD dwSize;
+  DWORD dwError;
+  BYTE LocalInterfaceIdentifier[8];
+  BYTE PeerInterfaceIdentifier[8];
+  BYTE LocalCompressionProtocol[2];
+  BYTE PeerCompressionProtocol[2];
+};
+#define LPRASPPPIPV6 RASPPPIPV6*;
+
 /* pdwSize  [extra typedef] */
 typedef DWORD (APIENTRY *PFNRASGETBUFFER)(  PBYTE* ppBuffer,  PDWORD pdwSize  );
 
@@ -242,19 +255,6 @@ typedef DWORD (APIENTRY *PFNRASRECEIVEBUFFER)(  HANDLE hPort,  PBYTE pBuffer,  P
 
 /* PBYTEpBuffer  [extra typedef] */
 typedef DWORD(APIENTRY *PFNRASFREEBUFFER)(PBYTEpBuffer );
-
-/* RASPPPIPW  [extra struct] */
-#define RASPPPIPW struct tagRASPPPIPW
-RASPPPIPW
-{
-  DWORD dwSize;
-  DWORD dwError;
-  WCHAR szIpAddress[ RAS_MaxIpAddress + 1 ];
-  WCHAR szServerIpAddress[ RAS_MaxIpAddress + 1 ];
-  DWORD dwOptions;
-  DWORD dwServerOptions;
-};
-#define RASPPPIP RASPPPIPW;
 
 /* _RASDIALPARAMS  [extra struct] */
 typedef struct _RASDIALPARAMS {- };

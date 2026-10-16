@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 26 constants, 19 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 26 constants, 19 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _IPRTRMIB_
 #define _IPRTRMIB_

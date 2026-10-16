@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1 constants, 38 declarations, 0 outlines, 0 base types, 1 extra macros, 24 extra decls
+ * 1 constants, 38 declarations, 0 outlines, 0 base types, 1 extra macros, 0 extra decls
  */
 #ifndef _NTDDNDIS_
 #define _NTDDNDIS_
@@ -263,8 +263,5 @@ typedef struct _NDIS_802_11_CONFIGURATION {
  ULONG DSConfig;
  NDIS_802_11_CONFIGURATION_FH FHConfig;
 } NDIS_802_11_CONFIGURATION, *PNDIS_802_11_CONFIGURATION;
-
-/* PNDIS_802_11_ENCRYPTION_STATUS  [extra enum] */
-typedef enum _NDIS_802_11_WEP_STATUS {Ndis802_11WEPEnabled, Ndis802_11Encryption1Enabled = Ndis802_11WEPEnabled,Ndis802_11WEPDisabled, Ndis802_11EncryptionDisabled = Ndis802_11WEPDisabled,Ndis802_11WEPKeyAbsent, Ndis802_11Encryption1KeyAbsent = Ndis802_11WEPNotSupported,Ndis802_11WEPNotSupported, Ndis802_11EncryptionNotSupported = Ndis802_11WEPNotSupported, Ndis802_11Encryption2Enabled, Ndis802_11Encryption2KeyAbsent, Ndis802_11Encryption3Enabled, Ndis802_11Encryption3KeyAbsent} NDIS_802_11_WEP_STATUS, *PNDIS_802_11_WEP_STATUS, NDIS_802_11_ENCRYPTION_STATUS, *PNDIS_802_11_ENCRYPTION_STATUS;
 
 #endif /* _NTDDNDIS_ */

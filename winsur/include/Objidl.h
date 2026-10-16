@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 45 constants, 12 declarations, 37 outlines, 0 base types, 0 extra macros, 75 extra decls
+ * 45 constants, 12 declarations, 37 outlines, 0 base types, 0 extra macros, 71 extra decls
  */
 #ifndef _OBJIDL_
 #define _OBJIDL_

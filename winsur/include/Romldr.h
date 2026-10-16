@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 0 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _ROMLDR_
 #define _ROMLDR_
@@ -50,5 +50,8 @@ typedef struct ROMChain_t{
  ROMHDR* pTOC;
 } ROMChain_t, OEMRomChain;
 typedef OEMRomChain *POEMRomChain, *LPOEMRomChain;
+
+/* ROMChain_t  [extra struct] */
+typedef struct ROMChain_t{struct ROMChain_t* pNext;ROMHDR* pTOC;} ROMChain_t, OEMRomChain;
 
 #endif /* _ROMLDR_ */

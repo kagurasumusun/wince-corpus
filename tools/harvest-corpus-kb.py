@@ -96,8 +96,10 @@ def identifier_from_decl(text, kind=""):
     if "}" in text:
         tail = text.rsplit("}", 1)[-1]
         ids = re.findall(r"[A-Za-z_][A-Za-z0-9_]*", tail)
+        # "} CHOOSECOLOR, *LPCHOOSECOLOR;" -- the type name, not the
+        # last pointer alias.
         if ids:
-            return ids[-1]
+            return ids[0]
     ids = re.findall(r"[A-Za-z_][A-Za-z0-9_]*", text)
     for tok in reversed(ids):
         if tok not in _KW:

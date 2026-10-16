@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 6 extra decls
+ * 2 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
  */
 #ifndef _AF_IRDA_
 #define _AF_IRDA_
@@ -79,13 +79,59 @@ typedef struct IRDA_DEVICE_INFO {
 /* _IRDA_DEVICE_INFO  [extra struct] */
 typedef struct IRDA_DEVICE_INFO { u_char irdaDeviceID[4]; char irdaDeviceName[22]; u_char Reserved[2]; } _IRDA_DEVICE_INFO;
 
+/* _IAS_QUERY  [extra struct] */
+typedef struct IAS_QUERY {
+  u_char irdaDeviceID[4];
+  char irdaClassName[61];
+  char irdaAttribName[61];
+  u_short irdaAttribType;
+  union
+  {
+    int irdaAttribInt;
+    struct
+    {
+      int Len;
+      u_char OctetSeq[1];
+      u_char Reserved[3];
+    } irdaAttribOctetSeq;
+    struct
+    {
+      int Len;
+      u_char CharSet;
+      u_char UsrStr[1];
+      u_char Reserved[2];
+    } irda AttribUsrStr;
+  } irdaAttribute;
+} _IAS_QUERY, *PIAS_QUERY;
+
+/* _IAS_SET  [extra struct] */
+typedef struct _IAS_SET {
+  char irdaClassName[61];
+  char irdaAttribName[61];
+  u_short irdaAttribType;
+  union
+  {
+    int irdaAttribInt;
+    struct
+    {
+      int Len;
+      u_char OctetSeq[1];
+      u_char Reserved[3];
+    } irdaAttribOctetSeq;
+    struct
+    {
+      int Len;
+      u_char CharSet;
+      u_char UsrStr[1];
+      u_char Reserved[2];
+    } irda AttribUsrStr;
+  } irdaAttribute;
+} _IAS_SET, *PIAS_SET;
+
 /* irdaServiceName  [extra struct] */
 struct sockaddr_irda {  u_short irdaAddressFamily;  u_char irdaDeviceID[4];  char irdaServiceName[25];};
 
-/* LPSOCKADDR_IRDA  [extra struct] */
-typedef struct _SOCKADDR_IRDA{u_short irdaAddressFamily;u_char irdaDeviceID[4];char irdaServiceName[25];} SOCKADDR_IRDA, *PSOCKADDR_IRDA, FAR* LPSOCKADDR_IRDA;
-
-/* PWCE_DEVICELIST  [extra struct] */
+/* _DEVICELIST  [extra struct] */
 typedef struct DEVICELIST{ ULONG numDevice; IRDA_DEVICE_INFO Device [1];}_DEVICELIST, *PWCE_DEVICELIST;
 
 #endif /* _AF_IRDA_ */

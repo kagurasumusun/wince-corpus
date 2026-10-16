@@ -1573,14 +1573,7 @@ def overlay_unified_surface(by_header, printed_forms, by_module, all_entities):
             hl = "winbase.h"
         if kind == "macro" or text.lstrip().startswith("#"):
             continue
-        if hl in {"ceddk.h", "pkfuncs.h", "kfuncs.h", "nkintr.h", "winddi.h"}:
-            pass
-        elif name in _OVERLAY_NAMED and hl in {
-                "windef.h", "winnt.h", "winbase.h", "winuser.h", "wingdi.h",
-                "winreg.h", "winerror.h", "winioctl.h", "mmsystem.h", "imm.h",
-                "winnls.h", "windbase.h", "dbgapi.h"}:
-            pass
-        else:
+        if not _want_overlay(name, kind, text, hl):
             continue
         entity = {
             "id": "unified:" + name, "name": name, "kinds": [kind],
@@ -1650,16 +1643,7 @@ def overlay_unified_surface(by_header, printed_forms, by_module, all_entities):
                     hl = "winbase.h"
                 if kind == "macro" or text.lstrip().startswith("#"):
                     continue
-                if hl in {"ceddk.h", "pkfuncs.h", "kfuncs.h", "nkintr.h",
-                          "winddi.h"}:
-                    pass
-                elif name in _OVERLAY_NAMED and hl in {
-                        "windef.h", "winnt.h", "winbase.h", "winuser.h",
-                        "wingdi.h", "winreg.h", "winerror.h", "winioctl.h",
-                        "mmsystem.h", "imm.h", "winnls.h", "windbase.h",
-                        "dbgapi.h"}:
-                    pass
-                else:
+                if not _want_overlay(name, kind, text, hl):
                     continue
                 entity = {
                     "id": "harvest:" + name, "name": name, "kinds": [kind],
@@ -1900,7 +1884,7 @@ def wrap_comment(prefix, text, width=64):
 
 _WINDOWS_UMBRELLA = (
     "WinDef.h", "WinNT.h", "winerror.h", "Winbase.h", "Winuser.h",
-    "Wingdi.h", "Winreg.h",
+    "Wingdi.h", "Winreg.h", "Commdlg.h",
 )
 
 # Pages often name Windows.h (the umbrella) or a desktop-split SDK
@@ -1938,7 +1922,27 @@ _OVERLAY_NAMED = {
     "FindFirstFile", "FindNextFile", "WIN32_FIND_DATA", "WIN32_FIND_DATAW",
     "LOGFONT", "LOGFONTW", "TIMERPROC",
     "GetCPInfo", "SelectPalette",
+    "GetOpenFileName", "GetSaveFileName", "ChooseColor", "ChooseFont",
+    "OPENFILENAME", "CHOOSECOLOR", "CreateDialogIndirectParam",
+    "AppendMenu", "CreateDialogParam",
 }
+
+_OVERLAY_HEADERS = {
+    "windef.h", "winnt.h", "winbase.h", "winuser.h", "wingdi.h",
+    "winreg.h", "winerror.h", "winioctl.h", "mmsystem.h", "imm.h",
+    "winnls.h", "windbase.h", "dbgapi.h", "commdlg.h",
+}
+_DDK_HEADERS = {
+    "ceddk.h", "pkfuncs.h", "kfuncs.h", "nkintr.h", "winddi.h",
+}
+
+
+def _want_overlay(name, kind, text, hl):
+    if hl in _DDK_HEADERS:
+        return True
+    if hl not in _OVERLAY_HEADERS:
+        return False
+    return name in _OVERLAY_NAMED
 
 CE_CORE_HEADERS = {
     "windef.h", "winnt.h", "basetsd.h", "winbase.h", "winuser.h",
@@ -2051,6 +2055,15 @@ _CORE_TYPEDEFS = (
      "*PBITMAPINFOHEADER, *LPBITMAPINFOHEADER;"),
     ("BITMAPINFO",
      "typedef struct tagBITMAPINFO BITMAPINFO, *PBITMAPINFO, *LPBITMAPINFO;"),
+    ("CHOOSECOLOR",
+     "typedef struct tagCHOOSECOLOR CHOOSECOLOR, *LPCHOOSECOLOR;"),
+    ("CHOOSEFONT",
+     "typedef struct tagCHOOSEFONT CHOOSEFONT, *LPCHOOSEFONT;"),
+    ("OPENFILENAME",
+     "typedef struct tagOPENFILENAME OPENFILENAME, *LPOPENFILENAME;"),
+    ("DLGTEMPLATE",
+     "typedef struct tagDLGTEMPLATE DLGTEMPLATE, *LPDLGTEMPLATE, "
+     "*LPCDLGTEMPLATE;"),
 )
 
 _WINDEF_NEED = (
@@ -2097,6 +2110,10 @@ _C_KNOWN_TYPES = {
     "HPALETTE", "HGDIOBJ", "HKL", "HMONITOR", "HHOOK",
     "BITMAPINFOHEADER", "PBITMAPINFOHEADER", "LPBITMAPINFOHEADER",
     "BITMAPINFO", "PBITMAPINFO", "LPBITMAPINFO",
+    "CHOOSECOLOR", "LPCHOOSECOLOR",
+    "CHOOSEFONT", "LPCHOOSEFONT",
+    "OPENFILENAME", "LPOPENFILENAME",
+    "DLGTEMPLATE", "LPDLGTEMPLATE", "LPCDLGTEMPLATE",
 }
 
 
@@ -2193,7 +2210,8 @@ def type_mentions_unknown(text, local_names, self_name=None, macros=None):
     if "{" in body:
         for inc in ("BITMAPINFOHEADER", "BITMAPINFO", "CRITICAL_SECTION",
                     "SECURITY_ATTRIBUTES", "STARTUPINFOW", "STARTUPINFO",
-                    "PROCESS_INFORMATION"):
+                    "PROCESS_INFORMATION", "CHOOSECOLOR", "OPENFILENAME",
+                    "DLGTEMPLATE"):
             if re.search(r"\b" + inc + r"\s+[A-Za-z_]\w*\s*;", body):
                 return True
     for tok in _ident_tokens(body) - skip:

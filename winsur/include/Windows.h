@@ -14,6 +14,7 @@
 #include "Winuser.h"
 #include "Wingdi.h"
 #include "Winreg.h"
+#include "Commdlg.h"
 
 #endif /* _WINDOWS_ */
 

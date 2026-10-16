@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 32 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
+ * 0 constants, 32 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _MSGSTOR2_
 #define _MSGSTOR2_
@@ -30,24 +30,6 @@ typedef struct TransportFolderList_s {
  UINT uiCount;
  lpTransportFolderInfo FolderArray[];
 } TransportFolderList, *lpTransportFolderList;
-
-/* lpTransportCheckForNewMailInfo  [extra struct] */
-typedef struct TransportCheckForNewMailInfo{
-  TransportFolderList* ptfl;
-  BOOL fFree;
-  HANDLE hTerminateEvent;
-  DWORD dwReserverd;
-} TransportCheckForNewMailInfo, *lpTransportCheckForNewMailInfo;
-
-/* lpTransportFolderInfo  [extra struct] */
-typedef struct TransportFolderInfo_s {
-  LPWSTR szFriendlyName;
-  LPWSTR szServiceID;
-  FID fidStoreID;
-} TransportFolderInfo, *lpTransportFolderInfo;
-
-/* lpTransportFolderList  [extra struct] */
-typedef struct TransportFolderList_s { UINT uiCount; lpTransportFolderInfo FolderArray[]; } TransportFolderList, *lpTransportFolderList;
 
 /* ==================================================================
  * functions and callbacks

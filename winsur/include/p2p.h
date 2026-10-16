@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 20 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 0 constants, 20 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _P2P_
 #define _P2P_
@@ -39,7 +39,7 @@ typedef enum peer_connection_flags_tag { PEER_CONNECTION_NEIGHBOR, PEER_CONNECTI
 /* PEER_RECORD_CHANGE_TYPE  [extra enum] */
 typedef enum peer_record_change_type_tag { PEER_RECORD_ADDED, PEER_RECORD_UPDATED, PEER_RECORD_DELETED, PEER_RECORD_EXPIRED } PEER_RECORD_CHANGE_TYPE;
 
-/* PPEER_NAME_PAIR  [extra struct] */
+/* PEER_NAME_PAIR  [extra struct] */
 typedef struct peer_name_pair_tag {
   DWORD dwSize;
   PWSTR pwzPeerName;

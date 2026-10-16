@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 580 constants, 195 declarations, 3 outlines, 0 base types, 0 extra macros, 74 extra decls
+ * 580 constants, 195 declarations, 3 outlines, 0 base types, 0 extra macros, 17 extra decls
  */
 #ifndef _WINCRYPT_
 #define _WINCRYPT_
@@ -822,27 +822,31 @@ typedef const CRYPT_OID_INFO CCRYPT_OID_INFO, *PCCRYPT_OID_INFO;
 /* SECURITY_INFORMATION  [extra typedef] */
 typedef DWORD SECURITY_INFORMATION;
 
-/* PCERT_ENHKEY_USAGE  [extra struct] */
-typedef struct _CTL_USAGE {  DWORD cUsageIdentifier;  LPSTR *rgpszUsageIdentifier;  } CTL_USAGE, *PCTL_USAGE, CERT_ENHKEY_USAGE, *PCERT_ENHKEY_USAGE;
+/* CRYPT_INTEGER_BLOB  [extra struct] */
+typedef struct _CRYPTOAPI_BLOB {
+  DWORD cbData;
+  BYTE* pbData;
+} CRYPT_INTEGER_BLOB, *PCRYPT_INTEGER_BLOB,
+CRYPT_UINT_BLOB, *PCRYPT_UINT_BLOB,
+CRYPT_OBJID_BLOB, *PCRYPT_OBJID_BLOB,
+CERT_NAME_BLOB,*PCERT_NAME_BLOB,
+CERT_RDN_VALUE_BLOB, *PCERT_RDN_VALUE_BLOB,
+CERT_BLOB, *PCERT_BLOB,
+CRL_BLOB,*PCRL_BLOB,
+DATA_BLOB, *PDATA_BLOB,
+CRYPT_DATA_BLOB, *PCRYPT_DATA_BLOB,
+CRYPT_HASH_BLOB, *PCRYPT_HASH_BLOB,
+CRYPT_DIGEST_BLOB,*PCRYPT_DIGEST_BLOB,
+CRYPT_DER_BLOB,*PCRYPT_DER_BLOB,
+CRYPT_ATTR_BLOB, *PCRYPT_ATTR_BLOB;
 
-/* CRYPT_OBJID  [extra struct] */
-typedef struct _CRYPTOAPI_BLOB {  DWORD cbData;  BYTE* pbData;  } CRYPT_INTEGER_BLOB, *PCRYPT_INTEGER_BLOB, CRYPT_UINT_BLOB, *PCRYPT_UINT_BLOB, CRYPT_OBJID;
-
-/* CMSG_ATTR  [extra struct] */
-typedef struct _CRYPT_ATTRIBUTES {  DWORD cAttr;  PCRYPT_ATTRIBUTE rgAttr;  } CRYPT_ATTRIBUTES, *PCRYPT_ATTRIBUTES, CMSG_ATTR;
-
-/* phWnd  [extra struct] */
-typedef struct _VTableProvStruc {
-  DWORD Version;
-  FARPROC FuncVerifyImage;
-  FARPROC FuncReturnhWnd;
-  DWORD dwProvType;
-  BYTE* pbContextInfo;
-  DWORD cbContextInfo;
-  LPWSTR pszProvName;
-} VTableProvStruc, *PVTableProvStruc;
-BOOL FuncVerifyImage(LPCSTR lpszImage, BYTE *pSigData);
-BOOL FuncReturnhWnd(DWORD *phWnd);
+/* BLOBHEADER  [extra struct] */
+typedef struct _PUBLICKEYSTRUC {
+  BYTE bType;
+  BYTE bVersion;
+  WORD reserved;
+  ALG_ID aiKeyAlg;
+} BLOBHEADER, PUBLICKEYSTRUC;
 
 /* ==================================================================
  * functions and callbacks
@@ -1007,6 +1011,12 @@ LPCSTR WINAPI CertAlgIdToOID(
  DWORD dwAlgId
 );
 
+/* CertCompareIntegerBlob  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
+BOOL WINAPI CertCompareIntegerBlob(
+ PCRYPT_INTEGER_BLOB pInt1,
+ PCRYPT_INTEGER_BLOB pInt2
+);
+
 /* CertCreateCertificateContext  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
 PCCERT_CONTEXT WINAPI CertCreateCertificateContext(
  DWORD dwCertEncodingType,
@@ -1041,14 +1051,6 @@ BOOL WINAPI CertGetCertificateContextProperty(
  DWORD dwPropId,
  void* pvData,
  DWORD* pcbData
-);
-
-/* CertGetEnhancedKeyUsage  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertGetEnhancedKeyUsage(
- PCCERT_CONTEXT pCertContext,
- DWORD dwFlags,
- PCERT_ENHKEY_USAGE pUsage,
- DWORD* pcbUsage
 );
 
 /* CertGetNameString  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib; A/W CertGetNameStringA,CertGetNameStringW (CE is W-side)] */
@@ -1089,12 +1091,6 @@ BOOL WINAPI CertSetCertificateContextProperty(
  DWORD dwPropId,
  DWORD dwFlags,
  const void* pvData
-);
-
-/* CertSetEnhancedKeyUsage  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertSetEnhancedKeyUsage(
- PCCERT_CONTEXT pCertContext,
- PCERT_ENHKEY_USAGE pUsage
 );
 
 /* CertStrToName  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib; A/W CertStrToNameA,CertStrToNameW (CE is W-side)] */

@@ -32,6 +32,16 @@ DWORD cuiParams;
 UIPARAM auiParams[4]; }; 
 typedef struct _FATUIDATA FATUIDATA, *PFATUIDATA;
 
+/* typedef  [extra struct] */
+struct _FATUIDATA {
+  DWORD dwSize;
+  DWORD dwFlags;
+  DWORD idsEvent;
+  DWORD idsEventCaption;
+  DWORD cuiParams;
+  UIPARAM auiParams[4]; };
+  typedef struct _FATUIDATA FATUIDATA, *PFATUIDATA;
+
 /* dwValue  [extra struct] */
 struct _UIPARAM {  DWORD dwType,  DWORD dwValue };
 

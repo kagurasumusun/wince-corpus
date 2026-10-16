@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 39 constants, 12 declarations, 0 outlines, 0 base types, 0 extra macros, 7 extra decls
+ * 39 constants, 12 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _SSPI_
 #define _SSPI_
@@ -84,35 +84,7 @@ typedef struct _SecPkgContext_StreamSizes {
  unsigned long cbBlockSize;
 }SecPkgContext_StreamSizes, *PSecPkgContext_StreamSizes;
 
-/* pSecPkgContext_Names  [extra struct] */
-typedef struct _SecPkgContext_Names {  SEC_CHAR SEC_FAR *sUserName;  } SecPkgContext_Names, SEC_FAR * pSecPkgContext_Names;
-
-/* SECURITY_SUPPORT_PROVIDER_INTERFACE_VERSION  [extra struct] */
-typedef struct _SECURITY_FUNCTION_TABLE {
-  unsigned long dwVersion;
-  ENUMERATE_SECURITY_PACKAGES_FN EnumerateSecurityPackages;
-  void SEC_FAR *Reserved1;
-  ACQUIRE_CREDENTIALS_HANDLE_FN AcquireCredentialsHandle;
-  FREE_CREDENTIALS_HANDLE_FN FreeCredentialHandle;
-  void SEC_FAR *Reserved2;
-  INITIALIZE_SECURITY_CONTEXT_FN InitializeSecurityContextA;
-  ACCEPT_SECURITY_CONTEXT_FN AcceptSecurityContext;
-  COMPLETE_AUTH_TOKEN_FN CompleteAuthToken;
-  DELETE_SECURITY_CONTEXT_FN DeleteSecurityContext;
-  APPLY_CONTROL_TOKEN_FN ApplyControlToken;
-  QUERY_CONTEXT_ATTRIBUTES_FN QueryContextAttributesA;
-  IMPERSONATE_SECURITY_CONTEXT_FN ImpersonateSecurityContext;
-  REVERT_SECURITY_CONTEXT_FN RevertSecurityContext;
-  MAKE_SIGNATURE_FN MakeSignature;
-  VERIFY_SIGNATURE_FN VerifySignature;
-  FREE_CONTEXT_BUFFER_FN FreeContextBuffer;
-  QUERY_SECURITY_PACKAGE_INFO_FN QuerySecurityPackageInfoA;
-  void SEC_FAR *Reserved3;
-  void SEC_FAR *Reserved4;
-} SecurityFunctionTable, * PSecurityFunctionTable;
-#define SECURITY_SUPPORT_PROVIDER_INTERFACE_VERSION;
-
-/* PSecurityFunctionTableW  [extra struct] */
+/* SecurityFunctionTableW  [extra struct] */
 typedef struct _SECURITY_FUNCTION_TABLE_W {
   unsigned long dwVersion;
   ENUMERATE_SECURITY_PACKAGES_FN_W EnumerateSecurityPackagesW;

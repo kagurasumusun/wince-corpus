@@ -432,6 +432,10 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: CommDlg と typedef 別名（第17弾）
+
+コピーはしない。CE 3.0 の `_wcesdk_Win32_*` を 345 頁すべて生で開いた（PRE 付き 344）。harvest は CE 105,096 頁を再読。`} CHOOSECOLOR, *LPCHOOSECOLOR` の識別子を最後のポインタ別名に取っていた誤判定を直し、型名を取る。`OPENFILENAME` / `CHOOSECOLOR` / `DLGTEMPLATE` は頁が名指しする不完全 typedef。`Windows.h` が `Commdlg.h` を含む。gcc で GetOpenFileName / ChooseColor / AppendMenu / CreateDialogParam が通る。commctrl への一括 overlay はマクロ衝突で戻した。`DialogBoxParam` の `PARAM`、`waveOutOpen` の `MMRESULT` は出さない。
+
 ### 2026-10-16: 傘ヘッダ誤振りと GDI 面（第16弾、10回連続）
 
 コピーはしない。10回続けて生ページと誤判定を当たった。

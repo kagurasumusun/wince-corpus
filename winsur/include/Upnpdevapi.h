@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 13 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 13 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _UPNPDEVAPI_
 #define _UPNPDEVAPI_
@@ -38,8 +38,5 @@ typedef DWORD (*PUPNPCALLBACK) (
  PVOID pvSvcParam
 );
 #endif /* _WIN32_WCE */
-
-/* PUNPNSUBSCRIPTION  [extra struct] */
-typedef struct {  PCWSTR pszUDN;  PCWSTR pszSID;  } UPNPSUBSCRIPTION, *PUNPNSUBSCRIPTION;
 
 #endif /* _UPNPDEVAPI_ */

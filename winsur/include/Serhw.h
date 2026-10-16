@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 35 declarations, 2 outlines, 0 base types, 0 extra macros, 3 extra decls
+ * 0 constants, 35 declarations, 2 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _SERHW_
 #define _SERHW_

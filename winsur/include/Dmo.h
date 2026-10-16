@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 6 constants, 20 declarations, 8 outlines, 0 base types, 0 extra macros, 34 extra decls
+ * 6 constants, 20 declarations, 8 outlines, 0 base types, 0 extra macros, 33 extra decls
  */
 #ifndef _DMO_
 #define _DMO_

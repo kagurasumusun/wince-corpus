@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 3 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
+ * 0 constants, 3 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _USB100_
 #define _USB100_
@@ -47,14 +47,5 @@ typedef struct {
  UCHAR bNumConfigurations;
 } USB_DEVICE_DESCRIPTOR;
 typedef USB_DEVICE_DESCRIPTOR *PUSB_DEVICE_DESCRIPTOR, *LPUSB_DEVICE_DESCRIPTOR;
-
-/* LPUSB_DEVICE  [extra struct] */
-typedef struct _USB_DEVICE { const DWORD dwCount; const USB_DEVICE_DESCRIPTOR Descriptor; const LPCUSB_CONFIGURATION lpConfigs; const LPCUSB_CONFIGURATION lpActiveConfig;} USB_DEVICE, * PUSB_DEVICE, * LPUSB_DEVICE;
-
-/* LPUSB_ENDPOINT  [extra struct] */
-typedef struct _USB_ENDPOINT { const DWORD dwCount; const USB_ENDPOINT_DESCRIPTOR Descriptor; const LPCVOID lpvExtended;} USB_ENDPOINT, * PUSB_ENDPOINT, * LPUSB_ENDPOINT;
-
-/* LPUSB_INTERFACE  [extra struct] */
-typedef struct _USB_INTERFACE { const DWORD dwCount; const USB_INTERFACE_DESCRIPTOR Descriptor; const LPCVOID lpvExtended; const LPCUSB_ENDPOINT lpEndpoints;} USB_INTERFACE, * PUSB_INTERFACE, * LPUSB_INTERFACE;
 
 #endif /* _USB100_ */

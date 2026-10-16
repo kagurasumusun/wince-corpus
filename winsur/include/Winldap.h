@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 146 constants, 92 declarations, 0 outlines, 0 base types, 0 extra macros, 23 extra decls
+ * 146 constants, 92 declarations, 0 outlines, 0 base types, 0 extra macros, 18 extra decls
  */
 #ifndef _WINLDAP_
 #define _WINLDAP_
@@ -304,7 +304,7 @@ typedef ULONG (_cdecl QUERYFORCONNECTION)(  PLDAP PrimaryConnection,  PLDAP Refe
 /* pServerCert  [extra typedef] */
 typedef BOOLEAN (_cdecl VERIFYSERVERCERT) (  PLDAP Connection,  PCCERT_CONTEXT pServerCert  );
 
-/* PBERVAL  [extra struct] */
+/* LDAP_BERVAL  [extra struct] */
 typedef struct berval {  ULONG bv_len;  UNICODE PTCHAR bv_val;  } LDAP_BERVAL, *PLDAP_BERVAL, BERVAL, *PBERVAL;
 
 /* MessageNumber  [extra struct] */

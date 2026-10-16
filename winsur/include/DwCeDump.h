@@ -58,46 +58,46 @@ typedef enum _MINIDUMP_STREAM_TYPE { UnusedStream = 0,// 1 to 0x7FFF - Reserved 
 /* MINIDUMP_LOCATION_DESCRIPTOR  [extra struct] */
 typedef struct _MINIDUMP_LOCATION_DESCRIPTOR { ULONG32 DataSize; RVARva;} MINIDUMP_LOCATION_DESCRIPTOR;
 
-/* PCEDUMP_BUCKET_PARAMETERS  [extra struct] */
+/* CEDUMP_BUCKET_PARAMETERS  [extra struct] */
 typedef struct _CEDUMP_BUCKET_PARAMETERS {USHORT SizeOfHeader;USHORT__unusedAlignment;RVAEventType;ULONG32fDebug;RVAAppName;ULONG32AppStamp;ULONG32AppVerMS;ULONG32AppVerLS;RVAModName;ULONG32ModStamp;ULONG32ModVerMS;ULONG32ModVerLS;ULONG32Offset;RVAOwnerName;ULONG32OwnerStamp;ULONG32OwnerVerMS;ULONG32OwnerVerLS;} CEDUMP_BUCKET_PARAMETERS, *PCEDUMP_BUCKET_PARAMETERS;
 
-/* PCEDUMP_ELEMENT_LIST  [extra struct] */
+/* CEDUMP_ELEMENT_LIST  [extra struct] */
 typedef struct _CEDUMP_ELEMENT_LIST {USHORTSizeOfHeader;USHORT SizeOfFieldInfo;ULONG32 NumberOfFieldInfo;ULONG32 NumberOfElements;RVA Elements;} CEDUMP_ELEMENT_LIST, *PCEDUMP_ELEMENT_LIST;
 
-/* PCEDUMP_EXCEPTION  [extra struct] */
+/* CEDUMP_EXCEPTION  [extra struct] */
 typedef struct _CEDUMP_EXCEPTION {ULONG32 ExceptionCode;ULONG32ExceptionFlags;ULONG32 ExceptionRecord;ULONG32ExceptionAddress;ULONG32NumberParameters;ULONG32ExceptionInformation[EXCEPTION_MAXIMUM_PARAMETERS ];} CEDUMP_EXCEPTION, *PCEDUMP_EXCEPTION;
 
-/* PCEDUMP_EXCEPTION_STREAM  [extra struct] */
+/* CEDUMP_EXCEPTION_STREAM  [extra struct] */
 typedef struct _CEDUMP_EXCEPTION_STREAM { USHORT SizeOfHeader; USHORTSizeOfException; USHORTSizeOfThreadContext; USHORTFlags; ULONG32CurrentProcessId; ULONG32ThreadId;ULONG32OwnerProcessId;ULONG32 CaptureAPICurrentProcessId;ULONG32 CaptureAPIThreadId;ULONG32 CaptureAPIOwnerProcessId;} CEDUMP_EXCEPTION_STREAM, *PCEDUMP_EXCEPTION_STREAM;
 
-/* PCEDUMP_FIELD_INFO  [extra struct] */
+/* CEDUMP_FIELD_INFO  [extra struct] */
 typedef struct _CEDUMP_FIELD_INFO {ULONG32FieldId;ULONG32 FieldSize;RVA FieldLabel;RVA FieldFormat;} CEDUMP_FIELD_INFO, *PCEDUMP_FIELD_INFO;
 
-/* PCEDUMP_MEMORY_LIST  [extra struct] */
+/* CEDUMP_MEMORY_LIST  [extra struct] */
 typedef struct _CEDUMP_MEMORY_LIST {USHORTSizeOfHeader;USHORTSizeOfEntry;ULONG32NumberOfEntries;} CEDUMP_MEMORY_LIST, *PCEDUMP_MEMORY_LIST;
 
-/* PCEDUMP_SYSTEM_INFO  [extra struct] */
+/* CEDUMP_SYSTEM_INFO  [extra struct] */
 typedef struct _CEDUMP_SYSTEM_INFO {USHORT SizeOfHeader;USHORT ProcessorArchitecture;ULONG32 NumberOfProcessors;ULONG32 ProcessorType;USHORT ProcessorLevel;USHORT ProcessorRevision;ULONG32 ProcessorFamily;ULONG32 MajorVersion;ULONG32 MinorVersion;ULONG32 BuildNumber;ULONG32 PlatformId;ULONG32 LCID;RVA OEMStringRva;ULONG32SupportFlags;USHORT Machine;USHORT __unusedAlignment;RVA PlatformTypeRva;DWORD Platforms;RVA PlatformVersion; DWORD InstructionSet;DWORD __unusedAlignment2} CEDUMP_SYSTEM_INFO, *PCEDUMP_SYSTEM_INFO;
 
-/* PCEDUMP_THREAD_CALL_STACK  [extra struct] */
+/* CEDUMP_THREAD_CALL_STACK  [extra struct] */
 typedef struct _CEDUMP_THREAD_CALL_STACK {ULONG32 ProcessId;ULONG32 ThreadId;USHORT SizeOfFrame;USHORT NumberOfFrames;RVAStackFramess;} CEDUMP_THREAD_CALL_STACK, *PCEDUMP_THREAD_CALL_STACK;
 
-/* PCEDUMP_THREAD_CALL_STACK_FRAME  [extra struct] */
+/* CEDUMP_THREAD_CALL_STACK_FRAME  [extra struct] */
 typedef struct _CEDUMP_THREAD_CALL_STACK_FRAME {ULONG32ReturnAddr;ULONG32 FramePtr;ULONG32 ProcessId;ULONG32 __unusedAlignment;ULONG32 Params[4];} CEDUMP_THREAD_CALL_STACK_FRAME, *PCEDUMP_THREAD_CALL_STACK_FRAME;
 
-/* PCEDUMP_THREAD_CALL_STACK_LIST  [extra struct] */
+/* CEDUMP_THREAD_CALL_STACK_LIST  [extra struct] */
 typedef struct _CEDUMP_THREAD_CALL_STACK_LIST {USHORTSizeOfHeader;USHORT SizeOfEntry;ULONG32 NumberOfEntries;} CEDUMP_THREAD_CALL_STACK_LIST, *PCEDUMP_THREAD_CALL_STACK_LIST;
 
-/* PMINIDUMP_DIRECTORY  [extra struct] */
+/* MINIDUMP_DIRECTORY  [extra struct] */
 typedef struct _MINIDUMP_DIRECTORY {ULONG32 StreamType;MINIDUMP_LOCATION_DESCRIPTOR Location;} MINIDUMP_DIRECTORY, *PMINIDUMP_DIRECTORY;
 
-/* PMINIDUMP_HEADER  [extra struct] */
+/* MINIDUMP_HEADER  [extra struct] */
 typedef struct _MINIDUMP_HEADER {ULONG32 Signature;ULONG32 Version;ULONG32 NumberOfStreams;RVA StreamDirectoryRva;ULONG32CheckSum;union{ULONG32 Reserved;ULONG32 TimeDateStamp;};ULONG64 Flags;} MINIDUMP_HEADER, *PMINIDUMP_HEADER;
 
-/* PMINIDUMP_MEMORY_DESCRIPTOR  [extra struct] */
+/* MINIDUMP_MEMORY_DESCRIPTOR  [extra struct] */
 typedef struct _MINIDUMP_MEMORY_DESCRIPTOR {ULONG64StartOfMemoryRange;MINIDUMP_LOCATION_DESCRIPTORMemory;} MINIDUMP_MEMORY_DESCRIPTOR, *PMINIDUMP_MEMORY_DESCRIPTOR;
 
-/* PMINIDUMP_STRING  [extra struct] */
+/* MINIDUMP_STRING  [extra struct] */
 typedef struct _MINIDUMP_STRING {ULONG32Length;WCHAR Buffer [0];} MINIDUMP_STRING, *PMINIDUMP_STRING;
 
 #endif /* _DWCEDUMP_ */

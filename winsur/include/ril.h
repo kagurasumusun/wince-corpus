@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 3 constants, 242 declarations, 1 outlines, 0 base types, 0 extra macros, 21 extra decls
+ * 3 constants, 242 declarations, 1 outlines, 0 base types, 0 extra macros, 5 extra decls
  */
 #ifndef _RIL_
 #define _RIL_
@@ -674,9 +674,6 @@ typedef RILRINGINFO *PRILRINGINFO, *LPRILRINGINFO;
 
 /* dwParam  [extra typedef] */
 typedef void (CALLBACK *RILRESULTCALLBACK)( DWORD dwCode, HRESULT hrCmdID, const void* lpData, DWORD cbData, DWORD dwParam );
-
-/* LPRILRING  [extra struct] */
-typedef struct rilrange_tag { DWORD dwMinValue; DWORD dwMaxValue; } RILRANGE, *LPRILRING;
 
 /* pRilStatus  [extra typedef] */
 typedef void (CALLBACK *RILNDISSTATUSCALLBACK)( PVOID pCallbackContext, LPRILNDISSTATUS pRilStatus );

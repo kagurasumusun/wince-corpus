@@ -1,5 +1,5 @@
 /* ExtraDeclarations.h -- declarations without header assignment
- * 6062 unassigned declarations
+ * 5899 unassigned declarations
  */
 #ifndef _EXTRADECLARATIONS_H_
 #define _EXTRADECLARATIONS_H_
@@ -239,7 +239,6 @@ typedef enum {
 };
 typedef enum STRMBUF_PLAYBACK_TUNE_POLICY { STRMBUF_PLAYBACK_TUNE_FLUSH_AND_GO_TO_LIVE, STRMBUF_PLAYBACK_TUNE_IGNORED} STRMBUF_PLAYBACK_TUNE_POLICY;
 enum tagDOMNodeType {NODE_INVALID,NODE_ELEMENT, 1 NODE_ATTRIBUTE,NODE_TEXT,NODE_CDATA_SECTION,NODE_ENTITY_REFERENCE,NODE_ENTITY,NODE_PROCESSING_INSTRUCTION,NODE_COMMENT,NODE_DOCUMENT,NODE_DOCUMENT_TYPE,NODE_DOCUMENT_FRAGMENT,NODE_NOTATION} DOMNodeType;
-typedef enum _WSAEcomparator {COMP_EQUAL = 0,COMP_NOTLESS} WSAECOMPARATOR, *PWSAECOMPARATOR;
 enum HCI_EVENT {DEVICE_UP,DEVICE_DOWN,DEVICE_ERROR};
 typedef enum _DSCP_TRAFFIC_TYPE {
   DSCPTypeNotSet = 0,
@@ -486,7 +485,6 @@ HRESULT CheckSourceRect( RECT *pSourceRect);
 HRESULT CheckStreaming( );
 HRESULT CheckTargetRect( RECT *pTargetRect);
 HRESULT CheckTransform( const CMediaType *mtIn, const CMediaType *mtOut );
-BOOL ChooseColor( LPCHOOSECOLOR lpcc);
 HRESULT CleanupOrphanedRecordings( LPCOLESTR pszDirName);
 UINT CleanupTestThread( HANDLE hThread, DWORD dwThreadId, int index );
 HRESULT ClearPendingSample(void);
@@ -3202,7 +3200,6 @@ void NewWindow( IDispatch **&ppDisp, VARIANT_BOOL *&Cancel );
 void PrintTemplateInstantiation(  IDispatch *pDisp  );
 void PrintTemplateTeardown(  IDispatch *pDisp  );
 HRESULT ShowBrowserBar(  VARIANT *pvaClsid,  VARIANT *pvarShow,  VARIANT *pvarSize  );
-BOOL APIENTRY ChooseFont(  LPCHOOSEFONT lpcf  );
 DWORD IsDialogBoxHandled(  HWND hWnd,  DWORD dwAction,  DWORD dwPermissions,  LPCTSTR lpszText  )
 INT BeginLevelV( DWORD dwLevelID,  LPCTSTR szFormat,  va_list pArgs  );
 INT EndLevelV( LPCTSTR szFormat,  va_list pArgs  );
@@ -4106,239 +4103,7 @@ typedef struct {
   BYTE bSignedData[MAX_WIN_CERT_SIGN_DATA_LEN];
   BYTE bSign[MAX_RSA_KEY_BITS/8];
 } PKCS1_MODULE_SIGN ;
-typedef struct _IMAGE_DATA_DIRECTORY {  DWORD VirtualAddress;  DWORD Size;  } IMAGE_DATA_DIRECTORY, *PIMAGE_DATA_DIRECTORY;
-typedef struct _SYSTEM_POWER_STATUS_EX2 {
-  BYTE ACLineStatus;
-  BYTE BatteryFlag;
-  BYTE BatteryLifePercent;
-  BYTE Reserved1;
-  DWORD BatteryLifeTime;
-  DWORD BatteryFullLifeTime;
-  BYTE Reserved2;
-  BYTE BackupBatteryFlag;
-  BYTE BackupBatteryLifePercent;
-  BYTE Reserved3;
-  DWORD BackupBatteryLifeTime;
-  DWORD BackupBatteryFullLifeTime;
-  DWORD BatteryVoltage;
-  DWORD BatteryCurrent;
-  DWORD BatteryAverageCurrent;
-  DWORD BatteryAverageInterval;
-  DWORD BatterymAHourConsumed;
-  DWORD BatteryTemperature;
-  DWORD BackupBatteryVoltage;
-  BYTE BatteryChemistry;
-} SYSTEM_POWER_STATUS_EX2, *PSYSTEM_POWER_STATUS_EX2, *LPSYSTEM_POWER_STATUS_EX2;
-typedef struct tagCOMMANDBANDSRESTOREINFO {
-  UINT cbSize;
-  UINT wID;
-  UINT fStyle;
-  UINT cxRestored;
-  BOOL fMaximized;
-} COMMANDBANDSRESTOREINFO, *LPCOMMANDBANDSRESTOREINFO;
-typedef struct _IMAGELISTDRAWPARAMS {
-  DWORD cbSize;
-  HIMAGELIST himl;
-  int i;
-  HDC hdcDst;
-  int x;
-  int y;
-  int cx;
-  int cy;
-  int xBitmap;
-  int yBitmap;
-  COLORREF rgbBk;
-  COLORREF rgbFg;
-  UINT fStyle;
-  DWORD dwRop;}
-  IMAGELISTDRAWPARAMS, FAR * LPIMAGELISTDRAWPARAMS;
 typedef struct tagINITCOMMONCONTROLSEX {  DWORD dwSize;  DWORD dwICC;}  INITCOMMONCONTROLSEX, *LPINITCOMMONCONTROLSEX;
-typedef struct {
-  UINT cbSize;
-  POINT pt;
-  UINT uHit;
-  SYSTEMTIME st;}
-  MCHITTESTINFO, *PMCHITTESTINFO;
-typedef struct tagNMCUSTOMDRAWINFO {
-  NMHDR hdr;
-  DWORD dwDrawStage;
-  HDC hdc;
-  RECT rc;
-  DWORD dwItemSpec;
-  UINT uItemState;
-  LPARAM lItemlParam}
-  NMCUSTOMDRAW, FAR * LPNMCUSTOMDRAW;
-typedef struct tagNMDATETIMECHANGE {
-  NMHDR nmhdr;
-  DWORD dwFlags;
-  SYSTEMTIME st;}
-  NMDATETIMECHANGE, FAR * LPNMDATETIMECHANGE;
-typedef struct tagNMDATETIMEFORMAT{
-  NMHDR nmhdr;
-  LPCTSTR pszFormat;
-  SYSTEMTIME st;
-  LPCTSTR pszDisplay;
-  TCHAR szDisplay[64];}
-  NMDATETIMEFORMAT, FAR * LPNMDATETIMEFORMAT;
-typedef struct tagNMDATETIMEFORMATQUERY{
-  NMHDR nmhdr;
-  LPCTSTR pszFormat;
-  SIZE szMax;}
-  NMDATETIMEFORMATQUERY, FAR * LPNMDATETIMEFORMATQUERY;
-typedef struct tagNMDATETIMESTRING{
-  NMHDR nmhdr;
-  LPCTSTR pszUserString;
-  SYSTEMTIME st;
-  DWORD dwFlags;}
-  NMDATETIMESTRING, FAR * LPNMDATETIMESTRING;
-typedef struct tagNMDATETIMEWMKEYDOWN{
-  NMHDR nmhdr;
-  int nVirtKey;
-  LPCTSTR pszFormat;
-  SYSTEMTIME st;}
-  NMDATETIMEWMKEYDOWN, FAR * LPNMDATETIMEWMKEYDOWN;
-typedef struct tagNMDAYSTATE {
-  NMHDR nmhdr;
-  SYSTEMTIME stStart;
-  int cDayState;
-  LPMONTHDAYSTATE prgDayState; }
-  NMDAYSTATE, FAR * LPNMDAYSTATE;
-typedef struct tagNMHDDISPINFO {
-  NMHDR hdr;
-  int iItem;
-  UINT mask;
-  LPTSTR pszText;
-  int cchTextMax;
-  int iImage;
-  LPARAM lParam;}
-  NMHDDISPINFO, FAR* LPNMHDDISPINFO;
-typedef struct tagNMKEY {
-  NMHDR hdr;
-  WORD wVKey;
-  UINT flags;}
-  NMKEY, FAR * LPNMKEY;
-typedef struct tagNMLISTVIEW{
-  NMHDR hdr;
-  int iItem;
-  int iSubItem;
-  UINT uNewState;
-  UINT uOldState;
-  UINT uChanged;
-  POINT ptAction;
-  LPARAM lParam;}
-  NMLISTVIEW, FAR *LPNMLISTVIEW;
-typedef struct tagNMLVCACHEHINT {
-  NMHDR hdr;
-  int iFrom;
-  int iTo;}
-  NMLVCACHEHINT, *PNMLVCACHEHINT;
-typedef struct tagNMLVCUSTOMDRAW {
-  NMCUSTOMDRAW nmcd;
-  COLORREF clrText;
-  COLORREF clrTextBk;}
-  NMLVCUSTOMDRAW, *LPNMLVCUSTOMDRAW;
-typedef struct tagLVKEYDOWN {
-  NMHDR hdr;
-  WORD wVKey;
-  UINT flags;}
-  NMLVKEYDOWN, FAR *LPNMLVKEYDOWN;
-typedef struct tagNMLVODSTATECHANGE {
-  NMHDR hdr;
-  int iFrom;
-  int iTo;
-  UINT uNewState;
-  UINT uOldState;}
-  NMLVODSTATECHANGE, FAR *LPNMLVODSTATECHANGE;
-typedef struct tagNMMOUSE {
-  NMHDR hdr;
-  DWORD dwItemSpec;
-  DWORD dwItemData;
-  POINT pt;}
-  NMMOUSE, FAR * LPNMMOUSE;
-typedef struct tagNMRBAUTOSIZE {
-  NMHDR hdr;
-  BOOL fChanged;
-  RECT rcTarget;
-  RECT rcActual;}
-  NMRBAUTOSIZE, *LPNMRBAUTOSIZE;
-typedef struct tagNMREBAR {
-  NMHDR hdr;
-  UINT uBand;
-  UINT wID;
-  UINT cyChild;
-  UINT cyBand;}
-  NMREBAR, *LPNMREBAR;
-typedef struct tagNMSELCHANGE{
-  NMHDR nmhdr;
-  SYSTEMTIME stSelStart;
-  SYSTEMTIME stSelEnd;}
-  NMSELCHANGE, FAR * LPNMSELCHANGE;
-typedef struct tagNMTVCUSTOMDRAW {
-  NMCUSTOMDRAW nmcd;
-  COLORREF clrText;
-  COLORREF clrTextBk;}
-  NMTVCUSTOMDRAW, *LPNMTVCUSTOMDRAW;
-typedef struct tagTVKEYDOWN {
-  NMHDR hdr;
-  WORD wVKey;
-  UINT flags;}
-  NMTVKEYDOWN, FAR *LPNMTVKEYDOWN;
-typedef struct _NM_UPDOWN {
-  NMHDR hdr;
-  int iPos;
-  int iDelta;
-} NMUPDOWN, FAR *LPNMUPDOWN;
-typedef struct {  int iLow;  int iHigh; }  PBRANGE, *PPBRANGE;
-typedef struct _RB_HITTESTINFO {
-  POINT pt;
-  UINT flags;
-  int iBand;}
-  RBHITTESTINFO, FAR *LPRBHITTESTINFO;
-typedef struct tagREBARBANDINFO{
-  UINT cbSize;
-  UINT fMask;
-  UINT fStyle;
-  COLORREF clrFore;
-  COLORREF clrBack;
-  LPTSTR lpText;
-  UINT cch;
-  int iImage;
-  HWND hwndChild;
-  UINT cxMinChild;
-  UINT cyMinChild;
-  UINT cx;
-  HBITMAP hbmBack;
-  UINT wID;
-  UINT cyChild;
-  UINT cyMaxChild;
-  UINT cyIntegral;
-  UINT cxIdeal;
-  LPARAM lParam;}
-  REBARBANDINFO, FAR *LPREBARBANDINFO;
-typedef struct tagREBARINFO{
-  UINT cbSize;
-  UINT fMask;
-  HIMAGELIST himl;}
-  REBARINFO, FAR *LPREBARINFO;
-typedef struct _RECTL {
-  LONG left;
-  LONG top;
-  LONG right;
-  LONG bottom;
-} RECTL, *PRECTL;
-typedef struct tagReplSetup{
-  UINT cbStruct;
-  BOOL fRead;
-  DWORD dwFlags;
-  HRESULT hr;
-  TCHAR szObjType[ MAX_OBJTYPE_NAME ];
-  IReplNotify *pNotify;
-  DWORD oid;
-  DWORD oidNew;
-  IReplStore *pStore ;
-  HREPLFLD hFolder;
-  HREPLITEM hItem;
-} REPLSETUP, *PREPLSETUP;
 typedef struct {
   UINT cbSize;
   DWORD dwMask;
@@ -4351,29 +4116,6 @@ typedef struct {
   LPTSTR pszText;
   int cchText;}
   TBBUTTONINFOA, *LPTBBUTTONINFOA;
-typedef struct {
-  HINSTANCE hInstOld;
-  UINT nIDOld;
-  HINSTANCE hInstNew;
-  UINT nIDNew;
-  int nButtons;}
-  TBREPLACEBITMAP, *LPTBREPLACEBITMAP;
-typedef struct tagPSD {
-  DWORD lStructSize;
-  HWND hwndOwner;
-  HGLOBAL hDevMode;
-  HGLOBAL hDevNames;
-  DWORD Flags;
-  POINT ptPaperSize;
-  RECT rtMinMargin;
-  RECT rtMargin;
-  HINSTANCE hInstance;
-  LPARAM lCustData;
-  LPPAGESETUPHOOK lpfnPageSetupHook;
-  LPPAGEPAINTHOOK lpfnPagePaintHook;
-  LPCTSTR lpPageSetupTemplateName;
-  HGLOBAL hPageSetupTemplate;
-} PAGESETUPDLG, * LPPAGESETUPDLG;
 typedef struct tagSTGMEDIUM {
   unsigned long tymed;
   union {
@@ -4387,133 +4129,6 @@ typedef struct tagSTGMEDIUM {
   }u;
   IUnknown *pUnkForRelease;
 } uSTGMEDIUM;
-typedef struct _CRYPT_ENCODE_PARA {
-  DWORD cbSize;
-  PFN_CRYPT_ALLOC pfnAlloc; // optional
-  PFN_CRYPT_FREE pfnFree; // optional
-} CRYPT_ENCODE_PARA, *PCRYPT_ENCODE_PARA;
-typedef struct tagCHOOSECOLOR {
-  DWORD lStructSize;
-  HWND hwndOwner;
-  HINSTANCE hInstance;
-  COLORREF rgbResult;
-  COLORREF *lpCustColors;
-  DWORD Flags;
-  LPARAM lCustData;
-  LPCCHOOKPROC lpfnHook;
-  LPCTSTR lpTemplateName;
-} CHOOSECOLOR, *LPCHOOSECOLOR;
-typedef struct tagINPUT {
-  DWORD type;
-  union
-  {MOUSEINPUT mi;
-  KEYBDINPUT ki;
-  HARDWAREINPUT hi;};
-} INPUT, *PINPUT, FAR* LPINPUT;
-typedef struct tagMENUITEMINFO {
-  UINT cbSize;
-  UINT fMask;
-  UINT fType;
-  UINT fState;
-  UINT wID;
-  HMENU hSubMenu;
-  HBITMAP hbmpChecked;
-  HBITMAP hbmpUnchecked;
-  DWORD dwItemData;
-  LPTSTR dwTypeData;
-  UINT cch;
-} MENUITEMINFO, FAR *LPMENUITEMINFO;
-typedef struct _NOTIFYICONDATA {
-  DWORD cbSize;
-  HWND hWnd;
-  UINT uID;
-  UINT uFlags;
-  UINT uCallbackMessage;
-  HICON hIcon;
-  WCHAR szTip[64];
-} NOTIFYICONDATA, *PNOTIFYICONDATA;
-typedef struct _OFNOTIFY {
-  NMHDR hdr;
-  LPOPENFILENAME lpOFN;
-  LPTSTR pszFile;
-} OFNOTIFY, FAR *LPOFNOTIFY;
-typedef struct tagPD {
-  DWORD cbStruct;
-  HWND hwndOwner;
-  HDC hdc;
-  DWORD dwFlags;
-  RECT rcMinMargin;
-  RECT rcMargin;
-  HINSTANCE hinst;
-  LPARAM lCustData;
-  LPPRINTHOOKPROC pfnPrintHook;
-  LPCTSTR pszPrintTemplateName;
-  HGLOBAL hglbPrintTemplateResource;
-} PRINTDLG , *LPPRINTDLG ;
-typedef struct _SHELLEXECUTEINFO {
-  DWORD cbSize;
-  ULONG fMask;
-  HWND hwnd;
-  LPCSTR lpVerb;
-  LPCSTR lpFile;
-  LPCSTR lpParameters;
-  LPCSTR lpDirectory;
-  int nShow;
-  HINSTANCE hInstApp;
-  LPVOID lpIDList;
-  LPCSTR lpClass;
-  HKEY hkeyClass;
-  DWORD dwHotKey;
-  HANDLE hIcon;
-  HANDLE hProcess;
-} SHELLEXECUTEINFO, FAR *LPSHELLEXECUTEINFO;
-typedef struct tagSTYLESTRUCT {  DWORD styleOld;  DWORD styleNew;  } STYLESTRUCT, * LPSTYLESTRUCT;
-typedef struct {  INSTANCE hInst;  INT nID; }  TBADDBITMAP, *LPTBADDBITMAP;
-typedef struct tagTPMPARAMS {  UINT cbSize;  RECT rcExclude;  } TPMPARAMS, FAR *LPTPMPARAMS;
-typedef struct _TVHITTESTINFO {
-  POINT pt;
-  UINT flags;
-  HTREEITEM hItem; }
-  TVHITTESTINFO, FAR *LPTVHITTESTINFO;
-typedef struct _TVINSERTSTRUCT {
-  HTREEITEM hParent;
-  HTREEITEM hInsertAfter;
-  TV_ITEM item; }
-  TVINSERTSTRUCT, FAR *LPTVINSERTSTRUCT;
-typedef struct _TVITEM { tvi
-UINT mask;
-HTREEITEM hItem;
-UINT state;
-UINT stateMask;
-LPSTR pszText;
-int cchTextMax;
-int iImage;
-int iSelectedImage;
-int cChildren;
-LPARAM lParam; }
-TVITEM, FAR *LPTVITEM;
-typedef struct _TVSORTCB {
-  HTREEITEM hParent;
-  PFNTVCOMPARE lpfnCompare;
-  LPARAM lParam; }
-  TVSORTCB, FAR *LPTVSORTCB;
-typedef struct _TV_INSERTSTRUCT {
-  HTREEITEM hParent;
-  HTREEITEM hInsertAfter;
-  TV_ITEM item; }
-  TV_INSERTSTRUCT, FAR *LPTV_INSERTSTRUCT;
-typedef struct _TV_ITEM { tvi
-UINT mask;
-HTREEITEM hItem;
-UINT state;
-UINT stateMask;
-LPSTR pszText;
-int cchTextMax;
-int iImage;
-int iSelectedImage;
-int cChildren;
-LPARAM lParam; }
-TV_ITEM, FAR *LPTV_ITEM;
 typedef struct _DDHAL_CALLBACKS
 {
   DDHAL_DDCALLBACKS cbDDCallbacks;
@@ -4537,12 +4152,6 @@ typedef struct _DDHAL_CALLBACKS
   DDHAL_DDKERNELCALLBACKS cbDDKernelCallbacks;
   DDHAL_DDKERNELCALLBACKS HALDDKernel;
 } DDHAL_CALLBACKS, far *LPDDHAL_CALLBACKS;
-typedef struct tagRECT {
-  LONG left;
-  LONG top;
-  LONG right;
-  LONG bottom;
-} RECT, *PRECT, NEAR *NPRECT, FAR *LPRECT;
 typedef struct {
   DWORD dwMicroSecPerFrame;
   DWORD dwMaxBytesPerSec;
@@ -4571,25 +4180,6 @@ typedef struct {
   DWORD dwSampleSize;
   RECT rcFrame;
 } AVIStreamHeader;
-typedef struct _COMMTIMEOUTS {
-  DWORD ReadIntervalTimeout;
-  DWORD ReadTotalTimeoutMultiplier;
-  DWORD ReadTotalTimeoutConstant;
-  DWORD WriteTotalTimeoutMultiplier;
-  DWORD WriteTotalTimeoutConstant;
-} COMMTIMEOUTS,*LPCOMMTIMEOUTS;
-typedef struct _COMSTAT {
-  DWORD fCtsHold : 1;
-  DWORD fDsrHold : 1;
-  DWORD fRlsdHold : 1;
-  DWORD fXoffHold : 1;
-  DWORD fXoffSent : 1;
-  DWORD fEof : 1;
-  DWORD fTxim : 1;
-  DWORD fReserved : 25;
-  DWORD cbInQue;
-  DWORD cbOutQue;
-} COMSTAT, *LPCOMSTAT;
 struct hostent {
   char FAR *h_name;
   char FAR *FAR *h_aliases;
@@ -4603,29 +4193,6 @@ typedef struct IDirectSoundCapture *LPDIRECTSOUNDCAPTURE;
 typedef struct IDirectSoundNotify *LPDIRECTSOUNDNOTIFY;
 typedef struct IDirectSound *LPDIRECTSOUND;
 struct linger {  u_short l_onoff;  u_short l_linger; };
-typedef struct _MEMORYSTATUS {
-  DWORD dwLength;
-  DWORD dwMemoryLoad;
-  DWORD dwTotalPhys;
-  DWORD dwAvailPhys;
-  DWORD dwTotalPageFile;
-  DWORD dwAvailPageFile;
-  DWORD dwTotalVirtual;
-  DWORD dwAvailVirtual;
-} MEMORYSTATUS, *LPMEMORYSTATUS;
-typedef struct tagMONITORINFO {
-  DWORD cbSize;
-  RECT rcMonitor;
-  RECT rcWork;
-  DWORD dwFlags;
-} MONITORINFO, *LPMONITORINFO;
-typedef struct tagMONITORINFOEX {
-  DWORD cbSize;
-  RECT rcMonitor;
-  RECT rcWork;
-  DWORD dwFlags;
-  TCHAR szDevice[CCHDEVICENAME];
-} MONITORINFOEX, *LPMONITORINFOEX;
 struct sockaddr {  unsigned short sa_family;  char sa_data[14];};
 struct sockaddr_in{
   short sin_family;
@@ -4648,90 +4215,14 @@ char *inet_ntoa (  struct in_addr in );
 int recvfrom (  SOCKET s,  char *buf,  int len,  int flags,  struct sockaddr *from,  int *fromlen );
 int select (  int nfds,  fd_set *readfds,  fd_set *writefds,  fd_set *exceptfds,  const struct timeval *timeout);
 int sendto (  SOCKET s,  const char *buf,  int len,  int flags,  const struct sockaddr *to,  int tolen );
-typedef struct tagACCESSTIMEOUT{
-  UINT cbSize;
-  DWORD dwFlags;
-  DWORD iTimeOutMSec;
-} ACCESSTIMEOUT, *LPACCESSTIMEOUT;
-typedef struct tagHIGHCONTRAST{
-  UINT cbSize;
-  DWORD dwFlags;
-  LPTSTR lpszDefaultScheme;
-} HIGHCONTRAST, FAR* LPHIGHCONTRAST;
-typedef struct tagMOUSEKEYS{
-  UINT cbSize;
-  DWORD dwFlags;
-  DWORD iMaxSpeed;
-  DWORD iTimeToMaxSpeed;
-  DWORD iCtrlSpeed;
-  DWORD dwReserved1;
-  DWORD dwReserved2;
-} MOUSEKEYS, *LPMOUSEKEYS;
-typedef struct tagSOUNDSENTRY{
-  UINT cbSize;
-  DWORD dwFlags;
-  DWORD iFSTextEffect;
-  DWORD iFSTextEffectMSec;
-  DWORD iFSTextEffectColorBits;
-  DWORD iFSGrafEffect;
-  DWORD iFSGrafEffectMSec;
-  DWORD iFSGrafEffectColor;
-  DWORD iWindowsEffect;
-  DWORD iWindowsEffectMSec;
-  LPTSTR lpszWindowsEffectDLL;
-  DWORD iWindowsEffectOrdinal;
-} SOUNDSENTRY, *LPSOUNDSENTRY;
-typedef struct tagSTICKYKEYS{  UINT cbSize;  DWORD dwFlags;  } STICKYKEYS, *LPSTICKYKEYS;
-typedef struct tagTOGGLEKEYS{  UINT cbSize;  DWORD dwFlags;  } TOGGLEKEYS, *LPTOGGLEKEYS;
-#define BTH_MARKER_NONE 0
-#define BTH_MARKER_CONNECTION 1
-#define BTH_MARKER_ADDRESS 2
-typedef struct _packet_marker {
-  unsigned int fMarker;
-  union {
-    BD_ADDR ba;
-    unsigned short connection_handle;
-  };
-} PacketMarker;
-typedef int (*HCI_CustomCode_In) (
-HANDLE hDeviceContext,
-void *pCallContext,
-unsigned short usOpCode,
-unsigned short cPacketSize,
-unsigned char *pPacket,
-PacketMarker *pMarker,
-unsigned char cEvent
-);
-typedef struct _DCB {
-  DWORD DCBlength;
-  DWORD BaudRate;
-  DWORD fBinary :1;
-  DWORD fParity :1;
-  DWORD fOutxCtsFlow :1;
-  DWORD fOutxDsrFlow :1;
-  DWORD fDtrControl :2;
-  DWORD fDsrSensitivity :1;
-  DWORD fTXContinueOnXoff :1;
-  DWORD fOutX :1;
-  DWORD fInX :1;
-  DWORD fErrorChar :1;
-  DWORD fNull :1;
-  DWORD fRtsControl :2;
-  DWORD fAbortOnError :1;
-  DWORD fDummy2 :17;
-  WORD wReserved;
-  WORD XonLim;
-  WORD XoffLim;
-  BYTE ByteSize;
-  BYTE Parity;
-  BYTE StopBits;
-  char XonChar;
-  char XoffChar;
-  char ErrorChar;
-  char EofChar;
-  char EvtChar;
-  WORD wReserved1;
-} DCB, *LPDCB;
+typedef struct _SecHandle {
+  ULONG_PTR dwLower;
+  ULONG_PTR dwUpper;
+} SecHandle, * PSecHandle;
+typedef SecHandle CredHandle;
+typedef PSecHandle PCredHandle;
+typedef SecHandle CtxtHandle;
+typedef PSecHandle PCtxtHandle;
 typedef struct {
   WORD wLength;
   WORD wValueLength;
@@ -4742,54 +4233,7 @@ typedef struct {
   WORD Padding2[];
   WORD Children[];
 } VS_VERSIONINFO;
-typedef struct _CMSG_STREAM_INFO {
-  DWORD cbContent;
-  PFN_CMSG_STREAM_OUTPUT pfnStreamOutput;
-  void* pvArg;
-} CMSG_STREAM_INFO, *PCMSG_STREAM_INFO;
-typedef struct _DMO_OUTPUT_DATA_BUFFER {
-  IMediaBuffer* pBuffer;
-  DWORD dwStatus;
-  REFERENCE_TIME rtTimestamp;
-  REFERENCE_TIME rtTimelength;
-} DMO_OUTPUT_DATA_BUFFER, *PDMO_OUTPUT_DATA_BUFFER;
 HRESULT RequestContacts(  struct ContactsSearchCriteria* pCriteria,  IExchangeClientRequest** ppiRequest  );
-typedef struct _ABC {
-  int abcA;
-  UINT abcB;
-  int abcC;
-} ABC, *PABC;
-typedef struct _INBOX_EVENT_DATA {
-  DWORD dwRequest;
-  DWORD dwInboxEvent;
-  LPCWSTR pszName;
-  LPCWSTR pszInboxDestination;
-  IHeaderCollection* pHeaderCol;
-  IStream* pStream;
-} INBOX_EVENT_DATA, *PINBOX_EVENT_DATA;
-typedef struct _OBEX_REQUEST {
-  DWORD dwRequest;
-  DWORD dwFlags;
-  IHeaderCollection* pHeaderCol;
-  BOOL fStream;
-  IStream* pStream;
-} OBEX_REQUEST, *POBEX_REQUEST;
-typedef struct tagTOOLINFO{
-  UINT cbSize;
-  UINT uFlags;
-  HWND hwnd;
-  WPARAM uId;
-  RECT rect;
-  HINSTANCE hinst;
-  LPTSTR lpszText;
-  LPARAM lParam;
-} TOOLINFO, NEAR *PTOOLINFO, FAR *LPTOOLINFO;
-typedef struct _BLENDFUNCTION {
-  BYTE BlendOp;
-  BYTE BlendFlags;
-  BYTE SourceConstantAlpha;
-  BYTE AlphaFormat;
-}BLENDFUNCTION, *PBLENDFUNCTION, *LPBLENDFUNCTION;
 typedef struct tagCHOOSEFONT {
   DWORD lStructSize;
   HWND hwndOwner;
@@ -4808,133 +4252,6 @@ typedef struct tagCHOOSEFONT {
   INT nSizeMin;
   INT nSizeMax;
 } CHOOSEFONTW, *LPCHOOSEFONTW;
-typedef struct tagCOMBOBOXINFO {
-  DWORD cbSize;
-  RECT rcItem;
-  RECT rcButton;
-  DWORD stateButton;
-  HWND hwndCombo;
-  HWND hwndItem;
-  HWND hwndList;
-} COMBOBOXINFO, *PCOMBOBOXINFO, *LPCOMBOBOXINFO;
-typedef struct _DISPLAY_DEVICE {
-  DWORD cb;
-  WCHAR DeviceName[32];
-  WCHAR DeviceString[128];
-  DWORD StateFlags;
-  WCHAR DeviceID[128];
-  WCHAR DeviceKey[128];
-} DISPLAY_DEVICE, *PDISPLAY_DEVICE;
-typedef struct _GRADIENT_RECT {  ULONG UpperLeft;  ULONG LowerRight;  }GRADIENT_RECT, *PGRADIENT_RECT;
-typedef struct tagKEYBDINPUT {
-  WORD wVk;
-  WORD wScan;
-  DWORD dwFlags;
-  DWORD time;
-  ULONG_PTR dwExtraInfo;
-} KEYBDINPUT, *PKEYBDINPUT;
-typedef struct LVGROUP {
-  UINT cbSize;
-  UINT mask;
-  LPWSTR pszHeader;
-  int cchHeader;
-  LPWSTR pszFooter;
-  int cchFooter;
-  int iGroupId;
-  UINT stateMask;
-  UINT state;
-  UINT uAlign;
-} LVGROUP, *PLVGROUP;
-typedef struct LVGROUPMETRICS {
-  UINT cbSize;
-  UINT mask;
-  UINT Left;
-  UINT Top;
-  UINT Right;
-  UINT Bottom;
-  COLORREF crLeft;
-  COLORREF crTop;
-  COLORREF crRight;
-  COLORREF crBottom;
-  COLORREF crRightHeader;
-  COLORREF crFooter;
-} LVGROUPMETRICS, *PLVGROUPMETRICS;
-typedef struct LVINSERTGROUPSORTED {
-  PFNLVGROUPCOMPARE pfnGroupCompare;
-  LPVOID *pvData;
-  LVGROUP lvGroup;
-} LVINSERTGROUPSORTED, *PLVINSERTGROUPSORTED;
-typedef struct LVSETINFOTIP {
-  UINT cbSize;
-  DWORD dwFlags;
-  LPWSTR pszText;
-  int iItem;
-  int iSubItem;
-} LVSETINFOTIP, *PLVSETINFOTIP;
-typedef struct tagMOUSEINPUT {
-  LONG dx;
-  LONG dy;
-  DWORD mouseData;
-  DWORD dwFlags;
-  DWORD time;
-  ULONG_PTR dwExtraInfo;
-} MOUSEINPUT, *PMOUSEINPUT;
-typedef struct tagNMNEWMENU {
-  NMHDR hdr;
-  TCHAR szReg[80];
-  HMENU hMenu;
-  CLSID clsid;
-  IPropertyBag** pppropbag;
-} NMNEWMENU, *PNMNEWMENU;
-typedef struct tagNMTTCUSTOMDRAW {  NMCUSTOMDRAW nmcd;  UINT uDrawFlags;  } NMTTCUSTOMDRAW, FAR* LPNMTTCUSTOMDRAW;
-typedef struct tagNMTTDISPINFO {
-  NMHDR hdr;
-  LPTSTR lpszText;
-  TCHAR szText[80];
-  HINSTANCE hinst;
-  UINT uFlags;
-  LPARAM lParam;
-} NMTTDISPINFO, FAR* LPNMTTDISPINFO;
-typedef struct {
-  DWORD cbSize;
-  HWND hwndLastFocus;
-  UINT fSipUp :1;
-  UINT fSipOnDeactivation :1;
-  UINT fActive :1;
-  UINT fReserved :29;
-} SHACTIVATEINFO, *PSHACTIVATEINFO;
-typedef struct _SHFILEOPSTRUCT {
-  HWND hwnd;
-  UINT wFunc;
-  LPCWSTR pFrom;
-  LPCWSTR pTo;
-  FILEOP_FLAGS fFlags;
-  BOOL fAnyOperationsAborted;
-  LPVOID hNameMappings;
-  LPCWSTR lpszProgressTitle;
-} SHFILEOPSTRUCT, *LPSHFILEOPSTRUCT;
-typedef struct tagSHINITDIALOG {
-  DWORD dwMask;
-  HWND hDlg;
-  DWORD dwFlags;
-} SHINITDLGINFO, *PSHINITDLGINFO;
-typedef struct tagSHMENUBARINFO {
-  DWORD cbSize;
-  HWND hwndParent;
-  DWORD dwFlags;
-  UINT nToolBarId;
-  HINSTANCE hInstRes;
-  int nBmpId;
-  int cBmpImages;
-  HWND hwndMB;
-  COLORREF clrBk;
-} SHMENUBARINFO, *PSHMENUBARINFO;
-typedef struct tagSHRGI {
-  DWORD cbSize;
-  HWND hwndClient;
-  POINT ptDown;
-  DWORD dwFlags;
-} SHRGINFO, *PSHRGINFO;
 typedef struct tagTOOLINFO {
   UINT cbSize;
   UINT uFlags;
@@ -4945,19 +4262,6 @@ typedef struct tagTOOLINFO {
   LPTSTR lpszText;
   LPARAM lParam;
 } TTTOOLINFO, NEAR* PTOOLINFO, FAR* LPTTTOOLINFO;
-typedef struct _TRIVERTEX {
-  LONG x;
-  LONG y;
-  COLOR16 Red;
-  COLOR16 Green;
-  COLOR16 Blue;
-  COLOR16 Alpha;
-} TRIVERTEX,*PTRIVERTEX,*LPTRIVERTEX;
-typedef struct _TT_HITTESTINFO {
-  HWND hwnd;
-  POINT pt;
-  TTTOOLINFO ti;
-} TTHITTESTINFO, FAR* LPTTHITTESTINFO;
 struct ConnectionInfo
 {
   IRenderingControl* pRenderingControl;
@@ -4968,8 +4272,6 @@ struct ConnectionInfo
   DIRECTION Direction;
   wstring strStatus;
 };
-typedef struct tagDrvEnableData{// Version control of this structure is performed by incrementing// DDI_DRIVER_VERSION whenever alterations are made. DHPDEV (* DrvEnablePDEV )( DEVMODEW* pdm, LPWSTR pwszLogAddress, ULONG cPat, HSURF* phsurfPatterns, ULONG cjCaps, ULONG* pdevcaps, ULONG cjDevInfo, DEVINFO* pdi, HDEV hdev, LPWSTR pwszDeviceName, HANDLE hDriver ); VOID (* DrvDisablePDEV )( DHPDEV dhpdev ); HSURF (* DrvEnableSurface )( DHPDEV dhpdev ); VOID (* DrvDisableSurface )( DHPDEV dhpdev ); HBITMAP (* DrvCreateDeviceBitmap )( DHPDEV dhpdev, SIZEL sizl, ULONG iFormat ); VOID (* DrvDeleteDeviceBitmap )( DHSURF dhsurf ); BOOL (* DrvRealizeBrush )( BRUSHOBJ* pbo, SURFOBJ* psoTarget, SURFOBJ* psoPattern, SURFOBJ* psoMask, XLATEOBJ* pxlo, ULONG iHatch ); BOOL (* DrvStrokePath )( SURFOBJ* pso, PATHOBJ* ppo, CLIPOBJ* pco, XFORMOBJ* pxo, BRUSHOBJ* pbo, POINTL* pptlBrushOrg, LINEATTRS* plineattrs, MIX mix ); BOOL (* DrvFillPath )( SURFOBJ* pso, PATHOBJ* ppo, CLIPOBJ* pco, BRUSHOBJ* pbo, POINTL* pptlBrushOrg, MIX mix, FLONG flOptions ); BOOL (* DrvPaint )( SURFOBJ* pso, CLIPOBJ* pco, BRUSHOBJ* pbo, POINTL* pptlBrushOrg, MIX mix ); BOOL (* DrvBitBlt )( SURFOBJ* psoTrg, SURFOBJ* psoSrc, SURFOBJ* psoMask, CLIPOBJ* pco, XLATEOBJ* pxlo, RECTL* prclTrg, POINTL* pptlSrc, POINTL* pptlMask, BRUSHOBJ* pbo, POINTL* pptlBrush, ROP4 rop4 ); BOOL (* DrvCopyBits )( SURFOBJ* psoDest, SURFOBJ* psoSrc, CLIPOBJ* pco, XLATEOBJ* pxlo, RECTL* prclDest, POINTL* pptlSrc ); BOOL (* DrvAnyBlt )( SURFOBJ* psoDest, SURFOBJ* psoSrc, SURFOBJ* psoMask, CLIPOBJ* pco, XLATEOBJ* pxlo, POINTL* pptlHTOrg, RECTL* prclDest, RECTL* prclSrc, POINTL* pptlMask, BRUSHOBJ* pbo, POINTL* pptlBrush, ROP4 rop4, ULONG iMode, ULONG bltFlags ); BOOL (* DrvTransparentBlt )( SURFOBJ* psoDest, SURFOBJ* psoSrc, CLIPOBJ* pco, XLATEOBJ* pxlo, RECTL* prclDest, RECTL* prclSrc, ULONG TransColor ); BOOL (* DrvSetPalette )( DHPDEV dhpdev, PALOBJ* ppalo, FLONG fl, ULONG iStart, ULONG cColors ); ULONG (* DrvSetPointerShape)( SURFOBJ* pso, SURFOBJ* psoMask, SURFOBJ* psoColor, XLATEOBJ* pxlo, LONG xHot, LONG yHot, LONG x, LONG y, RECTL* prcl, FLONG fl ); VOID (* DrvMovePointer)( SURFOBJ* pso, LONG x, LONG y, RECTL* prcl ); ULONG (* DrvGetModes)( HANDLE hDriver, ULONG cjSize, DEVMODEW* pdm ); ULONG (* DrvRealizeColor )( USHORT iDstType, ULONG cEntries, ULONG* pPalette, ULONG rgbColor ); ULONG* (* DrvGetMasks )( DHPDEV dhpdev ); ULONG (* DrvUnrealizeColor )( USHORT iSrcType, ULONG cEntries, ULONG* pPalette, ULONG iRealizedColor ); BOOL (* DrvContrastControl)( DHPDEV dhpdev, ULONG cmd, ULONG* pValue ); VOID (* DrvPowerHandler)( DHPDEV dhpdev, BOOL bOff ); BOOL (* DrvEndDoc )( IN SURFOBJ* pso, IN FLONG fl ); BOOL (* DrvStartDoc )( IN SURFOBJ* pso, IN PWSTR pwszDocName, IN DWORD dwJobId ); BOOL (* DrvStartPage )( IN SURFOBJ* pso ); ULONG (* DrvEscape )( IN DHPDEV dhpdev, IN SURFOBJ* pso, IN ULONG iEsc, IN ULONG cjIn, IN PVOID pvIn, OUT ULONG cjOut, OUT PVOID pvOut ); BOOL (* DrvGradientFill)( SURFOBJ* pso, CLIPOBJ* pco, XLATEOBJ* pxlo, TRIVERTEX* pVertex, ULONG nVertex, PVOID pMesh, ULONG nMesh, RECTL* prclExtents, POINTL* pptlDitherOrg, ULONG ulMode );} DRVENABLEDATA,* PDRVENABLEDATA;
-typedef struct _ENGCALLBACKS { PVOID (* BRUSHOBJ_pvAllocRbrush)( BRUSHOBJ* pbo, ULONG cj ); PVOID (* BRUSHOBJ_pvGetRbrush)( BRUSHOBJ* pbo ); ULONG (* CLIPOBJ_cEnumStart)( CLIPOBJ* pco, BOOL bAll, ULONG iType, ULONG iDirection, ULONG cLimit ); BOOL (* CLIPOBJ_bEnum)( CLIPOBJ* pco, ULONG cj, ULONG* pul ); ULONG (* PALOBJ_cGetColors)( PALOBJ* ppalo, ULONG iStart, ULONG cColors, ULONG* pulColors ); VOID (* PATHOBJ_vEnumStart)( PATHOBJ* ppo ); BOOL (* PATHOBJ_bEnum)( PATHOBJ* ppo, PATHDATA* ppd ); VOID (* PATHOBJ_vGetBounds)( PATHOBJ* ppo, PRECTFX prectfx ); ULONG (* XLATEOBJ_cGetPalette)( XLATEOBJ* pxlo, ULONG iPal, ULONG cPal, ULONG* pPal ); HSURF (* EngCreateDeviceSurface)( DHSURF dhsurf, SIZEL sizl, ULONG iFormatCompat ); BOOL (* EngDeleteSurface)( HSURF hsurf ); HBITMAP (* EngCreateDeviceBitmap)( DHSURF dhsurf, SIZEL sizl, ULONG iFormatCompat ); HPALETTE (* EngCreatePalette)( ULONG iMode, ULONG cColors, PULONG pulColors, FLONG flRed, FLONG flGreen, FLONG flBlue );} ENGCALLBACKS,* PENGCALLBACKS;
 struct X { int a[0]; // error, unsized array };
 struct A {
   __declspec(property(get=GetProp)) int prop;
@@ -5014,42 +4316,17 @@ struct S
     int a, b, c; // warning
   };
 } *p_s;
-struct C
-{
-  C();
-};
-C * pC = &C();// yields C4238;
 struct servent {char FAR* s_name;char FAR* FAR* s_aliases;short s_port;char FAR* s_proto;};
 struct sockaddr_in{shortsin_family;
 unsigned shortsin_port;
 IN_ADDR sin_addr;
 charsin_zero[8];
 };
-typedef struct sockaddr_storage {short ss_family;char __ss_pad1[_SS_PAD1SIZE];__int64 __ss_align;char __ss_pad2[_SS_PAD2SIZE];} SOCKADDR_STORAGE, *PSOCKADDR_STORAGE;
-typedef struct _SOCKET_ADDRESS {LPSOCKADDR lpSockaddr;INT iSockaddrLength;} SOCKET_ADDRESS, *PSOCKET_ADDRESS;
 struct timeval {long tv_sec;long tv_usec;};
-typedef struct _DEFRAG_PARAMS { DWORD cbSize; DEFRAG_OPTIONS dopt; DEFRAG_RESULTS dr; PFN_PROGRESS pfnProgress; PFN_MESSAGE pfnMessage;} DEFRAG_PARAMS, *PDEFRAG_PARAMS;
-typedef struct _FILE_NOTIFY_INFORMATION {DWORD NextEntryOffset; DWORD Action; DWORD FileNameLength; WCHAR FileName[1]; } FILE_NOTIFY_INFORMATION, *PFILE_NOTIFY_INFORMATION;
-typedef struct _FORMAT_PARAMS { DWORD cbSize; FORMAT_OPTIONS fo; FORMAT_RESULTS fr; PFN_PROGRESS pfnProgress; PFN_MESSAGE pfnMessage;} FORMAT_PARAMS, *PFORMAT_PARAMS;
-typedef struct _SCAN_PARAMS { DWORD cbSize; SCAN_OPTIONS so; SCAN_RESULTS sr; PFN_PROGRESS pfnProgress; PFN_MESSAGE pfnMessage;} SCAN_PARAMS, *PSCAN_PARAMS;
 struct protoent {char FAR* p_name;char FAR* FAR* p_aliases;short p_proto;};
-typedef struct _DevmgrDeviceInformation_tag { DWORD dwSize; HANDLE hDevice; HANDLE hParentDevice; WCHAR szLegacyName[6]; WCHAR szDeviceKey[MAX_PATH]; WCHAR szDeviceName[MAX_PATH]; WCHAR szBusName[MAX_PATH];} DEVMGR_DEVICE_INFORMATION, *PDEVMGR_DEVICE_INFORMATION;
-typedef struct _devicemodew { WCHAR dmDeviceName[CCHDEVICENAME]; WORD dmSpecVersion; WORD dmDriverVersion; WORD dmSize; WORD dmDriverExtra; DWORD dmFields; short dmOrientation; short dmPaperSize; short dmPaperLength; short dmPaperWidth; short dmScale; short dmCopies; short dmDefaultSource; short dmPrintQuality; short dmColor; short dmDuplex; short dmYResolution; short dmTTOption; short dmCollate; WCHAR dmFormName[CCHFORMNAME]; WORD dmLogPixels; DWORD dmBitsPerPel; DWORD dmPelsWidth; DWORD dmPelsHeight; DWORD dmDisplayFlags; DWORD dmDisplayFrequency; DWORD dmDisplayOrientation;} DEVMODEW,* PDEVMODEW,* NPDEVMODEW,* LPDEVMODEW;
-typedef struct __WSABUF {u_long len;char FAR* buf;} WSABUF, FAR* LPWSABUF;
-typedef struct _WSACOMPLETION { WSACOMPLETIONTYPE Type; union { struct { HWND hWnd; UINT uMsg; WPARAM context; } WindowMessage; struct { LPWSAOVERLAPPED lpOverlapped; } Event; struct { LPWSAOVERLAPPED lpOverlapped; LPWSAOVERLAPPED_COMPLETION_ROUTINE lpfnCompletionProc; } Apc; struct { LPWSAOVERLAPPED lpOverlapped; HANDLE hPort; ULONG_PTR Key; } Port; } Parameters;} WSACOMPLETION, *PWSACOMPLETION, FAR *LPWSACOMPLETION;
 int WSAConnect(SOCKET s,const struct sockaddr FAR* name,int namelen,LPWSABUF lpCallerData,LPWSABUF lpCalleeData,LPQOS lpSQOS,LPQOS lpGQOS);
-typedef struct WSAData {WORD wVersion;WORD wHighVersion;char szDescription[WSADESCRIPTION_LEN+1];char szSystemStatus[WSASYS_STATUS_LEN+1];unsigned short iMaxSockets;unsigned short iMaxUdpDg;char FAR* lpVendorInfo;} WSADATA, *LPWSADATA;
 SOCKET WSAJoinLeaf(SOCKET s,const struct sockaddr FAR* name,int namelen,LPWSABUF lpCallerData,LPWSABUF lpCalleeData,LPQOS lpSQOS,LPQOS lpGQOS,DWORD dwFlags);
-typedef struct _WSANAMESPACE_INFO {GUID NSProviderId;DWORD dwNameSpace;BOOL fActive;DWORD dwVersion;LPTSTR lpszIdentifier;} WSANAMESPACE_INFO, *PWSANAMESPACE_INFO;
-typedef struct _WSANETWORKEVENTS {long lNetworkEvents;int iErrorCode[FD_MAX_EVENTS];} WSANETWORKEVENTS, *LPWSANETWORKEVENTS;
-typedef struct _WSAOVERLAPPED {DWORD Internal;DWORD InternalHigh;DWORD Offset;DWORD OffsetHigh;WSAEVENT hEvent;} WSAOVERLAPPED, *LPWSAOVERLAPPED;
-typedef struct _WSAPROTOCOLCHAIN {int ChainLen;DWORD ChainEntries[MAX_PROTOCOL_CHAIN];} WSAPROTOCOLCHAIN, *LPWSAPROTOCOLCHAIN;
-typedef struct _WSAPROTOCOL_INFO {DWORD dwServiceFlags1;DWORD dwServiceFlags2;DWORD dwServiceFlags3;DWORD dwServiceFlags4;DWORD dwProviderFlags;GUID ProviderId;DWORD dwCatalogEntryId;WSAPROTOCOLCHAIN ProtocolChain;int iVersion;int iAddressFamily;int iMaxSockAddr;int iMinSockAddr;int iSocketType;int iProtocol;int iProtocolMaxOffset;int iNetworkByteOrder;int iSecurityScheme;DWORD dwMessageSize;DWORD dwProviderReserved;TCHAR szProtocol[WSAPROTOCOL_LEN+1];} WSAPROTOCOL_INFO, *LPWSAPROTOCOL_INFO;
-typedef struct _WSAQuerySet {DWORD dwSize;LPTSTR lpszServiceInstanceName;LPGUID lpServiceClassId;LPWSAVERSION lpVersion;LPTSTR lpszComment;DWORD dwNameSpace;LPGUID lpNSProviderId;LPTSTR lpszContext;DWORD dwNumberOfProtocols;LPAFPROTOCOLS lpafpProtocols;LPTSTR lpszQueryString;DWORD dwNumberOfCsAddrs;LPCSADDR_INFO lpcsaBuffer;DWORD dwOutputFlags;LPBLOB lpBlob;} WSAQUERYSET, *PWSAQUERYSETW;
 int WSARecvFrom(SOCKET s,LPWSABUF lpBuffers,DWORD dwBufferCount,LPDWORD lpNumberOfBytesRecvd,LPDWORD lpFlags,struct sockaddr FAR* lpFrom,LPINT lpFromlen,LPWSAOVERLAPPED lpOverlapped,LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine);
-typedef struct _WSAServiceClassInfo {LPGUID lpServiceClassId;LPTSTR lpszServiceClassName;DWORD dwCount;LPWSANSCLASSINFOW lpClassInfos;} WSASERVICECLASSINFO, *PWSASERVICECLASSINFOW;
-typedef struct tagKEYBD_PDD { WORD wPddMask; LPCTSTR pszName; PFN_KEYBD_PDD_POWER_HANDLER pfnPowerHandler; PFN_KEYBD_PDD_TOGGLE_LIGHTS pfnToggleLights;} KEYBD_PDD, *PKEYBD_PDD;
-typedef struct _MEMORY_SECTION {DWORD dwFlags;DWORD dwStart;DWORD dwLen;} MEMORY_SECTION, *PMEMORY_SECTION;
 struct A* pA;
 struct B { int i; };
 B* pB;
@@ -5058,12 +4335,6 @@ void main()
   pA++; // error, size of A not known
   pB++;
 };
-struct Point
-{
-  int x, y;
-};
-int f( Point p = { 1, 2 } ); // error C2279;
-class __single_inheritance X; struct A { }; struct B { }; struct X : A, B { }; // error, X uses multiple inheritance;
 #pragma keyword("interface", on)
 struct IUnknown {
 };
@@ -5071,11 +4342,21 @@ interface IMyIF {
   [ property(put=0, put=0) ]
   int data;
 };
-typedef struct _SG_REQ {DWORD sr_start;DWORD sr_num_sec;DWORD sr_num_sg;DWORD sr_status;PFN_REQDONE sr_callback;SG_BUF sr_sglist[1];} SG_REQ, *PSG_REQ;
 struct S; union S;
-typedef struct _OUTLINETEXTMETRICW { UINT otmSize; TEXTMETRIC otmTextMetrics; BYTE otmFiller; PANOSE otmPanoseNumber; UINT otmfsSelection; UINT otmfsType; int otmsCharSlopeRise; int otmsCharSlopeRun; int otmItalicAngle; UINT otmEMSquare; int otmAscent; int otmDescent; UINT otmLineGap; UINT otmsCapEmHeight; UINT otmsXHeight; RECT otmrcFontBox; int otmMacAscent; int otmMacDescent; UINT otmMacLineGap; UINT otmusMinimumPPEM; POINT otmptSubscriptSize; POINT otmptSubscriptOffset; POINT otmptSuperscriptSize; POINT otmptSuperscriptOffset; UINT otmsStrikeoutSize; int otmsStrikeoutPosition; int otmsUnderscoreSize; int otmsUnderscorePosition; PSTR otmpFamilyName; PSTR otmpFaceName; PSTR otmpStyleName; PSTR otmpFullName; } OUTLINETEXTMETRICW, *POUTLINETEXTMETRICW;
 typedef struct _IMAGE_CE_RUNTIME_FUNCTION_ENTRY { unsigned int FuncStart : 32; unsigned int PrologLen : 8; unsigned int FuncLen : 22; unsigned int ThirtyTwoBit : 1; unsigned int ExceptionFlag : 1;} IMAGE_CE_RUNTIME_FUNCTION_ENTRY,*PIMAGE_CE_RUNTIME_FUNCTION_ENTRY;
 struct PDATA_EH { unsigned int* pHandler; unsigned int* pHandlerData;};
+struct {
+  float x;
+  float y;
+} point;
+int myfunction(struct point p1,
+float u,
+struct point p2,
+double v,
+float w,
+float x,
+double y,
+double z);
 typedef struct IDirect3D8 *LPDIRECT3D8, *PDIRECT3D8;
 typedef struct IDirect3DBaseTexture8 *LPDIRECT3DBASETEXTURE8, *PDIRECT3DBASETEXTURE8;
 typedef struct IDirect3DDevice8 *LPDIRECT3DDEVICE8, *PDIRECT3DDEVICE8;
@@ -5086,98 +4367,7 @@ typedef struct IDirect3DSwapChain8 *LPDIRECT3DSWAPCHAIN8, *PDIRECT3DSWAPCHAIN8;
 typedef struct IDirect3DTexture8 *LPDIRECT3DTEXTURE8, *PDIRECT3DTEXTURE8;
 typedef struct IDirect3DVertexBuffer8 *LPDIRECT3DVERTEXBUFFER8, *PDIRECT3DVERTEXBUFFER8;
 typedef struct IKsPropertySet *LPKSPROPERTYSET;
-typedef struct _KITLTRANSPORT{
-  DWORD dwBootFlags;
-  char szName[KITL_MAX_DEV_NAMELEN];
-  UCHAR Interrupt;
-  UCHAR WindowSize;
-  UCHAR FrmHdrSize;
-  UCHAR FrmTlrSize;
-  DWORD dwPhysBuffer;
-  DWORD dwPhysBufLen;
-  PFN_ENCODE pfnEncode;
-  PFN_DECODE pfnDecode;
-  PFN_SENDFRAME pfnSend;
-  PFN_RECVFRAME pfnRecv;
-  PFN_ENABLEINT pfnEnableInt;
-  PFN_GETDEVCFG pfnGetDevCfg;
-  PFN_SETHOSTCFG pfnSetHostCfg;
-} KITLTRANSPORT, *PKITLTRANSPORT;
-typedef struct _AFPROTOCOLS { INT iAddressFamily; INT iProtocol; } AFPROTOCOLS, *PAFPROTOCOLS, *LPAFPROTOCOLS;
 SOCKET WSAAccept( SOCKET s, struct SOCK_ADDR* addr, LPINT addrlen, LPCONDITIONPROC lpfnCondition, DWORD dwCallbackData );
-typedef struct _NKGLOBAL {
-  DWORD dwVersion;
-  PFN_WriteDebugString pfnWriteDebugString;
-  void (*pfnNKvDbgPrintfW) (LPCWSTR lpszFmt, va_list lpParms);
-  int (*pfnNKwvsprintfW) (LPWSTR lpOut, LPCWSTR lpFmt, va_list lpParms, int maxchars);
-  void (*pfnSetLastError) (DWORD dwErr);
-  DWORD (*pfnGetLastError) (void);
-  void (WINAPI *pfnInitializeCS) (LPCRITICAL_SECTION lpcs);
-  void (WINAPI *pfnDeleteCS) (LPCRITICAL_SECTION lpcs);
-  void (WINAPI *pfnEnterCS) (LPCRITICAL_SECTION lpcs);
-  void (WINAPI *pfnLeaveCS) (LPCRITICAL_SECTION lpcs);
-  void (*pfnINT_OFF) (void);
-  void (*pfnINT_ON) (void);
-  BOOL (*pfnINT_ENABLE) (BOOL fEnable);
-  BOOL (*pfnHookInterrupt) (int hwInterruptNumber, FARPROC pfnHandler);
-  BOOL (*pfnUnhookInterrupt) (int hwInterruptNumber, FARPROC pfnHandler);
-  DWORD (*pfnNKCallIntChain) (BYTE irq);
-  BOOL (*pfnNKIsSysIntrValid) (DWORD idInt);
-  BOOL (*pfnNKSetInterruptEvent) (DWORD idInt);
-  void (*pfnSleep) (DWORD cmsec);
-  BOOL (*pfnVMSetAttrib) (LPVOID lpvAddress, DWORD cbSize, DWORD dwNewFlags, DWORD dwMask, LPDWORD lpdwOldFlags);
-  LPVOID (*pfnCreateStaticMapping) (DWORD dwPhysBase, DWORD dwSize);
-  LONG (*pfnRegCreateKeyExW) (HKEY hKey, LPCWSTR lpSubKey, DWORD Reserved, LPWSTR lpClass, DWORD dwOptions, REGSAM samDesired, LPSECURITY_ATTRIBUTES lpsa, PHKEY phkResult, LPDWORD lpdwDisp);
-  LONG (*pfnRegCloseKey) (HKEY hKey);
-  LONG (*pfnRegQueryValueExW) (HKEY hKey, LPCWSTR lpValueName, LPDWORD lpReserved, LPDWORD lpType, LPBYTE lpData, LPDWORD lpcbData);
-  LONG (*pfnRegSetValueExW) (HKEY hKey, LPCWSTR lpValueName, DWORD dwReserved, DWORD dwType, LPBYTE lpData, DWORD cbData);
-  void (*pfnNKForceCleanBoot) (void);
-  BOOL (*pfnNKReboot) (BOOL fClean);
-  LPVOID (*pfnPhysToVirt) (DWORD dwShiftedPhysAddr, BOOL fCached);
-  LPVOID (*pfnVirtToPhys) (DWORD dwVirtAddr);
-  PFN_Ioctl pfnKITLIoctl;
-  DWORD (*pfnNKwcslen) (const wchar_t * wcs);
-  int (*pfnNKwcscmp) (const wchar_t * pwc1, const wchar_t * pwc2);
-  int (*pfnNKwcsicmp) (LPCWSTR str1, LPCWSTR str2);
-  int (*pfnNKwcsnicmp) (LPCWSTR str1, LPCWSTR str2, int cchLen);
-  void (*pfnNKwcscpy) (LPWSTR p1, LPCWSTR p2);
-  DWORD (*pfnNKwcsncpy) (LPWSTR pDst, LPCWSTR pSrc, DWORD cchLen);
-  int (*pfnNKstrcmpiAandW) (LPCSTR lpa, LPCWSTR lpu);
-  void (*pfnNKUnicodeToAscii) (LPSTR chptr, LPCWSTR wchptr, int maxlen);
-  void (*pfnNKAsciiToUnicode) (LPWSTR wchptr, LPCSTR chptr, int maxlen);
-  BOOL (*pfnSystemTimeToFileTime) (const SYSTEMTIME *pst, LPFILETIME pft);
-  BOOL (*pfnFileTimeToSystemTime) (const FILETIME *pft, LPSYSTEMTIME pst);
-  LONG (*pfnCompareFileTime) (const FILETIME *, const FILETIME *);
-  void (*pfnProfilerHit) (UINT addr);
-  DWORD (*pfnGetEPC) (void);
-  DWORD dwStartupAddr;
-  volatile DWORD dwNextReschedTime;
-  volatile DWORD dwCurMSec;
-  volatile LARGE_INTEGER liIdle;
-  DWORD dwIdleConv;
-  DWORD dwMaxThreadPerProc;
-  DWORD dwProcessorType;
-  WORD wProcessorLevel;
-  WORD wProcessorRevision;
-  DWORD dwInstructionSet;
-  DBGPARAM *pKITLDbgZOne;
-  #ifdef x86
-  FARPROC pfn_except_handler3;
-  FARPROC pfn__abnormal_termination;
-  BOOL (*pfnX86wrmsr) (DWORD dwAddr, DWORD dwValHigh, DWORD dwValLow);
-  BOOL (*pfnX86rdmsr) (DWORD dwAddr, DWORD *lpdwValHigh, DWORD *lpdwValLow);
-  #else
-  FARPROC pfn__C_specific_handler;
-  #endif
-  #ifdef SH4
-  BYTE *IntrPrio;
-  DWORD *InterruptTable;
-  #endif
-  #ifdef ARM
-  const DWORD *pdwOrigVectors;
-  LPDWORD pdwCurrVectors;
-  #endif
-} NKGLOBAL, *PNKGLOBAL;
 struct RNDIS_PDD_CHARACTERISTICS {
   PFN_PDD_SEND_RNDIS_MESSAGE SendRndisMessageHandler;
   PFN_PDD_SEND_RNDIS_PACKET SendRndisPacketHandler;
@@ -5190,113 +4380,23 @@ struct RNDIS_PDD_CHARACTERISTICS {
   DWORD dwMaxRx;
   DWORD dwBaseAddr;
 };
-typedef struct _FMDInterface {
-  DWORD cbSize;
-  PFN_INIT pInit;
-  PFN_DEINIT pDeInit;
-  PFN_GETINFO pGetInfo;
-  PFN_GETBLOCKSTATUS pGetBlockStatus;
-  PFN_SETBLOCKSTATUS pSetBlockStatus;
-  PFN_READSECTOR pReadSector;
-  PFN_WRITESECTOR pWriteSector;
-  PFN_ERASEBLOCK pEraseBlock;
-  PFN_POWERUP pPowerUp;
-  PFN_POWERDON pPowerDown
-  PFN_GETPHYSSECTORADDR pGetPhysSectorAddr;
-  PFN_GETINFOEX pGetInfoEx;
-  PFN_OEMIOCONTROL pOEMIoControl;
-} FMDInterface, *PFMDInterface;
-typedef struct _REG_NOTIFY_INFORMATION {
-  DWORD NextEntryOffset;
-  DWORD Action;
-  DWORD RegNameLength;
-  WCHAR RegName[1];
-} REG_NOTIFY_INFORMATION, *PREG_NOTIFY_INFORMATION;
-typedef struct _IFIMETRICS {
-  ULONG cjThis;
-  ULONG cjIfiExtra;
-  PTRDIFF dpwszFamilyName;
-  PTRDIFF dpwszStyleName;
-  PTRDIFF dpwszFaceName;
-  PTRDIFF dpwszUniqueName;
-  PTRDIFF dpFontSim;
-  LONG lEmbedId;
-  LONG lItalicAngle;
-  LONG lCharBias;
-  PTRDIFF dpCharSets;
-  BYTE jWinCharSet;
-  BYTE jWinPitchAndFamily;
-  USHORT usWinWeight;
-  ULONG flInfo;
-  USHORT fsSelection;
-  USHORT fsType;
-  FWORD fwdUnitsPerEm;
-  FWORD fwdLowestPPEm;
-  FWORD fwdWinAscender;
-  FWORD fwdWinDescender;
-  FWORD fwdMacAscender;
-  FWORD fwdMacDescender;
-  FWORD fwdMacLineGap;
-  FWORD fwdTypoAscender;
-  FWORD fwdTypoDescender;
-  FWORD fwdTypoLineGap;
-  FWORD fwdAveCharWidth;
-  FWORD fwdMaxCharInc;
-  FWORD fwdCapHeight;
-  FWORD fwdXHeight;
-  FWORD fwdSubscriptXSize;
-  FWORD fwdSubscriptYSize;
-  FWORD fwdSubscriptXOffset;
-  FWORD fwdSubscriptYOffset;
-  FWORD fwdSuperscriptXSize;
-  FWORD fwdSuperscriptYSize;
-  FWORD fwdSuperscriptXOffset;
-  FWORD fwdSuperscriptYOffset;
-  FWORD fwdUnderscoreSize;
-  FWORD fwdUnderscorePosition;
-  FWORD fwdStrikeoutSize;
-  FWORD fwdStrikeoutPosition;
-  BYTE chFirstChar;
-  BYTE chLastChar;
-  BYTE chDefaultChar;
-  BYTE chBreakChar;
-  WCHAR wcFirstChar;
-  WCHAR wcLastChar;
-  WCHAR wcDefaultChar;
-  WCHAR wcBreakChar;
-  POINTL ptlBaseline;
-  POINTL ptlAspect;
-  POINTL ptlCaret;
-  RECTL rclFontBox;
-  BYTE achVendId[4];
-  ULONG cKerningPairs;
-  ULONG ulPanoseCulture;
-  PANOSE panose;
-} IFIMETRICS, *PIFIMETRICS;
-typedef struct _FD_DEVICEMETRICS {
-  FLONG flRealizedType;
-  POINTE pteBase;
-  POINTE pteSide;
-  LONG lD;
-  FIX fxMaxAscender;
-  FIX fxMaxDescender;
-  POINTL ptlUnderline1;
-  POINTL ptlStrikeout;
-  POINTL ptlULThickness;
-  POINTL ptlSOThickness;
-  ULONG cxMax;
-  ULONG cyMax;
-  ULONG cjGlyphMax;
-  FD_XFORM fdxQuantized;
-  LONG lNonLinearExtLeading;
-  LONG lNonLinearIntLeading;
-  LONG lNonLinearMaxCharWidth;
-  LONG lNonLinearAvgCharWidth;
-  LONG lMinA;
-  LONG lMinC;
-  LONG lMinD;
-  LONG alReserved[1];
-} FD_DEVICEMETRICS, *PFD_DEVICEMETRICS;
+typedef struct _CE_DMA_ADAPTER {
+  ULONG Size;
+  INTERFACE_TYPE InterfaceType;
+  ULONG BusNumber;
+  ULONG DeviceLocation;
+  ULONG DmaAdapter;
+  ULONG MaximunSizeOfMappingRegister;
+  ULONG AddressBoundary;
+  ULONG AddressAlignment;
+  PHYSICAL_ADDRESS DmaSystemMemoryRangeStart;
+  ULONG DmaSystemMemoryRangeLength;
+  CE_REGISTER_ACCESS_WIDTH CeDmaWidth;
+  CE_DMA_SPEED DmaSpeed;
+  BOOLEAN DemandMode;
+  BOOLEAN BusMaster;
+  DWORD dwFlags;
+} DEVICE_DMA_REQUIRMENT_INFO , *PDEVICE_DMA_REQUIRMENT_INFO;
 typedef struct SMSSTOREITEM_TAG{
   UINT cbSize;
   RILMESSAGE rmMessage;
@@ -5312,21 +4412,6 @@ typedef struct SMSROUTERMSGINFO_TAG{
   UINT nTotalParts;
   UINT iPartIndex;
 } SMSROUTERMSGINFO, *LPSMSROUTERMSGINFO;
-typedef struct tagGESTUREMETRICS {
-  UINT cbSize;
-  DWORD dwID;
-  DWORD dwTimeout;
-  DWORD dwDistanceTolerance;
-  DWORD dwAngularTolerance;
-  DWORD dwExtraInfo;
-} GESTUREMETRICS, *LPGESTUREMETRICS;
-typedef struct _WSDUpdRetransmitParams {
-  ULONG ulSendDelay;
-  ULONG ulRepeat;
-  ULONG ulRepeatMinDelay;
-  ULONG ulRepeatMaxDelay;
-  ULONG ulRepeatUpperDelay;
-} WSDUdpRetransmitParams, *PWSDUdpRetransmitParams;
 struct XRMouseEventArgs : XRRoutedEventArgs{
   XRPoint Position;
   IXRStylusInfo *pStylusInfo;
@@ -5564,11 +4649,6 @@ DWORD dwSpeed;
 GUID gModeID;
 } VTSITEINFO, *PVTSITEINFO;
 int sendto (SOCKET s, const char *buf, int len, int flags, const struct sockaddr *to, int token);
-typedef struct tagNMRGINFO {
-  NMHDR hdr;
-  POINT ptAction;
-  DWORD dwItemSpec;
-} NMRGINFO, *PNMRGINFO;
 typedef struct tagMENUITEMINFO {- };
 typedef struct tagMETAFILEPICT {- // mfp };
 typedef struct tagSTYLESTRUCT {- // ss };
@@ -5620,210 +4700,6 @@ struct COMMAND_MESSAGE_DATA {
  HPACKET hPacketIn;
  HPACKET hPacketOut;
 };
-typedef struct _DDHAL_CALLBACKS 
-{ 
-DDHAL_DDCALLBACKS cbDDCallbacks; 
-DDHAL_DDSURFACECALLBACKS cbDDSurfaceCallbacks; 
-DDHAL_DDPALETTECALLBACKS cbDDPaletteCallbacks; 
-DDHAL_DDCALLBACKS HALDD; 
-DDHAL_DDSURFACECALLBACKS HALDDSurface; 
-DDHAL_DDPALETTECALLBACKS HALDDPalette; 
-DDHAL_DDCALLBACKS HELDD; 
-DDHAL_DDSURFACECALLBACKS HELDDSurface; 
-DDAHL_DDPALETTECALLBACKS HELDDPalette; 
-DDHAL_DDEXEBUFCALLBACKS cbDDExeBufCallbacks; 
-DDHAL_DDEXBUFCALLBACKS HALDDExeBuf; 
-DDHAL_DDEXEBUFCALLBACKS HELDDExeBuf; 
-DDHAL_DDVIDEOPORTCALLBACKS cbDDVideoPortCallbacks; 
-DDHAL_DDVIDEOPORTCALLBACKS HALDDVideoport; 
-DDHAL_DDCOLORCONTROLCALLBACKS cbDDColorControlCallbacks; 
-DDHAL_DDCOLORCONTROLCALLBACKS HALDDColorControl; 
-DDHAL_DDMISCELLANEOUSCALLBACKS cbDDMiscellaneousCallbacks; 
-DDHAL_DDMISCELLANEOUSCALLBACKS HALDDMiscellaneous; 
-DDHAL_DDKERNELCALLBACKS cbDDKernelCallbacks; 
-DDHAL_DDKERNELCALLBACKS HALDDKernel; 
-} DDHAL_CALLBACKS, far *LPDDHAL_CALLBACKS;
-typedef struct _FIELDSTRENGTH {
-unsigned short MaxStrength;
-unsigned short CurrentStrength;
-} FIELDSTRENGTH, *PFIELDSTRENGTH;
-typedef struct _FREQUENCY {
-DWORD dwFreqValue;
-DWORD dwFreqUnit;
-} FREQUENCY, *PFREQUENCY;
-typedef struct _LOGENTRYINFO {
- DWORD LogEntry;
- DWORD dwSequenceId;
- FILETIME EntryTime;
- DWORD dwEventClass;
- BOOL bFinalEntryData;
-} LOGENTRYINFO, *PLOGENTRYINFO;
-typedef struct _SIGNALINFO {
-BOOL fIsStation;
-FREQUENCY CurrentFreq;
-FIELDSTRENGTH FieldStrength;
-DWORD dwMultiPath;
-BOOL fStereoPresent;
-DWORD dwReserved;
-} SIGNALINFO, *PSIGNALINFO;
-typedef struct SMSROUTERMSGINFO_TAG{
- UINT cbSize;
- UINT cbMessageUID;
- BYTE rgbMessageUID[SMS_MAX_MESSAGEUID_SIZE];
- UINT nTotalParts;
- UINT iPartIndex;
-} SMSROUTERMSGINFO, *LPSMSROUTERMSGINFO;
-typedef struct SMSSTOREITEM_TAG{
- UINT cbSize;
- RILMESSAGE rmMessage;
- UINT cbMessageUID;
- BYTE rgbMessageUID[SMS_MAX_MESSAGEUID_SIZE];
- UINT nTotalParts;
- UINT iPartInde;
-} SMSSTOREITEM, *LPSMSSTOREITEM;
-typedef struct { // srmi 
-GUID gEngineID; 
-TCHAR szMfgName[SRMI_NAMELEN]; 
-TCHAR szProductName[SRMI_NAMELEN]; 
-GUID gModeID; 
-TCHAR szModeName[SRMI_NAMELEN]; 
-LANGUAGE language; 
-DWORD dwSequencing; 
-DWORD dwMaxWordsVocab; 
-DWORD dwMaxWordsState; 
-DWORD dwGrammars; 
-DWORD dwFeatures; 
-DWORD dwInterfaces; 
-DWORD dwEngineFeatures;
-} SRMODEINFO, *PSRMODEINFO;
-typedef struct { // srmir
-DWORD dwEngineID;
-DWORD dwMfgName;
-DWORD dwProductName;
-DWORD dwModeID;
-DWORD dwModeName;
-DWORD dwLanguage;
-DWORD dwDialect;
-DWORD dwSequencing;
-DWORD dwMaxWordsVocab;
-DWORD dwMaxWordsState;
-DWORD dwGrammars;
-DWORD dwFeatures;
-DWORD dwInterfaces;
-DWORD dwEngineFeatures;
-} SRMODEINFORANK, *PSRMODEINFORANK;
-typedef struct { // srp
-DWORD dwSize;
-BYTE abWords[0];
-} SRPHRASE, *PSRPHRASE;
-typedef struct { // srrwn
-DWORD dwNextWordNode;
-DWORD dwUpAlternateWordNode;
-DWORD dwDownAlternateWordNode;
-DWORD dwPreviousWordNode;
-DWORD dwPhonemeNode;
-QWORD qwStartTime;
-QWORD qwEndTime;
-DWORD dwWordScore;
-WORD wVolume;
-WORD wPitch;
-VOICEPARTOFSPEECH pos;
-DWORD dwCFGParse;
-DWORD dwCue;
-} SRRESWORDNODE, *PSRRESWORDNODE;
-typedef struct { // srw
-DWORD dwSize;
-DWORD dwWordNum;
-TCHAR szWord[ ];
-} SRWORD, *PSRWORD;
-typedef struct { // ttsmi
-GUID gEngineID;
-TCHAR szMfgName[TTSI_NAMELEN];
-TCHAR szProductName[TTSI_NAMELEN];
-GUID gModeID;
-TCHAR szModeName[TTSI_NAMELEN];
-LANGUAGE language;
-TCHAR szSpeaker[TTSI_NAMELEN];
-TCHAR szStyle[TTSI_STYLELEN];
-WORD wGender;
-WORD wAge;
-DWORD dwFeatures;
-DWORD dwInterfaces;
-DWORD dwEngineFeatures;
-} TTSMODEINFO, *PTTSMODEINFO;
-typedef struct { // ttsmir
-DWORD dwEngineID;
-DWORD dwMfgName;
-DWORD dwProductName;
-DWORD dwModeID;
-DWORD dwModeName;
-DWORD dwLanguage;
-DWORD dwDialect;
-DWORD dwSpeaker;
-DWORD dwStyle;
-DWORD dwGender;
-DWORD dwAge;
-DWORD dwFeatures;
-DWORD dwInterfaces;
-DWORD dwEngineFeatures;
-} TTSMODEINFORANK, *PTTSMODEINFORANK;
-typedef struct _TUNERBANDINFO {
-DWORD dwBandID;
-FREQUENCY RangeLow;
-FREQUENCY RangeHigh;
-FREQUENCY MinTuningStep;
-DWORD dwBandCaps
-} TUNERBANDINFO, *PTUNERBANDINFO;
-typedef struct _TUNERCONFIG {
-DWORD dwBand;
-FREQUENCY CurrentFreq;
-FREQUENCY SeekStep;
-FREQUENCY RangeLow;
-FREQUENCY RangeHigh;
-DWORD dwState;
-} TUNERCONFIG, *PTUNERCONFIG;
-typedef struct _TUNERDEVCAPS {
-DWORD dwMakerID; 
-DWORD dwDrvVer; 
-DWORD dwTunerCaps; 
-DWORD dwBands; 
-DWORD dwReserved1; 
-DWORD dwReserved2;
-} TUNERDEVCAPS, *PTUNERDEVCAPS;
-typedef struct _TUNERSEEKINFO {
-WORD wSeekOptions;
-WORD wSensitivity;
-FREQUENCY RangeLow;
-FREQUENCY RangeHigh;
-SEEK_STATUS_NOTIFY fnCallBack;
-DWORD Reserved;
-} TUNERSEEKINFO, *PTUNERSEEKINFO;
-typedef struct { // vccmd
-DWORD dwSize;
-DWORD dwFlags;
-DWORD dwID;
-DWORD dwCommand;
-DWORD dwDescription;
-DWORD dwCategory;
-DWORD dwCommandText;
-DWORD dwAction;
-DWORD dwActionSize;
-BYTE abData[];
-} VCMDCOMMAND, *PVCMDCOMMAND;
-typedef struct { // vcn
-TCHAR szApplication[VCMD_APPLEN];
-TCHAR szState[VCMD_STATELEN];
-} VCMDNAME, *PVCMDNAME;
-typedef struct { // vcsi
-DWORD dwAutoGainEnable;
-DWORD dwAwakeState;
-DWORD dwThreshold;
-DWORD dwDevice;
-DWORD dwEnable;
-TCHAR szMicrophone[VCMD_MICLEN];
-TCHAR szSpeaker[VCMD_SPEAKERLEN];
-GUID gModeID;
-} VCSITEINFO, *PVCSITEINFO
 typedef struct {
 CLSID clsidDevice;
 TCHAR szDeviceName[VIODEVICENAMESIZE];
@@ -5853,12 +4729,6 @@ DWORD cDiagnosticInfo;
 DWORD cbDiagnosticInfo;
 VIODIAGNOSTICINFO vdiItems[1];
 }
-typedef struct { // vtsi
-DWORD dwDevice;
-DWORD dwEnable;
-DWORD dwSpeed;
-GUID gModeID;
-} VTSITEINFO, *PVTSITEINFO;
 typedef OLECHAR * BSTR;
 typedef CStaticIOWindow CPcmciaIoWindow;
 typedef CStaticMemoryWindow CPcmciaMemWindow;
