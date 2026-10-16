@@ -247,15 +247,6 @@ RASPPPIPV6
 };
 #define LPRASPPPIPV6 RASPPPIPV6*;
 
-/* pdwSize  [extra typedef] */
-typedef DWORD (APIENTRY *PFNRASGETBUFFER)(  PBYTE* ppBuffer,  PDWORD pdwSize  );
-
-/* hEvent  [extra typedef] */
-typedef DWORD (APIENTRY *PFNRASRECEIVEBUFFER)(  HANDLE hPort,  PBYTE pBuffer,  PDWORD pdwSize,  DWORD dwTimeout,  HANDLE hEvent  );
-
-/* PBYTEpBuffer  [extra typedef] */
-typedef DWORD(APIENTRY *PFNRASFREEBUFFER)(PBYTEpBuffer );
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */

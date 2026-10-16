@@ -711,9 +711,6 @@ typedef InternetCookieState *PInternetCookieState, *LPInternetCookieState;
 /*   dwOptions */
 /*   dwContext */
 
-/* dwStatusInformationLength  [extra typedef] */
-typedef void (CALLBACK *INTERNET_STATUS_CALLBACK)(  HINTERNET hInternet,  DWORD_PTR dwContext,  DWORD dwInternetStatus,  LPVOID lpvStatusInformation,  DWORD dwStatusInformationLength  );
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */

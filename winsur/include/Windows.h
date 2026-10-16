@@ -18,6 +18,8 @@
 #include "Winnls.h"
 #include "Tlhelp32.h"
 #include "shellapi.h"
+#include "Mmsystem.h"
+#include "Aygshell.h"
 
 #endif /* _WINDOWS_ */
 

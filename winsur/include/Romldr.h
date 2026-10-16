@@ -51,7 +51,4 @@ typedef struct ROMChain_t{
 } ROMChain_t, OEMRomChain;
 typedef OEMRomChain *POEMRomChain, *LPOEMRomChain;
 
-/* ROMChain_t  [extra struct] */
-typedef struct ROMChain_t{struct ROMChain_t* pNext;ROMHDR* pTOC;} ROMChain_t, OEMRomChain;
-
 #endif /* _ROMLDR_ */

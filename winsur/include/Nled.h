@@ -44,29 +44,6 @@ struct NLED_SUPPORTS_INFO {
  BOOL fMetaCycleOff; 
 };
 
-/* cLeds  [extra struct] */
-struct NLED_COUNT_INFO {  UINT cLeds ; };
-
-/* MetaCycleOff  [extra struct] */
-struct NLED_SETTINGS_INFO {
-  UINT Lednum;
-  INT OffOnBlink;
-  LONG TotalCycleTime;
-  LONG OnTime;
-  LONG OffTime;
-  INT MetaCycleOn;
-  INT MetaCycleOff ; };
-
-/* fMetaCycleOff  [extra struct] */
-struct NLED_SUPPORTS_INFO {
-  UINT Lednum;
-  LONG lCycleAdjust;
-  BOOL fAdjustTotalCycleTime;
-  BOOL fAdjustOnTime;
-  BOOL fAdjustOffTime;
-  BOOL fMetaCycleOn;
-  BOOL fMetaCycleOff ; };
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */

@@ -672,16 +672,4 @@ typedef struct {
 } RILRINGINFO;
 typedef RILRINGINFO *PRILRINGINFO, *LPRILRINGINFO;
 
-/* dwParam  [extra typedef] */
-typedef void (CALLBACK *RILRESULTCALLBACK)( DWORD dwCode, HRESULT hrCmdID, const void* lpData, DWORD cbData, DWORD dwParam );
-
-/* pRilStatus  [extra typedef] */
-typedef void (CALLBACK *RILNDISSTATUSCALLBACK)( PVOID pCallbackContext, LPRILNDISSTATUS pRilStatus );
-
-/* pRilPacket  [extra typedef] */
-typedef void (CALLBACK *RILNDISRECEIVECALLBACK)( PVOID pCallbackContext, LPRILNDISPACKET pRilPacket );
-
-/* pRemotePartyInfo  [extra typedef] */
-typedef DWORD (CALLBACK *RILCALLTYPECALLBACK)( const RILREMOTEPARTYINFO* const pRemotePartyInfo );
-
 #endif /* _RIL_ */

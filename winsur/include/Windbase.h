@@ -94,9 +94,6 @@ typedef struct CEVOLUMEOPTIONS {
 } CEVOLUMEOPTIONS;
 typedef CEVOLUMEOPTIONS *PCEVOLUMEOPTIONS, *LPCEVOLUMEOPTIONS;
 
-/* CESORTORDERSPECEX  [extra struct] */
-typedef struct CESORTORDERSPECEX { WORD wVersion; WORD wNumProps; WORD wKeyFlags; WORD wReserved; CEPROPID rgPropID[CEDB_MAXSORTPROP]; DWROD rgdwFlags[CEDB_MAXSORTPROP]; } CESORTORDERSPECEX;
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */

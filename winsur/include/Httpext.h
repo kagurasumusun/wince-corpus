@@ -76,9 +76,6 @@ typedef struct _HSE_VERSION_INFO{
  CHAR lpszExtensionDesc[HSE_MAX_EXT_DLL_NAME_LEN]; 
 } HSE_VERSION_INFO, *LPHSE_VERSION_INFO;
 
-/* ul2  [extra enum] */
-BOOL WINAPI *ServerSupportFunction(  PHTTP_FILTER_CONTEXT pfc,  enum SF_REQ_TYPE sfReq,  PVOID pData,  DWORD ul1,  DWORD ul2 );
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */

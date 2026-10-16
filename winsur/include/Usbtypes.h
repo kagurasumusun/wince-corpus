@@ -36,7 +36,4 @@ typedef struct {
 } USB_INTERFACE_DESCRIPTOR;
 typedef USB_INTERFACE_DESCRIPTOR *PUSB_INTERFACE_DESCRIPTOR, *LPUSB_INTERFACE_DESCRIPTOR;
 
-/* lpvNotifyParameter  [extra typedef] */
-typedef DWORD (WINAPI *LPTRANSFER_NOTIFY_ROUTINE)( LPVOID lpvNotifyParameter);
-
 #endif /* _USBTYPES_ */

@@ -141,6 +141,12 @@ class GluedPrototypeTests(unittest.TestCase):
                 "POINT ptCurrentPos; RECT rcArea; } COMPOSITIONFORM;")
         self.assertTrue(q.looks_like_c_declaration(text))
 
+    def test_dotted_member_name_is_broken(self):
+        self.assertTrue(q.is_broken_c(
+            "typedef struct { DWORD cbSize.; HWND hwndLastFocus.; } SHACTIVATEINFO;"))
+        self.assertTrue(q.is_broken_c(
+            "typedef struct { UINT fSipUp.:1; } SHACTIVATEINFO;"))
+
     def test_outline_dash_body_is_broken(self):
         self.assertTrue(q.is_broken_c("typedef struct _numberfmt {- };"))
         self.assertTrue(q.is_broken_c("typedef struct _SYSTEM_INFO {- // mbi"))

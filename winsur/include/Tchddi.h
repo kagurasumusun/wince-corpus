@@ -46,15 +46,6 @@ struct TPDC_SAMPLE_RATE {
 /* x40000000  [extra enum] */
 enum enumTouchPanelSampleFlags {TouchSampleValidFlag = 0x01,TouchSampleDownFlag = 0x02,TouchSampleIsCalibratedFlag = 0x04,TouchSamplePreviousDownFlag = 0x08,TouchSampleIgnore = 0x10,TouchSampleMouse = 0x40000000};
 
-/* CalibrationY  [extra struct] */
-struct TPDC_CALIBRATION_POINT {INT PointNumber;INT cDisplayWidth;INT cDisplayHeight;INT CalibrationX;INT CalibrationY;};
-
-/* cCalibrationPoints  [extra struct] */
-struct TPDC_CALIBRATION_POINT_COUNT {DDI_TOUCH_PANEL_CALIBRATION_FLAGS flags;INT cCalibrationPoints;};
-
-/* CurrentSampleRateSetting  [extra struct] */
-struct TPDC_SAMPLE_RATE {INT SamplesPerSecondLow;INT SamplesPerSecondHigh;INT CurrentSampleRateSetting; };
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */

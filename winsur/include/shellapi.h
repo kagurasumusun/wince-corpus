@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 162 constants, 21 declarations, 0 outlines, 1 base types, 0 extra macros, 0 extra decls
+ * 162 constants, 37 declarations, 0 outlines, 1 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _SHELLAPI_
 #define _SHELLAPI_
@@ -240,6 +240,26 @@ typedef struct _NOTIFYICONDATA {
  WCHAR szTip[64]; 
 } NOTIFYICONDATA, *PNOTIFYICONDATA;
 
+/* SHELLEXECUTEINFO  [struct; ce-only; harvest-kb; harvest-kb] */
+typedef struct _SHELLEXECUTEINFO { 
+DWORD cbSize; 
+ULONG fMask; 
+HWND hwnd; 
+LPCSTR lpVerb; 
+LPCSTR lpFile; 
+LPCSTR lpParameters; 
+LPCSTR lpDirectory; 
+int nShow; 
+HINSTANCE hInstApp; 
+// Optional members 
+LPVOID lpIDList; 
+LPCSTR lpClass; 
+HKEY hkeyClass; 
+DWORD dwHotKey; 
+HANDLE hIcon; 
+HANDLE hProcess; 
+} SHELLEXECUTEINFO, FAR *LPSHELLEXECUTEINFO;
+
 /* SHFILEINFO  [struct; shared; A/W SHFILEINFOA,SHFILEINFOW (CE is W-side)] */
 typedef struct _SHFILEINFO { 
  HICON hIcon; 
@@ -290,17 +310,6 @@ HICON ExtractIconEx(
  HICON FAR* phiconLarge,
  HICON FAR* phiconSmall,
  UINT nIcons
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
-
-/* SHGetSpecialFolderPath  [function; shared; CE 3.0..399, 5.0..699; coredll.lib; A/W SHGetSpecialFolderPathA,SHGetSpecialFolderPathW (CE is W-side)] */
-BOOL SHGetSpecialFolderPath(
- HWND hwndOwner,
- LPTSTR lpszPath,
- int nFolder,
- BOOL fCreate 
 );
 #endif /* _WIN32_WCE */
 

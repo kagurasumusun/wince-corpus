@@ -432,6 +432,10 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: Mmsystem/Aygshell を Windows.h へ（第26弾）
+
+コピーはしない。harvest **105,096** 頁を生で開いた。PlaySound / timeGetTime / SHFullScreen は既にヘッダにあったが umbrella から見えない読み落とし。`DWORD cbSize.;` と未知の `TIMECALLBACK` extra typedef を出していた。gcc 通過。
+
 ### 2026-10-16: Tlhelp32/shellapi を Windows.h へ（第25弾）
 
 コピーはしない。harvest **105,096** 頁を生で開いた。CreateToolhelp32Snapshot / SHGetSpecialFolderPath は既にヘッダにあったが umbrella から見えない読み落とし。SetLocaleInfo PRE は `LPWTSTR` のまま（書き換えない）。gcc 通過。

@@ -52,17 +52,6 @@ enum SCROLL_STATE {
   SCROLL_NEXT_FREE
 };
 
-/* idTimer  [extra struct] */
-struct ScrollBarInfoInternal {
-  SCROLLINFO si;
-  BOOL bInSetSBInfo;
-  int nThumbPos;
-  SCROLL_STATE dwState;
-  UINT nTrackStart;
-  UINT fnBar;
-  UINT idTimer;
-};
-
 /* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration

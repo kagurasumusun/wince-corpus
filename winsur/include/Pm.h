@@ -88,9 +88,6 @@ typedef struct _POWER_RELATIONSHIP {
  LPCWSTR pwsChild;
 } POWER_RELATIONSHIP, *PPOWER_RELATIONSHIP;
 
-/* PBT_ADDR  [extra typedef] */
-typedef ULONGLONG bt_addr, *pbt_addr, BT_ADDR, *PBT_ADDR;
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */

@@ -577,20 +577,6 @@ typedef enum SPRECOEVENTFLAGS{ SPREF_AutoPause = (1 << 0) SPREF_Emulated = (1 <<
 /* SPSTREAMFORMATTYPE  [extra enum] */
 typedef enum SPWAVEFORMATTYPE{ SPWF_INPUT, SPWF_SRENGINE } SPSTREAMFORMATTYPE;
 
-/* Confidence  [extra struct] */
-struct SPPHRASEPROPERTY{
-  const WCHAR* pszName;
-  ULONG ulId;
-  const WCHAR* pszValue;
-  VARIANT vValue;
-  ULONG ulFirstElement;
-  ULONG ulCountOfElements;
-  const SPPHRASEPROPERTY* pNextSibling;
-  const SPPHRASEPROPERTY* pFirstChild;
-  char SREngineConfidence;
-  char Confidence;
-};
-
 /* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration

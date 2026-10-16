@@ -326,19 +326,8 @@ typedef struct tagDEC { USHORT wReserved; BYTE scale; BYTE sign; ULONG Hi32; ULO
 /* tagIDLDESC  [extra struct] */
 typedef struct tagIDLDESC { ULONG dwReserved; USHORT wIDLFlags; };
 
-/* tagPARAMDESC  [extra struct] */
-typedef struct FARSTRUCT tagPARAMDESC { unsigned long lpVarValue; unsigned short wParamFlags; };
-
 /* VARIANT_BOOL  [extra typedef] */
 typedef short VARIANT_BOOL;
-
-/* ELEMDES  [extra struct] */
-typedef struct tagELEMDESC {
-  TYPEDESC tdesc;
-  union {
-    IDLDESC idldesc;
-    PARAMDESC paramdesc;};
-  } ELEMDES, *LPELEMDESC;
 
 /* here  [extra enum] */
 typedef unsigned short VARTYPE;

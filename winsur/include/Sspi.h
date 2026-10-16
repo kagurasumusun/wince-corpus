@@ -84,35 +84,4 @@ typedef struct _SecPkgContext_StreamSizes {
  unsigned long cbBlockSize;
 }SecPkgContext_StreamSizes, *PSecPkgContext_StreamSizes;
 
-/* SecurityFunctionTableW  [extra struct] */
-typedef struct _SECURITY_FUNCTION_TABLE_W {
-  unsigned long dwVersion;
-  ENUMERATE_SECURITY_PACKAGES_FN_W EnumerateSecurityPackagesW;
-  QUERY_CREDENTIALS_ATTRIBUTES_FN_W QueryCredentialsAttributesW;
-  ACQUIRE_CREDENTIALS_HANDLE_FN_W AcquireCredentialsHandleW;
-  FREE_CREDENTIALS_HANDLE_FN FreeCredentialsHandle;
-  void SEC_FAR *Reserved2;
-  INITIALIZE_SECURITY_CONTEXT_FN_W InitializeSecurityContextW;
-  ACCEPT_SECURITY_CONTEXT_FN AcceptSecurityContext;
-  COMPLETE_AUTH_TOKEN_FN CompleteAuthToken;
-  DELETE_SECURITY_CONTEXT_FN DeleteSecurityContext;
-  APPLY_CONTROL_TOKEN_FN ApplyControlToken;
-  QUERY_CONTEXT_ATTRIBUTES_FN_W QueryContextAttributesW;
-  IMPERSONATE_SECURITY_CONTEXT_FN ImpersonateSecurityContext;
-  REVERT_SECURITY_CONTEXT_FN RevertSecurityContext;
-  MAKE_SIGNATURE_FN MakeSignature;
-  VERIFY_SIGNATURE_FN VerifySignature;
-  FREE_CONTEXT_BUFFER_FN FreeContextBuffer;
-  QUERY_SECURITY_PACKAGE_INFO_FN_W QuerySecurityPackageInfoW;
-  void SEC_FAR * Reserved3;
-  void SEC_FAR * Reserved4;
-  void SEC_FAR * Reserved5;
-  void SEC_FAR * Reserved6;
-  void SEC_FAR * Reserved7;
-  void SEC_FAR * Reserved8;
-  QUERY_SECURITY_CONTEXT_TOKEN_FN QuerySecurityContextToken;
-  ENCRYPT_MESSAGE_FN EncryptMessage;
-  DECRYPT_MESSAGE_FN DecryptMessage;
-} SecurityFunctionTableW, SEC_FAR * PSecurityFunctionTableW;
-
 #endif /* _SSPI_ */

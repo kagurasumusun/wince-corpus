@@ -519,21 +519,6 @@ struct XRScrollEventArgs : XRRoutedEventArgs
   XRScrollEventType ScrollEventType;
 };
 
-/* ParentWindow  [extra struct] */
-struct XRWindowCreateParams{
-  DWORD Style;
-  DWORD ExStyle;
-  const WCHAR *pTitle;
-  UINT Left;
-  UINT Top;
-  UINT Width;
-  UINT Height;
-  XR_HOOKPROC pHookProc;
-  VOID *pvUserParam;
-  bool AllowsMultipleThreadAccess;
-  HWND ParentWindow;
-};
-
 /* BottomLeft  [extra struct] */
 struct XRCornerRadius{
   float TopLeft;

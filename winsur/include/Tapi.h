@@ -1108,14 +1108,6 @@ typedef struct linecallparams_tag {
 /*   ProtocolGuid */
 /*   dwAvailableTracking */
 
-/* LINEGENERATETONE  [extra struct] */
-typedef struct linegeneratetone_tag {
-  DWORD dwFrequency;
-  DWORD dwCadenceOn;
-  DWORD dwCadenceOff;
-  DWORD dwVolume;
-} LINEGENERATETONE, FAR* LPLINEGENERATETONE;
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */

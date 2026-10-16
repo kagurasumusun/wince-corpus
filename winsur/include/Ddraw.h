@@ -178,9 +178,6 @@ typedef struct _DDBLTFX{
  DDCOLORKEY ddckSrcColorkey; 
 } DDBLTFX,FAR* LPDDBLTFX;
 
-/* LPDIRECTDRAW4  [extra struct] */
-typedef struct IDirectDraw FAR *LPDIRECTDRAW;  typedef struct IDirectDraw2 FAR *LPDIRECTDRAW2;  typedef struct IDirectDraw4 FAR *LPDIRECTDRAW4;
-
 /* LPDIRECTDRAWCLIPPER  [extra struct] */
 typedef struct IDirectDrawClipper FAR *LPDIRECTDRAWCLIPPER;
 
@@ -189,9 +186,6 @@ typedef struct IDirectDrawColorControl FAR *LPDIRECTDRAWCOLORCONTROL;
 
 /* LPDIRECTDRAWPALETTE  [extra struct] */
 typedef struct IDirectDrawPalette FAR *LPDIRECTDRAWPALETTE;
-
-/* LPDIRECTDRAWSURFACE5  [extra struct] */
-typedef struct IDirectDrawSurface FAR *LPDIRECTDRAWSURFACE;  typedef struct IDirectDrawSurface2 FAR *LPDIRECTDRAWSURFACE2;  typedef struct IDirectDrawSurface3 FAR *LPDIRECTDRAWSURFACE3;  typedef struct IDirectDrawSurface4 FAR *LPDIRECTDRAWSURFACE4;  typedef struct IDirectDrawSurface5 FAR *LPDIRECTDRAWSURFACE5;
 
 /* ==================================================================
  * functions and callbacks

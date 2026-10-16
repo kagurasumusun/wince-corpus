@@ -43,9 +43,6 @@ typedef struct tagNOTIFICATIONCONDITION {
 } NOTIFICATIONCONDITION;
 typedef NOTIFICATIONCONDITION *PNOTIFICATIONCONDITION, *LPNOTIFICATIONCONDITION;
 
-/* cbData  [extra typedef] */
-typedef void REGISTRYNOTIFYCALLBACK( HREGNOTIFY hNotify, DWORD dwUserData, const PBYTE pData, const UINT cbData );
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */

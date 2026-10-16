@@ -86,12 +86,6 @@ typedef BOOL (* LPUN_REGISTER_CLIENT_DRIVER_ID)(
 );
 #endif /* _WIN32_WCE */
 
-/* dwInfo4  [extra typedef] */
-typedef BOOL (WINAPI *LPDEVICE_NOTIFY_ROUTINE)( LPVOID lpvNotifyParameter, DWORD dwCode, LPDWORD* dwInfo1, LPDWORD* dwInfo2, LPDWORD* dwInfo3, LPDWORD* dwInfo4);
-
-/* lpResumeDevice  [extra struct] */
-struct _USB_FUNCS { DWORD dwCount; LPGET_USBD_VERSION lpGetUSBDVersion; LPOPEN_CLIENT_REGISTRY_KEY lpOpenClientRegistyKey; LPREGISTER_NOTIFICATION_ROUTINE lpRegisterNotificationRoutine; LPUN_REGISTER_NOTIFICATION_ROUTINE lpUnRegisterNotificationRoutine; LPLOAD_GENERIC_INTERFACE_DRIVER lpLoadGenericInterfaceDriver; LPTRANSLATE_STRING_DESCR lpTranslateStringDesc; LPFIND_INTERFACE lpFindInterface; LPGET_FRAME_NUMBER lpGetFrameNumber; LPGET_FRAME_LENGTH lpGetFrameLength; LPTAKE_FRAME_LENGTH_CONTROL lpTakeFrameLengthControl; LPRELEASE_FRAME_LENGTH_CONTROL lpReleaseFrameLengthControl; LPSET_FRAME_LENGTH lpSetFrameLength; LPGET_DEVICE_INFO lpGetDeviceInfo; LPISSUE_VENDOR_TRANSFER lpIssueVendorTransfer; LPGET_INTERFACE lpGetInterface; LPSET_INTERFACE lpSetInterface; LPGET_DESCRIPTOR lpGetDescriptor; LPSET_DESCRIPTOR lpSetDescriptor; LPSET_FEATURE lpSetFeature; LPCLEAR_FEATURE lpClearFeature; LPGET_STATUS lpGetStatus; LPSYNC_FRAME lpSyncFrame; LPOPEN_PIPE lpOpenPipe; LPABORT_PIPE_TRANSFERS lpAbortPipeTransfers; LPRESET_PIPE lpResetPipe; LPCLOSE_PIPE lpClosePipe; LPIS_PIPE_HALTED lpIsPipeHalted; LPISSUE_CONTROL_TRANSFER lpIssueControlTransfer; LPISSUE_BULK_TRANSFER lpIssueBulkTransfer; LPISSUE_INTERRUPT_TRANSFER lpIssueInterruptTransfer; LPISSUE_ISOCH_TRANSFER lpIssueIsochTransfer; LPIS_TRANSFER_COMPLETE lpIsTransferComplete; LPGET_TRANSFER_STATUS lpGetTransferStatus; LPGET_ISOCH_RESULTS lpGetIsochResults; LPABORT_TRANSFER lpAbortTransfer; LPCLOSE_TRANSFER lpCloseTransfer; LPRESET_DEFAULT_PIPE lpResetDefaultPipe; LPIS_DEFAULT_PIPE_HALTED lpIsDefaultPipeHalted; LPDISABLE_DEVICE lpDisableDevice; LPSUSPEND_DEVICE lpSuspendDevice; LPRESUME_DEVICE lpResumeDevice;};
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */

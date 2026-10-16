@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 59 constants, 43 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 59 constants, 59 declarations, 2 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _AYGSHELL_
 #define _AYGSHELL_
@@ -81,6 +81,8 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
+/* SHACTIVATEINFO  [struct; ce-only; aygshell.lib] */
+
 /* SHGetMenu  [macro; ce-only] */
 #define SHGetMenu(hWndMB) (HMENU)SendMessage((hWndMB), \
  SHCMBM_GETMENU, (WPARAM)0, (LPARAM)0);
@@ -107,16 +109,6 @@ typedef struct tagSHINITDIALOG {
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
-
-/* SHACTIVATEINFO  [struct; ce-only; aygshell.lib] */
-typedef struct {
- DWORD cbSize.;
- HWND hwndLastFocus.;
- UINT fSipUp.:1;
- UINT fSipOnDeactivation. :1;
- UINT fActive :1;
- UINT fReserved :29;
-} SHACTIVATEINFO, *PSHACTIVATEINFO;
 
 /* SHCHANGENOTIFYENTRY  [struct; shared; ceshell.lib] */
 typedef struct tagSHCHANGENOTIFYENTRY {
@@ -158,6 +150,33 @@ typedef struct tagSHRGI {
  * functions and callbacks
  * ================================================================ */
 
+/* SHCreateMenuBar  [function; ce-only; unified-kb; unified-kb] */
+BOOL SHCreateMenuBar( 
+ SHMENUBARINFO* pmb 
+);
+
+/* SHFullScreen  [function; ce-only; unified-kb; unified-kb] */
+BOOL SHFullScreen( 
+ HWND hwndRequester, 
+ DWORD dwState 
+);
+
+/* SHGetSpecialFolderPath  [function; shared; unified-kb; unified-kb] */
+BOOL SHGetSpecialFolderPath( 
+ HWND hwndOwner, 
+ LPTSTR lpszPath, 
+ int nFolder, 
+ BOOL fCreate 
+);
+
+/* SHSipInfo  [function; ce-only; unified-kb; unified-kb] */
+BOOL WINAPI SHSipInfo( 
+ UINT uiAction, 
+ UINT uiParam, 
+ PVOID pvParam, 
+ UINT fWinIni 
+);
+
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 5.0..699 */
 
 /* SHCloseApps  [function; ce-only; CE 2.11..2.12, 5.0..699; Aygshell.lib, aygshell.lib] */
@@ -172,14 +191,6 @@ BYTE SHGetAppKeyAssoc(
 
 /* SHInitExtraControls  [function; ce-only; CE 2.11..2.12, 5.0..699; Aygshell.lib, aygshell.lib] */
 BOOL SHInitExtraControls(void);
-
-/* SHSipInfo  [function; ce-only; CE 2.11..2.12, 5.0..699; Aygshell.lib, aygshell.lib] */
-BOOL WINAPI SHSipInfo(
- UINT uiAction,
- UINT uiParam,
- PVOID pvParam,
- UINT fWinIni
-);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
@@ -193,11 +204,6 @@ BOOL WINAPI SHChangeNotifyDeregister(
 BOOL WINAPI SHChangeNotifyRegister(
  HWND hwnd,
  SHCHANGENOTIFYENTRY * pshcne
-);
-
-/* SHCreateMenuBar  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-BOOL SHCreateMenuBar(
- SHMENUBARINFO * pmb
 );
 
 /* SHDoneButton  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
@@ -214,12 +220,6 @@ HWND WINAPI SHFindMenuBar(
 /* SHFreeContextMenuExtensions  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
 BOOL SHFreeContextMenuExtensions(
  HANDLE hCMExtensions
-);
-
-/* SHFullScreen  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-BOOL SHFullScreen(
- HWND hwndRequester,
- DWORD dwState
 );
 
 /* SHGetAutoRunPath  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */

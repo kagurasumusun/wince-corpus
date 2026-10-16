@@ -813,40 +813,8 @@ typedef struct _CMSG_CTRL_VERIFY_SIGNATURE_EX_PARA {
 /*   pfnAlloc */
 /*   pfnFree */
 
-/* PCCERT_CONTEXT  [extra typedef] */
-typedef const CERT_CONTEXT *PCCERT_CONTEXT;
-
-/* PCCRYPT_OID_INFO  [extra typedef] */
-typedef const CRYPT_OID_INFO CCRYPT_OID_INFO, *PCCRYPT_OID_INFO;
-
 /* SECURITY_INFORMATION  [extra typedef] */
 typedef DWORD SECURITY_INFORMATION;
-
-/* CRYPT_INTEGER_BLOB  [extra struct] */
-typedef struct _CRYPTOAPI_BLOB {
-  DWORD cbData;
-  BYTE* pbData;
-} CRYPT_INTEGER_BLOB, *PCRYPT_INTEGER_BLOB,
-CRYPT_UINT_BLOB, *PCRYPT_UINT_BLOB,
-CRYPT_OBJID_BLOB, *PCRYPT_OBJID_BLOB,
-CERT_NAME_BLOB,*PCERT_NAME_BLOB,
-CERT_RDN_VALUE_BLOB, *PCERT_RDN_VALUE_BLOB,
-CERT_BLOB, *PCERT_BLOB,
-CRL_BLOB,*PCRL_BLOB,
-DATA_BLOB, *PDATA_BLOB,
-CRYPT_DATA_BLOB, *PCRYPT_DATA_BLOB,
-CRYPT_HASH_BLOB, *PCRYPT_HASH_BLOB,
-CRYPT_DIGEST_BLOB,*PCRYPT_DIGEST_BLOB,
-CRYPT_DER_BLOB,*PCRYPT_DER_BLOB,
-CRYPT_ATTR_BLOB, *PCRYPT_ATTR_BLOB;
-
-/* BLOBHEADER  [extra struct] */
-typedef struct _PUBLICKEYSTRUC {
-  BYTE bType;
-  BYTE bVersion;
-  WORD reserved;
-  ALG_ID aiKeyAlg;
-} BLOBHEADER, PUBLICKEYSTRUC;
 
 /* ==================================================================
  * functions and callbacks
@@ -1000,67 +968,9 @@ BOOL WINAPI CryptVerifySignature(
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
 
-/* CertAddEnhancedKeyUsageIdentifier  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertAddEnhancedKeyUsageIdentifier(
- PCCERT_CONTEXT pCertContext,
- LPCSTR pszUsageIdentifier
-);
-
 /* CertAlgIdToOID  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
 LPCSTR WINAPI CertAlgIdToOID(
  DWORD dwAlgId
-);
-
-/* CertCompareIntegerBlob  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertCompareIntegerBlob(
- PCRYPT_INTEGER_BLOB pInt1,
- PCRYPT_INTEGER_BLOB pInt2
-);
-
-/* CertCreateCertificateContext  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-PCCERT_CONTEXT WINAPI CertCreateCertificateContext(
- DWORD dwCertEncodingType,
- const BYTE* pbCertEncoded,
- DWORD cbCertEncoded
-);
-
-/* CertDeleteCertificateFromStore  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertDeleteCertificateFromStore(
- PCCERT_CONTEXT pCertContext
-);
-
-/* CertDuplicateCertificateContext  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-PCCERT_CONTEXT WINAPI CertDuplicateCertificateContext(
- PCCERT_CONTEXT pCertContext
-);
-
-/* CertEnumCertificateContextProperties  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-DWORD WINAPI CertEnumCertificateContextProperties(
- PCCERT_CONTEXT pCertContext,
- DWORD dwPropId
-);
-
-/* CertFreeCertificateContext  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertFreeCertificateContext(
- PCCERT_CONTEXT pCertContext
-);
-
-/* CertGetCertificateContextProperty  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertGetCertificateContextProperty(
- PCCERT_CONTEXT pCertContext,
- DWORD dwPropId,
- void* pvData,
- DWORD* pcbData
-);
-
-/* CertGetNameString  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib; A/W CertGetNameStringA,CertGetNameStringW (CE is W-side)] */
-DWORD WINAPI CertGetNameString(
- PCCERT_CONTEXT pCertContext,
- DWORD dwType,
- DWORD dwFlags,
- void* pvTypePara,
- LPTSTR pszNameString,
- DWORD cchNameString
 );
 
 /* CertifyModule  [function; ce-only; CE 3.0..699; Loadauth.lib, loadauth.lib; heuristic-prefix] */
@@ -1083,28 +993,6 @@ DWORD WINAPI CertOIDToAlgId(
  LPCSTR pszObjId
 );
 
-/* CertRemoveEnhancedKeyUsageIdentifier  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertRemoveEnhancedKeyUsageIdentifier(
- PCCERT_CONTEXT pCertContext,
- LPCSTR pszUsageIdentifier
-);
-
-/* CertSerializeCertificateStoreElement  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertSerializeCertificateStoreElement(
- PCCERT_CONTEXT pCertContext,
- DWORD dwFlags,
- BYTE* pbElement,
- DWORD* pcbElement
-);
-
-/* CertSetCertificateContextProperty  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertSetCertificateContextProperty(
- PCCERT_CONTEXT pCertContext,
- DWORD dwPropId,
- DWORD dwFlags,
- const void* pvData
-);
-
 /* CertStrToName  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib; A/W CertStrToNameA,CertStrToNameW (CE is W-side)] */
 BOOL WINAPI CertStrToName(
  DWORD dwCertEncodingType,
@@ -1114,37 +1002,6 @@ BOOL WINAPI CertStrToName(
  BYTE* pbEncoded,
  DWORD* pcbEncoded,
  LPCTSTR* ppszError
-);
-
-/* CertVerifySubjectCertificateContext  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertVerifySubjectCertificateContext(
- PCCERT_CONTEXT pSubject, 
- PCCERT_CONTEXT pIssuer, 
- DWORD* pdwFlags
-);
-
-/* CryptAcquireCertificatePrivateKey  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CryptAcquireCertificatePrivateKey(
- PCCERT_CONTEXT pCert, 
- DWORD dwFlags,
- void* pvReserved,
- HCRYPTPROV* phCryptProv,
- DWORD* pdwKeySpec,
- BOOL* pfCallerFreeProv
-);
-
-/* CryptFindCertificateKeyProvInfo  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CryptFindCertificateKeyProvInfo(
- PCCERT_CONTEXT pCert,
- DWORD dwFlags,
- void* pvReserved
-);
-
-/* CryptFindOIDInfo  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-PCCRYPT_OID_INFO WINAPI CryptFindOIDInfo(
- DWORD dwKeyType,
- void* pvKey,
- DWORD dwGroupId
 );
 
 /* CryptHashCertificate  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
@@ -1191,15 +1048,6 @@ BOOL CPAcquireContext(
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
-
-/* CertGetValidUsages  [function; shared; CE 5.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertGetValidUsages(
- DWORD cCerts,
- PCCERT_CONTEXT* rghCerts,
- int* cNumOIDs,
- LPSTR* rghOIDs,
- DWORD* pcbOIDs
-);
 
 /* CryptFindLocalizedName  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 LPCWSTR WINAPI CryptFindLocalizedName(

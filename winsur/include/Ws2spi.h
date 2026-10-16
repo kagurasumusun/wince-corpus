@@ -49,24 +49,6 @@ int WSPSelect(
  LPINT lpErrno 
 );
 
-/* lpErrno  [extra struct] */
-SOCKET WSPAccept(SOCKET s,struct sockaddr FAR* addr,LPINT addrlen,LPCONDITIONPROC lpfnCondition,DWORD dwCallbackData,LPINT lpErrno );
-
-/* NSP_ROUTINE  [extra struct] */
-typedef struct _NSP_ROUTINE {
-  DWORD cbSize;
-  DWORD dwMajorVersion;
-  DWORD dwMinorVersion;
-  INT (*NSPCleanup);
-  INT (*NSPLookupServiceBegin);
-  INT (*NSPLookupServiceNext);
-  INT (*NSPLookupServiceEnd);
-  INT (*NSPSetService);
-  INT (*NSPInstallServiceClass);
-  INT (*NSPRemoveServiceClass);
-  INT (*NSPGetServiceClassInfo);
-} NSP_ROUTINE, *PNSP_ROUTINE, *LPNSP_ROUTINE;
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */

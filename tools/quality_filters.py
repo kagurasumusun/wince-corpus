@@ -277,6 +277,9 @@ def is_broken_c(text: str) -> bool:
     # ``typedef struct _foo {- };`` -- outline leftover, not a body.
     if re.search(r"\{\s*-", body):
         return True
+    # ``DWORD cbSize.;`` / ``UINT fSipUp.:1`` -- page glued a '.' onto the name.
+    if re.search(r"[A-Za-z0-9_]\s*\.;", body) or re.search(r"[A-Za-z0-9_]\s*\.:", body):
+        return True
     return False
 
 

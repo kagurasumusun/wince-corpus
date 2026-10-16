@@ -1900,7 +1900,7 @@ def wrap_comment(prefix, text, width=64):
 _WINDOWS_UMBRELLA = (
     "WinDef.h", "WinNT.h", "winerror.h", "Winbase.h", "Winuser.h",
     "Wingdi.h", "Winreg.h", "Commdlg.h", "Winnls.h",
-    "Tlhelp32.h", "shellapi.h",
+    "Tlhelp32.h", "shellapi.h", "Mmsystem.h", "Aygshell.h",
 )
 
 # Pages often name Windows.h (the umbrella) or a desktop-split SDK
@@ -1971,12 +1971,16 @@ _OVERLAY_NAMED = {
     "Module32First", "Module32Next", "CloseToolhelp32Snapshot",
     "PROCESSENTRY32", "MODULEENTRY32",
     "SHGetSpecialFolderPath", "ShellExecuteEx", "SHELLEXECUTEINFO",
+    "PlaySound", "sndPlaySound", "timeGetTime",
+    "waveInGetNumDevs", "waveOutGetNumDevs",
+    "SHCreateMenuBar", "SHFullScreen", "SHSipInfo",
 }
 
 _OVERLAY_HEADERS = {
     "windef.h", "winnt.h", "winbase.h", "winuser.h", "wingdi.h",
     "winreg.h", "winerror.h", "winioctl.h", "mmsystem.h", "imm.h",
     "winnls.h", "windbase.h", "dbgapi.h", "commdlg.h",
+    "aygshell.h", "tlhelp32.h", "shellapi.h",
 }
 _APP_OVERLAY_HEADERS = {
     "windef.h", "winnt.h", "winerror.h", "winbase.h", "winuser.h",
@@ -3461,6 +3465,8 @@ def run_unified(args):
             if not quality_filters.is_c_toolchain_declaration(text, name, kind):
                 continue
             if quality_filters.decl_unusable_for_c(text, name):
+                continue
+            if type_mentions_unknown(text, set(_C_KNOWN_TYPES), name):
                 continue
             extra_type_ds.append(d)
         open_decl_guard = None

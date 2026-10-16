@@ -183,7 +183,4 @@ typedef struct {
  ULONG OptionsFlags;
 } CSSTREAM_HEADER, *PCSSTREAM_HEADER;
 
-/* PCSEVENT  [extra typedef] */
-typedef CSIDENTIFIER CSPROPERTY, *PCSPROPERTY, CSMETHOD, \ *PCSMETHOD, CSEVENT, *PCSEVENT;
-
 #endif /* _CS_ */

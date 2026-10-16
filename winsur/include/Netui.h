@@ -42,13 +42,6 @@ typedef struct _NETUI_NEWPWD{
  TCHAR szNewPassword[PWLEN+1];
 } NETUI_NEWPWD, *PNETUI_NEWPWD;
 
-/* GETDRIVERNAME  [extra struct] */
-typedef struct _GETDRIVERNAMEPARMS {
-  WCHAR DriverName[DRIVER_NAME_LEN];
-  DWORD Socket;
-  DWORD PCCardType;
-} GETDRIVERNAME PARMS, *PGETDRIVERNAMEPARMS;
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */

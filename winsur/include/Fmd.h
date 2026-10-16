@@ -44,14 +44,6 @@ typedef struct _RawWriteBlocksReq {
  DWORD cbBuffer;
 } RawWriteBlocksReq, *PRawWriteBlocksReq;
 
-/* SECTORINFO  [extra struct] */
-typedef struct _SECTORINFO {
-  DWORD dwReserved1;
-  BYTE bOEMReserved;
-  BYTE bBadBlock;
-  BYTE wReserved2;
-} SECTORINFO, *PSECTORINFO;
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */

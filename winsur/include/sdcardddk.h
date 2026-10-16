@@ -214,9 +214,6 @@ typedef struct _SD_CARD_INTERFACE_EX{
  ULONG Reserved[6];
 }SD_CARD_INTERFACE_EX, *PSD_CARD_INTERFACE_EX;
 
-/* SD_DATA_TRANSFER_TRANSFER_CLOCKS  [extra struct] */
-typedef struct _SD_DATA_TRANSFER_CLOCKS { ULONG ReadClocks; ULONG WriteClocks; } SD_DATA_TRANSFER_TRANSFER_CLOCKS, *PSD_DATA_TRANSFER_CLOCKS;
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */

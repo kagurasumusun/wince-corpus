@@ -77,17 +77,6 @@ typedef int (*HCI_DataPacketDown_Out)(
 );
 #endif /* _WIN32_WCE */
 
-/* clock_offset  [extra struct] */
-struct InquiryResultBuffer {
-  DWORD dwTick;
-  BD_ADDR ba;
-  unsigned char page_scan_repetition_mode;
-  unsigned char page_scan_period_mode;
-  unsigned char page_scan_mode;
-  unsigned int class_of_device;
-  unsigned short clock_offset;
-};
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */

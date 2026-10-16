@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 860 constants, 81 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 860 constants, 106 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _MMSYSTEM_
 #define _MMSYSTEM_
@@ -1020,34 +1020,31 @@ typedef struct {
 WAVEHDR;
 typedef WAVEHDR *PWAVEHDR, *LPWAVEHDR;
 
-/* LPTIMECALLBACK  [extra typedef] */
-typedef TIMECALLBACK FAR *LPTIMECALLBACK;
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* PlaySound  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
+/* PlaySound  [function; ce-only; unified-kb; unified-kb] */
 BOOL WINAPI PlaySound( 
  LPCSTR pszSound, 
  HMODULE hmod, 
  DWORD fdwSound 
 );
 
-/* sndPlaySound  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-BOOL sndPlaySound(
- LPCTSTR lpszSoundName,
- UINT fuSound
+/* sndPlaySound  [function; ce-only; unified-kb; unified-kb] */
+BOOL sndPlaySound( 
+ LPCTSTR lpszSoundName, 
+ UINT fuSound 
 );
 
-/* waveInGetNumDevs  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
+/* timeGetTime  [function; shared; unified-kb; unified-kb] */
+DWORD timeGetTime(void);
+
+/* waveInGetNumDevs  [function; shared; unified-kb; unified-kb] */
 UINT waveInGetNumDevs(void);
 
-/* waveOutGetNumDevs  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
+/* waveOutGetNumDevs  [function; shared; unified-kb; unified-kb] */
 UINT waveOutGetNumDevs(void);
-#endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
@@ -1059,9 +1056,6 @@ UINT mixerGetNumDevs(void);
 
 /* timeGetHardwareFrequency  [function; ce-only; CE 5.0..699; Mmtimer.lib] */
 DWORD timeGetHardwareFrequency(void);
-
-/* timeGetTime  [function; shared; CE 5.0..699; Mmtimer.lib] */
-DWORD timeGetTime(void);
 
 /* timeGetTimeSinceInterrupt  [function; ce-only; CE 5.0..699; Mmtimer.lib] */
 DWORD timeGetTimeSinceInterrupt(void);

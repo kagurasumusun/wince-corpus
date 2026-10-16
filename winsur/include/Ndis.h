@@ -476,9 +476,6 @@ typedef struct _NDIS_PACKET_OOB_DATA {
  NDIS_STATUS Status;
 } NDIS_PACKET_OOB_DATA, *PNDIS_PACKET_OOB_DATA;
 
-/* MEDIA_SPECIFIC_INFORMATION  [extra struct] */
-typedef struct MediaSpecificInformation { UINT NextEntryOffset; NDIS_CLASS_ID ClassId; UINT Size; UCHAR ClassInformation[1]; } MEDIA_SPECIFIC_INFORMATION;
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */

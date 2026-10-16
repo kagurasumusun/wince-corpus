@@ -38,9 +38,6 @@ typedef enum _HID_STRING_TYPE {
 } HID_STRING_TYPE;
 typedef HID_STRING_TYPE *PHID_STRING_TYPE, *LPHID_STRING_TYPE;
 
-/* lpSetQueueSize  [extra struct] */
-struct _HID_FUNCS { DWORD dwCount; LPGET_REPORT lpGetReport; LPSET_REPORT lpSetReport; LPGET_INTERRUPT_REPORT lpGetInterruptReport; LPGET_STRING lpGetString; LPGET_QUEUE_SIZE lpGetQueueSize; LPSET_QUEUE_SIZE lpSetQueueSize;};
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */

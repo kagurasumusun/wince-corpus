@@ -26,15 +26,6 @@ struct REPLCHANGEINFO {
  CEOID oidDbase;
 };
 
-/* oidDbase  [extra struct] */
-struct REPLCHANGEINFO {
-  WORD wVersion;
-  WORD wStatus;
-  WORD wObjType;
-  CEOID oidChanged;
-  CEOID oidDbase;
-};
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */

@@ -68,14 +68,8 @@ typedef enum tagRAPISTREAMFLAG {
 } RAPISTREAMFLAG;
 typedef RAPISTREAMFLAG *PRAPISTREAMFLAG, *LPRAPISTREAMFLAG;
 
-/* CENOTINOTIFICATION  [extra struct] */
-typedef struct _CENOTIFICATION { DWORD dwSize DWORD dwParam; UINT uType; CEGUID guid; CEOID oid; CEOID oidParent; } CENOTINOTIFICATION;
-
 /* CENOTIREQUEST  [extra struct] */
 typedef struct _CENOTIFYREQUEST { DWORD dwSize; HWND hwnd; DWORD dwFlags; HANDLE hHeap; DWORD dwParam; } CENOTIREQUEST;
-
-/* PCEPROPVAL  [extra typedef] */
-typedef CEPROPVAL *PCEPROPVAL;
 
 /* Reserved3  [extra struct] */
 typedef struct _SYSTEM_POWER_STATUS_EX {

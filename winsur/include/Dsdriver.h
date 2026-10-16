@@ -35,48 +35,6 @@ typedef struct _DSDMP_MSG {
 } DSDMP_MSG;
 typedef DSDMP_MSG *PDSDMP_MSG, *LPDSDMP_MSG;
 
-/* DSDMP_GETPROP  [extra struct] */
-typedef struct {
-  DWORD dwMsg;
-  DWORD dwInstance;
-  LPGUID pGUID;
-  ULONG ulPropId;
-  PVOID pParams;
-  ULONG cbParams;
-  PVOID pData;
-  ULONG cbData;
-  PULONG pcbReturnedData;
-} DSDMP_GETPROP;
-
-/* DSDMP_QUERYPROP  [extra struct] */
-typedef struct {
-  DWORD dwMsg;
-  DWORD dwInstance;
-  LPGUID pGUID;
-  ULONG ulPropId;
-  PULONG pulSupport;
-} DSDMP_QUERYPROP;
-
-/* DSDMP_SETPROP  [extra struct] */
-typedef struct {
-  DWORD dwMsg;
-  DWORD dwInstance;
-  LPGUID pGUID;
-  ULONG ulPropId;
-  PVOID pParams;
-  ULONG cbParams;
-  PVOID pData;
-  ULONG cbData;
-} DSDMP_SETPROP;
-
-/* DSDMP_CREATEBUFFER  [extra struct] */
-typedef struct {
-  DWORD dwMsg;
-  PDWORD pdwInstance;
-  DWORD dwDeviceIndex;
-  LPCDSBUFFERDESC pDesc;
-} DSDMP_CREATEBUFFER;
-
 /* DSDMP_DELETEBUFFER  [extra struct] */
 typedef struct { DWORD dwMsg;  PDWORD dwInstance; } DSDMP_DELETEBUFFER;
 
@@ -135,14 +93,6 @@ typedef struct {
   DWORD dwInstance;
   DWORD dwFreq;
 } DSDMP_SETFREQUENCY;
-
-/* DSDMP_SET_NOTIFICATIONS  [extra struct] */
-typedef struct {
-  DWORD dwMsg;
-  DWORD dwInstance;
-  DWORD dwCount;
-  LPCDSBPOSITIONNOTIFY pDSNP;
-} DSDMP_SET_NOTIFICATIONS;
 
 /* DSDMP_SETPOSITION  [extra struct] */
 typedef struct {

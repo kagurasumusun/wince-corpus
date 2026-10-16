@@ -92,17 +92,6 @@ typedef struct tagStoreInfo {
  LPBYTE lpbStoreId;
 } STOREINFO, *PSTOREINFO;
 
-/* OBJTPYEINFO  [extra struct] */
-typedef struct tagObjTypeInfo {
-  UINT cbStruct;
-  OBJTYPENAMEW szObjType;
-  UINT uFlags;
-  WCHAR szName[ 80 ];
-  UINT cObjects;
-  UINT cbAllObj;
-  FILETIME ftLastModified
-} OBJTPYEINFO, *POBJTYPEINFO;
-
 /* OPTIONS_DIALOG  [extra enum] */
 enum ReplDialogs {OPTIONS_DIALOG };
 

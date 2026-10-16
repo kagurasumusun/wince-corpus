@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 20 constants, 18 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 20 constants, 53 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _TLHELP32_
 #define _TLHELP32_
@@ -121,18 +121,42 @@ typedef THREADENTRY32* LPTHREADENTRY32;
  * functions and callbacks
  * ================================================================ */
 
+/* CloseToolhelp32Snapshot  [function; ce-only; unified-kb; unified-kb] */
+BOOL WINAPI CloseToolhelp32Snapshot( 
+ HANDLE hSnapshot 
+);
+
+/* CreateToolhelp32Snapshot  [function; shared; unified-kb; unified-kb] */
+HANDLE WINAPI CreateToolhelp32Snapshot( 
+ DWORD dwFlags, 
+ DWORD th32ProcessID 
+);
+
+/* Module32First  [function; shared; unified-kb; unified-kb] */
+BOOL WINAPI Module32First( 
+ HANDLE hSnapshot, 
+ LPMODULEENTRY32 lpme 
+);
+
+/* Module32Next  [function; shared; unified-kb; unified-kb] */
+BOOL WINAPI Module32Next( 
+ HANDLE hSnapshot, 
+ LPMODULEENTRY32 lpme 
+);
+
+/* Process32First  [function; shared; unified-kb; unified-kb] */
+BOOL WINAPI Process32First( 
+ HANDLE hSnapshot, 
+ LPPROCESSENTRY32 lppe 
+);
+
+/* Process32Next  [function; shared; unified-kb; unified-kb] */
+BOOL WINAPI Process32Next( 
+ HANDLE hSnapshot, 
+ LPPROCESSENTRY32 lppe 
+);
+
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* CloseToolhelp32Snapshot  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib] */
-BOOL WINAPI CloseToolhelp32Snapshot(
- HANDLE hSnapshot
-);
-
-/* CreateToolhelp32Snapshot  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib] */
-HANDLE WINAPI CreateToolhelp32Snapshot(
- DWORD dwFlags,
- DWORD th32ProcessID
-);
 
 /* Heap32First  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib] */
 BOOL WINAPI Heap32First(
@@ -158,30 +182,6 @@ BOOL WINAPI Heap32ListNext(
 BOOL WINAPI Heap32Next(
  HANDLE hSnapshot,
  LPHEAPENTRY32 lphe
-);
-
-/* Module32First  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib; A/W Module32FirstW (CE is W-side)] */
-BOOL WINAPI Module32First(
- HANDLE hSnapshot,
- LPMODULEENTRY32 lpme
-);
-
-/* Module32Next  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib; A/W Module32NextW (CE is W-side)] */
-BOOL WINAPI Module32Next(
- HANDLE hSnapshot,
- LPMODULEENTRY32 lpme
-);
-
-/* Process32First  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib; A/W Process32FirstW (CE is W-side)] */
-BOOL WINAPI Process32First(
- HANDLE hSnapshot,
- LPPROCESSENTRY32 lppe
-);
-
-/* Process32Next  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib; A/W Process32NextW (CE is W-side)] */
-BOOL WINAPI Process32Next(
- HANDLE hSnapshot,
- LPPROCESSENTRY32 lppe
 );
 
 /* Thread32First  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib] */

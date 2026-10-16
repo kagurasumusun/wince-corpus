@@ -46,13 +46,6 @@ typedef enum peer_connection_flags_tag { PEER_CONNECTION_NEIGHBOR, PEER_CONNECTI
 /* PEER_RECORD_CHANGE_TYPE  [extra enum] */
 typedef enum peer_record_change_type_tag { PEER_RECORD_ADDED, PEER_RECORD_UPDATED, PEER_RECORD_DELETED, PEER_RECORD_EXPIRED } PEER_RECORD_CHANGE_TYPE;
 
-/* PEER_NAME_PAIR  [extra struct] */
-typedef struct peer_name_pair_tag {
-  DWORD dwSize;
-  PWSTR pwzPeerName;
-  PWSTR pwzFriendlyName;
-} PEER_NAME_PAIR, *PPEER_NAME_PAIR;
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
