@@ -26,6 +26,9 @@ EXACT_TO_HEADER = {
     "BLENDFUNCTION": "Wingdi.h",
     # CE 5.0 RedrawWindow page names Windows.h umbrella.
     "RedrawWindow": "Winuser.h",
+    # CE GetSystemInfo / SYSTEM_INFO pages; desktop split is sysinfoapi.h.
+    "SYSTEM_INFO": "Winbase.h",
+    "GetSystemInfo": "Winbase.h",
     "INVALID_HANDLE_VALUE": "Winbase.h",
     "INVALID_FILE_SIZE": "Winbase.h",
     "INVALID_SET_FILE_POINTER": "Winbase.h",

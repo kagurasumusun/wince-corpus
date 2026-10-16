@@ -747,11 +747,6 @@ BOOL DeleteUrlCacheEntry(
  LPCTSTR lpszUrlName
 );
 
-/* FindCloseUrlCache  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib] */
-BOOL FindCloseUrlCache( 
- HANDLE hEnumHandle
-);
-
 /* FindFirstUrlCacheEntry  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W FindFirstUrlCacheEntryA,FindFirstUrlCacheEntryW (CE is W-side)] */
 HANDLE FindFirstUrlCacheEntry( 
  LPCTSTR lpszUrlSearchPattern,

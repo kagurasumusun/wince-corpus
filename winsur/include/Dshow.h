@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 25 constants, 50 declarations, 2 outlines, 0 base types, 0 extra macros, 70 extra decls
+ * 25 constants, 47 declarations, 2 outlines, 0 base types, 0 extra macros, 70 extra decls
  */
 #ifndef _DSHOW_
 #define _DSHOW_
@@ -186,23 +186,6 @@ typedef enum _FilterState {
 } FILTER_STATE;
 typedef FILTER_STATE *PFILTER_STATE, *LPFILTER_STATE;
 
-/* MPEG2Level  [enum, typedef; ce-only; heuristic-prefix] */
-enum MPEG2Level {
- MPEG2Level_Low = 1,
- MPEG2Level_Main,
- MPEG2Level_High1440,
- MPEG2Level_High
-};
-
-/* MPEG2Profile  [enum, typedef; ce-only; heuristic-prefix] */
-enum MPEG2Profile {
- MPEG2Profile_Simple = 1,
- MPEG2Profile_Main,
- MPEG2Profile_SNRScalable,
- MPEG2Profile_SpatiallyScalable,
- MPEG2Profile_High
-};
-
 /* PIN_DIRECTION  [enum, typedef; shared; entity-headers] */
 typedef enum _PinDirection {
  PINDIR_INPUT,
@@ -220,12 +203,6 @@ typedef enum {
  Flood
 } QualityMessageType;
 typedef QualityMessageType *PQualityMessageType, *LPQualityMessageType;
-
-/* StreamControlState  [enum, typedef; ce-only; heuristic-prefix] */
-enum StreamControlState {
- STREAM_FLOWING,
- STREAM_DISCARDING
-};
 
 /* TIMECODE  [struct, typedef; shared] */
 typedef struct tagTIMECODE {

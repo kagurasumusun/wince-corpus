@@ -267,6 +267,13 @@ def is_broken_c(text: str) -> bool:
             r"(?:WORD|DWORD|LONG|BYTE|UINT|INT|SHORT|BOOL)",
             body):
         return True
+    # Nested ``struct { ... } DWORD dwPageSize`` -- missing ';' after '}'.
+    if re.search(
+            r"\}\s+(?:DWORD|WORD|LONG|BYTE|UINT|INT|SHORT|BOOL|WCHAR|CHAR|"
+            r"TCHAR|HANDLE|HWND|ULONG|USHORT|UCHAR|LPVOID|LPWSTR|LPSTR)\s+"
+            r"[A-Za-z_]",
+            body):
+        return True
     return False
 
 

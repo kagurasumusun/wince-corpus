@@ -141,6 +141,13 @@ class GluedPrototypeTests(unittest.TestCase):
                 "POINT ptCurrentPos; RECT rcArea; } COMPOSITIONFORM;")
         self.assertTrue(q.looks_like_c_declaration(text))
 
+    def test_nested_struct_missing_semi_is_broken(self):
+        text = ("typedef struct _SYSTEM_INFO {\n DWORD dwOemId;\n"
+                " struct {\n WORD wProcessorArchitecture;\n"
+                " WORD wReserved;\n } \n DWORD dwPageSize;\n"
+                "} SYSTEM_INFO, *LPSYSTEM_INFO;")
+        self.assertTrue(q.is_broken_c(text))
+
     def test_formatmessage_va_list_is_usable(self):
         text = ("DWORD FormatMessage(DWORD dwFlags, LPCVOID lpSource, "
                 "DWORD dwMessageId, DWORD dwLanguageId, LPTSTR lpBuffer, "

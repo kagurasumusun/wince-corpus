@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 30 constants, 67 declarations, 9 outlines, 121 base types, 0 extra macros, 0 extra decls
+ * 30 constants, 67 declarations, 9 outlines, 122 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDEF_
 #define _WINDEF_
@@ -529,6 +529,11 @@ typedef LONG *PLONG;
  * CE Unicode / 32-bit data-types row
  * source: win32/common/windows-data-types.md */
 typedef ULONG *PULONG;
+
+/* SYSTEM_INFO [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef struct _SYSTEM_INFO SYSTEM_INFO, *LPSYSTEM_INFO;
 
 /* LPLOGFONT [CE-SPECIFIC]
  * CE Unicode / 32-bit data-types row

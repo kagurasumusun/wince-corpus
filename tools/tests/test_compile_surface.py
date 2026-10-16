@@ -74,6 +74,8 @@ int WINAPI WinMain(HINSTANCE h, HINSTANCE p, LPWSTR cmd, int show) {
     RedrawWindow(NULL, NULL, NULL, 0);
     ExtTextOut(NULL, 0, 0, 0, NULL, NULL, 0, NULL);
     RegCopyFile(NULL);
+    GetSystemInfo(NULL);
+    FindCloseUrlCache(NULL);
     return 0;
 }
 '''

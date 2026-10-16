@@ -432,6 +432,10 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: SYSTEM_INFO 壊れ PRE と GetSystemInfo（第23弾）
+
+コピーはしない。harvest **105,096** + CE 未訪問 41（sample、harvest 対象外）を生で開いた。入れ子 `} DWORD dwPageSize` を broken と見ない誤判定。GetSystemInfo / 不完全 SYSTEM_INFO / FindCloseUrlCache を載せる。gcc 通過。
+
 ### 2026-10-16: va_list 誤 unusable と FormatMessage（第22弾）
 
 コピーはしない。harvest-visits **105,096** 頁を生で開いた。`va_list` を unusable にして FormatMessage を落としていた。`int` が `interface` に誤 glue。PLONG は windows-data-types.md（CC-BY）。FormatMessage / SetFilePointer / CommDlgExtendedError / RedrawWindow / ExtTextOut / RegCopyFile を載せる。ISO C の stdarg.h のみ。gcc 通過。

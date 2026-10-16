@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 566 constants, 346 declarations, 8 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 566 constants, 350 declarations, 8 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINBASE_
 #define _WINBASE_
@@ -983,19 +983,6 @@ typedef CEFILEINFO *PCEFILEINFO, *LPCEFILEINFO;
 /*   dwProviderSize */
 /*   wcProviderData */
 
-/* SYSTEM_INFO  [struct; shared] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   DUMMYUNIONNAME */
-/*   dwPageSize */
-/*   lpMinimumApplicationAddress */
-/*   lpMaximumApplicationAddress */
-/*   dwActiveProcessorMask */
-/*   dwNumberOfProcessors */
-/*   dwProcessorType */
-/*   dwAllocationGranularity */
-/*   wProcessorLevel */
-/*   wProcessorRevision */
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
@@ -1016,6 +1003,11 @@ BOOL WINAPI FindClosePartition(
 /* FindCloseStore  [function; ce-only; unified-kb; unified-kb] */
 BOOL WINAPI FindCloseStore( 
  HANDLE hSearch 
+);
+
+/* FindCloseUrlCache  [function; shared; unified-kb; unified-kb] */
+BOOL FindCloseUrlCache( 
+ HANDLE hEnumHandle
 );
 
 /* GetCurrentProcess  [function; shared; unified-kb; unified-kb] */
@@ -1475,6 +1467,11 @@ FARPROC GetProcAddress(
 
 /* GetProcessHeap  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Lmem.lib, lmem.lib] */
 HANDLE GetProcessHeap(VOID);
+
+/* GetSystemInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
+VOID GetSystemInfo(
+ LPSYSTEM_INFO lpSystemInfo
+);
 
 /* GetSystemPowerStatusEx2  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Getpower.lib, getpower.lib] */
 DWORD GetSystemPowerStatusEx2(

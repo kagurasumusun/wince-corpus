@@ -1963,6 +1963,8 @@ _OVERLAY_NAMED = {
     "CommDlgExtendedError",
     "RegCopyFile", "RegRestoreFile",
     "RedrawWindow", "ExtTextOut",
+    "GetSystemInfo", "SYSTEM_INFO",
+    "FindCloseUrlCache",
 }
 
 _OVERLAY_HEADERS = {
@@ -2114,6 +2116,8 @@ _CORE_TYPEDEFS = (
     ("PUSHORT", "typedef USHORT *PUSHORT;"),
     ("PLONG", "typedef LONG *PLONG;"),
     ("PULONG", "typedef ULONG *PULONG;"),
+    ("SYSTEM_INFO",
+     "typedef struct _SYSTEM_INFO SYSTEM_INFO, *LPSYSTEM_INFO;"),
     ("WNDENUMPROC",
      "typedef BOOL (CALLBACK *WNDENUMPROC)(HWND, LPARAM);"),
     ("WNDENUMPROCW",
@@ -2191,6 +2195,7 @@ _C_KNOWN_TYPES = {
     "DLGTEMPLATE", "LPDLGTEMPLATE", "LPCDLGTEMPLATE",
     "LCID", "PDWORD", "PUINT", "LPINT", "PINT", "PUSHORT", "PBYTE",
     "PLONG", "PULONG",
+    "SYSTEM_INFO", "LPSYSTEM_INFO",
     "BLENDFUNCTION", "PBLENDFUNCTION", "LPBLENDFUNCTION",
     "WNDENUMPROC", "FONTENUMPROC",
     "TEXTMETRIC", "PTEXTMETRIC", "LPTEXTMETRIC",
