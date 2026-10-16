@@ -432,6 +432,10 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: Cred.h を Windows.h へ（第39弾）
+
+コピーはしない。CredFree は既に生成済み。umbrella 読み落とし。
+
 ### 2026-10-16: getdeviceuniqueid.h を Windows.h へ（第38弾）
 
 コピーはしない。GetDeviceUniqueID は既に生成済み。umbrella 読み落とし。

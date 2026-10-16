@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2457 constants, 312 declarations, 16 outlines, 1 base types, 0 extra macros, 0 extra decls
+ * 2457 constants, 312 declarations, 6 outlines, 1 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINUSER_
 #define _WINUSER_
@@ -3013,14 +3013,6 @@ typedef HANDLE HDROP;
 
 /* EM_CANPASTE  [macro, typedef; ce-only; heuristic-prefix] */
 
-/* HIMAGELIST  [typedef; ce-only; heuristic-prefix] */
-
-/* HIMC  [typedef; ce-only; heuristic-prefix] */
-
-/* LPCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
-
-/* LUID  [typedef; ce-only; heuristic-prefix] */
-
 /* MAKEINTRESOURCE  [macro, function; shared; A/W MAKEINTRESOURCEA,MAKEINTRESOURCEW (CE is W-side)] */
 
 /* MAKELPARAM  [macro, function; shared] */
@@ -3037,17 +3029,7 @@ LPARAM MAKEWPARAM(
  WORD wHigh 
 );
 
-/* PCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
-
-/* PCWCH  [typedef; ce-only; heuristic-prefix] */
-
-/* PLUID  [typedef; ce-only; heuristic-prefix] */
-
 /* POINTSTOPOINT  [macro, function; shared] */
-
-/* REGSAM  [typedef; ce-only; heuristic-prefix] */
-
-/* UNSIGNED  [typedef; ce-only; heuristic-prefix] */
 
 /* WM_COPYDATA  [function, struct; ce-only] */
 

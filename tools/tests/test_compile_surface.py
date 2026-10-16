@@ -103,6 +103,7 @@ int WINAPI WinMain(HINSTANCE h, HINSTANCE p, LPWSTR cmd, int show) {
     ConnMgrApiReadyEvent();
     GPSOpenDevice(NULL, NULL, NULL, 0);
     GetDeviceUniqueID(NULL, 0, 1, NULL, NULL);
+    CredFree(NULL);
     return 0;
 }
 '''

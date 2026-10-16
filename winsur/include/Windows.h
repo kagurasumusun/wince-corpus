@@ -17,7 +17,7 @@
 #include "Commdlg.h"
 #include "Winnls.h"
 #include "Tlhelp32.h"
-#include "shellapi.h"
+#include "ShellApi.h"
 #include "Mmsystem.h"
 #include "Aygshell.h"
 #include "Storemgr.h"
@@ -34,6 +34,7 @@
 #include "connmgr.h"
 #include "gpsapi.h"
 #include "getdeviceuniqueid.h"
+#include "Cred.h"
 
 #endif /* _WINDOWS_ */
 
