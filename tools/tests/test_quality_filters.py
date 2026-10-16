@@ -19,6 +19,11 @@ class DefineTests(unittest.TestCase):
         self.assertNotIn("<", line)
         self.assertIn("MAKEINTRESOURCE", line)
 
+    def test_broken_assertmsg_define_dropped(self):
+        self.assertIsNone(q.sanitize_define_line(
+            "#define ASSERTMSG(\n message,\n Condition\n);",
+            "ASSERTMSG", "message, Condition", ""))
+
     def test_rejects_sample_and_incomplete(self):
         self.assertIsNone(q.sanitize_define_line(
             "#define DEMO_COPY 1", "DEMO_COPY", "", "1"))

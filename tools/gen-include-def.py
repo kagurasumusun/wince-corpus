@@ -1901,6 +1901,7 @@ _WINDOWS_UMBRELLA = (
     "WinDef.h", "WinNT.h", "winerror.h", "Winbase.h", "Winuser.h",
     "Wingdi.h", "Winreg.h", "Commdlg.h", "Winnls.h",
     "Tlhelp32.h", "shellapi.h", "Mmsystem.h", "Aygshell.h",
+    "Storemgr.h",
 )
 
 # Pages often name Windows.h (the umbrella) or a desktop-split SDK
@@ -1974,13 +1975,14 @@ _OVERLAY_NAMED = {
     "PlaySound", "sndPlaySound", "timeGetTime",
     "waveInGetNumDevs", "waveOutGetNumDevs",
     "SHCreateMenuBar", "SHFullScreen", "SHSipInfo",
+    "OpenStore", "FormatStore", "FindCloseStore", "FindClosePartition",
 }
 
 _OVERLAY_HEADERS = {
     "windef.h", "winnt.h", "winbase.h", "winuser.h", "wingdi.h",
     "winreg.h", "winerror.h", "winioctl.h", "mmsystem.h", "imm.h",
     "winnls.h", "windbase.h", "dbgapi.h", "commdlg.h",
-    "aygshell.h", "tlhelp32.h", "shellapi.h",
+    "aygshell.h", "tlhelp32.h", "shellapi.h", "storemgr.h",
 }
 _APP_OVERLAY_HEADERS = {
     "windef.h", "winnt.h", "winerror.h", "winbase.h", "winuser.h",

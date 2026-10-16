@@ -88,6 +88,9 @@ int WINAPI WinMain(HINSTANCE h, HINSTANCE p, LPWSTR cmd, int show) {
     timeGetTime();
     waveOutGetNumDevs();
     SHFullScreen(NULL, 0);
+    OpenStore(NULL);
+    FormatStore(NULL);
+    FindCloseStore(NULL);
     return 0;
 }
 '''

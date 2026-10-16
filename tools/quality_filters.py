@@ -146,6 +146,10 @@ def sanitize_define_line(definition: str, name: str = "", args: str = "",
     # Two #define tokens glued together (parser ate a line break).
     if definition.count("#define") > 1:
         return None
+    # ``#define ASSERTMSG(\n message,\n Condition\n);`` -- the page
+    # dropped the replacement and the backslash continuations.
+    if re.search(r"#define\s+\w+\s*\(\s*$", definition, re.M):
+        return None
     return definition
 
 
