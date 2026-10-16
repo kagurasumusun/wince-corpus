@@ -213,6 +213,38 @@ typedef struct {
  WORD Pad;
 } DNS_SRV_DATA, *PDNS_SRV_DATA;
 
+/* DNS_TKEY_DATA  [struct; shared; A/W DNS_TKEY_DATAA,DNS_TKEY_DATAW (CE is W-side)] */
+typedef struct {
+ LPTSTR pNameAlgorithm;
+ PBYTE pAlgorithmPacket;
+ PBYTE pKey;
+ PBYTE pOtherData;
+ DWORD dwCreateTime;
+ DWORD dwExpireTime;
+ WORD wMode;
+ WORD wError;
+ WORD wKeyLength;
+ WORD wOtherLength;
+ UCHAR cAlgNameLength;
+ BOOL bPacketPointers;
+} DNS_TKEY_DATA, *PDNS_TKEY_DATA;
+
+/* DNS_TSIG_DATA  [struct; shared; A/W DNS_TSIG_DATAA,DNS_TSIG_DATAW (CE is W-side)] */
+typedef struct {
+ LPTSTR pNameAlgorithm;
+ PBYTE pAlgorithmPacket;
+ PBYTE pSignature;
+ PBYTE pOtherData;
+ LONGLONG i64CreateTime;
+ WORD wFudgeTime;
+ WORD wOriginalXid;
+ WORD wError;
+ WORD wSigLength;
+ WORD wOtherLength;
+ UCHAR cAlgNameLength;
+ BOOL bPacketPointers;
+} DNS_TSIG_DATA, *PDNS_TSIG_DATA;
+
 /* DNS_TXT_DATA  [struct; shared; A/W DNS_TXT_DATAA,DNS_TXT_DATAW (CE is W-side)] */
 typedef struct {
  DWORD dwStringCount;

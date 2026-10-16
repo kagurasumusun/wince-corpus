@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 424 constants, 40 declarations, 0 outlines, 2 base types, 0 extra macros, 2 extra decls
+ * 424 constants, 46 declarations, 0 outlines, 2 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _WINNLS_
 #define _WINNLS_
@@ -507,6 +507,12 @@ typedef struct _currencyfmt {- };
  * functions and callbacks
  * ================================================================ */
 
+/* GetCPInfo  [function; shared; unified-kb; unified-kb] */
+BOOL GetCPInfo( 
+ UINT CodePage, 
+ LPCPINFO lpCPInfo 
+);
+
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* IsDBCSLeadByte  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, coreloc.lib, locusa.lib] */
@@ -631,12 +637,6 @@ int FoldString(
 
 /* GetACP  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib] */
 UINT GetACP(VOID);
-
-/* GetCPInfo  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib] */
-BOOL GetCPInfo(
- UINT CodePage, 
- LPCPINFO lpCPInfo 
-);
 
 /* GetCurrencyFormat  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib; A/W GetCurrencyFormatA,GetCurrencyFormatW (CE is W-side)] */
 int GetCurrencyFormat(

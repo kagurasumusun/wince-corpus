@@ -59,6 +59,13 @@ BOOL DeregisterService(
  HANDLE hDevice
 );
 
+/* EnumServices  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
+BOOL EnumServices(
+ PBYTE pBuffer,
+ DWORD pdwServiceEntries,
+ DWORD pdwBufferLen
+);
+
 /* GetServiceHandle  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
 HANDLE GetServiceHandle(
  LPWSTR szPrefix,

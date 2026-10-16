@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 20 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
+ * 0 constants, 19 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _NOTIFEXT_HXX_
 #define _NOTIFEXT_HXX_
@@ -97,11 +97,6 @@ void CeNotifyPrivate_DeleteNotification(
  CEOID oid
 );
 
-/* CeNotifyPrivate_FilterType  [function; ce-only; CE 3.0..699] */
-void CeNotifyPrivate_FilterType(
- unsigned intuiFlag
-);
-
 /* CeNotifyPrivate_Lock  [function; ce-only; CE 3.0..699] */
 void CeNotifyPrivate_Lock (void);
 
@@ -167,6 +162,7 @@ void CeNotifyPublic_Uninitialize(void);
  * ================================================================ */
 
 /* function */
+void CeNotifyPrivate_FilterType ( unsigned int uiFlag );
 NotifyPacket *CeNotifyPrivate_TranslateOID (  CEOID oid );
 union PersistentPacket {
   struct {

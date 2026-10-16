@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 45 constants, 17 declarations, 0 outlines, 0 base types, 0 extra macros, 80 extra decls
+ * 45 constants, 16 declarations, 1 outlines, 0 base types, 0 extra macros, 80 extra decls
  */
 #ifndef _DVDATA_
 #define _DVDATA_
@@ -66,6 +66,8 @@
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
+
+/* DVD_TEXT_LANGUAGE_UNIT  [struct; ce-only] */
 
 /* UNICODE_PATH  [macro; ce-only] */
 #define MAX_PATH 128

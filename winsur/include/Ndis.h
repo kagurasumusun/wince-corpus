@@ -1106,6 +1106,14 @@ VOID NdisFillMemory(
 /* NdisGeneratePartialCancelId  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
 UCHAR NdisGeneratePartialCancelId(void);
 
+/* NdisGetAdapterNames  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
+VOID NdisGetAdapterNames(
+ PNDIS_STATUS Status,
+ PBYTE pOutBuf,
+ DWORD cbOutBufSize,
+ PDWORD pcbReturned
+);
+
 /* NdisGetCacheFillSize  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
 ULONG NdisGetCacheFillSize();
 
@@ -1118,6 +1126,14 @@ VOID NdisGetCurrentSystemTime(
 VOID NdisGetDriverHandle(
  PNDIS_HANDLE NdisBindingHandle,
  PNDIS_HANDLE NdisDriverHandle
+);
+
+/* NdisGetProtocolNames  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
+VOID NdisGetProtocolNames(
+ PNDIS_STATUS pStatus,
+ PBYTE pOutBuf,
+ DWORD cbOutBufSize,
+ PDWORD pcbReturned
 );
 
 /* NdisGetSystemUpTime  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */

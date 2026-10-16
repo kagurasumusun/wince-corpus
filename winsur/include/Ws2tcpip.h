@@ -74,14 +74,23 @@ struct sockaddr_in6 {
  u_long sin6_scope_id;
 };
 
-/* ai_next  [extra struct] */
-struct addrinfo {intai_flags;intai_family;intai_socktype;intai_protocol;size_tai_addrlen;char* ai_canonname;struct sockaddr* ai_addr;struct addrinfo* ai_next;};
-
 /* ai  [extra struct] */
 void freeaddrinfo(struct addrinfo FAR* ai);
 
 /* sin6_scope_id  [extra struct] */
 struct sockaddr_in6 {short sin6_family;u_short sin6_port;u_longsin6_flowinfo;struct in6_addrsin6_addr;u_long sin6_scope_id;};
+
+/* ai_next  [extra struct] */
+struct addrinfo {
+  int ai_flags;
+  int ai_family;
+  int ai_socktype;
+  int ai_protocol;
+  size_t ai_addrlen;
+  char* ai_canonname;
+  struct sockaddr* ai_addr;
+  struct addrinfo* ai_next;
+};
 
 /* flags  [extra struct] */
 int getnameinfo( const struct sockaddr FAR* sa, socklen_t salen, char FAR* host, DWORD hostlen, char FAR* serv, DWORD servlen, int flags );

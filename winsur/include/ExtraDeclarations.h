@@ -1,5 +1,5 @@
 /* ExtraDeclarations.h -- declarations without header assignment
- * 5939 unassigned declarations
+ * 5923 unassigned declarations
  */
 #ifndef _EXTRADECLARATIONS_H_
 #define _EXTRADECLARATIONS_H_
@@ -881,7 +881,6 @@ HRESULT GetCaption( long lIndex, long lItemId, long lItemData, BSTR *pbstrCaptio
 HRESULT GetCaptureMode( STRMBUF_CAPTURE_MODE* peStrmbufCaptureMode, LONGLONG* phyMaxBufferMilliseconds);
 HRESULT GetCharsetInfo( BSTR Charset, PMIMECSETINFO pCharsetInfo );
 HRESULT GetClientSite( IOleClientSite **ppClientSite);
-HRESULT GetCommand( intnMaxCmdSize,BSTR*pbstrCommand);
 HRESULT GetCommonBoolProperties( short *pwProps );
 HRESULT GetConnection( BSTR bstrConnectId, IPMConnection** ppiConnection );
 HRESULT GetConnectionFromId( BSTR bstrConnectionId, ICcConnection** ppiConnection);
@@ -1595,7 +1594,6 @@ HRESULT Session( [out] IRTCSession2** ppSession );
 void Set(void);
 void SetAbortSignal( BOOL bAbort);
 HRESULT SetActualDataLength( long lLen );
-HRESULT SetAddInInfo( longnInstanceHandle,IDispatch* pCmdDispatch,longnIDBitmapResourceMedium,longnIDBitmapResourceLarge,longdwCookie);
 HRESULT SetAdditionalHeaderValues( BSTR bstrHeaderValuePairs );
 HRESULT SetAdvise( DWORD dwAspect, DWORD advf, IAdviseSink *pAdvSink);
 BOOL SetAllocatedSize( HPACKET hPacket, DWORD dwBytesRequested, DWORD *pBytesAllocated );
@@ -3339,6 +3337,9 @@ BOOL KitlStopTimerCallback( PFN_KITLTIMERCB pfnCB, LPVOID lpParam );
 HRESULT Download( IDirectMusicPerformance* pPerformance );
 HRESULT GetDMAChannel( DWORD dwIndex, IDMAChannel** ppChannel );
 BOOL TranEnumKnownDevice( PFN_EnumProc pfnCB, LPVOID pUserData );
+HRESULT AddCommand( BSTR szCmdName, BSTR szMethodName, long nBitmapOffset, long dwCookie VARIANT_BOOL FAR* pbResult );
+HRESULT AddCommandBarButton( long nButtonType, BSTR szCmdName, long dwCookie );
+HRESULT SetAddInInfo( long nInstanceHandle, IDispatch* pCmdDispatch, long nIDBitmapResourceMedium, long nIDBitmapResourceLarge, long dwCookie );
 HRESULT OnConnection ( IApplication* pApp, VARIANT BOOL bFirstTime, Long dwCookie  VARIANT_BOOL* OnConnection );
 public override string ToString ()
 public PluginDataView ( PluginData data )
@@ -3390,6 +3391,7 @@ HRESULT GetCallStack( [in] DWORD dwStartingFrameNb, [in] DWORD dwEndingFrameNb, 
 HRESULT AddCodeBpsInProcAndThd( [in] DWORD ProcID, [in] DWORD ThdID, [in] DWORD ccbp, [in, size_is(ccbp)] CODE_BP_TYPE acbp[], [out, size_is(ccbp)] IeXdi2CodeBp* apieXdi2CodeBp[] );
 HRESULT FillMemoryX( [in] DWORD dwCpuNum, [in] LINEAR_MEM_MAP_TYPE lmt, [in] ADDRESS_TYPE AddressRangeStart, [in] ADDRESS_TYPE AddressRangeEnd, [in] DWORD dwNbElem, [in] BYTE bAccessWidthInBytes, [in, size_is(dwNbElem* bAccessWidthInBytes)] BYTE* pbSequenceToFill );
 HRESULT ReadMemoryByProc( [in] DWORD ProcID, [in] LINEAR_MEM_MAP_TYPE lmt, [in] ADDRESS_TYPE Address, [in] DWORD dwNbElemToRead, [in] BYTE bAccessWidthInBytes, [out, size_is(dwNbElemToRead* bAccessWidthInBytes)] BYTE* pbReadBuffer, [out] DWORD* pdwNbElementEffectRead );
+HRESULT GetCommand( int nMaxCmdSize, BSTR* pbstrCommand );
 HRESULT NotifyModule( IOsAxsModule* pmod, BOOL fLoaded );
 HRESULT GetThreadByID ( DWORD dwID, IOsAxsProcess** ppiOsAxsThread );
 HRESULT NotifyProcess( IOsAxsProcess* pproc, BOOL fCreated );
@@ -3526,7 +3528,6 @@ Private Sub winsock_SendProgress(bytesSent, bytesRemaining)
 Private Sub form_Terminate( )
 Private Sub timer_Timer( )
 Private Sub form_Unload(cancel)
-Private Sub intrinsic_Change( )
 Private Sub object_Click( )
 Private Sub winsock_Close( )
 Private Sub treeview_Collapse(index)
@@ -3648,97 +3649,10 @@ BOOL CAM_IOControl(
  DWORD OutBufLen,
  DWORD* pdwBytesTransferred
 );
-Private Sub intrinsic_Change( )
 Class ClearTypeBlt : public GPE
 SCODE ClearTypeBltDst16 (GPEBltParms *);
 SCODE ClearTypeBltDst24 (GPEBltParms *);
 SCODE ClearTypeBltDst32 (GPEBltParms *);
-HRESULT hr; 
-IVIO_Device *pEngineRPM; 
-//Create the event sink; CEngineRPMSink is derived from //IVIO_EventSink. 
-IVIO_EventSink *iRpmSink = new CEngineRPMSink; 
-//Create an instance of the engine RPM device and get its 
-//IVIO_Device interface. 
-hr = CoCreateInstance(CLSID_VIO_ENGINE_RPM, NULL, 
- CLSCTX_INPROC_SERVER, IID_VIODEVICE, 
- &pEngineRPM); 
-//Set the notification sink to notify every half second. 
-pEngineRPM->SetNotify(NULL, iRpmSink, 500); 
-. 
-. 
-. //Turn off the notification sink. 
-pVehicleSpeed->SetNotify(NULL, NULL, 0); 
-//Release the reference to the event sink. 
-iRpmSink->Release(); 
-//Release the reference to the interface. 
-pEngineRPM->Release();
-HRESULT hr; 
-IVIO_Device *pLatchControl; 
-VARIANT vLatchState; 
-//Initialize the VARIANT. 
-VariantInit(&vLatchState); 
-hr = CoCreateInstance(CLSID_VIO_LATCH_CONTROL, NULL, 
- CLSCTX_INPROC_SERVER, IID_VIODEVICE, 
- &pLatchControl); 
-//Set the VARIANT to pop the gas cap switch. 
-vLatchState.vt = VT_UI4; 
-vLatchState.ulVal = VIOLATCH_GAS_CAP; 
-//Send the command to the vehicle. 
-pLatchControl->SetData(&vLatchState, 3000); 
-//Release the reference to the interface. 
-pLatchControl->Release();
-HRESULT hr; 
-IVIO_Device *pLockState; 
-VARIANT vLockInfo; 
-//Initialize the VARIANT. 
-VariantInit(&vLockInfo); 
-hr = CoCreateInstance(CLSID_VIO_LOCK_STATE, NULL, 
- CLSCTX_INPROC_SERVER, IID_VIODEVICE, 
- &pLockState); 
-//Set the VARIANT to lock the doors. 
-vLockInfo.vt = VT_UI4; 
-vLockInfo.ulVal = VIOLOCKS_LOCKED; 
-//Send the command to the vehicle. 
-pLatchControl->SetData(&vLatchState, 3000); 
-//Release the reference to the interface. 
-pLockState->Release();
-HRESULT hr; 
-IVIO_Device *pOdometer; 
-//Create an event sink object; iOdometerSink is derived from //IVIO_EventSink. 
-IVIO_EventSink *iOdometerSink = new COdometerSink; 
-//Create an instance of the odometer device and get its 
-//IVIO_Device interface. 
-hr = CoCreateInstance(CLSID_VIO_ODOMETER, NULL, 
- CLSCTX_INPROC_SERVER, IID_VIODEVICE, 
- &pOdometer); 
-//Set the notification sink to notify every five seconds. 
-pOdometer->SetNotify(NULL, iOdometerSink, 5000); 
-. . . 
-//Remove the notification sink. 
-pOdometer->SetNotify(NULL, NULL, 0); 
-//Release the reference to the interface. 
-pOdometer->Release(); 
-//Release the event sink object. 
-iOdometerSink->Release();
-HRESULT hr; 
-IVIO_Device *pVehicleSpeed; 
-//Create the event sink - CVehicleSpeedSink is derived from //IVIO_EventSink. 
-IVIO_EventSink *iSpeedSink = new CVehicleSpeedSink; 
-//Create an instance of the vehicle speed device and get its 
-//IVIO_Device interface. 
-hr = CoCreateInstance(CLSID_VIO_VEHICLE_SPEED, NULL, 
- CLSCTX_INPROC_SERVER, IID_VIODEVICE, 
- &pVehicleSpeed); 
-//Set the notification sink to notify every half second. 
-pVehicleSpeed->SetNotify(NULL, iSpeedSink, 500); 
-. 
-. 
-//Turn off the notification sink. 
-pVehicleSpeed->SetNotify(NULL, NULL, 0); 
-//Release the reference to the vehicle speed device. 
-pVehicleSpeed->Release(); 
-//Release the reference to the event sink. 
-iSpeedSink->Release();
 Private Sub treeview_Collapse(index)
 Private Sub listview_ColumnClick(index)
 Private Sub commandbar_ComboBoxChange(combobox)
@@ -3834,21 +3748,6 @@ Private Sub object_StateChange(
  ByVal newState As Long
 )
 Private Sub timer_Timer( )
-interface IFst { HRESULT fst(BSTR b); HRESULT fst(long l); };
-#pragma keyword("interface", on)
-#pragma warning(disable:4199)
-interface IX1 {
-  public:
-  [ property(get={0, 1}) ]
-  int Size;
-};
-interface I1 {
-};
-interface I2 {
-};
-interface I3 : I1, I2 {
-};
-interface IX11 { [ property, id(1), helpstring("Help!") ] // id and helpstring not valid on property int Size; };
 #define ARRAYSIZE(hArray) sizeof (hArray) / sizeof (HANDLE)
 enum
 {
@@ -3950,6 +3849,7 @@ while (iRes == 10);
 #define D3DMPRESENTFLAG_LOCKABLE_BACKBUFFER 0x00000001
 #define IMPLTYPEFLAG_FDEFAULT 0x1  #define IMPLTYPEFLAG_FSOURCE 0x2  #define IMPLTYPEFLAG_FRESTRICTED 0x4  #define IMPLTYPEFLAG_FDEFAULTVTABLE 0x8
 #define DVD_SYSTEM_SPACE_BIT 1 #define DVD_MENU_SPACE_BIT (DVD_SYSTEM_SPACE_BIT << 1) #define DVD_VMG_SPACE_BIT (DVD_MENU_SPACE_BIT << 1) #define DVD_VTS_SPACE_BIT (DVD_VMG_SPACE_BIT << 1) #define DVD_NAVSTATREQ_VOLUME_BIT 1 #define DVD_NAVSTATREQ_HIGHLIGHT_BIT (DVD_NAVSTATREQ_VOLUME_BIT << 1) #define DVD_NAVSTATREQ_PCI_BIT (DVD_NAVSTATREQ_HIGHLIGHT_BIT << 1) #define DVD_PROGRAM_PREVIOUS 0 #define DVD_PROGRAM_NEXT 1 #define DVD_PROGRAM_TOP 2 #define DVD_MENU_TITLE 0 #define DVD_MENU_ROOT 1 #define DVD_MENU_SUBPICTURE 2 #define DVD_MENU_AUDIO 3 #define DVD_MENU_ANGLE 4 #define DVD_MENU_PTT 5 #define DVD_SELECT_UPPER 0 #define DVD_SELECT_RIGHT 1 #define DVD_SELECT_LOWER 2 #define DVD_SELECT_LEFT 3 #define DVD_SCANCAP_FORWARD_SCAN 0x1 #define DVD_SCANCAP_FORWARD_SLOW 0x2 #define DVD_SCANCAP_FORWARD_SINGLE 0x4 #define DVD_SCANCAP_BACKWARD_SCAN 0x8 #define DVD_SCANCAP_BACKWARD_SLOW 0x10 #define DVD_SCANCAP_BACKWARD_SINGLE 0x20 #define SPRM_M_LCD 0 #define SPRM_ASTN 1 #define SPRM_SPSTN 2 #define SPRM_AGLN 3 #define SPRM_TTN 4 #define SPRM_VTS_TTN 5 #define SPRM_TT_PGCN 6 #define SPRM_PTTN 7 #define SPRM_HL_BTNN 8 #define SPRM_NV_TMR 9 #define SPRM_NV_TMR_PGCN 10 #define SPRM_P_AMXMD 11 #define SPRM_CTY_CD 12 #define SPRM_PTL_LVL 13 #define SPRM_P_CFG_VIDEO 14 #define SPRM_P_CFG_AUDIO 15 #define SPRM_INI_LCD_AST 16 #define SPRM_INI_LCD_EXT_AST 17 #define SPRM_INI_LCD_SPST 18 #define SPRM_INI_LCD_EXT_SPST 19 #define SPRM_REGION 20
+#define MulDiv(a,b,c) (((a)*(b))/(c))
 #define ALPHA_SHIFT 24 #define RED_SHIFT 16 #define GREEN_SHIFT 8 #define BLUE_SHIFT 0 #define ALPHA_MASK ((ARGB) 0xff << ALPHA_SHIFT) #define MAKEARGB(a, r, g, b) \ (((ARGB) ((a) & 0xff) << ALPHA_SHIFT)| \ ((ARGB) ((r) & 0xff) << RED_SHIFT) | \ ((ARGB) ((g) & 0xff) << GREEN_SHIFT)| \ ((ARGB) ((b) & 0xff) << BLUE_SHIFT))
 #define LDAP_OPT_SIGN 0x95  #define LDAP_OPT_ENCRYPT 0x96
 #define OBEX_RESP_RESPOND 0x00000001  #define OBEX_RESP_OK 0x00000002  #define OBEX_RESP_ACCEPT 0x00000003  #define OBEX_RESP_REJECT 0x00000004  #define OBEX_RESP_DENY 0x00000005  #define OBEX_RESP_CONTINUE 0x00000006  #define OBEX_RESP_ABORT 0x00000007  #define OBEX_RESP_DISCONNECT 0x00000008  #define OBEX_RESP_HANGUP 0x00000009
@@ -4007,71 +3907,6 @@ ENABLEFAULTS();
 #define declint( varname ) int #varname; declint( a ); //Warning, int a;; declint( b ) //OK, int b;
 #define ALTERNATE_ENTRY(Name) \ .globl Name; \ Name:; #define LEAF_ENTRY(Name) \ .text; \ .globl Name; \ .ent Name, 0; \ Name:; \ .frame sp, 0, ra; \ .prologue 0; #define NESTED_ENTRY(Name, fsize, retrg) \ .text; \ .globl Name; \ .ent Name, 0; \ Name:; \ .frame sp, fsize, retrg; #define ALTERNATE_ENTRY_S(Name) \ .globl Name; \ Name:; #define SYSTEM_ENTRY(Name) \ .text; \ .globl Name; \ .ent Name, 0; \ Name:; \ .frame sp, 0, ra; \ .prologue 0; #define LEAF_ENTRY_S(Name, Section) \ .text Section; \ .globl Name; \ .ent Name, 0; \ Name:; \ .frame sp, 0, ra; \ .prologue 0; #define NESTED_ENTRY_S(Name, fsize, retrg, Section) \ .text Section; \ .globl Name; \ .ent Name, 0; \ Name:; \ .frame sp, fsize, retrg; #define EXCEPTION_HANDLER(Handler) \ .edata 1, Handler; #define PROLOGUE_END .prologue 1;
 #define D3DFVF_TEXTUREFORMAT1 3 // one floating point value #define D3DFVF_TEXTUREFORMAT2 0 // two floating point values #define D3DFVF_TEXTUREFORMAT3 1 // three floating point values #define D3DFVF_TEXTUREFORMAT4 2 // four floating point values
-#define BITRATE (DX * abs(DY) * DBITCOUNT * FRAMERATE)
-#define SAMPLESIZE (DX * abs(DY) * DBITCOUNT / 8)
-#define FOURCC_YV12 mmioFOURCC('Y', 'V', '1', '2')
-#define DX 176
-#define DY -144 // **** YUV is always negative ****
-#define DBITCOUNT 12 // **** YV12 is 12 bits format ****
-#define FRAMERATE 15
-CS_DATARANGE_VIDEO DCAM_StreamMode = {
-  {
-    sizeof (CS_DATARANGE_VIDEO),
-    0,
-    SAMPLESIZE,
-    0,
-    STATIC_CSDATAFORMAT_TYPE_VIDEO,
-    FOURCC_YV12,
-    0x0000, 0x0010, 0x80, 0x00, 0x00, 0xaa, 0x00, 0x38, 0x9b, 0x71,
-    STATIC_CSDATAFORMAT_SPECIFIER_VIDEOINFO
-  },
-  TRUE,
-  TRUE,
-  CS_VIDEOSTREAM_CAPTURE,
-  0,
-  {
-    STATIC_CSDATAFORMAT_SPECIFIER_VIDEOINFO,
-    CS_AnalogVideo_None,
-    DX,DY,
-    DX,DY,
-    DX,DY,
-    1,
-    1,
-    1,
-    1,
-    DX, DY,
-    DX, DY,
-    DX,
-    DY,
-    0,
-    0,
-    0,
-    0,
-    FRAMEINTERVAL_15FPS,
-    FRAMEINTERVAL_3_75FPS,
-    BITRATE / 8, // (DX * DY * DBITCOUNT) * DFPS_MIN,
-    BITRATE, // (DX * DY * DBITCOUNT) * DFPS_MAX
-  },
-  {
-    0,0,DX,DY,
-    0,0,DX,DY,
-    BITRATE,
-    0L,
-    REFTIME_15FPS,
-    sizeof (CS_BITMAPINFOHEADER),
-    DX,
-    DY,
-    3,
-    DBITCOUNT,
-    FOURCC_YV12|BI_SRCPREROTATE,
-    SAMPLESIZE,
-    0,
-    0,
-    0,
-    0,
-    0, 0, 0
-  }
-};
 #define CeCreateTokenFromAccount
 #define CeCreateTokenFromAccount_Trap WIN32_FS_CALL( HANDLE, 100, (LPCWSTR pszAccountName)).
 #define OEM_BLOCK_RESERVED 0x01 #define OEM_BLOCK_READONLY 0x02
@@ -4343,11 +4178,6 @@ struct S
   };
 } *p_s;
 struct servent {char FAR* s_name;char FAR* FAR* s_aliases;short s_port;char FAR* s_proto;};
-struct sockaddr_in{shortsin_family;
-unsigned shortsin_port;
-IN_ADDR sin_addr;
-charsin_zero[8];
-};
 struct timeval {long tv_sec;long tv_usec;};
 struct protoent {char FAR* p_name;char FAR* FAR* p_aliases;short p_proto;};
 int WSAConnect(SOCKET s,const struct sockaddr FAR* name,int namelen,LPWSABUF lpCallerData,LPWSABUF lpCalleeData,LPQOS lpSQOS,LPQOS lpGQOS);
@@ -4360,13 +4190,6 @@ void main()
 {
   pA++; // error, size of A not known
   pB++;
-};
-#pragma keyword("interface", on)
-struct IUnknown {
-};
-interface IMyIF {
-  [ property(put=0, put=0) ]
-  int data;
 };
 struct S; union S;
 typedef struct _IMAGE_CE_RUNTIME_FUNCTION_ENTRY { unsigned int FuncStart : 32; unsigned int PrologLen : 8; unsigned int FuncLen : 22; unsigned int ThirtyTwoBit : 1; unsigned int ExceptionFlag : 1;} IMAGE_CE_RUNTIME_FUNCTION_ENTRY,*PIMAGE_CE_RUNTIME_FUNCTION_ENTRY;

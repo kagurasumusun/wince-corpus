@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 38 constants, 10 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 38 constants, 42 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _KFUNCS_
 #define _KFUNCS_
@@ -70,33 +70,28 @@ DWORD dwTimeout
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
+/* DebugBreak  [function; ce-only; harvest-kb; harvest-kb] */
+void DebugBreak( void );
 
-/* DebugBreak  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-void DebugBreak(void);
-
-/* GetCurrentProcess  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib] */
+/* GetCurrentProcess  [function; ce-only; harvest-kb; harvest-kb] */
 HANDLE GetCurrentProcess(void);
 
-/* GetCurrentProcessId  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib] */
+/* GetCurrentProcessId  [function; ce-only; harvest-kb; harvest-kb] */
 DWORD GetCurrentProcessId(void);
 
-/* GetCurrentThread  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib] */
+/* GetCurrentThread  [function; ce-only; harvest-kb; harvest-kb] */
 HANDLE GetCurrentThread(void);
 
-/* GetCurrentThreadId  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib] */
+/* GetCurrentThreadId  [function; ce-only; harvest-kb; harvest-kb] */
 DWORD GetCurrentThreadId(void);
 
-/* ResetEvent  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-BOOL ResetEvent(
- HANDLE hEvent
-);
+/* ResetEvent  [function; ce-only; harvest-kb; harvest-kb] */
+BOOL ResetEvent( 
+HANDLE hEvent );
 
-/* SetEvent  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-BOOL SetEvent(
- HANDLE hEvent
-);
-#endif /* _WIN32_WCE */
+/* SetEvent  [function; ce-only; harvest-kb; harvest-kb] */
+BOOL SetEvent( 
+HANDLE hEvent );
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 

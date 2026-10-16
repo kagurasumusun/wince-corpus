@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1265 constants, 144 declarations, 4 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 1265 constants, 147 declarations, 4 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINGDI_
 #define _WINGDI_
@@ -1433,6 +1433,14 @@ typedef struct tagBITMAPFILEHEADER {
 } BITMAPFILEHEADER;
 typedef BITMAPFILEHEADER *PBITMAPFILEHEADER, *LPBITMAPFILEHEADER;
 
+/* BLENDFUNCTION  [struct; shared; +not-umbrella] */
+typedef struct _BLENDFUNCTION {
+ BYTE BlendOp;
+ BYTE BlendFlags;
+ BYTE SourceConstantAlpha;
+ BYTE AlphaFormat;
+}BLENDFUNCTION, *PBLENDFUNCTION, *LPBLENDFUNCTION;
+
 /* DISPLAY_DEVICE  [struct; shared; +not-umbrella; A/W DISPLAY_DEVICEA,DISPLAY_DEVICEW (CE is W-side)] */
 typedef struct _DISPLAY_DEVICE {
  DWORD cb;
@@ -2221,6 +2229,21 @@ WINGDIAPI UINT WINAPI SetTextAlign(
 BOOL CALLBACK AbortProc(
  HDC hdc, // handle to DC
  int iError // error value
+);
+
+/* AlphaBlend  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
+BOOL AlphaBlend(
+ HDC hdcDest,
+ int nXOriginDest,
+ int nYOriginDest,
+ int nWidthDest,
+ int nHeightDest,
+ HDC hdcSrc,
+ int nXOriginSrc,
+ int nYOriginSrc,
+ int nWidthSrc,
+ int nHeightSrc,
+ BLENDFUNCTION blendFunction
 );
 
 /* EnumFontFamiliesEx  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W EnumFontFamiliesExA,EnumFontFamiliesExW (CE is W-side)] */

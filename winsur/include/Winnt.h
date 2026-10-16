@@ -1,11 +1,11 @@
-/* WinNT.h -- Windows CE unified surface
+/* Winnt.h -- Windows CE unified surface
  *
  * ONE tree for every CE generation.  Version differences use
  * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1520 constants, 41 declarations, 14 outlines, 21 base types, 0 extra macros, 0 extra decls
+ * 1520 constants, 45 declarations, 41 outlines, 21 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINNT_
 #define _WINNT_
@@ -1648,6 +1648,20 @@ typedef WCHAR TBYTE;
 
 /* _IMAGE_ALPHA_RUNTIME_FUNCTION_ENTRY  [typedef; ce-only] */
 
+/* definition  [typedef; ce-only; heuristic-prefix] */
+
+/* firstChild  [typedef; ce-only; heuristic-prefix] */
+
+/* HIMAGELIST  [typedef; ce-only; heuristic-prefix] */
+
+/* HIMC  [typedef; ce-only; heuristic-prefix] */
+
+/* lastChild  [typedef; ce-only; heuristic-prefix] */
+
+/* LPCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
+
+/* LUID  [typedef; ce-only; heuristic-prefix] */
+
 /* MAKELANGID  [macro, function; shared] */
 WORD MAKELANGID( 
  USHORT usPrimaryLanguage, 
@@ -1659,16 +1673,54 @@ WORD MAKELANGID(
  ((DWORD)((((DWORD)((WORD )(srtid))) << 16) | \ 
  ((DWORD)((WORD )(lgid)))));
 
+/* namespaceURI  [typedef; ce-only; heuristic-prefix] */
+
+/* nextSibling  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeName  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeType  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeTypedValue  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeTypeString  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeValue  [typedef; ce-only; heuristic-prefix] */
+
+/* ownerDocument  [typedef; ce-only; heuristic-prefix] */
+
+/* parentNode  [typedef; ce-only; heuristic-prefix] */
+
+/* parsed  [typedef; ce-only; heuristic-prefix] */
+
+/* PCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
+
+/* PCWCH  [typedef; ce-only; heuristic-prefix] */
+
+/* PLUID  [typedef; ce-only; heuristic-prefix] */
+
+/* prefix  [typedef; ce-only; heuristic-prefix] */
+
+/* previousSibling  [typedef; ce-only; heuristic-prefix] */
+
 /* PRIMARYLANGID  [macro, function; shared] */
 WORD PRIMARYLANGID( 
  WORD lgid 
 );
 
+/* REGSAM  [typedef; ce-only; heuristic-prefix] */
+
+/* specified  [typedef; ce-only; heuristic-prefix] */
+
 /* SUBLANGID  [macro, function; shared] */
 
 /* TEXT  [macro, typedef, function; shared] */
 
+/* UNSIGNED  [typedef; ce-only; heuristic-prefix] */
+
 /* VOID  [typedef, macro; shared; entity-headers] */
+
+/* xml  [typedef; ce-only; heuristic-prefix] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -1725,13 +1777,13 @@ typedef struct _FILE_NOTIFY_INFORMATION {
 
 /* MEMORY_BASIC_INFORMATION  [struct; ce-only; harvest-kb; harvest-kb] */
 typedef struct _MEMORY_BASIC_INFORMATION { 
-PVOID BaseAddress; 
-PVOID AllocationBase; 
-DWORD AllocationProtect; 
-DWORD RegionSize; 
-DWORD State; 
-DWORD Protect; 
-DWORD Type; 
+ PVOID BaseAddress; 
+ PVOID AllocationBase; 
+ DWORD AllocationProtect; 
+ DWORD RegionSize; 
+ DWORD State; 
+ DWORD Protect; 
+ DWORD Type; 
 } MEMORY_BASIC_INFORMATION; 
 typedef MEMORY_BASIC_INFORMATION *PMEMORY_BASIC_INFORMATION;
 typedef MEMORY_BASIC_INFORMATION *PMEMORY_BASIC_INFORMATION, *LPMEMORY_BASIC_INFORMATION;

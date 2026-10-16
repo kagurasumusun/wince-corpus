@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 566 constants, 320 declarations, 8 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 566 constants, 344 declarations, 8 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINBASE_
 #define _WINBASE_
@@ -696,35 +696,35 @@ typedef struct _CREATE_THREAD_DEBUG_INFO {
 typedef CREATE_THREAD_DEBUG_INFO *PCREATE_THREAD_DEBUG_INFO, *LPCREATE_THREAD_DEBUG_INFO;
 
 /* DCB  [struct; ce-only; harvest-kb; harvest-kb] */
-typedef struct _DCB { 
-DWORD DCBlength; 
-DWORD BaudRate; 
-DWORD fBinary:1; 
-DWORD fParity:1; 
-DWORD fOutxCtsFlow:1; 
-DWORD fOutxDsrFlow:1; 
-DWORD fDtrControl:2; 
-DWORD fDsrSensitivity:1; 
-DWORD fTXContinueOnXoff:1; 
-DWORD fOutX: 1; 
-DWORD fInX: 1; 
-DWORD fErrorChar:1; 
-DWORD fNull:1; 
-DWORD fRtsControl:2; 
-DWORD fAbortOnError:1; 
-DWORD fDummy2:17; 
-WORD wReserved; 
-WORD XonLim; 
-WORD XoffLim; 
-BYTE ByteSize; 
-BYTE Parity; 
-BYTE StopBits; 
-char XonChar; 
-char XoffChar; 
-char ErrorChar; 
-char EofChar; 
-char EvtChar; 
-WORD wReserved1; 
+typedef struct _DCB {
+ DWORD DCBlength;
+ DWORD BaudRate; 
+ DWORD fBinary:1;
+ DWORD fParity:1;
+ DWORD fOutxCtsFlow:1;
+ DWORD fOutxDsrFlow:1;
+ DWORD fDtrControl:2;
+ DWORD fDsrSensitivity:1;
+ DWORD fTXContinueOnXoff:1;
+ DWORD fOutX: 1;
+ DWORD fInX: 1;
+ DWORD fErrorChar:1;
+ DWORD fNull:1; 
+ DWORD fRtsControl:2; 
+ DWORD fAbortOnError:1;
+ DWORD fDummy2:17;
+ WORD wReserved;
+ WORD XonLim; 
+ WORD XoffLim; 
+ BYTE ByteSize; 
+ BYTE Parity; 
+ BYTE StopBits;
+ char XonChar; 
+ char XoffChar; 
+ char ErrorChar;
+ char EofChar; 
+ char EvtChar; 
+ WORD wReserved1; 
 } DCB;
 typedef DCB *PDCB, *LPDCB;
 
@@ -842,9 +842,9 @@ typedef struct _SORTORDERSPEC {
 typedef SORTORDERSPEC *PSORTORDERSPEC, *LPSORTORDERSPEC;
 
 /* STORE_INFORMATION  [struct; ce-only; harvest-kb; harvest-kb] */
-typedef struct STORE_INFORMATION { 
-DWORD dwStoreSize; 
-DWORD dwFreeSize; 
+typedef struct STORE_INFORMATION {
+ DWORD dwStoreSize;
+ DWORD dwFreeSize;
 } STORE_INFORMATION, *LPSTORE_INFORMATION;
 
 /* SYSTEM_POWER_STATUS_EX2  [struct; ce-only] */
@@ -999,6 +999,51 @@ typedef CEFILEINFO *PCEFILEINFO, *LPCEFILEINFO;
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
+
+/* DebugBreak  [function; shared; unified-kb; unified-kb] */
+void DebugBreak( void );
+
+/* ExitProcess  [function; shared; unified-kb; unified-kb] */
+VOID ExitProcess( 
+ UINT uExitCode 
+);
+
+/* FindClosePartition  [function; ce-only; unified-kb; unified-kb] */
+BOOL WINAPI FindClosePartition( 
+ HANDLE hSearch 
+);
+
+/* FindCloseStore  [function; ce-only; unified-kb; unified-kb] */
+BOOL WINAPI FindCloseStore( 
+ HANDLE hSearch 
+);
+
+/* GetCurrentProcess  [function; shared; unified-kb; unified-kb] */
+HANDLE GetCurrentProcess(void);
+
+/* GetCurrentProcessId  [function; shared; unified-kb; unified-kb] */
+DWORD GetCurrentProcessId(void);
+
+/* GetCurrentThread  [function; shared; unified-kb; unified-kb] */
+HANDLE GetCurrentThread(void);
+
+/* GetCurrentThreadId  [function; shared; unified-kb; unified-kb] */
+DWORD GetCurrentThreadId(void);
+
+/* GlobalDeleteAtom  [function; shared; unified-kb; unified-kb] */
+ATOM GlobalDeleteAtom( 
+ ATOM nAtom 
+);
+
+/* ResetEvent  [function; shared; unified-kb; unified-kb] */
+BOOL ResetEvent( 
+ HANDLE hEvent 
+);
+
+/* SetEvent  [function; shared; unified-kb; unified-kb] */
+BOOL SetEvent( 
+ HANDLE hEvent 
+);
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
 

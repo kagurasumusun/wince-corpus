@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 2 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 1 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _NEW_
 #define _NEW_
@@ -20,9 +20,6 @@
 /* _set_new_handler  [function; ce-only; CE 5.0..599; coredll.dll] */
 _PNH _set_new_handler(
  _PNH pNewHandler);
-
-/* _set_new_mode  [function; ce-only; CE 5.0..599; coredll.dll] */
-int _set_new_mode(intnewhandlermode);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

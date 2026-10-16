@@ -51,7 +51,14 @@ typedef struct _BTEVENT {
 } BTEVENT, *PBTEVENT;
 
 /* BthInquiryResult  [extra struct] */
-typedef struct __bth_inquiry_result {BT_ADDRba;unsigned intcod;unsigned shortclock_offset;unsigned charpage_scan_mode;unsigned charpage_scan_period_mode;unsigned charpage_scan_repetition_mode;} BthInquiryResult;
+typedef struct __bth_inquiry_result {
+  BT_ADDR ba;
+  unsigned int cod;
+  unsigned short clock_offset;
+  unsigned char page_scan_mode;
+  unsigned char page_scan_period_mode;
+  unsigned char page_scan_repetition_mode;
+} BthInquiryResult;
 
 /* ==================================================================
  * functions and callbacks

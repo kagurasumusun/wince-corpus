@@ -32,6 +32,17 @@ PVOID WAV_Init(
  DWORD dwInfo 
 );
 
+/* WAV_IOControl  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
+BOOL WAV_IOControl(
+ DWORD dwOpenData,
+ DWORD dwCode,
+ PBYTE pBufIn,
+ DWORD dwLenIn,
+ PBYTE pBufOut,
+ DWORD dwLenOut,
+ PDWORD pdwActualOut 
+);
+
 /* WAV_Open  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
 PVOID WAV_Open(
  DWORD dwData,

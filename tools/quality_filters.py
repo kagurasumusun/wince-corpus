@@ -187,6 +187,7 @@ _GLUED = re.compile(
     r"BOOL|DWORD|UINT|ULONG|LONG|WORD|BYTE|LPVOID|LPCVOID|LPSTR|LPCSTR|"
     r"LPWSTR|LPCWSTR|LPTSTR|LPCTSTR|HRESULT|LRESULT|NTSTATUS|"
     r"VOID|INT|SHORT|CHAR)(?:[A-Z][a-z]|[a-z])|"
+    r"\b(?:int|void|char|long|short)[a-z]|"
     r"\b(?:struct|enum|union)_[A-Z]"
 )
 

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 2 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 0 constants, 2 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _PWINGDI_
 #define _PWINGDI_
@@ -25,8 +25,5 @@ struct ContrastCmdInputParm {
 
 /* parm  [extra struct] */
 struct ContrastCmdInputParm {  int command;  int parm;  };
-
-/* intparm  [extra struct] */
-struct ContrastCmdInputParm{intcommand;intparm;};
 
 #endif /* _PWINGDI_ */

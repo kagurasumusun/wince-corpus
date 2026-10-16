@@ -432,6 +432,10 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: SetEvent を Windows.h 面へ（第21弾）
+
+コピーはしない。harvest-visits **105,096** 頁を生で再読。`intnNumerator` を glued と判定。kfuncs に居る SetEvent が Winbase overlay を潰していた。AlphaBlend/BLENDFUNCTION（CE 5.0 PRE）、SetEvent/ResetEvent/DebugBreak/GetCurrentThread/GetCurrentProcess/ExitProcess を Windows.h 面に載せる。gcc 通過。
+
 ### 2026-10-16: 全コーパス PRE と harvest ヘッダ落ち（第20弾）
 
 コピーはしない。harvest-visits の **105,096** 頁を生で開き PRE 82,775。`INT` が `INTERNET_*` に誤 glue。`Typedef` 大文字始まりを宣言と見ない。harvest に header が無く overlay が捨てていた。壊れた `{- // mbi` が MEMORY_BASIC 本文を塞いでいた。VirtualQuery / GetCharABCWidths / ABC / LPABC（GetCharABCWidths PRE）を載せる。harvest 55,114。gcc 通過。

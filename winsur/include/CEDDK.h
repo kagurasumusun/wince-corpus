@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 60 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 178 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _CEDDK_
 #define _CEDDK_
@@ -17,7 +17,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-/* BUS_DATA_TYPE  [enum; ce-only] */
+/* BUS_DATA_TYPE  [enum; ce-only; harvest-kb; harvest-kb] */
 typedef enum _BUS_DATA_TYPE {
  ConfigurationSpaceUndefined = -1,
  Cmos,
@@ -34,7 +34,7 @@ typedef enum _BUS_DATA_TYPE {
  MaximumBusDataType
 } BUS_DATA_TYPE, *PBUS_DATA_TYPE;
 
-/* INTERFACE_TYPE  [enum; ce-only] */
+/* INTERFACE_TYPE  [enum; ce-only; harvest-kb; harvest-kb] */
 typedef enum _INTERFACE_TYPE {
  InterfaceTypeUndefined = -1,
  Internal,
@@ -67,25 +67,7 @@ typedef struct _DMA_ADAPTER_OBJECT_ {
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
-
-/* MmMapIoSpace  [function; ce-only; CE 3.0..399, 5.0..699; CEDDK.lib] */
-PVOID MmMapIoSpace( 
- PHYSICAL_ADDRESS PhysicalAddress, 
- ULONG NumberOfBytes, 
- BOOLEAN CacheEnable 
-);
-
-/* MmUnmapIoSpace  [function; ce-only; CE 3.0..399, 5.0..699; CEDDK.lib] */
-VOID MmUnmapIoSpace( 
- PVOID BaseAddress, 
- ULONG NumberOfBytes 
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
-
-/* HalGetBusData  [function; ce-only; CE 3.0..699; CEDDK.lib] */
+/* HalGetBusData  [function; ce-only; unified-kb; unified-kb] */
 ULONG HalGetBusData( 
  BUS_DATA_TYPE BusDataType, 
  ULONG BusNumber, 
@@ -94,7 +76,7 @@ ULONG HalGetBusData(
  ULONG Length 
 );
 
-/* HalGetBusDataByOffset  [function; ce-only; CE 3.0..699; CEDDK.lib] */
+/* HalGetBusDataByOffset  [function; ce-only; unified-kb; unified-kb] */
 ULONG HalGetBusDataByOffset( 
  BUS_DATA_TYPE BusDataType, 
  ULONG BusNumber, 
@@ -104,7 +86,7 @@ ULONG HalGetBusDataByOffset(
  ULONG Length 
 );
 
-/* HalSetBusData  [function; ce-only; CE 3.0..699; CEDDK.lib] */
+/* HalSetBusData  [function; ce-only; unified-kb; unified-kb] */
 ULONG HalSetBusData( 
  BUS_DATA_TYPE BusDataType, 
  ULONG BusNumber, 
@@ -113,7 +95,7 @@ ULONG HalSetBusData(
  ULONG Length 
 );
 
-/* HalSetBusDataByOffset  [function; ce-only; CE 3.0..699; CEDDK.lib] */
+/* HalSetBusDataByOffset  [function; ce-only; unified-kb; unified-kb] */
 ULONG HalSetBusDataByOffset( 
  BUS_DATA_TYPE BusDataType, 
  ULONG BusNumber, 
@@ -123,50 +105,139 @@ ULONG HalSetBusDataByOffset(
  ULONG Length 
 );
 
-/* HalTranslateBusAddress  [function; ce-only; CE 3.0..699; CEDDK.lib] */
-BOOL HalTranslateBusAddress( 
- INTERFACE_TYPE InterfaceType, 
- ULONG BusNumber, 
- PHYSICAL_ADDRESS BusAddress, 
- PULONG AddressSpace, 
- PPHYSICAL_ADDRESS TranslatedAddress 
+/* HalTranslateBusAddress  [function; ce-only; harvest-kb; harvest-kb] */
+BOOL HalTranslateBusAddress ( 
+INTERFACE_TYPE InterfaceType, 
+ULONG BusNumber, 
+PHYSICAL_ADDRESS BusAddress, 
+PULONG AddressSpace, 
+PPHYSICAL_ADDRESS TranslatedAddress );
+
+/* MmUnmapIoSpace  [function; ce-only; unified-kb; unified-kb] */
+VOID MmUnmapIoSpace( 
+ PVOID BaseAddress, 
+ ULONG NumberOfBytes 
 );
 
-/* READ_PORT_BUFFER_UCHAR  [function; ce-only; CE 3.0..699; CEDDK.lib] */
+/* READ_PORT_BUFFER_UCHAR  [function; ce-only; unified-kb; unified-kb] */
 VOID READ_PORT_BUFFER_UCHAR(
  PUCHAR Port, 
  PUCHAR Buffer, 
  ULONG Count 
 );
 
-/* READ_PORT_BUFFER_ULONG  [function; ce-only; CE 3.0..699; CEDDK.lib] */
+/* READ_PORT_BUFFER_ULONG  [function; ce-only; unified-kb; unified-kb] */
 VOID READ_PORT_BUFFER_ULONG(
  PULONG Port, 
  PULONG Buffer, 
  ULONG Count 
 );
 
-/* READ_PORT_BUFFER_USHORT  [function; ce-only; CE 3.0..699; CEDDK.lib] */
+/* READ_PORT_BUFFER_USHORT  [function; ce-only; unified-kb; unified-kb] */
 VOID READ_PORT_BUFFER_USHORT(
  PUSHORT Port, 
  PUSHORT Buffer, 
  ULONG Count 
 );
 
-/* READ_PORT_UCHAR  [function; ce-only; CE 3.0..699; CEDDK.lib] */
+/* READ_PORT_UCHAR  [function; ce-only; unified-kb; unified-kb] */
 UCHAR READ_PORT_UCHAR(
  PUCHAR Port 
 );
 
-/* READ_PORT_ULONG  [function; ce-only; CE 3.0..699; CEDDK.lib] */
+/* READ_PORT_ULONG  [function; ce-only; unified-kb; unified-kb] */
 ULONG READ_PORT_ULONG(
  PULONG Port 
 );
 
-/* READ_PORT_USHORT  [function; ce-only; CE 3.0..699; CEDDK.lib] */
+/* READ_PORT_USHORT  [function; ce-only; unified-kb; unified-kb] */
 USHORT READ_PORT_USHORT(
  PUSHORT Port 
 );
+
+/* READ_REGISTER_UCHAR  [function; ce-only; unified-kb; unified-kb] */
+UCHAR READ_REGISTER_UCHAR(
+ PUCHAR Register 
+);
+
+/* READ_REGISTER_ULONG  [function; ce-only; unified-kb; unified-kb] */
+ULONG READ_REGISTER_ULONG(
+ PULONG Register 
+);
+
+/* READ_REGISTER_USHORT  [function; ce-only; unified-kb; unified-kb] */
+USHORT READ_REGISTER_USHORT(
+ PUSHORT Register 
+);
+
+/* WRITE_PORT_BUFFER_UCHAR  [function; ce-only; unified-kb; unified-kb] */
+VOID WRITE_PORT_BUFFER_UCHAR(
+ PUCHAR Port, 
+ PUCHAR Buffer, 
+ ULONG Count 
+);
+
+/* WRITE_PORT_BUFFER_ULONG  [function; ce-only; unified-kb; unified-kb] */
+VOID WRITE_PORT_BUFFER_ULONG(
+ PULONG Port, 
+ PULONG Buffer, 
+ ULONG Count 
+);
+
+/* WRITE_PORT_BUFFER_USHORT  [function; ce-only; unified-kb; unified-kb] */
+VOID WRITE_PORT_BUFFER_ULONG(
+ PULONG Port, 
+ PULONG Buffer, 
+ ULONG Count 
+);
+
+/* WRITE_PORT_UCHAR  [function; ce-only; unified-kb; unified-kb] */
+VOID WRITE_PORT_UCHAR(
+ PUCHAR Port, 
+ UCHAR Value 
+);
+
+/* WRITE_PORT_ULONG  [function; ce-only; unified-kb; unified-kb] */
+VOID WRITE_PORT_ULONG(
+ PULONG Port, 
+ ULONG Value 
+);
+
+/* WRITE_PORT_USHORT  [function; ce-only; unified-kb; unified-kb] */
+VOID WRITE_PORT_USHORT(
+ PUSHORT Port, 
+ USHORT Value 
+);
+
+/* WRITE_REGISTER_UCHAR  [function; ce-only; unified-kb; unified-kb] */
+VOID WRITE_REGISTER_UCHAR(
+ PUCHAR Register, 
+ UCHAR Value 
+);
+
+/* WRITE_REGISTER_ULONG  [function; ce-only; unified-kb; unified-kb] */
+VOID WRITE_REGISTER_ULONG(
+ PULONG Register, 
+ ULONG Value 
+);
+
+/* WRITE_REGISTER_USHORT  [function; ce-only; unified-kb; unified-kb] */
+VOID WRITE_REGISTER_USHORT(
+ PUSHORT Register, 
+ USHORT Value 
+);
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
+
+/* MmMapIoSpace  [function; ce-only; CE 3.0..399, 5.0..699; CEDDK.lib] */
+PVOID MmMapIoSpace( 
+ PHYSICAL_ADDRESS PhysicalAddress, 
+ ULONG NumberOfBytes, 
+ BOOLEAN CacheEnable 
+);
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
 
 /* READ_REGISTER_BUFFER_UCHAR  [function; ce-only; CE 3.0..699; CEDDK.lib] */
 VOID READ_REGISTER_BUFFER_UCHAR(
@@ -189,60 +260,6 @@ VOID READ_REGISTER_BUFFER_USHORT(
  ULONG Count 
 );
 
-/* READ_REGISTER_UCHAR  [function; ce-only; CE 3.0..699; CEDDK.lib] */
-UCHAR READ_REGISTER_UCHAR(
- PUCHAR Register 
-);
-
-/* READ_REGISTER_ULONG  [function; ce-only; CE 3.0..699; CEDDK.lib] */
-ULONG READ_REGISTER_ULONG(
- PULONG Register 
-);
-
-/* READ_REGISTER_USHORT  [function; ce-only; CE 3.0..699; CEDDK.lib] */
-USHORT READ_REGISTER_USHORT(
- PUSHORT Register 
-);
-
-/* WRITE_PORT_BUFFER_UCHAR  [function; ce-only; CE 3.0..699; CEDDK.lib] */
-VOID WRITE_PORT_BUFFER_UCHAR(
- PUCHAR Port, 
- PUCHAR Buffer, 
- ULONG Count 
-);
-
-/* WRITE_PORT_BUFFER_ULONG  [function; ce-only; CE 3.0..699; CEDDK.lib] */
-VOID WRITE_PORT_BUFFER_ULONG(
- PULONG Port, 
- PULONG Buffer, 
- ULONG Count 
-);
-
-/* WRITE_PORT_BUFFER_USHORT  [function; ce-only; CE 3.0..699; CEDDK.lib] */
-VOID WRITE_PORT_BUFFER_ULONG(
- PULONG Port, 
- PULONG Buffer, 
- ULONG Count 
-);
-
-/* WRITE_PORT_UCHAR  [function; ce-only; CE 3.0..699; CEDDK.lib] */
-VOID WRITE_PORT_UCHAR(
- PUCHAR Port, 
- UCHAR Value 
-);
-
-/* WRITE_PORT_ULONG  [function; ce-only; CE 3.0..699; CEDDK.lib] */
-VOID WRITE_PORT_ULONG(
- PULONG Port, 
- ULONG Value 
-);
-
-/* WRITE_PORT_USHORT  [function; ce-only; CE 3.0..699; CEDDK.lib] */
-VOID WRITE_PORT_USHORT(
- PUSHORT Port, 
- USHORT Value 
-);
-
 /* WRITE_REGISTER_BUFFER_UCHAR  [function; ce-only; CE 3.0..699; CEDDK.lib] */
 VOID WRITE_REGISTER_BUFFER_UCHAR(
  PUCHAR Register, 
@@ -262,24 +279,6 @@ VOID WRITE_REGISTER_BUFFER_USHORT(
  PUSHORT Register, 
  PUSHORT Buffer, 
  ULONG Count 
-);
-
-/* WRITE_REGISTER_UCHAR  [function; ce-only; CE 3.0..699; CEDDK.lib] */
-VOID WRITE_REGISTER_UCHAR(
- PUCHAR Register, 
- UCHAR Value 
-);
-
-/* WRITE_REGISTER_ULONG  [function; ce-only; CE 3.0..699; CEDDK.lib] */
-VOID WRITE_REGISTER_ULONG(
- PULONG Register, 
- ULONG Value 
-);
-
-/* WRITE_REGISTER_USHORT  [function; ce-only; CE 3.0..699; CEDDK.lib] */
-VOID WRITE_REGISTER_USHORT(
- PUSHORT Register, 
- USHORT Value 
 );
 #endif /* _WIN32_WCE */
 

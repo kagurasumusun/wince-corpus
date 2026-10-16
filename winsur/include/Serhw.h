@@ -161,6 +161,17 @@ ULONG HWGetStatus(
  LPCOMSTAT lpStat 
 );
 
+/* HWIoctl  [function; ce-only; CE 2.11..2.12, 3.0..699] */
+BOOL HWIoctl(
+ DWORD dwOpenData,
+ DWORD dwCode,
+ PBYTE pBufIn,
+ DWORD dwLenIn,
+ PBYTE pBufOut,
+ DWORD dwLenOut,
+ PDWORD pdwActualOut 
+);
+
 /* HWOpen  [function; ce-only; CE 2.11..2.12, 3.0..699] */
 BOOL HWOpen(
  PVOID pContext 

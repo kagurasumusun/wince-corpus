@@ -22,6 +22,8 @@ EXACT_TO_HEADER = {
     "MEMORY_BASIC_INFORMATION": "Winnt.h",
     # GetCharABCWidths is Wingdi; ABC page names the Windows.h umbrella.
     "ABC": "Wingdi.h",
+    # CE 5.0 BLENDFUNCTION / AlphaBlend pages name Windows.h umbrella.
+    "BLENDFUNCTION": "Wingdi.h",
     "INVALID_HANDLE_VALUE": "Winbase.h",
     "INVALID_FILE_SIZE": "Winbase.h",
     "INVALID_SET_FILE_POINTER": "Winbase.h",

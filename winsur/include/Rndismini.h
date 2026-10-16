@@ -38,8 +38,16 @@ void pdddEINIT(void);
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
+/* MDDAllocMem  [function; ce-only; CE 5.0..699] */
+PBYTE MDDAllocMem(void);
+
 /* MddDisconnect  [function; ce-only; CE 5.0..699] */
 void MddDisconnect();
+
+/* MDDFreeMem  [function; ce-only; CE 5.0..699] */
+void MDDFreeMem(
+ PBYTE pBuffer
+);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

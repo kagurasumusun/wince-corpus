@@ -122,6 +122,16 @@ class GluedPrototypeTests(unittest.TestCase):
         self.assertFalse(q.is_glued_prototype(text))
         self.assertTrue(q.looks_like_c_declaration(text))
 
+    def test_int_glued_to_hungarian_is_glued(self):
+        text = "int MulDiv( int nNumber,  intnNumerator,  intnDenominator);"
+        self.assertTrue(q.is_glued_prototype(text))
+        self.assertFalse(q.looks_like_c_declaration(text))
+
+    def test_spaced_intdecl_ok(self):
+        text = "int MulDiv(int nNumber, int nNumerator, int nDenominator);"
+        self.assertFalse(q.is_glued_prototype(text))
+        self.assertTrue(q.looks_like_c_declaration(text))
+
     def test_capital_t_typedef_is_kept(self):
         text = ("Typedef struct _tagCOMPOSITIONFORM { DWORD dwStyle; "
                 "POINT ptCurrentPos; RECT rcArea; } COMPOSITIONFORM;")

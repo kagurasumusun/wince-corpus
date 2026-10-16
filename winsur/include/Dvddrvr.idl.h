@@ -110,13 +110,13 @@ HRESULT RequestTransfer( PHYSICAL_ADDRESS physStart, DWORD dwSize,  VOID* pva, D
 HRESULT Scan( BOOL bForward, double dRate, double* dwActual, DWORD* bVobuSkip );
 HRESULT SetAPS( DWORD apsType, DWORD* pdwCookie );
 HRESULT SetAspectRatioMode(EDVDAspectRatioModeenumAspectRatioMode);
-HRESULT SetAudioStreamNumber(intiDecodingNumber);
+HRESULT SetAudioStreamNumber( int iDecodingNumber );
 HRESULT SetAudioStreamType(EDVDAudioStreamTypedwSelectedDecoder);
 HRESULT SetBitstreamType( DWORD dwBitstreamType );
 HRESULT SetContentAspectRatio(EDVDDisplayAspectRatioenumDisplayAspectRatio);
 HRESULT SetDataNotificationThreshold( DWORD dwPendingThreshold );
 HRESULT SetDisplayAspectRatio(EDVDDisplayAspectRatioenumDisplayAspectRatio);
-HRESULT SetSubpictureStreamNumber(intiDecodingNumber,BOOL bDisplay);
+HRESULT SetSubpictureStreamNumber( int iDecodingNumber );
 HRESULT Slow( BOOL bForward, double dRate, double* dwActual );
 HRESULT UnregisterSyncEvent( EDVDSyncEventType etype, HANDLE h );
 

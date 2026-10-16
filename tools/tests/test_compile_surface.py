@@ -56,6 +56,19 @@ int WINAPI WinMain(HINSTANCE h, HINSTANCE p, LPWSTR cmd, int show) {
     VirtualQuery(NULL, NULL, 0);
     GetCharABCWidths(NULL, 0, 0, NULL);
     GetObject(NULL, 0, NULL);
+    SetEvent(NULL);
+    ResetEvent(NULL);
+    GetCurrentThread();
+    GetCurrentProcess();
+    {
+        BLENDFUNCTION bf;
+        bf.BlendOp = 0;
+        bf.BlendFlags = 0;
+        bf.SourceConstantAlpha = 0;
+        bf.AlphaFormat = 0;
+        AlphaBlend(NULL, 0, 0, 0, 0, NULL, 0, 0, 0, 0, bf);
+    }
+    DebugBreak();
     return 0;
 }
 '''

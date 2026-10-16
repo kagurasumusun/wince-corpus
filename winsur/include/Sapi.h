@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 68 declarations, 3 outlines, 0 base types, 0 extra macros, 112 extra decls
+ * 0 constants, 67 declarations, 3 outlines, 0 base types, 0 extra macros, 111 extra decls
  */
 #ifndef _SAPI_
 #define _SAPI_
@@ -571,9 +571,6 @@ typedef enum SPWORDTYPE{
 } SPWORDTYPE;
 typedef SPWORDTYPE *PSPWORDTYPE, *LPSPWORDTYPE;
 
-/* SPEVENTENUM  [extra enum] */
-typedef enum SPEVENTENUM{ SPEI_UNDEFINED = 0, };
-
 /* SPRECOECOEVENTFLAGS  [extra enum] */
 typedef enum SPRECOEVENTFLAGS{ SPREF_AutoPause = (1 << 0) SPREF_Emulated = (1 << 1) } SPRECOECOEVENTFLAGS;
 
@@ -611,7 +608,6 @@ HRESULT Discard( DWORD dwValueTypes );
 HRESULT EnumKeys( ULONG Index, WCHAR** ppszSubKeyName );
 HRESULT EnumValues( ULONG Index, WCHAR** ppszValueName );
 HANDLE EventHandle(void);
-HRESULT GetAlertBoundary( SPEVENTENUM* peBoundary );
 HRESULT GetBufferInfo( SPAUDIOBUFFERINFO* pBuffInfo );
 HRESULT GetBufferNotifySize( ULONG* pcbSize );
 HRESULT GetContextState( SPCONTEXTSTATE* peContextState );
@@ -656,7 +652,6 @@ HRESULT ScaleBaseToConvertedOffset( ULONGLONG ullOffsetBaseStream, ULONGLONG* pu
 HRESULT ScaleConvertedToBaseOffset( ULONGLONG ullOffsetConvertedStream, ULONGLONG* pullOffsetBaseStream );
 HRESULT Serialize( SPSERIALIZEDRESULT** ppCoMemSerializedResult );
 HRESULT SetAdaptationData( const WCHAR* pAdaptationData, const ULONG cch );
-HRESULT SetAlertBoundary( SPEVENTENUM eBoundary );
 HRESULT SetBufferInfo( const SPAUDIOBUFFERINFO* pBuffInfo );
 HRESULT SetBufferNotifySize( ULONG cbSize );
 HRESULT SetContextState( SPCONTEXTSTATE eContextState );

@@ -1524,12 +1524,16 @@ def overlay_unified_surface(by_header, printed_forms, by_module, all_entities):
     No header files are copied.  Quotes already in knowledge/ only.
     """
     have = set()
-    for infos in by_header.values():
+    have_app = set()
+    for hdr, infos in by_header.items():
         for info in infos:
             decl = info.get("declaration") or {}
             text = decl.get("text") if isinstance(decl, dict) else ""
             if text and str(text).strip() and not quality_filters.is_broken_c(text):
-                have.add(info["entity"]["name"])
+                n = info["entity"]["name"]
+                have.add(n)
+                if hdr.lower() in _APP_OVERLAY_HEADERS:
+                    have_app.add(n)
     have_exp = set()
     for wl in by_module.values():
         for e in wl.get("entries") or []:
@@ -1551,7 +1555,11 @@ def overlay_unified_surface(by_header, printed_forms, by_module, all_entities):
         name = rec.get("name") or ""
         kind = rec.get("kind") or "function"
         text = (rec.get("text") or "").replace("\\n", "\n")
-        if not name or name in have:
+        if not name:
+            continue
+        if name in have_app:
+            continue
+        if name in have and name not in _OVERLAY_NAMED:
             continue
         text = _keepable_c_decl(text, name, kind)
         if not text:
@@ -1626,7 +1634,11 @@ def overlay_unified_surface(by_header, printed_forms, by_module, all_entities):
                 name = rec.get("name") or ""
                 kind = rec.get("type") or rec.get("kind") or "function"
                 text = (rec.get("declaration") or rec.get("text") or "").replace("\\n", "\n")
-                if not name or name in have:
+                if not name:
+                    continue
+                if name in have_app:
+                    continue
+                if name in have and name not in _OVERLAY_NAMED:
                     continue
                 text = _keepable_c_decl(text, name, kind)
                 if not text:
@@ -1941,12 +1953,22 @@ _OVERLAY_NAMED = {
     "COMSTAT", "LOGBRUSH", "LOGPEN",
     "ABC", "GetCharABCWidths",
     "ACCEL",
+    "BLENDFUNCTION", "AlphaBlend",
+    "SetEvent", "ResetEvent", "DebugBreak",
+    "GetCurrentProcess", "GetCurrentProcessId",
+    "GetCurrentThread", "GetCurrentThreadId",
+    "ExitProcess", "GlobalDeleteAtom",
+    "FindClosePartition", "FindCloseStore",
 }
 
 _OVERLAY_HEADERS = {
     "windef.h", "winnt.h", "winbase.h", "winuser.h", "wingdi.h",
     "winreg.h", "winerror.h", "winioctl.h", "mmsystem.h", "imm.h",
     "winnls.h", "windbase.h", "dbgapi.h", "commdlg.h",
+}
+_APP_OVERLAY_HEADERS = {
+    "windef.h", "winnt.h", "winerror.h", "winbase.h", "winuser.h",
+    "wingdi.h", "winreg.h", "commdlg.h",
 }
 _DDK_HEADERS = {
     "ceddk.h", "pkfuncs.h", "kfuncs.h", "nkintr.h", "winddi.h",
@@ -2161,7 +2183,8 @@ _C_KNOWN_TYPES = {
     "CHOOSEFONT", "LPCHOOSEFONT",
     "OPENFILENAME", "LPOPENFILENAME",
     "DLGTEMPLATE", "LPDLGTEMPLATE", "LPCDLGTEMPLATE",
-    "LCID", "PDWORD", "PUINT", "LPINT", "PINT", "PUSHORT",
+    "LCID", "PDWORD", "PUINT", "LPINT", "PINT", "PUSHORT", "PBYTE",
+    "BLENDFUNCTION", "PBLENDFUNCTION", "LPBLENDFUNCTION",
     "WNDENUMPROC", "FONTENUMPROC",
     "TEXTMETRIC", "PTEXTMETRIC", "LPTEXTMETRIC",
     "ENUMLOGFONT", "PENUMLOGFONT", "LPENUMLOGFONT",
@@ -3010,6 +3033,7 @@ def run_unified(args):
         return [comment]
 
     global_fn_names = set()
+    global_fn_from = {}
     for key in sorted(set(by_header) | set(const_entries) | extra_keys):
         display = safe_name(printed_forms.get(key) or key, ".h")
         def entry_sort(e):
@@ -3429,17 +3453,25 @@ def run_unified(args):
                     cname = (ename or "").lstrip("_")
                     if not (text or "").strip():
                         continue
-                    if ename and (ename in seen_fn or ename in global_fn_names
-                                  or cname in global_fn_names):
+                    if ename and ename in seen_fn:
                         continue
+                    prev = global_fn_from.get(ename) or (
+                        global_fn_from.get(cname) if cname else None)
+                    if prev:
+                        if prev in _APP_OVERLAY_HEADERS:
+                            continue
+                        if key.lower() not in _APP_OVERLAY_HEADERS:
+                            continue
                     if type_mentions_unknown(text, local, ename, visible_macros):
                         continue
                     filtered.append(info)
                     if ename:
                         seen_fn.add(ename)
                         global_fn_names.add(ename)
+                        global_fn_from[ename] = key.lower()
                         if cname:
                             global_fn_names.add(cname)
+                            global_fn_from.setdefault(cname, key.lower())
                 items = filtered
             if bucket_key == "types":
                 items = order_type_infos(items)

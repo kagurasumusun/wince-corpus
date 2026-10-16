@@ -17,6 +17,22 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* IPSEC_API_MODE_INFO  [struct, typedef; ce-only] */
+typedef struct {
+ DWORD inAction;
+ DWORD outAction;
+ DWORD auth;
+ PBYTE authInfo;
+ DWORD authInfoSize;
+ DWORD mmHashMask;
+ DWORD mmEncMask;
+ DWORD qmHashMask;
+ DWORD qmEncMask;
+ DWORD dhMask;
+ DWORD protocol;
+ DWORD scrIP;
+} IPSEC_API_MODE_INFO, *PIPSEC_API_MODE_INFO;
+
 /* IPSEC_API_PARAM  [struct, typedef; ce-only] */
 typedef struct {
  DWORD id;
@@ -36,6 +52,12 @@ HRESULT IsIPSecRunning(void);
 /* SetIPSecConfig  [function; ce-only; CE 5.0..699; Ipsec_api.lib] */
 HRESULT SetIPSecConfig(
  IPSEC_API_PARAM param,
+ DWORD flags
+);
+
+/* SetIPSecMode  [function; ce-only; CE 5.0..699; Ipsec_api.lib] */
+HRESULT SetIPSecMode(
+ IPSEC_API_MODE_INFO modeInfo,
  DWORD flags
 );
 
