@@ -1,0 +1,159 @@
+/* exdispid.h -- Windows CE unified surface
+ *
+ * ONE tree for every CE generation.  Version differences use
+ * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
+ * Win32-shared entries are marked 'win32-ref'.
+ * Generated from wince-docs-corpus knowledge/ by
+ * tools/gen-include-def.py --unified.
+ * 6 constants, 21 declarations, 0 outlines, 0 base types, 0 extra macros, 7 extra decls
+ */
+#ifndef _EXDISPID_
+#define _EXDISPID_
+
+
+/* ==================================================================
+ * constants (one evidence comment per #define; the
+ * #if of a batch covers every #define in it; values
+ * that differ per generation pool into #if/#elif
+ * chains with the evidence after the #endif)
+ * ================================================================ */
+#define DISPID_BEFORENAVIGATE2 250
+#define DISPID_DOCUMENTCOMPLETE 259
+#define DISPID_NEWWINDOW2 251
+#define DISPID_PROGRESSCHANGE 108
+#define DISPID_STATUSTEXTCHANGE 102
+#define DISPID_TITLECHANGE 113
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
+
+/* DWebBrowserEvents2::NewWindow2  [function; ce-only; CE 5.0..599] */
+void NewWindow2( 
+ IDispatch **&ppDisp, 
+ VARIANT_BOOL *&Cancel 
+);
+
+/* DWebBrowserEvents2::OnFullScreen  [function; ce-only; CE 5.0..599] */
+void OnFullScreen( 
+ VARIANT_BOOL FullScreen 
+);
+
+/* DWebBrowserEvents2::OnMenuBar  [function; ce-only; CE 5.0..599] */
+void OnMenuBar( 
+ VARIANT_BOOL MenuBar 
+);
+
+/* DWebBrowserEvents2::OnTheaterMode  [function; ce-only; CE 5.0..599] */
+void OnTheaterMode( 
+ VARIANT_BOOL TheaterMode 
+);
+
+/* DWebBrowserEvents2::OnToolBar  [function; ce-only; CE 5.0..599] */
+void OnToolBar( 
+ VARIANT_BOOL ToolBar 
+);
+
+/* DWebBrowserEvents2::PrintTemplateInstantiation  [function; ce-only; CE 5.0..599] */
+void PrintTemplateInstantiation( 
+ IDispatch *pDisp 
+);
+
+/* DWebBrowserEvents2::PrintTemplateTeardown  [function; ce-only; CE 5.0..599] */
+void PrintTemplateTeardown( 
+ IDispatch *pDisp 
+);
+
+/* DWebBrowserEvents2::PrivacyImpactedStateChange  [function; ce-only; CE 5.0..599] */
+void PrivacyImpactedStateChange( 
+ VT_BOOL PrivacyImpacted 
+);
+
+/* DWebBrowserEvents2::StatusTextChange  [function; ce-only; CE 5.0..599] */
+void StatusTextChange( 
+ BSTR Text 
+);
+
+/* DWebBrowserEvents2::WindowClosing  [function; ce-only; CE 5.0..599] */
+void WindowClosing( 
+ VARIANT_BOOL IsChildWindow, 
+ VARIANT_BOOL *&Cancel 
+);
+
+/* DWebBrowserEvents::BeforeNavigate  [function; ce-only; CE 5.0..599] */
+void BeforeNavigate( 
+ IDispatch *pDisp, 
+ VARIANT *&url, 
+ VARIANT *&Flags, 
+ VARIANT *&TargetFrameName, 
+ VARIANT *&PostData, 
+ VARIANT *&Headers, 
+ VARIANT_BOOL *&Cancel 
+);
+
+/* DWebBrowserEvents::CommandStateChange  [function; ce-only; CE 5.0..599] */
+void CommandStateChange( 
+ long Command, 
+ VARIANT_BOOL Enable 
+);
+
+/* DWebBrowserEvents::DownloadBegin  [function; ce-only; CE 5.0..599] */
+void DownloadBegin(VOID);
+
+/* DWebBrowserEvents::DownloadComplete  [function; ce-only; CE 5.0..599] */
+void DownloadComplete(VOID);
+
+/* DWebBrowserEvents::NavigateComplete  [function; ce-only; CE 5.0..599] */
+void NavigateComplete( 
+ IDispatch *pDisp, 
+ VARIANT *URL 
+);
+
+/* DWebBrowserEvents::NewWindow  [function; ce-only; CE 5.0..599] */
+void NewWindow( 
+ IDispatch **&ppDisp, 
+ VARIANT_BOOL *&Cancel 
+);
+
+/* DWebBrowserEvents::OnQuit  [function; ce-only; CE 5.0..599] */
+void OnQuit(VOID);
+
+/* DWebBrowserEvents::ProgressChange  [function; ce-only; CE 5.0..599] */
+void ProgressChange( 
+ long Progress, 
+ long ProgressMax 
+);
+
+/* DWebBrowserEvents::PropertyChange  [function; ce-only; CE 5.0..599] */
+void PropertyChange( 
+ BSTR szProperty 
+);
+
+/* DWebBrowserEvents::StatusTextChange  [function; ce-only; CE 5.0..599] */
+void StatusTextChange( 
+ BSTR Text 
+);
+
+/* DWebBrowserEvents::TitleChange  [function; ce-only; CE 5.0..599] */
+void TitleChange( 
+ BSTR Text 
+);
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* function */
+void BeforeNavigate( IDispatch *pDisp, VARIANT *&url, VARIANT *&Flags, VARIANT *&TargetFrameName, VARIANT *&PostData, VARIANT *&Headers, VARIANT_BOOL *&Cancel );
+void NavigateComplete(  IDispatch *pDisp,  VARIANT *URL  );
+void NewWindow( IDispatch **&ppDisp, VARIANT_BOOL *&Cancel );
+void PrintTemplateInstantiation(  IDispatch *pDisp  );
+void PrintTemplateTeardown(  IDispatch *pDisp  );
+void PrivacyImpactedStateChange(  VT_BOOL PrivacyImpacted  );
+void WindowClosing( VARIANT_BOOL IsChildWindow, VARIANT_BOOL *&Cancel );
+
+#endif /* _EXDISPID_ */

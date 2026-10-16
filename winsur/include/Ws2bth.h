@@ -1,0 +1,122 @@
+/* Ws2bth.h -- Windows CE unified surface
+ *
+ * ONE tree for every CE generation.  Version differences use
+ * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
+ * Win32-shared entries are marked 'win32-ref'.
+ * Generated from wince-docs-corpus knowledge/ by
+ * tools/gen-include-def.py --unified.
+ * 2 constants, 9 declarations, 0 outlines, 0 base types, 0 extra macros, 8 extra decls
+ */
+#ifndef _WS2BTH_
+#define _WS2BTH_
+
+
+/* ==================================================================
+ * constants (one evidence comment per #define; the
+ * #if of a batch covers every #define in it; values
+ * that differ per generation pool into #if/#elif
+ * chains with the evidence after the #endif)
+ * ================================================================ */
+#define AF_BTH 32
+#define BTHPROTO_RFCOMM 3
+
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+
+/* BTH_LOCAL_VERSION  [struct; ce-only; CE 4.0..699] */
+typedef struct _BTH_LOCAL_VERSION {
+ unsigned char hci_version;
+ unsigned short hci_revision; 
+ unsigned char lmp_version;
+ unsigned short lmp_subversion; 
+ unsigned short manufacturer; 
+ unsigned char lmp_features[8];
+} BTH_LOCAL_VERSION, *PBTH_LOCAL_VERSION;
+
+/* BTH_REMOTE_NAME  [struct; ce-only; CE 4.0..699] */
+typedef struct _BTH_REMOTE_NAME {
+ BT_ADDR bt;
+ WCHAR szNameBuffer[248]; 
+} BTH_REMOTE_NAME, *PBTH_REMOTE_NAME;
+
+/* BTH_REMOTE_VERSION  [struct; ce-only; CE 4.0..699] */
+typedef struct _BTH_REMOTE_VERSION {
+ unsigned char lmp_version;
+ unsigned short lmp_subversion; 
+ unsigned short manufacturer; 
+ unsigned char lmp_features[8];
+} BTH_REMOTE_VERSION, *PBTH_REMOTE_VERSION;
+
+/* BTH_SOCKOPT_SECURITY  [struct; ce-only; CE 4.0..699] */
+typedef struct _BTH_SOCKOPT_SECURITY {
+ int iLength; 
+ bt_addr btAddr; 
+ unsigned char caData[16];
+} BTH_SOCKOPT_SECURITY, *PBTH_SOCKOPT_SECURITY;
+
+/* BTHINQUIRYRESULT  [struct; ce-only; CE 4.0..699] */
+typedef struct __bth_inquiry_result {
+ BT_ADDR ba;
+ unsigned int cod;
+ unsigned short clock_offset;
+ unsigned char page_scan_mode;
+ unsigned char page_scan_period_mode;
+ unsigned char page_scan_repetition_mode;
+} BthInquiryResult;
+
+/* SOCKADDR_BTH  [struct; shared; CE 4.0..699] */
+typedef struct _SOCKADDR_BTH {
+ USHORT addressFamily;
+ bt_addr btAddr;
+ GUID serviceClassId;
+ ULONG port;
+} SOCKADDR_BTH, *PSOCKADDR_BTH;
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+
+/* BTH_HOLD_MODE  [struct; ce-only; CE 5.0..699] */
+typedef struct _BTH_HOLD_MODE {
+ unsigned short hold_mode_max;
+ unsigned short hold_mode_min;
+ unsigned short interval;
+} BTH_HOLD_MODE, *PBTH_HOLD_MODE;
+
+/* BTH_PARK_MODE  [struct; ce-only; CE 5.0..699] */
+typedef struct _BTH_PARK_MODE {
+ unsigned short beacon_max;
+ unsigned short beacon_min;
+ unsigned short interval;
+} BTH_PARK_MODE, *PBTH_PARK_MODE;
+
+/* BTH_SNIFF_MODE  [struct; ce-only; CE 5.0..699] */
+typedef struct _BTH_SNIFF_MODE {
+ unsigned short sniff_mode_max;
+ unsigned short sniff_mode_min;
+ unsigned short sniff_attempt;
+ unsigned short sniff_timeout;
+ unsigned short interval;
+} BTH_SNIFF_MODE, *PBTH_SNIFF_MODE;
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* struct */
+typedef struct _BTH_HOLD_MODE { unsigned short hold_mode_max; unsigned short hold_mode_min; unsigned short interval;} BTH_HOLD_MODE, *PBTH_HOLD_MODE;
+typedef struct _BTH_LOCAL_VERSION {unsigned char hci_version;unsigned short hci_revision; unsigned char lmp_version;unsigned short lmp_subversion; unsigned short manufacturer; unsigned char lmp_features[8];} BTH_LOCAL_VERSION, *PBTH_LOCAL_VERSION;
+typedef struct _BTH_PARK_MODE { unsigned short beacon_max; unsigned short beacon_min; unsigned short interval;} BTH_PARK_MODE, *PBTH_PARK_MODE;
+typedef struct _BTH_REMOTE_NAME {BT_ADDR bt;WCHAR szNameBuffer[248]; } BTH_REMOTE_NAME, *PBTH_REMOTE_NAME;
+typedef struct _BTH_REMOTE_VERSION {unsigned char lmp_version;unsigned short lmp_subversion; unsigned short manufacturer; unsigned char lmp_features[8];} BTH_REMOTE_VERSION, *PBTH_REMOTE_VERSION;
+typedef struct _BTH_SNIFF_MODE { unsigned short sniff_mode_max; unsigned short sniff_mode_min; unsigned short sniff_attempt; unsigned short sniff_timeout; unsigned short interval;} BTH_SNIFF_MODE, *PBTH_SNIFF_MODE;
+typedef struct _BTH_SOCKOPT_SECURITY {int iLength; bt_addr btAddr; unsigned char caData[16];} BTH_SOCKOPT_SECURITY, *PBTH_SOCKOPT_SECURITY;
+typedef struct _SOCKADDR_BTH {USHORT addressFamily;bt_addr btAddr;GUID serviceClassId;ULONG port;} SOCKADDR_BTH, *PSOCKADDR_BTH;
+
+#endif /* _WS2BTH_ */

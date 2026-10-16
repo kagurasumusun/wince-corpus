@@ -14,22 +14,17 @@ One identifier, one chosen Windows CE fact.  The quote store
 | `names.tsv` | grep-friendly lookup |
 | `catalog.json` | counts |
 
-Rebuild:
-
-    python3 tools/harvest-corpus-kb.py   # re-read CE pages with current extractors
-    python3 tools/build-unified-kb.py
-
-`harvest-corpus-kb.py` opens `corpus/` (it is a KB builder). The generator still reads `knowledge/` only.
+Rebuild with `python3 tools/build-unified-kb.py`.
 
 ## Counts
 
-- **constants**: 9,555
-- **constants_with_header**: 7,771
+- **constants**: 9,554
+- **constants_with_header**: 7,770
 - **constants_win32_fallback**: 2,054
 - **discarded_values**: 390
-- **declarations**: 33,912
-- **declarations_with_header**: 20,313
+- **declarations**: 32,664
+- **declarations_with_header**: 20,087
 - **macros**: 160
-- **headers**: 591
+- **headers**: 587
 - **modules**: 290
 - **entities**: 30,372

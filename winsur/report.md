@@ -11,20 +11,20 @@ the SAME tree, marked 'Win32 reference' -- never a second tree.
 ## What was generated
 
 * entities in scope: **29,161** (by surface: `ce-only` 24,666, `shared` 4,495)
-* header fragments: **606** under `include/`, each
+* header fragments: **689** under `include/`, each
   with its documented constants first, then the macros, the types
   and the functions; quoted text is verbatim, the `#define`
   keyword and the header/constant filing are derived and say so
-* derived `#define` lines written: **9,574**
+* derived `#define` lines written: **29,787**
 * derived member outlines (structures whose body no page prints):
-  **1,680** -- marked DERIVED in the fragment
+  **366** -- marked DERIVED in the fragment
 * constants whose pages disagree / overlap: **33** name(s) examined in `kb/constant-conflicts.tsv`
-  (3 of them reach a header fragment in this build;
+  (2 of them reach a header fragment in this build;
   **0** resolved by the review in
   `data/constant-value-review.tsv` to a print the pages themselves
   state, the rest get no `#define` -- every one keeps its
   CONFLICT block with the verdict)
-* constants with no header linkage at all: **1,989**
+* constants with no header linkage at all: **1,986**
   (worklist only -- they stay in `constants.tsv`)
 * module `.def` worklists: **266** under `link/`
   (per-line version range is a comment; `.def` has no
@@ -32,7 +32,7 @@ the SAME tree, marked 'Win32 reference' -- never a second tree.
 * printed export ordinals: 1 file(s),
   94 name(s)
 * declarations taken from the Win32 reference because no CE page
-  prints one: **115** -- every
+  prints one: **109** -- every
   one marked in the fragment and the manifest; CE and desktop
   values are never assumed equal
 * constants numbered only by the Win32 shared reference (and only
@@ -40,7 +40,7 @@ the SAME tree, marked 'Win32 reference' -- never a second tree.
   tree, every one marked 'verify against the CE SDK'; a number a
   CE page prints always wins
 * spacing-only repairs across CE generations: **0**
-* pages behind this output: 23,720
+* pages behind this output: 23,361
 
 ## Constant/header linkage (kb/constant-headers.tsv)
 
@@ -97,9 +97,9 @@ every `#define` number above is a CE documentation quotation.
 
 | reason | entities |
 |--------|----------|
+| no declaration in the corpus | 5,579 |
 | no header stated | 5,510 |
-| no declaration in the corpus | 5,240 |
-| declaration is not a C declaration | 1,652 |
+| declaration is not a C declaration | 2,017 |
 | no CE version evidence | 1,504 |
 
 The skipped entities are the collection worklist, same as in the

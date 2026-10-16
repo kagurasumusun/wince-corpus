@@ -432,6 +432,23 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: コンパイラ/リンカ面（第8弾）
+
+アプリ/ドライバが `#include "Windows.h"` して `coredll.def` でリンクできることを目標にした。
+
+- 定数 **29,787**（前回 ~9.5k）。CE が名前だけ書いて番号が無いものは、ピン留めした **CeGCC w32api（パブリックドメイン）** で穴埋め。`WM_PAINT 15`、`NULL 0`、`INFINITE 0xFFFFFFFF`。
+- **使わない**: Wine / ReactOS / mingw-w64。winsock.h（UCB/DEC 著作権）、gl.h（Mesa）はコピーしない。
+- **上書きしない**: `MAX_PATH` は CE 頁の **128**（w32api の 260 は捨てる）。`BOOL` を `#define BOOL 1` にしない。
+- 出所: `winsur/TOOLCHAIN.md`、`sources/w32api-cegcc/PROVENANCE.md`。
+
+### 2026-10-16: 開発用 .h / .def（第7弾）
+
+- 出力を **`include/*.h`** にした（`.fragment` はやめた）。`Windows.h` は WinDef / Winbase / Winuser / Wingdi / winerror などを `#include` する傘。
+- `#define` は値だけ。証拠コメントは unified では出さない。
+- 潰れた `HANDLECreateFile(` は出さない。`NULL 1`（別表の誤ヒット）は出さない。
+- `.def` は `EXPORTS` に文書化された名前だけ（先頭の 290 行リードコメントをやめた）。
+- メッセージ名の関数スタブ（`WM_CREATE` を function 扱い）をやめた。
+
 ### 2026-10-16: コーパス収穫（第6弾）
 
 - **`page_parse`**: `#define NAME MAKE_D3DMHRESULT(2158)` や `(WM_USER+255)` を印刷どおり定数にする。折れた 1 行の複数 `#define` / enum メンバーも分割。

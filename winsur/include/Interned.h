@@ -1,0 +1,101 @@
+/* Interned.h -- Windows CE unified surface
+ *
+ * ONE tree for every CE generation.  Version differences use
+ * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
+ * Win32-shared entries are marked 'win32-ref'.
+ * Generated from wince-docs-corpus knowledge/ by
+ * tools/gen-include-def.py --unified.
+ * 0 constants, 3 declarations, 26 outlines, 0 base types, 0 extra macros, 0 extra decls
+ */
+#ifndef _INTERNED_
+#define _INTERNED_
+
+
+/* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* alert  [typedef; ce-only; heuristic-prefix] */
+
+/* blur  [typedef; ce-only; heuristic-prefix] */
+
+/* clearTimeout  [typedef; ce-only; heuristic-prefix] */
+
+/* confirm  [typedef; ce-only; heuristic-prefix] */
+
+/* document  [typedef; ce-only; heuristic-prefix] */
+
+/* external  [typedef; ce-only; heuristic-prefix] */
+
+/* focus  [typedef; ce-only; heuristic-prefix] */
+
+/* history  [typedef; ce-only; heuristic-prefix] */
+
+/* length  [typedef; ce-only; heuristic-prefix] */
+
+/* location  [typedef; ce-only; heuristic-prefix] */
+
+/* Method  [typedef; ce-only; heuristic-prefix] */
+
+/* navigate  [typedef; ce-only; heuristic-prefix] */
+
+/* navigator  [typedef; ce-only; heuristic-prefix] */
+
+/* onload  [typedef; ce-only; heuristic-prefix] */
+
+/* onunload  [typedef; ce-only; heuristic-prefix] */
+
+/* Parent  [typedef; ce-only; heuristic-prefix] */
+
+/* PROMPT  [typedef; ce-only; heuristic-prefix] */
+
+/* screen  [typedef; ce-only; heuristic-prefix] */
+
+/* scrollTo  [typedef; ce-only; heuristic-prefix] */
+
+/* self  [typedef; ce-only; heuristic-prefix] */
+
+/* setTimeout  [typedef; ce-only; heuristic-prefix] */
+
+/* Top  [typedef; ce-only; heuristic-prefix] */
+
+/* window  [typedef; ce-only; heuristic-prefix] */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 200 && _WIN32_WCE < 210) || (_WIN32_WCE >= 212 && _WIN32_WCE < 400)) /* CE 2.0..209, 2.12..399 */
+
+/* Close  [function, typedef; ce-only; CE 2.0..209, 2.12..399; heuristic-prefix] */
+
+/* Scroll  [function, typedef; ce-only; CE 2.0..209, 2.12..399; heuristic-prefix] */
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 212 && _WIN32_WCE < 400) || (_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 2.12..399, 6.0..699 */
+
+/* Name  [function, typedef; ce-only; CE 2.12..399, 6.0..699; heuristic-prefix] */
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+
+/* BeforeWindowOpen  [function; ce-only; CE 5.0..699] */
+HRESULT BeforeWindowOpen(
+ BSTR url,
+ BSTR urlContext,
+ BSTR name,
+ BSTR features,
+ IUnknown* punkEvents
+);
+
+/* Count  [function; ce-only; CE 5.0..699] */
+HRESULT Count(long *pCount);
+
+/* EVENT  [function, typedef; ce-only; CE 5.0..699] */
+HRESULT Event(
+ int index, 
+ DWORD *pdispidEvt
+);
+#endif /* _WIN32_WCE */
+
+#endif /* _INTERNED_ */

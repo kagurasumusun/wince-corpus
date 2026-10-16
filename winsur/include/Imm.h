@@ -1,0 +1,884 @@
+/* Imm.h -- Windows CE unified surface
+ *
+ * ONE tree for every CE generation.  Version differences use
+ * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
+ * Win32-shared entries are marked 'win32-ref'.
+ * Generated from wince-docs-corpus knowledge/ by
+ * tools/gen-include-def.py --unified.
+ * 236 constants, 73 declarations, 1 outlines, 0 base types, 0 extra macros, 7 extra decls
+ */
+#ifndef _IMM_
+#define _IMM_
+
+
+/* ==================================================================
+ * constants (one evidence comment per #define; the
+ * #if of a batch covers every #define in it; values
+ * that differ per generation pool into #if/#elif
+ * chains with the evidence after the #endif)
+ * ================================================================ */
+#define ATTR_CONVERTED 2
+#define ATTR_FIXEDCONVERTED 5
+#define ATTR_INPUT 0
+#define ATTR_INPUT_ERROR 4
+#define ATTR_TARGET_CONVERTED 1
+#define ATTR_TARGET_NOTCONVERTED 3
+#define CFS_CANDIDATEPOS 64
+#define CFS_DEFAULT 0
+#define CFS_EXCLUDE 128
+#define CFS_FORCE_POSITION 32
+#define CFS_POINT 2
+#define CFS_RECT 1
+#define CFS_SCREEN 4
+#define CPS_CANCEL 4
+#define CPS_COMPLETE 1
+#define CPS_CONVERT 2
+#define CPS_REVERT 3
+#define CS_INSERTCHAR 0x2000
+#define CS_NOMOVECARET 0x4000
+#define GCL_CONVERSION 1
+#define GCL_REVERSE_LENGTH 3
+#define GCL_REVERSECONVERSION 2
+#define GCS_COMPATTR 16
+#define GCS_COMPCLAUSE 32
+#define GCS_COMPREADATTR 2
+#define GCS_COMPREADCLAUSE 4
+#define GCS_COMPREADSTR 1
+#define GCS_COMPSTR 8
+#define GCS_CURSORPOS 128
+#define GCS_DELTASTART 256
+#define GCS_RESULTCLAUSE 4096
+#define GCS_RESULTREADCLAUSE 1024
+#define GCS_RESULTREADSTR 512
+#define GCS_RESULTSTR 2048
+#define GGL_INDEX 2
+#define GGL_LEVEL 1
+#define GGL_PRIVATE 4
+#define GGL_STRING 3
+#define GL_ID_CANNOTSAVE 17
+#define GL_ID_CHOOSECANDIDATE 40
+#define GL_ID_INPUTCODE 38
+#define GL_ID_INPUTRADICAL 37
+#define GL_ID_INPUTREADING 36
+#define GL_ID_INPUTSYMBOL 39
+#define GL_ID_NOCONVERT 32
+#define GL_ID_NODICTIONARY 16
+#define GL_ID_NOMODULE 1
+#define GL_ID_PRIVATE_FIRST 0x8000
+#define GL_ID_PRIVATE_LAST 0xFFFF
+#define GL_ID_READINGCONFLICT 35
+#define GL_ID_REVERSECONVERSION 41
+#define GL_ID_TOOMANYSTROKE 34
+#define GL_ID_TYPINGERROR 33
+#define GL_ID_UNKNOWN 0
+#define GL_LEVEL_ERROR 2
+#define GL_LEVEL_FATAL 1
+#define GL_LEVEL_INFORMATION 4
+#define GL_LEVEL_NOGUIDELINE 0
+#define GL_LEVEL_WARNING 3
+#define IACE_CHILDREN 1
+#define IACE_DEFAULT 16
+#define IACE_IGNORENOCONTEXT 32
+#define IGIMIF_RIGHTMENU 1
+#define IGIMII_CMODE 1
+#define IGIMII_CONFIGURE 4
+#define IGIMII_HELP 16
+#define IGIMII_INPUTTOOLS 64
+#define IGIMII_OTHER 32
+#define IGIMII_SMODE 2
+#define IGIMII_TOOLS 8
+#define IGP_CONVERSION 8
+#define IGP_GETIMEVERSION (DWORD)(-4)
+#define IGP_PROPERTY 4
+#define IGP_SELECT 0x18
+#define IGP_SENTENCE 12
+#define IGP_SETCOMPSTR 0x14
+#define IGP_UI 16
+#define IMC_CLOSESTATUSWINDOW 0x21
+#define IMC_GETCANDIDATEPOS 7
+#define IMC_GETCOMPOSITIONFONT 9
+#define IMC_GETCOMPOSITIONWINDOW 11
+#define IMC_GETSTATUSWINDOWPOS 15
+#define IMC_OPENSTATUSWINDOW 0x22
+#define IMC_SETCANDIDATEPOS 8
+#define IMC_SETCOMPOSITIONFONT 10
+#define IMC_SETCOMPOSITIONWINDOW 12
+#define IMC_SETSTATUSWINDOWPOS 16
+#define IME_CAND_CODE 2
+#define IME_CAND_MEANING 3
+#define IME_CAND_RADICAL 4
+#define IME_CAND_READ 1
+#define IME_CAND_STROKE 5
+#define IME_CAND_UNKNOWN 0
+#define IME_CHOTKEY_IME_NONIME_TOGGLE 16
+#define IME_CHOTKEY_SHAPE_TOGGLE 17
+#define IME_CHOTKEY_SYMBOL_TOGGLE 18
+#define IME_CMODE_ALPHANUMERIC 0
+#define IME_CMODE_CHARCODE 32
+#define IME_CMODE_CHINESE IME_CMODE_NATIVE
+#define IME_CMODE_EUDC 512
+#define IME_CMODE_FIXED 2048
+#define IME_CMODE_FULLSHAPE 8
+#define IME_CMODE_HANGEUL IME_CMODE_NATIVE
+#define IME_CMODE_HANGUL IME_CMODE_NATIVE
+#define IME_CMODE_HANJACONVERT 64
+#define IME_CMODE_JAPANESE IME_CMODE_NATIVE
+#define IME_CMODE_KATAKANA 2
+#define IME_CMODE_LANGUAGE 3
+#define IME_CMODE_NATIVE 1
+#define IME_CMODE_NOCONVERSION 256
+#define IME_CMODE_ROMAN 16
+#define IME_CMODE_SOFTKBD 128
+#define IME_CMODE_SYMBOL 1024
+#define IME_CONFIG_GENERAL 1
+#define IME_CONFIG_REGISTERWORD 2
+#define IME_CONFIG_SELECTDICTIONARY 3
+#define IME_ESC_AUTOMATA 0x1009
+#define IME_ESC_GET_EUDC_DICTIONARY 0x1003
+#define IME_ESC_HANJA_MODE 0x1008
+#define IME_ESC_IME_NAME 0x1006
+#define IME_ESC_MAX_KEY 0x1005
+#define IME_ESC_PRIVATE_FIRST 0x800
+#define IME_ESC_PRIVATE_LAST 0xFFF
+#define IME_ESC_QUERY_SUPPORT 3
+#define IME_ESC_RESERVED_FIRST 4
+#define IME_ESC_RESERVED_LAST 0x7FF
+#define IME_ESC_SEQUENCE_TO_INTERNAL 0x1001
+#define IME_ESC_SET_EUDC_DICTIONARY 0x1004
+#define IME_ESC_SYNC_HOTKEY 0x1007
+#define IME_HOTKEY_DSWITCH_FIRST 256
+#define IME_HOTKEY_DSWITCH_LAST 0x11F
+#define IME_ITHOTKEY_PREVIOUS_COMPOSITION 513
+#define IME_ITHOTKEY_RESEND_RESULTSTR 512
+#define IME_ITHOTKEY_UISTYLE_TOGGLE 514
+#define IME_JHOTKEY_CLOSE_OPEN 0x30
+#define IME_KHOTKEY_ENGLISH 0x52
+#define IME_KHOTKEY_HANJACONVERT 0x51
+#define IME_KHOTKEY_SHAPE_TOGGLE 0x50
+#define IME_PROP_AT_CARET 0x10000
+#define IME_PROP_CANDLIST_START_FROM_1 0x40000
+#define IME_PROP_SPECIAL_UI 0x20000
+#define IME_PROP_UNICODE 0x80000
+#define IME_REGWORD_STYLE_EUDC 1
+#define IME_REGWORD_STYLE_USER_FIRST 0x80000000
+#define IME_REGWORD_STYLE_USER_LAST 0xFFFFFFFF
+#define IME_SMODE_AUTOMATIC 4
+#define IME_SMODE_NONE 0
+#define IME_SMODE_PHRASEPREDICT 8
+#define IME_SMODE_PLAURALCLAUSE 1
+#define IME_SMODE_SINGLECONVERT 2
+#define IME_THOTKEY_IME_NONIME_TOGGLE 0x70
+#define IME_THOTKEY_SHAPE_TOGGLE 0x71
+#define IME_THOTKEY_SYMBOL_TOGGLE 0x72
+#define IMEMENUITEM_STRING_SIZE 80
+#define IMEVER_0310 0x3000A
+#define IMEVER_0400 0x40000
+#define IMFS_CHECKED MFS_CHECKED
+#define IMFS_DEFAULT MFS_DEFAULT
+#define IMFS_DISABLED MFS_DISABLED
+#define IMFS_ENABLED MFS_ENABLED
+#define IMFS_GRAYED MFS_GRAYED
+#define IMFS_HILITE MFS_HILITE
+#define IMFS_UNCHECKED MFS_UNCHECKED
+#define IMFS_UNHILITE MFS_UNHILITE
+#define IMFT_RADIOCHECK 1
+#define IMFT_SEPARATOR 2
+#define IMFT_SUBMENU 4
+#define IMM_ERROR_GENERAL (-2)
+#define IMM_ERROR_NODATA (-1)
+#define IMN_CHANGECANDIDATE 3
+#define IMN_CLOSECANDIDATE 4
+#define IMN_CLOSESTATUSWINDOW 1
+#define IMN_GUIDELINE 13
+#define IMN_OPENCANDIDATE 5
+#define IMN_OPENSTATUSWINDOW 2
+#define IMN_PRIVATE 14
+#define IMN_SETCANDIDATEPOS 9
+#define IMN_SETCOMPOSITIONFONT 10
+#define IMN_SETCOMPOSITIONWINDOW 11
+#define IMN_SETCONVERSIONMODE 6
+#define IMN_SETOPENSTATUS 8
+#define IMN_SETSENTENCEMODE 7
+#define IMN_SETSTATUSWINDOWPOS 12
+#define IMR_QUERYCHARPOSITION 6
+#define IMR_RECONVERTSTRING 4
+#define ISC_SHOWUIALL 0xC000000F
+#define ISC_SHOWUIALLCANDIDATEWINDOW 15
+#define ISC_SHOWUICANDIDATEWINDOW 1
+#define ISC_SHOWUICOMPOSITIONWINDOW 0x80000000
+#define ISC_SHOWUIGUIDELINE 0x40000000
+#define MOD_IGNORE_ALL_MODIFIER 1024
+#define MOD_LEFT 32768
+#define MOD_ON_KEYUP 2048
+#define MOD_RIGHT 16384
+#define NI_CHANGECANDIDATELIST 19
+#define NI_CLOSECANDIDATE 17
+#define NI_COMPOSITIONSTR 21
+#define NI_FINALIZECONVERSIONRESULT 20
+#define NI_IMEMENUSELECTED 24
+#define NI_OPENCANDIDATE 16
+#define NI_SELECTCANDIDATESTR 18
+#define NI_SETCANDIDATE_PAGESIZE 23
+#define NI_SETCANDIDATE_PAGESTART 22
+#define REGISTERWORDENUMPROC REGISTERWORDENUMPROCW
+#define SCS_CAP_COMPSTR 1
+#define SCS_CAP_MAKEREAD 2
+#define SCS_CHANGEATTR (GCS_COMPREADATTR|GCS_COMPATTR)
+#define SCS_CHANGECLAUSE (GCS_COMPREADCLAUSE|GCS_COMPCLAUSE)
+#define SCS_SETSTR (GCS_COMPREADSTR|GCS_COMPSTR)
+#define SELECT_CAP_CONVERSION 1
+#define SELECT_CAP_SENTENCE 2
+#define SOFTKEYBOARD_TYPE_C1 2
+#define SOFTKEYBOARD_TYPE_T1 1
+#define STYLE_DESCRIPTION_SIZE 32
+#define UI_CAP_2700 1
+#define UI_CAP_ROT90 2
+#define UI_CAP_ROTANY 4
+#define VK_PROCESSKEY 0x0E5
+#define WM_CONVERTREQUESTEX 0x108
+#define WM_IME_CHAR 0x286
+#define WM_IME_COMPOSITION 0x10F
+#define WM_IME_COMPOSITIONFULL 0x284
+#define WM_IME_CONTROL 0x283
+#define WM_IME_ENDCOMPOSITION 0x10E
+#define WM_IME_KEYDOWN 0x290
+#define WM_IME_KEYLAST 0x10F
+#define WM_IME_KEYUP 0x291
+#define WM_IME_NOTIFY 0x282
+#define WM_IME_REQUEST 0x0288
+#define WM_IME_SELECT 0x285
+#define WM_IME_SETCONTEXT 0x281
+#define WM_IME_STARTCOMPOSITION 0x10D
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
+#define NI_MAXHOST 1025
+#define NI_MAXSERV 32
+#define SCF_SIMULATE_RTS 0x00000002
+#define SCF_SINGLE_THREAD 0x00000001
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
+
+/* CANDIDATEFORM  [struct, typedef; shared; CE 2.11..2.12, 3.0..699] */
+typedef struct _tagCANDIDATEFORM {
+ DWORD dwIndex;
+ DWORD dwStyle;
+ POINT ptCurrentPos;
+ RECT rcArea;
+} CANDIDATEFORM;
+
+/* CANDIDATELIST  [struct; shared; CE 2.11..2.12, 3.0..699] */
+typedef struct _tagCANDIDATELIST {
+ DWORD dwSize;
+ DWORD dwStyle;
+ DWORD dwCount;
+ DWORD dwSelection;
+ DWORD dwPageStart;
+ DWORD dwPageSize;
+ DWORD dwOffset[];
+} CANDIDATELIST;
+
+/* COMPOSITIONFORM  [struct, typedef; shared; CE 2.11..2.12, 3.0..699] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   dwStyle */
+/*   ptCurrentPos */
+/*   rcArea */
+
+/* IMEMENUITEMINFO  [struct; shared; CE 2.11..2.12, 3.0..699; A/W IMEMENUITEMINFOA,IMEMENUITEMINFOW (CE is W-side)] */
+typedef struct tagIMEMENUITEMINFO {
+ UINT cbSize; 
+ UINT fType; 
+ UINT fState; 
+ UINT wID; 
+ HBITMAP hbmpChecked; 
+ HBITMAP hbmpUnchecked; 
+ DWORD dwItemData; 
+ WCHAR szString[IMEMENUITEM_STRING_SIZE]; 
+ HBITMAP hbmpItem; 
+} IMEMENUITEMINFO, *PIMEMENUITEMINFO, NEAR *NPIMEMENUITEMINFO, FAR *LPIMEMENUITEMINFO;
+
+/* INPUTCONTEXT  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
+typedef struct tagINPUTCONTEXT{
+ HWND hWnd;
+ BOOL fOpen;
+ HWND hwndImeInUse; 
+ POINT ptStatusWndPos;
+ POINT ptSoftKbdPos;
+ DWORD fdwConversion;
+ DWORD fdwSentence;
+ union{
+ LOGFONTA A;
+ LOGFONTW W;
+ } lfFont;
+ COMPOSITIONFORM cfCompForm;
+ CANDIDATEFORM cfCandForm[4];
+ HIMCC hCompStr;
+ HIMCC hCandInfo;
+ HIMCC hGuideLine;
+ HIMCC hPrivate;
+ DWORD dwNumMsgBuf;
+ HIMCC hMsgBuf;
+ DWORD fdwInit;
+ DWORD dwReserve[3]
+} INPUTCONTEXT, *PINPUTCONTEXT, NEAR *NPINPUTCONTEXT, FAR *LPINPUTCONTEXT;
+
+/* RECONVERTSTRING  [struct; shared; CE 2.11..2.12, 3.0..699] */
+typedef struct tagRECONVERTSTRING {
+ DWORD dwSize; 
+ DWORD dwVersion; 
+ DWORD dwStrLen; 
+ DWORD dwStrOffset; 
+ DWORD dwCompStrLen; 
+ DWORD dwCompStrOffset; 
+ DWORD dwTargetStrLen; 
+ DWORD dwTargetStrOffset;
+} RECONVERTSTRING, *PRECONVERTSTRING, NEAR *NPRECONVERTSTRING, FAR *LPRECONVERTSTRING;
+
+/* REGISTERWORD  [struct; shared; CE 2.11..2.12, 3.0..699; A/W REGISTERWORDA,REGISTERWORDW (CE is W-side)] */
+typedef struct tagREGISTERWORD {
+ LPTSTR lpReading; 
+ LPTSTR lpWord;
+} REGISTERWORD;
+
+/* STYLEBUF  [struct; shared; CE 2.11..2.12, 3.0..699; A/W STYLEBUFA,STYLEBUFW (CE is W-side)] */
+typedef struct _tagSTYLEBUF {
+ DWORD dwStyle;
+ CHAR szDescription[32];
+} STYLEBUF;
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 600)) /* CE 4.0..599 */
+
+/* COMPOSITIONSTR  [struct; ce-only; CE 4.0..599] */
+typedef struct tagCOMPOSITIONSTR { 
+ DWORD dwSize; 
+ DWORD dwCompReadAttrLen; 
+ DWORD dwCompReadAttrOffset; 
+ DWORD dwCompReadClsLen; 
+ DWORD dwCompReadClsOffset; 
+ DWORD dwCompReadStrLen; 
+ DWORD dwCompReadStrOffset; 
+ DWORD dwCompAttrLen; 
+ DWORD dwCompAttrOffset; 
+ DWORD dwCompClsLen; 
+ DWORD dwCompClsOffset; 
+ DWORD dwCompStrLen; 
+ DWORD dwCompStrOffset; 
+ DWORD dwCursorPos; 
+ DWORD dwDeltaStart; 
+ DWORD dwResultReadClsLen; 
+ DWORD dwResultReadClsOffset; 
+ DWORD dwResultReadStrLen; 
+ DWORD dwResultReadStrOffset; 
+ DWORD dwResultClsLen; 
+ DWORD dwResultClsOffset; 
+ DWORD dwResultStrLen; 
+ DWORD dwResultStrOffset; 
+ DWORD dwPrivateSize; 
+ DWORD dwPrivateOffset; 
+} COMPOSITIONSTR;
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+
+/* CANDIDATEINFO  [struct; ce-only; CE 4.0..699] */
+typedef struct tagCANDIDATEINFO {
+ DWORD dwSize;
+ DWORD dwCount;
+ DWORD dwOffset[32];
+ DWORD dwPrivateSize;
+ DWORD dwPrivateOffset;
+} CANDIDATEINFO;
+
+/* GUIDELINE  [struct; ce-only; CE 4.0..699] */
+typedef struct tagGUIDELINE {
+ DWORD dwSize;
+ DWORD dwLevel;
+ DWORD dwIndex;
+ DWORD dwStrLen;
+ DWORD dwStrOffset;
+ DWORD dwPrivateSize;
+ DWORD dwPrivateOffset;
+} GUIDELINE;
+
+/* IMECHARPOSITION  [struct; shared; CE 4.0..699] */
+typedef struct tagIMECHARPOSITION {
+ DWORD dwSize;
+ DWORD dwCharPos;
+ POINT pt;
+ UNIT cLineHeight;
+ RECT rcDocument;
+} IMECHARPOSITION, *PIMECHARPOSITION;
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+
+/* COMPOSITIONSTRING  [struct; ce-only; CE 6.0..699] */
+typedef struct tagCOMPOSITIONSTRING {
+ DWORD dwSize;
+ DWORD dwCompReadAttrLen;
+ DWORD dwCompReadAttrOffset;
+ DWORD dwCompReadClauseLen;
+ DWORD dwCompReadClauseOffset;
+ DWORD dwCompReadStrLen;
+ DWORD dwCompReadStrOffset;
+ DWORD dwCompAttrLen;
+ DWORD dwCompAttrOffset;
+ DWORD dwCompClauseLen;
+ DWORD dwCompClauseOffset;
+ DWORD dwCompStrLen;
+ DWORD dwCompStrOffset;
+ DWORD dwCursorPos;
+ DWORD dwDeltaStart;
+ DWORD dwResultReadClauseLen;
+ DWORD dwResultReadClauseOffset;
+ DWORD dwResultReadStrLen;
+ DWORD dwResultReadStrOffset;
+ DWORD dwResultClauseLen;
+ DWORD dwResultClauseOffset;
+ DWORD dwResultStrLen;
+ DWORD dwResultStrOffset;
+ DWORD dwPrivateSize;
+ DWORD dwPrivateOffset;
+} COMPOSITIONSTRING;
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
+
+/* EnumRegisterWordProc  [function; ce-only; CE 2.11..2.12, 3.0..699] */
+UINT CALLBACK EnumRegisterWordProc(
+ LPCTSTR lpszReading,
+ DWORD dwStyle,
+ LPCTSTR lpszString,
+ LPVOID lpData 
+);
+
+/* ImmAssociateContext  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+HIMC ImmAssociateContext(
+ HWND hWnd, 
+ HIMC hIMC
+);
+
+/* ImmAssociateContextEx  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmAssociateContextEx( 
+ HWND hWnd, 
+ HINC hIMC, 
+ DWORD dwFlags
+);
+
+/* ImmConfigureIME  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmConfigureIMEA,ImmConfigureIMEW (CE is W-side)] */
+BOOL ImmConfigureIME( 
+ HKL hKL, 
+ HWND hWnd, 
+ DWORD dwMode, 
+ LPVOID lpData
+);
+
+/* ImmCreateContext  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+HIMC ImmCreateContext(void);
+
+/* ImmCreateIMCC  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+HIMCC WINAPI ImmCreateIMCC( 
+ DWORD dwSize
+);
+
+/* ImmDestroyContext  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmDestroyContext( 
+ HIMC hIMC
+);
+
+/* ImmDestroyIMCC  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+HIMCC WINAPI ImmDestroyIMCC( 
+ HIMCC hIMCC
+);
+
+/* ImmDisableIME  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmDisableIME( 
+ DWORD idThread
+);
+
+/* ImmEnumRegisterWord  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmEnumRegisterWordA,ImmEnumRegisterWordW (CE is W-side)] */
+UINT ImmEnumRegisterWord( 
+ HKL hKL, 
+ REGISTERWORDENUMPROC lpfnEnumProc, 
+ LPCTSTR lpszReading, 
+ DWORD dwStyle, 
+ LPCTSTR lpszRegister, 
+ LPVOID lpData
+);
+
+/* ImmEscape  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmEscapeA,ImmEscapeW (CE is W-side)] */
+LRESULT ImmEscape( 
+ HKL hKL, 
+ HIMC hIMC, 
+ UINT uEscape, 
+ LPVOID lpData
+);
+
+/* ImmGenerateMessage  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL WINAPI ImmGenerateMessage( 
+ HIMC hIMC
+);
+
+/* ImmGetCandidateList  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetCandidateListA,ImmGetCandidateListW (CE is W-side)] */
+DWORD ImmGetCandidateList(
+ HIMC hIMC, 
+ DWORD deIndex, 
+ LPCANDIDATELIST lpCandList, 
+ DWORD dwBufLen 
+);
+
+/* ImmGetCandidateListCount  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetCandidateListCountA,ImmGetCandidateListCountW (CE is W-side)] */
+DWORD ImmGetCandidateListCount(
+ HIMC hIMC, 
+ LPDWORD lpdwListCount
+);
+
+/* ImmGetCandidateWindow  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmGetCandidateWindow(
+ HIMC hIMC, 
+ DWORD dwIndex, 
+ LPCANDIDATEFORM lpCandidate
+);
+
+/* ImmGetCompositionFont  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetCompositionFontA,ImmGetCompositionFontW (CE is W-side)] */
+BOOL ImmGetCompositionFont( 
+ HIMC hIMC, 
+ LPLOGFONT lplf
+);
+
+/* ImmGetCompositionString  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetCompositionStringA,ImmGetCompositionStringW (CE is W-side)] */
+LONG ImmGetCompositionString(
+ HIMC hIMC, 
+ DWORD dwIndex, 
+ LPVOID lpBuf, 
+ DWORD dwBufLen
+);
+
+/* ImmGetCompositionWindow  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmGetCompositionWindow(
+ HIMC hIMC, 
+ LPCOMPOSITIONFORM lpCompForm
+);
+
+/* ImmGetContext  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+HIMC ImmGetContext(
+ HWND hWnd
+);
+
+/* ImmGetConversionList  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetConversionListA,ImmGetConversionListW (CE is W-side)] */
+UINT ImmGetConversionList(
+ HKL hKL, 
+ HIMC hIMC, 
+ LPCTSTR lpSrc, 
+ LPCANDIDATELIST lpDst, 
+ DWORD dwBufLen, 
+ UINT uFlag
+);
+
+/* ImmGetConversionStatus  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmGetConversionStatus(
+ HIMC hIMC, 
+ LPDWORD lpfdwConversion, 
+ LPDWORD lpfdwSentence
+);
+
+/* ImmGetDefaultIMEWnd  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+HWND ImmGetDefaultIMEWnd(
+ HWND hWnd
+);
+
+/* ImmGetDescription  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetDescriptionA,ImmGetDescriptionW (CE is W-side)] */
+UINT ImmGetDescription( 
+ HKL hKL, 
+ LPTSTR lpszDescription, 
+ UINT uBufLen
+);
+
+/* ImmGetGuideLine  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetGuideLineA,ImmGetGuideLineW (CE is W-side)] */
+DWORD ImmGetGuideLine( 
+ HIMC hIMC, 
+ DWORD dwIndex, 
+ LPTSTR lpBuf, 
+ DWORD dwBufLen
+);
+
+/* ImmGetHotKey  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL WINAPI ImmGetHotKey( 
+ DWORD dwHotKeyID,
+ LPUINT lpuModifiers,
+ LPUINT lpuVKey,
+ LPHKL lphKL
+);
+
+/* ImmGetIMCCLockCount  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+DWORD WINAPI ImmGetIMCCLockCount( 
+ HIMCC hIMCC
+);
+
+/* ImmGetIMCCSize  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+DWORD WINAPI ImmGetIMCCSize( 
+ HIMCC hIMCC
+);
+
+/* ImmGetIMCLockCount  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+DWORD WINAPI ImmGetIMCLockCount( 
+ HIMC hIMC
+);
+
+/* ImmGetIMEFileName  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetIMEFileNameA,ImmGetIMEFileNameW (CE is W-side)] */
+BOOL ImmGetIMEFileName( 
+ HKL hKL, 
+ LPTSTR lpszFileName, 
+ UINT uBufLen
+);
+
+/* ImmGetImeMenuItems  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetImeMenuItemsA,ImmGetImeMenuItemsW (CE is W-side)] */
+DWORD WINAPI ImmGetImeMenuItems( 
+ HIMC hIMC, 
+ DWORD dwFlags, 
+ DWORD dwType, 
+ LPIMEMENUITEMINFO lpImeParentMenu, 
+ LPIMEMENUITEMINFO lpImeMenu, 
+ DWORD dwSize
+);
+
+/* ImmGetOpenStatus  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL WINAPI ImmGetOpenStatus(
+ HIMC hIMC
+);
+
+/* ImmGetProperty  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmGetProperty(
+ HKL hKL, 
+ DWORD fdwIndex 
+);
+
+/* ImmGetRegisterWordStyle  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetRegisterWordStyleA,ImmGetRegisterWordStyleW (CE is W-side)] */
+UINT ImmGetRegisterWordStyle( 
+ HKL hKL, 
+ UINT nItem, 
+ LPSTYLEBUF lpStyleBuf
+);
+
+/* ImmGetStatusWindowPos  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmGetStatusWindowPos( 
+ HIMC hIMC, 
+ LPPOINT lpptPos
+);
+
+/* ImmGetVirtualKey  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+UINT ImmGetVirtualKey( 
+ HWND hWnd
+);
+
+/* ImmIsIME  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmIsIME( 
+ HKL hKL
+);
+
+/* ImmIsUIMessage  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmIsUIMessageA,ImmIsUIMessageW (CE is W-side)] */
+BOOL ImmIsUIMessage(
+ HWND hWndIME, 
+ UINT msg, 
+ WPARAM wParam, 
+ LPARAM lParam
+);
+
+/* ImmLockIMC  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+LPINPUTCONTEXT WINAPI ImmLockIMC( 
+ HIMC hIMC
+);
+
+/* ImmLockIMCC  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+LPVOID WINAPI ImmLockIMCC( 
+ HIMCC hIMCC
+);
+
+/* ImmNotifyIME  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmNotifyIME(
+ HIMC hIMC, 
+ DWORD dwAction, 
+ DWORD dwIndex, 
+ DWORD dwValue
+);
+
+/* ImmRegisterWord  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmRegisterWordA,ImmRegisterWordW (CE is W-side)] */
+BOOL ImmRegisterWord( 
+ HKL hKL, 
+ LPCTSR lpszReading, 
+ DWORD dwStyle, 
+ LPCTSTR lpszRegister
+);
+
+/* ImmReleaseContext  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmReleaseContext(
+ HWND hWnd, 
+ HIMC hIMC
+);
+
+/* ImmReSizeIMCC  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+HIMCC WINAPI ImmReSizeIMCC( 
+ HIMCC hIMCC, 
+ DWORD dwSize
+);
+
+/* ImmSetCandidateWindow  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmSetCandidateWindow(
+ HIMC hIMC, 
+ LPCANDIDATEFORM lpCandidate
+);
+
+/* ImmSetCompositionFont  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmSetCompositionFontA,ImmSetCompositionFontW (CE is W-side)] */
+BOOL ImmSetCompositionFont( 
+ HIMC hIMC, 
+ LPLOGFONT lplf
+);
+
+/* ImmSetCompositionString  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmSetCompositionStringA,ImmSetCompositionStringW (CE is W-side)] */
+BOOL ImmSetCompositionString(
+ HIMC hIMC, 
+ DWORD dwIndex, 
+ LPCVOID lpComp, 
+ DWORD dwCompLen, 
+ LPCVOID lpRead, 
+ DWORD dwReadLen
+);
+
+/* ImmSetCompositionWindow  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmSetCompositionWindow(
+ HIMC hIMC, 
+ LPCOMPOSITIONFORM lpCompForm
+);
+
+/* ImmSetConversionStatus  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmSetConversionStatus(
+ HIMC hIMC, 
+ DWORD fdwConversion, 
+ DWORD fdwSentence
+);
+
+/* ImmSetHotKey  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL WINAPI ImmSetHotKey( 
+ DWORD dwHotKeyID,
+ UINT uModifiers,
+ UINT uVKey,
+ HKL hKL
+);
+
+/* ImmSetOpenStatus  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmSetOpenStatus(
+ HIMC hIMC,
+ BOOL fOpen
+);
+
+/* ImmSetStatusWindowPos  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmSetStatusWindowPos( 
+ HIMC hIMC,
+ LPPOINT lpptPos
+);
+
+/* ImmSimulateHotKey  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmSimulateHotKey(
+ HWND hWnd,
+ DWORD dwHotKeyID
+);
+
+/* ImmSIPanelState  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmSIPanelState(
+ UINT dwCmd, 
+ LPVOID pValue
+);
+
+/* ImmUnlockIMC  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL WINAPI ImmUnlockIMC( 
+ HIMC hIMC
+);
+
+/* ImmUnlockIMCC  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL WINAPI ImmUnlockIMCC( 
+ HIMCC hIMCC
+);
+
+/* ImmUnregisterWord  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmUnregisterWordA,ImmUnregisterWordW (CE is W-side)] */
+BOOL ImmUnregisterWord( 
+ HKL hKL,
+ LPCTSTR lpszReading,
+ DWORD dwStyle,
+ LPCTSTR lpszUnregister
+);
+
+/* WM_IME_COMPOSITION  [function; ce-only; CE 2.11..2.12, 3.0..699] */
+WM_IME_COMPOSITION 
+ chDBCS = (WORD) wParam; 
+ fFlags = (BOOL) lParam;
+
+/* WM_IME_KEYDOWN  [function; ce-only; CE 2.11..2.12, 3.0..699] */
+WM_IME_KEYDOWN nVirtKey = (int) wParam;
+lKeyData = lParam;
+
+/* WM_IME_KEYUP  [function; ce-only; CE 2.11..2.12, 3.0..699] */
+WM_IME_KEYUP nVirtKey = (int) wParam;
+lKeyData = lParam;
+
+/* WM_IME_NOTIFY  [function; ce-only; CE 2.11..2.12, 3.0..699] */
+WM_IME_NOTIFY
+ dwCommand = (DWORD) wParam;
+ dwData = (DWORD) lParam;
+
+/* WM_IME_SETCONTEXT  [function; ce-only; CE 2.11..2.12, 3.0..699] */
+WM_IME_SETCONTEXT
+ fSet = (BOOL) wParam; 
+ iShow = (DWORD) lParam;
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* typedef */
+typedef _tagCANDIDATEFORM { DWORD dwIndex;
+typedef _tagCOMPOSITIONFORM { DWORD dwStyle;
+
+/* struct */
+typedef struct tagINPUTCONTEXT{
+  HWND hWnd;
+  BOOL fOpen;
+  HWND hwndImeInUse;
+  POINT ptStatusWndPos;
+  POINT ptSoftKbdPos;
+  DWORD fdwConversion;
+  DWORD fdwSentence;
+  union{
+    LOGFONTA A;
+    LOGFONTW W;
+  } lfFont;
+  COMPOSITIONFORM cfCompForm;
+  CANDIDATEFORM cfCandForm[4];
+  HIMCC hCompStr;
+  HIMCC hCandInfo;
+  HIMCC hGuideLine;
+  HIMCC hPrivate;
+  DWORD dwNumMsgBuf;
+  HIMCC hMsgBuf;
+  DWORD fdwInit;
+  DWORD dwReserve[3]
+} INPUTCONTEXT, *PINPUTCONTEXT, NEAR *NPINPUTCONTEXT, FAR *LPINPUTCONTEXT;
+typedef struct tagIMECHARPOSITION {DWORDdwSize;DWORDdwCharPos;POINTpt;UNITcLineHeight;RECTrcDocument;} IMECHARPOSITION, *PIMECHARPOSITION;
+typedef struct tagINPUTCONTEXT{ HWND hWnd; BOOL fOpen; HWND hwndImeInUse; POINT ptStatusWndPos; POINT ptSoftKbdPos; DWORD fdwConversion; DWORD fdwSentence; union{ LOGFONTA A; LOGFONTW W; } lfFont;
+
+/* function */
+typedefstructtagIMEMENUITEMINFO{UINTcbSize;UINTfType;UINTfState;UINTwID;HBITMAPhbmpChecked;HBITMAPhbmpUnchecked;DWORDdwItemData;WCHARszString[IMEMENUITEM_STRING_SIZE];HBITMAPhbmpItem;}IMEMENUITEMINFO,*PIMEMENUITEMINFO,NEAR*NPIMEMENUITEMINFO,FAR*LPIMEMENUITEMINFO;
+typedefstructtagRECONVERTSTRING{DWORDdwSize;DWORDdwVersion;DWORDdwStrLen;DWORDdwStrOffset;DWORDdwCompStrLen;DWORDdwCompStrOffset;DWORDdwTargetStrLen;DWORDdwTargetStrOffset;}RECONVERTSTRING,*PRECONVERTSTRING,NEAR*NPRECONVERTSTRING,FAR*LPRECONVERTSTRING;
+
+#endif /* _IMM_ */

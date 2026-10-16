@@ -1,0 +1,81 @@
+/* Webproxy.h -- Windows CE unified surface
+ *
+ * ONE tree for every CE generation.  Version differences use
+ * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
+ * Win32-shared entries are marked 'win32-ref'.
+ * Generated from wince-docs-corpus knowledge/ by
+ * tools/gen-include-def.py --unified.
+ * 0 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
+ */
+#ifndef _WEBPROXY_
+#define _WEBPROXY_
+
+
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+
+/* PROXY_HTTP_INFORMATION  [struct; ce-only; CE 5.0..699] */
+typedef struct _PROXY_HTTP_INFORMATION {
+ DWORD dwSize;
+ DWORD dwProxyVersion;
+} PROXY_HTTP_INFORMATION, *PPROXY_HTTP_INFORMATION;
+
+/* PROXY_HTTP_REQUEST  [struct; ce-only; CE 5.0..699] */
+typedef struct _PROXY_HTTP_REQUEST {
+ DWORD dwSize;
+ const SOCKADDR_STORAGE* psaClient;
+ int cbsaClient
+ const char* szUser;
+ int cchUser;
+ const char* szURL;
+ int cchURL;
+ char* szURLOut;
+ int cbURLOut;
+ const SOCKADDR_STORAGE* psaProxy;
+ int cbsaProxy;
+} PROXY_HTTP_REQUEST, *PPROXY_HTTP_REQUEST;
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+
+/* ProxyFilterHttpRequest  [function; ce-only; CE 5.0..699] */
+DWORD ProxyFilterHttpRequest(
+ PPROXY_HTTP_REQUEST pRequest
+);
+
+/* ProxyInitializeFilter  [function; ce-only; CE 5.0..699] */
+DWORD WINAPI ProxyInitializeFilter(
+ PPROXY_HTTP_INFORMATION pInfo
+);
+
+/* ProxyNotifyAddrChange  [function; ce-only; CE 5.0..699] */
+DWORD WINAPI ProxyNotifyAddrChange(void);
+
+/* ProxySignalFilter  [function; ce-only; CE 5.0..699] */
+DWORD ProxySignalFilter(
+ DWORD dwSignal
+);
+
+/* ProxyUninitializeFilter  [function; ce-only; CE 5.0..699] */
+DWORD WINAPI ProxyUninitializeFilter (void);
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* struct */
+typedef struct _PROXY_HTTP_INFORMATION { DWORD dwSize; DWORD dwProxyVersion;} PROXY_HTTP_INFORMATION, *PPROXY_HTTP_INFORMATION;
+typedef struct _PROXY_HTTP_REQUEST { DWORD dwSize; const SOCKADDR_STORAGE* psaClient; int cbsaClient const char* szUser; int cchUser; const char* szURL; int cchURL; char* szURLOut; int cbURLOut; const SOCKADDR_STORAGE* psaProxy; int cbsaProxy;} PROXY_HTTP_REQUEST, *PPROXY_HTTP_REQUEST;
+
+#endif /* _WEBPROXY_ */

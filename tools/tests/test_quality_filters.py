@@ -49,13 +49,27 @@ class DeclarationTests(unittest.TestCase):
             "LRESULT SendMessage(HWND hWnd, UINT Msg, "
             "WPARAM wParam, LPARAM lParam);"))
 
-    def test_accepts_collapsed_prototype(self):
-        self.assertTrue(q.looks_like_c_declaration(
+    def test_rejects_collapsed_prototype(self):
+        self.assertFalse(q.looks_like_c_declaration(
             "BOOLCreateFile(LPCTSTRlpFileName);"))
 
     def test_rejects_sample_enum_name(self):
         self.assertIsNone(q.sanitize_declaration(
             "typedef enum myEnum { k=1 } myEnumv;", "myEnumv", "enum"))
+
+
+class GluedPrototypeTests(unittest.TestCase):
+    def test_handle_createfile_is_glued(self):
+        self.assertTrue(q.is_glued_prototype(
+            "HANDLECreateFile(LPCTSTRlpFileName);"))
+        self.assertFalse(q.looks_like_c_declaration(
+            "HANDLECreateFile(LPCTSTRlpFileName);"))
+
+    def test_spaced_createfile_ok(self):
+        self.assertFalse(q.is_glued_prototype(
+            "HANDLE CreateFile(LPCTSTR lpFileName);"))
+        self.assertTrue(q.looks_like_c_declaration(
+            "HANDLE CreateFile(LPCTSTR lpFileName);"))
 
 
 if __name__ == "__main__":

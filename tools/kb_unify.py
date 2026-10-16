@@ -43,6 +43,10 @@ _KEEP_VALUE = re.compile(
 )
 
 
+# Well-known C names whose printed table hit is often a different column.
+_NULL_OK = re.compile(r"^(0|0[lL]|0x0+|NULL|\(\s*\(\s*void\s*\*\s*\)\s*0\s*\))$")
+
+
 def is_keepable_constant_value(value):
     """A printed number, alias, or constructor expression -- not sample C."""
     text = quality_filters.strip_markup(value or "")
@@ -126,6 +130,10 @@ def choose_constant_value(records, resolved=None):
     if not records:
         return None, None, None, discarded
     records = [r for r in records if is_keepable_constant_value(r.get("value"))]
+    name0 = (records[0].get("name") if records else "") or ""
+    if name0 == "NULL":
+        records = [r for r in records
+                   if _NULL_OK.match(re.sub(r"\s+", "", str(r.get("value") or "")))]
     if not records:
         return None, None, None, discarded
 

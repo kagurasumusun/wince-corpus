@@ -1,0 +1,790 @@
+/* Gdi.hpp -- Windows CE unified surface
+ *
+ * ONE tree for every CE generation.  Version differences use
+ * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
+ * Win32-shared entries are marked 'win32-ref'.
+ * Generated from wince-docs-corpus knowledge/ by
+ * tools/gen-include-def.py --unified.
+ * 0 constants, 104 declarations, 0 outlines, 0 base types, 0 extra macros, 18 extra decls
+ */
+#ifndef _GDI_HPP_
+#define _GDI_HPP_
+
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+
+/* Gdi::AbortDoc_I  [function; ce-only; CE 4.0..699] */
+static INGDIAPI int WINAPI AbortDoc_I(
+ HDC hdc
+);
+
+/* Gdi::AddFontResourceW_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI int WINAPI AddFontResourceW_I(
+ const WCHAR* lpszFilename
+);
+
+/* Gdi::BitBlt_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI BOOL WINAPI BitBlt_I(
+ HDC hdcDest, 
+ int nXDest, 
+ int nYDest, 
+ int nWidth, 
+ int nHeight, 
+ HDC hdcSrc, 
+ int nXSrc, 
+ int nYSrc, 
+ DWORD dwRop
+);
+
+/* Gdi::CeRemoveFontResource_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI BOOL WINAPI CeRemoveFontResource_I(
+ CEOID oid
+);
+
+/* Gdi::CombineRgn_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI int WINAPI CombineRgn_I(
+ HRGN hrgnDest, 
+ HRGN hrgnSrc1, 
+ HRGN hrgnSrc2, 
+ int fnCombineMode
+);
+
+/* Gdi::CreateBitmap_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI HBITMAP WINAPI CreateBitmap_I(
+ int nWidth, 
+ int nHeight, 
+ UINT cPlanes, 
+ UINT cBitsPerPel, 
+ CONST VOID* lpvBits
+);
+
+/* Gdi::CreateCompatibleBitmap_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI HBITMAP WINAPI CreateCompatibleBitmap_I(
+ HDC hdc, 
+ int nWidth, 
+ int nHeight
+);
+
+/* Gdi::CreateCompatibleDC_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI HDC WINAPI CreateCompatibleDC_I(
+ HDC hdcIn
+);
+
+/* Gdi::CreateDCW_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI HDC WINAPI CreateDCW_I(
+ const WCHAR* lpszDriver,
+ const WCHAR* lpszDevice,
+ const WCHAR* lpszOutput,
+ const DEVMODEW* lpInitData
+);
+
+/* Gdi::CreateDIBPatternBrushPt_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI HBRUSH WINAPI CreateDIBPatternBrushPt_I(
+ const void* lpPackedDIB,
+ unsigned int iUsage
+);
+
+/* Gdi::CreateFontIndirectW_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI HFONT WINAPI CreateFontIndirectW_I(
+ const LOGFONT* lplf
+);
+
+/* Gdi::CreatePalette_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI HPALETTE WINAPI CreatePalette_I(
+ CONST LOGPALETTE* lplgpl
+);
+
+/* Gdi::CreatePatternBrush_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI HBRUSH WINAPI CreatePatternBrush_I(
+ HBITMAP hbmp
+);
+
+/* Gdi::CreatePen_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI HPEN WINAPI CreatePen_I(
+ int fnPenStyle, 
+ int nWidth, 
+ COLORREF crColor
+);
+
+/* Gdi::CreatePenIndirect_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI HPEN WINAPI CreatePenIndirect_I(
+ const LOGPEN* lplgpn
+);
+
+/* Gdi::CreatePermanentDIBSection  [function; ce-only; CE 4.0..699] */
+static HBITMAP WINAPI CreatePermanentDIBSection(
+ HDC hdc,
+ CONST BITMAPINFO* pbmi,
+ UINT iUsage,
+ void** ppvBits,
+ HANDLE hSection,
+ DWORD dwOffset
+);
+
+/* Gdi::CreateRectRgn_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI HRGN WINAPI CreateRectRgn_I(
+ int nLeftRect, 
+ int nTopRect, 
+ int nRightRect, 
+ int nBottomRect
+);
+
+/* Gdi::CreateRectRgnIndirect_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI HRGN WINAPI CreateRectRgnIndirect_I(
+ const RECT* lprc
+);
+
+/* Gdi::CreateSolidBrush_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI HBRUSH WINAPI CreateSolidBrush_I(
+ COLORREF crColor
+);
+
+/* Gdi::DeleteDC_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI BOOL WINAPI DeleteDC_I(
+ HDC hdc
+);
+
+/* Gdi::DeleteObject_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI BOOL WINAPI DeleteObject_I(
+ HGDIOBJ hgdiobj
+);
+
+/* Gdi::DibByteWidth  [function; ce-only; CE 4.0..699] */
+static unsigned int DibByteWidth(
+ unsigned int N,
+ unsigned int W
+);
+
+/* Gdi::DibSize  [function; ce-only; CE 4.0..699] */
+static unsigned int DibSize(
+ unsigned int N,
+ unsigned int W,
+ int H
+);
+
+/* Gdi::DrawEdge_I  [function; ce-only; CE 4.0..699] */
+static WINUSERAPI BOOL WINAPI DrawEdge_I(
+ HDC hdc,
+ RECT* qrc,
+ unsigned int edge,
+ unsigned int grfFlags
+);
+
+/* Gdi::DrawFocusRect_I  [function; ce-only; CE 4.0..699] */
+static WINUSERAPI BOOL WINAPI DrawFocusRect_I(
+ HDC hDC, 
+ const RECT* lprc
+);
+
+/* Gdi::DrawTextW_I  [function; ce-only; CE 4.0..699] */
+static WINUSERAPI int WINAPI DrawTextW_I(
+ HDC hDC,
+ const WCHAR* lpString,
+ int nCount,
+ RECT* lpRect,
+ unsigned int uFormat
+);
+
+/* Gdi::Ellipse_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI BOOL WINAPI Ellipse_I(
+ HDC hdc, 
+ int nLeftRect, 
+ int nTopRect, 
+ int nRightRect, 
+ int nBottomRect
+);
+
+/* Gdi::EnableEUDC_I  [function; ce-only; CE 4.0..699] */
+static BOOL WINAPI EnableEUDC_I(
+ BOOL fEnableEUDC
+);
+
+/* Gdi::EndDoc_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI int WINAPI EndDoc_I(
+ HDC hdc
+);
+
+/* Gdi::EndPage_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI int WINAPI EndPage_I(
+ HDC hdc
+);
+
+/* Gdi::EnumDisplayMonitors_I  [function; ce-only; CE 4.0..699] */
+static BOOL WINAPI EnumDisplayMonitors_I(
+ HDC hdcPaint,
+ LPCRECT lprcPaint,
+ MONITORENUMPROC lpfnEnum,
+ LPARAM lData
+ HPROCESS hProcCallingContext
+);
+
+/* Gdi::EnumFontFamiliesW_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI int WINAPI EnumFontFamiliesW_I(
+ HDC hdc,
+ const WCHAR* lpszFamily, 
+ FONTENUMPROC lpEnumFontFamProc, 
+ LPARAM lParam
+);
+
+/* Gdi::EnumFontsW_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI int WINAPI EnumFontsW_I(
+ HDC hdc,
+ const WCHAR* lpFaceName,
+ FONTENUMPROC lpFontFunc,
+ LPARAM lParam
+);
+
+/* Gdi::ExcludeClipRect_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI int WINAPI ExcludeClipRect_I(
+ HDC hdc, 
+ int nLeftRect, 
+ int nTopRect, 
+ int nRightRect, 
+ int nBottomRect
+);
+
+/* Gdi::ExtEscape_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI int WINAPI ExtEscape_I(
+ HDC hdc, 
+ int nEscape, 
+ int cbInput, 
+ const char* lpszInData,
+ int cbOutput,
+ char* lpszOutData
+);
+
+/* Gdi::ExtTextOutW_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI BOOL WINAPI ExtTextOutW_I(
+ HDC hdc,
+ int X,
+ int Y,
+ unsigned int fuOptions,
+ const RECT* lprc,
+ const WCHAR* lpszString,
+ unsigned int cbCount,
+ const int* lpDx
+);
+
+/* Gdi::FillRect_I  [function; ce-only; CE 4.0..699] */
+static WINUSERAPI int WINAPI FillRect_I(
+ HDC hDC, 
+ CONST RECT* lprc, 
+ HBRUSH hbr
+);
+
+/* Gdi::FillRgn_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI BOOL WINAPI FillRgn_I(
+ HDC hdc, 
+ HRGN hrgn, 
+ HBRUSH hbr
+);
+
+/* Gdi::GdiSetObjectOwner_I  [function; ce-only; CE 4.0..699] */
+static BOOL GdiSetObjectOwner_I(
+ HGDIOBJ hgdiobj,
+ HPROCESS hprc
+);
+
+/* Gdi::GetBkColor_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI COLORREF WINAPI GetBkColor_I(
+ HDC hdc
+);
+
+/* Gdi::GetBkMode_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI int WINAPI GetBkMode_I(
+ HDC hdc
+);
+
+/* Gdi::GetClipBox_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI int WINAPI GetClipBox_I(
+ HDC hdc,
+ RECT* lprc
+);
+
+/* Gdi::GetClipRgn_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI int WINAPI GetClipRgn_I(
+ HDC hdc, 
+ HRGN hrgn
+);
+
+/* Gdi::GetCurrentObject_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI HGDIOBJ WINAPI GetCurrentObject_I(
+ HDC hdc,
+ unsigned int uObjectType
+);
+
+/* Gdi::GetDeviceCaps_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI int WINAPI GetDeviceCaps_I(
+ HDC hdc,
+ int nIndex
+);
+
+/* Gdi::GetMonitorInfo_I  [function; ce-only; CE 4.0..699] */
+static BOOL WINAPI GetMonitorInfo_I(
+ HMONITOR hMonitor, 
+ LPMONITORINFO lpmi 
+);
+
+/* Gdi::GetNearestColor_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI COLORREF WINAPI GetNearestColor_I(
+ HDC hdc, 
+ COLORREF crColor
+);
+
+/* Gdi::GetNearestPaletteIndex_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI unsigned int WINAPI GetNearestPaletteIndex_I(
+ HPALETTE hpal, 
+ COLORREF crColor
+);
+
+/* Gdi::GetObjectType_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI DWORD WINAPI GetObjectType_I(
+ HGDIOBJ hgdiobj
+);
+
+/* Gdi::GetObjectW_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI int WINAPI GetObjectW_I(
+ HGDIOBJ hgdiobj,
+ int cbBuffer,
+ void* lpvObject
+);
+
+/* Gdi::GetPaletteEntries_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI unsigned int WINAPI GetPaletteEntries_I(
+ HPALETTE hpal,
+ unsigned int iStartIndex,
+ unsigned int nEntries,
+ PALETTEENTRY* lppe
+);
+
+/* Gdi::GetPixel_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI COLORREF WINAPI GetPixel_I(
+ HDC hdc, 
+ int nXPos, 
+ int nYPos
+);
+
+/* Gdi::GetRegionData_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI DWORD WINAPI GetRegionData_I(
+ HRGN hRgn, 
+ DWORD dwCount,
+ RGNDATA* lpRgnData
+);
+
+/* Gdi::GetRgnBox_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI int WINAPI GetRgnBox_I(
+ HRGN hrgn,
+ RECT* lprc
+);
+
+/* Gdi::GetSysColorBrush_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI HBRUSH WINAPI GetSysColorBrush_I(
+ int nIndex
+);
+
+/* Gdi::GetSystemPaletteEntries_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI unsigned int WINAPI GetSystemPaletteEntries_I(
+ HDC hdc,
+ unsigned int iStartIndex,
+ unsigned int nEntries,
+ PALETTEENTRY* lppe
+);
+
+/* Gdi::GetTextColor_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI COLORREF WINAPI GetTextColor_I(
+ HDC hdc
+);
+
+/* Gdi::GetTextExtentExPointW_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI BOOL WINAPI GetTextExtentExPointW_I(
+ HDC hdc,
+ const WCHAR* lpszStr,
+ int cchString,
+ int nMaxExtent,
+ int* lpnFit,
+ int* alpDx,
+ SIZE* lpSize
+);
+
+/* Gdi::GetTextFaceW_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI int WINAPI GetTextFaceW_I(
+ HDC hdc, 
+ int nCount,
+ WCHAR* lpFaceName
+);
+
+/* Gdi::GetTextMetricsW_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI BOOL WINAPI etTextMetricsW_I(
+ HDC hdc,
+ TEXTMETRIC* lptm
+);
+
+/* Gdi::IntersectClipRect_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI int WINAPI IntersectClipRect_I(
+ HDC hdc, 
+ int nLeftRect, 
+ int nTopRect, 
+ int nRightRect, 
+ int nBottomRect
+);
+
+/* Gdi::InvertRect_I  [function; ce-only; CE 4.0..699] */
+static WINUSERAPI BOOL WINAPI InvertRect_I(
+ HDC hdc,
+ const RECT* lprc
+);
+
+/* Gdi::MaskBlt_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI BOOL WINAPI MaskBlt_I(
+ HDC hdcDest, 
+ int nXDest, 
+ int nYDest, 
+ int nWidth, 
+ int nHeight, 
+ HDC hdcSrc, 
+ int nXSrc, 
+ int nYSrc, 
+ HBITMAP hbmMask, 
+ int xMask, 
+ int yMask, 
+ DWORD dwRop
+);
+
+/* Gdi::MonitorFromPoint_I  [function; ce-only; CE 4.0..699] */
+static HMONITOR WINAPI MonitorFromPoint_I(
+ POINT pt,
+ DWORD dwFlag
+);
+
+/* Gdi::MonitorFromRect_I  [function; ce-only; CE 4.0..699] */
+static HMONITOR WINAPI MonitorFromRect_I(
+ LPCRECT lprc,
+ DWORD dwFlag
+);
+
+/* Gdi::MonitorFromWindow_I  [function; ce-only; CE 4.0..699] */
+static HMONITOR WINAPI MonitorFromWindow_I(
+ HWND hwnd,
+ DWORD dwFlag
+);
+
+/* Gdi::OffsetRgn_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI int WINAPI OffsetRgn_I(
+ HRGN hrgn, 
+ int nXOffset, 
+ int nYOffset
+);
+
+/* Gdi::PatBlt_I  [function; ce-only; CE 4.0..699] */
+static BOOL WINAPI PatBlt_I(
+ HDC hdc, 
+ int nXLeft, 
+ int nYLeft, 
+ int nWidth, 
+ int nHeight, 
+ DWORD dwRop
+);
+
+/* Gdi::Polygon_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI BOOL WINAPI Polygon_I(
+ HDC hdc, 
+ const POINT* lpPoints, 
+ int nCount
+);
+
+/* Gdi::Polyline_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI BOOL WINAPI Polyline_I(
+ HDC hdc, 
+ const POINT* lppt, 
+ int cPoints
+);
+
+/* Gdi::PtInRegion_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI BOOL WINAPI PtInRegion_I(
+ HRGN hrgn, 
+ int X, 
+ int Y
+);
+
+/* Gdi::RealizePalette_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI unsigned int WINAPI RealizePalette_I(
+ HDC hdc
+);
+
+/* Gdi::Rectangle_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI BOOL WINAPI Rectangle_I(
+ HDC hdc, 
+ int nLeftRect, 
+ int nTopRect, 
+ int nRightRect, 
+ int nBottomRect
+);
+
+/* Gdi::RectInRegion_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI BOOL WINAPI RectInRegion_I(
+ HRGN hrgn, 
+ const RECT* lprc
+);
+
+/* Gdi::RectVisible_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI BOOL WINAPI RectVisible_I(
+ HDC hdc, 
+ CONST RECT* lprc
+);
+
+/* Gdi::RemoveFontResourceW_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI BOOL WINAPI RemoveFontResourceW_I(
+ const WCHAR* lpFileName
+);
+
+/* Gdi::RestoreDC_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI BOOL WINAPI RestoreDC_I(
+ HDC hdc, 
+ int nSavedDC
+);
+
+/* Gdi::RoundRect_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI BOOL WINAPI RoundRect_I(
+ HDC hdc, 
+ int nLeftRect, 
+ int nTopRect, 
+ int nRightRect, 
+ int nBottomRect, 
+ int nWidth, 
+ int nHeight
+);
+
+/* Gdi::SaveDC_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI int WINAPI SaveDC_I(
+ HDC hdc
+);
+
+/* Gdi::ScrollDC_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI BOOL WINAPI ScrollDC_I(
+ HDC hdc,
+ int dx,
+ int dy,
+ const RECT* lprcScroll,
+ const RECT* lprcClip,
+ HRGN hrgnUpdate,
+ RECT* lprcUpdate
+);
+
+/* Gdi::SelectClipRgn_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI int WINAPI SelectClipRgn_I(
+ HDC hdc,
+ HRGN hrgn
+);
+
+/* Gdi::SelectObject_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI HGDIOBJ WINAPI SelectObject_I(
+ HDC hdc,
+ HGDIOBJ hgdiobj
+);
+
+/* Gdi::SelectPalette_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI HPALETTE WINAPI SelectPalette_I(
+ HDC hdc, 
+ HPALETTE hpal, 
+ BOOL bForceBackground
+);
+
+/* Gdi::SetAbortProc_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI int WINAPI SetAbortProc_I(
+ HDC hdc, 
+ ABORTPROC lpAbortProc
+);
+
+/* Gdi::SetBkColor_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI COLORREF WINAPI SetBkColor_I(
+ HDC hdc,
+ COLORREF crColor
+);
+
+/* Gdi::SetBkMode_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI int WINAPI SetBkMode_I(
+ HDC hdc,
+ int iBkMode
+);
+
+/* Gdi::SetBrushOrgEx_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI BOOL WINAPI SetBrushOrgEx_I(
+ HDC hdc, 
+ int nXOrg, 
+ int nYOrg,
+ POINT* lppt
+);
+
+/* Gdi::SetPaletteEntries_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI unsigned int WINAPI SetPaletteEntries_I(
+ HPALETTE hpal,
+ unsigned int iStart,
+ unsigned int cEntries,
+ CONST PALETTEENTRY* lppe
+);
+
+/* Gdi::SetPixel_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI COLORREF WINAPI SetPixel_I(
+ HDC hdc, 
+ int X, 
+ int Y, 
+ COLORREF crColor
+);
+
+/* Gdi::SetRectRgn_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI BOOL WINAPI SetRectRgn_I(
+ HRGN hrgn, 
+ int nLeftRect, 
+ int nTopRect, 
+ int nRightRect, 
+ int nBottomRect
+);
+
+/* Gdi::SetROP2_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI int WINAPI SetROP2_I(
+ HDC hdc, 
+ int fnDrawMode
+);
+
+/* Gdi::SetTextColor_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI COLORREF WINAPI SetTextColor_I(
+ HDC hdc,
+ COLORREF crColor
+);
+
+/* Gdi::SetViewportOrgEx_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI BOOL WINAPI SetViewportOrgEx_I(
+ HDC hdc,
+ int nXOrg,
+ int nYOrg,
+ POINT* lppt
+);
+
+/* Gdi::StartDocW_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI int WINAPI StartDocW_I(
+ HDC hdc, 
+ CONST DOCINFO* lpdi
+);
+
+/* Gdi::StartPage_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI int WINAPI StartPage_I(
+ HDC hDC
+);
+
+/* Gdi::StretchBlt_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI BOOL WINAPI StretchBlt_I(
+ HDC hdcDest, 
+ int nXOriginDest, 
+ int nYOriginDest, 
+ int nWidthDest, 
+ int nHeightDest, 
+ HDC hdcSrc, 
+ int nXOriginSrc, 
+ int nYOriginSrc, 
+ int nWidthSrc, 
+ int nHeightSrc, 
+ DWORD dwRop
+);
+
+/* Gdi::TransparentImage_I  [function; ce-only; CE 4.0..699] */
+static WINGDIAPI BOOL WINAPI TransparentImage_I(
+ HDC hdcDest,
+ int DstX,
+ int DstY,
+ int DstCx,
+ int DstCy,
+ HANDLE hSrc,
+ int SrcX,
+ int SrcY,
+ int SrcCx,
+ int SrcCy,
+ COLORREF TransparentColor
+);
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+
+/* Gdi::AlphaBlend_I  [function; ce-only; CE 5.0..699] */
+BOOL AlphaBlend(
+ HDC hdcDest,
+ int nXOriginDest,
+ int nYOriginDest,
+ int nWidthDest,
+ int nHeightDest,
+ HDC hdcSrc,
+ int nXOriginSrc,
+ int nYOriginSrc,
+ int nWidthSrc,
+ int nHeightSrc,
+ BLENDFUNCTION blendFunction
+);
+
+/* Gdi::EnumFontFamiliesExW_I  [function; ce-only; CE 5.0..699] */
+int EnumFontFamiliesEx(
+ HDC hdc,
+ LPLOGFONT lpLogfont,
+ FONTENUMPROC lpEnumFontFamExProc,
+ LPARAM lParam,
+ DWORD dwFlags
+);
+
+/* Gdi::GetOutlineTextMetricsW_I  [function; ce-only; CE 5.0..699] */
+UINT GetOutlineTextMetrics(
+ HDC hdc,
+ UINT cbData,
+ LPOUTLINETEXTMETRICW lpOTM
+);
+
+/* GDI::GetTextCharacterExtra_I  [function; ce-only; CE 5.0..699] */
+int GetTextCharacterExtra(
+ HDC hdc
+);
+
+/* GDI::SetTextCharacterExtra_I  [function; ce-only; CE 5.0..699] */
+int SetTextCharacterExtra(
+ HDC hdc,
+ int nCharExtra
+);
+
+/* Gdi_GetStretchBltMode_I  [function; ce-only; CE 5.0..699] */
+int GetStretchBltMode(
+ HDC hdc
+);
+
+/* Gdi_SetStretchBltMode_I  [function; ce-only; CE 5.0..699] */
+int SetStretchBltMode(
+ HDC hdc,
+ int iStretchMode
+);
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* function */
+VOID WINAPI CeRemoveFontResource_I( CEOID oid );
+VOID WINAPI CreateDCW_I( const WCHAR* lpszDriver, const WCHAR* lpszDevice, const WCHAR* lpszOutput, const DEVMODEW* lpInitData );
+VOID WINAPI CreateDIBPatternBrushPt_I( const void* lpPackedDIB, unsigned int iUsage );
+VOID WINAPI CreatePermanentDIBSection( HDC hdc, CONST BITMAPINFO* pbmi, UINT iUsage, void** ppvBits, HANDLE hSection, DWORD dwOffset );
+VOID WINAPI DeleteDC_I( HDC hdc );
+int DibByteWidth( unsigned int N, unsigned int W );
+int DibSize( unsigned int N, unsigned int W, int H );
+VOID WINAPI EnableEUDC_I( BOOL fEnableEUDC );
+VOID WINAPI EnumDisplayMonitors_I( HDC hdcPaint, LPCRECT lprcPaint, MONITORENUMPROC lpfnEnum, LPARAM lData HPROCESS hProcCallingContext );
+BOOL GdiSetObjectOwner_I( HGDIOBJ hgdiobj, HPROCESS hprc );
+VOID WINAPI GetClipRgn_I( HDC hdc, HRGN hrgn );
+VOID WINAPI GetMonitorInfo_I( HMONITOR hMonitor, LPMONITORINFO lpmi );
+VOID WINAPI GetRegionData_I( HRGN hRgn, DWORD dwCount, RGNDATA* lpRgnData );
+VOID WINAPI MonitorFromPoint_I( POINT pt, DWORD dwFlag );
+VOID WINAPI MonitorFromRect_I( LPCRECT lprc, DWORD dwFlag );
+VOID WINAPI MonitorFromWindow_I( HWND hwnd, DWORD dwFlag );
+VOID WINAPI RectVisible_I( HDC hdc, CONST RECT* lprc );
+VOID WINAPI etTextMetricsW_I( HDC hdc, TEXTMETRIC* lptm );
+
+#endif /* _GDI_HPP_ */

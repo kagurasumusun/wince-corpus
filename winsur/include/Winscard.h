@@ -1,0 +1,309 @@
+/* Winscard.h -- Windows CE unified surface
+ *
+ * ONE tree for every CE generation.  Version differences use
+ * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
+ * Win32-shared entries are marked 'win32-ref'.
+ * Generated from wince-docs-corpus knowledge/ by
+ * tools/gen-include-def.py --unified.
+ * 9 constants, 31 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
+ */
+#ifndef _WINSCARD_
+#define _WINSCARD_
+
+
+/* ==================================================================
+ * constants (one evidence comment per #define; the
+ * #if of a batch covers every #define in it; values
+ * that differ per generation pool into #if/#elif
+ * chains with the evidence after the #endif)
+ * ================================================================ */
+#define SCARD_PROVIDER_CARD_MODULE 0x80000001
+#define SCARD_PROVIDER_CSP 2
+#define SCARD_PROVIDER_KSP 3
+#define SCARD_PROVIDER_PRIMARY 1
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
+#define SCARD_F_COMM_ERROR 0x80100013L
+#define SCARD_F_INTERNAL_ERROR 0x80100001L
+#define SCARD_F_UNKNOWN_ERROR 0x80100014L
+#define SCARD_F_WAITED_TOO_LONG 0x80100007L
+#define SCARD_P_SHUTDOWN 0x80100018L
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
+
+/* SCARD_IO_REQUEST  [struct; ce-only; CE 3.0..699] */
+typedef struct {
+ DWORD dwProtocol;
+ DWORD cbPciLength;
+} SCARD_IO_REQUEST;
+
+/* SCARD_READERSTATE  [struct; shared; CE 3.0..699; A/W SCARD_READERSTATEA,SCARD_READERSTATEW (CE is W-side)] */
+typedef struct {
+ LPCTSTR szReader;
+ LPVOID pvUserData;
+ DWORD dwCurrentState;
+ DWORD dwEventState;
+ DWORD cbAtr;
+ BYTE rgbAtr[36];
+} SCARD_READERSTATE, *PSCARD_READERSTATE, *LPSCARD_READERSTATE;
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+
+/* SCARD_ATRMASK  [struct; shared; CE 4.0..699] */
+typedef struct _SCARD_ATRMASK {
+ DWORD cbAtr; 
+ BYTE rgbAtr[36]; 
+ BYTE rgbMask[36]; 
+} SCARD_ATRMASK, *PSCARD_ATRMASK, *LPSCARD_ATRMASK;
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
+
+/* SCardBeginTransaction  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib] */
+LONG SCardBeginTransaction(
+ SCARDHANDLE hCard 
+);
+
+/* SCardCancel  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib] */
+LONG SCardCancel(
+ SCARDCONTEXT hContext 
+);
+
+/* SCardConnect  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardConnectA,SCardConnectW (CE is W-side)] */
+LONG SCardConnect(
+ SCARDCONTEXT hContext, 
+ LPCTSTR szReader, 
+ DWORD dwShareMode, 
+ DWORD dwPreferredProtocols, 
+ LPSCARDHANDLE phCard, 
+ LPDWORD pdwActiveProtocol 
+);
+
+/* SCardControl  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib] */
+LONG SCardControl(
+ SCARDHANDLE hCard, 
+ DWORD dwControlCode, 
+ LPCVOID lpInBuffer, 
+ DWORD nInBufferSize, 
+ LPVOID lpOutBuffer, 
+ DWORD nOutBufferSize, 
+ LPDWORD lpBytesReturned 
+);
+
+/* SCardDisconnect  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib] */
+LONG SCardDisconnect(
+ SCARDHANDLE hCard, 
+ DWORD dwDisposition 
+);
+
+/* SCardEndTransaction  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib] */
+LONG SCardEndTransaction(
+ SCARDHANDLE hCard, 
+ DWORD dwDisposition 
+);
+
+/* SCardEstablishContext  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib] */
+LONG SCardEstablishContext(
+ DWORD dwScope, 
+ LPCVOID pvReserved1, 
+ LPCVOID pvReserved2, 
+ LPSCARDCONTEXT phContext 
+);
+
+/* SCardForgetCardType  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardForgetCardTypeA,SCardForgetCardTypeW (CE is W-side)] */
+LONG SCardForgetCardType(
+ SCARDCONTEXT hContext, 
+ LPCTSTR szCardName 
+);
+
+/* SCardForgetReader  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardForgetReaderA,SCardForgetReaderW (CE is W-side)] */
+LONG SCardForgetReader(
+ SCARDCONTEXT hContext, 
+ LPCTSTR szReaderName 
+);
+
+/* SCardGetAttrib  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib] */
+LONG SCardGetAttrib(
+ SCARDHANDLE hCard, 
+ DWORD dwAttrId, 
+ LPBYTE pbAttr, 
+ LPDWORD pcbAttrLen 
+);
+
+/* SCardGetCardTypeProviderName  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardGetCardTypeProviderNameA,SCardGetCardTypeProviderNameW (CE is W-side)] */
+LONG SCardGetCardTypeProviderName(
+ SCARDCONTEXT hContext,
+ LPCTSTR szCardName,
+ DWORD dwProviderId,
+ LPTSTR szProvider,
+ LPDWORD pcchProvider 
+);
+
+/* SCardGetProviderId  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardGetProviderIdA,SCardGetProviderIdW (CE is W-side)] */
+LONG SCardGetProviderId(
+ SCARDCONTEXT hContext, 
+ LPCTSTR szCard, 
+ LPGUID pguidProviderId 
+);
+
+/* SCardGetStatusChange  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardGetStatusChangeA,SCardGetStatusChangeW (CE is W-side)] */
+LONG SCardGetStatusChange(
+ SCARDCONTEXT hContext, 
+ DWORD dwTimeout, 
+ LPSCARD_READERSTATE rgReaderStates, 
+ DWORD cReaders 
+);
+
+/* SCardIntroduceCardType  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardIntroduceCardTypeA,SCardIntroduceCardTypeW (CE is W-side)] */
+LONG SCardIntroduceCardType(
+ SCARDCONTEXT hContext, 
+ LPCTSTR szCardName, 
+ LPGUID pguidPrimaryProvider, 
+ LPGUID rgguidInterfaces, 
+ DWORD dwInterfaceCount, 
+ LPCBYTE pbAtr, 
+ LPCBYTE pbAtrMask, 
+ DWORD cbAtrLen 
+);
+
+/* SCardIntroduceReader  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardIntroduceReaderA,SCardIntroduceReaderW (CE is W-side)] */
+LONG SCardIntroduceReader(
+ SCARDCONTEXT hContext, 
+ LPCTSTR szReaderName, 
+ LPCTSTR szDeviceName 
+);
+
+/* SCardListCards  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardListCardsA,SCardListCardsW (CE is W-side)] */
+LONG SCardListCards(
+ SCARDCONTEXT hContext, 
+ LPCBYTE pbAtr, 
+ LPCGUID rgguidInterfaces, 
+ DWORD cguidInterfaceCount, 
+ LPTSTR mszCards, 
+ LPDWORD pcchCards 
+);
+
+/* SCardListInterfaces  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardListInterfacesA,SCardListInterfacesW (CE is W-side)] */
+LONG SCardListInterfaces(
+ SCARDCONTEXT hContext, 
+ LPCTSTR szCard, 
+ LPGUID pguidInterfaces, 
+ LPDWORD pcguidInterfaces 
+);
+
+/* SCardListReaders  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardListReadersA,SCardListReadersW (CE is W-side)] */
+LONG SCardListReaders(
+ SCARDCONTEXT hContext, 
+ LPCTSTR mszGroups, 
+ LPTSTR mszReaders, 
+ LPDWORD pcchReaders 
+);
+
+/* SCardLocateCards  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardLocateCardsA,SCardLocateCardsW (CE is W-side)] */
+LONG SCardLocateCards(
+ SCARDCONTEXT hContext, 
+ LPCTSTR mszCards, 
+ LPSCARD_READERSTATE rgReaderStates, 
+ DWORD cReaders 
+);
+
+/* SCardReconnect  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib] */
+LONG SCardReconnect(
+ SCARDHANDLE hCard, 
+ DWORD dwShareMode, 
+ DWORD dwPreferredProtocols, 
+ DWORD dwInitialization, 
+ LPDWORD pdwActiveProtocol 
+);
+
+/* SCardReleaseContext  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib] */
+LONG SCardReleaseContext(
+ SCARDCONTEXT hContext 
+);
+
+/* SCardSetAttrib  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib] */
+LONG SCardSetAttrib(
+ SCARDHANDLE hCard, 
+ DWORD dwAttrId, 
+ LPCBYTE pbAttr, 
+ DWORD cbAttrLen 
+);
+
+/* SCardSetCardTypeProviderName  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardSetCardTypeProviderNameA,SCardSetCardTypeProviderNameW (CE is W-side)] */
+LONG SCardSetCardTypeProviderName(
+ SCARDCONTEXT hContext,
+ LPCTSTR szCardName,
+ DWORD dwProviderId,
+ LPCTSTR szProvider 
+);
+
+/* SCardStatus  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardStatusA,SCardStatusW (CE is W-side)] */
+LONG SCardStatus(
+ SCARDHANDLE hCard, 
+ LPTSTR szReaderName, 
+ LPDWORD pcchReaderLen, 
+ LPDWORD pdwState, 
+ LPDWORD pdwProtocol, 
+ LPBYTE pbAtr, 
+ LPDWORD pbcAtrLen 
+);
+
+/* SCardTransmit  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib] */
+LONG SCardTransmit(
+ SCARDHANDLE hCard,
+ LPCSCARD_I0_REQUEST pioSendPci,
+ LPCBYTE pbSendBuffer,
+ DWORD cbSendLength,
+ LPSCARD_IO_REQUEST pioRecvPci,
+ LPBYTE pbRecvBuffer,
+ LPDWORD pcbRecvLength
+);
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+
+/* SCardIsValidContext  [function; shared; CE 4.0..699; Winscard.lib, winscard.lib] */
+LONG SCardIsValidContext(
+ SCARDCONTEXT hContext 
+);
+
+/* SCardLocateCardsByATR  [function; shared; CE 4.0..699; Winscard.lib, winscard.lib; A/W SCardLocateCardsByATRA,SCardLocateCardsByATRW (CE is W-side)] */
+LONG SCardLocateCards(
+ SCARDCONTEXT hContext,
+ LPSCARD_ATRMASK rgAtrMasks,
+ DWORD cAtrs,
+ LPSCARD_READERSTATE rgReaderStates,
+ DWORD cReaders
+);
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+
+/* SCardFreeMemory  [function; shared; CE 5.0..699; Winscard.lib, winscard.lib] */
+LONG SCardFreeMemory(
+ SCARDCONTEXT hContext,
+ LPCVOID pvMem,
+);
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* struct */
+typedef struct _SCARD_ATRMASK {DWORDcbAtr;BYTErgbAtr[36];BYTErgbMask[36];} SCARD_ATRMASK, *PSCARD_ATRMASK, *LPSCARD_ATRMASK;
+typedef struct {LPCTSTR szReader;LPVOID pvUserData;DWORD dwCurrentState;DWORD dwEventState;DWORD cbAtr;BYTE rgbAtr[36];} SCARD_READERSTATE, *PSCARD_READERSTATE, *LPSCARD_READERSTATE;
+
+#endif /* _WINSCARD_ */

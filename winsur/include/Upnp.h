@@ -1,0 +1,375 @@
+/* Upnp.h -- Windows CE unified surface
+ *
+ * ONE tree for every CE generation.  Version differences use
+ * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
+ * Win32-shared entries are marked 'win32-ref'.
+ * Generated from wince-docs-corpus knowledge/ by
+ * tools/gen-include-def.py --unified.
+ * 1 constants, 50 declarations, 10 outlines, 0 base types, 0 extra macros, 39 extra decls
+ */
+#ifndef _UPNP_
+#define _UPNP_
+
+
+/* ==================================================================
+ * constants (one evidence comment per #define; the
+ * #if of a batch covers every #define in it; values
+ * that differ per generation pool into #if/#elif
+ * chains with the evidence after the #endif)
+ * ================================================================ */
+#define SDT_STRING 0
+
+/* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
+
+/* IUPnPDescriptionDocument  [interface; shared; CE 5.0..599; Uuid.lib] */
+
+/* IUPnPDescriptionDocumentCallback  [interface; shared; CE 5.0..599; Uuid.lib] */
+
+/* IUPnPDevice  [interface; shared; CE 5.0..599; Uuid.lib] */
+
+/* IUPnPDeviceDocumentAccess  [interface; shared; CE 5.0..599; Uuid.lib] */
+
+/* IUPnPDeviceFinder  [interface; shared; CE 5.0..599; Uuid.lib] */
+
+/* IUPnPDeviceFinderCallback  [interface; shared; CE 5.0..599; Uuid.lib] */
+
+/* IUPnPDevices  [interface; shared; CE 5.0..599; Uuid.lib] */
+
+/* IUPnPService  [interface; shared; CE 5.0..599; Uuid.lib] */
+
+/* IUPnPServiceCallback  [interface; shared; CE 5.0..599; Uuid.lib] */
+
+/* IUPnPServices  [interface; shared; CE 5.0..599; Uuid.lib] */
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+
+/* IUPnPDescriptionDocument::Abort  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT Abort(void);
+
+/* IUPnPDescriptionDocument::DeviceByUDN  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT DeviceByUDN(
+ BSTR bstrUDN,
+ IUPnPDevice** ppudDevice
+);
+
+/* IUPnPDescriptionDocument::Load  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT Load(
+ BSTR bstrUrl
+);
+
+/* IUPnPDescriptionDocument::LoadAsync  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT LoadAsync(
+ BSTR bstrUrl,
+ IUnknown* punkCallback
+);
+
+/* IUPnPDescriptionDocument::LoadResult  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get_LoadResult(
+ long* phrError
+);
+
+/* IUPnPDescriptionDocument::ReadyState  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get_ReadyState(
+ LONG* plReadyState
+);
+
+/* IUPnPDescriptionDocument::RootDevice  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT RootDevice(
+ IUPnPDevice** ppudRootDevice
+);
+
+/* IUPnPDescriptionDocumentCallback::LoadComplete  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT LoadComplete(
+ HRESULT hrLoadResult
+);
+
+/* IUPnPDevice::Children  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get_Children(
+ IUPnPDevices** ppudChildren
+);
+
+/* IUPnPDevice::Description  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get_Description(
+ BSTR* pbstr
+);
+
+/* IUPnPDevice::FriendlyName  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get_FriendlyName(
+ BSTR* pbstr
+);
+
+/* IUPnPDevice::HasChildren  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get_HasChildren(
+ VARIANT_BOOL* pvarb
+);
+
+/* IUPnPDevice::IconURL  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT IconURL(
+ BSTR bstrEncodingFormat,
+ LONG lSizeX,
+ LONG lSizeY,
+ LONG lBitDepth,
+ BSTR* pbstrIconURL
+);
+
+/* IUPnPDevice::IsRootDevice  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get_IsRootDevice(
+ VARIANT_BOOL* pvarb
+);
+
+/* IUPnPDevice::ManufacturerName  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get_ManufacturerName(
+ BSTR* pbstr
+);
+
+/* IUPnPDevice::ManufacturerURL  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get_ManufacturerURL(
+ BSTR* pbstr
+);
+
+/* IUPnPDevice::ModelName  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get_ModelName(
+ BSTR* pbstr
+);
+
+/* IUPnPDevice::ModelNumber  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get_ModelNumber(
+ BSTR* pbstr
+);
+
+/* IUPnPDevice::ModelURL  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get_ModelURL(
+ BSTR* pbstr
+);
+
+/* IUPnPDevice::ParentDevice  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get_ParentDevice(
+ IUPnPDevice** ppudDeviceParent
+);
+
+/* IUPnPDevice::PresentationURL  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get_PresentationURL(
+ BSTR* pbstr
+);
+
+/* IUPnPDevice::RootDevice  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get_RootDevice(
+ IUPnPDevice** ppudRootDevice
+);
+
+/* IUPnPDevice::SerialNumber  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get_SerialNumber(
+ BSTR* pbstr
+);
+
+/* IUPnPDevice::Services  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get_Services(
+ IUPnPServices** ppusServices
+);
+
+/* IUPnPDevice::Type  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get_Type(
+ BSTR* pbstr
+);
+
+/* IUPnPDevice::UniqueDeviceName  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get_UniqueDeviceName(
+ BSTR* pbstr
+);
+
+/* IUPnPDevice::UPC  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get_UPC(
+ BSTR* pbstr
+);
+
+/* IUPnPDeviceFinder::CancelAsyncFind  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT CancelAsyncFind(
+ LONG lFindData
+);
+
+/* IUPnPDeviceFinder::CreateAsyncFind  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT CreateAsyncFind(
+ BSTR bstrTypeURI,
+ DWORD dwFlags,
+ IUnknown* punkDeviceFinderCallback,
+ LONG* plFindData
+);
+
+/* IUPnPDeviceFinder::FindByType  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT FindByType(
+ BSTR bstrTypeURI,
+ DWORD dwFlags,
+ IUPnPDevices** pDevices
+);
+
+/* IUPnPDeviceFinder::FindByUDN  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT FindByUDN(
+ BSTR bstrUDN,
+ IUPnPDevice** pDevice
+);
+
+/* IUPnPDeviceFinder::StartAsyncFind  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT StartAsyncFind(
+ LONG lFindData
+);
+
+/* IUPnPDeviceFinderCallback::DeviceAdded  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT DeviceAdded(
+ LONG lFindData,
+ IUPnPDevice* pDevice
+);
+
+/* IUPnPDeviceFinderCallback::DeviceRemoved  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT DeviceRemoved(
+ LONG lFindData,
+ BSTR bstrUDN
+);
+
+/* IUPnPDeviceFinderCallback::SearchComplete  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT SearchComplete(
+ LONG lFindData
+);
+
+/* IUPnPDevices::_NewEnum  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get__NewEnum(
+ LPUNKNOWN* ppunk
+);
+
+/* IUPnPDevices::Count  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get_Count(
+ long* plCount
+);
+
+/* IUPnPDevices::Item  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get_Item(
+ BSTR bstrUDN,
+ IUPnPDevice** ppDevice
+);
+
+/* IUPnPService::AddCallback  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT AddCallback(
+ IUnknown* pUnkCallback
+);
+
+/* IUPnPService::Id  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get_Id(
+ BSTR* pbstrId
+);
+
+/* IUPnPService::InvokeAction  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT InvokeAction(
+ BSTR bstrActionName,
+ VARIANT varInActionArgs,
+ VARIANT* pvarOutActionArgs,
+ VARIANT* pvarRetVal
+);
+
+/* IUPnPService::LastTransportStatus  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get_LastTransportStatus(
+ long* plValue
+);
+
+/* IUPnPService::QueryStateVariable  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT QueryStateVariable(
+ BSTR bstrVariableName,
+ VARIANT* pvarValue
+);
+
+/* IUPnPService::ServiceTypeIdentifier  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get_ServiceTypeIdentifier(
+ BSTR* pVal
+);
+
+/* IUPnPServiceCallback::ServiceInstanceDied  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT ServiceInstanceDied(
+ IUPnPService* pus
+);
+
+/* IUPnPServiceCallback::StateVariableChanged  [function; shared; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT StateVariableChanged(
+ IUPnPService* pus,
+ LPCWSTR pcwszStateVarName,
+ VARIANT varValue
+);
+
+/* IUPnPServices::_NewEnum  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get__NewEnum(
+ LPUNKNOWN* ppunk
+);
+
+/* IUPnPServices::Count  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get_Count(
+ long* plCount
+);
+
+/* IUPnPServices::Item  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
+HRESULT get_Item(
+ BSTR bstrServiceID,
+ IUPnPService** ppService
+);
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+
+/* IUPnPDeviceDocumentAccess::GetDocumentURL  [function; shared; CE 5.0..699; Uuid.lib, uuid.lib] */
+HRESULT GetDocumentURL(
+ BSTR* pbstrDocument
+);
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* function */
+HRESULT AddCallback( IUnknown* pUnkCallback );
+HRESULT CancelAsyncFind( LONG lFindData );
+HRESULT CreateAsyncFind( BSTR bstrTypeURI, DWORD dwFlags, IUnknown* punkDeviceFinderCallback, LONG* plFindData );
+HRESULT DeviceAdded( LONG lFindData, IUPnPDevice* pDevice );
+HRESULT DeviceByUDN( BSTR bstrUDN, IUPnPDevice** ppudDevice );
+HRESULT DeviceRemoved( LONG lFindData, BSTR bstrUDN );
+HRESULT FindByType( BSTR bstrTypeURI, DWORD dwFlags, IUPnPDevices** pDevices );
+HRESULT FindByUDN( BSTR bstrUDN, IUPnPDevice** pDevice );
+HRESULT GetDocumentURL( BSTR* pbstrDocument );
+HRESULT IconURL( BSTR bstrEncodingFormat, LONG lSizeX, LONG lSizeY, LONG lBitDepth, BSTR* pbstrIconURL );
+HRESULT InvokeAction( BSTR bstrActionName, VARIANT varInActionArgs, VARIANT* pvarOutActionArgs, VARIANT* pvarRetVal );
+HRESULT LoadAsync( BSTR bstrUrl, IUnknown* punkCallback );
+HRESULT LoadComplete( HRESULT hrLoadResult );
+HRESULT QueryStateVariable( BSTR bstrVariableName, VARIANT* pvarValue );
+HRESULT RootDevice( IUPnPDevice** ppudRootDevice );
+HRESULT SearchComplete( LONG lFindData );
+HRESULT ServiceInstanceDied( IUPnPService* pus );
+HRESULT StartAsyncFind( LONG lFindData );
+HRESULT StateVariableChanged( IUPnPService* pus, LPCWSTR pcwszStateVarName, VARIANT varValue );
+HRESULT get_FriendlyName( BSTR* pbstr );
+HRESULT get_HasChildren( VARIANT_BOOL* pvarb );
+HRESULT get_Id( BSTR* pbstrId );
+HRESULT get_IsRootDevice( VARIANT_BOOL* pvarb );
+HRESULT get_LastTransportStatus( long* plValue );
+HRESULT get_LoadResult( long* phrError );
+HRESULT get_ManufacturerName( BSTR* pbstr );
+HRESULT get_ManufacturerURL( BSTR* pbstr );
+HRESULT get_ModelName( BSTR* pbstr );
+HRESULT get_ModelNumber( BSTR* pbstr );
+HRESULT get_ModelURL( BSTR* pbstr );
+HRESULT get_ParentDevice( IUPnPDevice** ppudDeviceParent );
+HRESULT get_PresentationURL( BSTR* pbstr );
+HRESULT get_ReadyState( LONG* plReadyState );
+HRESULT get_RootDevice( IUPnPDevice** ppudRootDevice );
+HRESULT get_SerialNumber( BSTR* pbstr );
+HRESULT get_ServiceTypeIdentifier( BSTR* pVal );
+HRESULT get_Services( IUPnPServices** ppusServices );
+HRESULT get_UPC( BSTR* pbstr );
+HRESULT get_UniqueDeviceName( BSTR* pbstr );
+
+#endif /* _UPNP_ */

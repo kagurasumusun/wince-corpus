@@ -1,0 +1,423 @@
+/* extapi.h -- Windows CE unified surface
+ *
+ * ONE tree for every CE generation.  Version differences use
+ * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
+ * Win32-shared entries are marked 'win32-ref'.
+ * Generated from wince-docs-corpus knowledge/ by
+ * tools/gen-include-def.py --unified.
+ * 26 constants, 43 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
+ */
+#ifndef _EXTAPI_
+#define _EXTAPI_
+
+
+/* ==================================================================
+ * constants (one evidence comment per #define; the
+ * #if of a batch covers every #define in it; values
+ * that differ per generation pool into #if/#elif
+ * chains with the evidence after the #endif)
+ * ================================================================ */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+#define LINECAPSCLASS_ALL 0x000000FF
+#define LINECAPSCLASS_ASYNCDATA 0x00000020
+#define LINECAPSCLASS_DATA 0x00000002
+#define LINECAPSCLASS_FAX 0x00000004
+#define LINECAPSCLASS_PACKET 0x00000040
+#define LINECAPSCLASS_PAD 0x00000080
+#define LINECAPSCLASS_SMS 0x00000008
+#define LINECAPSCLASS_SYNCDATA 0x00000010
+#define LINECAPSCLASS_VOICE 0x00000001
+#define LINEMUTESTATE_MUTEDISABLED 0x00000002
+#define LINEMUTESTATE_MUTEENABLED 0x00000001
+#define LINEOPFORMAT_ALPHALONG 0x00000002
+#define LINEOPFORMAT_ALPHASHORT 0x00000001
+#define LINEOPFORMAT_NONE 0x00000000
+#define LINEOPFORMAT_NUMERIC 0x00000004
+#define LINESYSTEMTYPE_1XEVDOPACKET 0x00000040
+#define LINESYSTEMTYPE_1XEVDVPACKET 0x00000080
+#define LINESYSTEMTYPE_1XRTTPACKET 0x00000004
+#define LINESYSTEMTYPE_EDGE 0x00000020
+#define LINESYSTEMTYPE_GPRS 0x00000010
+#define LINESYSTEMTYPE_GSM 0x00000008
+#define LINESYSTEMTYPE_HSDPA 0x00000200
+#define LINESYSTEMTYPE_IS95A 0x00000001
+#define LINESYSTEMTYPE_IS95B 0x00000002
+#define LINESYSTEMTYPE_NONE 0x00000000
+#define LINESYSTEMTYPE_UMTS 0x00000100
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+
+/* LINE_CURRENTLINECHANGE  [macro; ce-only; CE 6.0..699] */
+#define LINE_CURRENTLINECHANGE
+ dwParam1 = LINE_CURRENTLINECHANGE;
+ dwParam2;
+ dwParam3;
+
+/* LINE_CURRENTSYSTEMCHANGE  [macro; ce-only; CE 6.0..699] */
+#define LINE_CURRENTSYSTEMCHANGE
+ dwParam1 = LINE_CURRENTSYSTEMCHANGE;
+ dwParam2;
+ dwParam3;
+
+/* LINE_GPRSCLASS  [macro; ce-only; CE 6.0..699] */
+#define LINE_GPRSCLASS
+ dwParam1 = LINE_GPRSCLASS;
+ dwParam2;
+ dwParam3;
+
+/* LINE_GPRSREGISTERSTATE  [macro; ce-only; CE 6.0..699] */
+#define LINE_GPRSREGISTERSTATE
+ dwParam1 = LINE_GPRSREGISTERSTATE;
+ dwParam2;
+ dwParam3;
+
+/* LINE_RADIOPRESENCE  [macro; ce-only; CE 6.0..699] */
+#define LINE_RADIOPRESENCE
+ dwParam1 = LINE_RADIOPRESENCE;
+ dwParam2;
+ dwParam3;
+
+/* LINE_REGISTERSTATE  [macro; ce-only; CE 6.0..699] */
+#define LINE_REGISTERSTATE
+ dwParam1 = LINE_REGISTERSTATE;
+ dwParam2;
+ dwParam3;
+
+/* LINE_USSD  [macro; ce-only; CE 6.0..699] */
+#define LINE_USSD
+ dwParam1 = LINE_USSD;
+ dwParam2;
+ dwParam3;
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+
+/* LINEGENERALINFO  [struct; ce-only; CE 6.0..699] */
+typedef struct linegeneralinfo_tag {
+ DWORD dwTotalSize;
+ DWORD dwNeededSize;
+ DWORD dwUsedSize;
+ DWORD dwManufacturerSize;
+ DWORD dwManufacturerOffset;
+ DWORD dwModelSize;
+ DWORD dwModelOffset;
+ DWORD dwRevisionSize;
+ DWORD dwRevisionOffset;
+ DWORD dwSerialNumberSize;
+ DWORD dwSerialNumberOffset;
+ DWORD dwSubscriberNumberSize;
+ DWORD dwSubscriberNumberOffset;
+} LINEGENERALINFO, * LPLINEGENERALINFO;
+
+/* LINEOPERATOR  [struct; ce-only; CE 6.0..699] */
+typedef struct lineoperator_tag {
+ DWORD dwIndex;
+ DWORD dwValidFields;
+ DWORD dwStatus;
+ TCHAR lpszLongName[MAX_LENGTH_OPERATOR_LONG];
+ TCHAR lpszShortName[MAX_LENGTH_OPERATOR_SHORT];
+ TCHAR lpszNumName[MAX_LENGTH_OPERATOR_NUMERIC];
+} LINEOPERATOR, * LPLINEOPERATOR;
+
+/* LINEOPERATORSTATUS  [struct; ce-only; CE 6.0..699] */
+typedef struct lineoperatorstatus_tag {
+ DWORD dwTotalSize;
+ DWORD dwNeededSize;
+ DWORD dwUsedSize;
+ DWORD dwPreferredCount;
+ DWORD dwPreferredSize;
+ DWORD dwPreferredOffset;
+ DWORD dwAvailableCount;
+ DWORD dwAvailableSize;
+ DWORD dwAvailableOffset;
+} LINEOPERATORSTATUS, * LPLINEOPERATORSTATUS;
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+
+/* lineGetCallBarringCaps  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineGetCallBarringCaps(
+ HLINE hLine,
+ LPDWORD lpdwModes,
+ LPDWORD lpdwClasses
+);
+
+/* lineGetCallBarringState  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineGetCallBarringState(
+ HLINE hLine,
+ DWORD dwMode,
+ LPDWORD lpdwClasses,
+ LPCTSTR lpszPassword
+);
+
+/* lineGetCallWaitingCaps  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineGetCallWaitingCaps(
+ HLINE hLine,
+ LPDWORD lpdwClasses
+);
+
+/* lineGetCallWaitingState  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineGetCallWaitingState(
+ HLINE hLine,
+ LPDWORD lpdwClasses
+);
+
+/* lineGetCurrentAddressID  [function; ce-only; CE 6.0..699; cellcore.lib] */
+HRESULT lineGetCurrentAddressID (
+ HLINE hLine,
+ LPDWORD lpdwAddressID,
+);
+
+/* lineGetCurrentHSCSDStatus  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineGetCurrentHSCSDStatus(
+ HLINE hLine,
+ LPDWORD lpdwChannelsIn,
+ LPDWORD lpdwChannelsOut,
+ LPDWORD lpdwChannelCoding,
+ LPDWORD lpdwAirInterfaceRate 
+);
+
+/* lineGetCurrentOperator  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineGetCurrentOperator(
+ HLINE hLine,
+ LPLINEOPERATOR lpCurrentOperator
+);
+
+/* lineGetCurrentSystemType  [function; ce-only; CE 6.0..699; cellcore.lib] */
+HRESULT lineGetCurrentSystemType (
+ HLINE hLine,
+ LPDWORD lpdwCurrentSystemType
+);
+
+/* lineGetEquipmentState  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineGetEquipmentState(
+ HLINE hLine,
+ LPDWORD lpdwState,
+ LPDWORD lpdwRadioSupport
+);
+
+/* lineGetGeneralInfo  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineGetGeneralInfo(
+ HLINE hLine,
+ LPLINEGENERALINFO lpLineGeneralInfo
+);
+
+/* lineGetGPRSClass  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineGetGPRSClass(
+ HLINE hLine,
+ LPDWORD lpdwClass
+);
+
+/* lineGetHSCSDCaps  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineGetHSCSDCaps(
+ HLINE hLine,
+ LPDWORD lpdwClass,
+ LPDWORD lpdwChannelsIn,
+ LPDWORD lpdwChannelsOut,
+ LPDWORD lpdwChannelsSum,
+ LPDWORD lpdwChannelCodings
+);
+
+/* lineGetHSCSDState  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineGetHSCSDState(
+ HLINE hLine,
+ LPDWORD lpdwChannelsIn,
+ LPDWORD lpdwMaxChannelsIn,
+ LPDWORD lpdwChannelCodings,
+ LPDWORD lpdwAirInterfaceRate
+);
+
+/* lineGetMuteState  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineGetMuteState(
+ HLINE hLine,
+ LPDWORD lpdwState
+);
+
+/* lineGetNumberCalls  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineGetNumberCalls(
+ HLINE hLine,
+ LPDWORD lpdwNumActiveCalls,
+ LPDWORD lpdwNumOnHoldCalls,
+ LPDWORD lpdwNumOnHoldPendCalls
+);
+
+/* lineGetOperatorStatus  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineGetOperatorStatus(
+ HLINE hLine,
+ LPLINEOPERATORSTATUS lpOperatorStatus
+);
+
+/* lineGetRadioPresence  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineGetRadioPresence(
+ HLINE hLine,
+ LPDWORD lpdwRadioPresence
+);
+
+/* lineGetRegisterStatus  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineGetRegisterStatus(
+ HLINE hLine,
+ LPDWORD lpdwRegisterStatus
+);
+
+/* lineGetSendCallerIDState  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineGetSendCallerIDState(
+ HLINE hLine,
+ LPDWORD lpdwState
+);
+
+/* lineGetUSSD  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineGetUSSD(
+ HLINE hLine,
+ DWORD dwID,
+ LPBYTE lpbUSSD,
+ DWORD dwUSSDSize,
+ LPDWORD lpdwFlags
+);
+
+/* lineRegister  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineRegister(
+ HLINE hLine,
+ DWORD dwRegisterMode,
+ LPCTSTR lpszOperator,
+ DWORD dwOperatorFormat
+);
+
+/* lineSendUSSD  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineSendUSSD(
+ HLINE hLine,
+ const BYTE * const lpbUSSD,
+ DWORD dwUSSDSize,
+ DWORD dwFlags
+);
+
+/* lineSetCallBarringPassword  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineSetCallBarringPassword(
+ HLINE hLine,
+ DWORD dwMode,
+ LPCTSTR lpszOldPassword,
+ LPCTSTR lpszNewPassword
+);
+
+/* lineSetCallBarringState  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineSetCallBarringState(
+ HLINE hLine,
+ DWORD dwMode,
+ DWORD dwClasses,
+ LPCTSTR lpszPassword
+);
+
+/* lineSetCallWaitingState  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineSetCallWaitingState (
+ HLINE hLine,
+ DWORD dwClasses,
+ DWORD dwState
+);
+
+/* lineSetCurrentAddressID  [function; ce-only; CE 6.0..699; cellcore.lib] */
+HRESULT lineSetCurrentAddressID (
+ HLINE hLine,
+ DWORD dwAddressID,
+);
+
+/* lineSetEquipmentState  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineSetEquipmentState(
+ HLINE hLine,
+ DWORD dwState
+);
+
+/* lineSetGPRSClass  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineSetGPRSClass(
+ HLINE hLine,
+ DWORD dwClass
+);
+
+/* lineSetHSCSDState  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineSetHSCSDState(
+ HLINE hLine,
+ DWORD dwChannelsIn,
+ DWORD dwMaxChannelsIn,
+ DWORD dwChannelCodings,
+ DWORD dwAirInterfaceRate
+);
+
+/* lineSetMuteState  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineSetMuteState(
+ HLINE hLine,
+ DWORD dwState
+);
+
+/* lineSetPreferredOperator  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineSetPreferredOperator(
+ HLINE hLine,
+ LPLINEOPERATOR lpOperator
+);
+
+/* lineSetSendCallerIDState  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineSetSendCallerIDState(
+ HLINE hLine,
+ DWORD dwState
+);
+
+/* lineUnregister  [function; ce-only; CE 6.0..699; cellcore.lib] */
+LONG WINAPI lineUnregister(
+ HLINE hLine
+);
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* struct */
+typedef struct linegeneralinfo_tag {
+  DWORD dwTotalSize;
+  DWORD dwNeededSize;
+  DWORD dwUsedSize;
+  DWORD dwManufacturerSize;
+  DWORD dwManufacturerOffset;
+  DWORD dwModelSize;
+  DWORD dwModelOffset;
+  DWORD dwRevisionSize;
+  DWORD dwRevisionOffset;
+  DWORD dwSerialNumberSize;
+  DWORD dwSerialNumberOffset;
+  DWORD dwSubscriberNumberSize;
+  DWORD dwSubscriberNumberOffset;
+} LINEGENERALINFO, * LPLINEGENERALINFO;
+typedef struct lineoperator_tag {
+  DWORD dwIndex;
+  DWORD dwValidFields;
+  DWORD dwStatus;
+  TCHAR lpszLongName[MAX_LENGTH_OPERATOR_LONG];
+  TCHAR lpszShortName[MAX_LENGTH_OPERATOR_SHORT];
+  TCHAR lpszNumName[MAX_LENGTH_OPERATOR_NUMERIC];
+} LINEOPERATOR, * LPLINEOPERATOR;
+typedef struct lineoperatorstatus_tag {
+  DWORD dwTotalSize;
+  DWORD dwNeededSize;
+  DWORD dwUsedSize;
+  DWORD dwPreferredCount;
+  DWORD dwPreferredSize;
+  DWORD dwPreferredOffset;
+  DWORD dwAvailableCount;
+  DWORD dwAvailableSize;
+  DWORD dwAvailableOffset;
+} LINEOPERATORSTATUS, * LPLINEOPERATORSTATUS;
+
+#endif /* _EXTAPI_ */

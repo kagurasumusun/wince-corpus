@@ -1,0 +1,1352 @@
+/* D3dm.h -- Windows CE unified surface
+ *
+ * ONE tree for every CE generation.  Version differences use
+ * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
+ * Win32-shared entries are marked 'win32-ref'.
+ * Generated from wince-docs-corpus knowledge/ by
+ * tools/gen-include-def.py --unified.
+ * 591 constants, 101 declarations, 0 outlines, 0 base types, 13 extra macros, 85 extra decls
+ */
+#ifndef _D3DM_
+#define _D3DM_
+
+
+/* ==================================================================
+ * constants (one evidence comment per #define; the
+ * #if of a batch covers every #define in it; values
+ * that differ per generation pool into #if/#elif
+ * chains with the evidence after the #endif)
+ * ================================================================ */
+#define D3DMX_DEFAULT ULONG_MAX
+#define D3DMX_DEFAULT_FLOAT FLT_MAX
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 500)) /* CE 4.0..499 */
+#define D3DCULL_CCW 3
+#define D3DCULL_CW 2
+#define D3DCULL_FORCE_DWORD 0x7fffffff
+#define D3DCULL_NONE 1
+#define D3DDEVTYPE_FORCE_DWORD 0xffffffff
+#define D3DDEVTYPE_HAL 1
+#define D3DDEVTYPE_REF 2
+#define D3DDEVTYPE_SW 3
+#define D3DDMT_DISABLE 1
+#define D3DDMT_ENABLE 0
+#define D3DDMT_FORCE_DWORD 0x7fffffff
+#define D3DFILL_FORCE_DWORD 0x7fffffff
+#define D3DFILL_POINT 1
+#define D3DFILL_SOLID 3
+#define D3DFILL_WIREFRAME 2
+#define D3DFMT_A1R5G5B5 25
+#define D3DFMT_A4L4 52
+#define D3DFMT_A4R4G4B4 26
+#define D3DFMT_A8 28
+#define D3DFMT_A8L8 51
+#define D3DFMT_A8P8 40
+#define D3DFMT_A8R3G3B2 29
+#define D3DFMT_A8R8G8B8 21
+#define D3DFMT_D15S1 73
+#define D3DFMT_D16 80
+#define D3DFMT_D16_LOCKABLE 70
+#define D3DFMT_D24S8 75
+#define D3DFMT_D24X4S4 79
+#define D3DFMT_D24X8 77
+#define D3DFMT_D32 71
+#define D3DFMT_FORCE_DWORD 0xFFFFFFFF
+#define D3DFMT_INDEX16 101
+#define D3DFMT_INDEX32 102
+#define D3DFMT_L6V5U5 61
+#define D3DFMT_L8 50
+#define D3DFMT_P8 41
+#define D3DFMT_Q8W8V8U8 63
+#define D3DFMT_R3G3B2 27
+#define D3DFMT_R5G6B5 23
+#define D3DFMT_R8G8B8 20
+#define D3DFMT_UNKNOWN 0
+#define D3DFMT_V16U16 64
+#define D3DFMT_V8U8 60
+#define D3DFMT_VERTEXDATA 100
+#define D3DFMT_W11V11U10 65
+#define D3DFMT_X1R5G5B5 24
+#define D3DFMT_X4R4G4B4 30
+#define D3DFMT_X8L8V8U8 62
+#define D3DFMT_X8R8G8B8 22
+#define D3DFOG_EXP 1
+#define D3DFOG_EXP2 2
+#define D3DFOG_FORCE_DWORD 0x7fffffff
+#define D3DFOG_LINEAR 3
+#define D3DFOG_NONE 0
+#define D3DFVF_TEXTUREFORMAT1 3
+#define D3DFVF_TEXTUREFORMAT2 0
+#define D3DFVF_TEXTUREFORMAT3 1
+#define D3DFVF_TEXTUREFORMAT4 2
+#define D3DLIGHT_DIRECTIONAL 3
+#define D3DLIGHT_FORCE_DWORD 0x7fffffff
+#define D3DLIGHT_POINT 1
+#define D3DLIGHT_SPOT 2
+#define D3DMCS_COLOR1 1
+#define D3DMCS_COLOR2 2
+#define D3DMCS_FORCE_DWORD 0x7fffffff
+#define D3DMCS_MATERIAL 0
+#define D3DMULTISAMPLE_10_SAMPLES 10
+#define D3DMULTISAMPLE_11_SAMPLES 11
+#define D3DMULTISAMPLE_12_SAMPLES 12
+#define D3DMULTISAMPLE_13_SAMPLES 13
+#define D3DMULTISAMPLE_14_SAMPLES 14
+#define D3DMULTISAMPLE_15_SAMPLES 15
+#define D3DMULTISAMPLE_16_SAMPLES 16
+#define D3DMULTISAMPLE_2_SAMPLES 2
+#define D3DMULTISAMPLE_3_SAMPLES 3
+#define D3DMULTISAMPLE_4_SAMPLES 4
+#define D3DMULTISAMPLE_5_SAMPLES 5
+#define D3DMULTISAMPLE_6_SAMPLES 6
+#define D3DMULTISAMPLE_7_SAMPLES 7
+#define D3DMULTISAMPLE_8_SAMPLES 8
+#define D3DMULTISAMPLE_9_SAMPLES 9
+#define D3DMULTISAMPLE_FORCE_DWORD 0xffffffff
+#define D3DMULTISAMPLE_NONE 0
+#define D3DORDER_CUBIC 3
+#define D3DORDER_FORCE_DWORD 0x7fffffff
+#define D3DORDER_LINEAR 1
+#define D3DORDER_QUINTIC 5
+#define D3DPOOL_DEFAULT 0
+#define D3DPOOL_FORCE_DWORD 0x7fffffff
+#define D3DPOOL_MANAGED 1
+#define D3DPOOL_SYSTEMMEM 2
+#define D3DPT_FORCE_DWORD 0x7fffffff
+#define D3DPT_LINELIST 2
+#define D3DPT_LINESTRIP 3
+#define D3DPT_POINTLIST 1
+#define D3DPT_TRIANGLEFAN 6
+#define D3DPT_TRIANGLELIST 4
+#define D3DPT_TRIANGLESTRIP 5
+#define D3DRS_ALPHABLENDENABLE 27
+#define D3DRS_ALPHAFUNC 25
+#define D3DRS_ALPHAREF 24
+#define D3DRS_ALPHATESTENABLE 15
+#define D3DRS_AMBIENT 139
+#define D3DRS_AMBIENTMATERIALSOURCE 147
+#define D3DRS_BLENDOP 171
+#define D3DRS_CLIPPING 136
+#define D3DRS_CLIPPLANEENABLE 152
+#define D3DRS_COLORVERTEX 141
+#define D3DRS_COLORWRITEENABLE 168
+#define D3DRS_CULLMODE 22
+#define D3DRS_DEBUGMONITORTOKEN 165
+#define D3DRS_DESTBLEND 20
+#define D3DRS_DIFFUSEMATERIALSOURCE 145
+#define D3DRS_DITHERENABLE 26
+#define D3DRS_EDGEANTIALIAS 40
+#define D3DRS_EMISSIVEMATERIALSOURCE 148
+#define D3DRS_FILLMODE 8
+#define D3DRS_FOGCOLOR 34
+#define D3DRS_FOGDENSITY 38
+#define D3DRS_FOGENABLE 28
+#define D3DRS_FOGEND 37
+#define D3DRS_FOGSTART 36
+#define D3DRS_FOGTABLEMODE 35
+#define D3DRS_FOGVERTEXMODE 140
+#define D3DRS_FORCE_DWORD 0x7fffffff
+#define D3DRS_INDEXEDVERTEXBLENDENABLE 167
+#define D3DRS_LASTPIXEL 16
+#define D3DRS_LIGHTING 137
+#define D3DRS_LINEPATTERN 10
+#define D3DRS_LOCALVIEWER 142
+#define D3DRS_MULTISAMPLEANTIALIAS 161
+#define D3DRS_MULTISAMPLEMASK 162
+#define D3DRS_NORMALIZENORMALS 143
+#define D3DRS_PATCHEDGESTYLE 163
+#define D3DRS_PATCHSEGMENTS 164
+#define D3DRS_POINTSCALE_A 158
+#define D3DRS_POINTSCALE_B 159
+#define D3DRS_POINTSCALE_C 160
+#define D3DRS_POINTSCALEENABLE 157
+#define D3DRS_POINTSIZE 154
+#define D3DRS_POINTSIZE_MAX 166
+#define D3DRS_POINTSIZE_MIN 155
+#define D3DRS_POINTSPRITEENABLE 156
+#define D3DRS_RANGEFOGENABLE 48
+#define D3DRS_SHADEMODE 9
+#define D3DRS_SOFTWAREVERTEXPROCESSING 153
+#define D3DRS_SPECULARENABLE 29
+#define D3DRS_SPECULARMATERIALSOURCE 146
+#define D3DRS_SRCBLEND 19
+#define D3DRS_STENCILENABLE 52
+#define D3DRS_STENCILFAIL 53
+#define D3DRS_STENCILFUNC 56
+#define D3DRS_STENCILMASK 58
+#define D3DRS_STENCILPASS 55
+#define D3DRS_STENCILREF 57
+#define D3DRS_STENCILWRITEMASK 59
+#define D3DRS_STENCILZFAIL 54
+#define D3DRS_TEXTUREFACTOR 60
+#define D3DRS_TWEENFACTOR 170
+#define D3DRS_VERTEXBLEND 151
+#define D3DRS_WRAP0 128
+#define D3DRS_WRAP1 129
+#define D3DRS_WRAP2 130
+#define D3DRS_WRAP3 131
+#define D3DRS_WRAP4 132
+#define D3DRS_WRAP5 133
+#define D3DRS_WRAP6 134
+#define D3DRS_WRAP7 135
+#define D3DRS_ZBIAS 47
+#define D3DRS_ZENABLE 7
+#define D3DRS_ZFUNC 23
+#define D3DRS_ZVISIBLE 30
+#define D3DRS_ZWRITEENABLE 14
+#define D3DRTYPE_CUBETEXTURE 5
+#define D3DRTYPE_FORCE_DWORD 0x7fffffff
+#define D3DRTYPE_INDEXBUFFER 7
+#define D3DRTYPE_SURFACE 1
+#define D3DRTYPE_TEXTURE 3
+#define D3DRTYPE_VERTEXBUFFER 6
+#define D3DRTYPE_VOLUME 2
+#define D3DRTYPE_VOLUMETEXTURE 4
+#define D3DSBT_ALL 1
+#define D3DSBT_FORCE_DWORD 0xffffffff
+#define D3DSBT_PIXELSTATE 2
+#define D3DSBT_VERTEXSTATE 3
+#define D3DSHADE_FLAT 1
+#define D3DSHADE_FORCE_DWORD 0x7fffffff
+#define D3DSHADE_GOURAUD 2
+#define D3DSHADE_PHONG 3
+#define D3DSWAPEFFECT_COPY 3
+#define D3DSWAPEFFECT_COPY_VSYNC 4
+#define D3DSWAPEFFECT_DISCARD 1
+#define D3DSWAPEFFECT_FLIP 2
+#define D3DSWAPEFFECT_FORCE_DWORD 0xFFFFFFFF
+#define D3DTADDRESS_BORDER 4
+#define D3DTADDRESS_CLAMP 3
+#define D3DTADDRESS_FORCE_DWORD 0x7fffffff
+#define D3DTADDRESS_MIRROR 2
+#define D3DTADDRESS_MIRRORONCE 5
+#define D3DTADDRESS_WRAP 1
+#define D3DTEXF_ANISOTROPIC 3
+#define D3DTEXF_FLATCUBIC 4
+#define D3DTEXF_FORCE_DWORD 0x7fffffff
+#define D3DTEXF_GAUSSIANCUBIC 5
+#define D3DTEXF_LINEAR 2
+#define D3DTEXF_NONE 0
+#define D3DTEXF_POINT 1
+#define D3DTOP_ADD 7
+#define D3DTOP_ADDSIGNED 8
+#define D3DTOP_ADDSIGNED2X 9
+#define D3DTOP_ADDSMOOTH 11
+#define D3DTOP_BLENDCURRENTALPHA 16
+#define D3DTOP_BLENDDIFFUSEALPHA 12
+#define D3DTOP_BLENDFACTORALPHA 14
+#define D3DTOP_BLENDTEXTUREALPHA 13
+#define D3DTOP_BLENDTEXTUREALPHAPM 15
+#define D3DTOP_BUMPENVMAP 22
+#define D3DTOP_BUMPENVMAPLUMINANCE 23
+#define D3DTOP_DISABLE 1
+#define D3DTOP_DOTPRODUCT3 24
+#define D3DTOP_FORCE_DWORD 0x7fffffff
+#define D3DTOP_LERP 26
+#define D3DTOP_MODULATE 4
+#define D3DTOP_MODULATE2X 5
+#define D3DTOP_MODULATE4X 6
+#define D3DTOP_MODULATEALPHA_ADDCOLOR 18
+#define D3DTOP_MODULATECOLOR_ADDALPHA 19
+#define D3DTOP_MODULATEINVALPHA_ADDCOLOR 20
+#define D3DTOP_MODULATEINVCOLOR_ADDALPHA 21
+#define D3DTOP_MULTIPLYADD 25
+#define D3DTOP_PREMODULATE 17
+#define D3DTOP_SELECTARG1 2
+#define D3DTOP_SELECTARG2 3
+#define D3DTOP_SUBTRACT 10
+#define D3DTS_FORCE_DWORD 0x7fffffff
+#define D3DTS_PROJECTION 3
+#define D3DTS_TEXTURE0 16
+#define D3DTS_TEXTURE1 17
+#define D3DTS_TEXTURE2 18
+#define D3DTS_TEXTURE3 19
+#define D3DTS_TEXTURE4 20
+#define D3DTS_TEXTURE5 21
+#define D3DTS_TEXTURE6 22
+#define D3DTS_TEXTURE7 23
+#define D3DTS_VIEW 2
+#define D3DTSS_ADDRESSU 13
+#define D3DTSS_ADDRESSV 14
+#define D3DTSS_ADDRESSW 25
+#define D3DTSS_ALPHAARG0 27
+#define D3DTSS_ALPHAARG1 5
+#define D3DTSS_ALPHAARG2 6
+#define D3DTSS_ALPHAOP 4
+#define D3DTSS_BORDERCOLOR 15
+#define D3DTSS_BUMPENVLOFFSET 23
+#define D3DTSS_BUMPENVLSCALE 22
+#define D3DTSS_BUMPENVMAT00 7
+#define D3DTSS_BUMPENVMAT01 8
+#define D3DTSS_BUMPENVMAT10 9
+#define D3DTSS_BUMPENVMAT11 10
+#define D3DTSS_COLORARG0 26
+#define D3DTSS_COLORARG1 2
+#define D3DTSS_COLORARG2 3
+#define D3DTSS_COLOROP 1
+#define D3DTSS_FORCE_DWORD 0x7fffffff
+#define D3DTSS_MAGFILTER 16
+#define D3DTSS_MAXANISOTROPY 21
+#define D3DTSS_MAXMIPLEVEL 20
+#define D3DTSS_MINFILTER 17
+#define D3DTSS_MIPFILTER 18
+#define D3DTSS_MIPMAPLODBIAS 19
+#define D3DTSS_RESULTARG 28
+#define D3DTSS_TEXCOORDINDEX 11
+#define D3DTSS_TEXTURETRANSFORMFLAGS 24
+#define D3DTTFF_COUNT1 1
+#define D3DTTFF_COUNT2 2
+#define D3DTTFF_COUNT3 3
+#define D3DTTFF_COUNT4 4
+#define D3DTTFF_DISABLE 0
+#define D3DTTFF_FORCE_DWORD 0x7fffffff
+#define D3DTTFF_PROJECTED 256
+#define D3DZB_FALSE 0
+#define D3DZB_FORCE_DWORD 0x7fffffff
+#define D3DZB_TRUE 1
+#define D3DZB_USEW 2
+#endif /* _WIN32_WCE */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
+#define _FACD3DM 0x877
+#define D3DM_MAXRENDERSTATES 50
+#define D3DMBACKBUFFER_TYPE_FORCE_DWORD 0x7fffffff
+#define D3DMBACKBUFFER_TYPE_MONO 0
+#define D3DMBLEND_DESTALPHA 7
+#define D3DMBLEND_DESTCOLOR 9
+#define D3DMBLEND_FORCE_ULONG 0x7fffffff
+#define D3DMBLEND_INVDESTALPHA 8
+#define D3DMBLEND_INVDESTCOLOR 10
+#define D3DMBLEND_INVSRCALPHA 6
+#define D3DMBLEND_INVSRCCOLOR 4
+#define D3DMBLEND_ONE 2
+#define D3DMBLEND_SRCALPHA 5
+#define D3DMBLEND_SRCALPHASAT 11
+#define D3DMBLEND_SRCCOLOR 3
+#define D3DMBLEND_ZERO 1
+#define D3DMBLENDOP_ADD 1
+#define D3DMBLENDOP_FORCE_ULONG 0x7fffffff
+#define D3DMBLENDOP_MAX 5
+#define D3DMBLENDOP_MIN 4
+#define D3DMBLENDOP_REVSUBTRACT 3
+#define D3DMBLENDOP_SUBTRACT 2
+#define D3DMCMP_ALWAYS 8
+#define D3DMCMP_EQUAL 3
+#define D3DMCMP_FORCE_ULONG 0x7fffffff
+#define D3DMCMP_GREATER 5
+#define D3DMCMP_GREATEREQUAL 7
+#define D3DMCMP_LESS 2
+#define D3DMCMP_LESSEQUAL 4
+#define D3DMCMP_NEVER 1
+#define D3DMCMP_NOTEQUAL 6
+#define D3DMCREATE_MULTITHREADED 0x00000004
+#define D3DMCULL_CCW 3
+#define D3DMCULL_CW 2
+#define D3DMCULL_FORCE_ULONG 0x7fffffff
+#define D3DMCULL_NONE 1
+#define D3DMCURRENT_DISPLAY_MODE 0x00EFFFFF
+#define D3DMDEVTYPE_DEFAULT 0
+#define D3DMDEVTYPE_FORCE_ULONG 0x7fffffff
+#define D3DMERR_ALREADYLOCKED MAKE_D3DMHRESULT(2158)
+#define D3DMERR_CONFLICTINGRENDERSTATE MAKE_D3DMHRESULT(2081)
+#define D3DMERR_CONFLICTINGTEXTUREFILTER MAKE_D3DMHRESULT(2078)
+#define D3DMERR_CONFLICTINGTEXTUREPALETTE MAKE_D3DMHRESULT(2086)
+#define D3DMERR_DEVICELOST MAKE_D3DMHRESULT(2152)
+#define D3DMERR_DEVICENOTRESET MAKE_D3DMHRESULT(2153)
+#define D3DMERR_DRIVERINTERNALERROR MAKE_D3DMHRESULT(2087)
+#define D3DMERR_DRIVERINVALIDCALL MAKE_D3DMHRESULT(2157)
+#define D3DMERR_DRIVERUNSUPPORTED MAKE_D3DMHRESULT(2088)
+#define D3DMERR_INVALIDCALL MAKE_D3DMHRESULT(2156)
+#define D3DMERR_INVALIDDEVICE MAKE_D3DMHRESULT(2155)
+#define D3DMERR_MEMORYPOOLEMPTY MAKE_D3DMHRESULT(380)
+#define D3DMERR_MOREDATA MAKE_D3DMHRESULT(2151)
+#define D3DMERR_NOTAVAILABLE MAKE_D3DMHRESULT(2154)
+#define D3DMERR_NOTFOUND MAKE_D3DMHRESULT(2150)
+#define D3DMERR_TOOMANYOPERATIONS MAKE_D3DMHRESULT(2077)
+#define D3DMERR_UNSUPPORTEDALPHAARG MAKE_D3DMHRESULT(2076)
+#define D3DMERR_UNSUPPORTEDALPHAOPERATION MAKE_D3DMHRESULT(2075)
+#define D3DMERR_UNSUPPORTEDCOLORARG MAKE_D3DMHRESULT(2074)
+#define D3DMERR_UNSUPPORTEDCOLOROPERATION MAKE_D3DMHRESULT(2073)
+#define D3DMERR_UNSUPPORTEDFACTORVALUE MAKE_D3DMHRESULT(2079)
+#define D3DMERR_UNSUPPORTEDTEXTUREFILTER MAKE_D3DMHRESULT(2082)
+#define D3DMERR_WRONGTEXTUREFORMAT MAKE_D3DMHRESULT(2072)
+#define D3DMFILL_FORCE_ULONG 0x7fffffff
+#define D3DMFILL_POINT 1
+#define D3DMFILL_SOLID 3
+#define D3DMFILL_WIREFRAME 2
+#define D3DMFMT_A1R5G5B5 6
+#define D3DMFMT_A4R4G4B4 7
+#define D3DMFMT_A8 13
+#define D3DMFMT_A8P8 11
+#define D3DMFMT_A8R3G3B2 9
+#define D3DMFMT_A8R8G8B8 2
+#define D3DMFMT_D15S1 22
+#define D3DMFMT_D16 24
+#define D3DMFMT_D24S8 23
+#define D3DMFMT_D24X4S4 26
+#define D3DMFMT_D24X8 25
+#define D3DMFMT_D32 21
+#define D3DMFMT_D3DMVALUE_FIXED 31
+#define D3DMFMT_D3DMVALUE_FLOAT 30
+#define D3DMFMT_DXT1 16
+#define D3DMFMT_DXT2 17
+#define D3DMFMT_DXT3 18
+#define D3DMFMT_DXT4 19
+#define D3DMFMT_DXT5 20
+#define D3DMFMT_FORCE_ULONG 0xFFFFFFFF
+#define D3DMFMT_INDEX16 27
+#define D3DMFMT_INDEX32 28
+#define D3DMFMT_NUMFORMAT 32
+#define D3DMFMT_P8 12
+#define D3DMFMT_R3G3B2 8
+#define D3DMFMT_R5G6B5 4
+#define D3DMFMT_R8G8B8 1
+#define D3DMFMT_UNKNOWN 0
+#define D3DMFMT_UYVY 14
+#define D3DMFMT_VERTEXDATA 29
+#define D3DMFMT_X1R5G5B5 5
+#define D3DMFMT_X4R4G4B4 10
+#define D3DMFMT_X8R8G8B8 3
+#define D3DMFMT_YUY2 15
+#define D3DMFOG_EXP 1
+#define D3DMFOG_EXP2 2
+#define D3DMFOG_FORCE_ULONG 0x7fffffff
+#define D3DMFOG_LINEAR 3
+#define D3DMFOG_NONE 0
+#define D3DMLIGHT_DIRECTIONAL 3
+#define D3DMLIGHT_FORCE_ULONG 0x7fffffff
+#define D3DMLIGHT_POINT 1
+#define D3DMMCS_COLOR1 1
+#define D3DMMCS_COLOR2 2
+#define D3DMMCS_FORCE_ULONG 0x7fffffff
+#define D3DMMCS_MATERIAL 0
+#define D3DMMULTISAMPLE_10_SAMPLES 10
+#define D3DMMULTISAMPLE_11_SAMPLES 11
+#define D3DMMULTISAMPLE_12_SAMPLES 12
+#define D3DMMULTISAMPLE_13_SAMPLES 13
+#define D3DMMULTISAMPLE_14_SAMPLES 14
+#define D3DMMULTISAMPLE_15_SAMPLES 15
+#define D3DMMULTISAMPLE_16_SAMPLES 16
+#define D3DMMULTISAMPLE_2_SAMPLES 2
+#define D3DMMULTISAMPLE_3_SAMPLES 3
+#define D3DMMULTISAMPLE_4_SAMPLES 4
+#define D3DMMULTISAMPLE_5_SAMPLES 5
+#define D3DMMULTISAMPLE_6_SAMPLES 6
+#define D3DMMULTISAMPLE_7_SAMPLES 7
+#define D3DMMULTISAMPLE_8_SAMPLES 8
+#define D3DMMULTISAMPLE_9_SAMPLES 9
+#define D3DMMULTISAMPLE_FORCE_ULONG 0x7fffffff
+#define D3DMMULTISAMPLE_NONE 0
+#define D3DMPOOL_FORCE_ULONG 0x7fffffff
+#define D3DMPOOL_MANAGED 2
+#define D3DMPOOL_SYSTEMMEM 1
+#define D3DMPOOL_VIDEOMEM 0
+#define D3DMPRESENTFLAG_LOCKABLE_BACKBUFFER 0x00000001
+#define D3DMPROFILE_BASE 0
+#define D3DMPROFILE_FORCE_DWORD 0x7fffffff
+#define D3DMPT_FORCE_ULONG 0x7fffffff
+#define D3DMPT_LINELIST 2
+#define D3DMPT_LINESTRIP 3
+#define D3DMPT_POINTLIST 1
+#define D3DMPT_TRIANGLEFAN 6
+#define D3DMPT_TRIANGLELIST 4
+#define D3DMPT_TRIANGLESTRIP 5
+#define D3DMRENDERSTATE_WRAPBIAS 32
+#define D3DMRS_ALPHABLENDENABLE 12
+#define D3DMRS_ALPHAFUNC 10
+#define D3DMRS_ALPHAREF 9
+#define D3DMRS_ALPHATESTENABLE 3
+#define D3DMRS_AMBIENT 38
+#define D3DMRS_AMBIENTMATERIALSOURCE 45
+#define D3DMRS_BLENDOP 47
+#define D3DMRS_CLIPPING 36
+#define D3DMRS_COLORVERTEX 40
+#define D3DMRS_COLORWRITEENABLE 46
+#define D3DMRS_CULLMODE 7
+#define D3DMRS_DEPTHBIAS 20
+#define D3DMRS_DESTBLEND 6
+#define D3DMRS_DIFFUSEMATERIALSOURCE 43
+#define D3DMRS_DITHERENABLE 11
+#define D3DMRS_FILLMODE 0
+#define D3DMRS_FOGCOLOR 15
+#define D3DMRS_FOGDENSITY 19
+#define D3DMRS_FOGENABLE 13
+#define D3DMRS_FOGEND 18
+#define D3DMRS_FOGSTART 17
+#define D3DMRS_FOGTABLEMODE 16
+#define D3DMRS_FOGVERTEXMODE 39
+#define D3DMRS_FORCE_ULONG 0x7fffffff
+#define D3DMRS_LASTPIXEL 4
+#define D3DMRS_LIGHTING 37
+#define D3DMRS_LOCALVIEWER 41
+#define D3DMRS_NORMALIZENORMALS 42
+#define D3DMRS_RANGEFOGENABLE 21
+#define D3DMRS_SHADEMODE 1
+#define D3DMRS_SLOPESCALEDEPTHBIAS 49
+#define D3DMRS_SPECULARENABLE 14
+#define D3DMRS_SPECULARMATERIALSOURCE 44
+#define D3DMRS_SRCBLEND 5
+#define D3DMRS_STENCILENABLE 22
+#define D3DMRS_STENCILFAIL 23
+#define D3DMRS_STENCILFUNC 26
+#define D3DMRS_STENCILMASK 28
+#define D3DMRS_STENCILPASS 25
+#define D3DMRS_STENCILREF 27
+#define D3DMRS_STENCILWRITEMASK 29
+#define D3DMRS_STENCILZFAIL 24
+#define D3DMRS_TEXTUREFACTOR 30
+#define D3DMRS_TEXTUREPERSPECTIVE 31
+#define D3DMRS_WRAP0 32
+#define D3DMRS_WRAP1 33
+#define D3DMRS_WRAP2 34
+#define D3DMRS_WRAP3 35
+#define D3DMRS_ZENABLE 48
+#define D3DMRS_ZFUNC 8
+#define D3DMRS_ZWRITEENABLE 2
+#define D3DMRTYPE_FORCE_ULONG 0x7fffffff
+#define D3DMRTYPE_INDEXBUFFER 7
+#define D3DMRTYPE_SURFACE 1
+#define D3DMRTYPE_TEXTURE 3
+#define D3DMRTYPE_VERTEXBUFFER 6
+#define D3DMSHADE_FLAT 1
+#define D3DMSHADE_FORCE_ULONG 0x7fffffff
+#define D3DMSHADE_GOURAUD 2
+#define D3DMSTENCILOP_DECR 8
+#define D3DMSTENCILOP_DECRSAT 5
+#define D3DMSTENCILOP_FORCE_ULONG 0x7fffffff
+#define D3DMSTENCILOP_INCR 7
+#define D3DMSTENCILOP_INCRSAT 4
+#define D3DMSTENCILOP_INVERT 6
+#define D3DMSTENCILOP_KEEP 1
+#define D3DMSTENCILOP_REPLACE 3
+#define D3DMSTENCILOP_ZERO 2
+#define D3DMSWAPEFFECT_COPY 3
+#define D3DMSWAPEFFECT_COPY_VSYNC 4
+#define D3DMSWAPEFFECT_DISCARD 1
+#define D3DMSWAPEFFECT_FLIP 2
+#define D3DMSWAPEFFECT_FORCE_ULONG 0x7fffffff
+#define D3DMTADDRESS_BORDER 4
+#define D3DMTADDRESS_CLAMP 3
+#define D3DMTADDRESS_FORCE_ULONG 0x7fffffff
+#define D3DMTADDRESS_MIRROR 2
+#define D3DMTADDRESS_WRAP 1
+#define D3DMTEXF_ANISOTROPIC 3
+#define D3DMTEXF_FORCE_ULONG 0x7fffffff
+#define D3DMTEXF_LINEAR 2
+#define D3DMTEXF_NONE 0
+#define D3DMTEXF_POINT 1
+#define D3DMTOP_ADD 7
+#define D3DMTOP_ADDSIGNED 8
+#define D3DMTOP_ADDSIGNED2X 9
+#define D3DMTOP_ADDSMOOTH 11
+#define D3DMTOP_BLENDCURRENTALPHA 16
+#define D3DMTOP_BLENDDIFFUSEALPHA 12
+#define D3DMTOP_BLENDFACTORALPHA 14
+#define D3DMTOP_BLENDTEXTUREALPHA 13
+#define D3DMTOP_BLENDTEXTUREALPHAPM 15
+#define D3DMTOP_DISABLE 1
+#define D3DMTOP_DOTPRODUCT3 24
+#define D3DMTOP_FORCE_ULONG 0x7fffffff
+#define D3DMTOP_LERP 26
+#define D3DMTOP_MODULATE 4
+#define D3DMTOP_MODULATE2X 5
+#define D3DMTOP_MODULATE4X 6
+#define D3DMTOP_MODULATEALPHA_ADDCOLOR 18
+#define D3DMTOP_MODULATECOLOR_ADDALPHA 19
+#define D3DMTOP_MODULATEINVALPHA_ADDCOLOR 20
+#define D3DMTOP_MODULATEINVCOLOR_ADDALPHA 21
+#define D3DMTOP_MULTIPLYADD 25
+#define D3DMTOP_PREMODULATE 17
+#define D3DMTOP_SELECTARG1 2
+#define D3DMTOP_SELECTARG2 3
+#define D3DMTOP_SUBTRACT 10
+#define D3DMTS_FORCE_ULONG 0x7fffffff
+#define D3DMTS_NUMTRANSFORM 7
+#define D3DMTS_PROJECTION 2
+#define D3DMTS_TEXTURE0 3
+#define D3DMTS_TEXTURE1 4
+#define D3DMTS_TEXTURE2 5
+#define D3DMTS_TEXTURE3 6
+#define D3DMTS_VIEW 1
+#define D3DMTS_WORLD 0
+#define D3DMTSS_ADDRESSU 8
+#define D3DMTSS_ADDRESSV 9
+#define D3DMTSS_ADDRESSW 18
+#define D3DMTSS_ALPHAARG0 20
+#define D3DMTSS_ALPHAARG1 5
+#define D3DMTSS_ALPHAARG2 6
+#define D3DMTSS_ALPHAOP 4
+#define D3DMTSS_BORDERCOLOR 10
+#define D3DMTSS_COLORARG0 19
+#define D3DMTSS_COLORARG1 2
+#define D3DMTSS_COLORARG2 3
+#define D3DMTSS_COLOROP 1
+#define D3DMTSS_FORCE_ULONG 0x7fffffff
+#define D3DMTSS_MAGFILTER 11
+#define D3DMTSS_MAXANISOTROPY 16
+#define D3DMTSS_MAXMIPLEVEL 15
+#define D3DMTSS_MAXTEXTURESTATES 22
+#define D3DMTSS_MINFILTER 12
+#define D3DMTSS_MIPFILTER 13
+#define D3DMTSS_MIPMAPLODBIAS 14
+#define D3DMTSS_RESULTARG 21
+#define D3DMTSS_TEXCOORDINDEX 7
+#define D3DMTSS_TEXTURE 0
+#define D3DMTSS_TEXTURETRANSFORMFLAGS 17
+#define D3DMTTFF_COUNT1 1
+#define D3DMTTFF_COUNT2 2
+#define D3DMTTFF_COUNT3 3
+#define D3DMTTFF_DISABLE 0
+#define D3DMTTFF_FORCE_ULONG 0x7fffffff
+#define D3DMTTFF_PROJECTED 256
+#define D3DMZB_FALSE 0
+#define D3DMZB_FORCE_DWORD 0x7fffffff
+#define D3DMZB_TRUE 1
+#define D3DMZB_USEW 2
+#endif /* _WIN32_WCE */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+#define D3DM_RESACTION_DISCARD_BYTES 0
+#define D3DM_RESACTION_FORCE_ULONG 0xFFFFFFFF
+#define D3DM_RESACTION_PRELOAD 2
+#define D3DM_RESACTION_SET_PRIORITY 1
+#define D3DM_SETLIGHT_DATA_DISABLE 3
+#define D3DM_SETLIGHT_DATA_ENABLE 2
+#define D3DM_SETLIGHT_DISABLE 1
+#define D3DM_SETLIGHT_ENABLE 0
+#define D3DM_SETPALETTE_SETACTIVE 0
+#define D3DM_SETPALETTE_SETENTRIES 1
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * macros -- supplementary #define from CE pages
+ * ================================================================ */
+#define D3DMXINLINE inline
+#define D3DM_DLL_ENTRY TEXT("D3DM_Initialize")
+
+#define D3DFVF_TEXCOORDSIZE2(CoordIndex) (D3DFVF_TEXTUREFORMAT2)
+#define D3DMCOLOR_RGBA(r,g,b,a) D3DMCOLOR_ARGB(a,r,g,b)
+#define D3DMCOLOR_XRGB(r,g,b) D3DMCOLOR_ARGB(0xff,r,g,b)
+#define D3DMFVF_TEXCOORDFLOAT(CoordIndex) (D3DMFVF_TEXCOORDFORMAT_FLOAT)
+#define D3DMFVF_TEXCOORDSIZE2(CoordIndex) (D3DMFVF_TEXCOORDCOUNT2)
+#define D3DMX_1BYPI((FLOAT) 0.318309886f)
+#define D3DMX_1BYPI_FXD((FIXED) (0.318309886f * 65536.0f))
+#define D3DMX_PI((FLOAT) 3.141592654f)
+#define D3DMX_PI_FXD((FIXED) (3.141592654f * 65536.0f))
+#define D3DM_MAKE_RSVALUE(Value) (*(ULONG *)(&(Value)))
+#define D3DX_PI((FLOAT) 3.141592654f)
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+
+/* Direct3DMobileCreate  [function; ce-only; CE 5.0..699; D3dm.lib] */
+IDirect3DMobile* WINAPI Direct3DMobileCreate(
+ UINT SDKVersion
+);
+
+/* IDirect3DMobile::CheckDepthStencilMatch  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT CheckDepthStencilMatch(
+ UINT Adapter,
+ D3DMDEVTYPE DeviceType,
+ D3DMFORMAT AdapterFormat,
+ D3DMFORMAT RenderTargetFormat,
+ D3DMFORMAT DepthStencilFormat
+);
+
+/* IDirect3DMobile::CheckDeviceFormat  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT CheckDeviceFormat(
+ UINT Adapter,
+ D3DMDEVTYPE DeviceType,
+ D3DMFORMAT AdapterFormat,
+ ULONG Usage,
+ D3DMRESOURCETYPE RType,
+ D3DMFORMAT CheckFormat
+);
+
+/* IDirect3DMobile::CheckDeviceFormatConversion  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT CheckDeviceFormatConversion(
+ UINT Adapter,
+ D3DMDEVTYPE DeviceType,
+ D3DMFORMAT SourceFormat,
+ D3DMFORMAT DestFormat
+);
+
+/* IDirect3DMobile::CheckDeviceMultiSampleType  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT CheckDeviceMultiSampleType(
+ UINT Adapter,
+ D3DMDEVTYPE DeviceType,
+ D3DMFORMAT SurfaceFormat,
+ BOOL Windowed,
+ D3DMMULTISAMPLE_TYPE MultiSampleType
+);
+
+/* IDirect3DMobile::CheckDeviceType  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT CheckDeviceType(
+ UINT Adapter,
+ D3DMDEVTYPE CheckType,
+ D3DMFORMAT DisplayFormat,
+ D3DMFORMAT BackBufferFormat,
+ BOOL Windowed
+);
+
+/* IDirect3DMobile::CheckProfile  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT CheckProfile(
+ UINT Adapter,
+ D3DMDEVTYPE DeviceType,
+ D3DMPROFILE Profile
+);
+
+/* IDirect3DMobile::CreateDevice  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT CreateDevice(
+ UINT Adapter,
+ D3DMDEVTYPE DeviceType,
+ HWND hFocusWindow,
+ ULONG BehaviorFlags,
+ D3DMPRESENT_PARAMETERS* pPresentationParameters,
+ IDirect3DMobileDevice** ppReturnedDeviceInterface
+);
+
+/* IDirect3DMobile::EnumAdapterModes  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT EnumAdapterModes(
+ UINT Adapter,
+ UINT Mode,
+ D3DMDISPLAYMODE* pMode
+);
+
+/* IDirect3DMobile::GetAdapterCount  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+UINT GetAdapterCount();
+
+/* IDirect3DMobile::GetAdapterDisplayMode  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetAdapterDisplayMode(
+ UINT Adapter,
+ D3DMDISPLAYMODE* pMode
+);
+
+/* IDirect3DMobile::GetAdapterIdentifier  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetAdapterIdentifier(
+ UINT Adapter,
+ ULONG Flags,
+ D3DMADAPTER_IDENTIFIER* pIdentifier
+);
+
+/* IDirect3DMobile::GetAdapterModeCount  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+UINT GetAdapterModeCount(
+ UINT Adapter
+);
+
+/* IDirect3DMobile::GetDeviceCaps  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetDeviceCaps(
+ UINT Adapter,
+ D3DMDEVTYPE DeviceType,
+ D3DMCAPS* pCaps
+);
+
+/* IDirect3DMobile::RegisterSoftwareDevice  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT RegisterSoftwareDevice(
+ VOID* pInitializeFunction
+);
+
+/* IDirect3DMobileBaseTexture::GetLevelCount  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+DWORD GetLevelCount();
+
+/* IDirect3DMobileBaseTexture::GetLOD  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+DWORD GetLOD();
+
+/* IDirect3DMobileBaseTexture::SetLOD  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+DWORD SetLOD(
+ DWORD LODNew
+);
+
+/* IDirect3DMobileDevice::BeginScene  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT BeginScene();
+
+/* IDirect3DMobileDevice::Clear  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT Clear(
+ DWORD Count,
+ CONST RECT* pRects,
+ DWORD Flags,
+ D3DMCOLOR Color,
+ float Z,
+ DWORD Stencil
+);
+
+/* IDirect3DMobileDevice::ColorFill  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT ColorFill(
+ IDirect3DMobileSurface* pSurface,
+ CONST RECT* pRect,
+ D3DMCOLOR Color
+);
+
+/* IDirect3DMobileDevice::CopyRects  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT CopyRects(
+ IDirect3DMobileSurface* pSourceSurface,
+ CONST RECT* pSourceRectsArray,
+ UINT cRects,
+ IDirect3DMobileSurface* pDestinationSurface,
+ CONST POINT* pDestPointsArray
+);
+
+/* IDirect3DMobileDevice::CreateAdditionalSwapChain  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT CreateAdditionalSwapChain(
+ D3DMPRESENT_PARAMETERS* pPresentationParameters,
+ IDirect3DMobileSwapChain** pSwapChain
+);
+
+/* IDirect3DMobileDevice::CreateDepthStencilSurface  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT CreateDepthStencilSurface(
+ UINT Width,
+ UINT Height,
+ D3DMFORMAT Format,
+ D3DMMULTISAMPLE_TYPE MultiSample,
+ IDirect3DMobileSurface** ppSurface
+);
+
+/* IDirect3DMobileDevice::CreateImageSurface  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT CreateImageSurface(
+ UINT Width,
+ UINT Height,
+ D3DMFORMAT Format,
+ IDirect3DMobileSurface** ppSurface
+);
+
+/* IDirect3DMobileDevice::CreateIndexBuffer  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT CreateIndexBuffer(
+ UINT Length,
+ DWORD Usage,
+ D3DMFORMAT Format,
+ D3DMPOOL Pool,
+ IDirect3DMobileIndexBuffer** ppIndexBuffer
+);
+
+/* IDirect3DMobileDevice::CreateRenderTarget  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT CreateRenderTarget(
+ UINT Width,
+ UINT Height,
+ D3DMFORMAT Format,
+ D3DMMULTISAMPLE_TYPE MultiSample,
+ BOOL Lockable,
+ IDirect3DMobileSurface** ppSurface
+);
+
+/* IDirect3DMobileDevice::CreateTexture  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT CreateTexture(
+ UINT Width,
+ UINT Height,
+ UINT Levels,
+ DWORD Usage,
+ D3DMFORMAT Format,
+ D3DMPOOL Pool,
+ IDirect3DMobileTexture** ppTexture
+);
+
+/* IDirect3DMobileDevice::CreateVertexBuffer  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT CreateVertexBuffer(
+ UINT Length,
+ DWORD Usage,
+ DWORD FVF,
+ D3DMPOOL Pool,
+ IDirect3DMobileVertexBuffer** ppVertexBuffer
+);
+
+/* IDirect3DMobileDevice::DrawIndexedPrimitive  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT DrawIndexedPrimitive(
+ D3DMPRIMITIVETYPE PrimitiveType,
+ INT BaseVertexIndex,
+ UINT minIndex,
+ UINT NumVertices,
+ UINT startIndex,
+ UINT primCount
+);
+
+/* IDirect3DMobileDevice::DrawPrimitive  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT DrawPrimitive(
+ D3DMPRIMITIVETYPE PrimitiveType,
+ UINT StartVertex,
+ UINT PrimitiveCount
+);
+
+/* IDirect3DMobileDevice::EndScene  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT EndScene();
+
+/* IDirect3DMobileDevice::GetAvailableTextureMem  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+UNIT GetAvailableTextureMem();
+
+/* IDirect3DMobileDevice::GetBackBuffer  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetBackBuffer(
+ UINT BackBuffer,
+ D3DMBACKBUFFER_TYPE Type,
+ IDirect3DMobileSurface** ppBackBuffer
+);
+
+/* IDirect3DMobileDevice::GetClipStatus  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetClipStatus(
+ D3DMCLIPSTATUS* pClipStatus
+);
+
+/* IDirect3DMobileDevice::GetCreationParameters  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetCreationParameters(
+ D3DMDEVICE_CREATION_PARAMETERS* pParameters
+);
+
+/* IDirect3DMobileDevice::GetCurrentTexturePalette  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetCurrentTexturePalette(
+ UINT* PaletteNumber
+);
+
+/* IDirect3DMobileDevice::GetDepthStencilSurface  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetDepthStencilSurface(
+ IDirect3DMobileSurface** ppZStencilSurface
+);
+
+/* IDirect3DMobileDevice::GetDeviceCaps  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetDeviceCaps(
+ D3DMCAPS* pCaps
+);
+
+/* IDirect3DMobileDevice::GetDirect3D  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetDirect3D(
+ IDirect3DMobile** ppD3DM
+);
+
+/* IDirect3DMobileDevice::GetDisplayMode  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetDisplayMode(
+ D3DMDISPLAYMODE* pMode
+);
+
+/* IDirect3DMobileDevice::GetFrontBuffer  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetFrontBuffer(
+ IDirect3DMobileSurface** pFrontBuffer
+);
+
+/* IDirect3DMobileDevice::GetIndices  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetIndices(
+ IDirect3DMobileIndexBuffer** ppIndexData
+);
+
+/* IDirect3DMobileDevice::GetInfo  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetInfo(
+ DWORD DevInfoID,
+ void* pDevInfoStruct,
+ DWORD DevInfoStructSize
+);
+
+/* IDirect3DMobileDevice::GetLight  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetLight(
+ DWORD Index,
+ D3DMLIGHT* pLight,
+ D3DMFORMAT* pFormat
+);
+
+/* IDirect3DMobileDevice::GetLightEnable  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetLightEnable(
+ DWORD Index,
+ BOOL* pEnable
+);
+
+/* IDirect3DMobileDevice::GetMaterial  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetMaterial(
+ D3DMMATERIAL* pMaterial,
+ D3DMFORMAT* pFormat
+);
+
+/* IDirect3DMobileDevice::GetPaletteEntries  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetPaletteEntries(
+ UINT PaletteNumber,
+ PALETTEENTRY* pEntries
+);
+
+/* IDirect3DMobileDevice::GetRenderState  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetRenderState(
+ D3DMRENDERSTATETYPE State,
+ DWORD* pValue
+);
+
+/* IDirect3DMobileDevice::GetRenderTarget  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetRenderTarget(
+ IDirect3DMobileSurface** ppRenderTarget
+);
+
+/* IDirect3DMobileDevice::GetStreamSource  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetStreamSource(
+ UINT StreamNumber,
+ IDirect3DMobileVertexBuffer** ppStreamData,
+ UINT* pStride
+);
+
+/* IDirect3DMobileDevice::GetTexture  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetTexture(
+ DWORD Stage,
+ IDirect3DMobileBaseTexture** ppTexture
+);
+
+/* IDirect3DMobileDevice::GetTextureStageState  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetTextureStageState(
+ DWORD Stage,
+ D3DMTEXTURESTAGESTATETYPE Type,
+ DWORD* pValue
+);
+
+/* IDirect3DMobileDevice::GetTransform  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetTransform(
+ D3DMTRANSFORMSTATETYPE State,
+ D3DMMATRIX* pMatrix,
+ D3DMFORMAT* pFormat
+);
+
+/* IDirect3DMobileDevice::GetViewport  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetViewport(
+ D3DMVIEWPORT* pViewport
+);
+
+/* IDirect3DMobileDevice::LightEnable  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT LightEnable(
+ DWORD Index,
+ BOOL Enable
+);
+
+/* IDirect3DMobileDevice::Present  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT Present(
+ CONST RECT* pSourceRect,
+ CONST RECT* pDestRect,
+ HWND hDestWindowOverride,
+ CONST RGNDATA* pDirtyRegion
+);
+
+/* IDirect3DMobileDevice::ProcessVertices  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT ProcessVertices(
+ UINT SrcStartIndex,
+ UINT DestIndex,
+ UINT VertexCount,
+ IDirect3DMobileVertexBuffer* pDestBuffer,
+ DWORD Flags
+);
+
+/* IDirect3DMobileDevice::Reset  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT Reset(
+ D3DMPRESENT_PARAMETERS* pPresentationParameters
+);
+
+/* IDirect3DMobileDevice::ResourceManagerDiscardBytes  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT ResourceManagerDiscardBytes(
+ DWORD Bytes
+);
+
+/* IDirect3DMobileDevice::SetClipStatus  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT SetClipStatus(
+ CONST D3DMCLIPSTATUS* pClipStatus
+);
+
+/* IDirect3DMobileDevice::SetCurrentTexturePalette  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT SetCurrentTexturePalette(
+ UINT PaletteNumber
+);
+
+/* IDirect3DMobileDevice::SetIndices  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT SetIndices(
+ IDirect3DMobileIndexBuffer* pIndexData
+);
+
+/* IDirect3DMobileDevice::SetLight  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT SetLight(
+ DWORD Index,
+ CONST D3DMLIGHT* pLight,
+ D3DMFORMAT Format
+);
+
+/* IDirect3DMobileDevice::SetMaterial  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT SetMaterial(
+ CONST D3DMMATERIAL* pMaterial,
+ D3DMFORMAT Format
+);
+
+/* IDirect3DMobileDevice::SetPaletteEntries  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT SetPaletteEntries(
+ UINT PaletteNumber,
+ CONST PALETTEENTRY* pEntries
+);
+
+/* IDirect3DMobileDevice::SetRenderState  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT SetRenderState(
+ D3DMRENDERSTATETYPE State,
+ DWORD Value
+);
+
+/* IDirect3DMobileDevice::SetRenderTarget  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT SetRenderTarget(
+ IDirect3DMobileSurface* pRenderTarget,
+ IDirect3DMobileSurface* pNewZStencil
+);
+
+/* IDirect3DMobileDevice::SetStreamSource  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT SetStreamSource(
+ UINT StreamNumber,
+ IDirect3DMobileVertexBuffer* pStreamData,
+ UINT Stride
+);
+
+/* IDirect3DMobileDevice::SetTexture  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT SetTexture(
+ DWORD Stage,
+ IDirect3DMobileBaseTexture* pTexture
+);
+
+/* IDirect3DMobileDevice::SetTextureStageState  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT SetTextureStageState(
+ DWORD Stage,
+ D3DMTEXTURESTAGESTATETYPE Type,
+ DWORD Value
+);
+
+/* IDirect3DMobileDevice::SetTransform  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT SetTransform(
+ D3DMTRANSFORMSTATETYPE State,
+ CONST D3DMMATRIX* pMatrix,
+ D3DMFORMAT Format
+);
+
+/* IDirect3DMobileDevice::SetViewport  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT SetViewport(
+ CONST D3DMVIEWPORT* pViewport
+);
+
+/* IDirect3DMobileDevice::StretchRect  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT StretchRect(
+ IDirect3DMobileSurface* pSourceSurface,
+ CONST RECT* pSourceRect,
+ IDirect3DMobileSurface* pDestSurface,
+ CONST RECT* pDestRect,
+ D3DMTEXTUREFILTERTYPE Filter
+);
+
+/* IDirect3DMobileDevice::TestCooperativeLevel  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT TestCooperativeLevel();
+
+/* IDirect3DMobileDevice::UpdateTexture  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT UpdateTexture(
+ IDirect3DMobileBaseTexture* pSourceTexture,
+ IDirect3DMobileBaseTexture* pDestinationTexture
+);
+
+/* IDirect3DMobileDevice::ValidateDevice  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT ValidateDevice(
+ DWORD* pNumPasses
+);
+
+/* IDirect3DMobileIndexBuffer::GetDesc  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetDesc(
+ D3DMINDEXBUFFER_DESC* pDesc
+);
+
+/* IDirect3DMobileIndexBuffer::Lock  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT Lock(
+ UINT OffsetToLock,
+ UINT SizeToLock,
+ void** ppvData,
+ DWORD Flags
+);
+
+/* IDirect3DMobileIndexBuffer::Unlock  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT Unlock();
+
+/* IDirect3DMobileResource::GetDevice  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetDevice(
+ IDirect3DMobileDevice** ppDevice
+);
+
+/* IDirect3DMobileResource::GetPriority  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+DWORD GetPriority();
+
+/* IDirect3DMobileResource::PreLoad  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+void PreLoad();
+
+/* IDirect3DMobileResource::SetPriority  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+DWORD SetPriority(
+ DWORD PriorityNew
+);
+
+/* IDirect3DMobileSurface::GetContainer  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetContainer(
+ REFIID riid,
+ void** ppContainer
+);
+
+/* IDirect3DMobileSurface::GetDC  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetDC(
+ HDC* phdc
+);
+
+/* IDirect3DMobileSurface::GetDesc  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetDesc(
+ D3DMSURFACE_DESC* pDesc
+);
+
+/* IDirect3DMobileSurface::GetDevice  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetDevice(
+ IDirect3DMobileDevice** ppDevice
+);
+
+/* IDirect3DMobileSurface::LockRect  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT LockRect(
+ D3DMLOCKED_RECT* pLockedRect,
+ CONST RECT* pRect,
+ DWORD Flags
+);
+
+/* IDirect3DMobileSurface::ReleaseDC  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT ReleaseDC(
+ HDC hdc
+);
+
+/* IDirect3DMobileSurface::UnlockRect  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT UnlockRect();
+
+/* IDirect3DMobileSwapChain::GetBackBuffer  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetBackBuffer(
+ UINT BackBuffer,
+ D3DMBACKBUFFER_TYPE Type,
+ IDirect3DMobileSurface** ppBackBuffer
+);
+
+/* IDirect3DMobileSwapChain::Present  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT Present(
+ CONST RECT* pSourceRect,
+ CONST RECT* pDestRect,
+ HWND hDestWindowOverride,
+ CONST RGNDATA* pDirtyRegion
+);
+
+/* IDirect3DMobileTexture::AddDirtyRect  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT AddDirtyRect(
+ CONST RECT* pDirtyRect
+);
+
+/* IDirect3DMobileTexture::GetLevelDesc  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetLevelDesc(
+ UINT Level,
+ D3DMSURFACE_DESC* pDesc
+);
+
+/* IDirect3DMobileTexture::GetSurfaceLevel  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetSurfaceLevel(
+ UINT Level,
+ IDirect3DMobileSurface** ppSurfaceLevel
+);
+
+/* IDirect3DMobileTexture::LockRect  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT LockRect(
+ UINT Level,
+ D3DMLOCKED_RECT* pLockedRect,
+ CONST RECT* pRect,
+ DWORD Flags
+);
+
+/* IDirect3DMobileTexture::UnlockRect  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT UnlockRect(
+ UINT Level
+);
+
+/* IDirect3DMobileVertexBuffer::GetDesc  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT GetDesc(
+ D3DMVERTEXBUFFER_DESC* pDesc
+);
+
+/* IDirect3DMobileVertexBuffer::Lock  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT Lock(
+ UINT OffsetToLock,
+ UINT SizeToLock,
+ void** ppvData,
+ DWORD Flags
+);
+
+/* IDirect3DMobileVertexBuffer::Unlock  [function; ce-only; CE 5.0..699; D3dm.lib, D3dmguid.lib] */
+HRESULT Unlock();
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* function */
+HRESULT AddDirtyRect( CONST RECT* pDirtyRect );
+HRESULT BeginScene();
+HRESULT CheckDepthStencilMatch( UINT Adapter, D3DMDEVTYPE DeviceType, D3DMFORMAT AdapterFormat, D3DMFORMAT RenderTargetFormat, D3DMFORMAT DepthStencilFormat );
+HRESULT CheckDeviceFormat( UINT Adapter, D3DMDEVTYPE DeviceType, D3DMFORMAT AdapterFormat, ULONG Usage, D3DMRESOURCETYPE RType, D3DMFORMAT CheckFormat );
+HRESULT CheckDeviceFormatConversion( UINT Adapter, D3DMDEVTYPE DeviceType, D3DMFORMAT SourceFormat, D3DMFORMAT DestFormat );
+HRESULT CheckDeviceMultiSampleType( UINT Adapter, D3DMDEVTYPE DeviceType, D3DMFORMAT SurfaceFormat, BOOL Windowed, D3DMMULTISAMPLE_TYPE MultiSampleType );
+HRESULT CheckDeviceType( UINT Adapter, D3DMDEVTYPE CheckType, D3DMFORMAT DisplayFormat, D3DMFORMAT BackBufferFormat, BOOL Windowed );
+HRESULT CheckProfile( UINT Adapter, D3DMDEVTYPE DeviceType, D3DMPROFILE Profile );
+HRESULT Clear( DWORD Count, CONST RECT* pRects, DWORD Flags, D3DMCOLOR Color, float Z, DWORD Stencil );
+HRESULT ColorFill( IDirect3DMobileSurface* pSurface, CONST RECT* pRect, D3DMCOLOR Color );
+HRESULT CreateAdditionalSwapChain( D3DMPRESENT_PARAMETERS* pPresentationParameters, IDirect3DMobileSwapChain** pSwapChain );
+HRESULT CreateDepthStencilSurface( UINT Width, UINT Height, D3DMFORMAT Format, D3DMMULTISAMPLE_TYPE MultiSample, IDirect3DMobileSurface** ppSurface );
+HRESULT CreateDevice( UINT Adapter, D3DMDEVTYPE DeviceType, HWND hFocusWindow, ULONG BehaviorFlags, D3DMPRESENT_PARAMETERS* pPresentationParameters, IDirect3DMobileDevice** ppReturnedDeviceInterface );
+HRESULT CreateImageSurface( UINT Width, UINT Height, D3DMFORMAT Format, IDirect3DMobileSurface** ppSurface );
+HRESULT CreateIndexBuffer( UINT Length, DWORD Usage, D3DMFORMAT Format, D3DMPOOL Pool, IDirect3DMobileIndexBuffer** ppIndexBuffer );
+HRESULT CreateRenderTarget( UINT Width, UINT Height, D3DMFORMAT Format, D3DMMULTISAMPLE_TYPE MultiSample, BOOL Lockable, IDirect3DMobileSurface** ppSurface );
+HRESULT CreateTexture( UINT Width, UINT Height, UINT Levels, DWORD Usage, D3DMFORMAT Format, D3DMPOOL Pool, IDirect3DMobileTexture** ppTexture );
+HRESULT CreateVertexBuffer( UINT Length, DWORD Usage, DWORD FVF, D3DMPOOL Pool, IDirect3DMobileVertexBuffer** ppVertexBuffer );
+VOID WINAPI D3DMXCreateTextureFromFileExW( LPDIRECT3DMOBILEDEVICE pDevice, LPCWSTR pSrcFile, UINT Width, UINT Height, UINT MipLevels, DWORD Usage, D3DMFORMAT Format, D3DMPOOL Pool, DWORD Filter, DWORD MipFilter, D3DMCOLOR ColorKey, D3DMXIMAGE_INFO* pSrcInfo, PALETTEENTRY* pPalette, LPDIRECT3DMOBILETEXTURE* ppTexture );
+VOID WINAPI D3DMXCreateTextureFromResourceExW( LPDIRECT3DMOBILEDEVICE pDevice, HMODULE hSrcModule, LPCWSTR pSrcResource, UINT Width, UINT Height, UINT MipLevels, DWORD Usage, D3DMFORMAT Format, D3DMPOOL Pool, DWORD Filter, DWORD MipFilter, D3DMCOLOR ColorKey, D3DMXIMAGE_INFO* pSrcInfo, PALETTEENTRY* pPalette, LPDIRECT3DMOBILETEXTURE* ppTexture );
+VOID WINAPI D3DMXLoadSurfaceFromFileW( LPDIRECT3DMOBILESURFACE pDestSurface, CONST PALETTEENTRY* pDestPalette, CONST RECT* pDestRect, LPCWSTR pSrcFile, CONST RECT* pSrcRect, DWORD Filter, D3DMCOLOR ColorKey, D3DMXIMAGE_INFO* pSrcInfo );
+VOID WINAPI D3DMXLoadSurfaceFromResourceW( LPDIRECT3DMOBILESURFACE pDestSurface, CONST PALETTEENTRY* pDestPalette, CONST RECT* pDestRect, HMODULE hSrcModule, LPCWSTR pSrcResource, CONST RECT* pSrcRect, DWORD Filter, D3DMCOLOR ColorKey, D3DMXIMAGE_INFO* pSrcInfo );
+HRESULT DrawIndexedPrimitive( D3DMPRIMITIVETYPE PrimitiveType, INT BaseVertexIndex, UINT minIndex, UINT NumVertices, UINT startIndex, UINT primCount );
+HRESULT DrawPrimitive( D3DMPRIMITIVETYPE PrimitiveType, UINT StartVertex, UINT PrimitiveCount );
+HRESULT EndScene();
+HRESULT EnumAdapterModes( UINT Adapter, UINT Mode, D3DMDISPLAYMODE* pMode );
+UINT GetAdapterCount();
+HRESULT GetAdapterDisplayMode( UINT Adapter, D3DMDISPLAYMODE* pMode );
+HRESULT GetAdapterIdentifier( UINT Adapter, ULONG Flags, D3DMADAPTER_IDENTIFIER* pIdentifier );
+UINT GetAdapterModeCount( UINT Adapter );
+HRESULT GetBackBuffer( UINT BackBuffer, D3DMBACKBUFFER_TYPE Type, IDirect3DMobileSurface** ppBackBuffer );
+HRESULT GetClipStatus( D3DMCLIPSTATUS* pClipStatus );
+HRESULT GetContainer( REFIID riid, void** ppContainer );
+HRESULT GetCreationParameters( D3DMDEVICE_CREATION_PARAMETERS* pParameters );
+HRESULT GetCurrentTexturePalette( UINT* PaletteNumber );
+HRESULT GetDepthStencilSurface( IDirect3DMobileSurface** ppZStencilSurface );
+HRESULT GetDesc( D3DMINDEXBUFFER_DESC* pDesc );
+HRESULT GetDirect3D( IDirect3DMobile** ppD3DM );
+HRESULT GetFrontBuffer( IDirect3DMobileSurface** pFrontBuffer );
+HRESULT GetIndices( IDirect3DMobileIndexBuffer** ppIndexData );
+DWORD GetLOD();
+DWORD GetLevelCount();
+HRESULT GetLevelDesc( UINT Level, D3DMSURFACE_DESC* pDesc );
+HRESULT GetLight( DWORD Index, D3DMLIGHT* pLight, D3DMFORMAT* pFormat );
+HRESULT GetLightEnable( DWORD Index, BOOL* pEnable );
+HRESULT GetMaterial( D3DMMATERIAL* pMaterial, D3DMFORMAT* pFormat );
+DWORD GetPriority();
+HRESULT GetRenderState( D3DMRENDERSTATETYPE State, DWORD* pValue );
+HRESULT GetRenderTarget( IDirect3DMobileSurface** ppRenderTarget );
+HRESULT GetStreamSource( UINT StreamNumber, IDirect3DMobileVertexBuffer** ppStreamData, UINT* pStride );
+HRESULT GetSurfaceLevel( UINT Level, IDirect3DMobileSurface** ppSurfaceLevel );
+HRESULT GetTexture( DWORD Stage, IDirect3DMobileBaseTexture** ppTexture );
+HRESULT GetTextureStageState( DWORD Stage, D3DMTEXTURESTAGESTATETYPE Type, DWORD* pValue );
+HRESULT GetTransform( D3DMTRANSFORMSTATETYPE State, D3DMMATRIX* pMatrix, D3DMFORMAT* pFormat );
+HRESULT GetViewport( D3DMVIEWPORT* pViewport );
+HRESULT LightEnable( DWORD Index, BOOL Enable );
+HRESULT LockRect( D3DMLOCKED_RECT* pLockedRect, CONST RECT* pRect, DWORD Flags );
+void PreLoad();
+HRESULT Present( CONST RECT* pSourceRect, CONST RECT* pDestRect, HWND hDestWindowOverride, CONST RGNDATA* pDirtyRegion );
+HRESULT ProcessVertices( UINT SrcStartIndex, UINT DestIndex, UINT VertexCount, IDirect3DMobileVertexBuffer* pDestBuffer, DWORD Flags );
+HRESULT RegisterSoftwareDevice( VOID* pInitializeFunction );
+HRESULT ResourceManagerDiscardBytes( DWORD Bytes );
+HRESULT SetClipStatus( CONST D3DMCLIPSTATUS* pClipStatus );
+HRESULT SetCurrentTexturePalette( UINT PaletteNumber );
+HRESULT SetIndices( IDirect3DMobileIndexBuffer* pIndexData );
+DWORD SetLOD( DWORD LODNew );
+HRESULT SetLight( DWORD Index, CONST D3DMLIGHT* pLight, D3DMFORMAT Format );
+HRESULT SetMaterial( CONST D3DMMATERIAL* pMaterial, D3DMFORMAT Format );
+DWORD SetPriority( DWORD PriorityNew );
+HRESULT SetRenderState( D3DMRENDERSTATETYPE State, DWORD Value );
+HRESULT SetRenderTarget( IDirect3DMobileSurface* pRenderTarget, IDirect3DMobileSurface* pNewZStencil );
+HRESULT SetStreamSource( UINT StreamNumber, IDirect3DMobileVertexBuffer* pStreamData, UINT Stride );
+HRESULT SetTexture( DWORD Stage, IDirect3DMobileBaseTexture* pTexture );
+HRESULT SetTextureStageState( DWORD Stage, D3DMTEXTURESTAGESTATETYPE Type, DWORD Value );
+HRESULT SetTransform( D3DMTRANSFORMSTATETYPE State, CONST D3DMMATRIX* pMatrix, D3DMFORMAT Format );
+HRESULT SetViewport( CONST D3DMVIEWPORT* pViewport );
+HRESULT StretchRect( IDirect3DMobileSurface* pSourceSurface, CONST RECT* pSourceRect, IDirect3DMobileSurface* pDestSurface, CONST RECT* pDestRect, D3DMTEXTUREFILTERTYPE Filter );
+HRESULT UnlockRect();
+HRESULT UpdateTexture( IDirect3DMobileBaseTexture* pSourceTexture, IDirect3DMobileBaseTexture* pDestinationTexture );
+HRESULT ValidateDevice( DWORD* pNumPasses );
+
+#endif /* _D3DM_ */

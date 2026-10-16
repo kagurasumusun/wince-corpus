@@ -1,0 +1,91 @@
+/* Dbgapi.h -- Windows CE unified surface
+ *
+ * ONE tree for every CE generation.  Version differences use
+ * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
+ * Win32-shared entries are marked 'win32-ref'.
+ * Generated from wince-docs-corpus knowledge/ by
+ * tools/gen-include-def.py --unified.
+ * 0 constants, 6 declarations, 2 outlines, 0 base types, 0 extra macros, 1 extra decls
+ */
+#ifndef _DBGAPI_
+#define _DBGAPI_
+
+
+/* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 200 && _WIN32_WCE < 210) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699 */
+
+/* ASSERT  [function, macro; shared; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699] */
+
+/* ASSERTMSG  [function, macro; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699] */
+#define ASSERTMSG(
+ message,
+ Condition
+)
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
+
+/* DEBUGZONE  [macro, function; ce-only; CE 3.0..399, 5.0..699] */
+
+/* ERRORMSG  [function, macro; ce-only; CE 3.0..399, 5.0..699] */
+#define ERRORMSG(
+ cond,
+ printf_exp
+)
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+
+/* DBGPARAM  [struct; ce-only; CE 5.0..699] */
+typedef struct _DBGPARAM {
+ WCHAR lpszName[32];
+ WCHAR rglpszZones[16][32];
+ ULONG ulZoneMask;
+} DBGPARAM, *LPDBGPARAM;
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
+
+/* WriteDebugLED  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
+void WriteDebugLED(
+ WORD wIndex,
+ DWORD dwPattern 
+);
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+
+/* NKDbgPrintfW  [function; ce-only; CE 5.0..699] */
+void WINAPIV NKDbgPrintfW(
+ LPCWSTR lpszFmt,...
+);
+
+/* RegisterDbgZones  [function; ce-only; CE 5.0..699] */
+BOOL RegisterDbgZones(
+ HMODULE hMod,
+ LPDBGPARAM lpdbgparam
+);
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* struct */
+typedef struct _DBGPARAM { WCHAR lpszName[32]; WCHAR rglpszZones[16][32]; ULONG ulZoneMask; } DBGPARAM, *LPDBGPARAM;
+
+#endif /* _DBGAPI_ */

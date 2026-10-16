@@ -123,6 +123,7 @@ import page_parse  # noqa: E402
 import html_clean  # noqa: E402
 import header_map  # noqa: E402
 import quality_filters  # noqa: E402
+import w32api_gaps  # noqa: E402
 
 KB = os.path.join(ROOT, "knowledge", "kb")
 
@@ -1375,19 +1376,9 @@ def apply_unified_constants(const_rows, unified):
             "license": rec.get("license") or "?",
             "source": source,
         }
-        existing = const_rows.get(name)
-        if existing:
-            want = _int_of(value)
-            kept = {}
-            for key, row in existing.items():
-                if _int_of(row.get("value")) == want or str(row.get("value")) == str(value):
-                    row = dict(row)
-                    if rec.get("header"):
-                        row["headers"] = [rec["header"]]
-                    kept[key] = row
-            const_rows[name] = kept or {"unified": synthetic}
-        else:
-            const_rows[name] = {"unified": synthetic}
+        # One unguarded #define: version-sliced CE table hits were putting
+        # TRUE/MAX_PATH behind a single-generation #if.
+        const_rows[name] = {"unified": synthetic}
         applied += 1
     return applied
 
@@ -1691,6 +1682,39 @@ def wrap_comment(prefix, text, width=64):
     return lines
 
 
+_WINDOWS_UMBRELLA = (
+    "WinDef.h", "WinNT.h", "winerror.h", "Winbase.h", "Winuser.h",
+    "Wingdi.h", "Winreg.h", "Commctrl.h", "Winioctl.h", "Winsock2.h",
+)
+
+
+def _write_windows_umbrella(include_dir):
+    """Replace Windows.h with an include of the core CE headers."""
+    present = {name.lower(): name for name in os.listdir(include_dir)
+               if name.lower().endswith(".h")}
+    includes = []
+    for name in _WINDOWS_UMBRELLA:
+        hit = present.get(name.lower())
+        if hit:
+            includes.append(hit)
+    if not includes:
+        return
+    lines = [
+        "/* Windows.h -- Windows CE unified umbrella",
+        " *",
+        " * #include this file.  It pulls in the core CE headers this",
+        " * tree actually generated.  Values stay in those headers.",
+        " */",
+        "#ifndef _WINDOWS_",
+        "#define _WINDOWS_",
+        "",
+    ]
+    for hit in includes:
+        lines.append(f'#include "{hit}"')
+    lines += ["", "#endif /* _WINDOWS_ */", ""]
+    _write_lines(os.path.join(include_dir, "Windows.h"), lines)
+
+
 def run_unified(args):
     """One include/def tree for every Windows CE generation at once."""
     declarations_of = {d["id"]: d for d in load(DECLARATIONS)}
@@ -1744,7 +1768,11 @@ def run_unified(args):
     for entity in sorted(entities, key=lambda e: e["name"].lower()):
         chosen, borrowed_from, ce_recs, win32_recs = \
             choose_unified_declaration(entity, declarations_of, borrow)
-        if chosen and not looks_like_c_declaration(chosen.get("text") or ""):
+        if chosen and (not looks_like_c_declaration(chosen.get("text") or "")
+                       or quality_filters.is_define_only_block(
+                           chosen.get("text") or "")
+                       or quality_filters.is_glued_prototype(
+                           chosen.get("text") or "")):
             skipped["declaration is not a C declaration"] += 1
             chosen = None
             borrowed_from = ""
@@ -1875,6 +1903,12 @@ def run_unified(args):
                 alternates = []
                 header_mark = "heuristic-prefix"
         if not primary:
+            mapped = header_map.header_for_entity(
+                entity.get("name") or "", entity.get("kinds") or [])
+            if mapped:
+                primary = mapped
+                header_mark = "heuristic-prefix"
+        if not primary:
             skipped["no header stated"] += 1
             if chosen:
                 leftover_kb_decls.append({
@@ -1888,9 +1922,13 @@ def run_unified(args):
             skipped["no CE version evidence"] += 1
         if primary and not chosen and not outline:
             n = entity.get("name") or ""
-            if header_map.header_for_constant(n) or "macro" in (
-                    entity.get("kinds") or []) or (
-                    n.isupper() and "_" in n and len(n) > 3):
+            kinds = entity.get("kinds") or []
+            # ALL-CAPS names are constants/macros already filed as #define;
+            # a name-only function stub is noise in a development header.
+            if "macro" in kinds and not (n.isupper() and "_" in n):
+                name_only = True
+            elif "struct" in kinds or "enum" in kinds or "typedef" in kinds \
+                    or "interface" in kinds:
                 name_only = True
         if primary and (chosen or outline or name_only):
             printed_forms[primary.lower()] = primary
@@ -1996,6 +2034,31 @@ def run_unified(args):
         shared_values += 1
     unified_consts = load_unified_constants()
     apply_unified_constants(const_rows, unified_consts)
+    bad_null = const_rows.get("NULL")
+    if bad_null:
+        vals = [str(r.get("value") or "").strip() for r in bad_null.values()]
+        if not any(v in ("0", "0L", "0l", "NULL") for v in vals):
+            const_rows.pop("NULL", None)
+            unified_consts.pop("NULL", None)
+    ce_named = load_ce_documented_names()
+    already = set(const_rows)
+    for name, rec in w32api_gaps.parse_defines(ce_named, already).items():
+        unified_consts[name] = rec
+        source = rec.get("source") or {}
+        const_rows[name] = {"gap": {
+            "id": "w32api:" + name,
+            "name": name,
+            "value": rec["value"],
+            "decimal": None,
+            "origin": "w32api-cegcc-public-domain",
+            "headers": [rec["header"]] if rec.get("header") else [],
+            "layer": "ce",
+            "row": f"{name} {rec['value']}",
+            "license": "w32api-public-domain",
+            "source": source if isinstance(source, dict) else {
+                "path": "sources/w32api-cegcc", "set": "w32api-cegcc",
+                "layer": "reference", "title": name, "page_id": ""},
+        }}
     defines = conflicts = unsupported_written = no_header = 0
     conflicts_resolved = 0
     const_entries = collections.defaultdict(list)   # header lower -> [entry]
@@ -2006,6 +2069,8 @@ def run_unified(args):
             continue
         if quality_filters.is_language_runtime_constant(name):
             no_header += 1
+            continue
+        if name in w32api_gaps.NEVER:
             continue
         unified_rec = unified_consts.get(name) or {}
         if unified_rec.get("header"):
@@ -2336,11 +2401,9 @@ def run_unified(args):
                            re.sub(r"\s+", "", group["print"])) in \
                     printed_defines
                 if printed:
-                    lines.append(
-                        f"/* {entry['name']} {group['print']} -- the page's "
-                        "syntax declaration below prints this #define; "
-                        "derived line suppressed (linkage: "
-                        f"{entry['strength']}) */")
+                    continue
+                if entry["name"] == "NULL" and str(group["print"]).strip() not in (
+                        "0", "0L", "0l", "NULL"):
                     continue
                 if not args.no_const_comments:
                     lines.extend(const_note(entry, group))
@@ -2540,7 +2603,7 @@ def run_unified(args):
         # Close the include guard
         lines.append("")
         lines.append(f"#endif /* _{guard_name} */")
-        path = os.path.join(include_dir, display + ".h.fragment")
+        path = os.path.join(include_dir, display + ".h")
         _write_lines(path, lines)
         header_files_written += 1
 
@@ -2553,7 +2616,7 @@ def run_unified(args):
             d.get("definition") or "")]
     unassigned_defines = leftover_defines
     if unassigned_defines:
-        extra_path = os.path.join(include_dir, "ExtraDefines.h.fragment")
+        extra_path = os.path.join(include_dir, "ExtraDefines.h")
         if args.minimal_comments:
             extra_lines = [
                 "/* ExtraDefines.h -- supplementary macro definitions",
@@ -2617,7 +2680,7 @@ def run_unified(args):
     # could not be assigned to a specific header.  These go to ExtraDeclarations.h.
     unassigned_declarations = leftover_decls
     if unassigned_declarations:
-        extra_decl_path = os.path.join(include_dir, "ExtraDeclarations.h.fragment")
+        extra_decl_path = os.path.join(include_dir, "ExtraDeclarations.h")
         extra_decl_lines = []
         if args.minimal_comments:
             extra_decl_lines = [
@@ -2667,6 +2730,9 @@ def run_unified(args):
         _write_lines(extra_decl_path, extra_decl_lines)
         header_files_written += 1
 
+    # Windows.h is the umbrella developers actually #include.
+    _write_windows_umbrella(include_dir)
+
     # ---- module .def worklists (one per module, annotated per line: the
     # .def grammar itself has no version conditional).
     ordinal_rows = load_ordinal_rows()
@@ -2695,43 +2761,33 @@ def run_unified(args):
         leads = [(name, member) for name, member in
                  (reference_exports or {}).get(safe_name(stem).lower(), [])
                  if name.lower() not in known]
-        if leads:
-            if not args.minimal_comments:
-                ch += [
-                    ";",
-                    f"; reference-export leads ({len(leads)}): names the pinned",
-                    "; CeGCC reference's .def export list claims for this module",
-                    "; but no CE page documents.  MEMBERSHIP ONLY -- the name is",
-                    "; claimed by the given list; ordinals and decoration were",
-                    "; never taken (values: never).  Each name is a REVIEW LEAD:",
-                    "; verify it against the CE SDK export table before linking,",
-                    "; and confirm any A-sounding spelling page by page (CE is",
-                    "; W-side basically).",
-                    ";",
-                ]
-            for name, member in leads:
-                if not args.minimal_comments:
-                    ch.append(f";   {name:38s}; lead  {member}")
-            if not args.minimal_comments:
-                ch.append(";")
         for info in entries:
             entity = info["entity"]
-            tag = ""
-            if info["lib_mark"] == "win32-reference":
-                tag += " [module: Win32 reference only]"
-            if info["borrowed_from"] == "win32-reference":
-                tag += " [declaration: Win32 reference]"
-            ver = wce_range_comment(info["merged"]) if info["merged"] \
-                else "version not established"
             ordinal, ordinal_page = ord_map.get(
                 (stem, entity["name"].lower()), ("", ""))
             name_field = (f"{entity['name']} @{ordinal}"
                           if ordinal else entity["name"])
-            ch.append(f"    {name_field:32s}; "
-                      f"{(entity['kinds'] or ['?'])[0]}  CE {ver}  "
-                      f"{info['declaration']['source']['path']}{tag}"
-                      + (f"  [ordinal printed by {ordinal_page}]"
-                         if ordinal else ""))
+            if args.minimal_comments:
+                ch.append(f"    {name_field}")
+            else:
+                tag = ""
+                if info["lib_mark"] == "win32-reference":
+                    tag += " [module: Win32 reference only]"
+                if info["borrowed_from"] == "win32-reference":
+                    tag += " [declaration: Win32 reference]"
+                ver = wce_range_comment(info["merged"]) if info["merged"] \
+                    else "version not established"
+                ch.append(f"    {name_field:32s}; "
+                          f"{(entity['kinds'] or ['?'])[0]}  CE {ver}  "
+                          f"{info['declaration']['source']['path']}{tag}"
+                          + (f"  [ordinal printed by {ordinal_page}]"
+                             if ordinal else ""))
+        if leads and not args.minimal_comments:
+            ch += [
+                ";",
+                f"; {len(leads)} undocumented reference-export lead(s) omitted",
+                ";",
+            ]
         _write_lines(os.path.join(link_dir, safe_name(stem) + ".def"), ch)
 
     # ---- export ordinals: the one family that prints them, across sets
@@ -2973,6 +3029,8 @@ def main():
     if args.unified or not args.target:
         if not args.out:
             ap.error("the unified build needs --out")
+        args.minimal_comments = True
+        args.no_const_comments = True
         return run_unified(args)
     if not args.out:
         ap.error("--set needs --out")

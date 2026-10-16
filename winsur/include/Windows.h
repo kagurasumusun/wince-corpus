@@ -1,0 +1,21 @@
+/* Windows.h -- Windows CE unified umbrella
+ *
+ * #include this file.  It pulls in the core CE headers this
+ * tree actually generated.  Values stay in those headers.
+ */
+#ifndef _WINDOWS_
+#define _WINDOWS_
+
+#include "WinDef.h"
+#include "Winnt.h"
+#include "winerror.h"
+#include "Winbase.h"
+#include "Winuser.h"
+#include "Wingdi.h"
+#include "Winreg.h"
+#include "Commctrl.h"
+#include "Winioctl.h"
+#include "Winsock2.h"
+
+#endif /* _WINDOWS_ */
+

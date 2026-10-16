@@ -1,0 +1,201 @@
+/* FlexiPMTInfo.h -- Windows CE unified surface
+ *
+ * ONE tree for every CE generation.  Version differences use
+ * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
+ * Win32-shared entries are marked 'win32-ref'.
+ * Generated from wince-docs-corpus knowledge/ by
+ * tools/gen-include-def.py --unified.
+ * 39 constants, 8 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ */
+#ifndef _FLEXIPMTINFO_
+#define _FLEXIPMTINFO_
+
+
+/* ==================================================================
+ * constants (one evidence comment per #define; the
+ * #if of a batch covers every #define in it; values
+ * that differ per generation pool into #if/#elif
+ * chains with the evidence after the #endif)
+ * ================================================================ */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+#define mfiName 0
+#define mfiUserDefined -1
+#define pfiBasePtr 4
+#define pfiCmdLine 7
+#define pfiCurDbgZoneMasks 5
+#define pfiDefaultAccessKey 3
+#define pfiHandle 9
+#define pfiName 6
+#define pfiProcessSlot 1
+#define pfiStartOfAddrSpace 2
+#define pfiStructAddr 0
+#define pfiTlsUsageBitMaskH 11
+#define pfiTlsUsageBitMaskL 10
+#define pfiTrustLevel 8
+#define pfiUserDefined -1
+#define tfiAddrSpaceAccessKey 2
+#define tfiBasePriority 8
+#define tfiCreationTimeLSW 19
+#define tfiCreationTimeMSW 18
+#define tfiCurrentPriority 6
+#define tfiHandle 14
+#define tfiHandleCurrentProcessRunIn 3
+#define tfiHandleOwnerProc 10
+#define tfiInfo 7
+#define tfiKernelTime 12
+#define tfiLastError 15
+#define tfiPC 22
+#define tfiQuantum 20
+#define tfiQuantumLeft 21
+#define tfiRunState 1
+#define tfiSleepCount 4
+#define tfiStackBase 16
+#define tfiStackLowBound 17
+#define tfiStructAddr 0
+#define tfiSuspendCount 5
+#define tfiTlsPtr 11
+#define tfiUserDefined -1
+#define tfiUserTime 13
+#define tfiWaitState 9
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+
+/* FLEXI_GETDATA_TYPE  [struct; ce-only; CE 5.0..699] */
+typedef struct _FLEXI_GETDATA_TYPE {
+ BOOLfGetProcessData;
+ BOOL fGetThreadData;
+ BOOL fGetModuleData;
+ DWORD dwProcIdxStart;
+ DWORD dwProcIdxEnd;
+ BOOL fThreadsInProcsOnly;
+ DWORD dwThreadIdxStart;
+ DWORD dwThreadIdxEn;
+ BOOL fModulesInProcsOnly;
+ DWORD dwModuleIdxStart;
+ DWORD dwModuleIdxEnd;
+} FLEXI_GETDATA_TYPE;
+
+/* MODULE_FIELD_IDS  [enum; ce-only; CE 5.0..699] */
+typedef enum _MODULE_FIELD_IDS {
+ mfiName = 0,
+ mfiBasePointer,
+ mfiModuleSize,
+ mfiRdWrDataStart,
+ mfiRdWrDataEnd,
+ mfiTimeStamp,
+ mfiDllHandle,
+ mfiInUse,
+ mfiFlags,
+ mfiTrustLevel,
+ mfiUserDefined = (-1L)
+} MODULE_FIELD_IDS;
+
+/* PROC_FIELD_IDS  [enum; ce-only; CE 5.0..699] */
+typedef enum _PROC_FIELD_IDS {
+ pfiStructAddr = (0L),
+ pfiProcessSlot = (1L),
+ pfiStartOfAddrSpace = (2L),
+ pfiDefaultAccessKey = (3L),
+ pfiBasePtr = (4L),
+ pfiCurDbgZoneMasks = (5L),
+ pfiName = (6L),
+ pfiCmdLine = (7L),
+ pfiTrustLevel = (8L),
+ pfiHandle = (9L),
+ pfiTlsUsageBitMaskL = (10L),
+ pfiTlsUsageBitMaskH = (11L),
+ pfiUserDefined = (-1L) 
+} PROC_FIELD_IDS;
+
+/* PTM_FIELD_DESC  [struct; ce-only; CE 5.0..699] */
+typedef struct _PTM_FIELD_DESC {
+ WORD wIdentifier;
+ WORD wSize;
+ LPOLESTR szLabel;
+ LPOLESTR szFormat;
+} PTM_FIELD_DESC;
+
+/* PTM_RAW_DATA  [struct; ce-only; CE 5.0..699] */
+typedef struct _PTM_RAW_DATA {
+ DWORD dwSize;
+ [size_is (dwSize )] BYTE* pdwRawData;
+PTM_RAW_DATA;
+
+/* THREAD_FIELD_IDS  [enum; ce-only; CE 5.0..699] */
+typedef enum _THREAD_FIELD_IDS {
+ tfiStructAddr = (0L),
+ tfiRunState = (1L),
+ tfiAddrSpaceAccessKey = (2L),
+ tfiHandleCurrentProcessRunIn = (3L),
+ tfiSleepCount = (4L),
+ tfiSuspendCount = (5L),
+ tfiCurrentPriority = (6L),
+ tfiInfo = (7L),
+ tfiBasePriority = (8L),
+ tfiWaitState = (9L),
+ tfiHandleOwnerProc = (10L),
+ tfiTlsPtr = (11L),
+ tfiKernelTime = (12L),
+ tfiUserTime = (13L),
+ tfiHandle = (14L),
+ tfiLastError = (15L),
+ tfiStackBase = (16L),
+ tfiStackLowBound = (17L),
+ tfiCreationTimeMSW = (18L),
+ tfiCreationTimeLSW = (19L),
+ tfiQuantum = (20L),
+ tfiQuantumLeft = (21L),
+ tfiPC = (22L),
+ tfiUserDefined = (-1L)
+} THREAD_FIELD_IDS;
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+
+/* IFlexiPTMInfo::GetData  [function; ce-only; CE 5.0..699] */
+HRESULT GetData(
+ [in] FLEXI_GETDATA_TYPE
+ fgds
+,
+ [out, size_is(, *pcProcess)] PTM_RAW_DATA** ppdatProcess,
+ [out] DWORD* pcProcess,
+ [out] DWORD* pcProcessTotal,
+ [out, size_is(, *pcThread)] PTM_RAW_DATA** ppdatThread,
+ [out] DWORD* pcThread,
+ [out] DWORD* pcThreadTotal,
+ [out, size_is(,* pcModule)] PTM_RAW_DATA** ppdatModule,
+ [out] DWORD* pcModule,
+ [out] DWORD* pcModuleTotal
+);
+
+/* IFlexiPTMInfo::GetDescriptionTables  [function; ce-only; CE 5.0..699] */
+HRESULT GetDescriptionTables(
+ [out, size_is(,*pcProcField)] PTM_FIELD_DESC** ppfdProcDescTable,
+ [out] DWORD* pcProcField,
+ [out, size_is(,*pcThreadField)] PTM_FIELD_DESC** ppfdThreadDescTable,
+ [out] DWORD* pcThreadField,
+ [out, size_is(, *pcModField)] PTM_FIELD_DESC** ppfdModDescTable,
+ [out] DWORD* pcModField
+);
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* function */
+HRESULT GetDescriptionTables( [out, size_is(, *pcProcField)] PTM_FIELD_DESC**ppfdProcDescTable, [out] DWORD*pcProcField, [out, size_is(,*pcThreadField)] PTM_FIELD_DESC**ppfdThreadDescTable, [out] DWORD*pcThreadField, [out, size_is(, *pcModField)] PTM_FIELD_DESC**ppfdModDescTable, [out] DWORD*pcModField);
+
+#endif /* _FLEXIPMTINFO_ */

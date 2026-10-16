@@ -1,0 +1,983 @@
+/* Av_upnp.h -- Windows CE unified surface
+ *
+ * ONE tree for every CE generation.  Version differences use
+ * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
+ * Win32-shared entries are marked 'win32-ref'.
+ * Generated from wince-docs-corpus knowledge/ by
+ * tools/gen-include-def.py --unified.
+ * 4 constants, 110 declarations, 0 outlines, 0 base types, 0 extra macros, 85 extra decls
+ */
+#ifndef _AV_UPNP_
+#define _AV_UPNP_
+
+
+/* ==================================================================
+ * constants (one evidence comment per #define; the
+ * #if of a batch covers every #define in it; values
+ * that differ per generation pool into #if/#elif
+ * chains with the evidence after the #endif)
+ * ================================================================ */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
+#define BIT_AV_ERROR 0
+#define BIT_AV_TRACE 2
+#define BIT_AV_WARN 1
+#define SUCCESS_AV 0
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
+
+/* object  [struct, typedef; ce-only; CE 5.0..599; Av_upnp.lib] */
+struct object 
+{ 
+ // constructor not shown 
+ bool bContainer; 
+ wstring strID; 
+ wstring strParentID; 
+ wstring strTitle; 
+ wstring strClass; 
+ bool bRestricted; 
+ // GetProperty declarations not shown 
+ // private members not shown 
+};
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+
+/* ConnectionInfo  [struct, typedef; ce-only; CE 5.0..699; Av_upnp.lib] */
+struct ConnectionInfo
+ {
+ IRenderingControl* 
+ pRenderingControl
+ ;
+ IAVTransport* 
+ pAVTransport
+ ;
+ wstring 
+ strRemoteProtocolInfo
+ ;
+ wstring 
+ strPeerConnectionManager
+ ;
+ long 
+ nPeerConnectionID
+ ;
+ DIRECTION 
+ Direction
+ ;
+ wstring 
+ strStatus
+ ;
+ };
+
+/* DeviceCapabilities  [struct, typedef; shared; CE 5.0..699; Av_upnp.lib; A/W DeviceCapabilitiesA,DeviceCapabilitiesW (CE is W-side)] */
+struct DeviceCapabilities
+ {
+ wstring 
+ strPossiblePlayMedia
+ ;
+ wstring 
+ strPossibleRecMedia
+ ;
+ wstring 
+ strPossibleRecQualityModes
+ ;
+ };
+
+/* DIRECTION  [enum; ce-only; CE 5.0..699; Av_upnp.lib] */
+enum DIRECTION {
+ OUTPUT,
+ INPUT
+};
+
+/* MediaInfo  [struct, typedef; ce-only; CE 5.0..699; Av_upnp.lib] */
+struct MediaInfo
+ {
+ unsigned long 
+ nNrTracks
+ ;
+ wstring 
+ strMediaDuration
+ ;
+ wstring 
+ strCurrentURI
+ ;
+ wstring 
+ strCurrentURIMetaData
+ ;
+ wstring 
+ strNextURI
+ ;
+ wstring 
+ strNextURIMetaData
+ ;
+ wstring 
+ strPlayMedium
+ ;
+ wstring 
+ strRecordMedium
+ ;
+ wstring 
+ strWriteStatus
+ ;
+ };
+
+/* PositionInfo  [struct, typedef; ce-only; CE 5.0..699; Av_upnp.lib] */
+struct PositionInfo
+ {
+ unsigned long 
+ nTrack
+ ;
+ wstring 
+ strTrackDuration
+ ;
+ wstring 
+ strTrackMetaData
+ ;
+ wstring 
+ strTrackURI
+ ;
+ wstring 
+ strRelTime
+ ;
+ wstring 
+ strAbsTime
+ ;
+ long 
+ nRelCount
+ ;
+ long 
+ nAbsCount
+ ;
+ };
+
+/* TransportActions  [struct, typedef; ce-only; CE 5.0..699; Av_upnp.lib] */
+struct TransportActions
+ {
+ bool 
+ bPlay
+ ;
+ bool 
+ bStop
+ ;
+ bool 
+ bPause
+ ;
+ bool 
+ bSeek
+ ;
+ bool 
+ bNext
+ ;
+ bool 
+ bPrevious
+ ;
+ bool 
+ bRecord
+ ;
+ };
+
+/* TransportInfo  [struct, typedef; ce-only; CE 5.0..699; Av_upnp.lib] */
+struct TransportInfo
+ {
+ wstring 
+ strCurrentTransportState
+ ;
+ wstring 
+ strCurrentTransportStatus
+ ;
+ wstring 
+ strCurrentSpeed
+ ;
+ };
+
+/* TransportSettings  [struct, typedef; ce-only; CE 5.0..699; Av_upnp.lib] */
+struct TransportSettings
+ {
+ wstring 
+ strPlayMode
+ ;
+ wstring 
+ strRecQualityMode
+ ;
+ };
+
+/* UPnPAVError  [enum; ce-only; CE 5.0..699; Av_upnp.lib] */
+enum UPnPAVError
+{
+ SUCCESS_AV = 0,
+ // Internal AV Toolkit only errors
+ ERROR_AV_POINTER = -1,
+ ERROR_AV_OOM = -2,
+ ERROR_AV_INVALID_INSTANCE = -3,
+ ERROR_AV_INVALID_STATEVAR = -4,
+ ERROR_AV_ALREADY_INITED = -5,
+ // Internal AV Toolkit Control Point errors
+ ERROR_AV_NONEXISTANT_SERVICE = -6,
+ ERROR_AV_NO_MORE_ITEMS = -7,
+ ERROR_AV_UPNP_ERROR = -8,
+ ERROR_AV_INVALID_OUT_ARGUMENTS = -9,
+ // Standard UPnP Errors
+ ERROR_AV_UPNP_INVALID_ACTION = FAULT_INVALID_ACTION,
+ ERROR_AV_UPNP_ACTION_FAILED = FAULT_DEVICE_INTERNAL_ERROR,
+ // ConnectionManager Errors
+ ERROR_AV_UPNP_CM_INCOMPATIBLE_PROTOCOL = 701,
+ ERROR_AV_UPNP_CM_INCOMPATIBLE_DIRECTION = 702,
+ ERROR_AV_UPNP_CM_INSUFFICIENT_NET_RESOURCES = 703,
+ ERROR_AV_UPNP_CM_LOCAL_RESTRICTIONS = 704,
+ ERROR_AV_UPNP_CM_ACCESS_DENIED = 705,
+ ERROR_AV_UPNP_CM_INVALID_CONNECTION_REFERENCE = 706,
+ ERROR_AV_UPNP_CM_NOT_IN_NETWORK = 707,
+ // AVTransport Errors
+ ERROR_AV_UPNP_AVT_INVALID_TRANSITION = 701,
+ ERROR_AV_UPNP_AVT_NO_CONTENTS = 702,
+ ERROR_AV_UPNP_AVT_READ_ERROR = 703,
+ ERROR_AV_UPNP_AVT_UNSUPPORTED_PLAY_FORMAT = 704,
+ ERROR_AV_UPNP_AVT_TRANSPORT_LOCKED = 705,
+ ERROR_AV_UPNP_AVT_WRITE_ERROR = 706,
+ ERROR_AV_UPNP_AVT_PROTECTED_MEDIA = 707,
+ ERROR_AV_UPNP_AVT_UNSUPPORTED_REC_FORMAT = 708,
+ ERROR_AV_UPNP_AVT_FULL_MEDIA = 709,
+ ERROR_AV_UPNP_AVT_UNSUPPORTED_SEEK_MODE = 710,
+ ERROR_AV_UPNP_AVT_ILLEGAL_SEEK_TARGET = 711,
+ ERROR_AV_UPNP_AVT_UNSUPPORTED_PLAY_MODE = 712,
+ ERROR_AV_UPNP_AVT_UNSUPPORTED_REC_QUALITY = 713,
+ ERROR_AV_UPNP_AVT_ILLEGAL_MIME = 714,
+ ERROR_AV_UPNP_AVT_CONTENT_BUSY = 715,
+ ERROR_AV_UPNP_AVT_RESOURCE_NOT_FOUND = 716,
+ ERROR_AV_UPNP_AVT_UNSUPPORTED_PLAY_SPEED = 717,
+ ERROR_AV_UPNP_AVT_INVALID_INSTANCE_ID = 718,
+ // RenderingControl Errors
+ ERROR_AV_UPNP_RC_INVALID_PRESET_NAME = 701,
+ ERROR_AV_UPNP_RC_INVALID_INSTANCE_ID = 702,
+ // ContentDirectory Errors
+ ERROR_AV_UPNP_CD_NO_SUCH_OBJECT = 701,
+ ERROR_AV_UPNP_CD_INVALID_CURRENTTAGVALUE = 702,
+ ERROR_AV_UPNP_CD_INVALID_NEWTAGVALUE = 703,
+ ERROR_AV_UPNP_CD_REQUIRED_TAG_DELETE = 704,
+ ERROR_AV_UPNP_CD_READONLY_TAG_UPDATE = 705,
+ ERROR_AV_UPNP_CD_PARAMETER_NUM_MISMATCH = 706,
+ ERROR_AV_UPNP_CD_BAD_SEARCH_CRITERIA = 708,
+ ERROR_AV_UPNP_CD_BAD_SORT_CRITERIA = 709,
+ ERROR_AV_UPNP_CD_NO_SUCH_CONTAINER = 710,
+ ERROR_AV_UPNP_CD_RESTRICTED_OBJECT = 711,
+ ERROR_AV_UPNP_CD_BAD_METADATA = 712,
+ ERROR_AV_UPNP_CD_RESTRICTED_PARENT_OBJECT = 713,
+ ERROR_AV_UPNP_CD_NO_SUCH_SOURCE_RESOURCE = 714,
+ ERROR_AV_UPNP_CD_SOURCE_RESOURCE_ACCESS_DENIED = 715,
+ ERROR_AV_UPNP_CD_TRANSFER_BUSY = 716,
+ ERROR_AV_UPNP_CD_NO_SUCH_FILE_TRANSFER = 717,
+ ERROR_AV_UPNP_CD_NO_SUCH_DESTINATION_RESOURCE = 718,
+ ERROR_AV_UPNP_CD_DESTINATION_RESOURCE_ACCESS_DENIED = 719,
+ ERROR_AV_UPNP_CD_REQUEST_FAILED = 720
+};
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+
+/* IAVTransport::GetCurrentTransportActions  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetCurrentTransportActions(
+ TransportActions* pActions
+) = 0;
+
+/* IAVTransport::GetDeviceCapabilities  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetDeviceCapabilities(
+ DeviceCapabilities* pDeviceCapabilities
+) = 0;
+
+/* IAVTransport::GetMediaInfo  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetMediaInfo(
+ MediaInfo* pMediaInfo
+) = 0;
+
+/* IAVTransport::GetPositionInfo  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetPositionInfo(
+ PositionInfo* pPositionInfo
+) = 0;
+
+/* IAVTransport::GetTransportInfo  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetTransportInfo(
+ TransportInfo* pTransportInfo
+) = 0;
+
+/* IAVTransport::GetTransportSettings  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetTransportSettings(
+ TransportSettings* pTransportSettings
+) = 0;
+
+/* IAVTransport::InvokeVendorAction  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD InvokeVendorAction(
+ LPCWSTR pszActionName,
+ DISPPARAMS* pdispparams, 
+ VARIANT* pvarResult
+) = 0;
+
+/* IAVTransport::Next  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD Next() = 0;
+
+/* IAVTransport::Pause  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD Pause() = 0;
+
+/* IAVTransport::Play  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD Play(
+ LPCWSTR pszSpeed
+) = 0;
+
+/* IAVTransport::Previous  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD Previous() = 0;
+
+/* IAVTransport::Record  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD Record() = 0;
+
+/* IAVTransport::Seek  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD Seek(
+ LPCWSTR pszUnit,
+ LPCWSTR pszTarget
+) = 0;
+
+/* IAVTransport::SetAVTransportURI  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD SetAVTransportURI(
+ LPCWSTR pszCurrentURI,
+ LPCWSTR pszCurrentURIMetaData
+) = 0;
+
+/* IAVTransport::SetNextAVTransportURI  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD SetNextAVTransportURI(
+ LPCWSTR pszNextURI,
+ LPCWSTR pszNextURIMetaData
+) = 0;
+
+/* IAVTransport::SetPlayMode  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD SetPlayMode(
+ LPCWSTR pszNewPlayMode
+) = 0;
+
+/* IAVTransport::SetRecordQualityMode  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD SetRecordQualityMode(
+ LPCWSTR pszNewRecordQualityMode
+) = 0;
+
+/* IAVTransport::Stop  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD Stop() = 0;
+
+/* IConnectionManager::ConnectionComplete  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD ConnectionComplete(
+ long ConnectionID
+) = 0;
+
+/* IConnectionManager::GetCurrentConnectionInfo  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetCurrentConnectionInfo(
+ long ConnectionID,
+ ConnectionInfo* pConnectionInfo
+) = 0;
+
+/* IConnectionManager::GetFirstConnectionID  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetFirstConnectionID(
+ long* pConnectionID
+) = 0;
+
+/* IConnectionManager::GetNextConnectionID  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetNextConnectionID(
+ long* pConnectionID
+) = 0;
+
+/* IConnectionManager::GetProtocolInfo  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetProtocolInfo(
+ wstring* pstrSourceProtocolInfo,
+ wstring* pstrSinkProtocolInfo
+) = 0;
+
+/* IConnectionManager::InvokeVendorAction  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD InvokeVendorAction(
+ LPCWSTR pszActionName,
+ DISPPARAMS* pdispparams, 
+ VARIANT* pvarResult
+) = 0;
+
+/* IConnectionManager::PrepareForConnection  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD PrepareForConnection(
+ LPCWSTR pszRemoteProtocolInfo,
+ LPCWSTR pszPeerConnectionManager,
+ long PeerConnectionID,
+ DIRECTION Direction,
+ long* pConnectionID,
+ IAVTransport** ppAVTransport,
+ IRenderingControl** ppRenderingControl
+) = 0;
+
+/* IConnectionManagerImpl::AddSinkProtocol  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD AddSinkProtocol(
+ LPCWSTR pszProtocolInfo
+);
+
+/* IConnectionManagerImpl::AddSourceProtocol  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD AddSourceProtocol(
+ LPCWSTR pszProtocolInfo
+);
+
+/* IConnectionManagerImpl::CreateConnection  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD CreateConnection(
+ LPCWSTR pszRemoteProtocolInfo,
+ DIRECTION Direction,
+ long ConnectionID,
+ IAVTransport** ppAVTransport,
+ IRenderingControl** ppRenderingControl
+) = 0;
+
+/* IConnectionManagerImpl::EndConnection  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD EndConnection(
+ long ConnectionID
+) = 0;
+
+/* IConnectionManagerImpl::RemoveSinkProtocol  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD RemoveSinkProtocol(
+ LPCWSTR pszProtocolInfo
+);
+
+/* IConnectionManagerImpl::RemoveSourceProtocol  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD RemoveSourceProtocol(
+ LPCWSTR pszProtocolInfo
+);
+
+/* IContentDirectory::BrowseChildren  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD BrowseChildren(
+ LPCWSTR pszObjectID,
+ LPCWSTR pszFilter,
+ unsigned long StartingIndex,
+ unsigned long RequestedCount,
+ LPCWSTR pszSortCriteria,
+ wstring* pstrResult,
+ unsigned long* pNumberReturned,
+ unsigned long* pTotalMatches,
+ unsigned long* pUpdateID
+) = 0;
+
+/* IContentDirectory::BrowseMetadata  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD BrowseMetadata(
+ LPCWSTR pszObjectID,
+ LPCWSTR pszFilter,
+ wstring* pstrResult,
+ unsigned long* pUpdateID
+) = 0;
+
+/* IContentDirectory::CreateObject  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD CreateObject(
+ LPCWSTR pszContainerID,
+ LPCWSTR pszElements,
+ wstring* pstrObjectID,
+ wstring* pstrResult
+) = 0;
+
+/* IContentDirectory::CreateReference  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD CreateReference(
+ LPCWSTR pszContainerID,
+ LPCWSTR pszObjectID,
+ wstring* pstrNewID
+) = 0;
+
+/* IContentDirectory::DeleteResource  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD DeleteResource(
+ LPCWSTR pszResourceURI
+) = 0;
+
+/* IContentDirectory::DestroyObject  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD DestroyObject(
+ LPCWSTR pszObjectID
+) = 0;
+
+/* IContentDirectory::ExportResource  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD ExportResource(
+ LPCWSTR pszSourceURI,
+ LPCWSTR pszDestinationURI,
+ unsigned long* pTransferID
+) = 0;
+
+/* IContentDirectory::GetSearchCapabilities  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetSearchCapabilities(
+ wstring* pstrSearchCaps
+) = 0;
+
+/* IContentDirectory::GetSortCapabilities  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetSortCapabilities(
+ wstring* pstrSortCaps
+) = 0;
+
+/* IContentDirectory::GetSystemUpdateID  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetSystemUpdateID(
+ unsigned long* pId
+) = 0;
+
+/* IContentDirectory::GetTransferProgress  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetTransferProgress(
+ unsigned long TransferID,
+ wstring* pstrTransferStatus,
+ wstring* pstrTransferLength,
+ wstring* pstrTransferTotal
+) = 0;
+
+/* IContentDirectory::ImportResource  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD ImportResource(
+ LPCWSTR pszSourceURI,
+ LPCWSTR pszDestinationURI,
+ unsigned long* pTransferID
+) = 0;
+
+/* IContentDirectory::InvokeVendorAction  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD InvokeVendorAction(
+ LPCWSTR pszActionName,
+ DISPPARAMS* pdispparams, 
+ VARIANT* pvarResult
+) = 0;
+
+/* IContentDirectory::Search  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD Search(
+ LPCWSTR pszContainerID,
+ LPCWSTR pszSearchCriteria,
+ LPCWSTR pszFilter,
+ unsigned long StartingIndex,
+ unsigned long RequestedCount,
+ LPCWSTR pszSortCriteria,
+ wstring* pstrResult,
+ unsigned long* pNumberReturned,
+ unsigned long* pTotalMatches,
+ unsigned long* pUpdateID
+) = 0;
+
+/* IContentDirectory::StopTransferResource  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD StopTransferResource(
+ unsigned long TransferID
+) = 0;
+
+/* IContentDirectory::UpdateObject  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD UpdateObject(
+ LPCWSTR pszObjectID,
+ LPCWSTR pszCurrentTagValue,
+ LPCWSTR pszNewTagValue
+) = 0;
+
+/* IEventSink::OnStateChanged  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD OnStateChanged(
+ LPCWSTR pszStateVariableName,
+ LPCWSTR pszValue
+) = 0;
+virtual DWORD OnStateChanged(
+ LPCWSTR pszStateVariableName,
+ long nValue
+) = 0;
+virtual DWORD OnStateChanged(
+ LPCWSTR pszStateVariableName,
+ LPCWSTR pszChannel,
+ long nValue
+) = 0;
+
+/* IEventSource::Advise  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD Advise(
+ IEventSink *pSubscriber
+) = 0;
+
+/* IEventSource::Unadvise  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD Unadvise(
+ IEventSink* pSubscriber
+) = 0;
+
+/* IRenderingControl::GetBlueVideoBlackLevel  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetBlueVideoBlackLevel(
+ unsigned short* pBlueVideoBlackLevel
+) = 0;
+
+/* IRenderingControl::GetBlueVideoGain  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetBlueVideoGain(
+ unsigned short* pBlueVideoGain
+) = 0;
+
+/* IRenderingControl::GetBrightness  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetBrightness(
+ unsigned short* pBrightness
+) = 0;
+
+/* IRenderingControl::GetColorTemperature  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetColorTemperature(
+ unsigned short* pColorTemperature
+) = 0;
+
+/* IRenderingControl::GetContrast  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetContrast(
+ unsigned short* pContrast
+) = 0;
+
+/* IRenderingControl::GetGreenVideoBlackLevel  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetGreenVideoBlackLevel(
+ unsigned short* pGreenVideoBlackLevel
+) = 0;
+
+/* IRenderingControl::GetGreenVideoGain  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetGreenVideoGain(
+ unsigned short* pGreenVideoGain
+) = 0;
+
+/* IRenderingControl::GetHorizontalKeystone  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetHorizontalKeystone(
+ short* pHorizontalKeystone
+) = 0;
+
+/* IRenderingControl::GetLoudness  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetLoudness(
+ LPCWSTR pszChannel,
+ bool* pLoudness
+) = 0;
+
+/* IRenderingControl::GetMute  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetMute(
+ LPCWSTR pszChannel,
+ bool* pMute
+) = 0;
+
+/* IRenderingControl::GetRedVideoBlackLevel  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetRedVideoBlackLevel(
+ unsigned short* pRedVideoBlackLevel
+) = 0;
+
+/* IRenderingControl::GetRedVideoGain  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetRedVideoGain(
+ unsigned short* pRedVideoGain
+) = 0;
+
+/* IRenderingControl::GetSharpness  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetSharpness(
+ unsigned short* pSharpness
+) = 0;
+
+/* IRenderingControl::GetVerticalKeystone  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetVerticalKeystone(
+ short* pVerticalKeystone
+) = 0;
+
+/* IRenderingControl::GetVolume  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetVolume(
+ LPCWSTR pszChannel,
+ unsigned short* pVolume
+) = 0;
+
+/* IRenderingControl::GetVolumeDB  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetVolumeDB(
+ LPCWSTR pszChannel,
+ short* pVolumeDB
+) = 0;
+
+/* IRenderingControl::GetVolumeDBRange  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD GetVolumeDBRange(
+ LPCWSTR pszChannel,
+ short* pMinValue,
+ short* pMaxValue
+) = 0;
+
+/* IRenderingControl::InvokeVendorAction  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD InvokeVendorAction(
+ LPCWSTR pszActionName,
+ DISPPARAMS* pdispparams, 
+ VARIANT* pvarResult
+) = 0;
+
+/* IRenderingControl::ListPresets  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD ListPresets(
+ wstring* pstrPresetNameList
+) = 0;
+
+/* IRenderingControl::SelectPreset  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD SelectPreset(
+ LPCWSTR pszPresetName
+) = 0;
+
+/* IRenderingControl::SetBlueVideoBlackLevel  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD SetBlueVideoBlackLevel(
+ unsigned short BlueVideoBlackLevel
+) = 0;
+
+/* IRenderingControl::SetBlueVideoGain  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD SetBlueVideoGain(
+ unsigned short BlueVideoGain
+) = 0;
+
+/* IRenderingControl::SetBrightness  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD SetBrightness(
+ unsigned short Brightness
+) = 0;
+
+/* IRenderingControl::SetColorTemperature  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD SetColorTemperature(
+ unsigned short ColorTemperature
+) = 0;
+
+/* IRenderingControl::SetContrast  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD SetContrast(
+ unsigned short Contrast
+) = 0;
+
+/* IRenderingControl::SetGreenVideoBlackLevel  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD SetGreenVideoBlackLevel(
+ unsigned short GreenVideoBlackLevel
+) = 0;
+
+/* IRenderingControl::SetGreenVideoGain  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD SetGreenVideoGain(
+ unsigned short GreenVideoGain
+) = 0;
+
+/* IRenderingControl::SetHorizontalKeystone  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD SetHorizontalKeystone(
+ short HorizontalKeystone
+) = 0;
+
+/* IRenderingControl::SetLoudness  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD SetLoudness(
+ LPCWSTR pszChannel,
+ bool Loudness
+) = 0;
+
+/* IRenderingControl::SetMute  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD SetMute(
+ LPCWSTR pszChannel,
+ bool Mute
+) = 0;
+
+/* IRenderingControl::SetRedVideoBlackLevel  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD SetRedVideoBlackLevel(
+ unsigned short RedVideoBlackLevel
+) = 0;
+
+/* IRenderingControl::SetRedVideoGain  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD SetRedVideoGain(
+ unsigned short RedVideoGain
+) = 0;
+
+/* IRenderingControl::SetSharpness  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD SetSharpness(
+ unsigned short Sharpness
+) = 0;
+
+/* IRenderingControl::SetVerticalKeystone  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD SetVerticalKeystone(
+ short VerticalKeystone
+) = 0;
+
+/* IRenderingControl::SetVolume  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD SetVolume(
+ LPCWSTR pszChannel,
+ unsigned short Volume
+) = 0;
+
+/* IRenderingControl::SetVolumeDB  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual DWORD SetVolumeDB(
+ LPCWSTR pszChannel,
+ short VolumeDB
+) = 0;
+
+/* IVirtualService::Release  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+virtual void Release() = 0;
+
+/* MediaRendererDevice::GetConnectionManager  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+DWORD GetConnectionManager(
+ IConnectionManager** ppConnectionManager,
+ wstring* pstrConnectionmanager
+);
+
+/* MediaServerDevice::GetConnectionManager  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+DWORD GetConnectionManager(
+ IConnectionManager** ppIConnectionManager,
+ wstring* pstrIConnectionManager
+);
+
+/* MediaServerDevice::GetContentDirectory  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+DWORD GetContentDirectory(
+ IContentDirectory** ppContentDirectory
+);
+
+/* object::GetProperty  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+bool GetProperty(
+ LPCWSTR pszName ,
+ wstring* pValue ,
+ unsigned long nIndex = 0
+);
+bool GetProperty(
+ LPCWSTR pszName ,
+ unsigned long* pValue ,
+ unsigned long nIndex = 0
+);
+bool GetProperty(
+ LPCWSTR pszName ,
+ signed long* pValue ,
+ unsigned long nIndex = 0
+ );
+bool GetProperty(
+ LPCWSTR pszName ,
+ bool* pValue ,
+ unsigned long nIndex = 0
+ );
+
+/* parser::AddNamespaceMapping  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+bool AddNamespaceMapping(
+ LPCWSTR pszNamespace, 
+ LPCWSTR pszPrefix
+);
+
+/* parser::GetFirstObject  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+bool GetFirstObject(
+ LPCWSTR pszXml, 
+ object* pObj
+);
+
+/* parser::GetNextObject  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+bool GetNextObject(
+ object* pObj
+);
+
+/* wstring::append  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+bool append(
+ const wstring& _X
+);
+bool append(
+ const wchar_t* _S
+);
+
+/* wstring::assign  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+bool assign(
+ const wstring& _X
+);
+bool assign(
+ const wchar_t* _S
+);
+
+/* wstring::clear  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+void clear();
+
+/* wstring::compare  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+int compare(
+ const wstring& _X
+) const;
+int compare(
+ const wchar_t* _S
+) const;
+
+/* wstring::reserve  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+bool reserve(
+ size_type _N
+);
+
+/* wstring::resize  [function; ce-only; CE 5.0..699; Av_upnp.lib] */
+bool resize(
+ size_type _N
+);
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* struct */
+struct TransportActions{ bool bPlay; bool bStop; bool bPause; bool bSeek; bool bNext; bool bPrevious; bool bRecord;};
+struct PositionInfo{ unsigned long nTrack; wstring strTrackDuration; wstring strTrackMetaData; wstring strTrackURI; wstring strRelTime; wstring strAbsTime; long nRelCount; long nAbsCount;};
+struct object
+{
+  bool bContainer;
+  wstring strID;
+  wstring strParentID;
+  wstring strTitle;
+  wstring strClass;
+  bool bRestricted;
+};
+struct TransportInfo{ wstring strCurrentTransportState; wstring strCurrentTransportStatus; wstring strCurrentSpeed;};
+struct DeviceCapabilities{ wstring strPossiblePlayMedia; wstring strPossibleRecMedia; wstring strPossibleRecQualityModes;};
+struct TransportSettings{ wstring strPlayMode; wstring strRecQualityMode;};
+struct ConnectionInfo{ IRenderingControl* pRenderingControl; IAVTransport* pAVTransport; wstring strRemoteProtocolInfo; wstring strPeerConnectionManager; long nPeerConnectionID; DIRECTION Direction; wstring strStatus;};
+struct MediaInfo{ unsigned long nNrTracks; wstring strMediaDuration; wstring strCurrentURI; wstring strCurrentURIMetaData; wstring strNextURI; wstring strNextURIMetaData; wstring strPlayMedium; wstring strRecordMedium; wstring strWriteStatus;};
+
+/* function */
+bool AddNamespaceMapping(  LPCWSTR pszNamespace,  LPCWSTR pszPrefix  );
+DWORD AddSinkProtocol( LPCWSTR pszProtocolInfo );
+DWORD AddSourceProtocol( LPCWSTR pszProtocolInfo );
+virtual DWORD BrowseChildren(  LPCWSTR pszObjectID,  LPCWSTR pszFilter,  unsigned long StartingIndex,  unsigned long RequestedCount,  LPCWSTR pszSortCriteria,  wstring* pstrResult,  unsigned long* pNumberReturned,  unsigned long* pTotalMatches,  unsigned long* pUpdateID  ) = 0;
+virtual DWORD BrowseMetadata(  LPCWSTR pszObjectID,  LPCWSTR pszFilter,  wstring* pstrResult,  unsigned long* pUpdateID  ) = 0;
+virtual DWORD ConnectionComplete(  long ConnectionID  ) = 0;
+virtual DWORD CreateConnection(  LPCWSTR pszRemoteProtocolInfo,  DIRECTION Direction,  long ConnectionID,  IAVTransport** ppAVTransport,  IRenderingControl** ppRenderingControl  ) = 0;
+virtual DWORD CreateObject(  LPCWSTR pszContainerID,  LPCWSTR pszElements,  wstring* pstrObjectID,  wstring* pstrResult  ) = 0;
+virtual DWORD CreateReference(  LPCWSTR pszContainerID,  LPCWSTR pszObjectID,  wstring* pstrNewID  ) = 0;
+virtual DWORD DeleteResource(  LPCWSTR pszResourceURI  ) = 0;
+virtual DWORD DestroyObject(  LPCWSTR pszObjectID  ) = 0;
+virtual DWORD EndConnection(  long ConnectionID  ) = 0;
+virtual DWORD ExportResource(  LPCWSTR pszSourceURI,  LPCWSTR pszDestinationURI,  unsigned long* pTransferID  ) = 0;
+virtual DWORD GetBlueVideoBlackLevel(  unsigned short* pBlueVideoBlackLevel  ) = 0;
+virtual DWORD GetBlueVideoGain(  unsigned short* pBlueVideoGain  ) = 0;
+virtual DWORD GetBrightness(  unsigned short* pBrightness  ) = 0;
+virtual DWORD GetColorTemperature(  unsigned short* pColorTemperature  ) = 0;
+DWORD GetConnectionManager( IConnectionManager** ppConnectionManager, wstring* pstrConnectionmanager );
+DWORD GetContentDirectory( IContentDirectory** ppContentDirectory );
+virtual DWORD GetContrast(  unsigned short* pContrast  ) = 0;
+virtual DWORD GetCurrentConnectionInfo(  long ConnectionID,  ConnectionInfo* pConnectionInfo  ) = 0;
+virtual DWORD GetCurrentTransportActions(  TransportActions* pActions  ) = 0;
+virtual DWORD GetDeviceCapabilities(  DeviceCapabilities* pDeviceCapabilities  ) = 0;
+virtual DWORD GetFirstConnectionID(  long* pConnectionID  ) = 0;
+bool GetFirstObject(  LPCWSTR pszXml,  object* pObj  );
+virtual DWORD GetGreenVideoBlackLevel(  unsigned short* pGreenVideoBlackLevel  ) = 0;
+virtual DWORD GetGreenVideoGain(  unsigned short* pGreenVideoGain  ) = 0;
+virtual DWORD GetHorizontalKeystone(  short* pHorizontalKeystone  ) = 0;
+virtual DWORD GetLoudness(  LPCWSTR pszChannel,  bool* pLoudness  ) = 0;
+virtual DWORD GetMediaInfo(  MediaInfo* pMediaInfo  ) = 0;
+virtual DWORD GetMute(  LPCWSTR pszChannel,  bool* pMute  ) = 0;
+virtual DWORD GetNextConnectionID(  long* pConnectionID  ) = 0;
+bool GetNextObject(  object* pObj  );
+virtual DWORD GetPositionInfo(  PositionInfo* pPositionInfo  ) = 0;
+virtual DWORD GetProtocolInfo(  wstring* pstrSourceProtocolInfo,  wstring* pstrSinkProtocolInfo  ) = 0;
+virtual DWORD GetRedVideoBlackLevel(  unsigned short* pRedVideoBlackLevel  ) = 0;
+virtual DWORD GetRedVideoGain(  unsigned short* pRedVideoGain  ) = 0;
+virtual DWORD GetSearchCapabilities(  wstring* pstrSearchCaps  ) = 0;
+virtual DWORD GetSharpness(  unsigned short* pSharpness  ) = 0;
+virtual DWORD GetSortCapabilities(  wstring* pstrSortCaps  ) = 0;
+virtual DWORD GetSystemUpdateID(  unsigned long* pId  ) = 0;
+virtual DWORD GetTransferProgress(  unsigned long TransferID,  wstring* pstrTransferStatus,  wstring* pstrTransferLength,  wstring* pstrTransferTotal  ) = 0;
+virtual DWORD GetTransportInfo(  TransportInfo* pTransportInfo  ) = 0;
+virtual DWORD GetTransportSettings(  TransportSettings* pTransportSettings  ) = 0;
+virtual DWORD GetVerticalKeystone(  short* pVerticalKeystone  ) = 0;
+virtual DWORD GetVolumeDB(  LPCWSTR pszChannel,  short* pVolumeDB  ) = 0;
+virtual DWORD GetVolumeDBRange(  LPCWSTR pszChannel,  short* pMinValue,  short* pMaxValue  ) = 0;
+virtual DWORD ImportResource(  LPCWSTR pszSourceURI,  LPCWSTR pszDestinationURI,  unsigned long* pTransferID  ) = 0;
+virtual DWORD InvokeVendorAction(  LPCWSTR pszActionName,  DISPPARAMS* pdispparams,  VARIANT* pvarResult  ) = 0;
+virtual DWORD ListPresets(  wstring* pstrPresetNameList  ) = 0;
+virtual DWORD PrepareForConnection(  LPCWSTR pszRemoteProtocolInfo,  LPCWSTR pszPeerConnectionManager,  long PeerConnectionID,  DIRECTION Direction,  long* pConnectionID,  IAVTransport** ppAVTransport,  IRenderingControl** ppRenderingControl  ) = 0;
+virtual DWORD Previous() = 0;
+DWORD RemoveSinkProtocol( LPCWSTR pszProtocolInfo );
+DWORD RemoveSourceProtocol( LPCWSTR pszProtocolInfo );
+virtual DWORD Search(  LPCWSTR pszContainerID,  LPCWSTR pszSearchCriteria,  LPCWSTR pszFilter,  unsigned long StartingIndex,  unsigned long RequestedCount,  LPCWSTR pszSortCriteria,  wstring* pstrResult,  unsigned long* pNumberReturned,  unsigned long* pTotalMatches,  unsigned long* pUpdateID  ) = 0;
+virtual DWORD SelectPreset(  LPCWSTR pszPresetName  ) = 0;
+virtual DWORD SetAVTransportURI(  LPCWSTR pszCurrentURI,  LPCWSTR pszCurrentURIMetaData  ) = 0;
+virtual DWORD SetBlueVideoBlackLevel(  unsigned short BlueVideoBlackLevel  ) = 0;
+virtual DWORD SetBlueVideoGain(  unsigned short BlueVideoGain  ) = 0;
+virtual DWORD SetBrightness(  unsigned short Brightness  ) = 0;
+virtual DWORD SetColorTemperature(  unsigned short ColorTemperature  ) = 0;
+virtual DWORD SetContrast(  unsigned short Contrast  ) = 0;
+virtual DWORD SetGreenVideoBlackLevel(  unsigned short GreenVideoBlackLevel  ) = 0;
+virtual DWORD SetGreenVideoGain(  unsigned short GreenVideoGain  ) = 0;
+virtual DWORD SetHorizontalKeystone(  short HorizontalKeystone  ) = 0;
+virtual DWORD SetLoudness(  LPCWSTR pszChannel,  bool Loudness  ) = 0;
+virtual DWORD SetMute(  LPCWSTR pszChannel,  bool Mute  ) = 0;
+virtual DWORD SetNextAVTransportURI(  LPCWSTR pszNextURI,  LPCWSTR pszNextURIMetaData  ) = 0;
+virtual DWORD SetPlayMode(  LPCWSTR pszNewPlayMode  ) = 0;
+virtual DWORD SetRecordQualityMode(  LPCWSTR pszNewRecordQualityMode  ) = 0;
+virtual DWORD SetRedVideoBlackLevel(  unsigned short RedVideoBlackLevel  ) = 0;
+virtual DWORD SetRedVideoGain(  unsigned short RedVideoGain  ) = 0;
+virtual DWORD SetSharpness(  unsigned short Sharpness  ) = 0;
+virtual DWORD SetVerticalKeystone(  short VerticalKeystone  ) = 0;
+virtual DWORD SetVolumeDB(  LPCWSTR pszChannel,  short VolumeDB  ) = 0;
+virtual DWORD StopTransferResource(  unsigned long TransferID  ) = 0;
+virtual DWORD UpdateObject(  LPCWSTR pszObjectID,  LPCWSTR pszCurrentTagValue,  LPCWSTR pszNewTagValue  ) = 0;
+
+#endif /* _AV_UPNP_ */

@@ -1,0 +1,274 @@
+/* webvw.h -- Windows CE unified surface
+ *
+ * ONE tree for every CE generation.  Version differences use
+ * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
+ * Win32-shared entries are marked 'win32-ref'.
+ * Generated from wince-docs-corpus knowledge/ by
+ * tools/gen-include-def.py --unified.
+ * 0 constants, 62 declarations, 0 outlines, 0 base types, 0 extra macros, 60 extra decls
+ */
+#ifndef _WEBVW_
+#define _WEBVW_
+
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
+
+/* _DPIEWebBrowserEvents2::BeforeNavigate2  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+void BeforeNavigate2( IDispatch* pdisp, VARIANT* pvtURL, VARIANT* pvtFlags, VARIANT* pvtTargetFrameName, VARIANT* pvtPostData, VARIANT* pvtHeaders, VARIANT_BOOL* pvbCancel);
+
+/* _DPIEWebBrowserEvents2::CommandStateChange  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+void CommandStateChange( long lCommand, VARIANT_BOOL vbEnable);
+
+/* _DPIEWebBrowserEvents2::DocumentComplete  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+void DocumentComplete ( IDispatch* pdisp, VARIANT* pvtURL);
+
+/* _DPIEWebBrowserEvents2::DownloadBegin  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+void DownloadBegin(void);
+
+/* _DPIEWebBrowserEvents2::DownloadComplete  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+void DownloadComplete(void);
+
+/* _DPIEWebBrowserEvents2::NavigateComplete2  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+void NavigateComplete2( IDispatch* pdisp, VARIANT vtURL);
+
+/* _DPIEWebBrowserEvents2::NewWindow2  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+void NewWindow2( IDispatch** ppdisp, VARIANT_BOOL* pvbCancel);
+
+/* _DPIEWebBrowserEvents2::OnFullScreen  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+void OnFullScreen( VARIANT_BOOL vbFullScreen);
+
+/* _DPIEWebBrowserEvents2::OnMenuBar  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+void OnMenuBar( VARIANT_BOOL vbMenuBar);
+
+/* _DPIEWebBrowserEvents2::OnProgressChange  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+void OnProgressChange( long lProgress, long lProgressMax);
+
+/* _DPIEWebBrowserEvents2::OnQuit  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+void OnQuit(void);
+
+/* _DPIEWebBrowserEvents2::OnStatusBar  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+void onStatusBar( VARIANT_BOOL vbOnStatusBar);
+
+/* _DPIEWebBrowserEvents2::OnTheaterMode  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+void OnTheaterMode( VARIANT_BOOL vbOnTheaterMode);
+
+/* _DPIEWebBrowserEvents2::OnToolBar  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+void OnToolBar( VARIANT_BOOL vbOnToolBar);
+
+/* _DPIEWebBrowserEvents2::OnVisible  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+void OnVisible(void);
+
+/* _DPIEWebBrowserEvents2::PropertyChange  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+void PropertyChange( BSTR bstrProperty);
+
+/* _DPIEWebBrowserEvents2::StatusTextChange  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+void StatusTextChange( BSTR bstrText);
+
+/* _DPIEWebBrowserEvents2::TitleChange  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+void TitleChange( BSTR bstrTitle);
+
+/* IBrowser2::get_ClearTypeEnabled  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT get_ClearTypeEnabled( VARIANT_BOOL* pbClearTypeEnabled);
+
+/* IBrowser2::get_FitToWindow  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT get_FitToWindow( VARIANT_BOOL* pbFitToWindow);
+
+/* IBrowser2::get_LayoutHeight  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT get_LayoutHeight( int* piLayoutHeight);
+
+/* IBrowser2::get_LayoutWidth  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT get_LayoutWidth( int* piLayoutWidth);
+
+/* IBrowser2::get_LocationBaseURL  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT get_LocationBaseURL( BSTR* bstrBaseLocationURL);
+
+/* IBrowser2::get_PlaySounds  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT get_PlaySounds( VARIANT_BOOL* pbPlaySounds);
+
+/* IBrowser2::get_ScriptingEnabled  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT get_ScriptingEnabled( VARIANT_BOOL* pbScriptingEnabled);
+
+/* IBrowser2::get_ShowImages  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT get_ShowImages( VARIANT_BOOL* pbShowImages);
+
+/* IBrowser2::get_ZoomLevel  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT get_ZoomLevel( DWORD* pdwZoomLevel);
+
+/* IBrowser2::put_ClearTypeEnabled  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT put_ClearTypeEnabled( VARIANT_BOOL bClearTypeEnabled);
+
+/* IBrowser2::put_FitToWindow  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT put_FitToWindow( VARIANT_BOOL bFitToWindow);
+
+/* IBrowser2::put_LocationBaseURL  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT put_LocationBaseURL( BSTR bstrBaseLocationURL);
+
+/* IBrowser2::put_PlaySounds  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT put_PlaySounds( VARIANT_BOOL bPlaySounds);
+
+/* IBrowser2::put_ScriptingEnabled  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT put_ScriptingEnabled( VARIANT_BOOL bScriptingEnabled);
+
+/* IBrowser2::put_ShowImages  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT put_ShowImages( VARIANT_BOOL bShowImages);
+
+/* IBrowser2::put_ZoomLevel  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT put_ZoomLevel( DWORD dwZoomLevel);
+
+/* IBrowser3::addStyle  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT addStyle( BSTR bstrStyle);
+
+/* IBrowser3::get_ActiveXEnabled  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT get_ActiveXEnabled( VARIANT_BOOL* pvbActiveXEnabled);
+
+/* IBrowser3::get_CanCopy  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT get_CanCopy( VARIANT_BOOL* pvbCanCopy);
+
+/* IBrowser3::get_ContextMenuEnabled  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT get_ContextMenuEnabled( VARIANT_BOOL* pvbContextMenu);
+
+/* IBrowser3::get_document  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT get_document( IDispatch** ppDisp);
+
+/* IBrowser3::get_FocusRectEnabled  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT get_FocusRectEnabled( VARIANT_BOOL* pvbFocusRectEnabled);
+
+/* IBrowser3::get_IntegralPaging  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT get_IntegralPaging( VARIANT_BOOL* pvbIntegralPaging);
+
+/* IBrowser3::get_script  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT get_script( IDispatch** ppDisp);
+
+/* IBrowser3::get_SelectionEnabled  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT get_SelectionEnabled( VARIANT_BOOL* pvbSelectionEnabled);
+
+/* IBrowser3::get_SuperFitToWindow  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT get_SuperFitToWindow( VARIANT_BOOL* pbSuperFitToWindow);
+
+/* IBrowser3::put_ActiveXEnabled  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT put_ActiveXEnabled( VARIANT_BOOL vbActiveXEnabled);
+
+/* IBrowser3::put_ContextMenuEnabled  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT put_ContextMenuEnabled( VARIANT_BOOL vbContextMenu);
+
+/* IBrowser3::put_FocusRectEnabled  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT put_FocusRectEnabled( VARIANT_BOOL bFocusRectEnabled);
+
+/* IBrowser3::put_IntegralPaging  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT put_IntegralPaging( VARIANT_BOOL vbIntegralPaging);
+
+/* IBrowser3::put_SelectionEnabled  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT put_SelectionEnabled( VARIANT_BOOL vbSelectionEnabled);
+
+/* IBrowser3::put_SuperFitToWindow  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT put_SuperFitToWindow( VARIANT_BOOL bSuperFitToWindow);
+
+/* IBrowser::get_Busy  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT get_Busy(BOOL* pVal);
+
+/* IBrowser::get_CBrowserPointer  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT get_CBrowserPointer( long* pVal);
+
+/* IBrowser::get_IsFrame  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT get_IsFrame( VARIANT_BOOL* pvbIsFrame);
+
+/* IBrowser::get_MarginHeight  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT get_MarginHeight( long* pVal);
+
+/* IBrowser::get_MarginWidth  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT get_MarginWidth( long* pVal);
+
+/* IBrowser::get_ScrollStyle  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT get_ScrollStyle ( long* pVal);
+
+/* IBrowser::get_SelectedCodepage  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT get_SelectedCodepage( long* pVal);
+
+/* IBrowser::put_IsFrame  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT put_IsFrame( VARIANT_BOOL vbIsFrame);
+
+/* IBrowser::put_MarginHeight  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT put_MarginHeight( long newVal);
+
+/* IBrowser::put_MarginWidth  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT put_MarginWidth( long newVal);
+
+/* IBrowser::put_ScrollStyle  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT put_ScrollStyle ( long newVal);
+
+/* IBrowser::put_SelectedCodepage  [function; ce-only; CE 5.0..599; wvuuid.lib] */
+HRESULT put_SelectedCodepage( long newVal);
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* function */
+void BeforeNavigate2( IDispatch* pdisp, VARIANT* pvtURL, VARIANT* pvtFlags, VARIANT* pvtTargetFrameName, VARIANT* pvtPostData, VARIANT* pvtHeaders, VARIANT_BOOL* pvbCancel);
+void CommandStateChange( long lCommand, VARIANT_BOOL vbEnable);
+void DocumentComplete ( IDispatch* pdisp, VARIANT* pvtURL);
+void DownloadBegin(void);
+void DownloadComplete(void);
+void NavigateComplete2( IDispatch* pdisp, VARIANT vtURL);
+void NewWindow2( IDispatch** ppdisp, VARIANT_BOOL* pvbCancel);
+void OnFullScreen( VARIANT_BOOL vbFullScreen);
+void OnMenuBar( VARIANT_BOOL vbMenuBar);
+void OnProgressChange( long lProgress, long lProgressMax);
+void OnQuit(void);
+void OnTheaterMode( VARIANT_BOOL vbOnTheaterMode);
+void OnToolBar( VARIANT_BOOL vbOnToolBar);
+void OnVisible(void);
+void PropertyChange( BSTR bstrProperty);
+void StatusTextChange( BSTR bstrText);
+void TitleChange( BSTR bstrTitle);
+HRESULT get_ActiveXEnabled( VARIANT_BOOL* pvbActiveXEnabled);
+HRESULT get_Busy(BOOL* pVal);
+HRESULT get_CBrowserPointer( long* pVal);
+HRESULT get_CanCopy( VARIANT_BOOL* pvbCanCopy);
+HRESULT get_ClearTypeEnabled( VARIANT_BOOL* pbClearTypeEnabled);
+HRESULT get_ContextMenuEnabled( VARIANT_BOOL* pvbContextMenu);
+HRESULT get_FitToWindow( VARIANT_BOOL* pbFitToWindow);
+HRESULT get_FocusRectEnabled( VARIANT_BOOL* pvbFocusRectEnabled);
+HRESULT get_IntegralPaging( VARIANT_BOOL* pvbIntegralPaging);
+HRESULT get_IsFrame( VARIANT_BOOL* pvbIsFrame);
+HRESULT get_LayoutHeight( int* piLayoutHeight);
+HRESULT get_LayoutWidth( int* piLayoutWidth);
+HRESULT get_LocationBaseURL( BSTR* bstrBaseLocationURL);
+HRESULT get_MarginHeight( long* pVal);
+HRESULT get_MarginWidth( long* pVal);
+HRESULT get_PlaySounds( VARIANT_BOOL* pbPlaySounds);
+HRESULT get_ScriptingEnabled( VARIANT_BOOL* pbScriptingEnabled);
+HRESULT get_ScrollStyle ( long* pVal);
+HRESULT get_SelectedCodepage( long* pVal);
+HRESULT get_SelectionEnabled( VARIANT_BOOL* pvbSelectionEnabled);
+HRESULT get_ShowImages( VARIANT_BOOL* pbShowImages);
+HRESULT get_SuperFitToWindow( VARIANT_BOOL* pbSuperFitToWindow);
+HRESULT get_ZoomLevel( DWORD* pdwZoomLevel);
+HRESULT get_document( IDispatch** ppDisp);
+HRESULT get_script( IDispatch** ppDisp);
+HRESULT put_ActiveXEnabled( VARIANT_BOOL vbActiveXEnabled);
+HRESULT put_ClearTypeEnabled( VARIANT_BOOL bClearTypeEnabled);
+HRESULT put_ContextMenuEnabled( VARIANT_BOOL vbContextMenu);
+HRESULT put_FitToWindow( VARIANT_BOOL bFitToWindow);
+HRESULT put_FocusRectEnabled( VARIANT_BOOL bFocusRectEnabled);
+HRESULT put_IntegralPaging( VARIANT_BOOL vbIntegralPaging);
+HRESULT put_IsFrame( VARIANT_BOOL vbIsFrame);
+HRESULT put_LocationBaseURL( BSTR bstrBaseLocationURL);
+HRESULT put_MarginHeight( long newVal);
+HRESULT put_MarginWidth( long newVal);
+HRESULT put_PlaySounds( VARIANT_BOOL bPlaySounds);
+HRESULT put_ScriptingEnabled( VARIANT_BOOL bScriptingEnabled);
+HRESULT put_ScrollStyle ( long newVal);
+HRESULT put_SelectedCodepage( long newVal);
+HRESULT put_SelectionEnabled( VARIANT_BOOL vbSelectionEnabled);
+HRESULT put_ShowImages( VARIANT_BOOL bShowImages);
+HRESULT put_SuperFitToWindow( VARIANT_BOOL bSuperFitToWindow);
+HRESULT put_ZoomLevel( DWORD dwZoomLevel);
+
+#endif /* _WEBVW_ */

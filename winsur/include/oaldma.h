@@ -1,0 +1,223 @@
+/* oaldma.h -- Windows CE unified surface
+ *
+ * ONE tree for every CE generation.  Version differences use
+ * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
+ * Win32-shared entries are marked 'win32-ref'.
+ * Generated from wince-docs-corpus knowledge/ by
+ * tools/gen-include-def.py --unified.
+ * 1 constants, 19 declarations, 2 outlines, 0 base types, 0 extra macros, 2 extra decls
+ */
+#ifndef _OALDMA_
+#define _OALDMA_
+
+
+/* ==================================================================
+ * constants (one evidence comment per #define; the
+ * #if of a batch covers every #define in it; values
+ * that differ per generation pool into #if/#elif
+ * chains with the evidence after the #endif)
+ * ================================================================ */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+#define DMA_TRANSFER_COMPLETE 0
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+
+/* CE_DMA_ADAPTER  [struct; ce-only; CE 6.0..699] */
+
+/* DEVICE_DMA_REQUIREMENT_INFO  [struct; ce-only; CE 6.0..699] */
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+
+/* CE_DMA_BUFFER_BLOCK  [struct; ce-only; CE 6.0..699] */
+typedef struct _CE_DMA_BUFFER_BLOCK {
+ DWORD dwLength;
+ PVOID virtualAddress;
+ PHYSICAL_ADDRESS physicalAddress;
+} CE_DMA_BUFFER_BLOCK, *PCE_DMA_BUFFER_BLOCK;
+
+/* DMA_STATUS_CODE  [enum; ce-only; CE 6.0..699] */
+typedef enum _DMA_STATUS {
+ DMA_TRANSFER_COMPLETE = 0,
+ DMA_TRANSFER_IN_PROGRESS,
+ DMA_TRANSFER_IN_QUEUE,
+ DMA_TRANSFER_COMPLETE_WITH_ERROR,
+ DMA_TRANSFER_COMPLETE_WITH_CANCELED
+} DMA_STATUS_CODE, *PDMA_STATUS_CODE;
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+
+/* DMAAllocateChannel  [function; ce-only; CE 6.0..699; CEDDK.lib] */
+DMA_CHANNEL_HANDLE DMAAllocateChannel(
+ PCE_DMA_ADAPTER pDmaAdapter,
+ ULONG ulRequestedChannel,
+ ULONG ulAddressSpace,
+ PHYSICAL_ADDRESS phDeviceIoAddress
+);
+
+/* DMACancelTransfer  [function; ce-only; CE 6.0..699; CEDDK.lib] */
+BOOL DMACancelTransfer(
+ DMACancelTransfer DmaTransferHandle
+);
+
+/* DMACloseBuffer  [function; ce-only; CE 6.0..699; CEDDK.lib] */
+BOOL DMACloseBuffer (
+ DMA_BUFFER_HANDLE hBuffer
+);
+
+/* DMACloseTransfer  [function; ce-only; CE 6.0..699; CEDDK.lib] */
+BOOL DMACloseTransfer (
+ DMA_TRANSFER_HANDLE DmaTransferHandle
+);
+
+/* DMAFlushBlockBuffer  [function; ce-only; CE 6.0..699; CEDDK.lib] */
+BOOL DMAFlushBlockBuffer (
+ DMA_BUFFER_HANDLE hBuffer
+);
+
+/* DMAFreeChannel  [function; ce-only; CE 6.0..699; CEDDK.lib] */
+BOOL DMAFreeChannel(
+ DMA_CHANNEL_HANDLE Channel
+);
+
+/* DMAGetAdapter  [function; ce-only; CE 6.0..699; CEDDK.lib] */
+BOOL DMAGetAdapter(
+ PDEVICE_DMA_REQUIRMENT_INFO pDeviceDmaRequirementInfo,
+ PCE_DMA_ADAPTER pDmaAdapter
+);
+
+/* DMAGetBufferPhysAddr  [function; ce-only; CE 6.0..699; CEDDK.lib] */
+DWORD DMAGetBufferPhysAddr (
+ DMA_BUFFER_HANDLE hBuffer,
+ DWORD NumOfBufferBlock,
+ CE_DMA_BUFFER_BLOCK ceDmaBufferBLockArray[]
+);
+
+/* DMAGetContexts  [function; ce-only; CE 6.0..699; CEDDK.lib] */
+BOOL DMAGetContexts (
+ DMA_TRANSFER_HANDLE hDmaTransferHandle,
+ PVOID *pContext1,
+ PVOID *pContext2
+);
+
+/* DMAGetStatus  [function; ce-only; CE 6.0..699; CEDDK.lib] */
+BOOL DMAGetStatus (
+ DMA_TRANSFER_HANDLE hDmaTransferHandle,
+ PDWORD lpCompletedLength,
+ PDWORD lpCompletionCode
+);
+
+/* DMAIssueMultiBufferTransfer  [function; ce-only; CE 6.0..699; CEDDK.lib] */
+BOOL DMAIssueMultiBufferTransfer (
+ HANDLE hDmaChannel,
+ PDMA_TRANSFER_HANDLE phDmaHandle,
+ DWORD dwFlags,
+ DWORD dwNumOfTransfer,
+ CE_DMA_BUFFER_BLOCK pCeDmaBufferBlock[],
+ HANDLE hNotifyHandle,
+ PVOID Context1,
+ PVOID Context2,
+ PHYSICAL_ADDRESS phOpDeviceIoAddress
+);
+
+/* DMAIssueRawTransfer  [function; ce-only; CE 6.0..699; CEDDK.lib] */
+BOOL DMAIssueRawTransfer (
+ DMA_TRANSFER_HANDLE *phDmaHandle,
+ HANDLE hDmaChannel,
+ PVOID lpInPtr,
+ DWORD nInLen,
+ HANDLE hNotifyHandle,
+ PVOID NotifyContext1,
+ PVOID NotifyContext2
+);
+
+/* DMAIssueTransfer  [function; ce-only; CE 6.0..699; CEDDK.lib] */
+BOOL DMAIssueTransfer(
+ HANDLE hDmaChannel,
+ PDMA_TRANSFER_HANDLE phDmaHandle,
+ DWORD dwFlags,
+ PHYSICAL_ADDRESS SysytemMemoryPhysicalAddress,
+ PVOID CurrentVa,
+ ULONG Length,
+ HANDLE hNotifyHandle,
+ PVOID Context1,
+ PVOID Context2,
+ PHYSICAL_ADDRESS phOpDeviceIoAddress
+);
+
+/* DMAOpenBuffer  [function; ce-only; CE 6.0..699; CEDDK.lib] */
+DMA_BUFFER_HANDLE DMAOpenBuffer (
+ PCE_DMA_ADAPTER pDmaAdapter,
+ DWORD dwNumBuffer,
+ PVOID pBufferArray[],
+ DWORD aLength[],
+);
+
+/* DMARawTransferControl  [function; ce-only; CE 6.0..699; CEDDK.lib] */
+BOOL DMARawTransferControl (
+ DMA_TRANSFER_HANDLE hDmaHandle,
+ DWORD dwIoControl,
+ PVOID lpInPtr,
+ DWORD nInLen,
+ LPVOID lpOutBuffer,
+ DWORD nOutBufferSize,
+ LPDWORD lpBytesReturned
+);
+
+/* DMAStartTransfer  [function; ce-only; CE 6.0..699; CEDDK.lib] */
+BOOL DMAStartTransfer(
+ DMA_TRANSFER_HANDLE hDmaTransferHandle
+);
+
+/* DMATransferOnBlocks  [function; ce-only; CE 6.0..699; CEDDK.lib] */
+BOOL DMATransferOnBlocks(
+ DMA_BUFFER_HANDLE hBuffer,
+ HANDLE hDmaChannel,
+ PDMA_TRANSFER_HANDLE phDmaHandle,
+ DWORD dwFlags,
+ PVOID pBufferContext,
+ HANDLE hNotifyHandle,
+ PVOID Context1,
+ PVOID Context2,
+ PHYSICAL_ADDRESS phOpDeviceIoAddress
+);
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* enum */
+typedef enum _DMA_STATUS {
+  DMA_TRANSFER_COMPLETE = 0,
+  DMA_TRANSFER_IN_PROGRESS,
+  DMA_TRANSFER_IN_QUEUE,
+  DMA_TRANSFER_COMPLETE_WITH_ERROR,
+  DMA_TRANSFER_COMPLETE_WITH_CANCELED
+} DMA_STATUS_CODE, *PDMA_STATUS_CODE;
+
+/* struct */
+typedef struct _CE_DMA_BUFFER_BLOCK {
+  DWORD dwLength;
+  PVOID virtualAddress;
+  PHYSICAL_ADDRESS physicalAddress;
+} CE_DMA_BUFFER_BLOCK, *PCE_DMA_BUFFER_BLOCK;
+
+#endif /* _OALDMA_ */

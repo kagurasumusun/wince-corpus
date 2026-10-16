@@ -181,6 +181,28 @@ def is_keepable_unassigned_macro(name: str, value: str, definition: str) -> bool
     return True
 
 
+_GLUED = re.compile(
+    r"\b(?:HANDLE|HMODULE|HINSTANCE|HWND|HDC|HMENU|HKEY|HBITMAP|HFONT|"
+    r"BOOL|DWORD|UINT|ULONG|LONG|WORD|BYTE|LPVOID|LPCVOID|LPSTR|LPCSTR|"
+    r"LPWSTR|LPCWSTR|LPTSTR|LPCTSTR|HRESULT|LRESULT|NTSTATUS|"
+    r"VOID|INT|SHORT|CHAR)[A-Z]"
+)
+
+
+def is_glued_prototype(text: str) -> bool:
+    """``HANDLECreateFile(`` -- the archived page lost spaces."""
+    return bool(_GLUED.search(text or ""))
+
+
+def is_define_only_block(text: str) -> bool:
+    """A syntax block that is only ``#define`` lines -- not a prototype."""
+    body = strip_markup(text or "")
+    lines = [ln.strip() for ln in body.splitlines() if ln.strip()]
+    if not lines:
+        return False
+    return all(ln.startswith("#") for ln in lines)
+
+
 def looks_like_c_declaration(text: str) -> bool:
     """True if *text* is a prototype / typedef / struct, not a usage snippet."""
     text = strip_markup(text or "")
@@ -189,6 +211,8 @@ def looks_like_c_declaration(text: str) -> bool:
     if _HTML_LEFTOVER.search(text):
         text = strip_markup(text)
     first = text.lstrip()
+    if is_glued_prototype(text):
+        return False
     if _ASSIGNMENT.match(first):
         return False
     if first.startswith(("if ", "if(", "for ", "for(", "while ", "while(",
@@ -207,11 +231,6 @@ def looks_like_c_declaration(text: str) -> bool:
             return True
     # "Type Name(args);" with a type token before the name.
     if re.search(r"\w+\s+\*?\s*\w+\s*\([^;]*\)\s*;", first):
-        return True
-    # collapsed "BOOLCreateFile(...);"
-    if re.search(r"^[A-Za-z_]\w+\s*\([^;]*\)\s*;", first) and \
-            re.match(r"^(BOOL|DWORD|HANDLE|HWND|HRESULT|LRESULT|UINT|INT|"
-                     r"LONG|void|VOID|int|WINAPI|STDAPI|APIENTRY)", first):
         return True
     return False
 

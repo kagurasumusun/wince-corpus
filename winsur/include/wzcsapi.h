@@ -1,0 +1,195 @@
+/* wzcsapi.h -- Windows CE unified surface
+ *
+ * ONE tree for every CE generation.  Version differences use
+ * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
+ * Win32-shared entries are marked 'win32-ref'.
+ * Generated from wince-docs-corpus knowledge/ by
+ * tools/gen-include-def.py --unified.
+ * 4 constants, 16 declarations, 4 outlines, 0 base types, 0 extra macros, 3 extra decls
+ */
+#ifndef _WZCSAPI_
+#define _WZCSAPI_
+
+
+/* ==================================================================
+ * constants (one evidence comment per #define; the
+ * #if of a batch covers every #define in it; values
+ * that differ per generation pool into #if/#elif
+ * chains with the evidence after the #endif)
+ * ================================================================ */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
+#define TMMS_DEFAULT_TC 0x70000000
+#define TMMS_DEFAULT_TF 0x0000ea60
+#define TMMS_DEFAULT_TP 0x000007d0
+#define TMMS_DEFAULT_TR 0x00000bb8
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+
+/* INTF_KEY_ENTRY  [struct; ce-only; CE 5.0..699] */
+
+/* INTFS_KEY_TABLE  [struct; ce-only; CE 5.0..699] */
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+
+/* INTF_80211_CAPABILITY  [struct; ce-only; CE 6.0..699] */
+
+/* INTF_ENTRY_EX  [struct; ce-only; CE 6.0..699] */
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+
+/* WZC_802_11_CONFIG_LIST  [struct; ce-only; CE 5.0..699] */
+typedef struct
+{
+ ULONG NumberOfItems;
+ ULONG Index;
+ WZC_WLAN_CONFIG Config[1];
+} WZC_802_11_CONFIG_LIST, *PWZC_802_11_CONFIG_LIST;
+
+/* WZC_CONTEXT  [struct; ce-only; CE 5.0..699] */
+typedef struct _wzc_context_t
+{
+ DWORD dwFlags; 
+ DWORD tmTr; 
+ DWORD tmTc; 
+ DWORD tmTp; 
+ DWORD tmTf; 
+ DWORD tmTd; 
+} WZC_CONTEXT, *PWZC_CONTEXT;
+
+/* WZC_EAPOL_PARAMS  [struct; ce-only; CE 5.0..699] */
+typedef struct _WZC_EAPOL_PARAMS
+{
+ BOOL bEnable8021x;
+ DWORD dwEapFlags;
+ DWORD dwEapType;
+ DWORD dwAuthDataLen;
+ BYTE *pbAuthData;
+}WZC_EAPOL_PARAMS, *PWZC_EAPOL_PARAMS;
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+
+/* WZCDeleteIntfObj  [function; ce-only; CE 4.0..699; Wzcsapi.lib] */
+VOID WZCDeleteIntfObj(
+ PINTF_ENTRY pIntf
+);
+
+/* WZCEnumInterfaces  [function; ce-only; CE 4.0..699; Wzcsapi.lib] */
+DWORD WZCEnumInterfaces(
+ LPWSTR pSrvAddr,
+ PINTFS_KEY_TABLE pIntfs
+);
+
+/* WZCPassword2Key  [function; ce-only; CE 4.0..699; Wzcsapi.lib] */
+VOID WZCPassword2Key(
+ PWZC_WLAN_CONFIG pwzcConfig,
+ LPCSTR cszPassword
+);
+
+/* WZCQueryInterface  [function; ce-only; CE 4.0..699; Wzcsapi.lib] */
+DWORD WZCQueryInterface(
+ LPWSTR pSrvAddr,
+ DWORD dwInFlags,
+ PINTF_ENTRY pIntf,
+ LPDWORD pdwOutFlags
+);
+
+/* WZCRefreshInterface  [function; ce-only; CE 4.0..699; Wzcsapi.lib] */
+DWORD WZCRefreshInterface(
+ LPWSTR pSrvAddr,
+ DWORD dwInFlags,
+ PINTF_ENTRY pIntf,
+ LPDWORD pdwOutFlags
+);
+
+/* WZCSetInterface  [function; ce-only; CE 4.0..699; Wzcsapi.lib] */
+DWORD WZCSetInterface(
+ LPWSTR pSrvAddr,
+ DWORD dwInFlags,
+ PINTF_ENTRY pIntf,
+ LPDWORD pdwOutFlags
+);
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+
+/* WZCQueryContext  [function; ce-only; CE 5.0..699; Wzcsapi.lib] */
+DWORD WZCQueryContext(
+ LPWSTR pSrvAddr,
+ DWORD dwInFlags,
+ PWZC_CONTEXT pContext,
+ LPDWORD pdwOutFlags
+);
+
+/* WZCSetContext  [function; ce-only; CE 5.0..699; Wzcsapi.lib] */
+DWORD WZCSetContext(
+ LPWSTR pSrvAddr,
+ DWORD dwInFlags,
+ PWZC_CONTEXT pContext,
+ LPDWORD pdwOutFlags
+);
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+
+/* WZCDeleteIntfObjEx  [function; ce-only; CE 6.0..699; Wzcsapi.lib] */
+VOID WZCDeleteIntfObjEx(
+ PINTF_ENTRY_EX pIntf
+);
+
+/* WZCEnumEapExtensions  [function; ce-only; CE 6.0..699; Wzcsapi.lib] */
+DWORD WZCEnumEapExtensions(
+ DWORD *pdwNumOfExtensions,
+ PEAP_EXTENSION_INFO *pEapExtensions);
+
+/* WZCQueryInterfaceEx  [function; ce-only; CE 6.0..699; Wzcsapi.lib] */
+DWORD WZCQueryInterfaceEx(
+ LPWSTR pSrvAddr,
+ DWORD dwInFlags,
+ PINTF_ENTRY_EX pIntfEx,
+ LPDWORD pdwOutFlags
+);
+
+/* WZCRefreshInterfaceEx  [function; ce-only; CE 6.0..699; Wzcsapi.lib] */
+DWORD WZCRefreshInterfaceEx(
+ LPWSTR pSrvAddr,
+ DWORD dwInFlags,
+ PINTF_ENTRY_EX pIntfEx,
+ LPDWORD pdwOutFlags);
+
+/* WZCSetInterfaceEx  [function; ce-only; CE 6.0..699; Wzcsapi.lib] */
+DWORD WZCSetInterfaceEx(
+ LPWSTR pSrvAddr,
+ DWORD dwInFlags,
+ PINTF_ENTRY_EX pIntfEx,
+ LPDWORD pdwOutFlags);
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* struct */
+typedef struct{ ULONG NumberOfItems; ULONG Index; WZC_WLAN_CONFIG Config[1];} WZC_802_11_CONFIG_LIST, *PWZC_802_11_CONFIG_LIST;
+typedef struct _wzc_context_t{ DWORD dwFlags; DWORD tmTr; DWORD tmTc; DWORD tmTp; DWORD tmTf; DWORD tmTd; } WZC_CONTEXT, *PWZC_CONTEXT;
+typedef struct _WZC_EAPOL_PARAMS{ BOOL bEnable8021x; DWORD dwEapFlags; DWORD dwEapType; DWORD dwAuthDataLen; BYTE *pbAuthData;}WZC_EAPOL_PARAMS, *PWZC_EAPOL_PARAMS;
+
+#endif /* _WZCSAPI_ */

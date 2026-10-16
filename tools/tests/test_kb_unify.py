@@ -70,6 +70,13 @@ class KeepableValueTests(unittest.TestCase):
         self.assertTrue(kb_unify.is_keepable_constant_value("RASBASE+1"))
         self.assertTrue(kb_unify.is_keepable_constant_value("0x0001"))
 
+    def test_null_one_is_not_c_null(self):
+        records = [
+            {"name": "NULL", "value": "1", "layer": "ce", "origin": "table"},
+        ]
+        value, _, _, _ = kb_unify.choose_constant_value(records)
+        self.assertIsNone(value)
+
     def test_sample_body_dropped(self):
         self.assertFalse(kb_unify.is_keepable_constant_value(
             "sizeof (hArray) / sizeof (HANDLE)"))

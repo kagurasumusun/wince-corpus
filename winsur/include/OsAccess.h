@@ -1,0 +1,502 @@
+/* OsAccess.h -- Windows CE unified surface
+ *
+ * ONE tree for every CE generation.  Version differences use
+ * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
+ * Win32-shared entries are marked 'win32-ref'.
+ * Generated from wince-docs-corpus knowledge/ by
+ * tools/gen-include-def.py --unified.
+ * 0 constants, 66 declarations, 0 outlines, 0 base types, 0 extra macros, 31 extra decls
+ */
+#ifndef _OSACCESS_
+#define _OSACCESS_
+
+
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+
+/* FRAME_TYPE  [struct; ce-only; CE 5.0..699; OSAXSC.lib] */
+typedef struct _FRAME_TYPE {
+ ADDRESS_TYPE addrFP;
+ ADDRESS_TYPE addrPC;
+ DWORD dwParam1;
+ DWORD dwParam2;
+ DWORD dwParam3;
+ DWORD dwParam4;
+} FRAME_TYPE;
+
+/* ROUTINE_DATA  [struct; ce-only; CE 5.0..699; OSAXSC.lib] */
+typedef struct _ROUTINE_DATA {
+ ADDRESS_TYPE RoutineBegin;
+ ADDRESS_TYPE RoutineEnd;
+ ADDRESS_TYPE ExceptionHandler;
+ ADDRESS_TYPE HandlerData;
+ ADDRESS_TYPE PrologEnd;
+ DWORD dwExecMode;
+} ROUTINE_DATA;
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+
+/* IOsAsxDataBp::GetAttributesEx  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT GetAttributesEx(
+ DWORD* pProcID,
+ DWORD* pThreadID,
+ DATA_BP_TYPE* pdbp,
+ DWORD* pdwBypassedOccurences
+);
+
+/* IOsAxsCe50Generic::GetHdstubNotifAddress  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT GetHdstubNotifAddress(
+ ADDRESS_TYPE* paddrNotif
+);
+
+/* IOsAxsCe50Generic::GetThreadMigrationTarget  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT GetThreadMigrationTarget(
+ ADDRESS_TYPE addrPsl,
+ ADDRESS_TYPE* paddrTarget
+);
+
+/* IOsAxsCe50Module::GetData  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT GetData(
+ DWORD* pdwInUse,
+ BYTE* pbTrustLevel,
+ DWORD* pdwTimeStamp
+);
+
+/* IOsAxsCe50Process::MapPointerToProcess  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT MapPointerToProcess(
+ ADDRESS_TYPE addrPointer,
+ ADDRESS_TYPE* paddrProc
+);
+
+/* IOsAxsCe50Thread::GetCurrentProcess  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT GetCurrentProcess(
+ IOsAxsProcess** ppiOsAxsProc
+);
+
+/* IOsAxsCe50Thread::TranslateReturnAddress  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT TranslateReturnAddress(
+ ADDRESS_TYPE ddrReturn,
+ ADDRESS_TYPE addrFrame,
+ DWORD dwFrameCurProcHnd,
+ ADDRESS_TYPE* paddrNewReturn,
+ ADDRESS_TYPE* paddrNewFrame,
+ DWORD* pdwNewFrameProcHnd
+);
+
+/* IOsAxsClientModuleEvents::NotifyModule  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT NotifyModule(
+ IOsAxsModule* pmod,
+ BOOL fLoaded
+);
+
+/* IOsAxsClientPageInEvents::NotifyPageIn  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT NotifyPageIn(
+ ADDRESS_TYPE addr,
+ BOOL fWrite
+);
+
+/* IOsAxsClientProcessEvents::NotifyProcess  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT NotifyProcess(
+ IOsAxsProcess* pproc,
+ BOOL fCreated
+);
+
+/* IOsAxsClientThreadEvents::NotifyThread  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT NotifyThread(
+ IOsAxsThread* pthrd,
+ BOOL fCreated
+);
+
+/* IOsAxsClientThreadSwitchEvents::NotifyThreadSwitched  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT NotifyThreadSwitched(
+ IOsAxsThread* pthrd
+);
+
+/* IOsAxsCodeBp::GetAttributesEx  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT GetAttributesEx(
+ DWORD* pProcID,
+ DWORD* pThreadID,
+ CODE_BP_TYPE* pcbp,
+ DWORD * pdwBypassedOccurences
+);
+
+/* IOsAxsEnumModule::Clone  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT Clone(
+ IOsAxsEnumModule** ppenum
+);
+
+/* IOsAxsEnumModule::Count  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT Count(
+ ULONG* pc
+);
+
+/* IOsAxsEnumModule::Next  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT Next(
+ [in] ULONG celt,
+ [out, size_is(celt), length_is (*pceltFetched )] IOsAxsModule** 
+rgelt,
+ [out] ULONG* pceltFetched
+);
+
+/* IOsAxsEnumModule::Reset  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT Reset(void);
+
+/* IOsAxsEnumModule::Skip  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT Skip(
+ ULONG celt
+);
+
+/* IOsAxsEnumProcess::Clone  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT Clone(
+ IOsAxsEnumProcess** ppenum
+);
+
+/* IOsAxsEnumProcess::Count  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT Count(
+ ULONG* pc
+);
+
+/* IOsAxsEnumProcess::Next  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT Next(
+ [in] ULONG celt,
+ [out, size_is(celt), length_is( *pceltFetched)] IOsAxsProcess** rgelt,
+ [out] ULONG * pceltFetched
+);
+
+/* IOsAxsEnumProcess::Reset  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT Reset(void);
+
+/* IOsAxsEnumProcess::Skip  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT Skip(
+ ULONG celt
+);
+
+/* IOsAxsEnumThread::Clone  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT Clone(
+ IOsAxsEnumThread** ppenum
+);
+
+/* IOsAxsEnumThread::Count  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT Count(
+ ULONG* pc
+);
+
+/* IOsAxsEnumThread::Next  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT Next(
+ [in] ULONG celt,
+ [out, size_is(celt), length_is(*pceltFetched)] IOsAxsProcess** rgelt,
+ [out] ULONG* pceltFetched
+);
+
+/* IOsAxsEnumThread::Reset  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT Reset(void);
+
+/* IOsAxsEnumThread::Skip  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT Skip(
+ ULONG celt
+);
+
+/* IOsAxsExec::AddCodeBpsInProcAndThd  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT AddCodeBpsInProcAndThd(
+ [in] DWORD ProcID,
+ [in] DWORD ThdID,
+ [in] DWORD ccbp,
+ [in, size_is(ccbp)] CODE_BP_TYPE acbp[],
+ [out, size_is(ccbp)] IeXdi2CodeBp* apieXdi2CodeBp[]
+);
+
+/* IOsAxsExec::AddDataBpsInProcAndThd  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT AddDataBpsInProcAndThd(
+ [in] DWORD ProcID,
+ [in] DWORD ThdID,
+ [in] DWORD cdbp,
+ [in, size_is(cdbp)] DATA_BP_TYPE adbp[],
+ [out, size_is(cdbp)] IeXdi2DataBp* apieXdi2DataBp[]
+);
+
+/* IOsAxsExec::EnumAllCodeBpsByProcAndThd  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT EnumAllCodeBpsByProcAndThd(
+ DWORD ProcID,
+ DWORD ThdID,
+ TRISTATE_TYPE f3Enabled,
+ IeXdi2EnumCodeBp** ppieXdi2EnumCodeBp
+);
+
+/* IOsAxsExec::EnumAllDataBpsByProcAndThd  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT EnumAllDataBpsByProcAndThd(
+ DWORD ProcID,
+ DWORD ThdID,
+ TRISTATE_TYPE f3Enabled,
+ IeXdi2EnumDataBp** ppieXdi2EnumDataBp
+);
+
+/* IOsAxsExec::EnumCodeBpsInAddrRange  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT EnumCodeBpsInAddrRangeByProcAndThd(
+ DWORD ProcID,
+ DWORD ThdID,
+ BOOL fPhys,
+ ADDRESS_TYPE FirstAddress,
+ ADDRESS_TYPE LastAddress,
+ TRISTATE_TYPE f3Enabled,
+ IeXdi2EnumCodeBp** ppieXdi2EnumCodeBp
+);
+
+/* IOsAxsExec::EnumDataBpsInAddrRange  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT EnumDataBpsInAddrRangeByProcAndThd(
+ DWORD ProcID,
+ DWORD ThdID,
+ MEM_TYPE2 mt2,
+ ADDRESS_TYPE FirstAddress,
+ ADDRESS_TYPE LastAddress,
+ TRISTATE_TYPE f3Enabled,
+ IeXdi2EnumDataBp** ppieXdi2EnumDataBp
+);
+
+/* IOsAxsExec::SingleStepInCurThread  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT SingleStepInCurThread(
+ BOOL fIgnoreCurrentExcept,
+ BOOL fOneCycleOnly
+);
+
+/* IOsAxsGeneric::Disable  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT Disable(void);
+
+/* IOsAxsGeneric::Enable  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT Enable(
+ BOOL fReset
+);
+
+/* IOsAxsGeneric::EnumAllModules  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT EnumAllModules(
+ IOsAxsEnumModule** ppienum
+);
+
+/* IOsAxsGeneric::EnumAllProcesses  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT EnumAllProcesses(
+ IOsAxsEnumProcess** ppienum
+);
+
+/* IOsAxsGeneric::EnumAllThreads  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT EnumAllThreads(
+ IOsAxsEnumThread** ppienum
+);
+
+/* IOsAxsGeneric::GetCurrentlyViewedProcess  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT GetCurrentlyViewedProcess(
+ IOsAxsProcess** ppiOsAxsProcess
+);
+
+/* IOsAxsGeneric::GetCurrentProcessAndThread  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT GetCurrentProcessAndThread(
+ DWORD dwCpuNum,
+ IOsAxsProcess** ppiproc,
+ IOsAxsThread** ppithrd
+);
+
+/* IOsAxsGeneric::GeteXdi2Service  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT GeteXdi2Service(
+ ICcService** ppeXdi2Service
+);
+
+/* IOsAxsGeneric::GetExecModeAtAddress  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT GetExecModeAtAddress(
+ ADDRESS_TYPE AddrCode,
+ DWORD* pdwExecMode
+);
+
+/* IOsAxsGeneric::GetFullThdContextRegList  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT GetFullThdContextRegList(
+ IeXdi2EnumCpuRegs** ppiOsAxsEnumCpuRegThreadCtx
+);
+
+/* IOsAxsGeneric::GetMetrics  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT GetMetrics(
+ OSAXS_METRICS* pmetrics
+);
+
+/* IOsAxsGeneric::GetModuleByID  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT GetModuleByID(
+ DWORD dwID,
+ IOsAxsProcess** ppiOsAxsModule
+);
+
+/* IOsAxsGeneric::GetModuleFromAddress  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT GetModuleFromAddress(
+ ADDRESS_TYPE Addr,
+ IOsAxsModule** ppiModule
+);
+
+/* IOsAxsGeneric::GetProcessByID  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT GetProcessByID(
+ DWORD dwID,
+ IOsAxsProcess** ppiOsAxsProcess
+);
+
+/* IOsAxsGeneric::GetRoutineDataByAddress  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT GetRoutineDataByAddress(
+ ADDRESS_TYPE AddrCode,
+ ROUTINE_DATA* pPData,
+ IOsAxsModule** ppiModule
+);
+
+/* IOsAxsGeneric::GetThreadByID  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT GetThreadByID (
+ DWORD dwID,
+ IOsAxsProcess** ppiOsAxsThread
+);
+
+/* IOsAxsGeneric::GetThreadMigrationTarget  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT GetThreadMigrationTarget(
+ ADDRESS_TYPE addrPsl,
+ ADDRESS_TYPE* paddrTarget
+);
+
+/* IOsAxsMem::CopyMemoryByProc  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT CopyMemoryByProc(
+ DWORD ProcID,
+ LINEAR_MEM_MAP_TYPE lmt,
+ ADDRESS_TYPE AddressSource,
+ ADDRESS_TYPE AddressTarget,
+ DWORD dwNbElem,
+ BYTE bAccessWidthInBytes
+);
+
+/* IOsAxsMem::FillMemoryByProc  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT FillMemoryByProc(
+ [in] DWORD ProcID,
+ [in] LINEAR_MEM_MAP_TYPE lmt,
+ [in] ADDRESS_TYPE AddressRangeStart,
+ [in] ADDRESS_TYPE AddressRangeEnd,
+ [in] DWORD dwNbElem,
+ [in] BYTE bAccessWidthInBytes,
+ [in, size_is(dwNbElem* bAccessWidthInBytes)] BYTE* pbSequenceToFill
+);
+
+/* IOsAxsMem::ReadMemoryByProc  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT ReadMemoryByProc(
+ [in] DWORD ProcID,
+ [in] LINEAR_MEM_MAP_TYPE lmt,
+ [in] ADDRESS_TYPE Address,
+ [in] DWORD dwNbElemToRead,
+ [in] BYTE bAccessWidthInBytes,
+ [out, size_is(dwNbElemToRead* bAccessWidthInBytes)] BYTE* pbReadBuffer,
+ [out] DWORD* pdwNbElementEffectRead
+);
+
+/* IOsAxsMem::SearchMemoryByProc  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT SearchMemoryByProc(
+ [in] DWORD ProcID,
+ [in] LINEAR_MEM_MAP_TYPE lmt,
+ [in] ADDRESS_TYPE AddressRangeStart,
+ [in] ADDRESS_TYPE AddressRangeEnd,
+ [in] DWORD dwNbElem,
+ [in] BYTE bAccessWidthInBytes,
+ [in, size_is(dwNbElem* bAccessWidthInBytes)] BYTE* pbSequenceToSearch 
+ [out] ADDRESS_TYPE** ppAddressFound
+);
+
+/* IOsAxsMem::WriteMemoryByProc  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT WriteMemoryByProc(
+ [in] DWORD ProcID,
+ [in] LINEAR_MEM_MAP_TYPE lmt,
+ [in] ADDRESS_TYPE Address,
+ [in] DWORD dwNbElemToWrite,
+ [in] BYTE bAccessWidthInBytes,
+ [in, size_is(dwNbElemToWrite* bAccessWidthInBytes)] const BYTE* pbWriteBuffer,
+ [out] DWORD* pdwNbElementEffectWritten
+);
+
+/* IOsAxsOleEvents::NotifyModuledOle  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT NotifyModuledOle(
+ VARIANT vtModId,
+ VARIANT vtLoaded
+);
+
+/* IOsAxsOleEvents::NotifyProcessOle  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT NotifyProcessOle(
+ VARIANT vtProcId,
+ VARIANT vtCreated
+);
+
+/* IOsAxsOleEvents::NotifyThreadOle  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT NotifyThreadOle(
+ VARIANT vtThrdId,
+ VARIANT vtCreated
+);
+
+/* IOsAxsThread::SwitchExecutionTo  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT SwitchExecutionTo(
+ IOsAxsProcess** ppiOldProc,
+ IOsAxsThread** ppiOldThrd,
+ IOsAxsProcess** ppiNewProc
+);
+
+/* IOsAxsVirtualMem::ChangeVirtualMapping  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT ChangeVirtualMapping(
+ ADDRESS_TYPE addrVirtual,
+ ADDRESS_TYPE addrPhysNew,
+ ADDRESS_TYPE* paddrPhysOld
+);
+
+/* IOsAxsVirtualMem::GetPageSize  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT GetPageSize(
+ DWORD*
+ pdwVmPageSize
+);
+
+/* IOsAxsVirtualMem::TranslateAddressVirtualToPhysical  [function; ce-only; CE 5.0..699; OSAXSC.lib] */
+HRESULT TranslateAddressVirtualToPhysical(
+ ADDRESS_TYPE addrVirt,
+ ADDRESS_TYPE* paddrPhys
+);
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* function */
+HRESULT ChangeVirtualMapping( ADDRESS_TYPE addrVirtual, ADDRESS_TYPEaddrPhysNew, ADDRESS_TYPE* paddrPhysOld);
+HRESULT Disable(void);
+HRESULT EnumAllModules( IOsAxsEnumModule** ppienum);
+HRESULT EnumAllProcesses( IOsAxsEnumProcess** ppienum);
+HRESULT EnumAllThreads( IOsAxsEnumThread** ppienum);
+HRESULT GetAttributesEx( DWORD* pProcID, DWORD* pThreadID, DATA_BP_TYPE* pdbp, DWORD* pdwBypassedOccurences);
+HRESULT GetCurrentlyViewedProcess( IOsAxsProcess** ppiOsAxsProcess);
+HRESULT GetExecModeAtAddress( [in] ADDRESS_TYPE AddrCode, [out] DWORD* pdwExecMode);
+HRESULT GetFullThdContextRegList( IeXdi2EnumCpuRegs**ppiOsAxsEnumCpuRegThreadCtx);
+HRESULT GetHdstubNotifAddress( ADDRESS_TYPE *paddrNotif);
+HRESULT GetMetrics( OSAXS_METRICS* pmetrics);
+HRESULT GetModuleByID( DWORD dwID, IOsAxsProcess** ppiOsAxsModule);
+HRESULT GetModuleFromAddress( ADDRESS_TYPEAddr, IOsAxsModule** ppiModule);
+HRESULT GetPageSize( DWORD*pdwVmPageSize);
+HRESULT GetProcessByID( DWORD dwID, IOsAxsProcess** ppiOsAxsProcess);
+HRESULT GetRoutineDataByAddress( ADDRESS_TYPEAddrCode, ROUTINE_DATA*pPData, IOsAxsModule **ppiModule);
+HRESULT GetThreadByID ( DWORDdwID, IOsAxsProcess **ppiOsAxsThread);
+HRESULT GetThreadMigrationTarget( ADDRESS_TYPEaddrPsl, ADDRESS_TYPE*paddrTarget);
+HRESULT GeteXdi2Service( [out] ICcService**ppeXdi2Service);
+HRESULT MapPointerToProcess( ADDRESS_TYPE addrPointer, ADDRESS_TYPE* paddrProc);
+HRESULT NotifyModule( [in] IOsAxsModule* pmod, [in] BOOLfLoaded);
+HRESULT NotifyModuledOle( VARIANTvtModId, VARIANTvtLoaded);
+HRESULT NotifyPageIn( ADDRESS_TYPE addr, BOOL fWrite);
+HRESULT NotifyProcess( IOsAxsProcess*pproc, BOOLfCreated);
+HRESULT NotifyProcessOle( VARIANT vtProcId, VARIANTvtCreated);
+HRESULT NotifyThreadOle( VARIANTvtThrdId, VARIANT vtCreated);
+HRESULT NotifyThreadSwitched( IOsAxsThread*pthrd);
+HRESULT SingleStepInCurThread( BOOLfIgnoreCurrentExcept, BOOLfOneCycleOnly);
+HRESULT SwitchExecutionTo( IOsAxsProcess** ppiOldProc, IOsAxsThread**ppiOldThrd, IOsAxsProcess** ppiNewProc);
+HRESULT TranslateAddressVirtualToPhysical( ADDRESS_TYPEaddrVirt,ADDRESS_TYPE*paddrPhys);
+HRESULT TranslateReturnAddress( ADDRESS_TYPEaddrReturn,ADDRESS_TYPEaddrFrame,DWORDdwFrameCurProcHnd,ADDRESS_TYPE*paddrNewReturn, ADDRESS_TYPE*paddrNewFrame,DWORD * pdwNewFrameProcHnd);
+
+#endif /* _OSACCESS_ */

@@ -1,0 +1,202 @@
+/* Socksv2.h -- Windows CE unified surface
+ *
+ * ONE tree for every CE generation.  Version differences use
+ * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
+ * Win32-shared entries are marked 'win32-ref'.
+ * Generated from wince-docs-corpus knowledge/ by
+ * tools/gen-include-def.py --unified.
+ * 0 constants, 11 declarations, 1 outlines, 0 base types, 0 extra macros, 5 extra decls
+ */
+#ifndef _SOCKSV2_
+#define _SOCKSV2_
+
+
+/* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+
+/* SS_SOCKET_SERVICE  [struct; ce-only; CE 5.0..699] */
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+
+/* CS_SocketCallback  [callback; ce-only; CE 5.0..699; Pcc_serv.dll] */
+typedef void(*PF_SS_CALLBACK)(
+ HANDLE hSocket,
+ UINT16 uSocket,
+ PSS_SOCKET_STATE pSocketState
+);
+
+/* SS_POWER_ENTRY  [struct; ce-only; CE 5.0..699] */
+typedef struct SS_POWER_ENTRY{
+ UINT8 uPowerLevel;
+ UINT8 fSupply;
+} SS_POWER_ENTRY, *PSS_POWER_ENTRY;
+
+/* SS_SOCKET_INFO  [struct; ce-only; CE 5.0..699] */
+typedef struct SS_SOCKET_INFO{
+ DWORD dwSocketCaps;
+ DWORD dwSocketIntrCaps;
+ DWORD dwSocketRptCaps;
+ DWORD dwSocketIndCaps;
+ DWORD dwNumOfPowerEntry;
+ DWORD dwNumOfWindows;
+ DWORD dwBusType;
+ DWORD dwBusNumber;
+ BYTE bArrayIrqRouting[IRQ_ROUTINGTABLE_SIZE];
+} SS_SOCKET_INFO, *PSS_SOCKET_INFO;
+
+/* SS_SOCKET_STATE  [struct; ce-only; CE 5.0..699] */
+typedef struct SS_SOCKETSTATE{
+ DWORD dwEventMask;
+ DWORD dwEventChanged;
+ DWORD dwEventStatus;
+ DWORD dwInterfaceType;
+ DWORD dwInterruptStatus;
+ UINT8 flREQRouting;
+ UINT8 fVcc;
+ UINT8 uVpp1;
+ UINT8 uVpp2;
+} SS_SOCKET_STATE, *PSS_SOCKET_STATE;
+
+/* SS_WINDOW_INFO  [struct; ce-only; CE 5.0..699] */
+typedef struct SS_WINDOW_INFO{
+ HANDLE hSocket;
+ UINT16 fWindowCaps;
+ UINT16 fMemoryCaps;
+ UINT16 fIOCaps;
+ UINT16 Reserved;
+ UINT32 uMemFirstByte;
+ UINT32 uMemLastByte;
+ UINT32 uMemMinSize;
+ UINT32 uMemMaxSize;
+ UINT32 uMemGranularity;
+ UINT32 uMemBase;
+ UINT32 uMemOffset;
+ UINT32 uIOFirstByte;
+ UINT32 uIOLastByte;
+ UINT32 uIOMinSize;
+ UINT32 uIOMaxSize;
+ UINT32 uIOGranularity;
+ UINT8 uAddressLines;
+ UINT8 fSlowest;
+ UINT8 fFastest;
+ UINT8 Reserved2;
+} SS_WINDOW_INFO, *PSS_WINDOW_INFO;
+
+/* SS_WINDOW_STATE  [struct; ce-only; CE 5.0..699] */
+typedef struct SS_WINDOW_STATE{
+ HANDLE hSocket;
+ UINT16 fState;
+ UINT8 fSpeed;
+ UINT8 Reserved;
+ UINT32 uSize;
+ UINT32 uBase;
+ UINT32 uOffset;
+} SS_WINDOW_STATE, *PSS_WINDOW_STATE;
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+
+/* SS_GetPowerEntry  [function; ce-only; CE 5.0..699; Pcc_serv.dll] */
+STATUS (*SS_GetPowerEntry)(
+ HANDLE hSocket,
+ PDWORD pdwNumOfEntry,
+ PSS_POWER_ENTRY pPowerEntry
+);
+
+/* SS_GetSocket  [function; ce-only; CE 5.0..699; Pcc_serv.dll] */
+STATUS (*SS_GetSocket)(
+ HANDLE hSocket,
+ PSS_SOCKET_STATE pSocketState
+);
+
+/* SS_InquireSocket  [function; ce-only; CE 5.0..699; Pcc_serv.dll] */
+STATUS (*SS_InquireSocket)(
+ HANDLE hSocket,
+ PSS_SOCKET_INFO pSocketInfo
+);
+
+/* SS_ResetSocket  [function; ce-only; CE 5.0..699; Pcc_serv.dll] */
+STATUS (*SS_ResetSocket)(
+ HANDLE hSocket
+);
+
+/* SS_SetSocket  [function; ce-only; CE 5.0..699; Pcc_serv.dll] */
+STATUS (*SS_SetSocket)(
+ HANDLE hSocket,
+ PSS_SOCKET_STATE pSocketState
+);
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* struct */
+typedef struct SS_POWER_ENTRY{UINT8uPowerLevel; UINT8fSupply; } SS_POWER_ENTRY, *PSS_POWER_ENTRY;
+typedef struct SS_SOCKET_INFO{DWORDdwSocketCaps;
+DWORDdwSocketIntrCaps;
+DWORDdwSocketRptCaps;
+DWORDdwSocketIndCaps;
+DWORDdwNumOfPowerEntry;
+DWORDdwNumOfWindows;
+DWORDdwBusType;
+DWORDdwBusNumber;
+BYTEbArrayIrqRouting[IRQ_ROUTINGTABLE_SIZE];
+} SS_SOCKET_INFO, *PSS_SOCKET_INFO;
+typedef struct SS_SOCKETSTATE{DWORDdwEventMask;
+DWORDdwEventChanged;
+DWORDdwEventStatus;
+DWORDdwInterfaceType;
+DWORDdwInterruptStatus;
+UINT8flREQRouting;
+UINT8fVcc;
+UINT8uVpp1;
+UINT8uVpp2;
+} SS_SOCKET_STATE, *PSS_SOCKET_STATE;
+typedef struct SS_WINDOW_INFO{HANDLEhSocket;
+UINT16fWindowCaps;
+UINT16fMemoryCaps;
+UINT16fIOCaps;
+UINT16Reserved;
+UINT32uMemFirstByte;
+UINT32uMemLastByte;
+UINT32uMemMinSize;
+UINT32uMemMaxSize;
+UINT32uMemGranularity;
+UINT32uMemBase;
+UINT32uMemOffset;
+UINT32uIOFirstByte;
+UINT32uIOLastByte;
+UINT32uIOMinSize;
+UINT32uIOMaxSize;
+UINT32uIOGranularity;
+UINT8uAddressLines;
+UINT8fSlowest;
+UINT8fFastest;
+UINT8Reserved2;
+} SS_WINDOW_INFO, *PSS_WINDOW_INFO;
+typedef struct SS_WINDOW_STATE{HANDLEhSocket;
+UINT16fState;
+UINT8fSpeed;
+UINT8Reserved;
+UINT32uSize;
+UINT32uBase;
+UINT32uOffset;
+} SS_WINDOW_STATE, *PSS_WINDOW_STATE;
+
+#endif /* _SOCKSV2_ */
