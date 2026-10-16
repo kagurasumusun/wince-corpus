@@ -66,13 +66,7 @@
 #define CFSTR_INETURL CFSTR_INETURLW
 #define CFSTR_INETURLA TEXT("UniformResourceLocator")
 #define CFSTR_INETURLW TEXT("UniformResourceLocatorW")
-#define CFSTR_NETRESOURCES TEXT("Net
-#define CFSTR_PASTESUCCEEDED TEXT("Paste
-#define CFSTR_PERFORMEDDROPEFFECT TEXT("Performed
-#define CFSTR_PREFERREDDROPEFFECT TEXT("Preferred
 #define CFSTR_PRINTERGROUP TEXT("PrinterFriendlyName")
-#define CFSTR_SHELLIDLIST TEXT("Shell
-#define CFSTR_SHELLIDLISTOFFSET TEXT("Shell
 #define CFSTR_SHELLURL CFSTR_INETURLA
 #define CMDSTR_NEWFOLDER CMDSTR_NEWFOLDERW
 #define CMDSTR_NEWFOLDERA "NewFolder"
@@ -357,44 +351,12 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* BrowseCallbackProc  [function; ce-only; CE 5.0..699; Ceshell.lib, ceshell.lib] */
-int CALLBACK BrowseCallbackProc(
- HWND hwnd,
- UINT uMsg,
- LPARAM lParam,
- LPARAM lpData
-);
-
-/* SHBindToParent  [function; shared; CE 5.0..699; Ceshell.lib, ceshell.lib] */
-HRESULT SHBindToParent(
- LPCITEMIDLIST pidl, 
- REFIID riid, 
- VOID** ppv, 
- LPCITEMIDLIST* ppidlLast
-);
-
-/* SHBrowseForFolder  [function; shared; CE 5.0..699; Ceshell.lib, ceshell.lib; A/W SHBrowseForFolderA,SHBrowseForFolderW (CE is W-side)] */
-LPITEMIDLIST WINAPI SHBrowseForFolder(
- LPBROWSEINFO lpbi
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* SHGetDesktopFolder  [function; shared; CE 5.0..699; Ceshell.lib, ceshell.lib] */
 HRESULT SHGetDesktopFolder(
  IShellFolder** ppshf
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* typedef */
-typedef const ITEMIDLIST * LPCITEMIDLIST;
-
-/* struct */
-typedef struct _browseinfo {HWND hwndOwner;LPCITEMIDLIST pidlRoot;LPTSTR pszDisplayName;LPCTSTR lpszTitle;UINT ulFlags;BFFCALLBACK lpfn;LPARAM lParam;int iImage;} BROWSEINFO, *PBROWSEINFO, *LPBROWSEINFO;
 
 #endif /* _SHLOBJ_ */

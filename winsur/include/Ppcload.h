@@ -15,7 +15,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213)) /* CE 1.0..199, 2.11..2.12 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213)) /* CE 1.0..199, 2.11..2.12 */
 
 /* Load_AlreadyInstalled  [function; ce-only; CE 1.0..199, 2.11..2.12; Ppcload.dll] */
 BOOL Load_AlreadyInstalled(LPSTR lpszAppName);
@@ -23,18 +23,11 @@ BOOL Load_AlreadyInstalled(LPSTR lpszAppName);
 /* Load_Exit  [function; ce-only; CE 1.0..199, 2.11..2.12; Ppcload.dll] */
 void Load_Exit(void);
 
-/* Load_Init  [function; ce-only; CE 1.0..199, 2.11..2.12; Ppcload.dll] */
-LOADERROR Load_Init(void);
-
 /* Load_PegCpuType  [function; ce-only; CE 1.0..199, 2.11..2.12; Ppcload.dll] */
 BOOL Load_PegCpuType(LPSTR lpszCpu);
 
 /* Load_PegFreeSpace  [function; ce-only; CE 1.0..199, 2.11..2.12; Ppcload.dll] */
 DWORD Load_PegFreeSpace(void);
-
-/* Load_RegisterFileInfo  [function; ce-only; CE 1.0..199, 2.11..2.12; Ppcload.dll] */
-LOADERROR Load_RegisterFileInfo(LPCSTR szFileName, 
-LPCSTR szIconFile, LPCSTR szFileType, int iIcon);
 #endif /* _WIN32_WCE */
 
 #endif /* _PPCLOAD_ */

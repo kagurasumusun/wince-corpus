@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 32 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 31 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _MSGSTOR2_
 #define _MSGSTOR2_
@@ -35,51 +35,14 @@ typedef struct TransportFolderList_s {
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213)) /* CE 2.11..2.12 */
-
-/* MailFirstEx  [function; ce-only; CE 2.11..2.12] */
-BOOL MailFirstEx (HANDLE hMail, MailMsg* pmm, FID* pfid, 
-FID* pfidTarget);
-
-/* MailGetEx  [function; ce-only; CE 2.11..2.12] */
-BOOL MailGetEx (HANDLE hMail, MailMsg* pmm, FID* pfid, 
-FID* pfidTarget);
-
-/* MailGetFolderIdEx  [function; ce-only; CE 2.11..2.12] */
-BOOL MailGetFolderIdEx (HANDLE hMail, FID fidParent, FID* pfid, LPWSTR szName);
-
-/* MailGetFolderNameEx  [function; ce-only; CE 2.11..2.12] */
-BOOL MailGetFolderNameEx (HANDLE hMail, FID* pfId, int* piLen 
-LPWSTR szName);
-
-/* MailGetSvcIdEx  [function; ce-only; CE 2.11..2.12] */
-BOOL MailGetSvcIdEx (HANDLE hMail, MailMsg* pmm, FID* pfid);
-
-/* MailNextEx  [function; ce-only; CE 2.11..2.12] */
-BOOL MailNextEx (HANDLE hMail, MailMsg* pmm, FID fid, FID fidTarget, 
-BOOL fDoAll);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213)) /* CE 2.11..2.12 */
 
 /* MailOpenNotifyEx  [function; ce-only; CE 2.11..2.12] */
 BOOL MailOpenNotifyEx (HANDLE * phMail, WORD* pwVersion 
 BOOL fAllowCreate, HWND hwndNotify);
 
-/* MailPutEx  [function; ce-only; CE 2.11..2.12] */
-BOOL MailPutEx (HANDLE hMail, MailMsg*pmm, FID fid);
-
-/* MailPutFolderEx  [function; ce-only; CE 2.11..2.12] */
-BOOL MailPutFolder (HANDLE hMail, FID fidParent, FID fidFolder, 
-LPWSTR szName);
-
-/* MailUpdateEx  [function; ce-only; CE 2.11..2.12] */
-BOOL MailUpdateEx (HANDLE hMail, MailMsg* pmm, FID fid, 
-FID fidTarget, BOOL fDoAll);
-
 /* TransportCancel  [function; ce-only; CE 2.11..2.12] */
 BOOL TransportCancel( HANDLE hService);
-
-/* TransportCheckForNewMail  [function; ce-only; CE 2.11..2.12] */
-BOOL TransportCheckForNewMail( HANDLE hService, 
-CHECKFORNEWMAILCALLBACK pfnCheckNewMailCallback);
 
 /* TransportCopy  [function; ce-only; CE 2.11..2.12] */
 BOOL TransportCopy(HANDLE hService, MailMsg *MsgPtr, 
@@ -91,10 +54,6 @@ WORD *pwNumMsg);
 
 /* TransportDelFolder  [function; ce-only; CE 2.11..2.12] */
 BOOL TransportDelFolder(HANDLE hService, LPWSTR szFolderID);
-
-/* TransportDownloadAttachment  [function; ce-only; CE 2.11..2.12] */
-Int TransportDownloadAttachment (HANDLE serviceHandle_p, 
-MailMsg* mailMessage_p, MailAtt* mailAtt_p)
 
 /* TransportDuplicateHandle  [function; ce-only; CE 2.11..2.12] */
 BOOL TransportDuplicateHandle(HANDLE hService, 
@@ -127,10 +86,6 @@ LPWSTR szDestFolderID);
 /* TransportPut  [function; ce-only; CE 2.11..2.12] */
 BOOL TransportPut(HANDLE hService, LPWSTR szFolderID, 
 MailMsg *MsgPtr);
-
-/* TransportPutFolder  [function; ce-only; CE 2.11..2.12] */
-BOOL TransportPutFolder(HANDLE hService, LPWSTR szFolderName, 
-LPWSTR szParentID, LPWST*pszCreatedID);
 
 /* TransportRecvEx  [function; ce-only; CE 2.11..2.12] */
 BOOL TransportRecvEx(HANDLE hService, LPWSTR szFolderID, 

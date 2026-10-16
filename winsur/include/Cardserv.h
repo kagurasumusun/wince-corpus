@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 27 constants, 11 declarations, 0 outlines, 0 base types, 0 extra macros, 11 extra decls
+ * 27 constants, 10 declarations, 0 outlines, 0 base types, 0 extra macros, 10 extra decls
  */
 #ifndef _CARDSERV_
 #define _CARDSERV_
@@ -54,54 +54,7 @@
 /* CARD_CLIENT_HANDLE  [typedef; ce-only] */
 typedef PVOID CARD_CLIENT_HANDLE;
 
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 200 && _WIN32_WCE < 210) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.0..209, 2.11..2.12, 3.0..699 */
-
-/* CardReleaseSocketMask  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Cardserv.lib] */
-STATUS CardReleaseSocketMask(
- CARD_CLIENT_HANDLE hCardClient,
- CARD_SOCKET_HANDLE hSock 
-);
-
-/* CardRequestIRQ  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Cardserv.lib] */
-STATUS CardRequestIRQ( 
-CARD_CLIENT_HANDLE hCardClient 
-CARD_SOCKET_HANDLE hSocket 
-CARD_ISR ISRFunction 
-UINT32 uISRContextData );
-
-/* CardRequestSocketMask  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Cardserv.lib] */
-STATUS CardRequestSocketMask(
- CARD_CLIENT_HANDLE hCardClient,
- CARD_SOCKET_HANDLE hSock,
- UINT16 fEventMask 
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* CardPowerOff  [function; ce-only; CE 4.0..699; Cardserv.lib] */
-STATUS CardRequestConfiguration(
- CARD_CLIENT_HANDLE hCardClient,
- CARD_SOCKET_HANDLE hSock
-);
-
-/* CardPowerOn  [function; ce-only; CE 4.0..699; Cardserv.lib] */
-STATUS CardRequestConfiguration(
- CARD_CLIENT_HANDLE hCardClient,
- CARD_SOCKET_HANDLE hSock
-);
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
+/* PCARD_CONFIG_INFO  [extra struct] */
 typedef struct {
   CARD_SOCKET_HANDLE hSocket;
   UINT16 fAttributes;
@@ -115,6 +68,8 @@ typedef struct {
   UINT8 uCopyReg;
   UINT8 uExtendedStatus;
 } CARD_CONFIG_INFO, *PCARD_CONFIG_INFO;
+
+/* PCARD_DATA_PARMS  [extra struct] */
 typedef struct {
   CARD_SOCKET_HANDLE hSocket;
   UINT16 fAttributes;
@@ -126,27 +81,39 @@ typedef struct {
   UINT16 uBufLen;
   UINT16 uDataLen;
 } CARD_DATA_PARMS, *PCARD_DATA_PARMS;
+
+/* PCARD_EVENT_MASK_PARMS  [extra struct] */
 typedef struct {
   CARD_SOCKET_HANDLE hSocket;
   UINT16 fAttributes;
   UINT16 fEventMask;
 } CARD_EVENT_MASK_PARMS, *PCARD_EVENT_MASK_PARMS;
+
+/* PCARD_EVENT_PARMS  [extra struct] */
 typedef struct {
   UINT32 uClientData;
   UINT32 Parm1;
   UINT32 Parm2;
 } CARD_EVENT_PARMS, *PCARD_EVENT_PARMS;
+
+/* PCARD_REGISTER_PARMS  [extra struct] */
 typedef struct {
   UINT16 fAttributes;
   UINT16 fEventMask;
   UINT32 uClientData;
 } CARD_REGISTER_PARMS, *PCARD_REGISTER_PARMS;
+
+/* PCARD_SOCKET_HANDLE  [extra struct] */
 typedef struct {  UINT8 uSocket;  UINT8 uFunction;  } CARD_SOCKET_HANDLE, *PCARD_SOCKET_HANDLE;
+
+/* PCARD_STATUS  [extra struct] */
 typedef struct {
   CARD_SOCKET_HANDLE hSocket;
   UINT16 fCardState;
   UINT16 fSocketState;
 } CARD_STATUS, *PCARD_STATUS;
+
+/* PCARD_TUPLE_PARMS  [extra struct] */
 typedef struct {
   CARD_SOCKET_HANDLE hSocket;
   UINT16 fAttributes;
@@ -158,14 +125,13 @@ typedef struct {
   UINT8 uTupleCode;
   UINT8 uTupleLink;
 } CARD_TUPLE_PARMS, *PCARD_TUPLE_PARMS;
+
+/* PCARD_WINDOW_PARMS  [extra struct] */
 typedef struct {
   CARD_SOCKET_HANDLE hSocket;
   UINT16 fAttributes;
   UINT32 uWindowSize;
   UINT8 fAccessSpeed;
 } CARD_WINDOW_PARMS, *PCARD_WINDOW_PARMS;
-
-/* callback */
-typedef void  (*CARD_ISR)( UINT32 uISRContextData );
 
 #endif /* _CARDSERV_ */

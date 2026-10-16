@@ -15,32 +15,11 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 1.0..199, 3.0..399 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400)) /* CE 1.0..199, 3.0..399 */
 
 /* InitHTMLControl  [function; ce-only; CE 1.0..199, 3.0..399] */
 BOOL InitHTMLControl( 
 HINSTANCE hinst );
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 2.11..2.12, 3.0..399 */
-
-/* DTM_ADDTEXT  [function; ce-only; CE 2.11..2.12, 3.0..399] */
-DTM_ADDTEXT wParam = (WPARAM)(BOOL) bPlainText; 
-lParam = (LPARAM)(LPSTR) szText;
-
-/* DTM_ADDTEXTW  [function; ce-only; CE 2.11..2.12, 3.0..399] */
-DTM_ADDTEXT wParam = (WPARAM)(BOOL) bPlainText; 
-lParam = (LPARAM)(LPWSTR) szwText;
-
-/* DTM_ANCHORW  [function; ce-only; CE 2.11..2.12, 3.0..399] */
-DTM_ANCHORW wParam = 0,lParam = (LPARAM)(LPWSTR) szwAnchor;
-
-/* DTM_ENABLESHRINK  [function; ce-only; CE 2.11..2.12, 3.0..399] */
-DTM_ENABLESHRINK wParam = 0, 
-lParam = (LPARAM)(BOOL) bEnableShrink;
-
-/* DTM_IMAGEFAIL  [function; ce-only; CE 2.11..2.12, 3.0..399] */
-DTM_IMAGEFAIL wParam = 0, lParam = (LPARAM)(DWORD) dwCookie;
 #endif /* _WIN32_WCE */
 
 #endif /* _HTMLCTRL_ */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 18 declarations, 2 outlines, 0 base types, 0 extra macros, 7 extra decls
+ * 0 constants, 19 declarations, 1 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _SMCLIB_
 #define _SMCLIB_
@@ -15,15 +15,13 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-/* SCARD_CARD_CAPABILITIES  [struct; ce-only] */
-
 /* SCARD_VENDOR_ATTR  [struct; ce-only] */
 
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* SmartcardCreateLink  [function; ce-only; CE 3.0..399, 5.0..699] */
 NTSTATUS SmartcardCreateLink(
@@ -35,166 +33,14 @@ NTSTATUS SmartcardCreateLink(
 NTSTATUS SmartcardDeleteLink(
  LPCWSTR pszFriendlyName
 );
-
-/* SmartcardDeviceControl  [function; ce-only; CE 3.0..399, 5.0..699] */
-NTSTATUS SmartcardDeviceControl(
- PSMARTCARD_EXTENSION SmartcardExtension,
- PBYTE pInBuf,
- DWORD nInBufSize,
- PBYTE pOutBuf,
- DWORD nOutBufSize,
- PDWORD pBytesReturned
-);
-
-/* SmartcardExit  [function; ce-only; CE 3.0..399, 5.0..699] */
-VOID SmartcardExit(
- PSMARTCARD_EXTENSION SmartcardExtension
-);
-
-/* SmartcardInitialize  [function; ce-only; CE 3.0..399, 5.0..699] */
-NTSTATUS SmartcardInitialize(
- PSMARTCARD_EXTENSION SmartcardExtension
-);
-
-/* SmartcardLockDevice  [function; ce-only; CE 3.0..399, 5.0..699] */
-VOID SmartcardLockDevice(
- PSMARTCARD_EXTENSION SmartcardExtension
-);
-
-/* SmartcardRawReply  [function; ce-only; CE 3.0..399, 5.0..699] */
-NTSTATUS SmartcardRawReply(
- PSMARTCARD_EXTENSION SmartcardExtension
-);
-
-/* SmartcardRawRequest  [function; ce-only; CE 3.0..399, 5.0..699] */
-NTSTATUS SmartcardRawRequest(
- PSMARTCARD_EXTENSION SmartcardExtension
-);
-
-/* SmartcardT0Reply  [function; ce-only; CE 3.0..399, 5.0..699] */
-NTSTATUS SmartcardT0Reply(
- PSMARTCARD_EXTENSION SmartcardExtension
-);
-
-/* SmartcardT0Request  [function; ce-only; CE 3.0..399, 5.0..699] */
-NTSTATUS SmartcardT0Request(
- PSMARTCARD_EXTENSION SmartcardExtension
-);
-
-/* SmartcardT1Reply  [function; ce-only; CE 3.0..399, 5.0..699] */
-NTSTATUS SmartcardT1Reply(
- PSMARTCARD_EXTENSION SmartcardExtension
-);
-
-/* SmartcardT1Request  [function; ce-only; CE 3.0..399, 5.0..699] */
-NTSTATUS SmartcardT1Request(
- PSMARTCARD_EXTENSION SmartcardExtension
-);
-
-/* SmartcardUnlockDevice  [function; ce-only; CE 3.0..399, 5.0..699] */
-VOID SmartcardUnlockDevice(
- PSMARTCARD_EXTENSION SmartcardExtension
-);
-
-/* SmartcardUpdateCardCapabilities  [function; ce-only; CE 3.0..399, 5.0..699] */
-NTSTATUS SmartcardUpdateCardCapabilities(
- PSMARTCARD_EXTENSION SmartcardExtension
-);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
 
 /* MapNtStatusToWinError  [function; ce-only; CE 3.0..699] */
 ULONG MapNtStatusToWinError(
  NTSTATUS Status
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _SCARD_READER_CAPABILITIES {
-  struct {
-    ULONG Async;
-    ULONG Sync;
-  } SupportedProtocols;
-  ULONG ReaderType;
-  ULONG MechProperties;
-  ULONG CurrentState;
-  ULONG Channel;
-  struct {
-    ULONG Default;
-    ULONG Max;
-  } CLKFrequency;
-  struct {
-    ULONG Default;
-    ULONG Max;
-  } DataRate;
-  ULONG MaxIFSD;
-  ULONG PowerMgmtSupport;
-  ULONG Reserved[25];
-} SCARD_READER_CAPABILITIES, *PSCARD_READER_CAPABILITIES;
-typedef struct _SMARTCARD_EXTENSION {
-  ULONG Version;
-  VENDOR_ATTR VendorAttr;
-  NTSTATUS (*ReaderFunction[16])(PSMARTCARD_EXTENSION);
-  SCARD_CARD_CAPABILITIES CardCapabilities;
-  ULONG LastError;
-  struct {
-    PULONG Information;
-    PUCHAR RequestBuffer;
-    ULONG RequestBufferLength;
-    PUCHAR ReplyBuffer;
-    ULONG ReplyBufferLength;
-  } IoRequest;
-  ULONG MajorIoControlCode;
-  ULONG MinorIoControlCode;
-  POS_DEP_DATA OsData;
-  SCARD_READER_CAPABILITIES ReaderCapabilities;
-  PREADER_EXTENSION ReaderExtension;
-  SMARTCARD_REPLY SmartcardReply;
-  SMARTCARD_REQUEST SmartcardRequest;
-  T0_DATA T0;
-  T1_DATA T1;
-  ULONG Reserved[25];
-} SMARTCARD_EXTENSION, *PSMARTCARD_EXTENSION;
-typedef struct _T1_DATA {
-  UCHAR InfSize;
-  ULONG BytesReceived;
-  ULONG BytesSent;
-  ULONG BytesToSend;
-  UCHAR LastError;
-  UCHAR NAD;
-  ULONG PrevState;
-  UCHAR Resend;
-  UCHAR Resynch;
-  UCHAR SSN;
-  ULONG State;
-  UCHAR Wtx;
-} T1_DATA, *PT1_DATA;
-typedef struct _VENDOR_ATTR {
-  struct {
-    USHORT Length;
-    UCHAR Buffer[MAXIMUM_ATTR_STRING_LENGTH];
-  } VendorName;
-  struct {
-    USHORT Length;
-    UCHAR Buffer[MAXIMUM_ATTR_STRING_LENGTH];
-  } IfdType;
-  ULONG UnitNo;
-  struct {
-    USHORT BuildNumber;
-    UCHAR VersionMinor;
-    UCHAR VersionMajor;
-  } IfdVersion;
-  struct {
-    USHORT Length;
-    UCHAR Buffer[MAXIMUM_ATTR_STRING_LENGTH];
-  } IfdSerialNo;
-  ULONG Reserved[25];
-} VENDOR_ATTR, *PVENDOR_ATTR;
 
 #endif /* _SMCLIB_ */

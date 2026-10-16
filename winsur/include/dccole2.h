@@ -11,12 +11,4 @@
 #define _DCCOLE2_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-HRESULT OnLogIpAddrEx ( const SOCKADDR_STORAGE * pIpAddrd );
-
 #endif /* _DCCOLE2_ */

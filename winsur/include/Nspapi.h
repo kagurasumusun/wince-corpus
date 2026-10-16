@@ -39,28 +39,4 @@
 #define SERVICE_FLUSH 3
 #define SERVICE_REGISTER 1
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _BLOB {ULONGcbSize;BYTE*pBlobData;} BLOB, LPBLOB;
-typedef struct _CRYPTOAPI_BLOB {
-  DWORD cbData;
-  BYTE* pbData;
-} CRYPT_INTEGER_BLOB, *PCRYPT_INTEGER_BLOB,
-CRYPT_UINT_BLOB, *PCRYPT_UINT_BLOB,
-CRYPT_OBJID_BLOB, *PCRYPT_OBJID_BLOB,
-CERT_NAME_BLOB, *PCERT_NAME_BLOB,
-CERT_RDN_VALUE_BLOB, *PCERT_RDN_VALUE_BLOB,
-CERT_BLOB, *PCERT_BLOB,
-CRL_BLOB, *PCRL_BLOB,
-DATA_BLOB, *PDATA_BLOB,
-CRYPT_DATA_BLOB, *PCRYPT_DATA_BLOB,
-CRYPT_HASH_BLOB, *PCRYPT_HASH_BLOB,
-CRYPT_DIGEST_BLOB, *PCRYPT_DIGEST_BLOB,
-CRYPT_DER_BLOB,*PCRYPT_DER_BLOB,
-CRYPT_ATTR_BLOB, *PCRYPT_ATTR_BLOB;
-
 #endif /* _NSPAPI_ */

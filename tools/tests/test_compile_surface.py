@@ -29,6 +29,9 @@ DRV = r'''
 #include "Windows.h"
 #include "CEDDK.h"
 BOOL APIENTRY DllMain(HANDLE h, DWORD reason, LPVOID reserved) {
+    PHYSICAL_ADDRESS a;
+    a.QuadPart = 0;
+    MmMapIoSpace(a, 0, FALSE);
     return TRUE;
 }
 '''
@@ -43,8 +46,9 @@ class CompileSurfaceTests(unittest.TestCase):
             path = fh.name
         try:
             r = subprocess.run(
-                ["gcc", "-fsyntax-only", "-I", INCLUDE,
-                 "-D_WIN32_WCE=0x500", "-w", path],
+                ["gcc", "-fsyntax-only", "-std=c11", "-w",
+                 "-Werror=implicit-function-declaration",
+                 "-I", INCLUDE, "-D_WIN32_WCE=0x500", path],
                 capture_output=True, text=True)
             self.assertEqual(r.returncode, 0, r.stderr)
         finally:

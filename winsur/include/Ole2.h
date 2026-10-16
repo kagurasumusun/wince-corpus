@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 18 constants, 15 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 18 constants, 15 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _OLE2_
 #define _OLE2_
@@ -35,119 +35,5 @@
 #define OLEIVERB_SHOW -1
 #define OLEIVERB_UIACTIVATE -4
 #define OLELINKBIND_EVENIFCLASSDIFF 1
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* CreateOleAdviseHolder  [function; shared; CE 2.11..2.12, 3.0..699; Ole232.lib, ole232.lib, Ole32.lib, ole32.lib] */
-WINOLEAPI CreateOleAdviseHolder(
- IOleAdviseHolder FAR* FAR* ppOAHolder
-);
-
-/* OleCreate  [function; shared; CE 2.11..2.12, 3.0..699; Ole232.lib, ole232.lib, Ole32.lib, ole32.lib] */
-WINOLEAPI OleCreate( 
- REFCLSID rclsid, 
- REFIID riid, 
- DWORD renderopt, 
- FORMATETC* pFormatEtc, 
- IOleClientSite* pClientSite, 
- IStorage* pStg, 
- void** ppvObject
-);
-
-/* OleIsRunning  [function; shared; CE 2.11..2.12, 3.0..699; Ole232.lib, ole232.lib, Ole32.lib, ole32.lib] */
-BOOL OleIsRunning(
- LPOLEOBJECT pObject
-);
-
-/* OleRun  [function; shared; CE 2.11..2.12, 3.0..699; Ole232.lib, ole232.lib, Ole32.lib, ole32.lib] */
-WINOLEAPI OleRun(
- LPUNKNOWN pUnknown
-);
-
-/* OleSave  [function; shared; CE 2.11..2.12, 3.0..699; Ole232.lib, ole232.lib, Ole32.lib, ole32.lib] */
-WINOLEAPI OleSave( 
- IPersistStorage* pPS, 
- IStorage* pStg, 
- BOOL fSameAsLoad
-);
-
-/* OleSetContainedObject  [function; shared; CE 2.11..2.12, 3.0..699; Ole232.lib, ole232.lib, Ole32.lib, ole32.lib] */
-WINOLEAPI OleSetContainedObject( 
- LPUNKNOWN pUnk, 
- BOOL fContained
-);
-
-/* OleSetMenuDescriptor  [function; shared; CE 2.11..2.12, 3.0..699; Ole232.lib, ole232.lib, Ole32.lib, ole32.lib] */
-WINOLEAPI OleSetMenuDescriptor( 
- HOLEMENU holemenu, 
- HWND hwndFrame, 
- HWND hwndActiveObject, 
- LPOLEINPLACEFRAME lpFrame, 
- LPOLEINPLACEACTIVEOBJECT lpActiveObj 
-);
-
-/* ReadClassStg  [function; shared; CE 2.11..2.12, 3.0..699; Ole232.lib, ole232.lib, Ole32.lib, ole32.lib] */
-WINOLEAPI ReadClassStg( 
- IStorage* pStg,
- CLSID* pclsid 
-);
-
-/* ReadClassStm  [function; shared; CE 2.11..2.12, 3.0..699; Ole232.lib, ole232.lib, Ole32.lib, ole32.lib] */
-WINOLEAPI ReadClassStm(
- IStream* pStm,
- CLSID* pclsid 
-);
-
-/* ReleaseStgMedium  [function; shared; CE 2.11..2.12, 3.0..699; ole232.lib, Ole32.lib, ole32.lib] */
-void ReleaseStgMedium( 
- STGMEDIUM* pmedium
-);
-
-/* WriteClassStg  [function; shared; CE 2.11..2.12, 3.0..699; Ole232.lib, ole232.lib, Ole32.lib, ole32.lib] */
-WINOLEAPI WriteClassStg(
- IStorage* pStg,
- REFCLSID rclsid 
-);
-
-/* WriteClassStm  [function; shared; CE 2.11..2.12, 3.0..699; Ole232.lib, ole232.lib, Ole32.lib, ole32.lib] */
-WINOLEAPI WriteClassStm(
- IStream* pStm,
- REFCLSID rclsid
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
-
-/* GetHGlobalFromStream  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
-WINOLEAPI GetHGlobalFromStream(
- IStream* pstm,
- HGLOBAL* phglobal
-);
-
-/* OleLoadFromStream  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
-WINOLEAPI OleLoadFromStream(
- IStream* pStm,
- REFIID iidInterface,
- void** ppvObj
-);
-
-/* OleSaveToStream  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
-WINOLEAPI OleSaveToStream(
- IPersistStream* pPStm,
- IStream* pStm 
-);
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-WINOLEAPI OleDraw(  IUnknown *pUnk,  DWORD dwAspect,  HDC hdcDraw,  LPCRECT lprcBounds);
 
 #endif /* _OLE2_ */

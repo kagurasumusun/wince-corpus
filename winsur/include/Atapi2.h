@@ -11,12 +11,4 @@
 #define _ATAPI2_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _INQUIRY_DATA{UCHARinqDevType; UCHARinqRMB; UCHARinqVersion; UCHARinqAtapiVersion; UCHARinqLength; UCHARinqReserved[3]; UCHARinqVendor[8]; UCHARinqProdID[16]; UCHARinqRev[4]; UCHARinqReserved2[60]; } INQUIRY_DATA, *PINQUIRY_DATA;
-
 #endif /* _ATAPI2_ */

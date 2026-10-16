@@ -61,16 +61,19 @@ struct sockaddr_in6 {
  u_long sin6_scope_id;
 };
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-void freeaddrinfo(struct addrinfo FAR* ai);
+/* ai_next  [extra struct] */
 struct addrinfo {intai_flags;intai_family;intai_socktype;intai_protocol;size_tai_addrlen;char* ai_canonname;struct sockaddr* ai_addr;struct addrinfo* ai_next;};
-int getnameinfo( const struct sockaddr FAR* sa, socklen_t salen, char FAR* host, DWORD hostlen, char FAR* serv, DWORD servlen, int flags );
+
+/* ai  [extra struct] */
+void freeaddrinfo(struct addrinfo FAR* ai);
+
+/* intflags  [extra struct] */
 int getnameinfo(const struct sockaddr FAR* sa,socklen_tsalen,char FAR* host,DWORDhostlen,char FAR* serv,DWORDservlen,intflags);
+
+/* sin6_scope_id  [extra struct] */
 struct sockaddr_in6 {short sin6_family;u_short sin6_port;u_longsin6_flowinfo;struct in6_addrsin6_addr;u_long sin6_scope_id;};
+
+/* flags  [extra struct] */
+int getnameinfo( const struct sockaddr FAR* sa, socklen_t salen, char FAR* host, DWORD hostlen, char FAR* serv, DWORD servlen, int flags );
 
 #endif /* _WS2TCPIP_ */

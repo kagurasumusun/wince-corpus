@@ -11,11 +11,11 @@ the SAME tree, marked 'Win32 reference' -- never a second tree.
 ## What was generated
 
 * entities in scope: **29,161** (by surface: `ce-only` 24,666, `shared` 4,495)
-* header fragments: **680** under `include/`, each
+* header fragments: **659** under `include/`, each
   with its documented constants first, then the macros, the types
   and the functions; quoted text is verbatim, the `#define`
   keyword and the header/constant filing are derived and say so
-* derived `#define` lines written: **29,829**
+* derived `#define` lines written: **28,742**
 * derived member outlines (structures whose body no page prints):
   **643** -- marked DERIVED in the fragment
 * constants whose pages disagree / overlap: **33** name(s) examined in `kb/constant-conflicts.tsv`
@@ -32,7 +32,7 @@ the SAME tree, marked 'Win32 reference' -- never a second tree.
 * printed export ordinals: 1 file(s),
   94 name(s)
 * declarations taken from the Win32 reference because no CE page
-  prints one: **109** -- every
+  prints one: **111** -- every
   one marked in the fragment and the manifest; CE and desktop
   values are never assumed equal
 * constants numbered only by the Win32 shared reference (and only
@@ -40,7 +40,7 @@ the SAME tree, marked 'Win32 reference' -- never a second tree.
   tree, every one marked 'verify against the CE SDK'; a number a
   CE page prints always wins
 * spacing-only repairs across CE generations: **0**
-* pages behind this output: 8,692
+* pages behind this output: 8,513
 
 ## Constant/header linkage (kb/constant-headers.tsv)
 
@@ -97,8 +97,8 @@ every `#define` number above is a CE documentation quotation.
 
 | reason | entities |
 |--------|----------|
-| no declaration in the corpus | 20,191 |
-| declaration is not a C declaration | 16,686 |
+| no declaration in the corpus | 20,379 |
+| declaration is not a C declaration | 16,874 |
 | no header stated | 5,510 |
 | no CE version evidence | 1,504 |
 

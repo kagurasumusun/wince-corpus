@@ -44,25 +44,10 @@ struct NLED_SUPPORTS_INFO {
  BOOL fMetaCycleOff; 
 };
 
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
+/* cLeds  [extra struct] */
+struct NLED_COUNT_INFO {  UINT cLeds ; };
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 2.11..2.12, 3.0..399 */
-
-/* NLedDriverDllEntry  [function; ce-only; CE 2.11..2.12, 3.0..399; heuristic-prefix] */
-BOOL NLedDriverDllEntry( 
-HANDLE hinstDll, 
-DWORD fdwReason, 
-LPVOID lpvReserved );
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
+/* MetaCycleOff  [extra struct] */
 struct NLED_SETTINGS_INFO {
   UINT Lednum;
   INT OffOnBlink;
@@ -71,7 +56,8 @@ struct NLED_SETTINGS_INFO {
   LONG OffTime;
   INT MetaCycleOn;
   INT MetaCycleOff ; };
-struct NLED_COUNT_INFO {  UINT cLeds ; };
+
+/* fMetaCycleOff  [extra struct] */
 struct NLED_SUPPORTS_INFO {
   UINT Lednum;
   LONG lCycleAdjust;
@@ -81,7 +67,17 @@ struct NLED_SUPPORTS_INFO {
   BOOL fMetaCycleOn;
   BOOL fMetaCycleOff ; };
 
-/* function */
-VOID WINAPI NLedDriverDeInitialize(VOID);
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400)) /* CE 2.11..2.12, 3.0..399 */
+
+/* NLedDriverDllEntry  [function; ce-only; CE 2.11..2.12, 3.0..399; heuristic-prefix] */
+BOOL NLedDriverDllEntry( 
+HANDLE hinstDll, 
+DWORD fdwReason, 
+LPVOID lpvReserved );
+#endif /* _WIN32_WCE */
 
 #endif /* _NLED_ */

@@ -11,12 +11,4 @@
 #define _WINSMCRD_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _SCARD_IO_REQUEST{  DWORD dwProtocol; DWORD cbPciLength; } SCARD_IO_REQUEST, *PSCARD_IO_REQUEST, *LPSCARD_IO_REQUEST;
-
 #endif /* _WINSMCRD_ */

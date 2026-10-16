@@ -15,22 +15,10 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* IsIPSecRunning  [function; ce-only; CE 5.0..699; Ipsec_api.lib] */
 HRESULT IsIPSecRunning(void);
-
-/* SetIPSecConfig  [function; ce-only; CE 5.0..699; Ipsec_api.lib] */
-HRESULT SetIPSecConfig(
- IPSEC_API_PARAM param,
- DWORD flags
-);
-
-/* SetIPSecMode  [function; ce-only; CE 5.0..699; Ipsec_api.lib] */
-HRESULT SetIPSecMode(
- IPSEC_API_MODE_INFO modeInfo,
- DWORD flags
-);
 
 /* StartIPSec  [function; ce-only; CE 5.0..699; Ipsec_api.lib] */
 HRESULT StartIPSec(void);
@@ -43,10 +31,6 @@ HRESULT StopIPSec(void);
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
-
-/* struct */
-typedef struct { DWORD inAction; DWORD outAction; DWORD auth; PBYTE authInfo; DWORD authInfoSize; DWORD mmHashMask; DWORD mmEncMask; DWORD qmHashMask; DWORD qmEncMask; DWORD dhMask; DWORD protocol; DWORD scrIP;} IPSEC_API_MODE_INFO, *PIPSEC_API_MODE_INFO;
-typedef struct { DWORD id; PVOID val; DWORD valSize;} IPSEC_API_PARAM, *PIPSEC_API_PARAM;
 
 /* function */
 HRESULT ResetIPSecMode( DWORD srcIP DWORD flags );

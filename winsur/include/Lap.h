@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 16 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 15 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _LAP_
 #define _LAP_
@@ -23,11 +23,14 @@ typedef struct _InitLap {
  DWORD capabilities;
 } InitLap;
 
+/* InitLap  [extra struct] */
+typedef struct _InitLap { DWORD size; DWORD Capabilities; } InitLap;
+
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* CreateEnrollmentConfigDialog  [function; ce-only; CE 5.0..699; Coredll.lib] */
 BOOL CreateEnrollmentConfigDialog(
@@ -43,24 +46,6 @@ BOOL LAPCreateEnrollmentConfigDialog(
  DWORD dwOptions
 );
 
-/* VerifyUser  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL VerifyUser(
- const GUID* AEKey,
- LPCWSTR pwszAEDisplayText,
- HWND hWndParent,
- DWORD dwOptions,
- PVOID pExtended
-);
-
-/* VerifyUserStart  [function; ce-only; CE 5.0..699; Coredll.lib] */
-VOID VerifyUserStart(
- const GUID* AEKey,
- LPCWSTR pwszAEDisplayText,
- HWND hWndParent,
- DWORD dwOptions,
- PVOID pExtended
-);
-
 /* VerifyUserStop  [function; ce-only; CE 5.0..699; Coredll.lib] */
 VOID VerifyUserStop();
 
@@ -68,10 +53,7 @@ VOID VerifyUserStop();
 VOID VerifyUserToTop();
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* LAPCancelVerifySequence  [function; ce-only; CE 6.0..699] */
-BOOL LAPCancelVerifySequence()
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* LAPDisplayCodeword  [function; ce-only; CE 6.0..699] */
 BOOL LAPDisplayCodeword(
@@ -108,23 +90,6 @@ BOOL LASSGetValue(
  DWORD cbOutBuffer,
  DWORD* pcbReturned
 );
-
-/* VerifyUserAsync  [function; ce-only; CE 6.0..699] */
-LASSHandle VerifyUserAsync(
- const GUID *AEKey,
- LPCWSTR wszAEDisplayText,
- HWND hWndParent, 
- DWORD dwOptions,
- PVOID pExtended
-);
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _InitLap { DWORD size; DWORD Capabilities; } InitLap;
 
 #endif /* _LAP_ */

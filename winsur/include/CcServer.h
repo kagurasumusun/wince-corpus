@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _CCSERVER_
 #define _CCSERVER_
@@ -17,8 +17,6 @@
  * ================================================================ */
 
 /* function */
-HRESULT EnumerateConnections( [in] DWORD dwSizeActual, [out] DWORD* pdwSizeReturned, [out,size_is(dwSizeActual), length_is(d*pdwSizeReturned)] BSTR[] Connections, [out] VARIANT_BOOL* pfMoreEntries);
-HRESULT GetConnectionFromId( BSTR bstrConnectionId, ICcConnection** ppiConnection);
 HRESULT GetDatastore( DWORD dwLocale, ICcDatastore** ppiDatastore);
 HRESULT get_Locale ( DWORD* pdwLocale);
 HRESULT put_Locale ( DWORDdwLocale);

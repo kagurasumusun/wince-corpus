@@ -15,22 +15,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 2.11..2.12, 3.0..399 */
-
-/* OhcdMdd_CreateMemoryObject  [function; ce-only; CE 2.11..2.12, 3.0..399] */
-LPVOID OhcdMdd_CreateMemoryObject( 
-DWORD cbSize, 
-DWORD cbHighPrioritySize, 
-PUCHAR pVirtAddr, 
-PUCHAR pPhysAddr );
-
-/* OhcdMdd_CreateOhcdObject  [function; ce-only; CE 2.11..2.12, 3.0..399] */
-LPVOID OhcdMdd_CreateOhcdObject( 
-LPVOID lpvOhcdPddObject, 
-LPVOID lpvMemoryObject, 
-LPCWSTR szRegKey, 
-PUCHAR ioPortBase, 
-DWORD dwSysIntr );
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400)) /* CE 2.11..2.12, 3.0..399 */
 
 /* OhcdMdd_DestroyMemoryObject  [function; ce-only; CE 2.11..2.12, 3.0..399] */
 BOOL OhcdMdd_DestroyMemoryObject( 
@@ -103,24 +88,7 @@ DWORD OhcdPdd_Write(
 DWORD dwOpenContext );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* HcdMdd_CreateHcdObject  [function; ce-only; CE 4.0..699] */
-LPVOID HcdMdd_CreateHcdObject(
- LPVOID lpvOhcdPddObject,
- LPVOID lpvMemoryObject,
- LPCWSTR szRegKey,
- PUCHAR ioPortBase,
- DWORD dwSysIntr 
-);
-
-/* HcdMdd_CreateMemoryObject  [function; ce-only; CE 4.0..699] */
-LPVOID HcdMdd_CreateMemoryObject(
- DWORD cbSize,
- DWORD cbHighPrioritySize,
- PUCHAR pVirtAddr,
- PUCHAR pPhysAddr 
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* HcdMdd_DestroyHcdObject  [function; ce-only; CE 4.0..699] */
 BOOL HcdMdd_DestroyOhcdObject(

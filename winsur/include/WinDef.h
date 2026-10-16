@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 29 constants, 67 declarations, 9 outlines, 87 base types, 1 extra macros, 0 extra decls
+ * 29 constants, 67 declarations, 9 outlines, 89 base types, 1 extra macros, 0 extra decls
  */
 #ifndef _WINDEF_
 #define _WINDEF_
@@ -114,7 +114,9 @@
 #define FALSE 0
 #define FASTCALL __fastcall
 #define HMONITOR_DECLARED 1
+#ifndef NULL
 #define NULL 0
+#endif
 #define PACKED __attribute__((packed))
 #define STDCALL __stdcall
 #define STRICT 1
@@ -405,6 +407,16 @@ typedef DWORD CEPROPID;
  * CE Unicode / 32-bit data-types row
  * source: win32/common/windows-data-types.md */
 typedef DWORD (WINAPI *LPTHREAD_START_ROUTINE)(LPVOID);
+
+/* LARGE_INTEGER [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef union _LARGE_INTEGER { struct { DWORD LowPart; LONG HighPart; } u; LONGLONG QuadPart; } LARGE_INTEGER, *PLARGE_INTEGER;
+
+/* PHYSICAL_ADDRESS [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef LARGE_INTEGER PHYSICAL_ADDRESS, *PPHYSICAL_ADDRESS;
 
 /* ATOM
  * source: win32/common/windows-data-types.md */

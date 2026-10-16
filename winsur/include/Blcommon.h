@@ -25,7 +25,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* BootloaderMain  [function; ce-only; CE 4.0..699; Blcommon.lib, blcommon.lib] */
 void BootloaderMain (void);
@@ -50,14 +50,6 @@ BOOL OEMFinishEraseFlash (void);
 /* OEMIsFlashAddr  [function; ce-only; CE 4.0..699; Blcommon.lib, blcommon.lib] */
 BOOL OEMIsFlashAddr(
  DWORD dwAddr
-);
-
-/* OEMLaunch  [function; ce-only; CE 4.0..699; Blcommon.lib, blcommon.lib] */
-void OEMLaunch(
- DWORD dwImageStart,
- DWORD dwImageLength,
- DWORD dwLaunchAddr,
- const ROMHDR* pRomHdr
 );
 
 /* OEMMapMemAddr  [function; ce-only; CE 4.0..699; Blcommon.lib, blcommon.lib] */

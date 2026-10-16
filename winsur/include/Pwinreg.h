@@ -48,7 +48,7 @@ typedef struct RegSecureKeyList {
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* RegCopyFile  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
 BOOL RegCopyFile(
@@ -61,7 +61,7 @@ BOOL RegRestoreFile(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* SetCurrentUser  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
 BOOL SetCurrentUser( 
@@ -72,7 +72,7 @@ BOOL SetCurrentUser(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* GetUserDirectory  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL GetUserDirectory( 

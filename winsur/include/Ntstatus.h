@@ -11,15 +11,4 @@
 #define _NTSTATUS_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* callback */
-typedef STATUS (  *CLIENT_CALLBACK)  ( CARD_EVENT CardEvent  CARD_SOCKET_HANDLE hSocket  PCARD_EVENT_PARMS pCardEventParms );
-
-/* function */
-NDIS STATUS_NdisIMQueueMiniportCallback (IN NDIS_HANDLE MiniportAdapterHandle,IN W_MINIPORT_CALLBACKCallbackRoutine,IN PVOIDCallbackContext);
-
 #endif /* _NTSTATUS_ */

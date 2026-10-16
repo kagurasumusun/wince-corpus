@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 27 constants, 30 declarations, 2 outlines, 0 base types, 0 extra macros, 26 extra decls
+ * 27 constants, 30 declarations, 2 outlines, 0 base types, 0 extra macros, 25 extra decls
  */
 #ifndef _WINDNS_
 #define _WINDNS_
@@ -119,81 +119,79 @@ typedef struct _DnsRecordFlags {
 /*   cAlgNameLength */
 /*   bPacketPointers */
 
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* DnsModifyRecordsInSet_W  [function; shared; CE 5.0..699; Dnsapi.lib, dnsapi.lib] */
-DNS_STATUS WINAPI DnsModifyRecordsInSet_W(
- PDNS_RECORD pAddRecords,
- PDNS_RECORD pDeleteRecords,
- DWORD Options,
- HANDLE hContext,
- PIP4_ARRAY pServerList,
- PVOID pReserved
-);
-
-/* DnsQuery_W  [function; shared; CE 5.0..699; Dnsapi.lib, dnsapi.lib] */
-DNS_STATUS
-WINAPI
-DnsQuery_W(
- IN PCWSTR pszName,
- IN WORD wType,
- IN DWORD Options, 
- IN PIP4_ARRAY aipServers OPTIONAL,
- IN OUT PDNS_RECORD * ppQueryResults OPTIONAL,
- IN OUT PVOID * pReserved OPTIONAL
- );
-
-/* DnsRecordListFree  [function; shared; CE 5.0..699; Dnsapi.lib, dnsapi.lib] */
-void WINAPI DnsRecordListFree(
- PDNS_RECORD pRecordList,
- DNS_FREE_TYPE FreeType
-);
-
-/* DnsReplaceRecordSetW  [function; shared; CE 5.0..699; Dnsapi.lib, dnsapi.lib] */
-DNS_STATUS WINAPI DnsReplaceRecordSetW(
- PDNS_RECORD pNewSet,
- DWORD Options,
- HANDLE hContext,
- PIP_ARRAY pServerList,
- PVOID pReserved
-);
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
+/* PDNS_AAAA_DATA  [extra struct] */
 typedef struct {DNS_IP6_ADDRESS Ip6Address;} DNS_AAAA_DATA, *PDNS_AAAA_DATA;
-typedef struct {BYTE AddressType;BYTE Address[DNS_ATMA_MAX_ADDR_LENGTH];} DNS_ATMA_DATA, *PDNS_ATMA_DATA;
+
+/* PDNS_A_DATA  [extra struct] */
 typedef struct {IP4_ADDRESS IpAddress;} DNS_A_DATA, *PDNS_A_DATA;
+
+/* PDNS_HEADER  [extra struct] */
 typedef struct _DNS_HEADER {WORD Xid;BYTE RecursionDesired;BYTE Truncation;BYTE Authoritative;BYTE Opcode;BYTE IsResponse;BYTE ResponseCode;BYTE Reserved;BYTE RecursionAvailable;WORD QuestionCount;WORD AnswerCount;WORD NameServerCount;WORD AdditionalCount;} DNS_HEADER, *PDNS_HEADER;
+
+/* PDNS_KEY_DATA  [extra struct] */
 typedef struct {WORD wFlags;BYTE chProtocol;BYTE chAlgorithm;BYTE Key[1];} DNS_KEY_DATA, *PDNS_KEY_DATA;
+
+/* PDNS_LOC_DATA  [extra struct] */
 typedef struct { WORD wVersion; WORD wSize; WORD wHorPrec; WORD wVerPrec; DWORD dwLatitude; DWORD dwLongitude; DWORD dwAltitude;} DNS_LOC_DATA, *PDNS_LOC_DATA;
+
+/* PDNS_MESSAGE_BUFFER  [extra struct] */
 typedef struct _DNS_MESSAGE_BUFFER {DNS_HEADER MessageHead;CHAR MessageBody[1];}DNS_MESSAGE_BUFFER, *PDNS_MESSAGE_BUFFER;
+
+/* PDNS_MINFO_DATA  [extra struct] */
 typedef struct { LPTSTR pNameMailbox; LPTSTR pNameErrorsMailbox;} DNS_MINFO_DATA, *PDNS_MINFO_DATA;
+
+/* PDNS_MX_DATA  [extra struct] */
 typedef struct { LPTSTR pNameExchange; WORD wPreference; WORD Pad;} DNS_MX_DATA, *PDNS_MX_DATA;
+
+/* PDNS_NULL_DATA  [extra struct] */
 typedef struct { DWORD dwByteCount; BYTE Data[1];} DNS_NULL_DATA, *PDNS_NULL_DATA;
+
+/* PDNS_NXT_DATA  [extra struct] */
 typedef struct { LPTSTR pNameNext; WORD wNumTypes; WORD wTypes[1];} DNS_NXT_DATA, *PDNS_NXT_DATA;
+
+/* PDNS_PTR_DATA  [extra struct] */
 typedef struct { LPTSTR pNameHost;} DNS_PTR_DATA, *PDNS_PTR_DATA;
+
+/* PDNS_RECORD  [extra struct] */
 typedef struct _DnsRecord {struct _DnsRecord* pNext;LPTSTR pName;WORD wType;WORD wDataLength;union {DWORD DW;DNS_RECORD_FLAGS S;} Flags;DWORD dwTtl;DWORD dwReserved;union {DNS_A_DATA A;DNS_SOA_DATA SOA, Soa;DNS_PTR_DATA PTR, Ptr, NS, Ns, CNAME, Cname, MB, Mb, MD, Md, MF, Mf, MG, Mg, MR, Mr;DNS_MINFO_DATA MINFO, Minfo, RP, Rp;DNS_MX_DATA MX, Mx, AFSDB, Afsdb, RT, Rt;DNS_TXT_DATA HINFO, Hinfo, ISDN, Isdn, TXT, Txt, X25;DNS_NULL_DATA Null;DNS_WKS_DATA WKS, Wks;DNS_AAAA_DATA AAAA;DNS_KEY_DATA KEY, Key;DNS_SIG_DATA SIG, Sig;DNS_ATMA_DATA ATMA, Atma;DNS_NXT_DATA NXT, Nxt;DNS_SRV_DATA SRV, Srv;DNS_TKEY_DATA TKEY, Tkey;DNS_TSIG_DATA TSIG, Tsig;DNS_WINS_DATA WINS, Wins;DNS_WINSR_DATA WINSR, WinsR, NBSTAT, Nbstat;} Data;} DNS_RECORD, *PDNS_RECORD;
+
+/* PDNS_RRSET  [extra struct] */
 typedef struct _DnsRRSet { PDNS_RECORD pFirstRR; PDNS_RECORD pLastRR;} DNS_RRSET, *PDNS_RRSET;
+
+/* PDNS_SIG_DATA  [extra struct] */
 typedef struct { LPTSTR pNameSigner; WORD wTypeCovered; BYTE chAlgorithm; BYTE chLabelCount; DWORD dwOriginalTtl; DWORD dwExpiration; DWORD dwTimeSigned; WORD wKeyTag; WORD Pad; BYTE Signature[1];} DNS_SIG_DATA, *PDNS_SIG_DATA;
+
+/* PDNS_SOA_DATA  [extra struct] */
 typedef struct { LPTSTR pNamePrimaryServer; LPTSTR pNameAdministrator; DWORD dwSerialNo; DWORD dwRefresh; DWORD dwRetry; DWORD dwExpire; DWORD dwDefaultTtl;} DNS_SOA_DATA, *PDNS_SOA_DATA;
+
+/* PDNS_SRV_DATA  [extra struct] */
 typedef struct { LPTSTR pNameTarget; WORD wPriority; WORD wWeight; WORD wPort; WORD Pad;} DNS_SRV_DATA, *PDNS_SRV_DATA;
+
+/* PDNS_TKEY_DATA  [extra struct] */
 typedef struct { LPTSTR pNameAlgorithm; PBYTE pAlgorithmPacket; PBYTE pKey; PBYTE pOtherData; DWORD dwCreateTime; DWORD dwExpireTime; WORD wMode; WORD wError; WORD wKeyLength; WORD wOtherLength; UCHAR cAlgNameLength; BOOL bPacketPointers;} DNS_TKEY_DATA, *PDNS_TKEY_DATA;
+
+/* PDNS_TXT_DATA  [extra struct] */
 typedef struct { DWORD dwStringCount; LPTSTR pStringArray[1];} DNS_TXT_DATA, *PDNS_TXT_DATA;
+
+/* PDNS_WINSR_DATA  [extra struct] */
 typedef struct { DWORD dwMappingFlag; DWORD dwLookupTimeout; DWORD dwCacheTimeout; LPTSTR pNameResultDomain;} DNS_WINSR_DATA, *PDNS_WINSR_DATA;
+
+/* PDNS_WINS_DATA  [extra struct] */
 typedef struct { DWORD dwMappingFlag; DWORD dwLookupTimeout; DWORD dwCacheTimeout; DWORD cWinsServerCount; IP4_ADDRESS WinsServers[1];} DNS_WINS_DATA, *PDNS_WINS_DATA;
+
+/* PDNS_WIRE_QUESTION  [extra struct] */
 typedef struct _DNS_WIRE_QUESTION { WORD QuestionType; WORD QuestionClass;} DNS_WIRE_QUESTION, *PDNS_WIRE_QUESTION;
+
+/* PDNS_WIRE_RECORD  [extra struct] */
 typedef struct _DNS_WIRE_RECORD { WORD RecordType; WORD RecordClass; DWORD TimeToLive; WORD DataLength;} DNS_WIRE_RECORD, *PDNS_WIRE_RECORD;
+
+/* PDNS_WKS_DATA  [extra struct] */
 typedef struct { IP4_ADDRESS IpAddress; UCHAR chProtocol; BYTE BitMask[1];} DNS_WKS_DATA, *PDNS_WKS_DATA;
+
+/* PIP4_ARRAY  [extra struct] */
 typedef struct _IP4_ARRAY { DWORD AddrCount; IP4_ADDRESS AddrArray[1];} IP4_ARRAY, *PIP4_ARRAY;
+
+/* PIP6_ADDRESS  [extra struct] */
 typedef struct { DWORD IP6Dword[4];} IP6_ADDRESS, *PIP6_ADDRESS;
 
 #endif /* _WINDNS_ */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 14 constants, 17 declarations, 4 outlines, 0 base types, 0 extra macros, 42 extra decls
+ * 14 constants, 12 declarations, 4 outlines, 0 base types, 0 extra macros, 41 extra decls
  */
 #ifndef _CESYNC_
 #define _CESYNC_
@@ -60,104 +60,7 @@
 /*   hpalDefault */
 /*   flGraphicsCaps2 */
 
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* ReportStatus  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib] */
-BOOL (*PREPORTSTATUS)(
- LPWSTR lpszObjType,
- UINT uCode,
- UINT uParam 
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 1.0..199, 3.0..699 */
-
-/* InitObjType  [function; ce-only; CE 1.0..199, 3.0..699; Coredll.lib, coredll.lib] */
-BOOL (*PINITOBJPROC)(
- LPWSTR lpszObjType,
- IReplObjHandler** ppObjHandler,
- UINT uPartnerBit
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 5.0..699 */
-
-/* GetObjTypeInfo  [function; ce-only; CE 1.0..199, 5.0..699] */
-BOOL (*PGETOBJTYPEINFO)(
- POBJTYPEINFO pInfo
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* FindObjects  [function; ce-only; CE 5.0..699] */
-HRESULT (*PFINDOBJECTS)(
- PFINDOBJINFO pInfo
-);
-
-/* SyncData  [function; ce-only; CE 5.0..699] */
-HRESULT (*PSYNCDATA)(
- PSDREQUEST psd 
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* DoOptionsDialog  [function; ce-only; CE 6.0..699] */
-HRESULT DoOptionsDialog (
- HWND hwndParent, 
- LPCSTR lpszObjType, 
- IReplNotify* pntfy
-);
-
-/* OnSSPDisable  [function; ce-only; CE 6.0..699] */
-HRESULT
- WINAPI
- OnSSPDisable
- (
- HWND
- hwndParent
- );
-
-/* OnSSPEnable  [function; ce-only; CE 6.0..699] */
-HRESULT
- WINAPI
- OnSSPEnable
- (
- HWND
- hwndParent
- );
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* enum */
-enum ReplDialogs {OPTIONS_DIALOG };
-
-/* struct */
-typedef struct tagConfInfo{UINTcbStruct;HREPLFLDhFolder;HREPLITEMhLocalItem;HREPLITEMhRemoteItem;charszLocalName[MAX_OBJTYPE_NAME];
-charszLocalDesc[512];
-charszRemoteName[MAX_OBJTYPE_NAME];
-charszRemoteDesc[512];
-} CONFINFO, *PCONFINFO;
-typedef struct tagDevInfo {DWORD pid;
-char szName[MAX_PATH];
-char szType[80];
-char szPath[MAX_PATH];
-} DEVINFO, *PDEVINFO;
-typedef struct tagFindObjInfo { UINTuFlags; OBJTYPENAMEszObjType; UINT *poid; UINTcUnChg; UINTcChg; LPBYTElpbVolumeID; UINTcbVolumeID; LPVOIDlpvUser;} FINDOBJINFO, *PFINDOBJINFO;
-typedef struct tagObjNotify {UINTcbStruct;OBJTYPENAMEszObjType[MAX_OBJTYPE_NAME];UINTuFlags;UINTuPartnerBit;CEOIDoidObject;CEOIDINFOoidInfo;UINTcOidChg;UINTcOidDel;UINT* poid;} OBJNOTIFY, *POBJNOTIFY;
-typedef struct tagObjTypeInfo {UINT cbStruct;OBJTYPENAMEW szObjType;UINT uFlags;WCHAR szName[80];UINT cObjects;UINT cbAllObj;FILETIME ftLastModified;} OBJTPYEINFO, *POBJTYPEINFO;
-typedef struct tagObjUIData {UINT cbStruct;HICON hIconLarge;HICONhIconSmall;charszName[MAX_PATH];charszSyncText[MAX_PATH];charszTypeText[80];charszPlTypeText[80];} OBJUIDATA, *POBJUIDATA;
-typedef struct tagReplSetup { UINT cbStruct; BOOL fRead; DWORD dwFlags; HRESULT hr; OBJTYPENAME szObjType; IReplNotify * pNotify; DWORD oid; DWORD oidNew; IReplStore * pStore; HREPLFLD hFolder; HREPLITEM hItem; LPBYTE lpbVolumeID; UINT cbVolumeID;} REPLSETUP, * PREPLSETUP;
-typedef struct SDREQUEST { OBJTYPENAMEszObjType; BOOLfSet; UINTuCode; LPBYTElpbData; UINTcbData;} SDREQUEST, *PSDREQUEST;
+/* PSTOREINFO  [extra struct] */
 typedef struct tagStoreInfo {
   UINT cbStruct;
   UINT uFlags;
@@ -169,10 +72,43 @@ typedef struct tagStoreInfo {
   LPBYTE lpbStoreId;
 } STOREINFO, *PSTOREINFO;
 
+/* POBJTYPEINFO  [extra struct] */
+typedef struct tagObjTypeInfo {UINT cbStruct;OBJTYPENAMEW szObjType;UINT uFlags;WCHAR szName[80];UINT cObjects;UINT cbAllObj;FILETIME ftLastModified;} OBJTPYEINFO, *POBJTYPEINFO;
+
+/* PREPLSETUP  [extra struct] */
+typedef struct tagReplSetup { UINT cbStruct; BOOL fRead; DWORD dwFlags; HRESULT hr; OBJTYPENAME szObjType; IReplNotify * pNotify; DWORD oid; DWORD oidNew; IReplStore * pStore; HREPLFLD hFolder; HREPLITEM hItem; LPBYTE lpbVolumeID; UINT cbVolumeID;} REPLSETUP, * PREPLSETUP;
+
+/* PSDREQUEST  [extra struct] */
+typedef struct SDREQUEST { OBJTYPENAMEszObjType; BOOLfSet; UINTuCode; LPBYTElpbData; UINTcbData;} SDREQUEST, *PSDREQUEST;
+
+/* OPTIONS_DIALOG  [extra enum] */
+enum ReplDialogs {OPTIONS_DIALOG };
+
+/* PFINDOBJINFO  [extra struct] */
+typedef struct tagFindObjInfo { UINTuFlags; OBJTYPENAMEszObjType; UINT *poid; UINTcUnChg; UINTcChg; LPBYTElpbVolumeID; UINTcbVolumeID; LPVOIDlpvUser;} FINDOBJINFO, *PFINDOBJINFO;
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
+
+/* DoOptionsDialog  [function; ce-only; CE 6.0..699] */
+HRESULT DoOptionsDialog (
+ HWND hwndParent, 
+ LPCSTR lpszObjType, 
+ IReplNotify* pntfy
+);
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
 /* function */
 HRESULT ActivateDialog( UINT uDlg, HWND hwndParent, HREPLFLD hFolder, IEnumReplItem *penum);
 HREPLOBJ BytesToObject(  LPBYTE lpb,  UINT cb);
-HRESULT Clone( IEnumReplItem FAR *FAR *ppEnum);
 int CompareItem( HREPLITEM hItem1, HREPLITEM hItem2);
 HRESULT CompareStoreIDs( LPBYTE lpbID1, UINT cbID1, LPBYTE lpbID2, UINT cbID2);
 BOOL CopyObject( HREPLOBJ hObjSrc, HREPLOBJ hObjDst);
@@ -181,21 +117,19 @@ HRESULT FindFirstItem( HREPLFLD hFolder, HREPLITEM *phItem, BOOL *pfExist);
 HRESULT FindItemClose( HREPLFLD hFolder);
 HRESULT FindNextItem( HREPLFLD hFolder, HREPLITEM *phItem, BOOL *pfExist);
 void FreeObject( HREPLOBJ hObject);
-HRESULT GetConflictInfo( PCONFINFO pConfInfo);
 hHREPLFLD GetFolderHandle ( );
-HRESULT GetFolderInfo( LPSTR lpszName, HREPLFLD *phFolder, IUnknown **ppObjHandler);
-HRESULT GetObjTypeUIData( HREPLFLD hFolder, POBJUIDATA pData);
+BOOL GetObjTypeInfo (POBJTYPEINFO pObjTypeInfo);
 HRESULT GetPacket( LPBYTE *lppbData, DWORD *pcbData, DWORD cbRecommend);
+BOOL InitObjType ( LPWSTR lpszObjType, IReplObjHandler *ppObjHandler, UINT uPartnerBit);
 HRESULT IsFolderChanged( HREPLFLD hFolder, BOOL *pfChanged);
 BOOL IsItemChanged( HREPLFLD hFolder, HREPLITEM hItem, HREPLITEM hItemComp);
-BOOL IsItemReplicated( HREPLIFLD hFolder, HREPLITEM hItem);
 HRESULT IsValidObject( HREPLFLD hFolder, HREPLITEM hItem, UINT uFlags);
-HRESULT Next( unsigned long celt, HREPLITEM *phItem, unsigned long FAR *pCeltFetched);
 UINT ObjectToBytes( HREPLOBJ hObject, LPBYTE lpb);
 HRESULT OnItemNotify( UINT uCode, LPSTR lpszProgId, LPSTR lpszObjType, HREPLITEM hItem, ULONG ulFlags);
 HRESULT OnObjectCompleted( PREPLSETUP pSetup);
 void QueryDevice( UINT uCode, LPVOID *ppvData);
 HRESULT RemoveDuplicates( LPSTR lpszObjType, UINT uFlags);
+HRESULT ReportStatus( HREPLFLD hFolder, HREPLITEM hItem, UINT uStatus, UINT uParam);
 HRESULT Reset();
 HRESULT SetPacket( LPBYTE lpbData, DWORD cbData);
 HRESULT SetStatusText ( LPSTR lpszText);

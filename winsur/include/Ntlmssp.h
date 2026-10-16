@@ -15,7 +15,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* NTLMDeleteUser  [function; ce-only; CE 3.0..399, 5.0..699; Ntlmssp.lib] */
 BOOL NTLMDeleteUser(
@@ -36,7 +36,7 @@ BOOL NTLMSetUserInfo(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* NTLMAddGroup  [function; ce-only; CE 5.0..699; Ntlmssp.lib] */
 BOOL NTLMAddGroup(

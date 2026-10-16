@@ -11,12 +11,4 @@
 #define _IFLEXIPTMINFO_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-HRESULT GetDescriptionTables2( [out, size_is(, *pcProcField)] PTM_FIELD_DESC** ppfdProcDescTable, [out] DWORD* pcProcField, [out, size_is(, *pcThreadField)] PTM_FIELD_DESC** ppfdThreadDescTable, [out] DWORD* pcThreadField, [out, size_is(, *pcModField)] PTM_FIELD_DESC** ppfdModDescTable, [out] DWORD* pcModField, [out, size_is(, *pcCtxField)] PTM_FIELD_DESC **ppfdCtxDescTable, [out] DWORD *pcCtxField );
-
 #endif /* _IFLEXIPTMINFO_ */

@@ -29,7 +29,7 @@ typedef struct tagPH_SPEEDDIAL_ENTRY
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* PHAddSpeedDialEntry  [function; ce-only; CE 6.0..699; PhCommon.dll] */
 HRESULT PHAddSpeedDialEntry(

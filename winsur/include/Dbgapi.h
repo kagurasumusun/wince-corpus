@@ -35,7 +35,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* WriteDebugLED  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
 void WriteDebugLED(
@@ -43,27 +43,5 @@ void WriteDebugLED(
  DWORD dwPattern 
 );
 #endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* NKDbgPrintfW  [function; ce-only; CE 5.0..699] */
-void WINAPIV NKDbgPrintfW(
- LPCWSTR lpszFmt,...
-);
-
-/* RegisterDbgZones  [function; ce-only; CE 5.0..699] */
-BOOL RegisterDbgZones(
- HMODULE hMod,
- LPDBGPARAM lpdbgparam
-);
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _DBGPARAM { WCHAR lpszName[32]; WCHAR rglpszZones[16][32]; ULONG ulZoneMask; } DBGPARAM, *LPDBGPARAM;
 
 #endif /* _DBGAPI_ */

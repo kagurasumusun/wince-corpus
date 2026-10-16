@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _CCSERVICE_
 #define _CCSERVICE_
@@ -17,10 +17,6 @@
  * ================================================================ */
 
 /* function */
-HRESULT CLSID ( BSTR* pbstrServiceCLSID );
-HRESULT Device ( BSTR* pbstrDeviceId);
 HRESULT GetCurrentState ( DWORD*pdwCurrentState);
-HRESULT LockService()
-HRESULT UnlockService()
 
 #endif /* _CCSERVICE_ */

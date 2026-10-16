@@ -183,7 +183,7 @@ def is_keepable_unassigned_macro(name: str, value: str, definition: str) -> bool
 
 _GLUED = re.compile(
     r"\b(?:HANDLE|HMODULE|HINSTANCE|HWND|HDC|HMENU|HKEY|HBITMAP|HFONT|"
-    r"BOOL|DWORD|UINT|ULONG|LONG|WORD|BYTE|LPVOID|LPCVOID|LPSTR|LPCSTR|"
+    r"BOOL(?!EAN)|DWORD|UINT|ULONG|LONG|WORD|BYTE|LPVOID|LPCVOID|LPSTR|LPCSTR|"
     r"LPWSTR|LPCWSTR|LPTSTR|LPCTSTR|HRESULT|LRESULT|NTSTATUS|"
     r"VOID|INT|SHORT|CHAR)[A-Z]|"
     r"\b(?:struct|enum|union)_[A-Z]"
@@ -197,10 +197,21 @@ def is_glued_prototype(text: str) -> bool:
 
 _UNUSABLE = re.compile(
     r"\[[A-Z][A-Z0-9_]+\]|"
+    r"\[in,|\bin,\s*optional\]|"
     r"\b(?:sz_Or_Ord|CBrush|CString|CObject|CWnd|"
     r"IUnknown|IDispatch|IDirect3D|IDVD|BSTR|HTREEITEM|"
     r"IOleInPlace|ISpThread|IOsAxs|IHTMLEvent|IWSD|"
-    r"IMediaSample|IHTML)\b"
+    r"IMediaSample|IHTML)\b|"
+    r"\bTYPE\s+Type\b|"
+    r"\bint64\b|"
+    r"unsigned__int64|"
+    r"\bHandle\b|"
+    r"\bva_list\b|"
+    r"\bIErrorInfo\b|"
+    r"size_tcount|"
+    r"va_listargptr|"
+    r"LPDWORDlpc|"
+    r"\bPFN_"
 )
 
 
@@ -225,6 +236,14 @@ def is_broken_c(text: str) -> bool:
         return True
     if body.count("(") != body.count(")"):
         return True
+    # ``InterlockedExchangeAdd(`` -- the page dropped the return type.
+    if re.match(r"[A-Za-z_]\w*\s*\(", body.lstrip()):
+        return True
+    # Prototype whose last non-space is not ';' (``GetCursor(void)``).
+    stripped = body.rstrip()
+    if "(" in stripped and not stripped.endswith((";", "}", "\\")):
+        if not stripped.lstrip().startswith(("#", "typedef")):
+            return True
     # ``WORD biBitCount \\n DWORD biCompression`` -- the page dropped a ';'
     if re.search(
             r"\b(?:WORD|DWORD|LONG|BYTE|UINT|INT|SHORT|BOOL|WCHAR|CHAR|"

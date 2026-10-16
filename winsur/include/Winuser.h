@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2457 constants, 398 declarations, 6 outlines, 1 base types, 0 extra macros, 0 extra decls
+ * 2457 constants, 396 declarations, 6 outlines, 1 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINUSER_
 #define _WINUSER_
@@ -2991,7 +2991,7 @@
 #define WVR_REDRAW 0x0300
 #define WVR_VALIDRECTS 0x0400
 #define WVR_VREDRAW 0x0200
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 1.0..199, 2.11..2.12, 3.0..399 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400)) /* CE 1.0..199, 2.11..2.12, 3.0..399 */
 #define VK_H 48
 #define VK_O 4F
 #endif /* _WIN32_WCE */
@@ -3186,7 +3186,7 @@ typedef struct _WNDCLASS {
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* EnableHardwareKeyboard  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Kbdui.lib, kbdui.lib] */
 BOOL EnableHardwareKeyboard( 
@@ -3200,39 +3200,9 @@ HANDLE GetClipboardDataAlloc(
 
 /* GetMessageSource  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib] */
 UINT GetMessageSource( );
-
-/* LB_SELITEMRANGE  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-LB_SELITEMRANGE wParam = (WPARAM)(BOOL) fSelect;
- lParam = MAKELPARAM(wFirst, wLast);
-
-/* WM_DRAWITEM  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
-WM_DRAWITEM idCtl = (UINT) wParam; 
- lpdis = (LPDRAWITEMSTRUCT) lParam;
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
-
-/* GetMouseMovePoints  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Uibase.lib, uibase.lib, Wmgr_c.lib, wmgr_c.lib] */
-BOOL WINAPI GetMouseMovePoints(
- PPOINT pptBuf,
- UINT nBufPoints,
- UINT* pnPointsRetrieved 
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213)) /* CE 2.11..2.12 */
-
-/* WM_CHARTOITEM  [function; ce-only; CE 2.11..2.12] */
-WM_CHARTOITEM nKey = LOWORD(wParam); nCaretPos = HIWORD(wParam); hwndListBox = (HWND) lParam;
-
-/* WM_CTLCOLORMSGBOX  [function; ce-only; CE 2.11..2.12] */
-WM_CTLCOLORMSGBOX hdcMB = (HDC) wParam; hwndMB = (HWND) lParam;
-
-/* WM_DEADCHAR  [function; ce-only; CE 2.11..2.12] */
-WM_DEADCHAR chCharCode = (TCHAR) wParam; lKeyData = lParam;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* AdjustWindowRectEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib] */
 BOOL AdjustWindowRectEx( 
@@ -3255,16 +3225,6 @@ HDWP BeginDeferWindowPos(
  int nNumWindows 
 );
 
-/* BeginPaint  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Winmgr.lib, winmgr.lib] */
-HDC BeginPaint( 
- HWND hwnd,
- LPPAINTSTRUCT lpPaint
-);
-
-/* BN_CLICKED  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BN_CLICKED idButton = (int)LOWORD(wParam);
- hwndButton = (HWND) lParam;
-
 /* BringWindowToTop  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib] */
 BOOL BringWindowToTop( 
  HWND hWnd
@@ -3279,84 +3239,11 @@ LRESULT CallWindowProc(
  LPARAM lParam 
 );
 
-/* CB_INITSTORAGE  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-CB_INITSTORAGE wParam = (WPARAM)(int) cItems;
- lParam = (LPARAM)(DWORD) cb;
-
-/* CB_SETEXTENDEDUI  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-CB_SETEXTENDEDUI wParam = (WPARAM)(BOOL) fExtended; 
- lParam = 0;
-
-/* CB_SETITEMDATA  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-CB_SETITEMDATA wParam = (WPARAM) index;
- lParam = (LPARAM)(DWORD) dwData;
-
-/* CB_SETITEMHEIGHT  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-CB_SETITEMHEIGHT wParam = (WPARAM) index; 
- lParam = (LPARAM)(int) height;
-
-/* CB_SHOWDROPDOWN  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-CB_SHOWDROPDOWN wParam = (WPARAM)(BOOL) fShow; 
- lParam = 0;
-
-/* CBN_CLOSEUP  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-CBN_CLOSEUP idComboBox = (int)LOWORD(wParam); 
- hwndComboBox = (HWND) lParam;
-
-/* CBN_DBLCLK  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-CBN_DBLCLK idComboBox = (int) LOWORD(wParam); 
- hwndComboBox = (HWND) lParam;
-
-/* CBN_DROPDOWN  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-CBN_DROPDOWN idComboBox = (int)LOWORD(wParam); 
- hwndComboBox = (HWND) lParam;
-
-/* CBN_EDITCHANGE  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-CBN_EDITCHANGE idComboBox = (int)LOWORD(wParam); 
- hwndComboBox = (HWND) lParam;
-
-/* CBN_EDITUPDATE  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-CBN_EDITUPDATE idComboBox = (int)LOWORD(wParam); 
- hwndComboBox = (HWND) lParam;
-
-/* CBN_ERRSPACE  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-CBN_ERRSPACE idComboBox = (int)LOWORD(wParam); 
- hwndComboBox = (HWND) lParam;
-
-/* CBN_KILLFOCUS  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-CBN_KILLFOCUS idComboBox = (int)LOWORD(wParam); 
- hwndComboBox = (HWND) lParam;
-
-/* CBN_SELCHANGE  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-CBN_SELCHANGE idComboBox = (int)LOWORD(wParam); 
- hwndComboBox = (HWND) lParam;
-
-/* CBN_SELENDCANCEL  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-CBN_SELENDCANCEL idComboBox = (int)LOWORD(wParam); 
- hwndComboBox = (HWND) lParam;
-
-/* CBN_SELENDOK  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-CBN_SELENDOK idComboBox = (int)LOWORD(wParam); 
- hwndComboBox = (HWND) lParam;
-
-/* CBN_SETFOCUS  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-CBN_SETFOCUS idComboBox = (int)LOWORD(wParam); 
- hwndComboBox = (HWND) lParam;
-
 /* CheckMenuItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Menu.lib, menu.lib] */
 DWORD CheckMenuItem(
  HMENU hmenu, 
  UINT uIDCheckItem, 
  UINT uCheck 
-);
-
-/* CheckMenuRadioItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Menu.lib] */
-BOOL API CheckMenuRadioItem(
- HMENU hmenu, 
- UINT idFirst, 
- UINT idLast, 
- UINT idCheck, 
- UINT uFlags 
 );
 
 /* CheckRadioButton  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Dlgmgr.lib, dlgmgr.lib] */
@@ -3391,52 +3278,12 @@ BOOL CopyRect(
 /* CountClipboardFormats  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Clipbd.lib, clipbd.lib] */
 int CountClipboardFormats(void);
 
-/* CreateAcceleratorTable  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Accel.lib, accel.lib; A/W CreateAcceleratorTableA,CreateAcceleratorTableW (CE is W-side)] */
-HACCEL CreateAcceleratorTable(
- LPACCEL lpaccl, 
- int cEntries
-);
-
 /* CreateCaret  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Caret.lib, caret.lib] */
 BOOL CreateCaret(
  HWND hWnd, 
  HBITMAP hBitmap, 
  int nWidth, 
  int nHeight
-);
-
-/* CreateDialog  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W CreateDialogA,CreateDialogW (CE is W-side)] */
-HWND CreateDialog( 
- HINSTANCE hInstance, 
- LPCTSTR lpTemplate, 
- HWND hWndParent, 
- DLGPROC lpDialogFunc
-);
-
-/* CreateDialogIndirect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Dlgmgr.lib; A/W CreateDialogIndirectA,CreateDialogIndirectW (CE is W-side)] */
-HWND CreateDialogIndirect( 
- HINSTANCE hInstance, 
- LPCDLGTEMPLATE lpTemplate, 
- HWND hWndParent, 
- DLGPROC lpDialogFunc
-);
-
-/* CreateDialogIndirectParam  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Dlgmgr.lib, dlgmgr.lib; A/W CreateDialogIndirectParamA,CreateDialogIndirectParamW (CE is W-side)] */
-HWND CreateDialogIndirectParam( 
- HINSTANCE hInstance, 
- LPCDLGTEMPLATE lpTemplate, 
- HWND hWndParent, 
- DLGPROC lpDialogFunc, 
- LPARAM lParamInit
-);
-
-/* CreateDialogParam  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W CreateDialogParamA,CreateDialogParamW (CE is W-side)] */
-HWND CreateDialogParam( 
- HINSTANCE hInstance, 
- LPCTSTR lpTemplateName, 
- HWND hWndParent, 
- DLGPROC lpDialogFunc, 
- LPARAM dwInitParam
 );
 
 /* CreateMenu  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Menu.lib, menu.lib] */
@@ -3484,18 +3331,6 @@ LRESULT DefDlgProc(
  LPARAM lParam
 );
 
-/* DeferWindowPos  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib] */
-HDWP DeferWindowPos( 
- HDWP hWinPosInfo,
- HWND hWnd,
- HWND hWndInsertAfter,
- int x,
- int y,
- int cx,
- int cy,
- UNIT uFlags
-);
-
 /* DefWindowProc  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W DefWindowProcA,DefWindowProcW (CE is W-side)] */
 LRESULT DefWindowProc( 
  HWND hWnd, 
@@ -3529,40 +3364,6 @@ BOOL DestroyWindow(
  HWND hWnd 
 );
 
-/* DialogBox  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W DialogBoxA,DialogBoxW (CE is W-side)] */
-int DialogBox( 
- HINSTANCE hInstance, 
- LPCTSTR lpTemplate, 
- HWND hWndParent, 
- DLGPROC lpDialogFunc
-);
-
-/* DialogBoxIndirect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W DialogBoxIndirectA,DialogBoxIndirectW (CE is W-side)] */
-int DialogBoxIndirect( 
- HINSTANCE hInstance, 
- LPDLGTEMPLATE lpTemplate, 
- HWND hWndParent, 
- DLGPROC lpDialogFunc
-);
-
-/* DialogBoxIndirectParam  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Dlgmgr.lib, dlgmgr.lib; A/W DialogBoxIndirectParamA,DialogBoxIndirectParamW (CE is W-side)] */
-int DialogBoxIndirectParam( 
- HINSTANCE hInstance, 
- LPCDLGTEMPLATE hDialogTemplate, 
- HWND hWndParent, 
- DLGPROC lpDialogFunc, 
- LPARAM dwInitParam
-);
-
-/* DialogBoxParam  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W DialogBoxParamA,DialogBoxParamW (CE is W-side)] */
-int DialogBoxParam( 
- HINSTANCE hInstance, 
- LPCTSTR lpTemplateName, 
- HWND hWndParent, 
- DLGPROC lpDialogFunc, 
- PARAM dwInitParam
-);
-
 /* DispatchMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib; A/W DispatchMessageA,DispatchMessageW (CE is W-side)] */
 LONG DispatchMessage( 
  const MSG* lpmsg 
@@ -3581,85 +3382,8 @@ BOOL DrawMenuBar(
  HWND hWnd 
 );
 
-/* EM_FMTLINES  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-EM_FMTLINES 
- wParam = (WPARAM)(BOOL) fAddEOL; 
- lParam = 0;
-
-/* EM_REPLACESEL  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-EM_REPLACESEL 
- wParam = (WPARAM) fCanUndo; 
- lParam = (LPARAM)(LPCTSTR) lpszReplace;
-
-/* EM_SCROLL  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-EM_SCROLL 
- wParam = (WPARAM)(INT) nScroll; 
- lParam = 0;
-
-/* EM_SETMODIFY  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-EM_SETMODIFY 
- wParam = (WPARAM)(UINT) fModified; 
- lParam = 0;
-
-/* EM_SETPASSWORDCHAR  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-EM_SETPASSWORDCHAR 
- wParam = (WPARAM)(UINT) ch; 
- lParam = 0;
-
-/* EM_SETREADONLY  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-EM_SETREADONLY 
- wParam = (WPARAM)(BOOL) fReadOnly;
- lParam = 0L;
-
-/* EM_SETSEL  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-EM_SETSEL 
- wParam = (WPARAM)(INT) nStart; 
- lParam = (LPARAM)(INT) nEnd;
-
 /* EmptyClipboard  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Clipbd.lib, clipbd.lib] */
 BOOL EmptyClipboard(void);
-
-/* EN_CHANGE  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-EN_CHANGE 
- idEditCtrl = (int) LOWORD (wParam);
- hwndEditCtrl = (HWND) lParam;
-
-/* EN_ERRSPACE  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-EN_ERRSPACE 
- idEditCtrl = (int) LOWORD (wParam);
- hwndEditCtrl = (HWND) lParam;
-
-/* EN_HSCROLL  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-EN_HSCROLL 
- idEditCtrl = (int) LOWORD (wParam);
- hwndEditCtrl = (HWND) lParam;
-
-/* EN_KILLFOCUS  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-EN_KILLFOCUS 
- idEditCtrl = (int) LOWORD (wParam);
- wNotifyCode = HIWORD (wParam); 
- hwndEditCtrl = (HWND) lParam;
-
-/* EN_MAXTEXT  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-EN_MAXTEXT 
- idEditCtrl = (int) LOWORD (wParam);
- hwndEditCtrl = (HWND) lParam;
-
-/* EN_SETFOCUS  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-EN_SETFOCUS 
- idEditCtrl = (int) LOWORD (wParam);
- wNotifyCode = HIWORD (wParam); 
- hwndEditCtrl = (HWND) lParam;
-
-/* EN_UPDATE  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-EN_UPDATE 
- idEditCtrl = (int) LOWORD (wParam);
- hwndEditCtrl = (HWND) lParam;
-
-/* EN_VSCROLL  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-EN_VSCROLL 
- idEditCtrl = (int) LOWORD (wParam);
- hwndEditCtrl = (HWND) lParam;
 
 /* EnableMenuItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Menu.lib, menu.lib] */
 BOOL EnableMenuItem(
@@ -3696,18 +3420,6 @@ UINT EnumClipboardFormats(
  UINT format
 );
 
-/* EnumWindows  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib] */
-BOOL EnumWindows( 
- WNDENUMPROC lpEnumFunc, 
- LPARAM lParam 
-);
-
-/* EnumWindowsProc  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL CALLBACK EnumWindowsProc(
- HWND hwnd, 
- LPARAM lParam 
-);
-
 /* EqualRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Rectapi.lib, rectapi.lib] */
 BOOL EqualRect(
  const RECT* lprc1, 
@@ -3734,13 +3446,6 @@ UINT GetCaretBlinkTime(void);
 /* GetCaretPos  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Caret.lib, caret.lib] */
 BOOL GetCaretPos(
  LPPOINT lpPoint
-);
-
-/* GetClassInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; wmgr_c.lib; A/W GetClassInfoA,GetClassInfoW (CE is W-side)] */
-BOOL GetClassInfo( 
- HINSTANCE hInstance, 
- LPCTSTR lpClassName, 
- LPWNDCLASS lpWndClass
 );
 
 /* GetClassLong  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; wmbase.lib; A/W GetClassLongA,GetClassLongW (CE is W-side)] */
@@ -3825,11 +3530,6 @@ HWND GetFocus(void);
 /* GetForegroundWindow  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; caret.lib, foregnd.lib] */
 HWND GetForegroundWindow(void);
 
-/* GetKeyboardLayout  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coreimm.lib, coreimm.lib] */
-HKL GetKeyboardLayout(
- DWORD idThread
-);
-
 /* GetKeyboardLayoutName  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Kbdui.lib, kbdui.lib; A/W GetKeyboardLayoutNameA,GetKeyboardLayoutNameW (CE is W-side)] */
 BOOL GetKeyboardLayoutName( 
  LPTSTR pwszKLID 
@@ -3842,22 +3542,6 @@ DWORD GetKeyboardStatus();
 SHORT GetKeyState( 
  int nVirtKey 
 );
-
-/* GetMenuItemInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Menu.lib, menu.lib; A/W GetMenuItemInfoA,GetMenuItemInfoW (CE is W-side)] */
-BOOL GetMenuItemInfo(
- HMENU hMenu, 
- UINT uItem, 
- BOOL fByPosition, 
- LPMENUITEMINFO lpmii 
-);
-
-/* GetMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib; A/W GetMessageA,GetMessageW (CE is W-side)] */
-BOOL GetMessage(
- LPMSG lpMsg, 
- HWND hWnd, 
- UINT wMsgFilterMin, 
- UINT wMsgFilterMax 
- );
 
 /* GetMessagePos  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib] */
 DWORD GetMessagePos(void);
@@ -3888,13 +3572,6 @@ HWND GetParent(
 int GetPriorityClipboardFormat(
  UINT* paFormatPriorityList, 
  int cFormats
-);
-
-/* GetScrollInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Sbcmn.lib, sbcmn.lib] */
-BOOL GetScrollInfo( 
- HWND hwnd, 
- int fnBar, 
- LPSCROLLINFO lpsi 
 );
 
 /* GetSubMenu  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Menu.lib, menu.lib] */
@@ -4015,12 +3692,6 @@ BOOL IsClipboardFormatAvailable(
  UINT format
 );
 
-/* IsDialogMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Dlgmgr.lib, dlgmgr.lib; A/W IsDialogMessageA,IsDialogMessageW (CE is W-side)] */
-BOOL IsDialogMessage( 
- HWND hDlg, 
- LPMSG lpMsg
-);
-
 /* IsRectEmpty  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Rectapi.lib, rectapi.lib] */
 BOOL IsRectEmpty(
  const RECT* lprc
@@ -4048,58 +3719,6 @@ VOID keybd_event(
  DWORD dwFlags, 
  DWORD dwExtraInfo 
 );
-
-/* LB_ADDSTRING  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-LB_ADDSTRING wParam = 0; 
- lParam = (LPARAM)(LPCTSTR) lpsz;
-
-/* LB_FINDSTRING  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-LB_FINDSTRING wParam = (WPARAM) indexStart;
- lParam = (LPARAM)(LPCTSTR) lpszFind;
-
-/* LB_GETTEXT  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-LB_GETTEXT wParam = (WPARAM) index;
- lParam = (LPARAM)(LPCTSTR) lpszBuffer;
-
-/* LB_INITSTORAGE  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-LB_INITSTORAGE wParam = (WPARAM)(int) cItems;
- lParam = (LPARAM)(DWORD) cb;
-
-/* LB_INSERTSTRING  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-LB_INSERTSTRING wParam = (WPARAM) index;
- lParam = (LPARAM)(LPCTSTR) lpsz;
-
-/* LB_SELECTSTRING  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-LB_SELECTSTRING wParam = (WPARAM) indexStart;
- lParam = (LPARAM)(LPCTSTR) lpszFind;
-
-/* LB_SETSEL  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-LB_SETSEL wParam = (WPARAM)(BOOL) fSelect; 
- lParam = (LPARAM)(UINT) index;
-
-/* LBN_DBLCLK  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-LBN_DBLCLK idListBox = (int)LOWORD(wParam); 
- hwndListBox = (HWND) lParam;
-
-/* LBN_ERRSPACE  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-LBN_ERRSPACE idListBox = (int)LOWORD(wParam); 
- hwndListBox = (HWND) lParam;
-
-/* LBN_KILLFOCUS  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-LBN_KILLFOCUS idListBox = (int)LOWORD(wParam);
- hwndListBox = (HWND) lParam;
-
-/* LBN_SELCANCEL  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-LBN_SELCANCEL idListBox = (int)LOWORD(wParam);
- hwndListBox = (HWND) lParam;
-
-/* LBN_SELCHANGE  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-LBN_SELCHANGE idListBox = (int)LOWORD(wParam);
- hwndListBox = (HWND) lParam;
-
-/* LBN_SETFOCUS  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-LBN_SETFOCUS idListBox = (int)LOWORD(wParam);
- hwndListBox = (HWND) lParam;
 
 /* LoadAccelerators  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Accel.lib, accel.lib, accel_c.lib; A/W LoadAcceleratorsA,LoadAcceleratorsW (CE is W-side)] */
 HACCEL LoadAccelerators(
@@ -4177,25 +3796,6 @@ BOOL OffsetRect(
 /* OpenClipboard  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Clipbd.lib, clipbd.lib] */
 BOOL OpenClipboard(
  HWND hWndNewOwner
-);
-
-/* PeekMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib; A/W PeekMessageA,PeekMessageW (CE is W-side)] */
-BOOL PeekMessage(
- LPMSG lpMsg, 
- HWND hWnd, 
- UINT wMsgFilterMin, 
- UINT wMsgFilterMax, 
- UINT wRemoveMsg 
-);
-
-/* PostKeybdMessage  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Kbdui.lib, kbdui.lib] */
-BOOL PostKeybdMessage( 
- HWND hwnd, 
- UINT VKey, 
- KEY_STATE_FLAGS KeyStateFlags, 
- UINT cCharacters, 
- UINT* pShiftStateBuffer, 
- UINT* pCharacterBuffer 
 );
 
 /* PostMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib; A/W PostMessageA,PostMessageW (CE is W-side)] */
@@ -4305,13 +3905,6 @@ LONG SendDlgItemMessage(
  LPARAM lParam
 );
 
-/* SendInput  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Uibase.lib, uibase.lib, Wmgr_c.lib, wmgr_c.lib] */
-UINT SendInput(
- UINT nInputs, 
- LPINPUT pInputs, 
- int cbSize 
-);
-
 /* SendMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib; A/W SendMessageA,SendMessageW (CE is W-side)] */
 LRESULT SendMessage(
  HWND hWnd, 
@@ -4372,13 +3965,6 @@ BOOL SetDlgItemText(
  LPCTSTR lpString
 );
 
-/* SetDlgMsgResult  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-SetDlgMsgResult( 
- HWND hwnd, 
- int msg, 
- LONG result 
-);
-
 /* SetFocus  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Caret.lib, caret.lib, Foregnd.lib, foregnd.lib] */
 HWND SetFocus(
  HWND hWnd 
@@ -4387,14 +3973,6 @@ HWND SetFocus(
 /* SetForegroundWindow  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; caret.lib, foregnd.lib] */
 BOOL SetForegroundWindow(
  HWND hWnd 
-);
-
-/* SetMenuItemInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Menu.lib, menu.lib; A/W SetMenuItemInfoA,SetMenuItemInfoW (CE is W-side)] */
-BOOL SetMenuItemInfo(
- HMENU hMenu, 
- UINT uItem, 
- BOOL fByPosition, 
- LPCMENUITEMINFO lpmii
 );
 
 /* SetParent  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib] */
@@ -4406,14 +3984,6 @@ HWND SetParent(
 /* SetRectEmpty  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Rectapi.lib, rectapi.lib] */
 BOOL SetRectEmpty(
  LPRECT lprc
-);
-
-/* SetScrollInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Sbcmn.lib, sbcmn.lib] */
-int SetScrollInfo( 
- HWND hwnd, 
- int fnBar, 
- LPSCROLLINFO lpsi, 
- BOOL fRedraw 
 );
 
 /* SetScrollPos  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Sbcmn.lib, sbcmn.lib] */
@@ -4431,21 +4001,6 @@ BOOL SetScrollRange(
  int nMinPos, 
  int nMaxPos, 
  BOOL bRedraw 
-);
-
-/* SetSysColors  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Winmgr.lib, winmgr.lib] */
-BOOL WINAPI SetSysColors( 
- int cElements, 
- CONST INT* lpaElements, 
- CONST COLORREF* lpaRgbValues
-);
-
-/* SetTimer  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; timer.lib] */
-UINT SetTimer(
- HWND hWnd, 
- UINT nIDEvent, 
- UINT uElapse, 
- TIMERPROC lpTimerFunc 
 );
 
 /* SetWindowLong  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W SetWindowLongA,SetWindowLongW (CE is W-side)] */
@@ -4490,9 +4045,6 @@ BOOL SubtractRect(
  const RECT* lprcSrc2
 );
 
-/* SystemIdleTimerReset  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; idle.lib] */
-void WINAPI SystemIdleTimerReset(void);
-
 /* SystemParametersInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib; A/W SystemParametersInfoA,SystemParametersInfoW (CE is W-side)] */
 /* Windows CE supports only the Unicode version of this function. */
 /* Windows CE supports only the Unicode version of this function. */
@@ -4518,23 +4070,6 @@ BOOL TrackPopupMenu(
  int nReserved, 
  HWND hWnd, 
  const RECT* prcRect 
-);
-
-/* TrackPopupMenuEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Menu.lib, menu.lib] */
-BOOL TrackPopupMenuEx(
- HMENU hmenu, 
- UINT uFlags, 
- int x, 
- int y, 
- HWND hwnd, 
- LPTPMPARAMS lptpm 
-);
-
-/* TranslateAccelerator  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Accel.lib, accel.lib; A/W TranslateAcceleratorA,TranslateAcceleratorW (CE is W-side)] */
-int TranslateAccelerator(
- HWND hWnd, 
- HACCEL hAccTable, 
- LPMSG lpMsg 
 );
 
 /* TranslateMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib] */
@@ -4576,165 +4111,9 @@ BOOL ValidateRect(
 HWND WindowFromPoint( 
  POINT Point 
 );
-
-/* WindowProc  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-LRESULT CALLBACK WindowProc(
- HWND hwnd, 
- UINT uMsg, 
- WPARAM wParam, 
- LPARAM lParam 
-);
-
-/* WinMain  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-int WINAPI WinMain(
- HINSTANCE hInstance, 
- HINSTANCE hPrevInstance, 
- LPWSTR lpCmdLine, 
- int nShowCmd 
-);
-
-/* WM_ACTIVATE  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_ACTIVATE fActive = LOWORD(wParam); 
- fMinimized = (BOOL)HIWORD(wParam);
- hwndPrevious = (HWND) lParam;
-
-/* WM_CHAR  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_CHAR chCharCode = (TCHAR) wParam; 
- lKeyData = lParam;
-
-/* WM_COMMAND  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_COMMAND wNotifyCode = HIWORD(wParam); 
- wID = LOWORD(wParam); 
- hwndCtl = (HWND) lParam;
-
-/* WM_CTLCOLORBTN  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_CTLCOLORBTN hdcButton = (HDC) wParam; 
- hwndButton = (HWND) lParam;
-
-/* WM_CTLCOLORDLG  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_CTLCOLORDLG hdcDlg = (HDC) wParam; 
- hwndDlg = (HWND) lParam;
-
-/* WM_CTLCOLOREDIT  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_CTLCOLOREDIT 
- hdcEdit = (HDC) wParam; 
- hwndEdit = (HWND) lParam;
-
-/* WM_CTLCOLORLISTBOX  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_CTLCOLORLISTBOX hdcLB = (HDC) wParam; 
- hwndLB = (HWND) lParam;
-
-/* WM_CTLCOLORSCROLLBAR  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_CTLCOLORSCROLLBAR hdcSB = (HDC) wParam; 
- hwndSB = (HWND) lParam;
-
-/* WM_CTLCOLORSTATIC  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_CTLCOLORSTATIC hdcStatic = (HDC) wParam; 
- hwndStatic = (HWND) lParam;
-
-/* WM_ENABLE  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_ENABLE fEnabled = (BOOL) wParam;
-
-/* WM_ENTERMENULOOP  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_ENTERMENULOOP fIsTrackPopupMenu = (BOOL) wParam;
-
-/* WM_EXITMENULOOP  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_EXITMENULOOP fIsTrackPopupMenu = (BOOL) wParam;
-
-/* WM_HOTKEY  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_HOTKEY idHotKey = (int) wParam; 
- fuModifiers = (UINT) LOWORD(lParam); 
- uVirtKey = (UINT) HIWORD(lParam);
-
-/* WM_HSCROLL  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_HSCROLL nScrollCode = (int)LOWORD(wParam);
- nPos = (short int)HIWORD(wParam);
- hwndScrollBar = (HWND) lParam;
-
-/* WM_INITDIALOG  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_INITDIALOG hwndFocus = (HWND) wParam;
- lInitParam = lParam;
-
-/* WM_INITMENUPOPUP  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_INITMENUPOPUP hmenuPopup = (HMENU) wParam; 
- uPos = (UINT)LOWORD(lParam); 
- fSystemMenu = (BOOL)HIWORD(lParam);
-
-/* WM_KEYDOWN  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_KEYDOWN nVirtKey = (int) wParam; 
- lKeyData = lParam;
-
-/* WM_KEYUP  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_KEYUP nVirtKey = (int) wParam; 
- lKeyData = lParam;
-
-/* WM_KILLFOCUS  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_KILLFOCUS hwndGetFocus = (HWND) wParam;
-
-/* WM_MEASUREITEM  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_MEASUREITEM idCtl = (UINT) wParam; 
- lpmis = (LPMEASUREITEMSTRUCT) lParam;
-
-/* WM_MENUCHAR  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_MENUCHAR chUser = (char)LOWORD(wParam); 
- fuFlag = (UINT)HIWORD(wParam); 
- hmenu = (HMENU) lParam;
-
-/* WM_MOVE  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_MOVE xPos = (int)LOWORD(lParam); 
- yPos = (int)HIWORD(lParam);
-
-/* WM_NEXTDLGCTL  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_NEXTDLGCTL wCtlFocus = wParam; 
- fHandle = (BOOL) LOWORD(lParam);
-
-/* WM_NOTIFY  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_NOTIFY idCtrl = (int) wParam; 
- pnmh = (LPNMHDR) lParam;
-
-/* WM_PALETTECHANGED  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_PALETTECHANGED hwndPalChg = (HWND) wParam;
-
-/* WM_QUIT  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_QUIT nExitCode = (int) wParam;
-
-/* WM_RENDERFORMAT  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_RENDERFORMAT uFormat = (UINT) wParam1;
-
-/* WM_SETFOCUS  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_SETFOCUS hwndLoseFocus = (HWND) wParam;
-
-/* WM_SETTEXT  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_SETTEXT wParam = 0; 
- lParam = (LPARAM)(LPCTSTR) lpsz;
-
-/* WM_SETTINGCHANGE  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_SETTINGCHANGE wParam = wFlag; 
- lParam = (LPARAM)(LPCTSTR) pszSectionName;
-
-/* WM_SYSCHAR  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_SYSCHAR chCharCode = (TCHAR) wParam; 
- lKeyData = lParam;
-
-/* WM_SYSDEADCHAR  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_SYSDEADCHAR chCharCode = (TCHAR) wParam; 
- lKeyData = lParam;
-
-/* WM_SYSKEYDOWN  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_SYSKEYDOWN nVirtKey = (int) wParam; 
- lKeyData = lParam;
-
-/* WM_SYSKEYUP  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_SYSKEYUP nVirtKey = (int) wParam; 
- lKeyData = lParam;
-
-/* WM_VSCROLL  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-WM_VSCROLL nScrollCode = (int)LOWORD(wParam); 
- nPos = (short int)HIWORD(wParam); 
- hwndScrollBar = (HWND) lParam;
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
 
 /* ClipCursor  [function; shared; CE 2.11..2.12, 3.0..699; Cursor.lib, Mcursor.lib, mcursor.lib] */
 BOOL ClipCursor( 
@@ -4751,11 +4130,6 @@ HCURSOR CreateCursor(
  int nHeight, 
  CONST VOID* pvANDPlane, 
  CONST VOID* pvXORPlane
-);
-
-/* CreateIconIndirect  [function; shared; CE 2.11..2.12, 3.0..699; Icon.lib, icon.lib] */
-HICON CreateIconIndirect(
- PICONINFO piconinfo
 );
 
 /* DestroyCursor  [function; shared; CE 2.11..2.12, 3.0..699; Iconcurs.lib, iconcurs.lib] */
@@ -4789,15 +4163,6 @@ BOOL DrawIconEx(
  UINT diFlags
 );
 
-/* DrawText  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Mgdrwtxt.lib, mgdrwtxt.lib; A/W DrawTextA,DrawTextW (CE is W-side)] */
-int DrawText(
- HDC hDC, 
- LPCTSTR lpString, 
- int nCount, 
- LPRECT lpRect, 
- UNIT uFormat
-);
-
 /* GetCapture  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Foregnd.lib, foregnd.lib] */
 HWND GetCapture(void);
 
@@ -4805,9 +4170,6 @@ HWND GetCapture(void);
 BOOL GetClipCursor( 
  LPRECT lpRect
 );
-
-/* GetCursor  [function; shared; CE 2.11..2.12, 3.0..699; Cursor.lib, cursor.lib, Mcursor.lib, mcursor.lib] */
-HCURSOR GetCursor(void)
 
 /* GetCursorPos  [function; shared; CE 2.11..2.12, 3.0..699; Cursor.lib, cursor.lib, Mcursor.lib, mcursor.lib] */
 BOOL GetCursorPos( 
@@ -4817,134 +4179,9 @@ BOOL GetCursorPos(
 /* GetDoubleClickTime  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Wmbase.lib, wmbase.lib] */
 UINT GetDoubleClickTime(void);
 
-/* ImmAssociateContext  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-HIMC ImmAssociateContext(
- HWND hWnd, 
- HIMC hIMC
-);
-
-/* ImmAssociateContextEx  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL ImmAssociateContextEx( 
- HWND hWnd, 
- HINC hIMC, 
- DWORD dwFlags
-);
-
-/* ImmConfigureIME  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmConfigureIMEA,ImmConfigureIMEW (CE is W-side)] */
-BOOL ImmConfigureIME( 
- HKL hKL, 
- HWND hWnd, 
- DWORD dwMode, 
- LPVOID lpData
-);
-
-/* ImmCreateContext  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-HIMC ImmCreateContext(void);
-
-/* ImmCreateIMCC  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-HIMCC WINAPI ImmCreateIMCC( 
- DWORD dwSize
-);
-
-/* ImmDestroyContext  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL ImmDestroyContext( 
- HIMC hIMC
-);
-
-/* ImmDestroyIMCC  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-HIMCC WINAPI ImmDestroyIMCC( 
- HIMCC hIMCC
-);
-
 /* ImmDisableIME  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
 BOOL ImmDisableIME( 
  DWORD idThread
-);
-
-/* ImmEnumRegisterWord  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmEnumRegisterWordA,ImmEnumRegisterWordW (CE is W-side)] */
-UINT ImmEnumRegisterWord( 
- HKL hKL, 
- REGISTERWORDENUMPROC lpfnEnumProc, 
- LPCTSTR lpszReading, 
- DWORD dwStyle, 
- LPCTSTR lpszRegister, 
- LPVOID lpData
-);
-
-/* ImmEscape  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmEscapeA,ImmEscapeW (CE is W-side)] */
-LRESULT ImmEscape( 
- HKL hKL, 
- HIMC hIMC, 
- UINT uEscape, 
- LPVOID lpData
-);
-
-/* ImmGenerateMessage  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL WINAPI ImmGenerateMessage( 
- HIMC hIMC
-);
-
-/* ImmGetCandidateList  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetCandidateListA,ImmGetCandidateListW (CE is W-side)] */
-DWORD ImmGetCandidateList(
- HIMC hIMC, 
- DWORD deIndex, 
- LPCANDIDATELIST lpCandList, 
- DWORD dwBufLen 
-);
-
-/* ImmGetCandidateListCount  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetCandidateListCountA,ImmGetCandidateListCountW (CE is W-side)] */
-DWORD ImmGetCandidateListCount(
- HIMC hIMC, 
- LPDWORD lpdwListCount
-);
-
-/* ImmGetCandidateWindow  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL ImmGetCandidateWindow(
- HIMC hIMC, 
- DWORD dwIndex, 
- LPCANDIDATEFORM lpCandidate
-);
-
-/* ImmGetCompositionFont  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetCompositionFontA,ImmGetCompositionFontW (CE is W-side)] */
-BOOL ImmGetCompositionFont( 
- HIMC hIMC, 
- LPLOGFONT lplf
-);
-
-/* ImmGetCompositionString  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetCompositionStringA,ImmGetCompositionStringW (CE is W-side)] */
-LONG ImmGetCompositionString(
- HIMC hIMC, 
- DWORD dwIndex, 
- LPVOID lpBuf, 
- DWORD dwBufLen
-);
-
-/* ImmGetCompositionWindow  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL ImmGetCompositionWindow(
- HIMC hIMC, 
- LPCOMPOSITIONFORM lpCompForm
-);
-
-/* ImmGetContext  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-HIMC ImmGetContext(
- HWND hWnd
-);
-
-/* ImmGetConversionList  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetConversionListA,ImmGetConversionListW (CE is W-side)] */
-UINT ImmGetConversionList(
- HKL hKL, 
- HIMC hIMC, 
- LPCTSTR lpSrc, 
- LPCANDIDATELIST lpDst, 
- DWORD dwBufLen, 
- UINT uFlag
-);
-
-/* ImmGetConversionStatus  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL ImmGetConversionStatus(
- HIMC hIMC, 
- LPDWORD lpfdwConversion, 
- LPDWORD lpfdwSentence
 );
 
 /* ImmGetDefaultIMEWnd  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
@@ -4952,93 +4189,9 @@ HWND ImmGetDefaultIMEWnd(
  HWND hWnd
 );
 
-/* ImmGetDescription  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetDescriptionA,ImmGetDescriptionW (CE is W-side)] */
-UINT ImmGetDescription( 
- HKL hKL, 
- LPTSTR lpszDescription, 
- UINT uBufLen
-);
-
-/* ImmGetGuideLine  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetGuideLineA,ImmGetGuideLineW (CE is W-side)] */
-DWORD ImmGetGuideLine( 
- HIMC hIMC, 
- DWORD dwIndex, 
- LPTSTR lpBuf, 
- DWORD dwBufLen
-);
-
-/* ImmGetHotKey  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL WINAPI ImmGetHotKey( 
- DWORD dwHotKeyID,
- LPUINT lpuModifiers,
- LPUINT lpuVKey,
- LPHKL lphKL
-);
-
-/* ImmGetIMCCLockCount  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-DWORD WINAPI ImmGetIMCCLockCount( 
- HIMCC hIMCC
-);
-
-/* ImmGetIMCCSize  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-DWORD WINAPI ImmGetIMCCSize( 
- HIMCC hIMCC
-);
-
-/* ImmGetIMCLockCount  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-DWORD WINAPI ImmGetIMCLockCount( 
- HIMC hIMC
-);
-
-/* ImmGetIMEFileName  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetIMEFileNameA,ImmGetIMEFileNameW (CE is W-side)] */
-BOOL ImmGetIMEFileName( 
- HKL hKL, 
- LPTSTR lpszFileName, 
- UINT uBufLen
-);
-
-/* ImmGetImeMenuItems  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetImeMenuItemsA,ImmGetImeMenuItemsW (CE is W-side)] */
-DWORD WINAPI ImmGetImeMenuItems( 
- HIMC hIMC, 
- DWORD dwFlags, 
- DWORD dwType, 
- LPIMEMENUITEMINFO lpImeParentMenu, 
- LPIMEMENUITEMINFO lpImeMenu, 
- DWORD dwSize
-);
-
-/* ImmGetOpenStatus  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL WINAPI ImmGetOpenStatus(
- HIMC hIMC
-);
-
-/* ImmGetProperty  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL ImmGetProperty(
- HKL hKL, 
- DWORD fdwIndex 
-);
-
-/* ImmGetRegisterWordStyle  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetRegisterWordStyleA,ImmGetRegisterWordStyleW (CE is W-side)] */
-UINT ImmGetRegisterWordStyle( 
- HKL hKL, 
- UINT nItem, 
- LPSTYLEBUF lpStyleBuf
-);
-
-/* ImmGetStatusWindowPos  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL ImmGetStatusWindowPos( 
- HIMC hIMC, 
- LPPOINT lpptPos
-);
-
 /* ImmGetVirtualKey  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
 UINT ImmGetVirtualKey( 
  HWND hWnd
-);
-
-/* ImmIsIME  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL ImmIsIME( 
- HKL hKL
 );
 
 /* ImmIsUIMessage  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmIsUIMessageA,ImmIsUIMessageW (CE is W-side)] */
@@ -5047,99 +4200,6 @@ BOOL ImmIsUIMessage(
  UINT msg, 
  WPARAM wParam, 
  LPARAM lParam
-);
-
-/* ImmLockIMC  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-LPINPUTCONTEXT WINAPI ImmLockIMC( 
- HIMC hIMC
-);
-
-/* ImmLockIMCC  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-LPVOID WINAPI ImmLockIMCC( 
- HIMCC hIMCC
-);
-
-/* ImmNotifyIME  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL ImmNotifyIME(
- HIMC hIMC, 
- DWORD dwAction, 
- DWORD dwIndex, 
- DWORD dwValue
-);
-
-/* ImmRegisterWord  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmRegisterWordA,ImmRegisterWordW (CE is W-side)] */
-BOOL ImmRegisterWord( 
- HKL hKL, 
- LPCTSR lpszReading, 
- DWORD dwStyle, 
- LPCTSTR lpszRegister
-);
-
-/* ImmReleaseContext  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL ImmReleaseContext(
- HWND hWnd, 
- HIMC hIMC
-);
-
-/* ImmReSizeIMCC  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-HIMCC WINAPI ImmReSizeIMCC( 
- HIMCC hIMCC, 
- DWORD dwSize
-);
-
-/* ImmSetCandidateWindow  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL ImmSetCandidateWindow(
- HIMC hIMC, 
- LPCANDIDATEFORM lpCandidate
-);
-
-/* ImmSetCompositionFont  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmSetCompositionFontA,ImmSetCompositionFontW (CE is W-side)] */
-BOOL ImmSetCompositionFont( 
- HIMC hIMC, 
- LPLOGFONT lplf
-);
-
-/* ImmSetCompositionString  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmSetCompositionStringA,ImmSetCompositionStringW (CE is W-side)] */
-BOOL ImmSetCompositionString(
- HIMC hIMC, 
- DWORD dwIndex, 
- LPCVOID lpComp, 
- DWORD dwCompLen, 
- LPCVOID lpRead, 
- DWORD dwReadLen
-);
-
-/* ImmSetCompositionWindow  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL ImmSetCompositionWindow(
- HIMC hIMC, 
- LPCOMPOSITIONFORM lpCompForm
-);
-
-/* ImmSetConversionStatus  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL ImmSetConversionStatus(
- HIMC hIMC, 
- DWORD fdwConversion, 
- DWORD fdwSentence
-);
-
-/* ImmSetHotKey  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL WINAPI ImmSetHotKey( 
- DWORD dwHotKeyID,
- UINT uModifiers,
- UINT uVKey,
- HKL hKL
-);
-
-/* ImmSetOpenStatus  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL ImmSetOpenStatus(
- HIMC hIMC,
- BOOL fOpen
-);
-
-/* ImmSetStatusWindowPos  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL ImmSetStatusWindowPos( 
- HIMC hIMC,
- LPPOINT lpptPos
 );
 
 /* ImmSimulateHotKey  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
@@ -5152,24 +4212,6 @@ BOOL ImmSimulateHotKey(
 BOOL ImmSIPanelState(
  UINT dwCmd, 
  LPVOID pValue
-);
-
-/* ImmUnlockIMC  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL WINAPI ImmUnlockIMC( 
- HIMC hIMC
-);
-
-/* ImmUnlockIMCC  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL WINAPI ImmUnlockIMCC( 
- HIMCC hIMCC
-);
-
-/* ImmUnregisterWord  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmUnregisterWordA,ImmUnregisterWordW (CE is W-side)] */
-BOOL ImmUnregisterWord( 
- HKL hKL,
- LPCTSTR lpszReading,
- DWORD dwStyle,
- LPCTSTR lpszUnregister
 );
 
 /* LoadCursor  [function; shared; CE 2.11..2.12, 3.0..699; Cursor.lib, cursor.lib, Mcursor.lib, mcursor.lib; A/W LoadCursorA,LoadCursorW (CE is W-side)] */
@@ -5216,28 +4258,9 @@ BOOL SetCursorPos(
 int ShowCursor( 
  BOOL bShow
 );
-
-/* WM_CAPTURECHANGED  [function; ce-only; CE 2.11..2.12, 3.0..699] */
-WM_CAPTURECHANGED hwndNewCapture = (HWND) lParam;
-
-/* WM_GETICON  [function; ce-only; CE 2.11..2.12, 3.0..699] */
-WM_GETICON fType = (BOOL) wParam;
-
-/* WM_RASDIALEVENT  [function; ce-only; CE 2.11..2.12, 3.0..699] */
-WM_RASDIALEVENT rasconnstate = (RASCONNSTATE) wParam; 
-dwError = (DWORD) lParam;
-
-/* WM_SETCURSOR  [function; ce-only; CE 2.11..2.12, 3.0..699] */
-WM_SETCURSOR hwnd = (HWND) wParam;
- nHittest = LOWORD (lParam);
- wMouseMsg = HIWORD (lParam);
-
-/* WM_SETICON  [function; ce-only; CE 2.11..2.12, 3.0..699] */
-WM_SETICON wParam = (WPARAM)(BOOL) fType;
- lParam = (LPARAM)(HICON) hicon;
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* GetWindowRgn  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Winmgr.lib, winmgr.lib] */
 int GetWindowRgn(
@@ -5256,62 +4279,7 @@ int SetWindowRgn(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
-
-/* EnumDisplayMonitors  [function; shared; CE 3.0..699; Coredll.lib, coredll.lib, User32.lib] */
-BOOL EnumDisplayMonitors(
- HDC hdc,
- LPCRECT lprcClip,
- MONITORENUMPROC lpfnEnum,
- LPARAM dwData
-);
-
-/* GetMonitorInfo  [function; shared; CE 3.0..699; Coredll.lib, coredll.lib, User32.lib; A/W GetMonitorInfoA,GetMonitorInfoW (CE is W-side)] */
-BOOL GetMonitorInfo(
- HMONITOR hMonitor, 
- LPMONITORINFO lpmi 
-);
-
-/* MonitorEnumProc  [function, callback; shared; CE 3.0..699; Coredll.lib, coredll.lib] */
-BOOL CALLBACK MonitorEnumProc(
- HMONITOR hMonitor,
- HDC hdcMonitor,
- LPRECT lprcMonitor,
- LPARAM dwData
-);
-
-/* MonitorFromPoint  [function; shared; CE 3.0..699; Coredll.lib, coredll.lib, User32.lib] */
-HMONITOR MonitorFromPoint(
- POINT pt,
- DWORD dwFlags
-);
-
-/* MonitorFromRect  [function; shared; CE 3.0..699; Coredll.lib, coredll.lib, User32.lib] */
-HMONITOR MonitorFromRect(
- LPCRECT lprc,
- DWORD dwFlags
-);
-
-/* MonitorFromWindow  [function; shared; CE 3.0..699; Coredll.lib, coredll.lib, User32.lib] */
-HMONITOR MonitorFromWindow(
- HWND hwnd,
- DWORD dwFlags
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* ActivateKeyboardLayout  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib] */
-HKL ActivateKeyboardLayout(
- HKL hkl,
- UINT Flags
-);
-
-/* GetKeyboardLayoutList  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib] */
-UINT GetKeyboardLayoutList(
- int nBuff, 
- HKL* lpList
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* GetKeyboardType  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib] */
 int GetKeyboardType(
@@ -5319,7 +4287,7 @@ int GetKeyboardType(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 5.0..599 */
 
 /* ExtractIcon  [function; shared; CE 5.0..599; Icon.lib; A/W ExtractIconA,ExtractIconW (CE is W-side)] */
 HICON ExtractIcon( 
@@ -5329,30 +4297,18 @@ HICON ExtractIcon(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* GetDesktopWindow  [function; shared; CE 5.0..699; User32.dll, User32.lib; lib:win32-reference] */
 HWND GetDesktopWindow(void);
-
-/* GetIconInfo  [function; shared; CE 5.0..699; Icon.lib] */
-BOOL GetIconInfo(
- HICON hIcon,
- PICONINFO piconinfo
-);
 
 /* GetQueueStatus  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 DWORD GetQueueStatus(
  UINT flags
 );
-
-/* LoadKeyboardLayout  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W LoadKeyboardLayoutA,LoadKeyboardLayoutW (CE is W-side)] */
-HKL LoadKeyboardLayout(
- LPCSTR pwszKLID,
- UINT Flags
-);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* AllKeys  [function; ce-only; CE 6.0..699] */
 BOOL AllKeys(

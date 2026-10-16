@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 19 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 18 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WDBGEXTS_CE_
 #define _WDBGEXTS_CE_
@@ -15,49 +15,10 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* CheckControlC  [function; ce-only; CE 5.0..699] */
 ULONG CheckControlC(VOID);
-
-/* Disassm  [function; ce-only; CE 5.0..699] */
-ULONG Disassm(
- PULONG lpOffset,
- PCSTR lpBuffer,
- ULONG fShowEffectiveAddress
-);
-
-/* dprintf  [function; ce-only; CE 5.0..699] */
-VOID dprintf(
- PCSTR format [,
- arguments]…
-):
-
-/* GetContext  [function; ce-only; CE 5.0..699] */
-ULONG GetContext(
- ULONG Target,
- PCONTEXT lpContext,
- ULONG cbSizeOfContext
-);
-
-/* GetExpression  [function; ce-only; CE 5.0..699] */
-ULONG GetExpression(
- PCSTR expression
-);
-
-/* GetSetSympath  [function; ce-only; CE 5.0..699] */
-VOID GetSetSympath(
- PSTR Arg,
- PSTR Result,
- int Length
-);
-
-/* GetSymbol  [function; ce-only; CE 5.0..699] */
-VOID GetSymbol(
- PVOID offset,
- PUCHAR pchBuffer,
- PULONG pDisplacement
-);
 
 /* Ioctl  [function; ce-only; CE 5.0..699] */
 ULONG Ioctl(
@@ -72,73 +33,6 @@ VOID ReadControlSpace(
  ULONG address,
  PVOID buf,
  ULONG size
-);
-
-/* ReadIoSpace  [function; ce-only; CE 5.0..699] */
-VOID ReadIoSpace(
- ULONG address,
- PULONG data,
- PULONG size
-);
-
-/* ReadMemory  [function; ce-only; CE 5.0..699] */
-ULONG ReadMemory(
- ULONG offset,
- PVOID lpBuffer,
- ULONG cb,
- PULONG lpcbBytesRead
-);
-
-/* ReadPhysical  [function; ce-only; CE 5.0..699] */
-VOID ReadPhysical(
- LARGE_INTEGER address,
- PVOID buf,
- ULONG size,
- PULONG sizer
-);
-
-/* SetContext  [function; ce-only; CE 5.0..699] */
-ULONG SetContext(
- ULONG Target,
- PCONTEXT lpContext,
- ULONG cbSizeOfContext
-);
-
-/* SetThreadForOperation  [function; ce-only; CE 5.0..699] */
-VOID SetTreadForOperation(
- PULONG Thread
-);
-
-/* StackTrace  [function; ce-only; CE 5.0..699] */
-ULONG StackTrace(
- ULONG FramePointer,
- ULONG StackPointer,
- ULONG ProgramCounter,
- PEXTSTACKTRACE StackFrames,
- ULONG Frames
-);
-
-/* WriteIoSpace  [function; ce-only; CE 5.0..699] */
-VOID WriteIoSpace(
- ULONG address,
- ULONG data,
- PULONG size
-);
-
-/* WriteMemory  [function; ce-only; CE 5.0..699] */
-ULONG WriteMemory(
- ULONG offset,
- LPCVOID lpbuffer,
- ULONG cb,
- PULONG lpcbBytesWritten
-);
-
-/* WritePhysical  [function; ce-only; CE 5.0..699] */
-VOID WritePhysical(
- LARGE_INTEGER address,
- PVOID buf,
- ULONG size,
- PULONG sizew
 );
 #endif /* _WIN32_WCE */
 

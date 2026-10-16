@@ -57,11 +57,14 @@ typedef struct _REGINI {
  DWORD dwType;
 } REGINI;
 
+/* PPOST_INIT_BUF  [extra struct] */
+struct _POST_INIT_BUF {HANDLE p_hDevice;HKEY p_hDeviceKey;} POST_INIT_BUF, *PPOST_INIT_BUF;
+
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* EnumDevices  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
 DWORD EnumDevices(
@@ -76,31 +79,12 @@ DWORD EnumPnpIds(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* DMAdvertiseInterface  [function; ce-only; CE 5.0..699] */
-DWORD WINAPI DmAdvertiseInterface(
- HANDLE hDevice,
- const GUID *devclass,
- LPCWSTR name,
- BOOL fAdd
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* OpenDeviceKey  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 HKEY OpenDeviceKey(
  LPCTSTR ActiveKey
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-struct _POST_INIT_BUF {HANDLE p_hDevice;HKEY p_hDeviceKey;} POST_INIT_BUF, *PPOST_INIT_BUF;
-
-/* function */
-VOID WINAPI DmAdvertiseInterface( HANDLE hDevice, const GUID *devclass, LPCWSTR name, BOOL fAdd);
 
 #endif /* _DEVLOAD_ */

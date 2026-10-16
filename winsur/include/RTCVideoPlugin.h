@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 1 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
+ * 0 constants, 1 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _RTCVIDEOPLUGIN_
 #define _RTCVIDEOPLUGIN_
@@ -35,7 +35,5 @@ struct _RTCRTPHeader {
 
 /* function */
 HRESULT CheckAcceptableFmtp( const CHAR *szFmtp );
-HRESULT ReadRTPPacket( IUnknown *pDecoder, const CHAR *szFmtp, BYTE *pbRTPPayload, DWORD dwRTPPayloadSize, RTCRTPHeader *pRTPHeader, BYTE *pbEncodedFrame, DWORD dwEncodedFrameSize, DWORD *pdwFrameStartBitOffset, DWORD *pdwFrameEndBitOffset, BOOL *pfLastPacket );
-HRESULT WriteRTPPayloadHeader( IUnknown *pEncoder, const CHAR *szFmtp, PBYTE pbEncodedFrame, DWORD dwEncodedSize, DWORD *pdwFrameStartBitOffset, DWORD *pdwFrameEndBitOffset, BOOL fKeyFrame, BYTE *pbPayloadHeader, DWORD *pdwPayloadHeaderLength, BOOL *pfLastPacket );
 
 #endif /* _RTCVIDEOPLUGIN_ */

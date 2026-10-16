@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 113 constants, 26 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
+ * 113 constants, 26 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _PRSHT_
 #define _PRSHT_
@@ -140,22 +140,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* CreatePropertySheetPage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W CreatePropertySheetPageA,CreatePropertySheetPageW (CE is W-side)] */
-HPROPSHEETPAGE CreatePropertySheetPage(
- LPCPROPSHEETPAGE lppsp 
-);
-
-/* DestroyPropertySheetPage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Comctl32.dll, Comctl32.lib; lib:win32-reference] */
-BOOL DestroyPropertySheetPage(
- HPROPSHEETPAGE hPSPage 
-);
-
-/* PropertySheet  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W PropertySheetA,PropertySheetW (CE is W-side)] */
-int PropertySheet(
- LPCPROPSHEETHEADER lppsph 
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* PropSheet_AddPage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
 BOOL PropSheet_AddPage( 
@@ -262,28 +247,6 @@ void PropSheet_UnChanged(
  hPropSheetDlg, 
  hwndPage 
 );
-
-/* PropSheetPageProc  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-UINT CALLBACK PropSheetPageProc(
- HWND hwnd, 
- UINT uMsg, 
- LPPROPSHEETPAGE ppsp 
-);
-
-/* PropSheetProc  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-int CALLBACK PropSheetProc(
- HWND hwndDlg, 
- UINT uMsg, 
- LPARAM lParam 
-);
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _PSHNOTIFY { NMHDR hdr; LPARAM lParam; } PSHNOTIFY, FAR* LPPSHNOTIFY;
 
 #endif /* _PRSHT_ */

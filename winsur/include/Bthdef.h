@@ -58,16 +58,4 @@
 #define BTH_STACK_RESET 1
 #define BTH_STACK_UP 3
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* enum */
-enum BTH_RADIO_MODE {
-  BTH_POWER_OFF,
-  BTH_CONNECTABLE,
-  BTH_DISCOVERABLE
-};
-
 #endif /* _BTHDEF_ */

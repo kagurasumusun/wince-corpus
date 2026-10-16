@@ -44,14 +44,16 @@ enum WidgetId{
  widHelp
 };
 
+/* bTopLevelWindow  [extra enum] */
+static RECT WidgetRect(  HWND hwnd,  enum WidgetId wid,  bool bTopLevelWindow  );
+
+/* widHelp  [extra enum] */
+enum WidgetId{widInvalid = -1,widClose,widMaxRestore,widMin,widOk,widHelp};
+
 /* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
-
-/* enum */
-static RECT WidgetRect(  HWND hwnd,  enum WidgetId wid,  bool bTopLevelWindow  );
-enum WidgetId{widInvalid = -1,widClose,widMaxRestore,widMin,widOk,widHelp};
 
 /* function */
 void BoundPoint( RECT* prcBound, POINT* ppt );
@@ -60,8 +62,6 @@ BOOL CalcCaptionRect( HWND hwnd, RECT* lprc );
 void CalcClientRectWithHorzScrollBars( RECT* lprc );
 void CalcClientRectWithNoScrollBars( HWND hwnd, RECT* lprc, DWORD dwStyle, DWORD dwExStyle );
 void CalcClientRectWithVertScrollBars( RECT* lprc, DWORD dwExStyle );
-static NcHitTestCode DoHitTest(  HWND hwnd,  POINT pt,  UINT32 WindowState,  bool bTopLevelWindow  );
-BOOL DoPaint( HWND hwnd, HRGN hrgn, UINT32 WindowState, bool bTopLevelWindow, bool bIsRestorable );
 static bool DoesHorzScrollBarFit(  RECT* lprc  );
 static bool DoesVertScrollBarFit(  RECT* lprc  );
 BOOL DrawBorder( HWND hwnd, HDC hdc, LPCRECT lprc );

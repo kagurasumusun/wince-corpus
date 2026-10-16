@@ -211,16 +211,7 @@ typedef struct _UNIVERSAL_NAME_INFO {
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* WNetAddConnection3  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Redir.lib, redir.lib; A/W WNetAddConnection3A,WNetAddConnection3W (CE is W-side)] */
-DWORD WNetAddConnection3(
- HWND hwndOwner, 
- LPNETRESOURCE lpNetResource, 
- LPTSTR lpPassword, 
- LPTSTR lpUserName, 
- DWORD dwFlags 
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
 
 /* WNetCancelConnection2  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Redir.lib, redir.lib; A/W WNetCancelConnection2A,WNetCancelConnection2W (CE is W-side)] */
 DWORD WNetCancelConnection2(
@@ -234,20 +225,10 @@ DWORD WNetCloseEnum(
  HANDLE hEnum 
 );
 
-/* WNetConnectionDialog1  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Redir.lib, redir.lib; A/W WNetConnectionDialog1A,WNetConnectionDialog1W (CE is W-side)] */
-DWORD WNetConnectionDialog1(
- LPCONNECTDLGSTRUCT lpConnectDlgStruct 
-);
-
 /* WNetDisconnectDialog  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Redir.lib, redir.lib] */
 DWORD WNetDisconnectDialog(
  HWND hwnd,
  DWORD dwType
-);
-
-/* WNetDisconnectDialog1  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Redir.lib, redir.lib; A/W WNetDisconnectDialog1A,WNetDisconnectDialog1W (CE is W-side)] */
-DWORD WNetDisconnectDialog1(
- LPDISCDLGSTRUCT lpDiscDlgStruct 
 );
 
 /* WNetEnumResource  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Redir.lib, redir.lib; A/W WNetEnumResourceA,WNetEnumResourceW (CE is W-side)] */
@@ -278,15 +259,6 @@ DWORD WNetGetUser(
  LPCTSTR lpName, 
  LPTSTR lpUserName, 
  LPDWORD lpnLength 
-);
-
-/* WNetOpenEnum  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Redir.lib, redir.lib; A/W WNetOpenEnumA,WNetOpenEnumW (CE is W-side)] */
-DWORD WNetOpenEnum(
- DWORD dwScope, 
- DWORD dwType, 
- DWORD dwUsage, 
- LPNETRESOURCE lpNetResource, 
- LPHANDLE lphEnum 
 );
 #endif /* _WIN32_WCE */
 

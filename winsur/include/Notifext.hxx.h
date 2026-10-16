@@ -31,7 +31,7 @@ struct NotifyPacket {
  PersistentPacket* sPacket; 
 };
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
 
 /* PersistentPacket  [?; ce-only; CE 3.0..699] */
 union PersistentPacket {
@@ -70,11 +70,14 @@ union PersistentPacket {
 };
 #endif /* _WIN32_WCE */
 
+/* sPacket  [extra struct] */
+struct NotifyPacket { NotifyPacket* pNext; NotifyPacket* pPrev; unsigned int uiPacketType; CEOID oidRecord; HICON hIcon; HICON hBigIcon; int fHasIcon; HWND hDlg; void* pExtraUIData; PersistentPacket* sPacket; };
+
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
 
 /* CeNotifyPrivate_ClearUserAlarm  [function; ce-only; CE 3.0..699] */
 void CeNotifyPrivate_ClearUserAlarm (void);
@@ -116,12 +119,6 @@ int CeNotifyPublic_FilterEvent(
  DWORD dwEvent
 );
 
-/* CeNotifyPublic_FilterUserNotification  [function; ce-only; CE 3.0..699] */
-int CeNotifyPublic_FilterUserNotification(
- CE_USER_NOTIFICATION* 
-pceun
-);
-
 /* CeNotifyPublic_Initialize  [function; ce-only; CE 3.0..699] */
 int CeNotifyPublic_Initialize(void);
 
@@ -130,27 +127,11 @@ void CeNotifyPublic_NewPacket(
  CEOID oidRecord
 );
 
-/* CeNotifyPublic_PresentSettingsBox  [function; ce-only; CE 3.0..699] */
-int CeNotifyPublic_PresentSettingsBox(
- HWND hWnd,
- CE_USER_NOTIFICATION* pceun,
- TCHAR* lpszSoundBuffer,
- void* pExpansion
-);
-
-/* CeNotifyPublic_UIWndProc  [function; ce-only; CE 3.0..699] */
-LRESULT CALLBACK CeNotifyPublic_UIWndProc(
- HWND hWnd,
- UINT message,
- WPARAM wParam,
- LPARAM lParam
-);
-
 /* CeNotifyPublic_UserAlarmSignalled  [function; ce-only; CE 3.0..699] */
 void CeNotifyPublic_UserAlarmSignalled (void);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* CeNotifyPublic_InitializeUI  [function; ce-only; CE 5.0..699] */
 int CeNotifyPublic_InitializeUI(
@@ -166,9 +147,6 @@ void CeNotifyPublic_Uninitialize(void);
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
-
-/* struct */
-struct NotifyPacket { NotifyPacket* pNext; NotifyPacket* pPrev; unsigned int uiPacketType; CEOID oidRecord; HICON hIcon; HICON hBigIcon; int fHasIcon; HWND hDlg; void* pExtraUIData; PersistentPacket* sPacket; };
 
 /* function */
 NotifyPacket *CeNotifyPrivate_TranslateOID (  CEOID oid );

@@ -63,22 +63,7 @@ typedef struct tagNEWCPLINFO {
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* CPL_DBLCLK  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-CPL_DBLCLK uAppNum = (UINT) lParam1; 
- lData = (LONG) lParam2;
-
-/* CPL_NEWINQUIRE  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-CPL_NEWINQUIRE uAppNum = (UINT) lParam1; 
- lpncpli = (LPNEWCPLINFO) lParam2;
-
-/* CPL_STOP  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-CPL_STOP uAppNum = (UINT) lParam1; 
- lData = (LONG) lParam2;
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* CPlApplet  [function; ce-only; CE 5.0..699] */
 LONG CPlApplet(

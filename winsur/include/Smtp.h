@@ -24,7 +24,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213)) /* CE 1.0..199, 2.11..2.12 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213)) /* CE 1.0..199, 2.11..2.12 */
 
 /* TransportConnect  [function; ce-only; CE 1.0..199, 2.11..2.12] */
 BOOL TransportConnect(HANDLE hService, DWORD dwFlags, HWND hNotify, (BOOL) (*CallBack)(int iStatus, BOOL bUnknownmax));
@@ -63,7 +63,7 @@ BOOL TransportSetPassword(HANDLE * InPtr, LPWSTR pszPassword, BOOL fRemember);
 BOOL TransportView(HWND hwndParent, MailMsg *MsgPtr);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213)) /* CE 2.11..2.12 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213)) /* CE 2.11..2.12 */
 
 /* TransportErrorMsg  [function; ce-only; CE 2.11..2.12] */
 int TransportErrorMsg(HANDLE hService, LPWSTR szBuf, int iBufLen, 

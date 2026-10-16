@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 8 declarations, 4 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 0 constants, 8 declarations, 4 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _D3DX8MATH_
 #define _D3DX8MATH_
@@ -38,28 +38,7 @@ typedef struct D3DXVECTOR4 {
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 500)) /* CE 4.0..499 */
-
-/* D3DXMatrixfDeterminant  [function; ce-only; CE 4.0..499; D3dx8.lib] */
-FLOAT D3DXMatrixfDeterminant(
- CONST D3DXMATRIX* pM
-);
-
-/* D3DXVec3Dot  [function; ce-only; CE 4.0..499; D3dx8.lib] */
-FLOAT D3DXVec3Dot(
- CONST D3DXVECTOR3* pV1,
- CONST D3DXVECTOR3* pV2
-);
-
-/* D3DXVec3Length  [function; ce-only; CE 4.0..499; D3dx8.lib] */
-FLOAT D3DXVec3Length(
- CONST D3DXVECTOR3* pV
-);
-
-/* D3DXVec3LengthSq  [function; ce-only; CE 4.0..499; D3dx8.lib] */
-FLOAT D3DXVec3LengthSq(
- CONST D3DXVECTOR3* pV
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x500)) /* CE 4.0..499 */
 
 /* D3DXVec4Dot  [function; ce-only; CE 4.0..499; D3dx8.lib] */
 FLOAT D3DXVec4Dot(

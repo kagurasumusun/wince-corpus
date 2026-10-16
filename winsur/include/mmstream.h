@@ -32,11 +32,7 @@ HRESULT CompletionStatus( DWORD dwFlags, DWORD dwMilliseconds);
 HRESULT CreateSharedSample( IStreamSample *pExistingSample, DWORD dwFlags, IStreamSample **ppNewSample);
 HRESULT EnumMediaStreams( long Index, IMediaStream **ppMediaStream);
 HRESULT GetEndOfStreamEventHandle( HANDLE *phEOS);
-HRESULT GetInformation( MSPID *pPurposeId, STREAM_TYPE *pType);
-HRESULT GetMediaStream( REFMSPID idPurpose, IMediaStream **ppMediaStream);
 HRESULT GetMultiMediaStream( IMultiMediaStream **ppMultiMediaStream);
 HRESULT SetSameFormat( IMediaStream *pStreamThatHasDesiredFormat, DWORD dwFlags);
-HRESULT SetSampleTimes( const STREAM_TIME *pStartTime, const STREAM_TIME *pEndTime);
-HRESULT SetState( STREAM_STATE NewState);
 
 #endif /* _MMSTREAM_ */

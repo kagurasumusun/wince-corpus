@@ -5,29 +5,10 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 4 constants, 2 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 2 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _TL_IDL_
 #define _TL_IDL_
 
-
-/* ==================================================================
- * constants (one evidence comment per #define; the
- * #if of a batch covers every #define in it; values
- * that differ per generation pool into #if/#elif
- * chains with the evidence after the #endif)
- * ================================================================ */
-#define TL_AUTO_REGISTER 0x4
-#define TL_AUTO_STARTUP 0x8
-#define TL_DIRECT_CONNECT 0x2
-#define TL_KEEPALIVE 0x1
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct TLPUBINFO {DWORDcbSize;DWORDdwVersion;DWORDdwFlags;DWORDdwConnectTimeOut;DWORDdwKeepAliveTimeOut;DWORDcbDataSize;BYTEpData[1];}TLPUBINFO, *PTLPUBINFO;
 
 #endif /* _TL_IDL_ */

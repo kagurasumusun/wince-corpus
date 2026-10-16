@@ -77,7 +77,7 @@ HRESULT Event(
  DWORD *pdispidEvt
 );
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* Count  [function; ce-only; CE 5.0..699] */
 HRESULT Count(long *pCount);

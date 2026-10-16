@@ -109,13 +109,10 @@ typedef struct tag_WAVEOUTEXTCAPS {
  DWORD dwMaxSampleRate;
 } WAVEOUTEXTCAPS;
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
+/* PMIXEROPENDESC  [extra struct] */
 typedef struct tMIXEROPENDESC { HMIXER hmx; LPVOID pReserved0; DWORD dwCallback; DWORD dwInstance;} MIXEROPENDESC, *PMIXEROPENDESC;
+
+/* PWAVEPROPINFO  [extra struct] */
 typedef struct tag_WAVEPROPINFO {LPGUIDpPropSetId;
 ULONGulPropId;
 LPVOIDpvPropParams;

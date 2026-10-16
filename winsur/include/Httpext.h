@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 21 constants, 8 declarations, 3 outlines, 0 base types, 0 extra macros, 7 extra decls
+ * 21 constants, 4 declarations, 4 outlines, 0 base types, 0 extra macros, 6 extra decls
  */
 #ifndef _HTTPEXT_
 #define _HTTPEXT_
@@ -49,63 +49,12 @@
 
 /* HSE_VERSION_INFO  [struct; ce-only] */
 
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-
-/* GetExtensionVersion  [function; ce-only; CE 3.0..399, 5.0..699] */
-BOOL WINAPI GetExtensionVersion(
- HSE_VERSION_INFO* pVer 
-);
-
-/* GetServerVariable  [function; ce-only; CE 3.0..399, 5.0..699; httpextn.lib, Httpfilt.lib, httpfilt.lib] */
-BOOL (WINAPI* GetServerVariable) (
- PHTTP_FILTER_CONTEXT pfc,
- LPSTR lpszVariableName,
- LPVOID lpvBuffer,
- LPDWORD lpdwSize
-);
-
-/* HttpExtensionProc  [function; ce-only; CE 3.0..399, 5.0..699] */
-DWORD WINAPI HttpExtensionProc(
- EXTENSION_CONTROL_BLOCK* pECB
-);
-
-/* ReadClient  [function; ce-only; CE 3.0..399, 5.0..699; Httpextn.lib, httpextn.lib] */
-BOOL (WINAPI* ReadClient)(
- HCONN ConnID,
- LPVOID lpvBuffer,
- LPDWORD lpdwSize 
-);
-
-/* TerminateExtension  [function; ce-only; CE 3.0..399, 5.0..699] */
-BOOL WINAPI TerminateExtension(
- DWORD dwFlags 
-);
-
-/* WriteClient  [function; ce-only; CE 3.0..399, 5.0..699; Httpextn.lib, httpextn.lib, Httpfilt.lib, httpfilt.lib] */
-BOOL (WINAPI* WriteClient)(
- HCONN ConnID,
- LPVOID Buffer,
- LPDWORD lpdwBytes,
- DWORD dwReserved 
-);
-#endif /* _WIN32_WCE */
+/* ServerSupportFunction  [enum, function; ce-only; httpextn.lib, Httpfilt.lib, httpfilt.lib] */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
-
-/* enum */
-BOOL (WINAPI* ServerSupportFunction)(PHTTP_FILTER_CONTEXTpfc,enum SF_REQ_TYPE sfReq,PVOID pData,DWORDul1,DWORD ul2);
-
-/* struct */
-typedef struct _EXTENSION_CONTROL_BLOCK{DWORDcbSize;DWORDdwVersion;HCONNConnID;DWORDdwHttpStatusCode;CHAR lpszLogData[HSE_LOG_BUFFER_LEN];LPSTRlpszMethod;LPSTRlpszQueryString;LPSTRlpszPathInfo;LPSTRlpszPathTranslated;DWORDcbTotalBytes;DWORDcbAvailable;LPBYTElpbData;LPSTRlpszContentType;BOOL (WINAPI* GetServerVariable);BOOL (WINAPI* WriteClient);BOOL (WINAPI* ReadClient);BOOL (WINAPI* ServerSupportFunction);} EXTENSION_CONTROL_BLOCK, LPEXTENSION_CONTROL_BLOCK;
-typedef struct _HSE_SEND_HEADER_EX_INFO{ LPCSTR pszStatus; LPCSTR pszHeader; DWORD cchStatus; DWORD cchHeader; BOOL fKeepConn;} HSE_SEND_HEADER_EX_INFO, *LPHSE_SEND_HEADER_EX_INFO;
-typedef struct _HSE_VERSION_INFO{DWORDdwExtensionVersion; CHARlpszExtensionDesc[HSE_MAX_EXT_DLL_NAME_LEN];} HSE_VERSION_INFO,*LPHSE_VERSION_INFO;
 
 /* function */
 BOOL WINAPIGetExtensionVersion(HSE_VERSION_INFO* pVer );

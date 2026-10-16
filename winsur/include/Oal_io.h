@@ -77,37 +77,4 @@
 
 /* SETREG8  [macro; ce-only] */
 
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* OALIoCtlHalDdkCall  [function; ce-only; CE 5.0..699] */
-BOOL OALIoCtlHalDdkCall(
- UINT32 dwIoControlCode,
- VOID *lpInBuf,
- UINT32 nInBufSize,
- VOID *lpOutBuf,
- UINT32 nOutBufSize,
- UINT32 *lpBytesReturned
-);
-
-/* OALIoReadBusData  [function; ce-only; CE 5.0..699] */
-UINT32 OALIoReadBusData(
- DEVICE_LOCATION *pDevLoc,
- UINT32 address,
- UINT32 size,
- VOID *pData
-);
-
-/* OALIoWriteBusData  [function; ce-only; CE 5.0..699] */
-UINT32 OALIoWriteBusData(
- DEVICE_LOCATION *pDevLoc,
- UINT32 address,
- UINT32 size,
- VOID *pData
-);
-#endif /* _WIN32_WCE */
-
 #endif /* _OAL_IO_ */

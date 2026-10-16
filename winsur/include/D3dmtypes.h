@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1 constants, 46 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 1 constants, 46 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _D3DMTYPES_
 #define _D3DMTYPES_
@@ -103,18 +103,5 @@ typedef struct _D3DMMATRIX {
  D3DMVALUE m[4][4];
  };
 } D3DMMATRIX;
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* D3DM_MAKE_D3DMVALUE  [function; ce-only; CE 5.0..699] */
-inline D3DMVALUE D3DM_MAKE_D3DMVALUE(D3DMVALUE Value);
-inline D3DMVALUE D3DM_MAKE_D3DMVALUE(float Value);
-inline D3DMVALUE D3DM_MAKE_D3DMVALUE(unsigned int Value);
-inline D3DMVALUE D3DM_MAKE_D3DMVALUE(double Value);
-#endif /* _WIN32_WCE */
 
 #endif /* _D3DMTYPES_ */

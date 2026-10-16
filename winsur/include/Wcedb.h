@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 37 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 26 extra decls
  */
 #ifndef _WCEDB_
 #define _WCEDB_
@@ -20,7 +20,6 @@
 BOOL AddProp( CCeDBProp* pProp );
 BOOL AddProps( CCeDBProp* pPropArray, int nNumProps );
 BOOL AddRecord( CCeDBRecord* pRecord );
-CCeDBEnum ( DWORD dwIdent = 0 );
 void DeleteAllProps( );
 BOOL DeleteCurrRecord( );
 void DeleteProp( WORD wPropIdent );
@@ -33,7 +32,6 @@ CEOID SeekPrev( );
 CEOID SeekToRecord( CEOID CeOID );
 CEOID SeekValueGreater( CCeDBProp& Prop );
 CEOID SeekValueSmaller( CCeDBProp& Prop );
-void SetBlob( CEBLOB blob, UINT nMode = Copy );
 void SetFiletime( FILETIME filetime );
 BOOL SetIdent( DWORD dwIdent );
 BOOL SetLastModified( FILETIME ftLastModified );

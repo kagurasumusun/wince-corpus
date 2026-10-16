@@ -51,7 +51,7 @@ typedef struct {
  DWORD dwInterfaceProtocol;
 } USB_DRIVER_SETTINGS;
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* LPGET_USBD_VERSION  [callback; ce-only; CE 5.0..699] */
 typedef VOID (* LPGET_USBD_VERSION)(
@@ -75,22 +75,17 @@ typedef BOOL (* LPUN_REGISTER_CLIENT_DRIVER_ID)(
 );
 #endif /* _WIN32_WCE */
 
+/* dwInfo4  [extra typedef] */
+typedef BOOL (WINAPI *LPDEVICE_NOTIFY_ROUTINE)( LPVOID lpvNotifyParameter, DWORD dwCode, LPDWORD* dwInfo1, LPDWORD* dwInfo2, LPDWORD* dwInfo3, LPDWORD* dwInfo4);
+
+/* lpResumeDevice  [extra struct] */
+struct _USB_FUNCS { DWORD dwCount; LPGET_USBD_VERSION lpGetUSBDVersion; LPOPEN_CLIENT_REGISTRY_KEY lpOpenClientRegistyKey; LPREGISTER_NOTIFICATION_ROUTINE lpRegisterNotificationRoutine; LPUN_REGISTER_NOTIFICATION_ROUTINE lpUnRegisterNotificationRoutine; LPLOAD_GENERIC_INTERFACE_DRIVER lpLoadGenericInterfaceDriver; LPTRANSLATE_STRING_DESCR lpTranslateStringDesc; LPFIND_INTERFACE lpFindInterface; LPGET_FRAME_NUMBER lpGetFrameNumber; LPGET_FRAME_LENGTH lpGetFrameLength; LPTAKE_FRAME_LENGTH_CONTROL lpTakeFrameLengthControl; LPRELEASE_FRAME_LENGTH_CONTROL lpReleaseFrameLengthControl; LPSET_FRAME_LENGTH lpSetFrameLength; LPGET_DEVICE_INFO lpGetDeviceInfo; LPISSUE_VENDOR_TRANSFER lpIssueVendorTransfer; LPGET_INTERFACE lpGetInterface; LPSET_INTERFACE lpSetInterface; LPGET_DESCRIPTOR lpGetDescriptor; LPSET_DESCRIPTOR lpSetDescriptor; LPSET_FEATURE lpSetFeature; LPCLEAR_FEATURE lpClearFeature; LPGET_STATUS lpGetStatus; LPSYNC_FRAME lpSyncFrame; LPOPEN_PIPE lpOpenPipe; LPABORT_PIPE_TRANSFERS lpAbortPipeTransfers; LPRESET_PIPE lpResetPipe; LPCLOSE_PIPE lpClosePipe; LPIS_PIPE_HALTED lpIsPipeHalted; LPISSUE_CONTROL_TRANSFER lpIssueControlTransfer; LPISSUE_BULK_TRANSFER lpIssueBulkTransfer; LPISSUE_INTERRUPT_TRANSFER lpIssueInterruptTransfer; LPISSUE_ISOCH_TRANSFER lpIssueIsochTransfer; LPIS_TRANSFER_COMPLETE lpIsTransferComplete; LPGET_TRANSFER_STATUS lpGetTransferStatus; LPGET_ISOCH_RESULTS lpGetIsochResults; LPABORT_TRANSFER lpAbortTransfer; LPCLOSE_TRANSFER lpCloseTransfer; LPRESET_DEFAULT_PIPE lpResetDefaultPipe; LPIS_DEFAULT_PIPE_HALTED lpIsDefaultPipeHalted; LPDISABLE_DEVICE lpDisableDevice; LPSUSPEND_DEVICE lpSuspendDevice; LPRESUME_DEVICE lpResumeDevice;};
+
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* USBDeviceAttach  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL USBDeviceAttach(
- USB_HANDLE hDevice,
- LPCUSB_FUNCS lpUsbFuncs,
- LPCUSB_INTERFACE lpInterface,
- LPCWSTR szUniqueDriverId,
- LPBOOL fAcceptControl,
- LPCUSB_DRIVER_SETTINGS lpDriverSettings,
- DWORD dwUnused 
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* USBInstallDriver  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
 BOOL USBInstallDriver(
@@ -101,7 +96,7 @@ BOOL USBInstallDriver(
 BOOL USBUnInstallDriver(void);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 500)) /* CE 2.11..2.12, 3.0..499 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x500)) /* CE 2.11..2.12, 3.0..499 */
 
 /* GetUSBDVersion  [function; ce-only; CE 2.11..2.12, 3.0..499; Usbd.lib] */
 VOID GetUSBDVersion(
@@ -118,31 +113,6 @@ HKEY OpenClientRegistryKey(
 BOOL RegisterClientDriverID(
  LPCWSTR szUniqueDriverId 
 );
-
-/* RegisterClientSettings  [function; ce-only; CE 2.11..2.12, 3.0..499] */
-BOOL RegisterClientSettings(
- LPCWSTR szDriverLibFile,
- LPCWSTR szUniqueDriverId,
- LPCWSTR szReserved,
- LPCUSB_DRIVER_SETTINGS lpDriverSettings 
-);
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* typedef */
-typedef BOOL (WINAPI *LPDEVICE_NOTIFY_ROUTINE)( LPVOID lpvNotifyParameter, DWORD dwCode, LPDWORD* dwInfo1, LPDWORD* dwInfo2, LPDWORD* dwInfo3, LPDWORD* dwInfo4);
-
-/* struct */
-struct _USB_FUNCS { DWORD dwCount; LPGET_USBD_VERSION lpGetUSBDVersion; LPOPEN_CLIENT_REGISTRY_KEY lpOpenClientRegistyKey; LPREGISTER_NOTIFICATION_ROUTINE lpRegisterNotificationRoutine; LPUN_REGISTER_NOTIFICATION_ROUTINE lpUnRegisterNotificationRoutine; LPLOAD_GENERIC_INTERFACE_DRIVER lpLoadGenericInterfaceDriver; LPTRANSLATE_STRING_DESCR lpTranslateStringDesc; LPFIND_INTERFACE lpFindInterface; LPGET_FRAME_NUMBER lpGetFrameNumber; LPGET_FRAME_LENGTH lpGetFrameLength; LPTAKE_FRAME_LENGTH_CONTROL lpTakeFrameLengthControl; LPRELEASE_FRAME_LENGTH_CONTROL lpReleaseFrameLengthControl; LPSET_FRAME_LENGTH lpSetFrameLength; LPGET_DEVICE_INFO lpGetDeviceInfo; LPISSUE_VENDOR_TRANSFER lpIssueVendorTransfer; LPGET_INTERFACE lpGetInterface; LPSET_INTERFACE lpSetInterface; LPGET_DESCRIPTOR lpGetDescriptor; LPSET_DESCRIPTOR lpSetDescriptor; LPSET_FEATURE lpSetFeature; LPCLEAR_FEATURE lpClearFeature; LPGET_STATUS lpGetStatus; LPSYNC_FRAME lpSyncFrame; LPOPEN_PIPE lpOpenPipe; LPABORT_PIPE_TRANSFERS lpAbortPipeTransfers; LPRESET_PIPE lpResetPipe; LPCLOSE_PIPE lpClosePipe; LPIS_PIPE_HALTED lpIsPipeHalted; LPISSUE_CONTROL_TRANSFER lpIssueControlTransfer; LPISSUE_BULK_TRANSFER lpIssueBulkTransfer; LPISSUE_INTERRUPT_TRANSFER lpIssueInterruptTransfer; LPISSUE_ISOCH_TRANSFER lpIssueIsochTransfer; LPIS_TRANSFER_COMPLETE lpIsTransferComplete; LPGET_TRANSFER_STATUS lpGetTransferStatus; LPGET_ISOCH_RESULTS lpGetIsochResults; LPABORT_TRANSFER lpAbortTransfer; LPCLOSE_TRANSFER lpCloseTransfer; LPRESET_DEFAULT_PIPE lpResetDefaultPipe; LPIS_DEFAULT_PIPE_HALTED lpIsDefaultPipeHalted; LPDISABLE_DEVICE lpDisableDevice; LPSUSPEND_DEVICE lpSuspendDevice; LPRESUME_DEVICE lpResumeDevice;};
-
-/* callback */
-typedef LPCUSB_DEVICE (* LPGET_DEVICE_INFO)( USB_HANDLE hDevice);
-typedef LPCUSB_INTERFACE (* LPFIND_INTERFACE)( LPCUSB_DEVICE lpDeviceInfo, UCHAR bInterfaceNumber, UCHAR bAlternateSetting);
-typedef USB_PIPE (* LPOPEN_PIPE)( USB_HANDLE hDevice, LPCUSB_ENDPOINT_DESCRIPTOR lpEndpointDescriptor);
-typedef USB_TRANSFER (* LPCLEAR_FEATURE)( USB_HANDLE hDevice, LPTRANSFER_NOTIFY_ROUTINE lpStartAddress, LPVOID lpvNotifyParameter, DWORD dwFlags, WORD wFeature, UCHAR bIndex);
 
 #endif /* _USBDI_ */

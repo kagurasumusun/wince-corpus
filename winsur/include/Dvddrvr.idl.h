@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 13 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 25 extra decls
+ * 9 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 25 extra decls
  */
 #ifndef _DVDDRVR_IDL_
 #define _DVDDRVR_IDL_
@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define DVD_AUDIO_TYPE_AC3 2
 #define DVD_AUDIOCAP_AC3 0x4000
 #define DVD_AUDIOCAP_AC3_KARAOKE 0x0040
 #define DVD_AUDIOCAP_DTS 0x0800
@@ -27,9 +26,6 @@
 #define DVD_AUDIOCAP_MPEG_KARAOKE 0x0010
 #define DVD_AUDIOCAP_SDDS 0x0400
 #define DVD_AUDIOCAP_SDDS_KARAOKE 0x0004
-#define DVD_DISPLAY_ASPECT_16x9 0x3
-#define DVD_DISPLAY_ASPECT_4x3 0
-#define HIGHLIGHT_SELECT 1
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

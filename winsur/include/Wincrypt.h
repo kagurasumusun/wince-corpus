@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 580 constants, 201 declarations, 1 outlines, 0 base types, 0 extra macros, 77 extra decls
+ * 580 constants, 195 declarations, 3 outlines, 0 base types, 0 extra macros, 70 extra decls
  */
 #ifndef _WINCRYPT_
 #define _WINCRYPT_
@@ -440,38 +440,16 @@
 #define KP_Y 0x0000000f
 #define MAXUIDLEN 64
 #define MS_DEF_DH_SCHANNEL_PROV MS_DEF_DH_SCHANNEL_PROV_W
-#define MS_DEF_DH_SCHANNEL_PROV_A "Microsoft
-#define MS_DEF_DH_SCHANNEL_PROV_W L"Microsoft
 #define MS_DEF_DSS_DH_PROV MS_DEF_DSS_DH_PROV_W
-#define MS_DEF_DSS_DH_PROV_A "Microsoft
-#define MS_DEF_DSS_DH_PROV_W L"Microsoft
 #define MS_DEF_DSS_PROV MS_DEF_DSS_PROV_W
-#define MS_DEF_DSS_PROV_A "Microsoft
-#define MS_DEF_DSS_PROV_W L"Microsoft
 #define MS_DEF_PROV MS_DEF_PROV_W
-#define MS_DEF_PROV_A "Microsoft
-#define MS_DEF_PROV_W L"Microsoft
 #define MS_DEF_RSA_SCHANNEL_PROV MS_DEF_RSA_SCHANNEL_PROV_W
-#define MS_DEF_RSA_SCHANNEL_PROV_A "Microsoft
-#define MS_DEF_RSA_SCHANNEL_PROV_W L"Microsoft
 #define MS_DEF_RSA_SIG_PROV MS_DEF_RSA_SIG_PROV_W
-#define MS_DEF_RSA_SIG_PROV_A "Microsoft
-#define MS_DEF_RSA_SIG_PROV_W L"Microsoft
 #define MS_ENH_DSS_DH_PROV MS_ENH_DSS_DH_PROV_W
-#define MS_ENH_DSS_DH_PROV_A "Microsoft
-#define MS_ENH_DSS_DH_PROV_W L"Microsoft
 #define MS_ENH_RSA_AES_PROV MS_ENH_RSA_AES_PROV_W
-#define MS_ENH_RSA_AES_PROV_A "Microsoft
-#define MS_ENH_RSA_AES_PROV_W L"Microsoft
 #define MS_ENHANCED_PROV MS_ENHANCED_PROV_W
-#define MS_ENHANCED_PROV_A "Microsoft
-#define MS_ENHANCED_PROV_W L"Microsoft
 #define MS_SCARD_PROV MS_SCARD_PROV_W
-#define MS_SCARD_PROV_A "Microsoft
-#define MS_SCARD_PROV_W L"Microsoft
 #define MS_STRONG_PROV MS_STRONG_PROV_W
-#define MS_STRONG_PROV_A "Microsoft
-#define MS_STRONG_PROV_W L"Microsoft
 #define OCSP_BASIC_RESPONSE (LPCSTR)
 #define OCSP_BASIC_SIGNED_RESPONSE (LPCSTR)
 #define OCSP_REQUEST (LPCSTR)
@@ -698,900 +676,212 @@ BOOL FuncReturnhWnd(DWORD *phWnd);
 /*   SignatureAlgorithm */
 /*   Signature */
 
+/* CMSG_STREAM_INFO  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   cbContent */
+/*   pfnStreamOutput */
+/*   pvArg */
+
+/* CRYPT_ENCODE_PARA  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   cbSize */
+/*   pfnAlloc */
+/*   pfnFree */
+
+/* PCCERT_CONTEXT  [extra typedef] */
+typedef const CERT_CONTEXT *PCCERT_CONTEXT;
+
+/* PCCRYPT_OID_INFO  [extra typedef] */
+typedef const CRYPT_OID_INFO CCRYPT_OID_INFO, *PCCRYPT_OID_INFO;
+
+/* SECURITY_INFORMATION  [extra typedef] */
+typedef DWORD SECURITY_INFORMATION;
+
+/* PHMAC_INFO  [extra struct] */
+typedef struct _HMAC_Info {ALG_IDHashAlgid;BYTE* pbInnerString;DWORDcbInnerString;BYTE* pbOuterString;DWORDcbOuterString;} HMAC_INFO, *PHMAC_INFO;
+
+/* PCERT_ACCESS_DESCRIPTION  [extra struct] */
+typedef struct _CERT_ACCESS_DESCRIPTION {LPSTRpszAccessMethod;CERT_ALT_NAME_ENTRYAccessLocation;} CERT_ACCESS_DESCRIPTION, *PCERT_ACCESS_DESCRIPTION;
+
+/* PCERT_ALT_NAME_ENTRY  [extra struct] */
+typedef struct _CERT_ALT_NAME_ENTRY {DWORDdwAltNameChoice;union{PCERT_OTHER_NAMEpOtherName;LPWSTRpwszRfc822Name;LPWSTRpwszDNSName;CERT_NAME_BLOBDirectoryName;LPWSTRpwszURL;CRYPT_DATA_BLOBIPAddress;LPSTRpszRegisteredID;};} CERT_ALT_NAME_ENTRY, *PCERT_ALT_NAME_ENTRY;
+
+/* PCERT_ALT_NAME_INFO  [extra struct] */
+typedef struct _CERT_ALT_NAME_INFO {DWORDcAltEntry;PCERT_ALT_NAME_ENTRYrgAltEntry;} CERT_ALT_NAME_INFO, *PCERT_ALT_NAME_INFO;
+
+/* PCERT_AUTHORITY_INFO_ACCESS  [extra struct] */
+typedef struct _CERT_AUTHORITY_INFO_ACCESS {DWORDcAccDescr;PCERT_ACCESS_DESCRIPTIONrgAccDescr;} CERT_AUTHORITY_INFO_ACCESS, *PCERT_AUTHORITY_INFO_ACCESS;
+
+/* PCERT_AUTHORITY_KEY_ID2_INFO  [extra struct] */
+typedef struct _CERT_AUTHORITY_KEY_ID2_INFO {CRYPT_DATA_BLOBKeyId;CERT_ALT_NAME_INFOAuthorityCertIssuer;CRYPT_INTEGER_BLOBAuthorityCertSerialNumber;} CERT_AUTHORITY_KEY_ID2_INFO, *PCERT_AUTHORITY_KEY_ID2_INFO;
+
+/* PCERT_AUTHORITY_KEY_ID_INFO  [extra struct] */
+typedef struct _CERT_AUTHORITY_KEY_ID_INFO {CRYPT_DATA_BLOBKeyId;CERT_NAME_BLOBCertIssuer;CRYPT_INTEGER_BLOBCertSerialNumber;} CERT_AUTHORITY_KEY_ID_INFO, *PCERT_AUTHORITY_KEY_ID_INFO;
+
+/* PCERT_BASIC_CONSTRAINTS2_INFO  [extra struct] */
+typedef struct _CERT_BASIC_CONSTRAINTS2_INFO {BOOLfCA;BOOLfPathLenConstraint;DWORDdwPathLenConstraint;} CERT_BASIC_CONSTRAINTS2_INFO, *PCERT_BASIC_CONSTRAINTS2_INFO;
+
+/* PCERT_BASIC_CONSTRAINTS_INFO  [extra struct] */
+typedef struct _CERT_BASIC_CONSTRAINTS_INFO {CRYPT_BIT_BLOBSubjectType;BOOLfPathLenConstraint;DWORDdwPathLenConstraint;DWORDcSubtreesConstraint;CERT_NAME_BLOB*rgSubtreesConstraint;} CERT_BASIC_CONSTRAINTS_INFO, *PCERT_BASIC_CONSTRAINTS_INFO;
+
+/* PCERT_CHAIN_CONTEXT  [extra struct] */
+typedef struct _CERT_CHAIN_CONTEXT {DWORDcbSize;CERT_TRUST_STATUSTrustStatus;DWORDcChain;PCERT_SIMPLE_CHAIN* rgpChain;} CERT_CHAIN_CONTEXT, *PCERT_CHAIN_CONTEXT;
+
+/* PCERT_CHAIN_ELEMENT  [extra struct] */
+typedef struct _CERT_CHAIN_ELEMENT {DWORDcbSize;PCCERT_CONTEXTpCertContext;CERT_TRUST_STATUSTrustStatus;PCERT_REVOCATION_INFOpRevocationInfo; } CERT_CHAIN_ELEMENT, *PCERT_CHAIN_ELEMENT;
+
+/* PCERT_CHAIN_PARA  [extra struct] */
+typedef struct _CERT_CHAIN_PARA {DWORD cbSize;CERT_USAGE_MATCHRequestedUsage;} CERT_CHAIN_PARA, *PCERT_CHAIN_PARA;
+
+/* PCERT_EXTENSION  [extra struct] */
+typedef struct _CERT_EXTENSION {LPSTRpszObjId;BOOLfCritical;CRYPT_OBJID_BLOBValue;} CERT_EXTENSION, *PCERT_EXTENSION;
+
+/* PCERT_ID  [extra struct] */
+typedef struct _CERT_ID {DWORD dwIdChoice;union{CERT_ISSUER_SERIAL_NUMBERIssuerSerialNumber;CRYPT_HASH_BLOBKeyId;CRYPT_HASH_BLOBHashId;};} CERT_ID, *PCERT_ID;
+
+/* PCERT_INFO  [extra struct] */
+typedef struct _CERT_INFO {DWORDdwVersion;CRYPT_INTEGER_BLOBSerialNumber;CRYPT_ALGORITHM_IDENTIFIERSignatureAlgorithm;CERT_NAME_BLOBIssuer;FILETIMENotBefore;FILETIMENotAfter;CERT_NAME_BLOBSubject;CERT_PUBLIC_KEY_INFOSubjectPublicKeyInfo;CRYPT_BIT_BLOBIssuerUniqueId;CRYPT_BIT_BLOBSubjectUniqueId;DWORDcExtension;PCERT_EXTENSIONrgExtension;} CERT_INFO, *PCERT_INFO;
+
+/* PCERT_ISSUER_SERIAL_NUMBER  [extra struct] */
+typedef struct _CERT_ISSUER_SERIAL_NUMBER {CERT_NAME_BLOBIssuer;CRYPT_INTEGER_BLOBSerialNumber;} CERT_ISSUER_SERIAL_NUMBER, *PCERT_ISSUER_SERIAL_NUMBER;
+
+/* PCERT_KEY_ATTRIBUTES_INFO  [extra struct] */
+typedef struct _CERT_KEY_ATTRIBUTES_INFO {CRYPT_DATA_BLOBKeyId;CRYPT_BIT_BLOBIntendedKeyUsage;PCERT_PRIVATE_KEY_VALIDITYpPrivateKeyUsagePeriod;} CERT_KEY_ATTRIBUTES_INFO, *PCERT_KEY_ATTRIBUTES_INFO;
+
+/* PCERT_KEY_CONTEXT  [extra struct] */
+typedef struct _CERT_KEY_CONTEXT {DWORD cbSize;HCRYPTPROVhCryptProv;DWORD dwKeySpec;} CERT_KEY_CONTEXT, *PCERT_KEY_CONTEXT;
+
+/* PCERT_KEYGEN_REQUEST_INFO  [extra struct] */
+typedef struct _CERT_KEYGEN_REQUEST_INFO {DWORDdwVersion;CERT_PUBLIC_KEY_INFOSubjectPublicKeyInfo;LPWSTRpwszChallengeString;} CERT_KEYGEN_REQUEST_INFO, *PCERT_KEYGEN_REQUEST_INFO;
+
+/* PCERT_KEY_USAGE_RESTRICTION_INFO  [extra struct] */
+typedef struct _CERT_KEY_USAGE_RESTRICTION_INFO {DWORDcCertPolicyId;PCERT_POLICY_IDrgCertPolicyId;CRYPT_BIT_BLOBRestrictedKeyUsage;} CERT_KEY_USAGE_RESTRICTION_INFO, *PCERT_KEY_USAGE_RESTRICTION_INFO;
+
+/* PCERT_NAME_INFO  [extra struct] */
+typedef struct _CERT_NAME_INFO {DWORDcRDN;PCERT_RDNrgRDN;} CERT_NAME_INFO, *PCERT_NAME_INFO;
+
+/* PCERT_POLICIES_INFO  [extra struct] */
+typedef struct _CERT_POLICIES_INFO {DWORDcPolicyInfo;CERT_POLICY_INFO* rgPolicyInfo;} CERT_POLICIES_INFO, *PCERT_POLICIES_INFO;
+
+/* PCERT_POLICY_ID  [extra struct] */
+typedef struct _CERT_POLICY_ID {DWORDcCertPolicyElementId;LPSTR* rgpszCertPolicyElementId;} CERT_POLICY_ID, *PCERT_POLICY_ID;
+
+/* PCERT_POLICY_INFO  [extra struct] */
+typedef struct _CERT_POLICY_INFO {LPSTRpszPolicyIdentifier;DWORDcPolicyQualifier;CERT_POLICY_QUALIFIER_INFO* rgPolicyQualifier;} CERT_POLICY_INFO, *PCERT_POLICY_INFO;
+
+/* PCERT_POLICY_QUALIFIER_INFO  [extra struct] */
+typedef struct _CERT_POLICY_QUALIFIER_INFO {LPSTRpszPolicyQualifierId;CRYPT_OBJID_BLOBQualifier;} CERT_POLICY_QUALIFIER_INFO, *PCERT_POLICY_QUALIFIER_INFO;
+
+/* PCERT_PRIVATE_KEY_VALIDITY  [extra struct] */
+typedef struct _CERT_PRIVATE_KEY_VALIDITY {FILETIMENotBefore;FILETIMENotAfter;} CERT_PRIVATE_KEY_VALIDITY, *PCERT_PRIVATE_KEY_VALIDITY;
+
+/* PCERT_PUBLIC_KEY_INFO  [extra struct] */
+typedef struct _CERT_PUBLIC_KEY_INFO {CRYPT_ALGORITHM_IDENTIFIERAlgorithm;CRYPT_BIT_BLOBPublicKey;} CERT_PUBLIC_KEY_INFO, *PCERT_PUBLIC_KEY_INFO;
+
+/* PCERT_RDN  [extra struct] */
+typedef struct _CERT_RDN {DWORD cRDNAttr;PCERT_RDN_ATTR rgRDNAttr;} CERT_RDN, *PCERT_RDN;
+
+/* PCERT_RDN_ATTR  [extra struct] */
+typedef struct _CERT_RDN_ATTR {LPSTRpszObjId;DWORDdwValueType;CERT_RDN_VALUE_BLOBValue;} CERT_RDN_ATTR, *PCERT_RDN_ATTR;
+
+/* PCERT_REQUEST_INFO  [extra struct] */
+typedef struct _CERT_REQUEST_INFO {DWORDdwVersion;CERT_NAME_BLOBSubject;CERT_PUBLIC_KEY_INFOSubjectPublicKeyInfo;DWORDcAttribute;PCRYPT_ATTRIBUTErgAttribute;} CERT_REQUEST_INFO, *PCERT_REQUEST_INFO;
+
+/* PCERT_SIGNED_CONTENT_INFO  [extra struct] */
+typedef struct _CERT_SIGNED_CONTENT_INFO {CRYPT_DER_BLOBToBeSigned;CRYPT_ALGORITHM_IDENTIFIERSignatureAlgorithm;CRYPT_BIT_BLOBSignature;CERT_SIGNED_CONTENT_INFO, *PCERT_SIGNED_CONTENT_INFO; };
+
+/* PCERT_SIMPLE_CHAIN  [extra struct] */
+typedef struct _CERT_SIMPLE_CHAIN {DWORDcbSize;CERT_TRUST_STATUSTrustStatus;DWORDcElement;PCERT_CHAIN_ELEMENT* rgpElement;PCERT_TRUST_LIST_INFOpTrustListInfo;} CERT_SIMPLE_CHAIN, *PCERT_SIMPLE_CHAIN;
+
+/* PCERT_SYSTEM_STORE_INFO  [extra struct] */
+typedef struct _CERT_SYSTEM_STORE_INFO {DWORDcbSize;} CERT_SYSTEM_STORE_INFO, *PCERT_SYSTEM_STORE_INFO;
+
+/* PCERT_SYSTEM_STORE_RELOCATE_PARA  [extra struct] */
+typedef struct _CERT_SYSTEM_STORE_RELOCATE_PARA {union { HKEYhKeyBase;void* pvBase; };union { void* pvSystemStore;LPCSTRpszSystemStore;LPCWSTRpwszSystemStore; };} CERT_SYSTEM_STORE_RELOCATE_PARA, *PCERT_SYSTEM_STORE_RELOCATE_PARA;
+
+/* PCERT_TRUST_LIST_INFO  [extra struct] */
+typedef struct _CERT_TRUST_LIST_INFO {DWORDcbSize;PCTL_ENTRYpCtlEntry;PCCTL_CONTEXTpCtlContext;} CERT_TRUST_LIST_INFO, *PCERT_TRUST_LIST_INFO;
+
+/* PCERT_TRUST_STATUS  [extra struct] */
+typedef struct _CERT_TRUST_STATUS {DWORDdwErrorStatus;DWORDdwInfoStatus;} CERT_TRUST_STATUS, *PCERT_TRUST_STATUS;
+
+/* PCERT_USAGE_MATCH  [extra struct] */
+typedef struct _CERT_USAGE_MATCH {DWORDdwType;CERT_ENHKEY_USAGEUsage;} CERT_USAGE_MATCH, *PCERT_USAGE_MATCH;
+
+/* PCMSG_CMS_RECIPIENT_INFO  [extra struct] */
+typedef struct _CMSG_CMS_RECIPIENT_INFO { DWORD dwRecipientChoice; union { PCMSG_KEY_TRANS_RECIPIENT_INFO pKeyTrans; PCMSG_KEY_AGREE_RECIPIENT_INFO pKeyAgree; PCMSG_MAIL_LIST_RECIPIENT_INFO pMailList; };} CMSG_CMS_RECIPIENT_INFO, *PCMSG_CMS_RECIPIENT_INFO;
+
+/* PCMSG_CMS_SIGNER_INFO  [extra struct] */
+typedef struct _CMSG_CMS_SIGNER_INFO { DWORD dwVersion; CERT_ID SignerId; CRYPT_ALGORITHM_IDENTIFIER HashAlgorithm; CRYPT_ALGORITHM_IDENTIFIER HashEncryptionAlgorithm; CRYPT_DATA_BLOB EncryptedHash; CRYPT_ATTRIBUTES AuthAttrs; CRYPT_ATTRIBUTES UnauthAttrs;} CMSG_CMS_SIGNER_INFO, *PCMSG_CMS_SIGNER_INFO;
+
+/* PCMSG_CTRL_ADD_SIGNER_UNAUTH_ATTR_PARA  [extra struct] */
+typedef struct _CMSG_CTRL_ADD_SIGNER_UNAUTH_ATTR_PARA { DWORD cbSize; DWORD dwSignerIndex; CRYPT_DATA_BLOB BLOB;} CMSG_CTRL_ADD_SIGNER_UNAUTH_ATTR_PARA, *PCMSG_CTRL_ADD_SIGNER_UNAUTH_ATTR_PARA;
+
+/* PCMSG_CTRL_DECRYPT_PARA  [extra struct] */
+typedef struct _CMSG_CTRL_DECRYPT_PARA { DWORD cbSize; HCRYPTPROV hCryptProv; DWORD dwKeySpec; DWORD dwRecipientIndex;} CMSG_CTRL_DECRYPT_PARA, *PCMSG_CTRL_DECRYPT_PARA;
+
+/* PCMSG_CTRL_DEL_SIGNER_UNAUTH_ATTR_PARA  [extra struct] */
+typedef struct _CMSG_CTRL_DEL_SIGNER_UNAUTH_ATTR_PARA { DWORD cbSize; DWORD dwSignerIndex; DWORD dwUnauthAttrIndex;} CMSG_CTRL_DEL_SIGNER_UNAUTH_ATTR_PARA, *PCMSG_CTRL_DEL_SIGNER_UNAUTH_ATTR_PARA;
+
+/* PCMSG_CTRL_KEY_AGREE_DECRYPT_PARA  [extra struct] */
+typedef struct _CMSG_CTRL_KEY_AGREE_DECRYPT_PARA { DWORD cbSize; HCRYPTPROV hCryptProv; DWORD dwKeySpec; PCMSG_KEY_AGREE_RECIPIENT_INFO pKeyAgree; DWORD dwRecipientIndex; DWORD dwRecipientEncryptedKeyIndex; CRYPT_BIT_BLOB OriginatorPublicKey;} CMSG_CTRL_KEY_AGREE_DECRYPT_PARA, *PCMSG_CTRL_KEY_AGREE_DECRYPT_PARA;
+
+/* PCMSG_CTRL_VERIFY_SIGNATURE_EX_PARA  [extra struct] */
+typedef struct _CMSG_CTRL_VERIFY_SIGNATURE_EX_PARA { DWORD cbSize; HCRYPTPROV hCryptProv; DWORD dwSignerIndex; DWORD dwSignerType; void* pvSigner;} CMSG_CTRL_VERIFY_SIGNATURE_EX_PARA, *PCMSG_CTRL_VERIFY_SIGNATURE_EX_PARA;
+
+/* PCMSG_ENVELOPED_ENCODE_INFO  [extra struct] */
+typedef struct _CMSG_ENVELOPED_ENCODE_INFO { DWORD cbSize; HCRYPTPROV hCryptProv; CRYPT_ALGORITHM_IDENTIFIER HashAlgorithm; void* pvHashAuxInfo;} CMSG_ENVELOPED_ENCODE_INFO, *PCMSG_ENVELOPED_ENCODE_INFO;
+
+/* PCMSG_MAIL_LIST_RECIPIENT_INFO  [extra struct] */
+typedef struct _CMSG_MAIL_LIST_RECIPIENT_INFO { DWORD dwVersion; CRYPT_DATA_BLOB KeyId; CRYPT_ALGORITHM_IDENTIFIER KeyEncryptionAlgorithm; CRYPT_DATA_BLOB EncryptedKey; FILETIME Date; PCRYPT_ATTRIBUTE_TYPE_VALUE pOtherAttr;} CMSG_MAIL_LIST_RECIPIENT_INFO, *PCMSG_MAIL_LIST_RECIPIENT_INFO;
+
+/* PCMSG_SIGNER_ENCODE_INFO  [extra struct] */
+typedef struct _CMSG_SIGNER_ENCODE_INFO { DWORD cbSize; PCERT_INFO pCertInfo; HCRYPTPROV hCryptProv; DWORD dwKeySpec; CRYPT_ALGORITHM_IDENTIFIER HashAlgorithm; void* pvHashAuxInfo; DWORD cAuthAttr; PCRYPT_ATTRIBUTE rgAuthAttr; DWORD cUnauthAttr; PCRYPT_ATTRIBUTE rgUnauthAttr; CERT_ID SignerId; CRYPT_ALGORITHM_IDENTIFIER HashEncryptionAlgorithm; void* pvHashEncryptionAuxInfo;} CMSG_SIGNER_ENCODE_INFO, *PCMSG_SIGNER_ENCODE_INFO;
+
+/* PCMSG_SIGNER_INFO  [extra struct] */
+typedef struct _CMSG_SIGNER_INFO { DWORD dwVersion; CERT_NAME_BLOB Issuer; CRYPT_INTEGER_BLOB SerialNumber; CRYPT_ALGORITHM_IDENTIFIER HashAlgorithm; CRYPT_ALGORITHM_IDENTIFIER HashEncryptionAlgorithm; CRYPT_DATA_BLOB EncryptedHash; CRYPT_ATTRIBUTES AuthAttrs; CRYPT_ATTRIBUTES UnauthAttrs;} CMSG_SIGNER_INFO, *PCMSG_SIGNER_INFO;
+
+/* PCRYPT_ALGORITHM_IDENTIFIER  [extra struct] */
+typedef struct _CRYPT_ALGORITHM_IDENTIFIER {LPSTRpszObjId;CRYPT_OBJID_BLOBParameters;} CRYPT_ALGORITHM_IDENTIFIER, *PCRYPT_ALGORITHM_IDENTIFIER;
+
+/* PCRYPT_ATTRIBUTE  [extra struct] */
+typedef struct _CRYPT_ATTRIBUTE {LPSTRpszObjId;DWORDcValue;PCRYPT_ATTR_BLOBrgValue;} CRYPT_ATTRIBUTE, *PCRYPT_ATTRIBUTE;
+
+/* PCRYPT_BIT_BLOB  [extra struct] */
+typedef struct _CRYPT_BIT_BLOB {DWORDcbData;BYTE* pbData;DWORDcUnusedBits;} CRYPT_BIT_BLOB, *PCRYPT_BIT_BLOB;
+
+/* PCRYPT_KEY_PROV_INFO  [extra struct] */
+typedef struct _CRYPT_KEY_PROV_INFO {LPWSTRpwszContainerName;LPWSTRpwszProvName;DWORDdwProvType;DWORDdwFlags;DWORDcProvParam;PCRYPT_KEY_PROV_PARAMrgProvParam;DWORDdwKeySpec;} CRYPT_KEY_PROV_INFO, *PCRYPT_KEY_PROV_INFO;
+
+/* PCRYPT_KEY_PROV_PARAM  [extra struct] */
+typedef struct _CRYPT_KEY_PROV_PARAM {DWORDdwParam;BYTE* pbData;DWORDcbData;DWORDdwFlags;} CRYPT_KEY_PROV_PARAM, *PCRYPT_KEY_PROV_PARAM;
+
+/* CRYPT_OBJID  [extra struct] */
+typedef struct _CRYPTOAPI_BLOB { DWORD cbData; BYTE* pbData;} CRYPT_INTEGER_BLOB, *PCRYPT_INTEGER_BLOB, CRYPT_UINT_BLOB, *PCRYPT_UINT_BLOB, CRYPT_OBJID;
+
+/* PCRYPT_OID_FUNC_ENTRY  [extra struct] */
+typedef struct _CRYPT_OID_FUNC_ENTRY {LPCSTRpszOID;void* pvFuncAddr;}CRYPT_OID_FUNC_ENTRY, *PCRYPT_OID_FUNC_ENTRY;
+
+/* CMSG_ATTR  [extra struct] */
+typedef struct _CRYPT_ATTRIBUTES { DWORD cAttr; PCRYPT_ATTRIBUTE rgAttr;} CRYPT_ATTRIBUTES, *PCRYPT_ATTRIBUTES, CMSG_ATTR;
+
+/* PCMSG_KEY_TRANS_RECIPIENT_INFO  [extra struct] */
+typedef struct _CMSG_KEY_TRANS_RECIPIENT_INFO { DWORD dwVersion; CERT_ID RecipientId; CRYPT_ALGORITHM_IDENTIFIER KeyEncryptionAlgorithm; CRYPT_DATA_BLOB EncryptedKey;} CMSG_KEY_TRANS_RECIPIENT_INFO, *PCMSG_KEY_TRANS_RECIPIENT_INFO;
+
+/* PCERT_ENHKEY_USAGE  [extra struct] */
+typedef struct _CTL_USAGE {DWORDcUsageIdentifier;LPSTR* rgpszUsageIdentifier;} CTL_USAGE, *PCTL_USAGE, CERT_ENHKEY_USAGE, *PCERT_ENHKEY_USAGE;
+
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* CryptContextAddRef  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
-BOOL WINAPI CryptContextAddRef( 
- HCRYPTPROV hProv,
- DWORD* pdwReserved, 
- DWORD dwFlags
-);
-
-/* CryptCreateHash  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
-BOOL CRYPTFUNC CryptCreateHash( 
- HCRYPTPROV hProv,
- ALG_ID Algid, 
- HCRYPTKEY hKey, 
- DWORD dwFlags, 
- HCRYPTHASH* phHash
-);
-
-/* CryptDecrypt  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
-BOOL CRYPTFUNC CryptDecrypt( 
- HCRYPTKEY hKey,
- HCRYPTHASH hHash, 
- BOOL Final, 
- DWORD dwFlags, 
- BYTE* pbData,
- DWORD* pdwDataLen
-);
-
-/* CryptDeriveKey  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
-BOOL CRYPTFUNC CryptDeriveKey( 
- HCRYPTPROV hProv, 
- ALG_ID Algid, 
- HCRYPTHASH hBaseData, 
- DWORD dwFlags, 
- HCRYPTKEY* phKey
-);
-
-/* CryptDestroyHash  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
-BOOL CRYPTFUNC CryptDestroyHash( 
- HCRYPTHASH hHash
-);
-
-/* CryptDestroyKey  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
-BOOL CRYPTFUNC CryptDestroyKey( 
- HCRYPTKEY hKey
-);
-
-/* CryptDuplicateHash  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
-BOOL WINAPI CryptDuplicateHash( 
- HCRYPTHASH hHash,
- DWORD* pdwReserved, 
- DWORD dwFlags, 
- HCRYPTHASH* phHash
-);
-
-/* CryptDuplicateKey  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
-BOOL WINAPI CryptDuplicateHash( 
- HCRYPTKEY hKey,
- DWORD* pdwReserved, 
- DWORD dwFlags, 
- HCRYPTKEY* phKey
-);
-
-/* CryptEncrypt  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
-BOOL CRYPTFUNC CryptEncrypt( 
- HCRYPTKEY hKey,
- HCRYPTHASH hHash, 
- BOOL Final, 
- DWORD dwFlags, 
- BYTE* pbData,
- DWORD* pdwDataLen, 
- DWORD dwBufLen
-);
-
-/* CryptEnumProviders  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib; A/W CryptEnumProvidersA,CryptEnumProvidersW (CE is W-side)] */
-BOOL WINAPI CryptEnumProviders( 
- DWORD dwIndex, 
- DWORD* pdwReserved, 
- DWORD dwFlags, 
- DWORD* pdwProvType, 
- LPTSTR pszProvName, 
- DWORD* pcbProvName
-);
-
-/* CryptEnumProviderTypes  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib; A/W CryptEnumProviderTypesA,CryptEnumProviderTypesW (CE is W-side)] */
-BOOL WINAPI CryptEnumProviderTypes( 
- DWORD dwIndex,
- DWORD* pdwReserved, 
- DWORD dwFlags, 
- DWORD* pdwProvType,
- LPTSTR pszTypeName, 
- DWORD* pcbTypeName
-);
-
-/* CryptExportKey  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
-BOOL CRYPTFUNC CryptExportKey( 
- HCRYPTKEY hKey, 
- HCRYPTKEY hExpKey, 
- DWORD dwBlobType, 
- DWORD dwFlags, 
- BYTE* pbData, 
- DWORD* pdwbDataLen
-);
-
-/* CryptGenKey  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
-BOOL CRYPTFUNC CryptGenKey( 
- HCRYPTPROV hProv, 
- ALG_ID Algid,
- DWORD dwFlags, 
- HCRYPTKEY* phKey
-);
-
-/* CryptGenRandom  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
-BOOL CRYPTFUNC CryptGenRandom( 
- HCRYPTPROV hProv,
- DWORD dwLen, 
- BYTE* pbBuffer
-);
-
-/* CryptGetDefaultProvider  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib; A/W CryptGetDefaultProviderA,CryptGetDefaultProviderW (CE is W-side)] */
-BOOL WINAPI CryptGetDefaultProvider( 
- DWORD dwProvType,
- DWORD* pdwReserved, 
- DWORD dwFlags, 
- LPTSTR pszProvName,
- DWORD* pcbProvName
-);
-
-/* CryptGetHashParam  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
-BOOL CRYPTFUNC CryptGethashParam( 
- HCRYPTHASH hHash,
- DWORD dwParam, 
- BYTE* pbData, 
- DWORD* pdwDataLen, 
- DWORD dwFlags
-);
-
-/* CryptGetKeyParam  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
-BOOL CRYPTFUNC CryptGetKeyParam( 
- HCRYPTKEY hKey,
- DWORD dwParam, 
- BYTE* pbData, 
- DWORD* pdwDataLen, 
- DWORD dwFlags
-);
-
-/* CryptGetProvParam  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
-BOOL WINAPI CryptGetProvParam( 
- HCRYPTPROV hProv,
- DWORD dwParam, 
- BYTE* pbData, 
- DWORD* pdwDataLen, 
- DWORD dwFlags
-);
-
-/* CryptGetUserKey  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
-BOOL WINAPI CryptGetUserKey( 
- HCRYPTPROV hProv,
- DWORD dwKeySpec, 
- HCRYPTKEY* phUserKey
-);
-
-/* CryptHashData  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
-BOOL WINAPI CryptHashData( 
- HCRYPTHASH hHash, 
- BYTE* pbData,
- DWORD dwDataLen, 
- DWORD dwFlags
-);
-
-/* CryptHashSessionKey  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
-BOOL WINAPI CryptHashSessionKey( 
- HCRYPTHASH hHash,
- HCRYPTKEY hKey, 
- DWORD dwFlags
-);
-
-/* CryptImportKey  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
-BOOL WINAPI CryptImportKey( 
- HCRYPTPROV hProv, 
- BYTE* pbData, 
- DWORD dwDataLen, 
- HCRYPTKEY hPubKey, 
- DWORD dwFlags, 
- HCRYPTKEY* phKey
-);
-
-/* CryptReleaseContext  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
-BOOL WINAPI CryptReleaseContext( 
- HCRYPTPROV hProv,
- DWORD dwFlags
-);
-
-/* CryptSetHashParam  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
-BOOL WINAPI CryptSetHashParam( 
- HCRYPTHASH hHash,
- DWORD dwParam, 
- BYTE* pbData, 
- DWORD dwFlags
-);
-
-/* CryptSetKeyParam  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
-BOOL WINAPI CryptSetKeyParam( 
- HCRYPTKEY hKey, 
- DWORD dwParam, 
- BYTE* pbData, 
- DWORD dwFlags
-);
-
-/* CryptSetProvider  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib; A/W CryptSetProviderA,CryptSetProviderW (CE is W-side)] */
-BOOL CRYPTFUNC CryptSetProvider( 
- LPCTSTR pszProvName,
- DWORD dwProvType
-);
-
-/* CryptSetProviderEx  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib; A/W CryptSetProviderExA,CryptSetProviderExW (CE is W-side)] */
-BOOL WINAPI CryptSetProviderEx( 
- LPCTSTR pszProvName, 
- DWORD dwProvType, 
- DWORD* pdwReserved, 
- DWORD dwFlags
-);
-
-/* CryptSetProvParam  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
-BOOL CRYPTFUNC CryptSetProvParam( 
- HCRYPTPROV hProv,
- DWORD dwParam, 
- BYTE* pbData, 
- DWORD dwFlags
-);
-
-/* CryptSignHash  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib; A/W CryptSignHashA,CryptSignHashW (CE is W-side)] */
-BOOL WINAPI CryptSignHash( 
- HCRYPTHASH hHash, 
- DWORD dwKeySpec, 
- LPCTSTR sDescription, 
- DWORD dwFlags,
- BYTE* pbSignature, 
- DWORD* pdwSigLen
-);
-
-/* CryptVerifySignature  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib; A/W CryptVerifySignatureA,CryptVerifySignatureW (CE is W-side)] */
-BOOL WINAPI CryptVerifySignature( 
- HCRYPTHASH hHash,
- BYTE* pbSignature, 
- DWORD dwSigLen, 
- HCRYPTKEY hPubKey,
- LPCTSTR sDescription, 
- DWORD dwFlags
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
-
-/* CertAddCertificateContextToStore  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertAddCertificateContextToStore(
- HCERTSTORE hCertStore,
- PCCERT_CONTEXT pCertContext,
- DWORD dwAddDisposition,
- PCCERT_CONTEXT* ppStoreContext
-);
-
-/* CertAddCertificateLinkToStore  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertAddCertificateLinkToStore(
- HCERTSTORE hCertStore,
- PCCERT_CONTEXT pCertContext,
- DWORD dwAddDisposition,
- PCCERT_CONTEXT* ppStoreContext
-);
-
-/* CertAddEncodedCertificateToStore  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertAddEncodedCertificateToStore(
- HCERTSTORE hCertStore,
- DWORD dwCertEncodingType,
- const BYTE* pbCertEncoded,
- DWORD cbCertEncoded,
- DWORD dwAddDisposition,
- PCCERT_CONTEXT* ppCertContext
-);
-
-/* CertAddEnhancedKeyUsageIdentifier  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertAddEnhancedKeyUsageIdentifier(
- PCCERT_CONTEXT pCertContext,
- LPCSTR pszUsageIdentifier
-);
-
-/* CertAddSerializedElementToStore  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertAddSerializedElementToStore(
- HCERTSTORE hCertStore,
- const BYTE* pbElement, 
- DWORD cbElement, 
- DWORD dwAddDisposition, 
- DWORD dwFlags, 
- DWORD dwContextTypeFlags, 
- DWORD* pdwContextType, 
- const void** ppvContext
-);
-
-/* CertAlgIdToOID  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-LPCSTR WINAPI CertAlgIdToOID(
- DWORD dwAlgId
-);
-
-/* CertCloseStore  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertCloseStore(
- HCERTSTORE hCertStore,
- DWORD dwFlags
-);
-
-/* CertCompareCertificate  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertCompareCertificate(
- DWORD dwCertEncodingType,
- PCERT_INFO pCertId1,
- PCERT_INFO pCertId2
-);
-
-/* CertCompareCertificateName  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertCompareCertificateName(
- DWORD dwCertEncodingType,
- PCERT_NAME_BLOB pCertName1,
- PCERT_NAME_BLOB pCertName2
-);
-
-/* CertCompareIntegerBlob  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertCompareIntegerBlob(
- PCRYPT_INTEGER_BLOB pInt1,
- PCRYPT_INTEGER_BLOB pInt2
-);
-
-/* CertComparePublicKeyInfo  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertComparePublicKeyInfo(
- DWORD dwCertEncodingType,
- PCERT_PUBLIC_KEY_INFO pPublicKey1,
- PCERT_PUBLIC_KEY_INFO pPublicKey2
-);
-
-/* CertControlStore  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertControlStore(
- HCERTSTORE hCertStore,
- DWORD dwFlags,
- DWORD dwCtrlType,
- void const* pvCtrlPara
-);
-
-/* CertCreateCertificateContext  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-PCCERT_CONTEXT WINAPI CertCreateCertificateContext(
- DWORD dwCertEncodingType,
- const BYTE* pbCertEncoded,
- DWORD cbCertEncoded
-);
-
-/* CertDeleteCertificateFromStore  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertDeleteCertificateFromStore(
- PCCERT_CONTEXT pCertContext
-);
-
-/* CertDuplicateCertificateChain  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-PCCERT_CHAIN_CONTEXT WINAPI CertDuplicateCertificateChain(
- PCCERT_CHAIN_CONTEXT pChainContext
-);
-
-/* CertDuplicateCertificateContext  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-PCCERT_CONTEXT WINAPI CertDuplicateCertificateContext(
- PCCERT_CONTEXT pCertContext
-);
-
-/* CertDuplicateStore  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-HCERTSTORE WINAPI CertDuplicateStore(
- HCERTSTORE hCertStore
-);
-
-/* CertEnumCertificateContextProperties  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-DWORD WINAPI CertEnumCertificateContextProperties(
- PCCERT_CONTEXT pCertContext,
- DWORD dwPropId
-);
-
-/* CertEnumCertificatesInStore  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-PCCERT_CONTEXT WINAPI CertEnumCertificatesInStore(
- HCERTSTORE hCertStore,
- PCCERT_CONTEXT pPrevCertContext
-);
-
-/* CertEnumSystemStore  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertEnumSystemStore(
- DWORD dwFlags,
- void* pvSystemStoreLocationPara,
- void* pvArg,
- PFN_CERT_ENUM_SYSTEM_STORE pfnEnum
-);
-
-/* CertEnumSystemStoreLocation  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertEnumSystemStoreLocation(
- DWORD dwFlags,
- void* pvArg,
- PFN_CERT_ENUM_SYSTEM_STORE_LOCATION pfnEnum 
-);
-
-/* CertFindAttribute  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-PCRYPT_ATTRIBUTE WINAPI CertFindAttribute(
- LPCSTR pszObjId,
- DWORD cAttr,
- CRYPT_ATTRIBUTE rgAttr[ ]
-);
-
-/* CertFindCertificateInStore  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-PCCERT_CONTEXT WINAPI CertFindCertificateInStore(
- HCERTSTORE hCertStore, 
- DWORD dwCertEncodingType, 
- DWORD dwFindFlags, 
- DWORD dwFindType, 
- const void* pvFindPara, 
- PCCERT_CONTEXT pPrevCertContext
-);
-
-/* CertFindExtension  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-PCERT_EXTENSION WINAPI CertFindExtension(
- LPCSTR pszObjId,
- DWORD cExtensions,
- CERT_EXTENSION rgExtensions[ ]
-);
-
-/* CertFindRDNAttr  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-PCERT_RDN_ATTR WINAPI CertFindRDNAttr(
- LPCSTR pszObjId,
- PCERT_NAME_INFO pName
-);
-
-/* CertFreeCertificateChain  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-void WINAPI CertFreeCertificateChain(
- PCCERT_CHAIN_CONTEXT pChainContext
-);
-
-/* CertFreeCertificateContext  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertFreeCertificateContext(
- PCCERT_CONTEXT pCertContext
-);
-
-/* CertGetCertificateChain  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertGetCertificateChain(
- HCERTCHAINENGINE hChainEngine, 
- PCCERT_CONTEXT pCertContext, 
- LPFILETIME pTime,
- HCERTSTORE hAdditionalStore,
- PCERT_CHAIN_PARA pChainPara,
- DWORD dwFlags,
- LPVOID pvReserved,
- PCCERT_CHAIN_CONTEXT* ppChainContext
-);
-
-/* CertGetCertificateContextProperty  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertGetCertificateContextProperty(
- PCCERT_CONTEXT pCertContext,
- DWORD dwPropId,
- void* pvData,
- DWORD* pcbData
-);
-
-/* CertGetEnhancedKeyUsage  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertGetEnhancedKeyUsage(
- PCCERT_CONTEXT pCertContext,
- DWORD dwFlags,
- PCERT_ENHKEY_USAGE pUsage,
- DWORD* pcbUsage
-);
-
-/* CertGetIntendedKeyUsage  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertGetIntendedKeyUsage(
- DWORD dwCertEncodingType,
- PCERT_INFO pCertInfo,
- BYTE* pbKeyUsage,
- DWORD cbKeyUsage
-);
-
-/* CertGetIssuerCertificateFromStore  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-PCCERT_CONTEXT WINAPI CertGetIssuerCertificateFromStore(
- HCERTSTORE hCertStore,
- PCCERT_CONTEXT pSubjectContext,
- PCCERT_CONTEXT pPrevIssuerContext,
- DWORD* pdwFlags
-);
-
-/* CertGetNameString  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib; A/W CertGetNameStringA,CertGetNameStringW (CE is W-side)] */
-DWORD WINAPI CertGetNameString(
- PCCERT_CONTEXT pCertContext,
- DWORD dwType,
- DWORD dwFlags,
- void* pvTypePara,
- LPTSTR pszNameString,
- DWORD cchNameString
-);
-
-/* CertGetPublicKeyLength  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-DWORD WINAPI CertGetPublicKeyLength(
- DWORD dwCertEncodingType,
- PCERT_PUBLIC_KEY_INFO pPublicKey
-);
-
-/* CertGetStoreProperty  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL CertGetStoreProperty(
- HCERTSTORE hCertStore,
- DWORD dwPropId,
- void* pvData,
- DWORD* pcbData
-);
-
-/* CertGetSubjectCertificateFromStore  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-PCCERT_CONTEXT WINAPI CertGetSubjectCertificateFromStore(
- HCERTSTORE hCertStore,
- DWORD dwCertEncodingType,
- PCERT_INFO pCertId
-);
-
-/* CertifyModule  [function; ce-only; CE 3.0..699; Loadauth.lib, loadauth.lib; heuristic-prefix] */
-BOOL CertifyModule(
- PBYTE pbBlock,
- DWORD cbBlock 
-);
-
-/* CertifyModuleFinal  [function; ce-only; CE 3.0..699; Loadauth.lib, loadauth.lib; heuristic-prefix] */
-BOOL CertifyModuleFinal(
- PBYTE* ppbSignData,
- PDWORD pcbSignData 
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
 
 /* CertifyModuleInit  [function; ce-only; CE 3.0..699; Loadauth.lib, loadauth.lib; heuristic-prefix] */
 BOOL CertifyModuleInit (void);
-
-/* CertIsRDNAttrsInCertificateName  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertIsRDNAttrsInCertificateName(
- DWORD dwCertEncodingType,
- DWORD dwFlags,
- PCERT_NAME_BLOB pCertName,
- PCERT_RDN pRDN
-);
-
-/* CertNameToStr  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib; A/W CertNameToStrA,CertNameToStrW (CE is W-side)] */
-DWORD WINAPI CertNameToStr(
- DWORD dwCertEncodingType,
- PCERT_NAME_BLOB pName,
- DWORD dwStrType,
- LPTSTR psz,
- DWORD csz
-);
-
-/* CertOIDToAlgId  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-DWORD WINAPI CertOIDToAlgId(
- LPCSTR pszObjId
-);
-
-/* CertOpenStore  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-HCERTSTORE WINAPI CertOpenStore(
- LPCSTR lpszStoreProvider,
- DWORD dwMsgAndCertEncodingType,
- HCRYPTPROV hCryptProv, 
- DWORD dwFlags, 
- const void* pvPara
-);
-
-/* CertOpenSystemStore  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib; A/W CertOpenSystemStoreA,CertOpenSystemStoreW (CE is W-side)] */
-HCERTSTORE WINAPI CertOpenSystemStore(
- HCRYPTPROV hProv,
- LPCTSTR szSubsystemProtocol
-);
-
-/* CertRDNValueToStr  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib; A/W CertRDNValueToStrA,CertRDNValueToStrW (CE is W-side)] */
-DWORD WINAPI CertRDNValueToStr(
- DWORD dwValueType,
- PCERT_RDN_VALUE_BLOB pValue,
- LPTSTR psz,
- DWORD csz
-);
-
-/* CertRemoveEnhancedKeyUsageIdentifier  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertRemoveEnhancedKeyUsageIdentifier(
- PCCERT_CONTEXT pCertContext,
- LPCSTR pszUsageIdentifier
-);
-
-/* CertSaveStore  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertSaveStore(
- HCERTSTORE hCertStore, 
- DWORD dwMsgAndCertEncodingType, 
- DWORD dwSaveAs, 
- DWORD dwSaveTo, 
- void* pvSaveToPara, 
- DWORD dwFlags
-);
-
-/* CertSerializeCertificateStoreElement  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertSerializeCertificateStoreElement(
- PCCERT_CONTEXT pCertContext,
- DWORD dwFlags,
- BYTE* pbElement,
- DWORD* pcbElement
-);
-
-/* CertSetCertificateContextProperty  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertSetCertificateContextProperty(
- PCCERT_CONTEXT pCertContext,
- DWORD dwPropId,
- DWORD dwFlags,
- const void* pvData
-);
-
-/* CertSetEnhancedKeyUsage  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertSetEnhancedKeyUsage(
- PCCERT_CONTEXT pCertContext,
- PCERT_ENHKEY_USAGE pUsage
-);
-
-/* CertSetStoreProperty  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL CertSetStoreProperty(
- HCERTSTORE hCertStore,
- DWORD dwPropId,
- DWORD dwFlags,
- const void* pvData
-);
-
-/* CertStrToName  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib; A/W CertStrToNameA,CertStrToNameW (CE is W-side)] */
-BOOL WINAPI CertStrToName(
- DWORD dwCertEncodingType,
- LPCTSTR pszX500,
- DWORD dwStrType,
- void* pvReserved,
- BYTE* pbEncoded,
- DWORD* pcbEncoded,
- LPCTSTR* ppszError
-);
-
-/* CertVerifySubjectCertificateContext  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertVerifySubjectCertificateContext(
- PCCERT_CONTEXT pSubject, 
- PCCERT_CONTEXT pIssuer, 
- DWORD* pdwFlags
-);
-
-/* CertVerifyTimeValidity  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-LONG WINAPI CertVerifyTimeValidity(
- LPFILETIME pTimeToVerify,
- PCERT_INFO pCertInfo
-);
-
-/* CertVerifyValidityNesting  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertVerifyValidityNesting(
- PCERT_INFO pSubjectInfo,
- PCERT_INFO pIssuerInfo
-);
-
-/* CryptAcquireCertificatePrivateKey  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CryptAcquireCertificatePrivateKey(
- PCCERT_CONTEXT pCert, 
- DWORD dwFlags,
- void* pvReserved,
- HCRYPTPROV* phCryptProv,
- DWORD* pdwKeySpec,
- BOOL* pfCallerFreeProv
-);
-
-/* CryptCreateKeyIdentifierFromCSP  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CryptCreateKeyIdentifierFromCSP(
- DWORD dwCertEncodingType,
- LPCSTR pszPubKeyOID,
- const PUBLICKEYSTRUC* pPubKeyStruc,
- DWORD cbPubKeyStruc,
- DWORD dwFlags,
- void* pvReserved,
- BYTE* pbHash,
- DWORD* pcbHash
-);
-
-/* CryptDecodeObjectEx  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CryptDecodeObjectEx(
- DWORD dwCertEncodingType, 
- LPCSTR lpszStructType, 
- const BYTE* pbEncoded, 
- DWORD cbEncoded, 
- DWORD dwFlags, 
- PCRYPT_DECODE_PARA pDecodePara, 
- void* pvStructInfo, 
- DWORD* pcbStructInfo
-);
-
-/* CryptEncodeObjectEx  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CryptEncodeObjectEx(
- DWORD dwCertEncodingType, 
- LPCSTR lpszStructType, 
- const void* pvStructInfo, 
- DWORD dwFlags, 
- PCRYPT_ENCODE_PARA pEncodePara, 
- void* pvEncoded, 
- DWORD* pcbEncoded
-);
-
-/* CryptEnumKeyIdentifierProperties  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CryptEnumKeyIdentifierProperties(
- const CRYPT_HASH_BLOB* pKeyIdentifier,
- DWORD dwPropId,
- DWORD dwFlags,
- LPCWSTR pwszComputerName,
- void* pvReserved,
- void* pvArg,
- PFN_CRYPT_ENUM_KEYID_PROP pfnEnum
-);
-
-/* CryptEnumOIDInfo  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CryptEnumOIDInfo(
- DWORD dwGroupId,
- DWORD dwFlags,
- void* pvArg,
- PFN_CRYPT_ENUM_OID_INFO pfnEnumOIDInfo
-);
-
-/* CryptExportPublicKeyInfoEx  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CryptExportPublicKeyInfoEx(
- HCRYPTPROV hCryptProv,
- DWORD dwKeySpec,
- DWORD dwCertEncodingType,
- LPSTR pszPublicKeyObjId,
- DWORD dwFlags,
- void* pvAuxInfo,
- PCERT_PUBLIC_KEY_INFO pInfo,
- DWORD* pcbInfo
-);
-
-/* CryptFindCertificateKeyProvInfo  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CryptFindCertificateKeyProvInfo(
- PCCERT_CONTEXT pCert,
- DWORD dwFlags,
- void* pvReserved
-);
-
-/* CryptFindOIDInfo  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-PCCRYPT_OID_INFO WINAPI CryptFindOIDInfo(
- DWORD dwKeyType,
- void* pvKey,
- DWORD dwGroupId
-);
-
-/* CryptFreeOIDFunctionAddress  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CryptFreeOIDFunctionAddress(
- HCRYPTOIDFUNCADDR hFuncAddr,
- DWORD dwFlags
-);
-
-/* CryptGetDefaultOIDFunctionAddress  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CryptGetDefaultOIDFunctionAddress(
- HCRYPTOIDFUNCSET hFuncSet,
- DWORD dwEncodingType,
- LPCWSTR pwszDll,
- DWORD dwFlags,
- void** ppvFuncAddr,
- HCRYPTOIDFUNCADDR* phFuncAddr
-);
-
-/* CryptGetKeyIdentifierProperty  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CryptGetKeyIdentifierProperty(
- const CRYPT_HASH_BLOB* pKeyIdentifier,
- DWORD dwPropId,
- DWORD dwFlags,
- LPCWSTR pwszComputerName,
- void* pvReserved,
- void* pvData,
- DWORD* pcbData
-);
-
-/* CryptGetOIDFunctionAddress  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CryptGetOIDFunctionAddress(
- HCRYPTOIDFUNCSET hFuncSet,
- DWORD dwEncodingType,
- LPCSTR pszOID,
- DWORD dwFlags,
- void** ppvFuncAddr,
- HCRYPTOIDFUNCADDR* phFuncAddr
-);
-
-/* CryptHashCertificate  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CryptHashCertificate(
- HCRYPTPROV hCryptProv,
- ALG_ID Algid,
- DWORD dwFlags,
- const BYTE* pbEncoded,
- DWORD cbEncoded,
- BYTE* pbComputedHash,
- DWORD* pcbComputedHash
-);
-
-/* CryptHashPublicKeyInfo  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CryptHashPublicKeyInfo(
- HCRYPTPROV hCryptProv,
- ALG_ID Algid,
- DWORD dwFlags,
- DWORD dwCertEncodingType,
- PCERT_PUBLIC_KEY_INFO pInfo,
- BYTE* pbComputedHash,
- DWORD* pcbComputedHash
-);
-
-/* CryptHashToBeSigned  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CryptHashToBeSigned(
- HCRYPTPROV hCryptProv,
- DWORD dwCertEncodingType,
- const BYTE* pbEncoded,
- DWORD cbEncoded,
- BYTE* pbComputedHash,
- DWORD* pcbComputedHash
-);
-
-/* CryptImportPublicKeyInfoEx  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CryptImportPublicKeyInfoEx(
- HCRYPTPROV hCryptProv,
- DWORD dwCertEncodingType,
- PCERT_PUBLIC_KEY_INFO pInfo,
- ALG_ID aiKeyAlg,
- DWORD dwFlags,
- void* pvAuxInfo,
- HCRYPTKEY* phKey
-);
-
-/* CryptInitOIDFunctionSet  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-HCRYPTOIDFUNCSET WINAPI CryptInitOIDFunctionSet(
- LPCSTR pszFuncName,
- DWORD dwFlags
-);
-
-/* CryptInstallDefaultContext  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CryptInstallDefaultContext(
- HCRYPTPROV hCryptProv,
- DWORD dwDefaultType,
- const void* pvDefaultPara,
- DWORD dwFlags,
- void* pvReserved,
- HCRYPTDEFAULTCONTEXT* phDefaultContext
-);
-
-/* CryptInstallOIDFunctionAddress  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CryptInstallOIDFunctionAddress(
- HMODULE hModule,
- DWORD dwEncodingType,
- LPCSTR pszFuncName,
- DWORD cFuncEntry,
- CRYPT_OID_FUNC_ENTRY rgFuncEntry[ ],
- DWORD dwFlags
-);
-
-/* CryptSetKeyIdentifierProperty  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CryptSetKeyIdentifierProperty(
- const CRYPT_HASH_BLOB* pKeyIdentifier,
- DWORD dwPropId,
- DWORD dwFlags,
- LPCWSTR pwszComputerName,
- void* pvReserved,
- const void* pvData
-);
-
-/* CryptSignAndEncodeCertificate  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CryptSignAndEncodeCertificate(
- HCRYPTPROV hCryptProv,
- DWORD dwKeySpec,
- DWORD dwCertEncodingType,
- LPCSTR lpszStructType,
- const void* pvStructInfo,
- PCRYPT_ALGORITHM_IDENTIFIER pSignatureAlgorithm,
- const void* pvHashAuxInfo,
- PBYTE pbEncoded,
- DWORD* pcbEncoded
-);
-
-/* CryptSignCertificate  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CryptSignCertificate(
- HCRYPTPROV hCryptProv,
- DWORD dwKeySpec,
- DWORD dwCertEncodingType,
- const BYTE* pbEncodedToBeSigned,
- DWORD cbEncodedToBeSigned,
- PCRYPT_ALGORITHM_IDENTIFIER pSignatureAlgorithm,
- const void* pvHashAuxInfo,
- BYTE* pbSignature,
- DWORD* pcbSignature
-);
-
-/* CryptUninstallDefaultContext  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CryptUninstallDefaultContext(
- HCRYPTDEFAULTCONTEXT hDefaultContext,
- DWORD dwFlags,
- void* pvReserved 
-);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* CPAcquireContext  [function; ce-only; CE 4.0..699] */
 BOOL CPAcquireContext(
@@ -1600,155 +890,6 @@ BOOL CPAcquireContext(
  DWORD dwFlags,
  PVTableProvStruc pVTable 
 );
-
-/* CryptProtectData  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib] */
-BOOL WINAPI CryptProtectData(
- DATA_BLOB* pDataIn, 
- LPCWSTR szDataDescr, 
- DATA_BLOB* pOptionalEntropy, 
- PVOID pvReserved, 
- CRYPTPROTECT_PROMPTSTRUCT* pPromptStruct, 
- DWORD dwFlags, 
- DATA_BLOB* pDataOut 
-);
-
-/* CryptUnprotectData  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib] */
-BOOL WINAPI CryptUnprotectData(
- DATA_BLOB* pDataIn, 
- LPWSTR* ppszDataDescr, 
- DATA_BLOB* pOptionalEntropy, 
- PVOID pvReserved, 
- CRYPTPROTECT_PROMPTSTRUCT* pPromptStruct, 
- DWORD dwFlags, 
- DATA_BLOB* pDataOut 
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* CertEnumPhysicalStore  [function; shared; CE 5.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertEnumPhysicalStore(
- const void* pvSystemStore,
- DWORD dwFlags,
- void* pvArg,
- PFN_CERT_ENUM_PHYSICAL_STORE pfnEnum
-);
-
-/* CertGetValidUsages  [function; shared; CE 5.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI CertGetValidUsages(
- DWORD cCerts,
- PCCERT_CONTEXT* rghCerts,
- int* cNumOIDs,
- LPSTR* rghOIDs,
- DWORD* pcbOIDs
-);
-
-/* CryptFindLocalizedName  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-LPCWSTR WINAPI CryptFindLocalizedName(
- LPCWSTR pwszCryptName
-);
-
-/* CryptMsgCalculateEncodedLength  [function; shared; CE 5.0..699; Coredll.lib, crypt32.lib] */
-DWORD WINAPI CryptMsgCalculateEncodedLength(
- DWORD dwMsgEncodingType,
- DWORD dwFlags,
- DWORD dwMsgType,
- const void* pvMsgEncodeInfo,
- LPSTR pszInnerContentObjID,
- DWORD cbData
-);
-
-/* CryptMsgClose  [function; shared; CE 5.0..699; Coredll.lib, crypt32.lib] */
-BOOL WINAPI CryptMsgClose(
- HCRYPTMSG hCryptMsg
-);
-
-/* CryptMsgControl  [function; shared; CE 5.0..699; Coredll.lib, crypt32.lib] */
-BOOL WINAPI CryptMsgControl(
- HCRYPTMSG hCryptMsg,
- DWORD dwFlags,
- DWORD dwCtrlType,
- const void* pvCtrlPara
-);
-
-/* CryptMsgDuplicate  [function; shared; CE 5.0..699; Coredll.lib, crypt32.lib] */
-HCRYPTMSG WINAPI CryptMsgDuplicate(
- HCRYPTMSG hCryptMsg
-);
-
-/* CryptMsgGetParam  [function; shared; CE 5.0..699; Coredll.lib, crypt32.lib] */
-BOOL WINAPI CryptMsgGetParam(
- HCRYPTMSG hCryptMsg,
- DWORD dwParamType,
- DWORD dwIndex,
- void* pvData,
- DWORD* pcbData
-);
-
-/* CryptMsgOpenToDecode  [function; shared; CE 5.0..699; Coredll.lib, crypt32.lib] */
-HCRYPTMSG WINAPI CryptMsgOpenToDecode(
- DWORD dwMsgEncodingType,
- DWORD dwFlags,
- DWORD dwMsgType,
- HCRYPTPROV hCryptProv,
- PCERT_INFO pRecipientInfo,
- PCMSG_STREAM_INFO pStreamInfo
-);
-
-/* CryptMsgOpenToEncode  [function; shared; CE 5.0..699; Coredll.lib, crypt32.lib] */
-HCRYPTMSG WINAPI CryptMsgOpenToEncode(
- DWORD dwMsgEncodingType,
- DWORD dwFlags,
- DWORD dwMsgType,
- const void* pvMsgEncodeInfo,
- LPSTR pszInnerContentObjID,
- PCMSG_STREAM_INFO pStreamInfo
-);
-
-/* CryptMsgUpdate  [function; shared; CE 5.0..699; Coredll.lib, crypt32.lib] */
-BOOL WINAPI CryptMsgUpdate(
- HCRYPTMSG hCryptMsg,
- const BYTE* pbData,
- DWORD cbData,
- BOOL fFinal
-);
-
-/* CryptVerifyCertificateSignature  [function; shared; CE 5.0..699; coredll.lib, Crypt32.lib] */
-BOOL WINAPI CryptVerifyCertificateSignature(
- HCRYPTPROV hCryptProv,
- DWORD dwCertEncodingType,
- BYTE* pbEncoded,
- DWORD cbEncoded,
- PCERT_PUBLIC_KEY_INFO pPublicKey
-);
-
-/* PFXExportCertStoreEx  [function; shared; CE 5.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI PFXExportCertStoreEx(
- HCERTSTORE hStore,
- CRYPT_DATA_BLOB* pPFX,
- LPCWSTR szPassword,
- void* pvReserved,
- DWORD dwFlags
-);
-
-/* PFXImportCertStore  [function; shared; CE 5.0..699; Crypt32.lib, crypt32.lib] */
-HCERTSTORE WINAPI PFXImportCertStore(
- CRYPT_DATA_BLOB* pPFX,
- LPCWSTR szPassword,
- DWORD dwFlags
-);
-
-/* PFXIsPFXBlob  [function; shared; CE 5.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI PFXIsPFXBlob(
- CRYPT_DATA_BLOB* pPFX
-);
-
-/* PFXVerifyPassword  [function; shared; CE 5.0..699; Crypt32.lib, crypt32.lib] */
-BOOL WINAPI PFXVerifyPassword(
- CRYPT_DATA_BLOB* pPFX,
- LPCWSTR szPassword,
- DWORD dwFlags
-);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================
@@ -1756,81 +897,10 @@ BOOL WINAPI PFXVerifyPassword(
  * parser did not turn into an entity declaration
  * ================================================================ */
 
-/* typedef */
-typedef const CERT_CONTEXT *PCCERT_CONTEXT;
-typedef const CRYPT_OID_INFO CCRYPT_OID_INFO, *PCCRYPT_OID_INFO;
-typedef DWORD SECURITY_INFORMATION;
-
-/* struct */
-typedef struct _CRYPT_ATTRIBUTES { DWORD cAttr; PCRYPT_ATTRIBUTE rgAttr;} CRYPT_ATTRIBUTES, *PCRYPT_ATTRIBUTES, CMSG_ATTR;
-typedef struct _CRYPTOAPI_BLOB { DWORD cbData; BYTE* pbData;} CRYPT_INTEGER_BLOB, *PCRYPT_INTEGER_BLOB, CRYPT_UINT_BLOB, *PCRYPT_UINT_BLOB, CRYPT_OBJID;
-typedef struct _CERT_ACCESS_DESCRIPTION {LPSTRpszAccessMethod;CERT_ALT_NAME_ENTRYAccessLocation;} CERT_ACCESS_DESCRIPTION, *PCERT_ACCESS_DESCRIPTION;
-typedef struct _CERT_ALT_NAME_ENTRY {DWORDdwAltNameChoice;union{PCERT_OTHER_NAMEpOtherName;LPWSTRpwszRfc822Name;LPWSTRpwszDNSName;CERT_NAME_BLOBDirectoryName;LPWSTRpwszURL;CRYPT_DATA_BLOBIPAddress;LPSTRpszRegisteredID;};} CERT_ALT_NAME_ENTRY, *PCERT_ALT_NAME_ENTRY;
-typedef struct _CERT_ALT_NAME_INFO {DWORDcAltEntry;PCERT_ALT_NAME_ENTRYrgAltEntry;} CERT_ALT_NAME_INFO, *PCERT_ALT_NAME_INFO;
-typedef struct _CERT_AUTHORITY_INFO_ACCESS {DWORDcAccDescr;PCERT_ACCESS_DESCRIPTIONrgAccDescr;} CERT_AUTHORITY_INFO_ACCESS, *PCERT_AUTHORITY_INFO_ACCESS;
-typedef struct _CERT_AUTHORITY_KEY_ID2_INFO {CRYPT_DATA_BLOBKeyId;CERT_ALT_NAME_INFOAuthorityCertIssuer;CRYPT_INTEGER_BLOBAuthorityCertSerialNumber;} CERT_AUTHORITY_KEY_ID2_INFO, *PCERT_AUTHORITY_KEY_ID2_INFO;
-typedef struct _CERT_AUTHORITY_KEY_ID_INFO {CRYPT_DATA_BLOBKeyId;CERT_NAME_BLOBCertIssuer;CRYPT_INTEGER_BLOBCertSerialNumber;} CERT_AUTHORITY_KEY_ID_INFO, *PCERT_AUTHORITY_KEY_ID_INFO;
-typedef struct _CERT_BASIC_CONSTRAINTS2_INFO {BOOLfCA;BOOLfPathLenConstraint;DWORDdwPathLenConstraint;} CERT_BASIC_CONSTRAINTS2_INFO, *PCERT_BASIC_CONSTRAINTS2_INFO;
-typedef struct _CERT_BASIC_CONSTRAINTS_INFO {CRYPT_BIT_BLOBSubjectType;BOOLfPathLenConstraint;DWORDdwPathLenConstraint;DWORDcSubtreesConstraint;CERT_NAME_BLOB*rgSubtreesConstraint;} CERT_BASIC_CONSTRAINTS_INFO, *PCERT_BASIC_CONSTRAINTS_INFO;
-typedef struct _CERT_CHAIN_CONTEXT {DWORDcbSize;CERT_TRUST_STATUSTrustStatus;DWORDcChain;PCERT_SIMPLE_CHAIN* rgpChain;} CERT_CHAIN_CONTEXT, *PCERT_CHAIN_CONTEXT;
-typedef struct _CERT_CHAIN_ELEMENT {DWORDcbSize;PCCERT_CONTEXTpCertContext;CERT_TRUST_STATUSTrustStatus;PCERT_REVOCATION_INFOpRevocationInfo; } CERT_CHAIN_ELEMENT, *PCERT_CHAIN_ELEMENT;
-typedef struct _CERT_CHAIN_PARA {DWORD cbSize;CERT_USAGE_MATCHRequestedUsage;} CERT_CHAIN_PARA, *PCERT_CHAIN_PARA;
-typedef struct _CTL_USAGE {DWORDcUsageIdentifier;LPSTR* rgpszUsageIdentifier;} CTL_USAGE, *PCTL_USAGE, CERT_ENHKEY_USAGE, *PCERT_ENHKEY_USAGE;
-typedef struct _CERT_EXTENSION {LPSTRpszObjId;BOOLfCritical;CRYPT_OBJID_BLOBValue;} CERT_EXTENSION, *PCERT_EXTENSION;
-typedef struct _CERT_ID {DWORD dwIdChoice;union{CERT_ISSUER_SERIAL_NUMBERIssuerSerialNumber;CRYPT_HASH_BLOBKeyId;CRYPT_HASH_BLOBHashId;};} CERT_ID, *PCERT_ID;
-typedef struct _CERT_INFO {DWORDdwVersion;CRYPT_INTEGER_BLOBSerialNumber;CRYPT_ALGORITHM_IDENTIFIERSignatureAlgorithm;CERT_NAME_BLOBIssuer;FILETIMENotBefore;FILETIMENotAfter;CERT_NAME_BLOBSubject;CERT_PUBLIC_KEY_INFOSubjectPublicKeyInfo;CRYPT_BIT_BLOBIssuerUniqueId;CRYPT_BIT_BLOBSubjectUniqueId;DWORDcExtension;PCERT_EXTENSIONrgExtension;} CERT_INFO, *PCERT_INFO;
-typedef struct _CERT_ISSUER_SERIAL_NUMBER {CERT_NAME_BLOBIssuer;CRYPT_INTEGER_BLOBSerialNumber;} CERT_ISSUER_SERIAL_NUMBER, *PCERT_ISSUER_SERIAL_NUMBER;
-typedef struct _CERT_KEYGEN_REQUEST_INFO {DWORDdwVersion;CERT_PUBLIC_KEY_INFOSubjectPublicKeyInfo;LPWSTRpwszChallengeString;} CERT_KEYGEN_REQUEST_INFO, *PCERT_KEYGEN_REQUEST_INFO;
-typedef struct _CERT_KEY_ATTRIBUTES_INFO {CRYPT_DATA_BLOBKeyId;CRYPT_BIT_BLOBIntendedKeyUsage;PCERT_PRIVATE_KEY_VALIDITYpPrivateKeyUsagePeriod;} CERT_KEY_ATTRIBUTES_INFO, *PCERT_KEY_ATTRIBUTES_INFO;
-typedef struct _CERT_KEY_CONTEXT {DWORD cbSize;HCRYPTPROVhCryptProv;DWORD dwKeySpec;} CERT_KEY_CONTEXT, *PCERT_KEY_CONTEXT;
-typedef struct _CERT_KEY_USAGE_RESTRICTION_INFO {DWORDcCertPolicyId;PCERT_POLICY_IDrgCertPolicyId;CRYPT_BIT_BLOBRestrictedKeyUsage;} CERT_KEY_USAGE_RESTRICTION_INFO, *PCERT_KEY_USAGE_RESTRICTION_INFO;
-typedef struct _CERT_NAME_INFO {DWORDcRDN;PCERT_RDNrgRDN;} CERT_NAME_INFO, *PCERT_NAME_INFO;
-typedef struct _CERT_POLICIES_INFO {DWORDcPolicyInfo;CERT_POLICY_INFO* rgPolicyInfo;} CERT_POLICIES_INFO, *PCERT_POLICIES_INFO;
-typedef struct _CERT_POLICY_ID {DWORDcCertPolicyElementId;LPSTR* rgpszCertPolicyElementId;} CERT_POLICY_ID, *PCERT_POLICY_ID;
-typedef struct _CERT_POLICY_INFO {LPSTRpszPolicyIdentifier;DWORDcPolicyQualifier;CERT_POLICY_QUALIFIER_INFO* rgPolicyQualifier;} CERT_POLICY_INFO, *PCERT_POLICY_INFO;
-typedef struct _CERT_POLICY_QUALIFIER_INFO {LPSTRpszPolicyQualifierId;CRYPT_OBJID_BLOBQualifier;} CERT_POLICY_QUALIFIER_INFO, *PCERT_POLICY_QUALIFIER_INFO;
-typedef struct _CERT_PRIVATE_KEY_VALIDITY {FILETIMENotBefore;FILETIMENotAfter;} CERT_PRIVATE_KEY_VALIDITY, *PCERT_PRIVATE_KEY_VALIDITY;
-typedef struct _CERT_PUBLIC_KEY_INFO {CRYPT_ALGORITHM_IDENTIFIERAlgorithm;CRYPT_BIT_BLOBPublicKey;} CERT_PUBLIC_KEY_INFO, *PCERT_PUBLIC_KEY_INFO;
-typedef struct _CERT_RDN {DWORD cRDNAttr;PCERT_RDN_ATTR rgRDNAttr;} CERT_RDN, *PCERT_RDN;
-typedef struct _CERT_RDN_ATTR {LPSTRpszObjId;DWORDdwValueType;CERT_RDN_VALUE_BLOBValue;} CERT_RDN_ATTR, *PCERT_RDN_ATTR;
-typedef struct _CERT_REQUEST_INFO {DWORDdwVersion;CERT_NAME_BLOBSubject;CERT_PUBLIC_KEY_INFOSubjectPublicKeyInfo;DWORDcAttribute;PCRYPT_ATTRIBUTErgAttribute;} CERT_REQUEST_INFO, *PCERT_REQUEST_INFO;
-typedef struct _CERT_SIGNED_CONTENT_INFO {CRYPT_DER_BLOBToBeSigned;CRYPT_ALGORITHM_IDENTIFIERSignatureAlgorithm;CRYPT_BIT_BLOBSignature;CERT_SIGNED_CONTENT_INFO, *PCERT_SIGNED_CONTENT_INFO; };
-typedef struct _CERT_SIMPLE_CHAIN {DWORDcbSize;CERT_TRUST_STATUSTrustStatus;DWORDcElement;PCERT_CHAIN_ELEMENT* rgpElement;PCERT_TRUST_LIST_INFOpTrustListInfo;} CERT_SIMPLE_CHAIN, *PCERT_SIMPLE_CHAIN;
-typedef struct _CERT_SYSTEM_STORE_INFO {DWORDcbSize;} CERT_SYSTEM_STORE_INFO, *PCERT_SYSTEM_STORE_INFO;
-typedef struct _CERT_SYSTEM_STORE_RELOCATE_PARA {union { HKEYhKeyBase;void* pvBase; };union { void* pvSystemStore;LPCSTRpszSystemStore;LPCWSTRpwszSystemStore; };} CERT_SYSTEM_STORE_RELOCATE_PARA, *PCERT_SYSTEM_STORE_RELOCATE_PARA;
-typedef struct _CERT_TRUST_LIST_INFO {DWORDcbSize;PCTL_ENTRYpCtlEntry;PCCTL_CONTEXTpCtlContext;} CERT_TRUST_LIST_INFO, *PCERT_TRUST_LIST_INFO;
-typedef struct _CERT_TRUST_STATUS {DWORDdwErrorStatus;DWORDdwInfoStatus;} CERT_TRUST_STATUS, *PCERT_TRUST_STATUS;
-typedef struct _CERT_USAGE_MATCH {DWORDdwType;CERT_ENHKEY_USAGEUsage;} CERT_USAGE_MATCH, *PCERT_USAGE_MATCH;
-typedef struct _CMSG_CMS_RECIPIENT_INFO { DWORD dwRecipientChoice; union { PCMSG_KEY_TRANS_RECIPIENT_INFO pKeyTrans; PCMSG_KEY_AGREE_RECIPIENT_INFO pKeyAgree; PCMSG_MAIL_LIST_RECIPIENT_INFO pMailList; };} CMSG_CMS_RECIPIENT_INFO, *PCMSG_CMS_RECIPIENT_INFO;
-typedef struct _CMSG_CMS_SIGNER_INFO { DWORD dwVersion; CERT_ID SignerId; CRYPT_ALGORITHM_IDENTIFIER HashAlgorithm; CRYPT_ALGORITHM_IDENTIFIER HashEncryptionAlgorithm; CRYPT_DATA_BLOB EncryptedHash; CRYPT_ATTRIBUTES AuthAttrs; CRYPT_ATTRIBUTES UnauthAttrs;} CMSG_CMS_SIGNER_INFO, *PCMSG_CMS_SIGNER_INFO;
-typedef struct _CMSG_CTRL_ADD_SIGNER_UNAUTH_ATTR_PARA { DWORD cbSize; DWORD dwSignerIndex; CRYPT_DATA_BLOB BLOB;} CMSG_CTRL_ADD_SIGNER_UNAUTH_ATTR_PARA, *PCMSG_CTRL_ADD_SIGNER_UNAUTH_ATTR_PARA;
-typedef struct _CMSG_CTRL_DECRYPT_PARA { DWORD cbSize; HCRYPTPROV hCryptProv; DWORD dwKeySpec; DWORD dwRecipientIndex;} CMSG_CTRL_DECRYPT_PARA, *PCMSG_CTRL_DECRYPT_PARA;
-typedef struct _CMSG_CTRL_DEL_SIGNER_UNAUTH_ATTR_PARA { DWORD cbSize; DWORD dwSignerIndex; DWORD dwUnauthAttrIndex;} CMSG_CTRL_DEL_SIGNER_UNAUTH_ATTR_PARA, *PCMSG_CTRL_DEL_SIGNER_UNAUTH_ATTR_PARA;
-typedef struct _CMSG_CTRL_KEY_AGREE_DECRYPT_PARA { DWORD cbSize; HCRYPTPROV hCryptProv; DWORD dwKeySpec; PCMSG_KEY_AGREE_RECIPIENT_INFO pKeyAgree; DWORD dwRecipientIndex; DWORD dwRecipientEncryptedKeyIndex; CRYPT_BIT_BLOB OriginatorPublicKey;} CMSG_CTRL_KEY_AGREE_DECRYPT_PARA, *PCMSG_CTRL_KEY_AGREE_DECRYPT_PARA;
-typedef struct _CMSG_CTRL_VERIFY_SIGNATURE_EX_PARA { DWORD cbSize; HCRYPTPROV hCryptProv; DWORD dwSignerIndex; DWORD dwSignerType; void* pvSigner;} CMSG_CTRL_VERIFY_SIGNATURE_EX_PARA, *PCMSG_CTRL_VERIFY_SIGNATURE_EX_PARA;
-typedef struct _CMSG_ENVELOPED_ENCODE_INFO { DWORD cbSize; HCRYPTPROV hCryptProv; CRYPT_ALGORITHM_IDENTIFIER HashAlgorithm; void* pvHashAuxInfo;} CMSG_ENVELOPED_ENCODE_INFO, *PCMSG_ENVELOPED_ENCODE_INFO;
-typedef struct _CMSG_KEY_TRANS_RECIPIENT_INFO { DWORD dwVersion; CERT_ID RecipientId; CRYPT_ALGORITHM_IDENTIFIER KeyEncryptionAlgorithm; CRYPT_DATA_BLOB EncryptedKey;} CMSG_KEY_TRANS_RECIPIENT_INFO, *PCMSG_KEY_TRANS_RECIPIENT_INFO;
-typedef struct _CMSG_MAIL_LIST_RECIPIENT_INFO { DWORD dwVersion; CRYPT_DATA_BLOB KeyId; CRYPT_ALGORITHM_IDENTIFIER KeyEncryptionAlgorithm; CRYPT_DATA_BLOB EncryptedKey; FILETIME Date; PCRYPT_ATTRIBUTE_TYPE_VALUE pOtherAttr;} CMSG_MAIL_LIST_RECIPIENT_INFO, *PCMSG_MAIL_LIST_RECIPIENT_INFO;
-typedef struct _CMSG_SIGNER_ENCODE_INFO { DWORD cbSize; PCERT_INFO pCertInfo; HCRYPTPROV hCryptProv; DWORD dwKeySpec; CRYPT_ALGORITHM_IDENTIFIER HashAlgorithm; void* pvHashAuxInfo; DWORD cAuthAttr; PCRYPT_ATTRIBUTE rgAuthAttr; DWORD cUnauthAttr; PCRYPT_ATTRIBUTE rgUnauthAttr; CERT_ID SignerId; CRYPT_ALGORITHM_IDENTIFIER HashEncryptionAlgorithm; void* pvHashEncryptionAuxInfo;} CMSG_SIGNER_ENCODE_INFO, *PCMSG_SIGNER_ENCODE_INFO;
-typedef struct _CMSG_SIGNER_INFO { DWORD dwVersion; CERT_NAME_BLOB Issuer; CRYPT_INTEGER_BLOB SerialNumber; CRYPT_ALGORITHM_IDENTIFIER HashAlgorithm; CRYPT_ALGORITHM_IDENTIFIER HashEncryptionAlgorithm; CRYPT_DATA_BLOB EncryptedHash; CRYPT_ATTRIBUTES AuthAttrs; CRYPT_ATTRIBUTES UnauthAttrs;} CMSG_SIGNER_INFO, *PCMSG_SIGNER_INFO;
-typedef struct _CMSG_STREAM_INFO { DWORD cbContent; PFN_CMSG_STREAM_OUTPUT pfnStreamOutput; void* pvArg;} CMSG_STREAM_INFO, *PCMSG_STREAM_INFO;
-typedef struct _CRYPT_ALGORITHM_IDENTIFIER {LPSTRpszObjId;CRYPT_OBJID_BLOBParameters;} CRYPT_ALGORITHM_IDENTIFIER, *PCRYPT_ALGORITHM_IDENTIFIER;
-typedef struct _CRYPT_ATTRIBUTE {LPSTRpszObjId;DWORDcValue;PCRYPT_ATTR_BLOBrgValue;} CRYPT_ATTRIBUTE, *PCRYPT_ATTRIBUTE;
-typedef struct _CRYPT_BIT_BLOB {DWORDcbData;BYTE* pbData;DWORDcUnusedBits;} CRYPT_BIT_BLOB, *PCRYPT_BIT_BLOB;
-typedef struct _CRYPT_ENCODE_PARA {DWORDcbSize;PFN_CRYPT_ALLOCpfnAlloc;PFN_CRYPT_FREEpfnFree;} CRYPT_ENCODE_PARA, *PCRYPT_ENCODE_PARA;
-typedef struct _CRYPT_KEY_PROV_INFO {LPWSTRpwszContainerName;LPWSTRpwszProvName;DWORDdwProvType;DWORDdwFlags;DWORDcProvParam;PCRYPT_KEY_PROV_PARAMrgProvParam;DWORDdwKeySpec;} CRYPT_KEY_PROV_INFO, *PCRYPT_KEY_PROV_INFO;
-typedef struct _CRYPT_KEY_PROV_PARAM {DWORDdwParam;BYTE* pbData;DWORDcbData;DWORDdwFlags;} CRYPT_KEY_PROV_PARAM, *PCRYPT_KEY_PROV_PARAM;
-typedef struct _CRYPT_OID_FUNC_ENTRY {LPCSTRpszOID;void* pvFuncAddr;}CRYPT_OID_FUNC_ENTRY, *PCRYPT_OID_FUNC_ENTRY;
-typedef struct _HMAC_Info {ALG_IDHashAlgid;BYTE* pbInnerString;DWORDcbInnerString;BYTE* pbOuterString;DWORDcbOuterString;} HMAC_INFO, *PHMAC_INFO;
-
 /* function */
 BOOL CRYPTFUNCCryptDestroyHash( HCRYPTHASHhHash);
 BOOL CRYPTFUNCCryptExportKey(HCRYPTKEY hKey,HCRYPTKEY hExpKey,DWORD dwBlobType,DWORD dwFlags,BYTE* pbData,DWORD* pdwbDataLen);
 BOOL CRYPTFUNCCryptGenRandom(HCRYPTPROVhProv,DWORDdwLen,BYTE* pbBuffer);
-VOID WINAPI CertEnumStoreLocationCallback( LPCWSTR pvszStoreLoocations DWORD dwFlags, void *pvReserved, void *pvArg );
-VOID WINAPI CertEnumSystemStoreCallback( const void *pvSystemStore, DWORD dwFlags, PCERT_SYSTEM_STORE_INFO pStoreInfo, void *pvReserved, void *pvArg );
-VOID WINAPI CmsgStreamOutputCallback( const void *pvArg, //in BYTE *pbData, //in DWORD cbData, //in BOOL fFinal //in );
-BOOL CRYPTFUNC CryptGethashParam( HCRYPTHASHhHash,DWORDdwParam,BYTE* pbData,DWORD* pdwDataLen,DWORDdwFlags);
 BOOL FuncReturnhWnd(DWORD *phWnd);
 BOOL FuncVerifyImage(LPCSTR lpszImage, BYTE *pSigData);
 

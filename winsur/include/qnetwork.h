@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 1 declarations, 0 outlines, 0 base types, 0 extra macros, 7 extra decls
+ * 0 constants, 1 declarations, 0 outlines, 0 base types, 0 extra macros, 6 extra decls
  */
 #ifndef _QNETWORK_
 #define _QNETWORK_
@@ -17,7 +17,6 @@
  * ================================================================ */
 
 /* function */
-HRESULT GetMarkerName( long MarkerNum, BSTR* pbstrMarkerName );
 HRESULT GetMarkerTime( long MarkerNum, double* pMarkerTime );
 HRESULT get_CurrentMarker( long* pCurrentMarker );
 HRESULT get_ExSeekCapabilities( long* pExCapabilities );

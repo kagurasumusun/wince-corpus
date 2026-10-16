@@ -15,13 +15,13 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 500)) /* CE 4.0..499 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x500)) /* CE 4.0..499 */
 
 /* _debugbreak  [function; ce-only; CE 4.0..499] */
 void __cdecl __debugbreak(void);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 600)) /* CE 4.0..599 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x600)) /* CE 4.0..599 */
 
 /* _byteswap_uint64  [function; ce-only; CE 4.0..599] */
 unsigned __int64 __cdecl _byteswap_uint64( unsigned __int64 arg1);
@@ -42,7 +42,7 @@ void __cdecl __CacheWriteback( void *);
 int __cdecl __trap(arg1,);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* _CopyDoubleFromInt64  [function; ce-only; CE 4.0..699] */
 double _CopyInt64FromDouble(
@@ -192,7 +192,7 @@ void __cdecl _WriteBarrier(void);
 void __cdecl _ReadBarrier(void);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 5.0..599 */
 
 /* MulDiv  [function; shared; CE 5.0..599; Kernel32.dll, Kernel32.lib; lib:win32-reference] */
 int MulDiv( int nNumber,
@@ -200,26 +200,7 @@ int MulDiv( int nNumber,
  intnDenominator);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* __debugbreak  [function; ce-only; CE 5.0..699] */
-void __cdecl __debugbreak(void);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* __CacheRelease  [function; ce-only; CE 6.0..699] */
-void __cdecl __CacheRelease(
- void *
-);
-
-/* __CacheWriteBack  [function; ce-only; CE 6.0..699] */
-void __cdecl __CacheWriteback(
- void *
-);
-
-/* __trap  [function; ce-only; CE 6.0..699] */
-int __cdecl __trap(int arg1, ...);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* _ReadBarrier  [function; ce-only; CE 6.0..699; entity-headers] */
 void __cdecl _ReadWriteBarrier(void);

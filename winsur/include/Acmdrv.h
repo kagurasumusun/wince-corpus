@@ -15,7 +15,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 200 && _WIN32_WCE < 210) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x200 && _WIN32_WCE < 0x210) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* ACM_Close  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Acmdwrap.lib] */
 BOOL ACM_Close(
@@ -23,7 +23,7 @@ BOOL ACM_Close(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 200 && _WIN32_WCE < 210) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.0..209, 2.11..2.12, 3.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x200 && _WIN32_WCE < 0x210) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.0..209, 2.11..2.12, 3.0..699 */
 
 /* ACM_Deinit  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Acmdwrap.lib] */
 PVOID ACM_Deinit(
@@ -33,17 +33,6 @@ PVOID ACM_Deinit(
 /* ACM_Init  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Acmdwrap.lib] */
 PVOID ACM_Init(
  DWORD dwInfo
-);
-
-/* ACM_IOControl  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Acmdwrap.lib] */
-BOOL ACM_IOControl(
- DWORD dwOpenData,
- DWORD dwCode,
- PBYTE pBufIn,
- DWORD dwLenIn,
- PBYTE pBufOut,
- DWORD dwLenOut,
- PDWORD pdwActualOut
 );
 
 /* ACM_PowerDown  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Acmdwrap.lib] */

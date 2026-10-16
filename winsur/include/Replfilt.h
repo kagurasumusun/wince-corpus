@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 7 declarations, 2 outlines, 0 base types, 0 extra macros, 8 extra decls
+ * 0 constants, 7 declarations, 2 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _REPLFILT_
 #define _REPLFILT_
@@ -15,7 +15,7 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 1.0..199, 3.0..399, 5.0..599 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 1.0..199, 3.0..399, 5.0..599 */
 
 /* IPegasusFileFilter  [interface; ce-only; CE 1.0..199, 3.0..399, 5.0..599; Coredll.lib] */
 

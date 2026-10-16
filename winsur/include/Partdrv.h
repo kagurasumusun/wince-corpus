@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 18 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 0 constants, 18 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _PARTDRV_
 #define _PARTDRV_
@@ -21,7 +21,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* PD_ClosePartition  [function; ce-only; CE 5.0..699] */
 void PD_ClosePartition(
@@ -33,41 +33,15 @@ void PD_CloseStore(
  DWORD dwStoreId
 );
 
-/* PD_CreatePartition  [function; ce-only; CE 5.0..699] */
-DWORD PD_CreatePartition(
- DWORD dwStoreId,
- LPCTSTR szPartName,
- BYTE bPartType, 
- SECTORNUM numSectors, 
- BOOL bAuto
-);
-
 /* PD_DeletePartition  [function; ce-only; CE 5.0..699] */
 DWORD PD_DeletePartition(
  DWORD dwStoreId, 
  LPCTSTR szPartName
 );
 
-/* PD_DeviceIoControl  [function; ce-only; CE 5.0..699] */
-DWORD PD_DeviceIoControl(
- DWORD dwPartitionId, 
- DWORD dwCode, 
- PBYTE pInBuf, 
- DWORD nInBufSize, 
- PBYTE pOutBuf, 
- DWORD nOutBufSize, 
- PDWORD pBytesReturned
-);
-
 /* PD_FindPartitionClose  [function; ce-only; CE 5.0..699] */
 void PD_FindPartitionClose(
  DWORD dwSearchId
-);
-
-/* PD_FindPartitionNext  [function; ce-only; CE 5.0..699] */
-DWORD PD_FindPartitionNext(
- DWORD dwSearchId, 
- PD_PARTINFO* pInfo
 );
 
 /* PD_FindPartitionStart  [function; ce-only; CE 5.0..699] */
@@ -87,19 +61,6 @@ DWORD PD_FormatPartition(
 /* PD_FormatStore  [function; ce-only; CE 5.0..699] */
 DWORD PD_FormatStore(
  DWORD dwStoreId
-);
-
-/* PD_GetPartitionInfo  [function; ce-only; CE 5.0..699] */
-DWORD PD_GetPartitionInfo(
- DWORD dwStoreId, 
- LPCTSTR szPartName, 
- PD_PARTINFO* pInfo
-);
-
-/* PD_GetStoreInfo  [function; ce-only; CE 5.0..699] */
-DWORD PD_GetStoreInfo(
- DWORD dwStoreId, 
- PD_STOREINFO* pInfo
 );
 
 /* PD_IsStoreFormatted  [function; ce-only; CE 5.0..699] */
@@ -134,14 +95,5 @@ DWORD PD_SetPartitionAttrs(
  DWORD dwAttr
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _PD_PARTINFO {DWORD cbSize;TCHAR szPartitionName[PARTITIONNAMESIZE];SECTORNUM snNumSectors;FILETIME ftCreated;FILETIME ftLastModified;DWORD dwAttributes;BYTE bPartType;} PD_PARTINFO, *PPD_PARTINFO;
-typedef struct _PD_STOREINFO {DWORD cbSize;SECTORNUM snNumSectors;DWORD dwBytesPerSector;SECTORNUM snFreeSectors;SECTORNUM snBiggestPartCreatable;FILETIME ftCreated;FILETIME ftLastModified;DWORD dwAttributes;} PD_STOREINFO, *PPD_STOREINFO;
 
 #endif /* _PARTDRV_ */

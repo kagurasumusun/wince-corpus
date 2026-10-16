@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 3 constants, 15 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
+ * 1 constants, 15 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _SETTINGSAPI_HPP_
 #define _SETTINGSAPI_HPP_
@@ -17,9 +17,7 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define AuthCanceled 0
 #define phsDoNotDisturb 0
-#define SpeakerVolumeMode 0
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -80,11 +78,55 @@ enum PHVolumeSetting
  phvsMicrophoneVolume,
 };
 
+/* phsLockPhoneAfterUpdatingPIN  [extra enum] */
+enum PHSetting
+{
+  phsDoNotDisturb = 0,
+  phsCallForwarding,
+  phsAutoDial,
+  phsBlockCallerId,
+  phsMissedCalls,
+  phsIncomingCalls,
+  phsOutgoingCalls,
+  phsGalFilterType,
+  phsContactFilterType,
+  phsDeviceLocked,
+  phsAutoDialRulesAvailability,
+  phsPhoneAppStatus,
+  phsDisableAGC,
+  phsLockPhoneAfterUpdatingPIN,
+};
+
+/* phvsMicrophoneVolume  [extra enum] */
+enum PHVolumeSetting
+{
+  phvsSpeakerVolume,
+  phvsRingerVolume,
+  phvsHandsetVolume,
+  phvsMicrophoneVolume,
+};
+
+/* LastVolumeMode  [extra enum] */
+enum PHActiveVolumeMode
+{
+  SpeakerVolumeMode = 0,
+  RingerVolumeMode,
+  LastVolumeMode,
+};
+
+/* AuthSucceeded  [extra enum] */
+enum AuthenticationResult_e
+{
+  AuthCanceled = 0,
+  AuthInProgress,
+  AuthSucceeded,
+};
+
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* PHAuthenticateUser  [function; ce-only; CE 6.0..699; PhCommon.dll] */
 HRESULT PHAuthenticateUser(
@@ -137,48 +179,5 @@ HRESULT PHWritePIN(
 WCHAR* pPinString
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* enum */
-enum AuthenticationResult_e
-{
-  AuthCanceled = 0,
-  AuthInProgress,
-  AuthSucceeded,
-};
-enum PHActiveVolumeMode
-{
-  SpeakerVolumeMode = 0,
-  RingerVolumeMode,
-  LastVolumeMode,
-};
-enum PHSetting
-{
-  phsDoNotDisturb = 0,
-  phsCallForwarding,
-  phsAutoDial,
-  phsBlockCallerId,
-  phsMissedCalls,
-  phsIncomingCalls,
-  phsOutgoingCalls,
-  phsGalFilterType,
-  phsContactFilterType,
-  phsDeviceLocked,
-  phsAutoDialRulesAvailability,
-  phsPhoneAppStatus,
-  phsDisableAGC,
-  phsLockPhoneAfterUpdatingPIN,
-};
-enum PHVolumeSetting
-{
-  phvsSpeakerVolume,
-  phvsRingerVolume,
-  phvsHandsetVolume,
-  phvsMicrophoneVolume,
-};
 
 #endif /* _SETTINGSAPI_HPP_ */

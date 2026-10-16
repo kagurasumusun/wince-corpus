@@ -15,7 +15,7 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 5.0..599 */
 
 /* IDropTarget  [interface; shared; CE 5.0..599] */
 
@@ -37,25 +37,14 @@
 
 /* function */
 HRESULT ActivateTab( HWND hwnd );
-HRESULT AddPropertySheetPages( DWORD dwReserved, LPFNADDPROPSHEETPAGE lpfn, LPARAM lparam );
 HRESULT AddTab( HWND hwnd );
-HRESULT CompareIDs( LPARAM lParam, LPCITEMIDLIST pidl1, LPCITEMIDLIST pidl2 );
-HRESULT CreateViewObject( HWND hwndOwner, REFIID riid, VOID** ppvOut );
-HRESULT CreateViewWindow( IShellView* psvPrevious, LPCFOLDERSETTINGS pfs, IShellBrowser* psb, RECT* prcView, HWND* phWnd );
 HRESULT DeleteTab( HWND hwnd );
 HRESULT DestroyViewWindow(void);
 HRESULT EnableModeless( BOOL fEnable );
-HRESULT EnumObjects( HWND hwndOwner, SHCONTF grfFlags, IENUMIDLIST** ppenumIDList );
-HRESULT GetAttributesOf( UINT cidl, LPCITEMIDLIST* apidl, SFGAOF* rgfInOut );
-HRESULT GetCurrentInfo( LPFOLDERSETTINGS lpfs );
-HRESULT GetItemObject( UINT uItem, REFIID riid, LPVOID* ppv );
-HRESULT GetUIObjectOf( HWND hwndOwner, UINT cidl, LPCITEMIDLIST* apidl, REFIID riid, UINT* rgfReserved, VOID** ppv );
 HRESULT HrInit(VOID);
 HRESULT MarkFullscreenWindow( HWND hwnd, BOOL fFullscreen );
 HRESULT SaveViewState(void);
-HRESULT SelectItem( LPCITEMIDLIST pidlItem, UINT uFlags );
 HRESULT SetActiveAlt( HWND hwnd );
-HRESULT SetNameOf( HWND hwndOwner, LPCITEMIDLIST pidl, LPCOLESTR lpszName, DWORD uFlags, LPITEMIDLIST* ppidlOut );
 HRESULT UIActivate( UINT uState );
 
 #endif /* _SHOBJIDL_ */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 16 constants, 4 declarations, 2 outlines, 0 base types, 0 extra macros, 28 extra decls
+ * 16 constants, 4 declarations, 2 outlines, 0 base types, 0 extra macros, 23 extra decls
  */
 #ifndef _VOIPMANAGER_
 #define _VOIPMANAGER_
@@ -86,7 +86,6 @@ typedef enum VoIPSystemEvent{
 
 /* function */
 HRESULT AddParticipantToConference( IVoIPCurrentCall *piCall );
-HRESULT Call( BSTR bstrURI, IVoIPCurrentCall** ppiCurrentCall );
 HRESULT Hangup();
 HRESULT Ignore();
 HRESULT OnCallEvent( VoIPCallEvent vceEvent, IVoIPCurrentCall* piCurrentCall );
@@ -95,23 +94,17 @@ HRESULT RegisterWithSIPServer( SIPServerRegistrationParameters *pParams );
 HRESULT Reregister( VoIPMgrParameters* pvmpMgrParams );
 HRESULT Unhold();
 HRESULT get_ActiveCurrentCall( IVoIPCurrentCall** ppiCall );
-HRESULT get_AutoForwardURI( BSTR* pbstrAutoForward );
 HRESULT get_CallLogDB( IVoIPCallLogDB** piCallLogDB );
 HRESULT get_CallerInfoDB( IVoIPCallerInfoDB** ppiCallerInfoDB );
 HRESULT get_ConferenceHost( [in] IVoIPCurrentCall **ppiConferenceCall );
 HRESULT get_ConferenceParticipants( [out, retval] IVoIPCurrentCallEnumerator **ppiCallEnum );
 HRESULT get_CurrentCallEnumerator( IVoIPCurrentCallEnumerator** ppiEnum );
-HRESULT get_IsConferenceHost( [out, retval] VARIANT_BOOL *pbConfHost );
-HRESULT get_IsConferenceParticipant( [out, retval] VARIANT_BOOL *pbConfParticipant );
 HRESULT get_MissedCallTimeout( UINT* pnTimeoutMilliseconds );
-HRESULT get_MyServer( BSTR* pbstrServer );
-HRESULT get_MyURI( BSTR* pbstrURI );
 HRESULT get_NetworkStatus( LONG* plStatus );
 HRESULT get_Parameters( VoIPMgrParameters* pvmpUsed );
 HRESULT get_RTCClient( IRTCClient** ppiRTCClient );
 HRESULT get_RTCParticipant( IRTCParticipant** piparticipant );
 HRESULT get_RTCSession( IRTCSession** piSession );
-HRESULT put_AutoForwardURI( BSTR bstrAutoForward );
 HRESULT put_MissedCallTimeout( UINT nTimeoutMilliseconds );
 
 #endif /* _VOIPMANAGER_ */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 35 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 29 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _NKINTR_
 #define _NKINTR_
@@ -15,13 +15,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 3.0..399 */
-
-/* lpParallelPortGetByteFunc  [function; ce-only; CE 3.0..399] */
-int (*lpParallelPortGetByteFunc)(void);
-
-/* lpParallelPortSendByteFunc  [function; ce-only; CE 3.0..399] */
-void (*lpParallelPortSendByteFunc)(BYTE ch);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400)) /* CE 3.0..399 */
 
 /* OEMParallelPortGetByte  [function; ce-only; CE 3.0..399] */
 int OEMParallelPortGetByte (void);
@@ -36,7 +30,7 @@ UCHAR Service,
 UCHAR CommDevice );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* HookInterrupt  [function; ce-only; CE 3.0..399, 5.0..699; Nk.lib, Nkstub.lib] */
 BOOL HookInterrupt(
@@ -50,31 +44,6 @@ LONG KCompareFileTime(
  LPFILETIME lpft2
 );
 
-/* KFileTimeToSystemTime  [function; ce-only; CE 3.0..399, 5.0..699; Nk.lib, Nkstub.lib] */
-BOOL KFileTimeToSystemTime(
- const FILETIME* lpft,
- LPSYSTEMTIME lpst
-);
-
-/* KSystemTimeToFileTime  [function; ce-only; CE 3.0..399, 5.0..699; Nk.lib, Nkstub.lib] */
-BOOL KSystemTimeToFileTime(
- LPSYSTEMTIME lpst,
- LPFILETIME lpft
-);
-
-/* lpReadDebugByteFunc  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-int (*lpReadDebugByteFunc)(void);
-
-/* lpWriteDebugByteFunc  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-void (*lpWriteDebugByteFunc)(
- BYTE ch
-);
-
-/* lpWriteDebugStringFunc  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nkstub.lib] */
-void (*lpWriteDebugStringFunc)(
- unsigned short* str
-);
-
 /* OEMClearDebugCommError  [function; ce-only; CE 3.0..399, 5.0..699; Nk.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
 void OEMClearDebugCommError (void);
 
@@ -82,11 +51,6 @@ void OEMClearDebugCommError (void);
 BOOL OEMGetExtensionDRAM( 
  LPDWORD lpMemStart, 
  LPDWORD lpMemLen 
-);
-
-/* OEMGetRealTime  [function; ce-only; CE 3.0..399, 5.0..699; Nk.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
-BOOL OEMGetRealTime(
- LPSYSTEMTIME lpst 
 );
 
 /* OEMInit  [function; ce-only; CE 3.0..399, 5.0..699; Nk.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
@@ -124,23 +88,13 @@ BOOL UnhookInterrupt(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
 
 /* OEMPowerOff  [function; ce-only; CE 3.0..699; Nk.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
 void OEMPowerOff (void);
 
 /* OEMReadDebugByte  [function; ce-only; CE 3.0..699; Nk.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
 int OEMReadDebugByte (void);
-
-/* OEMSetAlarmTime  [function; ce-only; CE 3.0..699; Nk.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
-BOOL OEMSetAlarmTime(
- LPSYSTEMTIME lpst 
-);
-
-/* OEMSetRealTime  [function; ce-only; CE 3.0..699; Nk.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
-BOOL OEMSetRealTime( 
- LPSYSTEMTIME lpst 
-);
 
 /* OEMWriteDebugByte  [function; ce-only; CE 3.0..699; Nk.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
 void OEMWriteDebugByte(
@@ -159,16 +113,7 @@ void OEMWriteDebugString(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* pNKEnumExtensionDRAM  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-DWORD (*pNKEnumExtensionDRAM)(
- PMEMORY_SECTION pMemSections,
- DWORD cMemSections
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* CeSetPowerOnEvent  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL CeSetPowerOnEvent(
@@ -183,12 +128,6 @@ DWORD NKCallIntChain(
 /* NKIsSysIntrValid  [function; ce-only; CE 5.0..699; Nk.lib, Nkstub.lib] */
 BOOL NKIsSysIntrValid( 
  DWORD idInt 
-);
-
-/* OEMEnumExtensionDRAM  [function; ce-only; CE 5.0..699; Nk.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
-DWORD OEMEnumExtensionDRAM(
- PMEMORY_SECTION pMemSections,
- DWORD cMemSections
 );
 #endif /* _WIN32_WCE */
 

@@ -11,12 +11,4 @@
 #define _GIISR_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _GIISR_INFO {DWORD SysIntr;BOOL CheckPort;BOOL PortIsIO;BOOL UseMaskReg;DWORD PortAddr;DWORD PortSize;DWORD Mask;DWORD MaskAddr;} GIISR_INFO, *PGIISR_INFO;
-
 #endif /* _GIISR_ */

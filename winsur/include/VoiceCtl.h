@@ -11,14 +11,4 @@
 #define _VOICECTL_
 
 
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213)) /* CE 2.11..2.12 */
-
-/* VoiceRecorder_Create  [function; ce-only; CE 2.11..2.12] */
-HWND VoiceRecorder_Create(CM_VOICE_RECORDER * lpCMVR);
-#endif /* _WIN32_WCE */
-
 #endif /* _VOICECTL_ */

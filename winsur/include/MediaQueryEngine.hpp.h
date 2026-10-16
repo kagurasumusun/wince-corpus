@@ -5,25 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 7 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 34 extra decls
+ * 0 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 33 extra decls
  */
 #ifndef _MEDIAQUERYENGINE_HPP_
 #define _MEDIAQUERYENGINE_HPP_
 
-
-/* ==================================================================
- * constants (one evidence comment per #define; the
- * #if of a batch covers every #define in it; values
- * that differ per generation pool into #if/#elif
- * chains with the evidence after the #endif)
- * ================================================================ */
-#define Attr_Title 0
-#define DETACHED 0
-#define MQE_EVENT_NETWORKAVAILABLE 0
-#define Music 0
-#define SearchBy_None 0
-#define SortBy_None 0
-#define UnInitialized 0
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -99,12 +85,7 @@ enum SortBy_e {
  SortBy_Date_Descending 
 };
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* enum */
+/* Attr_ProtocolInfo  [extra enum] */
 enum Item_Attribute_e {
   Attr_Title = 0,
   Attr_Class,
@@ -127,6 +108,32 @@ enum Item_Attribute_e {
   Attr_Description,
   Attr_ProtocolInfo
 };
+
+/* VideoGenre  [extra enum] */
+enum MediaType_e {
+  Music = 0,
+  Video,
+  Picture,
+  Playlist,
+  MusicAlbum,
+  VideoAlbum,
+  PictureAlbum,
+  MusicArtist,
+  MovieActor,
+  PictureDateFolder,
+  MusicGenre,
+  VideoGenre
+};
+
+/* Running  [extra enum] */
+enum QueryEngineState_e {
+  UnInitialized = 0,
+  Error,
+  Stopped,
+  Running
+};
+
+/* MQE_EVENT_CRITICALERROR  [extra enum] */
 enum QuerySinkEvent_e {
   MQE_EVENT_NETWORKAVAILABLE = 0,
   MQE_EVENT_NETWORKNOTAVAILABLE,
@@ -143,12 +150,8 @@ enum QuerySinkEvent_e {
   MQE_EVENT_CONTENTUPDATE_PICTURE,
   MQE_EVENT_CRITICALERROR
 };
-enum QueryEngineState_e {
-  UnInitialized = 0,
-  Error,
-  Stopped,
-  Running
-};
+
+/* SearchBy_Date  [extra enum] */
 enum SearchBy_e {
   SearchBy_None = 0,
   SearchBy_Title,
@@ -158,6 +161,8 @@ enum SearchBy_e {
   SearchBy_Genre,
   SearchBy_Date
 };
+
+/* SortBy_Date_Descending  [extra enum] */
 enum SortBy_e {
   SortBy_None = 0,
   SortBy_Name_Ascending,
@@ -165,20 +170,11 @@ enum SortBy_e {
   SortBy_Date_Ascending,
   SortBy_Date_Descending
 };
-enum MediaType_e {
-  Music = 0,
-  Video,
-  Picture,
-  Playlist,
-  MusicAlbum,
-  VideoAlbum,
-  PictureAlbum,
-  MusicArtist,
-  MovieActor,
-  PictureDateFolder,
-  MusicGenre,
-  VideoGenre
-};
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
 
 /* function */
 Bool ActiveServerName(WCHAR*pBuffer,  int*pBufferLen);
@@ -200,7 +196,6 @@ bool ModelNumber (  WCHAR* pBuffer,  int* pBufferLength  );
 MediaQuery_t OemExtensionUpnpBrowseChildren( const WCHAR* pObjectIdStr, const WCHAR* pSortString, int BatchSize );
 bool OemExtensionUpnpItemAttribute ( const WCHAR* pAttributeName,  WCHAR* pBuffer,  int* pBufferLength,  unsigned long nIndex = 0  );
 MediaQuery_t OemExtensionUpnpQuery ( const WCHAR* pContainerIdStr, const WCHAR* pSearchString, const WCHAR* pSortString, int BatchSize);
-QueryParams_t ( MediaType_eMediaType,SearchBy_eSearchBy, WCHAR*pSearchString, SortBy_eSortBy,intBatchSize,WCHAR*pFileExtList);
 bool RegisterContentUpdateCallback(constContentUpdateCallback_t* pCallbackObj  );
 bool RemoveSink( const QueryEngineSink_t*pRemoveThis);
 QueryEngineState_e State ( void );

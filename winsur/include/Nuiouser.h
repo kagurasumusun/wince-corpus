@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 34 constants, 4 declarations, 3 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 34 constants, 5 declarations, 2 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _NUIOUSER_
 #define _NUIOUSER_
@@ -58,20 +58,6 @@
 
 /* NDISUIO_DEVICE_NOTIFICATION  [struct; ce-only] */
 
-/* NDISUIO_OPEN_CONTEXT  [struct; ce-only] */
-
 /* NIC_STATISTICS  [struct; ce-only] */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct {DWORD dwNotificationType;TCHAR ptcDeviceName[MAX_PATH]; UINT uiOffsetToStatusBuffer; UINT uiStatusBufferSize;} NDISUIO_DEVICE_NOTIFICATION, *PNDISUIO_DEVICE_NOTIFICATION;
-typedef struct _NDISUIO_QUERY_BINDING{ULONG BindingIndex;ULONG DeviceNameOffset;ULONG DeviceNameLength;ULONG DeviceDescrOffset;ULONG DeviceDescrLength;} NDISUIO_QUERY_BINDING, *PNDISUIO_QUERY_BINDING;
-typedef struct _NDISUIO_QUERY_OID {NDIS_OID Oid;#ifdef UNDER_CEPTCHAR ptcDeviceName;#endifUCHAR Data[sizeof(ULONG)];} NDISUIO_QUERY_OID, *PNDISUIO_QUERY_OID;
-typedef struct{ HANDLE hMsgQueue; DWORD dwNotificationTypes; }NDISUIO_REQUEST_NOTIFICATION, *PNDISUIO_REQUEST_NOTIFICATION;
-typedef struct _NDISUIO_SET_OID {NDIS_OID Oid;#ifdef UNDER_CEPTCHAR ptcDeviceName;#endifUCHAR Data[sizeof(ULONG)];} NDISUIO_SET_OID, *PNDISUIO_SET_OID;
 
 #endif /* _NUIOUSER_ */

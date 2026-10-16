@@ -40,13 +40,10 @@
 /*   Index */
 /*   Name */
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _IP_INTERFACE_INFO{LONG NumAdapters;IP_ADAPTER_INDEX_MAP Adapter[1];}IP_INTERFACE_INFO, *PIP_INTERFACE_INFO;
+/* PIP_UNIDIRECTIONAL_ADAPTER_ADDRESS  [extra struct] */
 typedef struct _IP_UNIDIRECTIONAL_ADAPTER_ADDRESS{ULONG NumAdapters;IPAddr Address[1];} IP_UNIDIRECTIONAL_ADAPTER_ADDRESS*, PIP_UNIDIRECTIONAL_ADAPTER_ADDRESS;
+
+/* PIP_INTERFACE_INFO  [extra struct] */
+typedef struct _IP_INTERFACE_INFO{LONG NumAdapters;IP_ADAPTER_INDEX_MAP Adapter[1];}IP_INTERFACE_INFO, *PIP_INTERFACE_INFO;
 
 #endif /* _IPEXPORT_ */

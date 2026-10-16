@@ -20,7 +20,5 @@
 HRESULT Control( DWORD dwControl, DWORD dwBufSize, BYTE* pbData );
 HRESULT StartPublishing();
 HRESULT StopPublishing();
-HRESULT Subscribe( GUID PlatformID, GUID DeviceID, GUID PublisherID, ISubscriber* pSubscriber, IPublisher** ppPublisher, GUID* pCookieID );
-HRESULT Unsubscribe( GUID cookieID );
 
 #endif /* _CEPUBSUB_ */

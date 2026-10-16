@@ -50,22 +50,7 @@ typedef struct{
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* SipEnumIM  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Coresip.lib, coresip.lib] */
-int SipEnumIM( 
- IMENUMPROC pEnumIMProc
-);
-
-/* SipEnumIMProc  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coresip.lib] */
-int SipEnumIMProc( 
- IMENUMINFO* pIMInfo
-);
-
-/* SipGetCurrentIM  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Coresip.lib, coresip.lib] */
-BOOL SipGetCurrentIM( 
- CLSID* pClsid
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* SipGetInfo  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Coresip.lib, coresip.lib] */
 BOOL SipGetInfo(
@@ -75,11 +60,6 @@ BOOL SipGetInfo(
 /* SipRegisterNotification  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Coresip.lib, coresip.lib] */
 BOOL SipRegisterNotification( 
  HWND hWnd
-);
-
-/* SipSetCurrentIM  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Coresip.lib, coresip.lib] */
-BOOL SipSetCurrentIM( 
- CLSID* pClsid
 );
 
 /* SipSetDefaultRect  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Coresip.lib, coresip.lib] */

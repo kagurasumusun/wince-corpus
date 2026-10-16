@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 13 constants, 89 declarations, 8 outlines, 0 base types, 0 extra macros, 94 extra decls
+ * 1 constants, 89 declarations, 8 outlines, 0 base types, 0 extra macros, 88 extra decls
  */
 #ifndef _WSDAPI_
 #define _WSDAPI_
@@ -17,25 +17,13 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define ONE_WAY 0
-#define TWO_WAY 1
-#define WSD_PT_ALL 0xff
-#define WSD_PT_HTTP 0x02
-#define WSD_PT_HTTPS 0x04
-#define WSD_PT_NONE 0x00
-#define WSD_PT_UDP 0x01
 #define WSDAPI_OPTION_MAX_INBOUND_MESSAGE_SIZE 0x0001
-#define WSDET_INCOMING_FAULT 2
-#define WSDET_INCOMING_MESSAGE 1
-#define WSDET_NONE 0
-#define WSDET_RESPONSE_TIMEOUTWSDET_RESPONSE_TIMEOUT 4
-#define WSDET_TRANSMISSION_FAILURE 3
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* IWSDAttachment  [interface; shared; CE 6.0..699; wsdapi.lib] */
 #endif /* _WIN32_WCE */
@@ -419,11 +407,20 @@ typedef struct _WSDXML_TEXT {
 /*   MetadataVersion */
 /*   Any */
 
+/* PWSDUdpRetransmitParams  [extra struct] */
+typedef struct _WSDUpdRetransmitParams {
+  ULONG ulSendDelay;
+  ULONG ulRepeat;
+  ULONG ulRepeatMinDelay;
+  ULONG ulRepeatMaxDelay;
+  ULONG ulRepeatUpperDelay;
+} WSDUdpRetransmitParams, *PWSDUdpRetransmitParams;
+
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* WSDAllocateLinkedMemory  [function; shared; CE 6.0..699; wsdapi.lib] */
 void* WSDAllocateLinkedMemory(
@@ -497,16 +494,6 @@ HRESULT WSDCreateOutboundAttachment (
  IWSDOutboundAttachment** attachmentOut
 );
 
-/* WSDCreateUdpAddress  [function; shared; CE 6.0..699; wsdapi.lib] */
-HRESULT WINAPI WSDCreateUdpAddress(
- IWSDUdpAddress** ppAddress
-);
-
-/* WSDCreateUdpMessageParameters  [function; shared; CE 6.0..699; wsdapi.lib] */
-HRESULT WINAPI WSDCreateUdpMessageParameters(
- IWSDUdpMessageParameters** ppTxParams
-);
-
 /* WSDDetachLinkedMemory  [function; shared; CE 6.0..699; wsdapi.lib] */
 void WSDDetachLinkedMemory(
  void* pVoid
@@ -517,86 +504,9 @@ void WSDFreeLinkedMemory(
  void* pVoid
 );
 
-/* WSDGenerateFault  [function; shared; CE 6.0..699; wsdapi.lib] */
-HRESULT WSDGenerateFault(
- const LPCWSTR* pszCode,
- const LPCWSTR* pszSubCode,
- const LPCWSTR* pszReason,
- const LPCWSTR* pszDetail,
- IWSDXMLContext* pContext,
- WSD_SOAP_FAULT** ppFault
-);
-
-/* WSDGenerateFaultEx  [function; shared; CE 6.0..699; wsdapi.lib] */
-HRESULT WSDGenerateFaultEx(
- WSDXML_NAME* pCode,
- WSDXML_NAME* pSubCode,
- WSD_LOCALIZED_STRING_LIST* pReasons,
- const LPCWSTR* pszDetail,
- WSD_SOAP_FAULT** ppFault
-);
-
-/* WSDGetConfigurationOption  [function; shared; CE 6.0..699; wsdapi.lib] */
-HRESULT WINAPI WSDGetConfigurationOption(
- DWORD dwOption,
- LPVOID pVoid,
- DWORD cbOutBuffer
-);
-
 /* WSDRegisterNamespaces  [function; ce-only; CE 6.0..699; wsdapi.lib] */
 void WSDRegisterNamespaces(
  IWSDXMLContext* pContext
-);
-
-/* WSDSetConfigurationOption  [function; shared; CE 6.0..699; wsdapi.lib] */
-HRESULT WINAPI WSDSetConfigurationOption(
- DWORD dwOption,
- LPVOID pVoid,
- DWORD cbInBuffer
-);
-
-/* WSDXMLAddChild  [function; shared; CE 6.0..699; wsdapi.lib] */
-HRESULT STDAPI WSDXMLAddChild(
- WSDXML_ELEMENT* pParent,
- WSDXML_ELEMENT* pChild
-);
-
-/* WSDXMLAddSibling  [function; shared; CE 6.0..699; wsdapi.lib] */
-HRESULT STDAPI WSDXMLAddSibling(
- WSDXML_ELEMENT* pFirst,
- WSDXML_ELEMENT* pSecond
-);
-
-/* WSDXMLBuildAnyForSingleElement  [function; shared; CE 6.0..699; wsdapi.lib] */
-HRESULT STDAPI WSDXMLBuildAnyForSingleElement(
- WSDXML_NAME* pElementName,
- const LPCWSTR* pszText,
- WSDXML_ELEMENT** ppAny
-);
-
-/* WSDXMLCleanupElement  [function; shared; CE 6.0..699; wsdapi.lib] */
-HRESULT WINAPI WSDXMLCleanupElement(
- WSDXML_ELEMENT* pAny
-);
-
-/* WSDXMLCreateContext  [function; shared; CE 6.0..699; wsdapi.lib] */
-HRESULT WINAPI WSDXMLCreateContext(
- IWSDXMLContext** ppContext
-);
-
-/* WSDXMLGetNameFromBuiltinNamespace  [function; shared; CE 6.0..699; wsdapi.lib] */
-HRESULT WINAPI WSDXMLGetNameFromBuiltinNamespace(
- LPCWSTR pszNamespace,
- LPCWSTR pszName,
- WSDXML_NAME** ppName
-);
-
-/* WSDXMLGetValueFromAny  [function; shared; CE 6.0..699; wsdapi.lib] */
-HRESULT STDAPI WSDXMLGetValueFromAny(
- const WCHAR* pszNamespace,
- const WCHAR* pszName,
- WSDXML_ELEMENT* pAny,
- const LPCWSTR** ppszValue
 );
 #endif /* _WIN32_WCE */
 
@@ -605,28 +515,16 @@ HRESULT STDAPI WSDXMLGetValueFromAny(
  * parser did not turn into an entity declaration
  * ================================================================ */
 
-/* struct */
-typedef struct _WSDUpdRetransmitParams {
-  ULONG ulSendDelay;
-  ULONG ulRepeat;
-  ULONG ulRepeatMinDelay;
-  ULONG ulRepeatMaxDelay;
-  ULONG ulRepeatUpperDelay;
-} WSDUdpRetransmitParams, *PWSDUdpRetransmitParams;
-
 /* function */
 HRESULT AbortAsyncOperation( IWSDAsyncResult* pAsyncResult );
-HRESULT AddDynamicService( LPCWSTR pszServiceId, LPCWSTR pszEndpointAddress, const WSD_PORT_TYPE* pPortType, const WSDXML_NAME* pPortName, const WSDXML_ELEMENT* pAny, IUnknown* pService );
 HRESULT AddNameToNamespace( const LPCWSTR* pszUri, const LPCWSTR* pszName, WSDXML_NAME** ppName );
 HRESULT AddNamespace( const LPCWSTR* pszUri, const LPCWSTR* pszSuggestedPrefix, WSDXML_NAMESPACE** ppNamespace );
-HRESULT AsyncOperationComplete( IWSDAsyncResult* pAsyncResult, IUnknown* pAsyncState );
 HRESULT BeginGetMetadata( IWSDAsyncResult** ppResult );
 HRESULT Deserialize( LPCWSTR pszBuffer );
 HRESULT Detach();
 HRESULT EndGetMetadata( IWSDAsyncResult* pResult );
 HRESULT FaultRequest( WSD_SOAP_HEADER* pRequestHeader, IWSDMessageParameters* pMessageParameters, WSD_SOAP_FAULT* pFault );
 HRESULT GetAllMetadata( WSD_METADATA_SECTION_LIST** ppMetadata );
-HRESULT GetAsyncState( IUnknown** ppAsyncState );
 HRESULT GetEndpointProxy( IWSDEndpointProxy** ppEndpoint );
 HRESULT* GetEndpointReference( WSD_ENDPOINT_REFERENCE** ppEndPointReference );
 HRESULT GetExclusive();
@@ -636,7 +534,6 @@ HRESULT GetHostMetadata( WSD_HOST_METADATA** ppHostMetadata );
 HRESULT GetID( LPCWSTR* ppszId );
 HRESULT GetInboundHttpHeaders( LPCWSTR* ppszHeaders );
 HRESULT GetLocalAddress( IWSDAddress** ppAddress );
-HRESULT GetLocalInterfaceGUID( GUID* pGuid );
 HRESULT GetLocalTransportAddress( LPCWSTR* ppszLocalTransportAddress );
 HRESULT GetLowerParameters( IWSDMessageParameters** ppTxParams );
 HRESULT GetMetadata( WSD_METADATA_SECTION_LIST** MetadataOut );
@@ -652,7 +549,6 @@ HRESULT GetSecure();
 HRESULT GetServiceMetadata( WSD_SERVICE_METADATA** ppServiceMetadata );
 HRESULT GetServiceProxyById( LPCWSTR pszServiceId, IWSDServiceProxy** ppServiceProxy );
 HRESULT GetServiceProxyByType( const WSDXML_NAME* pType, IWSDServiceProxy** ppServiceProxy );
-HRESULT* GetSockaddr( SOCKADDR_STORAGE* pSockAddr );
 HRESULT GetTTL( DWORD* pdwTTL );
 HRESULT GetThisDeviceMetadata( WSD_THIS_DEVICE_METADATA** ppThisDeviceMetadata );
 HRESULT GetThisModelMetadata( WSD_THIS_MODEL_METADATA** ppManufacturerMetadata );
@@ -678,30 +574,23 @@ HRESULT SearchFailed( HRESULT hr, LPCWSTR pszTag );
 HRESULT SendOneWayRequest( const void* pBody, const WSD_OPERATION* pOperation );
 HRESULT SendResponse( void* pBody, WSD_OPERATION* pOperation, IWSDMessageParameters* pMessageParameters );
 HRESULT SendTwoWayRequest( const void* pBody, const WSD_OPERATION* pOperation, WSD_SYNCHRONOUS_RESPONSE_CONTEXT* pResponseContext );
-HRESULT SendTwoWayRequestAsync( const void* pBody, const WSD_OPERATION* pOperation, IUnknown* pAsyncState, IWSDAsyncCallback* pCallback, IWSDAsyncResult** pResult );
 HRESULT SetAddressFamily( DWORD dwAddressFamily );
-HRESULT SetAlias( const GUID* pAlias );
-HRESULT SetCallback( IWSDAsyncCallback* pCallback, IUnknown* pAsyncState );
 HRESULT SetExclusive( BOOL fExclusive );
 HRESULT SetID( LPCWSTR pszId );
 HRESULT SetInboundHttpHeaders( LPCWSTR pszHeaders );
 HRESULT SetLocalAddress( IWSDAddress* pAddress );
 HRESULT SetMessageType( WSDUdpMessageType messageType );
 HRESULT SetMetadata( const WSD_THIS_MODEL_METADATA* pThisModelMetadata, const WSD_THIS_DEVICE_METADATA* pThisDeviceMetadata, const WSD_HOST_METADATA* pHostMetadata, const WSD_METADATA_SECTION_LIST* pCustomMetadata );
-HRESULT SetNamespaces( const PCWSDXML_NAMESPACE* pNamespaces, WORD wNamespacesCount, BYTE bLayerNumber );
 HRESULT SetOutboundHttpHeaders( LPCWSTR pszHeaders );
 HRESULT SetPort( WORD wPort );
 HRESULT SetRemoteAddress( IWSDAddress* pAddress );
 HRESULT SetRetransmitParams( WSDUdpRetransmitParams* pParams );
 HRESULT SetSecure( BOOL fSecure );
 HRESULT SetServiceDiscoverable( const WCHAR* pszServiceId, BOOL fDiscoverable );
-HRESULT SetSockaddr( const SOCKADDR_STORAGE* pSockAddr );
 HRESULT SetTTL( DWORD dwTTL );
 HRESULT SetTransportAddress( LPCWSTR pszAddress );
-HRESULT SetTypes( const PCWSDXML_TYPE* pTypes, DWORD dwTypesCount, BYTE bLayerNumber );
 HRESULT SetWaitHandle( HANDLE hWaitHandle );
 HRESULT SignalEvent( LPCWSTR pszServiceId, const void* pBody, const WSD_OPERATION* pOperation );
-HRESULT SubscribeToOperation( const WSD_OPERATION* pOperation, IUnknown* pUnknown, const WSDXML_ELEMENT* pAny, WSDXML_ELEMENT** ppAny );
 void SubscriptionEnded( LPCWSTR pszSubscriptionAction );
 void SubscriptionRenewalFailed( LPCWSTR pszSubscriptionAction, HRESULT hr );
 void SubscriptionRenewed( LPCWSTR pszSubscriptionAction );

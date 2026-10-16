@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 236 constants, 17 declarations, 2 outlines, 0 base types, 0 extra macros, 7 extra decls
+ * 236 constants, 17 declarations, 2 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _IMM_
 #define _IMM_
@@ -387,50 +387,10 @@ typedef struct _tagSTYLEBUF {
 /*   szString */
 /*   hbmpItem */
 
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
+/* PIMECHARPOSITION  [extra struct] */
+typedef struct tagIMECHARPOSITION {DWORDdwSize;DWORDdwCharPos;POINTpt;UNITcLineHeight;RECTrcDocument;} IMECHARPOSITION, *PIMECHARPOSITION;
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* EnumRegisterWordProc  [function; ce-only; CE 2.11..2.12, 3.0..699] */
-UINT CALLBACK EnumRegisterWordProc(
- LPCTSTR lpszReading,
- DWORD dwStyle,
- LPCTSTR lpszString,
- LPVOID lpData 
-);
-
-/* WM_IME_COMPOSITION  [function; ce-only; CE 2.11..2.12, 3.0..699] */
-WM_IME_COMPOSITION 
- chDBCS = (WORD) wParam; 
- fFlags = (BOOL) lParam;
-
-/* WM_IME_KEYDOWN  [function; ce-only; CE 2.11..2.12, 3.0..699] */
-WM_IME_KEYDOWN nVirtKey = (int) wParam;
-lKeyData = lParam;
-
-/* WM_IME_KEYUP  [function; ce-only; CE 2.11..2.12, 3.0..699] */
-WM_IME_KEYUP nVirtKey = (int) wParam;
-lKeyData = lParam;
-
-/* WM_IME_NOTIFY  [function; ce-only; CE 2.11..2.12, 3.0..699] */
-WM_IME_NOTIFY
- dwCommand = (DWORD) wParam;
- dwData = (DWORD) lParam;
-
-/* WM_IME_SETCONTEXT  [function; ce-only; CE 2.11..2.12, 3.0..699] */
-WM_IME_SETCONTEXT
- fSet = (BOOL) wParam; 
- iShow = (DWORD) lParam;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
+/* LPINPUTCONTEXT  [extra struct] */
 typedef struct tagINPUTCONTEXT{
   HWND hWnd;
   BOOL fOpen;
@@ -454,10 +414,5 @@ typedef struct tagINPUTCONTEXT{
   DWORD fdwInit;
   DWORD dwReserve[3]
 } INPUTCONTEXT, *PINPUTCONTEXT, NEAR *NPINPUTCONTEXT, FAR *LPINPUTCONTEXT;
-typedef struct tagIMECHARPOSITION {DWORDdwSize;DWORDdwCharPos;POINTpt;UNITcLineHeight;RECTrcDocument;} IMECHARPOSITION, *PIMECHARPOSITION;
-
-/* function */
-typedefstructtagIMEMENUITEMINFO{UINTcbSize;UINTfType;UINTfState;UINTwID;HBITMAPhbmpChecked;HBITMAPhbmpUnchecked;DWORDdwItemData;WCHARszString[IMEMENUITEM_STRING_SIZE];HBITMAPhbmpItem;}IMEMENUITEMINFO,*PIMEMENUITEMINFO,NEAR*NPIMEMENUITEMINFO,FAR*LPIMEMENUITEMINFO;
-typedefstructtagRECONVERTSTRING{DWORDdwSize;DWORDdwVersion;DWORDdwStrLen;DWORDdwStrOffset;DWORDdwCompStrLen;DWORDdwCompStrOffset;DWORDdwTargetStrLen;DWORDdwTargetStrOffset;}RECONVERTSTRING,*PRECONVERTSTRING,NEAR*NPRECONVERTSTRING,FAR*LPRECONVERTSTRING;
 
 #endif /* _IMM_ */

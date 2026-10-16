@@ -54,17 +54,11 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* CeClearUserNotification  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Notify.lib, notify.lib] */
 BOOL CeClearUserNotification(
  HANDLE hNotification 
-);
-
-/* CeGetUserNotificationPreferences  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Notify.lib, notify.lib] */
-BOOL CeGetUserNotificationPreferences(
- HWND hWndParent, 
- PCE_USER_NOTIFICATION lpNotification 
 );
 
 /* CeHandleAppNotifications  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Notify.lib, notify.lib] */
@@ -83,27 +77,9 @@ BOOL CeRunAppAtTime(
  TCHAR* pwszAppName, 
  SYSTEMTIME* lpTime 
 );
-
-/* CeSetUserNotification  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Notify.lib, notify.lib] */
-HANDLE CeSetUserNotification(
- HANDLE hNotification, 
- TCHAR* pwszAppName, 
- SYSTEMTIME* lpTime, 
- PCE_USER_NOTIFICATION lpUserNotification 
-);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* CeSetUserNotificationEx  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Notify.lib, notify.lib] */
-HANDLE CeSetUserNotificationEx(
- HANDLE hNotification, 
- CE_NOTIFICATION_TRIGGER* pcnt, 
- CE_USER_NOTIFICATION* pceun 
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* CeGetUserNotification  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Notify.lib, notify.lib] */
 BOOL CeGetUserNotification(
@@ -121,7 +97,7 @@ BOOL CeGetUserNotificationHandles(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* CeEventHasOccurred  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
 BOOL CeEventHasOccurred(
@@ -129,15 +105,5 @@ BOOL CeEventHasOccurred(
  TCHAR* pwszEndOfCommandLine
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct UserNotificationInfoHeader {HANDLE hNotification;DWORD dwStatus;CE_NOTIFICATION_TRIGGER* pcent;CE_USER_NOTIFICATION* pceun;} CE_NOTIFICATION_INFO_HEADER, *PCE_NOTIFICATION_INFO_HEADER;
-typedef struct UserNotificationTrigger {DWORD dwSize;DWORD dwType;DWORD dwEvent;WCHAR* lpszApplication;WCHAR* lpszArguments;SYSTEMTIME stStartTime;SYSTEMTIME stEndTime;} CE_NOTIFICATION_TRIGGER, *PCE_NOTIFICATION_TRIGGER;
-typedef struct UserNotificationType {DWORD ActionFlags;TCHAR* pwszDialogTitle;TCHAR* pwszDialogText;TCHAR* pwszSound;DWORD nMaxSound;DWORD dwReserved;} CE_USER_NOTIFICATION, *PCE_USER_NOTIFICATION;
 
 #endif /* _NOTIFY_ */

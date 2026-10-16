@@ -1798,7 +1798,7 @@
 #define ZONEID_EXCEPT 2
 #define ZONEID_INIT 0
 #define ZONEID_SECOND 1
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 212 && _WIN32_WCE < 400)) /* CE 2.12..399 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x212 && _WIN32_WCE < 0x400)) /* CE 2.12..399 */
 #define DB_E_BADCOLUMNID 80040E11
 #define DB_E_CANTCONVERTVALUE 80040E07
 #define DB_E_CANTFETCHBACKWARDS 80040E24
@@ -1813,10 +1813,10 @@
 #define DB_E_NOINDEX 80040E35
 #define DB_E_NOTABLE 80040E37
 #endif /* _WIN32_WCE */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 420 && _WIN32_WCE < 600)) /* CE 4.2..599 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x420 && _WIN32_WCE < 0x600)) /* CE 4.2..599 */
 #define DEF_BAUD_DIVISOR line
 #endif /* _WIN32_WCE */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 #define DBL_EPSILON 2.2204460492503131e-016
 #define DBL_MAX 1.7976931348623158e+308
 #define DBL_MIN 2.2250738585072014e-308

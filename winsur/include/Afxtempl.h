@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 16 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 8 extra decls
  */
 #ifndef _AFXTEMPL_
 #define _AFXTEMPL_
@@ -17,14 +17,7 @@
  * ================================================================ */
 
 /* function */
-CMap( int nBlockSize = 10 );
-TYPE& ElementAt( int nIndex );
 void FreeExtra( );
 void InitHashTable( UINT hashSize );
-POSITION InsertAfter( POSITION position, ARG_TYPE newElement );
-POSITION InsertBefore( POSITION position, ARG_TYPE newElement );
-BOOL RemoveKey( ARG_KEY key );
-void SetAt( int nIndex, ARG_TYPE newElement );
-void SetAtGrow( int nIndex, ARG_TYPE newElement ); throw( CMemoryException );
 
 #endif /* _AFXTEMPL_ */

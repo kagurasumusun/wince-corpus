@@ -18,7 +18,6 @@
 
 /* function */
 LONG AddRef( void );
-HRESULT QueryInterface( REFIID iid, void **ppvObject);
 LONG Release( void );
 
 #endif /* _UNKNOWN_ */

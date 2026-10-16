@@ -15,22 +15,9 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 5.0..599 */
 
 /* IAccessControl  [interface; shared; CE 5.0..599; Ole32.lib, Uuid.lib] */
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-HRESULT GetAllAccessRights( LPWSTR lpProperty, PACTRL_ACCESSW* ppAccessList, PTRUSTEEW* ppOwner, PTRUSTEEW* ppGroup );
-HRESULT GrantAccessRights( PACTRL_ACCESSW pAccessList );
-HRESULT IsAccessAllowed( PTRUSTEEW pTrustee, LPWSTR lpProperty, ACCESS_RIGHTS AccessRights, BOOL* pfAccessAllowed );
-HRESULT RevokeAccessRights( LPWSTR lpProperty, ULONG cTrustees, TRUSTEEW prgTrustees[] );
-HRESULT SetAccessRights( PACTRL_ACCESSW pAccessList );
-HRESULT SetOwner( PTRUSTEEW pOwner, PTRUSTEEW pGroup );
 
 #endif /* _IACCESS_ */

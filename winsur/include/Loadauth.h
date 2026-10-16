@@ -24,12 +24,4 @@
 #define WIN_CERT_TYPE_RESERVED_1 0x0003
 #define WIN_CERT_TYPE_X509 0x0001
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct WIN_CERTIFICATE { DWORD dwLength; WORD wRevision; WORD wCertificateType;BYTEbCertificate[];} WIN_CERTIFICATE, *LPWIN_CERTIFICATE;
-
 #endif /* _LOADAUTH_ */

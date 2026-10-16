@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 3 constants, 13 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 3 constants, 13 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _BT_DDI_
 #define _BT_DDI_
@@ -65,7 +65,7 @@ typedef union _event_context {
  ControllerEvent Event; 
 } HCIEventContext;
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* HCI_DataPacketDown_Out  [callback; ce-only; CE 4.0..699; Btd.lib] */
 typedef int (*HCI_DataPacketDown_Out)(
@@ -74,26 +74,13 @@ typedef int (*HCI_DataPacketDown_Out)(
 );
 #endif /* _WIN32_WCE */
 
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* HCI_CloseDeviceContext  [function; ce-only; CE 4.0..699; Btd.lib] */
-int HCI_CloseDeviceContext(
- HANDLE hDeviceContext
-);
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
+/* PBASEBAND_CONNECTION_DATA  [extra struct] */
 typedef struct _BASEBAND_CONNECTION_DATA{ USHORT hConnection; BD_ADDR baAddress; int cDataPacketsPending; UINT fLinkType : 1; UINT fEncrypted : 1; UINT fAuthenticated : 1; UINT fMode : 3;} BASEBAND_CONNECTION_DATA, *PBASEBAND_CONNECTION_DATA;
+
+/* clock_offset  [extra struct] */
 struct InquiryResultBuffer {DWORD dwTick;BD_ADDR ba;unsigned charpage_scan_repetition_mode;unsigned charpage_scan_period_mode;unsigned charpage_scan_mode;unsigned int class_of_device;unsigned short clock_offset;};
+
+/* pop  [extra struct] */
 #pragma pack(push, 1)
 typedef struct __bd_addr {
   union {
@@ -106,5 +93,17 @@ typedef struct __bd_addr {
   unsigned short NAP;
 } BD_ADDR;
 #pragma pack(pop);
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
+
+/* HCI_CloseDeviceContext  [function; ce-only; CE 4.0..699; Btd.lib] */
+int HCI_CloseDeviceContext(
+ HANDLE hDeviceContext
+);
+#endif /* _WIN32_WCE */
 
 #endif /* _BT_DDI_ */

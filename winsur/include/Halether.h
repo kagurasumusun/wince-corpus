@@ -36,7 +36,7 @@ EDBG_ADAPTER;
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 3.0..399 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400)) /* CE 3.0..399 */
 
 /* EdbgInit  [function; ce-only; CE 3.0..399] */
 BOOL EdbgInit(void);
@@ -45,17 +45,9 @@ BOOL EdbgInit(void);
 void EdbgOutputDebugString( 
 const char * fmt, 
 const char valist... );
-
-/* EdbgSendUDP  [function; ce-only; CE 3.0..399] */
-BOOL EdbgSendUDP( 
-BYTE *pFrameBuffer, 
-EDBG_ADDR *pDestAddr, 
-USHORT SrcPort, 
-BYTE *pData , 
-UINT16 cwLength );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 3.0..399, 5.0..599 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 3.0..399, 5.0..599 */
 
 /* OEMEthDisableInts  [function; ce-only; CE 3.0..399, 5.0..599; Hal.lib] */
 void OEMEthDisableInts (void);
@@ -67,27 +59,13 @@ void OEMEthEnableInts (void);
 BOOL OEMEthInit(EDBG_ADAPTER* pAdapter );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-
-/* OEMEthGetFrame  [function; ce-only; CE 3.0..399, 5.0..699; Hal.lib, hal.lib] */
-BOOL OEMEthGetFrame(
- BYTE* pData, 
- UINT16* pwLength 
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* OEMEthGetSecs  [function; ce-only; CE 3.0..399, 5.0..699; Hal.lib, hal.lib] */
 DWORD OEMEthGetSecs (void);
 
 /* OEMEthISR  [function; ce-only; CE 3.0..399, 5.0..699; Hal.lib, hal.lib] */
 void OEMEthISR (void);
-
-/* OEMEthQueryClientInfo  [function; ce-only; CE 3.0..399, 5.0..699; Hal.lib, hal.lib] */
-BOOL OEMEthQueryClientInfo(
- UCHAR Id, 
- EDBG_ADDR* pPeerAddr, 
- PUCHAR pWindowSize, 
- PUCHAR* ppBufferPool 
-);
 
 /* OEMEthSendFrame  [function; ce-only; CE 3.0..399, 5.0..699; Hal.lib, hal.lib] */
 BOOL OEMEthSendFrame( 
@@ -96,7 +74,7 @@ BOOL OEMEthSendFrame(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 600)) /* CE 4.0..599 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x600)) /* CE 4.0..599 */
 
 /* CallEdbgDeregisterClient  [function; ce-only; CE 4.0..599; Hal.lib] */
 BOOL CallEdbgDeregisterClient(
@@ -133,7 +111,7 @@ BOOL CallEdbgSetDebug(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* EbootEtherReadData  [function; ce-only; CE 5.0..699; Hal.lib, hal.lib] */
 BOOL EbootEtherReadData(

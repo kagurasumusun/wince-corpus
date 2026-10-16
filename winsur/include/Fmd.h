@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2 constants, 18 declarations, 2 outlines, 0 base types, 0 extra macros, 8 extra decls
+ * 2 constants, 16 declarations, 3 outlines, 0 base types, 0 extra macros, 6 extra decls
  */
 #ifndef _FMD_
 #define _FMD_
@@ -23,6 +23,8 @@
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
+
+/* FMDInterface  [struct; ce-only] */
 
 /* ReservedReq  [struct; ce-only] */
 
@@ -52,102 +54,29 @@ typedef struct _RawWriteBlocksReq {
  DWORD cbBuffer;
 } RawWriteBlocksReq, *PRawWriteBlocksReq;
 
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* FMD_Deinit  [function; ce-only; CE 4.0..699] */
-BOOL FMD_Deinit(
-PVOID hFMD
-);
-
-/* FMD_EraseBlock  [function; ce-only; CE 4.0..699] */
-BOOL FMD_EraseBlock(
- BLOCK_ID blockID
-);
-
-/* FMD_GetBlockStatus  [function; ce-only; CE 4.0..699] */
-DWORD FMD_GetBlockStatus(
- BLOCK_ID blockID
-);
-
-/* FMD_GetInfo  [function; ce-only; CE 4.0..699] */
-BOOL FMD_GetInfo(
- PFlashInfo pFlashInfo
-);
-
-/* FMD_Init  [function; ce-only; CE 4.0..699] */
-PVOID FMD_Init(
- LPCTSTR lpActiveReg,
- PPCI_REG_INFO pRegIn,
- PPCI_REG_INFO pRegOut
-);
-
-/* FMD_OEMIoControl  [function; ce-only; CE 4.0..699] */
-FMD_OEMIoControl(
- DWORD dwIoControlCode,
- PBYTE pInBuf,
- DWORD nInBufSize,
- PBYTE pOutBuf,
- DWORD nOutBufSize,
- PDWORD pBytesReturned
-);
-
-/* FMD_PowerDown  [function; ce-only; CE 4.0..699] */
-VOID FMD_PowerDown(VOID);
-
-/* FMD_PowerUp  [function; ce-only; CE 4.0..699] */
-VOID FMD_PowerUp(VOID);
-
-/* FMD_ReadSector  [function; ce-only; CE 4.0..699] */
-BOOL FMD_ReadSector(
- SECTOR_ADDR startSectorAddr,
- LPBYTE pSectorBuff,
- PSectorInfo pSectorInfoBuff,
- DWORD dwNumSectors
-);
-
-/* FMD_SetBlockStatus  [function; ce-only; CE 4.0..699] */
-BOOL FMD_SetBlockStatus(
- BLOCK_ID blockID,
- DWORD dwStatus
-);
-
-/* FMD_WriteSector  [function; ce-only; CE 4.0..699] */
-BOOL FMD_WriteSector(
- SECTOR_ADDR startSectorAddr,
- LPBYTE pSectorBuff,
- PSectorInfo pSectorInfoBuff,
- DWORD dwNumSectors
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* FMD_GetInfoEx  [function; ce-only; CE 6.0..699] */
-BOOL FMD_GetInfoEx(
- PFlashInfoEx pFlashInfo,
- PDWORD pdwNumRegions
-);
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _FMDInfo {
-  DWORD cbSize;
-  FLASH_TYPE flashType;
-  DWORD dwBaseAddress;
-  DWORD dwNumRegions;
-  DWORD dwNumReserved;
-}FMDInfo, *PFMDInfo;
-typedef struct _FMDInterface {DWORDcbSize;PFN_INITpInit;PFN_DEINITpDeInit; PFN_GETINFO pGetInfo; PFN_GETBLOCKSTATUS pGetBlockStatus; PFN_SETBLOCKSTATUS pSetBlockStatus; PFN_READSECTOR pReadSector; PFN_WRITESECTOR pWriteSector; PFN_ERASEBLOCK pEraseBlock; PFN_POWERUP pPowerUp; PFN_POWERDON pPowerDown PFN_GETPHYSSECTORADDR pGetPhysSectorAddr; PFN_GETINFOEX pGetInfoEx;PFN_OEMIOCONTROLpOEMIoControl; }FMDInterface, *PFMDInterface;
+/* PFlashInfo  [extra struct] */
 typedef struct _FlashInfo {FLASH_TYPEflashType;DWORDdwNumBlocks;DWORDdwBytesPerBlock; WORD wSectorsPerBlock; WORD wDataBytesPerSector;}FlashInfo, *PFlashInfo;
+
+/* PSectorInfo  [extra struct] */
+typedef struct _SectorInfo {DWORDdwReserved1;BYTEbOEMReserved; BYTE bBadBlock; WORD wReserved2;}SectorInfo, *PSectorInfo;
+
+/* PSECTORINFO  [extra struct] */
+typedef struct _SECTORINFO {
+  DWORD dwReserved1;
+  BYTE bOEMReserved;
+  BYTE bBadBlock;
+  BYTE wReserved2;
+} SECTORINFO, *PSECTORINFO;
+
+/* PRawWriteBlocksReq  [extra struct] */
+typedef struct _RawWriteBlocksReq {
+  DWORD dwStartBlock;
+  DWORD dwNumBlocks;
+  LPBYTE pBuffer;
+  DWORD cbBuffer;
+} RawWriteBlocksReq, *PRawWriteBlocksReq;
+
+/* PFlashInfoEx  [extra struct] */
 typedef struct _FlashInfoEx {
   DWORDcbSize;
   FLASH_TYPEflashType;
@@ -156,24 +85,37 @@ typedef struct _FlashInfoEx {
   DWORD dwNumRegions;
   FlashRegion region[1];
 } FlashInfoEx, *PFlashInfoEx;
-typedef struct _RawWriteBlocksReq {
-  DWORD dwStartBlock;
-  DWORD dwNumBlocks;
-  LPBYTE pBuffer;
-  DWORD cbBuffer;
-} RawWriteBlocksReq, *PRawWriteBlocksReq;
-typedef struct _ReservedReq {
-  CHAR szName[RESERVED_NAME_LEN];
-  DWORD dwStart;
-  DWORD dwLen;
-  LPBYTE pBuffer;
-} ReservedReq, *PReservedReq;
-typedef struct _SECTORINFO {
-  DWORD dwReserved1;
-  BYTE bOEMReserved;
-  BYTE bBadBlock;
-  BYTE wReserved2;
-} SECTORINFO, *PSECTORINFO;
-typedef struct _SectorInfo {DWORDdwReserved1;BYTEbOEMReserved; BYTE bBadBlock; WORD wReserved2;}SectorInfo, *PSectorInfo;
+
+/* PFMDInfo  [extra struct] */
+typedef struct _FMDInfo {
+  DWORD cbSize;
+  FLASH_TYPE flashType;
+  DWORD dwBaseAddress;
+  DWORD dwNumRegions;
+  DWORD dwNumReserved;
+}FMDInfo, *PFMDInfo;
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
+
+/* FMD_Deinit  [function; ce-only; CE 4.0..699] */
+BOOL FMD_Deinit(
+PVOID hFMD
+);
+
+/* FMD_GetInfo  [function; ce-only; CE 4.0..699] */
+BOOL FMD_GetInfo(
+ PFlashInfo pFlashInfo
+);
+
+/* FMD_PowerDown  [function; ce-only; CE 4.0..699] */
+VOID FMD_PowerDown(VOID);
+
+/* FMD_PowerUp  [function; ce-only; CE 4.0..699] */
+VOID FMD_PowerUp(VOID);
+#endif /* _WIN32_WCE */
 
 #endif /* _FMD_ */

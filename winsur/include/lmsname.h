@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define NWSAP_DISPLAY_NAME TEXT("NW
 #define SERVER_DISPLAY_NAME TEXT("Server")
 #define SERVICE_AFP TEXT("AFP")
 #define SERVICE_ALERTER TEXT("ALERTER")

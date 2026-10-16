@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 7 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 6 extra decls
  */
 #ifndef _CCTRANSPORT_IDL_
 #define _CCTRANSPORT_IDL_
@@ -18,11 +18,6 @@
 
 /* function */
 HRESULT Bandwidth( DWORD* pdwRate);
-HRESULT Buffering( [in] VARIANT_BOOL bBuffering);
-HRESULT ID ( BSTR* pbstrStreamId );
-HRESULT IsDataAvailable( VARIANT_BOOL* pbDataAvailable);
-HRESULT MTU( DWORD* pdwMTU);
 HRESULT Recv( DWORD dwTimeout, BYTE*pBuffer, DWORD*pcbBuffer );
-HRESULT SupportsNonUniqueStreamId ( VARIANT_BOOL*pbSupported );
 
 #endif /* _CCTRANSPORT_IDL_ */

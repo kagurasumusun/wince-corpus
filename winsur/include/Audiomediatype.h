@@ -11,18 +11,4 @@
 #define _AUDIOMEDIATYPE_
 
 
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-
-/* CreateAudioMediaType  [function; shared; CE 3.0..399, 5.0..699; entity-headers] */
-STDAPI CreateAudioMediaType(
- const WAVEFORMATEX* pwfx,
- AM_MEDIA_TYPE* pmt,
- BOOL bSetFormat
-);
-#endif /* _WIN32_WCE */
-
 #endif /* _AUDIOMEDIATYPE_ */

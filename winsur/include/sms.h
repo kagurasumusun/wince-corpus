@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 90 constants, 31 declarations, 5 outlines, 0 base types, 0 extra macros, 13 extra decls
+ * 80 constants, 31 declarations, 5 outlines, 0 base types, 0 extra macros, 11 extra decls
  */
 #ifndef _SMS_
 #define _SMS_
@@ -17,12 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define BPSGS_UNKNOWN 0
-#define NOTIFICATIONPSIT_LINE1 1
-#define NOTIFICATIONPSIT_LINE2 2
-#define NOTIFICATIONPSIT_NONE 0
-#define NOTIFICATIONPSMWT_NONE 0
-#define PSRO_NONE 0
 #define SMS_E_BADPARAM 0x0208
 #define SMS_E_BUFFERTOOSMALL 0x0102
 #define SMS_E_DESTINATION 0x020b
@@ -97,16 +91,12 @@
 #define SMS_MSGPROTOCOL_VOICEPHONE 0x00000006
 #define SMS_MSGPROTOCOL_X400 0x00000011
 #define SMS_S_NOSUCHREGISTRATION 0x0003
-#define SMSAT_UNKNOWN 0
-#define SMSDE_OPTIMAL 0
 #define TEXTPSEXTPARM_ALL 0x00000003
 #define TEXTPSEXTPARM_CALLBACK 0x00000001
 #define TEXTPSEXTPARM_NONE 0x00000000
 #define TEXTPSEXTPARM_PRIORITY 0x00000002
 #define TEXTPSPRI_NONE 0
 #define TEXTPSPRI_NORMAL 1
-#define WCMPPSMT_UNSUPPORTED 0
-#define WDPPSPA_8_BIT_PORT_NUMBERS 0
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
@@ -126,187 +116,17 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* SmsClearMessageNotification  [function; ce-only; CE 6.0..699; sms.lib] */
 HRESULT SmsClearMessageNotification (
 const LPCTSTR tszProtocolName
 );
 
-/* SmsClose  [function; ce-only; CE 6.0..699; sms.lib] */
-HRESULT SmsClose (
-const SMS_HANDLE smshHandle
-);
-
-/* SmsGetBroadcastMsgRanges  [function; ce-only; CE 6.0..699; sms.lib] */
-HRESULT SmsGetBroadcastMsgRanges (
-const SMS_BROADCAST_RANGES* psmsbrBroadcastRanges
-);
-
-/* SmsGetMessageSize  [function; ce-only; CE 6.0..699; sms.lib] */
-HRESULT SmsGetMessageSize (
- const SMS_HANDLE smshHandle,
- DWORD* const pdwDataSize
-);
-
-/* SmsGetMessageStatus  [function; ce-only; CE 6.0..699; sms.lib] */
-HRESULT SmsGetMessageStatus (
- const SMS_HANDLE smshHandle,
- SMS_MESSAGE_ID smsmidMessageID,
- SMS_STATUS_INFORMATION* psmssiStatusInformation,
- const DWORD dwTimeout
-);
-
-/* SmsGetPhoneNumber  [function; ce-only; CE 6.0..699; sms.lib] */
-HRESULT SmsGetPhoneNumber (
- const SMS_ADDRESS* psmsaAddress
-);
-
-/* SmsGetSMSC  [function; ce-only; CE 6.0..699; sms.lib] */
-HRESULT SmsGetSMSC (
- SMS_ADDRESS* psmsaSMSCAddress
-);
-
 /* SmsGetTime  [function; ce-only; CE 6.0..699; sms.lib] */
 HRESULT SmsGetTime (
  const SYSTEMTIME* ptsCurrentTime,
  const DWORD* pdwErrorMargin);
-
-/* SmsOpen  [function; ce-only; CE 6.0..699; sms.lib] */
-HRESULT SmsOpen (
- const LPCTSTR ptsMessageProtocol,
- const DWORD dwMessageModes,
- const SMS_HANDLE* psmshHandle,
- const HANDLE* phMessageAvailableEvent);
-
-/* SmsReadMessage  [function; ce-only; CE 6.0..699; sms.lib] */
-HRESULT SmsReadMessage (
- const SMS_HANDLE smshHandle,
- SMS_ADDRESS* const psmsaSMSCAddress,
- SMS_ADDRESS* const psmsaSourceAddress,
- SYSTEMTIME* const pstReceiveTime,
- bcount(dwBufferSize) BYTE* pbBuffer,
- DWORD dwBufferSize,
- bcount(dwProviderSpecificDataBuffer) BYTE* pbProviderSpecificBuffer,
- DWORD dwProviderSpecificDataBuffer,
- DWORD* pdwBytesRead
-);
-
-/* SmsSendMessage  [function; ce-only; CE 6.0..699; sms.lib] */
-HRESULT SmsSendMessage (
- const SMS_HANDLE smshHandle,
- const SMS_ADDRESS* psmsaSMSCAddress,
- const SMS_ADDRESS* psmsaDestinationAddress,
- const SYSTEMTIME* pstValidityPeriod,
- const BYTE* pbData,
- const DWORD dwDataSize,
- const BYTE* pbProviderSpecificData,
- const DWORD dwProviderSpecificDataSize,
- const SMS_DATA_ENCODING smsdeDataEncoding,
- const DWORD dwOptions,
- SMS_MESSAGE_ID* psmsmidMessageID
-);
-
-/* SmsSetBroadcastMsgRanges  [function; ce-only; CE 6.0..699; sms.lib] */
-HRESULT SmsSetBroadcastMsgRanges (
-const SMS_BROADCAST_RANGES* psmsbrBroadcastRanges);
-
-/* SmsSetMessageNotification  [function; ce-only; CE 6.0..699; sms.lib] */
-HRESULT SmsSetMessageNotification (
-const SMSREGISTRATIONDATA* psmsrd
-);
-
-/* SmsSetSMSC  [function; ce-only; CE 6.0..699; sms.lib] */
-HRESULT SmsSetSMSC (
-const SMS_ADDRESS *psmsaSMSCAddress);
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* enum */
-enum BROADCAST_PROVIDER_SPECIFIC_GEOGRAPHICAL_SCOPE {
-  BPSGS_UNKNOWN = 0,
-  BPSGS_CELL_DISPLAY_IMMEDIATE,
-  BPSGS_CELL,
-  BPSGS_PLMN,
-  BPSGS_LOCATION_AREA,
-};
-enum NOTIFICATION_PROVIDER_SPECIFIC_MSG_WAITING_TYPE {
-  NOTIFICATIONPSMWT_NONE = 0,
-  NOTIFICATIONPSMWT_GENERIC,
-  NOTIFICATIONPSMWT_VOICEMAIL,
-  NOTIFICATIONPSMWT_FAX,
-  NOTIFICATIONPSMWT_EMAIL,
-  NOTIFICATIONPSMWT_OTHER,
-};
-enum PROVIDER_SPECIFIC_REPLACE_OPTION {
-  PSRO_NONE = 0,
-  PSRO_REPLACE_TYPE1,
-  PSRO_REPLACE_TYPE2,
-  PSRO_REPLACE_TYPE3,
-  PSRO_REPLACE_TYPE4,
-  PSRO_REPLACE_TYPE5,
-  PSRO_REPLACE_TYPE6,
-  PSRO_REPLACE_TYPE7,
-  PSRO_RETURN_CALL,
-  PSRO_DEPERSONALIZATION,
-};
-enum SMS_ADDRESS_TYPE {
-  SMSAT_UNKNOWN=0,
-  SMSAT_INTERNATIONAL,
-  SMSAT_NATIONAL,
-  SMSAT_NETWORKSPECIFIC,
-  SMSAT_SUBSCRIBER,
-  SMSAT_ALPHANUMERIC,
-  SMSAT_ABBREVIATED
-};
-enum SMS_DATA_ENCODING {
-  SMSDE_OPTIMAL=0,
-  SMSDE_GSM,
-  SMSDE_UCS2,
-};
-enum TEXT_PROVIDER_SPECIFIC_PRIORITY_TYPE {
-  TEXTPSPRI_NONE = 0,
-  TEXTPSPRI_NORMAL = 1,
-  TEXTPSPRI_INTERACTIVE,
-  TEXTPSPRI_URGENT,
-  TEXTPSPRI_EMERGENCY, };
-enum WCMP_PROVIDER_SPECIFIC_MESSAGE_TYPE {
-  WCMPPSMT_UNSUPPORTED = 0,
-  WCMPPSMT_PORT_UNREACHABLE,
-  WCMPPSMT_MESSAGE_TOO_BIG,
-  WCMPPSMT_ECHO_REQUEST,
-  WCMPPSMT_ECHO_REPLY,
-};
-enum WDP_PROVIDER_SPECIFIC_PORT_ADDRESSING { WDPPSPA_8_BIT_PORT_NUMBERS = 0, WDPPSPA_16_BIT_PORT_NUMBERS, };
-
-/* struct */
-typedef struct smsregistrationdata_tag {
-  DWORD cbSize;
-  TCHAR tszAppName[SMS_MAX_APPNAME_LENGTH];
-  TCHAR tszParams[SMS_MAX_PARAMS_LENGTH];
-  TCHAR tszProtocolName[SMS_MAX_PROTOCOLNAME_LENGTH];
-} SMSREGISTRATIONDATA, *LPSMSREGISTRATIONDATA;
-typedef struct sms_address_tag { SMS_ADDRESS_TYPE smsatAddressType; TCHAR ptsAddress[SMS_MAX_ADDRESS_LENGTH]; } SMS_ADDRESS, *LPSMS_ADDRESS;
-typedef struct sms_broadcast_ranges_tag {
-  DWORD cbSize;
-  DWORD dwParams;
-  DWORD dwNumRanges;
-  DWORD dwBroadcastMsgLangs;
-  BOOL bAccept;
-  SMS_RANGE smsrBroadcastRanges[];
-} SMS_BROADCAST_RANGES, *LPSMS_BROADCAST_RANGES;
-typedef struct sms_range_tag { DWORD dwMinimum; DWORD dwMaximum; } SMS_RANGE, *LPSMS_RANGE;
-typedef struct sms_status_information_tag {
-  SMS_MESSAGE_ID smsmidMessageID;
-  DWORD dwMessageStatus0;
-  DWORD dwMessageStatus1;
-  SMS_ADDRESS smsaRecipientAddress;
-  SYSTEMTIME stServiceCenterTimeStamp;
-  SYSTEMTIME stDischargeTime;
-} SMS_STATUS_INFORMATION, *LPSMS_STATUS_INFORMATION;
 
 #endif /* _SMS_ */

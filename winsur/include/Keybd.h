@@ -11,13 +11,4 @@
 #define _KEYBD_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-struct KBDI_VKEY_TO_UNICODE_INFO { UINT32 cbToUnicodeState; UINT32 cMaxToUnicodeCharacters;};
-struct KBDI_AUTOREPEAT_INFO {INT32 CurrentInitialDelay; INT32 CurrentRepeatRate; INT32 cInitialDelaysSelectable; INT32 cRepeatRatesSelectable; };
-
 #endif /* _KEYBD_ */

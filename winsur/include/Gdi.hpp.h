@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 20 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _GDI_HPP_
 #define _GDI_HPP_
@@ -17,7 +17,6 @@
  * ================================================================ */
 
 /* function */
-VOID WINAPI CreatePermanentDIBSection( HDC hdc, CONST BITMAPINFO* pbmi, UINT iUsage, void** ppvBits, HANDLE hSection, DWORD dwOffset );
 int DibByteWidth( unsigned int N, unsigned int W );
 int DibSize( unsigned int N, unsigned int W, int H );
 

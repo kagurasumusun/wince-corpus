@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 39 constants, 2 declarations, 0 outlines, 0 base types, 0 extra macros, 19 extra decls
+ * 39 constants, 2 declarations, 0 outlines, 0 base types, 0 extra macros, 13 extra decls
  */
 #ifndef _MSXML2_
 #define _MSXML2_
@@ -61,7 +61,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 5.0..599 */
 
 /* ISAXDeclHandler  [function; ce-only; CE 5.0..599; Uuid.lib] */
 ... SAXXMLReader * r = ...
@@ -84,20 +84,10 @@ HRESULT EndEntity(const wchar_t* pwchName,intcchName);
 HRESULT ParseURL(const wchar_t* pwchUrl);
 ... SAXXMLReader * r = ... SAXDeclHandler * dh = new SAXDeclHandler(); r->putProperty("http://xml.org/sax/properties/declaration-handler",dh);
 ... SAXXMLReader * r = ... SAXLexicalHandler * lh = new SAXLexicalHandler (); r->putProperty("http://xml.org/sax/properties/lexical-handler",lh);
-HRESULT get_data(BSTR* data);
 HRESULT get_length(long* dataLength);
-HRESULT get_namespaceURI(BSTR* namespaceURI);
-HRESULT get_publicId(BSTR* publicID);
 HRESULT get_readyState(long* value);
-HRESULT get_responseBody(VARIANT* pvarBody);
-HRESULT get_responseStream(VARIANT* pvarBody);
-HRESULT get_responseText(BSTR* pbstrBody);
 HRESULT get_responseXML(Idispatch** ppBody);
 HRESULT get_status(long* plStatus);
-HRESULT get_statusText(BSTR* pbstrStatus);
-HRESULT get_systemId(VARIANT* systemID);
-HRESULT get_url(BSTR* urlString);
 HRESULT put_data(BSTRdata);
-HRESULT put_onreadystatechange(VARIANT readystatechangeSink);
 
 #endif /* _MSXML2_ */

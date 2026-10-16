@@ -11,12 +11,4 @@
 #define _CMEDIA_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct tagCS_DATAFORMAT_VIDEOINFOHEADER { CSDATAFORMAT DataFormat; CS_VIDEOINFOHEADER VideoInfoHeader; } CS_DATAFORMAT_VIDEOINFOHEADER, *PCS_DATAFORMAT_VIDEOINFOHEADER;
-
 #endif /* _CMEDIA_ */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 14 constants, 0 declarations, 2 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 14 constants, 0 declarations, 2 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WZCAPI_
 #define _WZCAPI_
@@ -39,13 +39,5 @@
 /* INTF_ENTRY  [struct; ce-only] */
 
 /* WZC_WLAN_CONFIG  [struct; ce-only] */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct{ ULONG Length; DWORD dwCtlFlags; NDIS_802_11_MAC_ADDRESS MacAddress; UCHAR Reserved[2]; NDIS_802_11_SSID Ssid; ULONG Privacy; NDIS_802_11_RSSI Rssi; NDIS_802_11_NETWORK_TYPE NetworkTypeInUse; NDIS_802_11_CONFIGURATION Configuration; NDIS_802_11_NETWORK_INFRASTRUCTURE InfrastructureMode; NDIS_802_11_RATES SupportedRates; ULONG KeyIndex; ULONG KeyLength; UCHAR KeyMaterial[WZCCTL_MAX_WEPK_MATERIAL]; NDIS_802_11_AUTHENTICATION_MODE AuthenticationMode; RAW_DATA rdUserData; WZC_EAPOL_PARAMS EapolParams; RAW_DATA rdNetworkData; ULONG WPAMCastCipher; ULONG ulMediaType;} WZC_WLAN_CONFIG, *PWZC_WLAN_CONFIG;
 
 #endif /* _WZCAPI_ */

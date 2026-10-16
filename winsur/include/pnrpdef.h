@@ -11,12 +11,4 @@
 #define _PNRPDEF_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _PNRP_CLOUD_ID { INT AddressFamily; PNRP_SCOPE Scope; ULONG ScopeID;} PNRP_CLOUD_ID, *PPNRP_CLOUD_ID;
-
 #endif /* _PNRPDEF_ */

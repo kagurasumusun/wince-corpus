@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 28 constants, 13 declarations, 9 outlines, 0 base types, 0 extra macros, 24 extra decls
+ * 13 constants, 13 declarations, 9 outlines, 0 base types, 0 extra macros, 20 extra decls
  */
 #ifndef _OCIDL_
 #define _OCIDL_
@@ -17,12 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define DVASPECTINFOFLAG_CANOPTIMIZE 1
-#define DVEXTENT_CONTENT 0
-#define HITRESULT_CLOSE 2
-#define HITRESULT_HIT 3
-#define HITRESULT_OUTSIDE 0
-#define HITRESULT_TRANSPARENT 1
 #define mpReadyStateComplete 4
 #define MpReadyStateComplete 4
 #define mpReadyStateInteractive 3
@@ -31,15 +25,6 @@
 #define MpReadyStateLoading 1
 #define mpReadyStateUninitialized 0
 #define MpReadyStateUninitialized 0
-#define READYSTATE_COMPLETE 4
-#define READYSTATE_INTERACTIVE 3
-#define READYSTATE_LOADED 2
-#define READYSTATE_LOADING 1
-#define READYSTATE_UNINITIALIZED 0
-#define VIEWSTATUS_DVASPECTOPAQUE 4
-#define VIEWSTATUS_DVASPECTTRANSPARENT 8
-#define VIEWSTATUS_OPAQUE 1
-#define VIEWSTATUS_SOLIDBKGND 2
 #define XFORMCOORDS_CONTAINERTOHIMETRIC 0x8
 #define XFORMCOORDS_EVENTCOMPAT 0x10
 #define XFORMCOORDS_HIMETRICTOCONTAINER 0x4
@@ -50,7 +35,7 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 3.0..399, 5.0..599 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 3.0..399, 5.0..599 */
 
 /* IClassFactory  [interface; shared; CE 3.0..399, 5.0..599; Ole32.lib, Uuid.lib] */
 
@@ -63,7 +48,7 @@
 /* IPersistStreamInit  [interface; shared; CE 3.0..399, 5.0..599; Ole32.lib, Uuid.lib] */
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 5.0..599 */
 
 /* IProvideClassInfo  [interface; shared; CE 5.0..599; Ole32.lib, Uuid.lib] */
 
@@ -93,7 +78,7 @@ typedef struct tagLICINFO {
  BOOL fLicVerified; 
 } LICINFO;
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 3.0..399, 5.0..599 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 3.0..399, 5.0..599 */
 
 /* IEnumConnectionPoints  [function, interface; shared; CE 3.0..399, 5.0..599; Ole32.lib, Uuid.lib] */
 HRESULT Next( 
@@ -123,12 +108,7 @@ HRESULT Clone(
 /*   pUnk */
 /*   dwCookie */
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* enum */
+/* READYSTATE  [extra enum] */
 typedef enum tagREADYSTATE {
   READYSTATE_UNINITIALIZED = 0,
   READYSTATE_LOADING = 1,
@@ -137,29 +117,23 @@ typedef enum tagREADYSTATE {
   READYSTATE_COMPLETE = 4
 } READYSTATE;
 
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
 /* function */
-HRESULT Advise( IUnknown *pUnk, DWORD *pdwCookie );
-HRESULT CreateInstanceLic( IUnknown *pUnkOuter, IUnknown *pUnkReserved, REFIID riid, BSTR bstrKey, void **ppvObject );
 HRESULT EnumConnectionPoints( IEnumConnectionPoints **ppEnum );
 HRESULT EnumConnections( IEnumConnections **ppEnum );
-HRESULT FindConnectionPoint( REFIID riid, IConnectionPoint **ppCP );
-HRESULT GetConnectionInterface( IID *pIID );
 HRESULT GetConnectionPointContainer( IConnectionPointContainer **ppCPC );
-HRESULT GetExtendedControl( IDispatch** ppDisp);
 HRESULT GetLicInfo( LICINFO *pLicInfo );
-HRESULT GetNaturalExtent( DWORD dwAspect, LONG lindex, DVTARGETDEVICE* ptd, HDC hicTargetDev, DVEXTENTINFO* pExtentInfo, LPSIZEL pSizel );
 HRESULT GetPages( CAUUID *pPages //Pointer to structure );
-HRESULT GetRect( DWORD dwAspect, LPRECTL pRect );
-HRESULT GetSizeMax( ULARGE_INTEGER *pcbSize );
 HRESULT GetViewStatus( DWORD* pdwStatus );
 HRESULT LockInPlaceActive( BOOL fLock);
 HRESULT OnControlInfoChanged(void);
 HRESULT OnFocus( BOOL fGotFocus);
-HRESULT QueryHitPoint( DWORD dwAspect, LPRECT pRectBounds, POINTL ptlLoc, LONG lCloseHint, DWORD* pHitResult );
 HRESULT QueryHitRect( DWORD dwAspect, LPRECT pRectBounds, LPRECT pRectLoc, LONG lCloseHint, DWORD* pHitResult );
-HRESULT RequestLicKey( DWORD dwReserved, BSTR *pbstrKey );
 HRESULT ShowPropertyFrame(void);
-HRESULT TransformCoords( POINTL* pPtlHimetric , POINTF* pPtfContainer , DWORD dwFlags);
 HRESULT Unadvise( DWORD dwCookie );
 
 #endif /* _OCIDL_ */

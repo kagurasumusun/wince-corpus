@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 3 constants, 20 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 3 constants, 20 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _CONTROLDEFINITIONS_
 #define _CONTROLDEFINITIONS_
@@ -120,7 +120,7 @@ typedef struct _PH_MENU_SCREEN_PARAMETERS
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* PHCreateLabeledEditDisplayItem  [function; ce-only; CE 6.0..699; PhCommon.dll] */
 HRESULT PHCreateLabeledEditDisplayItem(
@@ -136,11 +136,6 @@ HRESULT PHCreateLabeledEditDisplayItem(
 HRESULT PHCreateTextDisplayItem(
  WCHAR* pText,
  IVoIPDisplayItem** ppItem
-);
-
-/* PHDialogScreen  [function; ce-only; CE 6.0..699; PhCommon.dll] */
-BOOL PHDialogScreen(
-PH_DIALOG_SCREEN_PARAMETERS* pParameters
 );
 
 /* PHDrawBackground  [function; ce-only; CE 6.0..699; PhCommon.dll] */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 9 constants, 2 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 9 constants, 1 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _CREDMGR_
 #define _CREDMGR_
@@ -26,36 +26,5 @@
 #define CRED_TYPE_GENERIC 1
 #define CRED_TYPE_KERBEROS_PASSWORD 6
 #define CRED_TYPE_NTLM_PASSWORD 5
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* CeCredRead  [function; ce-only; CE 5.0..699; Secur32.lib, secur32.lib] */
-CeCredRead( 
- PCWSTR pszTarget,
- DWORD dwCredType,
- DWORD dwFlags,
- PCREDENTIAL pCred 
-);
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _CREDENTIAL {
-  DWORD Flags;
-  DWORD Type;
-  FILETIME LastWritten;
-  DWORD CredentialBlobSize;
-  LPBYTE CredentialBlob;
-  DWORD Persist;
-  LPTSTR UserName;
-} CREDENTIAL, *PCREDENTIAL;
 
 #endif /* _CREDMGR_ */

@@ -11,13 +11,4 @@
 #define _USBMSC_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _TRANSPORT_COMMAND { DWORD Flags; DWORD Timeout; DWORD Length; DWORD dwLun; PVOID CommandBlock;} TRANSPORT_COMMAND, *PTRANSPORT_COMMAND;
-typedef struct _TRANSPORT_DATA_BUFFER { DWORD RequestLength; DWORD TransferLength; PVOID DataBlock;} TRANSPORT_DATA, *PTRANSPORT_DATA;
-
 #endif /* _USBMSC_ */

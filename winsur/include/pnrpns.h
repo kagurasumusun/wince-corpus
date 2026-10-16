@@ -11,13 +11,4 @@
 #define _PNRPNS_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _PNRPCLOUDINFO { DWORD dwSize; PNRP_CLOUD_ID Cloud; PNRP_CLOUD_STATE enCloudState; PNRP_CLOUD_FLAGS enCloudFlags;} PNRPCLOUDINFO, *PPNRPCLOUDINFO;
-typedef struct _PNRPINFO { DWORD dwSize; LPWSTR lpwszIdentity; DWORD nMaxResolve; DWORD dwTimeout; DWORD dwLifetime; PNRP_RESOLVE_CRITERIA enResolveCriteria; DWORD dwFlags; SOCKET_ADDRESS saHint; PNRP_REGISTERED_ID_STATE enNameState;} PNRPINFO, *PPNRPINFO;
-
 #endif /* _PNRPNS_ */

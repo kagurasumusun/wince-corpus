@@ -371,124 +371,12 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-
-/* MQCloseCursor  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
-HRESULT APIENTRY MQCloseCursor(
- HANDLE hCursor
-);
-
-/* MQCloseQueue  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
-HRESULT APIENTRY MQCloseQueue(
- QUEUEHANDLE hQueue
-);
-
-/* MQCreateCursor  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
-HRESULT APIENTRY MQCreateCursor(
- QUEUEHANDLE hQueue,
- PHANDLE phCursor
-);
-
-/* MQCreateQueue  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
-HRESULT APIENTRY MQCreateQueue(
- PSECURITY_DESCRIPTOR pSecurityDescriptor,
- MQQUEUEPROPS* pQueueProps,
- LPWSTR lpwcsFormatName,
- LPDWORD lpdwFormatNameLength
-);
-
-/* MQDeleteQueue  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
-HRESULT APIENTRY MQDeleteQueue(
- LPCWSTR lpwcsFormatName
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* MQFreeMemory  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
 VOID MQFreeMemory(
  PVOID pvMemory
 );
-
-/* MQGetMachineProperties  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
-HRESULT APIENTRY MQGetMachineProperties(
- LPCWSTR lpwcsMachineName,
- const GUID* pguidMachineID,
- MQQMPROPS* pQMProps
-);
-
-/* MQGetQueueProperties  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
-HRESULT APIENTRY MQGetQueueProperties(
- LPCWSTR lpwcsFormatName,
- MQQUEUEPROPS* pQueueProps
-);
-
-/* MQHandleToFormatName  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
-HRESULT APIENTRY MQHandleToFormatName(
- QUEUEHANDLE hQueue,
- LPWSTR lpwcsFormatName,
- LPDWORD lpdwCount
-);
-
-/* MQOpenQueue  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
-HRESULT APIENTRY MQOpenQueue(
- LPCWSTR lpwcsFormatName,
- DWORD dwAccess,
- DWORD dwShareMode,
- LPQUEUEHANDLE phQueue
-);
-
-/* MQPathNameToFormatName  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
-HRESULT APIENTRY MQPathNameToFormatName(
- LPCWSTR lpwcsPathName,
- LPWSTR lpwcsFormatName,
- LPDWORD lpdwCount
-);
-
-/* MQReceiveMessage  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
-HRESULT APIENTRY MQReceiveMessage(
- QUEUEHANDLE hSource,
- DWORD dwTimeout,
- DWORD dwAction,
- MQMSGPROPS pMessageProps,
- LPOVERLAPPED lpOverlapped,
- PMQRECEIVECALLBACK fnReceiveCallback,
- HANDLE hCursor,
- Transaction* pTransaction
-);
-
-/* MQSendMessage  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
-HRESULT APIENTRY MQSendMessage(
- QUEUEHANDLE hDestinationQueue,
- MQMSGPROPS* pMessageProps,
- ITransaction* pTransaction
-);
-
-/* MQSetQueueProperties  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
-HRESULT APIENTRY MQSetQueueProperties(
- LPCWSTR lpwcsFormatName,
- MQQUEUEPROPS* pQueueProps
-);
 #endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
-
-/* PROPID_M_BODY_SIZE  [function; ce-only; CE 3.0..699] */
-MsgProps.aPropID[i] = PROPID_M_BODY_SIZE; // Property ID
-MsgProps.aPropVar[i].vt = VT_UI4; // Type indicator
-i++;
-DWORD dwBodyBufferSize = 1024;
-UCHAR *pucBodyBuffer = (UCHAR *)malloc(dwBodyBufferSize);
-MsgProps.aPropID[i] = PROPID_M_BODY; // Property ID
-MsgProps.aPropVar[i].vt = VT_VECTOR|VT_UI1; // Type indicator
-MsgProps.aPropVar[i].caub.pElems = (UCHAR*)pucBodyBuffer;
-MsgProps.aPropVar[i].caub.cElems = dwBodyBufferSize;
-i++;
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct tagCAUI1 { ULONG cElems; unsigned char *pElems; } CAUI1;
 
 #endif /* _MQ_ */

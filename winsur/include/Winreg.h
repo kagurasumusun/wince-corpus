@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 43 constants, 18 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 43 constants, 17 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINREG_
 #define _WINREG_
@@ -71,24 +71,11 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* RegCloseKey  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, Fsreg.lib, fsreg.lib, Nkstub.lib] */
 LONG RegCloseKey( 
  HKEY hKey 
-);
-
-/* RegCreateKeyEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, Fsreg.lib, fsreg.lib, Nkstub.lib; A/W RegCreateKeyExA,RegCreateKeyExW (CE is W-side)] */
-LONG RegCreateKeyEx( 
- HKEY hKey, 
- LPCWSTR lpSubKey, 
- DWORD Reserved, 
- LPWSTR lpClass, 
- DWORD dwOptions, 
- REGSAM samDesired, 
- LPSECURITY_ATTRIBUTES lpSecurityAttributes, 
- PHKEY phkResult, 
- LPDWORD lpdwDisposition 
 );
 
 /* RegDeleteKey  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Fsreg.lib, fsreg.lib; A/W RegDeleteKeyA,RegDeleteKeyW (CE is W-side)] */
@@ -132,31 +119,6 @@ LONG RegFlushKey(
  HKEY hKey 
 );
 
-/* RegOpenKeyEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, Fsreg.lib, fsreg.lib, Nkstub.lib; A/W RegOpenKeyExA,RegOpenKeyExW (CE is W-side)] */
-LONG RegOpenKeyEx( 
- HKEY hKey, 
- LPCWSTR lpSubKey, 
- DWORD ulOptions, 
- REGSAM samDesired, 
- PHKEY phkResult 
-);
-
-/* RegQueryInfoKey  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Fsreg.lib, fsreg.lib; A/W RegQueryInfoKeyA,RegQueryInfoKeyW (CE is W-side)] */
-LONG RegQueryInfoKey( 
- HKEY hKey, 
- LPWSTR lpClass, 
- LPDWORD lpcbClass, 
- LPDWORD lpReserved, 
- LPDWORDlpcSubKeys, 
- LPDWORD lpcbMaxSubKeyLen, 
- LPDWORD lpcbMaxClassLen, 
- LPDWORD lpcValues, 
- LPDWORD lpcbMaxValueNameLen, 
- LPDWORD lpcbMaxValueLen, 
- LPDWORD lpcbSecurityDescriptor, 
- PFILETIME lpftLastWriteTime 
-);
-
 /* RegQueryValueEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, Fsreg.lib, fsreg.lib, Nkstub.lib; A/W RegQueryValueExA,RegQueryValueExW (CE is W-side)] */
 /* Windows CE supports only the Unicode version of this function. */
 /* Windows CE supports only the Unicode version of this function. */
@@ -185,7 +147,7 @@ LONG RegSetValueEx(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 5.0..599 */
 
 /* RegNotifyChangeKeyValue  [function; shared; CE 5.0..599; Coredll.lib] */
 LONG RegNotifyChangeKeyValue( 
@@ -197,7 +159,7 @@ LONG RegNotifyChangeKeyValue(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* CeFindCloseRegChange  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL CeFindCloseRegChange (
@@ -217,7 +179,7 @@ BOOL CeFindNextRegChange (
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* CeRegGetNotificationInfo  [function; ce-only; CE 6.0..699; coredll.lib] */
 LONG CeRegGetNotificationInfo(

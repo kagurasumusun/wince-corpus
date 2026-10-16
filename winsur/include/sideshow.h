@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 23 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 22 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _SIDESHOW_
 #define _SIDESHOW_
@@ -15,17 +15,12 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 5.0..599 */
 
 /* SideShowMgr_FindFirstItem  [function; ce-only; CE 5.0..599; sideshowapi.lib] */
 HANDLE SideShowMgr_FindFirstItem(
  UINT uiGadget,
  UINT* lpFirstItemSize
-);
-
-/* SideShowMgr_FindItemClose  [function; ce-only; CE 5.0..599; sideshowapi.lib] */
-SideShowMgr_FindItemClose(
- HANDLE hSearch
 );
 
 /* SideShowMgr_FindNextItem  [function; ce-only; CE 5.0..599; sideshowapi.lib] */
@@ -50,21 +45,6 @@ DWORD SideShowMgr_GetCurrentCacheSize();
 /* SideShowMgr_GetGadgetCount  [function; ce-only; CE 5.0..599; sideshowapi.lib] */
 int SideShowMgr_GetGadgetCount();
 
-/* SideShowMgr_GetGadgetInfo  [function; ce-only; CE 5.0..599; sideshowapi.lib] */
-BOOL SideShowMgr_GetGadgetInfo(
- UINT* lpuiGadgetId,
- WCHAR* wcName,
- UINT uiNameLen,
- GUID* pguidEndPoint,
- BOOL* lpfOnlineOnly,
- BYTE* lpbIcon48,
- UINT uiIcon48,
- BYTE* lpbIcon32,
- UINT uiIcon32,
- BYTE* lpbIcon16,
- UINT uiIcon16
-);
-
 /* SideShowMgr_GetGadgetInfoSizes  [function; ce-only; CE 5.0..599; sideshowapi.lib] */
 BOOL SideShowMgr_GetGadgetInfoSizes(
  UINT* lpuiNameLen,
@@ -77,13 +57,6 @@ BOOL SideShowMgr_GetGadgetInfoSizes(
 int SideShowMgr_GetGadgetOrder(
  UINT* lpuiGadgetIds,
  int iGadgetIdBufferSize
-);
-
-/* SideShowMgr_GetGuidsFromGadgetId  [function; ce-only; CE 5.0..599; sideshowapi.lib] */
-BOOL SideShowMgr_GetGuidsFromGadgetId(
- UINT uiGadgetId,
- GUID* pguidGadget,
- GUID* pguidEndPoint
 );
 
 /* SideShowMgr_GetItemData  [function; ce-only; CE 5.0..599; sideshowapi.lib] */
@@ -144,13 +117,6 @@ BOOL SideShowMgr_SendApplicationEvent(
 /* SideShowMgr_SetMaximumCacheSize  [function; ce-only; CE 5.0..599; sideshowapi.lib] */
 BOOL SideShowMgr_SetMaximumCacheSize(
  DWORD size
-);
-
-/* SideShowMgr_Start  [function; ce-only; CE 5.0..599; sideshowapi.lib] */
-BOOL SideShowMgr_Start(
- HWND hShellNotificationWindow,
- UINT uiGuidCount,
- GUID* pguidContent
 );
 
 /* SideShowMgr_Stop  [function; ce-only; CE 5.0..599; sideshowapi.lib] */

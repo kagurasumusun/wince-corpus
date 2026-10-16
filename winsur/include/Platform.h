@@ -15,7 +15,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213)) /* CE 1.0..199, 2.11..2.12 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213)) /* CE 1.0..199, 2.11..2.12 */
 
 /* Load_PegGetPlatformName  [function; ce-only; CE 1.0..199, 2.11..2.12] */
 BOOL Load_PegGetPlatformName(LPTSTR pszPlatformName);

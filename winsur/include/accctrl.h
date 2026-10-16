@@ -18,8 +18,6 @@
  * chains with the evidence after the #endif)
  * ================================================================ */
 #define ACCCTRL_DEFAULT_PROVIDER ACCCTRL_DEFAULT_PROVIDERW
-#define ACCCTRL_DEFAULT_PROVIDERA "Windows
-#define ACCCTRL_DEFAULT_PROVIDERW L"Windows
 #define ACTRL_ACCESS_ALLOWED 0x00000001
 #define ACTRL_ACCESS_DENIED 0x00000002
 #define ACTRL_ACCESS_NO_OPTIONS 0x00000000

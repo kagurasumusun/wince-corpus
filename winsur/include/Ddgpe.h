@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2 constants, 6 declarations, 0 outlines, 0 base types, 0 extra macros, 8 extra decls
+ * 2 constants, 6 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
  */
 #ifndef _DDGPE_
 #define _DDGPE_
@@ -113,12 +113,24 @@ typedef enum EDDGPEPixelFormat{
  ddgpePixelFormat_CustomFormat = 0x1000
 };
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
+/* ddgpePixelFormat  [extra struct] */
+#define DDGPEALLOCSURFACEDATA_VERSION0(0)
+#define DDGPEALLOCSURFACEDATA_CURRENTVERSION \
+(DDGPEBLTPARMS_VERSION0)
+struct DDGPEAllocSurfaceData
+{
+  DDGPEStandardHeader;
+  DWORD dwCreateFlags;
+  int nWidth;
+  int nHeight;
+  int nStride;
+  int nSurfaceFlags;
+  unsigned char *pBits;
+  EGPEFormat gpeFormat;
+  EDDGPEPixelFormat *ddgpePixelFormat;
+};
 
-/* enum */
+/* x1000  [extra enum] */
 enum EDDGPEPixelFormat
 {
   ddgpePixelFormat_1bpp = 0,
@@ -141,22 +153,10 @@ enum EDDGPEPixelFormat
   ddgpePixelFormat_CustomFormat = 0x1000
 };
 
-/* struct */
-#define DDGPEALLOCSURFACEDATA_VERSION0(0)
-#define DDGPEALLOCSURFACEDATA_CURRENTVERSION \
-(DDGPEBLTPARMS_VERSION0)
-struct DDGPEAllocSurfaceData
-{
-  DDGPEStandardHeader;
-  DWORD dwCreateFlags;
-  int nWidth;
-  int nHeight;
-  int nStride;
-  int nSurfaceFlags;
-  unsigned char *pBits;
-  EGPEFormat gpeFormat;
-  EDDGPEPixelFormat *ddgpePixelFormat;
-};
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
 
 /* function */
 void SetOverlay();

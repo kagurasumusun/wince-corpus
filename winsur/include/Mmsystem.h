@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 860 constants, 80 declarations, 6 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 860 constants, 75 declarations, 6 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _MMSYSTEM_
 #define _MMSYSTEM_
@@ -1020,27 +1020,23 @@ WAVEHDR;
 /*   wChannels */
 /*   dwSupport */
 
+/* LPTIMECALLBACK  [extra typedef] */
+typedef TIMECALLBACK FAR *LPTIMECALLBACK;
+
+/* PTIMECAPS  [extra struct] */
+typedef struct timecaps_tag {UINT wPeriodMin; UINT wPeriodMax; } TIMECAPS, *PTIMECAPS;
+
+/* PSTREAMPROPS  [extra struct] */
+typedef struct tagSTREAMPROPS { DWORD dwClassID; DWORD dwFlags;} STREAMPROPS, *PSTREAMPROPS;
+
+/* PAUDIOGAINCLASS  [extra struct] */
+typedef struct tagAUDIOGAINCLASS { DWORD dwPriority; DWORD dwRelativeGain;} AUDIOGAINCLASS, * PAUDIOGAINCLASS;
+
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200)) /* CE 1.0..199 */
-
-/* WaveInFunc  [function; ce-only; CE 1.0..199] */
-void CALLBACK WaveInFunc(HWAVEIN hWaveIn, UINT wMsg, DWORD dwInstance, DWORD dwParam1, DWORD dwParam2);
-
-/* WaveOutFunc  [function; ce-only; CE 1.0..199] */
-void CALLBACK WaveOutFunc(HWAVEOUT hwo, UINT uMsg, DWORD dwInstance, DWORD dwParam1, DWORD dwParam2);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* PlaySound  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-BOOL WINAPI PlaySound( 
- LPCSTR pszSound, 
- HMODULE hmod, 
- DWORD fdwSound 
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* sndPlaySound  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
 BOOL sndPlaySound(
@@ -1048,444 +1044,29 @@ BOOL sndPlaySound(
  UINT fuSound
 );
 
-/* waveInAddBuffer  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveInAddBuffer(
- HWAVEIN hwi, 
- LPWAVEHDR pwh, 
- UINT cbwh 
-);
-
-/* waveInClose  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveInClose(
- HWAVEIN hwi 
-);
-
-/* waveInGetDevCaps  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib; A/W waveInGetDevCapsA,waveInGetDevCapsW (CE is W-side)] */
-MMRESULT waveInGetDevCaps(
- UINT uDeviceID, 
- LPWAVEINCAPS pwic, 
- UINT cbwic 
-);
-
-/* waveInGetErrorText  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveInGetErrorText(
- MMRESULT mmrError, 
- LPTSTR pszText, 
- UINT cchText 
-);
-
-/* waveInGetID  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveInGetID(
- HWAVEIN hwi, 
- PUINT puDeviceID 
-);
-
 /* waveInGetNumDevs  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
 UINT waveInGetNumDevs(void);
 
-/* waveInGetPosition  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveInGetPosition(
- HWAVEIN hwi, 
- LPMMTIME pmmt, 
- UINT cbmmt 
-);
-
-/* waveInMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveInMessage(
- HWAVEIN hwi, 
- UINT uMsg, 
- DWORD dw1, 
- DWORD dw2 
-);
-
-/* waveInOpen  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveInOpen(
- LPHWAVEIN phwi, 
- UINT uDeviceID, 
- LPCWAVEFORMATEX pwfx, 
- DWORD dwCallback, 
- DWORD dwInstance, 
- DWORD fdwOpen 
-);
-
-/* waveInPrepareHeader  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveInPrepareHeader(
- HWAVEIN hwi, 
- LPWAVEHDR pwh, 
- UINT cbwh 
-);
-
-/* waveInReset  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveInReset(
- HWAVEIN hwi 
-);
-
-/* waveInStart  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveInStart(
- HWAVEIN hwi 
-);
-
-/* waveInStop  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveInStop(
- HWAVEIN hwi 
-);
-
-/* waveInUnprepareHeader  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveInUnprepareHeader(
- HWAVEIN hwi, 
- LPWAVEHDR pwh, 
- UINT cbwh 
-);
-
-/* waveOutBreakLoop  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveOutBreakLoop(
- HWAVEOUT hwo 
-);
-
-/* waveOutClose  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveOutClose(
- HWAVEOUT hwo 
-);
-
-/* waveOutGetDevCaps  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib; A/W waveOutGetDevCapsA,waveOutGetDevCapsW (CE is W-side)] */
-MMRESULT waveOutGetDevCaps(
- UINT uDeviceID, 
- LPWAVEOUTCAPS pwoc, 
- UINT cbwoc 
-);
-
-/* waveOutGetErrorText  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveOutGetErrorText(
- UINT mmrError, 
- LPTSTR pszText, 
- UINT cchText 
-);
-
-/* waveOutGetID  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveOutGetID(
- HWAVEOUT hwo, 
- LPUINT puDeviceID 
-);
-
 /* waveOutGetNumDevs  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
 UINT waveOutGetNumDevs(void);
-
-/* waveOutGetPitch  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveOutGetPitch(
- HWAVEOUT hwo, 
- LPDWORD pdwPitch 
-);
-
-/* waveOutGetPlaybackRate  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveOutGetPlaybackRate(
- HWAVEOUT hwo, 
- LPDWORD pdwRate 
-);
-
-/* waveOutGetPosition  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveOutGetPosition(
- HWAVEOUT hwo, 
- LPMMTIME pmmt, 
- UINT cbmmt 
-);
-
-/* waveOutGetVolume  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveOutGetVolume(
- HWAVEOUT hwo, 
- LPDWORD pdwVolume 
-);
-
-/* waveOutMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveOutMessage(
- HWAVEOUT hwo, 
- UINT uMsg, 
- DWORD dw1, 
- DWORD dw2 
-);
-
-/* waveOutOpen  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveOutOpen(
- LPHWAVEOUT phwo,
- UINT uDeviceID,
- LPWAVEFORMATEX pwfx,
- DWORD dwCallback,
- DWORD dwInstance,
- DWORD fdwOpen
-);
-
-/* waveOutPause  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveOutPause(
- HWAVEOUT hwo 
-);
-
-/* waveOutPrepareHeader  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveOutPrepareHeader(
- HWAVEOUT hwo, 
- LPWAVEHDR pwh, 
- UINT cbwh 
-);
-
-/* waveOutReset  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveOutReset(
- HWAVEOUT hwo 
-);
-
-/* waveOutRestart  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveOutRestart(
- HWAVEOUT hwo 
-);
-
-/* waveOutSetPitch  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveOutSetPitch(
- HWAVEOUT hwo, 
- DWORD dwPitch 
-);
-
-/* waveOutSetPlaybackRate  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveOutSetPlaybackRate(
- HWAVEOUT hwo, 
- DWORD dwRate 
-);
-
-/* waveOutSetVolume  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveOutSetVolume(
- HWAVEOUT hwo, 
- DWORD dwVolume 
-);
-
-/* waveOutUnprepareHeader  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveOutUnprepareHeader(
- HWAVEOUT hwo, 
- LPWAVEHDR pwh, 
- UINT cbwh 
-);
-
-/* waveOutWrite  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Wavelib.lib, wavelib.lib] */
-MMRESULT waveOutWrite(
- HWAVEOUT hwo, 
- LPWAVEHDR pwh, 
- UINT cbwh 
-);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-
-/* mixerClose  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, mixerapi.lib] */
-MMRESULT mixerClose(
- HMIXER hmx 
-);
-
-/* mixerGetControlDetails  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, mixerapi.lib; A/W mixerGetControlDetailsA,mixerGetControlDetailsW (CE is W-side)] */
-MMRESULT mixerGetControlDetails(
- HMIXEROBJ hmxobj, 
- LPMIXERCONTROLDETAILS pmxcd, 
- DWORD fdwDetails 
-);
-
-/* mixerGetDevCaps  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, mixerapi.lib; A/W mixerGetDevCapsA,mixerGetDevCapsW (CE is W-side)] */
-MMRESULT mixerGetDevCaps(
- UINT uMxId, 
- LPMIXERCAPS pmxcaps, 
- UINT cbmxcaps 
-);
-
-/* mixerGetID  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, mixerapi.lib] */
-MMRESULT mixerGetID(
- HMIXEROBJ hmxobj, 
- UINT* puMxId, 
- DWORD fdwId 
-);
-
-/* mixerGetLineControls  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, mixerapi.lib; A/W mixerGetLineControlsA,mixerGetLineControlsW (CE is W-side)] */
-MMRESULT mixerGetLineControls(
- HMIXEROBJ hmxobj, 
- LPMIXERLINECONTROLS pmxlc, 
- DWORD fdwControls 
-);
-
-/* mixerGetLineInfo  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, mixerapi.lib; A/W mixerGetLineInfoA,mixerGetLineInfoW (CE is W-side)] */
-MMRESULT mixerGetLineInfo(
- HMIXEROBJ hmxobj, 
- LPMIXERLINE pmxl, 
- DWORD fdwInfo 
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* mixerGetNumDevs  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, mixerapi.lib] */
 UINT mixerGetNumDevs(void);
-
-/* mixerMessage  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, mixerapi.lib] */
-DWORD mixerMessage(
- HMIXER hmx, 
- UINT uMsg, 
- DWORD dwParam1, 
- DWORD dwParam2 
-);
-
-/* mixerOpen  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, mixerapi.lib] */
-MMRESULT mixerOpen(
- LPHMIXER phmx, 
- UINT uMxId, 
- DWORD dwCallback, 
- DWORD dwInstance, 
- DWORD fdwOpen 
-);
-
-/* mixerSetControlDetails  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, mixerapi.lib] */
-MMRESULT mixerSetControlDetails(
- HMIXEROBJ hmxobj, 
- LPMIXERCONTROLDETAILS pmxcd, 
- DWORD fdwDetails 
-);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* MM_WIM_DATA  [function; ce-only; CE 5.0..699] */
-MM_WIM_DATA 
- wParam = (WPARAM) hInputDev
- lParam = (LONG) lpwvhdr
-
-/* MM_WOM_ATTENUATED  [function; ce-only; CE 5.0..699] */
-MM_WOM_ATTENUATED 
- wParam = (DWORD) dwAttenuation
- lParam = 0
-
-/* MM_WOM_DONE  [function; ce-only; CE 5.0..699] */
-MM_WOM_DONE 
- wParam = (WPARAM) hOutputDev
- lParam = (LONG) lpwvhdr
-
-/* timeBeginPeriod  [function; shared; CE 5.0..699; Mmtimer.lib] */
-MMRESULT timeBeginPeriod(
- UINT uPeriod
-);
-
-/* timeEndPeriod  [function; shared; CE 5.0..699; Mmtimer.lib] */
-MMRESULT timeEndPeriod(
- UINT uPeriod
-);
-
-/* timeGetDevCaps  [function; shared; CE 5.0..699; Mmtimer.lib] */
-MMRESULT timeGetDevCaps(
- LPTIMECAPS ptc,
- UINT cbtc
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* timeGetHardwareFrequency  [function; ce-only; CE 5.0..699; Mmtimer.lib] */
 DWORD timeGetHardwareFrequency(void);
-
-/* timeGetSystemTime  [function; shared; CE 5.0..699; Mmtimer.lib] */
-MMRESULT timeGetSystemTime(
- LPMMTIME pmmt,
- UINT cbmmt
-);
 
 /* timeGetTime  [function; shared; CE 5.0..699; Mmtimer.lib] */
 DWORD timeGetTime(void);
 
 /* timeGetTimeSinceInterrupt  [function; ce-only; CE 5.0..699; Mmtimer.lib] */
 DWORD timeGetTimeSinceInterrupt(void);
-
-/* timeKillEvent  [function; ce-only; CE 5.0..699; Mmtimer.lib] */
-MMRESULT timeKillEvent(
- UINT uTimerID
-);
-
-/* timeSetEvent  [function; ce-only; CE 5.0..699; Mmtimer.lib] */
-MMRESULT timeSetEvent(
- UINT uDelay,
- UINT uResolution,
- LPTIMECALLBACK fptc,
- DWORD dwUser,
- UINT fuEvent
-);
-
-/* waveInGetProperty  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-MMRESULT waveInGetProperty (
- UINT uDeviceID,
- const GUID* pPropSetId,
- ULONG ulPropId,
- LPVOID pvPropParams,
- ULONG cbPropParams,
- LPVOID pvPropData,
- ULONG cbPropData,
- PULONG pcbReturn
-);
-
-/* waveInProc  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-void CALLBACK waveInProc(
- HWAVEIN hwi,
- UINT uMsg,
- DWORD dwInstance,
- DWORD dwParam1,
- DWORD dwParam2
-);
-
-/* waveInSetProperty  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-MMRESULT waveInSetProperty(
- UINT uDeviceID,
- const GUID* pPropSetId,
- ULONG ulPropId,
- LPVOID pvPropParams,
- ULONG cbPropParams,
- LPVOID pvPropData,
- ULONG cbPropData
-);
-
-/* waveOutGetProperty  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-MMRESULT waveOutGetProperty(
- UINT uDeviceID,
- const GUID* pPropSetId,
- ULONG ulPropId,
- LPVOID pvPropParams,
- ULONG cbPropParams,
- LPVOID pvPropData,
- ULONG cbPropData,
- PULONG pcbReturn
-);
-
-/* waveOutProc  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-void CALLBACK waveOutProc(
- HWAVEOUT hwo,
- UINT uMsg,
- DWORD dwInstance,
- DWORD dwParam1,
- DWORD dwParam2
-);
-
-/* waveOutSetProperty  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-MMRESULT waveOutSetProperty(
- UINT uDeviceID,
- const GUID* pPropSetId,
- ULONG ulPropId,
- LPVOID pvPropParams,
- ULONG cbPropParams,
- LPVOID pvPropData,
- ULONG cbPropData
-);
-
-/* WIM_DATA  [function; ce-only; CE 5.0..699] */
-WIM_DATA 
- dwParam1 = (DWORD) lpwvhdr
- dwParam2 = reserved
-
-/* WOM_DONE  [function; ce-only; CE 5.0..699] */
-WOM_DONE 
- dwParam1 = (DWORD) lpwvhdr
- dwParam2 = reserved
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* typedef */
-typedef TIMECALLBACK FAR *LPTIMECALLBACK;
-
-/* struct */
-typedef struct tagAUDIOGAINCLASS { DWORD dwPriority; DWORD dwRelativeGain;} AUDIOGAINCLASS, * PAUDIOGAINCLASS;
-typedef struct tagSTREAMPROPS { DWORD dwClassID; DWORD dwFlags;} STREAMPROPS, *PSTREAMPROPS;
-typedef struct timecaps_tag {UINT wPeriodMin; UINT wPeriodMax; } TIMECAPS, *PTIMECAPS;
 
 #endif /* _MMSYSTEM_ */

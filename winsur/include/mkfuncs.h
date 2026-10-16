@@ -15,7 +15,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* ExitProcess  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
 VOID ExitProcess(
@@ -23,13 +23,7 @@ VOID ExitProcess(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* RegisterDirectMethods  [function; ce-only; CE 6.0..699] */
-BOOL RegisterDirectMethods (
- HANDLE hApiSet,
- const PFNVOID *ppfnDirectMethod
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* VirtualSetAttributesEx  [function; ce-only; CE 6.0..699; coredll.lib] */
 BOOL VirtualSetAttributes (

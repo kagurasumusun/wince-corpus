@@ -183,40 +183,4 @@
 #define VT_YSIZE_HIMETRIC VT_I4
 #define VT_YSIZE_PIXELS VT_I4
 
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 3.0..399 */
-
-/* OleCreateFontIndirect  [function; shared; CE 3.0..399; Oleaut32.lib] */
-STDAPI OleCreateFontIndirect( 
-LPFONTDESC lpFontDesc, 
-REFIID riid, 
-LPVOID FAR *lplpvObj );
-
-/* OleCreatePropertyFrame  [function; shared; CE 3.0..399; Oleaut32.lib] */
-STDAPI OleCreatePropertyFrame( 
-HWND hwndOwner, 
-UINT x, 
-UINT y, 
-LPCOLESTR lpszCaption, 
-ULONG cObjects, 
-LPUNKNOWN FAR *ppUnk, 
-ULONG cPages, 
-LPCLSID pPageClsID, 
-LCID lcid, 
-DWORD dwReserved, 
-LPVOID pvReserved );
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
-
-/* DllRegisterServer  [function; shared; CE 3.0..699; Oleaut32.lib, oleaut32.lib] */
-STDAPI DllRegisterServer(void);
-
-/* DllUnregisterServer  [function; shared; CE 3.0..699; Oleaut32.lib, oleaut32.lib] */
-STDAPI DllUnregisterServer(void);
-#endif /* _WIN32_WCE */
-
 #endif /* _OLECTL_ */

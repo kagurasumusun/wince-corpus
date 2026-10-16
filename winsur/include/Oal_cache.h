@@ -15,19 +15,13 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* OALCacheGlobalsInit  [function; ce-only; CE 5.0..699] */
 VOID OALCacheGlobalsInit();
 
 /* OALCleanDCache  [function; ce-only; CE 5.0..699] */
 VOID OALCleanDCache();
-
-/* OALCleanDCacheLines  [function; ce-only; CE 5.0..699] */
-VOID OALCleanDCacheLines(
- VOID *pAddress,
- UINT32 size
-);
 
 /* OALClearDTLB  [function; ce-only; CE 5.0..699] */
 VOID OALClearDTLB();
@@ -56,30 +50,8 @@ VOID OALClearTLBEntry(
 /* OALFlushDCache  [function; ce-only; CE 5.0..699] */
 VOID OALFlushDCache();
 
-/* OALFlushDCacheLines  [function; ce-only; CE 5.0..699] */
-VOID OALFlushDCacheLines(
- VOID *pAddress,
- UINT32 size
-);
-
 /* OALFlushICache  [function; ce-only; CE 5.0..699] */
 VOID OALFlushICache();
-
-/* OALFlushICacheLines  [function; ce-only; CE 5.0..699] */
-VOID OALFlushICacheLines(
- VOID *pAddress,
- UINT32 size
-);
-
-/* OALIoCtlHalGetCacheInfo  [function; ce-only; CE 5.0..699] */
-BOOL OALIoCtlHalGetCacheInfo(
- UINT32 code,
- VOID *pInBuffer,
- UINT32 inpSize,
- VOID *pOutBuffer,
- UINT32 outSize,
- UINT32 *pOutSize
-);
 #endif /* _WIN32_WCE */
 
 #endif /* _OAL_CACHE_ */

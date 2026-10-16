@@ -15,16 +15,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* UfnGetRegistryInfo  [function; ce-only; CE 5.0..699; UfnClientLibBase.lib] */
-DWORD UfnGetRegistryInfo(
- LPCTSTR pszActiveKey,
- PUFN_CLIENT_REG_INFO pRegInfo
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* UfnGetSystemSerialNumber  [function; ce-only; CE 6.0..699; UfnClientLibBase.lib] */
 DWORD UfnGetSystemSerialNumber(

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 116 constants, 14 declarations, 24 outlines, 0 base types, 0 extra macros, 35 extra decls
+ * 116 constants, 14 declarations, 24 outlines, 0 base types, 0 extra macros, 26 extra decls
  */
 #ifndef _PIMSTORE_
 #define _PIMSTORE_
@@ -277,11 +277,14 @@ enum OlSensitivity {
  olConfidential = 3
 };
 
+/* PIMTYPE  [extra enum] */
+typedef enum tagPIMTYPE { PT_CALENDAR = 0, PT_TASKS, PT_CONTACT } PIMTYPE;
+
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* CePimCommand  [function; ce-only; CE 3.0..399, 5.0..699; Pimstore.lib] */
 void CePimCommand(
@@ -293,7 +296,7 @@ void CePimCommand(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 5.0..599 */
 
 /* IException  [function; ce-only; CE 5.0..599; Pimstore.lib] */
 void GetFirstExceptionItem (IAppointment *pAppt) 
@@ -338,21 +341,12 @@ void GetAnItemsCollection (IPOutlookApp *polApp)
  * parser did not turn into an entity declaration
  * ================================================================ */
 
-/* enum */
-typedef enum tagPIMTYPE { PT_CALENDAR = 0, PT_TASKS, PT_CONTACT } PIMTYPE;
-
 /* function */
-HRESULT Add( IDispatch ** ppolItem );
-HRESULT AddItemToInfraredFolder( int olItem, IDispatch * polItem );
 HRESULT Cancel();
 HRESULT ClearReccurencePattern();
 HRESULT ClearRecurrencePattern();
-HRESULT Copy( ITEMTYPE ** ppolItem );
-HRESULT CreateItem( int olItem, IDispatch ** ppolItem );
 HRESULT Delete();
 HRESULT Display();
-HRESULT Find( BSTR pwszRestriction, IDispatch ** ppolItem );
-HRESULT FindNext( IDispatch ** ppolItem );
 void GetAnItemsCollection (IPOutlookApp *polApp)
 {
   IPOutlookItemCollection *pItems;
@@ -381,24 +375,17 @@ void GetFirstExceptionItem(IAppointment *pAppt)
   pExceptions->Release();
   pException->Release();
 }
-HRESULT GetItemFromOid( CEOID oid, IDispatch ** ppolItem );
-HRESULT GetOccurrence( DATE date, IAppointmentItem * polAppt );
 HRESULT GetRecurrence( IRecurrencePattern * pRec );
 HRESULT GetRecurrencePattern( IRecurrencePattern * pRec );
 HRESULT GetTimeZoneFromIndex( int iIndex, ITimeZone ** ppTimeZone );
-HRESULT GetTimeZoneInformationFromIndex( int iIndex, TIME_ZONE_INFORMATION* ptz );
 HRESULT Item( int iIndex, IException ** ppException );
 HRESULT Logoff();
 HRESULT Logon( long hWnd );
 HRESULT ReceiveFromInfrared( IPOutlookItemCollection ** ppolItems );
 HRESULT Remove( int iItem );
-HRESULT Resolve( VARIANT_BOOL fDisplayUI, VARIANT_BOOL * pfResolved );
-HRESULT Restrict( BSTR pwszRestriction, IPOutlookItemCollection ** ppolItems );
 HRESULT Save();
 HRESULT Send();
 HRESULT SendToInfrared();
-HRESULT SetColumns( BSTR Columns );
 HRESULT SkipRecurrence();
-HRESULT Sort( BSTR pwszProperty, VARIANT_BOOL fDescending );
 
 #endif /* _PIMSTORE_ */

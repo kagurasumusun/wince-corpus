@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 16 constants, 10 declarations, 2 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 16 constants, 9 declarations, 3 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _SERVICE_
 #define _SERVICE_
@@ -40,13 +40,15 @@
 
 /* SERVICE  [typedef; ce-only; heuristic-prefix] */
 
+/* ServicesexeCallbackFunctions  [struct; ce-only] */
+
 /* ServicesExeCommandLineParams  [struct; ce-only] */
 
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* ActivateService  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
 HANDLE ActivateService(
@@ -57,13 +59,6 @@ HANDLE ActivateService(
 /* DeregisterService  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
 BOOL DeregisterService(
  HANDLE hDevice
-);
-
-/* EnumServices  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-BOOL EnumServices(
- PBYTE pBuffer,
- DWORD pdwServiceEntries,
- DWORD pdwBufferLen
 );
 
 /* GetServiceHandle  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
@@ -81,48 +76,10 @@ HANDLE RegisterService(
  DWORD dwInfo
 );
 
-/* ServiceAddPort  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-BOOL ServiceAddPort(
- HANDLE hService,
- SOCKADDR *pSockAddr,
- INT cbSockAddr,
- INT iProtocol,
- WCHAR szRegWritePath
-);
-
-/* ServiceClosePort  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-BOOL ServiceClosePort(
- HANDLE hService, 
- SOCKADDR* pSockAddr, 
- int cbSockAddr, 
- int iProtocol, 
- BOOL fRemoveFromRegistry
-);
-
-/* ServiceIoControl  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-BOOL ServiceIoControl(
- HANDLE hService,
- DWORD dwIoControlCode,
- LPVOID lpInBuf,
- DWORD nInBufSize,
- LPVOID lpOutBuf,
- DWORD nOutBufSize,
- LPDWORD lpBytesReturned,
- LPOVERLAPPED lpOverlapped
-);
-
 /* ServiceUnbindPorts  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
 BOOL ServiceUnbindPorts(
  HANDLE hService
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _ServicesExeCallbackFunctions { PFN_SERVICE_SHUTDOWN pfnServiceShutdown; } ServicesExeCallbackFunctions;
 
 #endif /* _SERVICE_ */

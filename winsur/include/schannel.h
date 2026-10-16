@@ -69,8 +69,6 @@
  * ================================================================ */
 
 /* struct */
-typedef struct _SCHANNEL_CRED { DWORDdwVersion;DWORDcCreds;PCCERT_CONTEXT*paCred;HCERTSTOREhRootStore;DWORD cMappers;struct _HMAPPER**aphMappers;DWORDcSupportedAlgs;ALG_ID*palgSupportedAlgs;DWORDgrbitEnabledProtocols;DWORDdwMinimumCipherStrength;DWORDdwMaximumCipherStrength;DWORDdwSessionLifespan;DWORDdwFlags;DWORDreserved;} SCHANNEL_CRED, *PSCHANNEL_CRED;
-typedef struct _SecPkgContext_ConnectionInfo { DWORDdwProtocol;ALG_IDaiCipher;DWORDdwCipherStrength;ALG_IDaiHash;DWORDdwHashStrength;ALG_ID aiExch;DWORDdwExchStrength;} SecPkgContext_ConnectionInfo, *PSecPkgContext_ConnectionInfo;
 typedef struct _SecPkgContext_IssuerListInfoEx { PCERT_NAME_BLOBaIssuers;DWORDcIssuers;} SecPkgContext_IssuerListInfoEx, *PSecPkgContext_IssuerListInfoEx;
 
 #endif /* _SCHANNEL_ */

@@ -128,7 +128,7 @@ typedef struct tagSHCHANGENOTIFYENTRY {
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 5.0..699 */
 
 /* SHCloseApps  [function; ce-only; CE 2.11..2.12, 5.0..699; Aygshell.lib, aygshell.lib] */
 BOOL SHCloseApps(
@@ -142,62 +142,14 @@ BYTE SHGetAppKeyAssoc(
 
 /* SHInitExtraControls  [function; ce-only; CE 2.11..2.12, 5.0..699; Aygshell.lib, aygshell.lib] */
 BOOL SHInitExtraControls(void);
-
-/* SHSipInfo  [function; ce-only; CE 2.11..2.12, 5.0..699; Aygshell.lib, aygshell.lib] */
-BOOL WINAPI SHSipInfo(
- UINT uiAction,
- UINT uiParam,
- PVOID pvParam,
- UINT fWinIni
-);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* SHChangeNotifyDeregister  [function; shared; CE 5.0..699; Aygshell.lib, aygshell.lib, ceshell.lib] */
-BOOL WINAPI SHChangeNotifyDeregister(
- HWND hwnd
-);
-
-/* SHChangeNotifyFree  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib, ceshell.lib] */
-void WINAPI SHChangeNotifyFree(
- FILECHANGENOTIFY * pfcn
-);
-
-/* SHChangeNotifyRegister  [function; shared; CE 5.0..699; Aygshell.lib, aygshell.lib, ceshell.lib] */
-BOOL WINAPI SHChangeNotifyRegister(
- HWND hwnd,
- SHCHANGENOTIFYENTRY * pshcne
-);
-
-/* SHCreateMenuBar  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-BOOL SHCreateMenuBar(
- SHMENUBARINFO * pmb
-);
-
-/* SHCreateNewItem  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-HRESULT SHCreateNewItem(
- HWND hwndOwner,
- REFCLSID clsid
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* SHDoneButton  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
 BOOL SHDoneButton(
  HWND hwndRequester,
  DWORD dwState
-);
-
-/* SHEnumPropSheetHandlers  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-BOOL SHEnumPropSheetHandlers(
- HKEY hkey,
- int * pcPages,
- HPROPSHEETPAGE* prghPropPages,
- IShellPropSheetExt ** prgpispse
-);
-
-/* SHFindMenuBar  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-HWND WINAPI SHFindMenuBar(
- HWND hwnd
 );
 
 /* SHFreeContextMenuExtensions  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
@@ -230,28 +182,6 @@ HRESULT SHGetInputContext (
  LPDWORD lpdwSize
 );
 
-/* SHHandleWMActivate  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-WINSHELLAPI BOOL SHHandleWMActivate(
- HWND hwnd,
- WPARAM wParam,
- LPARAM lParam,
- SHACTIVATEINFO * psai,
- DWORD dwFlags
-);
-
-/* SHHandleWMSettingChange  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-WINSHELLAPI BOOL SHHandleWMSettingChange(
- HWND hwnd,
- WPARAM wParam,
- LPARAM lParam,
- SHACTIVATEINFO * psai
-);
-
-/* SHInitDialog  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-BOOL SHInitDialog(
- PSHINITDLGINFO pshidi
-);
-
 /* SHInputDialog  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
 void SHInputDialog(
  HWND hwnd,
@@ -268,35 +198,6 @@ BOOL SHInvokeContextMenuCommand(
 
 /* SHNavigateBack  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
 void SHNavigateBack(void);
-
-/* SHNotificationAdd  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-LRESULT SHNotificationAdd(
- SHNOTIFICATIONDATA* pndAdd
-);
-
-/* SHNotificationGetData  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-LRESULT SHNotificationGetData(
- const CLSID * pclsid,
- DWORD dwID,
- SHNOTIFICATIONDATA* pndBuffer
-);
-
-/* SHNotificationRemove  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-LRESULT SHNotificationRemove(
- const CLSID* pclsid,
- DWORD dwID
-);
-
-/* SHNotificationUpdate  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-LRESULT SHNotificationUpdate(
- DWORD grnumUpdateMask,
- SHNOTIFICATIONDATA* pndNew
-);
-
-/* SHRecognizeGesture  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-WINSHELLAPI DWORD SHRecognizeGesture(
- SHRGINFO * shrg
-);
 
 /* SHSetAppKeyWndAssoc  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
 BOOL SHSetAppKeyWndAssoc(
@@ -321,12 +222,6 @@ HRESULT SHSetInputContext (
 BOOL SHSetNavBarText(
  HWND hwndRequester,
  LPCTSTR pszText
-);
-
-/* SHSipPreference  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-BOOL SHSipPreference(
- HWND hwnd,
- SIPSTATE st
 );
 #endif /* _WIN32_WCE */
 

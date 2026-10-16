@@ -17,17 +17,4 @@
 
 /* DPA_FastGetPtr  [macro, function; shared] */
 
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* DPA_GetPtr  [function; shared; CE 4.0..699; ComCtl32.dll, Comctl32.lib; lib:win32-reference] */
-WINCOMMCTRLAPI LPVOID WINAPI DPA_GetPtr(
- HDPA hdpa,
- int i
-);
-#endif /* _WIN32_WCE */
-
 #endif /* _PCOMMCTR_ */

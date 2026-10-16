@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1265 constants, 119 declarations, 9 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 1265 constants, 118 declarations, 9 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINGDI_
 #define _WINGDI_
@@ -1616,7 +1616,7 @@ typedef struct _RGNDATA {
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* TransparentImage  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Mgblt2.lib, mgblt2.lib] */
 BOOL TransparentImage(
@@ -1634,7 +1634,7 @@ BOOL TransparentImage(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
 
 /* EnableEUDC  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Mgtt.lib, mgtt.lib] */
 BOOL EnableEUDC(
@@ -1642,7 +1642,7 @@ BOOL EnableEUDC(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* BitBlt  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Mgblt.lib, mgblt.lib] */
 BOOL BitBlt(
@@ -1686,28 +1686,10 @@ HDC CreateCompatibleDC(
  HDC hdc
 );
 
-/* CreateDC  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Mgdc.lib, mgdc.lib; A/W CreateDCA,CreateDCW (CE is W-side)] */
-HDC CreateDC( 
- LPCTSTR lpszDriver, 
- LPCTSTR lpszDevice, 
- LPCTSTR lpszOutput, 
- CONST DEVMODE* lpInitData
-);
-
 /* CreateDIBPatternBrushPt  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Mgdraw.lib, mgdraw.lib] */
 HBRUSH CreateDIBPatternBrushPt(
  const void* lpPackedDIB, 
  UINT iUsage
-);
-
-/* CreateDIBSection  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Mgdi_c.lib, mgdi_c.lib, Mgdibsec.lib, mgdibsec.lib] */
-HBITMAP CreateDIBSection(
- HDC hdc, 
- const BITMAPINFO* pbmi, 
- UINT iUsage, 
- void** ppvBits, 
- HANDLE hSection, 
- DWORD dwOffset
 );
 
 /* CreatePatternBrush  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Mgdraw.lib, mgdraw.lib] */
@@ -1857,12 +1839,6 @@ COLORREF GetNearestColor(
  COLORREF crColor
 );
 
-/* GetNearestPaletteIndex  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Mgpal.lib, mgpal.lib] */
-UINT GetNearestPaletteIndex( 
- HPALETTE hpal, 
- COLORREF crColor
-);
-
 /* GetObject  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Mgbase.lib, mgbase.lib; A/W GetObjectA,GetObjectW (CE is W-side)] */
 int GetObject(
  HGDIOBJ hgdiobj, 
@@ -1875,26 +1851,11 @@ DWORD GetObjectType(
  HGDIOBJ h
 );
 
-/* GetPaletteEntries  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, mgpal.lib, Winmgr.lib] */
-UINT GetPaletteEntries( 
- HPALETTE hpal, 
- UINT iStartIndex, 
- UINT nEntries, 
- LPPALETTEENTRY lppe
-);
-
 /* GetPixel  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Mgdraw.lib, mgdraw.lib] */
 COLORREF GetPixel(
  HDC hdc, 
  int nXPos, 
  int nYPos
-);
-
-/* GetRegionData  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, mgrgn.lib, Winmgr.lib] */
-DWORD GetRegionData(
- HRGN hRgn, 
- DWORD dwCount, 
- LPRGNDATA lpRgnData
 );
 
 /* GetRgnBox  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Mgrgn.lib, mgrgn.lib] */
@@ -1913,14 +1874,6 @@ HBRUSH GetSysColorBrush(
  int nIndex
 );
 
-/* GetSystemPaletteEntries  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Mgpal.lib, mgpal.lib] */
-UINT GetSystemPaletteEntries( 
- HDC hdc, 
- UINT iStartIndex, 
- UINT nEntries, 
- LPPALETTEENTRY lppe
-);
-
 /* IntersectClipRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Mgrgn.lib, mgrgn.lib] */
 int IntersectClipRect(
  HDC hdc, 
@@ -1928,12 +1881,6 @@ int IntersectClipRect(
  int nTopRect, 
  int nRightRect, 
  int nBottomRect
-);
-
-/* MAKEROP4  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-DWORD MAKEROP4(
- DWORD fore, 
- DWORD back
 );
 
 /* MaskBlt  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Mgblt2.lib, mgblt2.lib] */
@@ -2050,13 +1997,6 @@ HGDIOBJ SelectObject(
  HGDIOBJ hgdiobj
 );
 
-/* SelectPalette  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Mgpal.lib, mgpal.lib] */
-HPALETTE SelectPalette( 
- HDC hdc, 
- HPALETTE hpal, 
- BOOL bForceBackground
-);
-
 /* SetBkColor  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Mgbase.lib, mgbase.lib] */
 COLORREF SetBkColor(
  HDC hdc, 
@@ -2075,14 +2015,6 @@ BOOL SetBrushOrgEx(
  int nXOrg, 
  int nYOrg, 
  LPPOINT lppt
-);
-
-/* SetPaletteEntries  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Mgpal.lib, mgpal.lib] */
-UINT SetPaletteEntries( 
- HPALETTE hpal, 
- UINT iStart, 
- UINT cEntries, 
- CONST PALETTEENTRY* lppe
 );
 
 /* SetPixel  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Mgdraw.lib, mgdraw.lib] */
@@ -2108,14 +2040,6 @@ int SetROP2(
  int fnDrawMode
 );
 
-/* SetViewportOrgEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-SetViewportOrgEx(
- HDC hdc, 
- int X, 
- int Y, 
- LPPOINT lpPoint
-);
-
 /* StretchBlt  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
 BOOL StretchBlt(
  HDC hdcDest, 
@@ -2130,16 +2054,9 @@ BOOL StretchBlt(
  int nHeightSrc, 
  DWORD dwRop
 );
-
-/* TranslateCharsetInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, mgtci.lib] */
-BOOL TranslateCharsetInfo( 
- DWORD FAR* lpSrc, 
- LPCHARSETINFO lpCs, 
- DWORD dwFlags 
-);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
 
 /* AbortDoc  [function; shared; CE 2.11..2.12, 3.0..699; Mgprint.lib, mgprint.lib] */
 int AbortDoc(
@@ -2151,16 +2068,6 @@ int AddFontResource(
  LPCTSTR lpszFilename
 );
 
-/* CreateFontIndirect  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Mgrast.lib, mgrast.lib, Mgtt.lib, mgtt.lib; A/W CreateFontIndirectA,CreateFontIndirectW (CE is W-side)] */
-HFONT CreateFontIndirect(
- const LOGFONT* lplf
-);
-
-/* CreatePalette  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Mgpal.lib, mgpal.lib] */
-HPALETTE CreatePalette( 
- CONST LOGPALETTE* lplgpl
-);
-
 /* EndDoc  [function; shared; CE 2.11..2.12, 3.0..699; Mgprint.lib, mgprint.lib] */
 int EndDoc( 
  HDC hdc
@@ -2169,38 +2076,6 @@ int EndDoc(
 /* EndPage  [function; shared; CE 2.11..2.12, 3.0..699; Mgprint.lib, mgprint.lib] */
 int EndPage( 
  HDC hdc
-);
-
-/* EnumFontFamilies  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Mgrast2.lib, mgrast2.lib, mgtt.lib; A/W EnumFontFamiliesA,EnumFontFamiliesW (CE is W-side)] */
-int EnumFontFamilies(
- HDC hdc, 
- LPCTSTR lpszFamily, 
- FONTENUMPROC lpEnumFontFamProc, 
- LPARAM lParam
-);
-
-/* EnumFontFamProc  [function; ce-only; CE 2.11..2.12, 3.0..699] */
-int CALLBACK EnumFontFamProc(
- const LOGFONT FAR* lpelf, 
- const TEXTMETRIC FAR* lpntm, 
- DWORD FontType, 
- LPARAM lParam
-);
-
-/* EnumFonts  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Mgrast2.lib, mgrast2.lib, mgtt.lib; A/W EnumFontsA,EnumFontsW (CE is W-side)] */
-int EnumFonts(
- HDC hdc, 
- LPCTSTR lpFaceName, 
- FONTENUMPROC lpFontFunc, 
- LPARAM lParam
-);
-
-/* EnumFontsProc  [function; ce-only; CE 2.11..2.12, 3.0..699] */
-int CALLBACK EnumFontsProc(
- lplf lplf, 
- lptm lptm, 
- DWORD dwType, 
- LPARAM lpData
 );
 
 /* ExtTextOut  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Mgrast.lib, mgrast.lib, Mgtt.lib, mgtt.lib; A/W ExtTextOutA,ExtTextOutW (CE is W-side)] */
@@ -2218,17 +2093,6 @@ BOOL ExtTextOut(
 /* GetTextColor  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, mgbase.lib, Winmgr.lib] */
 COLORREF GetTextColor(
  HDC hdc
-);
-
-/* GetTextExtentExPoint  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Mgrast.lib, mgrast.lib, Mgtt.lib, mgtt.lib; A/W GetTextExtentExPointA,GetTextExtentExPointW (CE is W-side)] */
-BOOL GetTextExtentExPoint(
- HDC hdc, 
- LPCTSTR lpszStr, 
- int cchString, 
- int nMaxExtent, 
- LPINT lpnFit, 
- LPINT alpDx, 
- LPSIZE lpSize
 );
 
 /* GetTextExtentPoint  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib; A/W GetTextExtentPointA,GetTextExtentPointW (CE is W-side)] */
@@ -2254,21 +2118,9 @@ int GetTextFace(
  LPTSTR lpFaceName
 );
 
-/* GetTextMetrics  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Mgrast.lib, mgrast.lib, Mgtt.lib, mgtt.lib; A/W GetTextMetricsA,GetTextMetricsW (CE is W-side)] */
-BOOL GetTextMetrics(
- HDC hdc, 
- LPTEXTMETRIC lptm
-);
-
 /* RemoveFontResource  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Mgrast.lib, mgrast.lib, Mgtt.lib, mgtt.lib; A/W RemoveFontResourceA,RemoveFontResourceW (CE is W-side)] */
 BOOL RemoveFontResource(
  LPCTSTR lpFileName
-);
-
-/* SetAbortProc  [function; shared; CE 2.11..2.12, 3.0..699; Mgprint.lib, mgprint.lib] */
-int SetAbortProc( 
- HDC hdc, 
- ABORTPROC lpAbortProc
 );
 
 /* SetTextColor  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Mgbase.lib, mgbase.lib] */
@@ -2289,22 +2141,7 @@ int StartPage(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* AbortProc  [function, callback; shared; CE 5.0..699; Mgprint.lib] */
-BOOL CALLBACK AbortProc(
- HDC hdc, // handle to DC
- int iError // error value
-);
-
-/* EnumFontFamiliesEx  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W EnumFontFamiliesExA,EnumFontFamiliesExW (CE is W-side)] */
-int EnumFontFamiliesEx(
- HDC hdc, // handle to DC
- LPLOGFONT lpLogfont, // font information
- FONTENUMPROC lpEnumFontFamExProc, // callback function
- LPARAM lParam, // additional data
- DWORD dwFlags // not used; must be 0
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* GetTextCharacterExtra  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 int GetTextCharacterExtra(

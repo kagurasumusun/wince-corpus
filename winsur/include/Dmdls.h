@@ -29,12 +29,7 @@ typedef struct {
  BYTE byData[ ];
 } DMUS_WAVEDATA;
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
+/* LPDMUS_NOTERANGE  [extra struct] */
 typedef struct _DMUS_NOTERANGE { DWORD dwLowNote; DWORD dwHighNote; } DMUS_NOTERANGE, *LPDMUS_NOTERANGE;
 
 #endif /* _DMDLS_ */

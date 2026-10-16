@@ -17,9 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define CF_RETEXTOBJ TEXT("RichEdit
-#define CF_RTF TEXT("Rich
-#define CF_RTFNOOBJS TEXT("Rich
 #define CFE_AUTOCOLOR 0x40000000
 #define CFE_BOLD 1
 #define CFE_ITALIC 2

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 26 constants, 11 declarations, 8 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 26 constants, 11 declarations, 8 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _IPRTRMIB_
 #define _IPRTRMIB_
@@ -136,16 +136,16 @@ typedef struct _MIBICMPINFO {
 /*   dwNumEntries */
 /*   table */
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
+/* PMIB_IPADDRROW  [extra struct] */
 typedef struct _MIB_IPADDRROW {DWORDdwAddr;DWORDdwIndex;DWORDdwMask;DWORDdwBCastAddr;DWORDdwReasmSize;unsignedshortunused1;unsignedshortunused2;} MIB_IPADDRROW,*PMIB_IPADDRROW;
-typedef struct _MIB_IPNETROW {DWORD dwIndex;DWORD dwPhysAddrLen;BYTE bPhysAddr[MAXLEN_PHYSADDR];DWORD dwAddr;DWORD dwType;} MIB_IPNETROW,*PMIB_IPNETROW;
+
+/* PMIB_IPSTATS  [extra struct] */
 typedef struct _MIB_IPSTATS {DWORD dwForwarding; DWORD dwDefaultTTL; DWORD dwInReceives; DWORD dwInHdrErrors; DWORD dwInAddrErrors; DWORD dwForwDatagrams; DWORD dwInUnknownProtos; DWORD dwInDiscards; DWORD dwInDelivers; DWORD dwOutRequests; DWORD dwRoutingDiscards; DWORD dwOutDiscards; DWORD dwOutNoRoutes; DWORD dwReasmTimeout; DWORD dwReasmReqds; DWORD dwReasmOks; DWORD dwReasmFails; DWORD dwFragOks; DWORD dwFragFails; DWORD dwFragCreates;DWORD dwNumIf; DWORD dwNumAddr; DWORD dwNumRoutes; } MIB_IPSTATS, *PMIB_IPSTATS;
+
+/* PMIB_TCPROW  [extra struct] */
 typedef struct _MIB_TCPROW {DWORD dwState; DWORD dwLocalAddr; DWORD dwLocalPort; DWORD dwRemoteAddr; DWORD dwRemotePort;} MIB_TCPROW,*PMIB_TCPROW;
+
+/* PMIB_TCPSTATS  [extra struct] */
 typedef struct _MIB_TCPSTATS {DWORD dwRtoAlgorithm;DWORD dwRtoMin; DWORD dwRtoMax; DWORD dwMaxConn; DWORD dwActiveOpens; DWORD dwPassiveOpens; DWORD dwAttemptFails; DWORD dwEstabResets; DWORD dwCurrEstab; DWORD dwInSegs; DWORD dwOutSegs; DWORD dwRetransSegs; DWORD dwInErrs; DWORD dwOutRsts; DWORD dwNumConns; } MIB_TCPSTATS,*PMIB_TCPSTATS;
 
 #endif /* _IPRTRMIB_ */

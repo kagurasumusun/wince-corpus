@@ -11,16 +11,4 @@
 #define _WFMTMIDI_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _WAVEFORMAT_MIDI {
-  WAVEFORMATEX wfx;
-  UINT32 USecPerQuarterNote;
-  UINT32 TicksPerQuarterNote;
-} WAVEFORMAT_MIDI, *LPWAVEFORMAT_MIDI;
-
 #endif /* _WFMTMIDI_ */

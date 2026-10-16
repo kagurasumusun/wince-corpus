@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 3 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 0 constants, 3 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _ROMLDR_
 #define _ROMLDR_
@@ -55,13 +55,7 @@ typedef struct ROMChain_t{
  ROMHDR* pTOC;
 } ROMChain_t, OEMRomChain;
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _XIPCHAIN_ENTRY {LPVOIDpvAddr;DWORDdwLength;DWORDdwMaxLength;USHORTusOrder;USHORTusFlags;DWORDdwVersion;CHARszName[XIP_NAMELEN];DWORDdwAlgoFlags;DWORDdwKeyLen;BYTEbyPublicKey[596];} XIPCHAIN_ENTRY, *PXIPCHAIN_ENTRY;
+/* PXIPCHAIN_INFO  [extra struct] */
 typedef struct _XIPCHAIN_INFO {DWORDcXIPs;XIPCHAIN_ENTRYxipEntryStart;} XIPCHAIN_INFO, *PXIPCHAIN_INFO;
 
 #endif /* _ROMLDR_ */

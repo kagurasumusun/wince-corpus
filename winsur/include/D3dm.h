@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 591 constants, 1 declarations, 0 outlines, 0 base types, 13 extra macros, 85 extra decls
+ * 591 constants, 1 declarations, 0 outlines, 0 base types, 13 extra macros, 86 extra decls
  */
 #ifndef _D3DM_
 #define _D3DM_
@@ -628,18 +628,6 @@
 #define D3DX_PI((FLOAT) 3.141592654f)
 
 /* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* Direct3DMobileCreate  [function; ce-only; CE 5.0..699; D3dm.lib] */
-IDirect3DMobile* WINAPI Direct3DMobileCreate(
- UINT SDKVersion
-);
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
@@ -647,81 +635,34 @@ IDirect3DMobile* WINAPI Direct3DMobileCreate(
 /* function */
 HRESULT AddDirtyRect( CONST RECT* pDirtyRect );
 HRESULT BeginScene();
-HRESULT CheckDepthStencilMatch( UINT Adapter, D3DMDEVTYPE DeviceType, D3DMFORMAT AdapterFormat, D3DMFORMAT RenderTargetFormat, D3DMFORMAT DepthStencilFormat );
-HRESULT CheckDeviceFormat( UINT Adapter, D3DMDEVTYPE DeviceType, D3DMFORMAT AdapterFormat, ULONG Usage, D3DMRESOURCETYPE RType, D3DMFORMAT CheckFormat );
-HRESULT CheckDeviceFormatConversion( UINT Adapter, D3DMDEVTYPE DeviceType, D3DMFORMAT SourceFormat, D3DMFORMAT DestFormat );
-HRESULT CheckDeviceMultiSampleType( UINT Adapter, D3DMDEVTYPE DeviceType, D3DMFORMAT SurfaceFormat, BOOL Windowed, D3DMMULTISAMPLE_TYPE MultiSampleType );
-HRESULT CheckDeviceType( UINT Adapter, D3DMDEVTYPE CheckType, D3DMFORMAT DisplayFormat, D3DMFORMAT BackBufferFormat, BOOL Windowed );
-HRESULT CheckProfile( UINT Adapter, D3DMDEVTYPE DeviceType, D3DMPROFILE Profile );
-HRESULT Clear( DWORD Count, CONST RECT* pRects, DWORD Flags, D3DMCOLOR Color, float Z, DWORD Stencil );
-HRESULT ColorFill( IDirect3DMobileSurface* pSurface, CONST RECT* pRect, D3DMCOLOR Color );
-HRESULT CreateAdditionalSwapChain( D3DMPRESENT_PARAMETERS* pPresentationParameters, IDirect3DMobileSwapChain** pSwapChain );
-HRESULT CreateDepthStencilSurface( UINT Width, UINT Height, D3DMFORMAT Format, D3DMMULTISAMPLE_TYPE MultiSample, IDirect3DMobileSurface** ppSurface );
-HRESULT CreateDevice( UINT Adapter, D3DMDEVTYPE DeviceType, HWND hFocusWindow, ULONG BehaviorFlags, D3DMPRESENT_PARAMETERS* pPresentationParameters, IDirect3DMobileDevice** ppReturnedDeviceInterface );
-HRESULT CreateImageSurface( UINT Width, UINT Height, D3DMFORMAT Format, IDirect3DMobileSurface** ppSurface );
-HRESULT CreateIndexBuffer( UINT Length, DWORD Usage, D3DMFORMAT Format, D3DMPOOL Pool, IDirect3DMobileIndexBuffer** ppIndexBuffer );
-HRESULT CreateRenderTarget( UINT Width, UINT Height, D3DMFORMAT Format, D3DMMULTISAMPLE_TYPE MultiSample, BOOL Lockable, IDirect3DMobileSurface** ppSurface );
-HRESULT CreateTexture( UINT Width, UINT Height, UINT Levels, DWORD Usage, D3DMFORMAT Format, D3DMPOOL Pool, IDirect3DMobileTexture** ppTexture );
-HRESULT CreateVertexBuffer( UINT Length, DWORD Usage, DWORD FVF, D3DMPOOL Pool, IDirect3DMobileVertexBuffer** ppVertexBuffer );
-VOID WINAPI D3DMXCreateTextureFromFileExW( LPDIRECT3DMOBILEDEVICE pDevice, LPCWSTR pSrcFile, UINT Width, UINT Height, UINT MipLevels, DWORD Usage, D3DMFORMAT Format, D3DMPOOL Pool, DWORD Filter, DWORD MipFilter, D3DMCOLOR ColorKey, D3DMXIMAGE_INFO* pSrcInfo, PALETTEENTRY* pPalette, LPDIRECT3DMOBILETEXTURE* ppTexture );
-VOID WINAPI D3DMXCreateTextureFromResourceExW( LPDIRECT3DMOBILEDEVICE pDevice, HMODULE hSrcModule, LPCWSTR pSrcResource, UINT Width, UINT Height, UINT MipLevels, DWORD Usage, D3DMFORMAT Format, D3DMPOOL Pool, DWORD Filter, DWORD MipFilter, D3DMCOLOR ColorKey, D3DMXIMAGE_INFO* pSrcInfo, PALETTEENTRY* pPalette, LPDIRECT3DMOBILETEXTURE* ppTexture );
-VOID WINAPI D3DMXLoadSurfaceFromFileW( LPDIRECT3DMOBILESURFACE pDestSurface, CONST PALETTEENTRY* pDestPalette, CONST RECT* pDestRect, LPCWSTR pSrcFile, CONST RECT* pSrcRect, DWORD Filter, D3DMCOLOR ColorKey, D3DMXIMAGE_INFO* pSrcInfo );
-VOID WINAPI D3DMXLoadSurfaceFromResourceW( LPDIRECT3DMOBILESURFACE pDestSurface, CONST PALETTEENTRY* pDestPalette, CONST RECT* pDestRect, HMODULE hSrcModule, LPCWSTR pSrcResource, CONST RECT* pSrcRect, DWORD Filter, D3DMCOLOR ColorKey, D3DMXIMAGE_INFO* pSrcInfo );
-HRESULT DrawIndexedPrimitive( D3DMPRIMITIVETYPE PrimitiveType, INT BaseVertexIndex, UINT minIndex, UINT NumVertices, UINT startIndex, UINT primCount );
-HRESULT DrawPrimitive( D3DMPRIMITIVETYPE PrimitiveType, UINT StartVertex, UINT PrimitiveCount );
 HRESULT EndScene();
-HRESULT EnumAdapterModes( UINT Adapter, UINT Mode, D3DMDISPLAYMODE* pMode );
 UINT GetAdapterCount();
-HRESULT GetAdapterDisplayMode( UINT Adapter, D3DMDISPLAYMODE* pMode );
-HRESULT GetAdapterIdentifier( UINT Adapter, ULONG Flags, D3DMADAPTER_IDENTIFIER* pIdentifier );
 UINT GetAdapterModeCount( UINT Adapter );
-HRESULT GetBackBuffer( UINT BackBuffer, D3DMBACKBUFFER_TYPE Type, IDirect3DMobileSurface** ppBackBuffer );
-HRESULT GetClipStatus( D3DMCLIPSTATUS* pClipStatus );
-HRESULT GetContainer( REFIID riid, void** ppContainer );
-HRESULT GetCreationParameters( D3DMDEVICE_CREATION_PARAMETERS* pParameters );
 HRESULT GetCurrentTexturePalette( UINT* PaletteNumber );
 HRESULT GetDepthStencilSurface( IDirect3DMobileSurface** ppZStencilSurface );
-HRESULT GetDesc( D3DMINDEXBUFFER_DESC* pDesc );
 HRESULT GetDirect3D( IDirect3DMobile** ppD3DM );
 HRESULT GetFrontBuffer( IDirect3DMobileSurface** pFrontBuffer );
 HRESULT GetIndices( IDirect3DMobileIndexBuffer** ppIndexData );
 DWORD GetLOD();
 DWORD GetLevelCount();
-HRESULT GetLevelDesc( UINT Level, D3DMSURFACE_DESC* pDesc );
-HRESULT GetLight( DWORD Index, D3DMLIGHT* pLight, D3DMFORMAT* pFormat );
 HRESULT GetLightEnable( DWORD Index, BOOL* pEnable );
-HRESULT GetMaterial( D3DMMATERIAL* pMaterial, D3DMFORMAT* pFormat );
 DWORD GetPriority();
-HRESULT GetRenderState( D3DMRENDERSTATETYPE State, DWORD* pValue );
 HRESULT GetRenderTarget( IDirect3DMobileSurface** ppRenderTarget );
 HRESULT GetStreamSource( UINT StreamNumber, IDirect3DMobileVertexBuffer** ppStreamData, UINT* pStride );
 HRESULT GetSurfaceLevel( UINT Level, IDirect3DMobileSurface** ppSurfaceLevel );
 HRESULT GetTexture( DWORD Stage, IDirect3DMobileBaseTexture** ppTexture );
-HRESULT GetTextureStageState( DWORD Stage, D3DMTEXTURESTAGESTATETYPE Type, DWORD* pValue );
-HRESULT GetTransform( D3DMTRANSFORMSTATETYPE State, D3DMMATRIX* pMatrix, D3DMFORMAT* pFormat );
-HRESULT GetViewport( D3DMVIEWPORT* pViewport );
 HRESULT LightEnable( DWORD Index, BOOL Enable );
-HRESULT LockRect( D3DMLOCKED_RECT* pLockedRect, CONST RECT* pRect, DWORD Flags );
 void PreLoad();
-HRESULT Present( CONST RECT* pSourceRect, CONST RECT* pDestRect, HWND hDestWindowOverride, CONST RGNDATA* pDirtyRegion );
 HRESULT ProcessVertices( UINT SrcStartIndex, UINT DestIndex, UINT VertexCount, IDirect3DMobileVertexBuffer* pDestBuffer, DWORD Flags );
 HRESULT RegisterSoftwareDevice( VOID* pInitializeFunction );
 HRESULT ResourceManagerDiscardBytes( DWORD Bytes );
-HRESULT SetClipStatus( CONST D3DMCLIPSTATUS* pClipStatus );
 HRESULT SetCurrentTexturePalette( UINT PaletteNumber );
 HRESULT SetIndices( IDirect3DMobileIndexBuffer* pIndexData );
 DWORD SetLOD( DWORD LODNew );
-HRESULT SetLight( DWORD Index, CONST D3DMLIGHT* pLight, D3DMFORMAT Format );
-HRESULT SetMaterial( CONST D3DMMATERIAL* pMaterial, D3DMFORMAT Format );
 DWORD SetPriority( DWORD PriorityNew );
-HRESULT SetRenderState( D3DMRENDERSTATETYPE State, DWORD Value );
 HRESULT SetRenderTarget( IDirect3DMobileSurface* pRenderTarget, IDirect3DMobileSurface* pNewZStencil );
 HRESULT SetStreamSource( UINT StreamNumber, IDirect3DMobileVertexBuffer* pStreamData, UINT Stride );
 HRESULT SetTexture( DWORD Stage, IDirect3DMobileBaseTexture* pTexture );
-HRESULT SetTextureStageState( DWORD Stage, D3DMTEXTURESTAGESTATETYPE Type, DWORD Value );
-HRESULT SetTransform( D3DMTRANSFORMSTATETYPE State, CONST D3DMMATRIX* pMatrix, D3DMFORMAT Format );
-HRESULT SetViewport( CONST D3DMVIEWPORT* pViewport );
-HRESULT StretchRect( IDirect3DMobileSurface* pSourceSurface, CONST RECT* pSourceRect, IDirect3DMobileSurface* pDestSurface, CONST RECT* pDestRect, D3DMTEXTUREFILTERTYPE Filter );
 HRESULT UnlockRect();
 HRESULT UpdateTexture( IDirect3DMobileBaseTexture* pSourceTexture, IDirect3DMobileBaseTexture* pDestinationTexture );
 HRESULT ValidateDevice( DWORD* pNumPasses );

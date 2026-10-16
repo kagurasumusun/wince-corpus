@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 25 constants, 7 declarations, 2 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 22 constants, 7 declarations, 2 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _GPSAPI_
 #define _GPSAPI_
@@ -18,9 +18,6 @@
  * chains with the evidence after the #endif)
  * ================================================================ */
 #define GPS_DATA_FLAGS_HARDWARE_OFF 0x00000001
-#define GPS_FIX_QUALITY_UNKNOWN 0
-#define GPS_FIX_SELECTION_UNKNOWN 0
-#define GPS_FIX_UNKNOWN 0
 #define GPS_MAX_FRIENDLY_NAME 64
 #define GPS_MAX_PREFIX_NAME 16
 #define GPS_MAX_SATELLITES 12
@@ -55,24 +52,11 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* GPSCloseDevice  [function; ce-only; CE 6.0..699; Gpsapi.lib] */
 DWORD GPSCloseDevice(
  HANDLE hGPSDevice
-);
-
-/* GPSGetDeviceState  [function; ce-only; CE 6.0..699; Gpsapi.lib] */
-DWORD GPSGetDeviceState(
- GPS_DEVICE *pGPSDevice
-);
-
-/* GPSGetPosition  [function; ce-only; CE 6.0..699; Gpsapi.lib] */
-DWORD GPSGetPosition(
- HANDLE hGPSDevice,
- GPS_POSITION *pGPSPosition,
- DWORD dwMaximumAge,
- DWORD dwFlags
 );
 
 /* GPSOpenDevice  [function; ce-only; CE 6.0..699; Gpsapi.lib] */
@@ -88,35 +72,6 @@ HANDLE GPSOpenDevice(
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
-
-/* struct */
-typedef struct _GPS_POSITION {
-  DWORD dwVersion;
-  DWORD dwSize;
-  DWORD dwValidFields;
-  DWORD dwFlags;
-  SYSTEMTIME stUTCTime;
-  double dblLatitude;
-  double dblLongitude;
-  float flSpeed;
-  float flHeading;
-  double dblMagneticVariation;
-  float flAltitudeWRTSeaLevel;
-  float flAltitudeWRTEllipsoid;
-  GPS_FIX_QUALITY FixQuality;
-  GPS_FIX_TYPE FixType;
-  GPS_FIX_SELECTION SelectionType;
-  float flPositionDilutionOfPrecision;
-  float flHorizontalDilutionOfPrecision;
-  float flVerticalDilutionOfPrecision;
-  DWORD dwSatelliteCount;
-  DWORD rgdwSatellitesUsedPRNs[GPS_MAX_SATELLITES];
-  DWORD dwSatellitesInView;
-  DWORD rgdwSatellitesInViewPRNs[GPS_MAX_SATELLITES];
-  DWORD rgdwSatellitesInViewElevation[GPS_MAX_SATELLITES];
-  DWORD rgdwSatellitesInViewAzimuth[GPS_MAX_SATELLITES];
-  DWORD rgdwSatellitesInViewSignalToNoiseRatio[GPS_MAX_SATELLITES];
-} GPS_POSITION, *PGPS_POSITION;
 
 /* function */
 DWORD GPS_Init(DWORD dwContext);

@@ -49,12 +49,19 @@ typedef struct _SecPkgCred_SupportedProtocols {
  DWORD grbitProtocol; 
 } SecPkgCred_SupportedProtocols, *PSecPkgCred_SupportedProtocols;
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
+/* PSecPkgContext_ProtoInfo  [extra struct] */
+typedef struct _SecPkgContext_ProtoInfo { SEC_WCHAR SEC_FAR*sProtocolName;unsigned longmajorVersion;unsigned longminorVersion;} SecPkgContext_ProtoInfo, *PSecPkgContext_ProtoInfo;
 
-/* struct */
+/* PSecPkgCred_CipherStrengths  [extra struct] */
+typedef struct _SecPkgCred_CipherStrengths { DWORDdwMinimumCipherStrength;DWORDdwMaximumCipherStrength;} SecPkgCred_CipherStrengths, *PSecPkgCred_CipherStrengths;
+
+/* PSecPkgCred_SupportedAlgs  [extra struct] */
+typedef struct _SecPkgCred_SupportedAlgs { DWORDcSupportedAlgs;ALG_ID*palgSupportedAlgs;} SecPkgCred_SupportedAlgs, *PSecPkgCred_SupportedAlgs;
+
+/* PSecPkgCred_SupportedProtocols  [extra struct] */
+typedef struct _SecPkgCred_SupportedProtocols { DWORDgrbitProtocol;} SecPkgCred_SupportedProtocols, *PSecPkgCred_SupportedProtocols;
+
+/* PSecPkgContext_MasterKeyInfo  [extra struct] */
 typedef struct _SecPkgContext_MasterKeyInfo {
   DWORD dwVersion;
   DWORD cbMasterKey;
@@ -64,9 +71,5 @@ typedef struct _SecPkgContext_MasterKeyInfo {
   DWORD cbServerRandom;
   BYTE rgbServerRandom[512];
 }SecPkgContext_MasterKeyInfo, *PSecPkgContext_MasterKeyInfo;
-typedef struct _SecPkgContext_ProtoInfo { SEC_WCHAR SEC_FAR*sProtocolName;unsigned longmajorVersion;unsigned longminorVersion;} SecPkgContext_ProtoInfo, *PSecPkgContext_ProtoInfo;
-typedef struct _SecPkgCred_CipherStrengths { DWORDdwMinimumCipherStrength;DWORDdwMaximumCipherStrength;} SecPkgCred_CipherStrengths, *PSecPkgCred_CipherStrengths;
-typedef struct _SecPkgCred_SupportedAlgs { DWORDcSupportedAlgs;ALG_ID*palgSupportedAlgs;} SecPkgCred_SupportedAlgs, *PSecPkgCred_SupportedAlgs;
-typedef struct _SecPkgCred_SupportedProtocols { DWORDgrbitProtocol;} SecPkgCred_SupportedProtocols, *PSecPkgCred_SupportedProtocols;
 
 #endif /* _SCHNLSP_ */

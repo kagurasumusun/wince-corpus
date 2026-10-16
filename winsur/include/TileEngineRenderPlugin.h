@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _TILEENGINERENDERPLUGIN_
 #define _TILEENGINERENDERPLUGIN_
@@ -17,7 +17,6 @@
  * ================================================================ */
 
 /* function */
-HRESULT Create16BppTexture( int fRenderTarget,  UINT nWidth,  UINT nHeight,  int fKeepsystemMemory,  ICustomSurface** ppSurface )
 void OnWindowUpdate();
 
 #endif /* _TILEENGINERENDERPLUGIN_ */

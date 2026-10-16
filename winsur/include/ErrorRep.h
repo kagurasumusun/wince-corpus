@@ -11,17 +11,4 @@
 #define _ERRORREP_
 
 
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* ReportFault  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-EFaultRepRetVal ReportFault(
- LPEXCEPTION_POINTERS pep,
- DWORD dwOpt
-);
-#endif /* _WIN32_WCE */
-
 #endif /* _ERRORREP_ */

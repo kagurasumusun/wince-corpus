@@ -17,7 +17,6 @@
  * ================================================================ */
 
 /* function */
-HRESULT DownloadImage( LPCOLESTR pszImagePath, DWORD dwRebootTimeout );
 HRESULT JumpToImage( DWORD dwJumpFlags );
 HRESULT OnProgressNotify( DWORD dwCurrentSize, DWORD dwTotalSize );
 HRESULT StopDownloadImage();

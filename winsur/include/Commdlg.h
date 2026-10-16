@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 230 constants, 16 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 230 constants, 15 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _COMMDLG_
 #define _COMMDLG_
@@ -269,74 +269,5 @@ typedef struct tagDEVNAMES {
  WORD wOutputOffset; 
  WORD wDefault; 
 } DEVNAMES;
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* CCHookProc  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-UINT APIENTRY CCHookProc(
- HWND hdlg, 
- UINT uiMsg, 
- WPARAM wParam, 
- LPARAM lParam
-);
-
-/* GetOpenFileName  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Fileopen.lib, fileopen.lib; A/W GetOpenFileNameA,GetOpenFileNameW (CE is W-side)] */
-BOOL GetOpenFileName( 
- LPOPENFILENAME lpofn
-);
-
-/* GetSaveFileName  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Fileopen.lib, fileopen.lib; A/W GetSaveFileNameA,GetSaveFileNameW (CE is W-side)] */
-BOOL GetSaveFileName( 
- LPOPENFILENAME lpofn
-);
-
-/* PagePaintHook  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-UINT CALLBACK PagePaintHook(
- HWND hdlg, 
- UINT uiMsg, 
- WPARAM wParam, 
- LPARAM lParam
-);
-
-/* PageSetupHook  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-UINT CALLBACK PageSetupHook(
- HWND hdlg, 
- UINT uiMsg, 
- WPARAM wParam, 
- LPARAM lParam
-);
-
-/* PrintHookProc  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-UINT APIENTRY PrintHookProc(
- HWND hdlg, 
- UINT uiMsg, 
- WPARAM wParam, 
- LPARAM lParam 
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* DrvAdvPageSetupDlg  [function; ce-only; CE 4.0..699] */
-BOOL DrvAdvPageSetupDlg( 
- LPPAGESETUPDLG lppsd, 
- HWND hwndDlg 
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* CFHookProc  [function; ce-only; CE 5.0..699] */
-UINT (APIENTRY* LPCFHOOKPROC)(
- HWND hdlg,
- UINT uiMsg,
- WPARAM wParam,
- LPARAM lParam
-);
-#endif /* _WIN32_WCE */
 
 #endif /* _COMMDLG_ */

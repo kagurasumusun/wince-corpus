@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 36 constants, 8 declarations, 7 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 25 constants, 8 declarations, 7 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _IPTYPES_
 #define _IPTYPES_
@@ -26,7 +26,6 @@
 #define IF_OTHER_ADAPTERTYPE 0
 #define IF_PPP_ADAPTERTYPE 4
 #define IF_TOKEN_RING_ADAPTERTYPE 2
-#define IfOperStatusUp 1
 #define IP_ADAPTER_ADDRESS_DNS_ELIGIBLE 0x00000001
 #define IP_ADAPTER_ADDRESS_TRANSIENT 0x00000002
 #define IP_ADAPTER_DDNS_ENABLED 0x00000001
@@ -35,9 +34,6 @@
 #define IP_ADAPTER_NO_MULTICAST 0x00000010
 #define IP_ADAPTER_RECEIVE_ONLY 0x00000008
 #define IP_ADAPTER_REGISTER_ADAPTER_SUFFIX 0x00000002
-#define IpDadStateInvalid 0
-#define IpPrefixOriginOther 0
-#define IpSuffixOriginOther 0
 #define MAX_ADAPTER_ADDRESS_LENGTH 8
 #define MAX_ADAPTER_DESCRIPTION_LENGTH 128
 #define MAX_ADAPTER_NAME_LENGTH 256
@@ -46,13 +42,6 @@
 #define MAX_SCOPE_ID_LEN 256
 #define MIXED_NODETYPE 4
 #define PEER_TO_PEER_NODETYPE 2
-#define ScopeLevelAdmin 4
-#define ScopeLevelGlobal 14
-#define ScopeLevelInterface 1
-#define ScopeLevelLink 2
-#define ScopeLevelOrganization 8
-#define ScopeLevelSite 5
-#define ScopeLevelSubnet 3
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
@@ -149,12 +138,7 @@ typedef enum {
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   String */
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
+/* PIP_PER_ADAPTER_INFO  [extra struct] */
 typedef struct _IP_PER_ADAPTER_INFO{UINT AutoconfigEnabled;UINT AutoconfigActive;PIP_ADDR_STRING CurrentDnsServer;IP_ADDR_STRING DnsServerList;} IP_PER_ADAPTER_INFO, *PIP_PER_ADAPTER_INFO;
 
 #endif /* _IPTYPES_ */

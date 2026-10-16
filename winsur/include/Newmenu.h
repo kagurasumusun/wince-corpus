@@ -11,12 +11,4 @@
 #define _NEWMENU_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct tagNMNEWMENU { NMHDR hdr; TCHAR szReg[80]; HMENU hMenu; CLSID clsid; IpropertyBag ** pppropbag;} NMNEWMENU, * PNMNEWMENU;
-
 #endif /* _NEWMENU_ */

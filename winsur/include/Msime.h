@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 6 declarations, 0 outlines, 0 base types, 0 extra macros, 32 extra decls
+ * 0 constants, 6 declarations, 0 outlines, 0 base types, 0 extra macros, 17 extra decls
  */
 #ifndef _MSIME_
 #define _MSIME_
@@ -32,20 +32,20 @@ typedef struct _POSTBL {
  BYTE* szName; 
 } POSTBL;
 
+/* PIMEWRD  [extra struct] */
+typedef struct _IMEWRD {WCHAR* pwchReading;WCHAR* pwchDisplay;Union{ULONGulPos;Struct{ WORDnPos1; WORDnPos2;};};ULONG* rgulAttrs[2];INTcbComment;IMEUCTuct;VOID* pvComment;}IMEWRD, *PIMEWRD;
+
+/* PIPCANDIDATE  [extra struct] */
+typedef struct tagIPCANDIDATE {DWORD dwSize;DWORD dwFlags;INT iSelIndex;INT nCandidate;DWORD dwPrivateDataOffset;DWORD dwPrivateDataSize;DWORD dwOffset[1];} IPCANDIDATE, *PIPCANDIDATE;
+
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* CreateIFEDictionaryInstance  [function; shared; CE 4.0..699; Imejpp.dll, imejpp.dll] */
 HRESULT CreateIFEDictionaryInstance(
- VOID** ppvObj
-);
-
-/* CreateIImeIPointInstance  [function; ce-only; CE 4.0..699; Imejpp.dll, imejpp.dll] */
-HRESULT CreateIImeIPointInstance(
- REFCLSID clsid,
  VOID** ppvObj
 );
 #endif /* _WIN32_WCE */
@@ -55,15 +55,9 @@ HRESULT CreateIImeIPointInstance(
  * parser did not turn into an entity declaration
  * ================================================================ */
 
-/* struct */
-typedef struct _IMEWRD {WCHAR* pwchReading;WCHAR* pwchDisplay;Union{ULONGulPos;Struct{ WORDnPos1; WORDnPos2;};};ULONG* rgulAttrs[2];INTcbComment;IMEUCTuct;VOID* pvComment;}IMEWRD, *PIMEWRD;
-typedef struct tagIPCANDIDATE {DWORD dwSize;DWORD dwFlags;INT iSelIndex;INT nCandidate;DWORD dwPrivateDataOffset;DWORD dwPrivateDataSize;DWORD dwOffset[1];} IPCANDIDATE, *PIPCANDIDATE;
-
 /* function */
 HRESULT GenerateMessage(void);
 HRESULT IsReadingHalfKana(void);
-STDMETHODGetAllCompositionInfo(WCHAR** ppwSzCompStr,DWORD** ppdwCharID,INT*pcchCompStr,INT*piIPPos,INT*piStartUndetStrPos,INT* pcchUndetStr,INT* piEditStart,INT*piEditLen);
-STDMETHODSelectIpCandidate(DWORD dwCharId,INT iselno);
 HRESULT SetCandidateSelection(UINT iciCandidate);
 HRESULT SetCandidateStr(UINTciCandidate,WCHAR* pwsz,UINT cbData);
 HRESULT SetCompositionAttr(UINT ciAtr,BYTE* pb);

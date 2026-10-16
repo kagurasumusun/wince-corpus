@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 7 constants, 45 declarations, 15 outlines, 0 base types, 0 extra macros, 4 extra decls
+ * 7 constants, 45 declarations, 15 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _WINDBASE_
 #define _WINDBASE_
@@ -83,39 +83,24 @@ typedef struct CEPROPSPEC {
  DWORD cchPropName;
 } CEPROPSPEC;
 
+/* LPBY_HANDLE_DB_INFORMATION  [extra struct] */
+typedef struct _BY_HANDLE_DB_INFORMATION {
+  WORD wVersion;
+  CEGUID guidVol;
+  CEOID oidDbase;
+  CEDBASEINFOEX infDatabase;
+} BY_HANDLE_DB_INFORMATION, *LPBY_HANDLE_DB_INFORMATION;
+
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* CeCreateDatabaseEx2  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-CEOID CeCreateDatabaseEx2( 
- PCEGUID pguid, 
- CEDBASEINFOEX* pInfo
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* CeGetDBInformationByHandle  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
 BOOL CeGetDBInformationByHandle(
  HANDLE hDbase, 
  LPBY_HANDLE_DB_INFORMATION lpDBInfo 
-);
-
-/* CeOidGetInfoEx2  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-BOOL CeOidGetInfoEx2(
- PCEGUID pGuid,
- CEOID oid,
- CEOIDINFO* poidInfo
-);
-
-/* CeOpenDatabaseEx2  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-HANDLE CeOpenDatabaseEx2( 
- PCEGUID pguid, 
- PCEOID poid,
- LPWSTR lpszName, 
- SORTORDERSPECEX* psort, 
- DWORD dwFlags,
- CENOTIFYREQUEST* pRequest
 );
 
 /* CeSeekDatabaseEx  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
@@ -126,43 +111,9 @@ CEOID CeSeekDatabaseEx(
  WORD wNumVals,
  LPDWORD lpdwIndex
 );
-
-/* CeSetDatabaseInfoEx2  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-BOOL CeSetDatabaseInfoEx2( 
- PCEGUID pguid, 
- CEOID oidDbase,
- CEDBASEINFOEX* pNewInfo
-);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* CeAddDatabaseProps  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL CeAddDatabaseProps(
- PCEGUID pGuid,
- CEOID oidDb,
- DWORD cProps,
- CEPROPSPEC* prgProps
-);
-
-/* CeBeginTransaction  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL CeBeginTransaction(
- HANDLE hSession,
- CEDBISOLATIONLEVEL isoLevel
-);
-
-/* CeCreateDatabaseWithProps  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-CEOID CeCreateDatabaseWithProps(
- PCEGUID pGuid,
- CEDBASEINFOEX* pInfo,
- DWORD cProps,
- CEPROPSPEC* prgProps
-);
-
-/* CeCreateSession  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-HANDLE CeCreateSession(
- CEGUID* pGuid
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* CeEndTransaction  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL CeEndTransaction(
@@ -183,30 +134,11 @@ HANDLE CeGetDatabaseSession(
  HANDLE hDatabase
 );
 
-/* CeOpenDatabaseInSession  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-HANDLE CeOpenDatabaseInSession(
- HANDLE hSession,
- PCEGUID pGuid,
- PCEOID poid,
- LPWSTR lpwszName,
- SORTORDERSPECEX* pSort,
- DWORD dwFlags,
- CENOTIFYREQUEST* pRequest
-);
-
 /* CeOpenStream  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 HANDLE CeOpenStream(
  HANDLE hDatabase,
  CEPROPID propid,
  DWORD dwMode
-);
-
-/* CeRemoveDatabaseProps  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL CeRemoveDatabaseProps(
- PCEGUID pGuid,
- CEOID oidDb,
- DWORD cProps,
- CEPROPID* prgProps
 );
 
 /* CeSetSessionOption  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
@@ -252,15 +184,7 @@ BOOL CeStreamWrite(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* CeAddSyncPartner  [function; ce-only; CE 6.0..699; coredll.lib] */
-BOOL CeAddSyncPartner(
- PCEGUID pVolGuid,
- PCEGUID pSyncPartnerGuid,
- LPCWSTR pwszFriendlyName,
- LPCWSTR pwszFullName 
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* CeAttachCustomTrackingData  [function; ce-only; CE 6.0..699; coredll.lib] */
 BOOL CeAttachCustomTrackingData(
@@ -268,16 +192,6 @@ BOOL CeAttachCustomTrackingData(
  CEOID oidChangeRecord,
  BYTE* rgbData,
  DWORD ccb
-);
-
-/* CeBeginSyncSession  [function; ce-only; CE 6.0..699; coredll.lib] */
-BOOL CeBeginSyncSession(
- HANDLE hSession,
- PCEGUID pSyncPartnerGuid,
- CEDBGEN genFrom,
- CEDBGEN genTo,
- DWORD dwFlags,
- CEDBGEN* pGenCur
 );
 
 /* CeEndSyncSession  [function; ce-only; CE 6.0..699; coredll.lib] */
@@ -321,79 +235,12 @@ BOOL CeGetPropChangeInfo(
  BOOL* pfPropChanged
 );
 
-/* CeGetRecordChangeInfo  [function; ce-only; CE 6.0..699; coredll.lib] */
-BOOL CeGetRecordChangeInfo(
- HANDLE hChangeEnum,
- CEOID oidChangeRecord,
- CECHANGEINFO* pInfo
-);
-
 /* CeMarkRecord  [function; ce-only; CE 6.0..699; coredll.lib] */
 BOOL CeMarkRecord(
  HANDLE hChangeEnum,
  CEOID oidChangeRecord,
  BOOL fChanged
 );
-
-/* CePurgeTrackingData  [function; ce-only; CE 6.0..699; coredll.lib] */
-BOOL CePurgeTrackingData(
- PCEGUID pVolGuid,
- PCEGUID pSyncPartnerGuid,
- SYSTEMTIME* pstThreshold
-);
-
-/* CePurgeTrackingGenerations  [function; ce-only; CE 6.0..699; coredll.lib] */
-BOOL CePurgeTrackingGenerations(
- PCEGUID pVolGuid,
- PCEGUID pSyncPartnerGuid,
- CEDBGEN genThreshold
-);
-
-/* CeRemoveDatabaseTracking  [function; ce-only; CE 6.0..699; coredll.lib] */
-BOOL CeRemoveDatabaseTracking(
- PCEGUID pVolGuid,
- PCEGUID pSyncPartnerGuid,
- CEOID oid,
-);
-
-/* CeRemoveSyncPartner  [function; ce-only; CE 6.0..699; coredll.lib] */
-BOOL CeRemoveSyncPartner(
-PCEGUID pVolGuid,
-PCEGUID pSyncPartnerGuid,
-);
-
-/* CeTrackDatabase  [function; ce-only; CE 6.0..699; coredll.lib] */
-BOOL CeTrackDatabase(
- PCEGUID pVolGuid,
- PCEGUID pSyncPartnerGuid,
- CEOID oid,
- DWORD dwTrackingFlags
-);
-
-/* CeTrackProperty  [function; ce-only; CE 6.0..699; coredll.lib] */
-BOOL CeTrackProperty(
- PCEGUID pVolGuid,
- CEOID oidDB,
- CEPROPID propid,
- BOOL fTrack
-);
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct CESORTORDERSPECEX { WORD wVersion; WORD wNumProps; WORD wKeyFlags; WORD wReserved; CEPROPID rgPropID[CEDB_MAXSORTPROP]; DWROD rgdwFlags[CEDB_MAXSORTPROP]; } CESORTORDERSPECEX;
-typedef struct _BY_HANDLE_DB_INFORMATION {
-  WORD wVersion;
-  CEGUID guidVol;
-  CEOID oidDbase;
-  CEDBASEINFOEX infDatabase;
-} BY_HANDLE_DB_INFORMATION, *LPBY_HANDLE_DB_INFORMATION;
-
-/* function */
-CEOIDCeSeekDatabaseEx(HANDLE hDatabase,DWORDdwSeekType, DWORDdwValue, WORD wNumVals,LPDWORDlpdwIndex);
 
 #endif /* _WINDBASE_ */

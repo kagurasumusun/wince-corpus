@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 8 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 94 extra decls
+ * 8 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 79 extra decls
  */
 #ifndef _MSTSAX_
 #define _MSTSAX_
@@ -33,14 +33,11 @@
 
 /* function */
 HRESULT get_AcceleratorPassthrough( LONG *pacceleratorPassthrough );
-get_BitmapCacheSize(  LONG *pbitmapCacheSize );
 HRESULT get_BitmapPersistence( LONG *pbitmapPersistence );
 HRESULT get_BitmapVirtualCache16BppSize( LONG *pBitmapVirtualCache16BppSize );
 HRESULT get_BitmapVirtualCacheSize( LONG *pbitmapVirtualCacheSize );
 HRESULT get_DedicatedTerminal( LONG *pdedicatedTerminal );
 HRESULT get_DisableCtrlAltDel( LONG *pdisableCtrlAltDel );
-HRESULT get_DisplayConnectionBar( VARIANT_BOOL *pDisplayConnectionBar );
-HRESULT get_GrabFocusOnConnect( VARIANT_BOOL *pfGrabFocusOnConnect );
 HRESULT get_HotKeyAltShiftTab( LONG *photKeyAltShiftTab );
 HRESULT get_HotKeyAltSpace( LONG *photKeyAltSpace );
 HRESULT get_HotKeyCtrlEsc( LONG *photKeyCtrlEsc );
@@ -53,17 +50,9 @@ HRESULT get_MaximizeShell( LONG *pmaximizeShell );
 HRESULT get_MinutesToIdleTimeout( LONG *pminutesToIdleTimeout );
 HRESULT get_NumBitmapCaches( LONG *pnumBitmapCaches );
 HRESULT get_PerformanceFlags( LONG *pDisableList );
-HRESULT get_PinConnectionBar( VARIANT_BOOL *pPinConnectionBar );
 HRESULT get_RDPPort( LONG *prdpPort );
-HRESULT get_RdpdrClipCleanTempDirString( BSTR *clipCleanTempDirString );
-HRESULT get_RdpdrClipPasteInfoString( BSTR *clipPasteInfoString );
-HRESULT get_RdpdrLocalPrintingDocName( BSTR *pLocalPrintingDocName );
-HRESULT get_RedirectPorts( VARIANT_BOOL *pRedirectPorts );
-HRESULT get_RedirectPrinters( VARIANT_BOOL *pRedirectPrinters );
-HRESULT get_RedirectSmartCards( VARIANT_BOOL *pRedirectSmartCards );
 HRESULT get_ScaleBitmapCachesByBPP( LONG *pbScale );
 HRESULT get_ShadowBitmap( LONG *pshadowBitmap );
-HRESULT get_SmartSizing( VARIANT_BOOL *pfSmartSizing );
 HRESULT get_SmoothScroll( LONG *psmoothScroll );
 HRESULT get_keepAliveInterval( LONG *pkeepAliveInterval );
 HRESULT get_maxEventCount( LONG *pmaxEventCount );
@@ -77,15 +66,11 @@ HRESULT put_BitmapCacheSize( LONG bitmapCacheSize );
 HRESULT put_BitmapVirtualCache16BppSize( LONG bitmapVirtualCache16BppSize );
 HRESULT put_BitmapVirtualCache24BppSize( LONG bitmapVirtualCache24BppSize );
 HRESULT put_BitmapVirtualCacheSize( LONG bitmapVirtualCacheSize );
-HRESULT put_ConnectToServerConsole( VARIANT_BOOL connectToServerConsole );
-HRESULT put_ConnectWithEndpoint( VARIANT *ConnectEndpoint );
 HRESULT put_DedicatedTerminal( LONG dedicatedTerminal );
 HRESULT put_DisableCtrlAltDel( LONG disableCtrlAltDel );
-HRESULT put_DisplayConnectionBar( VARIANT_BOOL fDisplayConnectionBar );
 HRESULT put_DoubleClickDetect( LONG doubleClickDetect );
 HRESULT put_EnableMouse( LONG enableMouse );
 HRESULT put_EnableWindowsKey( LONG enableWindowsKey );
-HRESULT put_GrabFocusOnConnect( VARIANT_BOOL fGrabFocusOnConnect );
 HRESULT put_HotKeyAltEsc( LONG hotKeyAltEsc );
 HRESULT put_HotKeyAltShiftTab( LONG hotKeyAltShiftTab );
 HRESULT put_HotKeyAltSpace( LONG hotKeyAltSpace );
@@ -101,17 +86,8 @@ HRESULT put_MaximizeShell( LONG maximizeShell );
 HRESULT put_MinutesToIdleTimeout( LONG minutesToIdleTimeout );
 HRESULT put_NumBitmapCaches( LONG numBitmapCaches );
 HRESULT put_PerformanceFlags( LONG DisableList );
-HRESULT put_PersistCacheDirectory( BSTR PersistCacheDirectory );
-HRESULT put_PinConnectionBar( VARIANT_BOOL fPinConnectionBar );
 HRESULT put_RDPPort( LONG rdpPort );
-HRESULT put_RdpdrClipCleanTempDirString( BSTR clipCleanTempDirString );
-HRESULT put_RdpdrClipPasteInfoString( BSTR clipPasteInfoString );
-HRESULT put_RdpdrLocalPrintingDocName( BSTR localPrintingDocName );
-HRESULT put_RedirectPorts( VARIANT_BOOL redirectPorts );
-HRESULT put_RedirectPrinters( VARIANT_BOOL redirectPrinters );
-HRESULT put_RedirectSmartCards( VARIANT_BOOL redirectSmartCards );
 HRESULT put_ShadowBitmap( LONG shadowBitmap );
-HRESULT put_SmartSizing( VARIANT_BOOL fSmartSizing );
 HRESULT put_SmoothScroll( LONG smoothScroll );
 HRESULT put_keepAliveInterval( LONG keepAliveInterval );
 HRESULT put_minInputSendInterval( LONG minInputSendInterval );

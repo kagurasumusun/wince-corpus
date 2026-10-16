@@ -5,24 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 6 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _DWUI_
 #define _DWUI_
 
-
-/* ==================================================================
- * constants (one evidence comment per #define; the
- * #if of a batch covers every #define in it; values
- * that differ per generation pool into #if/#elif
- * chains with the evidence after the #endif)
- * ================================================================ */
-#define ResponseTypeAutolaunch 1
-#define ResponseTypeDialogLink 0
-#define ResponseTypeDialogSurvey 2
-#define ResponseTypeLightweight 3
-#define ResponseTypeMax 4
-#define ResponseTypeMin 0
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -41,7 +28,7 @@ typedef struct _BucketResponse {
  int iResponseType;
 } BucketResponse;
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* iResponseType  [?; ce-only; CE 6.0..699; DwUI.dll] */
 enum {
@@ -54,11 +41,14 @@ enum {
 };
 #endif /* _WIN32_WCE */
 
+/* BucketResponse  [extra struct] */
+typedef struct _BucketResponse { BOOL fUploadSucceeded; DWORD dwUploadError; char* pchUploadFile; int iBucket; int iBucketTable; char* pchResponse; int iResponseType; } BucketResponse;
+
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* GetUserConsent  [function; ce-only; CE 6.0..699; DwUI.dll] */
 HRESULT GetUserConsent(
@@ -71,13 +61,5 @@ HRESULT WatsonUploadResponse(
  BucketResponse* pBucketResponse
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _BucketResponse { BOOL fUploadSucceeded; DWORD dwUploadError; char* pchUploadFile; int iBucket; int iBucketTable; char* pchResponse; int iResponseType; } BucketResponse;
 
 #endif /* _DWUI_ */

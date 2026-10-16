@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 19 declarations, 0 outlines, 0 base types, 0 extra macros, 17 extra decls
+ * 0 constants, 19 declarations, 0 outlines, 0 base types, 0 extra macros, 16 extra decls
  */
 #ifndef _DSDRIVER_
 #define _DSDRIVER_
@@ -33,30 +33,7 @@ typedef struct _DSDMP_MSG {
  DWORD dwInstance;
 } DSDMP_MSG;
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct {
-  DWORD dwMsg;
-  PDWORD pdwInstance;
-  DWORD dwDeviceIndex;
-  LPCDSBUFFERDESC pDesc;
-} DSDMP_CREATEBUFFER;
-typedef struct { DWORD dwMsg;  PDWORD dwInstance; } DSDMP_DELETEBUFFER;
-typedef struct {
-  DWORD dwMsg;
-  DWORD dwInstance;
-  PDWORD pdwInstance;
-} DSDMP_DUPLICATEBUFFER;
-typedef struct {
-  DWORD dwMsg;
-  DWORD dwInstance;
-  PDWORD pdwPlay;
-  PDWORD pdwWrite;
-} DSDMP_GETPOSITION;
+/* DSDMP_GETPROP  [extra struct] */
 typedef struct {
   DWORD dwMsg;
   DWORD dwInstance;
@@ -68,11 +45,62 @@ typedef struct {
   ULONG cbData;
   PULONG pcbReturnedData;
 } DSDMP_GETPROP;
+
+/* DSDMP_QUERYPROP  [extra struct] */
+typedef struct {
+  DWORD dwMsg;
+  DWORD dwInstance;
+  LPGUID pGUID;
+  ULONG ulPropId;
+  PULONG pulSupport;
+} DSDMP_QUERYPROP;
+
+/* DSDMP_SETPROP  [extra struct] */
+typedef struct {
+  DWORD dwMsg;
+  DWORD dwInstance;
+  LPGUID pGUID;
+  ULONG ulPropId;
+  PVOID pParams;
+  ULONG cbParams;
+  PVOID pData;
+  ULONG cbData;
+} DSDMP_SETPROP;
+
+/* DSDMP_CREATEBUFFER  [extra struct] */
+typedef struct {
+  DWORD dwMsg;
+  PDWORD pdwInstance;
+  DWORD dwDeviceIndex;
+  LPCDSBUFFERDESC pDesc;
+} DSDMP_CREATEBUFFER;
+
+/* DSDMP_DELETEBUFFER  [extra struct] */
+typedef struct { DWORD dwMsg;  PDWORD dwInstance; } DSDMP_DELETEBUFFER;
+
+/* DSDMP_DUPLICATEBUFFER  [extra struct] */
+typedef struct {
+  DWORD dwMsg;
+  DWORD dwInstance;
+  PDWORD pdwInstance;
+} DSDMP_DUPLICATEBUFFER;
+
+/* DSDMP_GETPOSITION  [extra struct] */
+typedef struct {
+  DWORD dwMsg;
+  DWORD dwInstance;
+  PDWORD pdwPlay;
+  PDWORD pdwWrite;
+} DSDMP_GETPOSITION;
+
+/* DSDMP_GETSTATUS  [extra struct] */
 typedef struct {
   DWORD dwMsg;
   DWORD dwInstance;
   PDWORD pdwStatus;
 } DSDMP_GETSTATUS;
+
+/* DSDMP_LOCK  [extra struct] */
 typedef struct {
   DWORD dwMsg;
   DWORD dwInstance;
@@ -84,55 +112,52 @@ typedef struct {
   LPDWORD pdwCount2;
   DWORD dwFlags;
 } DSDMP_LOCK;
+
+/* DSDMP_PLAY  [extra struct] */
 typedef struct {
   DWORD dwMsg;
   DWORD dwInstance;
   DWORD dwFlags;
 } DSDMP_PLAY;
-typedef struct {
-  DWORD dwMsg;
-  DWORD dwInstance;
-  LPGUID pGUID;
-  ULONG ulPropId;
-  PULONG pulSupport;
-} DSDMP_QUERYPROP;
+
+/* DSDMP_SETFORMAT  [extra struct] */
 typedef struct {
   DWORD dwMsg;
   DWORD dwInstance;
   LPWAVEFORMATEX pWFX;
 } DSDMP_SETFORMAT;
+
+/* DSDMP_SETFREQUENCY  [extra struct] */
 typedef struct {
   DWORD dwMsg;
   DWORD dwInstance;
   DWORD dwFreq;
 } DSDMP_SETFREQUENCY;
-typedef struct {
-  DWORD dwMsg;
-  DWORD dwInstance;
-  DWORD dwPosition;
-} DSDMP_SETPOSITION;
-typedef struct {
-  DWORD dwMsg;
-  DWORD dwInstance;
-  LPGUID pGUID;
-  ULONG ulPropId;
-  PVOID pParams;
-  ULONG cbParams;
-  PVOID pData;
-  ULONG cbData;
-} DSDMP_SETPROP;
-typedef struct {
-  DWORD dwMsg;
-  DWORD dwInstance;
-  LONG lVolume;
-  LONG lPan;
-} DSDMP_SETVOLUMEPAN;
+
+/* DSDMP_SET_NOTIFICATIONS  [extra struct] */
 typedef struct {
   DWORD dwMsg;
   DWORD dwInstance;
   DWORD dwCount;
   LPCDSBPOSITIONNOTIFY pDSNP;
 } DSDMP_SET_NOTIFICATIONS;
+
+/* DSDMP_SETPOSITION  [extra struct] */
+typedef struct {
+  DWORD dwMsg;
+  DWORD dwInstance;
+  DWORD dwPosition;
+} DSDMP_SETPOSITION;
+
+/* DSDMP_SETVOLUMEPAN  [extra struct] */
+typedef struct {
+  DWORD dwMsg;
+  DWORD dwInstance;
+  LONG lVolume;
+  LONG lPan;
+} DSDMP_SETVOLUMEPAN;
+
+/* DSDMP_STOP  [extra struct] */
 typedef struct { DWORD dwMsg; DWORD dwInstance; } DSDMP_STOP;
 
 #endif /* _DSDRIVER_ */

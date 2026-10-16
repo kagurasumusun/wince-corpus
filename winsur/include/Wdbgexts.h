@@ -11,12 +11,4 @@
 #define _WDBGEXTS_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-VOID SetTreadForOperation( PULONG Thread);
-
 #endif /* _WDBGEXTS_ */

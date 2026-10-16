@@ -15,7 +15,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 420 && _WIN32_WCE < 700)) /* CE 4.2..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x420 && _WIN32_WCE < 0x700)) /* CE 4.2..699 */
 
 /* CommentMarkAtProfile  [function; ce-only; CE 4.2..699; Cecap.lib, cecap.lib] */
 int CommentMarkAtProfile(

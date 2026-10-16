@@ -19,10 +19,7 @@
 /* function */
 HRESULT Accept( ITransportConnection** ppiTransportConnection );
 HRESULT Configure( HWND hWnd, IRemoteDevice* piDevice );
-HRESULT GetClientName( LPOLESTR* ppszName );
 HRESULT GetConnectionInfo( DWORD dwMaxSize, BYTE* pData, LPDWORD pdwActualSize );
-HRESULT GetName( LPOLESTR* ppszName );
-HRESULT GetType( DEVICE_TYPE* pdt );
 HRESULT InitConnection( IRemoteDevice* piDevice );
 HRESULT WriteBytes( DWORD dwSize, BYTE* pData, LPDWORD pdwBytesWritten );
 

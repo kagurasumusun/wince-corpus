@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 45 declarations, 0 outlines, 0 base types, 0 extra macros, 40 extra decls
+ * 0 constants, 45 declarations, 0 outlines, 0 base types, 0 extra macros, 37 extra decls
  */
 #ifndef _D3DHAL_
 #define _D3DHAL_
@@ -40,12 +40,7 @@ typedef struct _D3DHAL_DP2INDEXEDTRIANGLESTRIP {
  WORD wV[3];
 } D3DHAL_DP2INDEXEDTRIANGLESTRIP;
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
+/* LPD3DDEVICEDESC_V1  [extra struct] */
 typedef struct _D3DDeviceDesc_V1 {
   DWORD dwSize;
   DWORD dwFlags;
@@ -61,6 +56,8 @@ typedef struct _D3DDeviceDesc_V1 {
   DWORD dwMaxBufferSize;
   DWORD dwMaxVertexCount;
 } D3DDEVICEDESC_V1, *LPD3DDEVICEDESC_V1;
+
+/* LPD3DHAL_CALLBACKS  [extra struct] */
 typedef struct _D3DHAL_CALLBACKS {
   DWORD dwSize;
   LPD3DHAL_CONTEXTCREATECB ContextCreate;
@@ -98,6 +95,8 @@ typedef struct _D3DHAL_CALLBACKS {
   ULONG_PTR dwReserved8;
   ULONG_PTR dwReserved9;
 } D3DHAL_CALLBACKS, *LPD3DHAL_CALLBACKS;
+
+/* LPD3DHAL_CALLBACKS3  [extra struct] */
 typedef struct _D3DHAL_CALLBACKS3 {
   DWORD dwSize;
   DWORD dwFlags;
@@ -106,11 +105,15 @@ typedef struct _D3DHAL_CALLBACKS3 {
   LPD3DHAL_VALIDATETEXTURESTAGESTATECB ValidateTextureStageState;
   LPD3DHAL_DRAWPRIMITIVES2CB DrawPrimitives2;
 } D3DHAL_CALLBACKS3, *LPD3DHAL_CALLBACKS3;
+
+/* LPD3DHAL_CLIPPEDTRIANGLEFAN  [extra struct] */
 typedef struct _D3DHAL_CLIPPEDTRIANGLEFAN {
   DWORD FirstVertexOffset;
   DWORD dwEdgeFlags;
   DWORD PrimitiveCount;
 } D3DHAL_CLIPPEDTRIANGLEFAN, *LPD3DHAL_CLIPPEDTRIANGLEFAN;
+
+/* LPD3DHAL_CONTEXTCREATEDATA  [extra struct] */
 typedef struct _D3DHAL_CONTEXTCREATEDATA {
   PDD_DIRECTDRAW_LOCAL lpDDLcl;
   PDD_SURFACE_LOCAL lpDDSLcl;
@@ -119,7 +122,11 @@ typedef struct _D3DHAL_CONTEXTCREATEDATA {
   ULONG_PTR dwhContext;
   HRESULT ddrval;
 } D3DHAL_CONTEXTCREATEDATA, *LPD3DHAL_CONTEXTCREATEDATA;
+
+/* LPD3DHAL_CONTEXTDESTROYDATA  [extra struct] */
 typedef struct _D3DHAL_CONTEXTDESTROYDATA { ULONG_PTR dwhContext; HRESULT ddrval; } D3DHAL_CONTEXTDESTROYDATA, *LPD3DHAL_CONTEXTDESTROYDATA;
+
+/* LPD3DHAL_DP2BUFFERBLT  [extra struct] */
 typedef struct _D3DHAL_DP2BUFFERBLT {
   DWORD dwDDDestSurface;
   DWORD dwDDSrcSurface;
@@ -127,6 +134,8 @@ typedef struct _D3DHAL_DP2BUFFERBLT {
   D3DRANGE rSrc;
   DWORD dwFlags;
 } D3DHAL_DP2BUFFERBLT, *LPD3DHAL_DP2BUFFERBLT;
+
+/* LPD3DHAL_DP2CLEAR  [extra struct] */
 typedef struct _D3DHAL_DP2CLEAR {
   DWORD dwFlags;
   DWORD dwFillColor;
@@ -134,6 +143,8 @@ typedef struct _D3DHAL_DP2CLEAR {
   DWORD dwFillStencil;
   RECT Rects[1];
 } D3DHAL_DP2CLEAR, *LPD3DHAL_DP2CLEAR;
+
+/* LPD3DHAL_DP2COMMAND  [extra struct] */
 typedef struct _D3DHAL_DP2COMMAND {
   BYTE bCommand;
   BYTE bReserved;
@@ -142,7 +153,11 @@ typedef struct _D3DHAL_DP2COMMAND {
     WORD wStateCount;
   };
 } D3DHAL_DP2COMMAND, *LPD3DHAL_DP2COMMAND;
+
+/* LPD3DHAL_DP2CREATELIGHT  [extra struct] */
 typedef struct _D3DHAL_DP2CREATELIGHT { DWORD dwIndex; } D3DHAL_DP2CREATELIGHT, *LPD3DHAL_DP2CREATELIGHT;
+
+/* LPD3DHAL_DP2DRAWINDEXEDPRIMITIVE  [extra struct] */
 typedef struct _D3DHAL_DP2DRAWINDEXEDPRIMITIVE {
   D3DPRIMITIVETYPE primType;
   DWORD BaseVertexIndex;
@@ -151,6 +166,8 @@ typedef struct _D3DHAL_DP2DRAWINDEXEDPRIMITIVE {
   DWORD StartIndex;
   DWORD PrimitiveCount;
 } D3DHAL_DP2DRAWINDEXEDPRIMITIVE, *LPD3DHAL_DP2DRAWINDEXEDPRIMITIVE;
+
+/* LPD3DHAL_DP2DRAWINDEXEDPRIMITIVE2  [extra struct] */
 typedef struct _D3DHAL_DP2DRAWINDEXEDPRIMITIVE2 {
   D3DPRIMITIVETYPE primType;
   INT BaseVertexOffset;
@@ -159,47 +176,83 @@ typedef struct _D3DHAL_DP2DRAWINDEXEDPRIMITIVE2 {
   DWORD StartIndexOffset;
   DWORD PrimitiveCount;
 } D3DHAL_DP2DRAWINDEXEDPRIMITIVE2, *LPD3DHAL_DP2DRAWINDEXEDPRIMITIVE2;
+
+/* LPD3DHAL_DP2DRAWPRIMITIVE  [extra struct] */
 typedef struct _D3DHAL_DP2DRAWPRIMITIVE {
   D3DPRIMITIVETYPE primType;
   DWORD VStart;
   DWORD PrimitiveCount;
 } D3DHAL_DP2DRAWPRIMITIVE, *LPD3DHAL_DP2DRAWPRIMITIVE;
+
+/* LPD3DHAL_DP2DRAWPRIMITIVE2  [extra struct] */
 typedef struct _D3DHAL_DP2DRAWPRIMITIVE2 {
   D3DPRIMITIVETYPE primType;
   DWORD FirstVertexOffset;
   DWORD PrimitiveCount;
 } D3DHAL_DP2DRAWPRIMITIVE2, *LPD3DHAL_DP2DRAWPRIMITIVE2;
+
+/* LPD3DHAL_DP2EXT  [extra struct] */
 typedef struct _D3DHAL_DP2EXT { DWORD dwExtToken; DWORD dwSize; } D3DHAL_DP2EXT, *LPD3DHAL_DP2EXT;
+
+/* LPD3DHAL_DP2INDEXEDTRIANGLELIST2  [extra struct] */
 typedef struct _D3DHAL_DP2INDEXEDTRIANGLELIST2 {
   WORD wV1;
   WORD wV2;
   WORD wV3;
 } D3DHAL_DP2INDEXEDTRIANGLELIST2, *LPD3DHAL_DP2INDEXEDTRIANGLELIST2;
+
+/* LPD3DHAL_DP2MULTIPLYTRANSFORM  [extra struct] */
 typedef struct _D3DHAL_DP2MULTIPLYTRANSFORM { D3DTRANSFORMSTATETYPE xfrmType;  D3DMATRIX matrix;  } D3DHAL_DP2MULTIPLYTRANSFORM, *LPD3DHAL_DP2MULTIPLYTRANSFORM;
+
+/* LPD3DHAL_DP2PIXELSHADER  [extra struct] */
 typedef struct _D3DHAL_DP2PIXELSHADER { DWORD dwHandle; } D3DHAL_DP2PIXELSHADER, *LPD3DHAL_DP2PIXELSHADER;
+
+/* LPD3DHAL_DP2SETCLIPPLANE  [extra struct] */
 typedef struct _D3DHAL_DP2SETCLIPPLANE { DWORD dwIndex; D3DVALUE plane[4]; } D3DHAL_DP2SETCLIPPLANE, *LPD3DHAL_DP2SETCLIPPLANE;
+
+/* LPD3DHAL_DP2SETINDICES  [extra struct] */
 typedef struct _D3DHAL_DP2SETINDICES { DWORD dwVBHandle;  DWORD dwStride;  } D3DHAL_DP2SETINDICES, *LPD3DHAL_DP2SETINDICES;
+
+/* LPD3DHAL_DP2SETLIGHT  [extra struct] */
 typedef struct _D3DHAL_DP2SETLIGHT { DWORD dwIndex; DWORD dwDataType; } D3DHAL_DP2SETLIGHT, *LPD3DHAL_DP2SETLIGHT;
+
+/* LPD3DHAL_DP2SETPALETTE  [extra struct] */
 typedef struct _D3DHAL_DP2SETPALETTE {
   DWORD dwPaletteHandle;
   DWORD dwPaletteFlags;
   DWORD dwSurfaceHandle;
 } D3DHAL_DP2SETPALETTE, *LPD3DHAL_DP2SETPALETTE;
+
+/* LPD3DHAL_DP2SETPRIORITY  [extra struct] */
 typedef struct _D3DHAL_DP2SETPRIORITY { DWORD dwDDDestSurface; DWORD dwPriority; } D3DHAL_DP2SETPRIORITY, *LPD3DHAL_DP2SETPRIORITY;
+
+/* LPD3DHAL_DP2SETRENDERTARGET  [extra struct] */
 typedef struct _D3DHAL_DP2SETRENDERTARGET { DWORD hRenderTarget; DWORD hZBuffer; } D3DHAL_DP2SETRENDERTARGET, *LPD3DHAL_DP2SETRENDERTARGET;
+
+/* LPD3DHAL_DP2SETSTREAMSOURCE  [extra struct] */
 typedef struct _D3DHAL_DP2SETSTREAMSOURCE {
   DWORD dwStream;
   DWORD dwVBHandle;
   DWORD dwStride;
 } D3DHAL_DP2SETSTREAMSOURCE, *LPD3DHAL_DP2SETSTREAMSOURCE;
+
+/* LPD3DHAL_DP2SETTEXLOD  [extra struct] */
 typedef struct _D3DHAL_DP2SETTEXLOD { DWORD dwDDSurface; DWORD dwLOD; } D3DHAL_DP2SETTEXLOD, *LPD3DHAL_DP2SETTEXLOD;
+
+/* LPD3DHAL_DP2SETTRANSFORM  [extra struct] */
 typedef struct _D3DHAL_DP2SETTRANSFORM { D3DTRANSFORMSTATETYPE xfrmType; D3DMATRIX matrix; } D3DHAL_DP2SETTRANSFORM, *LPD3DHAL_DP2SETTRANSFORM;
+
+/* LPD3DHAL_DP2STARTVERTEX  [extra struct] */
 typedef struct _D3DHAL_DP2STARTVERTEX { WORD wVStart; } D3DHAL_DP2STARTVERTEX, *LPD3DHAL_DP2STARTVERTEX;
+
+/* LPD3DHAL_DP2STATESET  [extra struct] */
 typedef struct _D3DHAL_DP2STATESET {
   DWORD dwOperation;
   DWORD dwParam;
   D3DSTATEBLOCKTYPE sbType;
 } D3DHAL_DP2STATESET, *LPD3DHAL_DP2STATESET;
+
+/* LPD3DHAL_DP2TEXBLT  [extra struct] */
 typedef struct _D3DHAL_DP2TEXBLT {
   DWORD dwDDDestSurface;
   DWORD dwDDSrcSurface;
@@ -207,20 +260,32 @@ typedef struct _D3DHAL_DP2TEXBLT {
   RECTL rSrc;
   DWORD dwFlags;
 } D3DHAL_DP2TEXBLT, *LPD3DHAL_DP2TEXBLT;
+
+/* LPD3DHAL_DP2UPDATEPALETTE  [extra struct] */
 typedef struct _D3DHAL_DP2UPDATEPALETTE {
   DWORD dwPaletteHandle;
   WORD wStartIndex;
   WORD wNumEntries;
 } D3DHAL_DP2UPDATEPALETTE, *LPD3DHAL_DP2UPDATEPALETTE;
+
+/* LPD3DHAL_DP2VERTEXSHADER  [extra struct] */
 typedef struct _D3DHAL_DP2VERTEXSHADER { DWORD dwHandle; } D3DHAL_DP2VERTEXSHADER, *LPD3DHAL_DP2VERTEXSHADER;
+
+/* LPD3DHAL_DP2VIEWPORTINFO  [extra struct] */
 typedef struct _D3DHAL_DP2VIEWPORTINFO {
   DWORD dwX;
   DWORD dwY;
   DWORD dwWidth;
   DWORD dwHeight;
 } D3DHAL_DP2VIEWPORTINFO, *LPD3DHAL_DP2VIEWPORTINFO;
+
+/* LPD3DHAL_DP2WINFO  [extra struct] */
 typedef struct _D3DHAL_DP2WINFO { D3DVALUE dvWNear; D3DVALUE dvWFar; } D3DHAL_DP2WINFO, *LPD3DHAL_DP2WINFO;
+
+/* LPD3DHAL_DP2ZRANGE  [extra struct] */
 typedef struct _D3DHAL_DP2ZRANGE { D3DVALUE dvMinZ; D3DVALUE dvMaxZ; } D3DHAL_DP2ZRANGE, *LPD3DHAL_DP2ZRANGE;
+
+/* LPD3DHAL_GLOBALDRIVERDATA  [extra struct] */
 typedef struct _D3DHAL_GLOBALDRIVERDATA {
   DWORD dwSize;
   D3DHALDEVICEDESC_V1 hwCaps;
@@ -229,6 +294,8 @@ typedef struct _D3DHAL_GLOBALDRIVERDATA {
   DWORD dwNumTextureFormats;
   LPDDSURFACEDESC lpTextureFormats;
 } D3DHAL_GLOBALDRIVERDATA, *LPD3DHAL_GLOBALDRIVERDATA;
+
+/* LPD3DHAL_VALIDATETEXTURESTAGESTATEDATA  [extra struct] */
 typedef struct _D3DHAL_VALIDATETEXTURESTAGESTATEDATA {
   ULONG_PTR dwhContext;
   DWORD dwFlags;

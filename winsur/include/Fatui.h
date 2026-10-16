@@ -22,17 +22,4 @@ struct _UIPARAM {
 DWORD dwType, 
 DWORD dwValue };
 
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 3.0..399 */
-
-/* FATUIEvent  [function; ce-only; CE 3.0..399; fat.lib] */
-int FATUIEvent ( 
-HANDLE hModule, 
-PCWSTR pszVol, 
-PFATUIDATA pfui );
-#endif /* _WIN32_WCE */
-
 #endif /* _FATUI_ */

@@ -11,12 +11,4 @@
 #define _AUTORAS_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct { DWORD dwNotificationId; DWORD dwNotificationParam; } DIALER_NOTIFICATION, PDIALER_NOTIFICATION;
-
 #endif /* _AUTORAS_ */

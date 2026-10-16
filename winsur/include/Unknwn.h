@@ -15,7 +15,7 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 2.11..2.12, 3.0..399, 5.0..599 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 2.11..2.12, 3.0..399, 5.0..599 */
 
 /* IUnknown  [interface; shared; CE 2.11..2.12, 3.0..399, 5.0..599; Ole32.lib, Uuid.lib] */
 #endif /* _WIN32_WCE */

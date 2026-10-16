@@ -11,12 +11,4 @@
 #define _PNP_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct {GUID guidDevClass;DWORD dwReserved;BOOL fAttached;int cbName;TCHAR szName[1]; } DEVDETAIL, *PDEVDETAIL;
-
 #endif /* _PNP_ */

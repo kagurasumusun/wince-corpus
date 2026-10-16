@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 30 constants, 45 declarations, 1 outlines, 0 base types, 0 extra macros, 13 extra decls
+ * 21 constants, 44 declarations, 1 outlines, 0 base types, 0 extra macros, 12 extra decls
  */
 #ifndef _RAS_
 #define _RAS_
@@ -20,7 +20,6 @@
 #define RAS_SIZE 128
 #define RASADFUNC RASADFUNCW
 #define RASCS_DONE 0x2000
-#define RASCS_OpenPort 0
 #define RASCS_PAUSED 0x1000
 #define RASDIALEVENT "RasDialEvent"
 #define RASDT_SW56 TEXT("SW56")
@@ -38,14 +37,6 @@
 #define RASLCPO_DES_56 0x00000008
 #define RASLCPO_PFC 0x00000001
 #define RASLCPO_SSHF 0x00000004
-#define RASP_Amb 0x10000
-#define RASP_PppCcp 0x80FD
-#define RASP_PppIp 0x8021
-#define RASP_PppIpV6 0x8057
-#define RASP_PppIpx 0x802B
-#define RASP_PppLcp 0xC021
-#define RASP_PppNbf 0x803F
-#define RASP_Slip 0x20000
 #define WM_RASDIALEVENT 0xCCCD
 
 /* ==================================================================
@@ -121,260 +112,37 @@ typedef enum _RASPROJECTION {
  RASP_Slip = 0x20000
 } RASPROJECTION;
 
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-/* RASENTRY  [typedef, function; ce-only] */
-typedef_struct_RASENTRY {
- DWORD dwSize;
- DWORD dwfOptions;
- DWORD dwCountryID;
- DWORD dwCountryCode;
- TCHAR szAreaCode[ RAS_MaxAreaCode + 1 ];
- TCHAR szLocalPhoneNumber[ RAS_MaxPhoneNumber + 1 ];
- DWORD dwAlternatesOffset;
- RASIPADDR ipaddr;
- RASIPADDR ipaddrDns;
- RASIPADDR ipaddrDnsAlt;
- RASIPADDR ipaddrWins;
- RASIPADDR ipaddrWinsAlt;
- DWORD dwFrameSize;
- DWORD dwfNetProtocols;
- DWORD dwFramingProtocol;
- TCHAR szScript[ MAX_PATH ];
- TCHAR szAutoDialDll[ MAX_PATH ];
- TCHAR szAutoDialFunc[ MAX_PATH ];
- TCHAR szDeviceType[ RAS_MaxDeviceType + 1 ];
- TCHAR szDeviceName[ RAS_MaxDeviceName + 1 ];
- TCHAR szX25PadType[ RAS_MaxPadType + 1 ];
- TCHAR szX25Address[ RAS_MaxX25Address + 1 ];
- TCHAR szX25Facilities[ RAS_MaxFacilities + 1 ];
- TCHAR szX25UserData[ RAS_MaxUserData + 1 ];
- DWORD dwChannels;
- DWORD dwReserved1;
- DWORD dwReserved2;
- DWORD dwCustomAuthKey;
-} RASENTRY;
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* RasDeleteEntry  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Ppp.lib, ppp.lib; A/W RasDeleteEntryA,RasDeleteEntryW (CE is W-side)] */
-DWORD RasDeleteEntry(
- LPWSTR lpszPhonebook, 
- LPWSTR lpszEntry 
-);
-
-/* RasDial  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Ppp.lib, ppp.lib; A/W RasDialA,RasDialW (CE is W-side)] */
-DWORD RasDial(
- LPRASDIALEXTENSIONS dialExtensions, 
- LPTSTR phoneBookPath, 
- LPRASDIALPARAMS rasDialParam, 
- DWORD NotifierType, 
- LPVOID notifier, 
- LPHRASCONN pRasConn 
-);
-
-/* RasEnumConnections  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Ppp.lib, ppp.lib; A/W RasEnumConnectionsA,RasEnumConnectionsW (CE is W-side)] */
-DWORD RasEnumConnections(
- LPRASCONN lprasconn, 
- LPDWORD lpcb, 
- LPDWORD lpcConnections 
-);
-
-/* RasEnumEntries  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Ppp.lib, ppp.lib; A/W RasEnumEntriesA,RasEnumEntriesW (CE is W-side)] */
-DWORD RasEnumEntries(
- LPWSTR Reserved, 
- LPWSTR lpszPhoneBookPath, 
- LPRASENTRYNAME lprasentryname, 
- LPDWORD lpcb, 
- LPDWORD lpcEntries 
-);
-
-/* RasGetConnectStatus  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Ppp.lib, ppp.lib; A/W RasGetConnectStatusA,RasGetConnectStatusW (CE is W-side)] */
-DWORD RasGetConnectStatus(
- HRASCONN rasconn, 
- LPRASCONNSTATUS lprasconnstatus 
-);
-
-/* RasGetEntryDialParams  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Ppp.lib, ppp.lib; A/W RasGetEntryDialParamsA,RasGetEntryDialParamsW (CE is W-side)] */
-DWORD RasGetEntryDialParams(
- LPWSTR lpszPhoneBook, 
- LPRASDIALPARAMS lpRasDialParams, 
- LPBOOL lpfPassword 
-);
-
-/* RasGetEntryProperties  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Ppp.lib, ppp.lib; A/W RasGetEntryPropertiesA,RasGetEntryPropertiesW (CE is W-side)] */
-DWORD RasGetEntryProperties(
- LPWSTR lpszPhoneBook, 
- LPWSTR szEntry, 
- LPRASENTRY lpbEntry, 
- LPDWORD lpdwEntrySize, 
- LPBYTE lpb, 
- LPDWORD lpdwSize 
-);
-
-/* RasHangUp  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Ppp.lib, ppp.lib; A/W RasHangUpA,RasHangUpW (CE is W-side)] */
-DWORD RasHangUp(
- HRASCONN Session 
-);
-
-/* RasRenameEntry  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Ppp.lib, ppp.lib; A/W RasRenameEntryA,RasRenameEntryW (CE is W-side)] */
-DWORD RasRenameEntry(
- LPWSTR lpszPhonebook, 
- LPWSTR lpszOldEntry, 
- LPWSTR lpszNewEntry 
-);
-
-/* RasSetEntryDialParams  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Ppp.lib, ppp.lib; A/W RasSetEntryDialParamsA,RasSetEntryDialParamsW (CE is W-side)] */
-DWORD RasSetEntryDialParams(
- LPWSTR lpszPhoneBook, 
- LPRASDIALPARAMS lpRasDialParams, 
- BOOL fRemovePassword 
-);
-
-/* RasSetEntryProperties  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Ppp.lib, ppp.lib; A/W RasSetEntryPropertiesA,RasSetEntryPropertiesW (CE is W-side)] */
-DWORD RasSetEntryProperties(
- LPWSTR lpszPhoneBook, 
- LPWSTR szEntry, 
- LPRASENTRY lpbEntry, 
- DWORD dwEntrySize, 
- LPBYTE lpb, 
- DWORD dwSize 
-);
-
-/* RasValidateEntryName  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Ppp.lib, ppp.lib; A/W RasValidateEntryNameA,RasValidateEntryNameW (CE is W-side)] */
-DWORD RasValidateEntryName(
- LPWSTR lpszPhonebook, 
- LPWSTR lpszEntry 
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
-
-/* RasEnumDevices  [function; shared; CE 3.0..699; Coredll.lib, coredll.lib, Ppp.lib, ppp.lib; A/W RasEnumDevicesA,RasEnumDevicesW (CE is W-side)] */
-DWORD RasEnumDevices( 
- LPRASDEVINFOW lpRasDevinfo, 
- LPDWORD lpcb, 
- LPDWORD lpcDevices 
-);
-
-/* RasGetLinkStatistics  [function; shared; CE 3.0..699; Coredll.lib, coredll.lib, Ppp.lib, ppp.lib] */
-DWORD RasGetLinkStatistics(
- HRASCONN hRasConn, 
- DWORD dwSubEntry, 
- RAS_STATS* lpStatistics 
-);
-
-/* RasGetProjectionInfo  [function; shared; CE 3.0..699; Coredll.lib, coredll.lib, Ppp.lib, ppp.lib; A/W RasGetProjectionInfoA,RasGetProjectionInfoW (CE is W-side)] */
-DWORD RasGetProjectionInfo(
- HRASCONN hrasconn, 
- RASPROJECTION rasprojection, 
- LPVOID lpprojection, 
- LPDWORD lpcb 
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* RasCustomScriptExecute  [function; ce-only; CE 4.0..699; heuristic-prefix] */
-DWORD RasCustomScriptExecute(
- HANDLE hPort, 
- LPCWSTR lpszPhonebook, 
- LPCWSTR lpszEntryName, 
- PFNRASGETBUFFER pfnRasGetBuffer, 
- PFNRASFREEBUFFER pfnRasFreeBuffer, 
- PFNRASSENDBUFFER pfnRasSendBuffer, 
- PFNRASRECEIVEBUFFER pfnRasReceiveBuffer, 
- PFNRASRETRIEVEBUFFER pfnRasRetrieveBuffer, 
- HWND hWnd, 
- RASDIALPARAMS* pRasDialParams, 
- RASCUSTOMSCRIPTEXTENSIONS* pRasCustomScriptExtensions 
-);
-
-/* RasDevConfigDialogEdit  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-DWORD RasDevConfigDialogEdit(
- LPCWSTR szDeviceName,
- LPCWSTR szDeviceType,
- HWND hWndOwner,
- LPVOID lpDeviceConfigIn,
- DWORD dwSize,
- LPVARSTRING lpDeviceConfigOut
-);
-
-/* RasGetDispPhoneNum  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-RasGetDispPhoneNum(
- LPCWSTR szPhonebook,
- LPCWSTR szEntry,
- LPWSTR szPhoneNum,
- DWORD dwPhoneNumLen
-);
-
-/* RasGetEapConnectionData  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-DWORD RasGetEapConnectionData(
- LPCTSTR pszPhonebook,
- LPCTSTR pszEntry, 
- PBYTE pbEapData, 
- PDWORD pdwSizeofEapData
-);
-
-/* RasGetEapUserData  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib; A/W RasGetEapUserDataA,RasGetEapUserDataW (CE is W-side)] */
-DWORD RasGetEapUserData(
- HANDLE hToken,
- LPCTSTR pszPhonebook, 
- LPCTSTR pszEntry, 
- PBYTE pbEapData, 
- PDWORD pdwSizeofEapData
-);
-
-/* RasIOControl  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-RasIOControl IMPLICIT_DECL(
- LPVOID hRasConn,
- DWORD dwCode,
- PBYTE pBufIn,
- DWORD dwLenIn,
- PBYTE pBufOut,
- DWORD dwLenOut,
- PDWORD pdwActualOut
-);
-
-/* RasSetEapConnectionData  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-DWORD RasSetEapConnectionData (
- LPCTSTR pszPhonebook,
- LPCTSTR pszEntry, 
- PBYTE pbEapData, 
- PDWORD pdwSizeofEapData
-);
-
-/* RasSetEapUserData  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib; A/W RasSetEapUserDataA,RasSetEapUserDataW (CE is W-side)] */
-DWORD RasSetEapUserData(
- HANDLE hToken,
- LPCTSTR pszPhonebook, 
- LPCTSTR pszEntry,
- BYTE* pbEapData,
- DWORD dwSizeofEapData
-);
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* typedef */
-typedef DWORD(APIENTRY *PFNRASRECEIVEBUFFER)(HANDLEhPort,PBYTEpBuffer,PDWORDpdwSize,DWORDdwTimeout,HANDLEhEvent);
+/* PBYTEpBuffer  [extra typedef] */
 typedef DWORD(APIENTRY *PFNRASFREEBUFFER)(PBYTEpBuffer );
-typedef DWORD(APIENTRY *PFNRASSENDBUFFER)(HANDLEhPort,PBYTEpBuffer,PDWORDdwSize);
+
+/* HANDLEhEvent  [extra typedef] */
+typedef DWORD(APIENTRY *PFNRASRECEIVEBUFFER)(HANDLEhPort,PBYTEpBuffer,PDWORDpdwSize,DWORDdwTimeout,HANDLEhEvent);
+
+/* PDWORDpdwSize  [extra typedef] */
 typedef DWORD(APIENTRY *PFNRASRETRIEVEBUFFER)(HANDLEhPort,PBYTEpBuffer,PDWORDpdwSize);
-typedef DWORD (APIENTRY *PFNRASRECEIVEBUFFER)( HANDLE hPort, PBYTE pBuffer, PDWORD pdwSize, DWORD dwTimeout, HANDLE hEvent );
+
+/* PDWORDdwSize  [extra typedef] */
+typedef DWORD(APIENTRY *PFNRASSENDBUFFER)(HANDLEhPort,PBYTEpBuffer,PDWORDdwSize);
+
+/* PRAS_STATS  [extra struct] */
+typedef struct _RAS_STATS {DWORDdwSize;DWORDdwBytesXmited;DWORDdwBytesRcved;DWORDdwFramesXmited;DWORDdwFramesRcved;DWORDdwCrcErr;DWORDdwTimeoutErr;DWORDdwAlignmentErr;DWORDdwHardwareOverrunErr;DWORDdwFramingErr;DWORDdwBufferOverrunErr;DWORDdwCompressionRatioIn;DWORDdwCompressionRatioOut;DWORDdwBps;DWORDdwConnectDuration;} RAS_STATS, *PRAS_STATS;
+
+/* PRASCNTL_SERVERSTATUS  [extra struct] */
+typedef struct tagRasCntlServerStatus {BOOLbEnable;DWORDbmFlags;BOOLbUseDhcpAddresses;DWORDdwStaticIpAddrStart;DWORDdwStaticIpAddrCount;DWORD bmAuthenticationMethods;DWORDdwNumLines;} RASCNTL_SERVERSTATUS, *PRASCNTL_SERVERSTATUS;
+
+/* PRASCNTL_SERVERCONNECTION  [extra struct] */
+typedef struct tagRasCntlServerConnection { RASDEVINFO rasDevInfo; HRASCONN hrasconn; DWORD dwServerIpAddress; DWORD dwClientIpAddress; RASCONNSTATE RasConnState; TCHAR tszUserName[DNLEN + 1 + UNLEN + 1];} RASCNTL_SERVERCONNECTION, *PRASCNTL_SERVERCONNECTION;
+
+/* PRASCNTL_SERVER_IPV6_NET_PREFIX  [extra struct] */
+typedef struct tagRasCntlServerIPV6NetPrefix { BYTE IPV6NetPrefix[16]; DWORD IPV6NetPrefixBitLength; DWORD IPV6NetPrefixCount;} RASCNTL_SERVER_IPV6_NET_PREFIX, *PRASCNTL_SERVER_IPV6_NET_PREFIX;
+
+/* pdwSize  [extra typedef] */
 typedef DWORD (APIENTRY *PFNRASGETBUFFER)( PBYTE* ppBuffer,  PDWORD pdwSize  );
 
-/* struct */
-typedef struct tagRasCntlServerConnection { RASDEVINFO rasDevInfo; HRASCONN hrasconn; DWORD dwServerIpAddress; DWORD dwClientIpAddress; RASCONNSTATE RasConnState; TCHAR tszUserName[DNLEN + 1 + UNLEN + 1];} RASCNTL_SERVERCONNECTION, *PRASCNTL_SERVERCONNECTION;
-typedef struct tagRasCntlServerStatus {BOOLbEnable;DWORDbmFlags;BOOLbUseDhcpAddresses;DWORDdwStaticIpAddrStart;DWORDdwStaticIpAddrCount;DWORD bmAuthenticationMethods;DWORDdwNumLines;} RASCNTL_SERVERSTATUS, *PRASCNTL_SERVERSTATUS;
-typedef struct tagRasCntlServerUser{TCHAR tszUserName[UNLEN + 1];TCHARtszDomainName[DNLEN + 1];BYTEpassword[PWLEN];DWORDcbPassword;} RASCNTL_SERVERUSERCREDENTIALS, *PRASCNTL_SERVERUSERCREDENTIALS;
-typedef struct tagRasCntlServerIPV6NetPrefix { BYTE IPV6NetPrefix[16]; DWORD IPV6NetPrefixBitLength; DWORD IPV6NetPrefixCount;} RASCNTL_SERVER_IPV6_NET_PREFIX, *PRASCNTL_SERVER_IPV6_NET_PREFIX;
-typedef struct _RAS_STATS {DWORDdwSize;DWORDdwBytesXmited;DWORDdwBytesRcved;DWORDdwFramesXmited;DWORDdwFramesRcved;DWORDdwCrcErr;DWORDdwTimeoutErr;DWORDdwAlignmentErr;DWORDdwHardwareOverrunErr;DWORDdwFramingErr;DWORDdwBufferOverrunErr;DWORDdwCompressionRatioIn;DWORDdwCompressionRatioOut;DWORDdwBps;DWORDdwConnectDuration;} RAS_STATS, *PRAS_STATS;
+/* hEvent  [extra typedef] */
+typedef DWORD (APIENTRY *PFNRASRECEIVEBUFFER)( HANDLE hPort, PBYTE pBuffer, PDWORD pdwSize, DWORD dwTimeout, HANDLE hEvent );
+
+/* RASPPPIPW  [extra struct] */
 #define RASPPPIPW struct tagRASPPPIPW
 RASPPPIPW
 {
@@ -387,7 +155,42 @@ RASPPPIPW
 };
 #define RASPPPIP RASPPPIPW;
 
-/* function */
-RasIOControl IMPLICIT_DECL(LPVOIDhRasConn,DWORDdwCode,PBYTEpBufIn,DWORDdwLenIn,PBYTEpBufOut,DWORDdwLenOut,PDWORDpdwActualOut);
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
+
+/* RasDeleteEntry  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Ppp.lib, ppp.lib; A/W RasDeleteEntryA,RasDeleteEntryW (CE is W-side)] */
+DWORD RasDeleteEntry(
+ LPWSTR lpszPhonebook, 
+ LPWSTR lpszEntry 
+);
+
+/* RasRenameEntry  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Ppp.lib, ppp.lib; A/W RasRenameEntryA,RasRenameEntryW (CE is W-side)] */
+DWORD RasRenameEntry(
+ LPWSTR lpszPhonebook, 
+ LPWSTR lpszOldEntry, 
+ LPWSTR lpszNewEntry 
+);
+
+/* RasValidateEntryName  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Ppp.lib, ppp.lib; A/W RasValidateEntryNameA,RasValidateEntryNameW (CE is W-side)] */
+DWORD RasValidateEntryName(
+ LPWSTR lpszPhonebook, 
+ LPWSTR lpszEntry 
+);
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
+
+/* RasSetEapUserData  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib; A/W RasSetEapUserDataA,RasSetEapUserDataW (CE is W-side)] */
+DWORD RasSetEapUserData(
+ HANDLE hToken,
+ LPCTSTR pszPhonebook, 
+ LPCTSTR pszEntry,
+ BYTE* pbEapData,
+ DWORD dwSizeofEapData
+);
+#endif /* _WIN32_WCE */
 
 #endif /* _RAS_ */

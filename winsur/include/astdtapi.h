@@ -15,7 +15,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* tapiRequestMakeCall  [function; shared; CE 6.0..699; cellcore.lib; A/W tapiRequestMakeCallA,tapiRequestMakeCallW (CE is W-side)] */
 LONG tapiRequestMakeCall (

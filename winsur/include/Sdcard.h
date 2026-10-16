@@ -44,40 +44,4 @@
  TCHAR Slot10
 );
 
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* BUILD_IO_RW_DIRECT_ARG  [function; ce-only; CE 5.0..699] */
-DWORD BUILD_IO_RW_DIRECT_ARG(
- RWFlag,
- RAW,
- Function,
- Address,
- Data
-);
-
-/* BUILD_IO_RW_EXTENDED_ARG  [function; ce-only; CE 5.0..699] */
-DWORD BUILD_IO_RW_EXTENDED_ARG(
- Read_Write,
- BlockMode,
- Function,
- Address,
- IncrementAddress,
- Count
-);
-
-/* SD_BUS_REQUEST_RESPONSE  [function; ce-only; CE 5.0..699] */
-PSD_COMMAND_RESPONSE SD_BUS_REQUEST_RESPONSE(
- PSD_BUS_REQUEST pRequest
-);
-
-/* SD_BUS_REQUEST_STATUS  [function; ce-only; CE 5.0..699] */
-SD_API_STATUS SD_BUS_REQUEST_STATUS(
- PSD_BUS_REQUEST pRequest
-);
-#endif /* _WIN32_WCE */
-
 #endif /* _SDCARD_ */

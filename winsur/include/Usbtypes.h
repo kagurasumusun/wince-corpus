@@ -30,15 +30,10 @@ typedef struct {
  UCHAR iInterface;
 } USB_INTERFACE_DESCRIPTOR;
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* typedef */
+/* lpvNotifyParameter  [extra typedef] */
 typedef DWORD (WINAPI *LPTRANSFER_NOTIFY_ROUTINE)( LPVOID lpvNotifyParameter);
 
-/* struct */
+/* LPUSB_CONFIGURATION  [extra struct] */
 typedef struct _USB_CONFIGURATION { const DWORD dwCount; const USB_CONFIGURATION_DESCRIPTOR Descriptor; const LPCVOID lpvExtended; const DWORD dwNumInterfaces; const LPCUSB_INTERFACE lpInterfaces;} USB_CONFIGURATION, * PUSB_CONFIGURATION, * LPUSB_CONFIGURATION;
 
 #endif /* _USBTYPES_ */

@@ -164,6 +164,7 @@ REQUIREMENTS = os.path.join(KB, "requirements.jsonl.gz")
 CONSTANTS = os.path.join(KB, "constants.jsonl.gz")
 UNIFIED_DIR = os.path.join(ROOT, "knowledge", "unified")
 UNIFIED_CONSTANTS = os.path.join(UNIFIED_DIR, "constants.jsonl")
+UNIFIED_DECLARATIONS = os.path.join(UNIFIED_DIR, "declarations.jsonl")
 CONSTANT_HEADERS = os.path.join(KB, "constant-headers.tsv")
 CONSTANT_CONFLICTS = os.path.join(KB, "constant-conflicts.tsv")
 PINVOKE_APIS = os.path.join(ROOT, "knowledge", "aux",
@@ -1130,10 +1131,10 @@ def split_libraries(entity):
 # ------------------------------------------------------------------ #
 
 # corpus set (book prefix) -> [lo, hi) interval of _WIN32_WCE values the
-# set's documentation covers.  Values follow the SDK convention the
-# pages print: CE 1.0 -> 100, CE 2.0 -> 200, CE 2.11/2.12 -> 211/212,
-# CE 3.0 -> 300, CE .NET 4.x -> 400..420, CE 5.0 -> 500, Embedded CE
-# 6.0 -> 600, Embedded Compact 7 -> 700.
+# set's documentation covers.  Stored as decimal 100, 200, 300, 500;
+# emitted as the SDK hex the headers actually test (CE 5.0 -> 0x500).
+# CE 1.0 -> 0x100, CE 2.11 -> 0x211, CE 3.0 -> 0x300, CE 4.x -> 0x400,
+# CE 5.0 -> 0x500, Embedded CE 6.0 -> 0x600, Compact 7 -> 0x700.
 SET_WCE_INTERVAL = (
     ("mvb/windows-ce-1.0/", 100, 200),
     ("msdn-library/techshelps/CEGUIDE/", 100, 200),
@@ -1204,12 +1205,13 @@ def wce_guard(sets):
     everywhere = merged[0][0] <= WCE_FIRST and merged[-1][1] >= WCE_LAST
     conds = []
     for lo, hi in merged:
+        lo_s, hi_s = f"0x{lo}", f"0x{hi}"
         if hi >= WCE_LAST:
-            conds.append(f"_WIN32_WCE >= {lo}")
+            conds.append(f"_WIN32_WCE >= {lo_s}")
         elif lo <= WCE_FIRST:
-            conds.append(f"_WIN32_WCE < {hi}")
+            conds.append(f"_WIN32_WCE < {hi_s}")
         else:
-            conds.append(f"_WIN32_WCE >= {lo} && _WIN32_WCE < {hi}")
+            conds.append(f"_WIN32_WCE >= {lo_s} && _WIN32_WCE < {hi_s}")
     return None if everywhere else "defined(_WIN32_WCE) && (" + \
         " || ".join(f"({c})" for c in conds) + ")", merged
 
@@ -1470,6 +1472,169 @@ def load_pinvoke_aux(path):
         return []
     check_spec_path(path)
     return list(load(path))
+
+
+def load_unified_declarations():
+    """knowledge/unified/declarations.jsonl -- one chosen quote per name."""
+    out = []
+    if not os.path.exists(UNIFIED_DECLARATIONS):
+        return out
+    check_spec_path(UNIFIED_DECLARATIONS)
+    with open(UNIFIED_DECLARATIONS, encoding="utf-8") as fh:
+        for line in fh:
+            line = line.strip()
+            if line:
+                out.append(json.loads(line))
+    return out
+
+
+def _keepable_c_decl(text, name, kind):
+    text = (text or "").replace("\\n", "\n")
+    if quality_filters.is_cpp_or_managed(text, name):
+        return False
+    if quality_filters.is_broken_c(text):
+        return False
+    if quality_filters.decl_unusable_for_c(text, name):
+        return False
+    if kind in ("function", "callback") and not looks_like_c_declaration(text):
+        return False
+    return bool(text and text.strip())
+
+
+def overlay_unified_surface(by_header, printed_forms, by_module, all_entities):
+    """Emit keepable unified/harvest quotes the entity loop dropped.
+
+    No header files are copied.  Quotes already in knowledge/ only.
+    """
+    have = set()
+    for infos in by_header.values():
+        for info in infos:
+            if info.get("declaration"):
+                have.add(info["entity"]["name"])
+    have_exp = set()
+    for wl in by_module.values():
+        for e in wl.get("entries") or []:
+            have_exp.add(e["entity"]["name"])
+    name_to_header = {}
+    name_to_libs = {}
+    for ent in all_entities:
+        n = ent.get("name")
+        if not n:
+            continue
+        hs = header_files(ent.get("headers") or [])
+        if hs:
+            name_to_header.setdefault(n, hs[0])
+        libs = list(ent.get("libraries") or []) + list(ent.get("dlls") or [])
+        if libs:
+            name_to_libs.setdefault(n, libs)
+    added = 0
+    for rec in load_unified_declarations():
+        name = rec.get("name") or ""
+        kind = rec.get("kind") or "function"
+        text = (rec.get("text") or "").replace("\\n", "\n")
+        if not name or name in have:
+            continue
+        if not _keepable_c_decl(text, name, kind):
+            continue
+        if kind == "function" and name.isupper():
+            continue
+        if name.startswith(("CBase", "CAgg", "CAM")):
+            continue
+        hdr = rec.get("header") or name_to_header.get(name)
+        if not hdr or hdr.lower() in ("windows.h",):
+            mapped = header_map.header_for_entity(name, [kind])
+            hdr = mapped or hdr
+        if not hdr or hdr.lower() in ("windows.h",):
+            continue
+        # Only fill driver headers from unified; dumping every keepable
+        # quote into Winuser/Winbase reintroduced COM and SAL.
+        if hdr.lower() not in {"ceddk.h", "pkfuncs.h", "kfuncs.h",
+                               "nkintr.h", "winddi.h"}:
+            continue
+        entity = {
+            "id": "unified:" + name, "name": name, "kinds": [kind],
+            "surface": rec.get("surface") or "ce-only",
+            "ce_sets": [], "unicode_only": [],
+        }
+        chosen = {
+            "id": "unified:" + name, "text": text,
+            "source": rec.get("source") if isinstance(rec.get("source"), dict)
+            else {"path": "knowledge/unified/declarations.jsonl",
+                  "set": "unified", "layer": rec.get("layer") or "ce",
+                  "title": name, "page_id": ""},
+        }
+        printed_forms.setdefault(hdr.lower(), hdr)
+        by_header[hdr.lower()].append({
+            "entity": entity, "declaration": chosen, "outline": [],
+            "name_only": False, "borrowed_from": "unified-kb",
+            "guard": None, "merged": [], "versions": set(),
+            "neutral_ce": [], "header_mark": "unified-kb",
+            "alternates": [], "modules": {}, "lib_mark": "",
+            "variants": [],
+        })
+        have.add(name)
+        added += 1
+        if kind in EXPORTABLE and "::" not in name and "." not in name:
+            libs = rec.get("libraries") or name_to_libs.get(name) or []
+            for lib in libs:
+                parsed = module_of(lib)
+                if not parsed:
+                    continue
+                stem = parsed[0].lower()
+                if name in have_exp:
+                    continue
+                by_module[stem]["stated"].add(lib)
+                by_module[stem]["entries"].append({
+                    "entity": entity, "declaration": chosen,
+                    "lib_mark": "unified-kb", "guard": None,
+                    "merged": [], "neutral_ce": [],
+                    "borrowed_from": "unified-kb"})
+                have_exp.add(name)
+    harvest_path = os.path.join(KB, "harvest-declarations.jsonl")
+    if os.path.exists(harvest_path):
+        check_spec_path(harvest_path)
+        with open(harvest_path, encoding="utf-8") as fh:
+            for line in fh:
+                line = line.strip()
+                if not line:
+                    continue
+                rec = json.loads(line)
+                name = rec.get("name") or ""
+                kind = rec.get("type") or rec.get("kind") or "function"
+                text = (rec.get("declaration") or rec.get("text") or "").replace("\\n", "\n")
+                if not name or name in have:
+                    continue
+                if not _keepable_c_decl(text, name, kind):
+                    continue
+                if kind == "function" and name.isupper():
+                    continue
+                hdr = rec.get("header") or name_to_header.get(name)
+                if not hdr or hdr.lower() not in {
+                        "ceddk.h", "pkfuncs.h", "kfuncs.h",
+                        "nkintr.h", "winddi.h"}:
+                    continue
+                entity = {
+                    "id": "harvest:" + name, "name": name, "kinds": [kind],
+                    "surface": "ce-only", "ce_sets": [], "unicode_only": [],
+                }
+                chosen = {
+                    "id": "harvest:" + name, "text": text,
+                    "source": {"path": rec.get("source") or harvest_path,
+                               "set": "harvest", "layer": "ce",
+                               "title": name, "page_id": rec.get("page_id") or ""},
+                }
+                printed_forms.setdefault(hdr.lower(), hdr)
+                by_header[hdr.lower()].append({
+                    "entity": entity, "declaration": chosen, "outline": [],
+                    "name_only": False, "borrowed_from": "harvest-kb",
+                    "guard": None, "merged": [], "versions": set(),
+                    "neutral_ce": [], "header_mark": "harvest-kb",
+                    "alternates": [], "modules": {}, "lib_mark": "",
+                    "variants": [],
+                })
+                have.add(name)
+                added += 1
+    return added
 
 
 def unified_scope(all_entities):
@@ -1777,6 +1942,11 @@ _CORE_TYPEDEFS = (
     ("CEPROPID", "typedef DWORD CEPROPID;"),
     ("LPTHREAD_START_ROUTINE",
      "typedef DWORD (WINAPI *LPTHREAD_START_ROUTINE)(LPVOID);"),
+    ("LARGE_INTEGER",
+     "typedef union _LARGE_INTEGER { struct { DWORD LowPart; LONG HighPart; } u; "
+     "LONGLONG QuadPart; } LARGE_INTEGER, *PLARGE_INTEGER;"),
+    ("PHYSICAL_ADDRESS",
+     "typedef LARGE_INTEGER PHYSICAL_ADDRESS, *PPHYSICAL_ADDRESS;"),
 )
 
 _WINDEF_NEED = (
@@ -1810,6 +1980,8 @@ _C_KNOWN_TYPES = {
     "BOOLEAN", "LPTHREAD_START_ROUTINE", "PFILETIME", "LPFILETIME",
     "PRECT", "LPRECT", "LPCRECT", "PPOINT", "LPPOINT", "PSIZE", "LPSIZE",
     "HCURSOR", "HACCEL", "HRSRC", "HGLOBAL", "HLOCAL", "HDWP", "HGDIOBJ",
+    "LARGE_INTEGER", "PLARGE_INTEGER", "PHYSICAL_ADDRESS", "PPHYSICAL_ADDRESS",
+    "INTERFACE_TYPE", "BOOLEAN",
 }
 
 
@@ -2269,6 +2441,8 @@ def run_unified(args):
             ";".join(v["name"] for v in variants.get(entity["id"], [])),
             header_mark, lib_mark))
 
+    overlay_unified_surface(by_header, printed_forms, by_module, all_entities)
+
     # ---- constants: every numbered constant the CE documents quote,
     # filed under the header the linkage table names for it.  Entries are
     # collected structured; the fragment writer batches several constants
@@ -2407,10 +2581,13 @@ def run_unified(args):
         for info in infos:
             emitted_names.add(info["entity"]["name"])
     page_to_headers = collections.defaultdict(set)
+    name_to_header = {}
     for ent in all_entities:
         hs = header_files(ent.get("headers") or [])
         if not hs:
             continue
+        if ent.get("name"):
+            name_to_header.setdefault(ent["name"], hs[0])
         for page in (ent.get("ce_pages") or []) + (ent.get("win32_pages") or []):
             for h in hs:
                 page_to_headers[page].add(h)
@@ -2447,6 +2624,9 @@ def run_unified(args):
             leftover_defines.append(d)
             continue
         hdr = _pick_header_for_extra(name, d.get("source") or "", ["macro"])
+        if hdr and hdr.lower() in {"ceddk.h", "pkfuncs.h", "kfuncs.h"}:
+            leftover_defines.append(d)
+            continue
         if hdr:
             printed_forms.setdefault(hdr.lower(), hdr)
             extra_macros_by_header[hdr.lower()].append(d)
@@ -2462,12 +2642,23 @@ def run_unified(args):
             continue
         hdr = _pick_header_for_extra(name, d.get("source") or "",
                                      [d.get("type") or ""])
-        # Extra scan junk must not land in the headers a compiler includes
-        # first (WinDef/Winuser/…).  Keep it in ExtraDeclarations.h.
+        if not hdr:
+            hdr = name_to_header.get(name)
+        text = d.get("declaration") or ""
+        keep = quality_filters.is_c_toolchain_declaration(
+            text, name, d.get("type") or "") \
+            and not quality_filters.decl_unusable_for_c(text, name)
+        # Junk stays out of WinDef/Winuser.  Keepable C (MmMapIoSpace) may
+        # fill a hole in a core header from harvest, not from a copied file.
         if hdr and hdr.lower() in CE_CORE_HEADERS | {"windows.h", "windowsapis.h"}:
-            leftover_decls.append(d)
+            if keep and hdr.lower() in {"ceddk.h", "pkfuncs.h", "kfuncs.h"}:
+                printed_forms.setdefault(hdr.lower(), hdr)
+                extra_decls_by_header[hdr.lower()].append(d)
+                emitted_names.add(name)
+            else:
+                leftover_decls.append(d)
             continue
-        if hdr:
+        if hdr and keep:
             printed_forms.setdefault(hdr.lower(), hdr)
             extra_decls_by_header[hdr.lower()].append(d)
             emitted_names.add(name)
@@ -2549,6 +2740,7 @@ def run_unified(args):
         comment = f"/* {name} = {group['print']}  [{', '.join(meta)}] */"
         return [comment]
 
+    global_fn_names = set()
     for key in sorted(set(by_header) | set(const_entries) | extra_keys):
         display = safe_name(printed_forms.get(key) or key, ".h")
         def entry_sort(e):
@@ -2563,6 +2755,21 @@ def run_unified(args):
         decls = sorted(by_header.get(key, []),
                        key=lambda e: (guard_sort_key(e["merged"]),
                                       e["entity"]["name"].lower()))
+        enum_members = set()
+        for info_item in decls:
+            decl = info_item.get("declaration") or {}
+            text = decl.get("text") if isinstance(decl, dict) else ""
+            if text and "enum" in text:
+                enum_members.update(re.findall(
+                    r"\b([A-Z][A-Za-z0-9_]*)\s*=", text))
+        if enum_members:
+            entries = [e for e in entries if e["name"] not in enum_members]
+        if key.lower() in {
+                "stdarg.h", "stdio.h", "stdlib.h", "string.h", "stddef.h",
+                "ctype.h", "malloc.h", "memory.h", "assert.h", "time.h",
+                "math.h", "setjmp.h", "signal.h", "locale.h", "errno.h",
+                "limits.h", "float.h", "iso646.h", "wchar.h", "wctype.h"}:
+            continue
         if not entries and not decls and not extra_macros_by_header.get(key) \
                 and not extra_decls_by_header.get(key) \
                 and not base_types_by_header.get(key.lower()):
@@ -2778,9 +2985,16 @@ def run_unified(args):
                 if entry["name"] == "NULL" and str(group["print"]).strip() not in (
                         "0", "0L", "0l", "NULL"):
                     continue
+                if str(group["print"]).count('"') % 2 != 0:
+                    continue
                 if not args.no_const_comments:
                     lines.extend(const_note(entry, group))
-                lines.append(f"#define {entry['name']} {group['print']}")
+                if entry["name"] == "NULL":
+                    lines.append("#ifndef NULL")
+                    lines.append(f"#define NULL {group['print']}")
+                    lines.append("#endif")
+                else:
+                    lines.append(f"#define {entry['name']} {group['print']}")
                 defines += 1
             if open_guard_now is not None:
                 close_guard(lines, open_guard_now)
@@ -2900,9 +3114,47 @@ def run_unified(args):
         buckets = collections.defaultdict(list)
         for info in decls:
             buckets[decl_bucket(info)].append(info)
+        extra_type_ds = []
+        already_decl_pre = {
+            (info.get("entity") or {}).get("name") for info in decls
+        }
+        already_decl_pre.discard(None)
+        for d in extra_decls_by_header.get(key.lower(), []):
+            name = d.get("name") or ""
+            kind = d.get("type") or "function"
+            text = (d.get("declaration") or "").replace("\\n", "\n")
+            if not name or name in already_decl_pre:
+                continue
+            if kind not in ("typedef", "enum", "struct"):
+                continue
+            if not quality_filters.is_c_toolchain_declaration(text, name, kind):
+                continue
+            if quality_filters.decl_unusable_for_c(text, name):
+                continue
+            extra_type_ds.append(d)
         open_decl_guard = None
         for bucket_key, bucket_title in sections:
             items = buckets.get(bucket_key) or []
+            if bucket_key == "functions":
+                local = set(emitted_type_names)
+                local.update(n for n, _d in _CORE_TYPEDEFS)
+                filtered, seen_fn = [], set()
+                for info in items:
+                    ename = (info.get("entity") or {}).get("name")
+                    text = ((info.get("declaration") or {}).get("text") or "")
+                    cname = (ename or "").lstrip("_")
+                    if ename and (ename in seen_fn or ename in global_fn_names
+                                  or cname in global_fn_names):
+                        continue
+                    if type_mentions_unknown(text, local):
+                        continue
+                    filtered.append(info)
+                    if ename:
+                        seen_fn.add(ename)
+                        global_fn_names.add(ename)
+                        if cname:
+                            global_fn_names.add(cname)
+                items = filtered
             if bucket_key == "types":
                 items = order_type_infos(items)
                 with_body, outlines = [], []
@@ -2947,9 +3199,11 @@ def run_unified(args):
                 if key.lower() != "windef.h" and ename in {
                         n for n, _d in _CORE_TYPEDEFS}:
                     continue
-                if bucket_key == "types" and ename:
-                    emitted_type_names.add(ename)
                 declaration = info["declaration"]
+                if bucket_key == "types" and ename:
+                    _dt = declaration.get("text") if isinstance(declaration, dict) else ""
+                    if _dt:
+                        emitted_type_names.add(ename)
                 libs = ", ".join(
                     name for names in info["modules"].values()
                     for name in sorted(names)) or "-"
@@ -2991,6 +3245,18 @@ def run_unified(args):
                     for member in outline:
                         head.append(f"/*   {member['field']} */")
                 lines.extend(head)
+            if bucket_key == "types" and extra_type_ds:
+                if open_decl_guard is not None:
+                    close_guard(lines, open_decl_guard)
+                    open_decl_guard = None
+                for d in extra_type_ds:
+                    text = (d.get("declaration") or "").replace("\\n", "\n")
+                    lines.append("")
+                    lines.append(
+                        f"/* {d.get('name')}  [extra {d.get('type')}] */")
+                    lines.append(text)
+                    if d.get("name"):
+                        emitted_type_names.add(d.get("name"))
         if open_decl_guard is not None:
             close_guard(lines, open_decl_guard)
         # Extra declarations filed into this header (not already emitted).
@@ -3003,6 +3269,10 @@ def run_unified(args):
             and quality_filters.is_c_toolchain_declaration(
                 d.get("declaration") or "", d.get("name") or "",
                 d.get("type") or "")
+            and not quality_filters.decl_unusable_for_c(
+                d.get("declaration") or "", d.get("name") or "")
+            and not type_mentions_unknown(
+                d.get("declaration") or "", already_decl_names)
         ]
         if extra_ds:
             by_type = collections.defaultdict(list)

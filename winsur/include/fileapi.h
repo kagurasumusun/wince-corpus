@@ -29,12 +29,4 @@
 #define LOCKFILE_EXCLUSIVE_LOCK 0x00000002
 #define LOCKFILE_FAIL_IMMEDIATELY 0x00000001
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _WIN32_FILE_ATTRIBUTE_DATA{ DWORD dwFileAttributes; FILETIME ftCreationTime; FILETIME ftLastAccessTime; FILETIME ftLastWriteTime; DWORD nFileSizeHigh; DWORD nFileSizeLow; } WIN32_FILE_ATTRIBUTE_DATA, *LPWIN32_FILE_ATTRIBUTE_DATA;
-
 #endif /* _FILEAPI_ */

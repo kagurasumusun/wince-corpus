@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 4 declarations, 1 outlines, 0 base types, 0 extra macros, 31 extra decls
+ * 0 constants, 4 declarations, 1 outlines, 0 base types, 0 extra macros, 29 extra decls
  */
 #ifndef _DMUSICC_
 #define _DMUSICC_
@@ -31,29 +31,13 @@ typedef struct _DMUS_WAVES_REVERB_PARAMS {
  float fHighFreqRTRatio;
 } DMUS_WAVES_REVERB_PARAMS;
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* typedef */
+/* LPDIRECTMUSICBUFFER  [extra typedef] */
 typedef IDirectMusicBuffer *LPDIRECTMUSICBUFFER;
+
+/* LPDIRECTMUSICPORT  [extra typedef] */
 typedef IDirectMusicPort *LPDIRECTMUSICPORT;
 
-/* struct */
-typedef struct _DMUS_PORTCAPS {
-  DWORD dwSize;
-  DWORD dwFlags;
-  GUID guidPort;
-  DWORD dwClass;
-  DWORD dwType;
-  DWORD dwMemorySize;
-  DWORD dwMaxChannelGroups;
-  DWORD dwMaxVoices;
-  DWORD dwMaxAudioChannels;
-  DWORD dwEffectFlags;
-  WCHAR wszDescription[DMUS_MAX_DESCRIPTION];
-} DMUS_PORTCAPS, *LPDMUS_PORTCAPS;
+/* LPDMUS_PORTPARAMS  [extra struct] */
 typedef struct _DMUS_PORTPARAMS {
   DWORD dwSize;
   DWORD dwValidParams;
@@ -65,33 +49,27 @@ typedef struct _DMUS_PORTPARAMS {
   DWORD fShare;
 } DMUS_PORTPARAMS, *LPDMUS_PORTPARAMS;
 
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
 /* function */
 HRESULT AllocateBuffer( DWORD dwSize, IDirectMusicDownload** ppIDMDownload );
 HRESULT EnumInstrument( DWORD dwIndex, DWORD* pdwPatch, LPWSTR pwszName, DWORD dwNameLen );
 HRESULT GetAppend( DWORD* pdwAppend );
-HRESULT GetBufferFormat( LPGUID pGuidFormat );
 HRESULT GetChannelPriority( DWORD dwChannelGroup, DWORD dwChannel, LPDWORD pdwPriority );
 HRESULT GetDLId( DWORD* pdwStartDLId, DWORD dwCount );
 HRESULT GetInstrument( DWORD dwPatch, IDirectMusicInstrument** ppInstrument );
 HRESULT GetLatencyClock( IReferenceClock** ppClock );
 HRESULT GetMaxBytes( LPDWORD pcb );
-HRESULT GetNextEvent( LPREFERENCE_TIME prt, LPDWORD pdwChannelGroup, LPDWORD pdwLength, LPBYTE* ppData );
 HRESULT GetRawBufferPtr( LPBYTE* ppData );
-HRESULT GetRunningStats( LPDMUS_SYNTHSTATS pStats );
-HRESULT GetStartTime( LPREFERENCE_TIME prt );
 HRESULT GetUsedBytes( LPDWORD pcb );
-HRESULT PackStructured( REFERENCE_TIME rt, DWORD dwChannelGroup, DWORD dwChannelMessage );
-HRESULT PackUnstructured( REFERENCE_TIME rt, DWORD dwChannelGroup, DWORD cb, LPBYTE lpb );
-HRESULT PlayBuffer( IDIRECTMUSICBUFFER* pBuffer );
-HRESULT ResetReadPtr()
 HRESULT SetChannelPriority( DWORD dwChannelGroup, DWORD dwChannel, DWORD dwPriority );
-HRESULT SetDirectSound( LPDIRECTSOUND pDirectSound, LPDIRECTSOUNDBUFFER pDirectSoundBuffer );
 HRESULT SetNumChannelGroups( DWORD dwChannelGroups );
 HRESULT SetPatch( DWORD dwPatch );
 HRESULT SetReadNotificationHandle( HANDLE hEvent );
-HRESULT SetStartTime( REFERENCE_TIME rt );
 HRESULT SetUsedBytes( DWORD cb );
-HRESULT TotalTime( LPREFERENCE_TIME prtTime );
 HRESULT UnloadInstrument( IDirectMusicDownloadedInstrument* pDownloadedInstrument );
 
 #endif /* _DMUSICC_ */

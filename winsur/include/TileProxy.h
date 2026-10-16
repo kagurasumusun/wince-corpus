@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 22 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 21 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _TILEPROXY_
 #define _TILEPROXY_
@@ -15,7 +15,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* CreateTileProxy  [function; ce-only; CE 6.0..699; tileengine.dll] */
 HRESULT CreateTileProxy(
@@ -29,12 +29,6 @@ HRESULT CreateTileProxy(
 HRESULT ReleaseTileProxy(
  HANDLE hTileProxy);
 
-/* TPChangePos  [function; ce-only; CE 6.0..699; tileengine.dll] */
-HRESULT TPChangePos(
- HANDLE hTileProxy,
- INT32 dxPage,
- INT32 dyPage);
-
 /* TPChangeZoom  [function; ce-only; CE 6.0..699; tileengine.dll] */
 HRESULT TPChangeZoom(
  HANDLE hTileProxy,
@@ -46,12 +40,6 @@ HRESULT TPChangeZoom(
 HRESULT TPChangeZoomScale(
  HANDLE hTileProxy,
  float fScale);
-
-/* TPForwardWindowInput  [function; ce-only; CE 6.0..699; tileengine.dll] */
-HRESULT TPForwardWindowInput(
- HANDLE hTileProxy,
- UINT32 msg, 
- POINT pt);
 
 /* TPGetHostWindow  [function; ce-only; CE 6.0..699; tileengine.dll] */
 HRESULT TPGetHostWindow(
@@ -83,16 +71,6 @@ HRESULT TPGetViewScale(
 HRESULT TPGetViewVisBounds(
  HANDLE hTileProxy,
  RECT* pRect);
-
-/* TPGetWaitEvent  [function; ce-only; CE 6.0..699; tileengine.dll] */
-HRESULT TPGetWaitEvent(
- HANDLE hTileProxy,
- HANDLE* phEvent)
-
-/* TPGetWaitTimeout  [function; ce-only; CE 6.0..699; tileengine.dll] */
-HRESULT TPGetWaitTimeout(
- HANDLE hTileProxy,
- UINT32* piTimeout);
 
 /* TPRedraw  [function; ce-only; CE 6.0..699; tileengine.dll] */
 HRESULT TPRedraw(
@@ -127,12 +105,6 @@ HRESULT TPShowTileWindow(
 /* TPUpdate  [function; ce-only; CE 6.0..699; tileengine.dll] */
 HRESULT TPUpdate(
  HANDLE hTileProxy);
-
-/* TPWindowToPage  [function; ce-only; CE 6.0..699; tileengine.dll] */
-HRESULT TPWindowToPage(
- HANDLE hTileProxy,
- INT32* px,
- INT32* py);
 #endif /* _WIN32_WCE */
 
 #endif /* _TILEPROXY_ */

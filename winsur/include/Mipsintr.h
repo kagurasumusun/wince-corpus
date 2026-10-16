@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 199 declarations, 0 outlines, 0 base types, 0 extra macros, 6 extra decls
+ * 0 constants, 198 declarations, 0 outlines, 0 base types, 0 extra macros, 6 extra decls
  */
 #ifndef _MIPSINTR_
 #define _MIPSINTR_
@@ -15,7 +15,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 500)) /* CE 4.0..499 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x500)) /* CE 4.0..499 */
 
 /* _abs_ps  [function; ce-only; CE 4.0..499] */
 double __cdecl _abs_ps(
@@ -745,13 +745,6 @@ double __cdecl _esrqrt_vu(
  arg1
 );
 
-/* _InterlockedCompareExchange64  [function; ce-only; CE 4.0..499] */
-InterlockedCompareExchange64(
- LPLONG Destination,
- LONG Exchange,
- LONG Comparand
-);
-
 /* _madd_ps  [function; ce-only; CE 4.0..499] */
 double __cdecl _madd_ps(
  arg1,
@@ -1292,7 +1285,6 @@ double _xor_ob(
  * ================================================================ */
 
 /* function */
-LONG ExpInterlockedCompareExchange64( PLONGLONG Destination, PLONGLONG Exchange, PLONGLONG Comparand );
 double __cdecl _esrqrt_ps( arg1 );
 float __cdecl _esrqrt_sl( arg1 );
 float __cdecl _esrqrt_su( arg1 );

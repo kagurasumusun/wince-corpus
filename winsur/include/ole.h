@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 11 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 11 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _OLE_
 #define _OLE_
@@ -28,13 +28,5 @@
 #define OT_EMBEDDED 2L
 #define OT_LINK 1L
 #define OT_STATIC 3L
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-WINOLEAPIOleDraw( IUnknown* pUnk, DWORD dwAspect, HDC hdcDraw, LPCRECT lprcBounds );
 
 #endif /* _OLE_ */

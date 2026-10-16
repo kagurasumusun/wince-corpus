@@ -16,15 +16,11 @@
  * parser did not turn into an entity declaration
  * ================================================================ */
 
-/* struct */
-typedef struct _MARGINS {intcxLeftWidth;intcxRightWidth;intcyTopHeight;intcyBottomHeight;} MARGINS,* PMARGINS;
-
 /* function */
 void AdjustRect( LPRECT lprcContent, DWORD dwState );
 HANDLE CreateRenderingMetrics( HDC hDC, INT iMaxCand, WCHAR* pszCandidates, WCHAR* pszInlineComments, HFONT hFontCandidates, HFONT hFontInlineComments, HICON hIconMemo, DWORD dwFlags );
 HANDLE FreeRenderingMetrics( HANDLE hMetrics );
 DWORD GetHorizontalOffset(void);
-void GetMargins( PMARGINS pMargins );
 static INT GetMaxHeight(void);
 static INT GetMaxItems(void);
 UINT GetSeparator(void);

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 60 constants, 16 declarations, 33 outlines, 0 base types, 0 extra macros, 101 extra decls
+ * 45 constants, 15 declarations, 34 outlines, 0 base types, 0 extra macros, 88 extra decls
  */
 #ifndef _OBJIDL_
 #define _OBJIDL_
@@ -17,17 +17,8 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define ADVF_DATAONSTOP 64
-#define ADVF_NODATA 1
-#define ADVF_ONLYONCE 4
-#define ADVF_PRIMEFIRST 2
-#define ADVFCACHE_FORCEBUILTIN 16
-#define ADVFCACHE_NOHANDLER 8
-#define ADVFCACHE_ONSAVE 32
 #define COLE_DEFAULT_AUTHINFO (
 #define COLE_DEFAULT_PRINCIPAL (
-#define DATADIR_GET 1
-#define DATADIR_SET 2
 #define DVASPECT_CONTENT 1
 #define DVASPECT_DOCPRINT 8
 #define DVASPECT_ICON 4
@@ -35,7 +26,6 @@
 #define DVASPECT_THUMBNAIL 2
 #define DVASPECT_TRANSPARENT 32
 #define EXTCONN_STRONG 0x0001
-#define MKRREDUCE_ALL 0
 #define PIDDSI_BYTECOUNT 0x00000004
 #define PIDDSI_CATEGORY 0x00000002
 #define PIDDSI_COMPANY 0x0000000F
@@ -72,11 +62,6 @@
 #define PRSPEC_INVALID 0xFFFFFFFF
 #define PRSPEC_LPWSTR 0x00000000
 #define PRSPEC_PROPID 0x00000001
-#define TYMED_FILE 2
-#define TYMED_HGLOBAL 1
-#define TYMED_ISTORAGE 8
-#define TYMED_ISTREAM 4
-#define TYMED_NULL 0
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
@@ -84,7 +69,7 @@
 
 /* STGMEDIUM  [struct; ce-only] */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 3.0..399, 5.0..599 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 3.0..399, 5.0..599 */
 
 /* IAdviseSink  [interface; shared; CE 3.0..399, 5.0..599; Oleaut32.lib, Uuid.lib] */
 
@@ -131,18 +116,20 @@
 /* IStream  [interface; shared; CE 3.0..399, 5.0..599; Ole32.lib, Uuid.lib] */
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* IEnumUnknown  [function, interface; shared; CE 4.0..699; Ole32.lib, ole32.lib, Uuid.lib, uuid.lib] */
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 5.0..599 */
 
 /* IBindCtx  [interface; shared; CE 5.0..599; Ole32.lib, Uuid.lib] */
 
 /* IDataObject  [interface; shared; CE 5.0..599; Ole32.lib, Uuid.lib] */
 
 /* IEnumFORMATETC  [interface; shared; CE 5.0..599; Ole32.lib, Uuid.lib] */
+
+/* IGlobalInterfaceTable  [function, interface; shared; CE 5.0..599; Ole32.lib, Uuid.lib] */
 
 /* IMalloc  [interface; shared; CE 5.0..599; Ole32.lib] */
 
@@ -169,7 +156,7 @@ typedef struct tagDVTARGETDEVICE{
  BYTE tdData;
 } DVTARGETDEVICE;
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 3.0..399, 5.0..599 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 3.0..399, 5.0..599 */
 
 /* IEnumMoniker  [function, interface; shared; CE 3.0..399, 5.0..599; Ole32.lib, Uuid.lib] */
 HRESULT Next( 
@@ -199,25 +186,26 @@ HRESULT Clone(
 /*   pItf */
 /*   hr */
 
+/* LPSTGMEDIUM  [extra typedef] */
+typedef STGMEDIUM *LPSTGMEDIUM;
+
+/* LPFORMATETC  [extra struct] */
+typedef struct FARSTRUCT tagFORMATETC {unsigned long cfFormat;DVTARGETDEVICE* ptd;unsigned long dwAspect;long lindex;unsigned long tymed;} FORMATETC, *LPFORMATETC;
+
+/* LPBIND_OPTS  [extra struct] */
+typedef struct tagBIND_OPTS {DWORDcbStruct;DWORDgrfFlags;DWORDgrfMode;DWORDdwTickCountDeadline;} BIND_OPTS, *LPBIND_OPTS;
+
+/* LPBIND_OPTS2  [extra struct] */
+typedef struct tagBIND_OPTS2 {DWORDcbStruct;DWORDgrfFlags;DWORDgrfMode;DWORDdwTickCountDeadline;DWORDdwTrackFlags;DWORDdwClassContext;LCIDlocale;COSERVERINFO* pServerInfo;} BIND_OPTS2, *LPBIND_OPTS2;
+
 /* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
 
-/* typedef */
-typedef STGMEDIUM *LPSTGMEDIUM;
-
-/* struct */
-typedef struct tagBIND_OPTS {DWORDcbStruct;DWORDgrfFlags;DWORDgrfMode;DWORDdwTickCountDeadline;} BIND_OPTS, *LPBIND_OPTS;
-typedef struct tagBIND_OPTS2 {DWORDcbStruct;DWORDgrfFlags;DWORDgrfMode;DWORDdwTickCountDeadline;DWORDdwTrackFlags;DWORDdwClassContext;LCIDlocale;COSERVERINFO* pServerInfo;} BIND_OPTS2, *LPBIND_OPTS2;
-typedef struct FARSTRUCT tagFORMATETC {unsigned long cfFormat;DVTARGETDEVICE* ptd;unsigned long dwAspect;long lindex;unsigned long tymed;} FORMATETC, *LPFORMATETC;
-typedef struct tagSTGMEDIUM {unsigned long tymed;union {HBITMAP hBitmap;HMETAFILEPICT hMetaFilePict;HENHMETAFILE hEnhMetaFile;HGLOBAL hGlobal;LPOLESTR lpszFileName;Istream* pstm;IStorage* pstg;}u;IUnknown* pUnkForRelease; } uSTGMEDIUM;
-
 /* function */
 HRESULT AddConnection( DWORD exconn, DWORD dwreserved );
 HRESULT Commit( DWORD grfCommitFlags );
-HRESULT CopyProxy( IUnknown *pProxy, IUnknown **ppCopy );
-HRESULT CopyTo( DWORD ciidExclude, IID const *rgiidExclude, SNB snbExclude, IStorage *pstgDest );
 HRESULT CreateStorage( const WCHAR *pwcsName, DWORD grfMode, DWORD reserved1, DWORD reserved2, IStorage **ppstg );
 HRESULT CreateStream( const WCHAR *pwcsName, DWORD grfMode, DWORD reserved1, DWORD *reserved2, IStream *ppstm );
 HRESULT DAdvise( FORMATETC* pFormatetc, DWORD advf, IAdviseSink* pAdvSink, DWORD* pdwConnection );
@@ -231,37 +219,20 @@ HRESULT EnumFormatEtc( DWORD dwDirection, IEnumFORMATETC** ppenumFormatetc );
 HRESULT EnumObjectParam( IEnumString** ppenum );
 HRESULT EnumRunning( IEnumMoniker **ppenumMoniker );
 HRESULT FillAppend( void const *pv, ULONG cb, ULONG *pcbWritten );
-HRESULT FillAt( ULARGE_INTEGER uIOffset, void const *pv, ULONG cb, ULONG *pcbWritten );
 HRESULT FreeSurrogate();
 HRESULT GetBindOptions( BIND_OPTS* pbindopts );
 HRESULT GetCanonicalFormatEtc( FORMATETC* pFormatetcIn, FORMATETC* pFormatetcOut );
-HRESULT GetClassForHandler( DWORD dwDestContext, void *pvDestContext, CLSID *pClsid );
-HRESULT GetClassID( CLSID *pClassID);
-HRESULT GetClassObject( REFCLSID *pClassID, DWORD dwClsContext, LCID locale, REFIID riid, void **ppv );
 HRESULT GetComparisonData( byte *pbData, ULONG cbMax, ULONG *pcbData );
-HRESULT GetCurFile( LPOLESTR *ppszFileName );
 HRESULT GetData( FORMATETC* pFormatetc, STGMEDIUM* pmedium );
 HRESULT GetDataHere( FORMATETC* pFormatetc, STGMEDIUM* pmedium );
-HRESULT GetInterfaceFromGlobal( DWORD dwCookie, REFIID riid, void** ppv );
-HRESULT GetMarshalSizeMax( REFIID riid, void *pv, DWORD dwDestContext, void * pvDestContext, DWORD mshlflags, ULONG * pSize );
-HRESULT GetRunningClass( LPCLSID lpClsid );
-HRESULT GetUnmarshalClass( REFIID riid, void *pv, DWORD dwDestContext, void *pvDestContext, DWORD mshlflags, CLSID *pCid );
-DWORD HandleInComingCall( DWORD dwCallType, HTASK threadIDCaller, DWORD dwTickCount, LPINTERFACEINFO lpInterfaceInfo );
 HRESULT HandsOfStorage(void);
 void HeapMinimize();
-HRESULT ImpersonateClient( )
 HRESULT InitNew( IStorage *pStg);
 HRESULT IsDirty(void);
-BOOL IsImpersonating( )
-HRESULT Load( LPCOLESTR pszFileName, DWORD dwMode );
-HRESULT LoadDllServer( REFCLSID Clsid );
 HRESULT LockRunning( BOOL fLock, BOOL fLastUnlockCloses );
-HRESULT MarshalInterface( IStream *pStm, REFIID riid, void *pv, DWORD dwDestContext, void *pvDestContext, DWORD mshlflags );
-DWORD MessagePending( HTASK threadIDCallee, DWORD dwTickCount, DWORD dwPendingType );
 HRESULT MoveElementTo( const WCHAR *pwcsName, IStorage *pstgDest, LPWSTR pwcsNewName, DWORD grfFlags );
 HRESULT NoteChangeTime( DWORD dwRegister, FILETIME *pfiletime );
 HRESULT OnProgress( DWORD dwProgressCurrent, DWORD dwProgressMaximum, BOOL fAccurate, BOOL fOwner );
-HRESULT OpenStorage( const WCHAR *pwcsName, IStorage *pstgPriority, DWORD grfMode, SNB snbExclude, DWORD reserved, IStorage **ppstg );
 HRESULT OpenStream( const WCHAR *pwcsName, void *reserved1, DWORD grfMode, DWORD reserved2, IStream **ppstm );
 void* PostAlloc(  void* pActual  );
 int PostDidAlloc( void* pRequest, BOOL fSpyed, int fActual );
@@ -275,39 +246,22 @@ void* PreFree(  void* pRequest,  BOOL fSpyed  );
 void* PreGetSize(  void* pRequest,  BOOL fSpyed  );
 void PreHeapMinimize(void);
 LONG PreRealloc( void* pRequest, ULONG cbRequest, void** ppNewRequest, BOOL fSpyed );
-HRESULT QueryBlanket( IUnknown *pProxy, DWORD *pAuthnSvc, DWORD *pAuthzSvc, OLECHAR **pServerPrincName, DWORD *pAuthnLevel, DWORD *pImpLevel, RPC_AUTH_IDENTITY_HANDLE* pAuthInfo, DWORD *pCapabilities );
 HRESULT QueryGetData( FORMATETC* pFormatetc );
 HRESULT QueryMultipleInterfaces( ULONG cMQIs, MULTI_QI *pMQIs );
 HRESULT Read( void *pv, ULONG cb, ULONG *pcbRead );
 void* Realloc(  void* pv,  ULONG cb  );
-HRESULT Register( DWORD grfFlags, IUnknown *punkObject, IMoniker *pmkObjectName, DWORD *pdwRegister );
-HRESULT RegisterInterfaceInGlobal( IUnknown* pUnk, REFIID riid, DWORD* pdwCookie );
-HRESULT RegisterObjectBound( IUnknown* punk );
-HRESULT RegisterObjectParam( LPOLESTR pszKey, IUnknown* punk );
 HRESULT ReleaseBoundObjects(void);
 HRESULT ReleaseMarshalData( IStream *pStm );
 HRESULT RenameElement( const WCHAR *pwcsOldName, const WCHAR *pwcsNewName );
-DWORD RetryRejectedCall( HTASK threadIDCallee, DWORD dwTickCount, DWORD dwRejectType );
 HRESULT Revert( void );
-HRESULT RevertToSelf( )
 HRESULT Revoke( DWORD dwRegister );
 HRESULT RevokeInterfaceFromGlobal( DWORD dwCookie );
-HRESULT RevokeObjectBound( IUnknown* punk );
-HRESULT RevokeObjectParam( LPOLESTR pszKey );
-HRESULT Run( LPBC lpbc );
-HRESULT SaveCompleted( LPCOLESTR pszFileName );
-HRESULT Seek( ULARGE_INTEGER dlibMove, DWORD dwOrigin, ULARGE_INTEGER plibNewPosition );
 HRESULT SetBindOptions( BIND_OPTS* pbindopts );
-HRESULT SetBlanket( IUnknown *pProxy, DWORD dwAuthnSvc, DWORD dwAuthzSvc, OLECHAR *pServerPrincName, DWORD dwAuthnLevel, DWORD dwImpLevel, RPC_AUTH_IDENTITY_HANDLE pAuthInfo, DWORD dwCapabilities );
-HRESULT SetClass( REFCLSID clsid );
 HRESULT SetContainedObject( BOOL fContained );
 HRESULT SetData( FORMATETC* pFormatetc, STGMEDIUM* pmedium, BOOL fRelease );
 HRESULT SetElementTimes( const WCHAR *pwcsName, FILETIME const *pctime, FILETIME const *patime, FILETIME const *pmtime );
-HRESULT SetFillSize( ULARGE_INTEGER uISize );
 HRESULT SetStateBits( DWORD grfStateBits, DWORD grfMask );
-HRESULT SwitchTofFile( LPOLESTR pszFile );
 HRESULT Terminate( BOOL bCanceled );
-HRESULT UnmarshalInterface( IStream *pStm, REFIID riid, void **ppv );
 HRESULT Write( void const *pv, ULONG cb, ULONG *pcbWritten );
 
 #endif /* _OBJIDL_ */

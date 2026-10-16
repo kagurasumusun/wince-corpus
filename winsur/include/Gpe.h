@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 4 declarations, 2 outlines, 0 base types, 0 extra macros, 10 extra decls
+ * 0 constants, 4 declarations, 2 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _GPE_
 #define _GPE_
@@ -35,25 +35,14 @@ struct GPEMode {
  EGPEFormat format;
 };
 
+/* format  [extra struct] */
+struct GPEMode {int modeId;int width;int height;int Bpp;int frequency;EGPEFormat format;};
+
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* GetGPE  [function; ce-only; CE 4.0..699; Gpe_lib.lib] */
-GPE* GetGPE(void);
-
-/* GPEEnableDriver  [function; ce-only; CE 4.0..699; Gpe_lib.lib] */
-BOOL APIENTRY GPEEnableDriver(
- ULONG iEngineVersion,
- ULONG cj,
- DRVENABLEDATA* pded,
- PENGCALLBACKS pEngCallbacks
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* ContrastControl  [function; ce-only; CE 6.0..699; Gpe_lib.lib] */
 BOOL ContrastControl(
@@ -66,9 +55,6 @@ BOOL ContrastControl(
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
-
-/* struct */
-struct GPEMode {int modeId;int width;int height;int Bpp;int frequency;EGPEFormat format;};
 
 /* function */
 int NumModes();

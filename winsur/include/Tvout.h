@@ -11,12 +11,4 @@
 #define _TVOUT_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _VIDEOPARAMETERS {GUID Guid;ULONG dwOffset;ULONG dwCommand;ULONG dwFlags;ULONG dwMode;ULONG dwTVStandard;ULONG dwAvailableModes;ULONG dwAvailableTVStandard;ULONG dwFlickerFilter;ULONG dwOverScanX;ULONGdwOverScanY;ULONG dwMaxUnscaledX;ULONG dwMaxUnscaledY;ULONG dwPositionX;ULONGdwPositionY;ULONG dwBrightness;ULONG dwContrast;ULONG dwCPType;ULONG dwCPCommand;ULONG dwCPStandard;ULONG dwCPKey;ULONG bCP_APSTriggerBits;UCHAR bOEMCopyProtection[256];} VIDEOPARAMETERS, *PVIDEOPARAMETERS, *LPVIDEOPARAMETERS;
-
 #endif /* _TVOUT_ */

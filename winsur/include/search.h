@@ -15,7 +15,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 5.0..599 */
 
 /* qsort  [function; ce-only; CE 5.0..599; coredll.dll] */
 void qsort( void*base,size_tnum,size_twidth,int( __cdecl*compare)( constvoid*elem1,constvoid*elem2) );

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 16 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 12 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _AVC_UNIT_
 #define _AVC_UNIT_
@@ -43,38 +43,5 @@ typedef struct {BOOL uqlp_PlugState;ULONG uqlp_PlugNumber;ULONG uqlp_Direction;U
 
 /* UNIT_RegisterSubunit_Response  [struct; ce-only] */
 typedef struct {PVOID urs_RegistrationToken;} UNIT_RegisterSubunit_Response;
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
-
-/* UNIT_AllocateLocalPlugCB  [function; ce-only; CE 5.0..599; Avc_unit.lib] */
-NTSTATUS (*UNIT_AllocateLocalPlugCB)(PVOID Context, ULONG SubunitPlugID,ULONG Direction,UNIT_MediaType MediaType,ULONG MaximumThroughput,ULONG* PlugNumber,HANDLE* Plug);
-
-/* UNIT_CloseUnitDeviceObject  [function; ce-only; CE 5.0..599; Avc_unit.lib] */
-NTSTATUS UNIT_CloseUnitDeviceObject(PFILE_OBJECT UnitFileObject, PDEVICE_OBJECT UnitDeviceObject);
-
-/* UNIT_ConnectToRemotePlugCB  [function; ce-only; CE 5.0..599; Avc_unit.lib] */
-NTSTATUS (*UNIT_ConnectToRemotePlugCB)(PVOID Context, HANDLE Plug,ULONG Direction,UNIT_MediaType MediaType,PVOID Request);
-
-/* UNIT_DisconnectFromRemotePlugCB  [function; ce-only; CE 5.0..599; Avc_unit.lib] */
-NTSTATUS (*UNIT_DisconnectFromRemotePlugCB)(PVOID Context, HANDLE Plug,PVOID Request);
-
-/* UNIT_FreeLocalPlugCB  [function; ce-only; CE 5.0..599; Avc_unit.lib] */
-NTSTATUS (*UNIT_FreeLocalPlugCB)(PVOID Context, HANDLE Plug);
-
-/* UNIT_OpenUnitDeviceObject  [function; ce-only; CE 5.0..599; Avc_unit.lib] */
-NTSTATUS UNIT_OpenUnitDeviceObject(PDEVICE_OBJECT SubunitParentDeviceObject, PFILE_OBJECT* UnitFileObject, PDEVICE_OBJECT* UnitDeviceObject);
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-NTSTATUS (*UNIT_AllocateLocalPlugCB)(PVOID Context, ULONG SubunitPlugID,ULONG Direction,UNIT_MediaType MediaType,ULONG MaximumThroughput,ULONG* PlugNumber,HANDLE* Plug);
 
 #endif /* _AVC_UNIT_ */

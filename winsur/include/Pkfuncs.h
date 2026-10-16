@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 19 constants, 113 declarations, 3 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 19 constants, 113 declarations, 3 outlines, 0 base types, 0 extra macros, 8 extra decls
  */
 #ifndef _PKFUNCS_
 #define _PKFUNCS_
@@ -163,28 +163,43 @@ typedef struct {
  DWORD FailCount;
 } PagePoolState;
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* PFNAPIERRHANDLER  [callback; ce-only; CE 6.0..699; coredll.lib] */
 typedef DWORD (*PFNAPIERRHANDLER)(DWORD);
 DWORD pfnHandler(DWORD iMethod);
 #endif /* _WIN32_WCE */
 
+/* PPHYSICAL_BASIC_INFORMATION  [extra typedef] */
+typedef PHYSICAL_BASIC_INFORMATION *PPHYSICAL_BASIC_INFORMATION;
+
+/* PPROCESSOR_INFO  [extra typedef] */
+typedef __PROCESSOR_INFO {WORDwVersion;WCHARszProcessCore[40];WORDwCoreRevision;WCHARszProcessorName[40];WORDwProcessorRevision;WCAHRszCatalogNumber[100];WCHARszVendor[100];DWORDdwInstructionSet;DWORDdwClockSpeed;} PROCESSOR_INFO, *PPROCESSOR_INFO;
+
+/* PCacheInfo  [extra struct] */
+typedef struct _CacheInfo { DWORD dwL1Flags; DWORD dwL1ICacheSize; DWORD dwL1ICacheLineSize; DWORD dwL1ICacheNumWays; DWORD dwL1DCacheSize; DWORD dwL1DCacheLineSize; DWORD dwL1DCacheNumWays; DWORD dwL2Flags; DWORD dwL2ICacheSize; DWORD dwL2ICacheLineSize; DWORD dwL2ICacheNumWays; DWORD dwL2DCacheSize; DWORD dwL2DCacheLineSize; DWORD dwL2DCacheNumWays;} CacheInfo, *PCacheInfo;
+
+/* PDEVICE_ID  [extra struct] */
+typedef struct _DEVICE_ID {DWORD dwSize;DWORD dwPresetIDOffset;DWORD dwPresetIDBytes;DWORD dwPlatformIDOffset;DWORD dwPlatformIDBytes;} DEVICE_ID, *PDEVICE_ID;
+
+/* PDEVICE_PSL_NOTIFY  [extra struct] */
+typedef struct _DEVICE_PSL_NOTIFY { DWORD dwSize; DWORD dwFlags; HANDLE hProc;HANDLEhThread;} DEVICE_PSL_NOTIFY, *PDEVICE_PSL_NOTIFY;
+
+/* PKD_BPINFO  [extra struct] */
+typedef struct _KD_BPINFO {intnVersion;ULONGulFlags;ULONGulAddress; ULONGulHandle;ULONGulCount;} KD_BPINFO, *PKD_BPINFO;
+
+/* PKD_EXCEPTION_INFO  [extra struct] */
+typedef struct _KD_EXCEPTION_INFO {intnVersion;ULONGulFlags;ULONGulAddress; ULONGulExceptionCode;} KD_EXCEPTION_INFO, *PKD_EXCEPTION_INFO;
+
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* CacheSync  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
 VOID CacheSync(
  int flags
-);
-
-/* CeChangeDatabaseLCID  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-VOID CeChangeDatabaseLCID( 
- PCEGUID pceguid, 
- DWORD LCID 
 );
 
 /* CeGetRandomSeed  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib] */
@@ -232,14 +247,6 @@ HINSTANCE LoadDriver(
  LPCWSTR lpszFileName
 );
 
-/* LockPages  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-BOOL LockPages(
- LPVOID lpvAddress,
- DWORD cbSize,
- PDWORD pPFNs,
- int fOptions
-);
-
 /* MapPtrToProcess  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
 LPVOID MapPtrToProcess(
  LPVOID lpv,
@@ -281,7 +288,7 @@ BOOL VirtualCopy(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
 
 /* OEMKDIoControl  [function; ce-only; CE 3.0..699; Nk.lib] */
 BOOL OEMKDIoControl(
@@ -325,7 +332,7 @@ BOOL WriteRegistryToOEM(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* FreeIntChainHandler  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
 BOOL FreeIntChainHandler(
@@ -350,16 +357,7 @@ VOID NKForceCleanBoot(void);
 void PowerOffSystem(void);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* AllocPhysMem  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-LPVOID AllocPhysMem(
- DWORD cbSize,
- DWORD fdwProtect,
- DWORD dwAlignmentMask,
- DWORD dwFlags,
- PULONG pPhysicalAddress
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* CacheRangeFlush  [function; ce-only; CE 5.0..699; Coredll.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
 void CacheRangeFlush(
@@ -448,13 +446,6 @@ DWORD GetEventData(
  HANDLE hEvent
 );
 
-/* GetStdioPathW  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL GetStdioPathW(
- DWORD id,
- PWSTR pwszBuf,
- LPDWORD lpdwLen
-);
-
 /* GetThreadCallStack  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 ULONG GetThreadCallStack(
  HANDLE hThrd,
@@ -520,28 +511,6 @@ LONG NKRegCloseKey(
  HKEY hKey
 );
 
-/* NKRegCreateKeyEx  [function; ce-only; CE 5.0..699; Coredll.lib, Nkstub.lib] */
-LONG NKRegCreateKeyEx(
- HKEY hKey, 
- LPCWSTR lpSubKey, 
- DWORD Reserved, 
- LPWSTR lpClass, 
- DWORD dwOptions, 
- REGSAM samDesired, 
- LPSECURITY_ATTRIBUTES lpSecurityAttributes, 
- PHKEY phkResult, 
- LPDWORD lpdwDisposition
-);
-
-/* NKRegOpenKeyEx  [function; ce-only; CE 5.0..699; Coredll.lib, Nkstub.lib] */
-LONG NKRegOpenKeyEx(
- HKEY hKey, 
- LPCWSTR lpSubKey, 
- DWORD ulOptions, 
- REGSAM samDesired, 
- PHKEY phkResult
-);
-
 /* NKRegQueryValueEx  [function; ce-only; CE 5.0..699; Coredll.lib, Nkstub.lib] */
 LONG NKRegQueryValueEx(
  HKEY hKey, 
@@ -560,11 +529,6 @@ LONG NKRegSetValueEx(
  DWORD dwType, 
  LPBYTE lpData, 
  DWORD cbData
-);
-
-/* NKSetDataAbortHandler  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-PFNVOID NKSetDataAbortHandler(
- PFNVOID pfnDataAbortHandler 
 );
 
 /* NKVirtualSetAttributes  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
@@ -594,15 +558,6 @@ BOOL RefreshWatchDogTimer(
  DWORD dwFlags
 );
 
-/* SetDbgZone  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL SetDbgZone(
- DWORD dwProcid,
- LPVOID lpvMod,
- LPVOID baseptr,
- DWORD zone,
- LPDBGPARAM lpdbgTgt
-);
-
 /* SetEventData  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL SetEventData(
  HANDLE hEvent,
@@ -612,12 +567,6 @@ BOOL SetEventData(
 /* SetJITDebuggerPath  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL SetJITDebuggerPath(
  LPCWSTR pszDbgrPath 
-);
-
-/* SetStdioPathW  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL SetStdioPathW(
- DWORD id,
- PWSTR pwszPath
 );
 
 /* SleepTillTick  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
@@ -645,7 +594,7 @@ BOOL VirtualSetAttributes(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* CeAllocAsynchronousBuffer  [function; ce-only; CE 6.0..699; coredll.lib] */
 HRESULT CeAllocAsynchronousBuffer(
@@ -737,18 +686,6 @@ BOOL DeleteStaticMapping(
  DWORD dwSize
 );
 
-/* ForwardDeviceIoControl  [function; ce-only; CE 6.0..699; coredll.lib] */
-BOOL ForwardDeviceIoControl (
- HANDLE hDevice,
- DWORD dwIoControlCode,
- LPVOID lpInBuf,
- DWORD nInBufSize,
- LPVOID lpOutBuf,
- DWORD nOutBufSize,
- LPDWORD lpBytesReturned,
- LPOVERLAPPED lpOverlapped
-);
-
 /* GetCallerVMProcessId  [function; ce-only; CE 6.0..699; coredll.lib] */
 DWORD GetCallerVMProcessId (void);
 
@@ -797,5 +734,13 @@ BOOL VirtualCopyEx(
  DWORD fdwProtect
 );
 #endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* function */
+HRESULT CeOpenCallerBuffer( PVOID * ppDestMarshalled, PVOID pSrcUnmarshalled, DWORD cbSrc, DWORD ArgumentDescriptor BOOL ForceDuplicate );
 
 #endif /* _PKFUNCS_ */

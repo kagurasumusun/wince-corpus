@@ -11,34 +11,4 @@
 #define _D3DCAPS_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _D3DLIGHTINGCAPS {
-  DWORD dwSize;
-  DWORD dwCaps;
-  DWORD dwLightingModel;
-  DWORD dwNumLights;
-} D3DLIGHTINGCAPS, *LPD3DLIGHTINGCAPS;
-typedef struct _D3DPrimCaps {
-  DWORD dwSize;
-  DWORD dwMiscCaps;
-  DWORD dwRasterCaps;
-  DWORD dwZCmpCaps;
-  DWORD dwSrcBlendCaps;
-  DWORD dwDestBlendCaps;
-  DWORD dwAlphaCmpCaps;
-  DWORD dwShadeCaps;
-  DWORD dwTextureCaps;
-  DWORD dwTextureFilterCaps;
-  DWORD dwTextureBlendCaps;
-  DWORD dwTextureAddressCaps;
-  DWORD dwStippleWidth;
-  DWORD dwStippleHeight;
-} D3DPRIMCAPS, *LPD3DPRIMCAPS;
-typedef struct _D3DTRANSFORMCAPS { DWORD dwSize; DWORD dwCaps; } D3DTRANSFORMCAPS, *LPD3DTRANSFORMCAPS;
-
 #endif /* _D3DCAPS_ */

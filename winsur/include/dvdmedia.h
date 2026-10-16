@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 6 constants, 1 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 2 constants, 1 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _DVDMEDIA_
 #define _DVDMEDIA_
@@ -19,22 +19,5 @@
  * ================================================================ */
 #define AMCONTROL_COLORINFO_PRESENT 0x00000008
 #define AMCONTROL_USED 0x00000001
-#define KS_AM_RATE_ExactRateChange 2
-#define KS_AM_RATE_MaxFullDataRate 3
-#define KS_AM_RATE_SimpleRateChange 1
-#define KS_AM_RATE_Step 4
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* enum */
-typedef enum {
-  KS_AM_RATE_SimpleRateChange=1,
-  KS_AM_RATE_ExactRateChange=2,
-  KS_AM_RATE_MaxFullDataRate=3,
-  KS_AM_RATE_Step=4
-} KS_AM_PROPERTY_TS_RATE_CHANGE;
 
 #endif /* _DVDMEDIA_ */

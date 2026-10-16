@@ -11,15 +11,4 @@
 #define _EXTFILE_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* typedef */
-typedef const FILECHANGEINFO *LPCFILECHANGEINFO;
-
-/* struct */
-struct _FILECHANGEINFO {DWORD cbSize;LONG wEventId;ULONG uFlags;DWORD dwItem1;DWORD dwItem2;DWORD dwAttributes;FILETIME ftModified;ULONG nFileSize;} FILECHANGEINFO, *LPFILECHANGEINFO;
-
 #endif /* _EXTFILE_ */

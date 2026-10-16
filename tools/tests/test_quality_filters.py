@@ -71,6 +71,19 @@ class GluedPrototypeTests(unittest.TestCase):
         self.assertTrue(q.looks_like_c_declaration(
             "HANDLE CreateFile(LPCTSTR lpFileName);"))
 
+    def test_placeholder_types_unusable(self):
+        self.assertTrue(q.decl_unusable_for_c(
+            "PCHAR CONTAINING_RECORD(PCHAR Address, TYPE Type, PCHAR Field);",
+            "CONTAINING_RECORD"))
+        self.assertTrue(q.is_broken_c("InterlockedExchangeAdd(\n PLONG Addend,\n LONG Increment\n);"))
+        self.assertTrue(q.is_broken_c("HCURSOR GetCursor(void)"))
+
+    def test_boolean_param_is_not_glued(self):
+        text = ("PVOID MmMapIoSpace(PHYSICAL_ADDRESS PhysicalAddress, "
+                "ULONG NumberOfBytes, BOOLEAN CacheEnable);")
+        self.assertFalse(q.is_glued_prototype(text))
+        self.assertTrue(q.looks_like_c_declaration(text))
+
 
 class ToolchainCTests(unittest.TestCase):
     def test_keeps_c_messagebox(self):

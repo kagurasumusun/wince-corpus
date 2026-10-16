@@ -15,7 +15,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
 
 /* DdsiTouchPanelDisable  [function; ce-only; CE 2.11..2.12, 3.0..699; Tchmdd.lib] */
 VOID DdsiTouchPanelDisable(void);
@@ -27,13 +27,6 @@ BOOL DdsiTouchPanelEnable(void);
 BOOL DdsiTouchPanelGetDeviceCaps(
  ULONG iIndex,
  LPVOID lpOutput 
-);
-
-/* DdsiTouchPanelGetPoint  [function; ce-only; CE 2.11..2.12, 3.0..699; Tchmdd.lib] */
-void DdsiTouchPanelGetPoint(
- TOUCH_PANEL_SAMPLE_FLAGS pTipState,
- PLONG pUnCalX,
- PLONG pUnCalY 
 );
 
 /* DdsiTouchPanelPowerHandler  [function; ce-only; CE 2.11..2.12, 3.0..699; Tchmdd.lib] */
@@ -48,7 +41,7 @@ BOOL DdsiTouchPanelSetMode(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* DdsiTouchPanelAttach  [function; ce-only; CE 4.0..699; Tchmdd.lib] */
 LONG DdsiTouchPanelAttach(void);

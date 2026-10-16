@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 5 constants, 30 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 5 constants, 26 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _STRSAFE_
 #define _STRSAFE_
@@ -27,7 +27,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* StringCbCat  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCbCatA,StringCbCatW (CE is W-side)] */
 HRESULT StringCbCat(
@@ -142,25 +142,6 @@ HRESULT StringCbPrintfEx(
  ...
 );
 
-/* StringCbVPrintf  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCbVPrintfA,StringCbVPrintfW (CE is W-side)] */
-HRESULT StringCbVPrintf( 
- LPTSTR pszDest,
- size_t cbDest,
- LPCTSTR pszFormat,
- va_list argList
-);
-
-/* StringCbVPrintfEx  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCbVPrintfExA,StringCbVPrintfExW (CE is W-side)] */
-HRESULT StringCbVPrintfEx( 
- LPTSTR pszDest,
- size_t cbDest,
- LPTSTR *ppszDestEnd,
- size_t *pcbRemaining,
- DWORD dwFlags,
- LPCTSTR pszFormat,
- va_list argList
-);
-
 /* StringCchCat  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCchCatA,StringCchCatW (CE is W-side)] */
 HRESULT StringCchCat( 
  LPTSTR pszDest,
@@ -272,25 +253,6 @@ HRESULT StringCchPrintfEx(
  DWORD dwFlags,
  LPCTSTR pszFormat,
  ...
-);
-
-/* StringCchVPrintf  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCchVPrintfA,StringCchVPrintfW (CE is W-side)] */
-HRESULT StringCchVPrintf( 
- LPTSTR pszDest,
- size_t cchDest,
- LPCTSTR pszFormat,
- va_list argList
-);
-
-/* StringCchVPrintfEx  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCchVPrintfExA,StringCchVPrintfExW (CE is W-side)] */
-HRESULT StringCchVPrintfEx( 
- LPTSTR pszDest,
- size_t cchDest,
- LPTSTR *ppszDestEnd,
- size_t *pcchRemaining,
- DWORD dwFlags,
- LPCTSTR pszFormat,
- va_list argList
 );
 #endif /* _WIN32_WCE */
 

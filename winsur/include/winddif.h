@@ -11,25 +11,4 @@
 #define _WINDDIF_
 
 
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* DrvTextOut  [function; shared; CE 6.0..699] */
-BOOL DrvTextOut(
- SURFOBJ *pso,
- STROBJ *pstro,
- FONTOBJ *pfo,
- CLIPOBJ *pco,
- RECTL *prclExtra,
- RECTL *prclOpaque,
- BRUSHOBJ *pboFore,
- BRUSHOBJ *pboOpaque,
- POINTL *pptlOrg,
- MIX mix
-);
-#endif /* _WIN32_WCE */
-
 #endif /* _WINDDIF_ */

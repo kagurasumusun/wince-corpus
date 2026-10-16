@@ -35,12 +35,7 @@ typedef struct {
  DWORD dwParam2;
 } MMDRV_MESSAGE_PARAMS;
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
+/* CMDRV_MESSAGE_PARAMS  [extra struct] */
 typedef struct {
   DWORD dwDriverID;
   HANDLE hDriver;

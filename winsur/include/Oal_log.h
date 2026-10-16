@@ -33,25 +33,12 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* OALLogPrintf  [function; ce-only; CE 5.0..699] */
-void OALLogPrintf(
- LPWSTR buffer,
- UINT32 maxChars,
- LPCWSTR format,
- ...
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* OALLogSerial  [function; ce-only; CE 5.0..699] */
 void OALLogSerial(
  LPCWSTR format,
  ...
-);
-
-/* OALLogSetZones  [function; ce-only; CE 5.0..699] */
-void OALLogSetZones(
- UINT32 zones
 );
 #endif /* _WIN32_WCE */
 

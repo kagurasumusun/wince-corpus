@@ -11,12 +11,4 @@
 #define _SMCCE_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _OS_DEP_DATA { struct _SMARTCARD_EXTENSION* pSmartCardExtension; CRITICAL_SECTION CritSect; HANDLE hChangeEvent; HANDLE hCancelEvent; } OS_DEP_DATA, *POS_DEP_DATA;
-
 #endif /* _SMCCE_ */

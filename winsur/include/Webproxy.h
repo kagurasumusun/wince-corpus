@@ -15,37 +15,12 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* ProxyFilterHttpRequest  [function; ce-only; CE 5.0..699] */
-DWORD ProxyFilterHttpRequest(
- PPROXY_HTTP_REQUEST pRequest
-);
-
-/* ProxyInitializeFilter  [function; ce-only; CE 5.0..699] */
-DWORD WINAPI ProxyInitializeFilter(
- PPROXY_HTTP_INFORMATION pInfo
-);
-
-/* ProxyNotifyAddrChange  [function; ce-only; CE 5.0..699] */
-DWORD WINAPI ProxyNotifyAddrChange(void);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* ProxySignalFilter  [function; ce-only; CE 5.0..699] */
 DWORD ProxySignalFilter(
  DWORD dwSignal
 );
-
-/* ProxyUninitializeFilter  [function; ce-only; CE 5.0..699] */
-DWORD WINAPI ProxyUninitializeFilter (void);
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _PROXY_HTTP_INFORMATION { DWORD dwSize; DWORD dwProxyVersion;} PROXY_HTTP_INFORMATION, *PPROXY_HTTP_INFORMATION;
-typedef struct _PROXY_HTTP_REQUEST { DWORD dwSize; const SOCKADDR_STORAGE* psaClient; int cbsaClient const char* szUser; int cchUser; const char* szURL; int cchURL; char* szURLOut; int cbURLOut; const SOCKADDR_STORAGE* psaProxy; int cbsaProxy;} PROXY_HTTP_REQUEST, *PPROXY_HTTP_REQUEST;
 
 #endif /* _WEBPROXY_ */

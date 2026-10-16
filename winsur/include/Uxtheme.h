@@ -198,75 +198,10 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* CloseThemeData  [function; shared; CE 5.0..699; Ietheme.dll] */
-HRESULT CloseThemeData(
- HTHEME hTheme
-);
-
-/* DrawThemeBackground  [function; shared; CE 5.0..699; Ietheme.dll] */
-HRESULT DrawThemeBackground(
- HTHEME hTheme,
- HDC hdc,
- int iPartId,
- int iStateId,
- const RECT* pRect,
- const RECT* pClipRect
-);
-
-/* GetThemeBackgroundExtent  [function; shared; CE 5.0..699; Ietheme.dll] */
-HRESULT GetThemeBackgroundExtent(
- HTHEME hTheme,
- HDC hdc,
- int iPartId,
- int iStateId,
- const RECT* pContentRect,
- const RECT* pExtentRect
-);
-
-/* GetThemeColor  [function; shared; CE 5.0..699; Ietheme.dll] */
-HRESULT GetThemeColor(
- HTHEME hTheme,
- HDC hdc,
- int iPartId,
- int iStateId,
- int iPropID,
- COLORREF* pColor
-);
-
-/* GetThemeFont  [function; shared; CE 5.0..699; Ietheme.dll] */
-HRESULT GetThemeColor(
- HTHEME hTheme,
- HDC hdc,
- int iPartId,
- int iStateId,
- int iPropID,
- LOGFONT* pFont
-);
-
-/* HitTestThemeBackground  [function; shared; CE 5.0..699; Ietheme.dll] */
-HRESULT GetThemeColor(
- HTHEME hTheme,
- HDC hdc,
- int iPartId,
- int iStateId,
- DWORD dwOptions,
- const RECT* pRect,
- HRGN hrgn,
- POINT ptTest,
- WORD* pwHitTestCode
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* IsAppThemed  [function; shared; CE 5.0..699; Ietheme.dll] */
 BOOL IsAppThemed(void);
-
-/* OpenThemeDataEx  [function; shared; CE 5.0..699; Ietheme.dll] */
-HTHEME OpenThemeDataEx(
- HWND hwnd,
- LPCWSTR pszClassList,
- DWORD dwFlags
-);
 #endif /* _WIN32_WCE */
 
 #endif /* _UXTHEME_ */

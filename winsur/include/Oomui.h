@@ -15,7 +15,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
 
 /* OomUI_CreateNotRespondingWindow  [function; ce-only; CE 3.0..699] */
 HWND OomUI_CreateNotRespondingWindow(void);
@@ -31,35 +31,8 @@ VOID OomUI_Initialize(
  HINSTANCE hinst 
 );
 
-/* OomUI_NotRespondingWndProc  [function; ce-only; CE 3.0..699] */
-LRESULT CALLBACK OomUI_NotRespondingWndProc( 
- HWND hwnd, 
- UINT message, 
- WPARAM wParam, 
- LPARAM lParam 
-);
-
 /* OomUI_OnShow  [function; ce-only; CE 3.0..699] */
 VOID OomUI_OnShow(void);
-
-/* OomUI_OomWndProc  [function; ce-only; CE 3.0..699] */
-LRESULT CALLBACK OomUI_OomWndProc( 
- HWND hwnd, 
- UINT message, 
- WPARAM wParam, 
- LPARAM lParam 
-);
-
-/* OomUI_SetWindowsInfo  [function; ce-only; CE 3.0..699] */
-VOID OomUI_SetWindowsInfo( 
- INT cWindows, 
- WINDOWINFO* rgwi 
-);
-
-/* OomUICallback_CloseWindow  [function; ce-only; CE 3.0..699] */
-BOOL OomUICallback_CloseWindow( 
- WINDOWINFO* pwi 
-);
 
 /* OomUICallback_IsCritical  [function; ce-only; CE 3.0..699] */
 BOOL OomUICallback_IsCritical(void);

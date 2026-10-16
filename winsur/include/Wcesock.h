@@ -15,7 +15,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 200 && _WIN32_WCE < 210)) /* CE 2.0..209 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x200 && _WIN32_WCE < 0x210)) /* CE 2.0..209 */
 
 /* AfxGetCeSocketWindow  [function; ce-only; CE 2.0..209] */
 HWND AfxGetCeSocketWindow();

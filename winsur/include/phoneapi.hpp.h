@@ -29,12 +29,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* PHMakePhoneCall  [function; ce-only; CE 6.0..699; PhCommon.dll] */
-HRESULT PHMakePhoneCall(
- const PH_MAKEPHONECALL_PARAMETERS* pParameters
- );
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* PHOnHookDialing  [function; ce-only; CE 6.0..699; PhCommon.dll] */
 HRESULT PHOnHookDialing(

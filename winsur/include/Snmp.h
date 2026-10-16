@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 114 constants, 38 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 114 constants, 37 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _SNMP_
 #define _SNMP_
@@ -192,17 +192,10 @@ typedef struct {
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
 
 /* SnmpExtensionClose  [function; shared; CE 3.0..699; Snmp.lib, snmp.lib] */
 VOID SnmpExtensionClose();
-
-/* SnmpExtensionInit  [function; shared; CE 3.0..699; Snmp.lib, snmp.lib] */
-BOOL SnmpExtensionInit( 
- DWORD dwUptimeReference, 
- Handle dwUptimeReference, 
- AsnObjectIdentifier pFirstSupportedRegion
-);
 
 /* SnmpExtensionInitEx  [function; shared; CE 3.0..699; Snmp.lib, snmp.lib] */
 BOOL SnmpExtensionInitEx(
@@ -249,17 +242,6 @@ DWORD SnmpSvcSetLogType(
  INT nLogType 
 );
 
-/* SnmpUtilAsnAnyCpy  [function; shared; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
-SNMPAPI SnmpUtilAsnAnyCpy(
- AsnAny* pAnyDest, 
- AsnAny* pAnySrc 
-);
-
-/* SnmpUtilAsnAnyFree  [function; shared; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
-SNMPAPI SnmpUtilAsnAnyFree(
- AsnAny* pAny 
-);
-
 /* SnmpUtilDbgPrint  [function; shared; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
 VOID SnmpUtilDbgPrint(
  INT nLogLevel, 
@@ -289,46 +271,9 @@ LPVOID SnmpUtilMemReAlloc(
  UINT nBytes 
 );
 
-/* SnmpUtilOctetsCmp  [function; shared; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
-SNMPAPI SnmpUtilOctetsComp(
- AsnOctetString pOctets1, 
- AsnOctetString pOctets2 
-);
-
-/* SnmpUtilOctetsCpy  [function; shared; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
-SNMPAPI SnmpUtilOctetsCpy(
- AsnOctetString pOctetsDest, 
- AsnOctetString pOctetsSrc 
-);
-
 /* SnmpUtilOctetsFree  [function; shared; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
 VOID SnmpUtilOctetsFree(
  AsnOctetString* pOctetsDst 
-);
-
-/* SnmpUtilOctetsNCmp  [function; shared; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
-SNMPAPI SnmpUtilOctetsFree(
- AsnOctetString* pOctets1, 
- AsnOctetString* pOctets2, 
- UINT nChars 
-);
-
-/* SnmpUtilOidAppend  [function; shared; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
-SNMPAPI SnmpUtilOidAppend(
- AsnObjectIdentifier* pOidDst, 
- AsnObjectIdentifier* pOidSrc 
-);
-
-/* SnmpUtilOidCmp  [function; shared; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
-SNMPAPI SnmpUtilOidCmp(
- AsnObjectIdentifier* pOid1, 
- AsnObjectIdentifier* pOid2 
-);
-
-/* SnmpUtilOidCpy  [function; shared; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
-SNMPAPI SnmpUtilOidCpy(
- AsnObjectIdentifier* pOidDst, 
- AsnObjectIdentifier* pOidSrc 
 );
 
 /* SnmpUtilOidFree  [function; shared; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
@@ -353,12 +298,6 @@ LPTSTR SnmpUtilOidToW(
  AsnObjectIdentifier Oid 
 );
 
-/* SnmpUtilPrintToStrAsnAny  [function; ce-only; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
-VOID SnmpUtilPrintToStrAsnAny(
- OUT TCHAR *szOut,
- AsnAny *pAny 
-);
-
 /* SnmpUtilVarBindCpy  [function; shared; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
 VOID SnmpUtilVarBindCpy(
  SnmpVarBind* pVbDest, 
@@ -381,13 +320,5 @@ VOID SnmpUtilVarBindListFree(
  SnmpVarBindList* pVbl 
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-SNMPAPI SnmpUtilOctetsComp(AsnOctetString pOctets1, AsnOctetString pOctets2 );
 
 #endif /* _SNMP_ */

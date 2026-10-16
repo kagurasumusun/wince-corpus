@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2 constants, 14 declarations, 2 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 1 constants, 14 declarations, 2 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _CONNMGR_
 #define _CONNMGR_
@@ -17,8 +17,7 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define ConRefType_NAP 0
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 #define INITGUID must
 #endif /* _WIN32_WCE */
 
@@ -41,90 +40,5 @@ typedef enum _ConnMgrConRefTypeEnum{
  ConRefType_NAP = 0,
  ConRefType_PROXY
 } ConnMgrConRefTypeEnum;
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* ConnMgrApiReadyEvent  [function; ce-only; CE 6.0..699; cellcore.lib] */
-HANDLE WINAPI ConnMgrApiReadyEvent (
- void
-);
-
-/* ConnMgrConnectionStatus  [function; ce-only; CE 6.0..699; cellcore.lib] */
-HRESULT WINAPI ConnMgrConnectionStatus(
- HANDLE hConnection,
- DWORD *pdwStatus
-);
-
-/* ConnMgrEnumDestinations  [function; ce-only; CE 6.0..699; cellcore.lib] */
-HRESULT WINAPI ConnMgrEnumDestinations(
- int Index,
- CONNMGR_DESTINATION_INFO *pDestInfo
-);
-
-/* ConnMgrEstablishConnection  [function; ce-only; CE 6.0..699; cellcore.lib] */
-HRESULT WINAPI ConnMgrEstablishConnection(
- CONNMGR_CONNECTIONINFO *pConnInfo,
- HANDLE *phConnection
-);
-
-/* ConnMgrEstablishConnectionSync  [function; ce-only; CE 6.0..699; cellcore.lib] */
-HRESULT WINAPI ConnMgrEstablishConnectionSync(
- CONNMGR_CONNECTIONINFO *pConnInfo,
- HANDLE *phConnection,
- DWORD dwTimeout,
- DWORD *pdwStatus
-);
-
-/* ConnMgrMapConRef  [function; ce-only; CE 6.0..699; cellcore.lib] */
-HRESULT WINAPI ConnMgrMapConRef(
- ConnMgrConRefTypeEnum e,
- LPCTSTR szConRef, 
- GUID *pGUID
-);
-
-/* ConnMgrMapURL  [function; ce-only; CE 6.0..699; cellcore.lib] */
-HRESULT WINAPI ConnMgrMapURL(
- LPTSTR pwszURL,
- GUID *pguid,
- DWORD *pdwIndex
-);
-
-/* ConnMgrProviderMessage  [function; ce-only; CE 6.0..699; cellcore.lib] */
-HRESULT WINAPI ConnMgrProviderMessage(
- HANDLE hConnection,
- const GUID *pguidProvider,
- DWORD *pdwIndex,
- DWORD dwMsg1,
- DWORD dwMsg2,
- PBYTE pParams,
- ULONG cbParamSize
-);
-
-/* ConnMgrRegisterScheduledConnection  [function; ce-only; CE 6.0..699; cellcore.lib] */
-HRESULT WINAPI ConnMgrRegisterScheduledConnection(
- SCHEDULEDCONNECTIONINFO *pSCI
-);
-
-/* ConnMgrReleaseConnection  [function; ce-only; CE 6.0..699; cellcore.lib] */
-HRESULT WINAPI ConnMgrReleaseConnection(
- HANDLE hConnection,
- LONG lCache 
-);
-
-/* ConnMgrSetConnectionPriority  [function; ce-only; CE 6.0..699; cellcore.lib] */
-HRESULT WINAPI ConnMgrSetConnectionPriority(
- HANDLE hConnection,
- DWORD dwPriority
-);
-
-/* ConnMgrUnregisterScheduledConnection  [function; ce-only; CE 6.0..699; cellcore.lib] */
-HRESULT WINAPI ConnMgrUnregisterScheduledConnection(
- LPCWSTR pwszToken
-);
-#endif /* _WIN32_WCE */
 
 #endif /* _CONNMGR_ */

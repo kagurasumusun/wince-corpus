@@ -11,13 +11,4 @@
 #define _ADDAUTO_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-HRESULT OnConnection ( IApplication* pApp,VARIANT BOOLbFirstTime,LongdwCookie VARIANT_BOOL* OnConnection );
-HRESULT OnDisconnection ( VARIANT_BOOL bLastTime);
-
 #endif /* _ADDAUTO_ */

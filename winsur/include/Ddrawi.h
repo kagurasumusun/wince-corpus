@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 136 declarations, 6 outlines, 0 base types, 0 extra macros, 23 extra decls
+ * 0 constants, 121 declarations, 6 outlines, 0 base types, 0 extra macros, 17 extra decls
  */
 #ifndef _DDRAWI_
 #define _DDRAWI_
@@ -191,267 +191,43 @@ typedef struct _DDRAWI_DIRECTDRAW_LCL {DWORDlpDDMore;LPDDRAWI_DIRECTDRAW_GBLlpGb
 /*   dwCurrVideoPorts */
 /*   dwSVBCaps2 */
 
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 3.0..399, 5.0..599 */
-
-/* DestroyPalette  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD __stdcall DestroyPalette( 
-LPDDHAL_DESTROYPALETTEDATA pdpd );
-
-/* DestroySurface  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD __stdcall DestroySurface( 
-LPDDHAL_DESTROYSURFACEDATA pdsd );
-
-/* DestroyVideoPort  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD __stdcall DestroyVideoPort( 
-LPDDHAL_DESTROYVPORTDATA pdvpd );
-
-/* Flip  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD __stdcall Flip( 
-LPDDHAL_FLIPDATA pfd );
-
-/* FlipVideoPort  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD __stdcall FlipVideoPort( 
-LPDDHAL_FLIPVPORTDATA pfvpd );
-
-/* GET_LPDDRAWSURFACE_GBL_MORE  [function; ce-only; CE 3.0..399, 5.0..599] */
-GET_LPDDRAWSURFACE_GBL_MORE(psurf_gbl) \(*(LPDDRAWI_DDRAWSURFACE_GBL_MORE *) \((BYTE *)psurf_gbl- sizeof( DWORD )))
-
-/* GetAvailDriverMemory  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD __stdcall GetAvailDriverMemory( 
-LPDDHAL_GETAVAILDRIVERMEMORYDATA pgadmd );
-
-/* GetBltStatus  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD __stdcall GetBltStatus( 
-LPDDHAL_GETBLTSTATUSDATA pgbsd );
-
-/* GetDriverInfo  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD __stdcall GetDriverInfo( 
-LPDDHAL_GETDRIVERINFODATA lpData );
-
-/* GetFlipStatus  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD __stdcall GetFlipStatus( 
-LPDDHAL_GETFLIPSTATUSDATA pgfsd );
-
-/* GetHeapAlignment  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD __stdcall GetHeapAlignment( 
-LPDDHAL_GETHEAPALIGNMENTDATA lpGhaData );
-
-/* GetSysmemBltStatus  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD __stdcall GetSysmemBltStatus( 
-LPDDHAL_GETBLTSTATUSDATA pgbsd );
-
-/* GetVideoPortBandwidth  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD __stdcall GetVideoPortBandwidth( 
-LPDDHAL_GETVPORTBANDWIDTHDATA pgvpbd );
-
-/* GetVideoPortConnectInfo  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD __stdcall GetVideoPortConnectInfo( 
-LPDDHAL_GETVPORTCONNECTDATA pgvpcd );
-
-/* GetVideoPortField  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD __stdcall GetVideoPortField( 
-LPDDHAL_GETVPORTFIELDDATA pgvpfd );
-
-/* GetVideoPortFlipStatus  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD __stdcall GetVideoPortFlipStatus( 
-LPDDHAL_GETVPORTFLIPSTATUSDATA pgvpfsd );
-
-/* GetVideoPortInputFormats  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD __stdcall GetVideoPortInputFormats( 
-LPDDHAL_GETVPORTINPUTFORMATDATA pgvpifd );
-
-/* GetVideoPortLine  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD __stdcall GetVideoPortLine( 
-LPDDHAL_GETVPORTLINEDATA pgvpld );
-
-/* GetVideoPortOutputFormats  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD __stdcall GetVideoPortOutputFormats( 
-LPDDHAL_GETVPORTOUTPUTFORMATDATA pgvpofd );
-
-/* GetVideoSignalStatus  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD __stdcall GetVideoSignalStatus( 
-LPDDHAL_GETVPORTSIGNALDATA pgvpsd );
-
-/* Lock  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD __stdcall Lock( 
-LPDDHAL_LOCKDATA pld );
-
-/* SetClipList  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD __stdcall SetClipList( 
-LPDDHAL_SETCLIPLISTDATA pscld );
-
-/* SetEntries  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD __stdcall SetEntries( 
-LPDDHAL_SETENTRIESDATA psed );
-
-/* SetOverlayPosition  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD SetOverlayPosition(LPDDHAL_SETOVERLAYPOSITIONDATA psopd);
-
-/* SetPalette  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD __stdcall SetPalette( 
-LPDDHAL_SETPALETTEDATA pspd );
-
-/* Unlock  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD __stdcall Unlock( 
-LPDDHAL_UNLOCKDATA puld );
-
-/* UpdateNonLocalHeap  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD __stdcall UpdateNonLocalHeap( 
-LPDDHAL_UPDATENONLOCALHEAPDATA lpd );
-
-/* UpdateOverlay  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD UpdateOverlay(LPDDHAL_UPDATEOVERLAYDATA puod);
-
-/* UpdateVideoPort  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD __stdcall UpdateVideoPort( 
-LPDDHAL_UPDATEVPORTDATA puvpd );
-
-/* WaitForVideoPortSync  [function; ce-only; CE 3.0..399, 5.0..599] */
-DWORD __stdcall WaitForVideoPortSync( 
-LPDDHAL_WAITFORVPORTSYNCDATA pwfvpsd );
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 500)) /* CE 3.0..499 */
-
-/* CanCreateSurface  [function; ce-only; CE 3.0..499] */
-DWORD CanCreateSurface(
- LPDDHAL_CANCREATESURFACEDATA pccsd 
-);
-
-/* CreateSurface  [function; ce-only; CE 3.0..499] */
-DWORD CreateSurface( 
- LPDDHAL_CREATESURFACEDATA pcsd 
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 600)) /* CE 3.0..599 */
-
-/* AddAttachedSurface  [function; ce-only; CE 3.0..599] */
-DWORD AddAttachedSurface(
- LPDDHAL_ADDATTACHEDSURFACEDATA paasd 
-);
-
-/* Blt  [function; ce-only; CE 3.0..599] */
-DWORD Blt(
- LPDDHAL_BLTDATA pbd 
-);
-
-/* CanCreateVideoPort  [function; ce-only; CE 3.0..599] */
-DWORD CanCreateVideoPort(
- LPDDHAL_CANCREATEVPORTDATA pccvpd 
-);
-
-/* CreateVideoPort  [function; ce-only; CE 3.0..599] */
-DWORD CreateVideoPort(
- LPDDHAL_CREATEVPORTDATA pcvpd 
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 600)) /* CE 4.0..599 */
-
-/* HalColorControl  [function; ce-only; CE 4.0..599] */
-DWORD HalColorControl(
- LPDDHAL_COLORCONTROLDATA pccd 
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* LPDDHAL_GETAVAILDRIVERMEMORY  [function; ce-only; CE 6.0..699] */
-DWORD (* LPDDHAL_GETAVAILDRIVERMEMORY)(
- LPDDHAL_GETAVAILDRIVERMEMORYDATA lpgadmd
-);
-
-/* LPDDHAL_GETDEVICEIDENTIFIER  [function; ce-only; CE 6.0..699] */
-DWORD (* LPDDHAL_GETDEVICEIDENTIFIER)(
- LPDDHAL_GETDEVICEIDENTIFIERDATA lpgdid
-);
-
-/* LPDDHAL_GETDRIVERINFO  [function; ce-only; CE 6.0..699] */
-DWORD (* LPDDHAL_GETDRIVERINFO)(
- LPDDHAL_GETDRIVERINFODATA lpgdid
-);
-
-/* LPDDHALCOLORCB_COLORCONTROL  [function; ce-only; CE 6.0..699] */
-DWORD (FAR PASCAL * LPDDHALCOLORCB_COLORCONTROL)(
- LPDDHAL_COLORCONTROLDATA lpccd
-);
-
-/* LPDDHALCOLORCB_GAMMACONTROL  [function; ce-only; CE 6.0..699] */
-DWORD (FAR PASCAL * LPDDHALCOLORCB_GAMMACONTROL)(
- LPDDHAL_GAMMACONTROLDATA lpgcd
-);
-
-/* LPDDHALSURFCB_DESTROYSURFACE  [function; ce-only; CE 6.0..699] */
-DWORD (* LPDDHALSURFCB_DESTROYSURFACE)(
- LPDDHAL_DESTROYSURFACEDATA lpdsd;
-);
-
-/* LPDDHALSURFCB_FLIP  [function; ce-only; CE 6.0..699] */
-DWORD (* LPDDHALSURFCB_FLIP)(
- LPDDHAL_FLIPDATA lpfd
-);
-
-/* LPDDHALSURFCB_GETBLTSTATUS  [function; ce-only; CE 6.0..699] */
-DWORD (* LPDDHALSURFCB_GETBLTSTATUS)(
- LPDDHAL_GETBLTSTATUSDATA lpgbsd
-);
-
-/* LPDDHALSURFCB_GETFLIPSTATUS  [function; ce-only; CE 6.0..699] */
-DWORD (* LPDDHALSURFCB_GETFLIPSTATUS)(
- LPDDHAL_GETFLIPSTATUSDATA lpgfsd
-);
-
-/* LPDDHALSURFCB_LOCK  [function; ce-only; CE 6.0..699] */
-DWORD (* LPDDHALSURFCB_LOCK)(
- LPDDHAL_LOCKDATA lpld
-);
-
-/* LPDDHALSURFCB_SETCOLORKEY  [function; ce-only; CE 6.0..699] */
-DWORD (* LPDDHALSURFCB_SETCOLORKEY)(
- LPDDHAL_SETCOLORKEYDATA lpdsckd
-);
-
-/* LPDDHALSURFCB_SETOVERLAYPOSITION  [function; ce-only; CE 6.0..699] */
-DWORD (* LPDDHALSURFCB_SETOVERLAYPOSITION)(
- LPDDHAL_SETOVERLAYPOSITIONDATA lpsopd
-);
-
-/* LPDDHALSURFCB_UNLOCK  [function; ce-only; CE 6.0..699] */
-DWORD (* LPDDHALSURFCB_UNLOCK)(
- LPDDHAL_UNLOCKDATA lpuld
-);
-
-/* LPDDHALSURFCB_UPDATEOVERLAY  [function; ce-only; CE 6.0..699] */
-DWORD (* LPDDHALSURFCB_UPDATEOVERLAY)(
- LPDDHAL_UPDATEOVERLAYDATA lpuod
-);
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* typedef */
+/* LPATTACHLIST  [extra typedef] */
 typedef ATTACHLIST FAR *LPATTACHLIST;
+
+/* LPDBLNODE  [extra typedef] */
 typedef DBLNODE FAR *LPDBLNODE;
+
+/* LPDDCORECAPS  [extra typedef] */
 typedef DDCORECAPS FAR* LPDDCORECAPS;
+
+/* LPDDHALINFO  [extra typedef] */
 typedef DDHALINFO FAR *LPDDHALINFO;
+
+/* LPDDHALMODEINFO  [extra typedef] */
 typedef DDHALMODEINFO FAR *LPDDHALMODEINFO;
+
+/* LPDDHAL_DDCALLBACKS  [extra typedef] */
 typedef DDHAL_DDCALLBACKS FAR *LPDDHAL_DDCALLBACKS;
+
+/* LPDDHAL_DDCOLORCONTROLCALLBACKS  [extra typedef] */
 typedef DDHAL_DDCOLORCONTROLCALLBACKS FAR *LPDDHAL_DDCOLORCONTROLCALLBACKS;
+
+/* LPDDHAL_DDPALETTECALLBACKS  [extra typedef] */
 typedef DDHAL_DDPALETTECALLBACKS FAR *LPDDHAL_DDPALETTECALLBACKS;
+
+/* LPDDHAL_DDSURFACECALLBACKS  [extra typedef] */
 typedef DDHAL_DDSURFACECALLBACKS FAR *LPDDHAL_DDSURFACECALLBACKS;
+
+/* LPDDHAL_DDVIDEOPORTCALLBACKS  [extra typedef] */
 typedef DDHAL_DDVIDEOPORTCALLBACKS FAR *LPDDHAL_DDVIDEOPORTCALLBACKS;
+
+/* LPVIDMEM  [extra typedef] */
 typedef VIDMEM FAR *LPVIDMEM;
+
+/* LPVIDMEMINFO  [extra typedef] */
 typedef VIDMEMINFO FAR *LPVIDMEMINFO;
 
-/* struct */
+/* LPDDHAL_DDMISCELLANEOUS2CALLBACKS  [extra struct] */
 typedef struct _DDHAL_DDMISCELLANEOUS2CALLBACKS {
   DWORD dwSize;
   DWORD dwFlags;
@@ -459,6 +235,8 @@ typedef struct _DDHAL_DDMISCELLANEOUS2CALLBACKS {
   LPDDHAL_SETSPRITEDISPLAYLIST SetSpriteDisplayList;
   LPDDHAL_RESIZE Resize;
 } DDHAL_DDMISCELLANEOUS2CALLBACKS, *LPDDHAL_DDMISCELLANEOUS2CALLBACKS;
+
+/* LPDDHAL_DDMISCELLANEOUSCALLBACKS  [extra struct] */
 typedef struct _DDHAL_DDMISCELLANEOUSCALLBACKS
 {
   DWORD dwSize;
@@ -468,13 +246,8 @@ typedef struct _DDHAL_DDMISCELLANEOUSCALLBACKS
   LPDDHAL_GETHEAPALIGNMENT GetHeapAlignment;
   LPDDHALSURFCB_GETBLTSTATUS GetSysmemBltStatus;
 } DDHAL_DDMISCELLANEOUSCALLBACKS, *LPDDHAL_DDMISCELLANEOUSCALLBACKS;
-typedef struct _DDHAL_GAMMACONTROLDATA {
-  LPDDRAWI_DIRECTDRAW_GBL lpDD;
-  LPDDRAWI_DDRAWSURFACE_LCL lpDDSurface;
-  LPDDGAMMARAMP lpGammaData;
-  DWORD dwFlags;
-  HRESULT ddRVal;
-} DDHAL_GAMMACONTROLDATA, * LPDDHAL_GAMMACONTROLDATA;
+
+/* LPDDMORECAPS  [extra struct] */
 typedef struct _DDMORECAPS
 {
   DWORD dwSize;
@@ -494,6 +267,8 @@ typedef struct _DDMORECAPS
   DWORD dwOverlayAffineMinifyLimit;
 } DDMORECAPS, FAR *LPDDMORECAPS;
 typedef struct _DDMORECAPS FAR *LPDDMORECAPS;
+
+/* LPDDMORESURFACECAPS  [extra struct] */
 typedef struct _DDMORESURFACECAPS
 {
   DWORD dwSize;
@@ -504,15 +279,14 @@ typedef struct _DDMORESURFACECAPS
     DDSCAPSEX ddsCapsAlt;
   } ddsExtendedHeapRestrictions[1];
 } DDMORESURFACECAPS, FAR * LPDDMORESURFACECAPS;
-typedef struct _DDNONLOCALVIDMEMCAPS
-{
-  DWORD dwSize;
-  DWORD dwNLVBCaps;
-  DWORD dwNLVBCaps2;
-  DWORD dwNLVBCKeyCaps;
-  DWORD dwNLVBFXCaps;
-  DWORD dwNLVBRops[DD_ROP_SPACE];
-} DDNONLOCALVIDMEMCAPS;
-typedef struct _DDNONLOCALVIDMEMCAPS FAR *LPDDNONLOCALVIDMEMCAPS;
+
+/* LPDDHAL_GAMMACONTROLDATA  [extra struct] */
+typedef struct _DDHAL_GAMMACONTROLDATA {
+  LPDDRAWI_DIRECTDRAW_GBL lpDD;
+  LPDDRAWI_DDRAWSURFACE_LCL lpDDSurface;
+  LPDDGAMMARAMP lpGammaData;
+  DWORD dwFlags;
+  HRESULT ddRVal;
+} DDHAL_GAMMACONTROLDATA, * LPDDHAL_GAMMACONTROLDATA;
 
 #endif /* _DDRAWI_ */

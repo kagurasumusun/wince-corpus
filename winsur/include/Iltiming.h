@@ -11,12 +11,4 @@
 #define _ILTIMING_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct tILTIMING_MESSAGE {WORDwMsg;WORDwNumInterrupts;DWORDdwIsrTime1;DWORDdwIsrTime2;DWORDdwSPC;DWORDdwFrequency;PVOIDpfnPerfCountSinceTick;} ILTIMING_MESSAGE, *PILTIMING_MESSAGE;
-
 #endif /* _ILTIMING_ */

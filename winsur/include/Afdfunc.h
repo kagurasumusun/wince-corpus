@@ -11,17 +11,4 @@
 #define _AFDFUNC_
 
 
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200)) /* CE 1.0..199 */
-
-/* RasGetEntryDevConfig  [function; ce-only; CE 1.0..199] */
-DWORD RasGetEntryDevConfig(LPCTSTR lpszPhoneBook, LPCTSTR szEntry, LPDWORD pdwDeviceID, LPDWORD pdwSize, LPVARSTRING pDeviceConfig);
-
-/* RasSetEntryDevConfig  [function; ce-only; CE 1.0..199] */
-DWORD RasSetEntryDevConfig(LPCTSTR lpszPhoneBook, LPCTSTR szEntry, DWORD dwDeviceID, LPVARSTRING lpDeviceConfig);
-#endif /* _WIN32_WCE */
-
 #endif /* _AFDFUNC_ */

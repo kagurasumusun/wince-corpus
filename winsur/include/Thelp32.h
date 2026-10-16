@@ -11,13 +11,4 @@
 #define _THELP32_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* typedef */
-typedef THREADENTRY32 *LPTHREADENTRY32;
-typedef THREADENTRY32 *PTHREADENTRY32;
-
 #endif /* _THELP32_ */

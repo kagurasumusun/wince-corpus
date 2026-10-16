@@ -17,14 +17,10 @@
  * ================================================================ */
 
 /* function */
-HRESULT GetAddressFromLine( DWORDdwLine,LPCWSTRpszModule,LPCWSTRpszSource, ADDRESS_TYPE*pAddress);
-HRESULT GetAddressFromSymbol( DWORD dwPid,LPCWSTRpszModule, LPCWSTRpszSource, LPCWSTRpszRoutine,LPCWSTRpszSymbol,ADDRESS_TYPE*pAddress);
 HRESULT GetNearestLineFromAddress( ADDRESS_TYPEAddress, LPWSTR*ppszModule, LPWSTR*ppszSource, DWORD*dwLine);
 HRESULT GetNearestLineFromOffset( ADDRESS_TYPEOffset,LPCWSTRpszModule,LPWSTR*ppszSource,DWORD*pdwLine);
 HRESULT GetNearestSymbolFromAddress( ADDRESS_TYPEAddress,DWORD*pdwPid,LPWSTR*ppszModule,LPWSTR*ppszSource,LPWSTR* ppszRoutine,LPWSTR*ppszSymbol,DWORD*pdwDistance);
 HRESULT GetNearestSymbolFromOffset( ADDRESS_TYPEOffset,LPCWSTRpszModule,LPWSTR*ppszSource,LPWSTR*ppszRoutine, LPWSTR*ppszSymbol,DWORD*pdwDistance);
-HRESULT GetOffsetFromLine( DWORD dwLine,LPCWSTRpszModule,LPCWSTRpszSource,ADDRESS_TYPE*pOffset);
-HRESULT GetOffsetFromSymbol( LPCWSTR pszModule,LPCWSTRpszSource,LPCWSTRpszRoutine,LPCWSTRpszSymbol,ADDRESS_TYPE*pOffset);
 HRESULT GetSymbolPath( LPWSTR* ppszPath);
 HRESULT SetSymbolPath( LPCWSTR pszPath);
 

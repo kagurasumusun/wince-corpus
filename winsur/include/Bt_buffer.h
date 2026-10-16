@@ -11,12 +11,4 @@
 #define _BT_BUFFER_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-struct BD_BUFFER {int cSize;int cStart;int cEnd;BD_BUFFER_FREE pFree;int fMustCopy;unsigned char* pBuffer;};
-
 #endif /* _BT_BUFFER_ */

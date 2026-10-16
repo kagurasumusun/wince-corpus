@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 21 constants, 10 declarations, 0 outlines, 0 base types, 0 extra macros, 6 extra decls
+ * 21 constants, 9 declarations, 1 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _RNDIS_
 #define _RNDIS_
@@ -40,27 +40,9 @@
 #define RNDIS_STATUS_SUCCESS 0x00000000
 
 /* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
+ * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-/* struct */
-struct RNDIS_PDD_CHARACTERISTICS { PFN_PDD_SEND_RNDIS_MESSAGE SendRndisMessageHandler; PFN_PDD_SEND_RNDIS_PACKETSendRndisPacketHandler; PFN_PDD_INDICATE_RNDIS_PACKET_COMPLETEIndicateRndisPacketCompleteHandler; PFN_PDD_SET SetHandler; PFN_PDD_GETGetHandler; PFN_PDD_ISRISRHandler; DWORDdwIRQ; DWORD dwMaxRx; DWORDdwBaseAddr;};
-typedef struct _RNDIS_DIAGNOSTIC_INFO {RNDIS_STATUSDiagStatus;UINT32ErrorOffset;} RNDIS_DIAGNOSTIC_INFO, *PRNDIS_DIAGNOSTIC_INFO;
-typedef struct _RNDIS_OOBD {UINT32Size;RNDIS_CLASS_IDType;UINT32ClassInformationOffset;} RNDIS_OOBD, *PRNDIS_OOBD;
-typedef struct _RNDIS_PACKET {UINT32DataOffset;UINT32DataLength;UINT32OOBDataOffset;UINT32OOBDataLength;UINT32NumOOBDataElements;UINT32PerPacketInfoOffset;UINT32PerPacketInfoLength;RNDIS_HANDLEVcHandle;UINT32Reserved;} RNDIS_PACKET, *PRNDIS_PACKET;
-typedef struct _RNDIS_PER_PACKET_INFO {UINT32Size;UINT32Type;UINT32PerPacketInformationOffset;} RNDIS_PER_PACKET_INFO, *PRNDIS_PER_PACKET_INFO;
-struct RNDIS_PDD_CHARACTERISTICS {
-  PFN_PDD_SEND_RNDIS_MESSAGE SendRndisMessageHandler;
-  PFN_PDD_SEND_RNDIS_PACKET SendRndisPacketHandler;
-  PFN_PDD_INDICATE_RNDIS_PACKET_COMPLETE
-  IndicateRndisPacketCompleteHandler;
-  PFN_PDD_SET SetHandler;
-  PFN_PDD_GET GetHandler;
-  PFN_PDD_ISR ISRHandler;
-  DWORD dwIRQ;
-  DWORD dwMaxRx;
-  DWORD dwBaseAddr;
-};
+/* RNDIS_PDD_CHARACTERISTICS  [struct; ce-only] */
 
 #endif /* _RNDIS_ */

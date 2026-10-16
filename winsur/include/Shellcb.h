@@ -11,16 +11,4 @@
 #define _SHELLCB_
 
 
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* ShellRegisterCallbacks  [function; ce-only; CE 4.0..699; Shellcb.lib] */
-BOOL ShellRegisterCallbacks(
- SHELLCALLBACKS* pShellCallbacks
-);
-#endif /* _WIN32_WCE */
-
 #endif /* _SHELLCB_ */

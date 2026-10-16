@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 163 constants, 20 declarations, 1 outlines, 1 base types, 0 extra macros, 0 extra decls
+ * 162 constants, 20 declarations, 1 outlines, 1 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _SHELLAPI_
 #define _SHELLAPI_
@@ -209,7 +209,6 @@
 #define SHIL_LAST SHIL_JUMBO
 #define SHIL_SMALL 0x1
 #define SHIL_SYSSMALL 0x3
-#define SIP_UP 0
 #define WINSHELLAPI DECLSPEC_IMPORT
 
 /* ==================================================================
@@ -242,13 +241,7 @@ typedef HANDLE HDROP;
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* SHCreateShortcut  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Shortcut.lib, shortcut.lib] */
-DWORD WINAPI SHCreateShortcut(
- LPTSTR szShortcut, 
- LPTSTR szTarget 
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* SHGetShortcutTarget  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Shortcut.lib, shortcut.lib] */
 BOOL SHGetShortcutTarget(
@@ -269,66 +262,7 @@ int SHShowOutOfMemory(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* SHAddToRecentDocs  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-WINSHELLAPI void WINAPI SHAddToRecentDocs(
- UINT uFlags, 
- LPCVOID pv 
-);
-
-/* Shell_NotifyIcon  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W Shell_NotifyIconA,Shell_NotifyIconW (CE is W-side)] */
-WINSHELLAPI BOOL WINAPI Shell_NotifyIcon(
- DWORD dwMessage, 
- PNOTIFYICONDATA pnid 
-);
-
-/* ShellExecuteEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Shexec.lib; A/W ShellExecuteExA,ShellExecuteExW (CE is W-side)] */
-WINSHELLAPI BOOL WINAPI ShellExecuteEx(
- LPSHELLEXECUTEINFO lpExecInfo 
-);
-
-/* SHGetFileInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; fileinfo.lib; A/W SHGetFileInfoA,SHGetFileInfoW (CE is W-side)] */
-WINSHELLAPI DWORD WINAPI SHGetFileInfo(
- LPCTSTR pszPath, 
- DWORD dwFileAttributes, 
- SHFILEINFO FAR* psfi, 
- UINT cbFileInfo, 
- UINT uFlags 
-);
-
-/* SHGetMalloc  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Ceshell.lib, ceshell.lib] */
-HRESULT SHGetMalloc(
- LPMALLOC* ppMalloc 
-);
-
-/* SHGetPathFromIDList  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Ceshell.lib, ceshell.lib; A/W SHGetPathFromIDListA,SHGetPathFromIDListW (CE is W-side)] */
-WINSHELLAPI BOOL WINAPI SHGetPathFromIDList( 
- LPCITEMIDLIST pidl, 
- LPSTR pszPath 
-);
-
-/* SHGetSpecialFolderLocation  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Ceshell.lib, ceshell.lib] */
-WINSHELLAPI HRESULT WINAPI SHGetSpecialFolderLocation(
- HWND hwndOwner, 
- int nFolder, 
- LPITEMIDLIST* ppidl 
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* ExtractIconEx  [function; shared; CE 2.11..2.12, 3.0..699; A/W ExtractIconExA,ExtractIconExW (CE is W-side)] */
-HICON ExtractIconEx(
- LPCTSTR lpszFile, 
- int nIconIndex,
- HICON FAR* phiconLarge,
- HICON FAR* phiconSmall,
- UINT nIcons
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* SHGetSpecialFolderPath  [function; shared; CE 3.0..399, 5.0..699; coredll.lib; A/W SHGetSpecialFolderPathA,SHGetSpecialFolderPathW (CE is W-side)] */
 BOOL SHGetSpecialFolderPath(
@@ -336,22 +270,6 @@ BOOL SHGetSpecialFolderPath(
  LPTSTR lpszPath,
  int nFolder,
  BOOL fCreate 
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* SHCreateShortcutEx  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-DWORD WINAPI SHCreateShortcutEx(
- LPTSTR lpszDir,
- LPTSTR lpszTarget,
- LPTSTR szShortcut,
- LPDWORD lpcbShortcut
-);
-
-/* SHFileOperation  [function; shared; CE 5.0..699; Ceshell.lib, ceshell.lib; A/W SHFileOperationA,SHFileOperationW (CE is W-side)] */
-int SHFileOperation(
- LPSHFILEOPSTRUCT lpFileOp
 );
 #endif /* _WIN32_WCE */
 

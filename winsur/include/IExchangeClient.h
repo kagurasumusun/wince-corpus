@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 8 constants, 5 declarations, 6 outlines, 0 base types, 0 extra macros, 32 extra decls
+ * 8 constants, 5 declarations, 6 outlines, 0 base types, 0 extra macros, 31 extra decls
  */
 #ifndef _IEXCHANGECLIENT_
 #define _IEXCHANGECLIENT_
@@ -93,22 +93,34 @@ struct GALSearchCriteria {
  WCHAR* wszLastName;
 };
 
+/* status  [extra enum] */
+HRESULT OnRequestProgress(  IExchangeClientRequest* pRequest,  enum ExchangeClientRequestStatus status  );
+
+/* ppiRequest  [extra struct] */
+HRESULT RequestContacts(  struct ContactsSearchCriteria* pCriteria,  IExchangeClientRequest** ppiRequest  );
+
+/* pStatus  [extra enum] */
+HRESULT GetStatus(  enum ExchangeClientRequestStatus* pStatus  );
+
+/* pecrt  [extra enum] */
+HRESULT GetType(  enum ExchangeClientRequestType* pecrt  );
+
+/* e_ecrsNoCredentials  [extra enum] */
+enum ExchangeClientRequestStatus{ e_ecrsPending = 0, e_ecrsInProgress, e_ecrsSending, e_ecrsBypassingOWAPage, e_ecrsSucceeded, e_ecrsOutOfMemory, e_ecrsParseFailed, e_ecrsHttpFailure, e_ecrsFailedToSend, e_ecrsFailedToBypassAuthPage, e_ecrsCancelled, e_ecrsNoCredentials,};
+
+/* e_ecrtFreeBusy  [extra enum] */
+enum ExchangeClientRequestType{ e_ecrtInvalid = 0, e_ecrtContacts, e_ecrtGALSearch, e_ecrtFreeBusy,};
+
+/* pstStart  [extra struct] */
+struct FreeBusyCriteria { WCHAR* wszAlias; SYSTEMTIME* pstStart;};
+
+/* wszLastName  [extra struct] */
+struct GALSearchCriteria { WCHAR* wszAlias; WCHAR* wszFirstName; WCHAR* wszLastName;};
+
 /* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
-
-/* enum */
-enum ExchangeClientRequestStatus{ e_ecrsPending = 0, e_ecrsInProgress, e_ecrsSending, e_ecrsBypassingOWAPage, e_ecrsSucceeded, e_ecrsOutOfMemory, e_ecrsParseFailed, e_ecrsHttpFailure, e_ecrsFailedToSend, e_ecrsFailedToBypassAuthPage, e_ecrsCancelled, e_ecrsNoCredentials,};
-enum ExchangeClientRequestType{ e_ecrtInvalid = 0, e_ecrtContacts, e_ecrtGALSearch, e_ecrtFreeBusy,};
-HRESULT GetStatus(  enum ExchangeClientRequestStatus* pStatus  );
-HRESULT GetType(  enum ExchangeClientRequestType* pecrt  );
-HRESULT OnRequestProgress(  IExchangeClientRequest* pRequest,  enum ExchangeClientRequestStatus status  );
-
-/* struct */
-HRESULT RequestContacts(  struct ContactsSearchCriteria* pCriteria,  IExchangeClientRequest** ppiRequest  );
-struct FreeBusyCriteria { WCHAR* wszAlias; SYSTEMTIME* pstStart;};
-struct GALSearchCriteria { WCHAR* wszAlias; WCHAR* wszFirstName; WCHAR* wszLastName;};
 
 /* function */
 HRESULT CancelPendingRequests();
@@ -119,7 +131,6 @@ HRESULT GetFreeBusyData( WCHAR* wszDataBuffer, UINT cchDataBuffer );
 HRESULT GetHomeAddress( WCHAR* wszBuffer, UINT cchBuffer );
 HRESULT GetHomePhoneNumber( WCHAR* wszNumberBuffer, UINT cchNumberBuffer );
 HRESULT GetHttpStatus( LONG* plHttpStatus );
-HRESULT GetItemAt( UINT idxItem, IUnknown** ppiItem );
 HRESULT GetMobilePhoneNumber( WCHAR* wszBuffer, UINT cchBuffer );
 HRESULT GetOffice( WCHAR* wszBuffer, UINT cchBuffer );
 HRESULT GetPhoneNumber( WCHAR* wszNumberBuffer, UINT cchNumberBuffer );

@@ -15,20 +15,13 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* MQMgmtAction  [function; ce-only; CE 5.0..699; Msmqrt.lib, msmqrt.lib] */
 HRESULT MQMgmtAction(
  LPCWSTR pMachineName, 
  LPCWSTR pObjectName, 
  LPCWSTR pAction 
-);
-
-/* MQMgmtGetInfo  [function; ce-only; CE 5.0..699; Msmqrt.lib, msmqrt.lib] */
-HRESULT MQMgmtGetInfo(
- LPCWSTR pMachineName, 
- LPCWSTR pObjectName, 
- MQMGMTPROPS* pMgmtProps 
 );
 #endif /* _WIN32_WCE */
 

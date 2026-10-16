@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 6 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 7 extra decls
+ * 6 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _EXDISPID_
 #define _EXDISPID_
@@ -23,19 +23,5 @@
 #define DISPID_PROGRESSCHANGE 108
 #define DISPID_STATUSTEXTCHANGE 102
 #define DISPID_TITLECHANGE 113
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-void BeforeNavigate( IDispatch *pDisp, VARIANT *&url, VARIANT *&Flags, VARIANT *&TargetFrameName, VARIANT *&PostData, VARIANT *&Headers, VARIANT_BOOL *&Cancel );
-void NavigateComplete(  IDispatch *pDisp,  VARIANT *URL  );
-void NewWindow( IDispatch **&ppDisp, VARIANT_BOOL *&Cancel );
-void PrintTemplateInstantiation(  IDispatch *pDisp  );
-void PrintTemplateTeardown(  IDispatch *pDisp  );
-void PrivacyImpactedStateChange(  VT_BOOL PrivacyImpacted  );
-void WindowClosing( VARIANT_BOOL IsChildWindow, VARIANT_BOOL *&Cancel );
 
 #endif /* _EXDISPID_ */

@@ -33,19 +33,17 @@ DWORD BackupBatteryLifeTime;
 DWORD BackupBatteryFullLifeTime; 
 } BATTERY_STATUS;
 
+/* PBATTERY_STATUS  [extra struct] */
+typedef struct tagBATTERY_STATUS{ DWORD ACLineStatus; DWORD BatteryFlag; DWORD BatteryLifePercent; DWORD_t BatteryLifeTime; DWORD BatteryFullLifeTime; } PBATTERY_STATUS;
+
+/* PBATTERYLIFETIMEINFO  [extra struct] */
+typedef struct _BatteryLifetimeInfo_tag { SYSTEMTIME stLastChange; DWORD cmsCpuUsage; DWORD cmsPreviousCpuUsage;} BATTERYLIFETIMEINFO, *PBATTERYLIFETIMEINFO;
+
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 2.11..2.12, 3.0..399 */
-
-/* BatteryDrvrGetStatus  [function; ce-only; CE 2.11..2.12, 3.0..399; Acmdwrap.lib] */
-BOOL BatteryDrvrGetStatus ( 
-PSYSTEM_POWER_STATUS_EX2 pstatus, 
-PBOOL pfBatteriesChangedSinceLastCall );
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 700)) /* CE 2.11..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x700)) /* CE 2.11..699 */
 
 /* BatteryDrvrGetLevels  [function; ce-only; CE 2.11..699; Coredll.lib, coredll.lib] */
 LONG BatteryDrvrGetLevels(void);
@@ -53,14 +51,5 @@ LONG BatteryDrvrGetLevels(void);
 /* BatteryDrvrSupportsChangeNotification  [function; ce-only; CE 2.11..699; Acmdwrap.lib, Coredll.lib, coredll.lib] */
 BOOL BatteryDrvrSupportsChangeNotification(void);
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _BatteryLifetimeInfo_tag { SYSTEMTIME stLastChange; DWORD cmsCpuUsage; DWORD cmsPreviousCpuUsage;} BATTERYLIFETIMEINFO, *PBATTERYLIFETIMEINFO;
-typedef struct tagBATTERY_STATUS{ DWORD ACLineStatus; DWORD BatteryFlag; DWORD BatteryLifePercent; DWORD_t BatteryLifeTime; DWORD BatteryFullLifeTime; } PBATTERY_STATUS;
 
 #endif /* _BATTERY_ */

@@ -26,11 +26,23 @@ struct REPLCHANGEINFO {
  CEOID oidDbase;
 };
 
+/* CEOIDoidDbase  [extra struct] */
+struct REPLCHANGEINFO {WORDwVersion;WORDwStatus;WORDwObjType;CEOIDoidChanged;CEOIDoidDbase;};
+
+/* oidDbase  [extra struct] */
+struct REPLCHANGEINFO {
+  WORD wVersion;
+  WORD wStatus;
+  WORD wObjType;
+  CEOID oidChanged;
+  CEOID oidDbase;
+};
+
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* GetSystemMemoryDivision  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
 BOOL GetSystemMemoryDivision(
@@ -44,72 +56,5 @@ DWORD SetSystemMemoryDivision(
  DWORD dwStorePages
 );
 #endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* ReplChangeSyncSettings  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL ReplChangeSyncSettings(
- HREPL hRepl,
- DWORD dwSyncFlags,
- LPDWORD lpdwOldFlags
-);
-
-/* ReplCheckpoint  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL ReplCheckpoint(
- HREPL hRepl,
- DWORD dwReserved
-);
-
-/* ReplCloseSync  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL ReplCloseSync(
- HREPL hRepl
-);
-
-/* ReplFindNextChange  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL ReplFindNextChange(
- HREPL hRepl,
- REPLCHANGEINFO* lpChangeInfo,
- BOOL fRestart
-);
-
-/* ReplGetOidStatus  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL ReplGetOidStatus(
- HREPL hRepl,
- CEOID oid,
- REPLCHANGEINFO* lpChangeInfo
-);
-
-/* ReplGetSyncState  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL ReplGetSyncState(
- HREPL hRepl,
- LPBYTE lpSyncState,
- LPDWORD lpdwSize,
- BOOL fFailIfUnchanged
-);
-
-/* ReplOpenSync  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL ReplOpenSync(
- CEGUID* pguid,
- LPBYTE lpSyncState,
- DWORD dwSize,
- DWORD dwSyncFlags,
- HREPL* phRepl
-);
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-struct REPLCHANGEINFO {WORDwVersion;WORDwStatus;WORDwObjType;CEOIDoidChanged;CEOIDoidDbase;};
-struct REPLCHANGEINFO {
-  WORD wVersion;
-  WORD wStatus;
-  WORD wObjType;
-  CEOID oidChanged;
-  CEOID oidDbase;
-};
 
 #endif /* _PWINDBAS_ */

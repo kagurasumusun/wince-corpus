@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 424 constants, 39 declarations, 1 outlines, 2 base types, 0 extra macros, 1 extra decls
+ * 424 constants, 37 declarations, 1 outlines, 2 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINNLS_
 #define _WINNLS_
@@ -497,7 +497,7 @@ typedef struct _numberfmt {
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* IsDBCSLeadByte  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, coreloc.lib, locusa.lib] */
 BOOL IsDBCSLeadByte(
@@ -533,7 +533,7 @@ int WideCharToMultiByte(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 600)) /* CE 2.11..2.12, 3.0..599 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x600)) /* CE 2.11..2.12, 3.0..599 */
 
 /* GetStringType  [function; shared; CE 2.11..2.12, 3.0..599; Coredll.lib, Coreloc.lib, Locusa.lib; A/W GetStringTypeA (CE is W-side)] */
 BOOL GetStringType( 
@@ -544,7 +544,7 @@ BOOL GetStringType(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
 
 /* CompareString  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib; A/W CompareStringA,CompareStringW (CE is W-side)] */
 int CompareString(
@@ -561,89 +561,6 @@ LCID ConvertDefaultLocale(
  LCID Locale
 );
 
-/* EnumCalendarInfo  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib; A/W EnumCalendarInfoA,EnumCalendarInfoW (CE is W-side)] */
-BOOL EnumCalendarInfo(
- CALINFO_ENUMPROC lpCalInfoEnumProc, 
- LCID Locale, 
- CALID Calendar, 
- CALTYPE CalType
-);
-
-/* EnumCalendarInfoProc  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreloc.lib] */
-/* Windows CE supports only the Unicode version of this function. */
-/* Windows CE supports only the Unicode version of this function. */
-/* Windows CE supports only the Unicode version of this function. */
-/* Windows CE supports only the Unicode version of this function. */
-/* Windows Embedded CE supports only the Unicode version of this function. */
-/* Windows CE supports only the Unicode version of this function. */
-BOOL CALLBACK EnumCalendarInfoProc(
- LPWSTR lpCalendarInfoString
-);
-
-/* EnumCodePagesProc  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreloc.lib] */
-BOOL CALLBACK EnumCodePagesProc( 
- LPTSTR lpCodePageString
-);
-
-/* EnumDateFormats  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib; A/W EnumDateFormatsA,EnumDateFormatsW (CE is W-side)] */
-BOOL EnumDateFormats(
- DATEFMT_ENUMPROC lpDateFmtEnumProc, 
- LCID Locale, 
- DWORD dwFlags
-);
-
-/* EnumDateFormatsProc  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreloc.lib] */
-/* Windows CE supports only the Unicode version of this function. */
-/* Windows CE supports only the Unicode version of this function. */
-/* Windows CE supports only the Unicode version of this function. */
-/* Windows CE supports only the Unicode version of this function. */
-/* Windows Embedded CE supports only the Unicode version of this function. */
-/* Windows CE supports only the Unicode version of this function. */
-BOOL CALLBACK EnumDateFormatsProc(
- LPWSTR lpDateFormatString
-);
-
-/* EnumLocalesProc  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreloc.lib] */
-/* Windows CE supports only the Unicode version of this function. */
-/* Windows CE supports only the Unicode version of this function. */
-/* Windows CE supports only the Unicode version of this function. */
-/* Windows CE supports only the Unicode version of this function. */
-/* Windows Embedded CE supports only the Unicode version of this function. */
-/* Windows CE supports only the Unicode version of this function. */
-BOOL CALLBACK EnumLocalesProc(
- LPWSTR lpLocaleString
-);
-
-/* EnumSystemCodePages  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib; A/W EnumSystemCodePagesA,EnumSystemCodePagesW (CE is W-side)] */
-BOOL EnumSystemCodePages(
- CODEPAGE_ENUMPROC lpCodePageEnumProc, 
- DWORD dwFlags
-);
-
-/* EnumSystemLocales  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib; A/W EnumSystemLocalesA,EnumSystemLocalesW (CE is W-side)] */
-BOOL EnumSystemLocales(
- LOCALE_ENUMPROC lpLocaleEnumProc, 
- DWORD dwFlags
-);
-
-/* EnumTimeFormats  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib; A/W EnumTimeFormatsA,EnumTimeFormatsW (CE is W-side)] */
-BOOL EnumTimeFormats(
- TIMEFMT_ENUMPROC lpTimeFmtEnumProc, 
- LCID Locale, 
- DWORD dwFlags 
-);
-
-/* EnumTimeFormatsProc  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreloc.lib] */
-/* Windows CE supports only the Unicode version of this function. */
-/* Windows CE supports only the Unicode version of this function. */
-/* Windows CE supports only the Unicode version of this function. */
-/* Windows CE supports only the Unicode version of this function. */
-/* Windows Embedded CE supports only the Unicode version of this function. */
-/* Windows CE supports only the Unicode version of this function. */
-BOOL CALLBACK EnumTimeFormatsProc(
- LPWSTR lpTimeFormatString 
-);
-
 /* FoldString  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib; A/W FoldStringA,FoldStringW (CE is W-side)] */
 int FoldString(
  DWORD dwMapFlags, 
@@ -651,15 +568,6 @@ int FoldString(
  int cchSrc, 
  LPTSTR lpDestStr, 
  int cchDest 
-);
-
-/* GetACP  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib] */
-UINT GetACP(VOID)
-
-/* GetCPInfo  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib] */
-BOOL GetCPInfo(
- UINT CodePage, 
- LPCPINFO lpCPInfo 
 );
 
 /* GetCurrencyFormat  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib; A/W GetCurrencyFormatA,GetCurrencyFormatW (CE is W-side)] */
@@ -700,9 +608,6 @@ int GetNumberFormat(
  int cchNumber 
 );
 
-/* GetOEMCP  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib] */
-UINT GetOEMCP(void)
-
 /* GetStringTypeEx  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib; A/W GetStringTypeExW (CE is W-side)] */
 /* Windows CE supports only the Unicode version of GetStringTypeEx, which ignores the Locale parameter. */
 /* Windows CE supports only the Unicode version of GetStringTypeEx, which ignores the Locale parameter. */
@@ -718,9 +623,6 @@ BOOL GetStringTypeEx(
  LPWORD lpCharType 
 );
 
-/* GetSystemDefaultLangID  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib] */
-LANGID GetSystemDefaultLangID(void);
-
 /* GetSystemDefaultLCID  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib] */
 LCID GetSystemDefaultLCID(void);
 
@@ -733,9 +635,6 @@ int GetTimeFormat(
  LPTSTR lpTimeStr, 
  int cchTime 
 );
-
-/* GetUserDefaultLangID  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib] */
-LANGID GetUserDefaultLangID(void);
 
 /* GetUserDefaultLCID  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib] */
 LCID GetUserDefaultLCID(void);
@@ -766,16 +665,9 @@ int LCMapString(
  LPTSTR lpDestStr, 
  int cchDest 
 );
-
-/* SetLocaleInfo  [function; shared; CE 2.11..2.12, 3.0..699; Coreloc.lib, coreloc.lib, locusa.lib; A/W SetLocaleInfoA,SetLocaleInfoW (CE is W-side)] */
-BOOL SetLocaleInfo(
- LCID Locale, 
- LCTYPE LCType, 
- LPWTSTR lpLCData 
-);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* GetStringTypeW  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL GetStringTypeW(

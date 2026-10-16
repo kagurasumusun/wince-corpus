@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 115 constants, 72 declarations, 18 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 105 constants, 70 declarations, 18 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDOWSAPIS_
 #define _WINDOWSAPIS_
@@ -64,16 +64,6 @@
 #define MKF_RIGHTBUTTONDOWN 0x02000000
 #define MKF_RIGHTBUTTONSEL 0x20000000
 #define MOD_NOREPEAT 0x4000
-#define NameCanonical 7
-#define NameCanonicalEx 9
-#define NameDisplay 3
-#define NameFullyQualifiedDN 1
-#define NameSamCompatible 2
-#define NameServicePrincipal 10
-#define NameUniqueId 6
-#define NameUnknown 0
-#define NameUserPrincipal 8
-#define NameWindowsCeLocal 0x80000001
 #define NUMPAD0 0
 #define NUMPAD1 0
 #define NUMPAD2 0
@@ -207,6 +197,24 @@ typedef struct _PERF_COUNTER_DEFINITION {
  DWORD CounterOffset;
 } PERF_COUNTER_DEFINITION;
 
+/* PERF_DATA_BLOCK  [struct, typedef; shared] */
+typedef struct _PERF_DATA_BLOCK {
+ WCHAR Signature[4];
+ DWORD LittleEndian;
+ DWORD Version;
+ DWORD Revision;
+ DWORD TotalByteLength;
+ DWORD HeaderLength;
+ DWORD NumObjectTypes;
+ DWORD DefaultObject;
+ SYSTEMTIME SystemTime;
+ LARGE_INTEGER PerfTime;
+ LARGE_INTEGER PerfFreq;
+ LARGE_INTEGER PerfTime100nSec;
+ DWORD SystemNameLength;
+ DWORD SystemNameOffset;
+} PERF_DATA_BLOCK;
+
 /* PERF_INSTANCE_DEFINITION  [struct, typedef; shared] */
 typedef struct _PERF_INSTANCE_DEFINITION {
  DWORD ByteLength;
@@ -216,6 +224,24 @@ typedef struct _PERF_INSTANCE_DEFINITION {
  DWORD NameOffset;
  DWORD NameLength;
 } PERF_INSTANCE_DEFINITION;
+
+/* PERF_OBJECT_TYPE  [struct, typedef; shared] */
+typedef struct _PERF_OBJECT_TYPE {
+ DWORD TotalByteLength;
+ DWORD DefinitionLength;
+ DWORD HeaderLength;
+ DWORD ObjectNameTitleIndex;
+ LPWSTR ObjectNameTitle;
+ DWORD ObjectHelpTitleIndex;
+ LPWSTR ObjectHelpTitle;
+ DWORD DetailLevel;
+ DWORD NumCounters;
+ DWORD DefaultCounter;
+ DWORD NumInstances;
+ DWORD CodePage;
+ LARGE_INTEGER PerfTime;
+ LARGE_INTEGER PerfFreq;
+} PERF_OBJECT_TYPE;
 
 /* COMMCONFIG  [struct; shared; entity-headers] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
@@ -232,98 +258,7 @@ typedef struct _PERF_INSTANCE_DEFINITION {
  * functions and callbacks
  * ================================================================ */
 
-/* PALETTEINDEX  [function; shared; entity-headers; win32-reference] */
-COLORREF PALETTEINDEX(
-    WORD i
-);
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* EnumUILanguages  [function; shared; CE 4.0..699; Coreloc.lib; A/W EnumUILanguagesA,EnumUILanguagesW (CE is W-side)] */
-BOOL EnumUILanguages(
- UILANGUAGE_ENUMPROC lpUILanguageEnumProc,
- DWORD dwFlags
-);
-
-/* EnumUILanguagesProc  [function; ce-only; CE 4.0..699; Coreloc.lib] */
-BOOL CALLBACK EnumUILanguagesProc(
- LPTSTR lpUILanguageString
-);
-
-/* GetCharABCWidths  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib; A/W GetCharABCWidthsA,GetCharABCWidthsW (CE is W-side)] */
-BOOL GetCharABCWidths(
- HDC hdc,
- UINT uFirstChar,
- UINT uLastChar,
- LPABC lpabc
-);
-
-/* GetCharWidth32  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib; A/W GetCharWidth32A,GetCharWidth32W (CE is W-side)] */
-WINGDIAPI BOOL WINAPI GetCharWidth32(
- HDC hdc,
- UINT iFirstChar,
- UINT iLastChar,
- LPINT lpBuffer
-);
-
-/* GetSystemDefaultUILanguage  [function; shared; CE 4.0..699; Coreloc.lib] */
-LANGID GetSystemDefaultUILanguage();
-
-/* GetTextAlign  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib] */
-WINGDIAPI UINT WINAPI GetTextAlign(
- HDC hdc
-);
-
-/* GetUserDefaultUILanguage  [function; shared; CE 4.0..699; Coreloc.lib] */
-LANGID GetUserDefaultUILanguage();
-
-/* LoadAnimatedCursor  [function; ce-only; CE 4.0..699; Cursor.lib, Mcursor.lib] */
-WINUSERAPI HCURSOR WINAPI LoadAnimatedCursor(
- HINSTANCE hInstance,
- DWORD ResourceId,
- int cFrames,
- int FrameTimeInterval
-);
-
-/* SetTextAlign  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib] */
-WINGDIAPI UINT WINAPI SetTextAlign(
- HDC hdc,
- UINT fmode
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* AlphaBlend  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL AlphaBlend(
- HDC hdcDest,
- int nXOriginDest,
- int nYOriginDest,
- int nWidthDest,
- int nHeightDest,
- HDC hdcSrc,
- int nXOriginSrc,
- int nYOriginSrc,
- int nWidthSrc,
- int nHeightSrc,
- BLENDFUNCTION blendFunction
-);
-
-/* ChangeDisplaySettingsEx  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W ChangeDisplaySettingsExA,ChangeDisplaySettingsExW (CE is W-side)] */
-LONG ChangeDisplaySettingsEx(
- LPCTSTR lpszDeviceName,
- LPDEVMODE lpDevMode,
- HWND hwnd,
- DWORD dwflags,
- LPVOID lParam
-);
-
-/* CheckDlgButton  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-__inline BOOL WINAPI CheckDlgButton(
- HWND hDlg,
- int nIDButton,
- UINT uCheck
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* DuplicateHandle  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL DuplicateHandle(
@@ -334,63 +269,6 @@ BOOL DuplicateHandle(
  DWORD dwDesiredAccess,
  BOOL bInheritHandle,
  DWORD dwOptions
-);
-
-/* EnumDisplayDevices  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W EnumDisplayDevicesA,EnumDisplayDevicesW (CE is W-side)] */
-BOOL EnumDisplayDevices(
- LPCTSTR lpDevice, 
- DWORD iDevNum, 
- PDISPLAY_DEVICE lpDisplayDevice, 
- DWORD dwFlags 
-);
-
-/* EnumDisplaySettings  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W EnumDisplaySettingsA,EnumDisplaySettingsW (CE is W-side)] */
-BOOL EnumDisplaySettings(
- LPCTSTR lpszDeviceName,
- DWORD iModeNum,
- LPDEVMODE lpDevMode
-);
-
-/* EnumPropsEx  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W EnumPropsExA,EnumPropsExW (CE is W-side)] */
-int EnumPropsEx(
- HWND hWnd,
- PROPENUMPROCEX lpEnumFunc,
- LPARAM lParam
-);
-
-/* ExtCreateRegion  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-HRGN ExtCreateRegion(
- CONST XFORM* lpXform,
- DWORD nCount,
- CONST RGNDATA* lpRgnData
-);
-
-/* FiberProc  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-VOID CALLBACK FiberProc(
- PVOID lpParameter
-);
-
-/* GetCharABCWidthsI  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL GetCharABCWidthsI(
- HDC hdc,
- UINT giFirst,
- UINT cgi,
- LPWORD pgi,
- LPABC lpabc
-);
-
-/* GetCurrentPositionEx  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-WINGDIAPI BOOL WINAPI GetCurrentPositionEx(
- HDC hdc,
- LPPOINT lpPoint
-);
-
-/* GetDIBColorTable  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-WINGDIAPI UINT WINAPI GetDIBColorTable(
- HDC hdc,
- UINT uStartIndex,
- UINT cEntries,
- RGBQUAD* pColors
 );
 
 /* GetFontData  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
@@ -405,18 +283,6 @@ DWORD GetFontData(
 /* GetLayout  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 DWORD GetLayout(
  HDC hdc
-);
-
-/* GetMessageQueueReadyTimeStamp  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-DWORD WINAPI GetMessageQueueReadyTimeStamp(
- HWND hWnd
-);
-
-/* GetOutlineTextMetrics  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W GetOutlineTextMetricsA,GetOutlineTextMetricsW (CE is W-side)] */
-UINT GetOutlineTextMetrics(
- HDC hdc,
- UINT cbData,
- LPOUTLINETEXTMETRICW lpOTM
 );
 
 /* GetProp  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W GetPropA,GetPropW (CE is W-side)] */
@@ -450,16 +316,6 @@ ATOM GlobalFindAtom(
  LPCTSTR lpString
 );
 
-/* GradientFill  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL GradientFill(
- HDC hdc,
- PTRIVERTEX pVertex,
- ULONG nVertex,
- PVOID pMesh,
- ULONG nCount,
- ULONG ulMode
-);
-
 /* InterlockedCompareExchange  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 LONG InterlockedCompareExchange(
  LPLONG Destination,
@@ -473,62 +329,10 @@ LONG InterlockedExchangeAdd(
  LONG Increment
 );
 
-/* InvalidateRgn  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL WINAPI InvalidateRgn(
- HWND hWnd,
- HRGN hRgn,
- BOOL fErase
-);
-
 /* InvertRect  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL InvertRect(
  HDC hDC,
  CONST RECT* lprc
-);
-
-/* IsDlgButtonChecked  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-__inline UINT WINAPI IsDlgButtonChecked(
- HWND hDlg,
- int nIDButton
-);
-
-/* LineTo  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-WINGDIAPI BOOL WINAPI LineTo(
- HDC hdc,
- int nXEnd,
- int nYEnd
-);
-
-/* MoveToEx  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-WINGDIAPI BOOL WINAPI MoveToEx(
- HDC hdc,
- int X,
- int Y,
- LPPOINT lpPoint
-);
-
-/* OffsetViewportOrgEx  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-OffsetViewportOrgEx(
- HDC hdc, 
- int nXOffset,
- int nYOffset,
- LPPOINT lpPoint
-);
-
-/* PropEnumProcEx  [function; shared; CE 5.0..699; A/W PROPENUMPROCEXA,PROPENUMPROCEXW (CE is W-side)] */
-BOOL CALLBACK PropEnumProcEx(
- HWND hwnd,
- LPTSTR lpszString,
- HANDLE hData,
- ULONG_PTR dwData
-);
-
-/* RedrawWindow  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL WINAPI RedrawWindow(
- HWND hwnd,
- CONST RECT* lprcUpdate,
- HRGN hrgnUpdate,
- UINT flags
 );
 
 /* RemoveProp  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W RemovePropA,RemovePropW (CE is W-side)] */
@@ -537,46 +341,11 @@ HANDLE RemoveProp(
  LPCTSTR lpString
 );
 
-/* SendMessageTimeout  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W SendMessageTimeoutA,SendMessageTimeoutW (CE is W-side)] */
-LRESULT SendMessageTimeout(
- HWND hWnd,
- UINT Msg,
- WPARAM wParam,
- LPARAM lParam,
- UINT fuFlags,
- UINT uTimeout,
- PDWORD_PTR lpdwResult
-);
-
 /* SetBitmapBits  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 LONG SetBitmapBits(
  HBITMAP hbmp,
  DWORD cBytes,
  CONST VOID *lpBits
-);
-
-/* SetDIBColorTable  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-WINGDIAPI UINT WINAPI SetDIBColorTable(
- HDC hdc,
- UINT uStartIndex,
- UINT cEntries,
- CONST RGBQUAD* pColor
-);
-
-/* SetDIBitsToDevice  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-int SetDIBitsToDevice(
- HDC hdc,
- int XDest,
- int YDest,
- DWORD dwWidth,
- DWORD dwHeight,
- int XSrc,
- int YSrc,
- UINT uStartScan,
- UINT cScanLines,
- CONST VOID* lpvBits,
- CONST BITMAPINFO* lpbmi,
- UINT fuColorUse
 );
 
 /* SetLayout  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
@@ -598,41 +367,6 @@ int SetStretchBltMode(
  int iStretchMode
 );
 
-/* SetUserDefaultLCID  [function; ce-only; CE 5.0..699; Coreloc.lib] */
-BOOL SetUserDefaultLCID(
- LCID Locale
-);
-
-/* SetUserDefaultUILanguage  [function; ce-only; CE 5.0..699; Coreloc.lib] */
-BOOL SetUserDefaultUILanguage(
- LANGID langid
-);
-
-/* SetWindowOrgEx  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-SetWindowOrgEx(
- HDC hdc, 
- int X,
- int Y,
- LPPOINT lpPoint
-);
-
-/* StretchDIBits  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-WINGDIAPI BOOL WINAPI StretchDIBits(
- HDC hdc,
- int XDest,
- int YDest,
- int nDestWidth,
- int nDestHeight,
- int XSrc,
- int YSrc,
- int nSrcWidth,
- int nSrcHeight,
- CONST VOID* lpBits,
- CONST BITMAPINFO* lpBitsInfo,
- UINT iUsage,
- DWORD dwRop
-);
-
 /* TransparentBlt  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL TransparentBlt(
  HDC hdcDest,
@@ -646,12 +380,6 @@ BOOL TransparentBlt(
  int nWidthSrc,
  int nHeightSrc,
  UINT crTransparent
-);
-
-/* ValidateRgn  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL WINAPI ValidateRgn(
- HWND hWnd,
- HRGN hRgn
 );
 #endif /* _WIN32_WCE */
 

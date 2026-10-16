@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 11 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 11 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _PROFILER_
 #define _PROFILER_
@@ -28,7 +28,7 @@ typedef struct OEMProfilerData {
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* GetEPC  [function; ce-only; CE 3.0..399, 5.0..699; Nkprof.lib, Nkstub.lib; heuristic-prefix] */
 DWORD GetEPC (void);
@@ -48,7 +48,7 @@ VOID ProfileStart(
 VOID ProfileStop (void);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
 
 /* OEMProfileTimerDisable  [function; ce-only; CE 3.0..699; Nkprof.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
 void OEMProfileTimerDisable (void);
@@ -59,7 +59,7 @@ void OEMProfileTimerEnable(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* ProfileCaptureStatus  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 VOID ProfileCaptureStatus();

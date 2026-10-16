@@ -53,7 +53,7 @@ typedef struct MailMsg {
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213)) /* CE 1.0..199, 2.11..2.12 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213)) /* CE 1.0..199, 2.11..2.12 */
 
 /* MailClose  [function; ce-only; CE 1.0..199, 2.11..2.12] */
 BOOL MailClose (HANDLE hMail);
@@ -94,17 +94,11 @@ BOOL MailGetFolderId (HANDLE hMail, BYTE* pbId, LPWSTR szName);
 /* MailGetFolderName  [function; ce-only; CE 1.0..199, 2.11..2.12] */
 BOOL MailGetFolderName (HANDLE hMail, int* piId, int* piLen LPWSTR szName);
 
-/* MailGetSort  [function; ce-only; CE 1.0..199, 2.11..2.12] */
-BOOL MailSetSort (HANDLE hMail, PMAILSORTINFO pInfo);
-
 /* MailGetSvcId  [function; ce-only; CE 1.0..199, 2.11..2.12] */
 BOOL MailGetSvcId (HANDLE hMail, MailMsg* pmm);
 
 /* MailHeaderLen  [function; ce-only; CE 1.0..199, 2.11..2.12] */
 DWORD MailHeaderLen (MailMsg* pmm);
-
-/* MailLocalAttachmentLen  [function; ce-only; CE 1.0..199, 2.11..2.12] */
-DWORD MailLocalAttachmentLen (HANDLE hMail, MAILMSG * pmm);
 
 /* MailNext  [function; ce-only; CE 1.0..199, 2.11..2.12] */
 BOOL MailNext (HANDLE hMail, MailMsg* pmm);
@@ -132,10 +126,6 @@ MailAtt * pma, BOOL bRetrieve);
 
 /* MailSetField  [function; ce-only; CE 1.0..199, 2.11..2.12] */
 BOOL MailSetField (MailMsg*pmm, LPWSTR szName, LPCWSTR szVal);
-
-/* MailSetSort  [function; ce-only; CE 1.0..199, 2.11..2.12] */
-BOOL MailSetSort (HANDLE hMail, MAILSORTFIELD iSort, 
-BOOL fAscending);
 
 /* MailUpdate  [function; ce-only; CE 1.0..199, 2.11..2.12] */
 BOOL MailUpdate (HANDLE hMail, MailMsg* pmm, BOOL fDoAll);

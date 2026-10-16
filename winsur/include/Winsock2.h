@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 201 constants, 92 declarations, 4 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 192 constants, 92 declarations, 4 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINSOCK2_
 #define _WINSOCK2_
@@ -24,14 +24,6 @@
 #define AF_IRDA 26
 #define AF_NETBIOS 17
 #define AF_UNSPEC 0
-#define COMP_EQUAL 0
-#define DSCPAudio 5
-#define DSCPBackground 2
-#define DSCPBestEffort 1
-#define DSCPControl 6
-#define DSCPExcellentEffort 3
-#define DSCPTypeNotSet 0
-#define DSCPVideo 4
 #define IPPROTO_ICMP 1
 #define IPPROTO_ICMPV6 58
 #define IPPROTO_IGMP 2
@@ -54,7 +46,6 @@
 #define LUP_RETURN_QUERY_STRING 0x0800
 #define LUP_RETURN_TYPE 0x0020
 #define LUP_RETURN_VERSION 0x0040
-#define NumDSCPTrafficTypes 6
 #define PF_3DNOW_INSTRUCTIONS_AVAILABLE 7
 #define PF_ARM_64BIT_LOADSTORE_ATOMIC 25
 #define PF_ARM_DIVIDE_INSTRUCTION_AVAILABLE 24
@@ -343,33 +334,13 @@ typedef struct _SERVICE_TYPE_INFO_ABS {
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
 
 /* WSACleanup  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
 int WSACleanup (void);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* closesocket  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-int closesocket(
- SOCKET s
-);
-
-/* gethostname  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib; A/W GetHostNameW (CE is W-side)] */
-int gethostname(
- char FAR* name,
- int namelen
-);
-
-/* getsockopt  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-int getsockopt(
- SOCKET s,
- int level,
- int optname,
- char FAR* optval,
- int FAR* optlen
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
 
 /* htonl  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
 u_long htonl(
@@ -379,24 +350,6 @@ u_long htonl(
 /* htons  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
 u_short htons(
  u_short hostshort
-);
-
-/* inet_addr  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-unsigned long inet_addr(
- const char FAR* cp
-);
-
-/* ioctlsocket  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-int ioctlsocket(
- SOCKET s,
- long cmd,
- u_long FAR* argp
-);
-
-/* listen  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-int listen(
- SOCKET s,
- int backlog
 );
 
 /* ntohl  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
@@ -409,256 +362,24 @@ u_short ntohs(
  u_short netshort
 );
 
-/* recv  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-int recv(
- SOCKET s,
- char FAR* buf,
- int len,
- int flags
-);
-
-/* send  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-int send(
- SOCKET s,
- const char FAR* buf,
- int len,
- int flags
-);
-
-/* setsockopt  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-int setsockopt(
- SOCKET s,
- int level,
- int optname,
- const char FAR* optval,
- int optlen
-);
-
-/* shutdown  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-int shutdown(
- SOCKET s,
- int how
-);
-
-/* socket  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-SOCKET socket(
- int af,
- int type,
- int protocol
-);
-
 /* WSAGetLastError  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
 int WSAGetLastError(void);
-
-/* WSAIoctl  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-int WSAIoctl(
- SOCKET s,
- DWORD dwIoControlCode,
- LPVOID lpvInBuffer,
- DWORD cbInBuffer,
- LPVOID lpvOutBuffer,
- DWORD cbOutBuffer,
- LPDWORD lpcbBytesReturned,
- LPWSAOVERLAPPED lpOverlapped,
- LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine
-);
-
-/* WSAStartup  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-int WSAStartup(
- WORD wVersionRequested,
- LPWSADATA lpWSAData
-);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* WSAAddressToString  [function; shared; CE 4.0..699; Ws2.lib; A/W WSAAddressToStringA,WSAAddressToStringW (CE is W-side)] */
-INT WSAAddressToString(
- LPSOCKADDR lpsaAddress,
- DWORD dwAddressLength,
- LPWSAPROTOCOL_INFO lpProtocolInfo,
- OUT LPTSTR lpszAddressString,
- IN OUT LPDWORD lpdwAddressStringLength
-);
-
-/* WSACloseEvent  [function; shared; CE 4.0..699; Ws2.lib] */
-BOOL WSACloseEvent(
- WSAEVENT hEvent
-);
-
-/* WSACreateEvent  [function; shared; CE 4.0..699; Ws2.lib] */
-WSAEVENT WSACreateEvent (void);
-
-/* WSAEnumNameSpaceProviders  [function; shared; CE 4.0..699; Ws2.lib; A/W WSAEnumNameSpaceProvidersA,WSAEnumNameSpaceProvidersW (CE is W-side)] */
-INT WSAAPI WSAEnumNameSpaceProviders(
- LPDWORD lpdwBufferLength,
- LPWSANAMESPACE_INFO lpnspBuffer
-);
-
-/* WSAEnumNetworkEvents  [function; shared; CE 4.0..699; Ws2.lib] */
-int WSAEnumNetworkEvents(
- SOCKET s,
- WSAEVENT hEventObject,
- LPWSANETWORKEVENTS lpNetworkEvents
-);
-
-/* WSAEnumProtocols  [function; shared; CE 4.0..699; Ws2.lib; A/W WSAEnumProtocolsA,WSAEnumProtocolsW (CE is W-side)] */
-int WSAEnumProtocols(
- LPINT lpiProtocols,
- LPWSAPROTOCOL_INFO lpProtocolBuffer,
- ILPDWORD lpdwBufferLength
-);
-
-/* WSAEventSelect  [function; shared; CE 4.0..699; Ws2.lib] */
-int WSAEventSelect(
- SOCKET s,
- WSAEVENT hEventObject,
- long lNetworkEvents
-);
-
-/* WSAGetOverlappedResult  [function; shared; CE 4.0..699; Ws2.lib] */
-BOOL WSAGetOverlappedResult(
- SOCKET s,
- LPWSAOVERLAPPED lpOverlapped,
- LPDWORD lpcbTransfer,
- BOOL fWait,
- LPDWORD lpdwFlags
-);
-
-/* WSAHtonl  [function; shared; CE 4.0..699; Ws2.lib] */
-int WSAHtonl(
- SOCKET s,
- u_long hostlong,
- u_long FAR* lpnetlong
-);
-
-/* WSAHtons  [function; shared; CE 4.0..699; Ws2.lib] */
-int WSAHtons(
- SOCKET s,
- u_short hostshort,
- u_short FAR* lpnetshort
-);
-
-/* WSALookupServiceBegin  [function; shared; CE 4.0..699; Btdrt.lib, Ws2.lib; A/W WSALookupServiceBeginA,WSALookupServiceBeginW (CE is W-side)] */
-INT WSALookupServiceBegin(
- LPWSAQUERYSET lpqsRestrictions,
- DWORD dwControlFlags,
- LPHANDLE lphLookup
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* WSALookupServiceEnd  [function; shared; CE 4.0..699; Btdrt.lib, Ws2.lib] */
 INT WSALookupServiceEnd(
  HANDLE hLookup
 );
-
-/* WSALookupServiceNext  [function; shared; CE 4.0..699; Btdrt.lib, Ws2.lib; A/W WSALookupServiceNextA,WSALookupServiceNextW (CE is W-side)] */
-INT WSALookupServiceNext(
- HANDLE hLookup,
- DWORD dwControlFlags,
- LPDWORD lpdwBufferLength,
- LPWSAQUERYSET lpqsResults
-);
-
-/* WSANtohl  [function; shared; CE 4.0..699; Ws2.lib] */
-int WSANtohl(
- SOCKET s,
- u_long netlong,
- u_long FAR* lphostlong
-);
-
-/* WSANtohs  [function; shared; CE 4.0..699; Ws2.lib] */
-int WSANtohs(
- SOCKET s,
- u_short netshort,
- u_short FAR* lphostshort
-);
-
-/* WSARecv  [function; shared; CE 4.0..699; Ws2.lib] */
-int WSARecv(
- SOCKET s,
- LPWSABUF lpBuffers,
- DWORD dwBufferCount,
- LPDWORD lpNumberOfBytesRecvd,
- LPDWORD lpFlags,
- LPWSAOVERLAPPED lpOverlapped,
- LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine
-);
-
-/* WSAResetEvent  [function; shared; CE 4.0..699; Ws2.lib] */
-BOOL WSAResetEvent(
- WSAEVENT hEvent
-);
-
-/* WSASend  [function; shared; CE 4.0..699; Ws2.lib] */
-int WSASend(
- SOCKET s,
- LPWSABUF lpBuffers,
- DWORD dwBufferCount,
- LPDWORD lpNumberOfBytesSent,
- DWORD dwFlags,
- LPWSAOVERLAPPED lpOverlapped,
- LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine
-);
-
-/* WSASetEvent  [function; shared; CE 4.0..699; Ws2.lib] */
-BOOL WSASetEvent(
- WSAEVENT hEvent
-);
-
-/* WSASetService  [function; shared; CE 4.0..699; Btdrt.lib, Ws2.lib; A/W WSASetServiceA,WSASetServiceW (CE is W-side)] */
-INT WSASetService(
- LPWSAQUERYSET lpqsRegInfo, 
- WSAESETSERVICEOP essOperation, 
- DWORD dwControlFlags
-);
-
-/* WSASocket  [function; shared; CE 4.0..699; Ws2.lib; A/W WSASocketA,WSASocketW (CE is W-side)] */
-SOCKET WSASocket(
- int af,
- int type,
- int protocol,
- LPWSAPROTOCOL_INFO lpProtocolInfo,
- GROUP g,
- DWORD dwFlags
-);
-
-/* WSAStringToAddress  [function; shared; CE 4.0..699; Ws2.lib; A/W WSAStringToAddressA,WSAStringToAddressW (CE is W-side)] */
-INT WSAStringToAddress(
- LPTSTR AddressString,
- INT AddressFamily,
- LPWSAPROTOCOL_INFO lpProtocolInfo,
- LPSOCKADDR lpAddress,
- LPINT lpAddressLength
-);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* sethostname  [function; ce-only; CE 5.0..699; Ws2.lib] */
 int sethostname(
  char* pName,
  int cName
-);
-
-/* WSANSPIoctl  [function; shared; CE 5.0..699; Ws2.lib] */
-int WSAAPI WSANSPIoctl(
- HANDLE hLookup,
- DWORD dwControlCode,
- LPVOID lpvInBuffer,
- DWORD cbInBuffer,
- LPVOID lpvOutBuffer,
- DWORD cbOutBuffer,
- LPDWORD lpcbBytesReturned,
- LPWSACOMPLETION lpCompletion
-);
-
-/* WSAWaitForMultipleEvents  [function; shared; CE 5.0..699; Ws2.lib] */
-DWORD WSAAPI WSAWaitForMultipleEvents(
- DWORD cEvents,
- const WSAEVENT FAR* lphEvents,
- BOOL fWaitAll,
- DWORD dwTimeout,
- BOOL fAlertable
 );
 #endif /* _WIN32_WCE */
 

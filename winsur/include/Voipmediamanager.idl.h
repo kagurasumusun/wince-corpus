@@ -59,13 +59,9 @@ HRESULT PlayProgressTone( VoIPProgressTone vpt );
 HRESULT StopProgressTone();
 HRESULT StopSound();
 HRESULT UnholdSession( IRTCSession2* piSession );
-HRESULT get_MicrophoneMute( VARIANT_BOOL* pfMuted );
 HRESULT get_MicrophoneVolume( float* pfpVolume );
-HRESULT get_SpeakerMute( VARIANT_BOOL* pfMuted );
 HRESULT get_SpeakerVolume( float* pfpVolume );
-HRESULT put_MicrophoneMute( VARIANT_BOOL fMuted );
 HRESULT put_MicrophoneVolume( float fpVolume );
-HRESULT put_SpeakerMute( VARIANT_BOOL fMuted );
 HRESULT put_SpeakerVolume( float fpVolume );
 
 #endif /* _VOIPMEDIAMANAGER_IDL_ */

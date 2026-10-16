@@ -19,11 +19,9 @@
 /* function */
 HRESULT CancelDefaultHandling( long lEvCode);
 HRESULT FreeEventParams( long lEventCode, long lParam1, long lParam2);
-HRESULT GetEventHandle( OAEVENT *hEvent);
 HRESULT GetNotifyFlags( [out] long *lplNoNotifyFlags);
 HRESULT RestoreDefaultHandling( long lEvCode);
 HRESULT SetNotifyFlags( long lNoNotifyFlags);
-HRESULT SetNotifyWindow( OAHWND hwnd, long lMsg, long lInstanceData);
 HRESULT StopWhenReady( );
 HRESULT get_Balance( long *plBalance);
 HRESULT get_Volume( long *plVolume);

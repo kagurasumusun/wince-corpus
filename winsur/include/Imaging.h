@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 48 constants, 14 declarations, 0 outlines, 0 base types, 0 extra macros, 67 extra decls
+ * 4 constants, 14 declarations, 0 outlines, 0 base types, 0 extra macros, 65 extra decls
  */
 #ifndef _IMAGING_
 #define _IMAGING_
@@ -17,50 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define DecoderInitFlagBuiltIn1st 0x0002
-#define DecoderInitFlagNoBlock 0x0001
-#define DecoderInitFlagNone 0
-#define EncoderParameterValueTypeASCII 2
-#define EncoderParameterValueTypeByte 1
-#define EncoderParameterValueTypeLong 4
-#define EncoderParameterValueTypeLongRange 6
-#define EncoderParameterValueTypeRational 5
-#define EncoderParameterValueTypeRationalRange 8
-#define EncoderParameterValueTypeShort 3
-#define EncoderParameterValueTypeUndefined 7
-#define ImageCodecFlagsBlockingDecode 0x00000020
-#define ImageCodecFlagsBuiltin 0x00010000
-#define ImageCodecFlagsDecoder 0x00000002
-#define ImageCodecFlagsEncoder 0x00000001
-#define ImageCodecFlagsSeekableEncode 0x00000010
-#define ImageCodecFlagsSupportBitmap 0x00000004
-#define ImageCodecFlagsSupportVector 0x00000008
-#define ImageCodecFlagsSystem 0x00020000
-#define ImageCodecFlagsUser 0x00040000
-#define ImageFlagsCaching 0x00020000
-#define ImageFlagsColorSpaceCMYK 0x0020
-#define ImageFlagsColorSpaceGRAY 0x0040
-#define ImageFlagsColorSpaceRGB 0x0010
-#define ImageFlagsColorSpaceYCBCR 0x0080
-#define ImageFlagsColorSpaceYCCK 0x0100
-#define ImageFlagsHasAlpha 0x0002
-#define ImageFlagsHasRealDPI 0x1000
-#define ImageFlagsHasRealPixelSize 0x2000
-#define ImageFlagsHasTranslucent 0x0004
-#define ImageFlagsNone 0
-#define ImageFlagsPartiallyScalable 0x0008
-#define ImageFlagsReadOnly 0x00010000
-#define ImageFlagsScalable 0x0001
-#define ImageFlagsValid 0x00030000
-#define ImageLockModeRead 0x0001
-#define ImageLockModeUserInputBuf 0x0004
-#define ImageLockModeWrite 0x0002
-#define SinkFlagsBottomUp 0x00020000
-#define SinkFlagsComposite 0x00100000
-#define SinkFlagsFullWidth 0x00040000
-#define SinkFlagsMultipass 0x00080000
-#define SinkFlagsTopDown 0x00010000
-#define SinkFlagsWantProps 0x00200000
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
@@ -216,53 +172,50 @@ enum SinkFlags {
  SinkFlagsWantProps = 0x00200000
 };
 
+/* x0002  [extra enum] */
+enum DecoderInitFlag { DecoderInitFlagNone = 0, DecoderInitFlagNoBlock = 0x0001, DecoderInitFlagBuiltIn1st = 0x0002};
+
+/* EncoderValueFrameDimensionPage  [extra enum] */
+enum EncoderValue { EncoderValueColorTypeCMYK, EncoderValueColorTypeYCCK, EncoderValueCompressionLZW, EncoderValueCompressionCCITT3, EncoderValueCompressionCCITT4, EncoderValueCompressionRle, EncoderValueCompressionNone, EncoderValueScanMethodInterlaced, EncoderValueScanMethodNonInterlaced, EncoderValueVersionGif87, EncoderValueVersionGif89, EncoderValueRenderProgressive, EncoderValueRenderNonProgressive, EncoderValueTransformRotate90, EncoderValueTransformRotate180, EncoderValueTransformRotate270, EncoderValueTransformFlipHorizontal, EncoderValueTransformFlipVertical, EncoderValueMultiFrame, EncoderValueLastFrame, EncoderValueFlush, EncoderValueFrameDimensionTime, EncoderValueFrameDimensionResolution, EncoderValueFrameDimensionPage};
+
+/* InterpolationHintBicubic  [extra enum] */
+enum InterpolationHint { InterpolationHintDefault, InterpolationHintNearestNeighbor, InterpolationHintBilinear, InterpolationHintAveraging, InterpolationHintBicubic};
+
+/* x00200000  [extra enum] */
+enum SinkFlags { SinkFlagsScalable = ImageFlagsScalable, SinkFlagsHasAlpha = ImageFlagsHasAlpha, SinkFlagsPartiallyScalable = ImageFlagsPartiallyScalable, SinkFlagsTopDown = 0x00010000, SinkFlagsBottomUp = 0x00020000, SinkFlagsFullWidth = 0x00040000, SinkFlagsMultipass = 0x00080000, SinkFlagsComposite = 0x00100000, SinkFlagsWantProps = 0x00200000};
+
+/* BufferDisposalFlagUnmapView  [extra enum] */
+enum BufferDisposalFlag { BufferDisposalFlagNone, BufferDisposalFlagGlobalFree, BufferDisposalFlagCoTaskMemFree, BufferDisposalFlagUnmapView};
+
 /* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
 
-/* enum */
-enum BufferDisposalFlag { BufferDisposalFlagNone, BufferDisposalFlagGlobalFree, BufferDisposalFlagCoTaskMemFree, BufferDisposalFlagUnmapView};
-enum EncoderValue { EncoderValueColorTypeCMYK, EncoderValueColorTypeYCCK, EncoderValueCompressionLZW, EncoderValueCompressionCCITT3, EncoderValueCompressionCCITT4, EncoderValueCompressionRle, EncoderValueCompressionNone, EncoderValueScanMethodInterlaced, EncoderValueScanMethodNonInterlaced, EncoderValueVersionGif87, EncoderValueVersionGif89, EncoderValueRenderProgressive, EncoderValueRenderNonProgressive, EncoderValueTransformRotate90, EncoderValueTransformRotate180, EncoderValueTransformRotate270, EncoderValueTransformFlipHorizontal, EncoderValueTransformFlipVertical, EncoderValueMultiFrame, EncoderValueLastFrame, EncoderValueFlush, EncoderValueFrameDimensionTime, EncoderValueFrameDimensionResolution, EncoderValueFrameDimensionPage};
-enum InterpolationHint { InterpolationHintDefault, InterpolationHintNearestNeighbor, InterpolationHintBilinear, InterpolationHintAveraging, InterpolationHintBicubic};
-enum DecoderInitFlag { DecoderInitFlagNone = 0, DecoderInitFlagNoBlock = 0x0001, DecoderInitFlagBuiltIn1st = 0x0002};
-enum SinkFlags { SinkFlagsScalable = ImageFlagsScalable, SinkFlagsHasAlpha = ImageFlagsHasAlpha, SinkFlagsPartiallyScalable = ImageFlagsPartiallyScalable, SinkFlagsTopDown = 0x00010000, SinkFlagsBottomUp = 0x00020000, SinkFlagsFullWidth = 0x00040000, SinkFlagsMultipass = 0x00080000, SinkFlagsComposite = 0x00100000, SinkFlagsWantProps = 0x00200000};
-
 /* function */
 HRESULT AdjustBrightness( FLOAT percent );
 HRESULT AdjustContrast( FLOAT shadow, FLOAT highlight );
 HRESULT AdjustGamma( FLOAT gamma );
-HRESULT BeginDecode( IImageSink* sink, OPTIONAL IPropertySetStorage* newPropSet );
-HRESULT BeginSink( ImageInfo* imageInfo, OPTIONAL RECT* subarea );
 HRESULT CreateImageDecoder( IStream* stream, DecoderInitFlag flags, IImageDecoder** decoder );
-HRESULT CreateImageEncoderToFile( const CLSID* clsid, const WCHAR* filename, IImageEncoder** encoder );
-HRESULT CreateImageEncoderToStream( const CLSID* clsid, IStream* stream, IImageEncoder** encoder );
 HRESULT CreateImageFromBuffer( const VOID* buf, UINT size, BufferDisposalFlag disposalFlag, IImage** image );
 HRESULT CreateImageFromFile( const WCHAR* filename, IImage** image );
 HRESULT CreateImageFromStream( IStream* stream, IImage** image );
 HRESULT CreateNewBitmap( UINT width, UINT height, PixelFormatID pixelFormat, IBitmapImage** bitmap );
 HRESULT Decode();
-HRESULT Draw( HDC hdc, const RECT* dstRect, OPTIONAL const RECT* srcRect );
 HRESULT EndDecode( HRESULT statusCode );
 HRESULT EndSink( HRESULT statusCode );
 HRESULT GetAllPropertyItems( UINT totalBufferSize, UINT numProperties, PropertyItem* allItems );
 HRESULT GetEncodeSink( IImageSink** sink );
 HRESULT GetEncoderParameterList( UINT size, EncoderParameters* Params );
 HRESULT GetEncoderParameterListSize( UINT* size );
-HRESULT GetFrameCount( const GUID* dimensionID, UINT* count );
 HRESULT GetFrameDimensionsCount( UINT* count );
-HRESULT GetFrameDimensionsList( GUID* dimensionIDs, UINT count );
 HRESULT GetImageInfo( ImageInfo* imageInfo );
 HRESULT GetInstalledDecoders( UINT* count, ImageCodecInfo** decoders );
 HRESULT GetInstalledEncoders( UINT* count, ImageCodecInfo** encoders );
 HRESULT GetPhysicalDimension( SIZE* size );
 HRESULT GetPropertyBuffer( UINT uiTotalBufferSize, PropertyItem** ppBuffer );
 HRESULT GetPropertyCount( UINT* numOfProperty );
-HRESULT GetPropertyIdList( UINT numOfProperty, PROPID* list );
-HRESULT GetPropertyItem( PROPID propId, UINT propSize, PropertyItem* buffer );
-HRESULT GetPropertyItemSize( PROPID propId, UINT* size );
 HRESULT GetPropertySize( UINT* totalBufferSize, UINT* numProperties );
-HRESULT GetThumbnail( OPTIONAL UINT thumbWidth, OPTIONAL UINT thumbHeight, IImage** thumbImage );
 HRESULT InitDecoder( IStream* stream, DecoderInitFlag flags );
 HRESULT InitEncoder( IStream* stream );
 HRESULT InstallImageCodec( const ImageCodecInfo* codecInfo );
@@ -274,15 +227,10 @@ HRESULT PushPixelData( const RECT* rect, const BitmapData* bitmapData, BOOL last
 HRESULT PushPropertyItems( UINT numOfItems, UINT uiTotalBufferSize, PropertyItem* item );
 HRESULT PushRawData( const VOID* buffer, UINT bufsize );
 HRESULT PushRawInfo( void* info );
-HRESULT QueryDecoderParam( GUID Guid );
 HRESULT ReleasePixelDataBuffer( const BitmapData* bitmapData );
-HRESULT RemovePropertyItem( PROPID propId );
 HRESULT Resize( UINT newWidth, UINT newHeight, PixelFormatID pixelFormat, InterpolationHint hints, IBitmapImage** outbmp );
 HRESULT Rotate( FLOAT angle, InterpolationHint hints, IBitmapImage** outbmp );
-HRESULT SelectActiveFrame( const GUID* dimensionID, UINT frameIndex );
-HRESULT SetDecoderParam( GUID Guid, UINT Length, PVOID Value );
 HRESULT SetEncoderParameters( const EncoderParameters* Param );
-HRESULT SetFrameDimension( const GUID* dimensionID );
 HRESULT SetImageFlags( UINT flags );
 HRESULT SetPropertyItem( PropertyItem item );
 HRESULT TerminateDecoder();

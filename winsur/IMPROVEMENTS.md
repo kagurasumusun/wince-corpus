@@ -432,6 +432,10 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: unified KB と harvest を開発面に載せる（第11弾）
+
+コピーはしない。`knowledge/unified/declarations.jsonl` と harvest にある C の引用で、エンティティループが落とした穴（`MmMapIoSpace`）を埋める。`PHYSICAL_ADDRESS` は CE DDK が引数に使う LARGE_INTEGER。`BOOLEAN` 引数を glued prototype と誤認しない。`_WIN32_WCE` の `#if` は SDK の 0x500 形式。型が無い関数は出さない。`gcc -std=c11 -Werror=implicit-function-declaration` で WinMain / DllMain+MmMapIoSpace が通る。
+
 ### 2026-10-16: gcc が通るアプリ/ドライバ面（第10弾）
 
 コピーはしない。CeGCC 以外は MSDN（既存コーパス）と CC-BY data-types、MIT pinvoke。

@@ -11,14 +11,4 @@
 #define _VPNOTIFY_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-HRESULT GetDeinterlaceMode(  AMVP_MODE *pmode) PURE;
-HRESULT RenegotiateVPParameters(void) PURE;
-HRESULT SetDeinterlaceMode(  AMVP_MODE mode) PURE;
-
 #endif /* _VPNOTIFY_ */

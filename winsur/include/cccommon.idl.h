@@ -5,20 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2 constants, 4 declarations, 3 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 4 declarations, 3 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _CCCOMMON_IDL_
 #define _CCCOMMON_IDL_
 
-
-/* ==================================================================
- * constants (one evidence comment per #define; the
- * #if of a batch covers every #define in it; values
- * that differ per generation pool into #if/#elif
- * chains with the evidence after the #endif)
- * ================================================================ */
-#define FileCustomAction_COM 0x0001
-#define FileCustomAction_None 0x0000
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
@@ -65,12 +56,7 @@ typedef struct tagPlatformInfo{
  DWORD m_InstructionSet;
 } SystemInfo;
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* enum */
+/* FileAction  [extra enum] */
 typedef enum tagFileCustomAction{ FileCustomAction_None = 0x0000, FileCustomAction_COM = 0x0001,} FileAction;
 
 #endif /* _CCCOMMON_IDL_ */

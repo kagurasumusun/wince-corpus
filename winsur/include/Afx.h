@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 1 declarations, 1 outlines, 0 base types, 0 extra macros, 59 extra decls
+ * 0 constants, 1 declarations, 1 outlines, 0 base types, 0 extra macros, 24 extra decls
  */
 #ifndef _AFX_
 #define _AFX_
@@ -40,8 +40,6 @@ TCHAR m_szFullName[_MAX_PATH];
  * ================================================================ */
 
 /* function */
-CMemFile( UINT nGrowBytes = 1024 );
-static int PASCAL ErrnoToException( int nErrno );
 LPTSTR GetBufferSetLength( int nNewLength ); throw( CMemoryException );
 void GrowFile( DWORD dwNewLen );
 void HexDump( LPCTSTR lpszLine, BYTE* pby, int nBytes, int nWidth ); throw( CFileException );
@@ -49,9 +47,7 @@ void MakeLower( );
 void MakeReverse( );
 void MakeUpper( );
 BYTE * Memcpy( BYTE* lpMemTarget, BYTE* lpMemSource, UINT nBytes );
-static int PASCAL OsErrorToException( LONG lOsError );
 DWORD ReadHuge( void* lpBuffer, DWORD dwCount ); throw( CFileException );
-static void PASCAL Rename( LPCTSTR lpszOldName, LPCTSTR lpszNewName ); throw( CFileException );
 void SeekToBegin( ); throw( CFileException );
 DWORD SeekToEnd( ); throw( CFileException );
 void SerializeClass( const CRuntimeClass* pRuntimeClass );
@@ -59,7 +55,6 @@ void SetDepth( int nNewDepth );
 void SetLoadParams( UINT nGrowBy = 1024 );
 void SetObjectSchema( UINT nSchema );
 void SetStoreParams( UINT nHashSize = 2053, UINT nBlockSize = 128 );
-static void PASCAL ThrowErrno( int nErrno );
 void TrimLeft( );
 void TrimRight( );
 void WriteClass( const CRuntimeClass* pClassRef );

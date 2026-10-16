@@ -11,12 +11,4 @@
 #define _DVDIOCTL_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _DVD_REGIONCE {HANDLE hDrive;UCHAR CopySystem; UCHAR RegionData; UCHAR SystemRegion; UCHAR ResetCount;} DVD_REGIONCE, *PDVD_REGIONCE;
-
 #endif /* _DVDIOCTL_ */

@@ -26,21 +26,11 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* ber_alloc_t  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib] */
 BerElement* ber_alloc_t(
  INT iOptions
-);
-
-/* ber_bvecfree  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib] */
-void ber_bvecfree(
- BERVAL** pBerVal
-);
-
-/* ber_bvfree  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib] */
-void ber_bvfree(
- BERVAL* pBerVal
 );
 
 /* ber_first_element  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib] */
@@ -48,12 +38,6 @@ ULONG ber_first_element(
  BerElement* pBerElement,
  ULONG* pLen,
  CHAR** ppOpaque
-);
-
-/* ber_flatten  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib] */
-INT ber_flatten(
- BerElement* pBerElement,
- BERVAL** pBerVal
 );
 
 /* ber_free  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib] */
@@ -73,20 +57,6 @@ ULONG ber_next_element(
 ULONG ber_peek_tag(
  BerElement* pBerElement,
  ULONG* pLen
-);
-
-/* ber_printf  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib] */
-INT ber_printf(
- BerElement* pBerElement,
- UNICODE PTCHAR fmt,
- ...
-);
-
-/* ber_scanf  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib] */
-INT ber_scanf(
- BerElement* pBerElement,
- UNICODE PTCHAR fmt,
- ...
 );
 
 /* ber_skip_tag  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib] */

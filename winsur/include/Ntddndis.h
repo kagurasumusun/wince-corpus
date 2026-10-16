@@ -83,39 +83,72 @@ typedef ULONG NDIS_802_11_ANTENNA;
 /* OID_802_11_TX_ANTENNA_SELECTED  [typedef; ce-only] */
 typedef ULONG NDIS_802_11_ANTENNA;
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* enum */
+/* PNDIS_802_11_AUTHENTICATION_MODE  [extra enum] */
 typedef enum _NDIS_802_11_AUTHENTICATION_MODE {Ndis802_11AuthModeOpen,Ndis802_11AuthModeShared,Ndis802_11AuthModeAutoSwitch,Ndis802_11AuthModeMax,} NDIS_802_11_AUTHENTICATION_MODE, *PNDIS_802_11_AUTHENTICATION_MODE;
-typedef enum _NDIS_802_11_WEP_STATUS {Ndis802_11WEPEnabled, Ndis802_11Encryption1Enabled = Ndis802_11WEPEnabled,Ndis802_11WEPDisabled, Ndis802_11EncryptionDisabled = Ndis802_11WEPDisabled,Ndis802_11WEPKeyAbsent, Ndis802_11Encryption1KeyAbsent = Ndis802_11WEPNotSupported,Ndis802_11WEPNotSupported, Ndis802_11EncryptionNotSupported = Ndis802_11WEPNotSupported, Ndis802_11Encryption2Enabled, Ndis802_11Encryption2KeyAbsent, Ndis802_11Encryption3Enabled, Ndis802_11Encryption3KeyAbsent} NDIS_802_11_WEP_STATUS, *PNDIS_802_11_WEP_STATUS, NDIS_802_11_ENCRYPTION_STATUS, *PNDIS_802_11_ENCRYPTION_STATUS;
-typedef enum _NDIS_802_11_LSM_MODE { Ndis802_11LSMOff,  Ndis802_11LSMOn  } NDIS_802_11_LSM_MODE, * PNDIS_802_11_LSM_MODE;
-typedef enum _NDIS_802_11_LSM_PARAMETERS { NDIS_802_11_LSM_MODE Mode;  ULONG PacketLatency;  } NDIS_802_11_LSM_PARAMETERS, * PNDIS_802_11_LSM_PARAMETERS;
+
+/* PNDIS_802_11_BSSID_LIST  [extra struct] */
+typedef struct _NDIS_802_11_BSSID_LIST {ULONG NumberOfItems;NDIS_WLAN_BSSID Bssid[1];} NDIS_802_11_BSSID_LIST, *PNDIS_802_11_BSSID_LIST;
+
+/* PNDIS_802_11_CONFIGURATION  [extra struct] */
+typedef struct _NDIS_802_11_CONFIGURATION {ULONG Length;ULONG BeaconPeriod;ULONG ATIMWindow;ULONG DSConfig;NDIS_802_11_CONFIGURATION_FH FHConfig;} NDIS_802_11_CONFIGURATION, *PNDIS_802_11_CONFIGURATION;
+
+/* PNDIS_802_11_NETWORK_INFRASTRUCTURE  [extra enum] */
 typedef enum _NDIS_802_11_NETWORK_INFRASTRUCTURE {Ndis802_11IBSS,Ndis802_11Infrastructure,Ndis802_11AutoUnknown,Ndis802_11InfrastructureMax,} NDIS_802_11_NETWORK_INFRASTRUCTURE, *PNDIS_802_11_NETWORK_INFRASTRUCTURE;
+
+/* PNDIS_802_11_NETWORK_TYPE  [extra enum] */
 typedef enum _NDIS_802_11_NETWORK_TYPE {Ndis802_11FH,Ndis802_11DS,Ndis802_11NetworkTypeMax,} NDIS_802_11_NETWORK_TYPE, *PNDIS_802_11_NETWORK_TYPE;
+
+/* PNDIS_802_11_NETWORK_TYPE_LIST  [extra struct] */
+typedef struct _NDIS_802_11_NETWORK_TYPE_LIST { ULONG NumberOfItems; NDIS_802_11_NETWORK_TYPE NetworkType[1];} NDIS_802_11_NETWORK_TYPE_LIST, *PNDIS_802_11_NETWORK_TYPE_LIST;
+
+/* PNDIS_802_11_POWER_MODE  [extra enum] */
 typedef enum _NDIS_802_11_POWER_MODE {Ndis802_11PowerModeCAM,Ndis802_11PowerModeMAX_PSP,Ndis802_11PowerModeFast_PSP,Ndis802_11PowerModeMax,} NDIS_802_11_POWER_MODE, *PNDIS_802_11_POWER_MODE;
+
+/* PNDIS_802_11_PRIVACY_FILTER  [extra enum] */
 typedef enum _NDIS_802_11_PRIVACY_FILTER {Ndis802_11PrivFilterAcceptAll,Ndis802_11PrivFilter8021xWEP,} NDIS_802_11_PRIVACY_FILTER, *PNDIS_802_11_PRIVACY_FILTER;
-typedef enum _NDIS_802_11_RADIO_POWER_STATE { Ndis802_11RadioPowerState_Off = 0, Ndis802_11RadioPowerState_On = 1, } NDIS_802_11_RADIO_POWER_STATE, *PNDIS_802_11_RADIO_POWER_STATE;
+
+/* PNDIS_802_11_RELOAD_DEFAULTS  [extra enum] */
 typedef enum _NDIS_802_11_RELOAD_DEFAULTS {Ndis802_11ReloadWEPKeys,} NDIS_802_11_RELOAD_DEFAULTS, *PNDIS_802_11_RELOAD_DEFAULTS;
+
+/* PNDIS_802_11_SSID  [extra struct] */
+typedef struct _NDIS_802_11_SSID {ULONG SsidLength;UCHAR Ssid [32];} NDIS_802_11_SSID, *PNDIS_802_11_SSID;
+
+/* PNDIS_802_11_STATISTICS  [extra struct] */
+typedef struct _NDIS_802_11_STATISTICS {ULONG Length;LARGE_INTEGER TransmittedFragmentCount;LARGE_INTEGER MulticastTransmittedFrameCount;LARGE_INTEGER FailedCount;LARGE_INTEGER RetryCount;LARGE_INTEGER MultipleRetryCount;LARGE_INTEGER RTSSuccessCount;LARGE_INTEGER RTSFailureCount;LARGE_INTEGER ACKFailureCount;LARGE_INTEGER FrameDuplicateCount;LARGE_INTEGER ReceivedFragmentCount;LARGE_INTEGER MulticastReceivedFrameCount;LARGE_INTEGER FCSErrorCount;} NDIS_802_11_STATISTICS, *PNDIS_802_11_STATISTICS;
+
+/* PNDIS_802_11_WEP  [extra struct] */
+typedef struct _NDIS_802_11_WEP {ULONG Length;ULONG KeyIndex;ULONG KeyLength;UCHAR KeyMaterial[1];} NDIS_802_11_WEP, *PNDIS_802_11_WEP;
+
+/* PNDIS_802_11_ENCRYPTION_STATUS  [extra enum] */
+typedef enum _NDIS_802_11_WEP_STATUS {Ndis802_11WEPEnabled, Ndis802_11Encryption1Enabled = Ndis802_11WEPEnabled,Ndis802_11WEPDisabled, Ndis802_11EncryptionDisabled = Ndis802_11WEPDisabled,Ndis802_11WEPKeyAbsent, Ndis802_11Encryption1KeyAbsent = Ndis802_11WEPNotSupported,Ndis802_11WEPNotSupported, Ndis802_11EncryptionNotSupported = Ndis802_11WEPNotSupported, Ndis802_11Encryption2Enabled, Ndis802_11Encryption2KeyAbsent, Ndis802_11Encryption3Enabled, Ndis802_11Encryption3KeyAbsent} NDIS_802_11_WEP_STATUS, *PNDIS_802_11_WEP_STATUS, NDIS_802_11_ENCRYPTION_STATUS, *PNDIS_802_11_ENCRYPTION_STATUS;
+
+/* PNDIS_802_5_RING_STATE  [extra enum] */
+typedef enum _NDIS_802_5_RING_STATE {NdisRingStateOpened = 1,NdisRingStateClosed,NdisRingStateOpening,NdisRingStateClosing,NdisRingStateOpenFailure,NdisRingStateRingFailure,} NDIS_802_5_RING_STATE, *PNDIS_802_5_RING_STATE;
+
+/* PNDIS_MEDIUM  [extra enum] */
+typedef enum _NDIS_MEDIUM {NdisMedium802_3,NdisMedium802_5,NdisMediumWan,NdisMediumDix,NdisMediumWirelessWan,NdisMediumIrda,NdisMediumBpc,NdisMediumCoWan,NdisMedium1394,NdisMediumMax,} NDIS_MEDIUM, *PNDIS_MEDIUM;
+
+/* PNDIS_PM_WAKE_UP_CAPABILITIES  [extra struct] */
+typedef struct _NDIS_PM_WAKE_UP_CAPABILITIES { NDIS_DEVICE_POWER_STATEMinMagicPacketWakeUp; NDIS_DEVICE_POWER_STATEMinPatternWakeUp;NDIS_DEVICE_POWER_STATEMinLinkChangeWakeUp;} NDIS_PM_WAKE_UP_CAPABILITIES, *PNDIS_PM_WAKE_UP_CAPABILITIES;
+
+/* PNDIS_WAN_MEDIUM_SUBTYPE  [extra enum] */
+typedef enum _NDIS_WAN_MEDIUM_SUBTYPE {NdisWanMediumHub,NdisWanMediumX_25,NdisWanMediumIsdn,NdisWanMediumSerial,NdisWanMediumFrameRelay,NdisWanMediumAtm,NdisWanMediumSonet,NdisWanMediumSW56K,NdisWanMediumPPTP,NdisWanMediumL2TP,NdisWanMediumIrda,NdisWanMediumParallel,NdisWanMediumPppoe,} NDIS_WAN_MEDIUM_SUBTYPE, *PNDIS_WAN_MEDIUM_SUBTYPE;
+
+/* PNDIS_802_11_WEP_STATUS  [extra enum] */
 typedef enum _NDIS_802_11_WEP_STATUS {
   Ndis802_11WEPEnabled,
   Ndis802_11WEPDisabled,
   Ndis802_11WEPKeyAbsent,
   Ndis802_11WEPNotSupported,
 } NDIS_802_11_WEP_STATUS, *PNDIS_802_11_WEP_STATUS;
-typedef enum _NDIS_802_5_RING_STATE {NdisRingStateOpened = 1,NdisRingStateClosed,NdisRingStateOpening,NdisRingStateClosing,NdisRingStateOpenFailure,NdisRingStateRingFailure,} NDIS_802_5_RING_STATE, *PNDIS_802_5_RING_STATE;
-typedef enum _NDIS_MEDIUM {NdisMedium802_3,NdisMedium802_5,NdisMediumWan,NdisMediumDix,NdisMediumWirelessWan,NdisMediumIrda,NdisMediumBpc,NdisMediumCoWan,NdisMedium1394,NdisMediumMax,} NDIS_MEDIUM, *PNDIS_MEDIUM;
-typedef enum _NDIS_WAN_MEDIUM_SUBTYPE {NdisWanMediumHub,NdisWanMediumX_25,NdisWanMediumIsdn,NdisWanMediumSerial,NdisWanMediumFrameRelay,NdisWanMediumAtm,NdisWanMediumSonet,NdisWanMediumSW56K,NdisWanMediumPPTP,NdisWanMediumL2TP,NdisWanMediumIrda,NdisWanMediumParallel,NdisWanMediumPppoe,} NDIS_WAN_MEDIUM_SUBTYPE, *PNDIS_WAN_MEDIUM_SUBTYPE;
 
-/* struct */
-typedef struct _NDIS_802_11_BSSID_LIST {ULONG NumberOfItems;NDIS_WLAN_BSSID Bssid[1];} NDIS_802_11_BSSID_LIST, *PNDIS_802_11_BSSID_LIST;
-typedef struct _NDIS_802_11_CONFIGURATION {ULONG Length;ULONG BeaconPeriod;ULONG ATIMWindow;ULONG DSConfig;NDIS_802_11_CONFIGURATION_FH FHConfig;} NDIS_802_11_CONFIGURATION, *PNDIS_802_11_CONFIGURATION;
-typedef struct _NDIS_802_11_NETWORK_TYPE_LIST { ULONG NumberOfItems; NDIS_802_11_NETWORK_TYPE NetworkType[1];} NDIS_802_11_NETWORK_TYPE_LIST, *PNDIS_802_11_NETWORK_TYPE_LIST;
-typedef struct _NDIS_802_11_SSID {ULONG SsidLength;UCHAR Ssid [32];} NDIS_802_11_SSID, *PNDIS_802_11_SSID;
-typedef struct _NDIS_802_11_STATISTICS {ULONG Length;LARGE_INTEGER TransmittedFragmentCount;LARGE_INTEGER MulticastTransmittedFrameCount;LARGE_INTEGER FailedCount;LARGE_INTEGER RetryCount;LARGE_INTEGER MultipleRetryCount;LARGE_INTEGER RTSSuccessCount;LARGE_INTEGER RTSFailureCount;LARGE_INTEGER ACKFailureCount;LARGE_INTEGER FrameDuplicateCount;LARGE_INTEGER ReceivedFragmentCount;LARGE_INTEGER MulticastReceivedFrameCount;LARGE_INTEGER FCSErrorCount;} NDIS_802_11_STATISTICS, *PNDIS_802_11_STATISTICS;
-typedef struct _NDIS_802_11_WEP {ULONG Length;ULONG KeyIndex;ULONG KeyLength;UCHAR KeyMaterial[1];} NDIS_802_11_WEP, *PNDIS_802_11_WEP;
-typedef struct _NDIS_PM_WAKE_UP_CAPABILITIES { NDIS_DEVICE_POWER_STATEMinMagicPacketWakeUp; NDIS_DEVICE_POWER_STATEMinPatternWakeUp;NDIS_DEVICE_POWER_STATEMinLinkChangeWakeUp;} NDIS_PM_WAKE_UP_CAPABILITIES, *PNDIS_PM_WAKE_UP_CAPABILITIES;
+/* PNDIS_802_11_LSM_PARAMETERS  [extra enum] */
+typedef enum _NDIS_802_11_LSM_PARAMETERS { NDIS_802_11_LSM_MODE Mode;  ULONG PacketLatency;  } NDIS_802_11_LSM_PARAMETERS, * PNDIS_802_11_LSM_PARAMETERS;
+
+/* PNDIS_802_11_RADIO_POWER_STATE  [extra enum] */
+typedef enum _NDIS_802_11_RADIO_POWER_STATE { Ndis802_11RadioPowerState_Off = 0, Ndis802_11RadioPowerState_On = 1, } NDIS_802_11_RADIO_POWER_STATE, *PNDIS_802_11_RADIO_POWER_STATE;
+
+/* PNDIS_802_11_LSM_MODE  [extra enum] */
+typedef enum _NDIS_802_11_LSM_MODE { Ndis802_11LSMOff,  Ndis802_11LSMOn  } NDIS_802_11_LSM_MODE, * PNDIS_802_11_LSM_MODE;
 
 #endif /* _NTDDNDIS_ */

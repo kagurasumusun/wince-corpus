@@ -15,7 +15,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* FileSystemPowerFunction  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
 void FileSystemPowerFunction(
@@ -23,7 +23,7 @@ void FileSystemPowerFunction(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* GetPasswordStatus  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 DWORD GetPasswordStatus(void);

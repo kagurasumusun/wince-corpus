@@ -18,7 +18,5 @@
 
 /* function */
 HRESULT DisplayServices(LPCOLESTRpwszDeviceId,LPCOLESTRpwszDefaultControl,LPCOLESTRpwszClientId);
-HRESULT GetDeviceState( LPCOLESTR pwszDeviceId, DWORD* pdwDeviceState);
-HRESULT GetService( LPCOLESTR pwszDeviceId,LPCOLESTR pwszServiceCategoryId,ICcService** piService);
 
 #endif /* _CCSVCHOST_ */

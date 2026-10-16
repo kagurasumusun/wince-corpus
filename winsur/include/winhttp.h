@@ -11,12 +11,4 @@
 #define _WINHTTP_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct {DWORDdwMajorVersion;DWORDdwMinorVersion;} HTTP_VERSION_INFO, *LPHTTP_VERSION_INFO;
-
 #endif /* _WINHTTP_ */

@@ -66,12 +66,7 @@ typedef struct phonecaps_tag{
  DWORD dwMonitoredHeadsetHookSwitchModes;
 } PHONECAPS;
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
+/* PUNIMODEM_INFO  [extra struct] */
 typedef struct UNIMODEM_INFO_tag {WORDwDeviceType;WORDwActive;DWORDdwPPPMTU;} UNIMODEM_INFO, * PUNIMODEM_INFO;
 
 #endif /* _UNIMODEM_ */

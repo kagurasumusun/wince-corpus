@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 39 constants, 12 declarations, 0 outlines, 0 base types, 0 extra macros, 8 extra decls
+ * 39 constants, 12 declarations, 0 outlines, 0 base types, 0 extra macros, 6 extra decls
  */
 #ifndef _SSPI_
 #define _SSPI_
@@ -54,8 +54,6 @@
 #define SECPKG_CRED_ATTR_NAMES 1
 #define SECPKG_CRED_BOTH (SECPKG_CRED_OUTBOUND|SECPKG_CRED_INBOUND)
 #define UNISP_NAME UNISP_NAME_W
-#define UNISP_NAME_A "Microsoft
-#define UNISP_NAME_W L"Microsoft
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -86,17 +84,22 @@ typedef struct _SecPkgContext_StreamSizes {
  unsigned long cbBlockSize;
 }SecPkgContext_StreamSizes, *PSecPkgContext_StreamSizes;
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
+/* PSecPkgContext_Authority  [extra struct] */
 typedef struct _SecPkgContext_Authority {SEC_CHAR SEC_FAR* sAuthorityName;} SecPkgContext_Authority, *PSecPkgContext_Authority;
+
+/* PSecPkgContext_KeyInfo  [extra struct] */
 typedef struct _SecPkgContext_KeyInfo {SEC_CHARSEC_FAR* sSignatureAlgorithmName;SEC_CHAR SEC_FAR* sEncryptAlgorithmName;ULONG KeySize;ULONG SignatureAlgorithm;ULONG EncryptAlgorithm;} SecPkgContext_KeyInfo, SEC_FAR *PSecPkgContext_KeyInfo;
-typedef struct _SecPkgCredentials_Names {SEC_CHAR SEC_FAR* sUserName;} SecPkgCredentials_Names, SEC_FAR *PSecPkgCredentials_Names;
-typedef struct _SecPkgInfo {ULONG fCapabilities;USHORT wVersion;USHORT wRPCID;ULONG cbMaxToken;SEC_CHAR SEC_FAR* Name;SEC_CHAR SEC_FAR* Comment;} SecPkgInfo, SEC_FAR *PSecPkgInfo;
-typedef struct _SECURITY_FUNCTION_TABLE_W { unsigned long dwVersion; ENUMERATE_SECURITY_PACKAGES_FN_W EnumerateSecurityPackagesW; QUERY_CREDENTIALS_ATTRIBUTES_FN_W QueryCredentialsAttributesW; ACQUIRE_CREDENTIALS_HANDLE_FN_W AcquireCredentialsHandleW; FREE_CREDENTIALS_HANDLE_FN FreeCredentialsHandle; void SEC_FAR *Reserved2; INITIALIZE_SECURITY_CONTEXT_FN_W InitializeSecurityContextW; ACCEPT_SECURITY_CONTEXT_FN AcceptSecurityContext; COMPLETE_AUTH_TOKEN_FN CompleteAuthToken; DELETE_SECURITY_CONTEXT_FN DeleteSecurityContext; APPLY_CONTROL_TOKEN_FN ApplyControlToken; QUERY_CONTEXT_ATTRIBUTES_FN_W QueryContextAttributesW; IMPERSONATE_SECURITY_CONTEXT_FN ImpersonateSecurityContext; REVERT_SECURITY_CONTEXT_FN RevertSecurityContext; MAKE_SIGNATURE_FN MakeSignature; VERIFY_SIGNATURE_FN VerifySignature; FREE_CONTEXT_BUFFER_FN FreeContextBuffer; QUERY_SECURITY_PACKAGE_INFO_FN_W QuerySecurityPackageInfoW; void SEC_FAR * Reserved3; void SEC_FAR * Reserved4; void SEC_FAR * Reserved5; void SEC_FAR * Reserved6; void SEC_FAR * Reserved7; void SEC_FAR * Reserved8; QUERY_SECURITY_CONTEXT_TOKEN_FN QuerySecurityContextToken; ENCRYPT_MESSAGE_FN EncryptMessage; DECRYPT_MESSAGE_FN DecryptMessage;} SecurityFunctionTableW, SEC_FAR * PSecurityFunctionTableW;
+
+/* pSecPkgContext_Names  [extra struct] */
 typedef struct _SecPkgContext_Names {SEC_CHARSEC_FAR* sUserName;} SecPkgContext_Names, SEC_FAR *pSecPkgContext_Names;
+
+/* PSecPkgCredentials_Names  [extra struct] */
+typedef struct _SecPkgCredentials_Names {SEC_CHAR SEC_FAR* sUserName;} SecPkgCredentials_Names, SEC_FAR *PSecPkgCredentials_Names;
+
+/* PSecPkgInfo  [extra struct] */
+typedef struct _SecPkgInfo {ULONG fCapabilities;USHORT wVersion;USHORT wRPCID;ULONG cbMaxToken;SEC_CHAR SEC_FAR* Name;SEC_CHAR SEC_FAR* Comment;} SecPkgInfo, SEC_FAR *PSecPkgInfo;
+
+/* PSecurityFunctionTableW  [extra struct] */
+typedef struct _SECURITY_FUNCTION_TABLE_W { unsigned long dwVersion; ENUMERATE_SECURITY_PACKAGES_FN_W EnumerateSecurityPackagesW; QUERY_CREDENTIALS_ATTRIBUTES_FN_W QueryCredentialsAttributesW; ACQUIRE_CREDENTIALS_HANDLE_FN_W AcquireCredentialsHandleW; FREE_CREDENTIALS_HANDLE_FN FreeCredentialsHandle; void SEC_FAR *Reserved2; INITIALIZE_SECURITY_CONTEXT_FN_W InitializeSecurityContextW; ACCEPT_SECURITY_CONTEXT_FN AcceptSecurityContext; COMPLETE_AUTH_TOKEN_FN CompleteAuthToken; DELETE_SECURITY_CONTEXT_FN DeleteSecurityContext; APPLY_CONTROL_TOKEN_FN ApplyControlToken; QUERY_CONTEXT_ATTRIBUTES_FN_W QueryContextAttributesW; IMPERSONATE_SECURITY_CONTEXT_FN ImpersonateSecurityContext; REVERT_SECURITY_CONTEXT_FN RevertSecurityContext; MAKE_SIGNATURE_FN MakeSignature; VERIFY_SIGNATURE_FN VerifySignature; FREE_CONTEXT_BUFFER_FN FreeContextBuffer; QUERY_SECURITY_PACKAGE_INFO_FN_W QuerySecurityPackageInfoW; void SEC_FAR * Reserved3; void SEC_FAR * Reserved4; void SEC_FAR * Reserved5; void SEC_FAR * Reserved6; void SEC_FAR * Reserved7; void SEC_FAR * Reserved8; QUERY_SECURITY_CONTEXT_TOKEN_FN QuerySecurityContextToken; ENCRYPT_MESSAGE_FN EncryptMessage; DECRYPT_MESSAGE_FN DecryptMessage;} SecurityFunctionTableW, SEC_FAR * PSecurityFunctionTableW;
 
 #endif /* _SSPI_ */

@@ -20,12 +20,4 @@
 #define L2TP_IPSEC_AUTH_PRESHAREDKEY 0x2
 #define L2TP_IPSEC_AUTH_SIGNATURE 0x1
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _L2TP_CONFIG_DATA{ DWORDdwVersion;DWORDdwAuthType;DWORDdwFlags;DWORDcbKey;DWORDdwOffsetKey;DWORDcMyCerts;DWORDcRootCerts;DWORDdwOffsetCertHashes;} L2TP_CONFIG_DATA, *PL2TP_CONFIG_DATA;
-
 #endif /* _LT2PCFG_ */

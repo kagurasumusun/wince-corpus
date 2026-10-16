@@ -39,19 +39,12 @@ typedef enum _PH_APPLICATION
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* PHGetAppWindow  [function; ce-only; CE 6.0..699; PhCommon.dll] */
 HWND PHGetAppWindow(
  PH_APPLICATION Id,
  BOOL SleepRetry
-);
-
-/* PHLaunchProcess  [function; ce-only; CE 6.0..699; PhCommon.dll] */
-HRESULT PHLaunchProcess(
- WCHAR* pApplicationName,
- WCHAR* pArguments,
- HPROCESS* pHandle
 );
 
 /* PHSendCommandLine  [function; ce-only; CE 6.0..699; PhCommon.dll] */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 3 constants, 222 declarations, 21 outlines, 0 base types, 0 extra macros, 26 extra decls
+ * 3 constants, 222 declarations, 21 outlines, 0 base types, 0 extra macros, 18 extra decls
  */
 #ifndef _RIL_
 #define _RIL_
@@ -525,1000 +525,7 @@ typedef struct {
  RILSERVICEINFO rsiServiceInfo;
 } RILRINGINFO;
 
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* RIL_AddCallForwarding  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_AddCallForwarding(
- HRIL hRil,
- DWORD dwReason,
- const RILCALLFORWARDINGSETTINGS* lpSettings,
- DWORD dwAddressId
-);
-
-/* RIL_AddPreferredOperator  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_AddPreferredOperator(
- HRIL hRil,
- DWORD dwIndex,
- const RILOPERATORNAMES* lpOperatorNames
-);
-
-/* RIL_Answer  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_Answer(
- HRIL hRil
-);
-
-/* RIL_CancelSupServiceDataSession  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_CancelSupServiceDataSession(
- HRIL hRil
-);
-
-/* RIL_ChangeCallBarringPassword  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_ChangeCallBarringPassword(
- HRIL hRil,
- DWORD dwType,
- LPCSTR lpwszOldPassword,
- LPCSTR lpwszNewPassword
-);
-
-/* RIL_ChangeLockingPassword  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT
- RIL_ChangeLockingPassword(
- HRIL hRil,
- DWORD dwFacility,
- LPCSTR lpszOldPassword,
- LPCSTR lpszNewPassword
-);
-
-/* RIL_ClearCCBSRegistration  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_ClearCCBSRegistration(
- HRIL hRil,
- DWORD dwCCBSIndex
-);
-
-/* RIL_Deinitialize  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_Deinitialize(
- HRIL hRil
-);
-
-/* RIL_DeleteGPRSContext  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_DeleteGPRSContext(
- HRIL hRil,
- DWORD dwContextID
-);
-
-/* RIL_DeleteMinimumQualityOfService  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_DeleteMinimumQualityOfService(
- HRIL hRil,
- DWORD dwContextID
-);
-
-/* RIL_DeleteMsg  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_DeleteMsg(
- HRIL hRil,
- DWORD dwIndex
-);
-
-/* RIL_DeletePhonebookEntry  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_DeletePhonebookEntry(
- HRIL hRil,
- DWORD dwIndex
-);
-
-/* RIL_DeleteRequestedQualityOfService  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_DeleteRequestedQualityOfService(
- HRIL hRil,
- DWORD dwContextID
-);
-
-/* RIL_Dial  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_Dial(
- HRIL hRil,
- LPCSTR lpszAddress,
- DWORD dwType,
- DWORD dwOptions
-);
-
-/* RIL_DisableNotifications  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_DisableNotifications(
- HRIL hRil,
- DWORD dwNotificationClasses
-);
-
-/* RIL_EnableNotifications  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_EnableNotifications(
- HRIL hRil,
- DWORD dwNotificationClasses
-);
-
-/* RIL_EnterGPRSDataMode  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_EnterGPRSDataMode(
- HRIL hRil,
- const RILENTERGPRSDATAMODE* lpEnterGprsDataMode
-);
-
-/* RIL_FetchSimToolkitCmd  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_FetchSimToolkitCmd(
- HRIL hRil
-);
-
-/* RIL_GetAllOperatorsList  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetAllOperatorsList(
- HRIL hRil
-);
-
-/* RIL_GetATR  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetATR(
- HRIL hRil
-);
-
-/* RIL_GetAudioDevices  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetAudioDevices(
- HRIL hRil
-);
-
-/* RIL_GetAudioGain  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetAudioGain(
- HRIL hRil
-);
-
-/* RIL_GetAudioMuting  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetAudioMuting(
- HRIL hRil
-);
-
-/* RIL_GetBearerServiceOptions  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetBearerServiceOptions(
- HRIL hRil
-);
-
-/* RIL_GetCallBarringStatus  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetCallBarringStatus(
- HRIL hRil,
- DWORD dwType,
- DWORD dwInfoClass,
- LPCSTR lpszPassword
-);
-
-/* RIL_GetCallerIdSettings  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetCallerIdSettings(
- HRIL hRil
-);
-
-/* RIL_GetCallForwardingSettings  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetCallForwardingSettings(
- HRIL hRil,
- DWORD dwReason,
- DWORD dwAddressId
-);
-
-/* RIL_GetCallWaitingSettings  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetCallWaitingSettings(
- HRIL hRil
- DWORD dwInfoClass
-);
-
-/* RIL_GetCCBSStatus  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetCCBSStatus(
- HRIL hRil,
- DWORD dwCCBSIndex
-);
-
-/* RIL_GetCellBroadcastMsgConfig  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetCellBroadcastMsgConfig(
- HRIL hRil
-);
-
-/* RIL_GetCellTowerInfo  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetCellTowerInfo(
- HRIL hRil
-);
-
-/* RIL_GetClosedGroupSettings  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetClosedGroupSettings(
- HRIL hRil
-);
-
-/* RIL_GetCurrentAddressId  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetCurrentAddressId(
- HRIL hRil
-);
-
-/* RIL_GetCurrentOperator  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetCurrentOperator(
- HRIL hRil,
- DWORD dwFormat
-);
-
-/* RIL_GetCurrentPrivacyStatus  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetCurrentPrivacyStatus(
- HRIL hRil
-);
-
-/* RIL_GetCurrentSystemType  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetCurrentSystemType(
- HRIL hRil
-);
-
-/* RIL_GetDataCompression  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetDataCompression(
- HRIL hRil
-);
-
-/* RIL_GetDevCaps  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetDevCaps(
- HRIL hRil,
- DWORD dwCapsType
-);
-
-/* RIL_GetDialedIdSettings  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetDialedIdSettings(
- HRIL hRil
-);
-
-/* RIL_GetDriverVersion  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetDriverVersion(
- HRIL hRil,
- DWORD *pdwVersion
-);
-
-/* RIL_GetEquipmentInfo  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetEquipmentInfo(
- HRIL hRil
-);
-
-/* RIL_GetEquipmentState  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetEquipmentState(
- HRIL hRil
-);
-
-/* RIL_GetErrorCorrection  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetErrorCorrection(
- HRIL hRil
-);
-
-/* RIL_GetGPRSAddress  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetGPRSAddress(
- HRIL hRil,
- DWORD dwContextID
-);
-
-/* RIL_GetGPRSAttached  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetGPRSAttached(
- HRIL hRil
-);
-
-/* RIL_GetGPRSClass  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetGPRSClass(
- HRIL hRil
-);
-
-/* RIL_GetGPRSContextActivatedList  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetGPRSContextActivatedList(
- HRIL hRil
-);
-
-/* RIL_GetGPRSContextList  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetGPRSContextList(
- HRIL hRil
-);
-
-/* RIL_GetGPRSRegistrationStatus  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetGPRSRegistrationStatus(
- HRIL hRil
-);
-
-/* RIL_GetHideConnectedIdSettings  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetHideConnectedIdSettings(
- HRIL hRil
-);
-
-/* RIL_GetHideIdSettings  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetHideIdSettings(
- HRIL hRil
-);
-
-/* RIL_GetHSCSDCallSettings  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetHSCSDCallSettings(
- HRIL hRil
-);
-
-/* RIL_GetHSCSDOptions  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetHSCSDOptions(
- HRIL hRil
-);
-
-/* RIL_GetLockingStatus  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetLockingStatus(
- HRIL hRil,
- DWORD dwFacility,
- LPCSTR lpszPassword
-);
-
-/* RIL_GetMinimumQualityOfServiceList  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetMinimumQualityOfServiceList(
- HRIL hRil
-);
-
-/* RIL_GetMOSMSService  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetMOSMSService(
- HRIL hRil
-);
-
-/* RIL_GetMsgConfig  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetMsgConfig(
- HRIL hRil
-);
-
-/* RIL_GetMsgServiceOptions  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetMsgServiceOptions(
- HRIL hRil
-);
-
-/* RIL_GetOperatorList  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetOperatorList(
- HRIL hRil
-);
-
-/* RIL_GetPacketByteCount  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetPacketByteCount(
- HRIL hRil
-);
-
-/* RIL_GetPhonebookOptions  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetPhonebookOptions(
- HRIL hRil
-);
-
-/* RIL_GetPhoneLockedState  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetPhoneLockedState(
- HRIL hRil
-);
-
-/* RIL_GetPreferredOperatorList  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetPreferredOperatorList(
- HRIL hRil,
- DWORD dwFormat
-);
-
-/* RIL_GetPreferredPrivacyMode  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetPreferredPrivacyMode(
- HRIL hRil
-);
-
-/* RIL_GetRadioPresence  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetRadioPresence(
- HRIL hRIL,
- DWORD* dwRadioPresence
-);
-
-/* RIL_GetRegistrationStatus  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetRegistrationStatus(
- HRIL hRil
-);
-
-/* RIL_GetRequestedQualityOfServiceList  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetRequestedQualityOfServiceList(
- HRIL hRil
-);
-
-/* RIL_GetRLPOptions  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetRLPOptions(
- HRIL hRil
-);
-
-/* RIL_GetRoamingMode  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetRoamingMode(
- HRIL hRil
-);
-
-/* RIL_GetSerialPortHandle  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetSerialPortHandle(
- HRIL hRil,
- HANDLE* lphSerial
-);
-
-/* RIL_GetSerialPortHandleFromContextID  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetSerialPortHandleFromContextID(
- HRIL hRil,
- DWORD dwContextID,
- HANDLE *lphSerial
-);
-
-/* RIL_GetSerialPortStatistics  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetSerialPortStatistics(
- HRIL hRil,
- RILSERIALPORTSTATS* lpSerialPortStats
-);
-
-/* RIL_GetSignalQuality  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetSignalQuality(
- HRIL hRil
-);
-
-/* RIL_GetSimRecordStatus  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetSimRecordStatus(
- HRIL hRil,
- DWORD dwFileID
-);
-
-/* RIL_GetSimToolkitProfile  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetSimToolkitProfile(
- HRIL hRil
-);
-
-/* RIL_GetSubscriberNumbers  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetSubscriberNumbers(
- HRIL hRil
-);
-
-/* RIL_GetSystemTime  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetSystemTime(
- HRIL hRil
-);
-
-/* RIL_GetUserIdentity  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GetUserIdentity(
- HRIL hRil
-);
-
-/* RIL_GPRSAnswer  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_GPRSAnswer(
- HRIL hRil
-);
-
-/* RIL_Hangup  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_Hangup(
- HRIL hRil
-);
-
-/* RIL_Initialize  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_Initialize(
- DWORD dwIndex,
- RILRESULTCALLBACK pfnResult,
- RILNOTIFYCALLBACK pfnNotify,
- DWORD dwNotificationClasses,
- DWORD dwParam,
- HRIL* lphRil
-);
-
-/* RIL_InitializeEmergency  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_InitializeEmergency(
- DWORD dwIndex,
- RILRESULTCALLBACK pfnResult,
- RILNOTIFYCALLBACK pfnNotify,
- DWORD dwNotificationClasses,
- DWORD dwParam,
- HRIL* lphRil
-);
-
-/* RIL_LogEventToRadio  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_LogEventToRadio(
- HRIL hRil,
- LPCSTR lpszChars
-);
-
-/* RIL_ManageCalls  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_ManageCalls(
- HRIL hRil,
- DWORD dwCommand,
- DWORD dwID
-);
-
-/* RIL_NDIS_ReceivePacketDone  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_NDIS_ReceivePacketDone (
- HRIL hRil,
- Const RILNDISPACKET* pPacketReceived
-);
-
-/* RIL_NDIS_SendPacket  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_NDIS_SendPacket (
- HRIL hRil,
- const RILNDISPACKET* pPacketToSend
-);
-
-/* RIL_NDIS_SetGPRSContextActivated  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_NDIS_ SetGPRSContextActivated (
- HRIL hRil,
- Const RILNDISGPRSCONTEXT* pGprsContext
-);
-
-/* RIL_ReadMsg  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_ReadMsg(
- HRIL hRil,
- DWORD dwIndex
-);
-
-/* RIL_ReadPhonebookEntries  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_ReadPhonebookEntries(
- HRIL hRil,
- DWORD dwStartIndex,
- DWORD dwEndIndex
-);
-
-/* RIL_RegisterOnNetwork  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_RegisterOnNetwork(
- HRIL hRil,
- DWORD dwMode,
- const RILOPERATORNAMES* lpOperatorNames
-);
-
-/* RIL_RemoveCallForwarding  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_RemoveCallForwarding(
- HRIL hRil,
- DWORD dwReason,
- DWORD dwInfoClasses,
- );
-
-/* RIL_RemovePreferredOperator  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_RemovePreferredOperator(
- HRIL hRil,
- DWORD dwIndex
-);
-
-/* RIL_ResetPacketByteCount  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_ResetPacketByteCount(
- HRIL hRil
-);
-
-/* RIL_SendAKey  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SendAKey(
- HRIL hRil,
- LPCSTR lpszChars
-);
-
-/* RIL_SendDTMF  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SendDTMF(
- HRIL hRil,
- LPCSTR lpszChars,
- DWORD dwDuration
-);
-
-/* RIL_SendFlash  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SendFlash(
- HRIL hRil,
- LPRILADDRESS lpraRilAddress
-);
-
-/* RIL_SendMsg  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SendMsg(
- HRIL hRil,
- const RILMESSAGE* lpMessage,
- DWORD dwOptions
-);
-
-/* RIL_SendMsgAcknowledgement  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SendMsgAcknowledgement(
- HRIL hRil,
- BOOL fSuccess
-);
-
-/* RIL_SendRestrictedSimCmd  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SendRestrictedSimCmd(
- HRIL hRil,
- DWORD dwCommand,
- const RILSIMCMDPARAMETERS* lpParameters,
- const BYTE* lpbData,
- DWORD dwSize
-);
-
-/* RIL_SendSimCmd  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SendSimCmd(
- HRIL hRil,
- const BYTE* lpbCommand,
- DWORD dwSize
-);
-
-/* RIL_SendSimToolkitCmdResponse  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SendSimToolkitCmdResponse(
- HRIL hRil,
- const RILSIMTOOLKITRSP* pRsp,
- const LPBYTE pDetails,
- DWORD dwDetailSize
-);
-
-/* RIL_SendSimToolkitEnvelopeCmd  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SendSimToolkitEnvelopeCmd(
- HRIL hRil,
- const BYTE* lpbCommand,
- DWORD dwSize
-);
-
-/* RIL_SendSimToolkitEventDownload  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SendSimToolkitEventDownload(
- HRIL hRil,
- const DWORD dwEvent,
- const LPBYTE pData,
- DWORD dwDataSize
-);
-
-/* RIL_SendStoredMsg  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SendStoredMsg(
- HRIL hRil,
- DWORD dwIndex,
- DWORD dwOptions
-);
-
-/* RIL_SendSupServiceData  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SendSupServiceData(
- HRIL hRil,
- const BYTE* lpbData,
- DWORD dwSize
-);
-
-/* RIL_SetAudioDevices  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetAudioDevices(
- HRIL hRil,
- const RILAUDIODEVICEINFO* lpAudioDeviceInfo
-);
-
-/* RIL_SetAudioGain  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetAudioGain(
- HRIL hRil,
- const RILGAININFO* lpGainInfo
-);
-
-/* RIL_SetAudioMuting  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetAudioMuting(
- HRIL hRil,
- BOOL fEnable
-);
-
-/* RIL_SetBearerServiceOptions  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetBearerServiceOptions(
- HRIL hRil,
- const RILBEARERSVCINFO* lpBearerServiceInfo
-);
-
-/* RIL_SetCallBarringStatus  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetCallBarringStatus(
- HRIL hRil,
- DWORD dwType,
- DWORD dwInfoClass,
- LPCSTR lpszPassword,
- DWORD dwStatus
-);
-
-/* RIL_SetCallerIdStatus  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetCallerIdStatus(
- HRIL hRil,
- DWORD dwStatus
-);
-
-/* RIL_SetCallForwardingStatus  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetCallForwardingStatus(
- HRIL hRil,
- DWORD dwReason,
- DWORD dwInfoClasses,
- DWORD dwStatus,
- );
-
-/* RIL_SetCallWaitingStatus  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetCallWaitingStatus(
- HRIL hRil,
- DWORD dwInfoClasses,
- DWORD dwStatus
-);
-
-/* RIL_SetCellBroadcastMsgConfig  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetCellBroadcastMsgConfig(
- HRIL hRil,
- const RILCBMSGCONFIG* lpCbMsgConfigInfo
-);
-
-/* RIL_SetClosedGroupSettings  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetClosedGroupSettings(
- HRIL hRil,
- const RILCLOSEDGROUPSETTINGS* lpSettings
-);
-
-/* RIL_SetCostInfo  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetCostInfo(
- HRIL hRil,
- const RILCOSTINFO* lpCostInfo,
- LPCSTR lpszPassword
-);
-
-/* RIL_SetCurrentAddressId  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetCurrentAddressId(
- HRIL hRil,
- DWORD dwAddressId
-);
-
-/* RIL_SetDataCompression  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetDataCompression(
- HRIL hRil,
- const RILDATACOMPINFO* lpDataCompInfo
-);
-
-/* RIL_SetDialedIdStatus  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetDialedIdStatus(
- HRIL hRil,
- DWORD dwStatus
-);
-
-/* RIL_SetDTMFMonitoring  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetDTMFMonitoring(
- HRIL hRil,
- BOOL fEnable
-);
-
-/* RIL_SetEquipmentState  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetEquipmentState(
- HRIL hRil,
- DWORD dwEquipmentState
-);
-
-/* RIL_SetErrorCorrection  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetErrorCorrection(
- HRIL hRil,
- const RILERRORCORRECTIONINFO* lpErrorCorrectionInfo
-);
-
-/* RIL_SetGPRSAttached  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetGPRSAttached(
- HRIL hRil,
- BOOL fAttached
-);
-
-/* RIL_SetGPRSClass  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetGPRSClass(
- HRIL hRil,
- DWORD dwClass
-);
-
-/* RIL_SetGPRSContext  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetGPRSContext(
- HRIL hRil,
- const RILGPRSCONTEXT* lpGprsContext
-);
-
-/* RIL_SetGPRSContextActivated  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetGPRSContextActivated(
- HRIL hRil,
- DWORD dwContextID,
- BOOL fContextActivation
-);
-
-/* RIL_SetHideConnectedIdStatus  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetHideConnectedIdStatus(
- HRIL hRil,
- DWORD dwStatus
-);
-
-/* RIL_SetHideIdStatus  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetHideIdStatus(
- HRIL hRil,
- DWORD dwStatus
-);
-
-/* RIL_SetHSCSDOptions  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetHSCSDOptions(
- HRIL hRil,
- const RILHSCSDINFO* lpHscsdInfo
-);
-
-/* RIL_SetLockingStatus  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetLockingStatus(
- HRIL hRil,
- DWORD dwFacility,
- LPCSTR lpszPassword,
- DWORD dwStatus
-);
-
-/* RIL_SetMinimumQualityOfService  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetMinimumQualityOfService(
- HRIL hRil,
- const RILGPRSQOSPROFILE* lpGprsQosProfile
-);
-
-/* RIL_SetMOSMSService  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetMOSMSService(
- HRIL hRil,
- DWORD dwMoSmsService
-);
-
-/* RIL_SetMsgConfig  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetMsgConfig(
- HRIL hRil,
- const RILMSGCONFIG* lpMsgConfigInfo
-);
-
-/* RIL_SetMsgServiceOptions  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetMsgServiceOptions(
- HRIL hRil,
- const RILMSGSERVICEINFO* lpMsgServiceInfo
-);
-
-/* RIL_SetPhonebookOptions  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetPhonebookOptions(
- HRIL hRil,
- const RILPHONEBOOKINFO* lpPhonebookInfo
-);
-
-/* RIL_SetPreferredPrivacyMode  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetPreferredPrivacyMode(
- HRIL hRil,
- DWORD dwPreferredPrivacyMode
-);
-
-/* RIL_SetRequestedQualityOfService  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetRequestedQualityOfService(
- HRIL hRil,
- const RILGPRSQOSPROFILE* lpGprsQosProfile
-);
-
-/* RIL_SetRLPOptions  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetRLPOptions(
- HRIL hRil,
- const RILRLPINFO* lpRlpInfo
-);
-
-/* RIL_SetRoamingMode  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetRoamingMode(
- HRIL hRil,
- DWORD dwRoamingMode
-);
-
-/* RIL_SetSimToolkitProfile  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_SetSimToolkitProfile(
- HRIL hRil,
- const BYTE* lpbProfile,
- DWORD dwSize
-);
-
-/* RIL_TerminateSimToolkitSession  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_TerminateSimToolkitSession(
- HRIL hRil,
- DWORD dwCause
-);
-
-/* RIL_TransferCall  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_TransferCall(
- HRIL hRil,
- const RILADDRESS* lpAddress,
- const RILSUBADDRESS* lpSubAddress
-);
-
-/* RIL_UnlockPhone  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_UnlockPhone(
- HRIL hRil,
- LPCSTR lpszPassword,
- LPCSTR lpszNewPassword
-);
-
-/* RIL_UnregisterFromNetwork  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_UnregisterFromNetwork(
- HRIL hRil
-);
-
-/* RIL_WriteMsg  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_WriteMsg(
- HRIL hRil,
- const RILMESSAGE* lpMessage,
- DWORD dwStatus
-);
-
-/* RIL_WritePhonebookEntry  [function; ce-only; CE 6.0..699; Ril.lib] */
-HRESULT RIL_WritePhonebookEntry(
- HRIL hRil,
- const RILPHONEBOOKENTRY* lpEntry
-);
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* typedef */
-typedef void (CALLBACK *RILRESULTCALLBACK)( DWORD dwCode, HRESULT hrCmdID, const void* lpData, DWORD cbData, DWORD dwParam );
-typedef DWORD (CALLBACK *RILCALLTYPECALLBACK)( const RILREMOTEPARTYINFO* const pRemotePartyInfo );
-typedef void (CALLBACK *RILNDISRECEIVECALLBACK)( PVOID pCallbackContext, LPRILNDISPACKET pRilPacket );
-typedef void (CALLBACK *RILNDISSTATUSCALLBACK)( PVOID pCallbackContext, LPRILNDISSTATUS pRilStatus );
-
-/* struct */
-typedef struct rilatrinfo_tag {
-  DWORD cbSize;
-  DWORD dwParams;
-  DWORD dwPhase;
-  DWORD cbATRSize;
-  BYTE rgbATR[MAXLENGTH_ATR];
-} RILATRINFO, *LPRILATRINFO;
-typedef struct rilbytecounter_tag {
-  DWORD cbSize;
-  DWORD dwParams;
-  DWORD dwRxByte;
-  DWORD dwTxByte;
-  DWORD dwTotalByte;
-} RILBYTECOUNTER, *LPRILBYTECOUNTER;
-typedef struct {
-  DWORD cbSize;
-  DWORD dwParams;
-  DWORD dwOriginalRequest;
-  DWORD dwOriginalFallback;
-  DWORD dwAnswererFallback;
-} RILCAPSERRORCORRECTION, *LPRILCAPSERRORCORRECTION;
-typedef struct {
-  DWORD cbSize;
-  DWORD dwParams;
-  DWORD dwMaxAddressLength;
-  DWORD dwMaxTextLength;
-} RILCAPSPBENTRYLENGTH, *LPRILCAPSPBENTRYLENGTH;
-typedef struct rilcbmsgconfig_tag {
-  DWORD cbSize;
-  DWORD dwParams;
-  DWORD dwBroadcastMsgLangs;
-  BOOL fAccept;
-  RILRANGE rgrrBroadcastMsgIDs[];
-} RILCBMSGCONFIG, *LPRILCBMSGCONFIG;
-typedef struct {
-  DWORD cbSize;
-  DWORD dwParams;
-  DWORD dwProtocolType;
-  RILRANGE ContextIDRange;
-  DWORD dwDataCompression;
-  DWORD dwHeaderCompression;
-  DWORD dwParameterLength;
-  char szParameters[];
-} RILGPRSCONTEXTCAPS, *LPRILGPRSCONTEXTCAPS;
-typedef struct {
-  DWORD cbSize;
-  DWORD dwParams;
-  DWORD dwProtocolType;
-  DWORD dwPrecedenceClass;
-  DWORD dwDelayClass;
-  DWORD dwReliabilityClass;
-  DWORD dwPeakThruClass;
-  char dwMeanThruClass;
-} RILGPRSQOSPROFILECAPS, *LPRILGPRSQOSPROFILECAPS;
-typedef struct rillocationinfo_tag {
-  DWORD cbSize;
-  DWORD dwLocationAreaCode;
-  DWORD dwCellID;
-} RILLOCATIONINFO, *LPRILLOCATIONINFO;
-typedef struct rilndisbuffer_tag { const BYTE *pbyBytes; DWORD cByteCount; } RILNDISBUFFER, *LPRILNDISBUFFER;
-typedef struct rilndisgprscontext_tag {
-  DWORD cbSize;
-  DWORD dwParams;
-  DWORD dwContextID;
-  BOOL fContextActivation;
-  TCHAR tszUserName[NDIS_GPRS_USERNAME_MAX_LENGTH];
-  TCHAR tszPassword[NDIS_GPRS_PASSWORD_MAX_LENGTH];
-  TCHAR tszDNS1[NDIS_GRPS_DNS_MAX_LENGTH];
-  TCHAR tszDNS2[NDIS_GRPS_DNS_MAX_LENGTH];
-  RILNDISRECEIVECALLBACK pfnNdisReceive;
-  RILNDISTRANSMITCALLBACK pfnNdisTransmit;
-  RILNDISSTATUSCALLBACK pfnNdisStatus;
-  PVOID pCallbackContext;
-} RILNDISGPRSCONTEXT, *LPRILNDISGPRSCONTEXT;
-typedef struct rilndisipv6addr_tag {
-  union
-  {
-    UCHAR Byte[IPV6_ADDRESS_LENGTH_IN_UCHAR];
-    USHORT Word[IPV6_ADDRESS_LENGTH_IN_USHORT];
-  };
-} RILNDISIPV6ADDR, *LPRILNDISIPV6ADDR;
-typedef struct rilndispacket_tag {
-  DWORD dwSize;
-  DWORD dwContextID;
-  DWORD cBufferCount;
-  const RILNDISBUFFER NDISBuffer[1];
-} RILNDISPACKET, *LPRILNDISPACKET;
-typedef struct rilndisstatus_tag {
-  DWORD dwContextId;
-  DWORD dwSize;
-  DWORD dwStatusType;
-  union
-  {
-    LPRILNDISIPCONFIG pRilNdisIpConfig;
-    DWORD dwFlowControl;
-  };
-} RILNDISSTATUS, *LPRILNDISSTATUS;
-typedef struct rilrange_tag { DWORD dwMinValue; DWORD dwMaxValue; } RILRANGE, *LPRILRING;
+/* LPRILSIMTOOLKITEVENTCAPS  [extra struct] */
 typedef struct rilsimtoolkiteventcaps_tag {
   DWORD cbSize;
   DWORD dwParams;
@@ -1534,6 +541,57 @@ typedef struct rilsimtoolkiteventcaps_tag {
   DWORD dwChannelStatus;
   DWORD dwDisplayChange;
 } RILSIMTOOLKITEVENTCAPS, *LPRILSIMTOOLKITEVENTCAPS;
+
+/* LPRILCAPSPBENTRYLENGTH  [extra struct] */
+typedef struct {
+  DWORD cbSize;
+  DWORD dwParams;
+  DWORD dwMaxAddressLength;
+  DWORD dwMaxTextLength;
+} RILCAPSPBENTRYLENGTH, *LPRILCAPSPBENTRYLENGTH;
+
+/* dwParam  [extra typedef] */
+typedef void (CALLBACK *RILRESULTCALLBACK)( DWORD dwCode, HRESULT hrCmdID, const void* lpData, DWORD cbData, DWORD dwParam );
+
+/* LPRILBYTECOUNTER  [extra struct] */
+typedef struct rilbytecounter_tag {
+  DWORD cbSize;
+  DWORD dwParams;
+  DWORD dwRxByte;
+  DWORD dwTxByte;
+  DWORD dwTotalByte;
+} RILBYTECOUNTER, *LPRILBYTECOUNTER;
+
+/* LPRILNDISSTATUS  [extra struct] */
+typedef struct rilndisstatus_tag {
+  DWORD dwContextId;
+  DWORD dwSize;
+  DWORD dwStatusType;
+  union
+  {
+    LPRILNDISIPCONFIG pRilNdisIpConfig;
+    DWORD dwFlowControl;
+  };
+} RILNDISSTATUS, *LPRILNDISSTATUS;
+
+/* LPRILRING  [extra struct] */
+typedef struct rilrange_tag { DWORD dwMinValue; DWORD dwMaxValue; } RILRANGE, *LPRILRING;
+
+/* LPRILNDISPACKET  [extra struct] */
+typedef struct rilndispacket_tag {
+  DWORD dwSize;
+  DWORD dwContextID;
+  DWORD cBufferCount;
+  const RILNDISBUFFER NDISBuffer[1];
+} RILNDISPACKET, *LPRILNDISPACKET;
+
+/* pRilStatus  [extra typedef] */
+typedef void (CALLBACK *RILNDISSTATUSCALLBACK)( PVOID pCallbackContext, LPRILNDISSTATUS pRilStatus );
+
+/* pRilPacket  [extra typedef] */
+typedef void (CALLBACK *RILNDISRECEIVECALLBACK)( PVOID pCallbackContext, LPRILNDISPACKET pRilPacket );
+
+/* LPRILSIMTOOLKITNOTIFYCAPS  [extra struct] */
 typedef struct rilsimtoolkitnotifycaps_tag {
   DWORD cbSize;
   DWORD dwParams;
@@ -1566,7 +624,59 @@ typedef struct rilsimtoolkitnotifycaps_tag {
   RILSIMTOOLKITEVENTCAPS rstecEvents;
 } RILSIMTOOLKITNOTIFYCAPS, *LPRILSIMTOOLKITNOTIFYCAPS;
 
-/* function */
-HRESULT RIL_NDIS_ SetGPRSContextActivated ( HRIL hRil, Const RILNDISGPRSCONTEXT* pGprsContext );
+/* LPRILNDISBUFFER  [extra struct] */
+typedef struct rilndisbuffer_tag { const BYTE *pbyBytes; DWORD cByteCount; } RILNDISBUFFER, *LPRILNDISBUFFER;
+
+/* LPRILCBMSGCONFIG  [extra struct] */
+typedef struct rilcbmsgconfig_tag {
+  DWORD cbSize;
+  DWORD dwParams;
+  DWORD dwBroadcastMsgLangs;
+  BOOL fAccept;
+  RILRANGE rgrrBroadcastMsgIDs[];
+} RILCBMSGCONFIG, *LPRILCBMSGCONFIG;
+
+/* LPRILGPRSQOSPROFILECAPS  [extra struct] */
+typedef struct {
+  DWORD cbSize;
+  DWORD dwParams;
+  DWORD dwProtocolType;
+  DWORD dwPrecedenceClass;
+  DWORD dwDelayClass;
+  DWORD dwReliabilityClass;
+  DWORD dwPeakThruClass;
+  char dwMeanThruClass;
+} RILGPRSQOSPROFILECAPS, *LPRILGPRSQOSPROFILECAPS;
+
+/* pRemotePartyInfo  [extra typedef] */
+typedef DWORD (CALLBACK *RILCALLTYPECALLBACK)( const RILREMOTEPARTYINFO* const pRemotePartyInfo );
+
+/* LPRILGPRSCONTEXTCAPS  [extra struct] */
+typedef struct {
+  DWORD cbSize;
+  DWORD dwParams;
+  DWORD dwProtocolType;
+  RILRANGE ContextIDRange;
+  DWORD dwDataCompression;
+  DWORD dwHeaderCompression;
+  DWORD dwParameterLength;
+  char szParameters[];
+} RILGPRSCONTEXTCAPS, *LPRILGPRSCONTEXTCAPS;
+
+/* LPRILLOCATIONINFO  [extra struct] */
+typedef struct rillocationinfo_tag {
+  DWORD cbSize;
+  DWORD dwLocationAreaCode;
+  DWORD dwCellID;
+} RILLOCATIONINFO, *LPRILLOCATIONINFO;
+
+/* LPRILCAPSERRORCORRECTION  [extra struct] */
+typedef struct {
+  DWORD cbSize;
+  DWORD dwParams;
+  DWORD dwOriginalRequest;
+  DWORD dwOriginalFallback;
+  DWORD dwAnswererFallback;
+} RILCAPSERRORCORRECTION, *LPRILCAPSERRORCORRECTION;
 
 #endif /* _RIL_ */

@@ -37,7 +37,6 @@ HRESULT Deselect( void );
 HRESULT GetImData( DWORD dwSize, void *pvImData);
 HRESULT GetInfo( IMINFO *pimi);
 HRESULT Hiding( void );
-HRESULT ReceiveSipInfo( SIPINFO *psi);
 HRESULT RegisterCallback( IIMCallback *pIMCallback);
 HRESULT RegisterCallback2( IIMCallback2 *pIMCallback2);
 HRESULT RegisterCallbackEx (IIMCallback* pIMCallback);

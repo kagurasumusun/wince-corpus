@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _CCCESHCB_
 #define _CCCESHCB_
@@ -18,7 +18,5 @@
 
 /* function */
 HRESULT CmdOut( BSTRbstrData);
-HRESULT FindFile( BSTR bstrFileName,VARIANT_BOOL fUseExisting, BSTR*pbstrFullPath);
-HRESULT GetCommand( intnMaxCmdSize,BSTR*pbstrCommand);
 
 #endif /* _CCCESHCB_ */

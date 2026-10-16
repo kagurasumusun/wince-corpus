@@ -33,15 +33,19 @@ enum BitmapType {
  btOk
 };
 
+/* bt  [extra enum] */
+static HBITMAP LoadSystemBitmap(  enum BitmapType bt  );
+
+/* btOk  [extra enum] */
+enum BitmapType {btStdSmallColor,btStdSmallMono,btViewSmallColor,btViewSmallMono,btClose,btOk};
+
+/* BitmapTypebt  [extra enum] */
+static HBITMAP LoadSystemBitmap(enum BitmapTypebt);
+
 /* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
-
-/* enum */
-static HBITMAP LoadSystemBitmap(enum BitmapTypebt);
-static HBITMAP LoadSystemBitmap(  enum BitmapType bt  );
-enum BitmapType {btStdSmallColor,btStdSmallMono,btViewSmallColor,btViewSmallMono,btClose,btOk};
 
 /* function */
 void DrawDropdownArrow( HDC hdc, int x, int y, int dx, int dy, int cxEdge, int cyEdge, int cyBorder, COLORREF clrBtnFace, int cxDropdownArrow, int yOffset );

@@ -5,24 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 6 constants, 15 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 0 constants, 13 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
  */
 #ifndef _TCHDDI_
 #define _TCHDDI_
 
-
-/* ==================================================================
- * constants (one evidence comment per #define; the
- * #if of a batch covers every #define in it; values
- * that differ per generation pool into #if/#elif
- * chains with the evidence after the #endif)
- * ================================================================ */
-#define TouchSampleDownFlag 0x02
-#define TouchSampleIgnore 0x10
-#define TouchSampleIsCalibratedFlag 0x04
-#define TouchSampleMouse 0x40000000
-#define TouchSamplePreviousDownFlag 0x08
-#define TouchSampleValidFlag 0x01
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -56,27 +43,29 @@ struct TPDC_SAMPLE_RATE {
  INT CurrentSampleRateSetting; 
 };
 
+/* PTOUCH_PANEL_SAMPLE_FLAGS  [extra typedef] */
+typedef UINT32 TOUCH_PANEL_SAMPLE_FLAGS, *PTOUCH_PANEL_SAMPLE_FLAGS;
+
+/* x40000000  [extra enum] */
+enum enumTouchPanelSampleFlags {TouchSampleValidFlag = 0x01,TouchSampleDownFlag = 0x02,TouchSampleIsCalibratedFlag = 0x04,TouchSamplePreviousDownFlag = 0x08,TouchSampleIgnore = 0x10,TouchSampleMouse = 0x40000000};
+
+/* CalibrationY  [extra struct] */
+struct TPDC_CALIBRATION_POINT {INT PointNumber;INT cDisplayWidth;INT cDisplayHeight;INT CalibrationX;INT CalibrationY;};
+
+/* cCalibrationPoints  [extra struct] */
+struct TPDC_CALIBRATION_POINT_COUNT {DDI_TOUCH_PANEL_CALIBRATION_FLAGS flags;INT cCalibrationPoints;};
+
+/* CurrentSampleRateSetting  [extra struct] */
+struct TPDC_SAMPLE_RATE {INT SamplesPerSecondLow;INT SamplesPerSecondHigh;INT CurrentSampleRateSetting; };
+
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* TouchPanelCalibrateAPoint  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Tchmain.lib] */
-VOID TouchPanelCalibrateAPoint(
- INT32 UncalX,
- INT32 UncalY,
- INT32* pCalX,
- INT32* pCalY 
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* TouchPanelDisable  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Tchmain.lib] */
 VOID TouchPanelDisable(void);
-
-/* TouchPanelEnable  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Tchmain.lib] */
-BOOL TouchPanelEnable(
- PFN_TOUCH_PANEL_CALLBACK pfnCallback
-);
 
 /* TouchPanelGetDeviceCaps  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Tchmain.lib] */
 BOOL TouchPanelGetDeviceCaps(
@@ -98,44 +87,11 @@ BOOL TouchPanelReadCalibrationPoint(
  INT* pRawY 
 );
 
-/* TouchPanelSetCalibration  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Tchmain.lib] */
-VOID TouchPanelSetCalibration(
- INT32 cCalibrationPoints,
- INT32* pScreenXBuffer,
- INT32* pScreenYBuffer,
- INT32* pUncalXBuffer,
- INT32* pUncalYBuffer 
-);
-
 /* TouchPanelSetMode  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Tchmain.lib] */
 BOOL TouchPanelSetMode(
  INT iIndex,
  LPVOID lpInput 
 );
 #endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* TouchPanelInitializeCursor  [function; ce-only; CE 5.0..699; Tchmain.lib] */
-BOOL TouchPanelInitializeCursor(
- PFN_DISP_DRIVER_MOVE_CURSOR
-);
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* typedef */
-typedef UINT32 TOUCH_PANEL_SAMPLE_FLAGS, *PTOUCH_PANEL_SAMPLE_FLAGS;
-
-/* enum */
-enum enumTouchPanelSampleFlags {TouchSampleValidFlag = 0x01,TouchSampleDownFlag = 0x02,TouchSampleIsCalibratedFlag = 0x04,TouchSamplePreviousDownFlag = 0x08,TouchSampleIgnore = 0x10,TouchSampleMouse = 0x40000000};
-
-/* struct */
-struct TPDC_CALIBRATION_POINT {INT PointNumber;INT cDisplayWidth;INT cDisplayHeight;INT CalibrationX;INT CalibrationY;};
-struct TPDC_SAMPLE_RATE {INT SamplesPerSecondLow;INT SamplesPerSecondHigh;INT CurrentSampleRateSetting; };
-struct TPDC_CALIBRATION_POINT_COUNT {DDI_TOUCH_PANEL_CALIBRATION_FLAGS flags;INT cCalibrationPoints;};
 
 #endif /* _TCHDDI_ */

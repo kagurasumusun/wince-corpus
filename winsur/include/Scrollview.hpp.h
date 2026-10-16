@@ -16,14 +16,7 @@
  * parser did not turn into an entity declaration
  * ================================================================ */
 
-/* enum */
-enum SCROLL_STATE {SCROLL_NO_PRESS, SCROLL_UP_PRESS, SCROLL_DN_PRESS, SCROLL_PGUP_PRESS, SCROLL_PGDN_PRESS, SCROLL_SLIDE_PRESS, SCROLL_UNAVAIL, SCROLL_NEXT_FREE};
-
-/* struct */
-struct ScrollBarInfoInternal {SCROLLINFO si;BOOL bInSetSBInfo;int nThumbPos;SCROLL_STATEdwState;UINT nTrackStart;UINT fnBar;UINT idTimer;};
-
 /* function */
-void DrawScrollBar( HDC hdc, HWND hwnd, BOOL fVert, SCROLL_STATE State, UINT32 WindowState, UINT32 WindowStyle, ScrollBarInfoInternal* psbii );
 int GetScrollRects( HWND hwnd, RECT* prcBounds, RECT* prcUp, RECT* prcDn, RECT* prcThumb, BOOL fVert, ScrollBarInfoInternal* psbii );
 LONG GetThumbPixel( HWND hwnd, BOOL fVert, ScrollBarInfoInternal* psbii );
 static SCROLL_STATE ScrollHitTest(  HWND hwnd,  POINT pt,  BOOL fVert,  ScrollBarInfoInternal* psbii  );

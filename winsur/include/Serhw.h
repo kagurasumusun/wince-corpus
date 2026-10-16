@@ -23,21 +23,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 2.11..2.12, 3.0..399 */
-
-/* HWGetBytes  [function; ce-only; CE 2.11..2.12, 3.0..399] */
-ULONG HWGetBytes( 
-PVOID pContext, 
-PUCHAR pTargetBuffer, 
-PULONG pByteNumber );
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
-
-/* GetSerialObject  [function; ce-only; CE 2.11..2.12, 3.0..699] */
-PHWOBJ GetSerialObject(
- DWORD DeviceArrayIndex
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
 
 /* HWClearBreak  [function; ce-only; CE 2.11..2.12, 3.0..699] */
 VOID HWClearBreak(
@@ -75,18 +61,6 @@ BOOL HWEnableIR(
  ULONG BaudRate 
 );
 
-/* HWGetCommProperties  [function; ce-only; CE 2.11..2.12, 3.0..699] */
-VOID HWGetCommProperties(
- PVOID pContext,
- LPCOMMPROP pCommProp 
-);
-
-/* HWGetModemStatus  [function; ce-only; CE 2.11..2.12, 3.0..699] */
-VOID HWGetModemStatus(
- PVOID pContext,
- PULONG pModemStatus 
-);
-
 /* HWGetRxBufferSize  [function; ce-only; CE 2.11..2.12, 3.0..699] */
 ULONG HWGetRxBufferSize(
  PVOID pContext 
@@ -95,30 +69,6 @@ ULONG HWGetRxBufferSize(
 /* HWGetRxStart  [function; ce-only; CE 2.11..2.12, 3.0..699] */
 PVOID HWGetRxStart(
  PVOID pContext 
-);
-
-/* HWGetStatus  [function; ce-only; CE 2.11..2.12, 3.0..699] */
-ULONG HWGetStatus(
- PVOID pContext,
- LPCOMSTAT lpStat 
-);
-
-/* HWInit  [function; ce-only; CE 2.11..2.12, 3.0..699] */
-PVOID HWInit(
- ULONG Identifier,
- PVOID pMDDContext,
- PHWOBJ pHWObj
-);
-
-/* HWIoctl  [function; ce-only; CE 2.11..2.12, 3.0..699] */
-BOOL HWIoctl(
- DWORD dwOpenData,
- DWORD dwCode,
- PBYTE pBufIn,
- DWORD dwLenIn,
- PBYTE pBufOut,
- DWORD dwLenOut,
- PDWORD pdwActualOut 
 );
 
 /* HWOpen  [function; ce-only; CE 2.11..2.12, 3.0..699] */
@@ -142,14 +92,6 @@ VOID HWPurgeComm(
  DWORD fdwAction 
 );
 
-/* HWPutBytes  [function; ce-only; CE 2.11..2.12, 3.0..699] */
-ULONG HWPutBytes(
- PVOID pContext,
- PUCHAR pSrc,
- ULONG NumberOfBytes,
- PULONG pBytesSent 
-);
-
 /* HWReset  [function; ce-only; CE 2.11..2.12, 3.0..699] */
 void HWReset(
  PVOID pContext 
@@ -158,18 +100,6 @@ void HWReset(
 /* HWSetBreak  [function; ce-only; CE 2.11..2.12, 3.0..699] */
 VOID HWSetBreak(
  PVOID pContext 
-);
-
-/* HWSetCommTimeouts  [function; ce-only; CE 2.11..2.12, 3.0..699] */
-BOOL HWSetCommTimeouts(
- PVOID pContext,
- LPCOMMTIMEOUTS lpCommTO 
-);
-
-/* HWSetDCB  [function; ce-only; CE 2.11..2.12, 3.0..699] */
-BOOL HWSetDCB(
- PVOID pContext,
- LPDCB pDCB 
 );
 
 /* HWSetDTR  [function; ce-only; CE 2.11..2.12, 3.0..699] */
@@ -182,13 +112,6 @@ VOID HWSetRTS(
  PVOID pContext 
 );
 
-/* HWTxIntrHandler  [function; ce-only; CE 2.11..2.12, 3.0..699] */
-VOID HWTxIntrHandler(
- PVOID pContext, 
- PUCHAR pSourceBuffer, 
- PULONG pByteNumber 
-);
-
 /* HWXmitComChar  [function; ce-only; CE 2.11..2.12, 3.0..699] */
 BOOL HWXmitComChar(
  PVOID pContext,
@@ -196,7 +119,7 @@ BOOL HWXmitComChar(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
 
 /* HWLineIntrHandler  [function; ce-only; CE 3.0..699] */
 VOID HWLineIntrHandler(
@@ -217,33 +140,12 @@ VOID HWOtherHandler(
 BOOL HWPostInit(
  PVOID pContext 
 );
-
-/* HWRxIntrHandler  [function; ce-only; CE 3.0..699] */
-ULONG HWRxIntrHandler(
- PVOID pContext,
- PUCHAR pTargetBuffer,
- PULONG pByteNumber 
-);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
-
-/* struct */
-typedef struct __DEVICE_LIST {
-  LPSTR DllName;
-  ULONG NumberOfDevices;
-  PHWOBJ *DeviceArray;
-} DEVICE_LIST, *PDEVICE_LIST;
-typedef struct __HWOBJ {
-  PVOID pDeviceParent;
-  ULONG BindFlags;
-  DWORD dwIntID;
-  PVOID pReserved;
-  PHW_VTBL pFuncTbl;
-} HWOBJ, *PHWOBJ;
 
 /* function */
 VOID HWOtherHandler(PVOID pContext);

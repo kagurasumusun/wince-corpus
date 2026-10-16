@@ -40,12 +40,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* BthAuthenticate  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthAuthenticate(
- BT_ADDR* pba
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* BthCancelInquiry  [function; ce-only; CE 4.0..699; Btdrt.lib] */
 int BthCancelInquiry(void);
@@ -58,67 +53,6 @@ int BthCloseConnection(
  unsigned short handle
 );
 
-/* BthCreateACLConnection  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthCreateACLConnection(
- BT_ADDR* pbt,
- unsigned short* phandle
-);
-
-/* BthCreateSCOConnection  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthCreateSCOConnection(
- BT_ADDR* pbt,
- unsigned short* phandle
-);
-
-/* BthEnterHoldMode  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthEnterHoldMode(
- BT_ADDR* pba,
- unsigned short hold_mode_max,
- unsigned short hold_mode_min,
- unsigned short* pinterval
-);
-
-/* BthEnterParkMode  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthEnterParkMode(
- BT_ADDR* pba,
- unsigned short beacon_max,
- unsigned short beacon_min,
- unsigned short* pinterval
-);
-
-/* BthEnterSniffMode  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthEnterSniffMode(
- BT_ADDR* pba,
- unsigned short sniff_mode_max,
- unsigned short sniff_mode_min,
- unsigned short sniff_attempt,
- unsigned short sniff_timeout,
- unsigned short* pinterval
-);
-
-/* BthExitParkMode  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthExitParkMode(
- BT_ADDR* pba
-);
-
-/* BthExitSniffMode  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthExitSniffMode(
- BT_ADDR* pba
-);
-
-/* BthGetAddress  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthGetAddress(
- unsigned short handle,
- BT_ADDR* pba
-);
-
-/* BthGetBasebandConnections  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthGetBasebandConnections(
- int cConnections,
- BASEBAND_CONNECTION* pConnections,
- int* pcConnectionsReturned
-);
-
 /* BthGetBasebandHandles  [function; ce-only; CE 4.0..699; Btdrt.lib] */
 int BthGetBasebandHandles(
  int cHandles,
@@ -126,63 +60,14 @@ int BthGetBasebandHandles(
  int* pcHandlesReturned
 );
 
-/* BthGetCurrentMode  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthGetCurrentMode(
- BT_ADDR* pba,
- unsigned char* pmode
-);
-
 /* BthGetHardwareStatus  [function; ce-only; CE 4.0..699; Btdrt.lib] */
 int BthGetHardwareStatus(
  int* pistatus
 );
 
-/* BthGetLinkKey  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthGetLinkKey(
- BT_ADDR* pba,
- unsigned char key[16]
-);
-
-/* BthGetPINRequest  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthGetPINRequest(
- BT_ADDR* pbt
-);
-
-/* BthNsLookupServiceBegin  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-INT BthNsLookupServiceBegin(
- LPWSAQUERYSET pQuerySet,
- DWORD dwFlags,
- LPHANDLE lphLookup
-);
-
 /* BthNsLookupServiceEnd  [function; ce-only; CE 4.0..699; Btdrt.lib] */
 INT BthNsLookupServiceEnd(
  HANDLE hLookup
-);
-
-/* BthNsLookupServiceNext  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-INT BthNsLookupServiceNext(
- HANDLE hLookup,
- DWORD dwFlags,
- LPDWORD lpdwBufferLength,
- LPWSAQUERYSET pResults
-);
-
-/* BthNsSetService  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-INT BthNsSetService(
- LPWSAQUERYSET lpqsRegInfo,
- WSAESETSERVICEOP essoperation,
- DWORD dwControlFlags
-);
-
-/* BthPerformInquiry  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthPerformInquiry(
- unsigned int LAP,
- unsigned char length,
- unsigned char num_responses,
- unsigned int cElems,
- unsigned int* pcDiscoveredDevices,
- BthInquiryResult* InquiryList
 );
 
 /* BthReadAuthenticationEnable  [function; ce-only; CE 4.0..699; Btdrt.lib] */
@@ -193,17 +78,6 @@ int BthReadAuthenticationEnable(
 /* BthReadCOD  [function; ce-only; CE 4.0..699; Btdrt.lib] */
 int BthReadCOD(
  unsigned int* pcod
-);
-
-/* BthReadLinkPolicySettings  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthReadLinkPolicySettings(
- BT_ADDR* pba,
- unsigned short* plps
-);
-
-/* BthReadLocalAddr  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthReadLocalAddr(
- BT_ADDR* pba
 );
 
 /* BthReadLocalVersion  [function; ce-only; CE 4.0..699; Btdrt.lib] */
@@ -221,65 +95,9 @@ int BthReadPageTimeout(
  unsigned short* ptimeout
 );
 
-/* BthReadRemoteVersion  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthReadRemoteVersion(
- BT_ADDR* pba,
- unsigned char* plmp_version,
- unsigned short* plmp_subversion,
- unsigned short* pmanufacturer,
- unsigned char* plmp_features
-);
-
 /* BthReadScanEnableMask  [function; ce-only; CE 4.0..699; Btdrt.lib] */
 int BthReadScanEnableMask(
  unsigned char* pmask
-);
-
-/* BthRefusePINRequest  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthRefusePINRequest(
- BT_ADDR* pbt
-);
-
-/* BthRemoteNameQuery  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthRemoteNameQuery(
- BT_ADDR* pba,
- unsigned int cBuffer,
- unsigned int* pcRequired,
- WCHAR* szString
-);
-
-/* BthRevokeLinkKey  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthRevokeLinkKey(
- BT_ADDR* pba
-);
-
-/* BthRevokePIN  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthRevokePIN(
- BT_ADDR* pba
-);
-
-/* BthSetEncryption  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthSetEncryption(
- BT_ADDR* pba,
- int fOn
-);
-
-/* BthSetInquiryFilter  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthSetInquiryFilter(
- BT_ADDR* pba
-);
-
-/* BthSetLinkKey  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthSetLinkKey (
- BT_ADDR* pba,
- unsigned char key[16]
-);
-
-/* BthSetPIN  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthSetPIN(
- BT_ADDR* pba,
- int cPinLength,
- unsigned char* ppin
 );
 
 /* BthSetSecurityUI  [function; ce-only; CE 4.0..699; Btdrt.lib] */
@@ -302,12 +120,6 @@ int BthWriteCOD(
  unsigned int cod
 );
 
-/* BthWriteLinkPolicySettings  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthWriteLinkPolicySettings(
- BT_ADDR* pba,
- unsigned short lps
-);
-
 /* BthWritePageTimeout  [function; ce-only; CE 4.0..699; Btdrt.lib] */
 int BthWritePageTimeout(
  unsigned short timeout
@@ -319,61 +131,23 @@ int BthWriteScanEnableMask(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* BthAcceptSCOConnections  [function; ce-only; CE 5.0..699; Btdrt.lib] */
 int BthAcceptSCOConnections ( BOOL fAccept);
-
-/* BthAnswerPairRequest  [function; ce-only; CE 5.0..699; Btdrt.lib] */
-int BthAnswerPairRequest ( 
- BT_ADDR* pba, 
- int cPinLength, 
- unsigned char *ppin
-);
-
-/* BthGetRemoteCOD  [function; ce-only; CE 5.0..699; Btdrt.lib] */
-int BthGetRemoteCOD ( 
- BT_ADDR* pbt,
- unsigned int* pcod
-);
-
-/* BthPairRequest  [function; ce-only; CE 5.0..699; Btdrt.lib] */
-int BthPairRequest ( 
- BT_ADDR* pba, 
- int cPinLength, 
- unsigned char *ppin
-);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* BthActivatePAN  [function; ce-only; CE 6.0..699; Btdrt.lib] */
 int BthActivatePAN (
  BOOL fActivate
 );
 
-/* BthNotifyEvent  [function; ce-only; CE 6.0..699; heuristic-prefix] */
-HANDLE BthNotifyEvent(
- PBTEVENT pbtEvent,
- DWORD dwEventClass
-);
-
-/* BthReadRSSI  [function; ce-only; CE 6.0..699; Btdrt.lib] */
-int BthReadRSSI (
- BT_ADDR* pbt, 
- BYTE* pbRSSI
-);
-
 /* BthSetCODInquiryFilter  [function; ce-only; CE 6.0..699; Btdrt.lib] */
 int BthSetCODInquiryFilter (
  unsigned int cod,
  unsigned int codMask
-);
-
-/* BthSwitchRole  [function; ce-only; CE 6.0..699; Btdrt.lib] */
-int BthSwitchRole (
- BT_ADDR* pbt,
- USHORT usRole
 );
 
 /* RequestBluetoothNotifications  [function; ce-only; CE 6.0..699; coredll.lib] */
@@ -395,12 +169,6 @@ BOOL StopBluetoothNotifications(
 
 /* struct */
 typedef struct __bth_inquiry_result {BT_ADDRba;unsigned intcod;unsigned shortclock_offset;unsigned charpage_scan_mode;unsigned charpage_scan_period_mode;unsigned charpage_scan_repetition_mode;} BthInquiryResult;
-typedef struct _BASEBAND_CONNECTION { USHORT hConnection; BT_ADDR baAddress; int cDataPacketsPending; UINT fLinkType : 1; UINT fEncrypted : 1; UINT fAuthenticated : 1; UINT fMode : 3;} BASEBAND_CONNECTION, *PBASEBAND_CONNECTION;
-typedef struct _BTEVENT {
-  DWORD dwEventId;
-  DWORD dwReserved;
-  BYTE baEventData[64];
-} BTEVENT, *PBTEVENT;
 
 /* function */
 DWORD BthAGNetworkHangupCall(DWORD dwFlags);

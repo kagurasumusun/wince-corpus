@@ -11,16 +11,4 @@
 #define _OAL_ARGS_
 
 
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* OALArgsQuery  [function; ce-only; CE 5.0..699] */
-VOID* OALArgsQuery(
- UINT32 type
-);
-#endif /* _WIN32_WCE */
-
 #endif /* _OAL_ARGS_ */

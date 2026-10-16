@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 4 constants, 10 declarations, 0 outlines, 0 base types, 0 extra macros, 85 extra decls
+ * 3 constants, 10 declarations, 0 outlines, 0 base types, 0 extra macros, 17 extra decls
  */
 #ifndef _AV_UPNP_
 #define _AV_UPNP_
@@ -20,7 +20,6 @@
 #define BIT_AV_ERROR 0
 #define BIT_AV_TRACE 2
 #define BIT_AV_WARN 1
-#define SUCCESS_AV 0
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -168,14 +167,7 @@ struct TransportSettings
  ;
  };
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-struct TransportActions{ bool bPlay; bool bStop; bool bPause; bool bSeek; bool bNext; bool bPrevious; bool bRecord;};
-struct PositionInfo{ unsigned long nTrack; wstring strTrackDuration; wstring strTrackMetaData; wstring strTrackURI; wstring strRelTime; wstring strAbsTime; long nRelCount; long nAbsCount;};
+/* shown  [extra struct] */
 struct object
 {
   bool bContainer;
@@ -185,11 +177,32 @@ struct object
   wstring strClass;
   bool bRestricted;
 };
-struct TransportInfo{ wstring strCurrentTransportState; wstring strCurrentTransportStatus; wstring strCurrentSpeed;};
+
+/* strPossibleRecQualityModes  [extra struct] */
 struct DeviceCapabilities{ wstring strPossiblePlayMedia; wstring strPossibleRecMedia; wstring strPossibleRecQualityModes;};
+
+/* bRecord  [extra struct] */
+struct TransportActions{ bool bPlay; bool bStop; bool bPause; bool bSeek; bool bNext; bool bPrevious; bool bRecord;};
+
+/* strCurrentSpeed  [extra struct] */
+struct TransportInfo{ wstring strCurrentTransportState; wstring strCurrentTransportStatus; wstring strCurrentSpeed;};
+
+/* strRecQualityMode  [extra struct] */
 struct TransportSettings{ wstring strPlayMode; wstring strRecQualityMode;};
+
+/* strStatus  [extra struct] */
 struct ConnectionInfo{ IRenderingControl* pRenderingControl; IAVTransport* pAVTransport; wstring strRemoteProtocolInfo; wstring strPeerConnectionManager; long nPeerConnectionID; DIRECTION Direction; wstring strStatus;};
+
+/* strWriteStatus  [extra struct] */
 struct MediaInfo{ unsigned long nNrTracks; wstring strMediaDuration; wstring strCurrentURI; wstring strCurrentURIMetaData; wstring strNextURI; wstring strNextURIMetaData; wstring strPlayMedium; wstring strRecordMedium; wstring strWriteStatus;};
+
+/* nAbsCount  [extra struct] */
+struct PositionInfo{ unsigned long nTrack; wstring strTrackDuration; wstring strTrackMetaData; wstring strTrackURI; wstring strRelTime; wstring strAbsTime; long nRelCount; long nAbsCount;};
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
 
 /* function */
 bool AddNamespaceMapping(  LPCWSTR pszNamespace,  LPCWSTR pszPrefix  );

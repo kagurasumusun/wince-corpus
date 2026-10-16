@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 12 constants, 60 declarations, 1 outlines, 0 base types, 0 extra macros, 7 extra decls
+ * 12 constants, 60 declarations, 1 outlines, 0 base types, 0 extra macros, 6 extra decls
  */
 #ifndef _RAPI_
 #define _RAPI_
@@ -40,13 +40,13 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213)) /* CE 1.0..199, 2.11..2.12 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213)) /* CE 1.0..199, 2.11..2.12 */
 
 /* RapiFreeBuffer  [function; ce-only; CE 1.0..199, 2.11..2.12] */
 HRESULT RapiFreeBuffer( LPVOID Buffer );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* CeCheckPassword  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
 BOOL CeCheckPassword( 
@@ -82,56 +82,14 @@ HANDLE CeCreateFile (
  HANDLE hTemplateFile 
 );
 
-/* CeCreateProcess  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
-BOOL CeCreateProcess(
- LPCWSTR lpApplicationName, 
- LPCWSTR lpCommandLine, 
- LPSECURITY_ATTRIBUTES lpProcessAttributes, 
- LPSECURITY_ATTRIBUTES lpThreadAttributes, 
- BOOL bInheritHandles, 
- DWORD dwCreationFlags, 
- LPVOID lpEnvironment, 
- LPWSTR lpCurrentDirectory, 
- LPSTARTUPINFO lpStartupInfo, 
- LPPROCESS_INFORMATION lpProcessInformation 
-);
-
 /* CeDeleteFile  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
 BOOL CeDeleteFile(
  LPCWSTR lpFileName 
 );
 
-/* CeFindAllDatabases  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
-BOOL CeFindAllDatabases(
- DWORD dwDbaseType, 
- WORD wFlags, 
- LPWORD cFindData, 
- LPLPCEDB_FIND_DATA ppFindData 
-);
-
-/* CeFindAllFiles  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
-BOOL CeFindAllFiles(
- LPCWSTR szPath, 
- DWORD dwFlags, 
- LPDWORD lpdwFoundCount, 
- LPLPCE_FIND_DATA ppFindDataArray 
-);
-
 /* CeFindClose  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
 BOOL CeFindClose( 
  HANDLE hFindFile 
-);
-
-/* CeFindFirstFile  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
-HANDLE CeFindFirstFile(
- LPCWSTR lpFileName, 
- LPCE_FIND_DATA lpFindFileData 
-);
-
-/* CeFindNextFile  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
-BOOL CeFindNextFile( 
- HANDLE hFindFile, 
- LPCE_FIND_DATA lpFindFileData 
 );
 
 /* CeGetDesktopDeviceCaps  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
@@ -168,36 +126,16 @@ DWORD CeGetSpecialFolderPath(
  LPWSTR lpBuffer 
 );
 
-/* CeGetStoreInformation  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
-BOOL CeGetStoreInformation( 
- LPSTORE_INFORMATION lpsi 
-);
-
-/* CeGetSystemInfo  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
-VOID CeGetSystemInfo (
- LPSYSTEM_INFO lpSystemInfo 
-);
-
 /* CeGetTempPath  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
 DWORD CeGetTempPath(
  DWORD nBufferLength,
  LPWSTR lpBuffer 
 );
 
-/* CeGetVersionEx  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
-BOOL CeGetVersionEx(
- LPCEOSVERSIONINFO lpVersionInformation 
-);
-
 /* CeGetWindow  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
 HWND CeGetWindow( 
  HWND hWnd, 
  UINT uCmd 
-);
-
-/* CeGlobalMemoryStatus  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
-void CeGlobalMemoryStatus(
- LPMEMORYSTATUS lpmst
 );
 
 /* CeMoveFile  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
@@ -211,11 +149,6 @@ HRESULT CeRapiGetError(void);
 
 /* CeRapiInit  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
 HRESULT CeRapiInit ();
-
-/* CeRapiInitEx  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
-HRESULT CeRapiInitEx(
- RAPIINIT * pRapiInit 
-);
 
 /* CeRapiInvoke  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
 HRESULT CeRapiInvoke(
@@ -232,31 +165,9 @@ HRESULT CeRapiInvoke(
 /* CeRapiUninit  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
 HRESULT CeRapiUninit ();
 
-/* CeReadFile  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
-BOOL CeReadFile ( 
- HANDLE hFile, 
- LPVOID lpBuffer, 
- DWORD nNumberOfBytesToRead, 
- LPDWORD lpNumberOfBytesRead, 
- LPOVERLAPPED lpOverlapped 
-);
-
 /* CeRegCloseKey  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
 LONG CeRegCloseKey(
  HKEY hKey 
-);
-
-/* CeRegCreateKeyEx  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
-LONG CeRegCreateKeyEx( 
- HKEY hKey, 
- LPCWSTR lpszSubKey, 
- DWORD Reserved, 
- LPWSTR lpszClass, 
- DWORD dwOptions, 
- REGSAM samDesired, 
- LPSECURITY_ATTRIBUTES lpSecurityAttributes, 
- PHKEY phkResult, 
- LPDWORD lpdwDisposition 
 );
 
 /* CeRegDeleteKey  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
@@ -293,15 +204,6 @@ LONG CeRegEnumValue(
  LPDWORD lpType, 
  LPBYTE lpData, 
  LPDWORD lpcbData 
-);
-
-/* CeRegOpenKeyEx  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
-LONG CeRegOpenKeyEx( 
- HKEY hKey, 
- LPCWSTR lpszSubKey, 
- DWORD ulOptions, 
- REGSAM samDesired, 
- PHKEY phkResult 
 );
 
 /* CeRegQueryInfoKey  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
@@ -364,14 +266,6 @@ BOOL CeSetFileAttributes(
  DWORD dwFileAttributes 
 );
 
-/* CeSetFilePointer  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
-DWORD CeSetFilePointer( 
- HANDLE hFile, 
- LONG lDistanceToMove, 
- PLONG lpDistanceToMoveHigh, 
- DWORD dwMoveMethod 
-);
-
 /* CeSetFileTime  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
 BOOL CeSetFileTime (
  HANDLE hFile,
@@ -392,30 +286,15 @@ BOOL CeSHGetShortcutTarget(
  LPWSTR lpszTarget, 
  Int cbMax 
 );
-
-/* CeWriteFile  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
-BOOL CeWriteFile( 
- HANDLE hFile, 
- LPCVOID lpBuffer, 
- DWORD nNumberOfBytesToWrite, 
- LPDWORD lpNumberOfBytesWritten, 
- LPOVERLAPPED lpOverlapped 
-);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 3.0..399, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 3.0..399, 5.0..699 */
 
 /* CeGetClassName  [function; ce-only; CE 1.0..199, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
 int CeGetClassName( 
  HWND hWnd, 
  LPWSTR lpClassName, 
  Int nMaxCount 
-);
-
-/* CeGetSystemPowerStatusEx  [function; ce-only; CE 1.0..199, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
-BOOL CeGetSystemPowerStatusEx(
- PSYSTEM_POWER_STATUS_EX pstatus, 
- BOOL fUpdate 
 );
 
 /* CeGetWindowLong  [function; ce-only; CE 1.0..199, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
@@ -432,7 +311,7 @@ int CeGetWindowText (
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 5.0..699 */
 
 /* CeGetSystemMetrics  [function; ce-only; CE 1.0..199, 5.0..699; Rapi.lib, rapi.lib] */
 INT CeGetSystemMetrics(
@@ -440,7 +319,7 @@ INT CeGetSystemMetrics(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* CeQueryInstructionSet  [function; ce-only; CE 5.0..699; Rapi.lib, rapi.lib] */
 BOOL CeQueryInstructionSet(
@@ -449,15 +328,7 @@ BOOL CeQueryInstructionSet(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/* CeGetDiskFreeSpaceEx  [function; ce-only; CE 6.0..699; rapi.lib] */
-int CeGetDiskFreeSpaceEx( 
- LPCTSTR _lpDirectoryName, 
- PULARGE_INTEGER lpFreeBytesAvailable, 
- PULARGE_INTEGER lpTotalNumberOfBytes, 
- PULARGE_INTEGER lpTotalNumberOfFreeBytes
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* CeSyncStart  [function; ce-only; CE 6.0..699; rapi.lib] */
 HRESULT CeSyncStart(
@@ -467,32 +338,5 @@ HRESULT CeSyncStart(
 /* CeSyncStop  [function; ce-only; CE 6.0..699; rapi.lib] */
 HRESULT CeSyncStop();
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* typedef */
-typedef HRESULT (STDAPICALLTYPE RAPIEXT)(DWORD cbInput,BYTE * pInput,DWORD * pcbOutput,BYTE ** ppOutput,IRAPIStream * pIRAPIStream);
-
-/* struct */
-struct CEDB_FIND_DATA {CEOID OidDb;CEDBASEINFO DbInfo;};
-typedef struct _CEDB_FIND_DATA { CEOID OidDb; CEDBASEINFO DbInfo; } CEDB_FIND_DATA, * LPCEDB_FIND_DATA;
-typedef struct _CEOSVERSIONINFO { DWORD dwOSVersionInfoSize; DWORD dwMajorVersion; DWORD dwMinorVersion; DWORD dwBuildNumber; DWORD dwPlatformId; WCHAR szCSDVersion[128]; } CEOSVERSIONINFO, *LPCEOSVERSIONINFO;
-typedef struct _CE_FIND_DATA {
-  DWORD dwFileAttributes;
-  FILETIME ftCreationTime;
-  FILETIME ftLastAccessTime;
-  FILETIME ftLastWriteTime;
-  DWORD nFileSizeHigh;
-  DWORD nFileSizeLow;
-  DWORD dwOID;
-  WCHAR cFileName[MAX_PATH];
-} CE_FIND_DATA, *LPCE_FIND_DATA;
-
-/* function */
-HRESULT GetRapiStat( RAPISTREAMFLAG Flag, DWORD* pdwValue );
-HRESULT SetRapiStat( RAPISTREAMFLAG Flag, DWORD dwValue );
 
 #endif /* _RAPI_ */

@@ -15,7 +15,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 500)) /* CE 3.0..499 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x500)) /* CE 3.0..499 */
 
 /* SchedLogGetProcessName  [function; ce-only; CE 3.0..499; Schedlog.lib] */
 LPCSTR SchedLogGetProcessName(

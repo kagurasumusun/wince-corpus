@@ -18,12 +18,8 @@
 
 /* function */
 bool CheckTypesSet(void);
-const DMO_MEDIA_TYPE *InputType(  DWORD ulInputStreamIndex  );
 bool InputTypeSet(  DWORD ulInputStreamIndex  );
 HRESULT InternalAcceptingInput( DWORD dwInputStreamIndex );
-HRESULT InternalCheckInputType( DWORD dwInputStreamIndex, const DMO_MEDIA_TYPE* pmt );
-HRESULT InternalCheckOutputType( DWORD dwOutputStreamIndex, const DMO_MEDIA_TYPE* pmt );
-const DMO_MEDIA_TYPE *OutputType(  DWORD ulOutputStreamIndex  );
 bool OutputTypeSet(  DWORD ulOutputStreamIndex  );
 
 #endif /* _DMOIMPL_ */

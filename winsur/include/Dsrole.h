@@ -26,18 +26,11 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 5.0..599 */
 
 /* DsRoleFreeMemory  [function; shared; CE 5.0..599; Netapi32.lib] */
 void DsRoleFreeMemory( 
  PVOID Buffer 
-);
-
-/* DsRoleGetPrimaryDomainInformation  [function; shared; CE 5.0..599; Netapi32.lib] */
-DWORD DsRoleGetPrimaryDomainInformation( 
- LPCWSTR lpServer, 
- DSROLE_PRIMARY_DOMAIN_INFO_LEVEL InfoLevel, 
- PBYTE* Buffer 
 );
 #endif /* _WIN32_WCE */
 

@@ -17,19 +17,10 @@
  * ================================================================ */
 
 /* function */
-HRESULT GetConnectInfo( LPDWORD pdwNumConnectInfo, LPDDVIDEOPORTCONNECT pddVPConnectInfo);
-HRESULT GetMaxPixelRate( LPAMVPSIZE pamvpSize, LPDWORD pdwMaxPixelsPerSecond);
-HRESULT GetOverlaySurface( LPDIRECTDRAWSURFACE *ppddOverlaySurface);
-HRESULT GetVPDataInfo( LPAMVPDATAINFO pamvpDataInfo);
-HRESULT GetVideoFormats( LPDWORD pdwNumFormats, LPDDPIXELFORMAT pddPixelFormats);
-HRESULT InformVPInputFormats( DWORD dwNumFormats, LPDDPIXELFORMAT pDDPixelFormats);
-HRESULT IsVPDecimationAllowed( AMVP_CONTEXT amvpContext, LPBOOL pbIsDecimationAllowed);
 HRESULT SetConnectInfo( DWORD dwChosenEntry);
 HRESULT SetDDSurfaceKernelHandles(DWORDcHandles, DWORD*rgDDKernelHandles);
 HRESULT SetDirectDrawKernelHandle( DWORD dwDDKernelHandle);
 HRESULT SetInvertPolarity(void);
-HRESULT SetScalingFactors( LPAMVPSIZE pamvpSize);
-HRESULT SetSurfaceParameters(  DWORD dwPitch,  DWORD dwXOrigin,  DWORD dwYOrigin) PURE;
 HRESULT SetVideoFormat( DWORD dwChosenEntry);
 HRESULT SetVideoPortID ( DWORD dwVideoPortID);
 

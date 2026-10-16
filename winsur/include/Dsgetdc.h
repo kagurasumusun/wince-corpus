@@ -61,34 +61,4 @@
 #define DS_WRITABLE_FLAG 0x00000100
 #define DS_WRITABLE_REQUIRED 0x00001000
 
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* DsGetDcName  [function; shared; CE 5.0..699; Netapi32.lib, netapi32.lib; A/W DsGetDcNameA,DsGetDcNameW (CE is W-side)] */
-DWORD DsGetDcName(
- LPCTSTR ComputerName,
- LPCTSTR DomainName,
- GUID* DomainGuid,
- LPCTSTR SiteName,
- ULONG Flags,
- PDOMAIN_CONTROLLER_INFO* DomainControllerInfo
-);
-
-/* NetApiBufferFree  [function; shared; CE 5.0..699; Netapi32.lib, netapi32.lib] */
-NET_API_STATUS NetApiBufferFree(
- LPVOID Buffer
-);
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _DOMAIN_CONTROLLER_INFO { LPTSTR DomainControllerName; LPTSTR DomainControllerAddress; ULONG DomainControllerAddressType; GUID DomainGuid; LPTSTR DomainName; LPTSTR DnsForestName; ULONG Flags; LPTSTR DcSiteName; LPTSTR ClientSiteName;} DOMAIN_CONTROLLER_INFO, *PDOMAIN_CONTROLLER_INFO;
-
 #endif /* _DSGETDC_ */

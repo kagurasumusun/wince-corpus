@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 9 constants, 25 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 9 constants, 23 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _BTAGPUB_
 #define _BTAGPUB_
@@ -31,7 +31,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 5.0..599 */
 
 /* BthAGDeinitPhoneExt  [function; ce-only; CE 5.0..599; Btagsvc_phoneext.lib] */
 void BthAGPhoneExtDeinit(void);
@@ -40,16 +40,13 @@ void BthAGPhoneExtDeinit(void);
 DWORD BthAGInitPhoneExt(void);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* BthAGATHandler  [function; ce-only; CE 5.0..699] */
 BOOL BthAGATHandler (
  LPSTR szCommand, 
  DWORD cbCommand
 );
-
-/* BthAGATSetCallback  [function; ce-only; CE 5.0..699] */
-void BthAGATSetCallback ( PFN_SendATCommand pfn );
 
 /* BthAGGetLastDialed  [function; ce-only; CE 5.0..699; Btagsvc_phoneext.lib] */
 BOOL BthAGGetLastDialed(
@@ -79,9 +76,6 @@ DWORD BthAGNetworkDialNumber(LPSTR pszNumber);
 
 /* BthAGNetworkDropCall  [function; ce-only; CE 5.0..699; Btagsvc_network.lib] */
 DWORD BthAGNetworkHangupCall(DWORD dwFlags);
-
-/* BthAGNetworkGetCallState  [function; ce-only; CE 5.0..699; Btagsvc_network.lib] */
-DWORD BthAGNetworkGetCallState ( PDWORD pdwFlags);
 
 /* BthAGNetworkHoldCall  [function; ce-only; CE 5.0..699; Btagsvc_network.lib] */
 DWORD BthAgNetworkHoldCall(void);
@@ -121,14 +115,9 @@ void BthAGPhoneExtEvent(
 
 /* BthAGPhoneExtInit  [function; ce-only; CE 5.0..699; Btagsvc_phoneext.lib] */
 DWORD BthAGInitPhoneExt(void);
-
-/* BthAGSetServiceCallback  [function; ce-only; CE 5.0..699; Btagsvc_phoneext.lib] */
-DWORD BthAGSetServiceCallback(
- PFN_PhoneExtServiceCallback pfn
-);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* BthAGNetworkDropSwapCall  [function; ce-only; CE 6.0..699; Btagsvc_network.lib] */
 DWORD BthAGNetworkDropSwapCall(void);

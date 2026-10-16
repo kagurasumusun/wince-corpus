@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 30 constants, 10 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 30 constants, 9 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _ICMPAPI_
 #define _ICMPAPI_
@@ -52,55 +52,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
-
-/* IcmpCloseHandle  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Icmplib.lib, Iphlpapi.dll, Iphlpapi.lib] */
-BOOL WINAPI IcmpCloseHandle(
- HANDLE IcmpHandle 
-);
-
-/* IcmpCreateFile  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Icmplib.lib, Iphlpapi.dll, Iphlpapi.lib] */
-HANDLE WINAPI IcmpCreateFile(VOID);
-
-/* IcmpSendEcho  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Icmplib.lib, Iphlpapi.dll, Iphlpapi.lib] */
-DWORD WINAPI IcmpSendEcho(
- HANDLE IcmpHandle, 
- IPAddr DestinationAddress,
- LPVOID RequestData, 
- WORD RequestSize, 
- PIP_OPTION_INFORMATION RequestOptions, 
- LPVOID ReplyBuffer,
- DWORD ReplySize, 
- DWORD Timeout 
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* Icmp6CreateFile  [function; shared; CE 4.0..699; Icmplib.lib, Iphlpapi.dll, Iphlpapi.lib] */
-HANDLE WINAPI Icmp6CreateFile(VOID);
-
-/* IcmpSendEcho2  [function; shared; CE 4.0..699; Icmplib.lib, Iphlpapi.dll, Iphlpapi.lib] */
-IcmpSendEcho2(
- HANDLE IcmpHandle,
- HANDLE Event,
- #ifdef PIO_APC_ROUTINE_DEFINED
- PIO_APC_ROUTINE ApcRoutine,
- #else
- FARPROC ApcRoutine,
- #endif
- PVOID ApcContext,
- IPAddr DestinationAddress,
- LPVOID RequestData,
- WORD RequestSize,
- PIP_OPTION_INFORMATION RequestOptions,
- LPVOID ReplyBuffer,
- DWORD ReplySize,
- DWORD Timeout
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* Icmp6ParseReplies  [function; shared; CE 5.0..699; Icmplib.lib, Iphlpapi.dll, Iphlpapi.lib] */
 DWORD Icmp6ParseReplies(

@@ -51,13 +51,10 @@ typedef int (*ServiceCallback)(
  struct _obex_transaction * pTrans 
 );
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
+/* pCommand  [extra struct] */
 typedef int (*ServerCallback)(unsigned int uiOp, unsigned int uiId, struct _obex_command * pCommand);
+
+/* pTrans  [extra struct] */
 typedef int (*ServiceCallback)(struct _obex_transaction * pTrans);
 
 #endif /* _OBEXSERVER_ */

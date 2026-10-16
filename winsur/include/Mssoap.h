@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 47 constants, 0 declarations, 4 outlines, 0 base types, 0 extra macros, 14 extra decls
+ * 47 constants, 0 declarations, 4 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _MSSOAP_
 #define _MSSOAP_
@@ -87,15 +87,5 @@ HRESULT get_Fault( IXMLDOMElement** ppElement );
 HRESULT get_FaultActor( IXMLDOMElement** ppElement );
 HRESULT get_FaultCode( IXMLDOMElement** ppElement );
 HRESULT get_FaultString( IXMLDOMElement** ppElement );
-HRESULT get_Property( BSTR pPropertyName, VARIANT* pPropertyValue );
-HRESULT get_detail( BSTR* bstrDetail );
-HRESULT get_elementName( BSTR* pbstrElementName );
-HRESULT get_encoding( BSTR* pbstrEncodingStyle );
-HRESULT get_faultactor( BSTR* bstrActor );
-HRESULT get_faultcode( BSTR* bstrFaultcode );
-HRESULT get_faultstring( BSTR* bstrFaultstring );
-HRESULT get_name( BSTR* pbstrOperationName );
-HRESULT get_soapAction( BSTR* pbstrSoapAction );
-HRESULT put_Property( BSTR pPropertyName, VARIANT PropertyValue );
 
 #endif /* _MSSOAP_ */

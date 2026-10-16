@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2 constants, 11 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 2 constants, 10 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _ETHDBG_
 #define _ETHDBG_
@@ -24,28 +24,11 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 3.0..399 */
-
-/* EDBG_BOOT_CALLBACK_FUNC  [function; ce-only; CE 3.0..399] */
-void EDBG_BOOT_CALLBACK_FUNC( 
-PVOID pParam, 
-PEDBG_BOOTME_DATA pBootmeData );
-
-/* EdbgDeregisterBootCallback  [function; ce-only; CE 3.0..399; Edbg.dll] */
-BOOL EdbgDeregisterBootCallback( 
-UCHAR Id, 
-EDBG_BOOT_CALLBACK_FUNC pCallBack, 
-PVOID pParam );
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400)) /* CE 3.0..399 */
 
 /* EdbgDeregisterClient  [function; ce-only; CE 3.0..399; Edbg.dll, Ethdbg.dll, Ethdbg.lib] */
 BOOL EdbgDeregisterClient( 
 UCHAR Id );
-
-/* EdbgGetDeviceInfo  [function; ce-only; CE 3.0..399; Edbg.dll] */
-BOOL EdbgGetDeviceInfo( 
-char *DeviceName, 
-UCHAR Id, 
-EDBG_BOOTME_DATA *pBootMeData );
 
 /* EdbgRecv  [function; ce-only; CE 3.0..399; Edbg.dll, Ethdbg.lib] */
 BOOL EdbgRecv( 
@@ -53,12 +36,6 @@ UCHAR Id,
 UCHAR *pRecvBuf, 
 DWORD *pdwLen, 
 DWORD Timeout );
-
-/* EdbgRegisterBootCallback  [function; ce-only; CE 3.0..399; Edbg.dll] */
-BOOL EdbgRegisterBootCallback( 
-UCHAR Id, 
-EDBG_BOOT_CALLBACK_FUNC pCallBack, 
-PVOID pParam );
 
 /* EdbgRegisterClient  [function; ce-only; CE 3.0..399; Edbg.dll, Ethdbg.lib] */
 BOOL EdbgRegisterClient( 
@@ -79,11 +56,6 @@ BOOL EdbgSend(
 UCHAR Id, 
 UCHAR *pUserData , 
 DWORD dwUserDataLen );
-
-/* EdbgSetDebug  [function; ce-only; CE 3.0..399; Edbg.dll, Ethdbg.dll, Ethdbg.lib] */
-VOID EdbgSetDebug( 
-DWORD DebugZoneMask, 
-PFN_OutputDebugString pDebugStringFunc );
 #endif /* _WIN32_WCE */
 
 #endif /* _ETHDBG_ */

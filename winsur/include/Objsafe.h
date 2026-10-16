@@ -20,13 +20,4 @@
 #define INTERFACESAFE_FOR_UNTRUSTED_CALLER 0x00000001
 #define INTERFACESAFE_FOR_UNTRUSTED_DATA 0x00000002
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-HRESULT GetInterfaceSafetyOptions( REFIID riid, DWORD* pdwSupportedOptions, DWORD* pdwEnabledOptions );
-HRESULT SetInterfaceSafetyOptions( REFIID riid, DWORD dwOptionSetMask, DWORD dwEnabledOptions );
-
 #endif /* _OBJSAFE_ */

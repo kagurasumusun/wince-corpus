@@ -23,18 +23,17 @@ struct ContrastCmdInputParm {
  int parm;
 };
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
+/* parm  [extra struct] */
+struct ContrastCmdInputParm {  int command;  int parm;  };
 
-/* struct */
+/* PVIDEO_POWER_MANAGEMENT  [extra struct] */
 typedef struct VIDEOPOWER_MANAGEMENT {
   ULONG Length;
   ULONG DPMSVersion;
   ULONG PowerState;
 } VIDEO_POWER_MANAGEMENT, *PVIDEO_POWER_MANAGEMENT;
+
+/* intparm  [extra struct] */
 struct ContrastCmdInputParm{intcommand;intparm;};
-struct ContrastCmdInputParm {  int command;  int parm;  };
 
 #endif /* _PWINGDI_ */

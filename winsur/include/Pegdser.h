@@ -11,13 +11,4 @@
 #define _PEGDSER_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _SERIAL_DEV_STATUS { DWORD Errors; COMSTAT ComStat;} SERIAL_DEV_STATUS, *PSERIAL_DEV_STATUS;
-typedef struct _SERIAL_QUEUE_SIZES { DWORD cbInQueue; DWORD cbOutQueue;} SERIAL_QUEUE_SIZES, *PSERIAL_QUEUE_SIZES;
-
 #endif /* _PEGDSER_ */

@@ -5,32 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 14 constants, 18 declarations, 1 outlines, 0 base types, 0 extra macros, 6 extra decls
+ * 0 constants, 18 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _FWAPI_
 #define _FWAPI_
 
-
-/* ==================================================================
- * constants (one evidence comment per #define; the
- * #if of a batch covers every #define in it; values
- * that differ per generation pool into #if/#elif
- * chains with the evidence after the #endif)
- * ================================================================ */
-#define FWA_ALLOW 0x02
-#define FWA_ALLOW_RESPONSE 0x03
-#define FWA_BLOCK 0x01
-#define FWD_FRIDAY 0x20
-#define FWD_INBOUND 0x08
-#define FWD_MONDAY 0x02
-#define FWD_OUTBOUND 0x10
-#define FWD_SATURDAY 0x40
-#define FWD_SUNDAY 0x01
-#define FWD_THURSDAY 0x10
-#define FWD_TUESDAY 0x04
-#define FWD_WEDNESDAY 0x08
-#define FWD_WEEKDAY 0x3E
-#define FWD_WEEKEND 0x41
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
@@ -42,19 +21,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-
-/* FirewallCreateRule  [function; ce-only; CE 4.0..699; Fwapi.lib, fwapi.lib] */
-DWORD FirewallCreateRule(
- FW_RULE* pRule, 
- BOOL bPersist
-);
-
-/* FirewallDeleteRule  [function; ce-only; CE 4.0..699; Fwapi.lib, fwapi.lib] */
-DWORD FirewallDeleteRule(
- HRULE hRule, 
- BOOL bPersist
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* FirewallEnable  [function; ce-only; CE 4.0..699; Fwapi.lib, fwapi.lib] */
 DWORD FirewallEnable(
@@ -63,27 +30,8 @@ DWORD FirewallEnable(
  BOOL bPersist
 );
 
-/* FirewallEnableRule  [function; ce-only; CE 4.0..699; Fwapi.lib, fwapi.lib] */
-DWORD FirewallEnableRule(
- HRULE hRule, 
- BOOL bEnabled, 
- BOOL bPersist
-);
-
-/* FirewallGetRules  [function; ce-only; CE 4.0..699; Fwapi.lib, fwapi.lib] */
-DWORD FirewallGetRules(
- PFW RULE pRules, 
- DWORD* pdwSize, 
- DWORD* pdwCount
-);
-
 /* FirewallLogInit  [function; ce-only; CE 4.0..699] */
 void FirewallLogInit();
-
-/* FirewallLogPacket  [function; ce-only; CE 4.0..699] */
-void FirewallLogPacket (
- const FW_LOG_ENTRY* pLogEntry
-);
 
 /* FirewallLogUninit  [function; ce-only; CE 4.0..699] */
 void FirewallLogUninit();
@@ -108,14 +56,5 @@ BOOL IsInterfaceFirewalled(
  LPCWSTR pszInterfaceName
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _FW_IP_ADDRESS { USHORT Family; union { IN6_ADDR AddressIPv6; IN_ADDR AddressIPv4; };} FW_IP_ADDRESS, *PFW_IP_ADDRESS;
-typedef struct _FIREWALL_RULE{ DWORD dwSize; HRULE hRule; DWORD dwFlags; DWORD dwMask; LPCWSTR wszDescription; FW_IP_ADDRESS PrivateHost; FW_IP_ADDRESS PublicHost; union { UINT PublicHostPrefixLength; IN_ADDR PublicHostMask; }; INT Protocol; FW_ACTIONS Action; WORD wHourStart, wHourEnd; WORD wDayOfWeek; WORD wDay; WORD wMonth; union { { USHORT PortMin; USHORT PortMax; }; struct { UCHAR Type; UCHAR Code; }; };}FW_RULE, *PFW__RULE;
 
 #endif /* _FWAPI_ */

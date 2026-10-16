@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 549 constants, 82 declarations, 14 outlines, 0 base types, 1 extra macros, 4 extra decls
+ * 543 constants, 81 declarations, 14 outlines, 0 base types, 1 extra macros, 2 extra decls
  */
 #ifndef _WININET_
 #define _WININET_
@@ -33,12 +33,6 @@
 #define CONNECTION 23
 #define COOKIE 44
 #define COOKIE_CACHE_ENTRY 0x100000
-#define COOKIE_STATE_ACCEPT 0x1
-#define COOKIE_STATE_DOWNGRADE 0x4
-#define COOKIE_STATE_LEASH 0x3
-#define COOKIE_STATE_PROMPT 0x2
-#define COOKIE_STATE_REJECT 0x5
-#define COOKIE_STATE_UNKNOWN 0x0
 #define ERROR_FTP_DROPPED (INTERNET_ERROR_BASE+111)
 #define ERROR_FTP_TRANSFER_IN_PROGRESS (INTERNET_ERROR_BASE+110)
 #define ERROR_GOPHER_ATTRIBUTE_NOT_FOUND (INTERNET_ERROR_BASE+137)
@@ -712,19 +706,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* FtpCommand  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W FtpCommandA,FtpCommandW (CE is W-side)] */
-BOOL WINAPI FtpCommand(
- HINTERNET hConnect, 
- BOOL fExpectResponse, 
- DWORD dwFlags, 
- LPCTSTR lpszCommand, 
- DWORD dwContext
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* CommitUrlCacheEntry  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W CommitUrlCacheEntryA,CommitUrlCacheEntryW (CE is W-side)] */
 BOOL CommitUrlCacheEntry( 
@@ -748,256 +730,14 @@ BOOL CreateUrlCacheEntry(
  DWORD dwReserved
 );
 
-/* CreateUrlCacheGroup  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib] */
-GROUPID CreateUrlCacheGroup(
- DWORD dwFlags,
- LPVOID lpReserved
-);
-
 /* DeleteUrlCacheEntry  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W DeleteUrlCacheEntryA,DeleteUrlCacheEntryW (CE is W-side)] */
 BOOL DeleteUrlCacheEntry( 
  LPCTSTR lpszUrlName
 );
 
-/* DeleteUrlCacheGroup  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib] */
-BOOL DeleteUrlCacheGroup(
- GROUPID GroupId,
- DWORD dwFlags,
- LPVOID lpReserved
-)
-
 /* FindCloseUrlCache  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib] */
 BOOL FindCloseUrlCache( 
  HANDLE hEnumHandle
-);
-
-/* FindFirstUrlCacheEntry  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W FindFirstUrlCacheEntryA,FindFirstUrlCacheEntryW (CE is W-side)] */
-HANDLE FindFirstUrlCacheEntry( 
- LPCTSTR lpszUrlSearchPattern,
- LPINTERNET_CACHE_ENTRY_INFO lpFirstCacheEntryInfo,
- LPDWORD lpdwFirstCacheEntryInfoBufferSize
-);
-
-/* FindFirstUrlCacheEntryEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W FindFirstUrlCacheEntryExA,FindFirstUrlCacheEntryExW (CE is W-side)] */
-HANDLE FindFirstUrlCacheEntryEx( 
- LPCWSTR lpszUrlSearchPattern,
- DWORD dwFlags, 
- DWORD dwFilter, 
- GROUPID GroupId, 
- LPINTERNET_CACHE_ENTRY_INFO lpFirstCacheEntryInfo,
- LPDWORD lpdwFirstCacheEntryInfoBufferSize,
- LPVOID lpGroupAttributes, 
- LPDWORD pcbGroupAttributes, 
- LPVOID lpReserved
-);
-
-/* FindNextUrlCacheEntry  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W FindNextUrlCacheEntryA,FindNextUrlCacheEntryW (CE is W-side)] */
-BOOL FindNextUrlCacheEntry( 
- HANDLE hEnumHandle,
- LPINTERNET_CACHE_ENTRY_INFO lpNextCacheEntryInfo,
- LPDWORD lpdwNextCacheEntryInfoBufferSize
-);
-
-/* FtpCreateDirectory  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W FtpCreateDirectoryA,FtpCreateDirectoryW (CE is W-side)] */
-BOOL WINAPI FtpCreateDirectory(
- HINTERNET hConnect, 
- LPCTSTR lpszDirectory
-);
-
-/* FtpDeleteFile  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W FtpDeleteFileA,FtpDeleteFileW (CE is W-side)] */
-BOOL WINAPI FtpDeleteFile(
- HINTERNET hConnect, 
- LPCTSTR lpszFileName
-);
-
-/* FtpFindFirstFile  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W FtpFindFirstFileA,FtpFindFirstFileW (CE is W-side)] */
-HINTERNET FtpFindFirstFile(
- HINTERNET hConnect, 
- LPCTSTR lpszSearchFile, 
- LPWIN32_FIND_DATA lpFindFileData, 
- DWORD dwFlags, 
- DWORD dwContext
-);
-
-/* FtpGetCurrentDirectory  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W FtpGetCurrentDirectoryA,FtpGetCurrentDirectoryW (CE is W-side)] */
-BOOL WINAPI FtpGetCurrentDirectory(
- HINTERNET hConnect, 
- LPCTSTR lpszCurrentDirectory, 
- LPDWORD lpdwCurrentDirectory
-);
-
-/* FtpGetFile  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W FtpGetFileA,FtpGetFileW (CE is W-side)] */
-BOOL WINAPI FtpGetFile(
- HINTERNET hConnect, 
- LPCTSTR lpszRemoteFile, 
- LPCTSTR lpszNewFile, 
- BOOL fFailIfExists, 
- DWORD dwFlagsAndAttributes, 
- DWORD dwFlags, 
- DWORD dwContext
-);
-
-/* FtpOpenFile  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W FtpOpenFileA,FtpOpenFileW (CE is W-side)] */
-HINTERNET FtpOpenFile(
- HINTERNET hConnect, 
- LPCTSTR lpszFileName, 
- DWORD dwAccess, 
- DWORD dwFlags, 
- DWORD dwContext
-);
-
-/* FtpPutFile  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W FtpPutFileA,FtpPutFileW (CE is W-side)] */
-BOOL WINAPI FtpPutFile(
- HINTERNET hConnect, 
- LPCTSTR lpszLocalFile, 
- LPCTSTR lpszNewRemoteFile, 
- DWORD dwFlags, 
- DWORD dwContext
-);
-
-/* FtpRemoveDirectory  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W FtpRemoveDirectoryA,FtpRemoveDirectoryW (CE is W-side)] */
-BOOL WINAPI FtpRemoveDirectory(
- HINTERNET hConnect, 
- LPCTSTR lpszDirectory
-);
-
-/* FtpRenameFile  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W FtpRenameFileA,FtpRenameFileW (CE is W-side)] */
-BOOL WINAPI FtpRenameFile(
- HINTERNET hConnect, 
- LPCTSTR lpszExisting, 
- LPCTSTR lpszNew
-);
-
-/* FtpSetCurrentDirectory  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W FtpSetCurrentDirectoryA,FtpSetCurrentDirectoryW (CE is W-side)] */
-BOOL WINAPI FtpSetCurrentDirectory(
- HINTERNET hConnect, 
- LPCTSTR lpszDirectory
-);
-
-/* GetUrlCacheEntryInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W GetUrlCacheEntryInfoA,GetUrlCacheEntryInfoW (CE is W-side)] */
-BOOL GetUrlCacheEntryInfo( 
- LPCTSTR lpszUrlName,
- LPINTERNET_CACHE_ENTRY_INFO lpCacheEntryInfo,
- LPDWORD lpdwCacheEntryInfoBufferSize
-);
-
-/* GetUrlCacheEntryInfoEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W GetUrlCacheEntryInfoExA,GetUrlCacheEntryInfoExW (CE is W-side)] */
-BOOL GetUrlCacheEntryInfoEx( 
- LPCSTR lpszUrl,
- LPINTERNET_CACHE_ENTRY_INFO lpCacheEntryInfo,
- LPDWORD lpdwCacheEntryInfoBufSize, 
- LPSTR lpszReserved,
- LPDWORD lpdwReserved, 
- LPVOID lpReserved, 
- DWORD dwFlags 
-);
-
-/* HttpAddRequestHeaders  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W HttpAddRequestHeadersA,HttpAddRequestHeadersW (CE is W-side)] */
-BOOL WINAPI HttpAddRequestHeaders(
- HINTERNET hHttpRequest, 
- LPCTSTR lpszHeaders, 
- DWORD dwHeadersLength, 
- DWORD dwModifiers
-);
-
-/* HttpEndRequest  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W HttpEndRequestA,HttpEndRequestW (CE is W-side)] */
-BOOL HttpEndRequest(
- HINTERNET hRequest,
- LPINTERNET_BUFFERS lpBuffersOut, 
- DWORD dwFlags,
- DWORD dwContext
-);
-
-/* HttpOpenRequest  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W HttpOpenRequestA,HttpOpenRequestW (CE is W-side)] */
-HINTERNET WINAPI HttpOpenRequest(
- HINTERNET hConnect, 
- LPCTSTR lpszVerb, 
- LPCTSTR lpszObjectName, 
- LPCTSTR lpszVersion, 
- LPCTSTR lpszReferrer, 
- LPCTSTR* lplpszAcceptTypes, 
- DWORD dwFlags, 
- DWORD dwContext 
-);
-
-/* HttpQueryInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W HttpQueryInfoA,HttpQueryInfoW (CE is W-side)] */
-BOOL WINAPI HttpQueryInfo(
- HINTERNET hRequest, 
- DWORD dwInfoLevel, 
- LPVOID lpBuffer, 
- LPDWORD lpdwBufferLength, 
- LPDWORD lpdwIndex
-);
-
-/* HttpSendRequest  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W HttpSendRequestA,HttpSendRequestW (CE is W-side)] */
-BOOL WINAPI HttpSendRequest(
- HINTERNET hRequest, 
- LPCTSTR lpszHeaders, 
- DWORD dwHeadersLength, 
- LPVOID lpOptional, 
- DWORD dwOptionalLength
-);
-
-/* HttpSendRequestEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W HttpSendRequestExA,HttpSendRequestExW (CE is W-side)] */
-BOOL HttpSendRequestEx(
- HINTERNET hRequest, 
- LPINTERNET_BUFFERS lpBuffersIn,
- LPINTERNET_BUFFERS lpBuffersOut, 
- DWORD dwFlags,
- DWORD dwContext
-);
-
-/* InternetCanonicalizeUrl  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Schannel.lib, schannel.lib, Secur32.lib, secur32.lib, wininet.lib; A/W InternetCanonicalizeUrlA,InternetCanonicalizeUrlW (CE is W-side)] */
-BOOL WINAPI InternetCanonicalizeUrl(
- LPCTSTR lpszUrl, 
- LPWSTR lpszBuffer, 
- LPDWORD lpdwBufferLength, 
- DWORD dwFlags 
-);
-
-/* InternetCloseHandle  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib] */
-BOOL WINAPI InternetCloseHandle(
- HINTERNET hInternet
-);
-
-/* InternetCombineUrl  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetCombineUrlA,InternetCombineUrlW (CE is W-side)] */
-BOOL WINAPI InternetCombineUrl(
- LPCTSTR lpszBaseUrl, 
- LPCTSTR lpszRelativeUrl, 
- LPTSTR lpszBuffer, 
- LPDWORD lpdwBufferLength, 
- DWORD dwFlags
-);
-
-/* InternetCrackUrl  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetCrackUrlA,InternetCrackUrlW (CE is W-side)] */
-BOOL WINAPI InternetCrackUrl(
- LPCTSTR lpszUrl, 
- DWORD dwUrlLength, 
- DWORD dwFlags, 
- LPURL_COMPONENTS lpUrlComponents
-);
-
-/* InternetCreateUrl  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetCreateUrlA,InternetCreateUrlW (CE is W-side)] */
-BOOL WINAPI InternetCreateUrl(
- LPURL_COMPONENTS lpUrlComponents, 
- DWORD dwFlags, 
- LPTSTR lpszUrl, 
- LPDWORD lpdwUrlLength 
-);
-
-/* InternetErrorDlg  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib] */
-DWORD InternetErrorDlg(
- HWND hWnd, 
- HINTERNET hRequest,
- DWORD dwError, 
- DWORD dwFlags, 
- LPVOID* lppvData
-);
-
-/* InternetFindNextFile  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetFindNextFileA,InternetFindNextFileW (CE is W-side)] */
-BOOL WINAPI InternetFindNextFile(
- HINTERNET hFind, 
- LPVOID lpvFindData
 );
 
 /* InternetGetCookie  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetGetCookieA,InternetGetCookieW (CE is W-side)] */
@@ -1008,100 +748,11 @@ BOOL InternetGetCookie(
  LPDWORD lpdwSize
 );
 
-/* InternetGetLastResponseInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetGetLastResponseInfoA,InternetGetLastResponseInfoW (CE is W-side)] */
-BOOL WINAPI InternetGetLastResponseInfo( 
- LPDWORD lpdwError, 
- LPTSTR lpszBuffer, 
- LPDWORD lpdwBufferLength
-);
-
-/* InternetLockRequestFile  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib] */
-BOOL InternetLockRequestFile(
- HINTERNET hInternet,
- HANDLE* lphLockRequestInfo
-);
-
-/* InternetOpen  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetOpenA,InternetOpenW (CE is W-side)] */
-HINTERNET WINAPI InternetOpen(
- LPCTSTR lpszAgent, 
- DWORD dwAccessType, 
- LPCTSTR lpszProxy, 
- LPCTSTR lpszProxyBypass, 
- DWORD dwFlags
-);
-
-/* InternetOpenUrl  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetOpenUrlA,InternetOpenUrlW (CE is W-side)] */
-HINTERNET InternetOpenUrl( 
- HINTERNET hInternetSession, 
- LPCTSTR lpszUrl, 
- LPCTSTR lpszHeaders, 
- DWORD dwHeadersLength, 
- DWORD dwFlags, 
- DWORD dwContext
-);
-
-/* InternetQueryDataAvailable  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib] */
-BOOL WINAPI InternetQueryDataAvailable(
- HINTERNET hFile, 
- LPDWORD lpdwNumberOfBytesAvailable, 
- DWORD dwFlags, 
- DWORD dwContext
-);
-
-/* InternetQueryOption  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetQueryOptionA,InternetQueryOptionW (CE is W-side)] */
-BOOL WINAPI InternetQueryOption(
- HINTERNET hInternet, 
- DWORD dwOption, 
- LPVOID lpBuffer OPTIONAL, 
- LPDWORD lpdwBufferLength
-);
-
-/* InternetReadFile  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib] */
-BOOL WINAPI InternetReadFile(
- HINTERNET hFile, 
- LPVOID lpBuffer, 
- DWORD dwNumberOfBytesToRead, 
- LPDWORD lpdwNumberOfBytesRead
-);
-
-/* InternetReadFileEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetReadFileExA,InternetReadFileExW (CE is W-side)] */
-BOOL InternetReadFileEx(
- HINTERNET hFile,
- LPINTERNET_BUFFERS lpBuffersOut, 
- DWORD dwFlags,
- DWORD dwContext
-);
-
 /* InternetSetCookie  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetSetCookieA,InternetSetCookieW (CE is W-side)] */
 BOOL InternetSetCookie(
  LPCTSTR lpszUrl, 
  LPCTSTR lpszCookieName, 
  LPCTSTR lpszCookieData
-);
-
-/* InternetSetFilePointer  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib] */
-DWORD InternetSetFilePointer(
- HINTERNET hFile,
- LONG lDistanceToMove, 
- PVOID pReserved, 
- DWORD dwMoveMethod, 
- DWORD dwContext
-);
-
-/* InternetSetOption  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetSetOptionA,InternetSetOptionW (CE is W-side)] */
-BOOL WINAPI InternetSetOption(
- HINTERNET hInternet, 
- DWORD dwOption, 
- LPVOID lpBuffer, 
- DWORD dwBufferLength
-);
-
-/* InternetTimeFromSystemTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetTimeFromSystemTimeA,InternetTimeFromSystemTimeW (CE is W-side)] */
-BOOL WINAPI InternetTimeFromSystemTime(
- CONST SYSTEMTIME* pst, 
- DWORD dwRFC, 
- LPTSTR lpszTime, 
- DWORD cbTime
 );
 
 /* InternetTimeToSystemTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetTimeToSystemTimeA,InternetTimeToSystemTimeW (CE is W-side)] */
@@ -1116,39 +767,6 @@ BOOL InternetUnlockRequestFile(
  HANDLE hLockRequestInfo
 );
 
-/* InternetWriteFile  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib] */
-BOOL InternetWriteFile(
- HINTERNET hFile,
- LPCVOID lpBuffer, 
- DWORD dwNumberOfBytesToWrite,
- LPDWORD lpdwNumberOfBytesWritten
-);
-
-/* RetrieveUrlCacheEntryFile  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W RetrieveUrlCacheEntryFileA,RetrieveUrlCacheEntryFileW (CE is W-side)] */
-BOOL RetrieveUrlCacheEntryFile(
- LPCTSTR lpszUrlName, 
- LPINTERNET_CACHE_ENTRY_INFO lpCacheEntryInfo,
- LPDWORD lpdwCacheEntryInfoBufferSize, 
- DWORD dwReserved
-);
-
-/* SetUrlCacheEntryGroup  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W SetUrlCacheEntryGroupA,SetUrlCacheEntryGroupW (CE is W-side)] */
-BOOL SetUrlCacheEntryGroup(
- LPCTSTR lpszUrlName,
- DWORD dwFlags,
- GROUPID GroupId,
- LPBYTE pbGroupAttributes,
- DWORD cbGroupAttributes,
- LPVOID lpReserved
-);
-
-/* SetUrlCacheEntryInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W SetUrlCacheEntryInfoA,SetUrlCacheEntryInfoW (CE is W-side)] */
-BOOL SetUrlCacheEntryInfo(
- LPCSTR lpszUrlName,
- LPINTERNET_CACHE_ENTRY_INFO lpCacheEntryInfo,
- DWORD dwFieldControl
-);
-
 /* UnlockUrlCacheEntryFile  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W UnlockUrlCacheEntryFileA,UnlockUrlCacheEntryFileW (CE is W-side)] */
 BOOL UnlockUrlCacheEntryFile(
  LPCSTR lpszUrlName,
@@ -1156,7 +774,7 @@ BOOL UnlockUrlCacheEntryFile(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* InternetGetConnectedState  [function; shared; CE 3.0..399, 5.0..699; Wininet.lib, wininet.lib] */
 BOOL InternetGetConnectedState(
@@ -1172,51 +790,7 @@ BOOL InternetGoOnline(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* FindFirstUrlCacheGroup  [function; shared; CE 5.0..699; Wininet.lib, wininet.lib] */
-BOOL FindFirstUrlCacheGroup(
- DWORD dwFlags,
- DWORD dwFilter,
- LPVOID lpSearchCondition,
- DWORD dwSearchCondition,
- GROUPID* lpGroupId,
- LPVOID lpReserved
-);
-
-/* FindNextUrlCacheGroup  [function; shared; CE 5.0..699; Wininet.lib, wininet.lib] */
-BOOL FindNextUrlCacheGroup(
- HANDLE hFind,
- GROUPID* lpGroupId,
- LPVOID lpReserved
-);
-
-/* FtpGetFileEx  [function; ce-only; CE 5.0..699; Wininet.lib, wininet.lib] */
-BOOL WINAPI FtpGetFileEx(
- HINTERNET hFtpSession,
- LPCTSTR lpszRemoteFile, 
- LPCTSTR lpszNewFile, 
- BOOL fFailIfExists, 
- DWORD dwFlagsAndAttributes, 
- DWORD dwFlags, 
- DWORD dwContext
-);
-
-/* FtpGetFileSize  [function; shared; CE 5.0..699; Wininet.lib, wininet.lib] */
-DWORD FtpGetFileSize(
- HINTERNET hFile,
- LPDWORD lpdwFileSizeHigh
-);
-
-/* GetUrlCacheGroupAttribute  [function; shared; CE 5.0..699; Wininet.lib, wininet.lib; A/W GetUrlCacheGroupAttributeA,GetUrlCacheGroupAttributeW (CE is W-side)] */
-BOOL GetUrlCacheGroupAttribute(
- GROUPID gid,
- DWORD dwFlags,
- DWORD dwAttributes,
- LPINTERNET_CACHE_GROUP_INFO lpGroupInfo,
- LPWORD lpdwGroupInfo,
- LPVOID lpReserved
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* InternetAttemptConnect  [function; shared; CE 5.0..699; Wininet.lib, wininet.lib] */
 DWORD InternetAttemptConnect(
@@ -1303,33 +877,9 @@ BOOL ReadUrlCacheEntryStream(
  LPDWORD lpdwLen,
  DWORD dwReserved
 );
-
-/* RetrieveUrlCacheEntryStream  [function; shared; CE 5.0..699; Wininet.lib, wininet.lib; A/W RetrieveUrlCacheEntryStreamA,RetrieveUrlCacheEntryStreamW (CE is W-side)] */
-HANDLE RetrieveUrlCacheEntryStream(
- LPCTSTR lpszUrlName
- LPINTERNET_CACHE_ENTRY_INFO lpCacheEntryInfo,
- LPDWORD lpdwCacheEntryInfoBufferSize,
- BOOL fRandomRead,
- DWORD dwReserved
-);
-
-/* SetUrlCacheGroupAttribute  [function; shared; CE 5.0..699; Wininet.lib, wininet.lib; A/W SetUrlCacheGroupAttributeA,SetUrlCacheGroupAttributeW (CE is W-side)] */
-BOOL SetUrlCacheGroupAttribute(
- GROUPID gid,
- DWORD dwFlags,
- DWORD dwAttributes,
- LPINTERNET_CACHE_GROUP_INFO lpGroupInfo,
- LPVOID lpReserved
-);
-
-/* UnlockUrlCacheEntryStream  [function; shared; CE 5.0..699; Wininet.lib, wininet.lib] */
-BOOL UnlockUrlCacheEntryStream(
- LHANDLE hUrlCacheStream,
- DWORD dwReserved
-);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* InternetClearAllPerSiteCookieDecisions  [function; shared; CE 6.0..699; wininet.lib] */
 BOOL InternetClearAllPerSiteCookieDecisions(void);

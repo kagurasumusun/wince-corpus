@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 10 constants, 12 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 6 constants, 12 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _BT_HCIP_
 #define _BT_HCIP_
@@ -17,10 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define COMMAND_PACKET 1
-#define DATA_PACKET_ACL 2
-#define DATA_PACKET_SCO 3
-#define ETYPE_FINISH 5
 #define HCI_FLAGS_NOLOCALNAME 0x00000002
 #define HCI_FLAGS_NORESET 0x00000001
 #define HCI_FLAGS_NOROLESWITCH 0x00000004
@@ -59,25 +55,10 @@ typedef struct __hci_parameters {
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* HCI_CloseConnection  [function; ce-only; CE 4.0..699; Btd.lib] */
 void HCI_CloseConnection(void);
-
-/* HCI_EstablishDeviceContext  [function; ce-only; CE 4.0..699; Btd.lib] */
-Int HCI_EstablishDeviceContext(
- Void* pUserContext,
- UINT uiControl,
- BD_ADDR* pba,
- UINT class_of_device,
- UCHAR link_type,
- HCI_EVENT_INDICATION* pInd,
- HCI_CALLBACKS* pCall,
- HCI_INTERFACE* pInt,
- int* pcDataHeaders,
- int* pcDataTrailers,
- HANDLE* phDeviceContext
-);
 
 /* HCI_OpenConnection  [function; ce-only; CE 4.0..699; Btd.lib] */
 int HCI_OpenConnection(void);
@@ -87,23 +68,11 @@ int HCI_ReadHciParameters(
  HCI_PARAMETERS* pParms
 );
 
-/* HCI_ReadPacket  [function; ce-only; CE 4.0..699; Btd.lib] */
-int HCI_ReadPacket(
- HCI_TYPE* peType, 
- BD_BUFFER* pInBuffer
-);
-
 /* HCI_StartHardware  [function; ce-only; CE 4.0..699; Btd.lib] */
 int HCI_StartHardware(void);
 
 /* HCI_StopHardware  [function; ce-only; CE 4.0..699; Btd.lib] */
 int HCI_StopHardware(void);
-
-/* HCI_WritePacket  [function; ce-only; CE 4.0..699; Btd.lib] */
-int HCI_WritePacket(
- HCI_TYPE eType, 
- BD_BUFFER* pOutBuffer
-);
 #endif /* _WIN32_WCE */
 
 #endif /* _BT_HCIP_ */

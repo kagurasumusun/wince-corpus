@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1520 constants, 42 declarations, 16 outlines, 21 base types, 0 extra macros, 0 extra decls
+ * 1520 constants, 39 declarations, 24 outlines, 21 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINNT_
 #define _WINNT_
@@ -234,8 +234,6 @@
 #define HEAP_TAIL_CHECKING_ENABLED 32
 #define HEAP_ZERO_MEMORY 0x00000008
 #define IMAGE_ARCHIVE_END "`\n"
-#define IMAGE_ARCHIVE_LINKER_MEMBER "/
-#define IMAGE_ARCHIVE_LONGNAMES_MEMBER "//
 #define IMAGE_ARCHIVE_PAD "\n"
 #define IMAGE_ARCHIVE_START "!<arch>\n"
 #define IMAGE_ARCHIVE_START_SIZE 8
@@ -1650,7 +1648,15 @@ typedef WCHAR TBYTE;
 
 /* _IMAGE_ALPHA_RUNTIME_FUNCTION_ENTRY  [typedef; ce-only] */
 
-/* BOOLEAN  [typedef; shared; entity-headers] */
+/* CRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
+
+/* HIMAGELIST  [typedef; ce-only; heuristic-prefix] */
+
+/* HIMC  [typedef; ce-only; heuristic-prefix] */
+
+/* LPCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
+
+/* LUID  [typedef; ce-only; heuristic-prefix] */
 
 /* MAKELANGID  [macro, function; shared] */
 WORD MAKELANGID( 
@@ -1663,16 +1669,24 @@ WORD MAKELANGID(
  ((DWORD)((((DWORD)((WORD )(srtid))) << 16) | \ 
  ((DWORD)((WORD )(lgid)))))
 
-/* PBOOLEAN  [typedef; shared; entity-headers] */
+/* PCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
+
+/* PCWCH  [typedef; ce-only; heuristic-prefix] */
+
+/* PLUID  [typedef; ce-only; heuristic-prefix] */
 
 /* PRIMARYLANGID  [macro, function; shared] */
 WORD PRIMARYLANGID( 
  WORD lgid 
 );
 
+/* REGSAM  [typedef; ce-only; heuristic-prefix] */
+
 /* SUBLANGID  [macro, function; shared] */
 
 /* TEXT  [macro, typedef, function; shared] */
+
+/* UNSIGNED  [typedef; ce-only; heuristic-prefix] */
 
 /* VOID  [typedef, macro; shared; entity-headers] */
 
@@ -1682,8 +1696,14 @@ WORD PRIMARYLANGID(
  * declaration body no page prints
  * ================================================================ */
 
+/* BOOLEAN  [typedef; shared; entity-headers; win32-reference] */
+typedef BYTE BOOLEAN;
+
 /* LCID  [typedef; shared; entity-headers] */
 typedef unsigned long LCID;
+
+/* PBOOLEAN  [typedef; shared; entity-headers; win32-reference] */
+typedef BOOLEAN *PBOOLEAN;
 
 /* PCHAR  [typedef; shared; entity-headers; win32-reference] */
 typedef CHAR *PCHAR;
@@ -1744,17 +1764,7 @@ typedef WCHAR *PWSTR;
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 200 && _WIN32_WCE < 210) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.0..209, 2.11..2.12, 3.0..699 */
-
-/* CONTAINING_RECORD  [function; shared; CE 2.0..209, 2.11..2.12, 3.0..699] */
-PCHAR CONTAINING_RECORD(
- PCHAR Address,
- TYPE Type,
- PCHAR Field
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 600)) /* CE 4.0..599 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x600)) /* CE 4.0..599 */
 
 /* _disable  [function; ce-only; CE 4.0..599] */
 void _disable(void);
@@ -1763,7 +1773,7 @@ void _disable(void);
 void _enable(void);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* __emul  [function; ce-only; CE 4.0..699] */
 __int64 __cdecl __emul(
@@ -1776,39 +1786,9 @@ unsigned __int64 __cdecl __emulu(
  int int1,
  int int2
 );
-
-/* __ll_lshift  [function; ce-only; CE 4.0..699] */
-__int64 __cdecl __ll_lshift(
- int64 Mask,
- int nBit
-);
-
-/* __ll_rshift  [function; ce-only; CE 4.0..699] */
-__int64 __cdecl __ll_rshift(
- int64 Mask,
- int nBit
-);
-
-/* __ull_rshift  [function; ce-only; CE 4.0..699] */
-unsigned __int64 __cdecl __ull_rshift(
- unsigned__int64 Mask,
- int nBit
-);
-
-/* _InterlockedExchangeAdd  [function; ce-only; CE 4.0..699] */
-InterlockedExchangeAdd(
- PLONG Addend,
- LONG Increment
-);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-
-/* _InterlockedExchange  [function; ce-only; CE 5.0..699] */
-LONG InterlockedExchange(
- LONG volatile* Target,
- LONG Value
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* SecureZeroMemory  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 PVOID SecureZeroMemory(

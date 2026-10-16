@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 43 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 42 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _D3D8TYPES_
 #define _D3D8TYPES_
@@ -98,18 +98,5 @@ typedef struct _D3DVIEWPORT8 {
  float MinZ;
  float MaxZ;
 } D3DVIEWPORT8;
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 500)) /* CE 4.0..499 */
-
-/* D3DCOLOR_COLORVALUE  [function; ce-only; CE 4.0..499] */
-D3DCOLOR_COLORVALUE(r,g,b,a) \
-D3DCOLOR_RGBA((DWORD)((r)*255.f),(DWORD)((g)*255.f),(DWORD)((b)*255.f),(D
-ORD)((a)*255.f)
-)
-#endif /* _WIN32_WCE */
 
 #endif /* _D3D8TYPES_ */

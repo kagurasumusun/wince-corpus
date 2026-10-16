@@ -17,8 +17,6 @@
  * ================================================================ */
 
 /* function */
-HRESULT FindDevices( RAPIDEVICEID *pDeviceID, RAPI_GETDEVICEOPCODE opFlags,..IRAPIDevice** ppIDevice );
-HRESULT GetConnectStat( RAPI_DEVICESTATUS* pStat );
 HRESULT OnDeviceConnected( IRAPIDevice* pIDevice );
 HRESULT OnDeviceDisconnected( IRAPIDevice* pIDevice );
 HRESULT UnAdvise( DWORD dwContext );

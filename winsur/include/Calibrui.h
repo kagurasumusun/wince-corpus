@@ -15,12 +15,7 @@
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
-
-/* TouchCalibrateUI_Done  [function; ce-only; CE 3.0..699] */
-void TouchCalibrateUI_Done( 
- TOUCH_CALIBRATE_STATE tcs 
-);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
 
 /* TouchCalibrateUI_DrawConfirmationScreen  [function; ce-only; CE 3.0..699] */
 void TouchCalibrateUI_DrawConfirmationScreen( 
@@ -37,12 +32,6 @@ void TouchCalibrateUI_HandleUserInputMessage(
  UINT Message, 
  UINT wParam, 
  UINT lParam 
-);
-
-/* TouchCalibrateUI_Initialize  [function; ce-only; CE 3.0..699] */
-void TouchCalibrateUI_Initialize( 
- TOUCH_CALIBRATE_STATE* ptcs, 
- HINSTANCE hinst 
 );
 
 /* TouchCalibrateUI_WaitForConfirmation  [function; ce-only; CE 3.0..699] */
