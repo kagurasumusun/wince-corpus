@@ -5,47 +5,145 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 42 declarations, 0 derived outlines, 0 base types
+ * 5 constants, 19 declarations, 48 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _MQ_
 #define _MQ_
 
 
+/* ==================================================================
+ * constants (one evidence comment per #define; the
+ * #if of a batch covers every #define in it; values
+ * that differ per generation pool into #if/#elif
+ * chains with the evidence after the #endif)
+ * ================================================================ */
 
-typedef struct tagMQMSGPROPS {DWORD cProp;MSGPROPID aPropID[];PROPVARIANT aPropVar[];HRESULT aStatus[];} MQMSGPROPS;
-typedef struct tagCAUI1 {  ULONG cElems;  unsigned char *pElems;  } CAUI1;
-typedef struct tagMQQMPROPS{
-  DWORD cProp;
-  QMPROPID aPropID[];
-  PROPVARIANT aPropVar[];
-  HRESULT aStatus[];
-} MQQMPROPS;
-typedef struct tagMQQUEUEPROPS {
-  DWORD cProp;
-  QUEUEPROPID aPropID[];
-  PROPVARIANT aPropVar[];
-  HRESULT aStatus[];
-} MQQUEUEPROPS;
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
 
-HRESULT APIENTRY MQCloseCursor( HANDLE hCursor );
-HRESULT APIENTRY MQCloseQueue(QUEUEHANDLE hQueue);
-HRESULT APIENTRY MQCreateCursor(QUEUEHANDLE hQueue,PHANDLE phCursor);
-HRESULT APIENTRY MQCreateQueue(PSECURITY_DESCRIPTOR pSecurityDescriptor,MQQUEUEPROPS* pQueueProps,LPWSTR lpwcsFormatName,LPDWORD lpdwFormatNameLength);
-HRESULT APIENTRY MQDeleteQueue(  LPCWSTR lpwcsFormatName  );
-VOID MQFreeMemory(  PVOID pvMemory  );
-HRESULT APIENTRY MQGetMachineProperties(  LPCWSTR lpwcsMachineName,  const GUID *pguidMachineID,  MQQMPROPS *pQMProps  );
-HRESULT APIENTRY MQGetQueueProperties(  LPCWSTR lpwcsFormatName,  MQQUEUEPROPS *pQueueProps  );
-HRESULT APIENTRY MQHandleToFormatName(  QUEUEHANDLE hQueue,  LPWSTR lpwcsFormatName,  LPDWORD lpdwCount  );
-HRESULT APIENTRY MQOpenQueue(  LPCWSTR lpwcsFormatName,  DWORD dwAccess,  DWORD dwShareMode,  LPQUEUEHANDLE phQueue  );
-HRESULT APIENTRY MQPathNameToFormatName( LPCWSTR lpwcsPathName, LPWSTR lpwcsFormatName, LPDWORD lpdwCount );
-HRESULT APIENTRY MQReceiveMessage( QUEUEHANDLE hSource, DWORD dwTimeout, DWORD dwAction, MQMSGPROPS pMessageProps, LPOVERLAPPED lpOverlapped, PMQRECEIVECALLBACK fnReceiveCallback, HANDLE hCursor, Transaction* pTransaction );
-HRESULT APIENTRY MQSendMessage(  QUEUEHANDLE hDestinationQueue,  MQMSGPROPS *pMessageProps,  ITransaction *pTransaction  );
-HRESULT APIENTRY MQSetQueueProperties(  LPCWSTR lpwcsFormatName,  MQQUEUEPROPS *pQueueProps  );
-MsgProps.aPropID[i] = PROPID_M_BODY_SIZE; MsgProps.aPropVar[i].vt = VT_UI4; i++; DWORD dwBodyBufferSize = 1024; UCHAR *pucBodyBuffer = (UCHAR *)malloc(dwBodyBufferSize); MsgProps.aPropID[i] = PROPID_M_BODY; MsgProps.aPropVar[i].vt = VT_VECTOR|VT_UI1; MsgProps.aPropVar[i].caub.pElems = (UCHAR*)pucBodyBuffer; MsgProps.aPropVar[i].caub.cElems = dwBodyBufferSize; i++;
-MsgProps.aPropID[i] = PROPID_M_BODY_SIZE; MsgProps.aPropVar[i].vt = VT_UI4; i++; DWORD dwBodyBufferSize = 1024; UCHAR *pucBodyBuffer = (UCHAR *)malloc(dwBodyBufferSize); MsgProps.aPropID[i] = PROPID_M_BODY; MsgProps.aPropVar[i].vt = VT_VECTOR|VT_UI1; MsgProps.aPropVar[i].caub.pElems = (UCHAR*)pucBodyBuffer; MsgProps.aPropVar[i].caub.cElems = dwBodyBufferSize; i++;
-UCHAR szCorrelationID[20]; aMsgPropId[i] = PROPID_M_CORRELATION; aMsgPropVar[i].vt = VT_VECTOR | VT_UI1; aMsgPropVar[i].caub.pElems = szCorrelationID; aMsgPropVar[i].caub.cElems = sizeof(szCorrelationID); i++;
-aMsgPropId[i] = PROPID_M_EXTENSION; aMsgPropVar[i].vt = VT_UI1 | VT_VECTOR; aMsgPropVar[i].caub.pElems = ExtensionInformation; aMsgPropVar[i].caub.cElems = sizeof(ExtensionInformation); i++;
-BYTE MessageID[PROPID_M_MSGID_SIZE]; MsgProps.aPropID[i] = PROPID_M_MSGID; MsgProps.aPropVar[i].vt = VT_VECTOR|VT_UI1; MsgProps.aPropVar[i].caub.pElems = MessageID; MsgProps.aPropVar[i].caub.cElems = sizeof(MessageID); i++;
+/* MQ_ERROR_ACCESS_DENIED = 0xC00E0025  [unified-kb] */
+#define MQ_ERROR_ACCESS_DENIED 0xC00E0025
+
+/* MQ_ERROR_ILLEGAL_FORMATNAME = 0xC00E001E  [unified-kb] */
+#define MQ_ERROR_ILLEGAL_FORMATNAME 0xC00E001E
+
+/* MQ_ERROR_ILLEGAL_PROPERTY_VT = 0xC00E0019  [unified-kb] */
+#define MQ_ERROR_ILLEGAL_PROPERTY_VT 0xC00E0019
+
+/* MQ_ERROR_SERVICE_NOT_AVAILABLE = 0xC00E000B  [unified-kb] */
+#define MQ_ERROR_SERVICE_NOT_AVAILABLE 0xC00E000B
+
+/* MQ_INFORMATION_UNSUPPORTED_PROPERTY = 0x400E0004  [unified-kb] */
+#define MQ_INFORMATION_UNSUPPORTED_PROPERTY 0x400E0004
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* PROPID_M_COMPOUND_MESSAGE  [?; ce-only; heuristic-prefix] */
+
+/* PROPID_M_COMPOUND_MESSAGE_SIZE  [?; ce-only; heuristic-prefix] */
+
+/* PROPID_M_FIRST_IN_XACT  [?; ce-only; heuristic-prefix] */
+
+/* PROPID_M_LAST_IN_XACT  [?; ce-only; heuristic-prefix] */
+
+/* PROPID_M_XACTID  [?; ce-only; heuristic-prefix] */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
+
+/* PROPID_M_ACKNOWLEDGE  [?; ce-only; CE 3.0..399, 5.0..699] */
+
+/* PROPID_M_ADMIN_QUEUE  [?; ce-only; CE 3.0..399, 5.0..699] */
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
+
+/* PROPID_M_ADMIN_QUEUE_LEN  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_M_APPSPECIFIC  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_M_ARRIVEDTIME  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_M_AUTH_LEVEL  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_M_BODY  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_M_BODY_TYPE  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_M_CLASS  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_M_CORRELATIONID  [function; ce-only; CE 3.0..699] */
+
+/* PROPID_M_DELIVERY  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_M_DEST_QUEUE  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_M_DEST_QUEUE_LEN  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_M_EXTENSION  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_M_EXTENSION_LEN  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_M_JOURNAL  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_M_LABEL  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_M_LABEL_LEN  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_M_MSGID  [function; ce-only; CE 3.0..699] */
+
+/* PROPID_M_PRIORITY  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_M_RESP_QUEUE  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_M_RESP_QUEUE_LEN  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_M_SENTTIME  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_M_SRC_MACHINE_ID  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_M_TIME_TO_BE_RECEIVED  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_M_TIME_TO_REACH_QUEUE  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_M_TRACE  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_M_VERSION  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_Q_AUTHENTICATE  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_Q_CREATE_TIME  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_Q_JOURNAL  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_Q_JOURNAL_QUOTA  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_Q_LABEL  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_Q_MODIFY_TIME  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_Q_PATHNAME  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_Q_PRIV_LEVEL  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_Q_QUOTA  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_Q_TRANSACTION  [?; ce-only; CE 3.0..699] */
+
+/* PROPID_QM_MACHINE_ID  [?; ce-only; CE 3.0..699] */
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+
+/* PROPID_M_SOAP_BODY  [?; ce-only; CE 4.0..699; heuristic-prefix] */
+
+/* PROPID_M_SOAP_ENVELOPE  [?; ce-only; CE 4.0..699; heuristic-prefix] */
+
+/* PROPID_M_SOAP_ENVELOPE_LEN  [?; ce-only; CE 4.0..699; heuristic-prefix] */
+
+/* PROPID_M_SOAP_HEADER  [?; ce-only; CE 4.0..699; heuristic-prefix] */
+#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -55,13 +153,7 @@ BYTE MessageID[PROPID_M_MSGID_SIZE]; MsgProps.aPropID[i] = PROPID_M_MSGID; MsgPr
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
 
-/*--------------------------------------------------------------------
- * MQMSGPROPS  [struct]
- * surface: ce-only
- * library: -
- * versions: 3.0..399, 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee501073(v=winembedded.60).html
- */
+/* MQMSGPROPS  [struct; ce-only; CE 3.0..399, 5.0..699] */
 typedef struct tagMQMSGPROPS {
  DWORD cProp;
  MSGPROPID aPropID[];
@@ -69,13 +161,7 @@ typedef struct tagMQMSGPROPS {
  HRESULT aStatus[];
 } MQMSGPROPS;
 
-/*--------------------------------------------------------------------
- * MQPROPVARIANT  [struct]
- * surface: ce-only
- * library: -
- * versions: 3.0..399, 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee500337(v=winembedded.60).html
- */
+/* MQPROPVARIANT  [struct; ce-only; CE 3.0..399, 5.0..699] */
 struct tagMQPROPVARIANT {
  VARTYPE vt;
  WORD wReserved1;
@@ -109,13 +195,7 @@ struct tagMQPROPVARIANT {
  };
 typedef struct MQPROPVARIANT MQPROPVARIANT;
 
-/*--------------------------------------------------------------------
- * MQQMPROPS  [struct]
- * surface: ce-only
- * library: -
- * versions: 3.0..399, 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee501158(v=winembedded.60).html
- */
+/* MQQMPROPS  [struct; ce-only; CE 3.0..399, 5.0..699] */
 typedef struct tagMQQMPROPS {
  DWORD cProp;
  QMPROPID aPropID[];
@@ -123,13 +203,7 @@ typedef struct tagMQQMPROPS {
  HRESULT aStatus[];
 } MQQMPROPS;
 
-/*--------------------------------------------------------------------
- * MQQUEUEPROPS  [struct]
- * surface: ce-only
- * library: -
- * versions: 3.0..399, 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee498471(v=winembedded.60).html
- */
+/* MQQUEUEPROPS  [struct; ce-only; CE 3.0..399, 5.0..699] */
 typedef struct tagMQQUEUEPROPS {
  DWORD cProp;
  QUEUEPROPID aPropID[];
@@ -144,47 +218,23 @@ typedef struct tagMQQUEUEPROPS {
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
 
-/*--------------------------------------------------------------------
- * MQCloseCursor  [function]
- * surface: ce-only
- * library: msmqapix.lib, Msmqrt.lib, msmqrt.lib
- * versions: 3.0..399, 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee499184(v=winembedded.60).html
- */
+/* MQCloseCursor  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
 HRESULT APIENTRY MQCloseCursor(
  HANDLE hCursor
 );
 
-/*--------------------------------------------------------------------
- * MQCloseQueue  [function]
- * surface: ce-only
- * library: msmqapix.lib, Msmqrt.lib, msmqrt.lib
- * versions: 3.0..399, 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee499791(v=winembedded.60).html
- */
+/* MQCloseQueue  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
 HRESULT APIENTRY MQCloseQueue(
  QUEUEHANDLE hQueue
 );
 
-/*--------------------------------------------------------------------
- * MQCreateCursor  [function]
- * surface: ce-only
- * library: msmqapix.lib, Msmqrt.lib, msmqrt.lib
- * versions: 3.0..399, 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee499156(v=winembedded.60).html
- */
+/* MQCreateCursor  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
 HRESULT APIENTRY MQCreateCursor(
  QUEUEHANDLE hQueue,
  PHANDLE phCursor
 );
 
-/*--------------------------------------------------------------------
- * MQCreateQueue  [function]
- * surface: ce-only
- * library: msmqapix.lib, Msmqrt.lib, msmqrt.lib
- * versions: 3.0..399, 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee500631(v=winembedded.60).html
- */
+/* MQCreateQueue  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
 HRESULT APIENTRY MQCreateQueue(
  PSECURITY_DESCRIPTOR pSecurityDescriptor,
  MQQUEUEPROPS* pQueueProps,
@@ -192,73 +242,37 @@ HRESULT APIENTRY MQCreateQueue(
  LPDWORD lpdwFormatNameLength
 );
 
-/*--------------------------------------------------------------------
- * MQDeleteQueue  [function]
- * surface: ce-only
- * library: msmqapix.lib, Msmqrt.lib, msmqrt.lib
- * versions: 3.0..399, 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee498833(v=winembedded.60).html
- */
+/* MQDeleteQueue  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
 HRESULT APIENTRY MQDeleteQueue(
  LPCWSTR lpwcsFormatName
 );
 
-/*--------------------------------------------------------------------
- * MQFreeMemory  [function]
- * surface: ce-only
- * library: msmqapix.lib, Msmqrt.lib, msmqrt.lib
- * versions: 3.0..399, 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee501162(v=winembedded.60).html
- */
+/* MQFreeMemory  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
 VOID MQFreeMemory(
  PVOID pvMemory
 );
 
-/*--------------------------------------------------------------------
- * MQGetMachineProperties  [function]
- * surface: ce-only
- * library: msmqapix.lib, Msmqrt.lib, msmqrt.lib
- * versions: 3.0..399, 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee498824(v=winembedded.60).html
- */
+/* MQGetMachineProperties  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
 HRESULT APIENTRY MQGetMachineProperties(
  LPCWSTR lpwcsMachineName,
  const GUID* pguidMachineID,
  MQQMPROPS* pQMProps
 );
 
-/*--------------------------------------------------------------------
- * MQGetQueueProperties  [function]
- * surface: ce-only
- * library: msmqapix.lib, Msmqrt.lib, msmqrt.lib
- * versions: 3.0..399, 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee498917(v=winembedded.60).html
- */
+/* MQGetQueueProperties  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
 HRESULT APIENTRY MQGetQueueProperties(
  LPCWSTR lpwcsFormatName,
  MQQUEUEPROPS* pQueueProps
 );
 
-/*--------------------------------------------------------------------
- * MQHandleToFormatName  [function]
- * surface: ce-only
- * library: msmqapix.lib, Msmqrt.lib, msmqrt.lib
- * versions: 3.0..399, 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee500342(v=winembedded.60).html
- */
+/* MQHandleToFormatName  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
 HRESULT APIENTRY MQHandleToFormatName(
  QUEUEHANDLE hQueue,
  LPWSTR lpwcsFormatName,
  LPDWORD lpdwCount
 );
 
-/*--------------------------------------------------------------------
- * MQOpenQueue  [function]
- * surface: ce-only
- * library: msmqapix.lib, Msmqrt.lib, msmqrt.lib
- * versions: 3.0..399, 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee498665(v=winembedded.60).html
- */
+/* MQOpenQueue  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
 HRESULT APIENTRY MQOpenQueue(
  LPCWSTR lpwcsFormatName,
  DWORD dwAccess,
@@ -266,26 +280,14 @@ HRESULT APIENTRY MQOpenQueue(
  LPQUEUEHANDLE phQueue
 );
 
-/*--------------------------------------------------------------------
- * MQPathNameToFormatName  [function]
- * surface: ce-only
- * library: msmqapix.lib, Msmqrt.lib, msmqrt.lib
- * versions: 3.0..399, 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee499193(v=winembedded.60).html
- */
+/* MQPathNameToFormatName  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
 HRESULT APIENTRY MQPathNameToFormatName(
  LPCWSTR lpwcsPathName,
  LPWSTR lpwcsFormatName,
  LPDWORD lpdwCount
 );
 
-/*--------------------------------------------------------------------
- * MQReceiveMessage  [function]
- * surface: ce-only
- * library: msmqapix.lib, Msmqrt.lib, msmqrt.lib
- * versions: 3.0..399, 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee498472(v=winembedded.60).html
- */
+/* MQReceiveMessage  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
 HRESULT APIENTRY MQReceiveMessage(
  QUEUEHANDLE hSource,
  DWORD dwTimeout,
@@ -297,105 +299,23 @@ HRESULT APIENTRY MQReceiveMessage(
  Transaction* pTransaction
 );
 
-/*--------------------------------------------------------------------
- * MQSendMessage  [function]
- * surface: ce-only
- * library: msmqapix.lib, Msmqrt.lib, msmqrt.lib
- * versions: 3.0..399, 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee500880(v=winembedded.60).html
- */
+/* MQSendMessage  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
 HRESULT APIENTRY MQSendMessage(
  QUEUEHANDLE hDestinationQueue,
  MQMSGPROPS* pMessageProps,
  ITransaction* pTransaction
 );
 
-/*--------------------------------------------------------------------
- * MQSetQueueProperties  [function]
- * surface: ce-only
- * library: msmqapix.lib, Msmqrt.lib, msmqrt.lib
- * versions: 3.0..399, 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee500296(v=winembedded.60).html
- */
+/* MQSetQueueProperties  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
 HRESULT APIENTRY MQSetQueueProperties(
  LPCWSTR lpwcsFormatName,
  MQQUEUEPROPS* pQueueProps
 );
-
-/*--------------------------------------------------------------------
- * PROPID_M_ACKNOWLEDGE  [?]
- * surface: ce-only
- * library: -
- * versions: 3.0..399, 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee498640(v=winembedded.60).html
- */
-aMsgPropId[i] = PROPID_M_ACKNOWLEDGE; // Property ID
-aMsgPropVar[i].vt = VT_UI1; // Type indicator
-aMsgPropVar[i].bVal = MQMSG_ACKNOWLEDGMENT_FULL_RECEIVE;
-i++;
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
 
-/*--------------------------------------------------------------------
- * PROPID_M_ADMIN_QUEUE_LEN  [?]
- * surface: ce-only
- * library: -
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee499458(v=winembedded.60).html
- */
-aMsgPropId[i] = PROPID_M_ADMIN_QUEUE_LEN; // Property ID
-aMsgPropVar[i].vt = VT_UI4; // Type indicator
-aMsgPropVar[i].ulVal = dwAdminFormatNameBufferLength;
-i++;
-aMsgPropId[i] = PROPID_M_ADMIN_QUEUE; // Property ID
-aMsgPropVar[i].vt = VT_LPWSTR; // Type indicator
-aMsgPropVar[i].pwszVal = wszAdminFormatNameBuffer;
-i++;
-
-/*--------------------------------------------------------------------
- * PROPID_M_APPSPECIFIC  [?]
- * surface: ce-only
- * library: -
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee500792(v=winembedded.60).html
- */
-aMsgPropId[i] = PROPID_M_APPSPECIFIC; // Property ID
-aMsgPropVar[i].vt = VT_UI4; // Type indicator
-aMsgPropVar[i].ulVal = dwAppspecificIndex; // Value
-i++;
-
-/*--------------------------------------------------------------------
- * PROPID_M_ARRIVEDTIME  [?]
- * surface: ce-only
- * library: -
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee501126(v=winembedded.60).html
- */
-aMsgPropId[i] = PROPID_M_ARRIVEDTIME; // Property ID
-aMsgPropVar[i].vt = VT_UI4; // Type indicator
-aMsgPropVar[i].ulVal = dwArrivedTime; // Value
-i++;
-
-/*--------------------------------------------------------------------
- * PROPID_M_AUTH_LEVEL  [?]
- * surface: ce-only
- * library: -
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee498937(v=winembedded.60).html
- */
-aMsgPropId[i] = PROPID_M_AUTH_LEVEL; // Property ID
-aMsgPropVar[i].vt = VT_UI4; // Type indicator
-aMsgPropVar[i].ulVal = MQMSG_AUTH_LEVEL_NONE;
-i++;
-
-/*--------------------------------------------------------------------
- * PROPID_M_BODY_SIZE  [function]
- * surface: ce-only
- * library: -
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee500462(v=winembedded.60).html
- */
+/* PROPID_M_BODY_SIZE  [function; ce-only; CE 3.0..699] */
 MsgProps.aPropID[i] = PROPID_M_BODY_SIZE; // Property ID
 MsgProps.aPropVar[i].vt = VT_UI4; // Type indicator
 i++;
@@ -406,243 +326,14 @@ MsgProps.aPropVar[i].vt = VT_VECTOR|VT_UI1; // Type indicator
 MsgProps.aPropVar[i].caub.pElems = (UCHAR*)pucBodyBuffer;
 MsgProps.aPropVar[i].caub.cElems = dwBodyBufferSize;
 i++;
-
-/*--------------------------------------------------------------------
- * PROPID_M_BODY_TYPE  [?]
- * surface: ce-only
- * library: -
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee498618(v=winembedded.60).html
- */
-MsgProps.aPropID[i] = PROPID_M_BODY_TYPE; // Property ID
-MsgProps.aPropVar[i].vt = VT_UI4; // Type indicator
-i++;
-
-/*--------------------------------------------------------------------
- * PROPID_M_CLASS  [?]
- * surface: ce-only
- * library: -
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee498849(v=winembedded.60).html
- */
-MsgProps.aPropID[i] = PROPID_M_CLASS; //PROPVARIANT Field
-MsgProps.aPropVar[i].vt = VT_UI2; //Type Indicator
-i++;
-
-/*--------------------------------------------------------------------
- * PROPID_M_CORRELATIONID  [function]
- * surface: ce-only
- * library: -
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee499737(v=winembedded.60).html
- */
-UCHAR szCorrelationID[20];
-aMsgPropId[i] = PROPID_M_CORRELATION; // Property ID
-aMsgPropVar[i].vt = VT_VECTOR | VT_UI1; // Type indicator
-aMsgPropVar[i].caub.pElems = szCorrelationID;
-aMsgPropVar[i].caub.cElems = sizeof(szCorrelationID);
-i++;
-
-/*--------------------------------------------------------------------
- * PROPID_M_DELIVERY  [?]
- * surface: ce-only
- * library: -
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee499837(v=winembedded.60).html
- */
-aMsgPropId[i] = PROPID_M_DELIVERY; // Property ID
-aMsgPropVar[i].vt = VT_UI1; // Type indicator
-aMsgPropVar[i].bVal = MQMSG_DELIVERY_RECOVERABLE;
-i++;
-
-/*--------------------------------------------------------------------
- * PROPID_M_DEST_QUEUE  [?]
- * surface: ce-only
- * library: -
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee501239(v=winembedded.60).html
- */
-DWORD dwDestFormatNameBufferLength = MQ_MAX_Q_NAME_LEN;
-WCHAR wszDestFormatNameBuffer[MQ_MAX_Q_NAME_LEN];
-aMsgPropId[i] = PROPID_M_DEST_QUEUE; // Property ID
-aMsgPropVar[i].vt = VT_LPWSTR; // Type indicator
-aMsgPropVar[i].pwszVal = wszDestFormatNameBuffer;
-i++;
-aMsgPropId[i] = PROPID_M_DEST_QUEUE_LEN; // Property ID
-aMsgPropVar[i].vt = VT_UI4; // Type indicator
-aMsgPropVar[i].ulVal = dwDestFormatNameBufferLength;
-i++;
-
-/*--------------------------------------------------------------------
- * PROPID_M_DEST_QUEUE_LEN  [?]
- * surface: ce-only
- * library: -
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee500318(v=winembedded.60).html
- */
-DWORD dwDestFormatNameBufferLength = MQ_MAX_Q_NAME_LEN;
-WCHAR wszDestFormatNameBuffer[MQ_MAX_Q_NAME_LEN];
-aMsgPropId[i] = PROPID_M_DEST_QUEUE; // Property ID
-aMsgPropVar[i].vt = VT_LPWSTR; // Type indicator
-aMsgPropVar[i].pwszVal = wszDestFormatNameBuffer;
-i++;
-aMsgPropId[i] = PROPID_M_DEST_QUEUE_LEN; // Property ID
-aMsgPropVar[i].vt = VT_UI4; // Type indicator
-aMsgPropVar[i].ulVal = dwDestFormatNameBufferLength;
-i++;
-
-/*--------------------------------------------------------------------
- * PROPID_M_EXTENSION_LEN  [?]
- * surface: ce-only
- * library: -
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee500567(v=winembedded.60).html
- */
-aMsgPropId[i] = PROPID_M_EXTENSION_LEN; // Property ID
-aMsgPropVar[i].vt = VT_UI4; // Type indicator
-i++;
-aMsgPropId[i] = PROPID_M_EXTENSION; // Property ID
-aMsgPropVar[i].vt = VT_UI1 | VT_VECTOR; // Type indicator
-i++;
-
-/*--------------------------------------------------------------------
- * PROPID_M_JOURNAL  [?]
- * surface: ce-only
- * library: -
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee499710(v=winembedded.60).html
- */
-aMsgPropId[i] = PROPID_M_JOURNAL; // Property ID
-aMsgPropVar[i].vt = VT_UI1; // Type indicator
-MsgProps.aPropVar[i].bVal = MQMSG_JOURNAL; // Value
-i++;
-
-/*--------------------------------------------------------------------
- * PROPID_M_LABEL_LEN  [?]
- * surface: ce-only
- * library: -
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee501063(v=winembedded.60).html
- */
-aMsgPropId[i] = PROPID_M_LABEL_LEN; // Property ID
-aMsgPropVar[i].vt =VT_UI4; // Type indicator
-aMsgPropVar[i].ulVal = 250; // Label buffer size
-i++;
-aMsgPropId[i] = PROPID_M_LABEL; // Property ID
-aMsgPropVar[i].vt = VT_LPWSTR; // Type indicator
-aMsgPropVar[i].pwszVal = wszLabelBuffer; // Label buffer
-i++;
-
-/*--------------------------------------------------------------------
- * PROPID_M_MSGID  [function]
- * surface: ce-only
- * library: -
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee498446(v=winembedded.60).html
- */
-BYTE MessageID[PROPID_M_MSGID_SIZE];
-MsgProps.aPropID[i] = PROPID_M_MSGID; // Property ID
-MsgProps.aPropVar[i].vt = VT_VECTOR|VT_UI1; // Type indicator
-MsgProps.aPropVar[i].caub.pElems = MessageID;
-MsgProps.aPropVar[i].caub.cElems = sizeof(MessageID);
-i++;
-
-/*--------------------------------------------------------------------
- * PROPID_M_PRIORITY  [?]
- * surface: ce-only
- * library: -
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee499477(v=winembedded.60).html
- */
-MsgProps.aPropID[i] = PROPID_M_PRIORITY; // Property ID
-MsgProps.aPropVar[i].vt = VT_UI1; // Type indicator
-MsgProps.aPropVar[i].bVal = 7;
-
-/*--------------------------------------------------------------------
- * PROPID_M_RESP_QUEUE_LEN  [?]
- * surface: ce-only
- * library: -
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee500857(v=winembedded.60).html
- */
-aMsgPropId[i] = PROPID_M_RESP_QUEUE_LEN; // Property ID
-aMsgPropVar[i].vt = VT_UI4; // Type indicator
-aMsgPropVar[i].ulVal = dwRespFormatNameBufferLength;
-i++;
-aMsgPropId[i] = PROPID_M_RESP_QUEUE; // Property ID
-aMsgPropVar[i].vt = VT_LPWSTR; // Type indicator
-aMsgPropVar[i].pwszVal = wszRespFormatNameBuffer;
-i++;
-
-/*--------------------------------------------------------------------
- * PROPID_M_SENTTIME  [?]
- * surface: ce-only
- * library: -
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee498924(v=winembedded.60).html
- */
-aMsgPropId[i] = PROPID_M_SENTTIME; // Property ID
-aMsgPropVar[i].vt = VT_UI4; // Type indicator
-aMsgPropVar[i].ulVal = dwSentTime; // Value
-i++;
-
-/*--------------------------------------------------------------------
- * PROPID_M_SRC_MACHINE_ID  [?]
- * surface: ce-only
- * library: -
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee500527(v=winembedded.60).html
- */
-GUID guidSource;
-aMsgPropId[i] = PROPID_M_SRC_MACHINE_ID;
-aMsgPropVar[i].vt = VT_CLSID;
-aMsgPropVar[i].puuid = &guidSource;
-i++;
-
-/*--------------------------------------------------------------------
- * PROPID_M_TRACE  [?]
- * surface: ce-only
- * library: -
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee498425(v=winembedded.60).html
- */
-aMsgPropId[i] = PROPID_M_TRACE;
-aMsgPropVar[i].vt = VT_UI1;
-aMsgPropVar[i].bVal = MQMSG_SEND_ROUTE_TO_REPORT_QUEUE;
- i++;
-
-/*--------------------------------------------------------------------
- * PROPID_Q_CREATE_TIME  [?]
- * surface: ce-only
- * library: -
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee499158(v=winembedded.60).html
- */
-aPropID[i] = PROPID_Q_CREATE_TIME; // Property identifier
-aVariant[i].vt = VT_I4; // Type indicator
-i++;
-
-/*--------------------------------------------------------------------
- * PROPID_Q_MODIFY_TIME  [?]
- * surface: ce-only
- * library: -
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee498982(v=winembedded.60).html
- */
-aPropID[i] = PROPID_Q_MODIFY_TIME; // Property identifier
-aVariant[i].vt = VT_I4; // Type indicator
-i++;
-
-/*--------------------------------------------------------------------
- * PROPID_QM_MACHINE_ID  [?]
- * surface: ce-only
- * library: -
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee501128(v=winembedded.60).html
- */
-aQMPropId[I] = PROPID_QM_MACHINE_ID; // Property identifier
-aQMPropVar[I].vt = VT_CLSID; // Type indicator
-aQMPropVar[I].puuid = &guidMachineId; // Machine ID buffer
 #endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* struct */
+typedef struct tagCAUI1 { ULONG cElems; unsigned char *pElems; } CAUI1;
 
 #endif /* _MQ_ */

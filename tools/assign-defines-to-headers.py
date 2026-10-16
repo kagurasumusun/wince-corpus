@@ -1,196 +1,115 @@
 #!/usr/bin/env python3
-"""Assign extra defines to appropriate headers based on source pages and content."""
+"""Assign extra defines to headers using the shared header map and KB pages.
+
+Output: knowledge/kb/defines-by-header/<header>.defines.json
+        knowledge/kb/defines-by-header/_unassigned.defines.json
+"""
+
+from __future__ import annotations
 
 import csv
+import gzip
 import json
 import os
-import re
+import sys
 from collections import defaultdict
 from pathlib import Path
 
-# Load extra defines
-extra_defines = []
-with open('knowledge/kb/extra-defines.tsv', 'r') as f:
-    reader = csv.DictReader(f, delimiter='\t')
-    for row in reader:
-        extra_defines.append(row)
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(ROOT, "tools"))
+import header_map  # noqa: E402
+import quality_filters  # noqa: E402
 
-print(f"Loaded {len(extra_defines)} extra defines")
+KB = Path(ROOT) / "knowledge" / "kb"
 
-# Load entities to map source pages to headers
-entities = []
-with open('knowledge/kb/entities.jsonl.gz', 'rt') as f:
-    import gzip
-    for line in gzip.open('knowledge/kb/entities.jsonl.gz', 'rt'):
-        entities.append(json.loads(line))
 
-# Build mapping: source page -> headers
-page_to_headers = defaultdict(set)
-for entity in entities:
-    headers = entity.get('headers', [])
-    if headers:
-        for page in entity.get('ce_pages', []) + entity.get('win32_pages', []):
-            for header in headers:
-                page_to_headers[page].add(header)
+def load_page_headers():
+    page_to_headers = defaultdict(set)
+    with gzip.open(KB / "entities.jsonl.gz", "rt", encoding="utf-8") as fh:
+        for line in fh:
+            entity = json.loads(line)
+            headers = entity.get("headers") or []
+            if not headers:
+                continue
+            for page in (entity.get("ce_pages") or []) + (entity.get("win32_pages") or []):
+                for header in headers:
+                    files = header_map.canonical_header(header.split(",")[0])
+                    if files:
+                        page_to_headers[page].add(files)
+    req_path = KB / "requirements.jsonl.gz"
+    if req_path.exists():
+        with gzip.open(req_path, "rt", encoding="utf-8") as fh:
+            for line in fh:
+                rec = json.loads(line)
+                if rec.get("field") != "header":
+                    continue
+                page = (rec.get("source") or {}).get("path") or ""
+                value = rec.get("value") or ""
+                if page and value:
+                    for tok in value.replace(",", " ").split():
+                        if "." in tok and tok.lower().split(".")[-1] in (
+                                "h", "hpp", "hh", "hxx", "idl", "inc"):
+                            page_to_headers[page].add(
+                                header_map.canonical_header(tok))
+    return page_to_headers
 
-# Load requirements for additional header mapping
-requirements = []
-import gzip
-for line in gzip.open('knowledge/kb/requirements.jsonl.gz', 'rt'):
-    requirements.append(json.loads(line))
 
-# Build mapping: page -> headers from requirements
-for req in requirements:
-    if req.get('field') == 'header':
-        page = req.get('source', {}).get('path', '')
-        header = req.get('value', '')
-        if page and header:
-            page_to_headers[page].add(header)
+def main():
+    extra_path = KB / "extra-defines.tsv"
+    extra_defines = []
+    with open(extra_path, encoding="utf-8") as fh:
+        reader = csv.DictReader(fh, delimiter="\t")
+        for row in reader:
+            extra_defines.append(row)
+    print(f"Loaded {len(extra_defines)} extra defines")
 
-print(f"Built page-to-header mapping for {len(page_to_headers)} pages")
+    page_to_headers = load_page_headers()
+    print(f"Page-to-header map: {len(page_to_headers)} pages")
 
-# Assign defines to headers
-header_defines = defaultdict(list)
-unassigned = []
+    header_defines = defaultdict(list)
+    unassigned = []
+    for define in extra_defines:
+        best = quality_filters.pick_best_define([define])
+        if not best:
+            continue
+        source = best.get("source") or ""
+        name = best.get("name") or ""
+        headers = set(page_to_headers.get(source) or ())
+        if not headers:
+            mapped = header_map.header_for_constant(name)
+            if mapped:
+                headers = {mapped}
+        if headers:
+            # one primary header -- prefer the mapped one if present
+            mapped = header_map.header_for_constant(name)
+            if mapped and mapped.lower() in {h.lower() for h in headers}:
+                chosen = mapped
+            else:
+                chosen = sorted(headers, key=str.lower)[0]
+            header_defines[chosen.lower()].append(best)
+        else:
+            unassigned.append(best)
 
-for define in extra_defines:
-    source = define.get('source', '')
-    name = define.get('name', '')
-    
-    # Try to find headers from source page
-    headers = page_to_headers.get(source, set())
-    
-    # If no headers from page, try heuristics based on name
-    if not headers:
-        # Common patterns
-        if name.startswith('WM_'):
-            headers = {'winuser.h'}
-        elif name.startswith(('WS_', 'WS_EX_')):
-            headers = {'winuser.h'}
-        elif name.startswith(('BS_', 'BN_')):
-            headers = {'winuser.h'}
-        elif name.startswith(('ES_', 'EN_')):
-            headers = {'winuser.h'}
-        elif name.startswith(('SS_', 'STM_')):
-            headers = {'winuser.h'}
-        elif name.startswith(('LBS_', 'LBN_')):
-            headers = {'winuser.h'}
-        elif name.startswith(('CBS_', 'CBN_')):
-            headers = {'winuser.h'}
-        elif name.startswith(('TVM_', 'TVN_', 'TVS_')):
-            headers = {'commctrl.h'}
-        elif name.startswith(('LVM_', 'LVN_', 'LVS_')):
-            headers = {'commctrl.h'}
-        elif name.startswith(('TCM_', 'TCN_', 'TCS_')):
-            headers = {'commctrl.h'}
-        elif name.startswith(('SBT_', 'SB_')):
-            headers = {'commctrl.h'}
-        elif name.startswith(('TB_', 'TBN_', 'TBS_')):
-            headers = {'commctrl.h'}
-        elif name.startswith('ERROR_'):
-            headers = {'winerror.h'}
-        elif name.startswith(('FILE_', 'GENERIC_', 'CREATE_', 'OPEN_')):
-            headers = {'winbase.h'}
-        elif name.startswith(('MEM_', 'PAGE_', 'SEC_')):
-            headers = {'winbase.h'}
-        elif name.startswith(('GMEM_', 'LMEM_')):
-            headers = {'winbase.h'}
-        elif name.startswith(('PROCESS_', 'THREAD_')):
-            headers = {'winbase.h'}
-        elif name.startswith(('REG_', 'HKEY_')):
-            headers = {'winreg.h'}
-        elif name.startswith(('SERVICE_', 'SC_')):
-            headers = {'winsvc.h'}
-        elif name.startswith(('SOCKET_', 'SO_', 'SOL_', 'IPPROTO_', 'AF_')):
-            headers = {'winsock2.h'}
-        elif name.startswith(('WSA', 'Wsa')):
-            headers = {'winsock2.h'}
-        elif name.startswith(('GDI_', 'GDIP_')):
-            headers = {'gdiplus.h'}
-        elif name.startswith(('SRCCOPY', 'SRCAND', 'SRCINVERT', 'PATCOPY')):
-            headers = {'wingdi.h'}
-        elif name.startswith(('PS_', 'HS_', 'BS_SOLID', 'NULL_BRUSH')):
-            headers = {'wingdi.h'}
-        elif name.startswith(('TA_', 'VTA_')):
-            headers = {'wingdi.h'}
-        elif name.startswith(('SPI_', 'SPIF_')):
-            headers = {'winuser.h'}
-        elif name.startswith(('SM_', 'SMTO_')):
-            headers = {'winuser.h'}
-        elif name.startswith(('SW_', 'SWP_')):
-            headers = {'winuser.h'}
-        elif name.startswith(('MB_', 'MBOK', 'MBCANCEL')):
-            headers = {'winuser.h'}
-        elif name.startswith(('IDC_', 'IDI_', 'IDOK', 'IDCANCEL', 'IDYES', 'IDNO')):
-            headers = {'winuser.h'}
-        elif name.startswith(('VK_', 'VK_L', 'VK_R')):
-            headers = {'winuser.h'}
-        elif name.startswith(('COLOR_', 'CLR_')):
-            headers = {'winuser.h'}
-        elif name.startswith(('CS_', 'CSIDL_')):
-            headers = {'winuser.h'}
-        elif name.startswith(('DT_', 'DTM_')):
-            headers = {'winuser.h'}
-        elif name.startswith(('EM_', 'EC_')):
-            headers = {'winuser.h'}
-        elif name.startswith(('LB_', 'CB_')):
-            headers = {'winuser.h'}
-        elif name.startswith(('STM_', 'STM_')):
-            headers = {'winuser.h'}
-        elif name.startswith(('BM_', 'BN_')):
-            headers = {'winuser.h'}
-        elif name.startswith(('DM_', 'DC_')):
-            headers = {'wingdi.h'}
-        elif name.startswith(('RASTERCAPS', 'CURVECAPS', 'LINECAPS')):
-            headers = {'wingdi.h'}
-        elif name.startswith(('BI_', 'DIB_')):
-            headers = {'wingdi.h'}
-        elif name.startswith(('FW_', 'LF_')):
-            headers = {'wingdi.h'}
-        elif name.startswith(('OUT_', 'CLIP_')):
-            headers = {'wingdi.h'}
-        elif name.startswith(('OBJ_', 'OBJ_BRUSH', 'OBJ_PEN')):
-            headers = {'wingdi.h'}
-        elif name.startswith(('STILLIMAGE', 'STI_')):
-            headers = {'sti.h'}
-        elif name.startswith(('BTH_', 'BT_')):
-            headers = {'bthdef.h', 'bt_api.h'}
-        elif name.startswith(('NDR_', 'RPC_')):
-            headers = {'rpc.h'}
-        elif name.startswith(('CE_', 'Ce')):
-            headers = {'ceconfig.h', 'winbase.h'}
-        elif name.startswith(('SH_', 'SHGet', 'SHSet')):
-            headers = {'shlobj.h', 'aygshell.h'}
-        elif name.startswith(('SIP', 'Sip')):
-            headers = {'sipapi.h'}
-        elif name.startswith(('IMM_', 'Imm')):
-            headers = {'imm.h'}
-    
-    if headers:
-        for header in headers:
-            header_defines[header.lower()].append(define)
-    else:
-        unassigned.append(define)
+    print(f"Assigned: {sum(len(v) for v in header_defines.values())}")
+    print(f"Unassigned: {len(unassigned)}")
+    print(f"Headers: {len(header_defines)}")
 
-print(f"\nAssignment results:")
-print(f"  Assigned to headers: {len(extra_defines) - len(unassigned)}")
-print(f"  Unassigned: {len(unassigned)}")
-print(f"  Headers with defines: {len(header_defines)}")
+    out_dir = KB / "defines-by-header"
+    out_dir.mkdir(exist_ok=True)
+    for existing in out_dir.glob("*.defines.json"):
+        existing.unlink()
+    for header, defines in sorted(header_defines.items()):
+        # keep original casing from first row's assignment
+        with open(out_dir / f"{header}.defines.json", "w", encoding="utf-8") as fh:
+            json.dump(defines, fh, indent=2, ensure_ascii=False)
+    with open(out_dir / "_unassigned.defines.json", "w", encoding="utf-8") as fh:
+        json.dump(unassigned, fh, indent=2, ensure_ascii=False)
+    print(f"Wrote {out_dir}/")
+    for header, defines in sorted(header_defines.items(),
+                                  key=lambda x: -len(x[1]))[:20]:
+        print(f"  {header}: {len(defines)}")
+    return 0
 
-# Write assigned defines by header
-output_dir = Path('knowledge/kb/defines-by-header')
-output_dir.mkdir(exist_ok=True)
 
-for header, defines in sorted(header_defines.items()):
-    output_file = output_dir / f"{header}.defines.json"
-    with open(output_file, 'w') as f:
-        json.dump(defines, f, indent=2)
-
-# Write unassigned defines
-with open(output_dir / '_unassigned.defines.json', 'w') as f:
-    json.dump(unassigned, f, indent=2)
-
-print(f"\nWrote defines to {output_dir}/")
-print(f"Top headers by define count:")
-for header, defines in sorted(header_defines.items(), key=lambda x: -len(x[1]))[:20]:
-    print(f"  {header}: {len(defines)}")
+if __name__ == "__main__":
+    sys.exit(main())

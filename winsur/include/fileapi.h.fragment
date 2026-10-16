@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 34 constants, 0 declarations, 0 derived outlines, 0 base types
+ * 11 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 10 extra decls
  */
 #ifndef _FILEAPI_
 #define _FILEAPI_
@@ -17,94 +17,57 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define CREATE_ALWAYS 2
-#define CREATE_NEW 1
-#define FILE_ATTRIBUTE_COMPRESSED 0x800
-#define FILE_ATTRIBUTE_DEVICE 0x40
-#define FILE_ATTRIBUTE_DIRECTORY 0x10
-#define FILE_ATTRIBUTE_ENCRYPTED 0x4000
-#define FILE_ATTRIBUTE_REPARSE_POINT 0x400
-#define FILE_ATTRIBUTE_SPARSE_FILE 0x200
-#define FILE_FLAG_BACKUP_SEMANTICS 0x02000000
-#define FILE_FLAG_DELETE_ON_CLOSE 0x04000000
-#define FILE_FLAG_NO_BUFFERING 0x20000000
-#define FILE_FLAG_OPEN_NO_RECALL 0x00100000
-#define FILE_FLAG_OPEN_REPARSE_POINT 0x00200000
-#define FILE_FLAG_OVERLAPPED 0x40000000
-#define FILE_FLAG_POSIX_SEMANTICS 0x01000000
-#define FILE_FLAG_RANDOM_ACCESS 0x10000000
-#define FILE_FLAG_SEQUENTIAL_SCAN 0x08000000
-#define FILE_FLAG_SESSION_AWARE 0x00800000
-#define FILE_FLAG_WRITE_THROUGH 0x80000000
+
+/* FILE_NOTIFY_CHANGE_ATTRIBUTES = 0x00000004  [unified-kb, verify] */
 #define FILE_NOTIFY_CHANGE_ATTRIBUTES 0x00000004
+
+/* FILE_NOTIFY_CHANGE_DIR_NAME = 0x00000002  [unified-kb, verify] */
 #define FILE_NOTIFY_CHANGE_DIR_NAME 0x00000002
+
+/* FILE_NOTIFY_CHANGE_FILE_NAME = 0x00000001  [unified-kb, verify] */
 #define FILE_NOTIFY_CHANGE_FILE_NAME 0x00000001
+
+/* FILE_NOTIFY_CHANGE_LAST_WRITE = 0x00000010  [unified-kb, verify] */
 #define FILE_NOTIFY_CHANGE_LAST_WRITE 0x00000010
+
+/* FILE_NOTIFY_CHANGE_SECURITY = 0x00000100  [unified-kb, verify] */
 #define FILE_NOTIFY_CHANGE_SECURITY 0x00000100
+
+/* FILE_NOTIFY_CHANGE_SIZE = 0x00000008  [unified-kb, verify] */
 #define FILE_NOTIFY_CHANGE_SIZE 0x00000008
-#define FILE_SHARE_DELETE 0x00000004
-#define FILE_SHARE_READ 0x00000001
-#define FILE_SHARE_WRITE 0x00000002
+
+/* FIND_FIRST_EX_CASE_SENSITIVE = 1  [unified-kb, verify] */
 #define FIND_FIRST_EX_CASE_SENSITIVE 1
+
+/* FIND_FIRST_EX_LARGE_FETCH = 2  [unified-kb, verify] */
 #define FIND_FIRST_EX_LARGE_FETCH 2
+
+/* FIND_FIRST_EX_ON_DISK_ENTRIES_ONLY = 4  [unified-kb, verify] */
 #define FIND_FIRST_EX_ON_DISK_ENTRIES_ONLY 4
-#define OPEN_ALWAYS 4
-#define OPEN_EXISTING 3
-#define TRUNCATE_EXISTING 5
 
+/* LOCKFILE_EXCLUSIVE_LOCK = 0x00000002  [unified-kb, verify] */
+#define LOCKFILE_EXCLUSIVE_LOCK 0x00000002
 
-typedef struct _BY_HANDLE_FILE_INFORMATION {
-  DWORD dwFileAttributes;
-  FILETIME ftCreationTime;
-  FILETIME ftLastAccessTime;
-  FILETIME ftLastWriteTime;
-  DWORD dwVolumeSerialNumber;
-  DWORD nFileSizeHigh;
-  DWORD nFileSizeLow;
-  DWORD nNumberOfLinks;
-  DWORD nFileIndexHigh;
-  DWORD nFileIndexLow;
-  DWORD dwOID;
-} BY_HANDLE_FILE_INFORMATION;
+/* LOCKFILE_FAIL_IMMEDIATELY = 0x00000001  [unified-kb, verify] */
+#define LOCKFILE_FAIL_IMMEDIATELY 0x00000001
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* struct */
 typedef struct _WIN32_FILE_ATTRIBUTE_DATA{ DWORD dwFileAttributes; FILETIME ftCreationTime; FILETIME ftLastAccessTime; FILETIME ftLastWriteTime; DWORD nFileSizeHigh; DWORD nFileSizeLow; } WIN32_FILE_ATTRIBUTE_DATA, *LPWIN32_FILE_ATTRIBUTE_DATA;
 
-LONG CompareFileTime(  const FILETIME* lpFileTime1,  const FILETIME* lpFileTime2  );
+/* function */
 BOOLFileTimeToLocalFileTime( constFILETIME* lpFileTime, LPFILETIMElpLocalFileTime );
-BOOL FindClose(  HANDLE hFindFile );
-BOOL FindCloseChangeNotification( HANDLE hChangeHandle );
-BOOL FindNextChangeNotification( HANDLE hChangeHandle );
-BOOL WINAPI FlushFileBuffers (HANDLE hFile);
-BOOL GetFileInformationByHandle( HANDLE hFile,  LPBY_HANDLE_FILE_INFORMATION lpFileInformation );
-dwSize = GetFileSize (hFile, NULL) ;
-if (dwSize == 0xFFFFFFFF) {
-  dwError = GetLastError() ;
-  .
-  .
-  .
-}
-dwSizeLow = GetFileSize (hFile, & dwSizeHigh) ;
-if (dwSizeLow == 0xFFFFFFFF
-&&
-(dwError = GetLastError()) != NO_ERROR ){
-  .
-  .
-  .
-}
+BOOLFindClose( HANDLEhFindFile );
+BOOLGetFileInformationByHandle( HANDLEhFile, LPBY_HANDLE_FILE_INFORMATIONlpFileInformation);
 BOOLGetFileTime( HANDLEhFile, LPFILETIMElpCreationTime, LPFILETIMElpLastAccessTime, LPFILETIMElpLastWriteTime );
-BOOL LocalFileTimeToFileTime( const FILETIME* lpLocalFileTime, LPFILETIME lpFileTime );
-BOOL LockFileEx( HANDLE hFile,  DWORD dwFlags, DWORD dwReserved, DWORD nNumberOfBytesToLockLow, DWORD nNumberOfBytesToLockHigh, LPOVERLAPPED lpOverlapped );
-bResult = ReadFile(hFile, &inBuffer, nBytesToRead, &nBytesRead, NULL) ;
-if (bResult && (nBytesRead == 0) )
-{
-}
-BOOL SetEndOfFile( HANDLE hFile );
-dwPtr = SetFilePointer (hFile, lDistance, NULL, FILE_BEGIN) ;
-if (dwPtr == 0xFFFFFFFF)
-{
-  dwError = GetLastError() ;
-}
-BOOL SetFileTime( HANDLE hFile, const FILETIME *lpCreationTime,  const FILETIME *lpLastAccessTime, const FILETIME *lpLastWriteTime );
-BOOL UnlockFileEx( HANDLE hFile,  DWORD dwReserved, DWORD nNumberOfBytesToLockLow, DWORD nNumberOfBytesToLockHigh, LPOVERLAPPED lpOverlapped );
+BOOLLocalFileTimeToFileTime( constFILETIME* lpLocalFileTime, LPFILETIMElpFileTime );
+BOOLSetEndOfFile( HANDLEhFile);
+BOOLSetFileTime( HANDLEhFile, constFILETIME* lpCreationTime, constFILETIME* lpLastAccessTime, constFILETIME* lpLastWriteTime );
 BOOLWriteFile( HANDLEhFile, LPCVOIDlpBuffer, DWORDnNumberOfBytesToWrite, LPDWORDlpNumberOfBytesWritten, LPOVERLAPPEDlpOverlapped);
+LONGCompareFileTime( constFILETIME* lpFileTime1, constFILETIME* lpFileTime2 );
 
 #endif /* _FILEAPI_ */

@@ -5,46 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 2 declarations, 0 derived outlines, 0 base types
+ * 0 constants, 2 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _LOCKMGRTYPES_
 #define _LOCKMGRTYPES_
 
-
-
-typedef VOID (*PACQUIREFILELOCKSTATE)( DWORD dwFile, PFILELOCKSTATE* ppFileLockState );
-typedef BOOL (*PRELEASEFILELOCKSTATE)( DWORD dwFile, PFILELOCKSTATE *ppFileLockState );
-
-BOOL MyAcquireFileLockState(DWORD dwPfh, PFILELOCKSTATE *ppFileLockState)
-{
-  PFILE pFileHandle = (PFILE)dwPfh;
-  PINTERNALFILE pFile = pFileHandle->pInternalFile;
-  if (NULL == pFile->FileLockState.lpcs)
-  {
-    return FALSE;
-  }
-  EnterCriticalSection(pFile->FileLockState.lpcs);
-  pFile->FileLockState.dwPosLow = pFileHandle->dwCurrentFileOffset;
-  pFile->FileLockState.dwPosHigh = 0;
-  pFile->FileLockState.dwAccess = pFileHandle->dwAccessMode;
-  *ppFileLockState = &pFile->FileLockState;
-  return TRUE;
-}
-BOOL MyAcquireFileLockState(DWORD dwPfh, PFILELOCKSTATE *ppFileLockState)
-{
-  PFILE pFileHandle = (PFILE)dwPfh;
-  PINTERNALFILE pFile = pFileHandle->pInternalFile;
-  if (NULL == pFile->FileLockState.lpcs)
-  {
-    return FALSE;
-  }
-  EnterCriticalSection(pFile->FileLockState.lpcs);
-  pFile->FileLockState.dwPosLow = pFileHandle->dwCurrentFileOffset;
-  pFile->FileLockState.dwPosHigh = 0;
-  pFile->FileLockState.dwAccess = pFileHandle->dwAccessMode;
-  *ppFileLockState = &pFile->FileLockState;
-  return TRUE;
-}
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -54,13 +19,7 @@ BOOL MyAcquireFileLockState(DWORD dwPfh, PFILELOCKSTATE *ppFileLockState)
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
 
-/*--------------------------------------------------------------------
- * PACQUIREFILELOCKSTATE  [callback]
- * surface: ce-only
- * library: Fsdmgr.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490755(v=winembedded.60).html
- */
+/* PACQUIREFILELOCKSTATE  [callback; ce-only; CE 5.0..699; Fsdmgr.lib] */
 typedef VOID (*PACQUIREFILELOCKSTATE)(
  DWORD dwFile,
  PFILELOCKSTATE* ppFileLockState
@@ -69,13 +28,7 @@ typedef VOID (*PACQUIREFILELOCKSTATE)(
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 
-/*--------------------------------------------------------------------
- * PRELEASEFILELOCKSTATE  [callback]
- * surface: ce-only
- * library: Fsdmgr.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee489955(v=winembedded.60).html
- */
+/* PRELEASEFILELOCKSTATE  [callback; ce-only; CE 6.0..699; Fsdmgr.lib] */
 typedef
 BOOL
 (*PRELEASEFILELOCKSTATE)(

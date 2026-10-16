@@ -5,72 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 2 declarations, 0 derived outlines, 0 base types
+ * 0 constants, 2 declarations, 0 outlines, 0 base types, 0 extra macros, 9 extra decls
  */
 #ifndef _AFDFUNC_
 #define _AFDFUNC_
 
-
-
-DWORD RasDeleteEntry( LPWSTR lpszPhonebook,  LPWSTR lpszEntry  );
-DWORD RasDial( LPRASDIALEXTENSIONS dialExtensions,  LPTSTR phoneBookPath,  LPRASDIALPARAMS rasDialParam,  DWORD NotifierType,  LPVOID notifier,  LPHRASCONN pRasConn  );
-DWORD RasEnumConnections(LPRASCONN lprasconn, LPDWORD lpcb, LPDWORD lpcConnections);
-lprasentryname = (LPRASENTRYNAME)LocalAlloc(LPTR, sizeof(RASENTRYNAME));
-lprasentryname->dwSize = sizeof(RASENTRYNAME);
-if ((nRet = RasEnumEntries(NULL, NULL, lprasentryname, &cb, &cEntries))
-== ERROR_BUFFER_TOO_SMALL)
-{
-  lprasentryname = (LPRASENTRYNAME)LocalAlloc(LPTR, cb);
-  lprasentryname->dwSize = sizeof(RASENTRYNAME);
-}
-nRet = RasEnumEntries(NULL, NULL, lprasentryname, &cb, &cEntries);
-if (nRet != ERROR_SUCCESS)
-{
-  printf("RasEnumEntries failed: Error %d\n", nRet);
-}
-else
-{
-  printf("Phone book entries in the default phonebook:\n\n");
-  for(i=0;i szEntryName);
-  lprasentryname++;
-}
-}
-DWORD RasGetConnectStatus( HRASCONN rasconn,  LPRASCONNSTATUS lprasconnstatus  );
-DWORD dwDeviceID;
-LPVARSTRING pDeviceConfig;
-DWORD dwSize;
-TCHAR szBuf[50];
-dwSize = 0;
-if (RasGetEntryDevConfig (NULL, EntryName, &dwDeviceID,
-&dwSize, NULL)) {
-  OutputDebugString(TEXT("\r\nError getting device info size\r\n"));
-  return;
-}
-pDeviceConfig = LocalAlloc (LPTR, dwSize);
-if (RasGetEntryDevConfig (NULL, EntryName, &dwDeviceID,
-&dwSize, pDeviceConfig)) {
-  OutputDebugString(TEXT("\r\nError getting device info size\r\n"));
-  return;
-} else {
-  wsprintf(szBuf, TEXT("dwDeviceID=%d\r\n"), dwDeviceID);
-  OutputDebugString(szBuf);
-  if (pDeviceConfig) {
-    wsprintf(szBuf, TEXT("Have a device config at: 0x%X\r\n"),
-    pDeviceConfig));
-    OutputDebugString(szBuf);
-    LocalFree(pDeviceConfig);
-  }
-}
-DWORDRasGetEntryDialParams(LPWSTRlpszPhoneBook, LPRASDIALPARAMSlpRasDialParams, LPBOOLlpfPassword );
-DWORD RasGetEntryProperties(  LPWSTR lpszPhoneBook,  LPWSTR szEntry,  LPRASENTRY lpbEntry,  LPDWORD lpdwEntrySize,  LPBYTE lpb,  LPDWORD lpdwSize  );
-DWORD RasGetLinkStatistics(HRASCONNhRasConn,DWORDdwSubEntry,RAS_STATS* lpStatistics);
-DWORD RasGetProjectionInfo(  HRASCONN hrasconn,  RASPROJECTION rasprojection,  LPVOID lpprojection,  LPDWORD lpcb  );
-DWORD RasHangUp(  HRASCONN Session  );
-DWORD RasRenameEntry( LPWSTR lpszPhonebook,  LPWSTR lpszOldEntry,  LPWSTR lpszNewEntry  );
-DWORD RasSetEntryDevConfig(LPCTSTR lpszPhoneBook, LPCTSTR szEntry, DWORD dwDeviceID, LPVARSTRING lpDeviceConfig);
-DWORD RasSetEntryDialParams(LPWSTR lpszPhoneBook, LPRASDIALPARAMS lpRasDialParams, BOOL fRemovePassword);
-DWORD RasSetEntryProperties(LPWSTRlpszPhoneBook, LPWSTRszEntry, LPRASENTRYlpbEntry, DWORD dwEntrySize, LPBYTElpb, DWORDdwSize );
-DWORD RasValidateEntryName(LPWSTR lpszPhonebook,  LPWSTR lpszEntry);
 
 /* ==================================================================
  * functions and callbacks
@@ -78,23 +17,27 @@ DWORD RasValidateEntryName(LPWSTR lpszPhonebook,  LPWSTR lpszEntry);
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 200)) /* CE 1.0..199 */
 
-/*--------------------------------------------------------------------
- * RasGetEntryDevConfig  [function]
- * surface: ce-only
- * library: -
- * versions: 1.0..199
- * source: corpus/msdn-library/techshelps/CEGUIDE/devdoc/good/wince/ce_func_71rb.htm
- */
+/* RasGetEntryDevConfig  [function; ce-only; CE 1.0..199] */
 DWORD RasGetEntryDevConfig(LPCTSTR lpszPhoneBook, LPCTSTR szEntry, LPDWORD pdwDeviceID, LPDWORD pdwSize, LPVARSTRING pDeviceConfig);
 
-/*--------------------------------------------------------------------
- * RasSetEntryDevConfig  [function]
- * surface: ce-only
- * library: -
- * versions: 1.0..199
- * source: corpus/msdn-library/techshelps/CEGUIDE/devdoc/good/wince/ce_func_6mcn.htm
- */
+/* RasSetEntryDevConfig  [function; ce-only; CE 1.0..199] */
 DWORD RasSetEntryDevConfig(LPCTSTR lpszPhoneBook, LPCTSTR szEntry, DWORD dwDeviceID, LPVARSTRING lpDeviceConfig);
 #endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* function */
+DWORDRasDial(LPRASDIALEXTENSIONSdialExtensions, LPTSTRphoneBookPath, LPRASDIALPARAMSrasDialParam, DWORDNotifierType, LPVOIDnotifier, LPHRASCONNpRasConn );
+DWORDRasEnumConnections(LPRASCONNlprasconn, LPDWORDlpcb, LPDWORDlpcConnections );
+DWORDRasGetConnectStatus(HRASCONNrasconn, LPRASCONNSTATUSlprasconnstatus );
+DWORDRasGetEntryDialParams(LPWSTRlpszPhoneBook, LPRASDIALPARAMSlpRasDialParams, LPBOOLlpfPassword );
+DWORDRasGetEntryProperties(LPWSTRlpszPhoneBook, LPWSTRszEntry, LPRASENTRYlpbEntry, LPDWORDlpdwEntrySize, LPBYTElpb, LPDWORDlpdwSize );
+DWORDRasHangUp(HRASCONNSession );
+DWORDRasRenameEntry(LPWSTRlpszPhonebook, LPWSTRlpszOldEntry, LPWSTRlpszNewEntry );
+DWORDRasSetEntryDialParams(LPWSTRlpszPhoneBook, LPRASDIALPARAMSlpRasDialParams, BOOLfRemovePassword );
+DWORDRasValidateEntryName(LPWSTRlpszPhonebook,LPWSTRlpszEntry );
 
 #endif /* _AFDFUNC_ */

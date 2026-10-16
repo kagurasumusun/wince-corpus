@@ -121,6 +121,8 @@ sys.path.insert(0, os.path.join(ROOT, "tools"))
 # read a corpus page.  The generator still refuses corpus paths below.
 import page_parse  # noqa: E402
 import html_clean  # noqa: E402
+import header_map  # noqa: E402
+import quality_filters  # noqa: E402
 
 KB = os.path.join(ROOT, "knowledge", "kb")
 
@@ -158,6 +160,8 @@ DECLARATIONS = os.path.join(KB, "declarations.jsonl.gz")
 ENTITIES = os.path.join(KB, "entities.jsonl.gz")
 REQUIREMENTS = os.path.join(KB, "requirements.jsonl.gz")
 CONSTANTS = os.path.join(KB, "constants.jsonl.gz")
+UNIFIED_DIR = os.path.join(ROOT, "knowledge", "unified")
+UNIFIED_CONSTANTS = os.path.join(UNIFIED_DIR, "constants.jsonl")
 CONSTANT_HEADERS = os.path.join(KB, "constant-headers.tsv")
 CONSTANT_CONFLICTS = os.path.join(KB, "constant-conflicts.tsv")
 PINVOKE_APIS = os.path.join(ROOT, "knowledge", "aux",
@@ -174,100 +178,140 @@ MODULE_FILE = re.compile(r"(?P<base>[\w.+-]+?)\.(?P<ext>lib|dll|drv|sys|ocx|tlb)
                          re.I)
 EXPORTABLE = ("function", "callback")
 
-# Heuristic header assignment for entities without stated headers.
-# Based on well-known Windows API naming conventions.
-ENTITY_PREFIX_TO_HEADER = {
-    # Window messages and window-related
-    "WM_": "Winuser.h",
-    "WS_": "Winuser.h",
-    "WS_EX_": "Winuser.h",
-    "CS_": "Winuser.h",
-    "SW_": "Winuser.h",
-    "GWL_": "Winuser.h",
-    "GWLP_": "Winuser.h",
-    "HWND_": "Winuser.h",
-    "SPI_": "Winuser.h",
-    "SB_": "Winuser.h",
-    "DT_": "Winuser.h",
-    "MF_": "Winuser.h",
-    "PM_": "Winuser.h",
-    "QS_": "Winuser.h",
-    "INPUT_": "Winuser.h",
-    "MOUSEEVENTF_": "Winuser.h",
-    "KEYEVENTF_": "Winuser.h",
-    # Control styles
-    "BS_": "Winuser.h",
-    "ES_": "Winuser.h",
-    "SS_": "Winuser.h",
-    "LBS_": "Winuser.h",
-    "CBS_": "Winuser.h",
-    "TVS_": "Winuser.h",
-    "TVN_": "Winuser.h",
-    "LVS_": "Winuser.h",
-    "LVN_": "Winuser.h",
-    "TBS_": "Winuser.h",
-    "PBS_": "Winuser.h",
-    "UDS_": "Winuser.h",
-    # System metrics and colors
-    "SM_": "Winuser.h",
-    "COLOR_": "Winuser.h",
-    "VK_": "Winuser.h",
-    "MB_": "Winuser.h",
-    "IDC_": "Winuser.h",
-    "IDI_": "Winuser.h",
-    # File and memory
-    "FILE_ATTRIBUTE_": "Winbase.h",
-    "FILE_FLAG_": "Winbase.h",
-    "GENERIC_": "Winbase.h",
-    "PAGE_": "Winbase.h",
-    "MEM_": "Winbase.h",
-    "SEC_": "Winbase.h",
-    "GMEM_": "Winbase.h",
-    "LMEM_": "Winbase.h",
-    "CREATE_": "Winbase.h",
-    "OPEN_": "Winbase.h",
-    "TRUNCATE_": "Winbase.h",
-    "MOVEFILE_": "Winbase.h",
-    "COPY_FILE_": "Winbase.h",
-    "STD_": "Winbase.h",
-    "WAIT_": "Winbase.h",
-    # Errors
-    "ERROR_": "Winerror.h",
-    "NERR_": "Lmerr.h",
-    # GDI
-    "PS_": "Wingdi.h",
-    "HS_": "Wingdi.h",
-    "BS_": "Wingdi.h",
-    "FW_": "Wingdi.h",
-    "LF_": "Wingdi.h",
-    "BI_": "Wingdi.h",
-    "DIB_": "Wingdi.h",
-    "SRCCOPY": "Wingdi.h",
-    "SRCAND": "Wingdi.h",
-    "SRCINVERT": "Wingdi.h",
-    # Registry
-    "HKEY_": "Winreg.h",
-    "REG_": "Winreg.h",
-    "KEY_": "Winreg.h",
-}
+def heuristic_entity_header(entity, lib_to_header=None, heuristic_rows=None):
+    """Assign a header to an entity from naming conventions / library map.
 
-
-def heuristic_entity_header(entity):
-    """Assign a header to an entity based on well-known name patterns.
-    
-    Returns the header name if a pattern matches, None otherwise.
+    Returns the header name if a pattern matches, None otherwise.  Marked
+    ``heuristic-prefix`` by the caller -- never passed off as a page statement.
     """
-    name = entity.get("name", "")
+    name = entity.get("name") or ""
     if not name:
         return None
-    # Check exact matches first
-    if name in ENTITY_PREFIX_TO_HEADER:
-        return ENTITY_PREFIX_TO_HEADER[name]
-    # Check prefix matches (longest prefix first to be more specific)
-    for prefix in sorted(ENTITY_PREFIX_TO_HEADER.keys(), key=len, reverse=True):
-        if prefix.endswith("_") and name.startswith(prefix):
-            return ENTITY_PREFIX_TO_HEADER[prefix]
+    if heuristic_rows and name in heuristic_rows:
+        return heuristic_rows[name]
+    header = header_map.header_for_entity(name, entity.get("kinds") or [])
+    if header:
+        return header
+    libs = (entity.get("libraries") or []) + (entity.get("dlls") or [])
+    for lib in libs:
+        mapped = header_map.header_for_library(lib)
+        if mapped:
+            return mapped
+        if lib_to_header:
+            stem = (module_of(lib) or (lib.lower(), ""))[0].lower()
+            if stem in lib_to_header:
+                return lib_to_header[stem]
     return None
+
+
+def looks_like_c_declaration(text):
+    return quality_filters.looks_like_c_declaration(text or "")
+
+
+def load_heuristic_headers():
+    """kb/heuristic-headers.tsv -> {name: header}."""
+    path = os.path.join(KB, "heuristic-headers.tsv")
+    out = {}
+    if not os.path.exists(path):
+        return out
+    with open(path, encoding="utf-8") as fh:
+        header = fh.readline().rstrip("\n").split("\t")
+        for line in fh:
+            cells = line.rstrip("\n").split("\t")
+            if len(cells) < 2:
+                continue
+            row = dict(zip(header, cells)) if header else {}
+            name = row.get("name") or cells[0]
+            hdr = row.get("header") or cells[1]
+            if name and hdr:
+                out[name] = hdr
+    return out
+
+
+def load_modules_ce_headers():
+    """kb/modules-ce.tsv -> {module_stem: header} for rows with field=header."""
+    path = os.path.join(KB, "modules-ce.tsv")
+    out = {}
+    if not os.path.exists(path):
+        return out
+    with open(path, encoding="utf-8") as fh:
+        header = fh.readline().rstrip("\n").split("\t")
+        for line in fh:
+            cells = line.rstrip("\n").split("\t")
+            if len(cells) < len(header):
+                continue
+            row = dict(zip(header, cells))
+            if (row.get("field") or "").lower() != "header":
+                continue
+            module = (row.get("module") or "").strip()
+            value = row.get("value") or ""
+            files = header_files([value])
+            if module and files:
+                out.setdefault(module.lower(), files[0])
+    return out
+
+
+def build_lib_to_unique_header(entities):
+    """library stem -> header when every entity of that lib names one header."""
+    counts = collections.defaultdict(collections.Counter)
+    for entity in entities:
+        headers = header_files(entity.get("headers") or [])
+        libs = (entity.get("libraries") or []) + (entity.get("dlls") or [])
+        if not headers or not libs:
+            continue
+        for lib in libs:
+            parsed = module_of(lib)
+            stem = (parsed[0] if parsed else lib).lower()
+            for h in headers:
+                counts[stem][h] += 1
+    out = {}
+    for stem, ctr in counts.items():
+        if len(ctr) == 1:
+            out[stem] = next(iter(ctr))
+        else:
+            mapped = header_map.header_for_library(stem)
+            if mapped:
+                out[stem] = mapped
+    return out
+
+
+def load_extra_surface():
+    """Load extra-defines / extra-declarations, quality-filtered.
+
+    Returns (defines, declarations) -- each item already sanitised.
+    """
+    defines = []
+    by_name = collections.defaultdict(list)
+    for row in load_extra_defines():
+        by_name[row.get("name") or ""].append(row)
+    for name, rows in by_name.items():
+        best = quality_filters.pick_best_define(rows)
+        if best:
+            defines.append(best)
+    decls = []
+    seen = set()
+    for fname in ("extra-declarations.jsonl", "harvest-declarations.jsonl"):
+        extra_path = os.path.join(KB, fname)
+        if not os.path.exists(extra_path):
+            continue
+        with open(extra_path, encoding="utf-8") as fh:
+            for line in fh:
+                rec = json.loads(line)
+                name = rec.get("name") or ""
+                if not name or name in seen:
+                    continue
+                cleaned = quality_filters.sanitize_declaration(
+                    rec.get("declaration") or "",
+                    name,
+                    rec.get("type") or "",
+                )
+                if not cleaned:
+                    continue
+                rec = dict(rec)
+                rec["declaration"] = cleaned
+                decls.append(rec)
+                seen.add(name)
+    return defines, decls
 
 
 def load(path):
@@ -1226,6 +1270,128 @@ def load_ce_documented_names():
     return names
 
 
+_LINK_RANK = {
+    "own-page": 0,
+    "entity-page": 1,
+    "constant-entity": 2,
+    "reference-header": 3,
+    "heuristic-prefix": 4,
+    "win32-reference": 5,
+    "co-mention": 6,
+    "pinvoke-weak": 7,
+}
+
+
+def pick_constant_targets(name, targets):
+    """One primary header for a numbered constant.
+
+    CE documentation ranks first.  A weak win32-reference that disagrees
+    with the shared name map is not used (ERROR_FILE_NOT_FOUND must not
+    follow a crypto page into wincrypt.h).  A reference-header (raserror.h
+    for RAS ERROR_*) outranks the name map.  Among equal ranks prefer the
+    public ``.h`` over an internal ``.hpp`` / ``.idl``.
+    """
+    mapped = header_map.header_for_constant(name)
+    if not targets:
+        if mapped:
+            return [{"header": mapped, "strength": "heuristic-prefix",
+                     "statements": 0, "example_page": "-"}]
+        return []
+    if mapped:
+        for t in targets:
+            if (t.get("header") or "").lower() == mapped.lower():
+                return [t]
+    by_rank = collections.defaultdict(list)
+    for t in targets:
+        rank = _LINK_RANK.get(t.get("strength") or "", 99)
+        by_rank[rank].append(t)
+    best = min(by_rank)
+    if mapped and best >= _LINK_RANK["win32-reference"]:
+        return [{"header": mapped, "strength": "heuristic-prefix",
+                 "statements": 0, "example_page": "-"}]
+    cands = by_rank[best]
+
+    def sort_key(t):
+        h = t.get("header") or ""
+        hl = h.lower()
+        return (
+            0 if mapped and hl == mapped.lower() else 1,
+            1 if hl.endswith(".hpp") else 0,
+            1 if hl.endswith(".idl") else 0,
+            -int(t.get("statements") or 0 or 0),
+            hl,
+        )
+    return [sorted(cands, key=sort_key)[0]]
+
+
+def load_unified_constants():
+    """``knowledge/unified/constants.jsonl`` -> {name: rec}."""
+    out = {}
+    if not os.path.exists(UNIFIED_CONSTANTS):
+        return out
+    check_spec_path(UNIFIED_CONSTANTS)
+    with open(UNIFIED_CONSTANTS, encoding="utf-8") as fh:
+        for line in fh:
+            line = line.strip()
+            if not line:
+                continue
+            rec = json.loads(line)
+            name = rec.get("name")
+            if name:
+                out[name] = rec
+    return out
+
+
+def apply_unified_constants(const_rows, unified):
+    """Keep only the CE-preferred value the unified KB chose.
+
+    Correspondence-table numbers (charset → code page) and a Win32 value
+    that a CE page contradicts are dropped.  A name only the extra
+    extractors numbered is injected.
+    """
+    if not unified:
+        return 0
+    applied = 0
+    for name, rec in unified.items():
+        value = rec.get("value")
+        if not value:
+            continue
+        source = rec.get("source") if isinstance(rec.get("source"), dict) else {}
+        source = dict(source)
+        source.setdefault("path", source.get("path") or "knowledge/unified/constants.jsonl")
+        source.setdefault("set", source.get("set") or "unified")
+        source.setdefault("layer", rec.get("layer") or "ce")
+        source.setdefault("title", name)
+        source.setdefault("page_id", source.get("page_id") or "")
+        synthetic = {
+            "id": "unified:" + name,
+            "name": name,
+            "value": value,
+            "decimal": rec.get("decimal"),
+            "origin": rec.get("origin") or "unified",
+            "headers": [rec["header"]] if rec.get("header") else [],
+            "layer": rec.get("layer") or "ce",
+            "row": f"{name} {value}",
+            "license": rec.get("license") or "?",
+            "source": source,
+        }
+        existing = const_rows.get(name)
+        if existing:
+            want = _int_of(value)
+            kept = {}
+            for key, row in existing.items():
+                if _int_of(row.get("value")) == want or str(row.get("value")) == str(value):
+                    row = dict(row)
+                    if rec.get("header"):
+                        row["headers"] = [rec["header"]]
+                    kept[key] = row
+            const_rows[name] = kept or {"unified": synthetic}
+        else:
+            const_rows[name] = {"unified": synthetic}
+        applied += 1
+    return applied
+
+
 def load_constant_links():
     """``kb/constant-headers.tsv`` -> {name: [{header, strength, sets}]}.
 
@@ -1540,10 +1706,19 @@ def run_unified(args):
     pinvoke_apis = load_pinvoke_aux(PINVOKE_APIS)
     pinvoke_consts = load_pinvoke_aux(PINVOKE_CONSTANTS)
     base_types_by_header = load_base_types()
-    extra_defines = load_extra_defines()
-    assigned_defines = load_assigned_defines()
-    unassigned_defines = load_unassigned_defines()
-    assigned_declarations = load_assigned_declarations()
+    extra_defines, extra_declarations = load_extra_surface()
+    heuristic_rows = load_heuristic_headers()
+    modules_ce_headers = load_modules_ce_headers()
+    lib_to_header = build_lib_to_unique_header(all_entities)
+    page_to_headers = collections.defaultdict(set)
+    for ent in all_entities:
+        hs = header_files(ent.get("headers") or [])
+        if not hs:
+            continue
+        for page in (ent.get("ce_pages") or []) + (ent.get("win32_pages") or []):
+            for h in hs:
+                page_to_headers[page].add(h)
+    leftover_kb_decls = []
     borrow = not args.no_borrow
 
     entities, variants = unified_scope(all_entities)
@@ -1569,6 +1744,10 @@ def run_unified(args):
     for entity in sorted(entities, key=lambda e: e["name"].lower()):
         chosen, borrowed_from, ce_recs, win32_recs = \
             choose_unified_declaration(entity, declarations_of, borrow)
+        if chosen and not looks_like_c_declaration(chosen.get("text") or ""):
+            skipped["declaration is not a C declaration"] += 1
+            chosen = None
+            borrowed_from = ""
         page_decl = chosen["source"]["path"] if chosen else ""
         if chosen:
             pages.add(chosen["source"]["path"])
@@ -1620,6 +1799,11 @@ def run_unified(args):
             primary = header_cands[primary_key]["printed"]
             alternates = [(c["printed"], c["sets"]) for k, c in
                           sorted(header_cands.items()) if k != primary_key]
+        elif entity.get("headers"):
+            files = header_files(entity.get("headers") or [])
+            primary = files[0] if files else ""
+            alternates = [(h, set()) for h in files[1:]]
+            header_mark = "entity-headers" if primary else ""
         elif borrow and win32_headers:
             primary = win32_headers[0]
             alternates = [(h, set()) for h in win32_headers[1:]]
@@ -1665,23 +1849,54 @@ def run_unified(args):
             if not chosen else []
         if not chosen and not outline:
             skipped["no declaration in the corpus"] += 1
+        name_only = False
         # Heuristic header assignment for entities without headers
         if not primary:
-            heuristic_header = heuristic_entity_header(entity)
+            heuristic_header = heuristic_entity_header(
+                entity, lib_to_header=lib_to_header,
+                heuristic_rows=heuristic_rows)
+            if not heuristic_header:
+                for lib in (entity.get("libraries") or []) + (
+                        entity.get("dlls") or []):
+                    parsed = module_of(lib)
+                    stem = (parsed[0] if parsed else lib).lower()
+                    if stem in modules_ce_headers:
+                        heuristic_header = modules_ce_headers[stem]
+                        break
+            if not heuristic_header:
+                votes = collections.Counter()
+                for page in entity.get("ce_pages") or ():
+                    for h in page_to_headers.get(page) or ():
+                        votes[h] += 1
+                if votes:
+                    heuristic_header = votes.most_common(1)[0][0]
             if heuristic_header:
                 primary = heuristic_header
                 alternates = []
                 header_mark = "heuristic-prefix"
         if not primary:
             skipped["no header stated"] += 1
+            if chosen:
+                leftover_kb_decls.append({
+                    "type": (entity.get("kinds") or ["function"])[0],
+                    "name": entity.get("name") or "",
+                    "declaration": chosen.get("text") or "",
+                    "source": ((chosen.get("source") or {}).get("path") or ""),
+                })
         guard, merged = wce_guard(versions)
         if not versions and not neutral_ce:
             skipped["no CE version evidence"] += 1
-        if primary and (chosen or outline):
+        if primary and not chosen and not outline:
+            n = entity.get("name") or ""
+            if header_map.header_for_constant(n) or "macro" in (
+                    entity.get("kinds") or []) or (
+                    n.isupper() and "_" in n and len(n) > 3):
+                name_only = True
+        if primary and (chosen or outline or name_only):
             printed_forms[primary.lower()] = primary
             by_header[primary.lower()].append(
                 {"entity": entity, "declaration": chosen,
-                 "outline": outline,
+                 "outline": outline, "name_only": name_only,
                  "borrowed_from": borrowed_from, "guard": guard,
                  "merged": merged, "versions": versions,
                  "neutral_ce": neutral_ce, "header_mark": header_mark,
@@ -1779,6 +1994,8 @@ def run_unified(args):
             continue
         const_rows[name] = records
         shared_values += 1
+    unified_consts = load_unified_constants()
+    apply_unified_constants(const_rows, unified_consts)
     defines = conflicts = unsupported_written = no_header = 0
     conflicts_resolved = 0
     const_entries = collections.defaultdict(list)   # header lower -> [entry]
@@ -1787,13 +2004,18 @@ def run_unified(args):
         unsupported = UNSUPPORTED.get(name) or []
         if not groups:
             continue
-        targets = links.get(name) or []
+        if quality_filters.is_language_runtime_constant(name):
+            no_header += 1
+            continue
+        unified_rec = unified_consts.get(name) or {}
+        if unified_rec.get("header"):
+            targets = [{"header": unified_rec["header"],
+                        "strength": "unified-kb",
+                        "statements": 1,
+                        "example_page": (unified_rec.get("source") or {}).get("path") or "-"}]
+        else:
+            targets = pick_constant_targets(name, links.get(name) or [])
         if not targets:
-            # No page names a header -- but the number IS documented
-            # ("定数は全て使った状態に"): file it under the honest catch-all
-            # NoStatedHeader.h, whose name invents no header and whose
-            # comment says the value is documented and the home header is
-            # not (check the CE SDK).
             no_header += 1
             printed_forms.setdefault("nostatedheader.h", "NoStatedHeader.h")
             targets = [{"header": "NoStatedHeader.h",
@@ -1820,6 +2042,90 @@ def run_unified(args):
                 "review": conflict_rows.get(name) or {},
                 "taken_away": taken_away,
             })
+
+    # ---- extra macros / declarations from the corpus scan, quality-filtered
+    # and filed by the shared header map.  Names already emitted from the
+    # knowledge base are not duplicated.
+    emitted_names = set()
+    for key, entries in const_entries.items():
+        for e in entries:
+            emitted_names.add(e["name"])
+    for key, infos in by_header.items():
+        for info in infos:
+            emitted_names.add(info["entity"]["name"])
+    page_to_headers = collections.defaultdict(set)
+    for ent in all_entities:
+        hs = header_files(ent.get("headers") or [])
+        if not hs:
+            continue
+        for page in (ent.get("ce_pages") or []) + (ent.get("win32_pages") or []):
+            for h in hs:
+                page_to_headers[page].add(h)
+
+    extra_macros_by_header = collections.defaultdict(list)
+    extra_decls_by_header = collections.defaultdict(list)
+    leftover_defines = []
+    leftover_decls = []
+
+    def _pick_header_for_extra(name, source, kinds=None):
+        # Macros from sample pages must not ride a page's Header into an
+        # API fragment.  The shared name map is the only extra-macro filing.
+        if kinds and "macro" in kinds:
+            if quality_filters.is_sample_source(source or ""):
+                return None
+            return header_map.header_for_entity(name, kinds)
+        if quality_filters.is_sample_source(source or ""):
+            return None
+        mapped = header_map.header_for_entity(name, kinds or [])
+        if mapped:
+            return mapped
+        headers = page_to_headers.get(source) or set()
+        if headers:
+            return sorted(headers, key=str.lower)[0]
+        return None
+
+    for d in extra_defines:
+        name = d.get("name") or ""
+        if name in emitted_names:
+            continue
+        if quality_filters.is_sample_source(d.get("source") or ""):
+            continue
+        if name.startswith(("IDC_", "IDI_")) and name not in header_map.EXACT_TO_HEADER:
+            leftover_defines.append(d)
+            continue
+        hdr = _pick_header_for_extra(name, d.get("source") or "", ["macro"])
+        if hdr:
+            printed_forms.setdefault(hdr.lower(), hdr)
+            extra_macros_by_header[hdr.lower()].append(d)
+            emitted_names.add(name)
+        else:
+            leftover_defines.append(d)
+
+    for d in extra_declarations:
+        name = d.get("name") or ""
+        if name in emitted_names:
+            continue
+        if quality_filters.is_sample_source(d.get("source") or ""):
+            continue
+        hdr = _pick_header_for_extra(name, d.get("source") or "",
+                                     [d.get("type") or ""])
+        if hdr:
+            printed_forms.setdefault(hdr.lower(), hdr)
+            extra_decls_by_header[hdr.lower()].append(d)
+            emitted_names.add(name)
+        else:
+            leftover_decls.append(d)
+
+    leftover_names = {d.get("name") for d in leftover_decls}
+    for d in leftover_kb_decls:
+        name = d.get("name") or ""
+        if not name or name in emitted_names or name in leftover_names:
+            continue
+        leftover_decls.append(d)
+        leftover_names.add(name)
+        emitted_names.add(name)
+
+    extra_keys = set(extra_macros_by_header) | set(extra_decls_by_header)
 
     out = os.path.abspath(args.out)
     os.makedirs(out, exist_ok=True)
@@ -1885,7 +2191,7 @@ def run_unified(args):
         comment = f"/* {name} = {group['print']}  [{', '.join(meta)}] */"
         return [comment]
 
-    for key in sorted(set(by_header) | set(const_entries)):
+    for key in sorted(set(by_header) | set(const_entries) | extra_keys):
         display = safe_name(printed_forms.get(key) or key, ".h")
         def entry_sort(e):
             if e["conflict"] or len(e["groups"]) != 1:
@@ -1899,7 +2205,9 @@ def run_unified(args):
         decls = sorted(by_header.get(key, []),
                        key=lambda e: (guard_sort_key(e["merged"]),
                                       e["entity"]["name"].lower()))
-        if not entries and not decls:
+        if not entries and not decls and not extra_macros_by_header.get(key) \
+                and not extra_decls_by_header.get(key) \
+                and not base_types_by_header.get(key.lower()):
             continue
         # A page whose syntax block prints `#define NAME <value>` already
         # carries the line verbatim below; the derived line adds nothing
@@ -1920,6 +2228,8 @@ def run_unified(args):
         n_decls = sum(1 for d in decls if d['declaration'] is not None)
         n_outlines = sum(1 for d in decls if d['declaration'] is None)
         n_base_types = len(base_types_by_header.get(key.lower(), []))
+        n_extra_macros = len(extra_macros_by_header.get(key.lower(), []))
+        n_extra_decls = len(extra_decls_by_header.get(key.lower(), []))
         lines = [
             f"/* {printed_forms.get(key) or key} -- Windows CE unified surface",
             " *",
@@ -1929,7 +2239,8 @@ def run_unified(args):
             " * Generated from wince-docs-corpus knowledge/ by",
             " * tools/gen-include-def.py --unified.",
             f" * {n_consts} constants, {n_decls} declarations, "
-            f"{n_outlines} derived outlines, {n_base_types} base types",
+            f"{n_outlines} outlines, {n_base_types} base types, "
+            f"{n_extra_macros} extra macros, {n_extra_decls} extra decls",
             " */",
             f"#ifndef _{guard_name}",
             f"#define _{guard_name}",
@@ -2093,51 +2404,24 @@ def run_unified(args):
                 defn_lines = bt["definition"].split("\\n")
                 for defn_line in defn_lines:
                     lines.append(defn_line)
-        # Assigned defines: extra macros found in corpus pages and assigned to this header
-        # These supplement the macros already extracted by the main parser
-        assigned_for_header = assigned_defines.get(key.lower(), [])
-        if assigned_for_header:
+        # Extra macros filed into this header (quality-filtered, not
+        # already numbered as constants above).  Object-like first, then
+        # function-like, so the two kinds are not mixed.
+        extra_macs = extra_macros_by_header.get(key.lower(), [])
+        if extra_macs:
+            obj_macros = [d for d in extra_macs if d.get("type") != "function-like"]
+            func_macros = [d for d in extra_macs if d.get("type") == "function-like"]
             lines.append("")
             lines.append("/* " + "=" * 66)
-            lines.append(" * additional macros -- supplementary definitions from corpus")
+            lines.append(" * macros -- supplementary #define from CE pages")
             lines.append(" * " + "=" * 64 + " */")
-            # Group by type
-            func_macros = [d for d in assigned_for_header if d["type"] == "function-like"]
-            obj_macros = [d for d in assigned_for_header if d["type"] == "object-like"]
-            if obj_macros:
-                for d in sorted(obj_macros, key=lambda x: x["name"]):
-                    lines.append(d["definition"])
+            for d in sorted(obj_macros, key=lambda x: x["name"]):
+                lines.append(d["definition"])
             if func_macros:
                 if obj_macros:
                     lines.append("")
                 for d in sorted(func_macros, key=lambda x: x["name"]):
                     lines.append(d["definition"])
-        # Assigned declarations: additional declarations from KB
-        # These supplement the declarations already extracted by the main parser
-        assigned_decls_for_header = assigned_declarations.get(key.lower(), [])
-        if assigned_decls_for_header:
-            lines.append("")
-            if not args.minimal_comments:
-                lines.append("/* " + "=" * 66)
-                lines.append(" * additional declarations -- supplementary definitions from KB")
-                lines.append(" * " + "=" * 64 + " */")
-            # Group by type
-            from collections import defaultdict
-            decls_by_type = defaultdict(list)
-            for d in assigned_decls_for_header:
-                decls_by_type[d["type"]].append(d)
-            # Write in order: typedef, enum, struct, callback, function
-            for decl_type in ["typedef", "enum", "struct", "callback", "function"]:
-                if decl_type in decls_by_type:
-                    lines.append("")
-                    if not args.minimal_comments:
-                        lines.append(f"/* {decl_type} declarations */")
-                    for d in sorted(decls_by_type[decl_type], key=lambda x: x["name"]):
-                        decl_text = d["declaration"]
-                        # Clean up declaration text
-                        decl_text = html_clean.clean_declaration(decl_text)
-                        if decl_text and decl_text.strip():
-                            lines.append(decl_text)
         # The declarations, in reading order: the macro blocks the pages
         # print (verbatim #define / macro syntax), then the types (structs,
         # enums, typedefs, interfaces, and the derived member outlines for
@@ -2147,6 +2431,8 @@ def run_unified(args):
         # the same batching rule applies: one _WIN32_WCE guard per batch,
         # never one guard per line.
         def decl_bucket(info):
+            if info.get("name_only"):
+                return "macros"
             if info["declaration"] is None:
                 return "types"          # derived member outline
             kinds = set(info["entity"]["kinds"] or [])
@@ -2195,90 +2481,62 @@ def run_unified(args):
                     lines.append("")
                     open_guard(lines, info["guard"], info["merged"])
                     open_decl_guard = info["guard"]
-                head = [
-                    "", "/*" + "-" * 68,
-                    f" * {entity['name']}  "
-                    f"[{', '.join(entity['kinds']) or '?'}]",
-                    f" * surface: {entity.get('surface') or '?'}",
-                    f" * library: {libs}"
-                    + ("  [stated by the Win32 reference; the CE pages name "
-                       "no module]" if info["lib_mark"] else ""),
-                ]
-                if info["neutral_ce"] or info["versions"]:
-                    desc = wce_range_comment(info["merged"]) \
-                        if info["merged"] else \
-                        "no versioned set documents interface material"
-                    head.append(f" * versions: {desc}")
-                    if info["neutral_ce"]:
-                        head.append(
-                            " *   also documented by version-neutral "
-                            "CE pages: " + "; ".join(info["neutral_ce"]))
-                if info["alternates"]:
-                    for printed, sets in info["alternates"]:
-                        head.append(f" * also stated in: {printed}"
-                                    + (f"  ({'; '.join(sorted(sets))})"
-                                       if sets else ""))
+                bits = [", ".join(entity["kinds"]) or "?",
+                        entity.get("surface") or "?"]
+                if info["merged"]:
+                    bits.append("CE " + wce_range_comment(info["merged"]))
+                if libs and libs != "-":
+                    bits.append(libs)
                 if info["header_mark"]:
-                    head.append(" * header: stated by the Win32 desktop "
-                                "reference only -- NOT a header a Windows CE "
-                                "page names for this entry")
-                for variant in info["variants"]:
-                    head.append(" * documented spelling: "
-                                f"{variant['name']}  "
-                                f"[{'; '.join(variant.get('win32_pages') or [])}]"
-                                if variant.get("win32_pages") else
-                                f" * documented spelling: {variant['name']}")
-                if info["variants"]:
-                    head.append(" * A/W: Windows CE は基本的に W 系。A 系綴りの"
-                                "面は個別確認必須 -- CE 文書が A 綴りを明示する"
-                                "場合のみ採用する (user order 2026-10)")
+                    bits.append(info["header_mark"])
+                if info["lib_mark"]:
+                    bits.append("lib:" + info["lib_mark"])
+                bf = info["borrowed_from"] or ""
+                if bf:
+                    bits.append(bf.split("|")[0])
+                variants = [v["name"] for v in info["variants"]]
+                if variants:
+                    bits.append("A/W " + ",".join(variants)
+                                + " (CE is W-side)")
+                head = ["", f"/* {entity['name']}  [{'; '.join(bits)}] */"]
                 for item in (item for item in entity.get("unicode_only") or []
                              if item.get("scope") == "this-api"):
-                    head.append(f" * {item['text']}  [{item['page']}]")
-                bf = info["borrowed_from"]
-                if bf == "win32-reference":
-                    head.append(" * declaration: the Win32 reference copy -- "
-                                "the CE documents print none; verify against "
-                                "the CE SDK")
-                elif bf.startswith("ce-set:"):
-                    head.append(
-                        f" * declaration: "
-                        f"{bf[len('ce-set:'):].split('|')[0]}"
-                        " copy (another CE generation prints it)")
-                if bf.endswith("|spacing"):
-                    head.append(" *   (the newest CE copy lost the spaces "
-                                "between tokens; this is another page's text, "
-                                "identical once whitespace is removed)")
+                    head.append(f"/* {item['text']} */")
                 if declaration is not None:
-                    aw_ansi = any(
-                        re.search(r"\b" + re.escape(v["name"]) + r"\s*\(",
-                                  declaration["text"])
-                        for v in info["variants"] if v["name"].endswith("A"))
-                    if aw_ansi:
-                        head.append(" * A/W 個別確認必須: この宣言文は A (ANSI) 綴"
-                                    "りの版。Windows CE は W 系が基本 -- CE 文書の"
-                                    "明示がない限り A 面は使わない")
-                    head.append(f" * source: {declaration['source']['path']}")
-                    head.append(" */")
                     head.append(declaration["text"])
+                elif info.get("name_only"):
+                    pass  # comment above is the whole record
                 else:
                     outline = info["outline"]
-                    head.append(
-                        " * DERIVED member outline -- the page(s) below "
-                        "document these members, in this order, without "
-                        "printing a declaration body; the types, offsets "
-                        "and the body are not stated and not guessed.")
+                    head.append("/* DERIVED member outline -- documented order,"
+                                " types/offsets not stated */")
                     for member in outline:
-                        credit = ""
-                        if member["spelling"] and \
-                                member["spelling"] != entity["name"]:
-                            credit = f"  (spelling: {member['spelling']})"
-                        head.append(f" *   {member['field']}  "
-                                    f"[{member['page']}]{credit}")
-                    head.append(" */")
+                        head.append(f"/*   {member['field']} */")
                 lines.extend(head)
         if open_decl_guard is not None:
             close_guard(lines, open_decl_guard)
+        # Extra declarations filed into this header (not already emitted).
+        extra_ds = extra_decls_by_header.get(key.lower(), [])
+        if extra_ds:
+            by_type = collections.defaultdict(list)
+            for d in extra_ds:
+                by_type[d.get("type") or "function"].append(d)
+            lines.append("")
+            lines.append("/* " + "=" * 66)
+            lines.append(" * extra declarations -- corpus pages the main")
+            lines.append(" * parser did not turn into an entity declaration")
+            lines.append(" * " + "=" * 64 + " */")
+            for decl_type in ("typedef", "enum", "struct", "callback",
+                              "function"):
+                group = by_type.get(decl_type) or []
+                if not group:
+                    continue
+                lines.append("")
+                lines.append(f"/* {decl_type} */")
+                for d in sorted(group, key=lambda x: x.get("name") or ""):
+                    text = d.get("declaration") or ""
+                    if text:
+                        lines.append(text)
         # Close the include guard
         lines.append("")
         lines.append(f"#endif /* _{guard_name} */")
@@ -2286,9 +2544,14 @@ def run_unified(args):
         _write_lines(path, lines)
         header_files_written += 1
 
-    # ---- extra defines: macros found in CE corpus pages that the main
-    # parser may have missed.  Only unassigned defines go to ExtraDefines.h;
-    # assigned defines are already in their respective header fragments.
+    # ---- leftover extra defines: quality-filtered macros that still have
+    # no header.  Assigned macros are already in their header fragments.
+    leftover_defines = [
+        d for d in leftover_defines
+        if quality_filters.is_keepable_unassigned_macro(
+            d.get("name") or "", d.get("value") or "",
+            d.get("definition") or "")]
+    unassigned_defines = leftover_defines
     if unassigned_defines:
         extra_path = os.path.join(include_dir, "ExtraDefines.h.fragment")
         if args.minimal_comments:
@@ -2352,7 +2615,7 @@ def run_unified(args):
 
     # ---- extra declarations: declarations found in CE corpus pages that
     # could not be assigned to a specific header.  These go to ExtraDeclarations.h.
-    unassigned_declarations = load_unassigned_declarations()
+    unassigned_declarations = leftover_decls
     if unassigned_declarations:
         extra_decl_path = os.path.join(include_dir, "ExtraDeclarations.h.fragment")
         extra_decl_lines = []

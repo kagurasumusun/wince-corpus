@@ -5,56 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 5 declarations, 0 derived outlines, 0 base types
+ * 0 constants, 5 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _KEYBDPDD_
 #define _KEYBDPDD_
 
-
-
-typedef struct tagKEYBD_PDD {
-  WORD wPddMask;
-  LPCTSTR pszName;
-  PFN_KEYBD_PDD_POWER_HANDLER pfnPowerHandler;
-  PFN_KEYBD_PDD_TOGGLE_LIGHTS pfnToggleLights;
-} KEYBD_PDD, *PKEYBD_PDD;
-
-typedef void (*PFN_KEYBD_EVENT)( UINT uiPddId, UINT32 uiScanCode, BOOL fKeyDown);
-typedef BOOL (*PFN_KEYBD_PDD_ENTRY)( UINT uiPddId,  PFN_KEYBD_EVENT pfnKeybdEvent,  PKEYBD_PDD *ppKeybdPdd );
-typedef void (*PFN_KEYBD_PDD_POWER_HANDLER)( UINT uiPddId, BOOL fTurnOff);
-typedef void (*PFN_KEYBD_PDD_TOGGLE_LIGHTS)( UINT uiPddId,  KEY_STATE_FLAGS KeyStateFlags );
-
-void
-WINAPI
-KeybdPdd_PowerHandler(
-BOOL bOff
-)
-{
-  extern DWORD gdwIoBase;
-  if ( bOff )
-  {
-    if ( KeyStateFlags == KeyStateDownFlag )
-    {
-      UCHAR ucKbdStatus, ucKbdData;
-      if(gdwIoBase != 0) {
-        do
-        {
-          ucKbdData = READ_PORT_UCHAR((PUCHAR)(gdwIoBase + 0x00));
-        } while ( !(ucKbdData & scKeyUpMask) );
-      }
-      KeyStateFlags = 0;
-      if(gdwIoBase != 0) {
-        ucKbdStatus = READ_PORT_UCHAR((PUCHAR)(gdwIoBase + 0x04));
-        while ( (ucKbdStatus & 0x21) == 0x01 )
-        {
-          ucKbdData = READ_PORT_UCHAR((PUCHAR)(gdwIoBase + 0x00));
-          ucKbdStatus = READ_PORT_UCHAR((PUCHAR)(gdwIoBase + 0x04));
-        }
-      }
-    }
-  }
-  return;
-}
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -64,13 +19,7 @@ BOOL bOff
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
 
-/*--------------------------------------------------------------------
- * KEYBD_PDD  [struct]
- * surface: ce-only
- * library: -
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee483047(v=winembedded.60).html
- */
+/* KEYBD_PDD  [struct; ce-only; CE 5.0..699] */
 typedef struct tagKEYBD_PDD {
  WORD wPddMask;
  LPCTSTR pszName;
@@ -78,55 +27,39 @@ typedef struct tagKEYBD_PDD {
  PFN_KEYBD_PDD_TOGGLE_LIGHTS pfnToggleLights;
 } KEYBD_PDD, *PKEYBD_PDD;
 
-/*--------------------------------------------------------------------
- * PFN_KEYBD_EVENT  [callback]
- * surface: ce-only
- * library: -
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee486678(v=winembedded.60).html
- */
+/* PFN_KEYBD_EVENT  [callback; ce-only; CE 5.0..699] */
 typedef void (*PFN_KEYBD_EVENT)(
  UINT uiPddId,
  UINT32 uiScanCode, 
  BOOL fKeyDown
 );
 
-/*--------------------------------------------------------------------
- * PFN_KEYBD_PDD_ENTRY  [callback]
- * surface: ce-only
- * library: -
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee484462(v=winembedded.60).html
- */
+/* PFN_KEYBD_PDD_ENTRY  [callback; ce-only; CE 5.0..699] */
 typedef BOOL (*PFN_KEYBD_PDD_ENTRY)(
  UINT uiPddId, 
  PFN_KEYBD_EVENT pfnKeybdEvent, 
  PKEYBD_PDD *ppKeybdPdd
 );
 
-/*--------------------------------------------------------------------
- * PFN_KEYBD_PDD_POWER_HANDLER  [callback]
- * surface: ce-only
- * library: -
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee482507(v=winembedded.60).html
- */
+/* PFN_KEYBD_PDD_POWER_HANDLER  [callback; ce-only; CE 5.0..699] */
 typedef void (*PFN_KEYBD_PDD_POWER_HANDLER)(
  UINT uiPddId,
  BOOL fTurnOff
 );
 
-/*--------------------------------------------------------------------
- * PFN_KEYBD_PDD_TOGGLE_LIGHTS  [callback]
- * surface: ce-only
- * library: -
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee486469(v=winembedded.60).html
- */
+/* PFN_KEYBD_PDD_TOGGLE_LIGHTS  [callback; ce-only; CE 5.0..699] */
 typedef void (*PFN_KEYBD_PDD_TOGGLE_LIGHTS)(
  UINT uiPddId, 
  KEY_STATE_FLAGS KeyStateFlags
 );
 #endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* struct */
+typedef struct tagKEYBD_PDD { WORD wPddMask; LPCTSTR pszName; PFN_KEYBD_PDD_POWER_HANDLER pfnPowerHandler; PFN_KEYBD_PDD_TOGGLE_LIGHTS pfnToggleLights;} KEYBD_PDD, *PKEYBD_PDD;
 
 #endif /* _KEYBDPDD_ */

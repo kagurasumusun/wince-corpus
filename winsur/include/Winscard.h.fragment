@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 5 constants, 31 declarations, 0 derived outlines, 0 base types
+ * 9 constants, 31 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _WINSCARD_
 #define _WINSCARD_
@@ -17,563 +17,36 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
+
+/* SCARD_PROVIDER_CARD_MODULE = 0x80000001  [unified-kb, verify] */
 #define SCARD_PROVIDER_CARD_MODULE 0x80000001
+
+/* SCARD_PROVIDER_CSP = 2  [unified-kb, verify] */
 #define SCARD_PROVIDER_CSP 2
+
+/* SCARD_PROVIDER_KSP = 3  [unified-kb, verify] */
 #define SCARD_PROVIDER_KSP 3
+
+/* SCARD_PROVIDER_PRIMARY = 1  [unified-kb, verify] */
 #define SCARD_PROVIDER_PRIMARY 1
+
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
-#define SCARD_W_RESET_CARD 0x80100068L
+
+/* SCARD_F_COMM_ERROR = 0x80100013L  [unified-kb] */
+#define SCARD_F_COMM_ERROR 0x80100013L
+
+/* SCARD_F_INTERNAL_ERROR = 0x80100001L  [unified-kb] */
+#define SCARD_F_INTERNAL_ERROR 0x80100001L
+
+/* SCARD_F_UNKNOWN_ERROR = 0x80100014L  [unified-kb] */
+#define SCARD_F_UNKNOWN_ERROR 0x80100014L
+
+/* SCARD_F_WAITED_TOO_LONG = 0x80100007L  [unified-kb] */
+#define SCARD_F_WAITED_TOO_LONG 0x80100007L
+
+/* SCARD_P_SHUTDOWN = 0x80100018L  [unified-kb] */
+#define SCARD_P_SHUTDOWN 0x80100018L
 #endif /* _WIN32_WCE */
-
-
-typedef struct _SCARD_ATRMASK {
-  DWORD cbAtr;
-  BYTE rgbAtr[36];
-  BYTE rgbMask[36];
-} SCARD_ATRMASK, *PSCARD_ATRMASK, *LPSCARD_ATRMASK;
-typedef struct { DWORD dwProtocol; DWORD cbPciLength; } SCARD_IO_REQUEST;
-typedef struct {
-  LPCTSTR szReader;
-  LPVOID pvUserData;
-  DWORD dwCurrentState;
-  DWORD dwEventState;
-  DWORD cbAtr;
-  BYTE rgbAtr[36];
-} SCARD_READERSTATE, *PSCARD_READERSTATE, *LPSCARD_READERSTATE;
-
-LONG SCardBeginTransaction(  IN SCARDHANDLE hCard );
-LONG SCardCancel(  IN SCARDCONTEXT hContext );
-LONG SCardConnect(  IN SCARDCONTEXT hContext,  IN LPCTSTR szReader,  IN DWORD dwShareMode,  IN DWORD dwPreferredProtocols,  OUT LPSCARDHANDLE phCard,  OUT LPDWORD pdwActiveProtocol );
-SCARDHANDLE     hCardHandle;
-LONG            lReturn;
-DWORD           dwAP;
-lReturn = SCardConnect( hContext,
-(LPCTSTR)"Rainbow Technologies SCR3531 0",
-SCARD_SHARE_SHARED,
-SCARD_PROTOCOL_T0 | SCARD_PROTOCOL_T1,
-&hCardHandle,
-&dwAP );
-if ( SCARD_S_SUCCESS != lReturn )
-{
-  printf("Failed SCardConnect\n");
-  exit(1);
-}
-switch ( dwAP )
-{
-  case SCARD_PROTOCOL_T0:
-  printf("Active protocol T0\n");
-  break;
-  case SCARD_PROTOCOL_T1:
-  printf("Active protocol T1\n");
-  break;
-  case SCARD_PROTOCOL_UNDEFINED:
-  default:
-  printf("Active protocol unnegotiated or unknown\n");
-  break;
-}
-LONG SCardControl(SCARDHANDLEhCard, DWORDdwControlCode, LPCVOIDlpInBuffer, DWORDnInBufferSize, LPVOIDlpOutBuffer, DWORDnOutBufferSize, LPDWORDlpBytesReturned);
-LONG SCardDisconnect( SCARDHANDLE hCard,  DWORD dwDisposition  );
-LONG SCardEndTransaction( SCARDHANDLE hCard,  DWORD dwDisposition  );
-LONG SCardEstablishContext( DWORD dwScope,  LPCVOID pvReserved1,  LPCVOID pvReserved2,  LPSCARDCONTEXT phContext  );
-LONG SCardForgetCardType(SCARDCONTEXThContext, LPCTSTRszCardName);
-lReturn = SCardForgetCardType(hContext,  L"MyCardName"); if ( SCARD_S_SUCCESS != lReturn ) printf("Failed SCardForgetCardType\n");
-lReturn = SCardForgetCardType(hContext,  L"MyCardName"); if ( SCARD_S_SUCCESS != lReturn ) printf("Failed SCardForgetCardType\n");
-LONG SCardForgetReader( SCARDCONTEXT hContext,  LPCTSTR szReaderName  );
-lReturn = SCardForgetReader(hContext,  TEXT("MyReader")); if ( SCARD_S_SUCCESS != lReturn ) printf("Failed SCardForgetReader\n");
-lReturn = SCardForgetReader(hContext,  TEXT("MyReader")); if ( SCARD_S_SUCCESS != lReturn ) printf("Failed SCardForgetReader\n");
-LONG SCardFreeMemory( SCARDCONTEXT hContext, LPCVOID pvMem, );
-LONG SCardGetAttrib(  SCARDHANDLE hCard,  DWORD dwAttrId,  LPBYTE pbAttr,  LPDWORD pcbAttrLen  );
-LONG SCardGetCardTypeProviderName(  SCARDCONTEXT hContext,  LPCTSTR szCardName,  DWORD dwProviderId,  LPTSTR szProvider,  LPDWORD pcchProvider  );
-LPTSTR szProvider = NULL;
-LPTSTR szCardName = _T("WindowsCard");
-DWORD  chProvider = SCARD_AUTOALLOCATE;
-LONG   lReturn = SCARD_S_SUCCESS;
-lReturn = SCardGetCardTypeProviderName(hContext,
-szCardName,
-SCARD_PROVIDER_CSP,
-(LPTSTR)&szProvider,
-&chProvider);
-if (SCARD_S_SUCCESS == lReturn)
-{
-  BOOL fSts = TRUE;
-  HCRYPTPROV hProv = NULL;
-  fSts = CryptAcquireContext(&hProv,
-  NULL,
-  szProvider,
-  PROV_RSA_FULL,
-  0);
-  lReturn = SCardFreeMemory(hContext, szProvider);
-}
-LONG SCardGetProviderId(SCARDCONTEXThContext, LPCTSTRszCard, LPGUIDpguidProviderId);
-GUID    guidProv;
-LONG    lReturn;
-lReturn = SCardGetProviderId(hContext,
-L"MyCardName",
-&guidProv);
-if ( SCARD_S_SUCCESS != lReturn )
-printf("Failed SCardGetProviderId - %x\n", lReturn);
-else
-{
-}
-GUID    guidProv;
-LONG    lReturn;
-lReturn = SCardGetProviderId(hContext,
-L"MyCardName",
-&guidProv);
-if ( SCARD_S_SUCCESS != lReturn )
-printf("Failed SCardGetProviderId - %x\n", lReturn);
-else
-{
-}
-LONG SCardGetStatusChange(  SCARDCONTEXT hContext,  DWORD dwTimeout,  LPSCARD_READERSTATE rgReaderStates,  DWORD cReaders  );
-LONG SCardIntroduceCardType( SCARDCONTEXT hContext,  LPCTSTR szCardName,  LPGUID pguidPrimaryProvider,  LPGUID rgguidInterfaces,  DWORD dwInterfaceCount,  LPCBYTE pbAtr,  LPCBYTE pbAtrMask,  DWORD cbAtrLen  );
-LONG SCardIntroduceReader( SCARDCONTEXT hContext,  LPCTSTR szReaderName,  LPCTSTR szDeviceName  );
-LPBYTE    pbAttr = NULL;
-DWORD     cByte = SCARD_AUTOALLOCATE;
-LONG      lReturn;
-lReturn = SCardGetAttrib(hCardHandle,
-SCARD_ATTR_DEVICE_SYSTEM_NAME,
-(LPBYTE)&pbAttr,
-&cByte);
-if ( SCARD_S_SUCCESS != lReturn )
-{
-  printf("Failed SCardGetAttrib\n");
-  exit(1);
-}
-lReturn = SCardIntroduceReader(hContext,
-TEXT("My New Reader Name"),
-(LPCTSTR)pbAttr );
-if ( SCARD_S_SUCCESS != lReturn )
-{
-  printf("Failed SCardIntroduceReader\n");
-  exit(1);
-}
-lReturn = SCardForgetReader(hContext,
-(LPCTSTR)pbAttr );
-if ( SCARD_S_SUCCESS != lReturn )
-{
-  printf("Failed SCardForgetReader\n");
-  exit(1);
-}
-lReturn = SCardFreeMemory( hContext, pbAttr );
-LPBYTE    pbAttr = NULL;
-DWORD     cByte = SCARD_AUTOALLOCATE;
-LONG      lReturn;
-lReturn = SCardGetAttrib(hCardHandle,
-SCARD_ATTR_DEVICE_SYSTEM_NAME,
-(LPBYTE)&pbAttr,
-&cByte);
-if ( SCARD_S_SUCCESS != lReturn )
-{
-  printf("Failed SCardGetAttrib\n");
-  exit(1);
-}
-lReturn = SCardIntroduceReader(hContext,
-TEXT("My New Reader Name"),
-(LPCTSTR)pbAttr );
-if ( SCARD_S_SUCCESS != lReturn )
-{
-  printf("Failed SCardIntroduceReader\n");
-  exit(1);
-}
-lReturn = SCardForgetReader(hContext,
-(LPCTSTR)pbAttr );
-if ( SCARD_S_SUCCESS != lReturn )
-{
-  printf("Failed SCardForgetReader\n");
-  exit(1);
-}
-lReturn = SCardFreeMemory( hContext, pbAttr );
-LONG SCardIsValidContext(SCARDCONTEXThContext );
-LONG SCardListCards(IN SCARDCONTEXT hContext,  IN LPCBYTE pbAtr,  IN LPCGUID rgguidInterfaces,  IN DWORD cguidInterfaceCount,  OUT LPTSTR mszCards,  IN OUT LPDWORD pcchCards );
-LPTSTR pmszCards = NULL;
-LPTSTR pCard;
-LONG lReturn;
-DWORD cch = SCARD_AUTOALLOCATE;
-lReturn = SCardListCards(NULL,
-NULL,
-NULL,
-NULL,
-(LPTSTR)&pmszCards,
-&cch );
-if ( SCARD_S_SUCCESS != lReturn )
-{
-  printf("Failed SCardListCards\n");
-  exit(1);
-}
-pCard = pmszCards;
-while ( '\0' != *pCard )
-{
-  printf("%S\n", pCard );
-  pCard = pCard + wcslen(pCard) + 1;
-}
-LONG SCardListInterfaces(  IN SCARDCONTEXT hContext,  IN LPCTSTR szCard,  OUT LPGUID pguidInterfaces,  IN OUT LPDWORD pcguidInterfaces );
-LPGUID          pGuids = NULL;
-LONG            lReturn;
-DWORD           cGuid = SCARD_AUTOALLOCATE;
-lReturn = SCardListInterfaces(NULL,
-(LPCSTR) "MyCard",
-(LPGUID)&pGuids,
-&cGuid );
-if ( SCARD_S_SUCCESS != lReturn )
-{
-  printf("Failed SCardListInterfaces\n");
-  exit(1);
-}
-if ( 0 != cGuid )
-{
-}
-LPGUID          pGuids = NULL;
-LONG            lReturn;
-DWORD           cGuid = SCARD_AUTOALLOCATE;
-lReturn = SCardListInterfaces(NULL,
-(LPCSTR) "MyCard",
-(LPGUID)&pGuids,
-&cGuid );
-if ( SCARD_S_SUCCESS != lReturn )
-{
-  printf("Failed SCardListInterfaces\n");
-  exit(1);
-}
-if ( 0 != cGuid )
-{
-}
-LONG SCardListReaders( SCARDCONTEXT hContext,  LPCTSTR mszGroups,  LPTSTR mszReaders,  LPDWORD pcchReaders  );
-LPTSTR          pmszReaders = NULL;
-LPTSTR          pReader;
-LONG            lReturn, lReturn2;
-DWORD           cch = SCARD_AUTOALLOCATE;
-lReturn = SCardListReaders(hSC,
-NULL,
-(LPTSTR)&pmszReaders,
-&cch );
-switch( lReturn )
-{
-  case SCARD_E_NO_READERS_AVAILABLE:
-  printf("Reader is not in groups.\n");
-  break;
-  case SCARD_S_SUCCESS:
-  pReader = pmszReaders;
-  while ( '\0' != *pReader )
-  {
-    printf("Reader: %S\n", pReader );
-    pReader = pReader + wcslen((wchar_t *)pReader) + 1;
-  }
-  lReturn2 = SCardFreeMemory( hSC,
-  pmszReaders );
-  if ( SCARD_S_SUCCESS != lReturn2 )
-  printf("Failed SCardFreeMemory\n");
-  break;
-  default:
-  printf("Failed SCardListReaders\n");
-  break;
-}
-LONG SCardLocateCards(  SCARDCONTEXT hContext,  LPCTSTR mszCards,  LPSCARD_READERSTATE rgReaderStates,  DWORD cReaders  );
-#include
-#include
-#include
-#pragma comment(lib, "winscard.lib")
-HRESULT __cdecl main()
-{
-  HRESULT hr = S_OK;
-  LPTSTR szReaders, szRdr;
-  DWORD cchReaders = SCARD_AUTOALLOCATE;
-  DWORD dwI, dwRdrCount;
-  SCARD_READERSTATE rgscState[MAXIMUM_SMARTCARD_READERS];
-  TCHAR szCard[MAX_PATH];
-  SCARDCONTEXT hSC;
-  LONG lReturn;
-  _tcscat_s ( szCard, MAX_PATH * sizeof(TCHAR), TEXT("GemSAFE"));
-  szCard[lstrlen(szCard) + 1] = 0;
-  lReturn = SCardEstablishContext(SCARD_SCOPE_USER,
-  NULL,
-  NULL,
-  &hSC );
-  if ( SCARD_S_SUCCESS != lReturn )
-  {
-    printf("Failed SCardEstablishContext\n");
-    exit(1);
-  }
-  lReturn = SCardListReaders(hSC,
-  NULL,
-  (LPTSTR)&szReaders,
-  &cchReaders );
-  if ( SCARD_S_SUCCESS != lReturn )
-  {
-    printf("Failed SCardListReaders\n");
-    exit(1);
-  }
-  szRdr = szReaders;
-  for ( dwI = 0; dwI < MAXIMUM_SMARTCARD_READERS; dwI++ )
-  {
-    if ( 0 == *szRdr )
-    break;
-    rgscState[dwI].szReader = szRdr;
-    rgscState[dwI].dwCurrentState = SCARD_STATE_UNAWARE;
-    szRdr += lstrlen(szRdr) + 1;
-  }
-  dwRdrCount = dwI;
-  if ( 0 != dwRdrCount )
-  {
-    for (;;)
-    {
-      lReturn = SCardLocateCards(hSC,
-      szCard,
-      rgscState,
-      dwRdrCount );
-      if ( SCARD_S_SUCCESS != lReturn )
-      {
-        printf("Failed SCardLocateCards\n");
-        exit(1);
-      }
-      for ( dwI=0; dwI < dwRdrCount; dwI++)
-      {
-        if ( 0 != ( SCARD_STATE_ATRMATCH &
-        rgscState[dwI].dwEventState))
-        {
-          _tprintf( TEXT("Card '%s' found in reader '%s'.\n"),
-          szCard,
-          rgscState[dwI].szReader );
-          SCardFreeMemory( hSC,
-          szReaders );
-          return 0;
-        }
-        rgscState[dwI].dwCurrentState = rgscState[dwI].dwEventState;
-      }
-      lReturn = SCardGetStatusChange(hSC,
-      INFINITE, // infinite wait
-      rgscState,
-      dwRdrCount );
-      if ( SCARD_S_SUCCESS != lReturn )
-      {
-        printf("Failed SCardGetStatusChange\n");
-        exit(1);
-      }
-    } // for (;;)
-  }
-  else
-  printf("No readers available\n");
-  lReturn = SCardReleaseContext(hSC);
-  if ( SCARD_S_SUCCESS != lReturn )
-  {
-    printf("Failed SCardReleaseContext\n");
-    exit(1);
-  }
-  SCardFreeMemory( hSC,
-  szReaders );
-  return hr;
-}
-LONG SCardLocateCards( SCARDCONTEXT hContext, LPSCARD_ATRMASK rgAtrMasks, DWORD cAtrs, LPSCARD_READERSTATE rgReaderStates, DWORD cReaders );
-#include
-#include
-#include
-#pragma comment(lib, "winscard.lib")
-HRESULT __cdecl main()
-{
-  HRESULT hr = S_OK;
-  LPTSTR szReaders, szRdr;
-  DWORD cchReaders = SCARD_AUTOALLOCATE;
-  DWORD dwI, dwRdrCount;
-  SCARD_READERSTATE rgscState[MAXIMUM_SMARTCARD_READERS];
-  TCHAR szCard[MAX_PATH];
-  SCARDCONTEXT hSC;
-  LONG lReturn;
-  _tcscat_s ( szCard, MAX_PATH * sizeof(TCHAR), TEXT("GemSAFE"));
-  szCard[lstrlen(szCard) + 1] = 0;
-  lReturn = SCardEstablishContext(SCARD_SCOPE_USER,
-  NULL,
-  NULL,
-  &hSC );
-  if ( SCARD_S_SUCCESS != lReturn )
-  {
-    printf("Failed SCardEstablishContext\n");
-    exit(1);
-  }
-  lReturn = SCardListReaders(hSC,
-  NULL,
-  (LPTSTR)&szReaders,
-  &cchReaders );
-  if ( SCARD_S_SUCCESS != lReturn )
-  {
-    printf("Failed SCardListReaders\n");
-    exit(1);
-  }
-  szRdr = szReaders;
-  for ( dwI = 0; dwI < MAXIMUM_SMARTCARD_READERS; dwI++ )
-  {
-    if ( 0 == *szRdr )
-    break;
-    rgscState[dwI].szReader = szRdr;
-    rgscState[dwI].dwCurrentState = SCARD_STATE_UNAWARE;
-    szRdr += lstrlen(szRdr) + 1;
-  }
-  dwRdrCount = dwI;
-  if ( 0 != dwRdrCount )
-  {
-    for (;;)
-    {
-      lReturn = SCardLocateCards(hSC,
-      szCard,
-      rgscState,
-      dwRdrCount );
-      if ( SCARD_S_SUCCESS != lReturn )
-      {
-        printf("Failed SCardLocateCards\n");
-        exit(1);
-      }
-      for ( dwI=0; dwI < dwRdrCount; dwI++)
-      {
-        if ( 0 != ( SCARD_STATE_ATRMATCH &
-        rgscState[dwI].dwEventState))
-        {
-          _tprintf( TEXT("Card '%s' found in reader '%s'.\n"),
-          szCard,
-          rgscState[dwI].szReader );
-          SCardFreeMemory( hSC,
-          szReaders );
-          return 0;
-        }
-        rgscState[dwI].dwCurrentState = rgscState[dwI].dwEventState;
-      }
-      lReturn = SCardGetStatusChange(hSC,
-      INFINITE, // infinite wait
-      rgscState,
-      dwRdrCount );
-      if ( SCARD_S_SUCCESS != lReturn )
-      {
-        printf("Failed SCardGetStatusChange\n");
-        exit(1);
-      }
-    } // for (;;)
-  }
-  else
-  printf("No readers available\n");
-  lReturn = SCardReleaseContext(hSC);
-  if ( SCARD_S_SUCCESS != lReturn )
-  {
-    printf("Failed SCardReleaseContext\n");
-    exit(1);
-  }
-  SCardFreeMemory( hSC,
-  szReaders );
-  return hr;
-}
-LONG SCardReconnect(SCARDHANDLEhCard, DWORDdwShareMode, DWORDdwPreferredProtocols, DWORDdwInitialization, LPDWORDpdwActiveProtocol);
-LONG SCardReleaseContext(  IN SCARDCONTEXT hContext );
-LONG SCardSetAttrib( SCARDHANDLE hCard,  DWORD dwAttrId,  LPCBYTE pbAttr,  DWORD cbAttrLen  );
-LONG SCardSetCardTypeProviderName( SCARDCONTEXT hContext, LPCTSTR szCardName, DWORD dwProviderId, LPCTSTR szProvider  );
-LPTSTR            szNewProvName = _T("My Provider Name");
-LPTSTR            szCardName = _T("WindowsCard");
-LONG              lReturn = SCARD_S_SUCCESS;
-lReturn = SCardSetCardTypeProviderName(hContext,
-szCardName,
-SCARD_PROVIDER_CSP,
-szNewProvName);
-if ( SCARD_S_SUCCESS != lReturn )
-{
-  printf("Failed SCardSetCardTypeProviderName - %x\n", lReturn);
-  exit(1);
-}
-LPTSTR            szNewProvName = _T("My Provider Name");
-LPTSTR            szCardName = _T("WindowsCard");
-LONG              lReturn = SCARD_S_SUCCESS;
-lReturn = SCardSetCardTypeProviderName(hContext,
-szCardName,
-SCARD_PROVIDER_CSP,
-szNewProvName);
-if ( SCARD_S_SUCCESS != lReturn )
-{
-  printf("Failed SCardSetCardTypeProviderName - %x\n", lReturn);
-  exit(1);
-}
-LONG SCardStatus( SCARDHANDLE hCard,  LPTSTR mszReaderNames,  LPDWORD pcchReaderLen,  LPDWORD pdwState,  LPDWORD pdwProtocol,  LPBYTE pbAtr,  LPDWORD pbcAtrLen  );
-WCHAR           szReader[200];
-DWORD           cch = 200;
-BYTE            bAttr[32];
-DWORD           cByte = 32;
-DWORD           dwState, dwProtocol;
-LONG            lReturn;
-lReturn = SCardStatus(hCardHandle,
-szReader,
-&cch,
-&dwState,
-&dwProtocol,
-(LPBYTE)&bAttr,
-&cByte);
-if ( SCARD_S_SUCCESS != lReturn )
-{
-  printf("Failed SCardStatus\n");
-  exit(1);     // or other appropriate action
-}
-printf("%S\n", szReader );
-switch ( dwState )
-{
-  case SCARD_ABSENT:
-  printf("Card absent.\n");
-  break;
-  case SCARD_PRESENT:
-  printf("Card present.\n");
-  break;
-  case SCARD_SWALLOWED:
-  printf("Card swallowed.\n");
-  break;
-  case SCARD_POWERED:
-  printf("Card has power.\n");
-  break;
-  case SCARD_NEGOTIABLE:
-  printf("Card reset and waiting PTS negotiation.\n");
-  break;
-  case SCARD_SPECIFIC:
-  printf("Card has specific communication protocols set.\n");
-  break;
-  default:
-  printf("Unknown or unexpected card state.\n");
-  break;
-}
-WCHAR           szReader[200];
-DWORD           cch = 200;
-BYTE            bAttr[32];
-DWORD           cByte = 32;
-DWORD           dwState, dwProtocol;
-LONG            lReturn;
-lReturn = SCardStatus(hCardHandle,
-szReader,
-&cch,
-&dwState,
-&dwProtocol,
-(LPBYTE)&bAttr,
-&cByte);
-if ( SCARD_S_SUCCESS != lReturn )
-{
-  printf("Failed SCardStatus\n");
-  exit(1);     // or other appropriate action
-}
-printf("%S\n", szReader );
-switch ( dwState )
-{
-  case SCARD_ABSENT:
-  printf("Card absent.\n");
-  break;
-  case SCARD_PRESENT:
-  printf("Card present.\n");
-  break;
-  case SCARD_SWALLOWED:
-  printf("Card swallowed.\n");
-  break;
-  case SCARD_POWERED:
-  printf("Card has power.\n");
-  break;
-  case SCARD_NEGOTIABLE:
-  printf("Card reset and waiting PTS negotiation.\n");
-  break;
-  case SCARD_SPECIFIC:
-  printf("Card has specific communication protocols set.\n");
-  break;
-  default:
-  printf("Unknown or unexpected card state.\n");
-  break;
-}
-LONG SCardTransmit(SCARDHANDLEhCard, LPCSCARD_I0_REQUEST pioSendPci, LPCBYTE pbSendBuffer, DWORD cbSendLength, LPSCARD_IO_REQUEST pioRecvPci, LPBYTE pbRecvBuffer, LPDWORD pcbRecvLength);
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -583,28 +56,13 @@ LONG SCardTransmit(SCARDHANDLEhCard, LPCSCARD_I0_REQUEST pioSendPci, LPCBYTE pbS
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
 
-/*--------------------------------------------------------------------
- * SCARD_IO_REQUEST  [struct]
- * surface: ce-only
- * library: -
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee498559(v=winembedded.60).html
- */
+/* SCARD_IO_REQUEST  [struct; ce-only; CE 3.0..699] */
 typedef struct {
  DWORD dwProtocol;
  DWORD cbPciLength;
 } SCARD_IO_REQUEST;
 
-/*--------------------------------------------------------------------
- * SCARD_READERSTATE  [struct]
- * surface: shared
- * library: -
- * versions: 3.0..699
- * documented spelling: SCARD_READERSTATEA  [corpus/win32/api/winscard/ns-winscard-scard_readerstatea.md]
- * documented spelling: SCARD_READERSTATEW  [corpus/win32/api/winscard/ns-winscard-scard_readerstatew.md]
- * A/W: Windows CE は基本的に W 系。A 系綴りの面は個別確認必須 -- CE 文書が A 綴りを明示する場合のみ採用する (user order 2026-10)
- * source: corpus/learn/windows-embedded-ce-6.0/ee497987(v=winembedded.60).html
- */
+/* SCARD_READERSTATE  [struct; shared; CE 3.0..699; A/W SCARD_READERSTATEA,SCARD_READERSTATEW (CE is W-side)] */
 typedef struct {
  LPCTSTR szReader;
  LPVOID pvUserData;
@@ -617,13 +75,7 @@ typedef struct {
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
 
-/*--------------------------------------------------------------------
- * SCARD_ATRMASK  [struct]
- * surface: shared
- * library: -
- * versions: 4.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee498363(v=winembedded.60).html
- */
+/* SCARD_ATRMASK  [struct; shared; CE 4.0..699] */
 typedef struct _SCARD_ATRMASK {
  DWORD cbAtr; 
  BYTE rgbAtr[36]; 
@@ -637,38 +89,17 @@ typedef struct _SCARD_ATRMASK {
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
 
-/*--------------------------------------------------------------------
- * SCardBeginTransaction  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee498118(v=winembedded.60).html
- */
+/* SCardBeginTransaction  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib] */
 LONG SCardBeginTransaction(
  SCARDHANDLE hCard 
 );
 
-/*--------------------------------------------------------------------
- * SCardCancel  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee497935(v=winembedded.60).html
- */
+/* SCardCancel  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib] */
 LONG SCardCancel(
  SCARDCONTEXT hContext 
 );
 
-/*--------------------------------------------------------------------
- * SCardConnect  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 3.0..699
- * documented spelling: SCardConnectA  [corpus/win32/api/winscard/nf-winscard-scardconnecta.md]
- * documented spelling: SCardConnectW  [corpus/win32/api/winscard/nf-winscard-scardconnectw.md]
- * A/W: Windows CE は基本的に W 系。A 系綴りの面は個別確認必須 -- CE 文書が A 綴りを明示する場合のみ採用する (user order 2026-10)
- * source: corpus/learn/windows-embedded-ce-6.0/ee498194(v=winembedded.60).html
- */
+/* SCardConnect  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardConnectA,SCardConnectW (CE is W-side)] */
 LONG SCardConnect(
  SCARDCONTEXT hContext, 
  LPCTSTR szReader, 
@@ -678,13 +109,7 @@ LONG SCardConnect(
  LPDWORD pdwActiveProtocol 
 );
 
-/*--------------------------------------------------------------------
- * SCardControl  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee498583(v=winembedded.60).html
- */
+/* SCardControl  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib] */
 LONG SCardControl(
  SCARDHANDLE hCard, 
  DWORD dwControlCode, 
@@ -695,37 +120,19 @@ LONG SCardControl(
  LPDWORD lpBytesReturned 
 );
 
-/*--------------------------------------------------------------------
- * SCardDisconnect  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee498515(v=winembedded.60).html
- */
+/* SCardDisconnect  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib] */
 LONG SCardDisconnect(
  SCARDHANDLE hCard, 
  DWORD dwDisposition 
 );
 
-/*--------------------------------------------------------------------
- * SCardEndTransaction  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee498580(v=winembedded.60).html
- */
+/* SCardEndTransaction  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib] */
 LONG SCardEndTransaction(
  SCARDHANDLE hCard, 
  DWORD dwDisposition 
 );
 
-/*--------------------------------------------------------------------
- * SCardEstablishContext  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee498313(v=winembedded.60).html
- */
+/* SCardEstablishContext  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib] */
 LONG SCardEstablishContext(
  DWORD dwScope, 
  LPCVOID pvReserved1, 
@@ -733,43 +140,19 @@ LONG SCardEstablishContext(
  LPSCARDCONTEXT phContext 
 );
 
-/*--------------------------------------------------------------------
- * SCardForgetCardType  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 3.0..699
- * documented spelling: SCardForgetCardTypeA  [corpus/win32/api/winscard/nf-winscard-scardforgetcardtypea.md]
- * documented spelling: SCardForgetCardTypeW  [corpus/win32/api/winscard/nf-winscard-scardforgetcardtypew.md]
- * A/W: Windows CE は基本的に W 系。A 系綴りの面は個別確認必須 -- CE 文書が A 綴りを明示する場合のみ採用する (user order 2026-10)
- * source: corpus/learn/windows-embedded-ce-6.0/ee498788(v=winembedded.60).html
- */
+/* SCardForgetCardType  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardForgetCardTypeA,SCardForgetCardTypeW (CE is W-side)] */
 LONG SCardForgetCardType(
  SCARDCONTEXT hContext, 
  LPCTSTR szCardName 
 );
 
-/*--------------------------------------------------------------------
- * SCardForgetReader  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 3.0..699
- * documented spelling: SCardForgetReaderA  [corpus/win32/api/winscard/nf-winscard-scardforgetreadera.md]
- * documented spelling: SCardForgetReaderW  [corpus/win32/api/winscard/nf-winscard-scardforgetreaderw.md]
- * A/W: Windows CE は基本的に W 系。A 系綴りの面は個別確認必須 -- CE 文書が A 綴りを明示する場合のみ採用する (user order 2026-10)
- * source: corpus/learn/windows-embedded-ce-6.0/ee498164(v=winembedded.60).html
- */
+/* SCardForgetReader  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardForgetReaderA,SCardForgetReaderW (CE is W-side)] */
 LONG SCardForgetReader(
  SCARDCONTEXT hContext, 
  LPCTSTR szReaderName 
 );
 
-/*--------------------------------------------------------------------
- * SCardGetAttrib  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee497944(v=winembedded.60).html
- */
+/* SCardGetAttrib  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib] */
 LONG SCardGetAttrib(
  SCARDHANDLE hCard, 
  DWORD dwAttrId, 
@@ -777,16 +160,7 @@ LONG SCardGetAttrib(
  LPDWORD pcbAttrLen 
 );
 
-/*--------------------------------------------------------------------
- * SCardGetCardTypeProviderName  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 3.0..699
- * documented spelling: SCardGetCardTypeProviderNameA  [corpus/win32/api/winscard/nf-winscard-scardgetcardtypeprovidernamea.md]
- * documented spelling: SCardGetCardTypeProviderNameW  [corpus/win32/api/winscard/nf-winscard-scardgetcardtypeprovidernamew.md]
- * A/W: Windows CE は基本的に W 系。A 系綴りの面は個別確認必須 -- CE 文書が A 綴りを明示する場合のみ採用する (user order 2026-10)
- * source: corpus/learn/windows-embedded-ce-6.0/ee497908(v=winembedded.60).html
- */
+/* SCardGetCardTypeProviderName  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardGetCardTypeProviderNameA,SCardGetCardTypeProviderNameW (CE is W-side)] */
 LONG SCardGetCardTypeProviderName(
  SCARDCONTEXT hContext,
  LPCTSTR szCardName,
@@ -795,32 +169,14 @@ LONG SCardGetCardTypeProviderName(
  LPDWORD pcchProvider 
 );
 
-/*--------------------------------------------------------------------
- * SCardGetProviderId  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 3.0..699
- * documented spelling: SCardGetProviderIdA  [corpus/win32/api/winscard/nf-winscard-scardgetproviderida.md]
- * documented spelling: SCardGetProviderIdW  [corpus/win32/api/winscard/nf-winscard-scardgetprovideridw.md]
- * A/W: Windows CE は基本的に W 系。A 系綴りの面は個別確認必須 -- CE 文書が A 綴りを明示する場合のみ採用する (user order 2026-10)
- * source: corpus/learn/windows-embedded-ce-6.0/ee498532(v=winembedded.60).html
- */
+/* SCardGetProviderId  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardGetProviderIdA,SCardGetProviderIdW (CE is W-side)] */
 LONG SCardGetProviderId(
  SCARDCONTEXT hContext, 
  LPCTSTR szCard, 
  LPGUID pguidProviderId 
 );
 
-/*--------------------------------------------------------------------
- * SCardGetStatusChange  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 3.0..699
- * documented spelling: SCardGetStatusChangeA  [corpus/win32/api/winscard/nf-winscard-scardgetstatuschangea.md]
- * documented spelling: SCardGetStatusChangeW  [corpus/win32/api/winscard/nf-winscard-scardgetstatuschangew.md]
- * A/W: Windows CE は基本的に W 系。A 系綴りの面は個別確認必須 -- CE 文書が A 綴りを明示する場合のみ採用する (user order 2026-10)
- * source: corpus/learn/windows-embedded-ce-6.0/ee498377(v=winembedded.60).html
- */
+/* SCardGetStatusChange  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardGetStatusChangeA,SCardGetStatusChangeW (CE is W-side)] */
 LONG SCardGetStatusChange(
  SCARDCONTEXT hContext, 
  DWORD dwTimeout, 
@@ -828,16 +184,7 @@ LONG SCardGetStatusChange(
  DWORD cReaders 
 );
 
-/*--------------------------------------------------------------------
- * SCardIntroduceCardType  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 3.0..699
- * documented spelling: SCardIntroduceCardTypeA  [corpus/win32/api/winscard/nf-winscard-scardintroducecardtypea.md]
- * documented spelling: SCardIntroduceCardTypeW  [corpus/win32/api/winscard/nf-winscard-scardintroducecardtypew.md]
- * A/W: Windows CE は基本的に W 系。A 系綴りの面は個別確認必須 -- CE 文書が A 綴りを明示する場合のみ採用する (user order 2026-10)
- * source: corpus/learn/windows-embedded-ce-6.0/ee498390(v=winembedded.60).html
- */
+/* SCardIntroduceCardType  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardIntroduceCardTypeA,SCardIntroduceCardTypeW (CE is W-side)] */
 LONG SCardIntroduceCardType(
  SCARDCONTEXT hContext, 
  LPCTSTR szCardName, 
@@ -849,32 +196,14 @@ LONG SCardIntroduceCardType(
  DWORD cbAtrLen 
 );
 
-/*--------------------------------------------------------------------
- * SCardIntroduceReader  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 3.0..699
- * documented spelling: SCardIntroduceReaderA  [corpus/win32/api/winscard/nf-winscard-scardintroducereadera.md]
- * documented spelling: SCardIntroduceReaderW  [corpus/win32/api/winscard/nf-winscard-scardintroducereaderw.md]
- * A/W: Windows CE は基本的に W 系。A 系綴りの面は個別確認必須 -- CE 文書が A 綴りを明示する場合のみ採用する (user order 2026-10)
- * source: corpus/learn/windows-embedded-ce-6.0/ee498309(v=winembedded.60).html
- */
+/* SCardIntroduceReader  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardIntroduceReaderA,SCardIntroduceReaderW (CE is W-side)] */
 LONG SCardIntroduceReader(
  SCARDCONTEXT hContext, 
  LPCTSTR szReaderName, 
  LPCTSTR szDeviceName 
 );
 
-/*--------------------------------------------------------------------
- * SCardListCards  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 3.0..699
- * documented spelling: SCardListCardsA  [corpus/win32/api/winscard/nf-winscard-scardlistcardsa.md]
- * documented spelling: SCardListCardsW  [corpus/win32/api/winscard/nf-winscard-scardlistcardsw.md]
- * A/W: Windows CE は基本的に W 系。A 系綴りの面は個別確認必須 -- CE 文書が A 綴りを明示する場合のみ採用する (user order 2026-10)
- * source: corpus/learn/windows-embedded-ce-6.0/ee498504(v=winembedded.60).html
- */
+/* SCardListCards  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardListCardsA,SCardListCardsW (CE is W-side)] */
 LONG SCardListCards(
  SCARDCONTEXT hContext, 
  LPCBYTE pbAtr, 
@@ -884,16 +213,7 @@ LONG SCardListCards(
  LPDWORD pcchCards 
 );
 
-/*--------------------------------------------------------------------
- * SCardListInterfaces  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 3.0..699
- * documented spelling: SCardListInterfacesA  [corpus/win32/api/winscard/nf-winscard-scardlistinterfacesa.md]
- * documented spelling: SCardListInterfacesW  [corpus/win32/api/winscard/nf-winscard-scardlistinterfacesw.md]
- * A/W: Windows CE は基本的に W 系。A 系綴りの面は個別確認必須 -- CE 文書が A 綴りを明示する場合のみ採用する (user order 2026-10)
- * source: corpus/learn/windows-embedded-ce-6.0/ee498870(v=winembedded.60).html
- */
+/* SCardListInterfaces  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardListInterfacesA,SCardListInterfacesW (CE is W-side)] */
 LONG SCardListInterfaces(
  SCARDCONTEXT hContext, 
  LPCTSTR szCard, 
@@ -901,16 +221,7 @@ LONG SCardListInterfaces(
  LPDWORD pcguidInterfaces 
 );
 
-/*--------------------------------------------------------------------
- * SCardListReaders  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 3.0..699
- * documented spelling: SCardListReadersA  [corpus/win32/api/winscard/nf-winscard-scardlistreadersa.md]
- * documented spelling: SCardListReadersW  [corpus/win32/api/winscard/nf-winscard-scardlistreadersw.md]
- * A/W: Windows CE は基本的に W 系。A 系綴りの面は個別確認必須 -- CE 文書が A 綴りを明示する場合のみ採用する (user order 2026-10)
- * source: corpus/learn/windows-embedded-ce-6.0/ee498314(v=winembedded.60).html
- */
+/* SCardListReaders  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardListReadersA,SCardListReadersW (CE is W-side)] */
 LONG SCardListReaders(
  SCARDCONTEXT hContext, 
  LPCTSTR mszGroups, 
@@ -918,16 +229,7 @@ LONG SCardListReaders(
  LPDWORD pcchReaders 
 );
 
-/*--------------------------------------------------------------------
- * SCardLocateCards  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 3.0..699
- * documented spelling: SCardLocateCardsA  [corpus/win32/api/winscard/nf-winscard-scardlocatecardsa.md]
- * documented spelling: SCardLocateCardsW  [corpus/win32/api/winscard/nf-winscard-scardlocatecardsw.md]
- * A/W: Windows CE は基本的に W 系。A 系綴りの面は個別確認必須 -- CE 文書が A 綴りを明示する場合のみ採用する (user order 2026-10)
- * source: corpus/learn/windows-embedded-ce-6.0/ee498758(v=winembedded.60).html
- */
+/* SCardLocateCards  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardLocateCardsA,SCardLocateCardsW (CE is W-side)] */
 LONG SCardLocateCards(
  SCARDCONTEXT hContext, 
  LPCTSTR mszCards, 
@@ -935,13 +237,7 @@ LONG SCardLocateCards(
  DWORD cReaders 
 );
 
-/*--------------------------------------------------------------------
- * SCardReconnect  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee498725(v=winembedded.60).html
- */
+/* SCardReconnect  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib] */
 LONG SCardReconnect(
  SCARDHANDLE hCard, 
  DWORD dwShareMode, 
@@ -950,24 +246,12 @@ LONG SCardReconnect(
  LPDWORD pdwActiveProtocol 
 );
 
-/*--------------------------------------------------------------------
- * SCardReleaseContext  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee498311(v=winembedded.60).html
- */
+/* SCardReleaseContext  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib] */
 LONG SCardReleaseContext(
  SCARDCONTEXT hContext 
 );
 
-/*--------------------------------------------------------------------
- * SCardSetAttrib  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee497964(v=winembedded.60).html
- */
+/* SCardSetAttrib  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib] */
 LONG SCardSetAttrib(
  SCARDHANDLE hCard, 
  DWORD dwAttrId, 
@@ -975,16 +259,7 @@ LONG SCardSetAttrib(
  DWORD cbAttrLen 
 );
 
-/*--------------------------------------------------------------------
- * SCardSetCardTypeProviderName  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 3.0..699
- * documented spelling: SCardSetCardTypeProviderNameA  [corpus/win32/api/winscard/nf-winscard-scardsetcardtypeprovidernamea.md]
- * documented spelling: SCardSetCardTypeProviderNameW  [corpus/win32/api/winscard/nf-winscard-scardsetcardtypeprovidernamew.md]
- * A/W: Windows CE は基本的に W 系。A 系綴りの面は個別確認必須 -- CE 文書が A 綴りを明示する場合のみ採用する (user order 2026-10)
- * source: corpus/learn/windows-embedded-ce-6.0/ee498120(v=winembedded.60).html
- */
+/* SCardSetCardTypeProviderName  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardSetCardTypeProviderNameA,SCardSetCardTypeProviderNameW (CE is W-side)] */
 LONG SCardSetCardTypeProviderName(
  SCARDCONTEXT hContext,
  LPCTSTR szCardName,
@@ -992,16 +267,7 @@ LONG SCardSetCardTypeProviderName(
  LPCTSTR szProvider 
 );
 
-/*--------------------------------------------------------------------
- * SCardStatus  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 3.0..699
- * documented spelling: SCardStatusA  [corpus/win32/api/winscard/nf-winscard-scardstatusa.md]
- * documented spelling: SCardStatusW  [corpus/win32/api/winscard/nf-winscard-scardstatusw.md]
- * A/W: Windows CE は基本的に W 系。A 系綴りの面は個別確認必須 -- CE 文書が A 綴りを明示する場合のみ採用する (user order 2026-10)
- * source: corpus/learn/windows-embedded-ce-6.0/ee498340(v=winembedded.60).html
- */
+/* SCardStatus  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib; A/W SCardStatusA,SCardStatusW (CE is W-side)] */
 LONG SCardStatus(
  SCARDHANDLE hCard, 
  LPTSTR szReaderName, 
@@ -1012,13 +278,7 @@ LONG SCardStatus(
  LPDWORD pbcAtrLen 
 );
 
-/*--------------------------------------------------------------------
- * SCardTransmit  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 3.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee498507(v=winembedded.60).html
- */
+/* SCardTransmit  [function; shared; CE 3.0..699; Winscard.lib, winscard.lib] */
 LONG SCardTransmit(
  SCARDHANDLE hCard,
  LPCSCARD_I0_REQUEST pioSendPci,
@@ -1032,27 +292,12 @@ LONG SCardTransmit(
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
 
-/*--------------------------------------------------------------------
- * SCardIsValidContext  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 4.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee498542(v=winembedded.60).html
- */
+/* SCardIsValidContext  [function; shared; CE 4.0..699; Winscard.lib, winscard.lib] */
 LONG SCardIsValidContext(
  SCARDCONTEXT hContext 
 );
 
-/*--------------------------------------------------------------------
- * SCardLocateCardsByATR  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 4.0..699
- * documented spelling: SCardLocateCardsByATRA  [corpus/win32/api/winscard/nf-winscard-scardlocatecardsbyatra.md]
- * documented spelling: SCardLocateCardsByATRW  [corpus/win32/api/winscard/nf-winscard-scardlocatecardsbyatrw.md]
- * A/W: Windows CE は基本的に W 系。A 系綴りの面は個別確認必須 -- CE 文書が A 綴りを明示する場合のみ採用する (user order 2026-10)
- * source: corpus/learn/windows-embedded-ce-6.0/ee497985(v=winembedded.60).html
- */
+/* SCardLocateCardsByATR  [function; shared; CE 4.0..699; Winscard.lib, winscard.lib; A/W SCardLocateCardsByATRA,SCardLocateCardsByATRW (CE is W-side)] */
 LONG SCardLocateCards(
  SCARDCONTEXT hContext,
  LPSCARD_ATRMASK rgAtrMasks,
@@ -1064,17 +309,20 @@ LONG SCardLocateCards(
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
 
-/*--------------------------------------------------------------------
- * SCardFreeMemory  [function]
- * surface: shared
- * library: Winscard.lib, winscard.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee498172(v=winembedded.60).html
- */
+/* SCardFreeMemory  [function; shared; CE 5.0..699; Winscard.lib, winscard.lib] */
 LONG SCardFreeMemory(
  SCARDCONTEXT hContext,
  LPCVOID pvMem,
 );
 #endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* struct */
+typedef struct _SCARD_ATRMASK {DWORDcbAtr;BYTErgbAtr[36];BYTErgbMask[36];} SCARD_ATRMASK, *PSCARD_ATRMASK, *LPSCARD_ATRMASK;
+typedef struct {LPCTSTR szReader;LPVOID pvUserData;DWORD dwCurrentState;DWORD dwEventState;DWORD cbAtr;BYTE rgbAtr[36];} SCARD_READERSTATE, *PSCARD_READERSTATE, *LPSCARD_READERSTATE;
 
 #endif /* _WINSCARD_ */

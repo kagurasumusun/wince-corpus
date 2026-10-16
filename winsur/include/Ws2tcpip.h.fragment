@@ -5,103 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2 constants, 6 declarations, 0 derived outlines, 0 base types
+ * 0 constants, 6 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
  */
 #ifndef _WS2TCPIP_
 #define _WS2TCPIP_
 
-
-/* ==================================================================
- * constants (one evidence comment per #define; the
- * #if of a batch covers every #define in it; values
- * that differ per generation pool into #if/#elif
- * chains with the evidence after the #endif)
- * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-#define NI_MAXHOST 1025
-#define NI_MAXSERV 32
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * additional macros -- supplementary definitions from corpus
- * ================================================================ */
-#define NI_MAXHOST 1025
-#define NI_MAXHOST 1025
-#define NI_MAXSERV 32
-#define NI_MAXSERV 32
-
-
-#ifndef UNICODE
-#define UNICODE
-#endif
-#define WIN32_LEAN_AND_MEAN
-#include
-#include
-#include
-#pragma comment(lib, "Ws2_32.lib")
-int __cdecl main(int argc, char **argv)
-{
-  WSADATA wsaData;
-  int iResult;
-  DWORD dwRetval;
-  struct sockaddr_in saGNI;
-  WCHAR hostname[NI_MAXHOST];
-  WCHAR servInfo[NI_MAXSERV];
-  u_short port = 27015;
-  if (argc != 2) {
-    wprintf(L"usage: %s IPv4 address\n", argv[0]);
-    wprintf(L" to return hostname\n");
-    wprintf(L" %s 127.0.0.1\n", argv[0]);
-    return 1;
-  }
-  iResult = WSAStartup(MAKEWORD(2, 2), &wsaData);
-  if (iResult != 0) {
-    wprintf(L"WSAStartup failed: %d\n", iResult);
-    return 1;
-  }
-  saGNI.sin_family = AF_INET;
-  saGNI.sin_addr.s_addr = inet_addr(argv[1]);
-  saGNI.sin_port = htons(port);
-  dwRetval = GetNameInfoW((struct sockaddr *) &saGNI,
-  sizeof (struct sockaddr),
-  hostname,
-  NI_MAXHOST, servInfo, NI_MAXSERV, NI_NUMERICSERV);
-  if (dwRetval != 0) {
-    wprintf(L"GetNameInfoW failed with error # %ld\n", WSAGetLastError());
-    return 1;
-  } else {
-    wprintf(L"GetNameInfoW returned hostname = %ws\n", hostname);
-    return 0;
-  }
-};
-struct addrinfo {
-  int ai_flags;
-  int ai_family;
-  int ai_socktype;
-  int ai_protocol;
-  size_t ai_addrlen;
-  char* ai_canonname;
-  struct sockaddr* ai_addr;
-  struct addrinfo* ai_next;
-};
-void freeaddrinfo( struct addrinfo FAR* ai );
-int getaddrinfo( const char FAR* nodename, const char FAR* servname, const struct addrinfo FAR* hints, struct addrinfo FAR* FAR* res );
-int getnameinfo( const struct sockaddr FAR* sa, socklen_t salen, char FAR* host, DWORD hostlen, char FAR* serv, DWORD servlen, int flags );
-struct in6_addr {
-  union {
-    u_char Byte[16];
-    u_short Word[8];
-  } u;
-};
-struct sockaddr_in6 {
-  short sin6_family;
-  u_short sin6_port;
-  u_long sin6_flowinfo;
-  struct in6_addr sin6_addr;
-  u_long sin6_scope_id;
-};
-
-int getaddrinfo(constcharFAR* nodename,constcharFAR* servname,conststructaddrinfoFAR* hints,structaddrinfoFAR* FAR* res);
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
@@ -109,15 +17,7 @@ int getaddrinfo(constcharFAR* nodename,constcharFAR* servname,conststructaddrinf
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
 
-/*--------------------------------------------------------------------
- * getnameinfo  [struct, macro, function]
- * surface: shared
- * library: Ws2.lib
- * versions: 4.0..699
- * documented spelling: GetNameInfoW  [corpus/win32/api/ws2tcpip/nf-ws2tcpip-getnameinfow.md]
- * A/W: Windows CE は基本的に W 系。A 系綴りの面は個別確認必須 -- CE 文書が A 綴りを明示する場合のみ採用する (user order 2026-10)
- * source: corpus/learn/windows-embedded-ce-6.0/ee493879(v=winembedded.60).html
- */
+/* getnameinfo  [struct, macro, function; shared; CE 4.0..699; Ws2.lib; A/W GetNameInfoW (CE is W-side)] */
 int getnameinfo(
  const struct sockaddr FAR* sa,
  socklen_t salen,
@@ -137,16 +37,7 @@ int getnameinfo(
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
 
-/*--------------------------------------------------------------------
- * addrinfo  [struct]
- * surface: shared
- * library: -
- * versions: 4.0..699
- * documented spelling: ADDRINFOA  [corpus/win32/api/ws2def/ns-ws2def-addrinfoa.md]
- * documented spelling: ADDRINFOW  [corpus/win32/api/ws2def/ns-ws2def-addrinfow.md]
- * A/W: Windows CE は基本的に W 系。A 系綴りの面は個別確認必須 -- CE 文書が A 綴りを明示する場合のみ採用する (user order 2026-10)
- * source: corpus/learn/windows-embedded-ce-6.0/ee493833(v=winembedded.60).html
- */
+/* addrinfo  [struct; shared; CE 4.0..699; A/W ADDRINFOA,ADDRINFOW (CE is W-side)] */
 struct addrinfo {
  int ai_flags;
  int ai_family;
@@ -158,28 +49,12 @@ struct addrinfo {
  struct addrinfo* ai_next;
 };
 
-/*--------------------------------------------------------------------
- * freeaddrinfo  [struct, function]
- * surface: shared
- * library: Ws2.lib
- * versions: 4.0..699
- * documented spelling: FreeAddrInfoW  [corpus/win32/api/ws2tcpip/nf-ws2tcpip-freeaddrinfow.md]
- * A/W: Windows CE は基本的に W 系。A 系綴りの面は個別確認必須 -- CE 文書が A 綴りを明示する場合のみ採用する (user order 2026-10)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494081(v=winembedded.60).html
- */
+/* freeaddrinfo  [struct, function; shared; CE 4.0..699; Ws2.lib; A/W FreeAddrInfoW (CE is W-side)] */
 void freeaddrinfo(
  struct addrinfo FAR* ai
 );
 
-/*--------------------------------------------------------------------
- * getaddrinfo  [struct, function]
- * surface: shared
- * library: Ws2.lib
- * versions: 4.0..699
- * documented spelling: GetAddrInfoW  [corpus/win32/api/ws2tcpip/nf-ws2tcpip-getaddrinfow.md]
- * A/W: Windows CE は基本的に W 系。A 系綴りの面は個別確認必須 -- CE 文書が A 綴りを明示する場合のみ採用する (user order 2026-10)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494084(v=winembedded.60).html
- */
+/* getaddrinfo  [struct, function; shared; CE 4.0..699; Ws2.lib; A/W GetAddrInfoW (CE is W-side)] */
 int getaddrinfo(
  const char FAR* nodename,
  const char FAR* servname,
@@ -190,13 +65,7 @@ int getaddrinfo(
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
 
-/*--------------------------------------------------------------------
- * in6_addr  [struct]
- * surface: shared
- * library: -
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee495157(v=winembedded.60).html
- */
+/* in6_addr  [struct; shared; CE 5.0..699] */
 struct in6_addr {
  union {
  u_char Byte[16];
@@ -204,13 +73,7 @@ struct in6_addr {
  } u;
 };
 
-/*--------------------------------------------------------------------
- * sockaddr_in6  [struct]
- * surface: ce-only
- * library: -
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee493465(v=winembedded.60).html
- */
+/* sockaddr_in6  [struct; ce-only; CE 5.0..699] */
 struct sockaddr_in6 {
  short sin6_family;
  u_short sin6_port;
@@ -219,5 +82,17 @@ struct sockaddr_in6 {
  u_long sin6_scope_id;
 };
 #endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* struct */
+void freeaddrinfo(struct addrinfo FAR* ai);
+struct addrinfo {intai_flags;intai_family;intai_socktype;intai_protocol;size_tai_addrlen;char* ai_canonname;struct sockaddr* ai_addr;struct addrinfo* ai_next;};
+int getnameinfo( const struct sockaddr FAR* sa, socklen_t salen, char FAR* host, DWORD hostlen, char FAR* serv, DWORD servlen, int flags );
+int getnameinfo(const struct sockaddr FAR* sa,socklen_tsalen,char FAR* host,DWORDhostlen,char FAR* serv,DWORDservlen,intflags);
+struct sockaddr_in6 {short sin6_family;u_short sin6_port;u_longsin6_flowinfo;struct in6_addrsin6_addr;u_long sin6_scope_id;};
 
 #endif /* _WS2TCPIP_ */

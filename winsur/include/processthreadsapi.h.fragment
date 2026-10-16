@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 14 constants, 0 declarations, 0 derived outlines, 0 base types
+ * 1 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 10 extra decls
  */
 #ifndef _PROCESSTHREADSAPI_
 #define _PROCESSTHREADSAPI_
@@ -17,123 +17,25 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define STARTF_FORCEOFFFEEDBACK 0x00000080
-#define STARTF_FORCEONFEEDBACK 0x00000040
-#define STARTF_PREVENTPINNING 0x00002000
-#define STARTF_RUNFULLSCREEN 0x00000020
-#define STARTF_TITLEISAPPID 0x00001000
-#define STARTF_TITLEISLINKNAME 0x00000800
-#define STARTF_UNTRUSTEDSOURCE 0x00008000
-#define STARTF_USECOUNTCHARS 0x00000008
-#define STARTF_USEFILLATTRIBUTE 0x00000010
-#define STARTF_USEHOTKEY 0x00000200
-#define STARTF_USEPOSITION 0x00000004
-#define STARTF_USESHOWWINDOW 0x00000001
-#define STARTF_USESIZE 0x00000002
-#define STARTF_USESTDHANDLES 0x00000100
 
+/* STACK_SIZE_PARAM_IS_A_RESERVATION = 0x00010000  [unified-kb, verify] */
+#define STACK_SIZE_PARAM_IS_A_RESERVATION 0x00010000
 
-typedef struct _PROCESS_INFORMATION {
-  HANDLE hProcess;
-  HANDLE hThread;
-  DWORD dwProcessId;
-  DWORD dwThreadId;
-} PROCESS_INFORMATION;
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
 
-HANDLE CreateThread(  LPSECURITY_ATTRIBUTES lpThreadAttributes,  DWORD dwStackSize,  LPTHREAD_START_ROUTINE lpStartAddress,  LPVOID lpParameter,  DWORD dwCreationFlags,  LPDWORD lpThreadId);
-VOID ExitProcess(  UINT uExitCode);
-VOID ExitThread( DWORD dwExitCode );
-BOOL FlushInstructionCache( HANDLE hProcess, LPCVOID lpBaseAddress, DWORD dwSize );
-HANDLEGetCurrentProcess(void);
-DWORD GetCurrentProcessId(void);
-HANDLEGetCurrentThread(void);
-DWORD GetCurrentThreadId(void);
-BOOL GetExitCodeProcess( HANDLE hProcess, LPDWORD lpExitCode );
-BOOL GetExitCodeThread( HANDLE hThread, LPDWORD lpExitCode );
-DWORD GetProcessVersion( DWORD ProcessId );
-BOOL GetThreadContext(  HANDLE hThread,  LPCONTEXT lpContext  );
-int GetThreadPriority( HANDLE hThread );
-BOOL GetThreadTimes (HANDLE hThread, LPFILETIME lpCreationTime,  LPFILETIME lpExitTime, LPFILETIME lpKernelTime, LPFILETIME lpUserTime);
-BOOL IsProcessorFeaturePresent(DWORDdwProcessorFeature);
-HANDLE OpenProcess(  DWORD fdwAccess,  BOOL fInherit,  DWORD IDProcess  );
-HANDLE OpenThread( DWORD dwDesiredAccess, BOOL bInheritHandle, DWORD dwThreadId );
-DWORD ResumeThread(  HANDLE hThread);
-#include
-#include
-#include
-void _tmain( int argc, TCHAR *argv[] )
-{
-  STARTUPINFO si;
-  PROCESS_INFORMATION pi;
-  ZeroMemory( &si, sizeof(si) );
-  si.cb = sizeof(si);
-  ZeroMemory( &pi, sizeof(pi) );
-  if( argc != 2 )
-  {
-    printf("Usage: %s [cmdline]\n", argv[0]);
-    return;
-  }
-  if( !CreateProcess( NULL,
-  argv[1],
-  NULL,
-  NULL,
-  FALSE,
-  0,
-  NULL,
-  NULL,
-  &si,
-  &pi )
-  )
-  {
-    printf( "CreateProcess failed (%d).\n", GetLastError() );
-    return;
-  }
-  WaitForSingleObject( pi.hProcess, INFINITE );
-  CloseHandle( pi.hProcess );
-  CloseHandle( pi.hThread );
-}
-#include
-#include
-#include
-void _tmain( int argc, TCHAR *argv[] )
-{
-  STARTUPINFO si;
-  PROCESS_INFORMATION pi;
-  ZeroMemory( &si, sizeof(si) );
-  si.cb = sizeof(si);
-  ZeroMemory( &pi, sizeof(pi) );
-  if( argc != 2 )
-  {
-    printf("Usage: %s [cmdline]\n", argv[0]);
-    return;
-  }
-  if( !CreateProcess( NULL,
-  argv[1],
-  NULL,
-  NULL,
-  FALSE,
-  0,
-  NULL,
-  NULL,
-  &si,
-  &pi )
-  )
-  {
-    printf( "CreateProcess failed (%d).\n", GetLastError() );
-    return;
-  }
-  WaitForSingleObject( pi.hProcess, INFINITE );
-  CloseHandle( pi.hProcess );
-  CloseHandle( pi.hThread );
-}
-BOOL SetThreadContext(  HANDLE hThread,  CONST CONTEXT * lpContext );
-BOOL SetThreadPriority( HANDLE hThread, int nPriority );
-DWORDSuspendThread(HANDLEhThread);
+/* function */
+BOOLGetExitCodeThread( HANDLEhThread, LPDWORDlpExitCode);
+BOOLSetThreadPriority( HANDLEhThread, intnPriority);
 BOOLTerminateProcess(HANDLEhProcess, DWORDuExitCode);
-BOOL TerminateThread( HANDLE hThread, DWORD dwExitCode );
-DWORD TlsAlloc(void);
 BOOLTlsFree(DWORDdwTlsIndex);
-LPVOID TlsGetValue( DWORD dwTlsIndex );
 BOOLTlsSetValue( DWORDdwTlsIndex, LPVOIDlpTlsValue);
+DWORDGetProcessVersion(DWORDProcessId);
+DWORDResumeThread( HANDLEhThread);
+DWORDSuspendThread(HANDLEhThread);
+HANDLECreateThread(LPSECURITY_ATTRIBUTESlpsa, DWORDcbStack, LPTHREAD_START_ROUTINElpStartAddr, LPVOIDlpvThreadParam, DWORDfdwCreate, LPDWORDlpIDThread);
+VOIDExitThread( DWORDdwExitCode);
 
 #endif /* _PROCESSTHREADSAPI_ */

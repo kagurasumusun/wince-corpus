@@ -432,6 +432,41 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: コーパス収穫（第6弾）
+
+- **`page_parse`**: `#define NAME MAKE_D3DMHRESULT(2158)` や `(WM_USER+255)` を印刷どおり定数にする。折れた 1 行の複数 `#define` / enum メンバーも分割。
+- **`tools/harvest-corpus-kb.py`**: CE 105,096 ページを現行抽出器で再読。`kb/harvest-constants.jsonl`（26,645 行）と `harvest-declarations.jsonl`。
+- ゴミ値（`sizeof` / HTML / サンプル本文）は定数にしない。`ARRAYSIZE sizeof(hArray)` はフラグメントから削除。
+- 再生成: 606 fragments、9,574 `#define`、ExtraDeclarations 6,517。`ANSI_CHARSET 0`、`D3DMERR_* MAKE_D3DMHRESULT(n)`。
+
+### 2026-10-16: 統合 KB（第5弾）
+
+- **`knowledge/unified/`** を新設。証拠（`kb/*.jsonl.gz`）はそのまま、生成器が読むのは「名前 → 1 つの CE 値 / 1 ヘッダ / 1 宣言」。
+- **CE 値が Win32 に勝つ**。CE が番号を書いていない名前だけ Win32 を借り、`win32_fallback` と印す。
+- **対応表を定数にしない**。`ANSI_CHARSET` の 1252 はコードページ列であり値 0 を残す（捏造ではない、ページが印刷したもう一方の数）。
+- extra の `#define` / enum メンバーを unified constants に合流。`IDC_` は Winuser に入れない。
+- 抽出強化: HTML タグは空白に置換（トークンをくっつけない）、関数プロトタイプの戻り値型を拡大。
+- `python3 tools/build-unified-kb.py`。`build-kb.py` の末尾でも実行。
+
+### 2026-10-16: 定数の単一ヘッダ化と KB 宣言の回収（第4弾）
+
+- **定数は 1 ヘッダだけに書く** (`pick_constant_targets`)。CE ページ優先。`header_map` が当たれば win32-reference の誤振り（`ERROR_FILE_NOT_FOUND` → wincrypt.h）を捨て `Winerror.h` にする。`raserror.h` のような `reference-header` は残す。`.h` を `.hpp`/`.idl` より優先。
+- **ヘッダ無し関数**は同じページの兄弟エンティティのヘッダを借りる。借りられない KB 宣言は `ExtraDeclarations.h` に落とす（KB を捨てない）。
+- **IDC_/IDI_** は `EXACT_TO_HEADER`（`IDC_STATIC`）以外 Winuser に入れない。ダイアログ ID は ExtraDefines。
+- **enum 名** `CLSCTX` / `ADVF` は `CLSCTX_` / `ADVF_` プレフィックスで Objbase/Objidl。
+- 単体テスト 25。再生成: 585 fragments、21,622 decls、9,228 `#define`（重複定数をやめたので前回より減）、266 `.def`。
+
+### 2026-10-16: パイプライン強化（第3弾）
+
+抽出・振り分け・生成を一本化し、KB を生成器が実際に使うようにした。
+
+- **共有ヘッダマッピング** `tools/header_map.py`（定数プレフィックス 1300+、関数名パターン、ライブラリ→ヘッダ）。`build-kb.py` と `gen-include-def.py` が同じ表を使う。`LVN_`/`TVN_` は Commctrl.h、`DT_LEFT` は Winuser.h、`DT_EXTERNAL_MODEM` は誤って Winuser に入れない。
+- **品質フィルタ** `tools/quality_filters.py`。サンプル識別子、HTML 残り（`</PRE>`）、途中切れマクロ、代入スニペット（`pnmv = ...`）をフラグメントに出さない。
+- **KB の利用**: `entity.headers`、`modules-ce.tsv`、ライブラリ一意マッピング、`heuristic-headers.tsv`（entities.jsonl は改変しない）、番号なし定数のスタブ（`LVN_*` を Commctrl にコメントとして残す）。
+- **マクロと定数の分離**: 定数 `#define` → 補足マクロ → ページ原文マクロ → 型 → 関数。宣言コメントは1行。
+- **VB/ADO 言語定数**は C ヘッダに出さない。
+- extra 抽出/割り当てスクリプトは上記モジュールを使う。`heuristic-header-assignment.py` は KB を書き換えない。
+
 ### 2026-10-16: 包括的な改善（第2弾）
 
 - 不足している宣言の抽出（9,830個: 関数、構造体、列挙型、typedef）
@@ -462,5 +497,7 @@ winsur/
 - `tools/extract-base-types.py` - 基底型抽出ツール
 - `tools/extract-missing-defines.py` - 追加マクロ抽出ツール
 - `tools/assign-defines-to-headers.py` - マクロヘッダ割り当てツール
+- `tools/header_map.py` - 共有ヘッダ対応表
+- `tools/quality_filters.py` - サンプル/HTML/スニペットの除外
 - `knowledge/` - 構造化仕様データベース
 - `docs/clean-room.md` - Clean-Roomポリシー

@@ -5,175 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 10 constants, 3 declarations, 0 derived outlines, 0 base types
+ * 0 constants, 3 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _IPEXPORT_
 #define _IPEXPORT_
 
-
-/* ==================================================================
- * constants (one evidence comment per #define; the
- * #if of a batch covers every #define in it; values
- * that differ per generation pool into #if/#elif
- * chains with the evidence after the #endif)
- * ================================================================ */
-#define IP_FLAG_REVERSE 0x01
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 3.0..699 */
-#define IP_FLAG_DF 0x2
-#endif /* _WIN32_WCE */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
-#define IP_OPT_EOL 0
-#define IP_OPT_LSRR 0x83
-#define IP_OPT_NOP 1
-#define IP_OPT_RR 0x7
-#define IP_OPT_SECURITY 0x82
-#define IP_OPT_SID 0x88
-#define IP_OPT_SSRR 0x89
-#define IP_OPT_TS 0x44
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * additional macros -- supplementary definitions from corpus
- * ================================================================ */
-#define used to access the S_addr member.</p>
-
-
-struct icmp_echo_reply {
-  IPAddr Address;
-  unsigned long Status;
-  unsigned long RoundTripTime;
-  unsigned short DataSize;
-  unsigned short Reserved;
-  void FAR* Data;
-  struct ip_option_information Options;
-} ICMP_ECHO_REPLY;
-typedef struct in_addr {
-  union {
-    struct{
-      unsigned char s_b1,
-      s_b2,
-      s_b3,
-      s_b4;
-    } S_un_b;
-    struct {
-      unsigned short s_w1,
-      s_w2;
-    } S_un_w;
-    unsigned long S_addr;
-  } S_un;
-} IN_ADDR;
-typedef struct _IP_ADAPTER_INDEX_MAP { ULONG Index;  WCHAR Name[MAX_ADAPTER_NAME];  } IP_ADAPTER_INDEX_MAP, *PIP_ADAPTER_INDEX_MAP;
-typedef struct _IP_INTERFACE_INFO{LONG NumAdapters;IP_ADAPTER_INDEX_MAP Adapter[1];}IP_INTERFACE_INFO, *PIP_INTERFACE_INFO;
-struct IP_OPTION_INFORMATION {
-  unsigned char Ttl;
-  unsigned char Tos;
-  unsigned char Flags;
-  unsigned char OptionsSize;
-  unsigned char FAR *OptionsData;
-};
-typedef struct ip_option_information IP_OPTION_INFORMATION, FAR *PIP_OPTION_INFORMATION;
-typedef struct _IP_UNIDIRECTIONAL_ADAPTER_ADDRESS{ULONG NumAdapters;IPAddr Address[1];} IP_UNIDIRECTIONAL_ADAPTER_ADDRESS*, PIP_UNIDIRECTIONAL_ADAPTER_ADDRESS;
-#include
-#include
-#include
-#include
-#pragma comment(lib, "iphlpapi.lib")
-#pragma comment(lib, "ws2_32.lib")
-int __cdecl main(int argc, char **argv) {
-  HANDLE hIcmpFile;
-  unsigned long ipaddr = INADDR_NONE;
-  DWORD dwRetVal = 0;
-  char SendData[32] = "Data Buffer";
-  LPVOID ReplyBuffer = NULL;
-  DWORD ReplySize = 0;
-  if (argc != 2) {
-    printf("usage: %s IP address\n", argv[0]);
-    return 1;
-  }
-  ipaddr = inet_addr(argv[1]);
-  if (ipaddr == INADDR_NONE) {
-    printf("usage: %s IP address\n", argv[0]);
-    return 1;
-  }
-  hIcmpFile = IcmpCreateFile();
-  if (hIcmpFile == INVALID_HANDLE_VALUE) {
-    printf("\tUnable to open handle.\n");
-    printf("IcmpCreatefile returned error: %ld\n", GetLastError() );
-    return 1;
-  }
-  ReplySize = sizeof(ICMP_ECHO_REPLY) + sizeof(SendData);
-  ReplyBuffer = (VOID*) malloc(ReplySize);
-  if (ReplyBuffer == NULL) {
-    printf("\tUnable to allocate memory\n");
-    return 1;
-  }
-  dwRetVal = IcmpSendEcho(hIcmpFile, ipaddr, SendData, sizeof(SendData),
-  NULL, ReplyBuffer, ReplySize, 1000);
-  if (dwRetVal != 0) {
-    PICMP_ECHO_REPLY pEchoReply = (PICMP_ECHO_REPLY)ReplyBuffer;
-    struct in_addr ReplyAddr;
-    ReplyAddr.S_un.S_addr = pEchoReply->Address;
-    printf("\tSent icmp message to %s\n", argv[1]);
-    if (dwRetVal > 1) {
-      printf("\tReceived %ld icmp message responses\n", dwRetVal);
-      printf("\tInformation from the first response:\n");
-    }
-    else {
-      printf("\tReceived %ld icmp message response\n", dwRetVal);
-      printf("\tInformation from this response:\n");
-    }
-    printf("\t Received from %s\n", inet_ntoa( ReplyAddr ) );
-    printf("\t Status = %ld\n",
-    pEchoReply->Status);
-    printf("\t Roundtrip time = %ld milliseconds\n",
-    pEchoReply->RoundTripTime);
-  }
-  else {
-    printf("\tCall to IcmpSendEcho failed.\n");
-    printf("\tIcmpSendEcho returned error: %ld\n", GetLastError() );
-    return 1;
-  }
-  return 0;
-};
-
-PIP_INTERFACE_INFO pInfo;
-pInfo = (IP_INTERFACE_INFO *) malloc( sizeof(IP_INTERFACE_INFO) );
-ULONG ulOutBufLen = 0;
-DWORD dwRetVal = 0;
-if ( GetInterfaceInfo(pInfo, &ulOutBufLen) == ERROR_INSUFFICIENT_BUFFER) {
-  free(pInfo);
-  pInfo = (IP_INTERFACE_INFO *) malloc (ulOutBufLen);
-}
-if ((dwRetVal = GetInterfaceInfo(pInfo, &ulOutBufLen)) == NO_ERROR ) {
-  printf("\tAdapter Name: %ws\n", pInfo->Adapter[0].Name);
-  printf("\tAdapter Index: %ld\n", pInfo->Adapter[0].Index);
-  printf("\tNum Adapters: %ld\n", pInfo->NumAdapters);
-  free(pInfo);
-  pInfo = NULL;
-}
-else if (dwRetVal == ERROR_NO_DATA) {
-  printf("There are no network adapters with IPv4 enabled on the local system\n");
-}
-else {
-  printf("GetInterfaceInfo failed.\n");
-  LPVOID lpMsgBuf;
-  if (FormatMessage(
-  FORMAT_MESSAGE_ALLOCATE_BUFFER |
-  FORMAT_MESSAGE_FROM_SYSTEM |
-  FORMAT_MESSAGE_IGNORE_INSERTS,
-  NULL,
-  dwRetVal,
-  MAKELANGID(LANG_NEUTRAL, SUBLANG_DEFAULT),
-  (LPTSTR) &lpMsgBuf,
-  0,
-  NULL ))  {
-    printf("\tError: %s", lpMsgBuf);
-  }
-  LocalFree( lpMsgBuf );
-}
-BOOL WINAPI IcmpCloseHandle( HANDLE IcmpHandle  );
-HANDLE WINAPI IcmpCreateFile (VOID);
-DWORD WINAPI IcmpSendEcho( HANDLE IcmpHandle,  IPAddr DestinationAddress, LPVOID RequestData,  WORD RequestSize,  PIP_OPTION_INFORMATION RequestOptions,  LPVOID ReplyBuffer, DWORD ReplySize,  DWORD Timeout  );
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -183,41 +19,33 @@ DWORD WINAPI IcmpSendEcho( HANDLE IcmpHandle,  IPAddr DestinationAddress, LPVOID
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
 
-/*--------------------------------------------------------------------
- * IP_ADAPTER_INDEX_MAP  [struct]
- * surface: shared
- * library: -
- * versions: 3.0..399, 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee493627(v=winembedded.60).html
- */
+/* IP_ADAPTER_INDEX_MAP  [struct; shared; CE 3.0..399, 5.0..699] */
 typedef struct _IP_ADAPTER_INDEX_MAP {
  ULONG Index; 
  WCHAR Name[MAX_ADAPTER_NAME]; 
 } IP_ADAPTER_INDEX_MAP, *PIP_ADAPTER_INDEX_MAP;
 
-/*--------------------------------------------------------------------
- * IP_INTERFACE_INFO  [struct]
- * surface: shared
- * library: -
- * versions: 3.0..399, 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee494671(v=winembedded.60).html
- */
+/* IP_INTERFACE_INFO  [struct; shared; CE 3.0..399, 5.0..699] */
 typedef struct _IP_INTERFACE_INFO {
  LONG NumAdapters; 
  IP_ADAPTER_INDEX_MAP Adapter[1]; 
 } IP_INTERFACE_INFO, *PIP_INTERFACE_INFO;
 
-/*--------------------------------------------------------------------
- * IP_UNIDIRECTIONAL_ADAPTER_ADDRESS  [struct]
- * surface: shared
- * library: -
- * versions: 3.0..399, 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee494663(v=winembedded.60).html
- */
+/* IP_UNIDIRECTIONAL_ADAPTER_ADDRESS  [struct; shared; CE 3.0..399, 5.0..699] */
 typedef struct _IP_UNIDIRECTIONAL_ADAPTER_ADDRESS {
  ULONG NumAdapters;
  IPAddr Address[1];
 } IP_UNIDIRECTIONAL_ADAPTER_ADDRESS*, PIP_UNIDIRECTIONAL_ADAPTER_ADDRESS;
 #endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* struct */
+typedef struct _IP_ADAPTER_INDEX_MAP{ULONGIndex; WCHARName[MAX_ADAPTER_NAME];}IP_ADAPTER_INDEX_MAP, *PIP_ADAPTER_INDEX_MAP;
+typedef struct _IP_INTERFACE_INFO{LONG NumAdapters;IP_ADAPTER_INDEX_MAP Adapter[1];}IP_INTERFACE_INFO, *PIP_INTERFACE_INFO;
+typedef struct _IP_UNIDIRECTIONAL_ADAPTER_ADDRESS{ULONG NumAdapters;IPAddr Address[1];} IP_UNIDIRECTIONAL_ADAPTER_ADDRESS*, PIP_UNIDIRECTIONAL_ADAPTER_ADDRESS;
 
 #endif /* _IPEXPORT_ */

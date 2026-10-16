@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2 constants, 95 declarations, 0 derived outlines, 0 base types
+ * 7 constants, 85 declarations, 23 outlines, 0 base types, 0 extra macros, 5 extra decls
  */
 #ifndef _WINDBASE_
 #define _WINDBASE_
@@ -17,282 +17,111 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
-#define OEM_CERTIFY_RUN 1
-#define OEM_CERTIFY_TRUST 2
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+
+/* CEDB_NOCOMPRESS = 0x00010000  [unified-kb] */
+#define CEDB_NOCOMPRESS 0x00010000
+
+/* CEDB_VALIDCREATE = 0x0017  [unified-kb] */
+#define CEDB_VALIDCREATE 0x0017
+
+/* CEDB_VALIDDBFLAGS = 0x0010  [unified-kb] */
+#define CEDB_VALIDDBFLAGS 0x0010
+
+/* CEDB_VALIDMODTIME = 0x0008  [unified-kb] */
+#define CEDB_VALIDMODTIME 0x0008
+
+/* CEDB_VALIDNAME = 0x0001  [unified-kb] */
+#define CEDB_VALIDNAME 0x0001
+
+/* CEDB_VALIDSORTSPEC = 0x0004  [unified-kb] */
+#define CEDB_VALIDSORTSPEC 0x0004
+
+/* CEDB_VALIDTYPE = 0x0002  [unified-kb] */
+#define CEDB_VALIDTYPE 0x0002
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * additional macros -- supplementary definitions from corpus
- * ================================================================ */
-#define CHECK_INVALIDGUID(</B><I>pguid</I><B>) </B> <B>\</B>
-#define CHECK_INVALIDGUID(</B><I>pguid</I><B>) </B> <B>\</B>
-#define CHECK_SYSTEMGUID(</B><I>pguid) </I> \
-#define CHECK_SYSTEMGUID(</B><I>pguid) </I> \
-#define CREATE_INVALIDGUID(</B><I>pguid</I><B>) (memset((</B><I>pguid</I><B>), -1, sizeof(</B><I>CEGUID</I><B>)))</B></PRE>
-#define CREATE_INVALIDGUID(</B><I>pguid</I><B>) (memset((</B><I>pguid</I><B>), -1, sizeof(</B><I>CEGUID</I><B>)))</B></PRE>
-#define CREATE_SYSTEMGUID(</B><I>pguid</I><B>) (memset((</B><I>pguid</I><B>), 0, sizeof(</B><I>CEGUID</I><B>)))</B></PRE>
-#define CREATE_SYSTEMGUID(</B><I>pguid</I><B>) (memset((</B><I>pguid</I><B>), 0, sizeof(</B><I>CEGUID</I><B>)))</B></PRE>
-#define TypeFromPropID(propid) LOWORD(propid)</PRE>
-#define TypeFromPropID(propid) LOWORD(propid)</PRE>
-
-
-typedef union _CEVALUNION {short iVal; USHORT uiVal; long lVal; ULONG ulVal; FILETIME filetime;LPWSTR lpwstr; CEBLOB blob; BOOL boolVal;double dblVal;} CEVALUNION;
-
-typedef struct _BY_HANDLE_DB_INFORMATION {
-  WORD wVersion;
-  CEGUID guidVol;
-  CEOID oidDbase;
-  CEDBASEINFOEX infDatabase;
-} BY_HANDLE_DB_INFORMATION, *LPBY_HANDLE_DB_INFORMATION;
-typedef struct _CEBLOB { DWORD dwCount; LPBYTE lpb; } CEBLOB;
-typedef struct _CEDBASEINFO {
-  DWORD dwFlags;
-  WCHAR szDbaseName[CEDB_MAXDBASENAMELEN];
-  DWORD dwDbaseType;
-  WORD wNumRecords;
-  WORD wNumSortOrder;
-  DWORD dwSize;
-  FILETIME ftLastModified;
-  SORTORDERSPEC rgSortSpecs[CEDB_MAXSORTORDER];
-} CEDBASEINFO;
-typedef struct CEDBASEINFOEX {WORDwVersion;WORDwNumSortOrder;DWORDdwFlags;WCHARszDbaseName[CEDB_MAXDBASENAMELEN];DWORDdwDbaseType;DWORDdwNumRecords;DWORDdwSize;FILETIMEftLastModified;SORTORDERSPECEXrgSortSpecs[CEDB_MAXSORTORDER];} CEDBASEINFOEX;
-typedef struct _CEDIRINFO {
-  DWORD dwAttributes;
-  CEOID oidParent;
-  WCHAR szDirName[MAX_PATH];
-} CEDIRINFO;
-typedef struct _CEFILEINFO {
-  DWORD dwAttributes;
-  CEOID oidParent;
-  WCHAR szFileName[MAX_PATH];
-  FILETIME ftLastChanged;
-  DWORD dwLength;
-} CEFILEINFO;
-typedef struct _CENOTIFICATION {
-  DWORD dwSize;
-  DWORD dwParam;
-  UINT uType;
-  CEGUID guid;
-  CEOID oid;
-  CEOID oidParent;
-} CENOTIFICATION;
-typedef struct _CENOTIFYREQUEST {
-  DWORD dwSize;
-  HWND hwnd;
-  DWORD dwFlags;
-  HANDLE hHeap;
-  DWORD dwParam;
-} CENOTIFYREQUEST;
-typedef struct _CEOIDINFO {
-  WORD wObjType;
-  WORD wPad;
-  union {
-    CEFILEINFO infFile;
-    CEDIRINFO infDirectory;
-    CEDBASEINFO infDatabase;
-    CERECORDINFO infRecord;
-  };
-} CEOIDINFO;
-typedef struct _CEOIDINFOEX {
-  WORD wVersion;
-  WORD wObjType;
-  union {
-    CEFILEINFO infFile;
-    CEDIRINFO infDirectory;
-    CEDBASEINFOEX infDatabase;
-    CERECORDINFO infRecord;
-  };
-} CEOIDINFOEX;
-typedef struct CEPROPSPEC {
-  WORD wVersion;
-  CEPROPID propid;
-  DWORD dwFlags;
-  LPWSTR pwszPropName;
-  DWORD cchPropName;
-} CEPROPSPEC;
-typedef struct _CEPROPVAL {
-  CEPROPID propid;
-  WORD wLenData;
-  WORD wFlags;
-  CEVALUNION val;
-} CEPROPVAL;
-typedef CEPROPVAL *PCEPROPVAL;
-typedef struct _CERECORDINFO { CEOID oidParent;  } CERECORDINFO;
-typedef struct CEVOLUMEOPTIONS {
-  WORD wVersion;
-  DWORD cbBufferPool;
-  DWORD dwAutoShrinkPercent;
-  DWORD dwFlushInterval;
-  DWORD cMaxNotifyChanges;
-  DWORD dwDefaultTimeout;
-  WCHAR wszPassword[CCH_MAX_PASSWORD + 1];
-  DWORD dwFlags;
-} CEVOLUMEOPTIONS;
-typedef struct _SORTORDERSPEC {  CEPROPID propid;  DWORD dwFlags;  } SORTORDERSPEC;
-typedef struct CESORTORDERSPECEX { WORD wVersion; WORD wNumProps; WORD wKeyFlags; WORD wReserved; CEPROPID rgPropID[CEDB_MAXSORTPROP]; DWROD rgdwFlags[CEDB_MAXSORTPROP];} CESORTORDERSPECEX;
-
-for (int loop=0;loop<numProps;loop++)
-{
-  propArray[loop].wVersion=CEPROPSPEC_VERSION;
-  propArray[loop].pwszPropName = new WCHAR[XXX]; // rr
-  propArray[loop]. cchPropName= XXX;
-}
-BOOL CHECK_INVALIDGUID(  PCEGUID pceguid);
-BOOL CHECK_SYSTEMGUID( PCEGUID pceguid );
-VOID CREATE_INVALIDGUID( PCEGUID pceguid );
-VOID CREATE_SYSTEMGUID( PCEGUID pceguid);
-BOOL CeAddDatabaseProps(PCEGUIDpGuid,CEOIDoidDb,DWORDcProps,CEPROPSPEC*prgProps);
-BOOL CeAddSyncPartner( PCEGUID pVolGuid, PCEGUID pSyncPartnerGuid, LPCWSTR pwszFriendlyName, LPCWSTR pwszFullName  );
-BOOL CeAttachCustomTrackingData( HANDLE hChangeEnum, CEOID oidChangeRecord, BYTE* rgbData, DWORD ccb );
-BOOL CeBeginSyncSession( HANDLE hSession, PCEGUID pSyncPartnerGuid, CEDBGEN genFrom, CEDBGEN genTo, DWORD dwFlags, CEDBGEN* pGenCur );
-BOOL CeBeginTransaction( HANDLE hSession, CEDBISOLATIONLEVEL isoLevel );
-VOID CeChangeDatabaseLCID (  PCEGUID pceguid,  DWORD LCID );
-BOOL CeClearReplChangeBitsEx( PCEGUID pguid, CEOID oid, DWORD mask );
-CEOID CeCreateDatabase(  LPWSTR lpszName,  DWORD dwDbaseType,  WORD wNumSortOrder,  SORTORDERSPEC* rgSortSpecs  );
-CEOID CeCreateDatabaseEx(  PCEGUID pceguid,  CEDBASEINFO* lpCEDBInfo );
-CEOID CeCreateDatabaseEx2( PCEGUID pguid,CEDBASEINFOEX* pInfo);
-CEOID CeCreateDatabaseWithProps(  PCEGUID pGuid,  CEDBASEINFO* pInfo,  DWORD cProps,  CEPROPSPEC* prgProps  );
-HANDLE CeCreateSession(CEGUID*pGuid);
-BOOL CeDeleteDatabase(CEOID oidDbase);
-BOOL CeDeleteDatabaseEx(  PCEGUID pguid,  CEOID oid  );
-BOOL CeDeleteRecord(HANDLE hDatabase, CEOID oidRecord);
-BOOL CeEndSyncSession( HANDLE hSession, DWORD dwOutcome );
-BOOL CeEndTransaction(  HANDLE hSession,  BOOL fCommit  );
-BOOL CeEnumDBVolumes( PCEGUIDpGuid,LPWSTRpwszName,DWORDcchMaxName);
-HANDLE CeFindFirstDatabase( DWORD dwDbaseType  );
-HANDLE CeFindFirstDatabaseEx(  PCEGUID pceguid,  DWORD dwDbaseType );
-CEOID CeFindNextChangedRecord( HANDLE hChangeEnum );
-CEOID CeFindNextDatabase(  HANDLE hEnum  );
-CEOID CeFindNextDatabaseEx( HANDLE hEnum,PCEGUID pceguid);
-BOOL CeFlushDBVol( PCEGUID pceguid  );
-BOOL CeFreeNotification( CENOTIFYREQUEST* pRequest, CENOTIFICATION* pNotification );
-BOOL CeGetChangedRecordCnt( HANDLE hSession, CEOID oidDB, DWORD* pdwCnt );
-HANDLE CeGetChangedRecords( HANDLE hSession, CEOID oidDB, DWORD dwChangeType );
-DWORD CeGetCurrentTrust (void);
-BOOL CeGetCustomTrackingData( HANDLE hChangeEnum, CEOID oidChangeRecord, BYTE* rgbData, DWORD* pccb );
-BOOL CeGetDBInformationByHandle( HANDLE hDbase,  BY_HANDLE_DB_INFORMATION* lpDBInfo );
-BOOL CeGetDatabaseProps (HANDLEhDatabase,LPWORDlpcPropID,CEPROPID*prgPropID,CEPROPSPEC*prgProps);
-HANDLE CeGetDatabaseSession(HANDLEhDatabase);
-BOOL CeGetPropChangeInfo( HANDLE hChangeEnum, CEOID oidChangeRecord, CEPROPID propid, BOOL* pfPropChanged );
-BOOL CeGetRecordChangeInfo( HANDLE hChangeEnum, CEOID oidChangeRecord, CECHANGEINFO* pInfo );
-BOOL CeGetReplChangeBitsEx( PCEGUID pguid, CEOID oid, LPDWORD lpbits, DWORD dwFlags );
-BOOL CeGetReplChangeMask( LPDWORD lpmask );
-BOOL CeGetReplOtherBitsEx(PCEGUID pguid,CEOID oid,LPDWORD lpbits);
-BOOL CeMarkRecord( HANDLE hChangeEnum, CEOID oidChangeRecord, BOOL fChanged );
-BOOL CeMountDBVol(  PCEGUID pceguid,  LPWSTR lpszDBVol,  DWORD dwFlags  );
-BOOL CeMountDBVolEx(  PCEGUID pGuid,  LPWSTR lpwszDBVol,  CEVOLUMEOPTIONS* pOptions,  DWORD dwFlags  );
-BOOL CeOidGetInfo(CEOID oid, CEOIDINFO *poidInfo) ;
-BOOL CeOidGetInfoEx( PCEGUID pceguid, CEOID oid, CEOIDINFO * poidInfo );
-BOOL CeOidGetInfoEx2(  PCEGUID pceguid,  CEOID oid,  CEOIDINFOEX* poidInfo  );
-HANDLE CeOpenDatabase ( PCEOID poid,  LPWSTR lpszName,  CEPROPID propid,  DWORD dwFlags,  HWND hwndNotify  );
-HANDLE CeOpenDatabaseEx( PCEGUID pceguid, PCEOID poid, LPWSTR lpszName, CEPROPID propid, DWORD dwFlags, CENOTIFYREQUEST *pRequest hwndNotify );
-HANDLE CeOpenDatabaseEx2(  PCEGUID pguid,  PCEOID poid, LPWSTR lpszName,  SORTORDERSPECEX* psort,  DWORD dwFlags, CENOTIFYREQUEST* pRequest );
-HANDLE CeOpenDatabaseInSession(  HANDLE hSession,  PCEGUID pGuid,  PCEOID poid,  LPWSTR lpwszName,  CESORTORDERSPEC* pSort,  DWORD dwFlags,  CENOTIFYREQUEST* pRequest  );
-HANDLE CeOpenStream(  HANDLE hDatabase,  CEPROPID propid,  DWORD dwMode  );
-BOOL CePurgeTrackingData( PCEGUID pVolGuid, PCEGUID pSyncPartnerGuid, SYSTEMTIME* pstThreshold );
-BOOL CePurgeTrackingGenerations( PCEGUID pVolGuid, PCEGUID pSyncPartnerGuid, CEDBGEN genThreshold );
-CEOID CeReadRecordProps(HANDLE hDbase, DWORD dwFlags, LPWORD lpcPropID, CEPROPID * rgPropID, LPBYTE * lplpBuffer, LPDWORD lpcbBuffer);
-CEOID CeReadRecordPropsEx(HANDLEhDbase,DWORDdwFlags,LPWORDlpcPropID,CEPROPID*prgPropID,LPBYTE* lplpBuffer,LPDWORDlpcbBuffer,HANDLEhHeap);
-BOOL CeRegisterReplNotification(  CENOTIFYREQUEST *pRequest  );
-BOOL CeRemoveDatabaseProps(  PCEGUID pGuid,  CEOID oidDb,  DWORD cProps,  CEPROPID* prgProps  );
-BOOL CeRemoveDatabaseTracking( PCEGUID pVolGuid, PCEGUID pSyncPartnerGuid, CEOID oid, );
-BOOL CeRemoveSyncPartner( PCEGUID pVolGuid, PCEGUID pSyncPartnerGuid, );
-CEOID CeSeekDatabase(HANDLE hDatabase, DWORD dwSeekType, DWORD dwValue, LPDWORD lpdwIndex);
-CEOID CeSeekDatabaseEx( HANDLE hDatabase, DWORD dwSeekType,  DWORD dwValue,  WORD wNumVals, LPDWORD lpdwIndex );
-BOOLCeSetDatabaseInfo(CEOIDoidDbase, CEDBASEINFO* pNewInfo);
-BOOL CeSetDatabaseInfo( PCEGUID pGuid, CEOID oidDbase, CEDBASEINFO* pNewInfo );
-BOOL CeSetDatabaseInfoEx2(  PCEGUID pguid,  CEOID oidDbase, CEDBASEINFOEX* pNewInfo );
-BOOL CeSetReplChangeBitsEx(  PCEGUID pguid,  CEOID oid,  DWORD mask  );
-BOOL CeSetReplChangeMask(DWORD mask);
-BOOL CeSetReplOtherBitsEx(PCEGUID pguid,CEOID oid,DWORDbits);
-BOOL CeSetSessionOption(  HANDLE hSession,  ULONG ulOptionId,  DWORD dwValue  );
-BOOL CeSetThreadPriority(HANDLE hThread, int nPriority);
-BOOL CeSetThreadQuantum(  HANDLE hThread,  DWORD dwTime);
-BOOL CeStreamRead(HANDLEhStream,LPBYTElprgbBuffer,DWORDcbRead,LPDWORDlpcbRead);
-BOOL CeStreamSaveChanges( HANDLE hStream );
-BOOL CeStreamSeek(  HANDLE hStream,  DWORD cbMove,  DWORD dwOrigin,  LPDWORD lpcbNewOffset  );
-BOOL CeStreamSetSize( HANDLE hStream, DWORD cbSize );
-BOOL CeStreamWrite(  HANDLE hStream,  LPBYTE lprgbBuffer,  DWORD cbWrite,  LPDWORD lpcbWritten  );
-BOOL CeTrackDatabase( PCEGUID pVolGuid, PCEGUID pSyncPartnerGuid, CEOID oid, DWORD dwTrackingFlags );
-BOOL CeTrackProperty( PCEGUID pVolGuid, CEOID oidDB, CEPROPID propid, BOOL fTrack );
-BOOL CeUnmountDBVol(  PCEGUID pceguid );
-CEOID CeWriteRecordProps(  HANDLE hDbase,  CEOID oidRecord,  WORD cPropID,  CEPROPVAL *rgPropVal);
-BOOL CheckPassword( LPWSTR lpszPassword  );
-DB_CEOID_CHANGED oidChanged = (CEOID) wParam;  oidParent = (CEOID) lParam;
-DB_CEOID_CREATED oidCreated = (CEOID) wParam;  oidParent = (CEOID) lParam;
-DB_CEOID_CHANGED oidChanged = (CEOID) wParam;  oidParent = (CEOID) lParam;
-DB_CEOID_CHANGEDoidChanged= (CEOID)wParam;oidParent= (CEOID)lParam;
-DB_CEOID_CHANGED oidChanged = (CEOID) wParam;  oidParent = (CEOID) lParam;
-DB_CEOID_RECORD_DELETED oidDeletedRec = (CEOID) wParam;  oidParent = (CEOID) lParam;
-DB_PEGOID_CHANGED oidChanged = (PEGOID) wParam; oidParent = (PEGOID) lParam;
-DB_PEGOID_CREATED oidCreated = (PEGOID) wParam;  oidParent = (PEGOID) lParam;
-DB_PEGOID_RECORD_DELETED oidDeletedRec = (PEGOID) wParam; oidParent = (PEGOID) lParam;
-BOOL GetPasswordActive(void);
-BOOL SetPassword( LPWSTR lpszOldPassword,  LPWSTR lpszNewPassword  );
-BOOL SetPasswordActive(BOOLbActive,LPWSTRlpszPassword );
-WORD TypeFromPropID(  CEPROPID propid);
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
+/* CEVT_AUTO_I4  [typedef; ce-only; heuristic-prefix] */
+
+/* CEVT_AUTO_I8  [typedef; ce-only; heuristic-prefix] */
+
+/* CEVT_BLOB  [typedef; ce-only; heuristic-prefix] */
+
+/* CEVT_BOOL  [typedef; ce-only; heuristic-prefix] */
+
+/* CEVT_FILETIME  [typedef; ce-only; heuristic-prefix] */
+
+/* CEVT_I2  [typedef; ce-only; heuristic-prefix] */
+
+/* CEVT_I4  [typedef; ce-only; heuristic-prefix] */
+
+/* CEVT_LPWSTR  [typedef; ce-only; heuristic-prefix] */
+
+/* CEVT_R8  [typedef; ce-only; heuristic-prefix] */
+
+/* CEVT_RECID  [typedef; ce-only; heuristic-prefix] */
+
+/* CEVT_STREAM  [typedef; ce-only; heuristic-prefix] */
+
+/* CEVT_UI2  [typedef; ce-only; heuristic-prefix] */
+
+/* CEVT_UI4  [typedef; ce-only; heuristic-prefix] */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 2.11..2.12, 3.0..399 */
+
+/* DB_PEGOID_CHANGED  [function; ce-only; CE 2.11..2.12, 3.0..399] */
+
+/* DB_PEGOID_CREATED  [function; ce-only; CE 2.11..2.12, 3.0..399] */
+
+/* DB_PEGOID_RECORD_DELETED  [function; ce-only; CE 2.11..2.12, 3.0..399] */
+#endif /* _WIN32_WCE */
+
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
 
-/*--------------------------------------------------------------------
- * TypeFromPropID  [macro]
- * surface: ce-only
- * library: Fsdbase.lib
- * versions: 2.11..2.12, 3.0..399, 5.0..699
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee490174(v=winembedded.60).html
- */
+/* TypeFromPropID  [macro; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Fsdbase.lib] */
 #define TypeFromPropID(propid) LOWORD(propid)
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
 
-/*--------------------------------------------------------------------
- * CHECK_INVALIDGUID  [macro, function]
- * surface: ce-only
- * library: -
- * versions: 2.11..2.12, 3.0..699
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee490402(v=winembedded.60).html
- */
+/* CHECK_INVALIDGUID  [macro, function; ce-only; CE 2.11..2.12, 3.0..699] */
 #define CHECK_INVALIDGUID(pguid) \
 !~((pguid)->Data1&(pguid)->Data2&(pguid)->Data3&(pguid)->Data4)
 
-/*--------------------------------------------------------------------
- * CHECK_SYSTEMGUID  [macro, function]
- * surface: ce-only
- * library: Fsdbase.lib
- * versions: 2.11..2.12, 3.0..699
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee490606(v=winembedded.60).html
- */
+/* CHECK_SYSTEMGUID  [macro, function; ce-only; CE 2.11..2.12, 3.0..699; Fsdbase.lib] */
 #define CHECK_SYSTEMGUID(pguid) \
 !((pguid)->Data1|(pguid)->Data2|(pguid)->Data3|(pguid)->Data4)
 
-/*--------------------------------------------------------------------
- * CREATE_INVALIDGUID  [macro, function]
- * surface: ce-only
- * library: Fsdbase.lib
- * versions: 2.11..2.12, 3.0..699
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee490224(v=winembedded.60).html
- */
+/* CREATE_INVALIDGUID  [macro, function; ce-only; CE 2.11..2.12, 3.0..699; Fsdbase.lib] */
 #define CREATE_INVALIDGUID(pguid) (memset((pguid), -1, sizeof(CEGUID)))
 
-/*--------------------------------------------------------------------
- * CREATE_SYSTEMGUID  [macro, function]
- * surface: ce-only
- * library: Fsdbase.lib
- * versions: 2.11..2.12, 3.0..699
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee489546(v=winembedded.60).html
- */
+/* CREATE_SYSTEMGUID  [macro, function; ce-only; CE 2.11..2.12, 3.0..699; Fsdbase.lib] */
 #define CREATE_SYSTEMGUID(pguid) (memset((pguid), 0, sizeof(CEGUID)))
+
+/* DB_CEOID_CHANGED  [function; ce-only; CE 2.11..2.12, 3.0..699] */
+
+/* DB_CEOID_CREATED  [function; ce-only; CE 2.11..2.12, 3.0..699] */
+
+/* DB_CEOID_RECORD_DELETED  [function; ce-only; CE 2.11..2.12, 3.0..699] */
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
+
+/* WM_DBNOTIFICATION  [?; ce-only; CE 3.0..399, 5.0..699] */
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+
+/* DB_CEOID_DATABASE_DELETED  [function; ce-only; CE 4.0..699] */
+
+/* DB_CEOID_DIRECTORY_DELETED  [function; ce-only; CE 4.0..699] */
+
+/* DB_CEOID_FILE_DELETED  [function; ce-only; CE 4.0..699] */
 #endif /* _WIN32_WCE */
 
 /* ==================================================================
@@ -303,15 +132,7 @@ WORD TypeFromPropID(  CEPROPID propid);
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
 
-/*--------------------------------------------------------------------
- * SORTORDERSPEC  [struct]
- * surface: ce-only
- * library: -
- * versions: 1.0..199, 2.11..2.12, 3.0..399, 5.0..699
- * also stated in: rapitypes.h  (learn/windows-embedded-ce-6.0)
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee490199(v=winembedded.60).html
- */
+/* SORTORDERSPEC  [struct; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
 typedef struct _SORTORDERSPEC {
  CEPROPID propid;
  DWORD dwFlags;
@@ -320,30 +141,13 @@ typedef struct _SORTORDERSPEC {
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
 
-/*--------------------------------------------------------------------
- * CEBLOB  [struct]
- * surface: ce-only
- * library: -
- * versions: 2.11..2.12, 3.0..699
- * also stated in: rapitypes.h  (learn/windows-embedded-ce-6.0)
- * also stated in: Winbase.h  (msdn-library/wcedevcon-99/wcesdkr)
- * also stated in: Winsock.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee489734(v=winembedded.60).html
- */
+/* CEBLOB  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
 typedef struct _CEBLOB {
  DWORD dwCount;
  LPBYTE lpb;
 } CEBLOB;
 
-/*--------------------------------------------------------------------
- * CEDBASEINFO  [struct]
- * surface: ce-only
- * library: -
- * versions: 2.11..2.12, 3.0..699
- * also stated in: rapitypes.h  (learn/windows-embedded-ce-6.0)
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee489526(v=winembedded.60).html
- */
+/* CEDBASEINFO  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
 typedef struct _CEDBASEINFO {
  DWORD dwFlags; 
  WCHAR szDbaseName[CEDB_MAXDBASENAMELEN];
@@ -355,30 +159,14 @@ typedef struct _CEDBASEINFO {
  SORTORDERSPEC rgSortSpecs[CEDB_MAXSORTORDER];
 } CEDBASEINFO;
 
-/*--------------------------------------------------------------------
- * CEDIRINFO  [struct]
- * surface: ce-only
- * library: -
- * versions: 2.11..2.12, 3.0..699
- * also stated in: rapitypes.h  (learn/windows-embedded-ce-6.0)
- * also stated in: Winbase.h  (chm/windows-ce-3.0; msdn-library/wcedevcon-99/wcesdkr)
- * source: corpus/learn/windows-embedded-ce-6.0/ee490596(v=winembedded.60).html
- */
+/* CEDIRINFO  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
 typedef struct _CEDIRINFO {
  DWORD dwAttributes; 
  CEOID oidParent; 
  WCHAR szDirName[MAX_PATH]; 
 } CEDIRINFO;
 
-/*--------------------------------------------------------------------
- * CEFILEINFO  [struct]
- * surface: ce-only
- * library: -
- * versions: 2.11..2.12, 3.0..699
- * also stated in: rapitypes.h  (learn/windows-embedded-ce-6.0)
- * also stated in: Winbase.h  (chm/windows-ce-3.0; msdn-library/wcedevcon-99/wcesdkr)
- * source: corpus/learn/windows-embedded-ce-6.0/ee490784(v=winembedded.60).html
- */
+/* CEFILEINFO  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
 typedef struct _CEFILEINFO {
  DWORD dwAttributes; 
  CEOID oidParent; 
@@ -387,14 +175,7 @@ typedef struct _CEFILEINFO {
  DWORD dwLength; 
 } CEFILEINFO;
 
-/*--------------------------------------------------------------------
- * CENOTIFICATION  [struct]
- * surface: ce-only
- * library: -
- * versions: 2.11..2.12, 3.0..699
- * also stated in: rapitypes.h  (learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee490156(v=winembedded.60).html
- */
+/* CENOTIFICATION  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
 typedef struct _CENOTIFICATION {
  DWORD dwSize; 
  DWORD dwParam;
@@ -404,14 +185,7 @@ typedef struct _CENOTIFICATION {
  CEOID oidParent;
 } CENOTIFICATION;
 
-/*--------------------------------------------------------------------
- * CENOTIFYREQUEST  [struct]
- * surface: ce-only
- * library: -
- * versions: 2.11..2.12, 3.0..699
- * also stated in: rapitypes.h  (learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee489793(v=winembedded.60).html
- */
+/* CENOTIFYREQUEST  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
 typedef struct _CENOTIFYREQUEST {
  DWORD dwSize;
  HWND hwnd; 
@@ -420,15 +194,7 @@ typedef struct _CENOTIFYREQUEST {
  DWORD dwParam;
 } CENOTIFYREQUEST;
 
-/*--------------------------------------------------------------------
- * CEOIDINFO  [struct]
- * surface: ce-only
- * library: -
- * versions: 2.11..2.12, 3.0..699
- * also stated in: rapitypes.h  (learn/windows-embedded-ce-6.0)
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee489759(v=winembedded.60).html
- */
+/* CEOIDINFO  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
 typedef struct _CEOIDINFO { 
  WORD wObjType;
  WORD wPad;
@@ -440,15 +206,7 @@ typedef struct _CEOIDINFO {
  };
 } CEOIDINFO;
 
-/*--------------------------------------------------------------------
- * CEPROPVAL  [struct]
- * surface: ce-only
- * library: -
- * versions: 2.11..2.12, 3.0..699
- * also stated in: rapitypes.h  (learn/windows-embedded-ce-6.0)
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee490426(v=winembedded.60).html
- */
+/* CEPROPVAL  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
 typedef struct _CEPROPVAL { 
  CEPROPID propid;
  WORD wLenData;
@@ -457,28 +215,12 @@ typedef struct _CEPROPVAL {
 } CEPROPVAL;
 typedef CEPROPVAL *PCEPROPVAL;
 
-/*--------------------------------------------------------------------
- * CERECORDINFO  [struct]
- * surface: ce-only
- * library: -
- * versions: 2.11..2.12, 3.0..699
- * also stated in: rapitypes.h  (learn/windows-embedded-ce-6.0)
- * also stated in: Winbase.h  (chm/windows-ce-3.0; msdn-library/wcedevcon-99/wcesdkr)
- * source: corpus/learn/windows-embedded-ce-6.0/ee490355(v=winembedded.60).html
- */
+/* CERECORDINFO  [struct; ce-only; CE 2.11..2.12, 3.0..699] */
 typedef struct _CERECORDINFO {
  CEOID oidParent; 
 } CERECORDINFO;
 
-/*--------------------------------------------------------------------
- * CEVALUNION  [typedef]
- * surface: ce-only
- * library: -
- * versions: 2.11..2.12, 3.0..699
- * also stated in: rapitypes.h  (learn/windows-embedded-ce-6.0)
- * also stated in: Winbase.h  (chm/windows-ce-3.0; msdn-library/wcedevcon-99/wcesdkr)
- * source: corpus/learn/windows-embedded-ce-6.0/ee490225(v=winembedded.60).html
- */
+/* CEVALUNION  [typedef; ce-only; CE 2.11..2.12, 3.0..699] */
 typedef union _CEVALUNION {
  short iVal; 
  USHORT uiVal; 
@@ -494,13 +236,7 @@ typedef union _CEVALUNION {
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
 
-/*--------------------------------------------------------------------
- * BY_HANDLE_DB_INFORMATION  [struct]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 4.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490409(v=winembedded.60).html
- */
+/* BY_HANDLE_DB_INFORMATION  [struct; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
 typedef struct BY_HANDLE_DB_INFORMATION {
  WORD wVersion;
  WORD wReserved;
@@ -509,13 +245,7 @@ typedef struct BY_HANDLE_DB_INFORMATION {
  CEDBASEINFOEX infDatabase;
 }BY_HANDLE_DB_INFORMATION;
 
-/*--------------------------------------------------------------------
- * CEDBASEINFOEX  [struct]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 4.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490234(v=winembedded.60).html
- */
+/* CEDBASEINFOEX  [struct; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
 typedef struct CEDBASEINFOEX {
  WORD wVersion;
  WORD wNumSortOrder;
@@ -528,13 +258,7 @@ typedef struct CEDBASEINFOEX {
  SORTORDERSPECEX rgSortSpecs[CEDB_MAXSORTORDER];
 } CEDBASEINFOEX;
 
-/*--------------------------------------------------------------------
- * CEOIDINFOEX  [struct]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 4.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490549(v=winembedded.60).html
- */
+/* CEOIDINFOEX  [struct; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
 typedef struct _CEOIDINFOEX { 
  WORD wVersion;
  WORD wObjType;
@@ -549,13 +273,7 @@ typedef struct _CEOIDINFOEX {
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
 
-/*--------------------------------------------------------------------
- * CEPROPSPEC  [struct]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490040(v=winembedded.60).html
- */
+/* CEPROPSPEC  [struct; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 typedef struct CEPROPSPEC {
  WORD wVersion;
  CEPROPID propid;
@@ -564,13 +282,7 @@ typedef struct CEPROPSPEC {
  DWORD cchPropName;
 } CEPROPSPEC;
 
-/*--------------------------------------------------------------------
- * CEVOLUMEOPTIONS  [struct]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490634(v=winembedded.60).html
- */
+/* CEVOLUMEOPTIONS  [struct; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 typedef struct CEVOLUMEOPTIONS {
  WORD wVersion;
  DWORD cbBufferPool;
@@ -582,13 +294,7 @@ typedef struct CEVOLUMEOPTIONS {
  DWORD dwFlags;
 } CEVOLUMEOPTIONS;
 
-/*--------------------------------------------------------------------
- * SORTORDERSPECEX  [struct]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490012(v=winembedded.60).html
- */
+/* SORTORDERSPECEX  [struct; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 typedef struct CESORTORDERSPECEX {
  WORD wVersion;
  WORD wNumProps;
@@ -605,14 +311,7 @@ typedef struct CESORTORDERSPECEX {
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
 
-/*--------------------------------------------------------------------
- * CheckPassword  [function]
- * surface: ce-only
- * library: Coredll.lib, Fspass.lib, fspass.lib
- * versions: 1.0..199, 2.11..2.12, 3.0..399, 5.0..699
- * also stated in: Winbase.h  (chm/windows-ce-3.0; msdn-library/techshelps/CEGUIDE/devdoc/good/wince; msdn-library/wcedevcon-99/wcesdkr)
- * source: corpus/learn/windows-embedded-ce-6.0/ee490382(v=winembedded.60).html
- */
+/* CheckPassword  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, Fspass.lib, fspass.lib] */
 BOOL CheckPassword(
  LPWSTR lpszPassword 
 );
@@ -620,42 +319,18 @@ BOOL CheckPassword(
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
 
-/*--------------------------------------------------------------------
- * CeDeleteDatabase  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib
- * versions: 1.0..199, 2.11..2.12, 3.0..699
- * also stated in: Rapi.h  (chm/windows-ce-3.0; chm/windows-ce-5.0/wceactsync5/html; learn/windows-ce-5.0; learn/windows-embedded-ce-6.0; msdn-library/wcedevcon-99/wcesdkr)
- * also stated in: Winbase.h  (chm/windows-ce-3.0; msdn-library/techshelps/CEGUIDE/devdoc/good/wince; msdn-library/wcedevcon-99/wcesdkr)
- * source: corpus/learn/windows-embedded-ce-6.0/ee489626(v=winembedded.60).html
- */
+/* CeDeleteDatabase  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
 BOOL CeDeleteDatabase(
  CEOID oidDbase
 );
 
-/*--------------------------------------------------------------------
- * CeDeleteRecord  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib
- * versions: 1.0..199, 2.11..2.12, 3.0..699
- * also stated in: Rapi.h  (chm/windows-ce-3.0; chm/windows-ce-5.0/wceactsync5/html; learn/windows-ce-5.0; learn/windows-embedded-ce-6.0; msdn-library/wcedevcon-99/wcesdkr)
- * also stated in: Winbase.h  (chm/windows-ce-3.0; msdn-library/techshelps/CEGUIDE/devdoc/good/wince; msdn-library/wcedevcon-99/wcesdkr)
- * source: corpus/learn/windows-embedded-ce-6.0/ee489957(v=winembedded.60).html
- */
+/* CeDeleteRecord  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
 BOOL CeDeleteRecord(
  HANDLE hDatabase,
  CEOID oidRecord
 );
 
-/*--------------------------------------------------------------------
- * CeReadRecordProps  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib
- * versions: 1.0..199, 2.11..2.12, 3.0..699
- * also stated in: Rapi.h  (chm/windows-ce-3.0; chm/windows-ce-5.0/wceactsync5/html; learn/windows-ce-5.0; learn/windows-embedded-ce-6.0; msdn-library/wcedevcon-99/wcesdkr)
- * also stated in: Winbase.h  (chm/windows-ce-3.0; msdn-library/techshelps/CEGUIDE/devdoc/good/wince; msdn-library/wcedevcon-99/wcesdkr)
- * source: corpus/learn/windows-embedded-ce-6.0/ee489779(v=winembedded.60).html
- */
+/* CeReadRecordProps  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
 CEOID CeReadRecordProps(
  HANDLE hDbase, 
  DWORD dwFlags, 
@@ -665,15 +340,7 @@ CEOID CeReadRecordProps(
  LPDWORD lpcbBuffer
 );
 
-/*--------------------------------------------------------------------
- * CeSeekDatabase  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib
- * versions: 1.0..199, 2.11..2.12, 3.0..699
- * also stated in: Rapi.h  (chm/windows-ce-3.0; chm/windows-ce-5.0/wceactsync5/html; learn/windows-ce-5.0; learn/windows-embedded-ce-6.0; msdn-library/wcedevcon-99/wcesdkr)
- * also stated in: Winbase.h  (chm/windows-ce-3.0; msdn-library/techshelps/CEGUIDE/devdoc/good/wince; msdn-library/wcedevcon-99/wcesdkr)
- * source: corpus/learn/windows-embedded-ce-6.0/ee489813(v=winembedded.60).html
- */
+/* CeSeekDatabase  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
 CEOID CeSeekDatabase(
  HANDLE hDatabase, 
  DWORD dwSeekType, 
@@ -681,29 +348,13 @@ CEOID CeSeekDatabase(
  LPDWORD lpdwIndex
 );
 
-/*--------------------------------------------------------------------
- * CeSetDatabaseInfo  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib
- * versions: 1.0..199, 2.11..2.12, 3.0..699
- * also stated in: Rapi.h  (chm/windows-ce-3.0; chm/windows-ce-5.0/wceactsync5/html; learn/windows-ce-5.0; learn/windows-embedded-ce-6.0; msdn-library/wcedevcon-99/wcesdkr)
- * also stated in: Winbase.h  (chm/windows-ce-3.0; msdn-library/techshelps/CEGUIDE/devdoc/good/wince; msdn-library/wcedevcon-99/wcesdkr)
- * source: corpus/learn/windows-embedded-ce-6.0/ee489573(v=winembedded.60).html
- */
+/* CeSetDatabaseInfo  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
 BOOL CeSetDatabaseInfo(
  CEOID oidDbase, 
  CEDBASEINFO* pNewInfo
 );
 
-/*--------------------------------------------------------------------
- * CeWriteRecordProps  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib
- * versions: 1.0..199, 2.11..2.12, 3.0..699
- * also stated in: Rapi.h  (chm/windows-ce-3.0; chm/windows-ce-5.0/wceactsync5/html; learn/windows-ce-5.0; learn/windows-embedded-ce-6.0)
- * also stated in: Winbase.h  (chm/windows-ce-3.0; msdn-library/techshelps/CEGUIDE/devdoc/good/wince; msdn-library/wcedevcon-99/wcesdkr)
- * source: corpus/learn/windows-embedded-ce-6.0/ee489540(v=winembedded.60).html
- */
+/* CeWriteRecordProps  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
 CEOID CeWriteRecordProps(
  HANDLE hDatabase,
  CEOID oidRecord,
@@ -712,180 +363,65 @@ CEOID CeWriteRecordProps(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400)) /* CE 2.11..2.12, 3.0..399 */
-
-/*--------------------------------------------------------------------
- * DB_PEGOID_CHANGED  [function]
- * surface: ce-only
- * library: -
- * versions: 2.11..2.12, 3.0..399
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/chm/windows-ce-3.0/_wcesdk_DB_PEGOID_CHANGED.html
- */
-DB_PEGOID_CHANGED oidChanged = (PEGOID) wParam; 
-oidParent = (PEGOID) lParam;
-
-/*--------------------------------------------------------------------
- * DB_PEGOID_CREATED  [function]
- * surface: ce-only
- * library: -
- * versions: 2.11..2.12, 3.0..399
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/chm/windows-ce-3.0/_wcesdk_DB_PEGOID_CREATED.html
- */
-DB_PEGOID_CREATED oidCreated = (PEGOID) wParam; 
-oidParent = (PEGOID) lParam;
-
-/*--------------------------------------------------------------------
- * DB_PEGOID_RECORD_DELETED  [function]
- * surface: ce-only
- * library: -
- * versions: 2.11..2.12, 3.0..399
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/chm/windows-ce-3.0/_wcesdk_DB_PEGOID_RECORD_DELETED.html
- */
-DB_PEGOID_RECORD_DELETED oidDeletedRec = (PEGOID) wParam; 
-oidParent = (PEGOID) lParam;
-#endif /* _WIN32_WCE */
-
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..699 */
 
-/*--------------------------------------------------------------------
- * CeCreateDatabaseEx  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib
- * versions: 2.11..2.12, 3.0..699
- * also stated in: Rapi.h  (chm/windows-ce-3.0; chm/windows-ce-5.0/wceactsync5/html; learn/windows-ce-5.0; learn/windows-embedded-ce-6.0)
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee489538(v=winembedded.60).html
- */
+/* CeCreateDatabaseEx  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
 CEOID CeCreateDatabaseEx( 
  PCEGUID pceguid, 
  CEDBASEINFO* lpCEDBInfo
 );
 
-/*--------------------------------------------------------------------
- * CeDeleteDatabaseEx  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib
- * versions: 2.11..2.12, 3.0..699
- * also stated in: Rapi.h  (chm/windows-ce-3.0; chm/windows-ce-5.0/wceactsync5/html; learn/windows-ce-5.0; learn/windows-embedded-ce-6.0; msdn-library/wcedevcon-99/wcesdkr)
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee489657(v=winembedded.60).html
- */
+/* CeDeleteDatabaseEx  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
 BOOL CeDeleteDatabase( 
  PCEGUID pGuid
  CEOID oid
 );
 
-/*--------------------------------------------------------------------
- * CeEnumDBVolumes  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib
- * versions: 2.11..2.12, 3.0..699
- * also stated in: Rapi.h  (chm/windows-ce-3.0; chm/windows-ce-5.0/wceactsync5/html; learn/windows-ce-5.0; learn/windows-embedded-ce-6.0; msdn-library/wcedevcon-99/wcesdkr)
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee489669(v=winembedded.60).html
- */
+/* CeEnumDBVolumes  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
 BOOL CeEnumDBVolumes( 
  PCEGUID pceguid, 
  LPWSTR lpBuf,
  DWORD dwNumChars
 );
 
-/*--------------------------------------------------------------------
- * CeFindFirstDatabaseEx  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib
- * versions: 2.11..2.12, 3.0..699
- * also stated in: Rapi.h  (chm/windows-ce-3.0; chm/windows-ce-5.0/wceactsync5/html; learn/windows-ce-5.0; learn/windows-embedded-ce-6.0; msdn-library/wcedevcon-99/wcesdkr)
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee490433(v=winembedded.60).html
- */
+/* CeFindFirstDatabaseEx  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
 HANDLE CeFindFirstDatabaseEx( 
  PCEGUID pceguid, 
  DWORD dwDbaseType
 );
 
-/*--------------------------------------------------------------------
- * CeFindNextDatabaseEx  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib
- * versions: 2.11..2.12, 3.0..699
- * also stated in: Rapi.h  (chm/windows-ce-3.0; chm/windows-ce-5.0/wceactsync5/html; learn/windows-ce-5.0; learn/windows-embedded-ce-6.0; msdn-library/wcedevcon-99/wcesdkr)
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee490167(v=winembedded.60).html
- */
+/* CeFindNextDatabaseEx  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
 CEOID CeFindNextDatabaseEx(
  HANDLE hEnum,
  PCEGUID pGuid
 );
 
-/*--------------------------------------------------------------------
- * CeFlushDBVol  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, rapi.lib
- * versions: 2.11..2.12, 3.0..699
- * also stated in: rapi.h  (learn/windows-embedded-ce-6.0)
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee490376(v=winembedded.60).html
- */
+/* CeFlushDBVol  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, rapi.lib] */
 BOOL CeFlushDBVol( 
  PCEGUID pceguid
 );
 
-/*--------------------------------------------------------------------
- * CeFreeNotification  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib
- * versions: 2.11..2.12, 3.0..699
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee490146(v=winembedded.60).html
- */
+/* CeFreeNotification  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib] */
 BOOL CeFreeNotification(
  CENOTIFYREQUEST* pRequest,
  CENOTIFICATION* pNotification
 );
 
-/*--------------------------------------------------------------------
- * CeMountDBVol  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib
- * versions: 2.11..2.12, 3.0..699
- * also stated in: Rapi.h  (chm/windows-ce-3.0; chm/windows-ce-5.0/wceactsync5/html; learn/windows-ce-5.0; learn/windows-embedded-ce-6.0; msdn-library/wcedevcon-99/wcesdkr)
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee490178(v=winembedded.60).html
- */
+/* CeMountDBVol  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
 BOOL CeMountDBVol( 
  PCEGUID pceguid, 
  LPWSTR lpszDBVol,
  DWORD dwFlags
 );
 
-/*--------------------------------------------------------------------
- * CeOidGetInfoEx  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib, Rapi.lib, rapi.lib
- * versions: 2.11..2.12, 3.0..699
- * also stated in: Rapi.h  (chm/windows-ce-3.0; chm/windows-ce-5.0/wceactsync5/html; learn/windows-ce-5.0; learn/windows-embedded-ce-6.0; msdn-library/wcedevcon-99/wcesdkr)
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee489655(v=winembedded.60).html
- */
+/* CeOidGetInfoEx  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Rapi.lib, rapi.lib] */
 BOOL CeOidGetInfoEx( 
  PCEGUID pceguid, 
  CEOID oid,
  CEOIDINFO* poidInfo
 );
 
-/*--------------------------------------------------------------------
- * CeOpenDatabaseEx  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib
- * versions: 2.11..2.12, 3.0..699
- * also stated in: Rapi.h  (chm/windows-ce-3.0; chm/windows-ce-5.0/wceactsync5/html; learn/windows-ce-5.0; learn/windows-embedded-ce-6.0; msdn-library/wcedevcon-99/wcesdkr)
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee489754(v=winembedded.60).html
- */
+/* CeOpenDatabaseEx  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
 HANDLE CeOpenDatabaseEx( 
  PCEGUID pceguid, 
  PCEOID poid,
@@ -895,15 +431,7 @@ HANDLE CeOpenDatabaseEx(
  CENOTIFYREQUEST* pReq
 );
 
-/*--------------------------------------------------------------------
- * CeReadRecordPropsEx  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib
- * versions: 2.11..2.12, 3.0..699
- * also stated in: Rapi.h  (chm/windows-ce-3.0; chm/windows-ce-5.0/wceactsync5/html; learn/windows-ce-5.0; learn/windows-embedded-ce-6.0; msdn-library/wcedevcon-99/wcesdkr)
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee489776(v=winembedded.60).html
- */
+/* CeReadRecordPropsEx  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
 CEOID CeReadRecordPropsEx( 
  HANDLE hDbase, 
  DWORD dwFlags,
@@ -914,179 +442,65 @@ CEOID CeReadRecordPropsEx(
  HANDLE hHeap
 );
 
-/*--------------------------------------------------------------------
- * CeSetDatabaseInfoEx  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib
- * versions: 2.11..2.12, 3.0..699
- * also stated in: Rapi.h  (chm/windows-ce-3.0; chm/windows-ce-5.0/wceactsync5/html; learn/windows-ce-5.0; learn/windows-embedded-ce-6.0)
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee489940(v=winembedded.60).html
- */
+/* CeSetDatabaseInfoEx  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
 BOOL CeSetDatabaseInfoEx( 
  PCEGUID pceguid, 
  CEOID oidDbase,
  CEDBASEINFO* pNewInfo
 );
 
-/*--------------------------------------------------------------------
- * CeUnmountDBVol  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib
- * versions: 2.11..2.12, 3.0..699
- * also stated in: Rapi.h  (chm/windows-ce-3.0; chm/windows-ce-5.0/wceactsync5/html; learn/windows-ce-5.0; learn/windows-embedded-ce-6.0; msdn-library/wcedevcon-99/wcesdkr)
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee490623(v=winembedded.60).html
- */
+/* CeUnmountDBVol  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
 BOOL CeUnmountDBVol( 
  PCEGUID pceguid
 );
-
-/*--------------------------------------------------------------------
- * DB_CEOID_CHANGED  [function]
- * surface: ce-only
- * library: -
- * versions: 2.11..2.12, 3.0..699
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee489760(v=winembedded.60).html
- */
-DB_CEOID_CHANGED oidChanged = (CEOID) wParam; 
- oidParent = (CEOID) lParam;
-
-/*--------------------------------------------------------------------
- * DB_CEOID_CREATED  [function]
- * surface: ce-only
- * library: -
- * versions: 2.11..2.12, 3.0..699
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee490153(v=winembedded.60).html
- */
-DB_CEOID_CREATED oidCreated = (CEOID) wParam; 
- oidParent = (CEOID) lParam;
-
-/*--------------------------------------------------------------------
- * DB_CEOID_RECORD_DELETED  [function]
- * surface: ce-only
- * library: -
- * versions: 2.11..2.12, 3.0..699
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee489561(v=winembedded.60).html
- */
-DB_CEOID_RECORD_DELETED oidDeletedRec = (CEOID) wParam;
- oidParent = (CEOID) lParam;
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 3.0..399, 5.0..699 */
 
-/*--------------------------------------------------------------------
- * CeChangeDatabaseLCID  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 3.0..399, 5.0..699
- * also stated in: Pkfuncs.h  (chm/windows-ce-3.0)
- * also stated in: Pwindbas.h  (learn/windows-ce-5.0; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee490434(v=winembedded.60).html
- */
+/* CeChangeDatabaseLCID  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
 VOID CeChangeDatabaseLCID( 
  PCEGUID pceguid, 
  DWORD LCID 
 );
 
-/*--------------------------------------------------------------------
- * GetPasswordActive  [function]
- * surface: ce-only
- * library: fspass.lib
- * versions: 3.0..399, 5.0..699
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee490428(v=winembedded.60).html
- */
+/* GetPasswordActive  [function; ce-only; CE 3.0..399, 5.0..699; fspass.lib] */
 BOOL GetPasswordActive(void);
 
-/*--------------------------------------------------------------------
- * SetPassword  [function]
- * surface: ce-only
- * library: fspass.lib
- * versions: 3.0..399, 5.0..699
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee490550(v=winembedded.60).html
- */
+/* SetPassword  [function; ce-only; CE 3.0..399, 5.0..699; fspass.lib] */
 BOOL SetPassword(
  LPWSTR lpszOldPassword, 
  LPWSTR lpszNewPassword 
 );
 
-/*--------------------------------------------------------------------
- * SetPasswordActive  [function]
- * surface: ce-only
- * library: fspass.lib
- * versions: 3.0..399, 5.0..699
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee490208(v=winembedded.60).html
- */
+/* SetPasswordActive  [function; ce-only; CE 3.0..399, 5.0..699; fspass.lib] */
 BOOL SetPasswordActive(
  BOOL bActive, 
  LPWSTR lpszPassword 
 );
-
-/*--------------------------------------------------------------------
- * WM_DBNOTIFICATION  [?]
- * surface: ce-only
- * library: -
- * versions: 3.0..399, 5.0..699
- * also stated in: Winbase.h  (chm/windows-ce-3.0)
- * also stated in: Winuser.h  (chm/windows-ce-3.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee490638(v=winembedded.60).html
- */
-WM_DBNOTIFICATION WPARAM wParam;
- LPARAM lParam;
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
 
-/*--------------------------------------------------------------------
- * CeCreateDatabaseEx2  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 4.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490213(v=winembedded.60).html
- */
+/* CeCreateDatabaseEx2  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
 CEOID CeCreateDatabaseEx2( 
  PCEGUID pguid, 
  CEDBASEINFOEX* pInfo
 );
 
-/*--------------------------------------------------------------------
- * CeGetDBInformationByHandle  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 4.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490013(v=winembedded.60).html
- */
+/* CeGetDBInformationByHandle  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
 BOOL CeGetDBInformationByHandle(
  HANDLE hDbase, 
  LPBY_HANDLE_DB_INFORMATION lpDBInfo 
 );
 
-/*--------------------------------------------------------------------
- * CeOidGetInfoEx2  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 4.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee489631(v=winembedded.60).html
- */
+/* CeOidGetInfoEx2  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
 BOOL CeOidGetInfoEx2(
  PCEGUID pGuid,
  CEOID oid,
  CEOIDINFO* poidInfo
 );
 
-/*--------------------------------------------------------------------
- * CeOpenDatabaseEx2  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 4.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee489942(v=winembedded.60).html
- */
+/* CeOpenDatabaseEx2  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
 HANDLE CeOpenDatabaseEx2( 
  PCEGUID pguid, 
  PCEOID poid,
@@ -1096,13 +510,7 @@ HANDLE CeOpenDatabaseEx2(
  CENOTIFYREQUEST* pRequest
 );
 
-/*--------------------------------------------------------------------
- * CeSeekDatabaseEx  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 4.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee489988(v=winembedded.60).html
- */
+/* CeSeekDatabaseEx  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
 CEOID CeSeekDatabaseEx(
  HANDLE hDatabase,
  DWORD dwSeekType, 
@@ -1111,59 +519,17 @@ CEOID CeSeekDatabaseEx(
  LPDWORD lpdwIndex
 );
 
-/*--------------------------------------------------------------------
- * CeSetDatabaseInfoEx2  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 4.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee489550(v=winembedded.60).html
- */
+/* CeSetDatabaseInfoEx2  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
 BOOL CeSetDatabaseInfoEx2( 
  PCEGUID pguid, 
  CEOID oidDbase,
  CEDBASEINFOEX* pNewInfo
 );
-
-/*--------------------------------------------------------------------
- * DB_CEOID_DATABASE_DELETED  [function]
- * surface: ce-only
- * library: -
- * versions: 4.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee489525(v=winembedded.60).html
- */
-DB_CEOID_CHANGED oidChanged = (CEOID) wParam; 
- oidParent = (CEOID) lParam;
-
-/*--------------------------------------------------------------------
- * DB_CEOID_DIRECTORY_DELETED  [function]
- * surface: ce-only
- * library: -
- * versions: 4.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee489939(v=winembedded.60).html
- */
-DB_CEOID_CHANGED oidChanged = (CEOID) wParam;
- oidParent = (CEOID) lParam;
-
-/*--------------------------------------------------------------------
- * DB_CEOID_FILE_DELETED  [function]
- * surface: ce-only
- * library: -
- * versions: 4.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490173(v=winembedded.60).html
- */
-DB_CEOID_CHANGED oidChanged = (CEOID) wParam; 
- oidParent = (CEOID) lParam;
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
 
-/*--------------------------------------------------------------------
- * CeAddDatabaseProps  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490024(v=winembedded.60).html
- */
+/* CeAddDatabaseProps  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL CeAddDatabaseProps(
  PCEGUID pGuid,
  CEOID oidDb,
@@ -1171,25 +537,13 @@ BOOL CeAddDatabaseProps(
  CEPROPSPEC* prgProps
 );
 
-/*--------------------------------------------------------------------
- * CeBeginTransaction  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee489732(v=winembedded.60).html
- */
+/* CeBeginTransaction  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL CeBeginTransaction(
  HANDLE hSession,
  CEDBISOLATIONLEVEL isoLevel
 );
 
-/*--------------------------------------------------------------------
- * CeCreateDatabaseWithProps  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee489951(v=winembedded.60).html
- */
+/* CeCreateDatabaseWithProps  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 CEOID CeCreateDatabaseWithProps(
  PCEGUID pGuid,
  CEDBASEINFOEX* pInfo,
@@ -1197,36 +551,18 @@ CEOID CeCreateDatabaseWithProps(
  CEPROPSPEC* prgProps
 );
 
-/*--------------------------------------------------------------------
- * CeCreateSession  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490572(v=winembedded.60).html
- */
+/* CeCreateSession  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 HANDLE CeCreateSession(
  CEGUID* pGuid
 );
 
-/*--------------------------------------------------------------------
- * CeEndTransaction  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee489943(v=winembedded.60).html
- */
+/* CeEndTransaction  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL CeEndTransaction(
  HANDLE hSession,
  BOOL fCommit
 );
 
-/*--------------------------------------------------------------------
- * CeGetDatabaseProps  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee489945(v=winembedded.60).html
- */
+/* CeGetDatabaseProps  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL CeGetDatabaseProps (
  HANDLE hDatabase,
  LPWORD lpcPropID,
@@ -1234,24 +570,12 @@ BOOL CeGetDatabaseProps (
  CEPROPSPEC* prgProps
 );
 
-/*--------------------------------------------------------------------
- * CeGetDatabaseSession  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490347(v=winembedded.60).html
- */
+/* CeGetDatabaseSession  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 HANDLE CeGetDatabaseSession(
  HANDLE hDatabase
 );
 
-/*--------------------------------------------------------------------
- * CeOpenDatabaseInSession  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee489772(v=winembedded.60).html
- */
+/* CeOpenDatabaseInSession  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 HANDLE CeOpenDatabaseInSession(
  HANDLE hSession,
  PCEGUID pGuid,
@@ -1262,26 +586,14 @@ HANDLE CeOpenDatabaseInSession(
  CENOTIFYREQUEST* pRequest
 );
 
-/*--------------------------------------------------------------------
- * CeOpenStream  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490778(v=winembedded.60).html
- */
+/* CeOpenStream  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 HANDLE CeOpenStream(
  HANDLE hDatabase,
  CEPROPID propid,
  DWORD dwMode
 );
 
-/*--------------------------------------------------------------------
- * CeRemoveDatabaseProps  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490413(v=winembedded.60).html
- */
+/* CeRemoveDatabaseProps  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL CeRemoveDatabaseProps(
  PCEGUID pGuid,
  CEOID oidDb,
@@ -1289,26 +601,14 @@ BOOL CeRemoveDatabaseProps(
  CEPROPID* prgProps
 );
 
-/*--------------------------------------------------------------------
- * CeSetSessionOption  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee489805(v=winembedded.60).html
- */
+/* CeSetSessionOption  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL CeSetSessionOption(
  HANDLE hSession,
  ULONG ulOptionId,
  DWORD dwValue
 );
 
-/*--------------------------------------------------------------------
- * CeStreamRead  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490363(v=winembedded.60).html
- */
+/* CeStreamRead  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL CeStreamRead(
  HANDLE hStream,
  LPBYTE lprgbBuffer,
@@ -1316,24 +616,12 @@ BOOL CeStreamRead(
  LPDWORD lpcbRead
 );
 
-/*--------------------------------------------------------------------
- * CeStreamSaveChanges  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490575(v=winembedded.60).html
- */
+/* CeStreamSaveChanges  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL CeStreamSaveChanges(
  HANDLE hStream
 );
 
-/*--------------------------------------------------------------------
- * CeStreamSeek  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490569(v=winembedded.60).html
- */
+/* CeStreamSeek  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL CeStreamSeek(
  HANDLE hStream,
  DWORD cbMove,
@@ -1341,25 +629,13 @@ BOOL CeStreamSeek(
  LPDWORD lpcbNewOffset
 );
 
-/*--------------------------------------------------------------------
- * CeStreamSetSize  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee489954(v=winembedded.60).html
- */
+/* CeStreamSetSize  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL CeStreamSetSize(
  HANDLE hStream,
  DWORD cbSize
 );
 
-/*--------------------------------------------------------------------
- * CeStreamWrite  [function]
- * surface: ce-only
- * library: Coredll.lib, coredll.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490147(v=winembedded.60).html
- */
+/* CeStreamWrite  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL CeStreamWrite(
  HANDLE hStream,
  LPBYTE lprgbBuffer,
@@ -1370,13 +646,7 @@ BOOL CeStreamWrite(
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 
-/*--------------------------------------------------------------------
- * CeAddSyncPartner  [function]
- * surface: ce-only
- * library: coredll.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee489559(v=winembedded.60).html
- */
+/* CeAddSyncPartner  [function; ce-only; CE 6.0..699; coredll.lib] */
 BOOL CeAddSyncPartner(
  PCEGUID pVolGuid,
  PCEGUID pSyncPartnerGuid,
@@ -1384,13 +654,7 @@ BOOL CeAddSyncPartner(
  LPCWSTR pwszFullName 
 );
 
-/*--------------------------------------------------------------------
- * CeAttachCustomTrackingData  [function]
- * surface: ce-only
- * library: coredll.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490591(v=winembedded.60).html
- */
+/* CeAttachCustomTrackingData  [function; ce-only; CE 6.0..699; coredll.lib] */
 BOOL CeAttachCustomTrackingData(
  HANDLE hChangeEnum,
  CEOID oidChangeRecord,
@@ -1398,13 +662,7 @@ BOOL CeAttachCustomTrackingData(
  DWORD ccb
 );
 
-/*--------------------------------------------------------------------
- * CeBeginSyncSession  [function]
- * surface: ce-only
- * library: coredll.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490361(v=winembedded.60).html
- */
+/* CeBeginSyncSession  [function; ce-only; CE 6.0..699; coredll.lib] */
 BOOL CeBeginSyncSession(
  HANDLE hSession,
  PCEGUID pSyncPartnerGuid,
@@ -1414,62 +672,32 @@ BOOL CeBeginSyncSession(
  CEDBGEN* pGenCur
 );
 
-/*--------------------------------------------------------------------
- * CeEndSyncSession  [function]
- * surface: ce-only
- * library: coredll.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490747(v=winembedded.60).html
- */
+/* CeEndSyncSession  [function; ce-only; CE 6.0..699; coredll.lib] */
 BOOL CeEndSyncSession(
  HANDLE hSession,
  DWORD dwOutcome
 );
 
-/*--------------------------------------------------------------------
- * CeFindNextChangedRecord  [function]
- * surface: ce-only
- * library: coredll.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490379(v=winembedded.60).html
- */
+/* CeFindNextChangedRecord  [function; ce-only; CE 6.0..699; coredll.lib] */
 CEOID CeFindNextChangedRecord(
  HANDLE hChangeEnum
 );
 
-/*--------------------------------------------------------------------
- * CeGetChangedRecordCnt  [function]
- * surface: ce-only
- * library: coredll.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490631(v=winembedded.60).html
- */
+/* CeGetChangedRecordCnt  [function; ce-only; CE 6.0..699; coredll.lib] */
 BOOL CeGetChangedRecordCnt(
  HANDLE hSession,
  CEOID oidDB,
  DWORD* pdwCnt
 );
 
-/*--------------------------------------------------------------------
- * CeGetChangedRecords  [function]
- * surface: ce-only
- * library: coredll.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490394(v=winembedded.60).html
- */
+/* CeGetChangedRecords  [function; ce-only; CE 6.0..699; coredll.lib] */
 HANDLE CeGetChangedRecords(
  HANDLE hSession,
  CEOID oidDB,
  DWORD dwChangeType
 );
 
-/*--------------------------------------------------------------------
- * CeGetCustomTrackingData  [function]
- * surface: ce-only
- * library: coredll.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490362(v=winembedded.60).html
- */
+/* CeGetCustomTrackingData  [function; ce-only; CE 6.0..699; coredll.lib] */
 BOOL CeGetCustomTrackingData(
  HANDLE hChangeEnum,
  CEOID oidChangeRecord,
@@ -1477,13 +705,7 @@ BOOL CeGetCustomTrackingData(
  DWORD* pccb
 );
 
-/*--------------------------------------------------------------------
- * CeGetPropChangeInfo  [function]
- * surface: ce-only
- * library: coredll.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee489544(v=winembedded.60).html
- */
+/* CeGetPropChangeInfo  [function; ce-only; CE 6.0..699; coredll.lib] */
 BOOL CeGetPropChangeInfo(
  HANDLE hChangeEnum,
  CEOID oidChangeRecord,
@@ -1491,90 +713,48 @@ BOOL CeGetPropChangeInfo(
  BOOL* pfPropChanged
 );
 
-/*--------------------------------------------------------------------
- * CeGetRecordChangeInfo  [function]
- * surface: ce-only
- * library: coredll.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490748(v=winembedded.60).html
- */
+/* CeGetRecordChangeInfo  [function; ce-only; CE 6.0..699; coredll.lib] */
 BOOL CeGetRecordChangeInfo(
  HANDLE hChangeEnum,
  CEOID oidChangeRecord,
  CECHANGEINFO* pInfo
 );
 
-/*--------------------------------------------------------------------
- * CeMarkRecord  [function]
- * surface: ce-only
- * library: coredll.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee489812(v=winembedded.60).html
- */
+/* CeMarkRecord  [function; ce-only; CE 6.0..699; coredll.lib] */
 BOOL CeMarkRecord(
  HANDLE hChangeEnum,
  CEOID oidChangeRecord,
  BOOL fChanged
 );
 
-/*--------------------------------------------------------------------
- * CePurgeTrackingData  [function]
- * surface: ce-only
- * library: coredll.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee489633(v=winembedded.60).html
- */
+/* CePurgeTrackingData  [function; ce-only; CE 6.0..699; coredll.lib] */
 BOOL CePurgeTrackingData(
  PCEGUID pVolGuid,
  PCEGUID pSyncPartnerGuid,
  SYSTEMTIME* pstThreshold
 );
 
-/*--------------------------------------------------------------------
- * CePurgeTrackingGenerations  [function]
- * surface: ce-only
- * library: coredll.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490398(v=winembedded.60).html
- */
+/* CePurgeTrackingGenerations  [function; ce-only; CE 6.0..699; coredll.lib] */
 BOOL CePurgeTrackingGenerations(
  PCEGUID pVolGuid,
  PCEGUID pSyncPartnerGuid,
  CEDBGEN genThreshold
 );
 
-/*--------------------------------------------------------------------
- * CeRemoveDatabaseTracking  [function]
- * surface: ce-only
- * library: coredll.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee489583(v=winembedded.60).html
- */
+/* CeRemoveDatabaseTracking  [function; ce-only; CE 6.0..699; coredll.lib] */
 BOOL CeRemoveDatabaseTracking(
  PCEGUID pVolGuid,
  PCEGUID pSyncPartnerGuid,
  CEOID oid,
 );
 
-/*--------------------------------------------------------------------
- * CeRemoveSyncPartner  [function]
- * surface: ce-only
- * library: coredll.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee489650(v=winembedded.60).html
- */
+/* CeRemoveSyncPartner  [function; ce-only; CE 6.0..699; coredll.lib] */
 BOOL CeRemoveSyncPartner(
 PCEGUID pVolGuid,
 PCEGUID pSyncPartnerGuid,
 );
 
-/*--------------------------------------------------------------------
- * CeTrackDatabase  [function]
- * surface: ce-only
- * library: coredll.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee490562(v=winembedded.60).html
- */
+/* CeTrackDatabase  [function; ce-only; CE 6.0..699; coredll.lib] */
 BOOL CeTrackDatabase(
  PCEGUID pVolGuid,
  PCEGUID pSyncPartnerGuid,
@@ -1582,13 +762,7 @@ BOOL CeTrackDatabase(
  DWORD dwTrackingFlags
 );
 
-/*--------------------------------------------------------------------
- * CeTrackProperty  [function]
- * surface: ce-only
- * library: coredll.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee489527(v=winembedded.60).html
- */
+/* CeTrackProperty  [function; ce-only; CE 6.0..699; coredll.lib] */
 BOOL CeTrackProperty(
  PCEGUID pVolGuid,
  CEOID oidDB,
@@ -1596,5 +770,24 @@ BOOL CeTrackProperty(
  BOOL fTrack
 );
 #endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* struct */
+typedef struct CESORTORDERSPECEX { WORD wVersion; WORD wNumProps; WORD wKeyFlags; WORD wReserved; CEPROPID rgPropID[CEDB_MAXSORTPROP]; DWROD rgdwFlags[CEDB_MAXSORTPROP]; } CESORTORDERSPECEX;
+typedef struct _BY_HANDLE_DB_INFORMATION {
+  WORD wVersion;
+  CEGUID guidVol;
+  CEOID oidDbase;
+  CEDBASEINFOEX infDatabase;
+} BY_HANDLE_DB_INFORMATION, *LPBY_HANDLE_DB_INFORMATION;
+typedef struct _CEOIDINFOEX { WORD wVersion; WORD wObjType; union { CEFILEINFO infFile; CEDIRINFO infDirectory; CEDBASEINFOEX infDatabase; CERECORDINFO infRecord; };
+
+/* function */
+BOOLCeGetDBInformationByHandle(HANDLEhDbase, LPBY_HANDLE_DB_INFORMATIONlpDBInfo);
+CEOIDCeSeekDatabaseEx(HANDLE hDatabase,DWORDdwSeekType, DWORDdwValue, WORD wNumVals,LPDWORDlpdwIndex);
 
 #endif /* _WINDBASE_ */

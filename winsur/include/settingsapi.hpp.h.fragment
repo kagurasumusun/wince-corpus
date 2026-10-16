@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 3 constants, 15 declarations, 0 derived outlines, 0 base types
+ * 3 constants, 15 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _SETTINGSAPI_HPP_
 #define _SETTINGSAPI_HPP_
@@ -17,13 +17,145 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
+
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+
+/* AuthCanceled = 0  [unified-kb] */
 #define AuthCanceled 0
+
+/* phsDoNotDisturb = 0  [unified-kb] */
 #define phsDoNotDisturb 0
+
+/* SpeakerVolumeMode = 0  [unified-kb] */
 #define SpeakerVolumeMode 0
 #endif /* _WIN32_WCE */
 
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
 
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+
+/* AuthenticationResult_e  [enum; ce-only; CE 6.0..699; PhCommon.dll] */
+enum AuthenticationResult_e
+{
+ AuthCanceled = 0,
+ AuthInProgress,
+ AuthSucceeded,
+};
+
+/* PH_AUTHENTICATE_USER_PARAMETERS  [struct; ce-only; CE 6.0..699; PhCommon.dll] */
+typedef struct tagPH_AUTHENTICATE_USER_PARAMETERS
+{
+ UINT StructSize; 
+ HWND NotificationWindow; 
+ UINT NotificationMessage; 
+ AuthenticationResult_e Result; 
+} PH_AUTHENTICATE_USER_PARAMETERS;
+
+/* PHActiveVolumeMode  [enum; ce-only; CE 6.0..699; PhCommon.dll] */
+enum PHActiveVolumeMode
+{
+ SpeakerVolumeMode = 0,
+ RingerVolumeMode,
+ LastVolumeMode, 
+};
+
+/* PHSetting  [enum; ce-only; CE 6.0..699; PhCommon.dll] */
+enum PHSetting
+{
+ phsDoNotDisturb = 0,
+ phsCallForwarding,
+ phsAutoDial,
+ phsBlockCallerId,
+ phsMissedCalls,
+ phsIncomingCalls,
+ phsOutgoingCalls,
+ phsGalFilterType,
+ phsContactFilterType,
+ phsDeviceLocked,
+ phsAutoDialRulesAvailability, 
+ phsPhoneAppStatus, 
+ phsDisableAGC, 
+ phsLockPhoneAfterUpdatingPIN, 
+};
+
+/* PHVolumeSetting  [enum; ce-only; CE 6.0..699; PhCommon.dll] */
+enum PHVolumeSetting
+{
+ phvsSpeakerVolume,
+ phvsRingerVolume,
+ phvsHandsetVolume,
+ phvsMicrophoneVolume,
+};
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
+
+/* PHAuthenticateUser  [function; ce-only; CE 6.0..699; PhCommon.dll] */
+HRESULT PHAuthenticateUser(
+ PH_AUTHENTICATE_USER_PARAMETERS* pParams
+);
+
+/* PHCancelAuthenticationRequest  [function; ce-only; CE 6.0..699; PhCommon.dll] */
+HRESULT PHCancelAuthenticationRequest(
+ HWND hwnd
+);
+
+/* PHGetActiveVolume  [function; ce-only; CE 6.0..699; PhCommon.dll] */
+PHActiveVolumeMode PHGetActiveVolume ( void );
+
+/* PHGetSetting  [function; ce-only; CE 6.0..699; PhCommon.dll] */
+DWORD PHGetSetting(
+ PHSetting Setting
+);
+
+/* PHGetVolumeSetting  [function; ce-only; CE 6.0..699; PhCommon.dll] */
+DWORD PHGetVolumeSetting(
+ PHVolumeSetting Setting
+ );
+
+/* PHReadPIN  [function; ce-only; CE 6.0..699; PhCommon.dll] */
+HRESULT PHReadPIN(
+WCHAR* pPinBuffer,
+int BufferLength
+);
+
+/* PHSetActiveVolume  [function; ce-only; CE 6.0..699; PhCommon.dll] */
+HRESULT PHSetActiveVolume (
+ PHActiveVolumeMode VolumeMode
+);
+
+/* PHSetValue  [function; ce-only; CE 6.0..699; PhCommon.dll] */
+HRESULT PHSetValue(
+ PHSetting Setting,
+ DWORD Value
+);
+
+/* PHSetVolume  [function; ce-only; CE 6.0..699; PhCommon.dll] */
+HRESULT PHSetVolume(
+ PHVolumeSetting Setting,
+ DWORD Value
+);
+
+/* PHWritePIN  [function; ce-only; CE 6.0..699; PhCommon.dll] */
+HRESULT PHWritePIN(
+WCHAR* pPinString
+);
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* enum */
 enum AuthenticationResult_e
 {
   AuthCanceled = 0,
@@ -60,234 +192,5 @@ enum PHVolumeSetting
   phvsHandsetVolume,
   phvsMicrophoneVolume,
 };
-
-typedef struct tagPH_AUTHENTICATE_USER_PARAMETERS
-{
-  UINT StructSize;
-  HWND NotificationWindow;
-  UINT NotificationMessage;
-  AuthenticationResult_e Result;
-} PH_AUTHENTICATE_USER_PARAMETERS;
-
-HRESULT PHAuthenticateUser( PH_AUTHENTICATE_USER_PARAMETERS* pParams );
-HRESULT PHCancelAuthenticationRequest( HWND hwnd );
-PHActiveVolumeMode PHGetActiveVolume ( void );
-DWORD PHGetSetting( PHSetting Setting );
-DWORD PHGetVolumeSetting( PHVolumeSetting Setting );
-HRESULT PHReadPIN( WCHAR* pPinBuffer, int BufferLength );
-HRESULT PHSetActiveVolume ( PHActiveVolumeMode VolumeMode );
-HRESULT PHSetValue( PHSetting Setting, DWORD Value );
-HRESULT PHSetVolume( PHVolumeSetting Setting, DWORD Value );
-HRESULT PHWritePIN( WCHAR* pPinString );
-
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/*--------------------------------------------------------------------
- * AuthenticationResult_e  [enum]
- * surface: ce-only
- * library: PhCommon.dll
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee501567(v=winembedded.60).html
- */
-enum AuthenticationResult_e
-{
- AuthCanceled = 0,
- AuthInProgress,
- AuthSucceeded,
-};
-
-/*--------------------------------------------------------------------
- * PH_AUTHENTICATE_USER_PARAMETERS  [struct]
- * surface: ce-only
- * library: PhCommon.dll
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee500686(v=winembedded.60).html
- */
-typedef struct tagPH_AUTHENTICATE_USER_PARAMETERS
-{
- UINT StructSize; 
- HWND NotificationWindow; 
- UINT NotificationMessage; 
- AuthenticationResult_e Result; 
-} PH_AUTHENTICATE_USER_PARAMETERS;
-
-/*--------------------------------------------------------------------
- * PHActiveVolumeMode  [enum]
- * surface: ce-only
- * library: PhCommon.dll
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee501527(v=winembedded.60).html
- */
-enum PHActiveVolumeMode
-{
- SpeakerVolumeMode = 0,
- RingerVolumeMode,
- LastVolumeMode, 
-};
-
-/*--------------------------------------------------------------------
- * PHSetting  [enum]
- * surface: ce-only
- * library: PhCommon.dll
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee499871(v=winembedded.60).html
- */
-enum PHSetting
-{
- phsDoNotDisturb = 0,
- phsCallForwarding,
- phsAutoDial,
- phsBlockCallerId,
- phsMissedCalls,
- phsIncomingCalls,
- phsOutgoingCalls,
- phsGalFilterType,
- phsContactFilterType,
- phsDeviceLocked,
- phsAutoDialRulesAvailability, 
- phsPhoneAppStatus, 
- phsDisableAGC, 
- phsLockPhoneAfterUpdatingPIN, 
-};
-
-/*--------------------------------------------------------------------
- * PHVolumeSetting  [enum]
- * surface: ce-only
- * library: PhCommon.dll
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee500378(v=winembedded.60).html
- */
-enum PHVolumeSetting
-{
- phvsSpeakerVolume,
- phvsRingerVolume,
- phvsHandsetVolume,
- phvsMicrophoneVolume,
-};
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
-
-/*--------------------------------------------------------------------
- * PHAuthenticateUser  [function]
- * surface: ce-only
- * library: PhCommon.dll
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee500995(v=winembedded.60).html
- */
-HRESULT PHAuthenticateUser(
- PH_AUTHENTICATE_USER_PARAMETERS* pParams
-);
-
-/*--------------------------------------------------------------------
- * PHCancelAuthenticationRequest  [function]
- * surface: ce-only
- * library: PhCommon.dll
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee501360(v=winembedded.60).html
- */
-HRESULT PHCancelAuthenticationRequest(
- HWND hwnd
-);
-
-/*--------------------------------------------------------------------
- * PHGetActiveVolume  [function]
- * surface: ce-only
- * library: PhCommon.dll
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee501700(v=winembedded.60).html
- */
-PHActiveVolumeMode PHGetActiveVolume ( void );
-
-/*--------------------------------------------------------------------
- * PHGetSetting  [function]
- * surface: ce-only
- * library: PhCommon.dll
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee501650(v=winembedded.60).html
- */
-DWORD PHGetSetting(
- PHSetting Setting
-);
-
-/*--------------------------------------------------------------------
- * PHGetVolumeSetting  [function]
- * surface: ce-only
- * library: PhCommon.dll
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee499873(v=winembedded.60).html
- */
-DWORD PHGetVolumeSetting(
- PHVolumeSetting Setting
- );
-
-/*--------------------------------------------------------------------
- * PHReadPIN  [function]
- * surface: ce-only
- * library: PhCommon.dll
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee500423(v=winembedded.60).html
- */
-HRESULT PHReadPIN(
-WCHAR* pPinBuffer,
-int BufferLength
-);
-
-/*--------------------------------------------------------------------
- * PHSetActiveVolume  [function]
- * surface: ce-only
- * library: PhCommon.dll
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee500680(v=winembedded.60).html
- */
-HRESULT PHSetActiveVolume (
- PHActiveVolumeMode VolumeMode
-);
-
-/*--------------------------------------------------------------------
- * PHSetValue  [function]
- * surface: ce-only
- * library: PhCommon.dll
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee499875(v=winembedded.60).html
- */
-HRESULT PHSetValue(
- PHSetting Setting,
- DWORD Value
-);
-
-/*--------------------------------------------------------------------
- * PHSetVolume  [function]
- * surface: ce-only
- * library: PhCommon.dll
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee501292(v=winembedded.60).html
- */
-HRESULT PHSetVolume(
- PHVolumeSetting Setting,
- DWORD Value
-);
-
-/*--------------------------------------------------------------------
- * PHWritePIN  [function]
- * surface: ce-only
- * library: PhCommon.dll
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee501008(v=winembedded.60).html
- */
-HRESULT PHWritePIN(
-WCHAR* pPinString
-);
-#endif /* _WIN32_WCE */
 
 #endif /* _SETTINGSAPI_HPP_ */

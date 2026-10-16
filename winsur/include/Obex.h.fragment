@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1 constants, 54 declarations, 0 derived outlines, 0 base types
+ * 1 constants, 54 declarations, 0 outlines, 0 base types, 0 extra macros, 33 extra decls
  */
 #ifndef _OBEX_
 #define _OBEX_
@@ -17,116 +17,12 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
+
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
+
+/* OE_QUERY_PASSWORD = 0  [unified-kb] */
 #define OE_QUERY_PASSWORD 0
 #endif /* _WIN32_WCE */
-
-
-typedef enum _OBEX_EVENT {
-  OE_QUERY_PASSWORD = 0,
-  OE_NEW_CONNECTION = OE_QUERY_PASSWORD + 1,
-  OE_NEW_COMMAND = OE_NEW_CONNECTION + 1,
-  OE_ABORT = OE_NEW_COMMAND + 1,
-  OE_DISCONNECT = OE_ABORT + 1,
-  OE_DEVICE_ARRIVAL = OE_DISCONNECT + 1,
-  OE_DEVICE_DEPARTURE = OE_DEVICE_ARRIVAL + 1,
-  OE_DEVICE_UPDATE = OE_DEVICE_DEPARTURE + 1
-} OBEX_EVENT, *LPOBEX_EVENT;
-
-typedef struct _INBOX_EVENT_DATA {
-  DWORD dwRequest;
-  DWORD dwInboxEvent;
-  LPCWSTR pszName;
-  LPCWSTR pszInboxDestination;
-  IHeaderCollection* pHeaderCol;
-  IStream* pStream;
-} INBOX_EVENT_DATA, *PINBOX_EVENT_DATA;
-typedef struct _OBEX_HEADER {
-  byte bId;
-  [switch_is(bId & OBEX_HEADER_4BYTE)]
-  union {
-    [case(OBEX_HEADER_UNICODE)]
-    [string] LPWSTR pszData;
-    [case(OBEX_HEADER_4BYTE)]
-    DWORD dwData;
-    [case(OBEX_HEADER_1BYTE)]
-    byte bData;
-    [case(OBEX_HEADER_STREAM)]
-    struct {
-      DWORD dwSize;
-      [size_is(dwSize)] byte* pbaData;
-    } ba;
-  } value;
-} OBEX_HEADER;
-typedef struct _OBEX_REQUEST {
-  DWORD dwRequest;
-  DWORD dwFlags;
-  IHeaderCollection* pHeaderCol;
-  BOOL fStream;
-  IStream* pStream;
-} OBEX_REQUEST, *POBEX_REQUEST;
-
-HRESULT Clone(IDeviceEnum * ppenum);
-HRESULT Next( ULONG celt, IObexDevice** rgelt, ULONG* pceltFetched );
-HRESULT Reset ();
-HRESULT Skip(ULONGcelt);
-HRESULT AddAppParams( unsigned long ulSize, byte* pData );
-HRESULT AddBody(  unsigned long ulSize,  byte* pData  );
-HRESULT AddByte( byte Id,  byte* pData );
-HRESULT AddByteArray(  byte Id,  unsigned long ulSize,  byte* pData  );
-HRESULT AddConnectionId(unsigned long ulConnectionId);
-HRESULT AddCount(  unsigned long ulCount  );
-HRESULT AddDescription(LPCWSTR pszDescription);
-HRESULT AddEndOfBody(unsigned longulSize,byte* pData);
-HRESULT AddHTTP(  unsigned long ulSize,  byte* pData  );
-HRESULT AddLength(unsigned longulLength);
-HRESULT AddLong(  byte Id,  unsigned long ulData  );
-HRESULT AddName( LPCWSTR pszName );
-HRESULT AddObjectClass( unsigned long ulSize,  byte* pData );
-HRESULT AddTarget(unsigned longulSize,byte* pData);
-HRESULT AddTime( FILETIME* pFiletime );
-HRESULT AddTimeOld( unsigned long ulTime  );
-HRESULT AddType(  unsigned long ulSize,  byte* pData  );
-HRESULT AddUnicodeString( byte Id,  LPCWSTR pszData );
-HRESULT AddWho(  unsigned long ulSize,  byte* pData  );
-HRESULT EnumHeaders(  IHeaderEnum** pHeaderEnum  );
-HRESULT Remove(byteId);
-HRESULT RemoveAll();
-HRESULT Clone( IHeaderEnum** ppenum );
-HRESULT Next( ULONG celt, OBEX_HEADER** rgelt, ULONG* pceltFetched );
-HRESULT Reset ();
-HRESULT BindToDevice(IPropertyBag* pPropertyBag,IObexDevice** ppDevice);
-HRESULT EnumDevices(IDeviceEnum** ppDeviceEnum,REFCLSIDuuidTransport);
-HRESULT EnumTransports( IPropertyBagEnum** ppTransportEnum );
-HRESULT Initialize();
-HRESULT Shutdown();
-HRESULT StartDeviceEnum();
-HRESULT StopDeviceEnum();
-HRESULT Abort( IHeaderCollection* pHeaders );
-HRESULT Connect(LPCWSTRpszPassword,DWORDdwCapability,IHeaderCollection* pHeaders);
-HRESULT Disconnect( IHeaderCollection* pHeaders );
-HRESULT EnumProperties(  REFIID riid,  void** ppv  );
-HRESULT Get(  IHeaderCollection* pHeaders,  IStream** ppStream  );
-IStream *pStream = NULL;
-if(FAILED(pHeaderCollection->AddName(L"MyFile.txt"))
-goto Error;
-if(FAILED(pObexDevice->Put(pHeaderCollection, &pStream)) {
-  goto Error;
-  if(FAILED(pStream->Commit(0))
-  goto Error;
-  hRet = S_OK;
-  goto Done;
-  Error:
-  hRet = E_FAIL;
-  Done:
-HRESULT SetPassword(LPCWSTRpszPassword);
-HRESULT SetPath(LPCWSTRpszName,DWORDdwFlags,IHeaderCollection* pHeaders);
-HRESULT GetLastResponseCode( BYTE *pResponseCode );
-HRESULT Notify( OBEX_EVENT Event, IUnknown* pUnk1, IUnknown* pUnk2 );
-HRESULT Clone( IPropertyBagEnum * ppenum );
-HRESULT Next( ULONG celt,LPPROPERTYBAG2 * rgelt,ULONG * pceltFetched);
-HRESULT Reset( void );
-HRESULT Skip( ULONG celt);
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -136,14 +32,7 @@ HRESULT Skip( ULONG celt);
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
 
-/*--------------------------------------------------------------------
- * INBOX_EVENT_DATA  [struct]
- * surface: ce-only
- * library: -
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee493091(v=winembedded.60).html
- */
+/* INBOX_EVENT_DATA  [struct; ce-only; CE 4.0..699] */
 typedef struct _INBOX_EVENT_DATA {
  DWORD dwRequest;
  DWORD dwInboxEvent;
@@ -153,14 +42,7 @@ typedef struct _INBOX_EVENT_DATA {
  IStream* pStream;
 } INBOX_EVENT_DATA, *PINBOX_EVENT_DATA;
 
-/*--------------------------------------------------------------------
- * OBEX_EVENT  [enum]
- * surface: ce-only
- * library: -
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-net-4x)
- * source: corpus/learn/windows-embedded-ce-6.0/ee493664(v=winembedded.60).html
- */
+/* OBEX_EVENT  [enum; ce-only; CE 4.0..699] */
 typedef enum _OBEX_EVENT {
  OE_QUERY_PASSWORD = 0,
  OE_NEW_CONNECTION = OE_QUERY_PASSWORD + 1,
@@ -172,14 +54,7 @@ typedef enum _OBEX_EVENT {
  OE_DEVICE_UPDATE = OE_DEVICE_DEPARTURE + 1
 } OBEX_EVENT, *LPOBEX_EVENT;
 
-/*--------------------------------------------------------------------
- * OBEX_HEADER  [struct]
- * surface: ce-only
- * library: -
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee493481(v=winembedded.60).html
- */
+/* OBEX_HEADER  [struct; ce-only; CE 4.0..699] */
 typedef struct _OBEX_HEADER {
  byte bId;
  [switch_is(bId & OBEX_HEADER_4BYTE)]
@@ -198,14 +73,7 @@ typedef struct _OBEX_HEADER {
  } value;
 } OBEX_HEADER;
 
-/*--------------------------------------------------------------------
- * OBEX_REQUEST  [struct]
- * surface: ce-only
- * library: -
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee493504(v=winembedded.60).html
- */
+/* OBEX_REQUEST  [struct; ce-only; CE 4.0..699] */
 typedef struct _OBEX_REQUEST {
  DWORD dwRequest;
  DWORD dwFlags;
@@ -221,542 +89,234 @@ typedef struct _OBEX_REQUEST {
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
 
-/*--------------------------------------------------------------------
- * IDeviceEnum::Next  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494512(v=winembedded.60).html
- */
+/* IDeviceEnum::Next  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT Next(
  ULONG celt,
  IObexDevice** rgelt,
  ULONG* pceltFetched
 );
 
-/*--------------------------------------------------------------------
- * IDeviceEnum::Reset  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494290(v=winembedded.60).html
- */
+/* IDeviceEnum::Reset  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT Reset ();
 
-/*--------------------------------------------------------------------
- * IDeviceEnum::Skip  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494106(v=winembedded.60).html
- */
+/* IDeviceEnum::Skip  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT Skip(
  ULONG celt
 );
 
-/*--------------------------------------------------------------------
- * IHeaderCollection::AddAppParams  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494479(v=winembedded.60).html
- */
+/* IHeaderCollection::AddAppParams  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT AddAppParams(
  unsigned long ulSize,
  byte* pData
 );
 
-/*--------------------------------------------------------------------
- * IHeaderCollection::AddBody  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494464(v=winembedded.60).html
- */
+/* IHeaderCollection::AddBody  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT AddBody(
  unsigned long ulSize, 
  byte* pData
 );
 
-/*--------------------------------------------------------------------
- * IHeaderCollection::AddByte  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494892(v=winembedded.60).html
- */
+/* IHeaderCollection::AddByte  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT AddByte(
  byte Id, 
  byte* pData
 );
 
-/*--------------------------------------------------------------------
- * IHeaderCollection::AddByteArray  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee493250(v=winembedded.60).html
- */
+/* IHeaderCollection::AddByteArray  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT AddByteArray(
  byte Id, 
  unsigned long ulSize,
  byte* pData
 );
 
-/*--------------------------------------------------------------------
- * IHeaderCollection::AddConnectionId  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee495168(v=winembedded.60).html
- */
+/* IHeaderCollection::AddConnectionId  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT AddConnectionId(
  unsigned long ulConnectionId
 );
 
-/*--------------------------------------------------------------------
- * IHeaderCollection::AddCount  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494905(v=winembedded.60).html
- */
+/* IHeaderCollection::AddCount  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT AddCount(
  unsigned long ulCount 
 );
 
-/*--------------------------------------------------------------------
- * IHeaderCollection::AddDescription  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee493880(v=winembedded.60).html
- */
+/* IHeaderCollection::AddDescription  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT AddDescription(
  LPCWSTR pszDescription
 );
 
-/*--------------------------------------------------------------------
- * IHeaderCollection::AddEndOfBody  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494891(v=winembedded.60).html
- */
+/* IHeaderCollection::AddEndOfBody  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT AddEndOfBody(
  unsigned long ulSize, 
  byte* pData
 );
 
-/*--------------------------------------------------------------------
- * IHeaderCollection::AddHTTP  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494844(v=winembedded.60).html
- */
+/* IHeaderCollection::AddHTTP  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT AddHTTP(
  unsigned long ulSize, 
  byte* pData
 );
 
-/*--------------------------------------------------------------------
- * IHeaderCollection::AddLength  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494646(v=winembedded.60).html
- */
+/* IHeaderCollection::AddLength  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT AddLength(
  unsigned long ulLength
 );
 
-/*--------------------------------------------------------------------
- * IHeaderCollection::AddLong  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee493100(v=winembedded.60).html
- */
+/* IHeaderCollection::AddLong  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT AddLong(
  byte Id, 
  unsigned long ulData
 );
 
-/*--------------------------------------------------------------------
- * IHeaderCollection::AddName  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494705(v=winembedded.60).html
- */
+/* IHeaderCollection::AddName  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT AddName(
  LPCWSTR pszName
 );
 
-/*--------------------------------------------------------------------
- * IHeaderCollection::AddObjectClass  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494889(v=winembedded.60).html
- */
+/* IHeaderCollection::AddObjectClass  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT AddObjectClass(
  unsigned long ulSize, 
  byte* pData
 );
 
-/*--------------------------------------------------------------------
- * IHeaderCollection::AddTarget  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee495254(v=winembedded.60).html
- */
+/* IHeaderCollection::AddTarget  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT AddTarget(
  unsigned long ulSize, 
  byte* pData
 );
 
-/*--------------------------------------------------------------------
- * IHeaderCollection::AddTime  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee493297(v=winembedded.60).html
- */
+/* IHeaderCollection::AddTime  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT AddTime(
  FILETIME* pFiletime
 );
 
-/*--------------------------------------------------------------------
- * IHeaderCollection::AddTimeOld  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee493856(v=winembedded.60).html
- */
+/* IHeaderCollection::AddTimeOld  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT AddTimeOld(
  unsigned long ulTime 
 );
 
-/*--------------------------------------------------------------------
- * IHeaderCollection::AddType  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee493268(v=winembedded.60).html
- */
+/* IHeaderCollection::AddType  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT AddType(
  unsigned long ulSize, 
  byte* pData
 );
 
-/*--------------------------------------------------------------------
- * IHeaderCollection::AddUnicodeString  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee495174(v=winembedded.60).html
- */
+/* IHeaderCollection::AddUnicodeString  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT AddUnicodeString(
  byte Id, 
  LPCWSTR pszData
 );
 
-/*--------------------------------------------------------------------
- * IHeaderCollection::AddWho  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494095(v=winembedded.60).html
- */
+/* IHeaderCollection::AddWho  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT AddWho(
  unsigned long ulSize,
  byte* pData
 );
 
-/*--------------------------------------------------------------------
- * IHeaderCollection::EnumHeaders  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee493478(v=winembedded.60).html
- */
+/* IHeaderCollection::EnumHeaders  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT EnumHeaders(
  IHeaderEnum** pHeaderEnum
 );
 
-/*--------------------------------------------------------------------
- * IHeaderCollection::Remove  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee493037(v=winembedded.60).html
- */
+/* IHeaderCollection::Remove  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT Remove(
  byte Id
 );
 
-/*--------------------------------------------------------------------
- * IHeaderCollection::RemoveAll  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494845(v=winembedded.60).html
- */
+/* IHeaderCollection::RemoveAll  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT RemoveAll();
 
-/*--------------------------------------------------------------------
- * IHeaderEnum::Clone  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee493709(v=winembedded.60).html
- */
+/* IHeaderEnum::Clone  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT Clone(
  IHeaderEnum** ppenum
 );
 
-/*--------------------------------------------------------------------
- * IHeaderEnum::Next  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee493282(v=winembedded.60).html
- */
+/* IHeaderEnum::Next  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT Next(
  ULONG celt,
  OBEX_HEADER** rgelt,
  ULONG* pceltFetched
 );
 
-/*--------------------------------------------------------------------
- * IHeaderEnum::Reset  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee493827(v=winembedded.60).html
- */
+/* IHeaderEnum::Reset  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT Reset ();
 
-/*--------------------------------------------------------------------
- * IObex::BindToDevice  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494030(v=winembedded.60).html
- */
+/* IObex::BindToDevice  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT BindToDevice(
  IPropertyBag* pPropertyBag, 
  IObexDevice** ppDevice
 );
 
-/*--------------------------------------------------------------------
- * IObex::EnumDevices  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494890(v=winembedded.60).html
- */
+/* IObex::EnumDevices  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT EnumDevices(
  IDeviceEnum** ppDeviceEnum, 
  REFCLSID uuidTransport
 );
 
-/*--------------------------------------------------------------------
- * IObex::EnumTransports  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494041(v=winembedded.60).html
- */
+/* IObex::EnumTransports  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT EnumTransports(
  IPropertyBagEnum** ppTransportEnum
 );
 
-/*--------------------------------------------------------------------
- * IObex::Initialize  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494493(v=winembedded.60).html
- */
+/* IObex::Initialize  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT Initialize();
 
-/*--------------------------------------------------------------------
- * IObex::Shutdown  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494883(v=winembedded.60).html
- */
+/* IObex::Shutdown  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT Shutdown();
 
-/*--------------------------------------------------------------------
- * IObex::StartDeviceEnum  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494506(v=winembedded.60).html
- */
+/* IObex::StartDeviceEnum  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT StartDeviceEnum();
 
-/*--------------------------------------------------------------------
- * IObex::StopDeviceEnum  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494301(v=winembedded.60).html
- */
+/* IObex::StopDeviceEnum  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT StopDeviceEnum();
 
-/*--------------------------------------------------------------------
- * IObexDevice::Abort  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee493480(v=winembedded.60).html
- */
+/* IObexDevice::Abort  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT Abort(
  IHeaderCollection* pHeaders
 );
 
-/*--------------------------------------------------------------------
- * IObexDevice::Connect  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494718(v=winembedded.60).html
- */
+/* IObexDevice::Connect  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT Connect(
  LPCWSTR pszPassword,
  DWORD dwCapability,
  IHeaderCollection* pHeaders
 );
 
-/*--------------------------------------------------------------------
- * IObexDevice::Disconnect  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494700(v=winembedded.60).html
- */
+/* IObexDevice::Disconnect  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT Disconnect(
  IHeaderCollection* pHeaders
 );
 
-/*--------------------------------------------------------------------
- * IObexDevice::EnumProperties  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494930(v=winembedded.60).html
- */
+/* IObexDevice::EnumProperties  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT EnumProperties(
  REFIID riid, 
  void** ppv
 );
 
-/*--------------------------------------------------------------------
- * IObexDevice::Get  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494714(v=winembedded.60).html
- */
+/* IObexDevice::Get  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT Get(
  IHeaderCollection* pHeaders, 
  IStream** ppStream
 );
 
-/*--------------------------------------------------------------------
- * IObexDevice::Put  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee493212(v=winembedded.60).html
- */
+/* IObexDevice::Put  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT Put(
  IHeaderCollection* pHeaders, 
  IStream** ppStream
 );
 
-/*--------------------------------------------------------------------
- * IObexDevice::SetPassword  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee493078(v=winembedded.60).html
- */
+/* IObexDevice::SetPassword  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT SetPassword(
  LPCWSTR pszPassword
 );
 
-/*--------------------------------------------------------------------
- * IObexDevice::SetPath  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee493214(v=winembedded.60).html
- */
+/* IObexDevice::SetPath  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT SetPath(
  LPCWSTR pszName,
  DWORD dwFlags,
  IHeaderCollection* pHeaders
 );
 
-/*--------------------------------------------------------------------
- * IObexSink::Notify  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 4.0..699
- * also stated in: Obex.idl  (chm/windows-ce-5.0/wceobex5/html; learn/windows-ce-5.0; learn/windows-ce-net-4x; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee494263(v=winembedded.60).html
- */
+/* IObexSink::Notify  [function; ce-only; CE 4.0..699; Uuid.lib, uuid.lib] */
 HRESULT Notify(
  OBEX_EVENT Event,
  IUnknown* pUnk1,
@@ -766,58 +326,27 @@ HRESULT Notify(
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
 
-/*--------------------------------------------------------------------
- * IDeviceEnum::Clone  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 5.0..699
- * also stated in: Obex.idl  (learn/windows-ce-5.0; learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee493429(v=winembedded.60).html
- */
+/* IDeviceEnum::Clone  [function; ce-only; CE 5.0..699; Uuid.lib, uuid.lib] */
 HRESULT Clone(
  IDeviceEnum * ppenum
 );
 
-/*--------------------------------------------------------------------
- * IPropertyBagEnum::Clone  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee493651(v=winembedded.60).html
- */
+/* IPropertyBagEnum::Clone  [function; ce-only; CE 5.0..699; Uuid.lib, uuid.lib] */
 HRESULT Clone(
  IPropertyBagEnum * ppenum
 );
 
-/*--------------------------------------------------------------------
- * IPropertyBagEnum::Next  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee493909(v=winembedded.60).html
- */
+/* IPropertyBagEnum::Next  [function; ce-only; CE 5.0..699; Uuid.lib, uuid.lib] */
 HRESULT Next( 
  ULONG celt,
  LPPROPERTYBAG2 * rgelt,
  ULONG * pceltFetched 
 );
 
-/*--------------------------------------------------------------------
- * IPropertyBagEnum::Reset  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee494326(v=winembedded.60).html
- */
+/* IPropertyBagEnum::Reset  [function; ce-only; CE 5.0..699; Uuid.lib, uuid.lib] */
 HRESULT Reset( void );
 
-/*--------------------------------------------------------------------
- * IPropertyBagEnum::Skip  [function]
- * surface: ce-only
- * library: Uuid.lib, uuid.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee493656(v=winembedded.60).html
- */
+/* IPropertyBagEnum::Skip  [function; ce-only; CE 5.0..699; Uuid.lib, uuid.lib] */
 HRESULT Skip( 
  ULONG celt 
 );
@@ -825,17 +354,54 @@ HRESULT Skip(
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 
-/*--------------------------------------------------------------------
- * IObexResponse::GetLastResponseCode  [function]
- * surface: ce-only
- * library: Uuid.lib
- * versions: 6.0..699
- * also stated in: Obex.idl  (learn/windows-embedded-ce-6.0)
- * source: corpus/learn/windows-embedded-ce-6.0/ee493822(v=winembedded.60).html
- */
+/* IObexResponse::GetLastResponseCode  [function; ce-only; CE 6.0..699; Uuid.lib] */
 HRESULT GetLastResponseCode(
  BYTE *pResponseCode
 );
 #endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* enum */
+typedef enum _OBEX_EVENT {OE_QUERY_PASSWORD = 0,OE_NEW_CONNECTION = OE_QUERY_PASSWORD + 1,OE_NEW_COMMAND = OE_NEW_CONNECTION + 1,OE_ABORT = OE_NEW_COMMAND + 1,OE_DISCONNECT = OE_ABORT + 1,OE_DEVICE_ARRIVAL = OE_DISCONNECT + 1,OE_DEVICE_DEPARTURE = OE_DEVICE_ARRIVAL + 1,OE_DEVICE_UPDATE = OE_DEVICE_DEPARTURE + 1 } OBEX_EVENT, *LPOBEX_EVENT;
+
+/* struct */
+typedef struct _INBOX_EVENT_DATA {DWORDdwRequest;DWORDdwInboxEvent;LPCWSTRpszName;LPCWSTRpszInboxDestination;IHeaderCollection* pHeaderCol;IStream* pStream;} INBOX_EVENT_DATA, *PINBOX_EVENT_DATA;
+typedef struct _OBEX_REQUEST {DWORD dwRequest;DWORD dwFlags;IHeaderCollection* pHeaderCol;BOOL fStream;IStream* pStream;} OBEX_REQUEST, *POBEX_REQUEST;
+typedef struct _OBEX_HEADER { byte bId; [switch_is(bId & OBEX_HEADER_4BYTE)] union { [case(OBEX_HEADER_UNICODE)] [string] LPWSTR pszData; [case(OBEX_HEADER_4BYTE)] DWORD dwData; [case(OBEX_HEADER_1BYTE)] byte bData; [case(OBEX_HEADER_STREAM)] struct { DWORD dwSize; [size_is(dwSize)] byte* pbaData; } ba;
+
+/* function */
+HRESULT Abort( IHeaderCollection* pHeaders );
+HRESULT AddAppParams( unsigned long ulSize, byte* pData );
+HRESULT AddBody( unsigned long ulSize, byte* pData );
+HRESULT AddByte( byte Id, byte* pData );
+HRESULT AddByteArray( byte Id, unsigned long ulSize, byte* pData );
+HRESULT AddConnectionId( unsigned long ulConnectionId );
+HRESULT AddCount( unsigned long ulCount );
+HRESULT AddDescription( LPCWSTR pszDescription );
+HRESULT AddEndOfBody( unsigned long ulSize, byte* pData );
+HRESULT AddHTTP( unsigned long ulSize, byte* pData );
+HRESULT AddLength( unsigned long ulLength );
+HRESULT AddLong( byte Id, unsigned long ulData );
+HRESULT AddName( LPCWSTR pszName );
+HRESULT AddObjectClass( unsigned long ulSize, byte* pData );
+HRESULT AddTarget( unsigned long ulSize, byte* pData );
+HRESULT AddTime( FILETIME* pFiletime );
+HRESULT AddTimeOld( unsigned long ulTime );
+HRESULT AddType( unsigned long ulSize, byte* pData );
+HRESULT AddUnicodeString( byte Id, LPCWSTR pszData );
+HRESULT AddWho( unsigned long ulSize, byte* pData );
+HRESULT BindToDevice( IPropertyBag* pPropertyBag, IObexDevice** ppDevice );
+HRESULT EnumHeaders( IHeaderEnum** pHeaderEnum );
+HRESULT Get( IHeaderCollection* pHeaders, IStream** ppStream );
+HRESULT GetLastResponseCode( BYTE *pResponseCode );
+HRESULT Put( IHeaderCollection* pHeaders, IStream** ppStream );
+HRESULT SetPath( LPCWSTR pszName, DWORD dwFlags, IHeaderCollection* pHeaders );
+HRESULT Shutdown();
+HRESULT StartDeviceEnum();
+HRESULT StopDeviceEnum();
 
 #endif /* _OBEX_ */

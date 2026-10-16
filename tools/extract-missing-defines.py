@@ -15,6 +15,9 @@ import re
 import sys
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+sys.path.insert(0, os.path.join(ROOT, "tools"))
+import quality_filters  # noqa: E402
+
 CORPUS = os.path.join(ROOT, "corpus")
 KB = os.path.join(ROOT, "knowledge", "kb")
 
@@ -41,13 +44,20 @@ def scan_file(filepath):
     try:
         with open(filepath, 'r', encoding='utf-8', errors='replace') as f:
             content = f.read()
-    except:
+    except OSError:
         return defines
     
     # Skip non-CE pages
     rel_path = os.path.relpath(filepath, ROOT)
     if 'win32/' in rel_path or 'dotnet/' in rel_path:
         return defines
+    if quality_filters.is_sample_source(rel_path):
+        return defines
+
+    # Tags become spaces so ``#define</b> NAME`` does not glue tokens.
+    content = re.sub(r'<[^>]+>', ' ', content)
+    content = content.replace('&lt;', '<').replace('&gt;', '>')
+    content = content.replace('&amp;', '&').replace('&nbsp;', ' ')
     
     # Find #define lines
     for match in DEFINE_PATTERN.finditer(content):
@@ -101,24 +111,16 @@ def main():
     print(f"Scanned {files_scanned} files")
     print(f"Found {len(all_defines)} #define macros")
     
-    # Deduplicate by name (keep first occurrence)
-    seen = set()
-    unique_defines = []
+    # Deduplicate by name, keeping the cleanest definition; drop sample /
+    # HTML / incomplete macros (tools/quality_filters.py).
+    by_name = {}
     for d in all_defines:
-        if d["name"] not in seen:
-            seen.add(d["name"])
-            # Filter out include guards and noise
-            name = d["name"]
-            if '_INCLUDED_' in name or name.startswith('AFX_'):
-                continue
-            if len(name) > 60:
-                continue
-            if '<' in name or '>' in name:
-                continue
-            # Filter out HTML artifacts in values
-            if '&gt;' in d["value"] or '&lt;' in d["value"] or '</code>' in d["value"]:
-                continue
-            unique_defines.append(d)
+        by_name.setdefault(d["name"], []).append(d)
+    unique_defines = []
+    for name, rows in by_name.items():
+        best = quality_filters.pick_best_define(rows)
+        if best:
+            unique_defines.append(best)
     
     print(f"Unique defines: {len(unique_defines)}")
     

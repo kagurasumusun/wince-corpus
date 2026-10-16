@@ -1,0 +1,62 @@
+"""Tests for tools/quality_filters.py."""
+
+import os
+import sys
+import unittest
+
+sys.path.insert(0, os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                                ".."))
+import quality_filters as q  # noqa: E402
+
+
+class DefineTests(unittest.TestCase):
+    def test_strips_html(self):
+        line = q.sanitize_define_line(
+            "#define MAKEINTRESOURCE(i) (LPTSTR) ((DWORD) ((WORD) (i))) </PRE>",
+            "MAKEINTRESOURCE", "i",
+            "(LPTSTR) ((DWORD) ((WORD) (i))) </PRE>")
+        self.assertIsNotNone(line)
+        self.assertNotIn("<", line)
+        self.assertIn("MAKEINTRESOURCE", line)
+
+    def test_rejects_sample_and_incomplete(self):
+        self.assertIsNone(q.sanitize_define_line(
+            "#define DEMO_COPY 1", "DEMO_COPY", "", "1"))
+        self.assertIsNone(q.sanitize_define_line(
+            "#define BOTTESINI \\", "BOTTESINI", "", "\\"))
+
+    def test_keeps_windows_constant(self):
+        line = q.sanitize_define_line(
+            "#define WM_CREATE 0x0001", "WM_CREATE", "", "0x0001")
+        self.assertEqual(line, "#define WM_CREATE 0x0001")
+
+    def test_unassigned_keeps_api_style_only(self):
+        self.assertTrue(q.is_keepable_unassigned_macro(
+            "DMA_READ", "4", "#define DMA_READ 4"))
+        self.assertFalse(q.is_keepable_unassigned_macro(
+            "CARETHEIGHT", "15", "#define CARETHEIGHT 15"))
+        self.assertFalse(q.is_keepable_unassigned_macro(
+            "BLOCK_SIZE", "1000", "#define BLOCK_SIZE 1000"))
+
+
+class DeclarationTests(unittest.TestCase):
+    def test_rejects_assignment_snippet(self):
+        self.assertFalse(q.looks_like_c_declaration(
+            "pnmv = (NM_LISTVIEW FAR *) lParam;"))
+
+    def test_accepts_prototype(self):
+        self.assertTrue(q.looks_like_c_declaration(
+            "LRESULT SendMessage(HWND hWnd, UINT Msg, "
+            "WPARAM wParam, LPARAM lParam);"))
+
+    def test_accepts_collapsed_prototype(self):
+        self.assertTrue(q.looks_like_c_declaration(
+            "BOOLCreateFile(LPCTSTRlpFileName);"))
+
+    def test_rejects_sample_enum_name(self):
+        self.assertIsNone(q.sanitize_declaration(
+            "typedef enum myEnum { k=1 } myEnumv;", "myEnumv", "enum"))
+
+
+if __name__ == "__main__":
+    unittest.main()

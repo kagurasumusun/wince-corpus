@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 16 constants, 15 declarations, 0 derived outlines, 0 base types
+ * 58 constants, 9 declarations, 6 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _SHLOBJ_
 #define _SHLOBJ_
@@ -17,97 +17,208 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
+
+/* BIF_BROWSEFILEJUNCTIONS = 0x00010000  [unified-kb, verify] */
 #define BIF_BROWSEFILEJUNCTIONS 0x00010000
+
+/* BIF_BROWSEFORCOMPUTER = 0x00001000  [unified-kb, verify] */
 #define BIF_BROWSEFORCOMPUTER 0x00001000
+
+/* BIF_BROWSEFORPRINTER = 0x00002000  [unified-kb, verify] */
 #define BIF_BROWSEFORPRINTER 0x00002000
+
+/* BIF_BROWSEINCLUDEFILES = 0x00004000  [unified-kb, verify] */
 #define BIF_BROWSEINCLUDEFILES 0x00004000
+
+/* BIF_BROWSEINCLUDEURLS = 0x00000080  [unified-kb, verify] */
 #define BIF_BROWSEINCLUDEURLS 0x00000080
+
+/* BIF_DONTGOBELOWDOMAIN = 0x00000002  [unified-kb, verify] */
 #define BIF_DONTGOBELOWDOMAIN 0x00000002
+
+/* BIF_EDITBOX = 0x00000010  [unified-kb, verify] */
 #define BIF_EDITBOX 0x00000010
+
+/* BIF_NEWDIALOGSTYLE = 0x00000040  [unified-kb, verify] */
 #define BIF_NEWDIALOGSTYLE 0x00000040
+
+/* BIF_NONEWFOLDERBUTTON = 0x00000200  [unified-kb, verify] */
 #define BIF_NONEWFOLDERBUTTON 0x00000200
+
+/* BIF_NOTRANSLATETARGETS = 0x00000400  [unified-kb, verify] */
 #define BIF_NOTRANSLATETARGETS 0x00000400
+
+/* BIF_RETURNFSANCESTORS = 0x00000008  [unified-kb, verify] */
 #define BIF_RETURNFSANCESTORS 0x00000008
+
+/* BIF_RETURNONLYFSDIRS = 0x00000001  [unified-kb, verify] */
 #define BIF_RETURNONLYFSDIRS 0x00000001
+
+/* BIF_SHAREABLE = 0x00008000  [unified-kb, verify] */
 #define BIF_SHAREABLE 0x00008000
+
+/* BIF_STATUSTEXT = 0x00000004  [unified-kb, verify] */
 #define BIF_STATUSTEXT 0x00000004
+
+/* BIF_UAHINT = 0x00000100  [unified-kb, verify] */
 #define BIF_UAHINT 0x00000100
+
+/* BIF_VALIDATE = 0x00000020  [unified-kb, verify] */
 #define BIF_VALIDATE 0x00000020
 
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 400 && _WIN32_WCE < 700)) /* CE 4.0..699 */
 
-typedef struct _browseinfo {
-  HWND hwndOwner;
-  LPCITEMIDLIST pidlRoot;
-  LPTSTR pszDisplayName;
-  LPCTSTR lpszTitle;
-  UINT ulFlags;
-  BFFCALLBACK lpfn;
-  LPARAM lParam;
-  int iImage;
-} BROWSEINFO, *PBROWSEINFO, *LPBROWSEINFO;
-struct _FILECHANGEINFO {
-  DWORD cbSize;
-  LONG wEventId;
-  ULONG uFlags;
-  DWORD dwItem1;
-  DWORD dwItem2;
-  DWORD dwAttributes;
-  FILETIME ftModified;
-  ULONG nFileSize;
-} FILECHANGEINFO, *LPFILECHANGEINFO;
-typedef struct tagFILECHANGENOTIFY {  DWORD dwRefCount;  FILECHANGEINFO fci;  } FILECHANGENOTIFY;
-typedef struct _ITEMIDLIST {  SHITEMID mkid;  } ITEMIDLIST, *LPITEMIDLIST;  typedef const ITEMIDLIST* LPCITEMIDLIST;
-typedef struct tagSHCHANGENOTIFYENTRY {
-  DWORD dwEventMask;
-  LPTSTR pszWatchDir;
-  BOOL fRecursive;
-} SHCHANGENOTIFYENTRY;
+/* FWF_DISABLED = 0x20  [unified-kb] */
+#define FWF_DISABLED 0x20
 
-BFFM_ENABLEOK  wParam = 0;  lParam = (LPARAM)fValid;
-BFFM_SELCHANGED pidlSelected = (LPITEMIDLIST)lParam;
-BFFM_SETSELECTION wParam = (WPARAM)fPath; lParam = (LPARAM)pFolder;
-BFFM_SETSTATUSTEXTwParam = 0;lParam = (LPARAM)szStatusText;
-BFFM_VALIDATEFAILEDlParam = (LPARAM)szEditText;
-int CALLBACK BrowseCallbackProc(HWND hwnd,UINT uMsg,LPARAM lParam,LPARAM lpData);
-DWORD CeGetSpecialFolderPath(  Int nFolder,  DWORD nBufferLength,  LPWSTR lpBuffer  );
-DWORD CeGetSpecialFolderPath(  Int nFolder,  DWORD nBufferLength,  LPWSTR lpBuffer  );
-WINSHELLAPI void WINAPI SHAddToRecentDocs(  UINT uFlags,  LPCVOID pv );
-HRESULT SHBindToParent( LPCITEMIDLIST pidl,  REFIID riid,  VOID** ppv,  LPCITEMIDLIST* ppidlLast );
-LPITEMIDLIST WINAPI SHBrowseForFolder(  LPBROWSEINFO lpbi  );
-BOOL WINAPI SHChangeNotifyDeregister( HWND hwnd);
-void WINAPI SHChangeNotifyFree( FILECHANGENOTIFY * pfcn );
-BOOL WINAPI SHChangeNotifyRegister( HWND hwnd, SHCHANGENOTIFYENTRY * pshcne );
-HRESULT SHGetDesktopFolder( IShellFolder** ppshf );
-BOOL SHGetDocumentsFolder( LPCTSTR pszVolume, LPTSTR pszDocs );
-HRESULT SHGetMalloc( LPMALLOC* ppMalloc );
-WINSHELLAPI HRESULT WINAPI SHGetSpecialFolderLocation( HWND hwndOwner,  int nFolder,  LPITEMIDLIST* ppidl  );
-LRESULT CALLBACK SomeWndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
-{
-  FILECHANGENOTIFY * lpfcn;
-  FILECHANGEINFO * lpfci;
-  switch (msg) {
-    case WM_FILECHANGEINFO:
-    lpfcn = (FILECHANGENOTIFY * )lp;
-    if (lpfcn == NULL) {
-      break;
-    }
-    lpfci = &(lpfcn->fci);
-    if (lpfci == NULL) {
-      break;
-    }
-    switch (lpfci->wEventId) {
-      case SHCNE_MKDIR:
-      break;
-      case SHCNE_RENAMEITEM:
-      break;
-    }
-    SHChangeNotifyFree(lpfcn);
-    break;
-    default:
-    return DefWindowProc(hwnd, msg, wp, lp);
-  }
-  return 0;
-}
+/* FWF_LOG = 0x04  [unified-kb] */
+#define FWF_LOG 0x04
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 600)) /* CE 5.0..599 */
+
+/* CSIDL_APPDATA = 0x001A  [unified-kb] */
+#define CSIDL_APPDATA 0x001A
+
+/* CSIDL_DESKTOP = 0x0000  [unified-kb] */
+#define CSIDL_DESKTOP 0x0000
+
+/* CSIDL_DESKTOPDIRECTORY = 0x0010  [unified-kb] */
+#define CSIDL_DESKTOPDIRECTORY 0x0010
+
+/* CSIDL_FAVORITES = 0x0006  [unified-kb] */
+#define CSIDL_FAVORITES 0x0006
+
+/* CSIDL_FONTS = 0x0014  [unified-kb] */
+#define CSIDL_FONTS 0x0014
+
+/* CSIDL_MYMUSIC = 0x000d  [unified-kb] */
+#define CSIDL_MYMUSIC 0x000d
+
+/* CSIDL_MYPICTURES = 0x0027  [unified-kb] */
+#define CSIDL_MYPICTURES 0x0027
+
+/* CSIDL_MYVIDEO = 0x000e  [unified-kb] */
+#define CSIDL_MYVIDEO 0x000e
+
+/* CSIDL_PERSONAL = 0x0005  [unified-kb] */
+#define CSIDL_PERSONAL 0x0005
+
+/* CSIDL_PROFILE = 0x0028  [unified-kb] */
+#define CSIDL_PROFILE 0x0028
+
+/* CSIDL_PROGRAM_FILES = 0x0026  [unified-kb] */
+#define CSIDL_PROGRAM_FILES 0x0026
+
+/* CSIDL_PROGRAMS = 0x0002  [unified-kb] */
+#define CSIDL_PROGRAMS 0x0002
+
+/* CSIDL_RECENT = 0x0008  [unified-kb] */
+#define CSIDL_RECENT 0x0008
+
+/* CSIDL_STARTUP = 0x0007  [unified-kb] */
+#define CSIDL_STARTUP 0x0007
+
+/* CSIDL_WINDOWS = 0x0024  [unified-kb] */
+#define CSIDL_WINDOWS 0x0024
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+
+/* SFGAO_BROWSABLE = 0x08000000  [unified-kb] */
+#define SFGAO_BROWSABLE 0x08000000
+
+/* SFGAO_CANCOPY = 0x00000001  [unified-kb] */
+#define SFGAO_CANCOPY 0x00000001
+
+/* SFGAO_CANDELETE = 0x00000020  [unified-kb] */
+#define SFGAO_CANDELETE 0x00000020
+
+/* SFGAO_CANLINK = 0x00000004  [unified-kb] */
+#define SFGAO_CANLINK 0x00000004
+
+/* SFGAO_CANMONIKER = 0x00400000  [unified-kb] */
+#define SFGAO_CANMONIKER 0x00400000
+
+/* SFGAO_CANMOVE = 0x00000002  [unified-kb] */
+#define SFGAO_CANMOVE 0x00000002
+
+/* SFGAO_CANRENAME = 0x00000010  [unified-kb] */
+#define SFGAO_CANRENAME 0x00000010
+
+/* SFGAO_CAPABILITYMASK = 0x00000177  [unified-kb] */
+#define SFGAO_CAPABILITYMASK 0x00000177
+
+/* SFGAO_COMPRESSED = 0x04000000  [unified-kb] */
+#define SFGAO_COMPRESSED 0x04000000
+
+/* SFGAO_CONTENTSMASK = 0x80000000  [unified-kb] */
+#define SFGAO_CONTENTSMASK 0x80000000
+
+/* SFGAO_DISPLAYATTRMASK = 0x000F0000  [unified-kb] */
+#define SFGAO_DISPLAYATTRMASK 0x000F0000
+
+/* SFGAO_DROPTARGET = 0x00000100  [unified-kb] */
+#define SFGAO_DROPTARGET 0x00000100
+
+/* SFGAO_FILESYSANCESTOR = 0x10000000  [unified-kb] */
+#define SFGAO_FILESYSANCESTOR 0x10000000
+
+/* SFGAO_FILESYSTEM = 0x40000000  [unified-kb] */
+#define SFGAO_FILESYSTEM 0x40000000
+
+/* SFGAO_FOLDER = 0x20000000  [unified-kb] */
+#define SFGAO_FOLDER 0x20000000
+
+/* SFGAO_GHOSTED = 0x00080000  [unified-kb] */
+#define SFGAO_GHOSTED 0x00080000
+
+/* SFGAO_HASPROPSHEET = 0x00000040  [unified-kb] */
+#define SFGAO_HASPROPSHEET 0x00000040
+
+/* SFGAO_HASSUBFOLDER = 0x80000000  [unified-kb] */
+#define SFGAO_HASSUBFOLDER 0x80000000
+
+/* SFGAO_LINK = 0x00010000  [unified-kb] */
+#define SFGAO_LINK 0x00010000
+
+/* SFGAO_NEWCONTENT = 0x00200000  [unified-kb] */
+#define SFGAO_NEWCONTENT 0x00200000
+
+/* SFGAO_NONENUMERATED = 0x00100000  [unified-kb] */
+#define SFGAO_NONENUMERATED 0x00100000
+
+/* SFGAO_READONLY = 0x00040000  [unified-kb] */
+#define SFGAO_READONLY 0x00040000
+
+/* SFGAO_REMOVABLE = 0x02000000  [unified-kb] */
+#define SFGAO_REMOVABLE 0x02000000
+
+/* SFGAO_SHARE = 0x00020000  [unified-kb] */
+#define SFGAO_SHARE 0x00020000
+
+/* SFGAO_VALIDATE = 0x01000000  [unified-kb] */
+#define SFGAO_VALIDATE 0x01000000
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
+
+/* BFFM_ENABLEOK  [function; ce-only; CE 5.0..699] */
+
+/* BFFM_INITIALIZED  [?; ce-only; CE 5.0..699] */
+
+/* BFFM_SELCHANGED  [function; ce-only; CE 5.0..699] */
+
+/* BFFM_SETSELECTION  [function; ce-only; CE 5.0..699] */
+
+/* BFFM_SETSTATUSTEXT  [function; ce-only; CE 5.0..699] */
+
+/* BFFM_VALIDATEFAILED  [function; ce-only; CE 5.0..699] */
+#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -117,13 +228,7 @@ LRESULT CALLBACK SomeWndProc(HWND hwnd, UINT msg, WPARAM wp, LPARAM lp)
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 200) || (_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
 
-/*--------------------------------------------------------------------
- * ITEMIDLIST  [struct]
- * surface: shared
- * library: -
- * versions: 1.0..199, 2.11..2.12, 3.0..399, 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee500170(v=winembedded.60).html
- */
+/* ITEMIDLIST  [struct; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699] */
 typedef struct _ITEMIDLIST { 
  SHITEMID mkid;
 } ITEMIDLIST, *LPITEMIDLIST; 
@@ -132,16 +237,7 @@ typedef const ITEMIDLIST* LPCITEMIDLIST;
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
 
-/*--------------------------------------------------------------------
- * BROWSEINFO  [struct]
- * surface: shared
- * library: -
- * versions: 5.0..699
- * documented spelling: BROWSEINFOA  [corpus/win32/api/shlobj_core/ns-shlobj_core-browseinfoa.md]
- * documented spelling: BROWSEINFOW  [corpus/win32/api/shlobj_core/ns-shlobj_core-browseinfow.md]
- * A/W: Windows CE は基本的に W 系。A 系綴りの面は個別確認必須 -- CE 文書が A 綴りを明示する場合のみ採用する (user order 2026-10)
- * source: corpus/learn/windows-embedded-ce-6.0/ee501763(v=winembedded.60).html
- */
+/* BROWSEINFO  [struct; shared; CE 5.0..699; A/W BROWSEINFOA,BROWSEINFOW (CE is W-side)] */
 typedef struct _browseinfo {
  HWND hwndOwner;
  LPCITEMIDLIST pidlRoot;
@@ -160,26 +256,12 @@ typedef struct _browseinfo {
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 211 && _WIN32_WCE < 213) || (_WIN32_WCE >= 300 && _WIN32_WCE < 400) || (_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
 
-/*--------------------------------------------------------------------
- * SHGetMalloc  [function]
- * surface: shared
- * library: Ceshell.lib, ceshell.lib
- * versions: 2.11..2.12, 3.0..399, 5.0..699
- * also stated in: Shellapi.h  (msdn-library/wcedevcon-99/wcesdkr)
- * source: corpus/learn/windows-embedded-ce-6.0/ee500848(v=winembedded.60).html
- */
+/* SHGetMalloc  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Ceshell.lib, ceshell.lib] */
 HRESULT SHGetMalloc(
  LPMALLOC* ppMalloc 
 );
 
-/*--------------------------------------------------------------------
- * SHGetSpecialFolderLocation  [function]
- * surface: shared
- * library: Ceshell.lib, ceshell.lib
- * versions: 2.11..2.12, 3.0..399, 5.0..699
- * also stated in: Shellapi.h  (msdn-library/wcedevcon-99/wcesdkr)
- * source: corpus/learn/windows-embedded-ce-6.0/ee505271(v=winembedded.60).html
- */
+/* SHGetSpecialFolderLocation  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Ceshell.lib, ceshell.lib] */
 WINSHELLAPI HRESULT WINAPI SHGetSpecialFolderLocation(
  HWND hwndOwner, 
  int nFolder, 
@@ -189,76 +271,7 @@ WINSHELLAPI HRESULT WINAPI SHGetSpecialFolderLocation(
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 500 && _WIN32_WCE < 700)) /* CE 5.0..699 */
 
-/*--------------------------------------------------------------------
- * BFFM_ENABLEOK  [function]
- * surface: ce-only
- * library: -
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee502534(v=winembedded.60).html
- */
-BFFM_ENABLEOK
- wParam = 0;
- lParam = (LPARAM)fValid;
-
-/*--------------------------------------------------------------------
- * BFFM_INITIALIZED  [?]
- * surface: ce-only
- * library: -
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee504577(v=winembedded.60).html
- */
-BFFM_INITIALIZED
- lParam = 0;
-
-/*--------------------------------------------------------------------
- * BFFM_SELCHANGED  [function]
- * surface: ce-only
- * library: -
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee501689(v=winembedded.60).html
- */
-BFFM_SELCHANGED
- pidlSelected = (LPITEMIDLIST)lParam;
-
-/*--------------------------------------------------------------------
- * BFFM_SETSELECTION  [function]
- * surface: ce-only
- * library: -
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee505690(v=winembedded.60).html
- */
-BFFM_SETSELECTION
- wParam = (WPARAM)fPath;
- lParam = (LPARAM)pFolder;
-
-/*--------------------------------------------------------------------
- * BFFM_SETSTATUSTEXT  [function]
- * surface: ce-only
- * library: -
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee499721(v=winembedded.60).html
- */
-BFFM_SETSTATUSTEXT
- wParam = 0;
- lParam = (LPARAM)szStatusText;
-
-/*--------------------------------------------------------------------
- * BFFM_VALIDATEFAILED  [function]
- * surface: ce-only
- * library: -
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee504585(v=winembedded.60).html
- */
-BFFM_VALIDATEFAILED
- lParam = (LPARAM)szEditText;
-
-/*--------------------------------------------------------------------
- * BrowseCallbackProc  [function]
- * surface: ce-only
- * library: Ceshell.lib, ceshell.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee506142(v=winembedded.60).html
- */
+/* BrowseCallbackProc  [function; ce-only; CE 5.0..699; Ceshell.lib, ceshell.lib] */
 int CALLBACK BrowseCallbackProc(
  HWND hwnd,
  UINT uMsg,
@@ -266,13 +279,7 @@ int CALLBACK BrowseCallbackProc(
  LPARAM lpData
 );
 
-/*--------------------------------------------------------------------
- * SHBindToParent  [function]
- * surface: shared
- * library: Ceshell.lib, ceshell.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee501784(v=winembedded.60).html
- */
+/* SHBindToParent  [function; shared; CE 5.0..699; Ceshell.lib, ceshell.lib] */
 HRESULT SHBindToParent(
  LPCITEMIDLIST pidl, 
  REFIID riid, 
@@ -280,41 +287,17 @@ HRESULT SHBindToParent(
  LPCITEMIDLIST* ppidlLast
 );
 
-/*--------------------------------------------------------------------
- * SHBrowseForFolder  [function]
- * surface: shared
- * library: Ceshell.lib, ceshell.lib
- * versions: 5.0..699
- * documented spelling: SHBrowseForFolderA  [corpus/win32/api/shlobj_core/nf-shlobj_core-shbrowseforfoldera.md]
- * documented spelling: SHBrowseForFolderW  [corpus/win32/api/shlobj_core/nf-shlobj_core-shbrowseforfolderw.md]
- * A/W: Windows CE は基本的に W 系。A 系綴りの面は個別確認必須 -- CE 文書が A 綴りを明示する場合のみ採用する (user order 2026-10)
- * source: corpus/learn/windows-embedded-ce-6.0/ee503764(v=winembedded.60).html
- */
+/* SHBrowseForFolder  [function; shared; CE 5.0..699; Ceshell.lib, ceshell.lib; A/W SHBrowseForFolderA,SHBrowseForFolderW (CE is W-side)] */
 LPITEMIDLIST WINAPI SHBrowseForFolder(
  LPBROWSEINFO lpbi
 );
 
-/*--------------------------------------------------------------------
- * SHGetDesktopFolder  [function]
- * surface: shared
- * library: Ceshell.lib, ceshell.lib
- * versions: 5.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee503191(v=winembedded.60).html
- */
+/* SHGetDesktopFolder  [function; shared; CE 5.0..699; Ceshell.lib, ceshell.lib] */
 HRESULT SHGetDesktopFolder(
  IShellFolder** ppshf
 );
 
-/*--------------------------------------------------------------------
- * WM_FILECHANGEINFO  [function]
- * surface: ce-only
- * library: Ceshell.lib, ceshell.lib
- * versions: 5.0..699
- * also stated in: Commctrl.h  (chm/windows-ce-5.0/wceui5/html)
- * also stated in: Prsht.h  (chm/windows-ce-5.0/wceui5/html)
- * also stated in: Shlguid.h  (chm/windows-ce-5.0/wceui5/html)
- * source: corpus/learn/windows-embedded-ce-6.0/ee501796(v=winembedded.60).html
- */
+/* WM_FILECHANGEINFO  [function; ce-only; CE 5.0..699; Ceshell.lib, ceshell.lib] */
 LRESULT CALLBACK WindowProc(
  HWND hwnd,
  UINT msg,
@@ -322,5 +305,16 @@ LRESULT CALLBACK WindowProc(
  LPARAM lParam
 );
 #endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* typedef */
+typedef const ITEMIDLIST * LPCITEMIDLIST;
+
+/* struct */
+typedef struct _browseinfo {HWND hwndOwner;LPCITEMIDLIST pidlRoot;LPTSTR pszDisplayName;LPCTSTR lpszTitle;UINT ulFlags;BFFCALLBACK lpfn;LPARAM lParam;int iImage;} BROWSEINFO, *PBROWSEINFO, *LPBROWSEINFO;
 
 #endif /* _SHLOBJ_ */

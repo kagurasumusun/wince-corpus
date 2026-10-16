@@ -5,269 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 16 declarations, 0 derived outlines, 0 base types
+ * 0 constants, 16 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
  */
 #ifndef _REGEXT_
 #define _REGEXT_
 
-
-/* ==================================================================
- * additional macros -- supplementary definitions from corpus
- * ================================================================ */
-#define MAX_DATA_LEN_CB 4096
-#define MAX_NOTIF 3
-
-#define MAX_MSGQUEUE_BUFFER_CB(sizeof(NOTIFYMSGQUEUEPACKET) + MAX_DATA_LEN_CB)
-
-
-typedef void REGISTRYNOTIFYCALLBACK( HREGNOTIFY hNotify, DWORD dwUserData, const PBYTE pData, const UINT cbData );
-
-typedef enum tagREG_COMPARISONTYPE {
-  REG_CT_ANYCHANGE,
-  REG_CT_EQUAL,
-  REG_CT_NOT_EQUAL,
-  REG_CT_GREATER,
-  REG_CT_GREATER_OR_EQUAL,
-  REG_CT_LESS,
-  REG_CT_LESS_OR_EQUAL,
-  REG_CT_CONTAINS,
-  REG_CT_STARTS_WITH,
-  REG_CT_ENDS_WITH
-} REG_COMPARISONTYPE;
-#include
-#include "snapi.h"
-const TCHAR c_szPhoneRegistryRootkey[] = TEXT("System\\State");
-const TCHAR c_szPhoneRegistrySubkey[] = TEXT("Phone");
-const TCHAR c_szPhoneSignalStrength[] = TEXT("Signal Strength");
-const TCHAR c_szPhoneIncomingCallerNumber[] = TEXT("Incoming Caller Number");
-const TCHAR c_szPhoneStatus[] = TEXT("Status");
-#define MAX_NOTIF 3
-enum NotifType
-{
-  SignalStrength = 0,
-  IncomingCallerNumber,
-  PhoneRoaming
-};
-HREGNOTIFY g_hRegNotify[ MAX_NOTIF ] ;
-void RegistryNotifyCallbackFunc(HREGNOTIFY hNotify, DWORD dwUserData, const PBYTE pData, const UINT cbData)
-{
-  TCHAR szOutput[MAX_PATH];
-  switch( dwUserData )
-  {
-    case SignalStrength:
-    StringCchPrintf(szOutput, MAX_PATH, _T("The Signal Strength is %d"), (DWORD) *pData);
-    break;
-    case IncomingCallerNumber:
-    StringCchPrintf(szOutput, MAX_PATH, _T("The Incoming Caller Number is %s"), (TCHAR*)pData);
-    break;
-    case PhoneRoaming:
-    {
-      DWORD dw = 0;
-      memcpy(&dw, pData, cbData);
-      StringCchPrintf(szOutput, MAX_PATH, _T("The Roam Status of the Phone is %s"), ( dw & SN_PHONEROAMING_BITMASK ) == SN_PHONEROAMING_BITMASK ? _T("TRUE") : _T("FALSE") );
-    }
-    break;
-    default :
-    break;
-  }
-  OutputDebugString( szOutput );
-  return;
-}
-void RegisterForPhoneNotifications()
-{
-  HKEY hKey;
-  if (S_OK == RegOpenKeyEx(HKEY_LOCAL_MACHINE, c_szPhoneRegistryRootkey, 0, KEY_QUERY_VALUE, &hKey))
-  {
-    HRESULT hr = RegistryNotifyCallback(hKey,
-    c_szPhoneRegistrySubkey,
-    c_szPhoneSignalStrength,
-    RegistryNotifyCallbackFunc,
-    SignalStrength,
-    NULL,
-    &g_hRegNotify[ SignalStrength ] );
-    hr = RegistryNotifyCallback(hKey,
-    c_szPhoneRegistrySubkey,
-    c_szPhoneIncomingCallerNumber,
-    RegistryNotifyCallbackFunc,
-    IncomingCallerNumber,
-    NULL,
-    &g_hRegNotify [ IncomingCallerNumber ] );
-    hr = RegistryNotifyCallback(hKey,
-    c_szPhoneRegistrySubkey,
-    c_szPhoneStatus,
-    RegistryNotifyCallbackFunc,
-    PhoneRoaming,
-    NULL,
-    &g_hRegNotify [ PhoneRoaming ] );
-    RegCloseKey(hKey);
-  }
-}
-void CloseAllNotifications ()
-{
-  for (int i = 0; i < MAX_NOTIF; i++)
-  {
-    RegistryCloseNotification(g_hRegNotify[i]);
-  }
-};
-
-typedef struct tagNOTIFICATIONCONDITION {
-  REG_COMPARISONTYPE ctComparisonType;
-  DWORD dwMask;
-  union TargetValue {
-    LPCTSTR psz;
-    DWORD dw;
-  };
-} NOTIFICATIONCONDITION;
-typedef struct tagNOTIFYMSGQUEUEPACKET
-{
-  HREGNOTIFY hNotify;
-  DWORD dwUserData;
-  UINT cbData;
-  BYTE rgData[1];
-} NOTIFYMSGQUEUEPACKET;
-
-HRESULT WINAPI RegistryBatchNotificaton( HREGNOTIFY hNotify, DWORD dwMillisecondsIdle, DWORD dwMillesecondsMax );
-HRESULT WINAPI RegistryCloseNotification(  HREGNOTIFY hNotify );
-void ClearRegistrySettings()
-{
-  HKEY hkey;
-  RegistryDeleteValue(HKEY_LOCAL_MACHINE,
-  TEXT("Software\\MyApplication"),
-  TEXT("SystemValue"));
-  0,
-  0,
-  &hkey);
-  RegistryDeleteValue(hkey, NULL, TEXT("UserValue1"));
-  RegistryDeleteValue(hkey, NULL, TEXT("UserValue2"));
-  RegCloseKey(hkey);
-}
-DWORD GetNumberOfBlueToothConnections()
-{
-  DWORD cBluetoothConnections = 0;
-  HRESULT hr;
-  hr = RegistryGetDWORD(SN_CONNECTIONSBLUETOOTHCOUNT_ROOT,
-  SN_CONNECTIONSBLUETOOTHCOUNT_PATH,
-  SN_CONNECTIONSBLUETOOTHCOUNT_VALUE,
-  &cBluetoothConnections);
-  if (SUCCEEDED(hr))
-  return cBluetoothConnections;
-  else
-  return 0;
-HRESULT WINAPI RegistryGetString(  HKEY hKey, LPCTSTR pszSubKey, LPCTSTR pszValueName, LPTSTR pszData, UINT cchData  );
-TCHAR szApp[] = TEXT("\"\\Program Files\\myApp\\myApp.exe\"");
-HRESULT WINAPI RegistryNotifyCallback( HKEY hKey, LPCTSTR pszSubKey, LPCTSTR pszValueName, REGISTRYNOTIFYCALLBACK pfnRegistryNotifyCallback, DWORD dwUserData, NOTIFICATIONCONDITION * pCondition, HREGNOTIFY * phNotify );
-#define MAX_DATA_LEN_CB 4096
-#define MAX_MSGQUEUE_BUFFER_CB (sizeof(NOTIFYMSGQUEUEPACKET) + MAX_DATA_LEN_CB)
-HRESULT RegistryNotifyMsgQueueExample()
-{
-  DWORD dwBytesRead;
-  TCHAR szBuffer[1024];
-  DWORD dwOldSignalStrength;
-  TCHAR szOldOperatorName[256];
-  NOTIFYMSGQUEUEPACKET * pPacket;
-  HRESULT hr = S_OK;
-  HREGNOTIFY hNotifyStrength = NULL;
-  HREGNOTIFY hNotifyOperator = NULL;
-  HANDLE hMsgQueue = NULL;
-  DWORD dwFlags = 0;
-  MSGQUEUEOPTIONS msgQueueOpts = {0};
-  msgQueueOpts.dwSize = sizeof(msgQueueOpts);
-  msgQueueOpts.dwFlags = MSGQUEUE_ALLOW_BROKEN;
-  msgQueueOpts.cbMaxMessage = MAX_MSGQUEUE_BUFFER_CB;
-  msgQueueOpts.bReadAccess = TRUE;
-  hMsgQueue = CreateMsgQueue(TEXT("MyMsgQueue"), &msgQueueOpts);
-  pPacket = (NOTIFYMSGQUEUEPACKET*) LocalAlloc(LPTR, MAX_MSGQUEUE_BUFFER_CB);
-  hr = RegistryNotifyMsgQueue(SN_PHONESIGNALSTRENGTH_ROOT,
-  SN_PHONESIGNALSTRENGTH_PATH,
-  SN_PHONESIGNALSTRENGTH_VALUE,
-  TEXT("MyMsgQueue"),
-  1,
-  NULL,
-  &hNotifyStrength);
-  hr = RegistryNotifyMsgQueue(SN_PHONEOPERATORNAME_ROOT,
-  SN_PHONEOPERATORNAME_PATH,
-  SN_PHONEOPERATORNAME_VALUE,
-  TEXT("MyMsgQueue"),
-  2,
-  NULL,
-  &hNotifyOperator);
-  RegistryGetDWORD(SN_PHONESIGNALSTRENGTH_ROOT,
-  SN_PHONESIGNALSTRENGTH_PATH,
-  SN_PHONESIGNALSTRENGTH_VALUE,
-  &dwOldSignalStrength);
-  RegistryGetString(SN_PHONEOPERATORNAME_ROOT,
-  SN_PHONEOPERATORNAME_PATH,
-  SN_PHONEOPERATORNAME_VALUE,
-  szOldOperatorName,
-  256);
-  while(ReadMsgQueue(hMsgQueue, pPacket, MAX_MSGQUEUE_BUFFER_CB, &dwBytesRead, INFINITE, &dwFlags))
-  {
-    if(1 == pPacket->dwUserData)
-    {
-      StringCchPrintf(szBuffer,
-      1024,
-      TEXT("Signal strength changed from %d to %d\n"),
-      dwOldSignalStrength,
-      *(DWORD*) pPacket->rgData);
-      MessageBox(NULL, szBuffer, TEXT("Signal"), MB_SETFOREGROUND | MB_OK);
-      dwOldSignalStrength = *(DWORD*) pPacket->rgData;
-    }
-    else if(2 == pPacket->dwUserData)
-    {
-      StringCchPrintf(szBuffer,
-      1024,
-      TEXT("Operator changed from %s to %s\n"),
-      szOldOperatorName, (LPCTSTR) pPacket->rgData);
-      MessageBox(NULL, szBuffer, TEXT("Operator"), MB_SETFOREGROUND | MB_OK);
-      StringCchCopy(szOldOperatorName, 256, (LPCTSTR) pPacket->rgData);
-    }
-  }
-  hr = RegistryCloseNotification(hNotifyStrength);
-  hr = RegistryCloseNotification(hNotifyOperator);
-  CloseMsgQueue(hMsgQueue);
-  LocalFree(pPacket);
-  return hr;
-}
-LRESULT RegistryNotifyWindowProc(HWND hDlg, UINT msg, UINT wParam, LONG lParam)
-{
-  TCHAR szLocation[256];
-  NOTIFICATIONCONDITION nc;
-  LRESULT lRet = FALSE;
-  HREGNOTIFY hNotify = NULL;
-  TCHAR szDowntown[] = TEXT("Downtown");
-  switch (msg)
-  {
-    case WM_CREATE:
-    nc.ctComparisonType = REG_CT_CONTAINS;
-    nc.TargetValue.psz = szDowntown;
-    nc.dwMask = 0;
-    RegistryNotifyWindow(SN_CALENDARNEXTAPPOINTMENTLOCATION_ROOT,
-    SN_CALENDARNEXTAPPOINTMENTLOCATION_PATH,
-    SN_CALENDARNEXTAPPOINTMENTLOCATION_VALUE,
-    hDlg,
-    WM_USER,
-    0,
-    &nc,
-    &hNotify);
-    lRet = 0;
-    break;
-    case WM_USER:
-    RegistryGetString(SN_CALENDARNEXTAPPOINTMENTLOCATION_ROOT,
-    SN_CALENDARNEXTAPPOINTMENTLOCATION_PATH,
-    SN_CALENDARNEXTAPPOINTMENTLOCATION_VALUE,
-    szLocation,
-    256);
-    lRet = TRUE;
-    break;
-    case WM_DESTROY:
-    RegistryCloseNotification(hNotify);
-    lRet = 0;
-    break;
-    return lRet;
-HRESULT WINAPI RegistrySetDWORD(  HKEY hKey, LPCTSTR pszSubKey, LPCTSTR pszValueName, DWORD dwData  );
-HRESULT WINAPI RegistrySetString(  HKEY hKey, LPCTSTR pszSubKey, LPCTSTR pszValueName, LPCTSTR pszData  );
-HRESULT WINAPI RegistryStopNotification( LPCTSTR pszName );
-HRESULT WINAPI RegistryTestExchangeDWORD(  HKEY hKey, LPCTSTR pszSubKey, LPCTSTR pszValueName, DWORD dwOldValue, DWORD dwNewValue  );
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -277,13 +19,7 @@ HRESULT WINAPI RegistryTestExchangeDWORD(  HKEY hKey, LPCTSTR pszSubKey, LPCTSTR
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 
-/*--------------------------------------------------------------------
- * NOTIFICATIONCONDITION  [struct]
- * surface: ce-only
- * library: -
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee488645(v=winembedded.60).html
- */
+/* NOTIFICATIONCONDITION  [struct; ce-only; CE 6.0..699] */
 typedef struct tagNOTIFICATIONCONDITION {
  REG_COMPARISONTYPE ctComparisonType;
  DWORD dwMask;
@@ -293,13 +29,7 @@ typedef struct tagNOTIFICATIONCONDITION {
  };
 } NOTIFICATIONCONDITION;
 
-/*--------------------------------------------------------------------
- * NOTIFYMSGQUEUEPACKET  [struct]
- * surface: ce-only
- * library: -
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee488220(v=winembedded.60).html
- */
+/* NOTIFYMSGQUEUEPACKET  [struct; ce-only; CE 6.0..699] */
 typedef struct tagNOTIFYMSGQUEUEPACKET
 {
  HREGNOTIFY hNotify;
@@ -308,13 +38,7 @@ typedef struct tagNOTIFYMSGQUEUEPACKET
  BYTE rgData[1];
 } NOTIFYMSGQUEUEPACKET;
 
-/*--------------------------------------------------------------------
- * REG_COMPARISONTYPE  [enum]
- * surface: ce-only
- * library: -
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee488568(v=winembedded.60).html
- */
+/* REG_COMPARISONTYPE  [enum; ce-only; CE 6.0..699] */
 typedef enum tagREG_COMPARISONTYPE { 
  REG_CT_ANYCHANGE,
  REG_CT_EQUAL,
@@ -335,50 +59,26 @@ typedef enum tagREG_COMPARISONTYPE {
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 600 && _WIN32_WCE < 700)) /* CE 6.0..699 */
 
-/*--------------------------------------------------------------------
- * RegistryBatchNotification  [function]
- * surface: ce-only
- * library: aygshell.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee488009(v=winembedded.60).html
- */
+/* RegistryBatchNotification  [function; ce-only; CE 6.0..699; aygshell.lib] */
 HRESULT WINAPI RegistryBatchNotificaton(
  HREGNOTIFY hNotify,
  DWORD dwMillisecondsIdle,
  DWORD dwMillesecondsMax
 );
 
-/*--------------------------------------------------------------------
- * RegistryCloseNotification  [function]
- * surface: ce-only
- * library: aygshell.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee488922(v=winembedded.60).html
- */
+/* RegistryCloseNotification  [function; ce-only; CE 6.0..699; aygshell.lib] */
 HRESULT WINAPI RegistryCloseNotification( 
  HREGNOTIFY hNotify
 );
 
-/*--------------------------------------------------------------------
- * RegistryDeleteValue  [function]
- * surface: ce-only
- * library: aygshell.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee488640(v=winembedded.60).html
- */
+/* RegistryDeleteValue  [function; ce-only; CE 6.0..699; aygshell.lib] */
 HRESULT WINAPI RegistryDeleteValue( 
  HKEY hKey
  LPCTSTR pszSubKey,
  LPCTSTR pszValueName
 );
 
-/*--------------------------------------------------------------------
- * RegistryGetDWORD  [function]
- * surface: ce-only
- * library: aygshell.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee488582(v=winembedded.60).html
- */
+/* RegistryGetDWORD  [function; ce-only; CE 6.0..699; aygshell.lib] */
 HRESULT WINAPI RegistryGetDWORD( 
  HKEY hKey,
  LPCTSTR pszSubKey,
@@ -386,13 +86,7 @@ HRESULT WINAPI RegistryGetDWORD(
  DWORD* pdwData
 );
 
-/*--------------------------------------------------------------------
- * RegistryGetString  [function]
- * surface: ce-only
- * library: aygshell.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee488928(v=winembedded.60).html
- */
+/* RegistryGetString  [function; ce-only; CE 6.0..699; aygshell.lib] */
 HRESULT WINAPI RegistryGetString( 
  HKEY hKey,
  LPCTSTR pszSubKey,
@@ -401,13 +95,7 @@ HRESULT WINAPI RegistryGetString(
  UINT cchData 
 );
 
-/*--------------------------------------------------------------------
- * RegistryNotifyApp  [function]
- * surface: ce-only
- * library: aygshell.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee488776(v=winembedded.60).html
- */
+/* RegistryNotifyApp  [function; ce-only; CE 6.0..699; aygshell.lib] */
 HRESULT WINAPI RegistryNotifyApp( 
  HKEY hKey,
  LPCTSTR pszSubKey,
@@ -421,13 +109,7 @@ HRESULT WINAPI RegistryNotifyApp(
  NOTIFICATIONCONDITION* pCondition
 );
 
-/*--------------------------------------------------------------------
- * RegistryNotifyCallback  [function, typedef]
- * surface: ce-only
- * library: aygshell.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee487978(v=winembedded.60).html
- */
+/* RegistryNotifyCallback  [function, typedef; ce-only; CE 6.0..699; aygshell.lib] */
 HRESULT WINAPI RegistryNotifyCallback(
  HKEY hKey,
  LPCTSTR pszSubKey,
@@ -438,13 +120,7 @@ HRESULT WINAPI RegistryNotifyCallback(
  HREGNOTIFY * phNotify
 );
 
-/*--------------------------------------------------------------------
- * RegistryNotifyMsgQueue  [function]
- * surface: ce-only
- * library: aygshell.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee488614(v=winembedded.60).html
- */
+/* RegistryNotifyMsgQueue  [function; ce-only; CE 6.0..699; aygshell.lib] */
 HRESULT WINAPI RegistryNotifyMsgQueue(
  HKEY hKey,
  LPCTSTR pszSubKey,
@@ -455,13 +131,7 @@ HRESULT WINAPI RegistryNotifyMsgQueue(
  HREGNOTIFY* phNotify
 );
 
-/*--------------------------------------------------------------------
- * RegistryNotifyWindow  [function]
- * surface: ce-only
- * library: aygshell.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee488231(v=winembedded.60).html
- */
+/* RegistryNotifyWindow  [function; ce-only; CE 6.0..699; aygshell.lib] */
 HRESULT WINAPI RegistryNotifyWindow( 
  HKEY hKey,
  LPCTSTR pszSubKey,
@@ -473,13 +143,7 @@ HRESULT WINAPI RegistryNotifyWindow(
  HREGNOTIFY* phNotify
 );
 
-/*--------------------------------------------------------------------
- * RegistrySetDWORD  [function]
- * surface: ce-only
- * library: aygshell.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee488764(v=winembedded.60).html
- */
+/* RegistrySetDWORD  [function; ce-only; CE 6.0..699; aygshell.lib] */
 HRESULT WINAPI RegistrySetDWORD( 
  HKEY hKey,
  LPCTSTR pszSubKey,
@@ -487,13 +151,7 @@ HRESULT WINAPI RegistrySetDWORD(
  DWORD dwData 
 );
 
-/*--------------------------------------------------------------------
- * RegistrySetString  [function]
- * surface: ce-only
- * library: aygshell.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee488611(v=winembedded.60).html
- */
+/* RegistrySetString  [function; ce-only; CE 6.0..699; aygshell.lib] */
 HRESULT WINAPI RegistrySetString( 
  HKEY hKey,
  LPCTSTR pszSubKey,
@@ -501,24 +159,12 @@ HRESULT WINAPI RegistrySetString(
  LPCTSTR pszData 
 );
 
-/*--------------------------------------------------------------------
- * RegistryStopNotification  [function]
- * surface: ce-only
- * library: aygshell.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee488205(v=winembedded.60).html
- */
+/* RegistryStopNotification  [function; ce-only; CE 6.0..699; aygshell.lib] */
 HRESULT WINAPI RegistryStopNotification(
  LPCTSTR pszName
 );
 
-/*--------------------------------------------------------------------
- * RegistryTestExchangeDWORD  [function]
- * surface: ce-only
- * library: aygshell.lib
- * versions: 6.0..699
- * source: corpus/learn/windows-embedded-ce-6.0/ee488186(v=winembedded.60).html
- */
+/* RegistryTestExchangeDWORD  [function; ce-only; CE 6.0..699; aygshell.lib] */
 HRESULT WINAPI RegistryTestExchangeDWORD( 
  HKEY hKey,
  LPCTSTR pszSubKey,
@@ -527,5 +173,21 @@ HRESULT WINAPI RegistryTestExchangeDWORD(
  DWORD dwNewValue 
 );
 #endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* typedef */
+typedef void REGISTRYNOTIFYCALLBACK( HREGNOTIFY hNotify, DWORD dwUserData, const PBYTE pData, const UINT cbData );
+
+/* struct */
+typedef struct tagNOTIFICATIONCONDITION { REG_COMPARISONTYPE ctComparisonType; DWORD dwMask; union TargetValue { LPCTSTR psz; DWORD dw; };
+
+/* function */
+void AdjustPowerConsumption(HREGNOTIFY hNotify, DWORD dwUserData, const PBYTE pData, const UINT cbData);
+void REGISTRYNOTIFYCALLBACK( HREGNOTIFY hNotify, DWORD dwUserData, const PBYTE pData, const UINT cbData );
+VOID WINAPI RegistryBatchNotificaton( HREGNOTIFY hNotify, DWORD dwMillisecondsIdle, DWORD dwMillesecondsMax );
 
 #endif /* _REGEXT_ */
