@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 3 declarations, 10 outlines, 0 base types, 0 extra macros, 20 extra decls
+ * 0 constants, 3 declarations, 10 outlines, 0 base types, 0 extra macros, 21 extra decls
  */
 #ifndef _ATLBASE_
 #define _ATLBASE_

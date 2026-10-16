@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 15 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 16 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _LAP_
 #define _LAP_
@@ -54,6 +54,9 @@ VOID VerifyUserToTop();
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
+
+/* LAPCancelVerifySequence  [function; ce-only; CE 6.0..699] */
+BOOL LAPCancelVerifySequence();
 
 /* LAPDisplayCodeword  [function; ce-only; CE 6.0..699] */
 BOOL LAPDisplayCodeword(

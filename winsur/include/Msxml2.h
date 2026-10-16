@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 39 constants, 2 declarations, 0 outlines, 0 base types, 0 extra macros, 13 extra decls
+ * 39 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 11 extra decls
  */
 #ifndef _MSXML2_
 #define _MSXML2_
@@ -58,23 +58,6 @@
 #define XML_XMLNS_FIXED 0xC00CE01E
 
 /* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 5.0..599 */
-
-/* ISAXDeclHandler  [function; ce-only; CE 5.0..599; Uuid.lib] */
-... SAXXMLReader * r = ...
-SAXDeclHandler * dh = new SAXDeclHandler();
-r->putProperty("http://xml.org/sax/properties/declaration-handler",dh);
-
-/* ISAXLexicalHandler  [function; ce-only; CE 5.0..599; Uuid.lib] */
-... SAXXMLReader * r = ...
-SAXLexicalHandler * lh = new SAXLexicalHandler ();
-r->putProperty("http://xml.org/sax/properties/lexical-handler",lh);
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
@@ -82,8 +65,6 @@ r->putProperty("http://xml.org/sax/properties/lexical-handler",lh);
 /* function */
 HRESULT EndEntity(const wchar_t* pwchName,intcchName);
 HRESULT ParseURL(const wchar_t* pwchUrl);
-... SAXXMLReader * r = ... SAXDeclHandler * dh = new SAXDeclHandler(); r->putProperty("http://xml.org/sax/properties/declaration-handler",dh);
-... SAXXMLReader * r = ... SAXLexicalHandler * lh = new SAXLexicalHandler (); r->putProperty("http://xml.org/sax/properties/lexical-handler",lh);
 HRESULT get_length(long* dataLength);
 HRESULT get_readyState(long* value);
 HRESULT get_responseXML(Idispatch** ppBody);

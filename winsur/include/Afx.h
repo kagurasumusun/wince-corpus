@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 1 declarations, 1 outlines, 0 base types, 0 extra macros, 24 extra decls
+ * 0 constants, 1 declarations, 1 outlines, 0 base types, 0 extra macros, 25 extra decls
  */
 #ifndef _AFX_
 #define _AFX_
@@ -32,6 +32,17 @@ CTime m_atime;
 LONG m_size;
 BYTE m_attribute;
 TCHAR m_szFullName[_MAX_PATH];
+};
+
+/* _MAX_PATH  [extra struct] */
+struct CFileStatus
+{
+  CTime m_ctime;
+  CTime m_mtime;
+  CTime m_atime;
+  LONG m_size;
+  BYTE m_attribute;
+  TCHAR m_szFullName[_MAX_PATH];
 };
 
 /* ==================================================================

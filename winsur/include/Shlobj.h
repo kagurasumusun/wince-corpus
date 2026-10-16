@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 335 constants, 4 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 335 constants, 4 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _SHLOBJ_
 #define _SHLOBJ_
@@ -356,6 +356,9 @@
 /* ITEMIDLIST  [struct; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   mkid */
+
+/* idl  [extra struct] */
+typedef struct _ITEMIDLIST {- // idl };
 
 /* ==================================================================
  * functions and callbacks

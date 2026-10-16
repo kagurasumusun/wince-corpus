@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 61 declarations, 10 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 62 declarations, 10 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _D3DMX_
 #define _D3DMX_
@@ -17,7 +17,7 @@
 
 /* D3DMXDivFxd  [macro; ce-only] */
 #define D3DMXDivFxd( fxdA, fxdB ) ((FIXED) \
- (((_int64)(fxdA) << 16) / (_int64)(fxdB)))
+ (((_int64)(fxdA) << 16) / (_int64)(fxdB)));
 
 /* D3DMXMATRIX  [struct; ce-only] */
 
@@ -25,13 +25,13 @@
 
 /* D3DMXMulFxd  [macro; ce-only] */
 #define D3DMXMulFxd( fxdA, fxdB ) ((FIXED) \
- (((_int64)(fxdA) * (_int64)(fxdB)) >> 16))
+ (((_int64)(fxdA) * (_int64)(fxdB)) >> 16));
 
 /* D3DMXToDegree  [macro; ce-only] */
 
 /* D3DMXToDegreeFxd  [macro; ce-only] */
 #define D3DMXToDegreeFxd( radian ) \
- D3DMXMulFxd(radian, D3DMXDivFxd(D3DMXToFixed(180.0f), D3DMX_PI_FXD))
+ D3DMXMulFxd(radian, D3DMXDivFxd(D3DMXToFixed(180.0f), D3DMX_PI_FXD));
 
 /* D3DMXToFixed  [macro; ce-only] */
 
@@ -41,7 +41,7 @@
 
 /* D3DMXToRadianFxd  [macro; ce-only] */
 #define D3DMXToRadianFxd( degree ) \
- D3DMXMulFxd(degree, D3DMXDivFxd(D3DMX_PI_FXD, D3DMXToFixed(180.0f)))
+ D3DMXMulFxd(degree, D3DMXDivFxd(D3DMX_PI_FXD, D3DMXToFixed(180.0f)));
 
 /* D3DMXVECTOR3  [struct; ce-only] */
 

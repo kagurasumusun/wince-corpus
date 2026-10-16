@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1786 constants, 325 declarations, 18 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 1786 constants, 327 declarations, 18 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _COMMCTRL_
 #define _COMMCTRL_
@@ -1819,7 +1819,7 @@ VOID FORWARD_WM_NOTIFY(
 
 /* HANDLE_WM_NOTIFY  [macro, function; shared] */
 #define HANDLE_WM_NOTIFY(hwnd, wParam, lParam, fn) \ 
- (fn)((hwnd), (int)(wParam), (NMHDR FAR*)(lParam))
+ (fn)((hwnd), (int)(wParam), (NMHDR FAR*)(lParam));
 
 /* HD_ITEM  [struct; ce-only] */
 
@@ -1830,7 +1830,7 @@ int iIndex);
 
 /* Header_DeleteItem  [macro, function; shared; Commctrl.lib] */
 #define Header_DeleteItem(hwndHD, i) \
- (BOOL)SNDMSG((hwndHD), HDM_DELETEITEM, (WPARAM)(int)(i), 0L)
+ (BOOL)SNDMSG((hwndHD), HDM_DELETEITEM, (WPARAM)(int)(i), 0L);
 
 /* Header_GetImageList  [function, macro; shared; Commctrl.lib] */
 HIMAGELIST Header_GetImageList( 
@@ -1839,11 +1839,11 @@ HWND hwndHD);
 /* Header_GetItem  [macro, function; shared; Commctrl.lib] */
 #define Header_GetItem(hwndHD, i, phdi) \
  (BOOL)SNDMSG((hwndHD), HDM_GETITEM, (WPARAM)(int)(i), \
- (LPARAM)(HD_ITEM FAR*)(phdi))
+ (LPARAM)(HD_ITEM FAR*)(phdi));
 
 /* Header_GetItemCount  [macro, function; shared; Commctrl.lib] */
 #define Header_GetItemCount(hwndHD) \
- (int)SNDMSG((hwndHD), HDM_GETITEMCOUNT, 0, 0L)
+ (int)SNDMSG((hwndHD), HDM_GETITEMCOUNT, 0, 0L);
 
 /* Header_GetItemRect  [function, macro; shared; Commctrl.lib] */
 BOOL Header_GetItemRect( 
@@ -1860,12 +1860,12 @@ int *lpiArray );
 /* Header_InsertItem  [macro, function; shared; Commctrl.lib] */
 #define Header_InsertItem(hwndHD, i, phdi) \
  (int)SNDMSG((hwndHD), HDM_INSERTITEM, (WPARAM)(int)(i), \
- (LPARAM)(const HD_ITEM FAR*)(phdi))
+ (LPARAM)(const HD_ITEM FAR*)(phdi));
 
 /* Header_Layout  [macro, function; shared; Commctrl.lib] */
 #define Header_Layout(hwndHD, playout) \
  (BOOL)SNDMSG((hwndHD), HDM_LAYOUT, 0, \
- (LPARAM)(HD_LAYOUT FAR*)(playout))
+ (LPARAM)(HD_LAYOUT FAR*)(playout));
 
 /* Header_OrderToIndex  [function, macro; shared; Commctrl.lib] */
 int Header_OrderToIndex( 
@@ -2373,6 +2373,9 @@ PVOID ACM_Open(
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
+
+/* CommDlgExtendedError  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commdlg.lib, commdlg.lib] */
+DWORD CommDlgExtendedError();
 
 /* CreateStatusWindow  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib; A/W CreateStatusWindowA,CreateStatusWindowW (CE is W-side)] */
 HWND CreateStatusWindow(
@@ -3316,6 +3319,12 @@ int ListView_GetGroupInfo(
  int iGroupId,
  PLVGROUP pgrp
 );
+
+/* ListView_GetGroupInfoByIndex  [function; shared; CE 5.0..699] */
+BOOL ListView_GetGroupInfoByIndex(
+ HWND hwnd,
+ int iIndex,
+ PLVGROUP pgrp);
 
 /* ListView_GetToolTips  [function; shared; CE 5.0..699] */
 HWND ListView_GetToolTips(

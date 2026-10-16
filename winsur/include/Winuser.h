@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2457 constants, 304 declarations, 7 outlines, 1 base types, 0 extra macros, 0 extra decls
+ * 2457 constants, 305 declarations, 7 outlines, 1 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINUSER_
 #define _WINUSER_
@@ -4432,6 +4432,9 @@ HWND GetCapture(void);
 BOOL GetClipCursor( 
  LPRECT lpRect
 );
+
+/* GetCursor  [function; shared; CE 2.11..2.12, 3.0..699; Cursor.lib, cursor.lib, Mcursor.lib, mcursor.lib] */
+HCURSOR GetCursor(void);
 
 /* GetCursorPos  [function; shared; CE 2.11..2.12, 3.0..699; Cursor.lib, cursor.lib, Mcursor.lib, mcursor.lib] */
 BOOL GetCursorPos( 

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 2 declarations, 3 outlines, 0 base types, 0 extra macros, 22 extra decls
+ * 0 constants, 2 declarations, 3 outlines, 0 base types, 0 extra macros, 23 extra decls
  */
 #ifndef _DMUSICC_
 #define _DMUSICC_
@@ -61,6 +61,7 @@ HRESULT GetDLId( DWORD* pdwStartDLId, DWORD dwCount );
 HRESULT GetMaxBytes( LPDWORD pcb );
 HRESULT GetRawBufferPtr( LPBYTE* ppData );
 HRESULT GetUsedBytes( LPDWORD pcb );
+HRESULT ResetReadPtr()
 HRESULT SetChannelPriority( DWORD dwChannelGroup, DWORD dwChannel, DWORD dwPriority );
 HRESULT SetNumChannelGroups( DWORD dwChannelGroups );
 HRESULT SetPatch( DWORD dwPatch );

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 32 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 32 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _MSGSTORE_
 #define _MSGSTORE_
@@ -65,6 +65,30 @@ typedef struct _MAILSORTINFO {
  BOOL fAscending;
  int cMsgs;
 } MAILSORTINFO, *PMAILSORTINFO;
+
+/* lpMailAtt  [extra struct] */
+typedef struct MailAtt_s {
+  UINT uiAttachmentNumber;
+  DWORD dwFlags;
+  ULONG ulCharacterPosition;
+  ULONG ulSize;
+  LPWSTR szOriginalName;
+  LPWSTR szLocalName;
+} MailAtt, *lpMailAtt;
+
+/* lpMailAttArray  [extra struct] */
+typedef struct MailAttArray_s {
+  DWORD dwFlags;
+  UINT uiAttCount;
+  lpMailAtt AttArray[];
+} MailAttArray, *lpMailAttArray;
+
+/* lpMailNonIpmInfo  [extra struct] */
+typedef struct MailNonIpmInfo_s {
+  LPWSTR szMessageClass;
+  UINT uiPropcount;
+  CEPROPVAL propArray[];
+} MailNonIpmInfo, *lpMailNonIpmInfo;
 
 /* ==================================================================
  * functions and callbacks

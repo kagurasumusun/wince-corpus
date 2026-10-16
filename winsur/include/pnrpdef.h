@@ -52,6 +52,10 @@ typedef enum
 typedef PNRP_RESOLVE_CRITERIA *PPNRP_RESOLVE_CRITERIA, *LPPNRP_RESOLVE_CRITERIA;
 
 /* PPNRP_CLOUD_ID  [extra struct] */
-typedef struct _PNRP_CLOUD_ID { INT AddressFamily; PNRP_SCOPE Scope; ULONG ScopeID;} PNRP_CLOUD_ID, *PPNRP_CLOUD_ID;
+typedef struct _PNRP_CLOUD_ID {
+  INT AddressFamily;
+  PNRP_SCOPE Scope;
+  ULONG ScopeID;
+} PNRP_CLOUD_ID, *PPNRP_CLOUD_ID;
 
 #endif /* _PNRPDEF_ */

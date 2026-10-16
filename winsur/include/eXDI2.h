@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 27 constants, 19 declarations, 1 outlines, 0 base types, 0 extra macros, 70 extra decls
+ * 27 constants, 19 declarations, 1 outlines, 0 base types, 0 extra macros, 73 extra decls
  */
 #ifndef _EXDI2_
 #define _EXDI2_
@@ -178,6 +178,7 @@ HRESULT AuthorizeTargetRestart( BOOL *pfContinue, DWORD *pdwRetryDelayMs);
 HRESULT ChangeExceptionAction( DWORD dwExceptionCode, EXCEPTION_DEFAULT_ACTION_TYPE2 efd2);
 HRESULT EnumAllCodeBps( TRISTATE_TYPE f3Enabled, IeXdi2EnumCodeBp** ppieXdi2EnumCodeBp);
 HRESULT EnumAllCpuRegs( IeXdi2EnumCpuRegs** ppieXdi2EnumCpuRegs);
+HRESULT EnumAllCpuRegsInGroup( DWORD dwGroupIdx, IeXdi2EnumCpuRegs** ppieXdi2EnumCpuRegs );
 HRESULT EnumAllDataBps( TRISTATE_TYPEf3Enabled, IeXdi2EnumDataBp** ppieXdi2EnumDataBp);
 HRESULT GetCurrentExecMode( DWORD dwCpuNum DWORD* pdwExecMode);
 HRESULT GetLinearMemMapList( [out] DWORD *pdwNbTotalMemMapInList, [out, size_is(,*pdwNbTotalMemMapInList)] MEMMAP_DESCRIPTION_TYPE **ppmmdTable);
@@ -194,6 +195,7 @@ HRESULT NotifyErrorState();
 HRESULT NotifyReset();
 HRESULT NotifyRun();
 HRESULT ReadClientScratchPad( [in] GUIDguidClient, [out] DWORD* pdwBuffOutSize, [out, size_is(,*pdwBuffOutSize)] BYTE** ppbBufferOut);
+HRESULT SingleStep( BOOL fIgnoreCurrentExcept, BOOL fOneCycleOnly );
 HRESULT UnlockHelper ();
 HRESULT UnlockProbe ();
 

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 660 constants, 114 declarations, 1 outlines, 0 base types, 0 extra macros, 14 extra decls
+ * 660 constants, 114 declarations, 1 outlines, 0 base types, 0 extra macros, 32 extra decls
  */
 #ifndef _TAPI_
 #define _TAPI_
@@ -1115,6 +1115,27 @@ typedef struct linegeneratetone_tag {
   DWORD dwCadenceOff;
   DWORD dwVolume;
 } LINEGENERATETONE, FAR* LPLINEGENERATETONE;
+
+/* linecallinfo_tag  [extra struct] */
+typedef struct linecallinfo_tag {- };
+
+/* Defaults  [extra struct] */
+typedef struct linecallparams_tag {- };
+
+/* linedevcaps_tag  [extra struct] */
+typedef struct linedevcaps_tag {- };
+
+/* linedevstatus_tag  [extra struct] */
+typedef struct linedevstatus_tag {- };
+
+/* lineextensionid_tag  [extra struct] */
+typedef struct lineextensionid_tag {- };
+
+/* linetranslatecaps_tag  [extra struct] */
+typedef struct linetranslatecaps_tag {- };
+
+/* linetranslateoutput_tag  [extra struct] */
+typedef struct linetranslateoutput_tag {- };
 
 /* ==================================================================
  * functions and callbacks

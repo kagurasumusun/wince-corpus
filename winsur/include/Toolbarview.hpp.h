@@ -33,11 +33,18 @@ enum BitmapType {
  btOk
 };
 
+/* btOk  [extra enum] */
+enum BitmapType {
+  btStdSmallColor,
+  btStdSmallMono,
+  btViewSmallColor,
+  btViewSmallMono,
+  btClose,
+  btOk
+};
+
 /* bt  [extra enum] */
 static HBITMAP LoadSystemBitmap(  enum BitmapType bt  );
-
-/* btOk  [extra enum] */
-enum BitmapType {btStdSmallColor,btStdSmallMono,btViewSmallColor,btViewSmallMono,btClose,btOk};
 
 /* BitmapTypebt  [extra enum] */
 static HBITMAP LoadSystemBitmap(enum BitmapTypebt);

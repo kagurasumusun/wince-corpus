@@ -17,7 +17,7 @@
 
 /* CTL_CODE  [macro, function; ce-only] */
 #define CTL_CODE( DeviceType, Function, Method, Access) (
- ((DeviceType) << 16) | ((Access) << 14) | ((Function) << 2) | (Method))
+ ((DeviceType) << 16) | ((Access) << 14) | ((Function) << 2) | (Method));
 
 /* ==================================================================
  * functions and callbacks

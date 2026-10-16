@@ -249,6 +249,28 @@ enum UPnPAVError
  ERROR_AV_UPNP_CD_REQUEST_FAILED = 720
 };
 
+/* strPossibleRecQualityModes  [extra struct] */
+struct DeviceCapabilities
+{
+  wstring strPossiblePlayMedia;
+  wstring strPossibleRecMedia;
+  wstring strPossibleRecQualityModes;
+};
+
+/* strWriteStatus  [extra struct] */
+struct MediaInfo
+{
+  unsigned long nNrTracks;
+  wstring strMediaDuration;
+  wstring strCurrentURI;
+  wstring strCurrentURIMetaData;
+  wstring strNextURI;
+  wstring strNextURIMetaData;
+  wstring strPlayMedium;
+  wstring strRecordMedium;
+  wstring strWriteStatus;
+};
+
 /* shown  [extra struct] */
 struct object
 {
@@ -260,23 +282,45 @@ struct object
   bool bRestricted;
 };
 
-/* strPossibleRecQualityModes  [extra struct] */
-struct DeviceCapabilities{ wstring strPossiblePlayMedia; wstring strPossibleRecMedia; wstring strPossibleRecQualityModes;};
+/* nAbsCount  [extra struct] */
+struct PositionInfo
+{
+  unsigned long nTrack;
+  wstring strTrackDuration;
+  wstring strTrackMetaData;
+  wstring strTrackURI;
+  wstring strRelTime;
+  wstring strAbsTime;
+  long nRelCount;
+  long nAbsCount;
+};
 
 /* bRecord  [extra struct] */
-struct TransportActions{ bool bPlay; bool bStop; bool bPause; bool bSeek; bool bNext; bool bPrevious; bool bRecord;};
+struct TransportActions
+{
+  bool bPlay;
+  bool bStop;
+  bool bPause;
+  bool bSeek;
+  bool bNext;
+  bool bPrevious;
+  bool bRecord;
+};
 
 /* strCurrentSpeed  [extra struct] */
-struct TransportInfo{ wstring strCurrentTransportState; wstring strCurrentTransportStatus; wstring strCurrentSpeed;};
+struct TransportInfo
+{
+  wstring strCurrentTransportState;
+  wstring strCurrentTransportStatus;
+  wstring strCurrentSpeed;
+};
 
 /* strRecQualityMode  [extra struct] */
-struct TransportSettings{ wstring strPlayMode; wstring strRecQualityMode;};
-
-/* strWriteStatus  [extra struct] */
-struct MediaInfo{ unsigned long nNrTracks; wstring strMediaDuration; wstring strCurrentURI; wstring strCurrentURIMetaData; wstring strNextURI; wstring strNextURIMetaData; wstring strPlayMedium; wstring strRecordMedium; wstring strWriteStatus;};
-
-/* nAbsCount  [extra struct] */
-struct PositionInfo{ unsigned long nTrack; wstring strTrackDuration; wstring strTrackMetaData; wstring strTrackURI; wstring strRelTime; wstring strAbsTime; long nRelCount; long nAbsCount;};
+struct TransportSettings
+{
+  wstring strPlayMode;
+  wstring strRecQualityMode;
+};
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

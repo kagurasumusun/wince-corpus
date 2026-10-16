@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 10 constants, 14 declarations, 4 outlines, 0 base types, 0 extra macros, 32 extra decls
+ * 10 constants, 14 declarations, 4 outlines, 0 base types, 0 extra macros, 33 extra decls
  */
 #ifndef _MLANG_
 #define _MLANG_
@@ -171,6 +171,14 @@ typedef struct tagUNICODERANGE {
  WCHAR wcTo;
 } UNICODERANGE;
 typedef UNICODERANGE *PUNICODERANGE, *LPUNICODERANGE;
+
+/* pDetectEncodingInfo  [extra struct] */
+typedef struct tagDetectEncodingInfo {
+  UINT nLangID;
+  UINT nCodePage;
+  INT nDocPercent;
+  INT nConfidence;
+} DetectEncodingInfo, *pDetectEncodingInfo;
 
 /* ==================================================================
  * functions and callbacks

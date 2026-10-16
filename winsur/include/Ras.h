@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 21 constants, 44 declarations, 1 outlines, 0 base types, 0 extra macros, 6 extra decls
+ * 21 constants, 44 declarations, 1 outlines, 0 base types, 0 extra macros, 11 extra decls
  */
 #ifndef _RAS_
 #define _RAS_
@@ -224,14 +224,14 @@ typedef struct tagRasCntlServerLine {
  BYTE DevConfig[1];
 } RASCNTL_SERVERLINE, *PRASCNTL_SERVERLINE;
 
-/* PBYTEpBuffer  [extra typedef] */
-typedef DWORD(APIENTRY *PFNRASFREEBUFFER)(PBYTEpBuffer );
-
 /* pdwSize  [extra typedef] */
-typedef DWORD (APIENTRY *PFNRASGETBUFFER)( PBYTE* ppBuffer,  PDWORD pdwSize  );
+typedef DWORD (APIENTRY *PFNRASGETBUFFER)(  PBYTE* ppBuffer,  PDWORD pdwSize  );
 
 /* hEvent  [extra typedef] */
-typedef DWORD (APIENTRY *PFNRASRECEIVEBUFFER)( HANDLE hPort, PBYTE pBuffer, PDWORD pdwSize, DWORD dwTimeout, HANDLE hEvent );
+typedef DWORD (APIENTRY *PFNRASRECEIVEBUFFER)(  HANDLE hPort,  PBYTE pBuffer,  PDWORD pdwSize,  DWORD dwTimeout,  HANDLE hEvent  );
+
+/* PBYTEpBuffer  [extra typedef] */
+typedef DWORD(APIENTRY *PFNRASFREEBUFFER)(PBYTEpBuffer );
 
 /* RASPPPIPW  [extra struct] */
 #define RASPPPIPW struct tagRASPPPIPW
@@ -245,6 +245,9 @@ RASPPPIPW
   DWORD dwServerOptions;
 };
 #define RASPPPIP RASPPPIPW;
+
+/* _RASDIALPARAMS  [extra struct] */
+typedef struct _RASDIALPARAMS {- };
 
 /* ==================================================================
  * functions and callbacks
@@ -328,5 +331,13 @@ DWORD RasSetEapUserData(
  DWORD dwSizeofEapData
 );
 #endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* function */
+RasIOControl IMPLICIT_DECL(  LPVOID hRasConn,  DWORD dwCode,  PBYTE pBufIn,  DWORD dwLenIn,  PBYTE pBufOut,  DWORD dwLenOut,  PDWORD pdwActualOut  );
 
 #endif /* _RAS_ */

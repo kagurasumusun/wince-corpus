@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 12 constants, 58 declarations, 2 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 12 constants, 58 declarations, 2 outlines, 0 base types, 0 extra macros, 8 extra decls
  */
 #ifndef _RAPI_
 #define _RAPI_
@@ -82,6 +82,20 @@ HANDLE CeCreateFile (
  DWORD dwCreationDisposition, 
  DWORD dwFlagsAndAttributes, 
  HANDLE hTemplateFile 
+);
+
+/* CeCreateProcess  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
+BOOL CeCreateProcess(
+ LPCWSTR lpApplicationName, 
+ LPCWSTR lpCommandLine, 
+ LPSECURITY_ATTRIBUTES lpProcessAttributes, 
+ LPSECURITY_ATTRIBUTES lpThreadAttributes, 
+ BOOL bInheritHandles, 
+ DWORD dwCreationFlags, 
+ LPVOID lpEnvironment, 
+ LPWSTR lpCurrentDirectory, 
+ LPSTARTUPINFO lpStartupInfo, 
+ LPPROCESS_INFORMATION lpProcessInformation 
 );
 
 /* CeDeleteFile  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
@@ -354,5 +368,13 @@ HRESULT CeSyncStart(
 /* CeSyncStop  [function; ce-only; CE 6.0..699; rapi.lib] */
 HRESULT CeSyncStop();
 #endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* function */
+DWORD PegGetLastError(void);
 
 #endif /* _RAPI_ */

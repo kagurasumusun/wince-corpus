@@ -17,6 +17,6 @@
  * ================================================================ */
 
 /* function */
-VOID SetTreadForOperation( PULONG Thread);
+VOID SetTreadForOperation( PULONG Thread );
 
 #endif /* _WDBGEXTS_ */

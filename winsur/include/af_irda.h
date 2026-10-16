@@ -79,7 +79,7 @@ typedef struct IRDA_DEVICE_INFO {
 /* _IRDA_DEVICE_INFO  [extra struct] */
 typedef struct IRDA_DEVICE_INFO { u_char irdaDeviceID[4]; char irdaDeviceName[22]; u_char Reserved[2]; } _IRDA_DEVICE_INFO;
 
-/* sockaddr_irda  [extra struct] */
+/* irdaServiceName  [extra struct] */
 struct sockaddr_irda {  u_short irdaAddressFamily;  u_char irdaDeviceID[4];  char irdaServiceName[25];};
 
 /* LPSOCKADDR_IRDA  [extra struct] */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 39 constants, 12 declarations, 0 outlines, 0 base types, 0 extra macros, 6 extra decls
+ * 39 constants, 12 declarations, 0 outlines, 0 base types, 0 extra macros, 7 extra decls
  */
 #ifndef _SSPI_
 #define _SSPI_
@@ -85,9 +85,62 @@ typedef struct _SecPkgContext_StreamSizes {
 }SecPkgContext_StreamSizes, *PSecPkgContext_StreamSizes;
 
 /* pSecPkgContext_Names  [extra struct] */
-typedef struct _SecPkgContext_Names {SEC_CHARSEC_FAR* sUserName;} SecPkgContext_Names, SEC_FAR *pSecPkgContext_Names;
+typedef struct _SecPkgContext_Names {  SEC_CHAR SEC_FAR *sUserName;  } SecPkgContext_Names, SEC_FAR * pSecPkgContext_Names;
+
+/* SECURITY_SUPPORT_PROVIDER_INTERFACE_VERSION  [extra struct] */
+typedef struct _SECURITY_FUNCTION_TABLE {
+  unsigned long dwVersion;
+  ENUMERATE_SECURITY_PACKAGES_FN EnumerateSecurityPackages;
+  void SEC_FAR *Reserved1;
+  ACQUIRE_CREDENTIALS_HANDLE_FN AcquireCredentialsHandle;
+  FREE_CREDENTIALS_HANDLE_FN FreeCredentialHandle;
+  void SEC_FAR *Reserved2;
+  INITIALIZE_SECURITY_CONTEXT_FN InitializeSecurityContextA;
+  ACCEPT_SECURITY_CONTEXT_FN AcceptSecurityContext;
+  COMPLETE_AUTH_TOKEN_FN CompleteAuthToken;
+  DELETE_SECURITY_CONTEXT_FN DeleteSecurityContext;
+  APPLY_CONTROL_TOKEN_FN ApplyControlToken;
+  QUERY_CONTEXT_ATTRIBUTES_FN QueryContextAttributesA;
+  IMPERSONATE_SECURITY_CONTEXT_FN ImpersonateSecurityContext;
+  REVERT_SECURITY_CONTEXT_FN RevertSecurityContext;
+  MAKE_SIGNATURE_FN MakeSignature;
+  VERIFY_SIGNATURE_FN VerifySignature;
+  FREE_CONTEXT_BUFFER_FN FreeContextBuffer;
+  QUERY_SECURITY_PACKAGE_INFO_FN QuerySecurityPackageInfoA;
+  void SEC_FAR *Reserved3;
+  void SEC_FAR *Reserved4;
+} SecurityFunctionTable, * PSecurityFunctionTable;
+#define SECURITY_SUPPORT_PROVIDER_INTERFACE_VERSION;
 
 /* PSecurityFunctionTableW  [extra struct] */
-typedef struct _SECURITY_FUNCTION_TABLE_W { unsigned long dwVersion; ENUMERATE_SECURITY_PACKAGES_FN_W EnumerateSecurityPackagesW; QUERY_CREDENTIALS_ATTRIBUTES_FN_W QueryCredentialsAttributesW; ACQUIRE_CREDENTIALS_HANDLE_FN_W AcquireCredentialsHandleW; FREE_CREDENTIALS_HANDLE_FN FreeCredentialsHandle; void SEC_FAR *Reserved2; INITIALIZE_SECURITY_CONTEXT_FN_W InitializeSecurityContextW; ACCEPT_SECURITY_CONTEXT_FN AcceptSecurityContext; COMPLETE_AUTH_TOKEN_FN CompleteAuthToken; DELETE_SECURITY_CONTEXT_FN DeleteSecurityContext; APPLY_CONTROL_TOKEN_FN ApplyControlToken; QUERY_CONTEXT_ATTRIBUTES_FN_W QueryContextAttributesW; IMPERSONATE_SECURITY_CONTEXT_FN ImpersonateSecurityContext; REVERT_SECURITY_CONTEXT_FN RevertSecurityContext; MAKE_SIGNATURE_FN MakeSignature; VERIFY_SIGNATURE_FN VerifySignature; FREE_CONTEXT_BUFFER_FN FreeContextBuffer; QUERY_SECURITY_PACKAGE_INFO_FN_W QuerySecurityPackageInfoW; void SEC_FAR * Reserved3; void SEC_FAR * Reserved4; void SEC_FAR * Reserved5; void SEC_FAR * Reserved6; void SEC_FAR * Reserved7; void SEC_FAR * Reserved8; QUERY_SECURITY_CONTEXT_TOKEN_FN QuerySecurityContextToken; ENCRYPT_MESSAGE_FN EncryptMessage; DECRYPT_MESSAGE_FN DecryptMessage;} SecurityFunctionTableW, SEC_FAR * PSecurityFunctionTableW;
+typedef struct _SECURITY_FUNCTION_TABLE_W {
+  unsigned long dwVersion;
+  ENUMERATE_SECURITY_PACKAGES_FN_W EnumerateSecurityPackagesW;
+  QUERY_CREDENTIALS_ATTRIBUTES_FN_W QueryCredentialsAttributesW;
+  ACQUIRE_CREDENTIALS_HANDLE_FN_W AcquireCredentialsHandleW;
+  FREE_CREDENTIALS_HANDLE_FN FreeCredentialsHandle;
+  void SEC_FAR *Reserved2;
+  INITIALIZE_SECURITY_CONTEXT_FN_W InitializeSecurityContextW;
+  ACCEPT_SECURITY_CONTEXT_FN AcceptSecurityContext;
+  COMPLETE_AUTH_TOKEN_FN CompleteAuthToken;
+  DELETE_SECURITY_CONTEXT_FN DeleteSecurityContext;
+  APPLY_CONTROL_TOKEN_FN ApplyControlToken;
+  QUERY_CONTEXT_ATTRIBUTES_FN_W QueryContextAttributesW;
+  IMPERSONATE_SECURITY_CONTEXT_FN ImpersonateSecurityContext;
+  REVERT_SECURITY_CONTEXT_FN RevertSecurityContext;
+  MAKE_SIGNATURE_FN MakeSignature;
+  VERIFY_SIGNATURE_FN VerifySignature;
+  FREE_CONTEXT_BUFFER_FN FreeContextBuffer;
+  QUERY_SECURITY_PACKAGE_INFO_FN_W QuerySecurityPackageInfoW;
+  void SEC_FAR * Reserved3;
+  void SEC_FAR * Reserved4;
+  void SEC_FAR * Reserved5;
+  void SEC_FAR * Reserved6;
+  void SEC_FAR * Reserved7;
+  void SEC_FAR * Reserved8;
+  QUERY_SECURITY_CONTEXT_TOKEN_FN QuerySecurityContextToken;
+  ENCRYPT_MESSAGE_FN EncryptMessage;
+  DECRYPT_MESSAGE_FN DecryptMessage;
+} SecurityFunctionTableW, SEC_FAR * PSecurityFunctionTableW;
 
 #endif /* _SSPI_ */

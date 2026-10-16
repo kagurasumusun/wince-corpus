@@ -29,6 +29,9 @@ int WINAPI WinMain(HINSTANCE h, HINSTANCE p, LPWSTR cmd, int show) {
     MessageBox(NULL, TEXT("hi"), TEXT("t"), 0);
     GetLastError();
     InitializeCriticalSection(NULL);
+    Sleep(0);
+    LoadLibrary(TEXT("x"));
+    CreateProcess(NULL, TEXT("x"), NULL, NULL, FALSE, 0, NULL, NULL, NULL, NULL);
     return 0;
 }
 '''

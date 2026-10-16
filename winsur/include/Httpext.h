@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 21 constants, 4 declarations, 4 outlines, 0 base types, 0 extra macros, 6 extra decls
+ * 21 constants, 4 declarations, 4 outlines, 0 base types, 0 extra macros, 7 extra decls
  */
 #ifndef _HTTPEXT_
 #define _HTTPEXT_
@@ -65,6 +65,9 @@ typedef struct _HSE_SEND_HEADER_EX_INFO{
  DWORD cchHeader;
  BOOL fKeepConn;
 } HSE_SEND_HEADER_EX_INFO, *LPHSE_SEND_HEADER_EX_INFO;
+
+/* ul2  [extra enum] */
+BOOL WINAPI *ServerSupportFunction(  PHTTP_FILTER_CONTEXT pfc,  enum SF_REQ_TYPE sfReq,  PVOID pData,  DWORD ul1,  DWORD ul2 );
 
 /* ==================================================================
  * functions and callbacks

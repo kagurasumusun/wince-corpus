@@ -52,11 +52,11 @@ typedef struct _DDVIDEOPORTCAPS {
  WORD wNumFilterTapsY; 
 } DDVIDEOPORTCAPS, *LPDDVIDEOPORTCAPS;
 
-/* LPDIRECTDRAWVIDEOPORT  [extra struct] */
-typedef struct IDirectDrawVideoPort FAR *LPDIRECTDRAWVIDEOPORT;
-
 /* LPDDVIDEOPORTCONTAINER  [extra struct] */
 typedef struct IDDVideoPortContainer FAR *LPDDVIDEOPORTCONTAINER;
+
+/* LPDIRECTDRAWVIDEOPORT  [extra struct] */
+typedef struct IDirectDrawVideoPort FAR *LPDIRECTDRAWVIDEOPORT;
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

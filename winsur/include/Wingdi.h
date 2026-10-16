@@ -1368,7 +1368,7 @@ BYTE GetRValue(
 /* RGB  [macro, function; shared] */
 #define RGB(r, g ,b) ((DWORD) (((BYTE) (r) | \ 
  ((WORD) (g) << 8)) | \ 
- (((DWORD) (BYTE) (b)) << 16)))
+ (((DWORD) (BYTE) (b)) << 16)));
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

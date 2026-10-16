@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 9 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 13 extra decls
+ * 9 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 24 extra decls
  */
 #ifndef _DVDDRVR_IDL_
 #define _DVDDRVR_IDL_
@@ -103,12 +103,21 @@ HRESULT GetDMAChannelCount(DWORD* pdwChannels);
 HRESULT GetHighlightedButton(BYTE* buttonNumber);
 HRESULT GetMaxOutstandingTransfers(DWORD* pdwTransfers,DWORD* pdwMaxSize);
 HRESULT GetPendingTransfersCount(DWORD* pdwPending);
+HRESULT Highlight( BYTE buttonNumber, EHighlightAction action, BOOL bRelativeMode );
 HRESULT OnDiscontinuity();
+HRESULT RegisterSyncEvent( EDVDSyncEventType eType, HANDLE h, void* pDataLock, DWORD dwMaxDataSize, void* pEventData );
+HRESULT RequestTransfer( PHYSICAL_ADDRESS physStart, DWORD dwSize,  VOID* pva, DWORD* pdwPending );
+HRESULT Scan( BOOL bForward, double dRate, double* dwActual, DWORD* bVobuSkip );
+HRESULT SetAPS( DWORD apsType, DWORD* pdwCookie );
 HRESULT SetAspectRatioMode(EDVDAspectRatioModeenumAspectRatioMode);
 HRESULT SetAudioStreamNumber(intiDecodingNumber);
 HRESULT SetAudioStreamType(EDVDAudioStreamTypedwSelectedDecoder);
+HRESULT SetBitstreamType( DWORD dwBitstreamType );
 HRESULT SetContentAspectRatio(EDVDDisplayAspectRatioenumDisplayAspectRatio);
+HRESULT SetDataNotificationThreshold( DWORD dwPendingThreshold );
 HRESULT SetDisplayAspectRatio(EDVDDisplayAspectRatioenumDisplayAspectRatio);
 HRESULT SetSubpictureStreamNumber(intiDecodingNumber,BOOL bDisplay);
+HRESULT Slow( BOOL bForward, double dRate, double* dwActual );
+HRESULT UnregisterSyncEvent( EDVDSyncEventType etype, HANDLE h );
 
 #endif /* _DVDDRVR_IDL_ */

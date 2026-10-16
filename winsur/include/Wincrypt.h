@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 580 constants, 195 declarations, 3 outlines, 0 base types, 0 extra macros, 35 extra decls
+ * 580 constants, 195 declarations, 3 outlines, 0 base types, 0 extra macros, 74 extra decls
  */
 #ifndef _WINCRYPT_
 #define _WINCRYPT_
@@ -822,11 +822,27 @@ typedef const CRYPT_OID_INFO CCRYPT_OID_INFO, *PCCRYPT_OID_INFO;
 /* SECURITY_INFORMATION  [extra typedef] */
 typedef DWORD SECURITY_INFORMATION;
 
+/* PCERT_ENHKEY_USAGE  [extra struct] */
+typedef struct _CTL_USAGE {  DWORD cUsageIdentifier;  LPSTR *rgpszUsageIdentifier;  } CTL_USAGE, *PCTL_USAGE, CERT_ENHKEY_USAGE, *PCERT_ENHKEY_USAGE;
+
 /* CRYPT_OBJID  [extra struct] */
-typedef struct _CRYPTOAPI_BLOB { DWORD cbData; BYTE* pbData;} CRYPT_INTEGER_BLOB, *PCRYPT_INTEGER_BLOB, CRYPT_UINT_BLOB, *PCRYPT_UINT_BLOB, CRYPT_OBJID;
+typedef struct _CRYPTOAPI_BLOB {  DWORD cbData;  BYTE* pbData;  } CRYPT_INTEGER_BLOB, *PCRYPT_INTEGER_BLOB, CRYPT_UINT_BLOB, *PCRYPT_UINT_BLOB, CRYPT_OBJID;
 
 /* CMSG_ATTR  [extra struct] */
-typedef struct _CRYPT_ATTRIBUTES { DWORD cAttr; PCRYPT_ATTRIBUTE rgAttr;} CRYPT_ATTRIBUTES, *PCRYPT_ATTRIBUTES, CMSG_ATTR;
+typedef struct _CRYPT_ATTRIBUTES {  DWORD cAttr;  PCRYPT_ATTRIBUTE rgAttr;  } CRYPT_ATTRIBUTES, *PCRYPT_ATTRIBUTES, CMSG_ATTR;
+
+/* phWnd  [extra struct] */
+typedef struct _VTableProvStruc {
+  DWORD Version;
+  FARPROC FuncVerifyImage;
+  FARPROC FuncReturnhWnd;
+  DWORD dwProvType;
+  BYTE* pbContextInfo;
+  DWORD cbContextInfo;
+  LPWSTR pszProvName;
+} VTableProvStruc, *PVTableProvStruc;
+BOOL FuncVerifyImage(LPCSTR lpszImage, BYTE *pSigData);
+BOOL FuncReturnhWnd(DWORD *phWnd);
 
 /* ==================================================================
  * functions and callbacks
@@ -1027,6 +1043,14 @@ BOOL WINAPI CertGetCertificateContextProperty(
  DWORD* pcbData
 );
 
+/* CertGetEnhancedKeyUsage  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
+BOOL WINAPI CertGetEnhancedKeyUsage(
+ PCCERT_CONTEXT pCertContext,
+ DWORD dwFlags,
+ PCERT_ENHKEY_USAGE pUsage,
+ DWORD* pcbUsage
+);
+
 /* CertGetNameString  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib; A/W CertGetNameStringA,CertGetNameStringW (CE is W-side)] */
 DWORD WINAPI CertGetNameString(
  PCCERT_CONTEXT pCertContext,
@@ -1077,6 +1101,12 @@ BOOL WINAPI CertSetCertificateContextProperty(
  DWORD dwPropId,
  DWORD dwFlags,
  const void* pvData
+);
+
+/* CertSetEnhancedKeyUsage  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
+BOOL WINAPI CertSetEnhancedKeyUsage(
+ PCCERT_CONTEXT pCertContext,
+ PCERT_ENHKEY_USAGE pUsage
 );
 
 /* CertStrToName  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib; A/W CertStrToNameA,CertStrToNameW (CE is W-side)] */

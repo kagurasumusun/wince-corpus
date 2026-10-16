@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 2 declarations, 0 outlines, 0 base types, 0 extra macros, 15 extra decls
+ * 0 constants, 2 declarations, 0 outlines, 0 base types, 0 extra macros, 23 extra decls
  */
 #ifndef _OSACCESS_
 #define _OSACCESS_
@@ -21,5 +21,6 @@ HRESULT Disable(void);
 HRESULT GetFullThdContextRegList( IeXdi2EnumCpuRegs**ppiOsAxsEnumCpuRegThreadCtx);
 HRESULT GetPageSize( DWORD*pdwVmPageSize);
 HRESULT NotifyModuledOle( VARIANTvtModId, VARIANTvtLoaded);
+HRESULT SingleStepInCurThread( BOOL fIgnoreCurrentExcept, BOOL fOneCycleOnly );
 
 #endif /* _OSACCESS_ */

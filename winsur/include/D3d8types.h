@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 42 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 44 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _D3D8TYPES_
 #define _D3D8TYPES_
@@ -22,7 +22,7 @@
 #define D3DFVF_TEXCOORDSIZE3(CoordIndex) (D3DFVF_TEXTUREFORMAT3 << \
  (CoordIndex*2 + 16))
 #define D3DFVF_TEXCOORDSIZE4(CoordIndex) (D3DFVF_TEXTUREFORMAT4 << \
- (CoordIndex*2 + 16))
+ (CoordIndex*2 + 16));
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -573,5 +573,15 @@ typedef struct _D3DPRESENT_PARAMETERS_ {
  UINT FullScreen_PresentationInterval;
 } D3DPRESENT_PARAMETERS;
 typedef D3DPRESENT_PARAMETERS *PD3DPRESENT_PARAMETERS, *LPD3DPRESENT_PARAMETERS;
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x500)) /* CE 4.0..499 */
+
+/* D3DTS_WORLD  [function; ce-only; CE 4.0..499] */
+D3DTS_WORLD D3DTS_WORLDMATRIX(0);
+#endif /* _WIN32_WCE */
 
 #endif /* _D3D8TYPES_ */

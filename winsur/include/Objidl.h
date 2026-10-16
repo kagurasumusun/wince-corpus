@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 45 constants, 12 declarations, 37 outlines, 0 base types, 0 extra macros, 70 extra decls
+ * 45 constants, 12 declarations, 37 outlines, 0 base types, 0 extra macros, 75 extra decls
  */
 #ifndef _OBJIDL_
 #define _OBJIDL_
@@ -252,7 +252,9 @@ HRESULT GetData( FORMATETC* pFormatetc, STGMEDIUM* pmedium );
 HRESULT GetDataHere( FORMATETC* pFormatetc, STGMEDIUM* pmedium );
 HRESULT HandsOfStorage(void);
 void HeapMinimize();
+HRESULT ImpersonateClient( )
 HRESULT IsDirty(void);
+BOOL IsImpersonating( )
 HRESULT LockRunning( BOOL fLock, BOOL fLastUnlockCloses );
 HRESULT NoteChangeTime( DWORD dwRegister, FILETIME *pfiletime );
 HRESULT OnProgress( DWORD dwProgressCurrent, DWORD dwProgressMaximum, BOOL fAccurate, BOOL fOwner );
@@ -275,6 +277,7 @@ void* Realloc(  void* pv,  ULONG cb  );
 HRESULT ReleaseBoundObjects(void);
 HRESULT RenameElement( const WCHAR *pwcsOldName, const WCHAR *pwcsNewName );
 HRESULT Revert( void );
+HRESULT RevertToSelf( )
 HRESULT Revoke( DWORD dwRegister );
 HRESULT RevokeInterfaceFromGlobal( DWORD dwCookie );
 HRESULT SetBindOptions( BIND_OPTS* pbindopts );

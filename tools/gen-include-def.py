@@ -1490,15 +1490,20 @@ def load_unified_declarations():
 
 def _keepable_c_decl(text, name, kind):
     text = (text or "").replace("\\n", "\n")
+    # Derived punctuation: a syntax PRE that prints the prototype but
+    # drops ';' is still that page's declaration.
+    if kind in ("function", "callback") and "(" in text and not text.rstrip().endswith(";"):
+        if re.search(r"\)\s*$", text.rstrip()):
+            text = text.rstrip() + ";"
     if quality_filters.is_cpp_or_managed(text, name):
-        return False
+        return ""
     if quality_filters.is_broken_c(text):
-        return False
+        return ""
     if quality_filters.decl_unusable_for_c(text, name):
-        return False
+        return ""
     if kind in ("function", "callback") and not looks_like_c_declaration(text):
-        return False
-    return bool(text and text.strip())
+        return ""
+    return text if text and text.strip() else ""
 
 
 def overlay_unified_surface(by_header, printed_forms, by_module, all_entities):
@@ -1534,7 +1539,8 @@ def overlay_unified_surface(by_header, printed_forms, by_module, all_entities):
         text = (rec.get("text") or "").replace("\\n", "\n")
         if not name or name in have:
             continue
-        if not _keepable_c_decl(text, name, kind):
+        text = _keepable_c_decl(text, name, kind)
+        if not text:
             continue
         if kind == "function" and name.isupper() \
                 and not name.startswith(("READ_", "WRITE_")):
@@ -1614,7 +1620,8 @@ def overlay_unified_surface(by_header, printed_forms, by_module, all_entities):
                 text = (rec.get("declaration") or rec.get("text") or "").replace("\\n", "\n")
                 if not name or name in have:
                     continue
-                if not _keepable_c_decl(text, name, kind):
+                text = _keepable_c_decl(text, name, kind)
+                if not text:
                     continue
                 if kind == "function" and name.isupper() \
                         and not name.startswith(("READ_", "WRITE_")):
@@ -2008,6 +2015,13 @@ _CORE_TYPEDEFS = (
     ("CRITICAL_SECTION",
      "typedef struct _CRITICAL_SECTION CRITICAL_SECTION, "
      "*PCRITICAL_SECTION, *LPCRITICAL_SECTION;"),
+    ("STARTUPINFOW",
+     "typedef struct _STARTUPINFOW STARTUPINFOW, *LPSTARTUPINFOW;"),
+    ("STARTUPINFO",
+     "typedef STARTUPINFOW STARTUPINFO, *LPSTARTUPINFO;"),
+    ("PROCESS_INFORMATION",
+     "typedef struct _PROCESS_INFORMATION PROCESS_INFORMATION, "
+     "*LPPROCESS_INFORMATION, *PPROCESS_INFORMATION;"),
 )
 
 _WINDEF_NEED = (
@@ -2047,6 +2061,8 @@ _C_KNOWN_TYPES = {
     "LPOVERLAPPED", "POVERLAPPED", "OVERLAPPED",
     "LPCRITICAL_SECTION", "PCRITICAL_SECTION", "CRITICAL_SECTION",
     "LPSECURITY_ATTRIBUTES",
+    "STARTUPINFOW", "LPSTARTUPINFOW", "STARTUPINFO", "LPSTARTUPINFO",
+    "PROCESS_INFORMATION", "LPPROCESS_INFORMATION", "PPROCESS_INFORMATION",
 }
 
 
@@ -3341,7 +3357,11 @@ def run_unified(args):
                              if item.get("scope") == "this-api"):
                     head.append(f"/* {item['text']} */")
                 if declaration is not None:
-                    head.append(declaration["text"])
+                    txt = declaration["text"] or ""
+                    if "(" in txt and not txt.rstrip().endswith(";"):
+                        if re.search(r"\)\s*$", txt.rstrip()):
+                            txt = txt.rstrip() + ";"
+                    head.append(txt)
                     if bucket_key == "types" and ename:
                         body = declaration.get("text") or ""
                         if re.search(r"\btypedef\s+(struct|union|enum)\b", body) \

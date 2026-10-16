@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 3 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 3 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _FATUI_
 #define _FATUI_
@@ -31,5 +31,8 @@ DWORD idsEventCaption;
 DWORD cuiParams; 
 UIPARAM auiParams[4]; }; 
 typedef struct _FATUIDATA FATUIDATA, *PFATUIDATA;
+
+/* dwValue  [extra struct] */
+struct _UIPARAM {  DWORD dwType,  DWORD dwValue };
 
 #endif /* _FATUI_ */

@@ -76,12 +76,18 @@ class GluedPrototypeTests(unittest.TestCase):
             "PCHAR CONTAINING_RECORD(PCHAR Address, TYPE Type, PCHAR Field);",
             "CONTAINING_RECORD"))
         self.assertTrue(q.is_broken_c("InterlockedExchangeAdd(\n PLONG Addend,\n LONG Increment\n);"))
-        self.assertTrue(q.is_broken_c("HCURSOR GetCursor(void)"))
+        self.assertFalse(q.is_broken_c("HCURSOR GetCursor(void)"))
+        self.assertTrue(q.looks_like_c_declaration("HCURSOR GetCursor(void)"))
 
     def test_boolean_param_is_not_glued(self):
         text = ("PVOID MmMapIoSpace(PHYSICAL_ADDRESS PhysicalAddress, "
                 "ULONG NumberOfBytes, BOOLEAN CacheEnable);")
         self.assertFalse(q.is_glued_prototype(text))
+        self.assertTrue(q.looks_like_c_declaration(text))
+
+    def test_missing_semicolon_port_proto_is_kept(self):
+        text = "UCHAR READ_PORT_UCHAR ( PUCHAR Port )"
+        self.assertFalse(q.is_broken_c(text))
         self.assertTrue(q.looks_like_c_declaration(text))
 
     def test_hungarian_arg_as_type_is_broken(self):

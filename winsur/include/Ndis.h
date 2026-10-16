@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 9 constants, 336 declarations, 3 outlines, 0 base types, 2 extra macros, 39 extra decls
+ * 9 constants, 336 declarations, 3 outlines, 0 base types, 2 extra macros, 49 extra decls
  */
 #ifndef _NDIS_
 #define _NDIS_

@@ -28,11 +28,11 @@
 /* D3DMCOLOR_ARGB  [macro; ce-only] */
 #define D3DMCOLOR_ARGB(a,r,g,b) \
  ((D3DMCOLOR)((((a)&0xff)<<24)|(((r)&0xff)<<16)| \
- (((g)&0xff)<<8)|((b)&0xff)))
+ (((g)&0xff)<<8)|((b)&0xff)));
 
 /* D3DMFVF_TEXCOORDFIXED  [macro; ce-only] */
 #define D3DMFVF_TEXCOORDFIXED(CoordIndex) \
- (D3DMFVF_TEXCOORDFORMAT_FIXED << (CoordIndex*2 + 24))
+ (D3DMFVF_TEXCOORDFORMAT_FIXED << (CoordIndex*2 + 24));
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

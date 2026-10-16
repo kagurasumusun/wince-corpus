@@ -34,7 +34,7 @@
  (((ARGB) ((a) & 0xff) << ALPHA_SHIFT)| \
  ((ARGB) ((r) & 0xff) << RED_SHIFT) | \
  ((ARGB) ((g) & 0xff) << GREEN_SHIFT)| \
- ((ARGB) ((b) & 0xff) << BLUE_SHIFT))
+ ((ARGB) ((b) & 0xff) << BLUE_SHIFT));
 
 /* PixelFormat  [typedef, function; ce-only] */
 
@@ -164,17 +164,61 @@ enum SinkFlags {
  SinkFlagsWantProps = 0x00200000
 };
 
+/* BufferDisposalFlagUnmapView  [extra enum] */
+enum BufferDisposalFlag {
+  BufferDisposalFlagNone,
+  BufferDisposalFlagGlobalFree,
+  BufferDisposalFlagCoTaskMemFree,
+  BufferDisposalFlagUnmapView
+};
+
 /* x0002  [extra enum] */
-enum DecoderInitFlag { DecoderInitFlagNone = 0, DecoderInitFlagNoBlock = 0x0001, DecoderInitFlagBuiltIn1st = 0x0002};
+enum DecoderInitFlag {
+  DecoderInitFlagNone = 0,
+  DecoderInitFlagNoBlock = 0x0001,
+  DecoderInitFlagBuiltIn1st = 0x0002
+};
 
 /* EncoderValueFrameDimensionPage  [extra enum] */
-enum EncoderValue { EncoderValueColorTypeCMYK, EncoderValueColorTypeYCCK, EncoderValueCompressionLZW, EncoderValueCompressionCCITT3, EncoderValueCompressionCCITT4, EncoderValueCompressionRle, EncoderValueCompressionNone, EncoderValueScanMethodInterlaced, EncoderValueScanMethodNonInterlaced, EncoderValueVersionGif87, EncoderValueVersionGif89, EncoderValueRenderProgressive, EncoderValueRenderNonProgressive, EncoderValueTransformRotate90, EncoderValueTransformRotate180, EncoderValueTransformRotate270, EncoderValueTransformFlipHorizontal, EncoderValueTransformFlipVertical, EncoderValueMultiFrame, EncoderValueLastFrame, EncoderValueFlush, EncoderValueFrameDimensionTime, EncoderValueFrameDimensionResolution, EncoderValueFrameDimensionPage};
+enum EncoderValue {
+  EncoderValueColorTypeCMYK,
+  EncoderValueColorTypeYCCK,
+  EncoderValueCompressionLZW,
+  EncoderValueCompressionCCITT3,
+  EncoderValueCompressionCCITT4,
+  EncoderValueCompressionRle,
+  EncoderValueCompressionNone,
+  EncoderValueScanMethodInterlaced,
+  EncoderValueScanMethodNonInterlaced,
+  EncoderValueVersionGif87,
+  EncoderValueVersionGif89,
+  EncoderValueRenderProgressive,
+  EncoderValueRenderNonProgressive,
+  EncoderValueTransformRotate90,
+  EncoderValueTransformRotate180,
+  EncoderValueTransformRotate270,
+  EncoderValueTransformFlipHorizontal,
+  EncoderValueTransformFlipVertical,
+  EncoderValueMultiFrame,
+  EncoderValueLastFrame,
+  EncoderValueFlush,
+  EncoderValueFrameDimensionTime,
+  EncoderValueFrameDimensionResolution,
+  EncoderValueFrameDimensionPage
+};
 
 /* x00200000  [extra enum] */
-enum SinkFlags { SinkFlagsScalable = ImageFlagsScalable, SinkFlagsHasAlpha = ImageFlagsHasAlpha, SinkFlagsPartiallyScalable = ImageFlagsPartiallyScalable, SinkFlagsTopDown = 0x00010000, SinkFlagsBottomUp = 0x00020000, SinkFlagsFullWidth = 0x00040000, SinkFlagsMultipass = 0x00080000, SinkFlagsComposite = 0x00100000, SinkFlagsWantProps = 0x00200000};
-
-/* BufferDisposalFlagUnmapView  [extra enum] */
-enum BufferDisposalFlag { BufferDisposalFlagNone, BufferDisposalFlagGlobalFree, BufferDisposalFlagCoTaskMemFree, BufferDisposalFlagUnmapView};
+enum SinkFlags {
+  SinkFlagsScalable = ImageFlagsScalable,
+  SinkFlagsHasAlpha = ImageFlagsHasAlpha,
+  SinkFlagsPartiallyScalable = ImageFlagsPartiallyScalable,
+  SinkFlagsTopDown = 0x00010000,
+  SinkFlagsBottomUp = 0x00020000,
+  SinkFlagsFullWidth = 0x00040000,
+  SinkFlagsMultipass = 0x00080000,
+  SinkFlagsComposite = 0x00100000,
+  SinkFlagsWantProps = 0x00200000
+};
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

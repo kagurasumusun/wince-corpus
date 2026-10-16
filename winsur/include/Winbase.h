@@ -598,11 +598,11 @@
 
 /* CHECK_INVALIDGUID  [macro, function; ce-only] */
 #define CHECK_INVALIDGUID(pguid) \
-!~((pguid)->Data1&(pguid)->Data2&(pguid)->Data3&(pguid)->Data4)
+!~((pguid)->Data1&(pguid)->Data2&(pguid)->Data3&(pguid)->Data4);
 
 /* CHECK_SYSTEMGUID  [macro, function; ce-only; Fsdbase.lib] */
 #define CHECK_SYSTEMGUID(pguid) \
-!((pguid)->Data1|(pguid)->Data2|(pguid)->Data3|(pguid)->Data4)
+!((pguid)->Data1|(pguid)->Data2|(pguid)->Data3|(pguid)->Data4);
 
 /* CONTEXT  [struct; shared] */
 
@@ -913,13 +913,6 @@ typedef BY_HANDLE_FILE_INFORMATION *PBY_HANDLE_FILE_INFORMATION, *LPBY_HANDLE_FI
 /*   EvtChar */
 /*   wReserved1 */
 
-/* PROCESS_INFORMATION  [struct; shared] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   hProcess */
-/*   hThread */
-/*   dwProcessId */
-/*   dwThreadId */
-
 /* SYSTEM_INFO  [struct; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   DUMMYUNIONNAME */
@@ -1162,6 +1155,20 @@ HANDLE CreateMutex(
  LPSECURITY_ATTRIBUTES lpMutexAttributes,
  BOOL bInitialOwner,
  LPCTSTR lpName
+);
+
+/* CreateProcess  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib; A/W CreateProcessA,CreateProcessW (CE is W-side)] */
+BOOL CreateProcess(
+ LPCWSTR pszImageName,
+ LPCWSTR pszCmdLine,
+ LPSECURITY_ATTRIBUTES psaProcess,
+ LPSECURITY_ATTRIBUTES psaThread,
+ BOOL fInheritHandles,
+ DWORD fdwCreate,
+ LPVOID pvEnvironment,
+ LPWSTR pszCurDir,
+ LPSTARTUPINFOW psiStartInfo,
+ LPPROCESS_INFORMATION pProcInfo
 );
 
 /* CreateThread  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */

@@ -71,7 +71,17 @@ union PersistentPacket {
 #endif /* _WIN32_WCE */
 
 /* sPacket  [extra struct] */
-struct NotifyPacket { NotifyPacket* pNext; NotifyPacket* pPrev; unsigned int uiPacketType; CEOID oidRecord; HICON hIcon; HICON hBigIcon; int fHasIcon; HWND hDlg; void* pExtraUIData; PersistentPacket* sPacket; };
+struct NotifyPacket {
+  NotifyPacket *pNext;
+  NotifyPacket *pPrev;
+  unsigned int uiPacketType;
+  CEOID oidRecord;
+  HICON hIcon;
+  HICON hBigIcon;
+  int fHasIcon;
+  HWND hDlg;
+  void *pExtraUIData;
+  PersistentPacket *sPacket; };
 
 /* ==================================================================
  * functions and callbacks
@@ -158,6 +168,38 @@ void CeNotifyPublic_Uninitialize(void);
 
 /* function */
 NotifyPacket *CeNotifyPrivate_TranslateOID (  CEOID oid );
-union PersistentPacket {struct { DWORD dwActionFlags; DWORD dwPacketFlags; FILETIME ftStart; FILETIME ftStop; union { unsigned int uiAppNameOffset; WCHAR* lpszAppName; }; union { unsigned int uiCmdLineOffset; WCHAR* lpszCmdLine; }; union { unsigned int uiDialogTitleOffset; WCHAR* lpszDialogTitle; }; union { unsigned int uiDialogTextOffset; WCHAR* lpszDialogText; }; union { unsigned int uiSoundOffset; WCHAR* lpszSound; }; union { unsigned int uiExpansionOffset; void* pvExpansionData; }; unsigned char header_end[1]; };unsigned char packet_start[1]; };
+union PersistentPacket {
+  struct {
+    DWORD dwActionFlags;
+    DWORD dwPacketFlags;
+    FILETIME ftStart;
+    FILETIME ftStop;
+    union {
+      unsigned int uiAppNameOffset;
+      WCHAR *lpszAppName;
+    };
+    union {
+      unsigned int uiCmdLineOffset;
+      WCHAR *lpszCmdLine;
+    };
+    union {
+      unsigned int uiDialogTitleOffset;
+      WCHAR *lpszDialogTitle;
+    };
+    union {
+      unsigned int uiDialogTextOffset;
+      WCHAR *lpszDialogText;
+    };
+    union {
+      unsigned int uiSoundOffset;
+      WCHAR *lpszSound;
+    };
+    union {
+      unsigned int uiExpansionOffset;
+      void *pvExpansionData;
+    };
+    unsigned char header_end[1];
+  };
+  unsigned char packet_start[1]; };
 
 #endif /* _NOTIFEXT_HXX_ */

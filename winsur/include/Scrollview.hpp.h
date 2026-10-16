@@ -29,11 +29,28 @@ enum SCROLL_STATE {
  SCROLL_NEXT_FREE
 };
 
-/* idTimer  [extra struct] */
-struct ScrollBarInfoInternal {SCROLLINFO si;BOOL bInSetSBInfo;int nThumbPos;SCROLL_STATEdwState;UINT nTrackStart;UINT fnBar;UINT idTimer;};
-
 /* SCROLL_NEXT_FREE  [extra enum] */
-enum SCROLL_STATE {SCROLL_NO_PRESS, SCROLL_UP_PRESS, SCROLL_DN_PRESS, SCROLL_PGUP_PRESS, SCROLL_PGDN_PRESS, SCROLL_SLIDE_PRESS, SCROLL_UNAVAIL, SCROLL_NEXT_FREE};
+enum SCROLL_STATE {
+  SCROLL_NO_PRESS,
+  SCROLL_UP_PRESS,
+  SCROLL_DN_PRESS,
+  SCROLL_PGUP_PRESS,
+  SCROLL_PGDN_PRESS,
+  SCROLL_SLIDE_PRESS,
+  SCROLL_UNAVAIL,
+  SCROLL_NEXT_FREE
+};
+
+/* idTimer  [extra struct] */
+struct ScrollBarInfoInternal {
+  SCROLLINFO si;
+  BOOL bInSetSBInfo;
+  int nThumbPos;
+  SCROLL_STATE dwState;
+  UINT nTrackStart;
+  UINT fnBar;
+  UINT idTimer;
+};
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

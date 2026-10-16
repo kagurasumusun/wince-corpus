@@ -21,7 +21,7 @@
 #define ASSERTMSG(
  message,
  Condition
-)
+);
 
 /* DEBUGZONE  [macro, function; ce-only] */
 
@@ -29,7 +29,7 @@
 #define ERRORMSG(
  cond,
  printf_exp
-)
+);
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 6 declarations, 0 outlines, 0 base types, 0 extra macros, 9 extra decls
+ * 0 constants, 6 declarations, 0 outlines, 0 base types, 0 extra macros, 17 extra decls
  */
 #ifndef _MSIME_
 #define _MSIME_
@@ -66,7 +66,14 @@ HRESULT CreateIFEDictionaryInstance(
 HRESULT GenerateMessage(void);
 HRESULT IsReadingHalfKana(void);
 HRESULT SetCandidateSelection(UINT iciCandidate);
+HRESULT SetCandidateStr( UINT ciCandidate, WCHAR* pwsz, UINT cbData );
 HRESULT SetCompositionAttr(UINT ciAtr,BYTE* pb);
+HRESULT SetCompositionClause( UINT ciCls, DWORD* pdw );
+HRESULT SetCompositionReadAttr( UINT ciAtr, BYTE* pb );
+HRESULT SetCompositionReadClause( UINT ciCls, DWORD* pdw );
+HRESULT SetCompositionReadStr( UINT cwch, WCHAR* pwsz );
+HRESULT SetCompositionStr( UINT cwch, WCHAR* pwsz );
+HRESULT SetDeltaPos( UINT iDelta );
 HRESULT SetResultClause(UINT ciCls,DWORD* pdw);
 HRESULT SetResultReadClause(UINT ciCls,DWORD* pdw);
 HRESULT SetResultReadStr(UINT cwch,WCHAR* pwsz);

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 29 constants, 67 declarations, 9 outlines, 92 base types, 0 extra macros, 0 extra decls
+ * 29 constants, 67 declarations, 9 outlines, 95 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDEF_
 #define _WINDEF_
@@ -442,6 +442,21 @@ typedef LARGE_INTEGER PHYSICAL_ADDRESS, *PPHYSICAL_ADDRESS;
  * source: win32/common/windows-data-types.md */
 typedef struct _CRITICAL_SECTION CRITICAL_SECTION, *PCRITICAL_SECTION, *LPCRITICAL_SECTION;
 
+/* STARTUPINFOW [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef struct _STARTUPINFOW STARTUPINFOW, *LPSTARTUPINFOW;
+
+/* STARTUPINFO [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef STARTUPINFOW STARTUPINFO, *LPSTARTUPINFO;
+
+/* PROCESS_INFORMATION [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef struct _PROCESS_INFORMATION PROCESS_INFORMATION, *LPPROCESS_INFORMATION, *PPROCESS_INFORMATION;
+
 /* ATOM
  * source: win32/common/windows-data-types.md */
 typedef WORD ATOM;
@@ -603,11 +618,11 @@ typedef HICON HCURSOR;
 
 /* MAKELONG  [macro; shared] */
 #define MAKELONG(a, b) \ 
- ((LONG) (((WORD) (a)) | ((DWORD) ((WORD) (b))) << 16))
+ ((LONG) (((WORD) (a)) | ((DWORD) ((WORD) (b))) << 16));
 
 /* MAKEWORD  [macro; shared] */
 #define MAKEWORD(a, b) \ 
- ((WORD) (((BYTE) (a)) | ((WORD) ((BYTE) (b))) << 8))
+ ((WORD) (((BYTE) (a)) | ((WORD) ((BYTE) (b))) << 8));
 
 /* WINAPI  [typedef, macro; shared; entity-headers] */
 

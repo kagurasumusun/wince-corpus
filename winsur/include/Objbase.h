@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 42 constants, 61 declarations, 0 outlines, 0 base types, 0 extra macros, 10 extra decls
+ * 42 constants, 63 declarations, 0 outlines, 0 base types, 0 extra macros, 10 extra decls
  */
 #ifndef _OBJBASE_
 #define _OBJBASE_
@@ -148,11 +148,17 @@ void CoFreeAllLibraries( );
 /* CoGetCurrentProcess  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
 DWORD CoGetCurrentProcess(void);
 
+/* CoImpersonateClient  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
+HRESULT CoImpersonateClient( );
+
 /* CoReleaseServerProcess  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
 ULONG CoReleaseServerProcess(void);
 
 /* CoResumeClassObjects  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
 WINOLEAPI CoResumeClassObjects(void);
+
+/* CoRevertToSelf  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
+HRESULT CoRevertToSelf( );
 
 /* CoRevokeClassObject  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
 HRESULT CoRevokeClassObject(

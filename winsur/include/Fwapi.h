@@ -64,7 +64,39 @@ typedef enum _FW_RULE_FLAGS {
 typedef FW_RULE_FLAGS *PFW_RULE_FLAGS, *LPFW_RULE_FLAGS;
 
 /* PFW__RULE  [extra struct] */
-typedef struct _FIREWALL_RULE{ DWORD dwSize; HRULE hRule; DWORD dwFlags; DWORD dwMask; LPCWSTR wszDescription; FW_IP_ADDRESS PrivateHost; FW_IP_ADDRESS PublicHost; union { UINT PublicHostPrefixLength; IN_ADDR PublicHostMask; }; INT Protocol; FW_ACTIONS Action; WORD wHourStart, wHourEnd; WORD wDayOfWeek; WORD wDay; WORD wMonth; union { { USHORT PortMin; USHORT PortMax; }; struct { UCHAR Type; UCHAR Code; }; };}FW_RULE, *PFW__RULE;
+typedef struct _FIREWALL_RULE
+{
+  DWORD dwSize;
+  HRULE hRule;
+  DWORD dwFlags;
+  DWORD dwMask;
+  LPCWSTR wszDescription;
+  FW_IP_ADDRESS PrivateHost;
+  FW_IP_ADDRESS PublicHost;
+  union
+  {
+    UINT PublicHostPrefixLength;
+    IN_ADDR PublicHostMask;
+  };
+  INT Protocol;
+  FW_ACTIONS Action;
+  WORD wHourStart, wHourEnd;
+  WORD wDayOfWeek;
+  WORD wDay;
+  WORD wMonth;
+  union
+  {
+    {
+      USHORT PortMin;
+      USHORT PortMax;
+    };
+    struct
+    {
+      UCHAR Type;
+      UCHAR Code;
+    };
+  };
+}FW_RULE, *PFW__RULE;
 
 /* ==================================================================
  * functions and callbacks

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 20 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 21 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _TILEPROXY_
 #define _TILEPROXY_
@@ -71,6 +71,11 @@ HRESULT TPGetViewScale(
 HRESULT TPGetViewVisBounds(
  HANDLE hTileProxy,
  RECT* pRect);
+
+/* TPGetWaitEvent  [function; ce-only; CE 6.0..699; tileengine.dll] */
+HRESULT TPGetWaitEvent(
+ HANDLE hTileProxy,
+ HANDLE* phEvent);
 
 /* TPRedraw  [function; ce-only; CE 6.0..699; tileengine.dll] */
 HRESULT TPRedraw(

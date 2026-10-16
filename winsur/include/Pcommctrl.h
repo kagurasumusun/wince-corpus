@@ -18,17 +18,17 @@
 /* ListView_GetNumberOfWorkAreas  [macro, function; shared] */
 #define ListView_GetNumberOfWorkAreas(hwnd, pnWorkAreas) \
  (BOOL)SNDMSG((hwnd), LVM_GETNUMBEROFWORKAREAS, 0, \
- (LPARAM)(UINT *)(pnWorkAreas))
+ (LPARAM)(UINT *)(pnWorkAreas));
 
 /* ListView_GetWorkAreas  [macro, function; shared] */
 #define ListView_GetWorkAreas(hwnd, nWorkAreas, prc) \
  (BOOL)SNDMSG((hwnd), LVM_GETWORKAREAS, (WPARAM)(int)nWorkAreas, \
- (LPARAM)(RECT FAR*)(prc))
+ (LPARAM)(RECT FAR*)(prc));
 
 /* ListView_SetWorkAreas  [macro, function; shared] */
 #define ListView_SetWorkAreas(hwnd, nWorkAreas, prc) \
  (BOOL)SNDMSG((hwnd), LVM_SETWORKAREAS, (WPARAM)(int)nWorkAreas, \
- (LPARAM)(RECT FAR*)(prc))
+ (LPARAM)(RECT FAR*)(prc));
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

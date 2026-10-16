@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1 constants, 7 declarations, 10 outlines, 0 base types, 0 extra macros, 32 extra decls
+ * 1 constants, 7 declarations, 10 outlines, 0 base types, 0 extra macros, 35 extra decls
  */
 #ifndef _OLEIDL_
 #define _OLEIDL_
@@ -125,6 +125,8 @@ HRESULT OnUIDeactivate( BOOL fUndoable);
 HRESULT RequestNewObjectLayout();
 HRESULT RequestNewObjectlayout();
 HRESULT SaveObject( void );
+HRESULT SendOnClose()
+HRESULT SendOnSave()
 HRESULT SetUpdateOptions( DWORD dwUpdateOpt );
 HRESULT ShowObject();
 HRESULT UnbindSource(void);

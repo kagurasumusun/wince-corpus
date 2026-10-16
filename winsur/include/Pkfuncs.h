@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 19 constants, 113 declarations, 3 outlines, 0 base types, 0 extra macros, 4 extra decls
+ * 19 constants, 113 declarations, 3 outlines, 0 base types, 0 extra macros, 9 extra decls
  */
 #ifndef _PKFUNCS_
 #define _PKFUNCS_
@@ -47,7 +47,7 @@
 
 /* IsCeLogZoneEnabled  [macro; ce-only] */
 #define IsCeLogZoneEnabled(ZoneCE)
- (IsCeLogEnabled(CELOGSTATUS_ENABLED_GENERAL, (ZoneCE)))
+ (IsCeLogEnabled(CELOGSTATUS_ENABLED_GENERAL, (ZoneCE)));
 
 /* IsInPwrHdlr  [macro; ce-only] */
 

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 5 declarations, 2 outlines, 0 base types, 0 extra macros, 6 extra decls
+ * 0 constants, 5 declarations, 2 outlines, 0 base types, 0 extra macros, 8 extra decls
  */
 #ifndef _RAPITYPES_
 #define _RAPITYPES_
@@ -68,10 +68,23 @@ typedef struct _CENOTIFYREQUEST { DWORD dwSize; HWND hwnd; DWORD dwFlags; HANDLE
 typedef CEPROPVAL *PCEPROPVAL;
 
 /* LPSTORE_INFORMATION  [extra struct] */
-typedef struct STORE_INFORMATION {DWORD dwStoreSize;DWORD dwFreeSize;} STORE_INFORMATION, *LPSTORE_INFORMATION;
+typedef struct STORE_INFORMATION {  DWORD dwStoreSize;  DWORD dwFreeSize;  } STORE_INFORMATION, *LPSTORE_INFORMATION;
 
 /* LPSYSTEM_POWER_STATUS_EX  [extra struct] */
-typedef struct _SYSTEM_POWER_STATUS_EX {BYTE ACLineStatus;BYTE BatteryFlag;BYTE BatteryLifePercent;BYTE Reserved1;DWORD BatteryLifeTime;DWORD BatteryFullLifeTime;BYTE Reserved2;BYTE BackupBatteryFlag;BYTE BackupBatteryLifePercent;BYTE Reserved3;DWORD BackupBatteryLifeTime;DWORD BackupBatteryFullLifeTime;} SYSTEM_POWER_STATUS_EX, *PSYSTEM_POWER_STATUS_EX,*LPSYSTEM_POWER_STATUS_EX;
+typedef struct _SYSTEM_POWER_STATUS_EX {
+  BYTE ACLineStatus;
+  BYTE BatteryFlag;
+  BYTE BatteryLifePercent;
+  BYTE Reserved1;
+  DWORD BatteryLifeTime;
+  DWORD BatteryFullLifeTime;
+  BYTE Reserved2;
+  BYTE BackupBatteryFlag;
+  BYTE BackupBatteryLifePercent;
+  BYTE Reserved3;
+  DWORD BackupBatteryLifeTime;
+  DWORD BackupBatteryFullLifeTime;
+} SYSTEM_POWER_STATUS_EX, *PSYSTEM_POWER_STATUS_EX, *LPSYSTEM_POWER_STATUS_EX;
 
 /* Reserved3  [extra struct] */
 typedef struct _SYSTEM_POWER_STATUS_EX {
@@ -85,5 +98,11 @@ typedef struct _SYSTEM_POWER_STATUS_EX {
   BYTE BackupBatteryFlag;
   BYTE BackupBatteryLifePercent;
   BYTE Reserved3; };
+
+/* _SORTORDERSPEC  [extra struct] */
+typedef struct _SORTORDERSPEC {- };
+
+/* _SYSTEM_POWER_STATUS_EX  [extra struct] */
+typedef struct _SYSTEM_POWER_STATUS_EX {- };
 
 #endif /* _RAPITYPES_ */

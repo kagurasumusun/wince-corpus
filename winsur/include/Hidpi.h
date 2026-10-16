@@ -17,19 +17,19 @@
 
 /* HidP_GetButtons  [macro; ce-only] */
 #define HidP_GetButtons(Rty, UPa, LCo, ULi, ULe, Ppd, Rep, RLe) \
- HidP_GetUsages(Rty, UPa, LCo, ULi, ULe, Ppd, Rep, RLe)
+ HidP_GetUsages(Rty, UPa, LCo, ULi, ULe, Ppd, Rep, RLe);
 
 /* HidP_GetButtonsEx  [macro; ce-only] */
 #define HidP_GetButtonsEx(Rty, LCo, BLi, ULe, Ppd, Rep, RLe) \
- HidP_GetUsagesEx(Rty, LCo, BLi, ULe, Ppd, Rep, RLe)
+ HidP_GetUsagesEx(Rty, LCo, BLi, ULe, Ppd, Rep, RLe);
 
 /* HidP_SetButtons  [macro; ce-only] */
 #define HidP_SetButtons(Rty, Up, Lco, ULi, ULe, Ppd, Rep, Rle) \
- HidP_SetUsages(Rty, Up, Lco, ULi, ULe, Ppd, Rep, Rle)
+ HidP_SetUsages(Rty, Up, Lco, ULi, ULe, Ppd, Rep, Rle);
 
 /* HidP_UnsetButtons  [macro; ce-only] */
 #define HidP_UnsetButtons(Rty, Up, Lco, ULi, ULe, Ppd, Rep, Rle) \
- HidP_UnsetUsages(Rty, Up, Lco, ULi, ULe, Ppd, Rep, Rle)
+ HidP_UnsetUsages(Rty, Up, Lco, ULi, ULe, Ppd, Rep, Rle);
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

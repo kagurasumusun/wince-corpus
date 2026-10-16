@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 58 declarations, 1 outlines, 0 base types, 0 extra macros, 3 extra decls
+ * 0 constants, 59 declarations, 1 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _CEDDK_
 #define _CEDDK_
@@ -306,6 +306,14 @@ VOID HalFreeCommonBuffer(
  PHYSICAL_ADDRESS LogicalAddress,
  PVOID VirtualAddress,
  BOOLEAN CacheEnabled
+);
+
+/* HalTranslateSystemAddress  [function; ce-only; CE 4.0..699; CEDDK.lib] */
+BOOLEAN HalTranslateSystemAddress(
+ INTERFACE_TYPE InterfaceType,
+ ULONG BusNumber,
+ PHYSICAL_ADDRESS SystemAddress,
+ PPHYSICAL_ADDRESS TranslatedAddress
 );
 
 /* TransBusAddrToStatic  [function; ce-only; CE 4.0..699; CEDDK.lib] */

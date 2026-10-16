@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 146 constants, 92 declarations, 0 outlines, 0 base types, 0 extra macros, 17 extra decls
+ * 146 constants, 92 declarations, 0 outlines, 0 base types, 0 extra macros, 23 extra decls
  */
 #ifndef _WINLDAP_
 #define _WINLDAP_
@@ -349,41 +349,50 @@ typedef struct LdapReferralCallback {
  DEREFERENCECONNECTION* DereferenceRoutine;
 } LDAP_REFERRAL_CALLBACK, *PLDAP_REFERRAL_CALLBACK;
 
-/* PLDAPConnectionToDereference  [extra typedef] */
-typedef ULONG (_cdecl DEREFERENCECONNECTION)(PLDAPPrimaryConnection,PLDAPConnectionToDereference);
+/* ConnectionToDereference  [extra typedef] */
+typedef ULONG (_cdecl DEREFERENCECONNECTION)(  PLDAP PrimaryConnection,  PLDAP ConnectionToDereference  );
+
+/* ErrorCodeFromBind  [extra typedef] */
+typedef BOOLEAN (_cdecl NOTIFYOFNEWCONNECTION) (  PLDAP PrimaryConnection,  PLDAP ReferralFromConnection,  PWCHAR NewDN,  PCHAR HostName,  PLDAP NewConnection,  ULONG PortNumber,  PVOID SecAuthIdentity,  PVOID CurrentUser,  ULONG ErrorCodeFromBind  );
+
+/* ConnectionToUse  [extra typedef] */
+typedef ULONG (_cdecl QUERYFORCONNECTION)(  PLDAP PrimaryConnection,  PLDAP ReferralFromConnection,  PWCHAR NewDN,  PCHAR HostName,  ULONG PortNumber,  PVOID SecAuthIdentity,  PVOID CurrentUserToken,  PLDAP* ConnectionToUse  );
+
+/* pServerCert  [extra typedef] */
+typedef BOOLEAN (_cdecl VERIFYSERVERCERT) (  PLDAP Connection,  PCCERT_CONTEXT pServerCert  );
+
+/* PBERVAL  [extra struct] */
+typedef struct berval {  ULONG bv_len;  UNICODE PTCHAR bv_val;  } LDAP_BERVAL, *PLDAP_BERVAL, BERVAL, *PBERVAL;
 
 /* MessageNumber  [extra struct] */
-ULONG ldap_compare_ext(LDAP* ld,UNICODE PTCHARdn,UNICODE PTCHARAttr,UNICODE PTCHARValue,struct berval* Data,LDAPControl** ServerControls,LDAPControl** ClientControls,ULONG* MessageNumber);
+ULONG ldap_compare_ext(  LDAP* ld,  UNICODE PTCHAR dn,  UNICODE PTCHAR Attr,  UNICODE PTCHAR Value,  struct berval* Data,  LDAPControl** ServerControls,  LDAPControl** ClientControls,  ULONG* MessageNumber  );
 
 /* ClientControls  [extra struct] */
-ULONG ldap_compare_ext_s(LDAP* ld,UNICODE PTCHARdn,UNICODE PTCHARAttr,UNICODE PTCHARValue,struct berval* Data,LDAPControl** ServerControls,LDAPControl** ClientControls);
+ULONG ldap_compare_ext_s(  LDAP* ld,  UNICODE PTCHAR dn,  UNICODE PTCHAR Attr,  UNICODE PTCHAR Value,  struct berval* Data,  LDAPControl** ServerControls,  LDAPControl** ClientControls  );
 
 /* vals  [extra struct] */
-ULONG ldap_count_values_len(struct berval** vals);
+ULONG ldap_count_values_len(  struct berval** vals  );
+
+/* attr  [extra struct] */
+struct berval** ldap_get_values_len(  LDAP* ExternalHandle,  LDAPMessage* Message,  UNICODE PTCHAR attr  );
+
+/* Freeit  [extra struct] */
+ULONG ldap_parse_extended_result(  LDAP Connection,  LDAPMessage* ResultMessage,  UNICODE PTCHAR* ResultOID,  struct berval** ResultData,  BOOL Freeit  );
+
+/* Cookie  [extra struct] */
+ULONG ldap_parse_page_control(  LDAP* ExternalHandle,  LDAPControl** ServerControls,  ULONG* TotalCount,  struct berva**l Cookie  );
+
+/* res  [extra struct] */
+ULONG ldap_search_ext_s(  LDAP* ld,  UNICODE PTCHAR base,  ULONG scope,  UNICODE PTCHAR filter,  UNICODE PTCHAR attrs[],  ULONG attrsonly,  LDAPControl** ServerControls,  LDAPControl** ClientControls,  struct l_timeval* timeout,  ULONG SizeLimit,  LDAPMessage** res  );
+
+/* PLDAPConnectionToDereference  [extra typedef] */
+typedef ULONG (_cdecl DEREFERENCECONNECTION)(PLDAPPrimaryConnection,PLDAPConnectionToDereference);
 
 /* PTCHARattr  [extra struct] */
 struct berval** ldap_get_values_len(LDAP* ExternalHandle,LDAPMessage* Message,UNICODE PTCHARattr);
 
-/* Cookie  [extra struct] */
-ULONG ldap_parse_page_control(LDAP*ExternalHandle,LDAPControl** ServerControls,ULONG* TotalCount,struct berva**l Cookie);
-
 /* PCCERT_CONTEXTpServerCert  [extra typedef] */
 typedef BOOLEAN (_cdecl VERIFYSERVERCERT) (PLDAPConnection,PCCERT_CONTEXTpServerCert);
-
-/* ConnectionToDereference  [extra typedef] */
-typedef ULONG (_cdecl DEREFERENCECONNECTION)( PLDAP PrimaryConnection, PLDAP ConnectionToDereference );
-
-/* Freeit  [extra struct] */
-ULONG ldap_parse_extended_result( LDAP Connection, LDAPMessage* ResultMessage, UNICODE PTCHAR* ResultOID, struct berval** ResultData, BOOL Freeit );
-
-/* pServerCert  [extra typedef] */
-typedef BOOLEAN (_cdecl VERIFYSERVERCERT) ( PLDAP Connection, PCCERT_CONTEXT pServerCert );
-
-/* ErrorCodeFromBind  [extra typedef] */
-typedef BOOLEAN (_cdecl NOTIFYOFNEWCONNECTION) ( PLDAP PrimaryConnection, PLDAP ReferralFromConnection, PWCHAR NewDN, PCHAR HostName, PLDAP NewConnection, ULONG PortNumber, PVOID SecAuthIdentity, PVOID CurrentUser, ULONG ErrorCodeFromBind );
-
-/* attr  [extra struct] */
-struct berval** ldap_get_values_len( LDAP* ExternalHandle, LDAPMessage* Message, UNICODE PTCHAR attr );
 
 /* ==================================================================
  * functions and callbacks

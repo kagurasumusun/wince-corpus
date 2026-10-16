@@ -48,7 +48,14 @@ enum WidgetId{
 static RECT WidgetRect(  HWND hwnd,  enum WidgetId wid,  bool bTopLevelWindow  );
 
 /* widHelp  [extra enum] */
-enum WidgetId{widInvalid = -1,widClose,widMaxRestore,widMin,widOk,widHelp};
+enum WidgetId{
+  widInvalid = -1,
+  widClose,
+  widMaxRestore,
+  widMin,
+  widOk,
+  widHelp
+};
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

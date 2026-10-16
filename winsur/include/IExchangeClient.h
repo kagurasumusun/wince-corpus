@@ -93,23 +93,43 @@ struct GALSearchCriteria {
  WCHAR* wszLastName;
 };
 
+/* wszLastName  [extra struct] */
+struct ContactsSearchCriteria {  WCHAR* wszFirstName;  WCHAR* wszLastName;  };
+
+/* e_ecrsNoCredentials  [extra enum] */
+enum ExchangeClientRequestStatus
+{
+  e_ecrsPending = 0,
+  e_ecrsInProgress,
+  e_ecrsSending,
+  e_ecrsBypassingOWAPage,
+  e_ecrsSucceeded,
+  e_ecrsOutOfMemory,
+  e_ecrsParseFailed,
+  e_ecrsHttpFailure,
+  e_ecrsFailedToSend,
+  e_ecrsFailedToBypassAuthPage,
+  e_ecrsCancelled,
+  e_ecrsNoCredentials,
+};
+
+/* e_ecrtFreeBusy  [extra enum] */
+enum ExchangeClientRequestType
+{
+  e_ecrtInvalid = 0,
+  e_ecrtContacts,
+  e_ecrtGALSearch,
+  e_ecrtFreeBusy,
+};
+
+/* pstStart  [extra struct] */
+struct FreeBusyCriteria {  WCHAR* wszAlias;  SYSTEMTIME* pstStart;  };
+
 /* pStatus  [extra enum] */
 HRESULT GetStatus(  enum ExchangeClientRequestStatus* pStatus  );
 
 /* pecrt  [extra enum] */
 HRESULT GetType(  enum ExchangeClientRequestType* pecrt  );
-
-/* e_ecrsNoCredentials  [extra enum] */
-enum ExchangeClientRequestStatus{ e_ecrsPending = 0, e_ecrsInProgress, e_ecrsSending, e_ecrsBypassingOWAPage, e_ecrsSucceeded, e_ecrsOutOfMemory, e_ecrsParseFailed, e_ecrsHttpFailure, e_ecrsFailedToSend, e_ecrsFailedToBypassAuthPage, e_ecrsCancelled, e_ecrsNoCredentials,};
-
-/* e_ecrtFreeBusy  [extra enum] */
-enum ExchangeClientRequestType{ e_ecrtInvalid = 0, e_ecrtContacts, e_ecrtGALSearch, e_ecrtFreeBusy,};
-
-/* pstStart  [extra struct] */
-struct FreeBusyCriteria { WCHAR* wszAlias; SYSTEMTIME* pstStart;};
-
-/* wszLastName  [extra struct] */
-struct GALSearchCriteria { WCHAR* wszAlias; WCHAR* wszFirstName; WCHAR* wszLastName;};
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

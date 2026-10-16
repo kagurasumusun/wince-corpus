@@ -111,7 +111,7 @@ def harvest_page(job):
     try:
         raw = open(full, "rb").read()
     except OSError:
-        return [], []
+        return path, 0, [], []
     constants = []
     declarations = []
     src = {
@@ -177,8 +177,8 @@ def harvest_page(job):
                 "page_id": page_id,
             })
     except Exception:
-        return [], []
-    return constants, declarations
+        return path, len(raw), [], []
+    return path, len(raw), constants, declarations
 
 
 def main():
@@ -193,8 +193,10 @@ def main():
           flush=True)
     constants = []
     declarations = []
+    visits = []
     with concurrent.futures.ProcessPoolExecutor(max_workers=args.workers) as ex:
-        for consts, decls in ex.map(harvest_page, jobs, chunksize=32):
+        for path, nbytes, consts, decls in ex.map(harvest_page, jobs, chunksize=32):
+            visits.append((path, nbytes, len(consts), len(decls)))
             constants.extend(consts)
             declarations.extend(decls)
     # unique by (name, value, path)
@@ -225,8 +227,16 @@ def main():
     with open(dpath, "w", encoding="utf-8") as fh:
         for rec in uniq_d:
             fh.write(json.dumps(rec, ensure_ascii=False) + "\n")
+    vpath = os.path.join(KB, "harvest-visits.tsv")
+    with open(vpath, "w", encoding="utf-8") as fh:
+        fh.write("path\tbytes\tconstants\tdeclarations\n")
+        for path, nbytes, nc, nd in visits:
+            fh.write(f"{path}\t{nbytes}\t{nc}\t{nd}\n")
+    missing = sum(1 for _p, b, _c, _d in visits if b == 0)
     print(f"[harvest] {len(uniq_c):,} constant row(s) -> {cpath}")
     print(f"[harvest] {len(uniq_d):,} declaration(s) -> {dpath}")
+    print(f"[harvest] opened {len(visits):,} page(s) one-by-one "
+          f"({missing} unreadable) -> {vpath}")
     return 0
 
 

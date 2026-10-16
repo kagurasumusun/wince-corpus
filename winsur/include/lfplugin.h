@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 16 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 0 constants, 17 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _LFPLUGIN_
 #define _LFPLUGIN_
@@ -38,6 +38,9 @@ DWORD ProviderIoctlClose(
  HANDLE hProv
 );
 
+/* ProviderStop  [function; ce-only; CE 6.0..699] */
+DWORD ProviderStop(void);
+
 /* ProviderUnInitialize  [function; ce-only; CE 6.0..699] */
 DWORD ProviderStop(void);
 
@@ -62,13 +65,5 @@ DWORD ResolverStop(void);
 /* ResolverUnInitialize  [function; ce-only; CE 6.0..699] */
 DWORD ResolverUnInitialize(void);
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-DWORD ProviderStop(void);
 
 #endif /* _LFPLUGIN_ */

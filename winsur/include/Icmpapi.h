@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 30 constants, 9 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 30 constants, 9 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _ICMPAPI_
 #define _ICMPAPI_
@@ -74,6 +74,9 @@ typedef struct IP_OPTION_INFORMATION {
  unsigned char FAR* OptionsData;
 } IP_OPTION_INFORMATION;
 typedef IP_OPTION_INFORMATION *PIP_OPTION_INFORMATION, *LPIP_OPTION_INFORMATION;
+
+/* Timeout  [extra struct] */
+DWORD WINAPI Icmp6SendEcho2(  HANDLE IcmpHandle,  HANDLE Event,  #ifdef PIO_APC_ROUTINE_DEFINED  PIO_APC_ROUTINE ApcRoutine,  #else  FARPROC ApcRoutine,  #endif  PVOID ApcContext,  struct sockaddr_in6* SourceAddress,  struct sockaddr_in6* DestinationAddress,  LPVOID RequestData,  WORD RequestSize,  PIP_OPTION_INFORMATION RequestOptions,  LPVOID ReplyBuffer,  DWORD ReplySize,  DWORD Timeout  );
 
 /* ==================================================================
  * functions and callbacks

@@ -432,6 +432,10 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: セミコロン無し PRE と CreateProcess 型（第14弾）
+
+コピーはしない。CE 3.0 `READ_PORT_UCHAR` の PRE は `UCHAR READ_PORT_UCHAR ( PUCHAR Port )` で `;` が無い。抽出器が `looks_like` で落としていたので、原型として残し、出すときに `;` だけ足す（型や値は足さない）。`DrawText` 頁は `UNIT uFormat` と印刷しており UINT に直さない。`CreateProcess` 頁が名指しする `STARTUPINFOW` / `PROCESS_INFORMATION` は本文が無いので不完全 typedef。CE 105,096 頁を1つずつ開き harvest 54,625 宣言。`gcc` で Sleep / LoadLibrary / CreateProcess が通る。
+
 ### 2026-10-16: 誤判定を潰して DDK/アプリ API を載せる（第13弾）
 
 コピーはしない。`READ_PORT_UCHAR` を未知型と誤認していた（宣言中の関数名）。`lplf lplf` のような引数名の型化、COM の `IImage*` を落とす。corpus に `lstrlen` の原型ページは無い。`gcc` で READ_PORT_UCHAR / EndPaint / HalGetBusData が通る。

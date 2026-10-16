@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 62 constants, 46 declarations, 0 outlines, 0 base types, 1 extra macros, 11 extra decls
+ * 62 constants, 46 declarations, 0 outlines, 0 base types, 1 extra macros, 14 extra decls
  */
 #ifndef _IPHLPAPI_
 #define _IPHLPAPI_
@@ -114,20 +114,59 @@ DWORD GetFriendlyIfIndex(
 /* MIB_ENTRY  [extra struct] */
 typedef struct mib_entry { AsnObjectIdentifier Oid; void * Storage; BYTE Type; UINT Access; UINT (*MibFunc) (UINT, struct mib_entry *, RFC1157VarBind *); struct mib_entry * MibNext; } MIB_ENTRY;
 
-/* PIP_ADDR_STRING  [extra struct] */
-typedef struct _IP_ADDR_STRING { struct _IP_ADDR_STRING* Next; IP_ADDRESS_STRING IpAddress; IP_MASK_STRING IpMask; DWORD Context;} IP_ADDR_STRING, *PIP_ADDR_STRING;
+/* PMIB_ICMP  [extra struct] */
+typedef struct _MIB_ICMP {  MIBICMPINFO stats // contains ICMP stats  } MIB_ICMP,*PMIB_ICMP;
 
-/* PMIB_IPFORWARDROW  [extra struct] */
-typedef struct _MIB_IPFORWARDROW {DWORD dwForwardDest;DWORD dwForwardMask;DWORD dwForwardPolicy;DWORD dwForwardNextHop;DWORD dwForwardIfIndex;DWORD dwForwardType;DWORD dwForwardProto;DWORD dwForwardAge;DWORD dwForwardNextHopAS;DWORD dwForwardMetric1;DWORD dwForwardMetric2;DWORD dwForwardMetric3;DWORD dwForwardMetric4;DWORD dwForwardMetric5;} MIB_IPFORWARDROW, *PMIB_IPFORWARDROW;
-
-/* PMIB_PROXYARP  [extra struct] */
-typedef struct _MIB_PROXYARP {DWORD dwAddress;DWORD dwMask;DWORD dwIfIndex;} MIB_PROXYARP,*PMIB_PROXYARP;
-
-/* PMIB_UDPSTATS  [extra struct] */
-typedef struct _MIB_UDPSTATS {DWORD dwInDatagrams; DWORD dwNoPorts; DWORD dwInErrors; DWORD dwOutDatagrams; DWORD dwNumAddrs; } MIB_UDPSTATS, *PMIB_UDPSTATS;
+/* PMIB_UDPROW  [extra struct] */
+typedef struct _MIB_UDPROW {  DWORD dwLocalAddr; DWORD dwLocalPort; // port number on local computer  } MIB_UDPROW, *PMIB_UDPROW;
 
 /* pdwBestIfIndex  [extra struct] */
-DWORD GetBestInterfaceEX( struct sockaddr* pDestAddr,  PDWORD pdwBestIfIndex  );
+DWORD GetBestInterfaceEX(  struct sockaddr* pDestAddr,  PDWORD pdwBestIfIndex  );
+
+/* PIP_ADDR_STRING  [extra struct] */
+typedef struct _IP_ADDR_STRING {
+  struct _IP_ADDR_STRING* Next;
+  IP_ADDRESS_STRING IpAddress;
+  IP_MASK_STRING IpMask;
+  DWORD Context;
+} IP_ADDR_STRING, *PIP_ADDR_STRING;
+
+/* PMIB_BEST_IF  [extra struct] */
+typedef struct _MIB_BEST_IF {  DWORD dwDestAddr;  DWORD dwIfIndex;  } MIB_BEST_IF*, PMIB_BEST_IF;
+
+/* PMIB_IPFORWARDROW  [extra struct] */
+typedef struct _MIB_IPFORWARDROW {
+  DWORD dwForwardDest;
+  DWORD dwForwardMask;
+  DWORD dwForwardPolicy;
+  DWORD dwForwardNextHop;
+  DWORD dwForwardIfIndex;
+  DWORD dwForwardType;
+  DWORD dwForwardProto;
+  DWORD dwForwardAge;
+  DWORD dwForwardNextHopAS;
+  DWORD dwForwardMetric1;
+  DWORD dwForwardMetric2;
+  DWORD dwForwardMetric3;
+  DWORD dwForwardMetric4;
+  DWORD dwForwardMetric5;
+} MIB_IPFORWARDROW, *PMIB_IPFORWARDROW;
+
+/* PMIB_PROXYARP  [extra struct] */
+typedef struct _MIB_PROXYARP {
+  DWORD dwAddress;
+  DWORD dwMask;
+  DWORD dwIfIndex;
+} MIB_PROXYARP, *PMIB_PROXYARP;
+
+/* PMIB_UDPSTATS  [extra struct] */
+typedef struct _MIB_UDPSTATS {
+  DWORD dwInDatagrams;
+  DWORD dwNoPorts;
+  DWORD dwInErrors;
+  DWORD dwOutDatagrams;
+  DWORD dwNumAddrs;
+} MIB_UDPSTATS, *PMIB_UDPSTATS;
 
 /* ==================================================================
  * functions and callbacks
@@ -190,6 +229,11 @@ DWORD GetBestRoute(
  PMIB_IPFORWARDROW pBestRoute 
 );
 
+/* GetIcmpStatistics  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
+DWORD GetIcmpStatistics(
+ PMIB_ICMP pStats 
+);
+
 /* GetNumberOfInterfaces  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
 DWORD GetNumberOfInterfaces(
  PDWORD pdwNumIf
@@ -220,6 +264,12 @@ DWORD SetIpTTL(
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
+
+/* GetIcmpStatisticsEx  [function; shared; CE 4.0..699; Iphlpapi.lib] */
+DWORD GetIcmpStatisticsEx(
+ PMIB_ICMP pStats, 
+ DWORD dwFamily
+);
 
 /* GetUdpStatisticsEx  [function; shared; CE 4.0..699; Iphlpapi.lib] */
 DWORD GetUdpStatisticsEx(

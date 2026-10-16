@@ -248,11 +248,13 @@ def is_broken_c(text: str) -> bool:
     # ``lplf lplf`` -- the page printed the argument name as the type.
     if re.search(r"\b(lp[a-z]{2,12})\s+\1\b", body):
         return True
-    # Prototype whose last non-space is not ';' (``GetCursor(void)``).
+    # Prototype whose last non-space is not ';' -- keep Type Name(args)
+    # when the PRE block only omitted the semicolon.
     stripped = body.rstrip()
     if "(" in stripped and not stripped.endswith((";", "}", "\\")):
         if not stripped.lstrip().startswith(("#", "typedef")):
-            return True
+            if not re.search(r"\w+\s+\*?\s*\w+\s*\([^;]*\)\s*$", stripped):
+                return True
     # ``WORD biBitCount \\n DWORD biCompression`` -- the page dropped a ';'
     if re.search(
             r"\b(?:WORD|DWORD|LONG|BYTE|UINT|INT|SHORT|BOOL|WCHAR|CHAR|"
@@ -339,7 +341,8 @@ def looks_like_c_declaration(text: str) -> bool:
         if first.strip().endswith(";") and "typedef" in first:
             return True
     # "Type Name(args);" with a type token before the name.
-    if re.search(r"\w+\s+\*?\s*\w+\s*\([^;]*\)\s*;", first):
+    # Some CE PRE blocks omit the trailing ';' (`READ_PORT_UCHAR ( PUCHAR Port )`).
+    if re.search(r"\w+\s+\*?\s*\w+\s*\([^;]*\)\s*;?\s*$", first):
         return True
     return False
 

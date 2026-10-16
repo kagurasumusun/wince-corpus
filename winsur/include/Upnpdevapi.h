@@ -40,6 +40,6 @@ typedef DWORD (*PUPNPCALLBACK) (
 #endif /* _WIN32_WCE */
 
 /* PUNPNSUBSCRIPTION  [extra struct] */
-typedef struct {PCWSTRpszUDN;PCWSTRpszSID;} UPNPSUBSCRIPTION, *PUNPNSUBSCRIPTION;
+typedef struct {  PCWSTR pszUDN;  PCWSTR pszSID;  } UPNPSUBSCRIPTION, *PUNPNSUBSCRIPTION;
 
 #endif /* _UPNPDEVAPI_ */
