@@ -5,11 +5,40 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 16 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 0 constants, 16 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _RECOG_
 #define _RECOG_
 
+
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* HWXGUIDE  [struct; ce-only] */
+typedef struct tagHWXGUIDE {
+ UINT cHorzBox;
+ UINT cVertBox;
+ INT xOrigin;
+ INT yOrigin;
+ UINT cxBox;
+ UINT cyBox;
+ UINT cxOffset;
+ UINT cyOffset;
+ UINT cxWriting;
+ UINT cyWriting;
+ UINT cyMid;
+ UINT cyBase;
+ UINT nDir; 
+} HWXGUIDE, *PHWXGUIDE;
+
+/* HWXRESULTS  [struct; ce-only] */
+typedef struct tagHWXRESULTS {
+ USHORT indxBox;
+ WCHAR rgChar[1] 
+} HWXRESULTS, *PHWXRESULTS;
 
 /* ==================================================================
  * functions and callbacks

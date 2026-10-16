@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 48 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 22 extra decls
+ * 48 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 21 extra decls
  */
 #ifndef _SECURITY_
 #define _SECURITY_
@@ -70,10 +70,6 @@
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
-
-/* struct */
-typedef struct _SecBuffer {ULONGcbBuffer;ULONG BufferType;PVOID pvBuffer;} SecBuffer, *PSecBuffer;
-typedef struct _SecBufferDesc {ULONG ulVersion;ULONG cBuffers;PSecBuffer pBuffers;} SecBufferDesc, *PSecBufferDesc;
 
 /* function */
 PSecurityFunctionTable InitSecurityInterface(VOID);

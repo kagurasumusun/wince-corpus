@@ -11,4 +11,20 @@
 #define _SAPIDDK_IDL_
 
 
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* SPCFGNOTIFY  [enum; ce-only] */
+typedef enum SPCFGNOTIFY{
+ SPCFGN_ADD,
+ SPCFGN_REMOVE,
+ SPCFGN_INVALIDATE,
+ SPCFGN_ACTIVATE,
+ SPCFGN_DEACTIVATE
+} SPCFGNOTIFY;
+typedef SPCFGNOTIFY *PSPCFGNOTIFY, *LPSPCFGNOTIFY;
+
 #endif /* _SAPIDDK_IDL_ */

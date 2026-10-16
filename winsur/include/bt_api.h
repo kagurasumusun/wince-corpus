@@ -37,6 +37,29 @@
 /* IOCTL_BLUETOOTH_GET_PEER_DEVICE  [typedef; ce-only] */
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* BT_DISCONNECT_EVENT  [struct; ce-only] */
+typedef struct { 
+ DWORD dwSize;
+ USHORT hConnection;
+ UCHAR ucReason;
+} BT_DISCONNECT_EVENT, *PBT_DISCONNECT_EVENT;
+
+/* BTEVENT  [struct; ce-only] */
+typedef struct _BTEVENT {
+ DWORD dwEventId;
+ DWORD dwReserved;
+ BYTE baEventData[64];
+} BTEVENT, *PBTEVENT;
+
+/* BthInquiryResult  [extra struct] */
+typedef struct __bth_inquiry_result {BT_ADDRba;unsigned intcod;unsigned shortclock_offset;unsigned charpage_scan_mode;unsigned charpage_scan_period_mode;unsigned charpage_scan_repetition_mode;} BthInquiryResult;
+
+/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
@@ -144,6 +167,12 @@ int BthActivatePAN (
  BOOL fActivate
 );
 
+/* BthNotifyEvent  [function; ce-only; CE 6.0..699; heuristic-prefix] */
+HANDLE BthNotifyEvent(
+ PBTEVENT pbtEvent,
+ DWORD dwEventClass
+);
+
 /* BthSetCODInquiryFilter  [function; ce-only; CE 6.0..699; Btdrt.lib] */
 int BthSetCODInquiryFilter (
  unsigned int cod,
@@ -166,9 +195,6 @@ BOOL StopBluetoothNotifications(
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
-
-/* struct */
-typedef struct __bth_inquiry_result {BT_ADDRba;unsigned intcod;unsigned shortclock_offset;unsigned charpage_scan_mode;unsigned charpage_scan_period_mode;unsigned charpage_scan_repetition_mode;} BthInquiryResult;
 
 /* function */
 DWORD BthAGNetworkHangupCall(DWORD dwFlags);

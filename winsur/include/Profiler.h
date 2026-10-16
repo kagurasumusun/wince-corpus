@@ -23,6 +23,7 @@ typedef struct OEMProfilerData {
  DWORD dwBufSize;
  BYTE buf[0];
 } OEMProfilerData;
+typedef OEMProfilerData *POEMProfilerData, *LPOEMProfilerData;
 
 /* ==================================================================
  * functions and callbacks

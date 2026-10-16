@@ -57,6 +57,7 @@ typedef struct SIPServerRegistrationParameters {
  const WCHAR *wszTransport; 
  const WCHAR *wszAuthType; 
 } SIPServerRegistrationParameters;
+typedef SIPServerRegistrationParameters *PSIPServerRegistrationParameters, *LPSIPServerRegistrationParameters;
 
 /* VoIPCallEvent  [enum; ce-only] */
 typedef enum VoIPCallEvent { 
@@ -69,6 +70,22 @@ typedef enum VoIPCallEvent {
  e_vceRedirectSucceeded, 
  e_vceRedirectFailed 
 } VoIPCallEvent;
+typedef VoIPCallEvent *PVoIPCallEvent, *LPVoIPCallEvent;
+
+/* VoIPCallStatus  [enum; ce-only] */
+typedef enum VoIPCallStatus { 
+ e_vcsInvalid = 0, 
+ e_vcsIdle = RTCSS_IDLE, 
+ e_vcsIncoming = RTCSS_INCOMING, 
+ e_vcsAnswering = RTCSS_ANSWERING, 
+ e_vcsInProgress = RTCSS_INPROGRESS, 
+ e_vcsConnected = RTCSS_CONNECTED, 
+ e_vcsDisconnected = RTCSS_DISCONNECTED, 
+ e_vcsHolding = RTCSS_HOLD, 
+ e_vcsReferring = RTCSS_REFER, 
+ e_vcsInConference = RTCSS_REFER+1, 
+} VoIPCallStatus;
+typedef VoIPCallStatus *PVoIPCallStatus, *LPVoIPCallStatus;
 
 /* VoIPSystemEvent  [enum; ce-only] */
 typedef enum VoIPSystemEvent{ 
@@ -78,6 +95,7 @@ typedef enum VoIPSystemEvent{
  e_vseRegistrationSucceeded, 
  e_vseRegistrationFailed 
 } VoIPSystemEvent;
+typedef VoIPSystemEvent *PVoIPSystemEvent, *LPVoIPSystemEvent;
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

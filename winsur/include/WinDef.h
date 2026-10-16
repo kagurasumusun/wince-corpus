@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 29 constants, 67 declarations, 9 outlines, 89 base types, 1 extra macros, 0 extra decls
+ * 29 constants, 67 declarations, 9 outlines, 92 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDEF_
 #define _WINDEF_
@@ -77,6 +77,15 @@
 #define __declspec(x)
 #endif
 #endif /* _MSC_VER */
+#ifndef WINAPI
+#define WINAPI __stdcall
+#endif
+#ifndef CALLBACK
+#define CALLBACK __stdcall
+#endif
+#ifndef APIENTRY
+#define APIENTRY WINAPI
+#endif
 #ifndef TEXT
 #define TEXT(s) L ## s
 #endif
@@ -398,10 +407,20 @@ typedef struct _SYSTEMTIME { WORD wYear; WORD wMonth; WORD wDayOfWeek; WORD wDay
  * source: win32/common/windows-data-types.md */
 typedef DWORD CEOID;
 
+/* PCEOID [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef CEOID *PCEOID;
+
 /* CEPROPID [CE-SPECIFIC]
  * CE Unicode / 32-bit data-types row
  * source: win32/common/windows-data-types.md */
 typedef DWORD CEPROPID;
+
+/* PPVOID [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef PVOID *PPVOID;
 
 /* LPTHREAD_START_ROUTINE [CE-SPECIFIC]
  * CE Unicode / 32-bit data-types row
@@ -417,6 +436,11 @@ typedef union _LARGE_INTEGER { struct { DWORD LowPart; LONG HighPart; } u; LONGL
  * CE Unicode / 32-bit data-types row
  * source: win32/common/windows-data-types.md */
 typedef LARGE_INTEGER PHYSICAL_ADDRESS, *PPHYSICAL_ADDRESS;
+
+/* CRITICAL_SECTION [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef struct _CRITICAL_SECTION CRITICAL_SECTION, *PCRITICAL_SECTION, *LPCRITICAL_SECTION;
 
 /* ATOM
  * source: win32/common/windows-data-types.md */
@@ -560,11 +584,6 @@ typedef LRESULT (CALLBACK *WNDPROC)(HWND, UINT, WPARAM, LPARAM);
 typedef HICON HCURSOR;
 
 /* ==================================================================
- * macros -- supplementary #define from CE pages
- * ================================================================ */
-#define MAX_PATH 128
-
-/* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
@@ -651,12 +670,14 @@ typedef struct tagPOINT {
  LONG x;
  LONG y;
 } POINT;
+typedef POINT *PPOINT, *LPPOINT;
 
 /* POINTS  [struct; shared] */
 typedef struct tagPOINTS { 
  SHORT x;
  SHORT y; 
 } POINTS;
+typedef POINTS *PPOINTS, *LPPOINTS;
 
 /* RECT  [struct, library; shared] */
 typedef struct _RECT { 
@@ -665,12 +686,22 @@ typedef struct _RECT {
  LONG right; 
  LONG bottom; 
 } RECT;
+typedef RECT *PRECT, *LPRECT;
+
+/* RECTL  [struct; shared] */
+typedef struct _RECTL { 
+ LONG left; 
+ LONG top; 
+ LONG right; 
+ LONG bottom; 
+} RECTL, *PRECTL;
 
 /* SIZE  [struct, function, library; shared] */
 typedef struct tagSIZE { 
  LONG cx; 
  LONG cy; 
 } SIZE;
+typedef SIZE *PSIZE, *LPSIZE;
 
 /* LPWORD  [typedef; shared; entity-headers; win32-reference] */
 typedef WORD *LPWORD;

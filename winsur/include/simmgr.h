@@ -103,12 +103,6 @@ typedef void (*SIMCALLBACK) (
 );
 #endif /* _WIN32_WCE */
 
-/* LPSIMLOCKINGPWDLENGTH  [extra struct] */
-typedef struct simlockingpwdlength { DWORD dwFacility; DWORD dwPasswordLength; } SIMLOCKINGPWDLENGTH, FAR *LPSIMLOCKINGPWDLENGTH;
-
-/* LPSIMPBECHANGE  [extra struct] */
-typedef struct simpbechange_tag { DWORD dwEntry; DWORD dwStorage; } SIMPBECHANGE, FAR *LPSIMPBECHANGE;
-
 /* LPPHONEBOOKSIMCAPS  [extra struct] */
 typedef struct simphonebookcaps_tag {
   DWORD cbSize;
@@ -131,17 +125,5 @@ typedef struct simphonebookcaps_tag {
   BOOL fUid;
   DWORD dwMaxGroupIdCount;
 } SIMPHONEBOOKCAPS, FAR *LPPHONEBOOKSIMCAPS;
-
-/* LPSIMMESSAGECHANGE  [extra struct] */
-typedef struct simmessagechange_tag { DWORD dwEntry; DWORD dwStorage; } SIMMESSAGECHANGE, FAR *LPSIMMESSAGECHANGE;
-
-/* LPSIMRECORDINFO  [extra struct] */
-typedef struct simrecordinfo_tag {
-  DWORD cbSize;
-  DWORD dwParams;
-  DWORD dwRecordType;
-  DWORD dwItemCount;
-  DWORD dwSize;
-} SIMRECORDINFO, FAR *LPSIMRECORDINFO;
 
 #endif /* _SIMMGR_ */

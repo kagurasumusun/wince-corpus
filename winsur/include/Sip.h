@@ -26,6 +26,7 @@ typedef struct _tagLMDATA{
  DWORD dwOffsetSkip;
  DWORD dwOffsetScore;
 }LMDATA;
+typedef LMDATA *PLMDATA, *LPLMDATA;
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

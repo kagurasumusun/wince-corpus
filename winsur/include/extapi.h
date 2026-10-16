@@ -92,4 +92,40 @@
 
 /* LINEOPERATOR  [struct; ce-only] */
 
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* LINEGENERALINFO  [struct; ce-only] */
+typedef struct linegeneralinfo_tag {
+ DWORD dwTotalSize;
+ DWORD dwNeededSize;
+ DWORD dwUsedSize;
+ DWORD dwManufacturerSize;
+ DWORD dwManufacturerOffset;
+ DWORD dwModelSize;
+ DWORD dwModelOffset;
+ DWORD dwRevisionSize;
+ DWORD dwRevisionOffset;
+ DWORD dwSerialNumberSize;
+ DWORD dwSerialNumberOffset;
+ DWORD dwSubscriberNumberSize;
+ DWORD dwSubscriberNumberOffset;
+} LINEGENERALINFO, * LPLINEGENERALINFO;
+
+/* LINEOPERATORSTATUS  [struct; ce-only] */
+typedef struct lineoperatorstatus_tag {
+ DWORD dwTotalSize;
+ DWORD dwNeededSize;
+ DWORD dwUsedSize;
+ DWORD dwPreferredCount;
+ DWORD dwPreferredSize;
+ DWORD dwPreferredOffset;
+ DWORD dwAvailableCount;
+ DWORD dwAvailableSize;
+ DWORD dwAvailableOffset;
+} LINEOPERATORSTATUS, * LPLINEOPERATORSTATUS;
+
 #endif /* _EXTAPI_ */

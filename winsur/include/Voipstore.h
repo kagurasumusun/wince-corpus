@@ -24,6 +24,7 @@ typedef enum VoIPCallType {
 ..e_vctOutgoing,
 ..e_vctMissed
 } VoIPCallType;
+typedef VoIPCallType *PVoIPCallType, *LPVoIPCallType;
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 

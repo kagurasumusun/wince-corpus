@@ -37,11 +37,30 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* HIDP_DATA  [struct; ce-only] */
+typedef struct _HIDP_DATA {
+ USHORT DataIndex;
+ USHORT Reserved;
+ union {
+ ULONG RawValue;
+ BOOLEAN On;
+ };
+} HIDP_DATA, * PHIDP_DATA;
+
+/* HIDP_EXTENDED_ATTRIBUTES  [struct; ce-only] */
+typedef struct _HIDP_EXTENDED_ATTRIBUTES {
+ UCHAR NumGlobalUnknowns;
+ UCHAR Reserved[3];
+ PHIDP_UNKNOWN_TOKEN GlobalUnknowns;
+ ULONG Data[1];
+} HIDP_EXTENDED_ATTRIBUTES, * PHIDP_EXTENDED_ATTRIBUTES;
+
 /* HIDP_KEYBOARD_DIRECTION  [enum; ce-only] */
 typedef enum _HIDP_KEYBOARD_DIRECTION {
  HidP_Keyboard_Break,
  HidP_Keyboard_Make
 } HIDP_KEYBOARD_DIRECTION;
+typedef HIDP_KEYBOARD_DIRECTION *PHIDP_KEYBOARD_DIRECTION, *LPHIDP_KEYBOARD_DIRECTION;
 
 /* HIDP_REPORT_TYPE  [enum; ce-only] */
 typedef enum _HIDP_REPORT_TYPE {
@@ -49,45 +68,13 @@ typedef enum _HIDP_REPORT_TYPE {
  HidP_Output,
  HidP_Feature
 } HIDP_REPORT_TYPE;
+typedef HIDP_REPORT_TYPE *PHIDP_REPORT_TYPE, *LPHIDP_REPORT_TYPE;
 
-/* PHIDP_BUTTON_CAPS  [extra struct] */
-typedef struct _HIDP_BUTTON_CAPS { USAGE UsagePage; UCHAR ReportID; BOOLEAN IsAlias; USHORT BitField; USHORT LinkCollection; USAGE LinkUsage; USAGE LinkUsagePage; BOOLEAN IsRange; BOOLEAN IsStringRange; BOOLEAN IsDesignatorRange; BOOLEAN IsAbsolute; ULONG Reserved[10]; union { struct { USAGE UsageMin, UsageMax; USHORT StringMin, StringMax; USHORT DesignatorMin, DesignatorMax; USHORT DataIndexMin, DataIndexMax; } Range; struct { USAGE Usage, Reserved1; USHORT StringIndex, Reserved2; USHORT DesignatorIndex, Reserved3; USHORT DataIndex, Reserved4; } NotRange; };} HIDP_BUTTON_CAPS, * PHIDP_BUTTON_CAPS;
-
-/* PHIDP_CAPS  [extra struct] */
-typedef struct _HIDP_CAPS { USAGE Usage; USAGE UsagePage; USHORT InputReportByteLength; USHORT OutputReportByteLength; USHORT FeatureReportByteLength; USHORT Reserved[17]; USHORT NumberLinkCollectionNodes; USHORT NumberInputButtonCaps; USHORT NumberInputValueCaps; USHORT NumberInputDataIndices; USHORT NumberOutputButtonCaps; USHORT NumberOutputValueCaps; USHORT NumberOutputDataIndices; USHORT NumberFeatureButtonCaps; USHORT NumberFeatureValueCaps; USHORT NumberFeatureDataIndices;} HIDP_CAPS, * PHIDP_CAPS;
-
-/* PHIDP_DATA  [extra struct] */
-typedef struct _HIDP_DATA { USHORT DataIndex; USHORT Reserved; union { ULONG RawValue; BOOLEAN On; };} HIDP_DATA, * PHIDP_DATA;
-
-/* PHIDP_EXTENDED_ATTRIBUTES  [extra struct] */
-typedef struct _HIDP_EXTENDED_ATTRIBUTES { UCHAR NumGlobalUnknowns; UCHAR Reserved[3]; PHIDP_UNKNOWN_TOKEN GlobalUnknowns; ULONG Data[1];} HIDP_EXTENDED_ATTRIBUTES, * PHIDP_EXTENDED_ATTRIBUTES;
-
-/* PHIDP_LINK_COLLECTION_NODE  [extra struct] */
-typedef struct _HIDP_LINK_COLLECTION_NODE { USAGE LinkUsage; USAGE LinkUsagePage; USHORT Parent; USHORT NumberOfChildren; USHORT NextSibling; USHORT FirstChild; ULONG CollectionType: 8; ULONG IsAlias: 1; ULONG Reserved: 23; PVOID UserContext;} HIDP_LINK_COLLECTION_NODE, * PHIDP_LINK_COLLECTION_NODE;
-
-/* PHIDP_UNKNOWN_TOKEN  [extra struct] */
-typedef struct _HIDP_UNKNOWN_TOKEN { UCHAR Token; UCHAR Reserved[3]; ULONG BitField;} HIDP_UNKNOWN_TOKEN, * PHIDP_UNKNOWN_TOKEN;
-
-/* PHIDP_VALUE_CAPS  [extra struct] */
-typedef struct _HIDP_VALUE_CAPS { USAGE UsagePage; UCHAR ReportID; BOOLEAN IsAlias; USHORT BitField; USHORT LinkCollection; USAGE LinkUsage; USAGE LinkUsagePage; BOOLEAN IsRange; BOOLEAN IsStringRange; BOOLEAN IsDesignatorRange; BOOLEAN IsAbsolute; BOOLEAN HasNull; UCHAR Reserved; USHORT BitSize; USHORT ReportCount; USHORT Reserved2[5]; ULONG UnitsExp; ULONG Units; LONG LogicalMin, LogicalMax; LONG PhysicalMin, PhysicalMax; union { struct { USAGE UsageMin, UsageMax; USHORT StringMin, StringMax; USHORT DesignatorMin, DesignatorMax; USHORT DataIndexMin, DataIndexMax; } Range; struct { USAGE Usage, Reserved1; USHORT StringIndex, Reserved2; USHORT DesignatorIndex, Reserved3; USHORT DataIndex, Reserved4; } NotRange; };} HIDP_VALUE_CAPS, * PHIDP_VALUE_CAPS;
-
-/* PUSAGE_AND_PAGE  [extra struct] */
-typedef struct _USAGE_AND_PAGE { USAGE Usage; USAGE UsagePage;} USAGE_AND_PAGE, * PUSAGE_AND_PAGE;
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
-
-/* HidP_UsageAndPageListDifference  [function; ce-only; CE 4.0..699; Hidparse_lib.lib] */
-NTSTATUS HidP_UsageAndPageListDifference(
- PUSAGE_AND_PAGE PreviousUsageList,
- PUSAGE_AND_PAGE CurrentUsageList,
- PUSAGE_AND_PAGE BreakUsageList,
- PUSAGE_AND_PAGE MakeUsageList,
- ULONG UsageListLength
-);
-#endif /* _WIN32_WCE */
+/* HIDP_UNKNOWN_TOKEN  [struct; ce-only] */
+typedef struct _HIDP_UNKNOWN_TOKEN {
+ UCHAR Token;
+ UCHAR Reserved[3];
+ ULONG BitField;
+} HIDP_UNKNOWN_TOKEN, * PHIDP_UNKNOWN_TOKEN;
 
 #endif /* _HIDPI_ */

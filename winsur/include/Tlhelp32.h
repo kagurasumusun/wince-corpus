@@ -44,6 +44,46 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* HEAPENTRY32  [struct; shared] */
+typedef struct tagHEAPENTRY32 {
+ DWORD dwSize;
+ HANDLE hHandle;
+ DWORD dwAddress;
+ DWORD dwBlockSize;
+ DWORD dwFlags;
+ DWORD dwLockCount;
+ DWORD dwResvd;
+ DWORD th32ProcessID;
+ DWORD th32HeapID;
+ } HEAPENTRY32;
+ typedef HEAPENTRY32* PHEAPENTRY32;
+typedef HEAPENTRY32* LPHEAPENTRY32;
+
+/* HEAPLIST32  [struct; shared] */
+typedef struct tagHEAPLIST32 { 
+ DWORD dwSize; 
+ DWORD th32ProcessID; 
+ DWORD th32HeapID; 
+ DWORD dwFlags; 
+ } HEAPLIST32; 
+ typedef HEAPLIST32* PHEAPLIST32; 
+typedef HEAPLIST32* LPHEAPLIST32;
+
+/* THREADENTRY32  [struct; shared] */
+typedef struct tagTHREADENTRY32 {
+ DWORD dwSize;
+ DWORD cntUsage;
+ DWORD th32ThreadID;
+ DWORD th32OwnerProcessID;
+ LONG tpBasePri;
+ LONG tpDeltaPri;
+ DWORD dwFlags;
+ DWORD th32AccessKey;
+ DWORD th32CurrentProcessID;
+ } THREADENTRY32;
+ typedef THREADENTRY32* PTHREADENTRY32;
+typedef THREADENTRY32* LPTHREADENTRY32;
+
 /* MODULEENTRY32  [struct; shared; A/W MODULEENTRY32W (CE is W-side)] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   dwSize */

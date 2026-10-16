@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 6 constants, 0 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 6 constants, 0 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _CCBOOTSTRAP_IDL_
 #define _CCBOOTSTRAP_IDL_
@@ -29,13 +29,5 @@
  * ================================================================ */
 
 /* ICcBootstrap::DeviceInfo  [enum; ce-only] */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-HRESULT Download( DWORDdwTimeout, VARIANT_BOOLbAsync, LPCOLESTRwszSrcFullPath, LPCOLESTRwszDestFullPath, VARIANT_BOOLbOverwrite, DWORD*pdwCookieId);
 
 #endif /* _CCBOOTSTRAP_IDL_ */

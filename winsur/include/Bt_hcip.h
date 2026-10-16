@@ -30,6 +30,13 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* HCI_EVENT  [enum; ce-only] */
+enum HCI_EVENT {
+ DEVICE_UP,
+ DEVICE_DOWN,
+ DEVICE_ERROR
+};
+
 /* HCI_PARAMETERS  [struct; ce-only] */
 typedef struct __hci_parameters {
  unsigned int uiSize;
@@ -50,6 +57,25 @@ typedef struct __hci_parameters {
  int iScoWritePacketSize;
  int iScoSampleSize;
 } HCI_PARAMETERS;
+typedef HCI_PARAMETERS *PHCI_PARAMETERS, *LPHCI_PARAMETERS;
+
+/* HCI_TYPE  [enum; ce-only] */
+enum HCI_TYPE {
+ COMMAND_PACKET = 1,
+ DATA_PACKET_ACL = 2,
+ DATA_PACKET_SCO = 3,
+ EVENT_PACKET = 4,
+ ETYPE_FINISH = 5
+};
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
+
+/* HCI_SetCallback  [callback; ce-only; CE 4.0..699; Btd.lib] */
+typedef int (*HCI_TransportCallback)(HCI_EVENT eEvent, void* pEvent);
+ int HCI_SetCallback(
+ HCI_TransportCallback pfCallback
+);
+#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks

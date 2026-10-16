@@ -32,6 +32,19 @@
 )
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* DBGPARAM  [struct; ce-only] */
+typedef struct _DBGPARAM {
+ WCHAR lpszName[32];
+ WCHAR rglpszZones[16][32];
+ ULONG ulZoneMask;
+} DBGPARAM, *LPDBGPARAM;
+
+/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
@@ -41,6 +54,15 @@
 void WriteDebugLED(
  WORD wIndex,
  DWORD dwPattern 
+);
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
+
+/* RegisterDbgZones  [function; ce-only; CE 5.0..699] */
+BOOL RegisterDbgZones(
+ HMODULE hMod,
+ LPDBGPARAM lpdbgparam
 );
 #endif /* _WIN32_WCE */
 

@@ -29,11 +29,9 @@ typedef struct {
  UCHAR bInterfaceProtocol;
  UCHAR iInterface;
 } USB_INTERFACE_DESCRIPTOR;
+typedef USB_INTERFACE_DESCRIPTOR *PUSB_INTERFACE_DESCRIPTOR, *LPUSB_INTERFACE_DESCRIPTOR;
 
 /* lpvNotifyParameter  [extra typedef] */
 typedef DWORD (WINAPI *LPTRANSFER_NOTIFY_ROUTINE)( LPVOID lpvNotifyParameter);
-
-/* LPUSB_CONFIGURATION  [extra struct] */
-typedef struct _USB_CONFIGURATION { const DWORD dwCount; const USB_CONFIGURATION_DESCRIPTOR Descriptor; const LPCVOID lpvExtended; const DWORD dwNumInterfaces; const LPCUSB_INTERFACE lpInterfaces;} USB_CONFIGURATION, * PUSB_CONFIGURATION, * LPUSB_CONFIGURATION;
 
 #endif /* _USBTYPES_ */

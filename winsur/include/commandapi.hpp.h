@@ -34,6 +34,7 @@ typedef enum _PH_APPLICATION
  phaContactsApp,
  phaLast, 
 } PH_APPLICATION;
+typedef PH_APPLICATION *PPH_APPLICATION, *LPPH_APPLICATION;
 
 /* ==================================================================
  * functions and callbacks

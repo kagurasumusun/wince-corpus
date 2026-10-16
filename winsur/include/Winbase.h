@@ -624,6 +624,7 @@
 typedef struct _CERECORDINFO {
  CEOID oidParent; 
 } CERECORDINFO;
+typedef CERECORDINFO *PCERECORDINFO, *LPCERECORDINFO;
 
 /* COMMPROP  [struct; shared] */
 typedef struct _COMMPROP {
@@ -646,6 +647,30 @@ typedef struct _COMMPROP {
  DWORD dwProvSpec2;
  WCHAR wcProvChar[1];
 } COMMPROP;
+typedef COMMPROP *PCOMMPROP, *LPCOMMPROP;
+
+/* COMMTIMEOUTS  [struct; shared] */
+typedef struct _COMMTIMEOUTS {
+ DWORD ReadIntervalTimeout;
+ DWORD ReadTotalTimeoutMultiplier;
+ DWORD ReadTotalTimeoutConstant;
+ DWORD WriteTotalTimeoutMultiplier;
+ DWORD WriteTotalTimeoutConstant;
+} COMMTIMEOUTS,*LPCOMMTIMEOUTS;
+
+/* COMSTAT  [struct; shared] */
+typedef struct _COMSTAT {
+ DWORD fCtsHold :1;
+ DWORD fDsrHold :1;
+ DWORD fRlsdHold :1;
+ DWORD fXoffHold :1;
+ DWORD fXoffSent :1;
+ DWORD fEof :1;
+ DWORD fTxim :1;
+ DWORD fReserved :25;
+ DWORD cbInQue;
+ DWORD cbOutQue;
+} COMSTAT, *LPCOMSTAT;
 
 /* CREATE_PROCESS_DEBUG_INFO  [struct; shared] */
 typedef struct _CREATE_PROCESS_DEBUG_INFO { 
@@ -660,6 +685,7 @@ typedef struct _CREATE_PROCESS_DEBUG_INFO {
  LPVOID lpImageName; 
  WORD fUnicode; 
 } CREATE_PROCESS_DEBUG_INFO;
+typedef CREATE_PROCESS_DEBUG_INFO *PCREATE_PROCESS_DEBUG_INFO, *LPCREATE_PROCESS_DEBUG_INFO;
 
 /* CREATE_THREAD_DEBUG_INFO  [struct; shared] */
 typedef struct _CREATE_THREAD_DEBUG_INFO { 
@@ -667,6 +693,7 @@ typedef struct _CREATE_THREAD_DEBUG_INFO {
  LPVOID lpThreadLocalBase; 
  LPTHREAD_START_ROUTINE lpStartAddress; 
 } CREATE_THREAD_DEBUG_INFO;
+typedef CREATE_THREAD_DEBUG_INFO *PCREATE_THREAD_DEBUG_INFO, *LPCREATE_THREAD_DEBUG_INFO;
 
 /* DeviceSearchType  [enum; ce-only] */
 typedef enum {
@@ -676,22 +703,26 @@ typedef enum {
  DeviceSearchByGuid, 
  DeviceSearchByParent 
 } DeviceSearchType;
+typedef DeviceSearchType *PDeviceSearchType, *LPDeviceSearchType;
 
 /* EXIT_PROCESS_DEBUG_INFO  [struct; shared] */
 typedef struct _EXIT_PROCESS_DEBUG_INFO { 
  DWORD dwExitCode; 
 } EXIT_PROCESS_DEBUG_INFO;
+typedef EXIT_PROCESS_DEBUG_INFO *PEXIT_PROCESS_DEBUG_INFO, *LPEXIT_PROCESS_DEBUG_INFO;
 
 /* EXIT_THREAD_DEBUG_INFO  [struct; shared] */
 typedef struct _EXIT_THREAD_DEBUG_INFO { 
  DWORD dwExitCode; 
 } EXIT_THREAD_DEBUG_INFO;
+typedef EXIT_THREAD_DEBUG_INFO *PEXIT_THREAD_DEBUG_INFO, *LPEXIT_THREAD_DEBUG_INFO;
 
 /* FINDEX_INFO_LEVELS  [enum; shared] */
 typedef enum _FINDEX_INFO_LEVELS {
  FindExInfoStandard,
  FindExInfoMaxInfoLevel
 } FINDEX_INFO_LEVELS;
+typedef FINDEX_INFO_LEVELS *PFINDEX_INFO_LEVELS, *LPFINDEX_INFO_LEVELS;
 
 /* FINDEX_SEARCH_OPS  [enum; shared] */
 typedef enum _FINDEX_SEARCH_OPS { 
@@ -699,11 +730,13 @@ typedef enum _FINDEX_SEARCH_OPS {
  FindExSearchLimitToDirectories, 
  FindExSearchLimitToDevices 
 } FINDEX_SEARCH_OPS;
+typedef FINDEX_SEARCH_OPS *PFINDEX_SEARCH_OPS, *LPFINDEX_SEARCH_OPS;
 
 /* GET_FILEEX_INFO_LEVELS  [enum; shared] */
 typedef enum _GET_FILEEX_INFO_LEVELS { 
  GetFileExInfoStandard 
 } GET_FILEEX_INFO_LEVELS;
+typedef GET_FILEEX_INFO_LEVELS *PGET_FILEEX_INFO_LEVELS, *LPGET_FILEEX_INFO_LEVELS;
 
 /* LOAD_DLL_DEBUG_INFO  [struct; shared] */
 typedef struct _LOAD_DLL_DEBUG_INFO { 
@@ -714,6 +747,19 @@ typedef struct _LOAD_DLL_DEBUG_INFO {
  LPVOID lpImageName; 
  WORD fUnicode; 
 } LOAD_DLL_DEBUG_INFO;
+typedef LOAD_DLL_DEBUG_INFO *PLOAD_DLL_DEBUG_INFO, *LPLOAD_DLL_DEBUG_INFO;
+
+/* MEMORYSTATUS  [struct; shared] */
+typedef struct _MEMORYSTATUS {
+ DWORD dwLength;
+ DWORD dwMemoryLoad;
+ DWORD dwTotalPhys;
+ DWORD dwAvailPhys;
+ DWORD dwTotalPageFile;
+ DWORD dwAvailPageFile;
+ DWORD dwTotalVirtual;
+ DWORD dwAvailVirtual;
+} MEMORYSTATUS, *LPMEMORYSTATUS;
 
 /* OSVERSIONINFO  [struct; shared; A/W OSVERSIONINFOA,OSVERSIONINFOW (CE is W-side)] */
 typedef struct _OSVERSIONINFO{
@@ -724,6 +770,7 @@ typedef struct _OSVERSIONINFO{
  DWORD dwPlatformId;
  TCHAR szCSDVersion[128];
 } OSVERSIONINFO;
+typedef OSVERSIONINFO *POSVERSIONINFO, *LPOSVERSIONINFO;
 
 /* OUTPUT_DEBUG_STRING_INFO  [struct; shared] */
 typedef struct _OUTPUT_DEBUG_STRING_INFO { 
@@ -731,6 +778,7 @@ typedef struct _OUTPUT_DEBUG_STRING_INFO {
  WORD fUnicode; 
  WORD nDebugStringLength; 
 } OUTPUT_DEBUG_STRING_INFO;
+typedef OUTPUT_DEBUG_STRING_INFO *POUTPUT_DEBUG_STRING_INFO, *LPOUTPUT_DEBUG_STRING_INFO;
 
 /* OVERLAPPED  [struct; shared] */
 typedef struct _OVERLAPPED {
@@ -740,12 +788,39 @@ typedef struct _OVERLAPPED {
  DWORD OffsetHigh; 
  HANDLE hEvent; 
 } OVERLAPPED;
+typedef OVERLAPPED *POVERLAPPED, *LPOVERLAPPED;
 
 /* SORTORDERSPEC  [struct; ce-only] */
 typedef struct _SORTORDERSPEC {
  CEPROPID propid;
  DWORD dwFlags;
 } SORTORDERSPEC;
+typedef SORTORDERSPEC *PSORTORDERSPEC, *LPSORTORDERSPEC;
+
+/* SYSTEM_POWER_STATUS_EX2  [struct; ce-only] */
+typedef struct _SYSTEM_POWER_STATUS_EX2 {
+ BYTE ACLineStatus;
+ BYTE BatteryFlag;
+ BYTE BatteryLifePercent;
+ BYTE Reserved1;
+ DWORD BatteryLifeTime;
+ DWORD BatteryFullLifeTime;
+ BYTE Reserved2;
+ BYTE BackupBatteryFlag;
+ BYTE BackupBatteryLifePercent;
+ BYTE Reserved3;
+ DWORD BackupBatteryLifeTime;
+ DWORD BackupBatteryFullLifeTime;
+ DWORD BatteryVoltage;
+ DWORD BatteryCurrent;
+ DWORD BatteryAverageCurrent;
+ DWORD BatteryAverageInterval;
+ DWORD BatterymAHourConsumed;
+ DWORD BatteryTemperature;
+ DWORD BackupBatteryVoltage;
+ BYTE BatteryChemistry;
+ // Add any extra information after the BatteryChemistry member.
+} SYSTEM_POWER_STATUS_EX2, *PSYSTEM_POWER_STATUS_EX2, *LPSYSTEM_POWER_STATUS_EX2;
 
 /* TIME_ZONE_INFORMATION  [struct; shared] */
 typedef struct _TIME_ZONE_INFORMATION {
@@ -757,11 +832,13 @@ typedef struct _TIME_ZONE_INFORMATION {
  SYSTEMTIME DaylightDate;
  LONG DaylightBias;
 } TIME_ZONE_INFORMATION;
+typedef TIME_ZONE_INFORMATION *PTIME_ZONE_INFORMATION, *LPTIME_ZONE_INFORMATION;
 
 /* UNLOAD_DLL_DEBUG_INFO  [struct; shared] */
 typedef struct _UNLOAD_DLL_DEBUG_INFO { 
  LPVOID lpBaseOfDll; 
 } UNLOAD_DLL_DEBUG_INFO;
+typedef UNLOAD_DLL_DEBUG_INFO *PUNLOAD_DLL_DEBUG_INFO, *LPUNLOAD_DLL_DEBUG_INFO;
 
 /* VS_FIXEDFILEINFO  [struct; shared] */
 struct VS_FIXEDFILEINFO { 
@@ -779,6 +856,16 @@ DWORD dwFileSubtype;
 DWORD dwFileDateMS; 
 DWORD dwFileDateLS; };
 
+/* WIN32_FILE_ATTRIBUTE_DATA  [struct; shared] */
+typedef struct _WIN32_FILE_ATTRIBUTE_DATA{ 
+ DWORD dwFileAttributes; 
+ FILETIME ftCreationTime; 
+ FILETIME ftLastAccessTime; 
+ FILETIME ftLastWriteTime; 
+ DWORD nFileSizeHigh; 
+ DWORD nFileSizeLow; 
+} WIN32_FILE_ATTRIBUTE_DATA, *LPWIN32_FILE_ATTRIBUTE_DATA;
+
 /* BY_HANDLE_FILE_INFORMATION  [struct; shared] */
 typedef struct _BY_HANDLE_FILE_INFORMATION { 
  DWORD dwFileAttributes; 
@@ -793,6 +880,7 @@ typedef struct _BY_HANDLE_FILE_INFORMATION {
  DWORD nFileIndexLow;
  DWORD dwOID;
 } BY_HANDLE_FILE_INFORMATION;
+typedef BY_HANDLE_FILE_INFORMATION *PBY_HANDLE_FILE_INFORMATION, *LPBY_HANDLE_FILE_INFORMATION;
 
 /* DCB  [struct; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
@@ -920,6 +1008,15 @@ CEOID CeFindNextDatabase(
  HANDLE hEnum
 );
 
+/* CeOpenDatabase  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
+HANDLE CeOpenDatabase(
+ PCEOID poid, 
+ LPWSTR lpszName, 
+ CEPROPID propid, 
+ DWORD dwFlags, 
+ HWND hwndNotify
+);
+
 /* CeReadRecordProps  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
 CEOID CeReadRecordProps(
  HANDLE hDbase, 
@@ -1024,6 +1121,13 @@ BOOL ClearCommBreak(
  HANDLE hFile
 );
 
+/* ClearCommError  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
+BOOL ClearCommError(
+ HANDLE hFile,
+ LPDWORD lpErrors,
+ LPCOMSTAT lpStat
+);
+
 /* CompareFileTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coremain.lib, Nkstub.lib] */
 LONG CompareFileTime( 
  const FILETIME* lpFileTime1,
@@ -1068,6 +1172,28 @@ BOOL DebugActiveProcess(
  DWORD dwProcessId 
 );
 
+/* DeleteCriticalSection  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coremain.lib, coremain.lib] */
+void DeleteCriticalSection(
+ LPCRITICAL_SECTION lpCriticalSection
+);
+
+/* DeviceIoControl  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Fsmain.lib, fsmain.lib] */
+BOOL DeviceIoControl(
+ HANDLE hDevice,
+ DWORD dwIoControlCode,
+ LPVOID lpInBuffer,
+ DWORD nInBufferSize,
+ LPVOID lpOutBuffer,
+ DWORD nOutBufferSize,
+ LPDWORD lpBytesReturned,
+ LPOVERLAPPED lpOverlapped
+);
+
+/* EnterCriticalSection  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coremain.lib, coremain.lib] */
+void EnterCriticalSection(
+ LPCRITICAL_SECTION lpCriticalSection
+);
+
 /* EscapeCommFunction  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
 BOOL EscapeCommFunction(
  HANDLE hFile,
@@ -1083,6 +1209,12 @@ VOID ExitThread(
 BOOL FileTimeToLocalFileTime(
  const FILETIME* lpFileTime,
  LPFILETIME lpLocalFileTime
+);
+
+/* FileTimeToSystemTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coremain.lib, Nkstub.lib] */
+BOOL FileTimeToSystemTime(
+ const FILETIME* lpFileTime,
+ LPSYSTEMTIME lpSystemTime
 );
 
 /* FindResource  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib; A/W FindResourceA,FindResourceW (CE is W-side)] */
@@ -1116,6 +1248,18 @@ BOOL GetCommModemStatus(
  LPDWORD lpModemStat
 );
 
+/* GetCommProperties  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
+BOOL GetCommProperties(
+ HANDLE hFile,
+ LPCOMMPROP lpCommProp
+);
+
+/* GetCommTimeouts  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
+BOOL GetCommTimeouts(
+ HANDLE hFile,
+ LPCOMMTIMEOUTS lpCommTimeouts
+);
+
 /* GetExitCodeProcess  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
 BOOL GetExitCodeProcess(
  HANDLE hProcess,
@@ -1131,6 +1275,12 @@ BOOL GetExitCodeThread(
 /* GetFileAttributes  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib; A/W GetFileAttributesA,GetFileAttributesW (CE is W-side)] */
 DWORD GetFileAttributes(
  LPCTSTR lpFileName 
+);
+
+/* GetFileInformationByHandle  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
+BOOL GetFileInformationByHandle( 
+ HANDLE hFile, 
+ LPBY_HANDLE_FILE_INFORMATION lpFileInformation
 );
 
 /* GetFileSize  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
@@ -1150,6 +1300,11 @@ BOOL GetFileTime(
 /* GetLastError  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib, Nkstub.lib] */
 DWORD GetLastError(void);
 
+/* GetLocalTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, coremain.lib] */
+void GetLocalTime(
+ LPSYSTEMTIME lpSystemTime
+);
+
 /* GetModuleHandle  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib; A/W GetModuleHandleA,GetModuleHandleW (CE is W-side)] */
 HMODULE GetModuleHandle(
  LPCTSTR lpModuleName
@@ -1164,6 +1319,18 @@ FARPROC GetProcAddress(
 /* GetProcessHeap  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Lmem.lib, lmem.lib] */
 HANDLE GetProcessHeap(VOID);
 
+/* GetSystemPowerStatusEx2  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Getpower.lib, getpower.lib] */
+DWORD GetSystemPowerStatusEx2(
+ PSYSTEM_POWER_STATUS_EX2 pSystemPowerStatusEx2,
+ DWORD dwLen, 
+ BOOL fUpdate
+);
+
+/* GetSystemTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, coremain.lib] */
+void GetSystemTime(
+ LPSYSTEMTIME lpSystemTime
+);
+
 /* GetThreadPriority  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
 int GetThreadPriority(
  HANDLE hThread
@@ -1176,6 +1343,21 @@ BOOL GetThreadTimes (
  LPFILETIME lpExitTime,
  LPFILETIME lpKernelTime,
  LPFILETIME lpUserTime
+);
+
+/* GetTimeZoneInformation  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, coremain.lib] */
+DWORD GetTimeZoneInformation(
+ LPTIME_ZONE_INFORMATION lpTimeZoneInformation
+);
+
+/* GetVersionEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Coremain.lib, coremain.lib; A/W GetVersionExA,GetVersionExW (CE is W-side)] */
+BOOL GetVersionEx( 
+ LPOSVERSIONINFO lpVersionInformation
+);
+
+/* GlobalMemoryStatus  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
+void GlobalMemoryStatus(
+ LPMEMORYSTATUS lpBuffer
 );
 
 /* HeapAlloc  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, lmem.lib] */
@@ -1224,6 +1406,11 @@ BOOL InflateRect(
  LPRECT lprc, 
  int dx, 
  int dy
+);
+
+/* InitializeCriticalSection  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coremain.lib, coremain.lib] */
+void InitializeCriticalSection(
+ LPCRITICAL_SECTION lpCriticalSection
 );
 
 /* InterlockedDecrement  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
@@ -1307,6 +1494,11 @@ BOOL IsCharUpper(
 BOOL KillTimer(
  HWND hWnd, 
  UINT uIDEvent 
+);
+
+/* LeaveCriticalSection  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coremain.lib, coremain.lib] */
+void LeaveCriticalSection(
+ LPCRITICAL_SECTION lpCriticalSection
 );
 
 /* LoadFSD  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, device.lib] */
@@ -1450,6 +1642,15 @@ void RaiseException(
  const DWORD* lpArguments
 );
 
+/* ReadFile  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Fsmain.lib, fsmain.lib] */
+BOOL ReadFile(
+ HANDLE hFile,
+ LPVOID lpBuffer,
+ DWORD nNumberOfBytesToRead,
+ LPDWORD lpNumberOfBytesRead,
+ LPOVERLAPPED lpOverlapped
+);
+
 /* ReadProcessMemory  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
 BOOL ReadProcessMemory(
  HANDLE hProcess,
@@ -1485,6 +1686,12 @@ BOOL SetCommMask(
  DWORD dwEvtMask
 );
 
+/* SetCommTimeouts  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
+BOOL SetCommTimeouts(
+ HANDLE hFile,
+ LPCOMMTIMEOUTS lpCommTimeouts
+);
+
 /* SetEndOfFile  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Fsmain.lib, fsmain.lib] */
 BOOL SetEndOfFile( 
  HANDLE hFile
@@ -1494,6 +1701,14 @@ BOOL SetEndOfFile(
 BOOL SetFileAttributes(
  LPCTSTR lpFileName, 
  DWORD dwFileAttributes
+);
+
+/* SetFilePointer  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Fsmain.lib] */
+DWORD SetFilePointer( 
+ HANDLE hFile, 
+ LONG lDistanceToMove, 
+ PLONG lpDistanceToMoveHigh, 
+ DWORD dwMoveMethod
 );
 
 /* SetFileTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, fsmain.lib] */
@@ -1622,6 +1837,21 @@ BOOL VirtualFree(
  DWORD dwFreeType
 );
 
+/* VirtualProtect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, nk.lib] */
+BOOL VirtualProtect(
+ LPVOID lpAddress,
+ DWORD dwSize,
+ DWORD flNewProtect,
+ PDWORD lpflOldProtect
+);
+
+/* WaitCommEvent  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
+BOOL WaitCommEvent(
+ HANDLE hFile,
+ LPDWORD lpEvtMask,
+ LPOVERLAPPED lpOverlapped
+);
+
 /* WaitForMultipleObjects  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Nk.lib, nk.lib] */
 DWORD WaitForMultipleObjects(
  DWORD nCount,
@@ -1634,6 +1864,15 @@ DWORD WaitForMultipleObjects(
 DWORD WaitForSingleObject(
  HANDLE hHandle,
  DWORD dwMilliseconds
+);
+
+/* WriteFile  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Fsmain.lib, fsmain.lib] */
+BOOL WriteFile( 
+ HANDLE hFile, 
+ LPCVOID lpBuffer, 
+ DWORD nNumberOfBytesToWrite, 
+ LPDWORD lpNumberOfBytesWritten, 
+ LPOVERLAPPED lpOverlapped
 );
 
 /* WriteProcessMemory  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Nk.lib, nk.lib] */
@@ -1871,6 +2110,19 @@ BOOL SetPasswordActive(
 VOID SignalStarted(
  DWORD dw
 );
+
+/* TryEnterCriticalSection  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
+BOOL TryEnterCriticalSection(
+ LPCRITICAL_SECTION lpCriticalSection
+);
+
+/* VerQueryValue  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib; A/W VerQueryValueA,VerQueryValueW (CE is W-side)] */
+BOOL VerQueryValue(
+ const LPVOID pBlock,
+ LPTSTR lpSubBlock,
+ LPVOID* lplpBuffer,
+ PUINT puLen
+);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
@@ -1943,6 +2195,18 @@ HANDLE ActivateDeviceEx(
  LPVOID lpvParam
 );
 
+/* CeFsIoControl  [function; ce-only; CE 5.0..699; Device.lib] */
+BOOL CeFsIoControl(
+ LPCWSTR pszDir,
+ DWORD dwIoControlCode,
+ LPVOID lpInBuffer,
+ DWORD nInBufferSize,
+ LPVOID lpOutBuffer,
+ DWORD nOutBufferSize,
+ LPDWORD lpBytesReturned,
+ LPOVERLAPPED lpOverlapped
+);
+
 /* CeGetCanonicalPathName  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 DWORD CeGetCanonicalPathName(
  LPCWSTR lpPathName, 
@@ -2011,6 +2275,16 @@ BOOL IsProcessorFeaturePresent(
  DWORD dwProcessorFeature
 );
 
+/* LockFileEx  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
+BOOL LockFileEx(
+ HANDLE hFile, 
+ DWORD dwFlags,
+ DWORD dwReserved,
+ DWORD nNumberOfBytesToLockLow,
+ DWORD nNumberOfBytesToLockHigh,
+ LPOVERLAPPED lpOverlapped
+);
+
 /* LockResource  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib, Nk.lib] */
 LPVOID LockResource(
  HGLOBAL hResData 
@@ -2075,9 +2349,24 @@ BOOL ResourceRequestEx (
 BOOL StopDeviceNotifications(
  HANDLE h
 );
+
+/* UnlockFileEx  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
+BOOL UnlockFileEx(
+ HANDLE hFile, 
+ DWORD dwReserved,
+ DWORD nNumberOfBytesToLockLow,
+ DWORD nNumberOfBytesToLockHigh,
+ LPOVERLAPPED lpOverlapped
+);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
+
+/* CheckRemoteDebuggerPresent  [function; shared; CE 6.0..699; coredll.dll] */
+BOOL CheckRemoteDebuggerPresent(
+ HANDLE hProcess,
+ PBOOL pbDebuggerPresent
+);
 
 /* DebugActiveProcessStop  [function; shared; CE 6.0..699; coredll.lib] */
 BOOL DebugActiveProcessStop (
@@ -2119,6 +2408,15 @@ BOOL VirtualFreeEx(
  LPVOID lpAddress,
  DWORD dwSize,
  DWORD dwFreeType
+);
+
+/* VirtualProtectEx  [function; shared; CE 6.0..699; coredll.lib] */
+BOOL VirtualProtectEx(
+ HANDLE hProcess,
+ LPVOID lpAddress,
+ DWORD dwSize,
+ DWORD flNewProtect,
+ PDWORD lpflOldProtect
 );
 #endif /* _WIN32_WCE */
 

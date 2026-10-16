@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 10 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 0 constants, 10 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _PWINDBAS_
 #define _PWINDBAS_
@@ -25,9 +25,6 @@ struct REPLCHANGEINFO {
  CEOID oidChanged;
  CEOID oidDbase;
 };
-
-/* CEOIDoidDbase  [extra struct] */
-struct REPLCHANGEINFO {WORDwVersion;WORDwStatus;WORDwObjType;CEOIDoidChanged;CEOIDoidDbase;};
 
 /* oidDbase  [extra struct] */
 struct REPLCHANGEINFO {

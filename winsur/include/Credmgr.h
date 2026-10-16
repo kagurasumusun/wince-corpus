@@ -27,4 +27,21 @@
 #define CRED_TYPE_KERBEROS_PASSWORD 6
 #define CRED_TYPE_NTLM_PASSWORD 5
 
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* CREDENTIAL  [struct; shared; A/W CREDENTIALA,CREDENTIALW (CE is W-side)] */
+typedef struct _CREDENTIAL {
+ DWORD Flags;
+ DWORD Type;
+ FILETIME LastWritten;
+ DWORD CredentialBlobSize;
+ LPBYTE CredentialBlob;
+ DWORD Persist;
+ LPTSTR UserName;
+} CREDENTIAL, *PCREDENTIAL;
+
 #endif /* _CREDMGR_ */

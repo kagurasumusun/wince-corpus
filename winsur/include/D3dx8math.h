@@ -33,6 +33,7 @@
 typedef struct D3DXVECTOR4 {
  FLOAT x, y, z, w;
 } D3DXVECTOR4;
+typedef D3DXVECTOR4 *PD3DXVECTOR4, *LPD3DXVECTOR4;
 
 /* ==================================================================
  * functions and callbacks

@@ -12,6 +12,19 @@
 
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* BTH_RADIO_MODE  [enum; ce-only] */
+enum BTH_RADIO_MODE {
+ BTH_POWER_OFF,
+ BTH_CONNECTABLE,
+ BTH_DISCOVERABLE
+};
+
+/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

@@ -23,6 +23,7 @@ typedef struct HiveRAMInfo {
  WORD wFlags;
  HiveRAMRegion SystemRegion;
 } HiveRAMInfo;
+typedef HiveRAMInfo *PHiveRAMInfo, *LPHiveRAMInfo;
 
 /* HiveRAMRegion  [struct; ce-only] */
 typedef struct HiveRAMRegion {
@@ -30,6 +31,7 @@ typedef struct HiveRAMRegion {
  DWORD dwLength;
  DWORD dwVirtCopyFlags;
 } HiveRAMRegion;
+typedef HiveRAMRegion *PHiveRAMRegion, *LPHiveRAMRegion;
 
 /* RegSecureKey  [struct; ce-only] */
 typedef struct RegSecureKey {
@@ -37,12 +39,14 @@ typedef struct RegSecureKey {
  WORD wLen;
  LPWSTR pName;
 } RegSecureKey;
+typedef RegSecureKey *PRegSecureKey, *LPRegSecureKey;
 
 /* RegSecureKeyList  [struct; ce-only] */
 typedef struct RegSecureKeyList {
  DWORD dwNumKeys;
  RegSecureKey* pList;
 } RegSecureKeyList;
+typedef RegSecureKeyList *PRegSecureKeyList, *LPRegSecureKeyList;
 
 /* ==================================================================
  * functions and callbacks

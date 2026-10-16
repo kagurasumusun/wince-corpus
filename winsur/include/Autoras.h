@@ -11,4 +11,16 @@
 #define _AUTORAS_
 
 
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* DIALER_NOTIFICATION  [struct; ce-only] */
+typedef struct { 
+ DWORD dwNotificationId; 
+ DWORD dwNotificationParam; 
+} DIALER_NOTIFICATION, PDIALER_NOTIFICATION;
+
 #endif /* _AUTORAS_ */

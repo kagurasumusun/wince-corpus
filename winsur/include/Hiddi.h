@@ -12,6 +12,36 @@
 
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* HID_DRIVER_SETTINGS  [struct; ce-only] */
+typedef struct _HID_DRIVER_SETTINGS {
+ DWORD dwVendorId;
+ DWORD dwProductId;
+ DWORD dwReleaseNumber;
+ DWORD dwInterfaceNumber;
+ DWORD dwCollection;
+ DWORD dwUsagePage;
+ DWORD dwUsage;
+} HID_DRIVER_SETTINGS, *PHID_DRIVER_SETTINGS;
+
+/* HID_STRING_TYPE  [enum; ce-only] */
+typedef enum _HID_STRING_TYPE {
+ HID_STRING_INDEXED = 0,
+ HID_STRING_ID_IMANUFACTURER,
+ HID_STRING_ID_IPRODUCT,
+ HID_STRING_ID_ISERIALNUMBER,
+ HID_STRING_MAX
+} HID_STRING_TYPE;
+typedef HID_STRING_TYPE *PHID_STRING_TYPE, *LPHID_STRING_TYPE;
+
+/* lpSetQueueSize  [extra struct] */
+struct _HID_FUNCS { DWORD dwCount; LPGET_REPORT lpGetReport; LPSET_REPORT lpSetReport; LPGET_INTERRUPT_REPORT lpGetInterruptReport; LPGET_STRING lpGetString; LPGET_QUEUE_SIZE lpGetQueueSize; LPSET_QUEUE_SIZE lpSetQueueSize;};
+
+/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
@@ -24,13 +54,5 @@ BOOL HIDDeviceNotifications(
  PVOID pvNotifyParameter
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-struct _HID_FUNCS { DWORD dwCount; LPGET_REPORT lpGetReport; LPSET_REPORT lpSetReport; LPGET_INTERRUPT_REPORT lpGetInterruptReport; LPGET_STRING lpGetString; LPGET_QUEUE_SIZE lpGetQueueSize; LPSET_QUEUE_SIZE lpSetQueueSize;};
 
 #endif /* _HIDDI_ */

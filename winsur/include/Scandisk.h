@@ -12,6 +12,18 @@
 
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* SCAN_OPTIONS  [struct; ce-only] */
+typedef struct _SCAN_OPTIONS {
+ DWORD dwFlags;
+ DWORD dwFatToUse;
+} SCAN_OPTIONS, *PSCAN_OPTIONS;
+
+/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

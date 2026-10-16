@@ -23,6 +23,7 @@ typedef struct {
  int index;
  int iteration;
 } ITERATION_INFO;
+typedef ITERATION_INFO *PITERATION_INFO, *LPITERATION_INFO;
 
 /* MODULE_PARAMS  [struct; ce-only] */
 typedef struct {
@@ -36,6 +37,7 @@ typedef struct {
  LPTSTR tszReserved;
  LPTSTR tszUser;
 } MODULE_PARAMS;
+typedef MODULE_PARAMS *PMODULE_PARAMS, *LPMODULE_PARAMS;
 
 /* ==================================================================
  * functions and callbacks

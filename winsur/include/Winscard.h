@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 9 constants, 31 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 9 constants, 31 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _WINSCARD_
 #define _WINSCARD_
@@ -33,16 +33,28 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* SCARD_ATRMASK  [struct; shared] */
+typedef struct _SCARD_ATRMASK {
+ DWORD cbAtr; 
+ BYTE rgbAtr[36]; 
+ BYTE rgbMask[36]; 
+} SCARD_ATRMASK, *PSCARD_ATRMASK, *LPSCARD_ATRMASK;
+
 /* SCARD_IO_REQUEST  [struct; ce-only] */
 typedef struct {
  DWORD dwProtocol;
  DWORD cbPciLength;
 } SCARD_IO_REQUEST;
+typedef SCARD_IO_REQUEST *PSCARD_IO_REQUEST, *LPSCARD_IO_REQUEST;
 
-/* LPSCARD_READERSTATE  [extra struct] */
-typedef struct {LPCTSTR szReader;LPVOID pvUserData;DWORD dwCurrentState;DWORD dwEventState;DWORD cbAtr;BYTE rgbAtr[36];} SCARD_READERSTATE, *PSCARD_READERSTATE, *LPSCARD_READERSTATE;
-
-/* LPSCARD_ATRMASK  [extra struct] */
-typedef struct _SCARD_ATRMASK {DWORDcbAtr;BYTErgbAtr[36];BYTErgbMask[36];} SCARD_ATRMASK, *PSCARD_ATRMASK, *LPSCARD_ATRMASK;
+/* SCARD_READERSTATE  [struct; shared; A/W SCARD_READERSTATEA,SCARD_READERSTATEW (CE is W-side)] */
+typedef struct {
+ LPCTSTR szReader;
+ LPVOID pvUserData;
+ DWORD dwCurrentState;
+ DWORD dwEventState;
+ DWORD cbAtr;
+ BYTE rgbAtr[36];
+} SCARD_READERSTATE, *PSCARD_READERSTATE, *LPSCARD_READERSTATE;
 
 #endif /* _WINSCARD_ */

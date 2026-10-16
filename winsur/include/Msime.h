@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 6 declarations, 0 outlines, 0 base types, 0 extra macros, 17 extra decls
+ * 0 constants, 6 declarations, 0 outlines, 0 base types, 0 extra macros, 9 extra decls
  */
 #ifndef _MSIME_
 #define _MSIME_
@@ -25,18 +25,25 @@ typedef struct {
  CHAR szDescription[256]; 
  CHAR szCopyright[128]; 
 } IMESHF;
+typedef IMESHF *PIMESHF, *LPIMESHF;
+
+/* IPCANDIDATE  [struct; ce-only] */
+typedef struct tagIPCANDIDATE {
+ DWORD dwSize;
+ DWORD dwFlags;
+ INT iSelIndex;
+ INT nCandidate;
+ DWORD dwPrivateDataOffset;
+ DWORD dwPrivateDataSize;
+ DWORD dwOffset[1];
+} IPCANDIDATE, *PIPCANDIDATE;
 
 /* POSTBL  [struct; shared] */
 typedef struct _POSTBL {
  WORD nPos; 
  BYTE* szName; 
 } POSTBL;
-
-/* PIMEWRD  [extra struct] */
-typedef struct _IMEWRD {WCHAR* pwchReading;WCHAR* pwchDisplay;Union{ULONGulPos;Struct{ WORDnPos1; WORDnPos2;};};ULONG* rgulAttrs[2];INTcbComment;IMEUCTuct;VOID* pvComment;}IMEWRD, *PIMEWRD;
-
-/* PIPCANDIDATE  [extra struct] */
-typedef struct tagIPCANDIDATE {DWORD dwSize;DWORD dwFlags;INT iSelIndex;INT nCandidate;DWORD dwPrivateDataOffset;DWORD dwPrivateDataSize;DWORD dwOffset[1];} IPCANDIDATE, *PIPCANDIDATE;
+typedef POSTBL *PPOSTBL, *LPPOSTBL;
 
 /* ==================================================================
  * functions and callbacks
@@ -59,14 +66,7 @@ HRESULT CreateIFEDictionaryInstance(
 HRESULT GenerateMessage(void);
 HRESULT IsReadingHalfKana(void);
 HRESULT SetCandidateSelection(UINT iciCandidate);
-HRESULT SetCandidateStr(UINTciCandidate,WCHAR* pwsz,UINT cbData);
 HRESULT SetCompositionAttr(UINT ciAtr,BYTE* pb);
-HRESULT SetCompositionClause(UINTciCls,DWORD* pdw);
-HRESULT SetCompositionReadAttr(UINTciAtr,BYTE* pb);
-HRESULT SetCompositionReadClause(UINTciCls,DWORD* pdw);
-HRESULT SetCompositionReadStr(UINTcwch,WCHAR* pwsz);
-HRESULT SetCompositionStr(UINTcwch,WCHAR* pwsz);
-HRESULT SetDeltaPos(UINTiDelta);
 HRESULT SetResultClause(UINT ciCls,DWORD* pdw);
 HRESULT SetResultReadClause(UINT ciCls,DWORD* pdw);
 HRESULT SetResultReadStr(UINT cwch,WCHAR* pwsz);

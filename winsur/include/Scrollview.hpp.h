@@ -12,6 +12,30 @@
 
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* SCROLL_STATE  [enum; ce-only] */
+enum SCROLL_STATE {
+ SCROLL_NO_PRESS,
+ SCROLL_UP_PRESS,
+ SCROLL_DN_PRESS,
+ SCROLL_PGUP_PRESS,
+ SCROLL_PGDN_PRESS,
+ SCROLL_SLIDE_PRESS,
+ SCROLL_UNAVAIL,
+ SCROLL_NEXT_FREE
+};
+
+/* idTimer  [extra struct] */
+struct ScrollBarInfoInternal {SCROLLINFO si;BOOL bInSetSBInfo;int nThumbPos;SCROLL_STATEdwState;UINT nTrackStart;UINT fnBar;UINT idTimer;};
+
+/* SCROLL_NEXT_FREE  [extra enum] */
+enum SCROLL_STATE {SCROLL_NO_PRESS, SCROLL_UP_PRESS, SCROLL_DN_PRESS, SCROLL_PGUP_PRESS, SCROLL_PGDN_PRESS, SCROLL_SLIDE_PRESS, SCROLL_UNAVAIL, SCROLL_NEXT_FREE};
+
+/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */

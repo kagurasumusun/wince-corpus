@@ -11,4 +11,35 @@
 #define _UPNPDEVAPI_
 
 
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* UPNPCB_ID  [enum; ce-only] */
+typedef enum {
+ UPNPCB_INIT,
+ UPNPCB_SUBSCRIBING,
+ UPNPCB_UNSUBSCRIBING,
+ UPNPCB_CONTROL,
+ UPNPCB_IDLE,
+ UPNPCB_WAKEUP,
+ UPNPCB_SHUTDOWN
+} UPNPCB_ID;
+typedef UPNPCB_ID *PUPNPCB_ID, *LPUPNPCB_ID;
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
+
+/* PUPNPCALLBACK  [callback; ce-only; CE 4.0..699; Upnpcapi.lib] */
+typedef DWORD (*PUPNPCALLBACK) (
+ UPNPCB_ID callbackId,
+ PVOID pvUserContext,
+ PVOID pvSvcParam
+);
+#endif /* _WIN32_WCE */
+
+/* PUNPNSUBSCRIPTION  [extra struct] */
+typedef struct {PCWSTRpszUDN;PCWSTRpszSID;} UPNPSUBSCRIPTION, *PUNPNSUBSCRIPTION;
+
 #endif /* _UPNPDEVAPI_ */

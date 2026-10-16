@@ -33,23 +33,27 @@ typedef enum {
  codeINSTALL_EXIT_DONE = 0, 
  codeINSTALL_EXIT_UNINSTALL 
 } codeINSTALL_EXIT;
+typedef codeINSTALL_EXIT *PcodeINSTALL_EXIT, *LPcodeINSTALL_EXIT;
 
 /* codeINSTALL_INIT  [enum; ce-only] */
 typedef enum {
  codeINSTALL_INIT_CONTINUE = 0,
  codeINSTALL_INIT_CANCEL
 } codeINSTALL_INIT;
+typedef codeINSTALL_INIT *PcodeINSTALL_INIT, *LPcodeINSTALL_INIT;
 
 /* codeUNINSTALL_EXIT  [enum; ce-only] */
 typedef enum {
  codeUNINSTALL_EXIT_DONE = 0 
 } codeUNINSTALL_EXIT;
+typedef codeUNINSTALL_EXIT *PcodeUNINSTALL_EXIT, *LPcodeUNINSTALL_EXIT;
 
 /* codeUNINSTALL_INIT  [enum; ce-only] */
 typedef enum {
  codeUNINSTALL_INIT_CONTINUE = 0,
  codeUNINSTALL_INIT_CANCEL
 } codeUNINSTALL_INIT;
+typedef codeUNINSTALL_INIT *PcodeUNINSTALL_INIT, *LPcodeUNINSTALL_INIT;
 
 /* ==================================================================
  * functions and callbacks

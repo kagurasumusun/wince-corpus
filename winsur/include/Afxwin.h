@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 1 outlines, 0 base types, 0 extra macros, 132 extra decls
+ * 0 constants, 0 declarations, 1 outlines, 0 base types, 0 extra macros, 127 extra decls
  */
 #ifndef _AFXWIN_
 #define _AFXWIN_
@@ -65,7 +65,6 @@ BOOL LimitText( int nMaxChars );
 void LineScroll( int nLines, int nChars = 0 );
 BOOL LoadOEMBitmap ( UINT nIDBitmap );
 void LoadStdProfileSettings( UINT nMaxMRU = _AFX_MRU_COUNT );
-CPoint MoveTo( int x, int y );
 void NormalizeRect( );
 void Offset( int xOffset, int yOffset );
 afx_msg void OnCancelMode( );
@@ -82,11 +81,7 @@ afx_msg void OnHScroll( UINT nSBCode, UINT nPos, CScrollBar* pScrollBar );
 afx_msg void OnInitMenuPopup ( CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu );
 afx_msg void OnKeyDown( UINT nChar, UINT nRepCnt, UINT nFlags );
 afx_msg void OnKeyUp( UINT nChar, UINT nRepCnt, UINT nFlags );
-afx_msg void OnLButtonDblClk( UINT nFlags, CPoint point );
-afx_msg void OnLButtonDown( UINT nFlags, CPoint point );
-afx_msg void OnLButtonUp( UINT nFlags, CPoint point );
 afx_msg LRESULT OnMenuChar ( UINT nChar, UINT nFlags, CMenu* pMenu );
-afx_msg void OnMouseMove( UINT nFlags, CPoint point );
 afx_msg void OnNcDestroy( );
 afx_msg void OnRenderAllFormats( );
 afx_msg void OnRenderFormat( UINT nFormat );

@@ -73,6 +73,7 @@ typedef enum {
  IfOperStatusNotPresent, 
  IfOperStatusLowerLayerDown
 } IF_OPER_STATUS;
+typedef IF_OPER_STATUS *PIF_OPER_STATUS, *LPIF_OPER_STATUS;
 
 /* IP_DAD_STATE  [enum; ce-only] */
 typedef enum {
@@ -82,6 +83,7 @@ typedef enum {
  IpDadStateDeprecated, 
  IpDadStatePreferred
 } IP_DAD_STATE;
+typedef IP_DAD_STATE *PIP_DAD_STATE, *LPIP_DAD_STATE;
 
 /* IP_PREFIX_ORIGIN  [enum; ce-only] */
 typedef enum {
@@ -91,6 +93,7 @@ typedef enum {
  IpPrefixOriginDhcp, 
  IpPrefixOriginRouterAdvertisement
 } IP_PREFIX_ORIGIN;
+typedef IP_PREFIX_ORIGIN *PIP_PREFIX_ORIGIN, *LPIP_PREFIX_ORIGIN;
 
 /* IP_SUFFIX_ORIGIN  [enum; ce-only] */
 typedef enum {
@@ -101,6 +104,7 @@ typedef enum {
  IpSuffixOriginLinkLayerAddress, 
  IpSuffixOriginRandom
 } IP_SUFFIX_ORIGIN;
+typedef IP_SUFFIX_ORIGIN *PIP_SUFFIX_ORIGIN, *LPIP_SUFFIX_ORIGIN;
 
 /* SCOPE_LEVEL  [enum; shared] */
 typedef enum {
@@ -112,6 +116,7 @@ typedef enum {
  ScopeLevelOrganization = 8, 
  ScopeLevelGlobal = 14
 } SCOPE_LEVEL;
+typedef SCOPE_LEVEL *PSCOPE_LEVEL, *LPSCOPE_LEVEL;
 
 /* IP_ADAPTER_INFO  [struct; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
@@ -137,8 +142,5 @@ typedef enum {
 /* IP_ADDRESS_STRING  [struct; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   String */
-
-/* PIP_PER_ADAPTER_INFO  [extra struct] */
-typedef struct _IP_PER_ADAPTER_INFO{UINT AutoconfigEnabled;UINT AutoconfigActive;PIP_ADDR_STRING CurrentDnsServer;IP_ADDR_STRING DnsServerList;} IP_PER_ADAPTER_INFO, *PIP_PER_ADAPTER_INFO;
 
 #endif /* _IPTYPES_ */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2 constants, 57 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 2 constants, 57 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _WS2SPI_
 #define _WS2SPI_
@@ -21,6 +21,21 @@
 #define WSPDESCRIPTION_LEN 255
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* WSATHREADID  [struct; shared] */
+typedef struct _WSATHREADID {
+ HANDLE ThreadHandle;
+ DWORD Reserved;
+} WSATHREADID, *LPWSATHREADID;
+
+/* lpErrno  [extra struct] */
+SOCKET WSPAccept(SOCKET s,struct sockaddr FAR* addr,LPINT addrlen,LPCONDITIONPROC lpfnCondition,DWORD dwCallbackData,LPINT lpErrno );
+
+/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
@@ -29,6 +44,11 @@
 /* NSPLookupServiceEnd  [function; ce-only; CE 5.0..699; Ws2.lib] */
 int NSPLookupServiceEnd(
  HANDLE hLookup
+);
+
+/* WSPCleanup  [function; ce-only; CE 5.0..699; Ws2.lib] */
+int WSPCleanup(
+ LPINT lpErrno 
 );
 #endif /* _WIN32_WCE */
 

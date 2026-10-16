@@ -29,5 +29,6 @@ typedef struct NodeData {
  USHORT specificType;
  NodeDataUnion u;
 } NodeData;
+typedef NodeData *PNodeData, *LPNodeData;
 
 #endif /* _BTHAPI_IDL_ */

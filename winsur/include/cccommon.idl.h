@@ -38,6 +38,7 @@ typedef struct tagFileVerifyResult{
  DWORD m_Version;
  FileVerifyInfo _Info;
 } FileVerifyResult;
+typedef FileVerifyResult *PFileVerifyResult, *LPFileVerifyResult;
 
 /* FileVerifyVersion  [struct; ce-only] */
 typedef struct tagFileVerifyVersion{
@@ -46,6 +47,7 @@ typedef struct tagFileVerifyVersion{
  DWORD m_Build;
  DWORD m_Revision;
 } FileVerifyVersion;
+typedef FileVerifyVersion *PFileVerifyVersion, *LPFileVerifyVersion;
 
 /* SystemInfo  [struct; ce-only] */
 typedef struct tagPlatformInfo{
@@ -55,6 +57,7 @@ typedef struct tagPlatformInfo{
  DWORD m_ProcessorArchitecture;
  DWORD m_InstructionSet;
 } SystemInfo;
+typedef SystemInfo *PSystemInfo, *LPSystemInfo;
 
 /* FileAction  [extra enum] */
 typedef enum tagFileCustomAction{ FileCustomAction_None = 0x0000, FileCustomAction_COM = 0x0001,} FileAction;

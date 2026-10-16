@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 543 constants, 81 declarations, 14 outlines, 0 base types, 1 extra macros, 2 extra decls
+ * 543 constants, 81 declarations, 14 outlines, 0 base types, 1 extra macros, 1 extra decls
  */
 #ifndef _WININET_
 #define _WININET_
@@ -578,6 +578,24 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* HTTP_VERSION_INFO  [struct; shared] */
+typedef struct {
+ DWORD dwMajorVersion;
+ DWORD dwMinorVersion;
+} HTTP_VERSION_INFO, *LPHTTP_VERSION_INFO;
+
+/* InternetCookieState  [enum; shared] */
+typedef enum InternetCookieState {
+ COOKIE_STATE_UNKNOWN = 0x0,
+ COOKIE_STATE_ACCEPT = 0x1,
+ COOKIE_STATE_PROMPT = 0x2,
+ COOKIE_STATE_LEASH = 0x3,
+ COOKIE_STATE_DOWNGRADE = 0x4,
+ COOKIE_STATE_REJECT = 0x5,
+ COOKIE_STATE_MAX = COOKIE_STATE_REJECT
+} InternetCookieState;
+typedef InternetCookieState *PInternetCookieState, *LPInternetCookieState;
+
 /* INTERNET_ASYNC_RESULT  [struct; shared; Wininet.lib] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   dwResult */
@@ -901,13 +919,5 @@ DWORD PrivacyGetZonePreferenceW(
  LPCWSTR pszPreference,
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-BOOL WINAPIInternetCrackUrl(LPCTSTRlpszUrl,DWORDdwUrlLength,DWORDdwFlags,LPURL_COMPONENTSlpUrlComponents);
 
 #endif /* _WININET_ */

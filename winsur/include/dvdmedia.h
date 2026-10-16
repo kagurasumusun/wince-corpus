@@ -20,4 +20,26 @@
 #define AMCONTROL_COLORINFO_PRESENT 0x00000008
 #define AMCONTROL_USED 0x00000001
 
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* KS_AM_KSPROPSETID_TSRateChange  [enum; ce-only] */
+typedef enum {
+ KS_AM_RATE_SimpleRateChange=1,
+ KS_AM_RATE_ExactRateChange=2,
+ KS_AM_RATE_MaxFullDataRate=3,
+ KS_AM_RATE_Step=4
+} KS_AM_PROPERTY_TS_RATE_CHANGE;
+
+/* KS_AM_PROPERTY_TS_RATE_CHANGE  [extra enum] */
+typedef enum {
+  KS_AM_RATE_SimpleRateChange=1,
+  KS_AM_RATE_ExactRateChange=2,
+  KS_AM_RATE_MaxFullDataRate=3,
+  KS_AM_RATE_Step=4
+} KS_AM_PROPERTY_TS_RATE_CHANGE;
+
 #endif /* _DVDMEDIA_ */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 3 declarations, 31 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 8 declarations, 30 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _OAL_IO_
 #define _OAL_IO_
@@ -50,8 +50,6 @@
 /* MASKREG32  [macro; ce-only] */
 
 /* MASKREG8  [macro; ce-only] */
-
-/* OAL_DDK_PARAMS  [struct; ce-only] */
 
 /* OUTPORT16  [macro; ce-only] */
 

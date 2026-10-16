@@ -1386,6 +1386,7 @@ typedef struct tagBITMAP {
  WORD bmBitsPixel; 
  LPVOID bmBits; 
 } BITMAP;
+typedef BITMAP *PBITMAP, *LPBITMAP;
 
 /* BITMAPCOREHEADER  [struct; shared] */
 typedef struct tagBITMAPCOREHEADER { 
@@ -1395,6 +1396,7 @@ typedef struct tagBITMAPCOREHEADER {
  WORD bcPlanes; 
  WORD bcBitCount; 
 } BITMAPCOREHEADER;
+typedef BITMAPCOREHEADER *PBITMAPCOREHEADER, *LPBITMAPCOREHEADER;
 
 /* BITMAPFILEHEADER  [struct; shared] */
 typedef struct tagBITMAPFILEHEADER {
@@ -1404,6 +1406,7 @@ typedef struct tagBITMAPFILEHEADER {
  WORD bfReserved2; 
  DWORD bfOffBits; 
 } BITMAPFILEHEADER;
+typedef BITMAPFILEHEADER *PBITMAPFILEHEADER, *LPBITMAPFILEHEADER;
 
 /* DOCINFO  [struct; shared; A/W DOCINFOA,DOCINFOW (CE is W-side)] */
 typedef struct { 
@@ -1413,12 +1416,14 @@ typedef struct {
  LPCTSTR lpszDatatype; 
  DWORD fwType;
 } DOCINFO;
+typedef DOCINFO *PDOCINFO, *LPDOCINFO;
 
 /* FONTSIGNATURE  [struct; shared] */
 typedef struct tagFONTSIGNATURE {
  DWORD fsUsb[4];
  DWORD fsCsb [2];
 } FONTSIGNATURE;
+typedef FONTSIGNATURE *PFONTSIGNATURE, *LPFONTSIGNATURE;
 
 /* LOGBRUSH  [struct; shared] */
 typedef struct tagLOGBRUSH { 
@@ -1426,6 +1431,7 @@ typedef struct tagLOGBRUSH {
  COLORREF lbColor; 
  LONG lbHatch; 
 } LOGBRUSH;
+typedef LOGBRUSH *PLOGBRUSH, *LPLOGBRUSH;
 
 /* LOGPEN  [struct; shared] */
 typedef struct tagLOGPEN { 
@@ -1433,6 +1439,7 @@ typedef struct tagLOGPEN {
  POINT lopnWidth; 
  COLORREF lopnColor; 
 } LOGPEN;
+typedef LOGPEN *PLOGPEN, *LPLOGPEN;
 
 /* PALETTEENTRY  [struct; shared] */
 typedef struct tagPALETTEENTRY {
@@ -1441,6 +1448,7 @@ typedef struct tagPALETTEENTRY {
  BYTE peBlue;
  BYTE peFlags;
 } PALETTEENTRY;
+typedef PALETTEENTRY *PPALETTEENTRY, *LPPALETTEENTRY;
 
 /* RGBQUAD  [struct; shared] */
 typedef struct tagRGBQUAD { 
@@ -1449,6 +1457,7 @@ typedef struct tagRGBQUAD {
  BYTE rgbRed;
  BYTE rgbReserved;
 } RGBQUAD;
+typedef RGBQUAD *PRGBQUAD, *LPRGBQUAD;
 
 /* RGBTRIPLE  [struct; shared] */
 typedef struct tagRGBTRIPLE { 
@@ -1456,6 +1465,7 @@ typedef struct tagRGBTRIPLE {
  BYTE rgbtGreen; 
  BYTE rgbtRed; 
 } RGBTRIPLE;
+typedef RGBTRIPLE *PRGBTRIPLE, *LPRGBTRIPLE;
 
 /* RGNDATAHEADER  [struct; shared] */
 typedef struct _RGNDATAHEADER { 
@@ -1465,6 +1475,7 @@ typedef struct _RGNDATAHEADER {
  DWORD nRgnSize; 
  RECT rcBound; 
 } RGNDATAHEADER;
+typedef RGNDATAHEADER *PRGNDATAHEADER, *LPRGNDATAHEADER;
 
 /* TEXTMETRIC  [struct; shared; A/W TEXTMETRICA,TEXTMETRICW (CE is W-side)] */
 typedef struct tagTEXTMETRIC {
@@ -1489,12 +1500,14 @@ typedef struct tagTEXTMETRIC {
  BYTE tmPitchAndFamily; 
  BYTE tmCharSet; 
 } TEXTMETRIC;
+typedef TEXTMETRIC *PTEXTMETRIC, *LPTEXTMETRIC;
 
 /* BITMAPCOREINFO  [struct; shared] */
 typedef struct _BITMAPCOREINFO { 
  BITMAPCOREHEADER bmciHeader; 
  RGBTRIPLE bmciColors[1]; 
 } BITMAPCOREINFO;
+typedef BITMAPCOREINFO *PBITMAPCOREINFO, *LPBITMAPCOREINFO;
 
 /* LOGPALETTE  [struct; shared] */
 typedef struct tagLOGPALETTE { 
@@ -1502,12 +1515,14 @@ typedef struct tagLOGPALETTE {
  WORD palNumEntries; 
  PALETTEENTRY palPalEntry[1]; 
 } LOGPALETTE;
+typedef LOGPALETTE *PLOGPALETTE, *LPLOGPALETTE;
 
 /* RGNDATA  [struct; shared] */
 typedef struct _RGNDATA { 
  RGNDATAHEADER rdh; 
  char Buffer[1]; 
 } RGNDATA;
+typedef RGNDATA *PRGNDATA, *LPRGNDATA;
 
 /* BITMAPINFOHEADER  [struct; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
@@ -1858,6 +1873,13 @@ COLORREF GetPixel(
  int nYPos
 );
 
+/* GetRegionData  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, mgrgn.lib, Winmgr.lib] */
+DWORD GetRegionData(
+ HRGN hRgn, 
+ DWORD dwCount, 
+ LPRGNDATA lpRgnData
+);
+
 /* GetRgnBox  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Mgrgn.lib, mgrgn.lib] */
 int GetRgnBox(
  HRGN hrgn, 
@@ -1872,6 +1894,14 @@ HGDIOBJ GetStockObject(
 /* GetSysColorBrush  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Mgdraw.lib, mgdraw.lib] */
 HBRUSH GetSysColorBrush(
  int nIndex
+);
+
+/* GetSystemPaletteEntries  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Mgpal.lib, mgpal.lib] */
+UINT GetSystemPaletteEntries( 
+ HDC hdc, 
+ UINT iStartIndex, 
+ UINT nEntries, 
+ LPPALETTEENTRY lppe
 );
 
 /* IntersectClipRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Mgrgn.lib, mgrgn.lib] */
@@ -2095,6 +2125,17 @@ COLORREF GetTextColor(
  HDC hdc
 );
 
+/* GetTextExtentExPoint  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Mgrast.lib, mgrast.lib, Mgtt.lib, mgtt.lib; A/W GetTextExtentExPointA,GetTextExtentExPointW (CE is W-side)] */
+BOOL GetTextExtentExPoint(
+ HDC hdc, 
+ LPCTSTR lpszStr, 
+ int cchString, 
+ int nMaxExtent, 
+ LPINT lpnFit, 
+ LPINT alpDx, 
+ LPSIZE lpSize
+);
+
 /* GetTextExtentPoint  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib; A/W GetTextExtentPointA,GetTextExtentPointW (CE is W-side)] */
 BOOL GetTextExtentPoint( 
  HDC hdc, 
@@ -2116,6 +2157,12 @@ int GetTextFace(
  HDC hdc, 
  int nCount, 
  LPTSTR lpFaceName
+);
+
+/* GetTextMetrics  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Mgrast.lib, mgrast.lib, Mgtt.lib, mgtt.lib; A/W GetTextMetricsA,GetTextMetricsW (CE is W-side)] */
+BOOL GetTextMetrics(
+ HDC hdc, 
+ LPTEXTMETRIC lptm
 );
 
 /* RemoveFontResource  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Mgrast.lib, mgrast.lib, Mgtt.lib, mgtt.lib; A/W RemoveFontResourceA,RemoveFontResourceW (CE is W-side)] */

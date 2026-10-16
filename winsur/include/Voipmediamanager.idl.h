@@ -40,6 +40,7 @@ typedef enum VoIPProgressTone {
  e_vptClientBusy, 
  e_vptNetworkBusy 
 } VoIPProgressTone;
+typedef VoIPProgressTone *PVoIPProgressTone, *LPVoIPProgressTone;
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

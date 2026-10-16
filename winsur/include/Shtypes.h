@@ -22,6 +22,7 @@ typedef struct _SHITEMID {
  USHORT cb; 
  BYTE abID[1]; 
  } SHITEMID;
+typedef SHITEMID *PSHITEMID, *LPSHITEMID;
 
 /* STRRET  [struct; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */

@@ -12,6 +12,20 @@
 
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* EXTSTACKTRACE  [struct; ce-only] */
+typedef struct _EXTSTACKTRACE {
+ ULONG FramePointer;
+ ULONG ProgramCounter;
+ ULONG ReturnAddress;
+ ULONG Args[4];
+} EXTSTACKTRACE, *PEXTSTACKTRACE;
+
+/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
@@ -19,6 +33,13 @@
 
 /* CheckControlC  [function; ce-only; CE 5.0..699] */
 ULONG CheckControlC(VOID);
+
+/* GetSymbol  [function; ce-only; CE 5.0..699] */
+VOID GetSymbol(
+ PVOID offset,
+ PUCHAR pchBuffer,
+ PULONG pDisplacement
+);
 
 /* Ioctl  [function; ce-only; CE 5.0..699] */
 ULONG Ioctl(
@@ -33,6 +54,66 @@ VOID ReadControlSpace(
  ULONG address,
  PVOID buf,
  ULONG size
+);
+
+/* ReadIoSpace  [function; ce-only; CE 5.0..699] */
+VOID ReadIoSpace(
+ ULONG address,
+ PULONG data,
+ PULONG size
+);
+
+/* ReadMemory  [function; ce-only; CE 5.0..699] */
+ULONG ReadMemory(
+ ULONG offset,
+ PVOID lpBuffer,
+ ULONG cb,
+ PULONG lpcbBytesRead
+);
+
+/* ReadPhysical  [function; ce-only; CE 5.0..699] */
+VOID ReadPhysical(
+ LARGE_INTEGER address,
+ PVOID buf,
+ ULONG size,
+ PULONG sizer
+);
+
+/* SetThreadForOperation  [function; ce-only; CE 5.0..699] */
+VOID SetTreadForOperation(
+ PULONG Thread
+);
+
+/* StackTrace  [function; ce-only; CE 5.0..699] */
+ULONG StackTrace(
+ ULONG FramePointer,
+ ULONG StackPointer,
+ ULONG ProgramCounter,
+ PEXTSTACKTRACE StackFrames,
+ ULONG Frames
+);
+
+/* WriteIoSpace  [function; ce-only; CE 5.0..699] */
+VOID WriteIoSpace(
+ ULONG address,
+ ULONG data,
+ PULONG size
+);
+
+/* WriteMemory  [function; ce-only; CE 5.0..699] */
+ULONG WriteMemory(
+ ULONG offset,
+ LPCVOID lpbuffer,
+ ULONG cb,
+ PULONG lpcbBytesWritten
+);
+
+/* WritePhysical  [function; ce-only; CE 5.0..699] */
+VOID WritePhysical(
+ LARGE_INTEGER address,
+ PVOID buf,
+ ULONG size,
+ PULONG sizew
 );
 #endif /* _WIN32_WCE */
 

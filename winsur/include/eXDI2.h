@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 27 constants, 19 declarations, 1 outlines, 0 base types, 0 extra macros, 74 extra decls
+ * 27 constants, 19 declarations, 1 outlines, 0 base types, 0 extra macros, 71 extra decls
  */
 #ifndef _EXDI2_
 #define _EXDI2_
@@ -63,6 +63,7 @@ typedef enum _BP_KIND {
  bptHW,
  bptSW
 } BP_KIND;
+typedef BP_KIND *PBP_KIND, *LPBP_KIND;
 
 /* BREAKPOINT_SUPPORT_TYPE2  [struct; ce-only] */
 typedef struct _BREAKPOINT_SUPPORT_TYPE2 {
@@ -75,6 +76,7 @@ typedef struct _BREAKPOINT_SUPPORT_TYPE2 {
  BOOL fDataBpReadWriteSpecifiable;
  BOOL fDataBpDataMatchSupported;
 } BREAKPOINT_SUPPORT_TYPE2;
+typedef BREAKPOINT_SUPPORT_TYPE2 *PBREAKPOINT_SUPPORT_TYPE2, *LPBREAKPOINT_SUPPORT_TYPE2;
 
 /* DEBUG_ACCESS_CAPABILITIES_STRUCT2  [struct; ce-only] */
 typedef struct _DEBUG_ACCESS_CAPABILITIES_STRUCT2 {
@@ -89,12 +91,14 @@ typedef struct _DEBUG_ACCESS_CAPABILITIES_STRUCT2 {
  BOOL fSupportsReturnValue1StdReg;
  BOOL fSupportsClockCycleCount;
 } DEBUG_ACCESS_CAPABILITIES_STRUCT2;
+typedef DEBUG_ACCESS_CAPABILITIES_STRUCT2 *PDEBUG_ACCESS_CAPABILITIES_STRUCT2, *LPDEBUG_ACCESS_CAPABILITIES_STRUCT2;
 
 /* EXCEPTION_CHANCE  [enum; ce-only] */
 typedef enum _EXCEPTION_CHANCE {
  ec1stChance = 0,
  ec2ndChance
 } EXCEPTION_CHANCE;
+typedef EXCEPTION_CHANCE *PEXCEPTION_CHANCE, *LPEXCEPTION_CHANCE;
 
 /* EXCEPTION_DEFAULT_ACTION_TYPE2  [enum; ce-only] */
 typedef enum _EXCEPTION_DEFAULT_ACTION_TYPE2 {
@@ -104,12 +108,14 @@ typedef enum _EXCEPTION_DEFAULT_ACTION_TYPE2 {
  eda2Ignore1stChc,
  eda2Notify1stChc
 } EXCEPTION_DEFAULT_ACTION_TYPE2;
+typedef EXCEPTION_DEFAULT_ACTION_TYPE2 *PEXCEPTION_DEFAULT_ACTION_TYPE2, *LPEXCEPTION_DEFAULT_ACTION_TYPE2;
 
 /* EXCEPTION_TYPE2  [struct; ce-only] */
 typedef struct _EXCEPTION_TYPE2 {
  DWORD dwExceptionCode;
  EXCEPTION_CHANCE ec;
 } EXCEPTION_TYPE2;
+typedef EXCEPTION_TYPE2 *PEXCEPTION_TYPE2, *LPEXCEPTION_TYPE2;
 
 /* HALT_REASON_CODE_TYPE2  [enum; ce-only] */
 typedef enum _HALT_REASON_CODE_TYPE2 {
@@ -122,6 +128,7 @@ typedef enum _HALT_REASON_CODE_TYPE2 {
  hrc2OsNotif,
  hrc2Unknown,
 } HALT_REASON_CODE_TYPE2;
+typedef HALT_REASON_CODE_TYPE2 *PHALT_REASON_CODE_TYPE2, *LPHALT_REASON_CODE_TYPE2;
 
 /* HALT_REASON_TYPE2  [struct; ce-only] */
 typedef struct _HALT_REASON_TYPE2 {
@@ -130,6 +137,7 @@ typedef struct _HALT_REASON_TYPE2 {
  [unique] IeXdi2DataBp* pieXdi2DataBp;
  [unique] EXCEPTION_TYPE2* pet;
 } HALT_REASON_TYPE2;
+typedef HALT_REASON_TYPE2 *PHALT_REASON_TYPE2, *LPHALT_REASON_TYPE2;
 
 /* LINEAR_MEM_MAP_TYPE  [typedef; ce-only] */
 typedef DWORD LINEAR_MEM_MAP_TYPE;
@@ -140,6 +148,7 @@ typedef enum _MEM_TYPE2 {
  mt2PhysicalOrPeriIO,
  mt2CpuReg
 } MEM_TYPE2;
+typedef MEM_TYPE2 *PMEM_TYPE2, *LPMEM_TYPE2;
 
 /* RUN_STATUS_TYPE2  [enum; ce-only] */
 typedef enum _RUN_STATUS_TYPE2 {
@@ -149,6 +158,7 @@ typedef enum _RUN_STATUS_TYPE2 {
  rs2Error,
  rs2Unknown
 } RUN_STATUS_TYPE2;
+typedef RUN_STATUS_TYPE2 *PRUN_STATUS_TYPE2, *LPRUN_STATUS_TYPE2;
 
 /* TRISTATE_TYPE  [enum; ce-only] */
 typedef enum _TRISTATE_TYPE {
@@ -156,6 +166,7 @@ typedef enum _TRISTATE_TYPE {
  tsEnable = 1,
  tsDontCare = 2
 } TRISTATE_TYPE;
+typedef TRISTATE_TYPE *PTRISTATE_TYPE, *LPTRISTATE_TYPE;
 
 /* ==================================================================
  * extra declarations -- corpus pages the main
@@ -167,7 +178,6 @@ HRESULT AuthorizeTargetRestart( BOOL *pfContinue, DWORD *pdwRetryDelayMs);
 HRESULT ChangeExceptionAction( DWORD dwExceptionCode, EXCEPTION_DEFAULT_ACTION_TYPE2 efd2);
 HRESULT EnumAllCodeBps( TRISTATE_TYPE f3Enabled, IeXdi2EnumCodeBp** ppieXdi2EnumCodeBp);
 HRESULT EnumAllCpuRegs( IeXdi2EnumCpuRegs** ppieXdi2EnumCpuRegs);
-HRESULT EnumAllCpuRegsInGroup( DWORDdwGroupIdx, IeXdi2EnumCpuRegs** ppieXdi2EnumCpuRegs);
 HRESULT EnumAllDataBps( TRISTATE_TYPEf3Enabled, IeXdi2EnumDataBp** ppieXdi2EnumDataBp);
 HRESULT GetCurrentExecMode( DWORD dwCpuNum DWORD* pdwExecMode);
 HRESULT GetLinearMemMapList( [out] DWORD *pdwNbTotalMemMapInList, [out, size_is(,*pdwNbTotalMemMapInList)] MEMMAP_DESCRIPTION_TYPE **ppmmdTable);
@@ -185,8 +195,6 @@ HRESULT NotifyErrorState();
 HRESULT NotifyReset();
 HRESULT NotifyRun();
 HRESULT ReadClientScratchPad( [in] GUIDguidClient, [out] DWORD* pdwBuffOutSize, [out, size_is(,*pdwBuffOutSize)] BYTE** ppbBufferOut);
-HRESULT ReadMemoryX( [in] DWORD dwCpuNum, [in] LINEAR_MEM_MAP_TYPElmt, [in] ADDRESS_TYPEAddress, [in] DWORDdwNbElemToRead, [in] BYTEbAccessWidthInBytes, [out, size_is(dwNbElemToRead*bAccessWidthInBytes)] BYTE* pbReadBuffer, [out] DWORD* pdwNbElementEffectRead);
-HRESULT SingleStep( BOOL fIgnoreCurrentExcept, BOOLfOneCycleOnly);
 HRESULT UnlockHelper ();
 HRESULT UnlockProbe ();
 

@@ -36,8 +36,61 @@
 /* FSD_VOLUME_INFO  [struct; ce-only] */
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* FILELOCKSTATE  [struct; ce-only; Fsdmgr.lib] */
+typedef struct _FILELOCKSTATE {
+ DWORD dwPosLow;
+ DWORD dwPosHigh;
+ DWORD dwAccess;
+ LPCRITICAL_SECTION lpcs;
+ BOOL fTerminal;
+ HANDLE hevUnlock;
+ DWORD cQueue;
+ PVOID pvLockContainer;
+} FILELOCKSTATE, * PFILELOCKSTATE;
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
+
+/* PEMPTYLOCKCONTAINER  [callback; ce-only; CE 5.0..699; Fsdmgr.lib] */
+typedef VOID(*PEMPTYLOCKCONTAINER)(
+ PFILELOCKSTATE pFileLockState
+);
+#endif /* _WIN32_WCE */
+
+/* PFBI  [extra struct] */
+typedef struct _FSD_BUFFER_INFO{PBYTE pBuffer;DWORD cbBuffer;} FSD_BUFFER_INFO, *PFBI;
+
+/* PFDI  [extra struct] */
+typedef struct _FSD_DISK_INFO{DWORD cSectors;DWORD cbSector;DWORD cCylinders;DWORD cHeadsPerCylinder;DWORD cSectorsPerTrack;DWORD dwFlags;} FSD_DISK_INFO, *PFDI;
+
+/* PFSGI  [extra struct] */
+typedef struct _FSD_SCATTER_GATHER_INFO{DWORD dwFlags;DWORD idDsk;DWORD dwSector;DWORD cSectors;PFDI pfdi;DWORD cfbi;PFBI pfbi;PFNFSG pfnCallBack;} FSD_SCATTER_GATHER_INFO, *PFSGI;
+
+/* PFSGR  [extra struct] */
+typedef struct _FSD_SCATTER_GATHER_RESULTS{DWORD dwFlags;DWORD cSectorsTransferred;} FSD_SCATTER_GATHER_RESULTS, *PFSGR;
+
+/* ==================================================================
  * functions and callbacks
  * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
+
+/* FSDMGR_ReadDiskEx  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Fsdmgr.lib, fsdmgr.lib] */
+DWORD FSDMGR_ReadDiskEx( 
+ PFSGI pfsgi, 
+ PFSGR pfsgr
+);
+
+/* FSDMGR_WriteDiskEx  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Fsdmgr.lib, fsdmgr.lib] */
+DWORD FSDMGR_WriteDiskEx( 
+ PFSGI pfsgi, 
+ PFSGR pfsgr
+);
+#endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
@@ -59,6 +112,18 @@ DWORD CachedWrite(
  DWORD dwWriteFlags
 );
 
+/* CacheIoControl  [function; ce-only; CE 5.0..699; Fsdmgr.lib] */
+BOOL CacheIoControl(
+ DWORD dwCacheId, 
+ DWORD dwIoControlCode,
+ LPVOID lpInbuf,
+ DWORD nInBufSize,
+ LPVOID lpOutBuf,
+ DWORD nOutBufSize,
+ LPDWORD lpBytesReturned,
+ LPOVERLAPPED lpOverlapped
+);
+
 /* CreateCache  [function; ce-only; CE 5.0..699; Fsdmgr.lib] */
 DWORD CreateCache(
  HANDLE hDsk, 
@@ -72,6 +137,32 @@ DWORD CreateCache(
 /* DeleteCache  [function; ce-only; CE 5.0..699; Fsdmgr.lib] */
 DWORD DeleteCache(
  DWORD dwCacheId 
+);
+
+/* FSDMGR_EmptyLockContainer  [function; ce-only; CE 5.0..699; Fsdmgr.lib] */
+BOOL MyFSD_EmptyLockContainer(
+ PFILELOCKSTATE pFileLockState
+);
+
+/* MyFSD_FsIoControl  [function; ce-only; CE 5.0..699; Fsdmgr.lib] */
+BOOL MyFSD_FsIoControl( 
+ DWORD pVol,
+ DWORD dwIoControlCode,
+ LPVOID lpInBuffer,
+ DWORD nInBufferSize,
+ LPVOID lpOutBuffer,
+ DWORD nOutBufferSize,
+ LPDWORD lpBytesReturned,
+ LPOVERLAPPED lpOverlapped
+);
+
+/* MyFSD_UnLockFileEx  [function; ce-only; CE 5.0..699; Fsdmgr.lib] */
+BOOL MyFSD_UnlockFileEx(
+ DWORD dwFile,
+ DWORD dwReserved,
+ DWORD nNumberOfBytesToUnlockLow,
+ DWORD nNumberOfBytesToUnlockHigh,
+ LPOVERLAPPED lpOverlapped
 );
 
 /* ResizeCache  [function; ce-only; CE 5.0..699; Fsdmgr.lib] */
@@ -102,6 +193,18 @@ DWORD FSDMGR_CachedWrite(
  DWORD dwWriteFlags
 );
 
+/* FSDMGR_CacheIoControl  [function; ce-only; CE 6.0..699; Fsdmgr.lib] */
+BOOL FSDMGR_CacheIoControl(
+ DWORD dwCacheId,
+ DWORD dwIoControlCode,
+ LPVOID lpInBuf,
+ DWORD nInBufSize,
+ LPVOID lpOutBuf,
+ DWORD nOutBufSize,
+ LPDWORD lpBytesReturned,
+ LPOVERLAPPED lpOverlapped
+);
+
 /* FSDMGR_DeleteCache  [function; ce-only; CE 6.0..699; Fsdmgr.lib] */
 DWORD FSDMGR_DeleteCache(
  DWORD dwCacheId
@@ -114,5 +217,13 @@ DWORD FSDMGR_ResizeCache(
  DWORD dwResizeFlags
 );
 #endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* function */
+BOOL MyFSD_EmptyLockContainer( PFILELOCKSTATE pFileLockState );
 
 #endif /* _FSDMGR_ */

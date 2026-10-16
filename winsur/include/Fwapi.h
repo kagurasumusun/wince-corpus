@@ -18,6 +18,55 @@
 /* FW_LOG_ENTRY  [struct; ce-only] */
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* FW_ACTIONS  [enum; ce-only] */
+typedef enum _FW_ACTIONS {
+ FWA_BLOCK = 0x01,
+ FWA_ALLOW = 0x02,
+ FWA_ALLOW_RESPONSE = 0x03,
+} FW_ACTIONS;
+typedef FW_ACTIONS *PFW_ACTIONS, *LPFW_ACTIONS;
+
+/* FW_DAYS  [enum; ce-only] */
+typedef enum _FW_DAYS {
+ FWD_SUNDAY = 0x01,
+ FWD_MONDAY = 0x02,
+ FWD_TUESDAY = 0x04,
+ FWD_WEDNESDAY = 0x08,
+ FWD_THURSDAY = 0x10,
+ FWD_FRIDAY = 0x20,
+ FWD_SATURDAY = 0x40,
+ FWD_WEEKDAY = 0x3E,
+ FWD_WEEKEND = 0x41,
+} FW_DAYS;
+typedef FW_DAYS *PFW_DAYS, *LPFW_DAYS;
+
+/* FW_DIRECTIONS  [enum; ce-only] */
+typedef enum _FW_DIRECTIONS {
+ FWD_INBOUND = 0x08,
+ FWD_OUTBOUND = 0x10,
+} FW_DIRECTIONS;
+typedef FW_DIRECTIONS *PFW_DIRECTIONS, *LPFW_DIRECTIONS;
+
+/* FW_RULE_FLAGS  [enum; ce-only] */
+typedef enum _FW_RULE_FLAGS {
+ FWF_BLOCK = FWA_BLOCK,
+ FWF_ALLOW = FWA_ALLOW,
+ FWF_LOG = 0x04,
+ FWF_INBOUND = FWD_INBOUND,
+ FWF_OUTBOUND = FWD_OUTBOUND,
+ FWF_DISABLED = 0x20
+} FW_RULE_FLAGS;
+typedef FW_RULE_FLAGS *PFW_RULE_FLAGS, *LPFW_RULE_FLAGS;
+
+/* PFW__RULE  [extra struct] */
+typedef struct _FIREWALL_RULE{ DWORD dwSize; HRULE hRule; DWORD dwFlags; DWORD dwMask; LPCWSTR wszDescription; FW_IP_ADDRESS PrivateHost; FW_IP_ADDRESS PublicHost; union { UINT PublicHostPrefixLength; IN_ADDR PublicHostMask; }; INT Protocol; FW_ACTIONS Action; WORD wHourStart, wHourEnd; WORD wDayOfWeek; WORD wDay; WORD wMonth; union { { USHORT PortMin; USHORT PortMax; }; struct { UCHAR Type; UCHAR Code; }; };}FW_RULE, *PFW__RULE;
+
+/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

@@ -5,19 +5,52 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 19 declarations, 2 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 0 constants, 21 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _OALDMA_
 #define _OALDMA_
 
 
 /* ==================================================================
- * macros -- the macro/#define blocks the pages print (verbatim)
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
  * ================================================================ */
 
-/* CE_DMA_ADAPTER  [struct; ce-only] */
+/* CE_DMA_BUFFER_BLOCK  [struct; ce-only] */
+typedef struct _CE_DMA_BUFFER_BLOCK {
+ DWORD dwLength;
+ PVOID virtualAddress;
+ PHYSICAL_ADDRESS physicalAddress;
+} CE_DMA_BUFFER_BLOCK, *PCE_DMA_BUFFER_BLOCK;
 
-/* DEVICE_DMA_REQUIREMENT_INFO  [struct; ce-only] */
+/* DMA_STATUS_CODE  [enum; ce-only] */
+typedef enum _DMA_STATUS {
+ DMA_TRANSFER_COMPLETE = 0,
+ DMA_TRANSFER_IN_PROGRESS,
+ DMA_TRANSFER_IN_QUEUE,
+ DMA_TRANSFER_COMPLETE_WITH_ERROR,
+ DMA_TRANSFER_COMPLETE_WITH_CANCELED
+} DMA_STATUS_CODE, *PDMA_STATUS_CODE;
+
+/* PDEVICE_DMA_REQUIRMENT_INFO  [extra struct] */
+typedef struct _CE_DMA_ADAPTER {
+  ULONG Size;
+  INTERFACE_TYPE InterfaceType;
+  ULONG BusNumber;
+  ULONG DeviceLocation;
+  ULONG DmaAdapter;
+  ULONG MaximunSizeOfMappingRegister;
+  ULONG AddressBoundary;
+  ULONG AddressAlignment;
+  PHYSICAL_ADDRESS DmaSystemMemoryRangeStart;
+  ULONG DmaSystemMemoryRangeLength;
+  CE_REGISTER_ACCESS_WIDTH CeDmaWidth;
+  CE_DMA_SPEED DmaSpeed;
+  BOOLEAN DemandMode;
+  BOOLEAN BusMaster;
+  DWORD dwFlags;
+} DEVICE_DMA_REQUIRMENT_INFO , *PDEVICE_DMA_REQUIRMENT_INFO;
 
 /* ==================================================================
  * functions and callbacks

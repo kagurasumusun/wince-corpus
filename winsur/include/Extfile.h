@@ -11,4 +11,25 @@
 #define _EXTFILE_
 
 
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* FILECHANGEINFO  [struct; ce-only; ceshell.lib] */
+struct _FILECHANGEINFO {
+ DWORD cbSize;
+ LONG wEventId;
+ ULONG uFlags;
+ DWORD dwItem1;
+ DWORD dwItem2;
+ DWORD dwAttributes;
+ FILETIME ftModified;
+ ULONG nFileSize;
+} FILECHANGEINFO, *LPFILECHANGEINFO;
+
+/* LPCFILECHANGEINFO  [extra typedef] */
+typedef const FILECHANGEINFO *LPCFILECHANGEINFO;
+
 #endif /* _EXTFILE_ */

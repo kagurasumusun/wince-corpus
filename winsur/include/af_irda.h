@@ -26,6 +26,49 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* IAS_QUERY  [struct, typedef; ce-only] */
+typedef struct IAS_QUERY {
+ u_char irdaDeviceID[4];
+ char irdaClassName[61];
+ char irdaAttribName[61];
+ u_short irdaAttribType;
+ union {
+ int irdaAttribInt;
+ struct {
+ int Len;
+ u_char OctetSeq[1];
+ u_char Reserved[3];
+ } irdaAttribOctetSeq;
+ struct {
+ int Len;
+ u_char CharSet;
+ u_char UsrStr[1];
+ u_char Reserved[2];
+ } irda AttribUsrStr;
+ } irdaAttribute; 
+} _IAS_QUERY, *PIAS_QUERY;
+
+/* IAS_SET  [struct, typedef; ce-only] */
+typedef struct _IAS_SET {
+ char irdaClassName[61];
+ char irdaAttribName[61];
+ u_short irdaAttribType;
+ union {
+ int irdaAttribInt;
+ struct {
+ int Len;
+ u_char OctetSeq[1];
+ u_char Reserved[3];
+ } irdaAttribOctetSeq;
+ struct {
+ int Len;
+ u_char CharSet;
+ u_char UsrStr[1];
+ u_char Reserved[2];
+ } irda AttribUsrStr;
+ } irdaAttribute;
+} _IAS_SET, *PIAS_SET;
+
 /* IRDA_DEVICE_INFO  [struct, typedef; ce-only] */
 typedef struct IRDA_DEVICE_INFO {
  u_char irdaDeviceID[4];
@@ -41,12 +84,6 @@ struct sockaddr_irda {  u_short irdaAddressFamily;  u_char irdaDeviceID[4];  cha
 
 /* LPSOCKADDR_IRDA  [extra struct] */
 typedef struct _SOCKADDR_IRDA{u_short irdaAddressFamily;u_char irdaDeviceID[4];char irdaServiceName[25];} SOCKADDR_IRDA, *PSOCKADDR_IRDA, FAR* LPSOCKADDR_IRDA;
-
-/* PIAS_QUERY  [extra struct] */
-typedef struct IAS_QUERY { u_char irdaDeviceID[4];char irdaClassName[61];char irdaAttribName[61];u_short irdaAttribType; union {int irdaAttribInt;struct { int Len; u_char OctetSeq[1]; u_char Reserved[3]; } irdaAttribOctetSeq; struct { int Len; u_char CharSet; u_char UsrStr[1]; u_char Reserved[2]; } irda AttribUsrStr; } irdaAttribute; } _IAS_QUERY, *PIAS_QUERY;
-
-/* PIAS_SET  [extra struct] */
-typedef struct _IAS_SET {char irdaClassName[61];char irdaAttribName[61];u_short irdaAttribType; union { int irdaAttribInt; struct { int Len; u_char OctetSeq[1]; u_char Reserved[3]; } irdaAttribOctetSeq; struct { int Len; u_char CharSet; u_char UsrStr[1]; u_char Reserved[2]; } irda AttribUsrStr; } irdaAttribute;} _IAS_SET, *PIAS_SET;
 
 /* PWCE_DEVICELIST  [extra struct] */
 typedef struct DEVICELIST{ ULONG numDevice; IRDA_DEVICE_INFO Device [1];}_DEVICELIST, *PWCE_DEVICELIST;

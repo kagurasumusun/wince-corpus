@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1 constants, 7 declarations, 10 outlines, 0 base types, 0 extra macros, 50 extra decls
+ * 1 constants, 7 declarations, 10 outlines, 0 base types, 0 extra macros, 46 extra decls
  */
 #ifndef _OLEIDL_
 #define _OLEIDL_
@@ -53,6 +53,57 @@
 #endif /* _WIN32_WCE */
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* OLEGETMONIKER  [enum; shared] */
+typedef enum tagOLEGETMONIKER { 
+ OLEGETMONIKER_ONLYIFTHERE = 1,
+ OLEGETMONIKER_FORCEASSIGN = 2,
+ OLEGETMONIKER_UNASSIGN = 3,
+ OLEGETMONIKER_TEMPFORUSER = 4
+} OLEGETMONIKER;
+typedef OLEGETMONIKER *POLEGETMONIKER, *LPOLEGETMONIKER;
+
+/* OLELINKBIND  [enum; shared] */
+typedef enum tagOLELINKBIND { 
+ OLELINKBIND_EVENIFCLASSDIFF = 1, 
+} OLELINKBIND;
+typedef OLELINKBIND *POLELINKBIND, *LPOLELINKBIND;
+
+/* OLEUPDATE  [enum; shared] */
+typedef enum tagOLEUPDATE { 
+ OLEUPDATE_ALWAYS = 1, 
+ OLEUPDATE_ONCALL = 3 
+} OLEUPDATE; 
+typedef OLEUPDATE *LPOLEUPDATE;
+
+/* OLEVERB  [struct; shared] */
+typedef struct tagOLEVERB { 
+ LONG lVerb; 
+ LPWSTR lpszVerbName; 
+ DWORD fuFlags; 
+ DWORD grfAttribs; 
+} OLEVERB, *LPOLEVERB;
+
+/* OLEVERBATTRIB  [enum; shared] */
+typedef enum tagOLEVERBATTRIB { 
+ OLEVERBATTRIB_NEVERDIRTIES = 1, 
+ OLEVERBATTRIB_ONCONTAINERMENU = 2 
+} OLEVERBATTRIB;
+typedef OLEVERBATTRIB *POLEVERBATTRIB, *LPOLEVERBATTRIB;
+
+/* OLEWHICHMK  [enum; shared] */
+typedef enum tagOLEWHICHMK { 
+ OLEWHICHMK_CONTAINER = 1, 
+ OLEWHICHMK_OBJREL = 2, 
+ OLEWHICHMK_OBJFULL = 3 
+} OLEWHICHMK;
+typedef OLEWHICHMK *POLEWHICHMK, *LPOLEWHICHMK;
+
+/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
@@ -67,7 +118,6 @@ HRESULT EnumAdvise( IENumSTATDATA *ppEnumAdvise,);
 HRESULT EnumVerbs( IEnumOleVerb **ppEnumOleVerb);
 HRESULT Freeze( DWORD dwAspect, LONG lindex, void *pvAspect, DWORD *pdwFreeze);
 HRESULT GetAdvise( DWORD * pdwAspect, DWORD * padvf, IAdviseSink **ppAdvSink);
-HRESULT GetClientSite( IOleClientSite **ppClientSite);
 HRESULT GetMiscStatus( DWORD dwAspect, DWORD *pdwStatus);
 HRESULT GetMoinker( DWORD dwAssign, DWORD dwWhichMoniker , IMoniker ** ppmk );
 HRESULT GetMoniker( DWORD dwAssign, DWORD dwWhichMoniker, IMoniker **ppmk);
@@ -85,7 +135,6 @@ HRESULT RequestNewObjectlayout();
 HRESULT SaveObject( void );
 HRESULT SendOnRename( IMoniker *pmk,);
 HRESULT SetAdvise( DWORD dwAspect, DWORD advf, IAdviseSink *pAdvSink);
-HRESULT SetClientSite( IOleClientSite *pClientSite);
 HRESULT SetUpdateOptions( DWORD dwUpdateOpt );
 HRESULT ShowObject();
 HRESULT UnbindSource(void);

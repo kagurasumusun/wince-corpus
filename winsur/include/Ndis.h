@@ -196,12 +196,148 @@ VOID TR_IS_GROUP(
  * declaration body no page prints
  * ================================================================ */
 
+/* NDIS_HANDLE  [typedef; ce-only] */
+typedef 
+PVOID NDIS_HANDLE,
+*PNDIS_HANDLE;
+
+/* NDIS_INTERFACE_TYPE  [enum; ce-only] */
+typedef enum _NDIS_INTERFACE_TYPE {
+ NdisInterfaceInternal = Internal,
+ NdisInterfaceIsa = Isa,
+ NdisInterfaceEisa = Eisa,
+ NdisInterfaceMca = MicroChannel,
+ NdisInterfaceTurboChannel = TurboChannel,
+ NdisInterfacePci = PCIBus,
+ NdisInterfacePcMcia = PCMCIABus,
+ NdisInterfaceCBus = CBus,
+ NdisInterfaceMPIBus = MPIBus,
+ NdisInterfaceMPSABus = MPSABus,
+ NdisInterfaceProcessorInternal = ProcessorInternal,
+ NdisInterfaceInternalPowerBus = InternalPowerBus,
+ NdisInterfacePNPISABus = PNPISABus,
+ NdisInterfacePNPBus = PNPBus,
+ NdisMaximumInterfaceType,
+} NDIS_INTERFACE_TYPE, *PNDIS_INTERFACE_TYPE;
+
+/* NDIS_MAC_FRAGMENT  [struct; ce-only] */
+typedef struct _NDIS_MAC_FRAGMENT {
+ NDIS_HANDLE 
+ NdisLinkContext
+ ;
+ ULONG
+ Errors
+ ;
+ } NDIS_MAC_FRAGMENT, *PNDIS_MAC_FRAGMENT;
+
+/* NDIS_MAC_LINE_DOWN  [struct; ce-only] */
+typedef struct _NDIS_MAC_LINE_DOWN {
+ NDIS_HANDLE NdisLinkContext;
+} NDIS_MAC_LINE_DOWN, *PNDIS_MAC_LINE_DOWN;
+
+/* NDIS_OID  [typedef; ce-only] */
+typedef 
+ULONG NDIS_OID, 
+*PNDIS_OID;
+
+/* NDIS_PACKET_EXTENSION  [struct; ce-only] */
+typedef struct _NDIS_PACKET_EXTENSION {
+ PVOID NdisPacketInfo[MaxPerPacketInfo];
+} NDIS_PACKET_EXTENSION, *PNDIS_PACKET_EXTENSION;
+
+/* NDIS_PACKET_STACK  [struct; ce-only] */
+typedef struct _NDIS_PACKET_STACK {
+ ULONG_PTR IMReserved[2];
+ ULONG_PTR NdisReserved[4];
+} NDIS_PACKET_STACK, *PNDIS_PACKET_STACK;
+
+/* NDIS_PARAMETER_TYPE  [enum; ce-only] */
+typedef enum _NDIS_PARAMETER_TYPE {
+ NdisParameterInteger,
+ NdisParameterHexInteger,
+ NdisParameterString,
+ NdisParameterMultiString,
+ NdisParameterBinary,
+} NDIS_PARAMETER_TYPE, *PNDIS_PARAMETER_TYPE;
+
+/* NDIS_PHYSICAL_ADDRESS  [typedef; ce-only] */
+typedef
+PHYSICAL_ADDRESS NDIS_PHYSICAL_ADDRESS, 
+*PNDIS_PHYSICAL_ADDRESS;
+
 /* NDIS_PROC  [struct; ce-only] */
 typedef
 VOID (*NDIS_PROC) (
  struct _NDIS_WORK_ITEM *,
  PVOID
 );
+
+/* NDIS_STATUS  [typedef; ce-only] */
+typedef 
+int NDIS_STATUS, 
+*PNDIS_STATUS;
+
+/* NDIS_TASK_TCP_IP_CHECKSUM  [struct; ce-only] */
+typedef struct _NDIS_TASK_TCP_IP_CHECKSUM {
+ struct {
+ ULONG IpOptionsSupported;
+ ULONG TcpOptionsSupported;
+ ULONG TcpChecksum;
+ ULONG UdpChecksum;
+ ULONG IpChecksum;
+ } V4Transmit;
+ struct {
+ ULONG IpOptionsSupported;
+ ULONG TcpOptionsSupported;
+ ULONG TcpChecksum;
+ ULONG UdpChecksum;
+ ULONG IpChecksum;
+ } V4Receive;
+ struct {
+ ULONG IpOptionsSupported;
+ ULONG TcpOptionsSupported;
+ ULONG TcpChecksum;
+ ULONG UdpChecksum;
+ } V6Transmit;
+ struct {
+ ULONG IpOptionsSupported;
+ ULONG TcpOptionsSupported;
+ ULONG TcpChecksum;
+ ULONG UdpChecksum;
+ } V6Receive;
+} NDIS_TASK_TCP_IP_CHECKSUM, *PNDIS_TASK_TCP_IP_CHECKSUM;
+
+/* NDIS_TASK_TCP_LARGE_SEND  [struct; ce-only] */
+typedef struct _NDIS_TASK_TCP_LARGE_SEND {
+ ULONG Version;
+ ULONG MaxOffLoadSize;
+ ULONG MinSegmentCount;
+ BOOLEAN TcpOptions;
+ BOOLEAN IpOptions;
+} NDIS_TASK_TCP_LARGE_SEND, *PNDIS_TASK_TCP_LARGE_SEND;
+
+/* NDIS_TCP_IP_CHECKSUM_PACKET_INFO  [struct; ce-only] */
+typedef struct _NDIS_TCP_IP_CHECKSUM_PACKET_INFO {
+union {
+ struct { 
+ ULONG NdisPacketChecksumV4:1;
+ ULONG NdisPacketChecksumV6:1;
+ ULONG NdisPacketTcpChecksum:1;
+ ULONG NdisPacketUdpChecksum:1;
+ ULONG NdisPacketIpChecksum:1;
+ } Transmit;
+ struct {
+ ULONG NdisPacketTcpChecksumFailed:1;
+ ULONG NdisPacketUdpChecksumFailed:1;
+ ULONG NdisPacketIpChecksumFailed:1;
+ ULONG NdisPacketTcpChecksumSucceeded:1;
+ ULONG NdisPacketUdpChecksumSucceeded:1;
+ ULONG NdisPacketIpChecksumSucceeded:1;
+ ULONG NdisPacketLoopback:1;
+ } Receive;
+ ULONG Value;
+};
+} NDIS_TCP_IP_CHECKSUM_PACKET_INFO, *PNDIS_TCP_IP_CHECKSUM_PACKET_INFO;
 
 /* NDIS_WAN_COMPRESS_INFO  [struct; ce-only] */
 typedef struct _NDIS_WAN_COMPRESS_INFO { 
@@ -220,30 +356,112 @@ typedef struct _NDIS_WAN_COMPRESS_INFO {
  } Public; 
  }; 
 } NDIS_WAN_COMPRESS_INFO;
+typedef NDIS_WAN_COMPRESS_INFO *PNDIS_WAN_COMPRESS_INFO, *LPNDIS_WAN_COMPRESS_INFO;
+
+/* NDIS_WAN_GET_COMP_INFO  [struct; ce-only] */
+typedef struct _NDIS_WAN_GET_COMP_INFO { 
+ NDIS_HANDLE NdisLinkHandle; 
+ NDIS_WAN_COMPRESS_INFO SendCapabilities; 
+ NDIS_WAN_COMPRESS_INFO RecvCapabilities; 
+} NDIS_WAN_GET_COMP_INFO, *PNDIS_WAN_GET_COMP_INFO;
+
+/* NDIS_WAN_GET_LINK_INFO  [struct; ce-only] */
+typedef struct _NDIS_WAN_GET_LINK_INFO { 
+ NDIS_HANDLE NdisLinkHandle; 
+ ULONG MaxSendFrameSize; 
+ ULONG MaxRecvFrameSize; 
+ ULONG HeaderPadding; 
+ ULONG TailPadding; 
+ ULONG SendFramingBits; 
+ ULONG RecvFramingBits; 
+ ULONG SendCompressionBits; 
+ ULONG RecvCompressionBits; 
+ ULONG SendACCM; 
+ ULONG RecvACCM; 
+} NDIS_WAN_GET_LINK_INFO, *PNDIS_WAN_GET_LINK_INFO;
+
+/* NDIS_WAN_GET_STATS_INFO  [struct; ce-only] */
+typedef struct _NDIS_WAN_GET_STATS_INFO { 
+ NDIS_HANDLE NdisLinkHandle; 
+ ULONG BytesSent; 
+ ULONG BytesRcvd; 
+ ULONG FramesSent; 
+ ULONG FramesRcvd; 
+ ULONG CRCErrors; 
+ ULONG TimeoutErrors; 
+ ULONG AlignmentErrors; 
+ ULONG SerialOverrunErrors; 
+ ULONG FramingErrors; 
+ ULONG BufferOverrunErrors; 
+ ULONG BytesTransmittedUncompressed; 
+ ULONG BytesReceivedUncompressed; 
+ ULONG BytesTransmittedCompressed; 
+ ULONG BytesReceivedCompressed; 
+} NDIS_WAN_GET_STATS_INFO, *PNDIS_WAN_GET_STATS_INFO;
+
+/* NDIS_WAN_INFO  [struct; ce-only] */
+typedef struct _NDIS_WAN_INFO {
+ ULONG MaxFrameSize; 
+ ULONG MaxTransmit; 
+ ULONG HeaderPadding; 
+ ULONG TailPadding; 
+ ULONG Endpoints; 
+ UINT MemoryFlags; 
+ NDIS_PHYSICAL_ADDRESS HighestAcceptableAddress; 
+ ULONG FramingBits; 
+ ULONG DesiredACCM; 
+} NDIS_WAN_INFO, *PNDIS_WAN_INFO;
+
+/* NDIS_WAN_LINE_DOWN  [struct; ce-only] */
+typedef struct _NDIS_WAN_LINE_DOWN {
+ UCHAR RemoteAddress[6];
+ UCHAR LocalAddress[6];
+} NDIS_WAN_LINE_DOWN, *PNDIS_WAN_LINE_DOWN;
+
+/* NDIS_WAN_SET_COMP_INFO  [struct; ce-only] */
+typedef struct _NDIS_WAN_SET_COMP_INFO { 
+ NDIS_HANDLE NdisLinkHandle; 
+ NDIS_WAN_COMPRESS_INFO SendCapabilities; 
+ NDIS_WAN_COMPRESS_INFO RecvCapabilities; 
+} NDIS_WAN_SET_COMP_INFO, *PNDIS_WAN_SET_COMP_INFO;
+
+/* NDIS_WAN_SET_LINK_INFO  [struct; ce-only] */
+typedef struct _NDIS_WAN_SET_LINK_INFO { 
+ NDIS_HANDLE NdisLinkHandle; 
+ ULONG MaxSendFrameSize; 
+ ULONG MaxRecvFrameSize; 
+ ULONG HeaderPadding; 
+ ULONG TailPadding; 
+ ULONG SendFramingBits; 
+ ULONG RecvFramingBits; 
+ ULONG SendCompressionBits; 
+ ULONG RecvCompressionBits; 
+ ULONG SendACCM; 
+ ULONG RecvACCM; 
+} NDIS_WAN_SET_LINK_INFO, *PNDIS_WAN_SET_LINK_INFO;
+
+/* NETWORK_ADDRESS  [struct; ce-only] */
+typedef struct _NETWORK_ADDRESS {
+ USHORT AddressLength; 
+ USHORT AddressType; 
+ UCHAR Address[1]; 
+} NETWORK_ADDRESS, *PNETWORK_ADDRESS;
+
+/* NETWORK_ADDRESS_LIST  [struct; ce-only] */
+typedef struct _NETWORK_ADDRESS_LIST {
+ LONG AddressCount; 
+ USHORT AddressType; 
+ NETWORK_ADDRESS Address[1]; 
+} NETWORK_ADDRESS_LIST, *PNETWORK_ADDRESS_LIST;
+
+/* TRANSPORT_HEADER_OFFSET  [struct; ce-only] */
+typedef struct _TRANSPORT_HEADER_OFFSET {
+ USHORT ProtocolType; 
+ USHORT HeaderOffset; 
+} TRANSPORT_HEADER_OFFSET, *PTRANSPORT_HEADER_OFFSET;
 
 /* MEDIA_SPECIFIC_INFORMATION  [extra struct] */
 typedef struct MediaSpecificInformation { UINT NextEntryOffset; NDIS_CLASS_ID ClassId; UINT Size; UCHAR ClassInformation[1]; } MEDIA_SPECIFIC_INFORMATION;
-
-/* PNDIS_BUFFER  [extra typedef] */
-typedef MDL NDIS_BUFFER, *PNDIS_BUFFER;
-
-/* PNDIS_HANDLE  [extra typedef] */
-typedef PVOID NDIS_HANDLE,*PNDIS_HANDLE;
-
-/* PNDIS_INTERRUPT_MODE  [extra typedef] */
-typedef KINTERRUPT_MODE NDIS_INTERRUPT_MODE, *PNDIS_INTERRUPT_MODE;
-
-/* PNDIS_OID  [extra typedef] */
-typedef ULONG NDIS_OID, *PNDIS_OID;
-
-/* PNDIS_PHYSICAL_ADDRESS  [extra typedef] */
-typedef PHYSICAL_ADDRESS NDIS_PHYSICAL_ADDRESS, *PNDIS_PHYSICAL_ADDRESS;
-
-/* PNDIS_STATUS  [extra typedef] */
-typedef int NDIS_STATUS, *PNDIS_STATUS;
-
-/* PNDIS_STRING  [extra typedef] */
-typedef UNICODE_STRING NDIS_STRING, *PNDIS_STRING;
 
 /* PPNDIS_PACKET  [extra struct] */
 typedef struct _NDIS_PACKET {
@@ -258,105 +476,6 @@ typedef struct _NDIS_PACKET {
   };
   UCHAR ProtocolReserved[1];
 } NDIS_PACKET, *PNDIS_PACKET, **PPNDIS_PACKET;
-
-/* PNDIS_PROTOCOL_CHARACTERISTICS  [extra struct] */
-typedef struct _NDIS_PROTOCOL_CHARACTERISTICS {
-  UCHAR MajorNdisVersion;
-  UCHAR MinorNdisVersion;
-  UINT Reserved;
-  OPEN_ADAPTER_COMPLETE_HANDLER OpenAdapterCompleteHandler;
-  CLOSE_ADAPTER_COMPLETE_HANDLER CloseAdapterCompleteHandler;
-  SEND_COMPLETE_HANDLER SendCompleteHandler;
-  TRANSFER_DATA_COMPLETE_HANDLER TransferDataCompleteHandler;
-  RESET_COMPLETE_HANDLER ResetCompleteHandler;
-  REQUEST_COMPLETE_HANDLER RequestCompleteHandler;
-  RECEIVE_HANDLER ReceiveHandler;
-  RECEIVE_COMPLETE_HANDLER ReceiveCompleteHandler;
-  STATUS_HANDLER StatusHandler;
-  STATUS_COMPLETE_HANDLER StatusCompleteHandler;
-  NDIS_STRING Name;
-  RECEIVE_PACKET_HANDLER ReceivePacketHandler;
-  BIND_HANDLER BindAdapterHandler;
-  UNBIND_HANDLER UnbindAdapterHandler;
-  TRANSLATE_HANDLER TranslateHandler;
-  UNLOAD_PROTOCOL_HANDLER UnloadHandler;
-} NDIS_PROTOCOL_CHARACTERISTICS, *PNDIS_PROTOCOL_CHARACTERISTICS;
-
-/* PNDIS_REQUEST  [extra struct] */
-typedef struct _ NDIS_REQUEST {
-  UCHAR MacReserved[16];
-  NDIS_REQUEST _TYPE RequestType;
-  union _DATA {
-    struct QUERY_INFORMATION {
-      NDIS_OID Oid;
-      PVOID InformationBuffer;
-      UINT InformationBufferLength;
-      UINT BytesWritten;
-      UINT BytesNeeded;
-    } QUERY_INFORMATION;
-    struct SET_INFORMATION {
-      NDIS_OID Oid;
-      PVOID InformationBuffer;
-      UINT InformationBufferLength;
-      UINT BytesRead;
-      UINT BytesNeeded;
-    } SET_INFORMATION;
-  } DATA;
-} NDIS_REQUEST, *PNDIS_REQUEST;
-
-/* PNDIS_CONFIGURATION_PARAMETER  [extra struct] */
-typedef struct _NDIS_CONFIGURATION_PARAMETER {NDIS_PARAMETER_TYPE ParameterType;union { ULONG IntegerData; NDIS_STRING StringData; BINARY_DATA BinaryData;} ParameterData;} NDIS_CONFIGURATION_PARAMETER, *PNDIS_CONFIGURATION_PARAMETER;
-
-/* PNDIS_ENCAPSULATION_FORMAT  [extra struct] */
-typedef struct _NDIS_ENCAPSULATION_FORMAT {NDIS_ENCAPSULATION Encapsulation;struct { ULONG FixedHeaderSize:1;ULONG Reserved:31;} Flags;ULONG EncapsulationHeaderSize;} NDIS_ENCAPSULATION_FORMAT,*PNDIS_ENCAPSULATION_FORMAT;
-
-/* PNDIS_INTERFACE_TYPE  [extra enum] */
-typedef enum _NDIS_INTERFACE_TYPE {NdisInterfaceInternal = Internal,NdisInterfaceIsa = Isa,NdisInterfaceEisa = Eisa,NdisInterfaceMca = MicroChannel,NdisInterfaceTurboChannel = TurboChannel,NdisInterfacePci = PCIBus,NdisInterfacePcMcia = PCMCIABus,NdisInterfaceCBus = CBus,NdisInterfaceMPIBus = MPIBus,NdisInterfaceMPSABus = MPSABus,NdisInterfaceProcessorInternal = ProcessorInternal,NdisInterfaceInternalPowerBus = InternalPowerBus,NdisInterfacePNPISABus = PNPISABus,NdisInterfacePNPBus = PNPBus,NdisMaximumInterfaceType,} NDIS_INTERFACE_TYPE, *PNDIS_INTERFACE_TYPE;
-
-/* PNDIS_MAC_LINE_DOWN  [extra struct] */
-typedef struct _NDIS_MAC_LINE_DOWN {NDIS_HANDLE NdisLinkContext;} NDIS_MAC_LINE_DOWN, *PNDIS_MAC_LINE_DOWN;
-
-/* PNDIS_MAC_LINE_UP  [extra struct] */
-typedef struct _NDIS_MAC_LINE_UP {ULONG LinkSpeed;NDIS_WAN_QUALITY Quality;USHORT SendWindow;NDIS_HANDLE ConnectionWrapperID;NDIS_HANDLE NdisLinkHandle;NDIS_HANDLE NdisLinkContext;} NDIS_MAC_LINE_UP, *PNDIS_MAC_LINE_UP;
-
-/* PTRANSPORT_HEADER_OFFSET  [extra struct] */
-typedef struct _TRANSPORT_HEADER_OFFSET { USHORTProtocolType;USHORT HeaderOffset;} TRANSPORT_HEADER_OFFSET, *PTRANSPORT_HEADER_OFFSET;
-
-/* PNDIS_PACKET_EXTENSION  [extra struct] */
-typedef struct _NDIS_PACKET_EXTENSION {PVOID NdisPacketInfo[MaxPerPacketInfo];} NDIS_PACKET_EXTENSION, *PNDIS_PACKET_EXTENSION;
-
-/* PNDIS_PACKET_STACK  [extra struct] */
-typedef struct _NDIS_PACKET_STACK{ULONG_PTR IMReserved[2];ULONG_PTR NdisReserved[4];} NDIS_PACKET_STACK, *PNDIS_PACKET_STACK;
-
-/* PNDIS_PARAMETER_TYPE  [extra enum] */
-typedef enum _NDIS_PARAMETER_TYPE {NdisParameterInteger,NdisParameterHexInteger,NdisParameterString,NdisParameterMultiString,NdisParameterBinary,} NDIS_PARAMETER_TYPE, *PNDIS_PARAMETER_TYPE;
-
-/* PNDIS_TASK_OFFLOAD  [extra struct] */
-typedef struct _NDIS_TASK_OFFLOAD {ULONG Version;ULONG Size;NDIS_TASK Task;ULONG OffsetNextTask;ULONG TaskBufferLength;UCHAR TaskBuffer[1];} NDIS_TASK_OFFLOAD, *PNDIS_TASK_OFFLOAD;
-
-/* PNDIS_TASK_OFFLOAD_HEADER  [extra struct] */
-typedef struct _NDIS_TASK_OFFLOAD_HEADER {ULONG Version;ULONG Size;ULONG Reserved;ULONG OffsetFirstTask;NDIS_ENCAPSULATION_FORMAT EncapsulationFormat;} NDIS_TASK_OFFLOAD_HEADER, *PNDIS_TASK_OFFLOAD_HEADER;
-
-/* PNDIS_TASK_TCP_IP_CHECKSUM  [extra struct] */
-typedef struct _NDIS_TASK_TCP_IP_CHECKSUM {struct {ULONG IpOptionsSupported;ULONG TcpOptionsSupported;ULONG TcpChecksum;ULONG UdpChecksum;ULONG IpChecksum;} V4Transmit;struct {ULONG IpOptionsSupported;ULONG TcpOptionsSupported;ULONG TcpChecksum;ULONG UdpChecksum;ULONG IpChecksum;} V4Receive;struct {ULONG IpOptionsSupported;ULONG TcpOptionsSupported;ULONG TcpChecksum;ULONG UdpChecksum;} V6Transmit;struct {ULONG IpOptionsSupported;ULONG TcpOptionsSupported;ULONG TcpChecksum;ULONG UdpChecksum;} V6Receive;} NDIS_TASK_TCP_IP_CHECKSUM, *PNDIS_TASK_TCP_IP_CHECKSUM;
-
-/* PNDIS_TASK_TCP_LARGE_SEND  [extra struct] */
-typedef struct _NDIS_TASK_TCP_LARGE_SEND {ULONG Version;ULONG MaxOffLoadSize;ULONG MinSegmentCount;BOOLEAN TcpOptions;BOOLEAN IpOptions;} NDIS_TASK_TCP_LARGE_SEND, *PNDIS_TASK_TCP_LARGE_SEND;
-
-/* PNDIS_WAN_GET_COMP_INFO  [extra struct] */
-typedef struct _NDIS_WAN_GET_COMP_INFO { NDIS_HANDLENdisLinkHandle;NDIS_WAN_COMPRESS_INFOSendCapabilities;NDIS_WAN_COMPRESS_INFORecvCapabilities;} NDIS_WAN_GET_COMP_INFO, *PNDIS_WAN_GET_COMP_INFO;
-
-/* PNDIS_WAN_LINE_DOWN  [extra struct] */
-typedef struct _NDIS_WAN_LINE_DOWN {UCHARRemoteAddress[6];UCHARLocalAddress[6];} NDIS_WAN_LINE_DOWN, *PNDIS_WAN_LINE_DOWN;
-
-/* PNDIS_WAN_LINE_UP  [extra struct] */
-typedef struct _NDIS_WAN_LINE_UP {ULONG LinkSpeed;ULONG MaximumTotalSize;NDIS_WAN_QUALITY Quality;USHORT SendWindow;UCHAR RemoteAddress[6];UCHAR LocalAddress[6];ULONG ProtocolBufferLength;PUCHAR ProtocolBuffer;USHORT ProtocolType;NDIS_STRING DeviceName;} NDIS_WAN_LINE_UP, *PNDIS_WAN_LINE_UP;
-
-/* PNDIS_WAN_PACKET  [extra struct] */
-typedef struct _NDIS_WAN_PACKET {LIST_ENTRY WanPacketQueue;PUCHAR CurrentBuffer;ULONG CurrentLength;PUCHAR StartBuffer;PUCHAR EndBuffer;PVOID ProtocolReserved1;PVOID ProtocolReserved2;PVOID ProtocolReserved3;PVOID ProtocolReserved4;PVOID MacReserved1;PVOID MacReserved2;PVOID MacReserved3;PVOID MacReserved4;} NDIS_WAN_PACKET, *PNDIS_WAN_PACKET;
-
-/* PNDIS_WAN_SET_COMP_INFO  [extra struct] */
-typedef struct _NDIS_WAN_SET_COMP_INFO { NDIS_HANDLE NdisLinkHandle; NDIS_WAN_COMPRESS_INFOSendCapabilities;NDIS_WAN_COMPRESS_INFORecvCapabilities;} NDIS_WAN_SET_COMP_INFO,*PNDIS_WAN_SET_COMP_INFO;
 
 /* ==================================================================
  * functions and callbacks
@@ -373,16 +492,156 @@ VOID KdPrint(LPSTR *lpszString);
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x200 && _WIN32_WCE < 0x210) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699 */
 
+/* NdisMDeregisterIoPortRange  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndis.dll, ndis.dll, Ndislib.lib] */
+VOID NdisMDeregisterIoPortRange(
+ NDIS_HANDLE MiniportAdapterHandle,
+ UINT InitialPort,
+ UINT NumberOfPorts,
+ PVOID PortOffset
+);
+
+/* NdisMMapIoSpace  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndis.dll, ndis.dll, Ndislib.lib] */
+NDIS_STATUS NdisMMapIoSpace(
+ PVOID* VirtualAddress,
+ NDIS_HANDLE MiniportAdapterHandle,
+ NDIS_PHYSICAL_ADDRESS PhysicalAddress,
+ UINT Length
+);
+
+/* NdisMQueryInformationComplete  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndis.dll, ndis.dll, Ndislib.lib] */
+VOID NdisMQueryInformationComplete(
+ NDIS_HANDLE MiniportAdapterHandle,
+ NDIS_STATUS Status
+);
+
+/* NdisMRegisterIoPortRange  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndis.dll, ndis.dll, Ndislib.lib] */
+NDIS_STATUS NdisMRegisterIoPortRange(
+ PVOID* PortOffset,
+ NDIS_HANDLE MiniportAdapterHandle,
+ UINT InitialPort,
+ UINT NumberOfPorts
+);
+
+/* NdisMResetComplete  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndis.dll, ndis.dll, Ndislib.lib] */
+VOID NdisMResetComplete(
+ NDIS_HANDLE MiniportAdapterHandle,
+ NDIS_STATUS Status,
+ BOOLEAN AddressingReset
+);
+
+/* NdisMSendResourcesAvailable  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndis.dll, ndis.dll, Ndislib.lib] */
+VOID NdisMSendResourcesAvailable(
+ NDIS_HANDLE MiniportAdapterHandle
+);
+
+/* NdisMSetAttributes  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndis.dll, ndis.dll, Ndislib.lib] */
+VOID NdisMSetAttributes(
+ NDIS_HANDLE MiniportAdapterHandle,
+ NDIS_HANDLE MiniportAdapterContext,
+ BOOLEAN BusMaster,
+ NDIS_INTERFACE_TYPE AdapterType
+);
+
+/* NdisMSetAttributesEx  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndis.dll, ndis.dll, Ndislib.lib] */
+VOID NdisMSetAttributesEx(
+ NDIS_HANDLE MiniportAdapterHandle,
+ NDIS_HANDLE MiniportAdapterContext,
+ UINT CheckForHangTimeInSeconds,
+ ULONG AttributeFlags,
+ NDIS_INTERFACE_TYPE AdapterType
+);
+
+/* NdisMSetInformationComplete  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndis.dll, ndis.dll, Ndislib.lib] */
+VOID NdisMSetInformationComplete(
+ NDIS_HANDLE MiniportAdapterHandle,
+ NDIS_STATUS Status
+);
+
 /* NdisMSleep  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndis.dll, ndis.dll, Ndislib.lib] */
 VOID NdisMSleep(
  ULONG MicrosecondsToSleep
 );
 
-/* NdisOpenProtocolConfiguration  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
-VOID NdisOpenProtocolConfiguration(
+/* NdisMUnmapIoSpace  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndis.dll, ndis.dll, Ndislib.lib] */
+VOID NdisMUnmapIoSpace(
+ NDIS_HANDLE MiniportAdapterHandle,
+ PVOID VirtualAddress,
+ UINT Length
+);
+
+/* NdisMUpdateSharedMemory  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndis.dll, ndis.dll, Ndislib.lib] */
+VOID NdisMUpdateSharedMemory(
+ NDIS_HANDLE MiniportAdapterHandle,
+ ULONG Length,
+ PVOID VirtualAddress,
+ NDIS_PHYSICAL_ADDRESS PhysicalAddress
+);
+
+/* NdisOpenConfiguration  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
+VOID NdisOpenConfiguration(
  PNDIS_STATUS Status,
  PNDIS_HANDLE ConfigurationHandle,
- PNDIS_STRING ProtocolSection
+ NDIS_HANDLE WrapperConfigurationContext
+);
+
+/* NdisRawReadPortBufferUchar  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
+VOID NdisRawReadPortBufferUchar(
+ ULONG Port,
+ PUCHAR Buffer,
+ ULONG Length
+);
+
+/* NdisRawReadPortBufferUlong  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
+VOID NdisRawReadPortBufferUlong(
+ ULONG Port,
+ PULONG Buffer,
+ ULONG Length
+);
+
+/* NdisRawReadPortBufferUshort  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
+VOID NdisRawReadPortBufferUshort(
+ ULONG Port,
+ PUSHORT Buffer,
+ ULONG Length
+);
+
+/* NdisRawReadPortUchar  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
+VOID NdisRawReadPortUchar(
+ ULONG Port,
+ PUCHAR Data
+);
+
+/* NdisRawReadPortUlong  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
+VOID NdisRawReadPortUlong(
+ ULONG Port,
+ PULONG Data
+);
+
+/* NdisRawReadPortUshort  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
+VOID NdisRawReadPortUshort(
+ ULONG Port,
+ PUSHORT Data
+);
+
+/* NdisRawWritePortBufferUchar  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
+VOID NdisRawWritePortBufferUchar(
+ ULONG Port,
+ PUCHAR Buffer,
+ ULONG Length
+);
+
+/* NdisRawWritePortBufferUlong  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
+VOID NdisRawWritePortBufferUlong(
+ ULONG Port,
+ PULONG Buffer,
+ ULONG Length
+);
+
+/* NdisRawWritePortBufferUshort  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
+VOID NdisRawWritePortBufferUshort(
+ ULONG Port,
+ PUSHORT Buffer,
+ ULONG Length
 );
 
 /* NdisRawWritePortUchar  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
@@ -403,17 +662,59 @@ VOID NdisRawWritePortUshort(
  USHORT Data
 );
 
-/* NdisRegisterProtocol  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
-VOID NdisRegisterProtocol(
+/* NdisReadNetworkAddress  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
+VOID NdisReadNetworkAddress(
  PNDIS_STATUS Status,
- PNDIS_HANDLE NdisProtocolHandle,
- PNDIS_PROTOCOL_CHARACTERISTICS ProtocolCharacteristics,
- UINT CharacteristicsLength
+ PVOID* NetworkAddress,
+ PUINT NetworkAddressLength,
+ NDIS_HANDLE ConfigurationHandle
+);
+
+/* NdisReadPciSlotInformation  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
+ULONG NdisReadPciSlotInformation(
+ NDIS_HANDLE NdisAdapterHandle,
+ ULONG SlotNumber,
+ ULONG Offset,
+ PVOID Buffer,
+ ULONG Length
+);
+
+/* NdisReset  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
+VOID NdisReset(
+ PNDIS_STATUS Status,
+ NDIS_HANDLE NdisBindingHandle
+);
+
+/* NdisSetPhysicalAddressHigh  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
+VOID NdisSetPhysicalAddressHigh(
+ NDIS_PHYSICAL_ADDRESS PhysicalAddress,
+ ULONG Value
+);
+
+/* NdisSetPhysicalAddressLow  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
+VOID NdisSetPhysicalAddressLow(
+ NDIS_PHYSICAL_ADDRESS PhysicalAddress,
+ ULONG Value
 );
 
 /* NdisStallExecution  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
 VOID NdisStallExecution(
  UINT MicrosecondsToStall
+);
+
+/* NdisTerminateWrapper  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
+VOID NdisTerminateWrapper(
+ NDIS_HANDLE NdisWrapperHandle,
+ PVOID SystemSpecific
+);
+
+/* NdisWritePciSlotInformation  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
+ULONG NdisWritePciSlotInformation(
+ NDIS_HANDLE NdisAdapterHandle,
+ ULONG SlotNumber,
+ ULONG Offset,
+ PVOID Buffer,
+ ULONG Length
 );
 
 /* NdisZeroMappedMemory  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
@@ -431,17 +732,19 @@ VOID NdisZeroMemory(
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x200 && _WIN32_WCE < 0x210) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.0..209, 2.11..2.12, 3.0..699 */
 
-/* NdisAdjustBufferLength  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.lib, ndis.lib, Ndislib.lib] */
-VOID NdisAdjustBufferLength(
- PNDIS_BUFFER Buffer,
- UINT Length
-);
-
 /* NdisAllocateBufferPool  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.lib, ndis.lib, Ndislib.lib] */
 VOID NdisAllocateBufferPool(
  PNDIS_STATUS Status,
  PNDIS_HANDLE PoolHandle,
  UINT NumberOfDescriptors
+);
+
+/* NdisAllocateMemory  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.lib, ndis.lib, Ndislib.lib] */
+NDIS_STATUS NdisAllocateMemory(
+ PVOID* VirtualAddress,
+ UINT Length,
+ UINT MemoryFlags,
+ NDIS_PHYSICAL_ADDRESS HighestAcceptableAddress
 );
 
 /* NdisAllocatePacketPool  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.lib, ndis.lib, Ndislib.lib] */
@@ -452,22 +755,26 @@ VOID NdisAllocatePacketPool(
  UINT ProtocolReservedLength
 );
 
-/* NdisEqualString  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.lib, ndis.lib, Ndislib.lib] */
-BOOLEAN NdisEqualString(
- PNDIS_STRING String1,
- PNDIS_STRING String2,
- BOOLEAN CaseInsensitive
+/* NdisCloseAdapter  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.lib, ndis.lib, Ndislib.lib] */
+VOID NdisCloseAdapter(
+ PNDIS_STATUS Status,
+ NDIS_HANDLE NdisBindingHandle
 );
 
-/* NdisFlushBuffer  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.lib, ndis.lib, Ndislib.lib] */
-VOID NdisFlushBuffer(
- PNDIS_BUFFER Buffer,
- BOOLEAN WriteToDevice
+/* NdisCloseConfiguration  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.lib, ndis.lib, Ndislib.lib] */
+VOID NdisCloseConfiguration(
+ NDIS_HANDLE ConfigurationHandle
 );
 
-/* NdisFreeBuffer  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.lib, ndis.lib, Ndislib.lib] */
-VOID NdisFreeBuffer(
- PNDIS_BUFFER Buffer
+/* NdisDeregisterProtocol  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.lib, ndis.lib, Ndislib.lib] */
+VOID NdisDeregisterProtocol(
+ PNDIS_STATUS Status,
+ NDIS_HANDLE NdisProtocolHandle
+);
+
+/* NdisFreeBufferPool  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.lib, ndis.lib, Ndislib.lib] */
+VOID NdisFreeBufferPool(
+ NDIS_HANDLE PoolHandle
 );
 
 /* NdisFreeMemory  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.lib, ndis.lib, Ndislib.lib] */
@@ -477,10 +784,60 @@ VOID NdisFreeMemory(
  UINT MemoryFlags
 );
 
-/* NdisGetNextBuffer  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.lib, ndis.lib, Ndislib.lib] */
-VOID NdisGetNextBuffer(
- PNDIS_BUFFER CurrentBuffer,
- PNDIS_BUFFER* NextBuffer
+/* NdisFreePacketPool  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.lib, ndis.lib, Ndislib.lib] */
+VOID NdisFreePacketPool(
+ NDIS_HANDLE PoolHandle
+);
+
+/* NdisGetPhysicalAddressHigh  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.lib, ndis.lib, Ndislib.lib] */
+ULONG NdisGetPhysicalAddressHigh(
+ NDIS_PHYSICAL_ADDRESS PhysicalAddress
+);
+
+/* NdisGetPhysicalAddressLow  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.lib, ndis.lib, Ndislib.lib] */
+ULONG NdisGetPhysicalAddressLow(
+ NDIS_PHYSICAL_ADDRESS PhysicalAddress
+);
+
+/* NdisMDeregisterAdapterShutdownHandler  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.dll, ndis.dll, Ndislib.lib] */
+VOID NdisMDeregisterAdapterShutdownHandler(
+ NDIS_HANDLE MiniportHandle
+);
+
+/* NdisMEthIndicateReceive  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.dll, ndis.dll, Ndislib.lib] */
+VOID NdisMEthIndicateReceive(
+ NDIS_HANDLE MiniportAdapterHandle,
+ NDIS_HANDLE MiniportReceiveContext,
+ PVOID HeaderBuffer,
+ UINT HeaderBufferSize,
+ PVOID LookaheadBuffer,
+ UINT LookaheadBufferSize,
+ UINT PacketSize
+);
+
+/* NdisMEthIndicateReceiveComplete  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.dll, ndis.dll, Ndislib.lib] */
+VOID NdisMEthIndicateReceiveComplete(
+ NDIS_HANDLE MiniportAdapterHandle
+);
+
+/* NdisMIndicateReceivePacket  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.dll, ndis.dll, Ndislib.lib] */
+VOID NdisMIndicateReceivePacket(
+ NDIS_HANDLE MiniportAdapterHandle,
+ PPNDIS_PACKET ReceivePackets,
+ UINT NumberOfPackets
+);
+
+/* NdisMIndicateStatus  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.dll, ndis.dll, Ndislib.lib] */
+VOID NdisMIndicateStatus(
+ NDIS_HANDLE MiniportAdapterHandle,
+ NDIS_STATUS GeneralStatus,
+ PVOID StatusBuffer,
+ UINT StatusBufferSize
+);
+
+/* NdisMIndicateStatusComplete  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.dll, ndis.dll, Ndislib.lib] */
+VOID NdisMIndicateStatusComplete(
+ NDIS_HANDLE MiniportAdapterHandle
 );
 
 /* NdisMoveFromMappedMemory  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndis.dll, ndis.dll, Ndislib.lib] */
@@ -512,7 +869,20 @@ VOID NdisMoveToMappedMemory(
 );
 #endif /* _WIN32_WCE */
 
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 2.11..2.12, 3.0..399, 5.0..599 */
+
+/* NdisIMRevertBack  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..599; Ndis.lib, Ndislib.lib] */
+VOID NdisIMRevertBack( 
+IN NDIS_HANDLE MiniportAdapterHandle, 
+IN NDIS_HANDLE SwitchHandle );
+#endif /* _WIN32_WCE */
+
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
+
+/* NdisMFreeMapRegisters  [function; ce-only; CE 2.11..2.12, 3.0..699; Ndis.dll, ndis.dll, Ndislib.lib] */
+VOID NdisMFreeMapRegisters(
+ NDIS_HANDLE MiniportAdapterHandle
+);
 
 /* NdisMInitializeWrapper  [function; ce-only; CE 2.11..2.12, 3.0..699; Ndis.dll, ndis.dll, Ndislib.lib] */
 VOID NdisMInitializeWrapper(
@@ -520,6 +890,114 @@ VOID NdisMInitializeWrapper(
  PVOID SystemSpecific1,
  PVOID SystemSpecific2,
  PVOID SystemSpecific3
+);
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
+
+/* DriverEntry  [function; ce-only; CE 3.0..399, 5.0..699] */
+NDIS_STATUS DriverEntry(
+ PVOID Argument1,
+ PVOID Argument2 
+);
+
+/* NdisMTrIndicateReceive  [function; ce-only; CE 3.0..399, 5.0..699; Ndis.dll, ndis.dll] */
+VOID NdisMTrIndicateReceive(
+ NDIS_HANDLE MiniportAdapterHandle,
+ NDIS_HANDLE MiniportReceiveContext,
+ PVOID HeaderBuffer,
+ UINT HeaderBufferSize,
+ PVOID LookaheadBuffer,
+ UINT LookaheadBufferSize,
+ UINT PacketSize
+);
+
+/* NdisMTrIndicateReceiveComplete  [function; ce-only; CE 3.0..399, 5.0..699; Ndis.dll, ndis.dll] */
+VOID NdisMTrIndicateReceiveComplete(
+ NDIS_HANDLE MiniportAdapterHandle
+);
+
+/* NdisMWanIndicateReceive  [function; ce-only; CE 3.0..399, 5.0..699; Ndis.dll, ndis.dll, Ndislib.lib] */
+VOID NdisMWanIndicateReceive(
+ PNDIS_STATUS Status,
+ NDIS_HANDLE MiniportAdapterHandle,
+ NDIS_HANDLE NdisLinkContext,
+ PUCHAR PacketBuffer,
+ UINT PacketSize
+);
+
+/* NdisMWanIndicateReceiveComplete  [function; ce-only; CE 3.0..399, 5.0..699; Ndis.dll, ndis.dll, Ndislib.lib] */
+VOID NdisMWanIndicateReceiveComplete(
+ NDIS_HANDLE MiniportAdapterHandle,
+ NDIS_HANDLE NdisLinkContext
+);
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
+
+/* NdisIMDeInitializeDeviceInstance  [function; ce-only; CE 3.0..699; Ndis.lib, ndis.lib, Ndislib.lib] */
+NDIS_STATUS NdisIMDeInitializeDeviceInstance(
+ NDIS_HANDLE NdisMiniportHandle
+);
+
+/* NdisIMGetDeviceContext  [function; ce-only; CE 3.0..699; Ndis.lib, ndis.lib, Ndislib.lib] */
+NDIS_HANDLE NdisIMGetDeviceContext(
+ NDIS_HANDLE MiniportAdapterHandle
+);
+
+/* ProtocolCloseAdapterComplete  [function; ce-only; CE 3.0..699; Ndislib.lib] */
+VOID ProtocolCloseAdapterComplete(
+ NDIS_HANDLE ProtocolBindingContext,
+ NDIS_STATUS Status
+);
+
+/* ProtocolOpenAdapterComplete  [function; ce-only; CE 3.0..699; Ndislib.lib] */
+VOID ProtocolOpenAdapterComplete(
+ NDIS_HANDLE ProtocolBindingContext,
+ NDIS_STATUS Status,
+ NDIS_STATUS OpenErrorStatus
+);
+
+/* ProtocolReceive  [function; ce-only; CE 3.0..699; Ndislib.lib] */
+NDIS_STATUS ProtocolReceive(
+ NDIS_HANDLE ProtocolBindingContext,
+ NDIS_HANDLE MacReceiveContext,
+ PVOID pHeader,
+ UINT HeaderSize,
+ PVOID LookAheadBuffer,
+ UINT LookAheadBufferSize,
+ UINT PacketSize 
+);
+
+/* ProtocolReceiveComplete  [function; ce-only; CE 3.0..699; Ndislib.lib] */
+VOID ProtocolReceiveComplete(
+ NDIS_HANDLE ProtocolBindingContext 
+);
+
+/* ProtocolResetComplete  [function; ce-only; CE 3.0..699; Ndislib.lib] */
+VOID ProtocolResetComplete(
+ NDIS_HANDLE ProtocolBindingContext,
+ NDIS_STATUS Status
+);
+
+/* ProtocolStatus  [function; ce-only; CE 3.0..699; Ndislib.lib] */
+VOID ProtocolStatus(
+ NDIS_HANDLE ProtocolBindingContext,
+ NDIS_STATUS GeneralStatus,
+ PVOID StatusBuffer,
+ UINT StatusBufferSize
+);
+
+/* ProtocolStatusComplete  [function; ce-only; CE 3.0..699; Ndislib.lib] */
+VOID ProtocolStatusComplete(
+ NDIS_HANDLE ProtocolBindingContext
+);
+
+/* ProtocolUnbindAdapter  [function; ce-only; CE 3.0..699; Ndislib.lib] */
+VOID ProtocolUnbindAdapter(
+ PNDIS_STATUS Status,
+ NDIS_HANDLE ProtocolBindingContext,
+ NDIS_HANDLE UnbindContext
 );
 #endif /* _WIN32_WCE */
 
@@ -537,14 +1015,35 @@ VOID NdisAllocatePacketPoolEx(
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
-/* NdisBufferLength  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
-ULONG NdisBufferLength(
- PNDIS_BUFFER Buffer
+/* NdisAllocateMemoryWithTag  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
+NDIS_STATUS NdisAllocateMemoryWithTag(
+ PVOID* VirtualAddress,
+ UINT Length,
+ ULONG Tag
 );
 
-/* NdisBufferVirtualAddress  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
-PVOID NdisBufferVirtualAddress(
- PNDIS_BUFFER Buffer
+/* NdisCancelSendPackets  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
+VOID NdisCancelSendPackets(
+ NDIS_HANDLE NdisBindingHandle,
+ ULONG_PTR CancelId
+);
+
+/* NdisCloseFile  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
+VOID NdisCloseFile(
+ NDIS_HANDLE FileHandle
+);
+
+/* NdisCompleteBindAdapter  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
+VOID NdisCompleteBindAdapter(
+ NDIS_HANDLE BindAdapterContext,
+ NDIS_STATUS Status,
+ NDIS_STATUS OpenStatus
+);
+
+/* NdisCompleteUnbindAdapter  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
+VOID NdisCompleteUnbindAdapter(
+ NDIS_HANDLE UnbindAdapterContext,
+ NDIS_STATUS Status
 );
 
 /* NdisCopyLookaheadData  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
@@ -567,25 +1066,11 @@ VOID NdisDestroyLookaheadBufferFromSharedMemory(
  PVOID pLookaheadBuffer
 );
 
-/* NdisEqualAnsiString  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
-BOOLEAN NdisEqualAnsiString(
- PNDIS_STRING String1,
- PNDIS_STRING String2,
- BOOLEAN CaseInSensitive
-);
-
 /* NdisEqualMemory  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
 ULONG NdisEqualMemory(
  CONST VOID* Source1,
  CONST VOID* Source2,
  ULONG Length
-);
-
-/* NdisEqualUnicodeString  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
-BOOLEAN NdisEqualUnicodeString(
- PNDIS_STRING String1,
- PNDIS_STRING String2,
- BOOLEAN CaseInSensitive
 );
 
 /* NdisFillMemory  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
@@ -597,6 +1082,14 @@ VOID NdisFillMemory(
 
 /* NdisGeneratePartialCancelId  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
 UCHAR NdisGeneratePartialCancelId(void);
+
+/* NdisGetAdapterNames  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
+VOID NdisGetAdapterNames(
+ PNDIS_STATUS Status,
+ PBYTE pOutBuf,
+ DWORD cbOutBufSize,
+ PDWORD pcbReturned
+);
 
 /* NdisGetCacheFillSize  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
 ULONG NdisGetCacheFillSize();
@@ -611,6 +1104,45 @@ VOID NdisGetDriverHandle(
  PNDIS_HANDLE NdisBindingHandle,
  PNDIS_HANDLE NdisDriverHandle
 );
+
+/* NdisGetProtocolNames  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
+VOID NdisGetProtocolNames(
+ PNDIS_STATUS pStatus,
+ PBYTE pOutBuf,
+ DWORD cbOutBufSize,
+ PDWORD pcbReturned
+);
+
+/* NdisGetSystemUpTime  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
+VOID NdisGetSystemUpTime(
+ PULONG pSystemUpTime
+);
+
+/* NdisIMAssociateMiniport  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
+VOID NdisIMAssociateMiniport(
+ NDIS_HANDLE DriverHandle,
+ NDIS_HANDLE ProtocolHandle
+);
+
+/* NdisIMDeregisterLayeredMiniport  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
+VOID NdisIMDeregisterLayeredMiniport(
+ NDIS_HANDLE DriverHandle
+);
+
+/* NdisIMGetBindingContext  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
+NDIS_HANDLE NdisIMGetBindingContext(
+ NDIS_HANDLE NdisBindingHandle
+);
+
+/* NdisInterlockedDecrement  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
+LONG NdisInterlockedDecrement(
+ PLONG Addend
+);
+
+/* NdisInterlockedIncrement  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
+LONG NdisInterlockedIncrement(
+ PLONG Addend
+);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
@@ -619,9 +1151,233 @@ VOID NdisGetDriverHandle(
 UINT NdisGetVersion(
 );
 
+/* NdisMAllocateSharedMemory  [function; ce-only; CE 5.0..699; Ndis.dll, ndis.dll] */
+VOID NdisMAllocateSharedMemory(
+ NDIS_HANDLE MiniportAdapterHandle,
+ ULONG Length ,
+ BOOLEAN Cached,
+ PVOID* VirtualAddress,
+ PNDIS_PHYSICAL_ADDRESS PhysicalAddress
+);
+
+/* NdisMapFile  [function; ce-only; CE 5.0..699; Ndis.dll, ndis.dll] */
+VOID NdisMapFile(
+ PNDIS_STATUS
+ Status
+ ,
+ PVOID* 
+ MappedBuffer
+ ,
+ NDIS_HANDLE
+ FileHandle
+ );
+
+/* NdisMCloseLog  [function; ce-only; CE 5.0..699; Ndis.dll, ndis.dll] */
+VOID NdisMCloseLog(
+ NDIS_HANDLE
+ LogHandle
+ );
+
+/* NdisMCreateLog  [function; ce-only; CE 5.0..699; Ndis.dll, ndis.dll] */
+NDIS_STATUS NdisMCreateLog(
+ NDIS_HANDLE
+ MiniportAdapterHandle
+ ,
+ UINT
+ Size
+ ,
+ PNDIS_HANDLE
+ LogHandle
+ );
+
+/* NdisMFlushLog  [function; ce-only; CE 5.0..699; Ndis.dll, ndis.dll] */
+VOID NdisMFlushLog(
+ NDIS_HANDLE LogHandle
+);
+
+/* NdisMFreeSharedMemory  [function; ce-only; CE 5.0..699; Ndis.dll, ndis.dll] */
+VOID NdisMFreeSharedMemory(
+ NDIS_HANDLE MiniportAdapterHandle,
+ ULONG Length,
+ BOOLEAN Cached,
+ PVOID VirtualAddress,
+ NDIS_PHYSICAL_ADDRESS PhysicalAddress
+);
+
+/* NdisMPromoteMiniport  [function; ce-only; CE 5.0..699; Ndis.dll, ndis.dll] */
+NDIS_STATUS NdisMPromoteMiniport(
+ NDIS_HANDLE MiniportAdapterHandle
+);
+
+/* NdisMRebindProtocolsToAdapter  [function; ce-only; CE 5.0..699; Ndis.dll, ndis.dll] */
+VOID NdisMRebindProtocolsToAdapter(
+ NDIS_HANDLE MiniportAdapterHandle 
+);
+
+/* NdisMRemoveMiniport  [function; ce-only; CE 5.0..699; Ndis.dll, ndis.dll] */
+NDIS_STATUS NdisMRemoveMiniport(
+ NDIS_HANDLE MiniportAdapterHandle
+);
+
+/* NdisMSetMiniportSecondary  [function; ce-only; CE 5.0..699; Ndis.dll, ndis.dll] */
+NDIS_STATUS NdisMSetMiniportSecondary(
+ NDIS_HANDLE MiniportAdapterHandle,
+ NDIS_HANDLE PrimaryMiniportAdapterHandle
+);
+
+/* NdisMWriteLogData  [function; ce-only; CE 5.0..699; Ndis.dll, ndis.dll] */
+NDIS_STATUS NdisMWriteLogData(
+ NDIS_HANDLE LogHandle,
+ PVOID LogBuffer,
+ UINT LogBufferSize
+);
+
 /* NdisPacketSize  [function; ce-only; CE 5.0..699; Ndis.lib, ndis.lib] */
 UINT NdisPacketSize(
  IN UINT ProtocolReservedSize
+);
+
+/* NdisQueryPendingIoCount  [function; ce-only; CE 5.0..699] */
+NDIS_STATUS NdisQueryPendingIoCount(
+ PVOID NdisBindingHandle,
+ PULONG IoCount
+);
+
+/* NdisReadPcmciaAttributeMemory  [function; ce-only; CE 5.0..699; Ndis.lib, ndis.lib] */
+ULONG NdisReadPcmciaAttributeMemory(
+ NDIS_HANDLE NdisAdapterHandle,
+ ULONG Offset,
+ PVOID Buffer,
+ ULONG Length
+);
+
+/* NdisReadPortUchar  [function; ce-only; CE 5.0..699] */
+VOID NdisReadPortUchar(
+ NDIS_HANDLE NdisAdapterHandle,
+ ULONG Port,
+ PUCHAR Data 
+);
+
+/* NdisReadPortUlong  [function; ce-only; CE 5.0..699] */
+VOID NdisReadPortUlong(
+ NDIS_HANDLE NdisAdapterHandle,
+ ULONG Port,
+ PULONG Data 
+);
+
+/* NdisReadPortUshort  [function; ce-only; CE 5.0..699] */
+VOID NdisReadPortUshort(
+ NDIS_HANDLE NdisAdapterHandle,
+ ULONG Port,
+ PUSHORT Data 
+);
+
+/* NdisReadRegisterUchar  [function; ce-only; CE 5.0..699] */
+VOID NdisReadRegisterUchar(
+ PUCHAR Register,
+ PUCHAR Data
+);
+
+/* NdisReadRegisterUlong  [function; ce-only; CE 5.0..699] */
+VOID NdisReadRegisterUlong(
+ PULONG Register,
+ PULONG Data
+);
+
+/* NdisReadRegisterUshort  [function; ce-only; CE 5.0..699] */
+VOID NdisReadRegisterUshort(
+ PUSHORT Register,
+ PUSHORT Data
+);
+
+/* NdisReEnumerateProtocolBindings  [function; ce-only; CE 5.0..699] */
+VOID NdisReEnumerateProtocolBindings(
+ NDIS_HANDLE NdisProtocolHandle
+);
+
+/* NdisRetrieveUlong  [function; ce-only; CE 5.0..699] */
+VOID NdisRetrieveUlong(
+ PULONG DestinationAddress,
+ PULONG SourceAddress
+);
+
+/* NdisSendPackets  [function; ce-only; CE 5.0..699] */
+VOID NdisSendPackets(
+ NDIS_HANDLE NdisBindingHandle,
+ PPNDIS_PACKET PacketArray,
+ UINT NumberOfPackets
+);
+
+/* NdisSetPacketPoolProtocolId  [function; ce-only; CE 5.0..699; Ndis.lib, ndis.lib] */
+VOID NdisSetPacketPoolProtocolId(
+ IN NDIS_HANDLE PacketPoolHandle,
+ IN UINT ProtocolId
+);
+
+/* NdisStoreUlong  [function; ce-only; CE 5.0..699] */
+VOID NdisStoreUlong(
+ PULONG DestinationAddress,
+ ULONG Value
+);
+
+/* NdisUnmapFile  [function; ce-only; CE 5.0..699] */
+VOID NdisUnmapFile(
+ NDIS_HANDLE FileHandle
+);
+
+/* NdisWritePcmciaAttributeMemory  [function; ce-only; CE 5.0..699; Ndis.lib, ndis.lib] */
+ULONG NdisWritePcmciaAttributeMemory(
+ NDIS_HANDLE NdisAdapterHandle,
+ ULONG Offset,
+ PVOID Buffer,
+ ULONG Length
+);
+
+/* NdisWritePortUchar  [function; ce-only; CE 5.0..699] */
+VOID NdisWritePortUchar(
+ NDIS_HANDLE NdisAdapterHandle,
+ ULONG Port,
+ UCHAR Data
+);
+
+/* NdisWritePortUlong  [function; ce-only; CE 5.0..699] */
+VOID NdisWritePortUlong(
+ NDIS_HANDLE NdisAdapterHandle,
+ ULONG Port,
+ ULONG Data
+);
+
+/* NdisWritePortUshort  [function; ce-only; CE 5.0..699] */
+VOID NdisWritePortUshort(
+ NDIS_HANDLE NdisAdapterHandle,
+ ULONG Port,
+ USHORT Data
+);
+
+/* NdisWriteRegisterUchar  [function; ce-only; CE 5.0..699] */
+VOID NdisWriteRegisterUchar(
+ PUCHAR Register,
+ UCHAR Data
+);
+
+/* NdisWriteRegisterUlong  [function; ce-only; CE 5.0..699] */
+VOID NdisWriteRegisterUlong(
+ PULONG Register,
+ ULONG Data
+);
+
+/* NdisWriteRegisterUshort  [function; ce-only; CE 5.0..699] */
+VOID NdisWriteRegisterUshort(
+ PUSHORT Register,
+ USHORT Data
+);
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
+
+/* NdisPacketPoolUsage  [function; ce-only; CE 6.0..699] */
+UINT NdisPacketPoolUsage(
+ NDIS_HANDLE PoolHandle
 );
 #endif /* _WIN32_WCE */
 

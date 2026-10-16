@@ -60,6 +60,7 @@ typedef struct tagGOFFSET {
  LONG du;
  LONG dv;
 } GOFFSET;
+typedef GOFFSET *PGOFFSET, *LPGOFFSET;
 
 /* SCRIPT_CACHE  [typedef; ce-only] */
 typedef void *SCRIPT_CACHE;
@@ -77,6 +78,7 @@ typedef struct tag_SCRIPT_CONTROL {
  DWORD fLegacyBidiClass; 
  DWORD fReserved; 
 } SCRIPT_CONTROL;
+typedef SCRIPT_CONTROL *PSCRIPT_CONTROL, *LPSCRIPT_CONTROL;
 
 /* SCRIPT_DIGITSUBSTITUTE  [struct; shared] */
 typedef struct tag_SCRIPT_DIGITSUBSTITUTE {
@@ -85,6 +87,7 @@ typedef struct tag_SCRIPT_DIGITSUBSTITUTE {
  DWORD DigitSubstitute;
  DWORD dwReserved;
 } SCRIPT_DIGITSUBSTITUTE;
+typedef SCRIPT_DIGITSUBSTITUTE *PSCRIPT_DIGITSUBSTITUTE, *LPSCRIPT_DIGITSUBSTITUTE;
 
 /* SCRIPT_FONTPROPERTIES  [struct; shared] */
 typedef struct {
@@ -95,6 +98,28 @@ typedef struct {
  WORD wgKashida; 
  int iKashidaWidth; 
 } SCRIPT_FONTPROPERTIES;
+typedef SCRIPT_FONTPROPERTIES *PSCRIPT_FONTPROPERTIES, *LPSCRIPT_FONTPROPERTIES;
+
+/* SCRIPT_JUSTIFY  [enum; shared] */
+typedef enum tag_SCRIPT_JUSTIFY { 
+ SCRIPT_JUSTIFY_NONE = 0, 
+ SCRIPT_JUSTIFY_ARABIC_BLANK = 1, 
+ SCRIPT_JUSTIFY_CHARACTER = 2, 
+ SCRIPT_JUSTIFY_RESERVED1 = 3, 
+ SCRIPT_JUSTIFY_BLANK = 4, 
+ SCRIPT_JUSTIFY_RESERVED2 = 5, 
+ SCRIPT_JUSTIFY_RESERVED3 = 6, 
+ SCRIPT_JUSTIFY_ARABIC_NORMAL = 7, 
+ SCRIPT_JUSTIFY_ARABIC_KASHIDA = 8, 
+ SCRIPT_JUSTIFY_ARABIC_ALEF = 9, 
+ SCRIPT_JUSTIFY_ARABIC_HA = 10, 
+ SCRIPT_JUSTIFY_ARABIC_RA = 11, 
+ SCRIPT_JUSTIFY_ARABIC_BA = 12, 
+ SCRIPT_JUSTIFY_ARABIC_BARA = 13, 
+ SCRIPT_JUSTIFY_ARABIC_SEEN = 14, 
+ SCRIPT_JUSTIFY_ARABIC_SEEN_M = 15, 
+} SCRIPT_JUSTIFY;
+typedef SCRIPT_JUSTIFY *PSCRIPT_JUSTIFY, *LPSCRIPT_JUSTIFY;
 
 /* SCRIPT_LOGATTR  [struct; shared] */
 typedef struct tag_SCRIPT_LOGATTR { 
@@ -105,6 +130,7 @@ typedef struct tag_SCRIPT_LOGATTR {
  BYTE fInvalid; 
  BYTE fReserved; 
 } SCRIPT_LOGATTR;
+typedef SCRIPT_LOGATTR *PSCRIPT_LOGATTR, *LPSCRIPT_LOGATTR;
 
 /* SCRIPT_PROPERTIES  [struct; shared] */
 typedef struct {
@@ -124,6 +150,7 @@ typedef struct {
  DWORD fClusterSizeVaries;
  DWORD fRejectInvalid;
 } SCRIPT_PROPERTIES;
+typedef SCRIPT_PROPERTIES *PSCRIPT_PROPERTIES, *LPSCRIPT_PROPERTIES;
 
 /* SCRIPT_STATE  [struct; shared] */
 typedef struct tag_SCRIPT_STATE { 
@@ -139,6 +166,7 @@ typedef struct tag_SCRIPT_STATE {
  WORD fReserved; 
  WORD fEngineReserved; 
 } SCRIPT_STATE;
+typedef SCRIPT_STATE *PSCRIPT_STATE, *LPSCRIPT_STATE;
 
 /* SCRIPT_STRING_ANALYSIS  [typedef; ce-only] */
 typedef void *SCRIPT_STRING_ANALYSIS;
@@ -150,6 +178,7 @@ typedef struct tag_SCRIPT_TABDEF {
  int* pTabStops;
  int iTabOrigin;
 } SCRIPT_TABDEF;
+typedef SCRIPT_TABDEF *PSCRIPT_TABDEF, *LPSCRIPT_TABDEF;
 
 /* SCRIPT_VISATTR  [struct; shared] */
 typedef struct tag_SCRIPT_VISATTR { 
@@ -160,6 +189,7 @@ typedef struct tag_SCRIPT_VISATTR {
  WORD fReserved; 
  WORD fShapeReserved; 
 } SCRIPT_VISATTR;
+typedef SCRIPT_VISATTR *PSCRIPT_VISATTR, *LPSCRIPT_VISATTR;
 
 /* SCRIPT_ANALYSIS  [struct; shared] */
 typedef struct tag_SCRIPT_ANALYSIS {
@@ -172,11 +202,13 @@ typedef struct tag_SCRIPT_ANALYSIS {
  WORD fNoGlyphIndex; 
  SCRIPT_STATE s; 
 } SCRIPT_ANALYSIS;
+typedef SCRIPT_ANALYSIS *PSCRIPT_ANALYSIS, *LPSCRIPT_ANALYSIS;
 
 /* SCRIPT_ITEM  [struct; shared] */
 typedef struct tag_SCRIPT_ITEM { 
  int iCharPos; 
  SCRIPT_ANALYSIS a; 
 } SCRIPT_ITEM;
+typedef SCRIPT_ITEM *PSCRIPT_ITEM, *LPSCRIPT_ITEM;
 
 #endif /* _USP10_ */

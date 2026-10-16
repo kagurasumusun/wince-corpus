@@ -80,6 +80,7 @@ typedef struct {
  DWORD dwTxDevice;
  DWORD dwRxDevice;
 } RILAUDIODEVICEINFO;
+typedef RILAUDIODEVICEINFO *PRILAUDIODEVICEINFO, *LPRILAUDIODEVICEINFO;
 
 /* RILBEARERSVCINFO  [struct; ce-only] */
 typedef struct {
@@ -89,6 +90,16 @@ typedef struct {
  DWORD dwServiceName;
  DWORD dwConnectionElement;
 } RILBEARERSVCINFO;
+typedef RILBEARERSVCINFO *PRILBEARERSVCINFO, *LPRILBEARERSVCINFO;
+
+/* RILBYTECOUNTER  [struct; ce-only; Ril.lib] */
+typedef struct rilbytecounter_tag {
+ DWORD cbSize;
+ DWORD dwParams;
+ DWORD dwRxByte;
+ DWORD dwTxByte;
+ DWORD dwTotalByte;
+} RILBYTECOUNTER, *LPRILBYTECOUNTER;
 
 /* RILCALLERIDSETTINGS  [struct; ce-only] */
 typedef struct {
@@ -97,6 +108,7 @@ typedef struct {
  DWORD dwStatus;
  DWORD dwProvisioning;
 } RILCALLERIDSETTINGS;
+typedef RILCALLERIDSETTINGS *PRILCALLERIDSETTINGS, *LPRILCALLERIDSETTINGS;
 
 /* RILCALLHSCSDINFO  [struct; ce-only] */
 typedef struct {
@@ -107,6 +119,7 @@ typedef struct {
  DWORD dwAirInterfaceUserRat;
  DWORD dwChannelCoding;
 } RILCALLHSCSDINFO;
+typedef RILCALLHSCSDINFO *PRILCALLHSCSDINFO, *LPRILCALLHSCSDINFO;
 
 /* RILCAPSBARRINGPWDLENGTH  [struct; ce-only] */
 typedef struct {
@@ -115,6 +128,7 @@ typedef struct {
  DWORD dwType;
  DWORD dwPasswordLength;
 } RILCAPSBARRINGPWDLENGTH;
+typedef RILCAPSBARRINGPWDLENGTH *PRILCAPSBARRINGPWDLENGTH, *LPRILCAPSBARRINGPWDLENGTH;
 
 /* RILCAPSBEARERSVC  [struct; ce-only] */
 typedef struct {
@@ -125,6 +139,7 @@ typedef struct {
  DWORD dwServiceNames;
  DWORD dwConnectionElements;
 } RILCAPSBEARERSVC;
+typedef RILCAPSBEARERSVC *PRILCAPSBEARERSVC, *LPRILCAPSBEARERSVC;
 
 /* RILCAPSDIAL  [struct; ce-only] */
 typedef struct {
@@ -133,6 +148,16 @@ typedef struct {
  DWORD dwCallTypes;
  DWORD dwOptions;
 } RILCAPSDIAL;
+typedef RILCAPSDIAL *PRILCAPSDIAL, *LPRILCAPSDIAL;
+
+/* RILCAPSERRORCORRECTION  [struct; ce-only] */
+typedef struct {
+ DWORD cbSize;
+ DWORD dwParams;
+ DWORD dwOriginalRequest;
+ DWORD dwOriginalFallback;
+ DWORD dwAnswererFallback;
+} RILCAPSERRORCORRECTION, *LPRILCAPSERRORCORRECTION;
 
 /* RILCAPSLOCKINGPWDLENGTH  [struct; ce-only] */
 typedef struct {
@@ -141,6 +166,7 @@ typedef struct {
  DWORD dwFacility;
  DWORD dwPasswordLength;
 } RILCAPSLOCKINGPWDLENGTH;
+typedef RILCAPSLOCKINGPWDLENGTH *PRILCAPSLOCKINGPWDLENGTH, *LPRILCAPSLOCKINGPWDLENGTH;
 
 /* RILCAPSMSGMEMORYLOCATIONS  [struct; ce-only] */
 typedef struct {
@@ -150,6 +176,15 @@ typedef struct {
  DWORD dwWriteLocations;
  DWORD dwStoreLocations;
 } RILCAPSMSGMEMORYLOCATIONS;
+typedef RILCAPSMSGMEMORYLOCATIONS *PRILCAPSMSGMEMORYLOCATIONS, *LPRILCAPSMSGMEMORYLOCATIONS;
+
+/* RILCAPSPBENTRYLENGTH  [struct; ce-only] */
+typedef struct {
+ DWORD cbSize;
+ DWORD dwParams;
+ DWORD dwMaxAddressLength;
+ DWORD dwMaxTextLength;
+} RILCAPSPBENTRYLENGTH, *LPRILCAPSPBENTRYLENGTH;
 
 /* RILCLOSEDGROUPSETTINGS  [struct; ce-only] */
 typedef struct {
@@ -159,6 +194,7 @@ typedef struct {
  DWORD dwIndex;
  DWORD dwInfo;
 } RILCLOSEDGROUPSETTINGS;
+typedef RILCLOSEDGROUPSETTINGS *PRILCLOSEDGROUPSETTINGS, *LPRILCLOSEDGROUPSETTINGS;
 
 /* RILCONNECTINFO  [struct; ce-only] */
 typedef struct {
@@ -167,6 +203,7 @@ typedef struct {
  DWORD dwCallType;
  DWORD dwBaudRate;
 } RILCONNECTINFO;
+typedef RILCONNECTINFO *PRILCONNECTINFO, *LPRILCONNECTINFO;
 
 /* RILDATACOMPINFO  [struct; ce-only] */
 typedef struct {
@@ -177,6 +214,7 @@ typedef struct {
  DWORD dwMaxDictEntries;
  DWORD dwMaxStringLength;
 } RILDATACOMPINFO;
+typedef RILDATACOMPINFO *PRILDATACOMPINFO, *LPRILDATACOMPINFO;
 
 /* RILDIALEDIDSETTINGS  [struct; ce-only] */
 typedef struct {
@@ -185,6 +223,7 @@ typedef struct {
  DWORD dwStatus;
  DWORD dwProvisioning;
 } RILDIALEDIDSETTINGS;
+typedef RILDIALEDIDSETTINGS *PRILDIALEDIDSETTINGS, *LPRILDIALEDIDSETTINGS;
 
 /* RILDIALINFO  [struct; ce-only] */
 typedef struct {
@@ -193,6 +232,7 @@ typedef struct {
  HRESULT hrCmdId;
  DWORD dwCallId;
 } RILDIALINFO;
+typedef RILDIALINFO *PRILDIALINFO, *LPRILDIALINFO;
 
 /* RILEMLPPPRIORITY  [struct; ce-only; Ril.lib] */
 typedef struct {
@@ -201,6 +241,7 @@ typedef struct {
  DWORD dwPriority;
  DWORD dwMaxPriority;
 }RILEMLPPPRIORITY;
+typedef RILEMLPPPRIORITY *PRILEMLPPPRIORITY, *LPRILEMLPPPRIORITY;
 
 /* RILENTERGPRSDATAMODE  [struct; ce-only] */
 typedef struct {
@@ -209,6 +250,7 @@ typedef struct {
  DWORD dwNumContexts;
  DWORD dwContextID[];
 } RILENTERGPRSDATAMODE;
+typedef RILENTERGPRSDATAMODE *PRILENTERGPRSDATAMODE, *LPRILENTERGPRSDATAMODE;
 
 /* RILEQUIPMENTSTATE  [struct; ce-only] */
 typedef struct {
@@ -218,6 +260,7 @@ typedef struct {
  DWORD dwEqState;
  DWORD dwReadyState;
 } RILEQUIPMENTSTATE;
+typedef RILEQUIPMENTSTATE *PRILEQUIPMENTSTATE, *LPRILEQUIPMENTSTATE;
 
 /* RILERRORCORRECTIONINFO  [struct; ce-only] */
 typedef struct {
@@ -227,6 +270,7 @@ typedef struct {
  DWORD dwOriginalFallback;
  DWORD dwAnswererFallback;
 } RILERRORCORRECTIONINFO;
+typedef RILERRORCORRECTIONINFO *PRILERRORCORRECTIONINFO, *LPRILERRORCORRECTIONINFO;
 
 /* RILGAININFO  [struct; ce-only] */
 typedef struct {
@@ -235,11 +279,13 @@ typedef struct {
  DWORD dwTxGain;
  DWORD dwRxGain;
 } RILGAININFO;
+typedef RILGAININFO *PRILGAININFO, *LPRILGAININFO;
 
 /* RILGPRSANSWER  [struct; ce-only] */
 typedef struct {
  DWORD cbSize;
 } RILGPRSANSWER;
+typedef RILGPRSANSWER *PRILGPRSANSWER, *LPRILGPRSANSWER;
 
 /* RILGPRSCONTEXTACTIVATED  [struct; ce-only] */
 typedef struct {
@@ -247,6 +293,7 @@ typedef struct {
  DWORD dwContextID;
  BOOL fActivated;
 } RILGPRSCONTEXTACTIVATED;
+typedef RILGPRSCONTEXTACTIVATED *PRILGPRSCONTEXTACTIVATED, *LPRILGPRSCONTEXTACTIVATED;
 
 /* RILGPRSQOSPROFILE  [struct; ce-only] */
 typedef struct {
@@ -259,6 +306,19 @@ typedef struct {
  DWORD dwPeakThruClass;
  DWORD dwMeanThruClass;
 } RILGPRSQOSPROFILE;
+typedef RILGPRSQOSPROFILE *PRILGPRSQOSPROFILE, *LPRILGPRSQOSPROFILE;
+
+/* RILGPRSQOSPROFILECAPS  [struct; ce-only] */
+typedef struct {
+ DWORD cbSize;
+ DWORD dwParams;
+ DWORD dwProtocolType;
+ DWORD dwPrecedenceClass;
+ DWORD dwDelayClass;
+ DWORD dwReliabilityClass;
+ DWORD dwPeakThruClass;
+ char dwMeanThruClass;
+} RILGPRSQOSPROFILECAPS, *LPRILGPRSQOSPROFILECAPS;
 
 /* RILHIDECONNECTEDIDSETTINGS  [struct; ce-only] */
 typedef struct {
@@ -267,6 +327,7 @@ typedef struct {
  DWORD dwStatus;
  DWORD dwProvisioning;
 } RILHIDECONNECTEDIDSETTINGS;
+typedef RILHIDECONNECTEDIDSETTINGS *PRILHIDECONNECTEDIDSETTINGS, *LPRILHIDECONNECTEDIDSETTINGS;
 
 /* RILHIDEIDSETTINGS  [struct; ce-only] */
 typedef struct {
@@ -275,6 +336,7 @@ typedef struct {
  DWORD dwStatus;
  DWORD dwProvisioning;
 } RILHIDEIDSETTINGS;
+typedef RILHIDEIDSETTINGS *PRILHIDEIDSETTINGS, *LPRILHIDEIDSETTINGS;
 
 /* RILHSCSDINFO  [struct; ce-only] */
 typedef struct {
@@ -288,6 +350,14 @@ typedef struct {
  DWORD dwRxTimeslotsLimit;
  BOOL fAutoSvcLevelUpgrading;
 } RILHSCSDINFO;
+typedef RILHSCSDINFO *PRILHSCSDINFO, *LPRILHSCSDINFO;
+
+/* RILLOCATIONINFO  [struct; ce-only] */
+typedef struct rillocationinfo_tag {
+ DWORD cbSize;
+ DWORD dwLocationAreaCode;
+ DWORD dwCellID;
+} RILLOCATIONINFO, *LPRILLOCATIONINFO;
 
 /* RILMESSAGE_IN_SIM  [struct; ce-only] */
 typedef struct {
@@ -296,6 +366,7 @@ typedef struct {
  DWORD dwLocation;
  DWORD dwIndex;
 } RILMESSAGE_IN_SIM;
+typedef RILMESSAGE_IN_SIM *PRILMESSAGE_IN_SIM, *LPRILMESSAGE_IN_SIM;
 
 /* RILMSGDCS  [struct; ce-only] */
 typedef struct {
@@ -308,6 +379,7 @@ typedef struct {
  DWORD dwIndication;
  DWORD dwLanguage;
 } RILMSGDCS;
+typedef RILMSGDCS *PRILMSGDCS, *LPRILMSGDCS;
 
 /* RILMSGSERVICEINFO  [struct; ce-only] */
 typedef struct {
@@ -325,6 +397,7 @@ typedef struct {
  DWORD dwStoreUsed;
  DWORD dwStoreTotal;
 } RILMSGSERVICEINFO;
+typedef RILMSGSERVICEINFO *PRILMSGSERVICEINFO, *LPRILMSGSERVICEINFO;
 
 /* RILMSGSTORAGEINFO  [struct; ce-only] */
 typedef struct {
@@ -334,6 +407,7 @@ typedef struct {
  DWORD dwWriteLocation;
  DWORD dwStoreLocation;
 } RILMSGSTORAGEINFO;
+typedef RILMSGSTORAGEINFO *PRILMSGSTORAGEINFO, *LPRILMSGSTORAGEINFO;
 
 /* RILMULTIPLECALLSETTINGS  [struct; ce-only; Ril.lib] */
 typedef struct {
@@ -342,6 +416,7 @@ typedef struct {
  BOOL fEnable;
  DWORD dwServiceStatus;
 }RILMULTIPLECALLSETTINGS;
+typedef RILMULTIPLECALLSETTINGS *PRILMULTIPLECALLSETTINGS, *LPRILMULTIPLECALLSETTINGS;
 
 /* RILNCHINDICATION  [struct; ce-only; Ril.lib] */
 typedef struct {
@@ -350,6 +425,21 @@ typedef struct {
  BOOL fEnable;
  DWORD dwNCHStatus;
 } RILNCHINDICATION;
+typedef RILNCHINDICATION *PRILNCHINDICATION, *LPRILNCHINDICATION;
+
+/* RILNDISBUFFER  [struct; ce-only] */
+typedef struct rilndisbuffer_tag {
+ const BYTE *pbyBytes;
+ DWORD cByteCount;
+} RILNDISBUFFER, *LPRILNDISBUFFER;
+
+/* RILNDISPACKET  [struct; ce-only] */
+typedef struct rilndispacket_tag {
+ DWORD dwSize;
+ DWORD dwContextID;
+ DWORD cBufferCount;
+ const RILNDISBUFFER NDISBuffer[1];
+} RILNDISPACKET, *LPRILNDISPACKET;
 
 /* RILNITZINFO  [struct; ce-only] */
 typedef struct {
@@ -360,6 +450,7 @@ typedef struct {
  int DaylightSavingOffsetMinutes;
  SYSTEMTIME SysTime;
 } RILNITZINFO;
+typedef RILNITZINFO *PRILNITZINFO, *LPRILNITZINFO;
 
 /* RILPDPPACKETSUPPORTCAPS  [struct; ce-only; Ril.lib] */
 typedef struct {
@@ -368,6 +459,7 @@ typedef struct {
  BOOL fPacket;
  DWORD dwActiveContexts;
 } RILPDPPACKETSUPPORTCAPS;
+typedef RILPDPPACKETSUPPORTCAPS *PRILPDPPACKETSUPPORTCAPS, *LPRILPDPPACKETSUPPORTCAPS;
 
 /* RILPHONEBOOKINFO  [struct; ce-only] */
 typedef struct {
@@ -377,6 +469,7 @@ typedef struct {
  DWORD dwUsed;
  DWORD dwTotal;
 } RILPHONEBOOKINFO;
+typedef RILPHONEBOOKINFO *PRILPHONEBOOKINFO, *LPRILPHONEBOOKINFO;
 
 /* RILRLPINFO  [struct; ce-only] */
 typedef struct {
@@ -389,6 +482,7 @@ typedef struct {
  DWORD dwVersion;
  DWORD dwResequencingPeriod;
 } RILRLPINFO;
+typedef RILRLPINFO *PRILRLPINFO, *LPRILRLPINFO;
 
 /* RILSECONDARYPDPCONTEXT  [struct; ce-only; Ril.lib] */
 typedef struct {
@@ -399,6 +493,7 @@ typedef struct {
  DWORD dwDataCompression;
  DWORD dwHeaderCompression;
 } RILSECONDARYPDPCONTEXT;
+typedef RILSECONDARYPDPCONTEXT *PRILSECONDARYPDPCONTEXT, *LPRILSECONDARYPDPCONTEXT;
 
 /* RILSERIALPORTSTATS  [struct; ce-only] */
 typedef struct {
@@ -407,6 +502,7 @@ typedef struct {
  DWORD dwReadBitsPerSecond;
  DWORD dwWrittenBitsPerSecond;
 } RILSERIALPORTSTATS;
+typedef RILSERIALPORTSTATS *PRILSERIALPORTSTATS, *LPRILSERIALPORTSTATS;
 
 /* RILSERVICEINFO  [struct; ce-only] */
 typedef struct {
@@ -415,6 +511,7 @@ typedef struct {
  BOOL fSynchronous;
  BOOL fTransparent;
 } RILSERVICEINFO;
+typedef RILSERVICEINFO *PRILSERVICEINFO, *LPRILSERVICEINFO;
 
 /* RILSIGNALQUALITY  [struct; ce-only] */
 typedef struct {
@@ -427,6 +524,7 @@ typedef struct {
  int nLowSignalStrength;
  int nHighSignalStrength;
 } RILSIGNALQUALITY;
+typedef RILSIGNALQUALITY *PRILSIGNALQUALITY, *LPRILSIGNALQUALITY;
 
 /* RILSIMCMDPARAMETERS  [struct; ce-only] */
 typedef struct {
@@ -437,6 +535,7 @@ typedef struct {
  DWORD dwParameter2;
  DWORD dwParameter3;
 } RILSIMCMDPARAMETERS;
+typedef RILSIMCMDPARAMETERS *PRILSIMCMDPARAMETERS, *LPRILSIMCMDPARAMETERS;
 
 /* RILSIMRECORDSTATUS  [struct; ce-only] */
 typedef struct {
@@ -446,6 +545,7 @@ typedef struct {
  DWORD dwItemCount;
  DWORD dwSize;
 } RILSIMRECORDSTATUS;
+typedef RILSIMRECORDSTATUS *PRILSIMRECORDSTATUS, *LPRILSIMRECORDSTATUS;
 
 /* RILSIMRESPONSE  [struct; ce-only] */
 typedef struct {
@@ -455,6 +555,7 @@ typedef struct {
  DWORD dwStatusWord2;
  BYTE pbResponse[];
 } RILSIMRESPONSE;
+typedef RILSIMRESPONSE *PRILSIMRESPONSE, *LPRILSIMRESPONSE;
 
 /* RILSIMTOOLKITCMD  [struct; ce-only] */
 typedef struct rilsimtoolkitcmd_tag {
@@ -468,6 +569,57 @@ typedef struct rilsimtoolkitcmd_tag {
  DWORD dwDetailsOffset;
  DWORD dwDetailsSize;
 } RILSIMTOOLKITCMD;
+typedef RILSIMTOOLKITCMD *PRILSIMTOOLKITCMD, *LPRILSIMTOOLKITCMD;
+
+/* RILSIMTOOLKITEVENTCAPS  [struct; ce-only] */
+typedef struct rilsimtoolkiteventcaps_tag {
+ DWORD cbSize;
+ DWORD dwParams;
+ DWORD dwMTCall;
+ DWORD dwCallConnected;
+ DWORD dwCallDisconnected;
+ DWORD dwLocationStatus;
+ DWORD dwUserActivity;
+ DWORD dwIdleScreen;
+ DWORD dwLanguageSelection;
+ DWORD dwBrowserTermination;
+ DWORD dwDataAvailable;
+ DWORD dwChannelStatus;
+ DWORD dwDisplayChange;
+} RILSIMTOOLKITEVENTCAPS, *LPRILSIMTOOLKITEVENTCAPS;
+
+/* RILSIMTOOLKITNOTIFYCAPS  [struct; ce-only] */
+typedef struct rilsimtoolkitnotifycaps_tag {
+ DWORD cbSize;
+ DWORD dwParams;
+ DWORD dwRefresh;
+ DWORD dwMoreTime;
+ DWORD dwPollInterval;
+ DWORD dwPollingOff;
+ DWORD dwSetUpCall;
+ DWORD dwSendSS;
+ DWORD dwSendUSSD;
+ DWORD dwSendSMS;
+ DWORD dwPlayTone;
+ DWORD dwDisplayText;
+ DWORD dwGetInkey;
+ DWORD dwGetInput;
+ DWORD dwSelectItem;
+ DWORD dwSetupMenu;
+ DWORD dwSetupIdleModeText;
+ DWORD dwLocalInfo;
+ DWORD dwNotifyFlags;
+ DWORD dwSetupEventList;
+ DWORD dwSendDTMF;
+ DWORD dwLaunchBrowser;
+ DWORD dwOpenChannel;
+ DWORD dwCloseChannel;
+ DWORD dwReceiveData;
+ DWORD dwSendData;
+ DWORD dwTimerManagement;
+ DWORD dwRunAtCmd;
+ RILSIMTOOLKITEVENTCAPS rstecEvents;
+} RILSIMTOOLKITNOTIFYCAPS, *LPRILSIMTOOLKITNOTIFYCAPS;
 
 /* RILSIMTOOLKITRSP  [struct; ce-only] */
 typedef struct rilsimtoolkitrsp_tag {
@@ -480,6 +632,7 @@ typedef struct rilsimtoolkitrsp_tag {
  DWORD dwResponse; 
  DWORD dwAdditionalInfo;
 } RILSIMTOOLKITRSP;
+typedef RILSIMTOOLKITRSP *PRILSIMTOOLKITRSP, *LPRILSIMTOOLKITRSP;
 
 /* RILSUPSERVICEDATA  [struct; ce-only] */
 typedef struct {
@@ -488,6 +641,7 @@ typedef struct {
  DWORD dwStatus;
  BYTE pbData[];
 } RILSUPSERVICEDATA;
+typedef RILSUPSERVICEDATA *PRILSUPSERVICEDATA, *LPRILSUPSERVICEDATA;
 
 /* RILVGCSTALKERACCESSINFO  [struct; ce-only; Ril.lib] */
 typedef struct {
@@ -496,6 +650,7 @@ typedef struct {
  DWORD dwMode;
  DWORD dwTime;
 } RILVGCSTALKERACCESSINFO;
+typedef RILVGCSTALKERACCESSINFO *PRILVGCSTALKERACCESSINFO, *LPRILVGCSTALKERACCESSINFO;
 
 /* RILVGCSUPLINKINFO  [struct; ce-only; Ril.lib] */
 typedef struct {
@@ -504,6 +659,7 @@ typedef struct {
  BOOL fEnable;
  DWORD dwStatus;
 } RILVGCSUPLINKINFO;
+typedef RILVGCSUPLINKINFO *PRILVGCSUPLINKINFO, *LPRILVGCSUPLINKINFO;
 
 /* RILVGCSVBSSTATEATTR  [struct; ce-only; Ril.lib] */
 typedef struct {
@@ -515,6 +671,7 @@ typedef struct {
  BOOL fBothDirComm;
  BOOL fOriginator;
 } RILVGCSVBSSTATEATTR;
+typedef RILVGCSVBSSTATEATTR *PRILVGCSVBSSTATEATTR, *LPRILVGCSVBSSTATEATTR;
 
 /* RILRINGINFO  [struct; ce-only] */
 typedef struct {
@@ -524,66 +681,13 @@ typedef struct {
  DWORD dwAddressId;
  RILSERVICEINFO rsiServiceInfo;
 } RILRINGINFO;
-
-/* LPRILSIMTOOLKITEVENTCAPS  [extra struct] */
-typedef struct rilsimtoolkiteventcaps_tag {
-  DWORD cbSize;
-  DWORD dwParams;
-  DWORD dwMTCall;
-  DWORD dwCallConnected;
-  DWORD dwCallDisconnected;
-  DWORD dwLocationStatus;
-  DWORD dwUserActivity;
-  DWORD dwIdleScreen;
-  DWORD dwLanguageSelection;
-  DWORD dwBrowserTermination;
-  DWORD dwDataAvailable;
-  DWORD dwChannelStatus;
-  DWORD dwDisplayChange;
-} RILSIMTOOLKITEVENTCAPS, *LPRILSIMTOOLKITEVENTCAPS;
-
-/* LPRILCAPSPBENTRYLENGTH  [extra struct] */
-typedef struct {
-  DWORD cbSize;
-  DWORD dwParams;
-  DWORD dwMaxAddressLength;
-  DWORD dwMaxTextLength;
-} RILCAPSPBENTRYLENGTH, *LPRILCAPSPBENTRYLENGTH;
+typedef RILRINGINFO *PRILRINGINFO, *LPRILRINGINFO;
 
 /* dwParam  [extra typedef] */
 typedef void (CALLBACK *RILRESULTCALLBACK)( DWORD dwCode, HRESULT hrCmdID, const void* lpData, DWORD cbData, DWORD dwParam );
 
-/* LPRILBYTECOUNTER  [extra struct] */
-typedef struct rilbytecounter_tag {
-  DWORD cbSize;
-  DWORD dwParams;
-  DWORD dwRxByte;
-  DWORD dwTxByte;
-  DWORD dwTotalByte;
-} RILBYTECOUNTER, *LPRILBYTECOUNTER;
-
-/* LPRILNDISSTATUS  [extra struct] */
-typedef struct rilndisstatus_tag {
-  DWORD dwContextId;
-  DWORD dwSize;
-  DWORD dwStatusType;
-  union
-  {
-    LPRILNDISIPCONFIG pRilNdisIpConfig;
-    DWORD dwFlowControl;
-  };
-} RILNDISSTATUS, *LPRILNDISSTATUS;
-
 /* LPRILRING  [extra struct] */
 typedef struct rilrange_tag { DWORD dwMinValue; DWORD dwMaxValue; } RILRANGE, *LPRILRING;
-
-/* LPRILNDISPACKET  [extra struct] */
-typedef struct rilndispacket_tag {
-  DWORD dwSize;
-  DWORD dwContextID;
-  DWORD cBufferCount;
-  const RILNDISBUFFER NDISBuffer[1];
-} RILNDISPACKET, *LPRILNDISPACKET;
 
 /* pRilStatus  [extra typedef] */
 typedef void (CALLBACK *RILNDISSTATUSCALLBACK)( PVOID pCallbackContext, LPRILNDISSTATUS pRilStatus );
@@ -591,92 +695,7 @@ typedef void (CALLBACK *RILNDISSTATUSCALLBACK)( PVOID pCallbackContext, LPRILNDI
 /* pRilPacket  [extra typedef] */
 typedef void (CALLBACK *RILNDISRECEIVECALLBACK)( PVOID pCallbackContext, LPRILNDISPACKET pRilPacket );
 
-/* LPRILSIMTOOLKITNOTIFYCAPS  [extra struct] */
-typedef struct rilsimtoolkitnotifycaps_tag {
-  DWORD cbSize;
-  DWORD dwParams;
-  DWORD dwRefresh;
-  DWORD dwMoreTime;
-  DWORD dwPollInterval;
-  DWORD dwPollingOff;
-  DWORD dwSetUpCall;
-  DWORD dwSendSS;
-  DWORD dwSendUSSD;
-  DWORD dwSendSMS;
-  DWORD dwPlayTone;
-  DWORD dwDisplayText;
-  DWORD dwGetInkey;
-  DWORD dwGetInput;
-  DWORD dwSelectItem;
-  DWORD dwSetupMenu;
-  DWORD dwSetupIdleModeText;
-  DWORD dwLocalInfo;
-  DWORD dwNotifyFlags;
-  DWORD dwSetupEventList;
-  DWORD dwSendDTMF;
-  DWORD dwLaunchBrowser;
-  DWORD dwOpenChannel;
-  DWORD dwCloseChannel;
-  DWORD dwReceiveData;
-  DWORD dwSendData;
-  DWORD dwTimerManagement;
-  DWORD dwRunAtCmd;
-  RILSIMTOOLKITEVENTCAPS rstecEvents;
-} RILSIMTOOLKITNOTIFYCAPS, *LPRILSIMTOOLKITNOTIFYCAPS;
-
-/* LPRILNDISBUFFER  [extra struct] */
-typedef struct rilndisbuffer_tag { const BYTE *pbyBytes; DWORD cByteCount; } RILNDISBUFFER, *LPRILNDISBUFFER;
-
-/* LPRILCBMSGCONFIG  [extra struct] */
-typedef struct rilcbmsgconfig_tag {
-  DWORD cbSize;
-  DWORD dwParams;
-  DWORD dwBroadcastMsgLangs;
-  BOOL fAccept;
-  RILRANGE rgrrBroadcastMsgIDs[];
-} RILCBMSGCONFIG, *LPRILCBMSGCONFIG;
-
-/* LPRILGPRSQOSPROFILECAPS  [extra struct] */
-typedef struct {
-  DWORD cbSize;
-  DWORD dwParams;
-  DWORD dwProtocolType;
-  DWORD dwPrecedenceClass;
-  DWORD dwDelayClass;
-  DWORD dwReliabilityClass;
-  DWORD dwPeakThruClass;
-  char dwMeanThruClass;
-} RILGPRSQOSPROFILECAPS, *LPRILGPRSQOSPROFILECAPS;
-
 /* pRemotePartyInfo  [extra typedef] */
 typedef DWORD (CALLBACK *RILCALLTYPECALLBACK)( const RILREMOTEPARTYINFO* const pRemotePartyInfo );
-
-/* LPRILGPRSCONTEXTCAPS  [extra struct] */
-typedef struct {
-  DWORD cbSize;
-  DWORD dwParams;
-  DWORD dwProtocolType;
-  RILRANGE ContextIDRange;
-  DWORD dwDataCompression;
-  DWORD dwHeaderCompression;
-  DWORD dwParameterLength;
-  char szParameters[];
-} RILGPRSCONTEXTCAPS, *LPRILGPRSCONTEXTCAPS;
-
-/* LPRILLOCATIONINFO  [extra struct] */
-typedef struct rillocationinfo_tag {
-  DWORD cbSize;
-  DWORD dwLocationAreaCode;
-  DWORD dwCellID;
-} RILLOCATIONINFO, *LPRILLOCATIONINFO;
-
-/* LPRILCAPSERRORCORRECTION  [extra struct] */
-typedef struct {
-  DWORD cbSize;
-  DWORD dwParams;
-  DWORD dwOriginalRequest;
-  DWORD dwOriginalFallback;
-  DWORD dwAnswererFallback;
-} RILCAPSERRORCORRECTION, *LPRILCAPSERRORCORRECTION;
 
 #endif /* _RIL_ */

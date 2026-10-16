@@ -21,4 +21,16 @@
 
 /* DDKWINDOWINFO  [struct; ce-only] */
 
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* DEVICEWINDOW  [struct; ce-only] */
+typedef struct _DEVICEWINDOW_tag {
+ DWORD dwBase; 
+ DWORD dwLen;
+} DEVICEWINDOW, *PDEVICEWINDOW;
+
 #endif /* _DDKREG_ */

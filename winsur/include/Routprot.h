@@ -41,4 +41,16 @@
 #define PROTO_IP_OTHER 0x00000001
 #define PROTO_IP_RIP 0x00000008
 
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* MIB_BEST_IF  [struct; shared] */
+typedef struct _MIB_BEST_IF {
+ DWORD dwDestAddr; 
+ DWORD dwIfIndex; 
+} MIB_BEST_IF*, PMIB_BEST_IF;
+
 #endif /* _ROUTPROT_ */

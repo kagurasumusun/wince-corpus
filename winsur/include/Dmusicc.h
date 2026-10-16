@@ -23,6 +23,18 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* DMUS_PORTPARAMS  [struct; ce-only] */
+typedef struct _DMUS_PORTPARAMS {
+ DWORD dwSize;
+ DWORD dwValidParams;
+ DWORD dwVoices;
+ DWORD dwChannelGroups;
+ DWORD dwAudioChannels;
+ DWORD dwSampleRate;
+ DWORD dwEffectFlags;
+ DWORD fShare;
+} DMUS_PORTPARAMS, *LPDMUS_PORTPARAMS;
+
 /* DMUS_WAVES_REVERB_PARAMS  [struct; ce-only] */
 typedef struct _DMUS_WAVES_REVERB_PARAMS {
  float fInGain;
@@ -30,24 +42,13 @@ typedef struct _DMUS_WAVES_REVERB_PARAMS {
  float fReverbTime;
  float fHighFreqRTRatio;
 } DMUS_WAVES_REVERB_PARAMS;
+typedef DMUS_WAVES_REVERB_PARAMS *PDMUS_WAVES_REVERB_PARAMS, *LPDMUS_WAVES_REVERB_PARAMS;
 
 /* LPDIRECTMUSICBUFFER  [extra typedef] */
 typedef IDirectMusicBuffer *LPDIRECTMUSICBUFFER;
 
 /* LPDIRECTMUSICPORT  [extra typedef] */
 typedef IDirectMusicPort *LPDIRECTMUSICPORT;
-
-/* LPDMUS_PORTPARAMS  [extra struct] */
-typedef struct _DMUS_PORTPARAMS {
-  DWORD dwSize;
-  DWORD dwValidParams;
-  DWORD dwVoices;
-  DWORD dwChannelGroups;
-  DWORD dwAudioChannels;
-  DWORD dwSampleRate;
-  DWORD dwEffectFlags;
-  DWORD fShare;
-} DMUS_PORTPARAMS, *LPDMUS_PORTPARAMS;
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

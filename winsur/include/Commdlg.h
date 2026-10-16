@@ -262,6 +262,11 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* CHOOSECOLOR  [struct, function; shared; Commdlg.lib, commdlg.lib; A/W ChooseColorA,ChooseColorW (CE is W-side)] */
+BOOL ChooseColor(
+ LPCHOOSECOLOR lpcc
+);
+
 /* DEVNAMES  [struct; shared] */
 typedef struct tagDEVNAMES {
  WORD wDriverOffset; 
@@ -269,5 +274,6 @@ typedef struct tagDEVNAMES {
  WORD wOutputOffset; 
  WORD wDefault; 
 } DEVNAMES;
+typedef DEVNAMES *PDEVNAMES, *LPDEVNAMES;
 
 #endif /* _COMMDLG_ */

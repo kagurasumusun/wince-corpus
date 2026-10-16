@@ -31,6 +31,22 @@
 #endif /* _WIN32_WCE */
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* SHGNO  [enum; ce-only] */
+typedef enum tagSHGDN {
+ SHGDN_NORMAL,
+ SHGDN_INFOLDER,
+ SHGDN_FOREDITING,
+ SHGDN_FORADDRESSBAR,
+ SHGDN_FORPARSING
+} SHGNO;
+typedef SHGNO *PSHGNO, *LPSHGNO;
+
+/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */

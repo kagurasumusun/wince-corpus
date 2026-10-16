@@ -11,4 +11,26 @@
 #define _USBMSC_
 
 
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* TRANSPORT_COMMAND  [struct; ce-only] */
+typedef struct _TRANSPORT_COMMAND {
+ DWORD Flags;
+ DWORD Timeout;
+ DWORD Length;
+ DWORD dwLun;
+ PVOID CommandBlock;
+} TRANSPORT_COMMAND, *PTRANSPORT_COMMAND;
+
+/* TRANSPORT_DATA  [struct; ce-only] */
+typedef struct _TRANSPORT_DATA_BUFFER {
+ DWORD RequestLength;
+ DWORD TransferLength;
+ PVOID DataBlock;
+} TRANSPORT_DATA, *PTRANSPORT_DATA;
+
 #endif /* _USBMSC_ */

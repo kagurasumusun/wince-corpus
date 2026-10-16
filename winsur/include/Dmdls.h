@@ -23,13 +23,17 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* DMUS_NOTERANGE  [struct; ce-only] */
+typedef struct _DMUS_NOTERANGE {
+DWORD dwLowNote;
+DWORD dwHighNote;
+} DMUS_NOTERANGE, *LPDMUS_NOTERANGE;
+
 /* DMUS_WAVEDATA  [struct; ce-only] */
 typedef struct {
  ULONG cbSize;
  BYTE byData[ ];
 } DMUS_WAVEDATA;
-
-/* LPDMUS_NOTERANGE  [extra struct] */
-typedef struct _DMUS_NOTERANGE { DWORD dwLowNote; DWORD dwHighNote; } DMUS_NOTERANGE, *LPDMUS_NOTERANGE;
+typedef DMUS_WAVEDATA *PDMUS_WAVEDATA, *LPDMUS_WAVEDATA;
 
 #endif /* _DMDLS_ */

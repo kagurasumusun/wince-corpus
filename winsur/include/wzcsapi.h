@@ -34,4 +34,54 @@
 
 /* INTFS_KEY_TABLE  [struct; ce-only] */
 
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* WZC_CONTEXT  [struct; ce-only] */
+typedef struct _wzc_context_t
+{
+ DWORD dwFlags; 
+ DWORD tmTr; 
+ DWORD tmTc; 
+ DWORD tmTp; 
+ DWORD tmTf; 
+ DWORD tmTd; 
+} WZC_CONTEXT, *PWZC_CONTEXT;
+
+/* WZC_EAPOL_PARAMS  [struct; ce-only] */
+typedef struct _WZC_EAPOL_PARAMS
+{
+ BOOL bEnable8021x;
+ DWORD dwEapFlags;
+ DWORD dwEapType;
+ DWORD dwAuthDataLen;
+ BYTE *pbAuthData;
+}WZC_EAPOL_PARAMS, *PWZC_EAPOL_PARAMS;
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
+
+/* WZCQueryContext  [function; ce-only; CE 5.0..699; Wzcsapi.lib] */
+DWORD WZCQueryContext(
+ LPWSTR pSrvAddr,
+ DWORD dwInFlags,
+ PWZC_CONTEXT pContext,
+ LPDWORD pdwOutFlags
+);
+
+/* WZCSetContext  [function; ce-only; CE 5.0..699; Wzcsapi.lib] */
+DWORD WZCSetContext(
+ LPWSTR pSrvAddr,
+ DWORD dwInFlags,
+ PWZC_CONTEXT pContext,
+ LPDWORD pdwOutFlags
+);
+#endif /* _WIN32_WCE */
+
 #endif /* _WZCSAPI_ */

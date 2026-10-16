@@ -45,6 +45,7 @@ typedef struct{
  DWORD dwImDataSize;
  VOID* pvImData;
 } SIPINFO;
+typedef SIPINFO *PSIPINFO, *LPSIPINFO;
 
 /* ==================================================================
  * functions and callbacks

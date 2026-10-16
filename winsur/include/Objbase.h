@@ -84,6 +84,7 @@ typedef struct _AUTH_IDENTITY {
  [size_is(DomainLength+1)] USHORT *Password;
  ULONG Flags;
 } AUTH_IDENTITY;
+typedef AUTH_IDENTITY *PAUTH_IDENTITY, *LPAUTH_IDENTITY;
 
 /* ==================================================================
  * functions and callbacks

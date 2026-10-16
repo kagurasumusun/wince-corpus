@@ -174,6 +174,16 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* CONNECTDLGSTRUCT  [struct, typedef; shared; A/W CONNECTDLGSTRUCTA,CONNECTDLGSTRUCTW (CE is W-side)] */
+typedef struct {
+ DWORD cbStructure;
+ HWND hwndOwner;
+ LPNETRESOURCE lpConnRes;
+ DWORD dwFlags;
+ DWORD dwDevNum;
+} CONNECTDLGSTRUCT;
+typedef CONNECTDLGSTRUCT *PCONNECTDLGSTRUCT, *LPCONNECTDLGSTRUCT;
+
 /* DISCDLGSTRUCT  [struct, typedef; shared; A/W DISCDLGSTRUCTA,DISCDLGSTRUCTW (CE is W-side)] */
 typedef struct _wcesdk_win32_DISCDLGSTRUCT_str{
  DWORD cbStructure;
@@ -182,6 +192,7 @@ typedef struct _wcesdk_win32_DISCDLGSTRUCT_str{
  LPTSTR lpRemoteName;
  DWORD dwFlags;
 } DISCDLGSTRUCT;
+typedef DISCDLGSTRUCT *PDISCDLGSTRUCT, *LPDISCDLGSTRUCT;
 
 /* NETRESOURCE  [struct, typedef; shared; A/W NETRESOURCEA,NETRESOURCEW (CE is W-side)] */
 typedef struct _NETRESOURCE {
@@ -194,6 +205,7 @@ typedef struct _NETRESOURCE {
  LPTSTR lpComment; 
  LPTSTR lpProvider; 
 } NETRESOURCE;
+typedef NETRESOURCE *PNETRESOURCE, *LPNETRESOURCE;
 
 /* REMOTE_NAME_INFO  [struct, typedef; shared; A/W REMOTE_NAME_INFOA,REMOTE_NAME_INFOW (CE is W-side)] */
 typedef struct _REMOTE_NAME_INFO {
@@ -201,17 +213,28 @@ typedef struct _REMOTE_NAME_INFO {
  LPTSTR lpConnectionName; 
  LPTSTR lpRemainingPath;
 } REMOTE_NAME_INFO;
+typedef REMOTE_NAME_INFO *PREMOTE_NAME_INFO, *LPREMOTE_NAME_INFO;
 
 /* UNIVERSAL_NAME_INFO  [struct, typedef; shared; A/W UNIVERSAL_NAME_INFOA,UNIVERSAL_NAME_INFOW (CE is W-side)] */
 typedef struct _UNIVERSAL_NAME_INFO {
  LPTSTR lpUniversalName;
 } UNIVERSAL_NAME_INFO;
+typedef UNIVERSAL_NAME_INFO *PUNIVERSAL_NAME_INFO, *LPUNIVERSAL_NAME_INFO;
 
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
+
+/* WNetAddConnection3  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Redir.lib, redir.lib; A/W WNetAddConnection3A,WNetAddConnection3W (CE is W-side)] */
+DWORD WNetAddConnection3(
+ HWND hwndOwner, 
+ LPNETRESOURCE lpNetResource, 
+ LPTSTR lpPassword, 
+ LPTSTR lpUserName, 
+ DWORD dwFlags 
+);
 
 /* WNetCancelConnection2  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Redir.lib, redir.lib; A/W WNetCancelConnection2A,WNetCancelConnection2W (CE is W-side)] */
 DWORD WNetCancelConnection2(
@@ -225,10 +248,20 @@ DWORD WNetCloseEnum(
  HANDLE hEnum 
 );
 
+/* WNetConnectionDialog1  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Redir.lib, redir.lib; A/W WNetConnectionDialog1A,WNetConnectionDialog1W (CE is W-side)] */
+DWORD WNetConnectionDialog1(
+ LPCONNECTDLGSTRUCT lpConnectDlgStruct 
+);
+
 /* WNetDisconnectDialog  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Redir.lib, redir.lib] */
 DWORD WNetDisconnectDialog(
  HWND hwnd,
  DWORD dwType
+);
+
+/* WNetDisconnectDialog1  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Redir.lib, redir.lib; A/W WNetDisconnectDialog1A,WNetDisconnectDialog1W (CE is W-side)] */
+DWORD WNetDisconnectDialog1(
+ LPDISCDLGSTRUCT lpDiscDlgStruct 
 );
 
 /* WNetEnumResource  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Redir.lib, redir.lib; A/W WNetEnumResourceA,WNetEnumResourceW (CE is W-side)] */
@@ -259,6 +292,15 @@ DWORD WNetGetUser(
  LPCTSTR lpName, 
  LPTSTR lpUserName, 
  LPDWORD lpnLength 
+);
+
+/* WNetOpenEnum  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Redir.lib, redir.lib; A/W WNetOpenEnumA,WNetOpenEnumW (CE is W-side)] */
+DWORD WNetOpenEnum(
+ DWORD dwScope, 
+ DWORD dwType, 
+ DWORD dwUsage, 
+ LPNETRESOURCE lpNetResource, 
+ LPHANDLE lphEnum 
 );
 #endif /* _WIN32_WCE */
 

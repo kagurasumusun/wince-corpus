@@ -12,6 +12,20 @@
 
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* MARGINS  [struct; shared] */
+typedef struct _MARGINS {
+ int cxLeftWidth;
+ int cxRightWidth;
+ int cyTopHeight;
+ int cyBottomHeight;
+} MARGINS,* PMARGINS;
+
+/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
@@ -21,6 +35,7 @@ void AdjustRect( LPRECT lprcContent, DWORD dwState );
 HANDLE CreateRenderingMetrics( HDC hDC, INT iMaxCand, WCHAR* pszCandidates, WCHAR* pszInlineComments, HFONT hFontCandidates, HFONT hFontInlineComments, HICON hIconMemo, DWORD dwFlags );
 HANDLE FreeRenderingMetrics( HANDLE hMetrics );
 DWORD GetHorizontalOffset(void);
+void GetMargins( PMARGINS pMargins );
 static INT GetMaxHeight(void);
 static INT GetMaxItems(void);
 UINT GetSeparator(void);

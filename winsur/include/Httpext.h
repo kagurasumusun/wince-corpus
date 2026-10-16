@@ -52,6 +52,21 @@
 /* ServerSupportFunction  [enum, function; ce-only; httpextn.lib, Httpfilt.lib, httpfilt.lib] */
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* HSE_SEND_HEADER_EX_INFO  [struct; ce-only] */
+typedef struct _HSE_SEND_HEADER_EX_INFO{
+ LPCSTR pszStatus;
+ LPCSTR pszHeader;
+ DWORD cchStatus;
+ DWORD cchHeader;
+ BOOL fKeepConn;
+} HSE_SEND_HEADER_EX_INFO, *LPHSE_SEND_HEADER_EX_INFO;
+
+/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */

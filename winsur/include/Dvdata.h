@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 45 constants, 16 declarations, 0 outlines, 0 base types, 0 extra macros, 99 extra decls
+ * 45 constants, 16 declarations, 0 outlines, 0 base types, 0 extra macros, 86 extra decls
  */
 #ifndef _DVDATA_
 #define _DVDATA_
@@ -64,6 +64,45 @@
 #define SPRM_VTS_TTN 5
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* EDVDDomainType  [enum; ce-only] */
+typedef enum {
+ DVD_FP_DOM,
+ DVD_VMGM_DOM,
+ DVD_VTSM_DOM,
+ DVD_TT_DOM
+} EDVDDomainType;
+typedef EDVDDomainType *PEDVDDomainType, *LPEDVDDomainType;
+
+/* ENavCmdArea  [enum; ce-only] */
+typedef enum {
+ DVD_PRE_CMD = 0,
+ DVD_POST_CMD = 1,
+ DVD_CELL_CMD = 2
+} ENavCmdArea;
+typedef ENavCmdArea *PENavCmdArea, *LPENavCmdArea;
+
+/* EPGCLinkType  [enum; ce-only] */
+typedef enum {
+ DVD_NEXT_PGC,
+ DVD_PREVIOUS_PGC,
+ DVD_UP_PGC
+} EPGCLinkType;
+typedef EPGCLinkType *PEPGCLinkType, *LPEPGCLinkType;
+
+/* EPGCPlaybackMode  [enum; ce-only] */
+typedef enum {
+ DVD_PLAYMODE_SEQUENTIAL,
+ DVD_PLAYMODE_RANDOM,
+ DVD_PLAYMODE_SHUFFLE
+} EPGCPlaybackMode;
+typedef EPGCPlaybackMode *PEPGCPlaybackMode, *LPEPGCPlaybackMode;
+
+/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
@@ -71,16 +110,9 @@
 /* function */
 HRESULT EnumerateTextLanguageUnits( IEnumDVD_TEXT_LANGUAGE_UNIT** ppEnum );
 HRESULT GetAudioAttr( UINT nStreamNo, DVD_AUDIO_STREAM_ATTR* pAudioAttr );
-HRESULT GetControlInfo( IDVDStreaControlInfo** ppStream );
-HRESULT GetDataSearchInfo( IDVDDataSearchInfo** ppDSI );
-HRESULT GetFirstPlay( IDVDDomain* ppDomain );
-HRESULT GetHighlightInfo( IDVDHighlightInfo** ppHLI );
 HRESULT GetPOSCode( DVD_POS_CODE* pPOSCode );
 HRESULT GetProviderID( DVD_PROVIDER_ID* pProvider );
 HRESULT GetRecordingVideoInfo( DVD_ISRC* pVideo );
-HRESULT GetStreamAttributes( IDVDStreamAttributes** ppAttr );
-HRESULT GetStreamingInfo( IDVDStreamControlInfo** pControlInfo );
-HRESULT GetTextDataManager( IDVDTextManager** ppTxtMgr );
 HRESULT NotifyNewPCI();
 HRESULT ReaderLock(void);
 HRESULT ReaderUnlock(void);

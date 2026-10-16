@@ -229,6 +229,17 @@ typedef HANDLE HDESK;
 /* HDROP  [typedef; shared; entity-headers; win32-reference] */
 typedef HANDLE HDROP;
 
+/* NOTIFYICONDATA  [struct; shared; A/W NOTIFYICONDATAA,NOTIFYICONDATAW (CE is W-side)] */
+typedef struct _NOTIFYICONDATA { 
+ DWORD cbSize;
+ HWND hWnd; 
+ UINT uID; 
+ UINT uFlags; 
+ UINT uCallbackMessage; 
+ HICON hIcon; 
+ WCHAR szTip[64]; 
+} NOTIFYICONDATA, *PNOTIFYICONDATA;
+
 /* SHFILEINFO  [struct; shared; A/W SHFILEINFOA,SHFILEINFOW (CE is W-side)] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   hIcon */

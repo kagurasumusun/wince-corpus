@@ -33,10 +33,148 @@
 #define POWER_STATE_USERIDLE (DWORD)(0x01000000)
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* CEDEVICE_POWER_STATE  [enum; ce-only] */
+typedef enum _CEDEVICE_POWER_STATE {
+ PwrDeviceUnspecified = -1,
+ D0 = 0,
+ D1,
+ D2,
+ D3,
+ D4,
+ PwrDeviceMaximum
+} CEDEVICE_POWER_STATE, *PCEDEVICE_POWER_STATE;
+
+/* POWER_BROADCAST  [struct; ce-only] */
+struct {
+ DWORD Message;
+ DWORD Flags;
+ DWORD Length;
+ WCHAR SystemPowerState[1];
+} POWER_BROADCAST, *PPOWER_BROADCAST;
+
+/* POWER_BROADCAST_POWER_INFO  [struct; ce-only] */
+typedef struct _POWER_BROADCAST_POWER_INFO {
+ DWORD dwBatteryLifeTime;
+ DWORD dwBatteryFullLifeTime;
+ DWORD dwBackupBatteryLifeTime;
+ DWORD dwBackupBatteryFullLifeTime;
+ BYTE bACLineStatus;
+ BYTE bBatteryFlag;
+ BYTE bBatteryLifePercent;
+ BYTE bBackupBatteryFlag;
+ BYTE bBackupBatteryLifePercent;
+} POWER_BROADCAST_POWER_INFO, *PPOWER_BROADCAST_POWER_INFO;
+
+/* POWER_CAPABILITIES  [struct; ce-only] */
+typedef struct _POWER_CAPABILITIES {
+ UCHAR DeviceDx;
+ UCHAR WakeFromDx;
+ UCHAR InrushDx;
+ DWORD Power[5];
+ DWORD Latency[5];
+ DWORD Flags;
+} POWER_CAPABILITIES, *PPOWER_CAPABILITIES;
+
+/* POWER_RELATIONSHIP  [struct; ce-only] */
+typedef struct _POWER_RELATIONSHIP {
+ HANDLE hParent;
+ LPCWSTR pwsParent;
+ HANDLE hChild;
+ LPCWSTR pwsChild;
+} POWER_RELATIONSHIP, *PPOWER_RELATIONSHIP;
+
+/* PBT_ROLE_SWITCH_EVENT  [extra struct] */
+typedef struct {
+  DWORD dwSize;
+  BT_ADDR bta;
+  UINT fRole : 1;
+} BT_ROLE_SWITCH_EVENT, *PBT_ROLE_SWITCH_EVENT;
+
+/* PBT_AVDTP_STATE_CHANGE  [extra struct] */
+typedef struct {
+  DWORD dwSize;
+  BT_ADDR bta;
+  DWORD dwState;
+} BT_AVDTP_STATE_CHANGE, *PBT_AVDTP_STATE_CHANGE;
+
+/* PBT_LINK_KEY_EVENT  [extra struct] */
+typedef struct {
+  DWORD dwSize;
+  BT_ADDR bta;
+  UCHAR link_key[16];
+  UCHAR key_type;
+} BT_LINK_KEY_EVENT, *PBT_LINK_KEY_EVENT;
+
+/* PBT_DISCONNECT_EVENT  [extra struct] */
+typedef struct {
+  DWORD dwSize;
+  USHORT hConnection;
+  UCHAR ucReason;
+} BT_DISCONNECT_EVENT, *PBT_DISCONNECT_EVENT;
+
+/* PBT_SERVICE_REQUEST  [extra struct] */
+typedef struct {
+  DWORD dwSize;
+  BT_ADDR btAddr;
+  GUID uuidService;
+} BT_SERVICE_REQUEST, *PBT_SERVICE_REQUEST;
+
+/* PBT_MODE_CHANGE_EVENT  [extra struct] */
+typedef struct {
+  DWORD dwSize;
+  USHORT hConnection;
+  BT_ADDR bta;
+  BYTE bMode;
+  USHORT usInterval;
+} BT_MODE_CHANGE_EVENT, *PBT_MODE_CHANGE_EVENT;
+
+/* PBT_CONNECT_EVENT  [extra struct] */
+typedef struct { DWORD dwSize;
+USHORT hConnection;
+BT_ADDR bta;
+UCHAR ucLinkType;
+UCHAR ucEncryptMode;
+} BT_CONNECT_EVENT, *PBT_CONNECT_EVENT;
+
+/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
+
+/* DevicePowerNotify  [function; ce-only; CE 4.0..699; Coredll.lib] */
+DWORD DevicePowerNotify(
+ PVOID pvDevice,
+ CEDEVICE_POWER_STATE DeviceState,
+ DWORD Flags
+);
+
+/* GetDevicePower  [function; ce-only; CE 4.0..699; Coredll.lib] */
+DWORD GetDevicePower(
+ PVOID pvDevice,
+ DWORD dwDeviceFlags,
+ PCEDEVICE_POWER_STATE pDeviceState
+);
+
+/* GetSystemPowerState  [function; ce-only; CE 4.0..699; Coredll.lib] */
+DWORD GetSystemPowerState(
+ LPWSTR pBuffer,
+ DWORD Length,
+ PDWORD pFlags
+);
+
+/* RegisterPowerRelationship  [function; ce-only; CE 4.0..699; Coredll.lib] */
+HANDLE RegisterPowerRelationship(
+ PVOID pvParent,
+ PVOID pvChild,
+ PPOWER_CAPABILITIES pCaps,
+ DWORD Flags
+);
 
 /* ReleasePowerRelationship  [function; ce-only; CE 4.0..699; Coredll.lib] */
 DWORD ReleasePowerRelationship(
@@ -53,9 +191,25 @@ HANDLE RequestPowerNotifications(
  HANDLE hMsgQ,
  DWORD Flags
 );
+
+/* SetDevicePower  [function; ce-only; CE 4.0..699; Coredll.lib] */
+DWORD SetDevicePower(
+ PVOID pvDevice,
+ DWORD dwDeviceFlags,
+ CEDEVICE_POWER_STATE DeviceState
+);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
+
+/* SetPowerRequirement  [function; ce-only; CE 5.0..699; Coredll.lib] */
+HANDLE SetPowerRequirement(
+ PVOID pvDevice,
+ CEDEVICE_POWER_STATE DeviceState,
+ ULONG DeviceFlags,
+ PVOID pvSystemState,
+ ULONG StateFlags
+);
 
 /* SetSystemPowerState  [function; shared; CE 5.0..699; Coredll.lib] */
 DWORD SetSystemPowerState(

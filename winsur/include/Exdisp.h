@@ -54,6 +54,22 @@ typedef enum BrowserNavConstants {
  navBrowserBar = 0x20, 
  navHyperlink = 0x40 
 } BrowserNavConstants;
+typedef BrowserNavConstants *PBrowserNavConstants, *LPBrowserNavConstants;
+
+/* CommandStateChangeConstants  [enum; ce-only; shdocvw.lib] */
+enum CommandStateChangeConstants{
+ CSC_NAVIGATEFORWARD = 0x1,
+ CSC_NAVIGATEBACK = 0x2
+} CommandStateChangeConstants;
+
+/* RefreshConstants  [enum; ce-only] */
+typedef enum RefreshConstants { 
+ REFRESH_NORMAL = 0, 
+ REFRESH_IFEXPIRED = 1, 
+ REFRESH_CONTINUE = 2, 
+ REFRESH_COMPLETELY = 3 
+} RefreshConstants;
+typedef RefreshConstants *PRefreshConstants, *LPRefreshConstants;
 
 /* SecureLockIconConstants  [enum; ce-only; shdocvw.lib] */
 enum SecureLockIconConstants{

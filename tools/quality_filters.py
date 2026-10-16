@@ -185,7 +185,7 @@ _GLUED = re.compile(
     r"\b(?:HANDLE|HMODULE|HINSTANCE|HWND|HDC|HMENU|HKEY|HBITMAP|HFONT|"
     r"BOOL(?!EAN)|DWORD|UINT|ULONG|LONG|WORD|BYTE|LPVOID|LPCVOID|LPSTR|LPCSTR|"
     r"LPWSTR|LPCWSTR|LPTSTR|LPCTSTR|HRESULT|LRESULT|NTSTATUS|"
-    r"VOID|INT|SHORT|CHAR)[A-Z]|"
+    r"VOID|INT(?!ERFACE)|SHORT|CHAR)[A-Za-z]|"
     r"\b(?:struct|enum|union)_[A-Z]"
 )
 
@@ -199,9 +199,9 @@ _UNUSABLE = re.compile(
     r"\[[A-Z][A-Z0-9_]+\]|"
     r"\[in,|\bin,\s*optional\]|"
     r"\b(?:sz_Or_Ord|CBrush|CString|CObject|CWnd|"
-    r"IUnknown|IDispatch|IDirect3D|IDVD|BSTR|HTREEITEM|"
-    r"IOleInPlace|ISpThread|IOsAxs|IHTMLEvent|IWSD|"
-    r"IMediaSample|IHTML)\b|"
+    r"BSTR|HTREEITEM)\b|"
+    r"\b(?:IUnknown|IDispatch|IDirect3D|IDVD|IOle|"
+    r"ISp|IOsAxs|IHTML|IWSD|IMediaSample|IErrorInfo|CSize|CPoint)|"
     r"\bTYPE\s+Type\b|"
     r"\bint64\b|"
     r"unsigned__int64|"
@@ -313,6 +313,8 @@ def looks_like_c_declaration(text: str) -> bool:
         return False
     if _ASSIGNMENT.match(first):
         return False
+    if re.match(r"[A-Z][A-Z0-9_]*\s+\w+\s*=", first):
+        return False
     if first.startswith(("if ", "if(", "for ", "for(", "while ", "while(",
                          "switch ", "return ", "else", "case ", "goto ",
                          "printf", "TRACE", "DEBUGMSG", "ASSERT", "NKDbg")):
@@ -342,7 +344,7 @@ def sanitize_declaration(text: str, name: str = "",
         return None
     if dtype == "function" and name and name[:1].islower() and \
             not name.startswith(("wave", "midi", "mixer", "time", "keybd",
-                                 "mouse", "snd")):
+                                 "mouse", "snd", "lstr", "wsp", "wvs")):
         # likely a local / sample identifier
         if "_" not in name:
             return None

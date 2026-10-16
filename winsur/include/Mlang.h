@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 10 constants, 14 declarations, 4 outlines, 0 base types, 0 extra macros, 41 extra decls
+ * 10 constants, 14 declarations, 4 outlines, 0 base types, 0 extra macros, 40 extra decls
  */
 #ifndef _MLANG_
 #define _MLANG_
@@ -56,6 +56,57 @@ typedef struct tagDetectEncodingInfo {
  INT nConfidence;
 } DetectEncodingInfo, *pDetectEncodingInfo;
 
+/* MIMECONTF  [enum; ce-only] */
+typedef enum tagMIMECONTF {
+ MIMECONTF_MAILNEWS = 0x00000001,
+ MIMECONTF_BROWSER = 0x00000002,
+ MIMECONTF_MINIMAL = 0x00000004,
+ MIMECONTF_IMPORT = 0x00000008,
+ MIMECONTF_SAVABLE_MAILNEWS = 0x00000100,
+ MIMECONTF_SAVABLE_BROWSER = 0x00000200,
+ MIMECONTF_EXPORT = 0x00000400,
+ MIMECONTF_PRIVCONVERTER = 0x00010000,
+ MIMECONTF_VALID = 0x00020000,
+ MIMECONTF_VALID_NLS = 0x00040000,
+ MIMECONTF_MIME_IE4 = 0x10000000,
+ MIMECONTF_MIME_LATEST = 0x20000000,
+ MIMECONTF_MIME_REGISTRY = 0x40000000
+} MIMECONTF;
+typedef MIMECONTF *PMIMECONTF, *LPMIMECONTF;
+
+/* MLCONVCHAR  [enum; ce-only] */
+typedef enum tagMLCONVCHARF {
+ MLCONVCHARF_NONE = 0,
+ MLCONVCHARF_AUTODETECT = 1,
+ MLCONVCHARF_NCR_ENTITIZE = 2,
+ MLCONVCHARF_NAME_ENTITIZE = 4,
+ MLCONVCHARF_USEDEFCHAR = 8,
+ MLCONVCHARF_NOBESTFITCHARS = 16
+} MLCONVCHAR;
+typedef MLCONVCHAR *PMLCONVCHAR, *LPMLCONVCHAR;
+
+/* MLCP  [enum; ce-only] */
+typedef enum tagMLCPF {
+ MLDETECTF_MAILNEWS = 0x0001,
+ MLDETECTF_BROWSER = 0x0002,
+ MLDETECTF_VALID = 0x0004,
+ MLDETECTF_VALID_NLS = 0x0008,
+ MLDETECTF_PRESERVE_ORDER = 0x0010,
+ MLDETECTF_PREFERRED_ONLY = 0x0020,
+ MLDETECTF_FILTER_SPECIALCHAR = 0x0040
+} MLCP;
+typedef MLCP *PMLCP, *LPMLCP;
+
+/* MLDETECTCP  [enum; ce-only] */
+typedef enum tagMLDETECTCP {
+ MLDETECTCP_NONE = 0,
+ MLDETECTCP_7BIT = 1,
+ MLDETECTCP_8BIT = 2,
+ MLDETECTCP_DBCS = 4,
+ MLDETECTCP_HTML = 8
+} MLDETECTCP;
+typedef MLDETECTCP *PMLDETECTCP, *LPMLDETECTCP;
+
 /* SCRIPTCONTF  [enum; ce-only] */
 typedef enum tagSCRIPTCONTF {
  sidDefault,
@@ -102,21 +153,61 @@ typedef enum tagSCRIPTCONTF {
  sidFEFirst = sidHangul,
  sidFELast = sidHan
 } SCRIPTCONTF;
+typedef SCRIPTCONTF *PSCRIPTCONTF, *LPSCRIPTCONTF;
+
+/* SCRIPTFONTCONTF  [enum; ce-only] */
+typedef enum tagSCRIPTFONTCONTF {
+ SCRIPTCONTF_FIXED_FONT = 0x00000001,
+ SCRIPTCONTF_PROPORTIONAL_FONT = 0x00000002,
+ SCRIPTCONTF_SCRIPT_USER = 0x00010000,
+ SCRIPTCONTF_SCRIPT_HIDE = 0x00020000,
+ SCRIPTCONTF_SCRIPT_SYSTEM = 0x00040000
+} SCRIPTFONTCONTF;
+typedef SCRIPTFONTCONTF *PSCRIPTFONTCONTF, *LPSCRIPTFONTCONTF;
 
 /* UNICODERANGE  [struct; ce-only] */
 typedef struct tagUNICODERANGE {
  WCHAR wcFrom;
  WCHAR wcTo;
 } UNICODERANGE;
-
-/* pDetectEncodingInfo  [extra struct] */
-typedef struct tagDetectEncodingInfo {UINTnLangID;UINTnCodePage;INTnDocPercent;INTnConfidence;}DetectEncodingInfo, *pDetectEncodingInfo;
+typedef UNICODERANGE *PUNICODERANGE, *LPUNICODERANGE;
 
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
+
+/* ConvertINetMultiByteToUnicode  [function; ce-only; CE 4.0..699; Mlang.dll, mlang.dll] */
+HRESULT ConvertINetMultiByteToUnicode(
+ LPDWORD lpdwMode,
+ DWORD dwSrcEncoding,
+ LPCSTR lpSrcStr,
+ LPINT lpnMultiCharCount,
+ LPWSTR lpDstStr,
+ LPINT lpnWideCharCount
+);
+
+/* ConvertINetString  [function; ce-only; CE 4.0..699; Mlang.dll, mlang.dll] */
+HRESULT ConvertINetString(
+ LPDWORD lpdwMode,
+ DWORD dwSrcEncoding,
+ DWORD dwDstEncoding,
+ LPCSTR lpSrcStr,
+ LPINT lpnSrcSize,
+ LPBYTE lpDstStr,
+ LPINT lpnDstSize
+);
+
+/* ConvertINetUnicodeToMultiByte  [function; ce-only; CE 4.0..699; Mlang.dll, mlang.dll] */
+HRESULT ConvertINetUnicodeToMultiByte(
+ LPDWORD lpdwMode,
+ DWORD dwEncoding,
+ LPCWSTR lpSrcStr,
+ LPINT lpnWideCharCount,
+ LPSTR lpDstStr,
+ LPINT lpnMultiCharCount
+);
 
 /* IsConvertINetStringAvailable  [function; ce-only; CE 4.0..699; Mlang.dll, mlang.dll] */
 HRESULT IsConvertINetStringAvailable(

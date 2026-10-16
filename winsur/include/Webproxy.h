@@ -12,6 +12,18 @@
 
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* PROXY_HTTP_INFORMATION  [struct; ce-only] */
+typedef struct _PROXY_HTTP_INFORMATION {
+ DWORD dwSize;
+ DWORD dwProxyVersion;
+} PROXY_HTTP_INFORMATION, *PPROXY_HTTP_INFORMATION;
+
+/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

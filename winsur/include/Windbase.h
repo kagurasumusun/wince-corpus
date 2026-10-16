@@ -73,6 +73,7 @@ typedef struct _CENOTIFYREQUEST {
  HANDLE hHeap;
  DWORD dwParam;
 } CENOTIFYREQUEST;
+typedef CENOTIFYREQUEST *PCENOTIFYREQUEST, *LPCENOTIFYREQUEST;
 
 /* CEPROPSPEC  [struct; ce-only; Coredll.lib, coredll.lib] */
 typedef struct CEPROPSPEC {
@@ -82,26 +83,13 @@ typedef struct CEPROPSPEC {
  LPWSTR pwszPropName;
  DWORD cchPropName;
 } CEPROPSPEC;
-
-/* LPBY_HANDLE_DB_INFORMATION  [extra struct] */
-typedef struct _BY_HANDLE_DB_INFORMATION {
-  WORD wVersion;
-  CEGUID guidVol;
-  CEOID oidDbase;
-  CEDBASEINFOEX infDatabase;
-} BY_HANDLE_DB_INFORMATION, *LPBY_HANDLE_DB_INFORMATION;
+typedef CEPROPSPEC *PCEPROPSPEC, *LPCEPROPSPEC;
 
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
-
-/* CeGetDBInformationByHandle  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-BOOL CeGetDBInformationByHandle(
- HANDLE hDbase, 
- LPBY_HANDLE_DB_INFORMATION lpDBInfo 
-);
 
 /* CeSeekDatabaseEx  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
 CEOID CeSeekDatabaseEx(

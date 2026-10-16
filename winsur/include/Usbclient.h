@@ -12,6 +12,27 @@
 
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* REG_VALUE_DESCR  [struct; ce-only] */
+typedef struct _REG_VALUE_DESCR {
+ LPWSTR Name;
+ DWORD Type;
+ DWORD Size;
+ PBYTE Data;
+} REG_VALUE_DESCR, *PREG_VALUE_DESCR;
+
+/* REMOVE_LOCK  [struct; ce-only] */
+typedef struct _REMOVE_LOCK {
+ BOOL Removed;
+ LONG IoCount;
+ HANDLE RemoveEvent;
+} REMOVE_LOCK, *PREMOVE_LOCK;
+
+/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
@@ -20,6 +41,19 @@
 /* DefaultTransferComplete  [function; ce-only; CE 5.0..699] */
 DWORD DefaultTransferComplete(
  PVOID Context
+);
+
+/* GetSetKeyValues  [function; ce-only; CE 5.0..699] */
+BOOL GetSetKeyValues(
+ LPCTSTR KeyName,
+ PREG_VALUE_DESCR ValDesc,
+ BOOL bSet,
+ BOOL bOverwrite
+);
+
+/* InitializeRemoveLock  [function; ce-only; CE 5.0..699] */
+BOOL InitializeRemoveLock(
+ IN PREMOVE_LOCK Lock
 );
 #endif /* _WIN32_WCE */
 

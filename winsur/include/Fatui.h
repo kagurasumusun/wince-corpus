@@ -22,4 +22,14 @@ struct _UIPARAM {
 DWORD dwType, 
 DWORD dwValue };
 
+/* FATUIDATA  [struct; ce-only] */
+struct _FATUIDATA { 
+DWORD dwSize; 
+DWORD dwFlags; 
+DWORD idsEvent; 
+DWORD idsEventCaption; 
+DWORD cuiParams; 
+UIPARAM auiParams[4]; }; 
+typedef struct _FATUIDATA FATUIDATA, *PFATUIDATA;
+
 #endif /* _FATUI_ */

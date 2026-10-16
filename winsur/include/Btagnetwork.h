@@ -22,6 +22,7 @@ typedef struct _NetworkCallFailedInfo {
  USHORT usCallType;
  DWORD dwStatus;
 } NetworkCallFailedInfo;
+typedef NetworkCallFailedInfo *PNetworkCallFailedInfo, *LPNetworkCallFailedInfo;
 
 /* NETWORK_CALL_TYPE  [extra enum] */
 typedef enum _NETWORK_CALL_TYPE { CALL_TYPE_ANSWER = 0x01, CALL_TYPE_DROP = 0x02, CALL_TYPE_DIAL = 0x03, CALL_TYPE_HOLD = 0x04, CALL_TYPE_SWAP = 0x05, CALL_TYPE_UNHOLD = 0x06, } NETWORK_CALL_TYPE;

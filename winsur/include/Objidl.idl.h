@@ -20,4 +20,17 @@
 /* ISurrogate  [interface; shared; CE 5.0..599; Ole32.lib, Uuid.lib] */
 #endif /* _WIN32_WCE */
 
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* BIND_FLAGS  [enum; shared] */
+typedef enum tagBIND_FLAGS {
+ BIND_MAYBOTHERUSER = 1, 
+ BIND_JUSTTESTEXISTENCE = 2, 
+} BIND_FLAGS;
+typedef BIND_FLAGS *PBIND_FLAGS, *LPBIND_FLAGS;
+
 #endif /* _OBJIDL_IDL_ */

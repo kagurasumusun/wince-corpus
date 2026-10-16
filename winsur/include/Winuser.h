@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2457 constants, 396 declarations, 6 outlines, 1 base types, 0 extra macros, 0 extra decls
+ * 2457 constants, 305 declarations, 7 outlines, 1 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINUSER_
 #define _WINUSER_
@@ -3031,6 +3031,8 @@ LPARAM MAKEWPARAM(
 
 /* POINTSTOPOINT  [macro, function; shared] */
 
+/* WM_COPYDATA  [function, struct; ce-only] */
+
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
@@ -3044,6 +3046,25 @@ typedef struct tagACCEL {
  WORD cmd;
  WORD pad;
 } ACCEL;
+typedef ACCEL *PACCEL, *LPACCEL;
+
+/* ACCESSTIMEOUT  [struct; shared] */
+typedef struct tagACCESSTIMEOUT{
+ UINT cbSize;
+ DWORD dwFlags;
+ DWORD iTimeOutMSec;
+} ACCESSTIMEOUT, *LPACCESSTIMEOUT;
+
+/* COMBOBOXINFO  [struct; shared] */
+typedef struct tagCOMBOBOXINFO {
+ DWORD cbSize;
+ RECT rcItem;
+ RECT rcButton;
+ DWORD stateButton;
+ HWND hwndCombo;
+ HWND hwndItem;
+ HWND hwndList;
+} COMBOBOXINFO, *PCOMBOBOXINFO, *LPCOMBOBOXINFO;
 
 /* COPYDATASTRUCT  [struct; shared] */
 typedef struct tagCOPYDATASTRUCT {
@@ -3051,6 +3072,7 @@ typedef struct tagCOPYDATASTRUCT {
  DWORD cbData; 
  PVOID lpData; 
 } COPYDATASTRUCT;
+typedef COPYDATASTRUCT *PCOPYDATASTRUCT, *LPCOPYDATASTRUCT;
 
 /* CREATESTRUCT  [struct; shared; A/W CREATESTRUCTA,CREATESTRUCTW (CE is W-side)] */
 typedef struct tagCREATESTRUCT { 
@@ -3067,6 +3089,7 @@ typedef struct tagCREATESTRUCT {
  LPCTSTR lpszClass; 
  DWORD dwExStyle; 
 } CREATESTRUCT;
+typedef CREATESTRUCT *PCREATESTRUCT, *LPCREATESTRUCT;
 
 /* DELETEITEMSTRUCT  [struct; shared] */
 typedef struct tagDELETEITEMSTRUCT { 
@@ -3076,6 +3099,7 @@ typedef struct tagDELETEITEMSTRUCT {
  HWND hwndItem; 
  UINT itemData; 
 } DELETEITEMSTRUCT;
+typedef DELETEITEMSTRUCT *PDELETEITEMSTRUCT, *LPDELETEITEMSTRUCT;
 
 /* DLGITEMTEMPLATE  [struct; shared] */
 typedef struct { 
@@ -3087,6 +3111,7 @@ typedef struct {
  short cy; 
  WORD id; 
 } DLGITEMTEMPLATE;
+typedef DLGITEMTEMPLATE *PDLGITEMTEMPLATE, *LPDLGITEMTEMPLATE;
 
 /* DLGTEMPLATE  [struct; shared] */
 typedef struct {
@@ -3098,6 +3123,7 @@ typedef struct {
  short cx; 
  short cy; 
 } DLGTEMPLATE;
+typedef DLGTEMPLATE *PDLGTEMPLATE, *LPDLGTEMPLATE;
 
 /* DRAWITEMSTRUCT  [struct; shared] */
 typedef struct tagDRAWITEMSTRUCT { 
@@ -3111,9 +3137,19 @@ typedef struct tagDRAWITEMSTRUCT {
  RECT rcItem; 
  ULONG_PTR itemData; 
 } DRAWITEMSTRUCT;
+typedef DRAWITEMSTRUCT *PDRAWITEMSTRUCT, *LPDRAWITEMSTRUCT;
 
 /* HDWP  [typedef; shared; entity-headers; win32-reference] */
 typedef HANDLE HDWP;
+
+/* KEYBDINPUT  [struct; shared] */
+typedef struct tagKEYBDINPUT {
+ WORD wVk;
+ WORD wScan;
+ DWORD dwFlags;
+ DWORD time;
+ ULONG_PTR dwExtraInfo;
+} KEYBDINPUT, *PKEYBDINPUT;
 
 /* MEASUREITEMSTRUCT  [struct; shared] */
 typedef struct tagMEASUREITEMSTRUCT { 
@@ -3124,6 +3160,36 @@ typedef struct tagMEASUREITEMSTRUCT {
  UINT itemHeight; 
  DWORD itemData; 
 } MEASUREITEMSTRUCT;
+typedef MEASUREITEMSTRUCT *PMEASUREITEMSTRUCT, *LPMEASUREITEMSTRUCT;
+
+/* MONITORINFO  [struct; shared] */
+typedef struct tagMONITORINFO {
+ DWORD cbSize;
+ RECT rcMonitor;
+ RECT rcWork;
+ DWORD dwFlags;
+} MONITORINFO, *LPMONITORINFO;
+
+/* MOUSEINPUT  [struct; shared] */
+typedef struct tagMOUSEINPUT {
+ LONG dx;
+ LONG dy;
+ DWORD mouseData;
+ DWORD dwFlags;
+ DWORD time;
+ ULONG_PTR dwExtraInfo;
+} MOUSEINPUT, *PMOUSEINPUT;
+
+/* MOUSEKEYS  [struct; shared] */
+typedef struct tagMOUSEKEYS{
+ UINT cbSize;
+ DWORD dwFlags;
+ DWORD iMaxSpeed;
+ DWORD iTimeToMaxSpeed;
+ DWORD iCtrlSpeed;
+ DWORD dwReserved1;
+ DWORD dwReserved2;
+} MOUSEKEYS, *LPMOUSEKEYS;
 
 /* MSG  [struct; shared] */
 typedef struct tagMSG { 
@@ -3134,6 +3200,7 @@ typedef struct tagMSG {
  DWORD time; 
  POINT pt; 
 } MSG;
+typedef MSG *PMSG, *LPMSG;
 
 /* NMHDR  [struct; shared] */
 typedef struct tagNMHDR { 
@@ -3141,6 +3208,7 @@ typedef struct tagNMHDR {
  UINT idFrom; 
  UINT code; 
 } NMHDR;
+typedef NMHDR *PNMHDR, *LPNMHDR;
 
 /* PAINTSTRUCT  [struct; shared] */
 typedef struct tagPAINTSTRUCT { 
@@ -3151,6 +3219,41 @@ typedef struct tagPAINTSTRUCT {
  BOOL fIncUpdate; 
  BYTE rgbReserved[32]; 
 } PAINTSTRUCT;
+typedef PAINTSTRUCT *PPAINTSTRUCT, *LPPAINTSTRUCT;
+
+/* SOUNDSENTRY  [struct, function; shared; User32.dll, User32.lib; lib:win32-reference; A/W SOUNDSENTRYA,SOUNDSENTRYW (CE is W-side)] */
+typedef struct tagSOUNDSENTRY{
+ UINT cbSize;
+ DWORD dwFlags;
+ DWORD iFSTextEffect;
+ DWORD iFSTextEffectMSec;
+ DWORD iFSTextEffectColorBits;
+ DWORD iFSGrafEffect;
+ DWORD iFSGrafEffectMSec;
+ DWORD iFSGrafEffectColor;
+ DWORD iWindowsEffect;
+ DWORD iWindowsEffectMSec;
+ LPTSTR lpszWindowsEffectDLL;
+ DWORD iWindowsEffectOrdinal;
+} SOUNDSENTRY, *LPSOUNDSENTRY;
+
+/* STICKYKEYS  [struct; shared] */
+typedef struct tagSTICKYKEYS{
+ UINT cbSize;
+ DWORD dwFlags;
+} STICKYKEYS, *LPSTICKYKEYS;
+
+/* STYLESTRUCT  [struct; shared] */
+typedef struct tagSTYLESTRUCT { 
+ DWORD styleOld; 
+ DWORD styleNew; 
+} STYLESTRUCT, *LPSTYLESTRUCT;
+
+/* TOGGLEKEYS  [struct; shared] */
+typedef struct tagTOGGLEKEYS{
+ UINT cbSize;
+ DWORD dwFlags;
+} TOGGLEKEYS, *LPTOGGLEKEYS;
 
 /* WINDOWPOS  [struct; shared] */
 typedef struct _WINDOWPOS { 
@@ -3162,6 +3265,7 @@ typedef struct _WINDOWPOS {
  int cy; 
  UINT flags; 
 } WINDOWPOS;
+typedef WINDOWPOS *PWINDOWPOS, *LPWINDOWPOS;
 
 /* WNDCLASS  [struct; shared; A/W WNDCLASSA,WNDCLASSW (CE is W-side)] */
 typedef struct _WNDCLASS {
@@ -3176,6 +3280,7 @@ typedef struct _WNDCLASS {
  LPCTSTR lpszMenuName; 
  LPCTSTR lpszClassName; 
 } WNDCLASS;
+typedef WNDCLASS *PWNDCLASS, *LPWNDCLASS;
 
 /* MONITORINFOEX  [struct; shared; A/W MONITORINFOEXA,MONITORINFOEXW (CE is W-side)] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
@@ -3223,6 +3328,12 @@ BOOL AppendMenu(
 /* BeginDeferWindowPos  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib] */
 HDWP BeginDeferWindowPos( 
  int nNumWindows 
+);
+
+/* BeginPaint  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Winmgr.lib, winmgr.lib] */
+HDC BeginPaint( 
+ HWND hwnd,
+ LPPAINTSTRUCT lpPaint
 );
 
 /* BringWindowToTop  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib] */
@@ -3277,6 +3388,12 @@ BOOL CopyRect(
 
 /* CountClipboardFormats  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Clipbd.lib, clipbd.lib] */
 int CountClipboardFormats(void);
+
+/* CreateAcceleratorTable  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Accel.lib, accel.lib; A/W CreateAcceleratorTableA,CreateAcceleratorTableW (CE is W-side)] */
+HACCEL CreateAcceleratorTable(
+ LPACCEL lpaccl, 
+ int cEntries
+);
 
 /* CreateCaret  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Caret.lib, caret.lib] */
 BOOL CreateCaret(
@@ -3448,6 +3565,13 @@ BOOL GetCaretPos(
  LPPOINT lpPoint
 );
 
+/* GetClassInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; wmgr_c.lib; A/W GetClassInfoA,GetClassInfoW (CE is W-side)] */
+BOOL GetClassInfo( 
+ HINSTANCE hInstance, 
+ LPCTSTR lpClassName, 
+ LPWNDCLASS lpWndClass
+);
+
 /* GetClassLong  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; wmbase.lib; A/W GetClassLongA,GetClassLongW (CE is W-side)] */
 DWORD GetClassLong( 
  HWND hWnd, 
@@ -3542,6 +3666,14 @@ DWORD GetKeyboardStatus();
 SHORT GetKeyState( 
  int nVirtKey 
 );
+
+/* GetMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib; A/W GetMessageA,GetMessageW (CE is W-side)] */
+BOOL GetMessage(
+ LPMSG lpMsg, 
+ HWND hWnd, 
+ UINT wMsgFilterMin, 
+ UINT wMsgFilterMax 
+ );
 
 /* GetMessagePos  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib] */
 DWORD GetMessagePos(void);
@@ -3692,6 +3824,12 @@ BOOL IsClipboardFormatAvailable(
  UINT format
 );
 
+/* IsDialogMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Dlgmgr.lib, dlgmgr.lib; A/W IsDialogMessageA,IsDialogMessageW (CE is W-side)] */
+BOOL IsDialogMessage( 
+ HWND hDlg, 
+ LPMSG lpMsg
+);
+
 /* IsRectEmpty  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Rectapi.lib, rectapi.lib] */
 BOOL IsRectEmpty(
  const RECT* lprc
@@ -3796,6 +3934,15 @@ BOOL OffsetRect(
 /* OpenClipboard  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Clipbd.lib, clipbd.lib] */
 BOOL OpenClipboard(
  HWND hWndNewOwner
+);
+
+/* PeekMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib; A/W PeekMessageA,PeekMessageW (CE is W-side)] */
+BOOL PeekMessage(
+ LPMSG lpMsg, 
+ HWND hWnd, 
+ UINT wMsgFilterMin, 
+ UINT wMsgFilterMax, 
+ UINT wRemoveMsg 
 );
 
 /* PostMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib; A/W PostMessageA,PostMessageW (CE is W-side)] */
@@ -4070,6 +4217,13 @@ BOOL TrackPopupMenu(
  int nReserved, 
  HWND hWnd, 
  const RECT* prcRect 
+);
+
+/* TranslateAccelerator  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Accel.lib, accel.lib; A/W TranslateAcceleratorA,TranslateAcceleratorW (CE is W-side)] */
+int TranslateAccelerator(
+ HWND hWnd, 
+ HACCEL hAccTable, 
+ LPMSG lpMsg 
 );
 
 /* TranslateMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib] */

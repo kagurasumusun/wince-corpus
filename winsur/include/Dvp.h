@@ -12,6 +12,53 @@
 
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* DDVIDEOPORTBANDWIDTH  [struct; shared] */
+typedef struct _DDVIDEOPORTBANDWIDTH { 
+ DWORD dwSize; 
+ DWORD dwCaps; 
+ DWORD dwOverlay; 
+ DWORD dwColorkey; 
+ DWORD dwYInterpolate; 
+ DWORD dwYInterpAndColorkey; 
+ DWORD dwReserved1; 
+ DWORD dwReserved2; 
+} DDVIDEOPORTBANDWIDTH, *LPDDVIDEOPORTBANDWIDTH;
+
+/* DDVIDEOPORTCAPS  [struct; shared] */
+typedef struct _DDVIDEOPORTCAPS { 
+ DWORD dwSize; 
+ DWORD dwFlags; 
+ DWORD dwMaxWidth; 
+ DWORD dwMaxVBIWidth; 
+ DWORD dwMaxHeight; 
+ DWORD dwVideoPortID; 
+ DWORD dwCaps; 
+ DWORD dwFX; 
+ DWORD dwNumAutoFlipSurfaces; 
+ DWORD dwAlignVideoPortBoundary; 
+ DWORD dwAlignVideoPortPrescaleWidth; 
+ DWORD dwAlignVideoPortCropBoundary; 
+ DWORD dwAlignVideoPortCropWidth; 
+ DWORD dwPreshrinkXStep; 
+ DWORD dwPreshrinkYStep; 
+ DWORD dwNumVBIAutoFlipSurfaces; 
+ DWORD dwNumPreferredAutoflip; 
+ WORD wNumFilterTapsX; 
+ WORD wNumFilterTapsY; 
+} DDVIDEOPORTCAPS, *LPDDVIDEOPORTCAPS;
+
+/* LPDIRECTDRAWVIDEOPORT  [extra struct] */
+typedef struct IDirectDrawVideoPort FAR *LPDIRECTDRAWVIDEOPORT;
+
+/* LPDDVIDEOPORTCONTAINER  [extra struct] */
+typedef struct IDDVideoPortContainer FAR *LPDDVIDEOPORTCONTAINER;
+
+/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
@@ -19,6 +66,9 @@
 /* function */
 HRESULT GetFieldPolarity( LPBOOL lpbFieldPolarity);
 HRESULT GetVideoLine( LPDWORD lpdwLine);
+HRESULT QueryVideoPortStatus( DWORD dwPortId, LPDDVIDEOPORTSTATUS lpVPStatus);
+HRESULT StartVideo( LPDDVIDEOPORTINFO lpVideoInfo);
 HRESULT StopVideo();
+HRESULT UpdateVideo( LPDDVIDEOPORTINFO lpVideoInfo);
 
 #endif /* _DVP_ */

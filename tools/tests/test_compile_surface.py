@@ -16,10 +16,18 @@ APP = r'''
 int WINAPI WinMain(HINSTANCE h, HINSTANCE p, LPWSTR cmd, int show) {
     MSG m;
     RECT r;
+    PAINTSTRUCT ps;
     HANDLE f = CreateFile(TEXT("x"), GENERIC_READ, 0, NULL,
                           OPEN_EXISTING, 0, NULL);
+    DWORD n = 0;
+    ReadFile(f, &n, sizeof n, &n, NULL);
+    WriteFile(f, &n, sizeof n, &n, NULL);
+    GetMessage(&m, NULL, 0, 0);
+    PeekMessage(&m, NULL, 0, 0, 0);
+    BeginPaint(NULL, &ps);
     MessageBox(NULL, TEXT("hi"), TEXT("t"), 0);
     GetLastError();
+    InitializeCriticalSection(NULL);
     return 0;
 }
 '''
@@ -32,6 +40,8 @@ BOOL APIENTRY DllMain(HANDLE h, DWORD reason, LPVOID reserved) {
     PHYSICAL_ADDRESS a;
     a.QuadPart = 0;
     MmMapIoSpace(a, 0, FALSE);
+    MmUnmapIoSpace(NULL, 0);
+    HalGetBusData(0, 0, 0, NULL, 0);
     return TRUE;
 }
 '''

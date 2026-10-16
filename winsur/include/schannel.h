@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 45 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
+ * 45 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _SCHANNEL_
 #define _SCHANNEL_
@@ -62,13 +62,5 @@
 #define SP_PROT_TLS1_3_SERVER 0x00001000
 #define SP_PROT_TLS1_CLIENT 0x00000080
 #define SP_PROT_TLS1_SERVER 0x00000040
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* struct */
-typedef struct _SecPkgContext_IssuerListInfoEx { PCERT_NAME_BLOBaIssuers;DWORDcIssuers;} SecPkgContext_IssuerListInfoEx, *PSecPkgContext_IssuerListInfoEx;
 
 #endif /* _SCHANNEL_ */

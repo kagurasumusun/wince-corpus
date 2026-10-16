@@ -26,12 +26,14 @@ typedef struct {
  LPVOID pBuffer2;
  DWORD dwCount2;
 } DSDM_UNLOCK;
+typedef DSDM_UNLOCK *PDSDM_UNLOCK, *LPDSDM_UNLOCK;
 
 /* DSDMP_MSG  [struct; ce-only] */
 typedef struct _DSDMP_MSG {
  DWORD dwMsg;
  DWORD dwInstance;
 } DSDMP_MSG;
+typedef DSDMP_MSG *PDSDMP_MSG, *LPDSDMP_MSG;
 
 /* DSDMP_GETPROP  [extra struct] */
 typedef struct {

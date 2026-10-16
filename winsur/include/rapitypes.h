@@ -32,6 +32,17 @@ typedef struct _CEGUID {
  DWORD Data3;
  DWORD Data4;
 } CEGUID;
+typedef CEGUID *PCEGUID, *LPCEGUID;
+
+/* CEOSVERSIONINFO  [struct; ce-only] */
+typedef struct _CEOSVERSIONINFO {
+ DWORD dwOSVersionInfoSize; 
+ DWORD dwMajorVersion; 
+ DWORD dwMinorVersion; 
+ DWORD dwBuildNumber; 
+ DWORD dwPlatformId; 
+ WCHAR szCSDVersion[ 128 ]; 
+} CEOSVERSIONINFO, * LPCEOSVERSIONINFO;
 
 /* RAPIINIT  [struct; ce-only] */
 typedef struct _RAPIINIT {
@@ -39,6 +50,13 @@ typedef struct _RAPIINIT {
  HANDLE heRapiInit;
  HRESULT hrRapiInit;
 } RAPIINIT;
+typedef RAPIINIT *PRAPIINIT, *LPRAPIINIT;
+
+/* RAPISTREAMFLAG  [enum; ce-only; rapi.lib] */
+typedef enum tagRAPISTREAMFLAG {
+ STREAM_TIMEOUT_READ
+} RAPISTREAMFLAG;
+typedef RAPISTREAMFLAG *PRAPISTREAMFLAG, *LPRAPISTREAMFLAG;
 
 /* CENOTINOTIFICATION  [extra struct] */
 typedef struct _CENOTIFICATION { DWORD dwSize DWORD dwParam; UINT uType; CEGUID guid; CEOID oid; CEOID oidParent; } CENOTINOTIFICATION;

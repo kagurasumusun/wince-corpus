@@ -12,6 +12,24 @@
 
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* RTC_SUBSCRIPTION_STATE  [enum; ce-only] */
+typedef enum RTC_SUBSCRIPTION_STATE
+{
+ RTCSUBC_NOT_SUBSCRIBED, 
+ RTCSUBC_SUBSCRIBING,
+ RTCSUBC_SUBSCRIBED, 
+ RTCSUBC_LOGGED_OFF,
+ RTCSUBC_ERROR,
+ RTCSUBC_UNSUBSCRIBING, 
+} RTC_SUBSCRIPTION_STATE;
+typedef RTC_SUBSCRIPTION_STATE *PRTC_SUBSCRIPTION_STATE, *LPRTC_SUBSCRIPTION_STATE;
+
+/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */

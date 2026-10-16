@@ -50,6 +50,16 @@ typedef struct tagANIMATEMESSAGEINFO {
  int nHPixelPosition;
 } ANIMATEMESSAGEINFO
 
+/* GESTUREMETRICS  [struct; ce-only] */
+typedef struct tagGESTUREMETRICS {
+ UINT cbSize;
+ DWORD dwID;
+ DWORD dwTimeout;
+ DWORD dwDistanceTolerance; 
+ DWORD dwAngularTolerance;
+ DWORD dwExtraInfo;
+} GESTUREMETRICS, *LPGESTUREMETRICS;
+
 /* PHYSICSENGINEINIT  [struct; ce-only] */
 typedef struct tagPHYSICSENGINEINIT {
  DWORD cbSize;
@@ -66,6 +76,7 @@ typedef struct tagPHYSICSENGINEINIT {
  POINT ptInitialPosition;
  SIZE sizeItem;
 } PHYSICSENGINEINIT;
+typedef PHYSICSENGINEINIT *PPHYSICSENGINEINIT, *LPPHYSICSENGINEINIT;
 
 /* PHYSICSENGINESTATE  [struct; ce-only] */
 typedef struct tagPHYSICSENGINESTATE {
@@ -76,6 +87,7 @@ typedef struct tagPHYSICSENGINESTATE {
  LONG lVelocityY;
  BOOL fComplete;
 } PHYSICSENGINESTATE;
+typedef PHYSICSENGINESTATE *PPHYSICSENGINESTATE, *LPPHYSICSENGINESTATE;
 
 /* WAGINFO  [struct; ce-only] */
 typedef struct tagWAGI {
@@ -116,6 +128,13 @@ void NotifyWinUserSystem(
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
 
+/* BatteryGetLifeTimeInfo  [function; ce-only; CE 3.0..699; Coredll.lib, coredll.lib] */
+void BatteryGetLifeTimeInfo( 
+ LPSYSTEMTIME pstLastChange, 
+ DWORD* pcmsCpuUsage, 
+ DWORD* pcmsPreviousCpuUsage 
+);
+
 /* RegisterTaskBar  [function; ce-only; CE 3.0..699; coredll.lib] */
 BOOL RegisterTaskBar( 
  HWND hwndTaskbar 
@@ -148,6 +167,42 @@ BOOL RegisterDesktop(
 BOOL RegisterTaskBarEx( 
  HWND hwndTaskbar,
  BOOL bTaskBarOnTop
+);
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
+
+/* GetAnimateMessageInfo  [function; ce-only; CE 6.0..699] */
+BOOL GetAnimateMessageInfo(
+ HWND hWnd, 
+ WPARAM wParam, 
+ LPARAM lParam, 
+ LPANIMATEMESSAGEINFO pAnimateMessageInfo
+);
+
+/* GetWindowAutoGesture  [function; ce-only; CE 6.0..699] */
+BOOL GetWindowAutoGesture(
+ HWND hWnd, 
+ LPWAGINFO lpAutoGestureInfo
+);
+
+/* QueryGestures  [function; ce-only; CE 6.0..699; TouchGesture.lib] */
+BOOL QueryGestures (
+ HWND hwnd,
+ UINT uScope,
+ PULONGLONG pullFlags
+);
+
+/* RegisterGesture  [function; ce-only; CE 6.0..699; TouchGesture.lib] */
+BOOL RegisterGesture (
+ LPCWSTR pszName,
+ PDWORD_PTR pdwID
+);
+
+/* SetWindowAutoGesture  [function; ce-only; CE 6.0..699] */
+BOOL SetWindowAutoGesture(
+ HWND hWnd, 
+ LPWAGINFO lpAutoGestureInfo
 );
 #endif /* _WIN32_WCE */
 

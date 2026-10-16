@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 39 constants, 5 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 39 constants, 4 declarations, 2 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _FLEXIPMTINFO_
 #define _FLEXIPMTINFO_
@@ -61,6 +61,8 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
+/* FLEXI_GETDATA_TYPE  [struct; ce-only] */
+
 /* PTM_RAW_DATA  [struct; ce-only] */
 
 /* ==================================================================
@@ -68,21 +70,6 @@
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
-
-/* FLEXI_GETDATA_TYPE  [struct; ce-only] */
-typedef struct _FLEXI_GETDATA_TYPE {
- BOOLfGetProcessData;
- BOOL fGetThreadData;
- BOOL fGetModuleData;
- DWORD dwProcIdxStart;
- DWORD dwProcIdxEnd;
- BOOL fThreadsInProcsOnly;
- DWORD dwThreadIdxStart;
- DWORD dwThreadIdxEn;
- BOOL fModulesInProcsOnly;
- DWORD dwModuleIdxStart;
- DWORD dwModuleIdxEnd;
-} FLEXI_GETDATA_TYPE;
 
 /* MODULE_FIELD_IDS  [enum; ce-only] */
 typedef enum _MODULE_FIELD_IDS {
@@ -98,6 +85,7 @@ typedef enum _MODULE_FIELD_IDS {
  mfiTrustLevel,
  mfiUserDefined = (-1L)
 } MODULE_FIELD_IDS;
+typedef MODULE_FIELD_IDS *PMODULE_FIELD_IDS, *LPMODULE_FIELD_IDS;
 
 /* PROC_FIELD_IDS  [enum; ce-only] */
 typedef enum _PROC_FIELD_IDS {
@@ -115,6 +103,7 @@ typedef enum _PROC_FIELD_IDS {
  pfiTlsUsageBitMaskH = (11L),
  pfiUserDefined = (-1L) 
 } PROC_FIELD_IDS;
+typedef PROC_FIELD_IDS *PPROC_FIELD_IDS, *LPPROC_FIELD_IDS;
 
 /* THREAD_FIELD_IDS  [enum; ce-only] */
 typedef enum _THREAD_FIELD_IDS {
@@ -143,6 +132,7 @@ typedef enum _THREAD_FIELD_IDS {
  tfiPC = (22L),
  tfiUserDefined = (-1L)
 } THREAD_FIELD_IDS;
+typedef THREAD_FIELD_IDS *PTHREAD_FIELD_IDS, *LPTHREAD_FIELD_IDS;
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

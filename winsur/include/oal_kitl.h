@@ -17,6 +17,26 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* OAL_KITL_FLAGS  [enum; ce-only] */
+typedef enum {
+ OAL_KITL_FLAGS_ENABLED = 0x0001,
+ OAL_KITL_FLAGS_PASSIVE = 0x0002,
+ OAL_KITL_FLAGS_DHCP = 0x0004,
+ OAL_KITL_FLAGS_VMINI = 0x0008,
+ OAL_KITL_FLAGS_POLL = 0x0010,
+ OAL_KITL_FLAGS_EXTNAME = 0x0020
+} OAL_KITL_FLAGS;
+typedef OAL_KITL_FLAGS *POAL_KITL_FLAGS, *LPOAL_KITL_FLAGS;
+
+/* OAL_KITL_TYPE  [enum; ce-only] */
+typedef enum {
+ OAL_KITL_TYPE_NONE = 0,
+ OAL_KITL_TYPE_SERIAL,
+ OAL_KITL_TYPE_ETH,
+ OAL_KITL_TYPE_FLASH
+} OAL_KITL_TYPE;
+typedef OAL_KITL_TYPE *POAL_KITL_TYPE, *LPOAL_KITL_TYPE;
+
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* OAL_KITLETH_DEINIT  [callback; ce-only; CE 5.0..699] */

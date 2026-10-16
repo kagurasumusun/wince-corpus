@@ -884,6 +884,12 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* AUDIOGAINCLASS  [struct; ce-only] */
+typedef struct tagAUDIOGAINCLASS {
+ DWORD dwPriority;
+ DWORD dwRelativeGain;
+} AUDIOGAINCLASS, * PAUDIOGAINCLASS;
+
 /* MIXERCONTROLDETAILS  [struct; shared] */
 typedef struct { 
  DWORD cbStruct; 
@@ -896,21 +902,25 @@ typedef struct {
  DWORD cbDetails; 
  LPVOID paDetails; 
 } MIXERCONTROLDETAILS;
+typedef MIXERCONTROLDETAILS *PMIXERCONTROLDETAILS, *LPMIXERCONTROLDETAILS;
 
 /* MIXERCONTROLDETAILS_BOOLEAN  [struct, typedef; shared] */
 typedef struct { 
  LONG fValue; 
 } MIXERCONTROLDETAILS_BOOLEAN;
+typedef MIXERCONTROLDETAILS_BOOLEAN *PMIXERCONTROLDETAILS_BOOLEAN, *LPMIXERCONTROLDETAILS_BOOLEAN;
 
 /* MIXERCONTROLDETAILS_SIGNED  [struct, typedef; shared] */
 typedef struct { 
  LONG lValue; 
 } MIXERCONTROLDETAILS_SIGNED;
+typedef MIXERCONTROLDETAILS_SIGNED *PMIXERCONTROLDETAILS_SIGNED, *LPMIXERCONTROLDETAILS_SIGNED;
 
 /* MIXERCONTROLDETAILS_UNSIGNED  [struct, typedef; shared] */
 typedef struct { 
  DWORD dwValue; 
 } MIXERCONTROLDETAILS_UNSIGNED;
+typedef MIXERCONTROLDETAILS_UNSIGNED *PMIXERCONTROLDETAILS_UNSIGNED, *LPMIXERCONTROLDETAILS_UNSIGNED;
 
 /* MMTIME  [struct; ce-only] */
 typedef struct mmtime_tag {
@@ -934,6 +944,19 @@ typedef struct mmtime_tag {
  } midi; 
  } u; 
 } MMTIME;
+typedef MMTIME *PMMTIME, *LPMMTIME;
+
+/* STREAMPROPS  [struct; ce-only] */
+typedef struct tagSTREAMPROPS {
+ DWORD dwClassID;
+ DWORD dwFlags;
+} STREAMPROPS, *PSTREAMPROPS;
+
+/* TIMECAPS  [struct; shared] */
+typedef struct timecaps_tag {
+ UINT wPeriodMin; 
+ UINT wPeriodMax; 
+} TIMECAPS, *PTIMECAPS;
 
 /* WAVEFORMATEX  [struct; shared] */
 typedef struct WAVEFORMATEX{
@@ -945,6 +968,7 @@ typedef struct WAVEFORMATEX{
  WORD wBitsPerSample;
  WORD cbSize;
 } WAVEFORMATEX;
+typedef WAVEFORMATEX *PWAVEFORMATEX, *LPWAVEFORMATEX;
 
 /* WAVEHDR  [struct; shared] */
 typedef struct {
@@ -957,6 +981,7 @@ typedef struct {
  struct wavehdr_tag* lpNext;
  DWORD reserved;}
 WAVEHDR;
+typedef WAVEHDR *PWAVEHDR, *LPWAVEHDR;
 
 /* MIXERCAPS  [struct; shared; A/W MIXERCAPSA,MIXERCAPSW (CE is W-side)] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
@@ -1022,15 +1047,6 @@ WAVEHDR;
 
 /* LPTIMECALLBACK  [extra typedef] */
 typedef TIMECALLBACK FAR *LPTIMECALLBACK;
-
-/* PTIMECAPS  [extra struct] */
-typedef struct timecaps_tag {UINT wPeriodMin; UINT wPeriodMax; } TIMECAPS, *PTIMECAPS;
-
-/* PSTREAMPROPS  [extra struct] */
-typedef struct tagSTREAMPROPS { DWORD dwClassID; DWORD dwFlags;} STREAMPROPS, *PSTREAMPROPS;
-
-/* PAUDIOGAINCLASS  [extra struct] */
-typedef struct tagAUDIOGAINCLASS { DWORD dwPriority; DWORD dwRelativeGain;} AUDIOGAINCLASS, * PAUDIOGAINCLASS;
 
 /* ==================================================================
  * functions and callbacks

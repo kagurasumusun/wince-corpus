@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 38 extra decls
+ * 0 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 37 extra decls
  */
 #ifndef _DVDNAV_
 #define _DVDNAV_
@@ -17,11 +17,27 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* EDDVDPlaybackState  [enum; ce-only] */
+typedef enum {
+ DVD_STOPPED,
+ DVD_PAUSED,
+ DVD_STILLED,
+ DVD_NORMAL_PLAY,
+ DVD_FORWARD_SCAN,
+ DVD_FORWARD_SLOW,
+ DVD_FORWARD_SINGLE,
+ DVD_BACKWARD_SCAN,
+ DVD_BACKWARD_SLOW,
+ DVD_BACKWARD_SINGLE
+} EDDVDPlaybackState;
+typedef EDDVDPlaybackState *PEDDVDPlaybackState, *LPEDDVDPlaybackState;
+
 /* EDVDNavException  [enum; ce-only] */
 typedef enum {
  InsufficientParentalLevel,
  FatalNavigationError
 } EDVDNavException;
+typedef EDVDNavException *PEDVDNavException, *LPEDVDNavException;
 
 /* EDVDSParamEvent  [enum; ce-only] */
 typedef enum {
@@ -30,6 +46,7 @@ typedef enum {
  MenuCallToVmgmDom,
  MenuCallToVtsmDom
 } EDVDSParamEvent;
+typedef EDVDSParamEvent *PEDVDSParamEvent, *LPEDVDSParamEvent;
 
 /* ==================================================================
  * extra declarations -- corpus pages the main
@@ -53,7 +70,6 @@ HRESULT MenuCall( BYTE byteMenu_ID );
 HRESULT OnDiskReadError( DWORD osCode );
 HRESULT OnGOPUserData( DVDUserGOPData* pData );
 HRESULT OnNavigationException( EDVDNavException excCode );
-HRESULT OnNewProgramChain( IDVDProgramChain* pChain );
 HRESULT ParentalCountrySelect( USHORT uhCountryCode );
 HRESULT ParentalLevelSelect( BYTE byteLevel );
 HRESULT PartPlay( BYTE byteTitleNumber, USHORT uhPartOfTheTitle );

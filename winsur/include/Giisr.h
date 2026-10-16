@@ -11,4 +11,22 @@
 #define _GIISR_
 
 
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* GIISR_INFO  [struct; ce-only] */
+typedef struct _GIISR_INFO {
+ DWORD SysIntr;
+ BOOL CheckPort;
+ BOOL PortIsIO;
+ BOOL UseMaskReg;
+ DWORD PortAddr;
+ DWORD PortSize;
+ DWORD Mask;
+ DWORD MaskAddr;
+} GIISR_INFO, *PGIISR_INFO;
+
 #endif /* _GIISR_ */

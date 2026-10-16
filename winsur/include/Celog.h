@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 32 constants, 94 declarations, 1 outlines, 0 base types, 0 extra macros, 62 extra decls
+ * 32 constants, 94 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _CELOG_
 #define _CELOG_
@@ -62,11 +62,182 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* CEL_BOOT_TIME  [struct; ce-only] */
+typedef struct _CEL_BOOT_TIME {
+ DWORD dwAction;
+ WCHAR szName[0];
+} CEL_BOOT_TIME, *PCEL_BOOT_TIME;
+
+/* CEL_CRITSEC_DELETE  [struct; ce-only] */
+typedef struct __CEL_CRITSEC_DELETE {
+ HANDLE hCS;
+} CEL_CRITSEC_DELETE, *PCEL_CRITSEC_DELETE;
+
+/* CEL_CRITSEC_ENTER  [struct; ce-only] */
+typedef struct __CEL_CRITSEC_ENTER {
+ HANDLE hCS; 
+ HANDLE hOwnerThread; 
+} CEL_CRITSEC_ENTER, *PCEL_CRITSEC_ENTER;
+
+/* CEL_CRITSEC_INIT  [struct; ce-only] */
+typedef struct __CEL_CRITSEC_INIT {
+ HANDLE hCS; 
+} CEL_CRITSEC_INIT, *PCEL_CRITSEC_INIT;
+
+/* CEL_CRITSEC_LEAVE  [struct; ce-only] */
+typedef struct __CEL_CRITSEC_LEAVE {
+ HANDLE hCS;
+ HANDLE hOwnerThread; 
+} CEL_CRITSEC_LEAVE, *PCEL_CRITSEC_LEAVE;
+
+/* CEL_DATA_LOSS  [struct; ce-only] */
+typedef struct __CEL_DATA_LOSS {
+ DWORD dwBytes;
+} CEL_DATA_LOSS, *PCEL_DATA_LOSS;
+
+/* CEL_EVENT_CLOSE  [struct; ce-only] */
+typedef struct __CEL_EVENT_CLOSE {
+ HANDLE hEvent;
+} CEL_EVENT_CLOSE, *PCEL_EVENT_CLOSE;
+
+/* CEL_EVENT_DELETE  [struct; ce-only] */
+typedef struct __CEL_EVENT_DELETE {
+ HANDLE hEvent; 
+} CEL_EVENT_DELETE, *PCEL_EVENT_DELETE;
+
+/* CEL_EVENT_PULSE  [struct; ce-only] */
+typedef struct __CEL_EVENT_PULSE { 
+ HANDLE hEvent;
+} CEL_EVENT_PULSE, *PCEL_EVENT_PULSE;
+
+/* CEL_EVENT_RESET  [struct; ce-only] */
+typedef struct __CEL_EVENT_RESET { 
+ HANDLE hEvent; 
+} CEL_EVENT_RESET, *PCEL_EVENT_RESET;
+
+/* CEL_EVENT_SET  [struct; ce-only] */
+typedef struct __CEL_EVENT_SET { 
+ HANDLE hEvent; 
+} CEL_EVENT_SET, *PCEL_EVENT_SET;
+
+/* CEL_EXTRA_MODULE_INFO  [struct; ce-only] */
+typedef struct __CEL_EXTRA_MODULE_INFO {
+ HANDLE hModule;
+ DWORD dwVMLen;
+ DWORD dwModuleFlags;
+ DWORD dwOID;
+ WCHAR szFullPath[0];
+} CEL_EXTRA_MODULE_INFO, *PCEL_EXTRA_MODULE_INFO;
+
+/* CEL_HEADER  [struct; ce-only] */
+typedef struct __CEL_HEADER {
+ DWORD Length:16;
+ DWORD ID:14;
+ DWORD Reserved:1;
+ DWORD fTimeStamp:1;
+} CEL_HEADER, *PCEL_HEADER;
+
+/* CEL_HEAP_ALLOC  [struct; ce-only] */
+typedef struct __CEL_HEAP_ALLOC {
+ HANDLE hHeap;
+ DWORD dwFlags;
+ DWORD dwBytes;
+ DWORD lpMem;
+ DWORD dwTID;
+ DWORD dwPID;
+ DWORD dwCallerPID;
+ DWORD adwStackTrace[0];
+} CEL_HEAP_ALLOC, *PCEL_HEAP_ALLOC;
+
+/* CEL_HEAP_CREATE  [struct; ce-only] */
+typedef struct __CEL_HEAP_CREATE {
+ DWORD dwOptions;
+ DWORD dwInitSize;
+ DWORD dwMaxSize;
+ HANDLE hHeap;
+ DWORD dwTID;
+ DWORD dwPID;
+} CEL_HEAP_CREATE, *PCEL_HEAP_CREATE;
+
+/* CEL_HEAP_DESTROY  [struct; ce-only] */
+typedef struct __CEL_HEAP_DESTROY {
+ HANDLE hHeap;
+ DWORD dwTID;
+ DWORD dwPID;
+} CEL_HEAP_DESTROY, *PCEL_HEAP_DESTROY;
+
+/* CEL_HEAP_FREE  [struct; ce-only] */
+typedef struct __CEL_HEAP_FREE {
+ HANDLE hHeap;
+ DWORD dwFlags;
+ DWORD lpMem;
+ DWORD dwTID;
+ DWORD dwPID;
+ DWORD dwCallerPID;
+ DWORD adwStackTrace[0];
+} CEL_HEAP_FREE, *PCEL_HEAP_FREE;
+
+/* CEL_HEAP_REALLOC  [struct; ce-only] */
+typedef struct __CEL_HEAP_REALLOC {
+ HANDLE hHeap;
+ DWORD dwFlags;
+ DWORD dwBytes;
+ DWORD lpMemOld;
+ DWORD lpMem;
+ DWORD dwTID;
+ DWORD dwPID;
+ DWORD dwCallerPID;
+ DWORD adwStackTrace[0];
+} CEL_HEAP_REALLOC, *PCEL_HEAP_REALLOC;
+
+/* CEL_INT_DATA  [typedef; ce-only] */
+typedef __CEL_INT_DATA {
+ DWORD dwTimeStamp;
+ WORD wSysIntr;
+ WORD wNestingLevel;
+} CEL_INT_DATA, *PCEL_INT_DATA;
+
+/* CEL_INTERRUPTS  [struct; ce-only] */
+typedef struct __CEL_INTERRUPTS {
+ DWORD dwDiscarded;
+ CEL_INT_DATA IntData[0];
+} CEL_INTERRUPTS, *PCEL_INTERRUPTS;
+
+/* CEL_LOG_MARKER  [struct; ce-only] */
+typedef struct __CEL_LOG_MARKER {
+ DWORD dwFrequency;
+ DWORD dwDefaultQuantum;
+ DWORD dwVersion;
+} CEL_LOG_MARKER, *PCEL_LOG_MARKER;
+
+/* CEL_MAPFILE_CREATE  [struct; ce-only] */
+typedef struct __CEL_MAPFILE_CREATE { 
+ HANDLE hMap;
+ DWORD flProtect;
+ DWORD dwMapFlags;
+ DWORD dwMaxSize;
+ WCHAR szName[0];
+} CEL_MAPFILE_CREATE, *PCEL_MAPFILE_CREATE;
+
+/* CEL_MAPFILE_DESTROY  [struct; ce-only] */
+typedef struct __CEL_MAPFILE_DESTROY { 
+ HANDLE hMap;
+} CEL_MAPFILE_DESTROY , *PCEL_MAPFILE_DESTROY ;
+
+/* CEL_MAPFILE_FLUSH  [struct; ce-only] */
+typedef struct __CEL_MAPFILE_FLUSH { 
+ LPVOID lpBaseAddress;
+ DWORD dwLen;
+ WORD wFlushFlags;
+ WORD wNumPages;
+} CEL_MAPFILE_FLUSH, *PCEL_MAPFILE_FLUSH;
+
 /* CEL_MAPFILE_VIEW_CLOSE  [struct; ce-only] */
 typedef struct __CEL_MAPFILE_VIEW_CLOSE { 
  HANDLE hMap;
  LPVOID lpBaseAddress;
 } CEL_MAPFILE_VIEW_CLOSE, *CEL_MAPFILE_VIEW_CLOSE;
+typedef CEL_MAPFILE_VIEW_CLOSE *PCEL_MAPFILE_VIEW_CLOSE, *LPCEL_MAPFILE_VIEW_CLOSE;
 
 /* CEL_MAPFILE_VIEW_OPEN  [struct; ce-only] */
 typedef struct __CEL_MAPFILE_VIEW_OPEN { 
@@ -77,196 +248,234 @@ typedef struct __CEL_MAPFILE_VIEW_OPEN {
  DWORD dwLen;
  LPVOID lpBaseAddress;
 } CEL_MAPFILE_VIEW_OPEN, *CEL_MAPFILE_VIEW_OPEN;
+typedef CEL_MAPFILE_VIEW_OPEN *PCEL_MAPFILE_VIEW_OPEN, *LPCEL_MAPFILE_VIEW_OPEN;
 
-/* PCEL_CRITSEC_ENTER  [extra struct] */
-typedef struct __CEL_CRITSEC_ENTER {HANDLEhCS;HANDLEhOwnerThread;}CEL_CRITSEC_ENTER, *PCEL_CRITSEC_ENTER;
+/* CEL_MAPFLUSH_TYPE  [enum; ce-only] */
+typedef enum {
+ CEL_INVALID_MAPFLUSH = 0,
+ CEL_FlushMapSimple = 1,
+ CEL_FlushMapAtomic = 2,
+ CEL_ValidateFile = 3,
+ CEL_FlushMapGather = 4,
+ CEL_NUM_MAPFLUSH_TYPES
+} CEL_MAPFLUSH_TYPE;
+typedef CEL_MAPFLUSH_TYPE *PCEL_MAPFLUSH_TYPE, *LPCEL_MAPFLUSH_TYPE;
 
-/* PCEL_CRITSEC_LEAVE  [extra struct] */
-typedef struct __CEL_CRITSEC_LEAVE {HANDLEhCS;HANDLEhOwnerThread;} CEL_CRITSEC_LEAVE, *PCEL_CRITSEC_LEAVE;
+/* CEL_MEMTRACK_BASELINE  [struct; ce-only] */
+typedef struct __CEL_MEMTRACK_BASELINE {
+ DWORD dwReserved;
+} CEL_MEMTRACK_BASELINE, *PCEL_MEMTRACK_BASELINE;
 
-/* PCEL_DATA_LOSS  [extra struct] */
-typedef struct __CEL_DATA_LOSS {DWORDdwBytes;} CEL_DATA_LOSS, *PCEL_DATA_LOSS;
+/* CEL_MODULE_FREE  [typedef; ce-only] */
+typedef __CEL_MODULE_FREE {
+ HANDLE hProcess;
+ HANDLE hModule;
+} CEL_MODULE_FREE, *PCEL_MODULE_FREE;
 
-/* PCEL_EVENT_CLOSE  [extra struct] */
-typedef struct __CEL_EVENT_CLOSE {HANDLEhEvent;} CEL_EVENT_CLOSE, *PCEL_EVENT_CLOSE;
+/* CEL_MODULE_LOAD  [typedef; ce-only] */
+typedef __CEL_MODULE_LOAD {
+ HANDLE hProcess;
+ HANDLE hModule;
+ DWORD dwBase;
+ WCHAR szName[0];
+} CEL_MODULE_LOAD, *PCEL_MODULE_LOAD;
 
-/* PCEL_EVENT1  [extra struct] */
-typedef struct __CEL_EVENT_CREATE {HANDLEhEvent;DWORDfManual:1;DWORDfInitialState:1;DWORDfCreate:1;DWORDdwReserved:29;WCHARszName[0];} CEL_EVENT1, *PCEL_EVENT1;
+/* CEL_MUTEX_CLOSE  [struct; ce-only] */
+typedef struct __CEL_MUTEX_CLOSE {
+ HANDLE hMutex;
+} CEL_MUTEX_CLOSE, *PCEL_MUTEX_CLOSE;
 
-/* PCEL_EVENT_DELETE  [extra struct] */
-typedef struct __CEL_EVENT_DELETE {HANDLEhEvent;} CEL_EVENT_DELETE, *PCEL_EVENT_DELETE;
+/* CEL_MUTEX_CREATE  [struct; ce-only] */
+typedef struct __CEL_MUTEX_CREATE {
+ HANDLE hMutex;
+ WCHAR szName[0];
+} CEL_MUTEX_CREATE, *PCEL_MUTEX_CREATE;
 
-/* PCEL_EVENT_PULSE  [extra struct] */
-typedef struct __CEL_EVENT_PULSE {HANDLEhEvent;} CEL_EVENT_PULSE, *PCEL_EVENT_PULSE;
+/* CEL_MUTEX_DELETE  [struct; ce-only] */
+typedef struct __CEL_MUTEX_DELETE {
+ HANDLE hMutex;
+} CEL_MUTEX_DELETE, *PCEL_MUTEX_DELETE;
 
-/* PCEL_EVENT_RESET  [extra struct] */
-typedef struct __CEL_EVENT_RESET {HANDLEhEvent;} CEL_EVENT_RESET, *PCEL_EVENT_RESET;
+/* CEL_MUTEX_RELEASE  [typedef; ce-only] */
+typedef __CEL_MUTEX_RELEASE {
+ HANDLE hMutex;
+} CEL_MUTEX_RELEASE, *PCEL_MUTEX_RELEASE;
 
-/* PCEL_EVENT_SET  [extra struct] */
-typedef struct __CEL_EVENT_SET {HANDLEhEvent;} CEL_EVENT_SET, *PCEL_EVENT_SET;
+/* CEL_PROCESS_CLOSE  [struct; ce-only] */
+typedef struct __CEL_PROCESS_CLOSE {
+ HANDLE hProcess;
+} CEL_PROCESS_CLOSE, *PCEL_PROCESS_CLOSE;
 
-/* PCEL_HEAP_ALLOC  [extra struct] */
-typedef struct __CEL_HEAP_ALLOC {HANDLEhHeap;DWORDdwFlags;DWORDdwBytes;DWORDlpMem;DWORD dwTID;DWORD dwPID;DWORD dwCallerPID;DWORD adwStackTrace[0];} CEL_HEAP_ALLOC, *PCEL_HEAP_ALLOC;
+/* CEL_PROCESS_CREATE  [struct; ce-only] */
+typedef struct __CEL_PROCESS_CREATE {
+ HANDLE hProcess;
+ DWORD dwVMBase;
+ WCHAR szName[0];
+} CEL_PROCESS_CREATE, *PCEL_PROCESS_CREATE;
 
-/* PCEL_HEAP_CREATE  [extra struct] */
-typedef struct __CEL_HEAP_CREATE {DWORDdwOptions;DWORDdwInitSize;DWORDdwMaxSize;HANDLEhHeap;DWORD dwTID;DWORD dwPID;} CEL_HEAP_CREATE, *PCEL_HEAP_CREATE;
+/* CEL_PROCESS_DELETE  [struct; ce-only] */
+typedef struct __CEL_PROCESS_DELETE {
+ HANDLE hProcess;
+} CEL_PROCESS_DELETE, *PCEL_PROCESS_DELETE;
 
-/* PCEL_HEAP_DESTROY  [extra struct] */
-typedef struct __CEL_HEAP_DESTROY {HANDLEhHeap;DWORD dwTID;DWORD dwPID;} CEL_HEAP_DESTROY, *PCEL_HEAP_DESTROY;
+/* CEL_PROCESS_REFCOUNT  [struct; ce-only] */
+typedef struct __CEL_PROCESS_REFCOUNT {
+ HANDLE hProcess;
+ DWORD dwRefCount
+} CEL_PROCESS_REFCOUNT, *PCEL_PROCESS_REFCOUNT;
 
-/* PCEL_HEAP_FREE  [extra struct] */
-typedef struct __CEL_HEAP_FREE {HANDLEhHeap;DWORDdwFlags;DWORDlpMem;DWORD dwTID;DWORD dwPID;DWORD dwCallerPID;DWORD adwStackTrace[0];} CEL_HEAP_FREE, *PCEL_HEAP_FREE;
+/* CEL_PROCESS_TERMINATE  [struct; ce-only] */
+typedef struct __CEL_PROCESS_TERMINATE {
+ HANDLE hProcess;
+} CEL_PROCESS_TERMINATE, *PCEL_PROCESS_TERMINATE;
 
-/* PCEL_HEAP_REALLOC  [extra struct] */
-typedef struct __CEL_HEAP_REALLOC {HANDLEhHeap;DWORDdwFlags;DWORDdwBytes;DWORDlpMemOld;DWORDlpMem;DWORD dwTID;DWORD dwPID;DWORD dwCallerPID;DWORD adwStackTrace[0];} CEL_HEAP_REALLOC, *PCEL_HEAP_REALLOC;
+/* CEL_SEM_CLOSE  [struct; ce-only] */
+typedef struct __CEL_SEM_CLOSE {
+ HANDLE hSem;
+} CEL_SEM_CLOSE, *PCEL_SEM_CLOSE;
 
-/* PCEL_INT_DATA  [extra typedef] */
-typedef __CEL_INT_DATA {DWORDdwTimeStamp;WORDwSysIntr;WORDwNestingLevel;} CEL_INT_DATA, *PCEL_INT_DATA;
+/* CEL_SEM_CREATE  [struct; ce-only] */
+typedef struct __CEL_SEM_CREATE {
+ HANDLE hSem;
+ DWORD dwInitCount;
+ DWORD dwMaxCount;
+ WCHAR szName[0];
+} CEL_SEM_CREATE, *PCEL_SEM_CREATE;
 
-/* PCEL_INTERRUPTS  [extra struct] */
-typedef struct __CEL_INTERRUPTS {DWORDdwDiscarded;CEL_INT_DATAIntData[0];} CEL_INTERRUPTS, *PCEL_INTERRUPTS;
+/* CEL_SEM_DELETE  [struct; ce-only] */
+typedef struct __CEL_SEM_DELETE {
+ HANDLE hSem;
+} CEL_SEM_DELETE, *PCEL_SEM_DELETE;
 
-/* PCEL_LOG_MARKER  [extra struct] */
-typedef struct __CEL_LOG_MARKER {DWORDdwFrequency;DWORDdwDefaultQuantum;DWORDdwVersion;} CEL_LOG_MARKER, *PCEL_LOG_MARKER;
+/* CEL_SEM_RELEASE  [struct; ce-only] */
+typedef struct __CEL_SEM_RELEASE {
+ HANDLE hSem;
+ DWORD dwReleaseCount;
+ DWORD dwPreviousCount;
+} CEL_SEM_RELEASE, *PCEL_SEM_RELEASE;
 
-/* PCEL_MEMTRACK_BASELINE  [extra struct] */
-typedef struct __CEL_MEMTRACK_BASELINE {DWORDdwReserved; } CEL_MEMTRACK_BASELINE, *PCEL_MEMTRACK_BASELINE;
+/* CEL_SLEEP  [struct; ce-only] */
+typedef struct __CEL_SLEEP {
+ DWORD dwTimeout;
+} CEL_SLEEP, *PCEL_SLEEP;
 
-/* PCEL_MODULE_FREE  [extra typedef] */
-typedef __CEL_MODULE_FREE {HANDLEhProcess;HANDLEhModule;} CEL_MODULE_FREE, *PCEL_MODULE_FREE;
+/* CEL_SYSTEM_INVERT  [typedef; ce-only] */
+typedef __CEL_SYSTEM_INVERT {
+ HANDLE hThread;
+ int nPriority;
+} CEL_SYSTEM_INVERT, *PCEL_SYSTEM_INVERT;
 
-/* PCEL_MODULE_LOAD  [extra typedef] */
-typedef __CEL_MODULE_LOAD {HANDLEhProcess;HANDLEhModule;DWORD dwBase;WCHARszName[0];} CEL_MODULE_LOAD, *PCEL_MODULE_LOAD;
+/* CEL_SYSTEM_PAGE  [typedef; ce-only] */
+typedef __CEL_SYSTEM_PAGE {
+ DWORD dwAddress;
+ DWORD fReadWrite:1;
+ DWORD fEndPageIn:1;
+ DWORD fSuccess: 1
+ DWORD dwReserved: 29
+} CEL_SYSTEM_PAGE, *PCEL_SYSTEM_PAGE;
 
-/* PCEL_MUTEX_CLOSE  [extra struct] */
-typedef struct __CEL_MUTEX_CLOSE {HANDLEhMutex;} CEL_MUTEX_CLOSE, *PCEL_MUTEX_CLOSE;
+/* CEL_SYSTEM_TLB  [typedef; ce-only] */
+typedef __CEL_SYSTEM_TLB {
+ DWORD dwCount;
+} CEL_SYSTEM_TLB, *PCEL_SYSTEM_TLB;
 
-/* PCEL_MUTEX_CREATE  [extra struct] */
-typedef struct __CEL_MUTEX_CREATE {HANDLEhMutex;WCHARszName[0];} CEL_MUTEX_CREATE, *PCEL_MUTEX_CREATE;
+/* CEL_THREAD_CLOSE  [struct; ce-only] */
+typedef struct __CEL_THREAD_CLOSE {
+ HANDLE hThread;
+} CEL_THREAD_CLOSE, *PCEL_THREAD_CLOSE;
 
-/* PCEL_MUTEX_DELETE  [extra struct] */
-typedef struct __CEL_MUTEX_DELETE {HANDLEhMutex;} CEL_MUTEX_DELETE, *PCEL_MUTEX_DELETE;
+/* CEL_THREAD_CREATE  [struct; ce-only] */
+typedef struct __CEL_THREAD_CREATE {
+ HANDLE hThread;
+ HANDLE hProcess;
+ HANDLE hModule;
+ DWORD dwStartAddr;
+ int nPriority;
+ WCHAR szName[0];
+} CEL_THREAD_CREATE, *PCEL_THREAD_CREATE;
 
-/* PCEL_MUTEX_RELEASE  [extra typedef] */
-typedef __CEL_MUTEX_RELEASE {HANDLEhMutex;} CEL_MUTEX_RELEASE, *PCEL_MUTEX_RELEASE;
+/* CEL_THREAD_DELETE  [struct; ce-only] */
+typedef struct __CEL_THREAD_DELETE {
+ HANDLE hThread;
+} CEL_THREAD_DELETE, *PCEL_THREAD_DELETE;
 
-/* PCEL_PROCESS_CLOSE  [extra struct] */
-typedef struct __CEL_PROCESS_CLOSE {HANDLEhProcess;} CEL_PROCESS_CLOSE, *PCEL_PROCESS_CLOSE;
+/* CEL_THREAD_MIGRATE  [typedef; ce-only] */
+typedef __CEL_THREAD_MIGRATE {
+ HANDLE hProcess;
+ DWORD dwReserved;
+} CEL_THREAD_MIGRATE, *PCEL_THREAD_MIGRATE;
 
-/* PCEL_PROCESS_CREATE  [extra struct] */
-typedef struct __CEL_PROCESS_CREATE {HANDLEhProcess;DWORD dwVMBase;WCHARszName[0];} CEL_PROCESS_CREATE, *PCEL_PROCESS_CREATE;
+/* CEL_THREAD_PRIORITY  [typedef; ce-only] */
+typedef __CEL_THREAD_PRIORITY {
+ HANDLE hThread;
+ int nPriority;
+} CEL_THREAD_PRIORITY, *PCEL_THREAD_PRIORITY;
 
-/* PCEL_CEL_DEBUG_MSG  [extra struct] */
-typedef struct __CEL_DEBUG_MSG {DWORDpid;DWORDtid;WCHAR szMessage[0]; } CEL_CEL_DEBUG_MSG, *PCEL_CEL_DEBUG_MSG;
+/* CEL_THREAD_QUANTUM  [typedef; ce-only] */
+typedef __CEL_THREAD_QUANTUM {
+ HANDLE hThread;
+ DWORD dwQuantum;
+} CEL_THREAD_QUANTUM, *PCEL_THREAD_QUANTUM;
 
-/* PCEL_MAPFILE_CREATE  [extra struct] */
-typedef struct __CEL_MAPFILE_CREATE {HANDLEhMap; DWORD flProtect;
-DWORD dwMapFlags;
-DWORD dwMaxSize;
-WCHAR szName[0];
-} CEL_MAPFILE_CREATE, *PCEL_MAPFILE_CREATE;
+/* CEL_THREAD_RESUME  [struct; ce-only] */
+typedef struct __CEL_THREAD_RESUME {
+ HANDLE hThread; 
+} CEL_THREAD_RESUME, *PCEL_THREAD_RESUME;
 
-/* PCEL_MAPFILE_DESTROY  [extra struct] */
-typedef struct __CEL_MAPFILE_DESTROY {HANDLEhMap; } CEL_MAPFILE_DESTROY , *PCEL_MAPFILE_DESTROY ;
+/* CEL_THREAD_SUSPEND  [struct; ce-only] */
+typedef struct __CEL_THREAD_SUSPEND {
+ HANDLE hThread; 
+} CEL_THREAD_SUSPEND, *PCEL_THREAD_SUSPEND;
 
-/* PCEL_MAPFILE_FLUSH  [extra struct] */
-typedef struct __CEL_MAPFILE_FLUSH {LPVOIDlpBaseAddress; DWORD dwLen; WORD wFlushFlags; WORD wNumPages; } CEL_MAPFILE_FLUSH, *PCEL_MAPFILE_FLUSH;
+/* CEL_THREAD_SWITCH  [struct; ce-only] */
+typedef struct __CEL_THREAD_SWITCH {
+ HANDLE hThread;
+} CEL_THREAD_SWITCH, *PCEL_THREAD_SWITCH;
 
-/* PCEL_PROCESS_DELETE  [extra struct] */
-typedef struct __CEL_PROCESS_DELETE {HANDLEhProcess;} CEL_PROCESS_DELETE, *PCEL_PROCESS_DELETE;
+/* CEL_THREAD_TERMINATE  [struct; ce-only] */
+typedef struct __CEL_THREAD_TERMINATE {
+ HANDLE hThread;
+} CEL_THREAD_TERMINATE, *PCEL_THREAD_TERMINATE;
 
-/* PCEL_PROCESS_TERMINATE  [extra struct] */
-typedef struct __CEL_PROCESS_TERMINATE {HANDLEhProcess;} CEL_PROCESS_TERMINATE, *PCEL_PROCESS_TERMINATE;
+/* CEL_VIRTUAL_ALLOC  [struct; ce-only] */
+typedef struct __CEL_VIRTUAL_ALLOC {
+ DWORD dwResult;
+ DWORD dwAddress;
+ DWORD dwSize;
+ DWORD dwType;
+ DWORD dwProtect;
+ BYTE bReserved[0];
+} CEL_VIRTUAL_ALLOC, *PCEL_VIRTUAL_ALLOC;
 
-/* PCEL_SEM_CLOSE  [extra struct] */
-typedef struct __CEL_SEM_CLOSE {HANDLEhSem;} CEL_SEM_CLOSE, *PCEL_SEM_CLOSE;
+/* CEL_VIRTUAL_COPY  [struct; ce-only] */
+typedef struct __CEL_VIRTUAL_COPY {
+ DWORD dwDest;
+ DWORD dwSource;
+ DWORD dwSize;
+ DWORD dwProtect;
+} CEL_VIRTUAL_COPY, *PCEL_VIRTUAL_COPY;
 
-/* PCEL_SEM_CREATE  [extra struct] */
-typedef struct __CEL_SEM_CREATE {HANDLEhSem;DWORDdwInitCount;DWORDdwMaxCount;WCHARszName[0];} CEL_SEM_CREATE, *PCEL_SEM_CREATE;
+/* CEL_VIRTUAL_FREE  [struct; ce-only] */
+typedef struct __CEL_VIRTUAL_FREE {
+ DWORD dwAddress;
+ DWORD dwSize;
+ DWORD dwType;
+ BYTE bReserved[0];
+} CEL_VIRTUAL_FREE, *PCEL_VIRTUAL_FREE;
 
-/* PCEL_SEM_DELETE  [extra struct] */
-typedef struct __CEL_SEM_DELETE {HANDLEhSem;} CEL_SEM_DELETE, *PCEL_SEM_DELETE;
+/* CEL_WAIT_MULTI  [struct; ce-only] */
+typedef struct __CEL_WAIT_MULTI {
+ DWORD dwTimeout;
+ DWORD fWaitAll:1;
+ DWORD dwReserved:31;
+ HANDLE hHandles[0];
+} CEL_WAIT_MULTI, *PCEL_WAIT_MULTI;
 
-/* PCEL_SEM_RELEASE  [extra struct] */
-typedef struct __CEL_SEM_RELEASE {HANDLEhSem;DWORDdwReleaseCount;DWORDdwPreviousCount;} CEL_SEM_RELEASE, *PCEL_SEM_RELEASE;
-
-/* PCEL_SLEEP  [extra struct] */
-typedef struct __CEL_SLEEP {DWORDdwTimeout;} CEL_SLEEP, *PCEL_SLEEP;
-
-/* PCEL_SYSTEM_INVERT  [extra typedef] */
-typedef __CEL_SYSTEM_INVERT {HANDLEhThread;intnPriority;} CEL_SYSTEM_INVERT, *PCEL_SYSTEM_INVERT;
-
-/* PCEL_SYSTEM_PAGE  [extra typedef] */
-typedef __CEL_SYSTEM_PAGE {DWORDdwAddress;DWORDfReadWrite:1;DWORDfEndPageIn:1; DWORD fSuccess: 1 DWORDdwReserved: 29 } CEL_SYSTEM_PAGE, *PCEL_SYSTEM_PAGE;
-
-/* PCEL_SYSTEM_TLB  [extra typedef] */
-typedef __CEL_SYSTEM_TLB {DWORDdwCount;} CEL_SYSTEM_TLB, *PCEL_SYSTEM_TLB;
-
-/* PCEL_THREAD_CLOSE  [extra struct] */
-typedef struct __CEL_THREAD_CLOSE {HANDLEhThread;} CEL_THREAD_CLOSE, *PCEL_THREAD_CLOSE;
-
-/* PCEL_THREAD_CREATE  [extra struct] */
-typedef struct __CEL_THREAD_CREATE {HANDLEhThread;HANDLEhProcess;HANDLE hModule;DWORD dwStartAddr;intnPriority;WCHARszName[0];} CEL_THREAD_CREATE, *PCEL_THREAD_CREATE;
-
-/* PCEL_THREAD_DELETE  [extra struct] */
-typedef struct __CEL_THREAD_DELETE {HANDLEhThread;} CEL_THREAD_DELETE, *PCEL_THREAD_DELETE;
-
-/* PCEL_THREAD_MIGRATE  [extra typedef] */
-typedef __CEL_THREAD_MIGRATE {HANDLEhProcess;DWORDdwReserved;} CEL_THREAD_MIGRATE, *PCEL_THREAD_MIGRATE;
-
-/* PCEL_THREAD_PRIORITY  [extra typedef] */
-typedef __CEL_THREAD_PRIORITY {HANDLEhThread;intnPriority;} CEL_THREAD_PRIORITY, *PCEL_THREAD_PRIORITY;
-
-/* PCEL_THREAD_QUANTUM  [extra typedef] */
-typedef __CEL_THREAD_QUANTUM {HANDLEhThread;DWORDdwQuantum;} CEL_THREAD_QUANTUM, *PCEL_THREAD_QUANTUM;
-
-/* PCEL_THREAD_RESUME  [extra struct] */
-typedef struct __CEL_THREAD_RESUME {HANDLEhThread; } CEL_THREAD_RESUME, *PCEL_THREAD_RESUME;
-
-/* PCEL_THREAD_SUSPEND  [extra struct] */
-typedef struct __CEL_THREAD_SUSPEND {HANDLEhThread; } CEL_THREAD_SUSPEND, *PCEL_THREAD_SUSPEND;
-
-/* PCEL_THREAD_SWITCH  [extra struct] */
-typedef struct __CEL_THREAD_SWITCH {HANDLEhThread;} CEL_THREAD_SWITCH, *PCEL_THREAD_SWITCH;
-
-/* PCEL_THREAD_TERMINATE  [extra struct] */
-typedef struct __CEL_THREAD_TERMINATE {HANDLEhThread;} CEL_THREAD_TERMINATE, *PCEL_THREAD_TERMINATE;
-
-/* PCEL_VIRTUAL_ALLOC  [extra struct] */
-typedef struct __CEL_VIRTUAL_ALLOC {DWORDdwResult;DWORDdwAddress;DWORDdwSize;DWORD dwType;DWORDdwProtect;BYTEbReserved[0];} CEL_VIRTUAL_ALLOC, *PCEL_VIRTUAL_ALLOC;
-
-/* PCEL_VIRTUAL_COPY  [extra struct] */
-typedef struct __CEL_VIRTUAL_COPY {DWORDdwDest;DWORDdwSource;DWORDdwSize;DWORDdwProtect;} CEL_VIRTUAL_COPY, *PCEL_VIRTUAL_COPY;
-
-/* PCEL_VIRTUAL_FREE  [extra struct] */
-typedef struct __CEL_VIRTUAL_FREE {DWORDdwAddress;DWORDdwSize;DWORDdwType;BYTEbReserved[0];} CEL_VIRTUAL_FREE, *PCEL_VIRTUAL_FREE;
-
-/* PCEL_WAIT_MULTI  [extra struct] */
-typedef struct __CEL_WAIT_MULTI {DWORDdwTimeout;DWORDfWaitAll:1;DWORDdwReserved:31;HANDLEhHandles[0];} CEL_WAIT_MULTI, *PCEL_WAIT_MULTI;
-
-/* PCEL_CRITSEC_DELETE  [extra struct] */
-typedef struct __CEL_CRITSEC_DELETE {HANDLEhCS;} CEL_CRITSEC_DELETE, *PCEL_CRITSEC_DELETE;
-
-/* PCEL_CRITSEC_INIT  [extra struct] */
-typedef struct __CEL_CRITSEC_INIT {HANDLEhCS;}CEL_CRITSEC_INIT, *PCEL_CRITSEC_INIT;
-
-/* PCEL_EXTRA_MODULE_INFO  [extra struct] */
-typedef struct __CEL_EXTRA_MODULE_INFO {HANDLEhModule;DWORDdwVMLen;DWORDdwModuleFlags;DWORDdwOID;WCHARszFullPath[0];} CEL_EXTRA_MODULE_INFO, *PCEL_EXTRA_MODULE_INFO;
-
-/* PCEL_EXTRA_PROCESS_INFO  [extra struct] */
-typedef struct __CEL_EXTRA_PROCESS_INFO {HANDLEhProcess; DWORD dwCodeBaseDWORDdwVMLen;DWORDdwOID;WCHARszFullPath[0];} CEL_EXTRA_PROCESS_INFO, *PCEL_EXTRA_PROCESS_INFO;
-
-/* PCEL_MODULE_REFERENCES  [extra struct] */
-typedef struct __CEL_MODULE_REFERENCES {HANDLEhModule;CEL_PROCESS_REFCOUNTref[1];} CEL_MODULE_REFERENCES, *PCEL_MODULE_REFERENCES;
-
-/* PCEL_PROCESS_REFCOUNT  [extra struct] */
-typedef struct __CEL_PROCESS_REFCOUNT {HANDLEhProcess;DWORDdwRefCount} CEL_PROCESS_REFCOUNT, *PCEL_PROCESS_REFCOUNT;
-
-/* PMAPHEADER  [extra struct] */
-typedef struct __MAPHEADER {DWORDdwBufSize;LPBYTEpWrite;LPBYTEpRead;BOOLfSetEvent;BYTEbReserved;DWORDdwLostBytes;} MAPHEADER, *PMAPHEADER;
-
-/* PCEL_BOOT_TIME  [extra struct] */
-typedef struct _CEL_BOOT_TIME { DWORD dwAction; WCHAR szName[0]; } CEL_BOOT_TIME, *PCEL_BOOT_TIME;
+/* CEL_MODULE_REFERENCES  [struct; ce-only] */
+typedef struct __CEL_MODULE_REFERENCES {
+ HANDLE hModule;
+ CEL_PROCESS_REFCOUNT ref[1];
+} CEL_MODULE_REFERENCES, *PCEL_MODULE_REFERENCES;
 
 /* ==================================================================
  * functions and callbacks

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 1 declarations, 0 outlines, 0 base types, 0 extra macros, 13 extra decls
+ * 0 constants, 1 declarations, 0 outlines, 0 base types, 0 extra macros, 12 extra decls
  */
 #ifndef _DVDCSS_IDL_
 #define _DVDCSS_IDL_
@@ -22,6 +22,5 @@ HRESULT EnableDescrambler();
 HRESULT InitiateAuthentication();
 HRESULT NewDisk();
 HRESULT ResetAuthentication();
-HRESULT SetSectorLength(UINTdwLength);
 
 #endif /* _DVDCSS_IDL_ */

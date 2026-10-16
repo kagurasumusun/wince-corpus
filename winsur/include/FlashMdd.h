@@ -21,4 +21,23 @@
 
 /* FLASH_TRANSFER_REQUEST  [struct; ce-only] */
 
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* FLASH_PARTITION_FLAGS  [enum; ce-only] */
+enum FLASH_PARTITION_FLAGS {
+ FLASH_PARTITION_FLAG_DIRECT_MAP = 0x00000001,
+ FLASH_PARTITION_FLAG_READ_ONLY = 0x00000002,
+ FLASH_PARTITION_FLAG_RESERVED = 0x00000004,
+};
+
+/* FLASH_TRANSFER_REQUEST_FLAGS  [enum; ce-only] */
+enum FLASH_TRANSFER_REQUEST_FLAGS {
+ FLASH_SECTOR_REQUEST_FLAG_ATOMIC = 0x00000001,
+ FLASH_SECTOR_REQUEST_FLAG_WRITE_THROUGH = 0x00000002,
+};
+
 #endif /* _FLASHMDD_ */

@@ -11,4 +11,42 @@
 #define _P2P_
 
 
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* PEER_CONNECTION_FLAGS_TAG  [enum; ce-only; p2p.lib] */
+typedef enum peer_connection_flags_tag 
+{ 
+ PEER_CONNECTION_NEIGHBOR, 
+ PEER_CONNECTION_DIRECT 
+} PEER_CONNECTION_FLAGS;
+
+/* PEER_DATA  [struct; shared; p2p.lib] */
+typedef struct peer_data_tag { 
+ ULONG cbData; 
+ PBYTE pbData; 
+} PEER_DATA, 
+*PPEER_DATA;
+
+/* PEER_RECORD_CHANGE_TYPE_TAG  [enum; ce-only; p2p.lib] */
+typedef enum peer_record_change_type_tag 
+{ 
+ PEER_RECORD_ADDED, 
+ PEER_RECORD_UPDATED, 
+ PEER_RECORD_DELETED, 
+ PEER_RECORD_EXPIRED 
+} PEER_RECORD_CHANGE_TYPE;
+
+/* PEER_CONNECTION_FLAGS  [extra enum] */
+typedef enum peer_connection_flags_tag { PEER_CONNECTION_NEIGHBOR, PEER_CONNECTION_DIRECT } PEER_CONNECTION_FLAGS;
+
+/* PEER_RECORD_CHANGE_TYPE  [extra enum] */
+typedef enum peer_record_change_type_tag { PEER_RECORD_ADDED, PEER_RECORD_UPDATED, PEER_RECORD_DELETED, PEER_RECORD_EXPIRED } PEER_RECORD_CHANGE_TYPE;
+
+/* PPEER_NAME_PAIR  [extra struct] */
+typedef struct peer_name_pair_tag { DWORD dwSize; PWSTR pwzPeerName; PWSTR pwzFriendlyName;} PEER_NAME_PAIR, *PPEER_NAME_PAIR;
+
 #endif /* _P2P_ */

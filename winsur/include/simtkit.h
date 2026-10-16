@@ -19,4 +19,17 @@
 
 /* SIMLOCALINFO  [struct; ce-only] */
 
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* SIMTKITRSPITEM  [struct; ce-only] */
+typedef struct simtkitrspitem_tag {
+ DWORD cbSize;
+ DWORD dwParams;
+ DWORD dwId;
+} SIMTKITRSPITEM, *LPSIMTKITRSPITEM;
+
 #endif /* _SIMTKIT_ */

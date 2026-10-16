@@ -18,12 +18,28 @@
 /* ButtonView_t::DrawText  [enum; ce-only] */
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* ButtonControlRectangleStyle_t  [enum; ce-only] */
+enum ButtonControlRectangleStyle_t {
+ CBR_CLIENTRECT,
+ CBR_CHECKBOX,
+ CBR_CHECKTEXT,
+ CBR_GROUPTEXT,
+ CBR_GROUPFRAME,
+ CBR_PUSHBUTTON
+};
+
+/* alignment  [extra enum] */
+static void DrawText(  HWND hwnd,  HDC hdc,  BOOL dbt,  BOOL fDepress,  UINT pbfPush,  enum ButtonControlRectangleStyle_t bcrs,  WORD alignment  );
+
+/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */
-
-/* enum */
-static void DrawText(  HWND hwnd,  HDC hdc,  BOOL dbt,  BOOL fDepress,  UINT pbfPush,  enum ButtonControlRectangleStyle_t bcrs,  WORD alignment  );
 
 /* function */
 void DrawCheckBoxandRadioStyle( HWND hwnd, HDC hdc, HBRUSH hbr, WORD alignment );

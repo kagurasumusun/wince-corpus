@@ -84,6 +84,18 @@ class GluedPrototypeTests(unittest.TestCase):
         self.assertFalse(q.is_glued_prototype(text))
         self.assertTrue(q.looks_like_c_declaration(text))
 
+    def test_interface_type_is_not_glued(self):
+        text = ("BOOL HalTranslateBusAddress(INTERFACE_TYPE InterfaceType, "
+                "ULONG BusNumber, PHYSICAL_ADDRESS BusAddress, "
+                "PULONG AddressSpace, PPHYSICAL_ADDRESS TranslatedAddress);")
+        self.assertFalse(q.is_glued_prototype(text))
+        self.assertTrue(q.looks_like_c_declaration(text))
+
+    def test_wsprintf_is_kept(self):
+        text = "int wsprintf(LPTSTR lpOut, LPCTSTR lpFmt, ...);"
+        self.assertTrue(q.looks_like_c_declaration(text))
+        self.assertIsNotNone(q.sanitize_declaration(text, "wsprintf", "function"))
+
 
 class ToolchainCTests(unittest.TestCase):
     def test_keeps_c_messagebox(self):

@@ -22,5 +22,6 @@ typedef struct _CEBLOB {
  DWORD dwCount;
  LPBYTE lpb;
 } CEBLOB;
+typedef CEBLOB *PCEBLOB, *LPCEBLOB;
 
 #endif /* _WINSOCK_ */

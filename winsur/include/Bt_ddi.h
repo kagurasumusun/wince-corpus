@@ -50,6 +50,7 @@ typedef struct _controller_event_packet {
  int cSize;
  unsigned char* pData;
 } ControllerEvent;
+typedef ControllerEvent *PControllerEvent, *LPControllerEvent;
 
 /* HCI_Buffer_Size  [struct; ce-only] */
 typedef struct _host_buffer_size {
@@ -58,12 +59,14 @@ typedef struct _host_buffer_size {
  unsigned short Total_Num_ACL_Data_Packets;
  unsigned short Total_Num_SCO_Data_Packets;
 } HCI_Buffer_Size;
+typedef HCI_Buffer_Size *PHCI_Buffer_Size, *LPHCI_Buffer_Size;
 
 /* HCIEventContext  [typedef; ce-only] */
 typedef union _event_context {
  HCI_Buffer_Size Host_Buffer;
  ControllerEvent Event; 
 } HCIEventContext;
+typedef HCIEventContext *PHCIEventContext, *LPHCIEventContext;
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
@@ -73,9 +76,6 @@ typedef int (*HCI_DataPacketDown_Out)(
  int iError
 );
 #endif /* _WIN32_WCE */
-
-/* PBASEBAND_CONNECTION_DATA  [extra struct] */
-typedef struct _BASEBAND_CONNECTION_DATA{ USHORT hConnection; BD_ADDR baAddress; int cDataPacketsPending; UINT fLinkType : 1; UINT fEncrypted : 1; UINT fAuthenticated : 1; UINT fMode : 3;} BASEBAND_CONNECTION_DATA, *PBASEBAND_CONNECTION_DATA;
 
 /* clock_offset  [extra struct] */
 struct InquiryResultBuffer {DWORD dwTick;BD_ADDR ba;unsigned charpage_scan_repetition_mode;unsigned charpage_scan_period_mode;unsigned charpage_scan_mode;unsigned int class_of_device;unsigned short clock_offset;};

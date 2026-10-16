@@ -48,6 +48,23 @@ typedef struct MailMsg {
  CEOID oid;
  HANDLE hHeap
 } MailMsg;
+typedef MailMsg *PMailMsg, *LPMailMsg;
+
+/* MAILSORTFIELD  [enum; ce-only] */
+typedef enum {
+ MAIL_SORT_FROM,
+ MAIL_SORT_SUBJ,
+ MAIL_SORT_DATE,
+ MAIL_SORT_SIZE
+} MAILSORTFIELD;
+typedef MAILSORTFIELD *PMAILSORTFIELD, *LPMAILSORTFIELD;
+
+/* MAILSORTINFO  [struct; ce-only] */
+typedef struct _MAILSORTINFO {
+ MAILSORTFIELD iSort;
+ BOOL fAscending;
+ int cMsgs;
+} MAILSORTINFO, *PMAILSORTINFO;
 
 /* ==================================================================
  * functions and callbacks
@@ -94,6 +111,9 @@ BOOL MailGetFolderId (HANDLE hMail, BYTE* pbId, LPWSTR szName);
 /* MailGetFolderName  [function; ce-only; CE 1.0..199, 2.11..2.12] */
 BOOL MailGetFolderName (HANDLE hMail, int* piId, int* piLen LPWSTR szName);
 
+/* MailGetSort  [function; ce-only; CE 1.0..199, 2.11..2.12] */
+BOOL MailSetSort (HANDLE hMail, PMAILSORTINFO pInfo);
+
 /* MailGetSvcId  [function; ce-only; CE 1.0..199, 2.11..2.12] */
 BOOL MailGetSvcId (HANDLE hMail, MailMsg* pmm);
 
@@ -126,6 +146,10 @@ MailAtt * pma, BOOL bRetrieve);
 
 /* MailSetField  [function; ce-only; CE 1.0..199, 2.11..2.12] */
 BOOL MailSetField (MailMsg*pmm, LPWSTR szName, LPCWSTR szVal);
+
+/* MailSetSort  [function; ce-only; CE 1.0..199, 2.11..2.12] */
+BOOL MailSetSort (HANDLE hMail, MAILSORTFIELD iSort, 
+BOOL fAscending);
 
 /* MailUpdate  [function; ce-only; CE 1.0..199, 2.11..2.12] */
 BOOL MailUpdate (HANDLE hMail, MailMsg* pmm, BOOL fDoAll);

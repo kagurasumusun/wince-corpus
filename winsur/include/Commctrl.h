@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1786 constants, 457 declarations, 16 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 1786 constants, 327 declarations, 17 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _COMMCTRL_
 #define _COMMCTRL_
@@ -1911,6 +1911,8 @@ UINT INDEXTOSTATEIMAGEMASK(
 
 /* TC_ITEMHEADER  [struct; ce-only] */
 
+/* TCM_SETITEM  [function, struct; ce-only] */
+
 /* TV_HITTESTINFO  [struct; ce-only] */
 
 /* TV_INSERTSTRUCT  [struct; ce-only] */
@@ -1925,12 +1927,22 @@ UINT INDEXTOSTATEIMAGEMASK(
  * declaration body no page prints
  * ================================================================ */
 
+/* COMMANDBANDSRESTOREINFO  [struct; ce-only] */
+typedef struct tagCOMMANDBANDSRESTOREINFO {
+ UINT cbSize;
+ UINT wID;
+ UINT fStyle;
+ UINT cxRestored;
+ BOOL fMaximized;
+} COMMANDBANDSRESTOREINFO, *LPCOMMANDBANDSRESTOREINFO;
+
 /* HD_HITTESTINFO  [struct; ce-only] */
 typedef struct _HD_HITTESTINFO {
  POINT pt; 
  UINT flags; 
  int iItem; 
 } HD_HITTESTINFO;
+typedef HD_HITTESTINFO *PHD_HITTESTINFO, *LPHD_HITTESTINFO;
 
 /* HDHITTESTINFO  [struct; shared] */
 typedef struct _HD_HITTESTINFO { 
@@ -1951,6 +1963,7 @@ typedef struct _HDITEM {
  int iImage;
  int iOrder;
 } HDITEM;
+typedef HDITEM *PHDITEM, *LPHDITEM;
 
 /* ICONINFO  [struct; shared] */
 typedef struct _ICONINFO {
@@ -1960,6 +1973,7 @@ typedef struct _ICONINFO {
  HBITMAP hbmMask;
  HBITMAP hbmColor;
 } ICONINFO;
+typedef ICONINFO *PICONINFO, *LPICONINFO;
 
 /* LV_FINDINFO  [struct; ce-only] */
 typedef struct _LV_FINDINFO {
@@ -1969,6 +1983,7 @@ typedef struct _LV_FINDINFO {
  POINT pt; 
  UINT vkDirection; 
 } LV_FINDINFO;
+typedef LV_FINDINFO *PLV_FINDINFO, *LPLV_FINDINFO;
 
 /* LV_HITTESTINFO  [struct; ce-only] */
 typedef struct _LV_HITTESTINFO {
@@ -1976,6 +1991,17 @@ typedef struct _LV_HITTESTINFO {
  UINT flags; 
  int iItem; 
 } LV_HITTESTINFO;
+typedef LV_HITTESTINFO *PLV_HITTESTINFO, *LPLV_HITTESTINFO;
+
+/* LVBKIMAGE  [struct; shared; A/W LVBKIMAGEA,LVBKIMAGEW (CE is W-side)] */
+typedef struct tagLVBKIMAGE {
+ ULONG ulFlags;
+ HBITMAP hbm;
+ LPTSTR pszImage;
+ UINT cchImageMax;
+ int xOffsetPercent;
+ int yOffsetPercent;
+} LVBKIMAGE, *LPLVBKIMAGE;
 
 /* LVCOLUMN  [struct; shared; A/W LVCOLUMNA,LVCOLUMNW (CE is W-side)] */
 typedef struct _LVCOLUMN { 
@@ -1988,6 +2014,37 @@ typedef struct _LVCOLUMN {
  int iOrder;
  int iImage;
 } LVCOLUMN;
+typedef LVCOLUMN *PLVCOLUMN, *LPLVCOLUMN;
+
+/* LVGROUP  [struct; shared] */
+typedef struct LVGROUP {
+ UINT cbSize;
+ UINT mask;
+ LPWSTR pszHeader;
+ int cchHeader;
+ LPWSTR pszFooter;
+ int cchFooter;
+ int iGroupId;
+ UINT stateMask;
+ UINT state;
+ UINT uAlign;
+} LVGROUP, *PLVGROUP;
+
+/* LVGROUPMETRICS  [struct; shared] */
+typedef struct LVGROUPMETRICS {
+ UINT cbSize;
+ UINT mask;
+ UINT Left;
+ UINT Top;
+ UINT Right;
+ UINT Bottom;
+ COLORREF crLeft;
+ COLORREF crTop;
+ COLORREF crRight;
+ COLORREF crBottom;
+ COLORREF crRightHeader;
+ COLORREF crFooter;
+} LVGROUPMETRICS, *PLVGROUPMETRICS;
 
 /* LVHITTESTINFO  [struct; shared] */
 typedef struct _LVHITTESTINFO { 
@@ -1996,6 +2053,7 @@ typedef struct _LVHITTESTINFO {
  int iItem; 
  int iSubItem;
 } LVHITTESTINFO;
+typedef LVHITTESTINFO *PLVHITTESTINFO, *LPLVHITTESTINFO;
 
 /* LVITEM  [struct; shared; A/W LVITEMA,LVITEMW (CE is W-side)] */
 typedef struct _LVITEM { 
@@ -2010,18 +2068,53 @@ int iImage;
 LPARAM lParam; 
 int iIndent; } 
 LVITEM;
+typedef LVITEM *PLVITEM, *LPLVITEM;
+
+/* LVSETINFOTIP  [struct; shared] */
+typedef struct LVSETINFOTIP {
+ UINT cbSize;
+ DWORD dwFlags;
+ LPWSTR pszText;
+ int iItem;
+ int iSubItem;
+} LVSETINFOTIP, *PLVSETINFOTIP;
+
+/* MCHITTESTINFO  [struct; shared] */
+typedef struct {
+ UINT cbSize;
+ POINT pt;
+ UINT uHit; 
+ SYSTEMTIME st;
+} MCHITTESTINFO, *PMCHITTESTINFO;
+
+/* PBRANGE  [struct; shared] */
+typedef struct {
+ int iLow;
+ int iHigh; 
+} PBRANGE, *PPBRANGE;
+
+/* TBREPLACEBITMAP  [struct; shared] */
+typedef struct {
+ HINSTANCE hInstOld;
+ UINT nIDOld;
+ HINSTANCE hInstNew;
+ UINT nIDNew;
+ int nButtons;
+} TBREPLACEBITMAP, *LPTBREPLACEBITMAP;
 
 /* TC_HITTESTINFO  [struct; ce-only] */
 typedef struct _TC_HITTESTINFO { 
  POINT pt; 
  UINT flags; 
 } TC_HITTESTINFO;
+typedef TC_HITTESTINFO *PTC_HITTESTINFO, *LPTC_HITTESTINFO;
 
 /* TCHITTESTINFO  [struct; shared] */
 typedef struct _TCHITTESTINFO { 
  POINT pt; 
  UINT flags; 
 } TCHITTESTINFO;
+typedef TCHITTESTINFO *PTCHITTESTINFO, *LPTCHITTESTINFO;
 
 /* TCITEM  [struct; shared; A/W TCITEMA,TCITEMW (CE is W-side)] */
 typedef struct tagTCITEM { 
@@ -2033,12 +2126,14 @@ typedef struct tagTCITEM {
  int iImage;
  LPARAM lParam;
 } TCITEM;
+typedef TCITEM *PTCITEM, *LPTCITEM;
 
 /* UDACCEL  [struct; shared] */
 typedef struct {
  int nSec; 
  int nInc; 
 } UDACCEL;
+typedef UDACCEL *PUDACCEL, *LPUDACCEL;
 
 /* TVHITTESTINFO  [struct; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
@@ -2242,6 +2337,18 @@ HFONT DateTime_GetMonthCalFont(
  HWND hwndDP
 );
 
+/* DateTime_GetRange  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+DWORD DateTime_GetRange(
+ HWND hwndDT, 
+ LPSYSTEMTIME lpSysTimeArray
+);
+
+/* DateTime_GetSystemtime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+DWORD DateTime_GetSystemtime(
+ HWND hwndDP, 
+ LPSYSTEMTIME lpSysTime
+);
+
 /* DateTime_SetFormat  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
 BOOL DateTime_SetFormat(
  HWND hwndDT, 
@@ -2253,6 +2360,20 @@ COLORREF DateTime_SetMonthCalColor(
  HWND hwndDP, 
  int iColor, 
  COLORREF clr
+);
+
+/* DateTime_SetRange  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+BOOL DateTime_SetRange(
+ HWND hwndDT, 
+ DWORD flags, 
+ LPSYSTEMTIME lpSysTimeArray
+);
+
+/* DateTime_SetSystemtime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+BOOL DateTime_SetSystemtime(
+ HWND hwndDT, 
+ DWORD flag, 
+ LPSYSTEMTIME lpSysTime
 );
 
 /* DrawStatusText  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib; A/W DrawStatusTextA,DrawStatusTextW (CE is W-side)] */
@@ -2529,6 +2650,12 @@ BOOL ListView_SetTextColor(
  COLORREF clrText 
 );
 
+/* ListView_SubItemHitTest  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+INT ListView_SubItemHitTest(
+ HWND hwndLV, 
+ LPLVHITTESTINFO pInfo 
+);
+
 /* ListView_Update  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
 BOOL ListView_Update( 
  HWND hwnd, 
@@ -2539,6 +2666,12 @@ BOOL ListView_Update(
 COLORREF MonthCal_GetColor(
  HWND hwndMC, 
  INT iColor 
+);
+
+/* MonthCal_GetCurSel  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+BOOL MonthCal_GetCurSel(
+ HWND hwndMC, 
+ LPSYSTEMTIME lpSysTime 
 );
 
 /* MonthCal_GetFirstDayOfWeek  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
@@ -2567,11 +2700,48 @@ INT MonthCal_GetMonthDelta(
  HWND hwndMC 
 );
 
+/* MonthCal_GetMonthRange  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+DWORD MonthCal_GetMonthRange(
+ HWND hwndMC, 
+ DWORD dwFlag, 
+ LPSYSTEMTIME lprgSysTimeArray 
+);
+
+/* MonthCal_GetRange  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+DWORD MonthCal_GetRange(
+ HWND hwndMC, 
+ LPSYSTEMTIME lprgSysTimeArray 
+);
+
+/* MonthCal_GetSelRange  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+BOOL MonthCal_GetSelRange(
+ HWND hwndMC, 
+ LPSYSTEMTIME lprgSysTimeArray 
+);
+
+/* MonthCal_GetToday  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+BOOL MonthCal_GetToday(
+ HWND hwndMC, 
+ LPSYSTEMTIME lpToday 
+);
+
+/* MonthCal_HitTest  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+DWORD MonthCal_HitTest(
+ HWND hwndMC, 
+ PMCHITTESTINFO pMCHitTest 
+);
+
 /* MonthCal_SetColor  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
 COLORREF MonthCal_SetColor(
  HWND hwndMC, 
  INT iColor, 
  COLORREF clr 
+);
+
+/* MonthCal_SetCurSel  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+BOOL MonthCal_SetCurSel(
+ HWND hwndMC, 
+ LPSYSTEMTIME lpSysTime 
 );
 
 /* MonthCal_SetFirstDayOfWeek  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
@@ -2590,6 +2760,25 @@ BOOL MonthCal_SetMaxSelCount(
 INT MonthCal_SetMonthDelta(
  HWND hwndMC, 
  INT iDelta 
+);
+
+/* MonthCal_SetRange  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+BOOL MonthCal_SetRange(
+ HWND hwndMC, 
+ DWORD fWhichLimit, 
+ LPSYSTEMTIME lprgSysTimeArray 
+);
+
+/* MonthCal_SetSelRange  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
+BOOL MonthCal_SetSelRange(
+ HWND hwndMC, 
+ LPSYSTEMTIME lprgSysTimeArray 
+);
+
+/* MonthCal_SetToday  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+void MonthCal_SetToday(
+ HWND hwndMC, 
+ LPSYSTEMTIME lpSysTime 
 );
 
 /* TabCtrl_DeleteAllItems  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
@@ -2871,9 +3060,22 @@ int ListView_EnableGroupView(
  BOOL fEnable
 );
 
+/* ListView_GetBkImage  [function; shared; CE 5.0..699] */
+BOOL ListView_GetBkImage(
+ HWND hwndLV,
+ LPLVBKIMAGE plvbki
+);
+
 /* ListView_GetGroupCount  [function; shared; CE 5.0..699] */
 int ListView_GetGroupCount(
  HWND hwnd
+);
+
+/* ListView_GetGroupInfo  [function; shared; CE 5.0..699] */
+int ListView_GetGroupInfo(
+ HWND hwnd,
+ int iGroupId,
+ PLVGROUP pgrp
 );
 
 /* ListView_GetToolTips  [function; shared; CE 5.0..699] */
@@ -2885,6 +3087,13 @@ HWND ListView_GetToolTips(
 BOOL ListView_HasGroup(
  HWND hwnd,
  int dwGroupId
+);
+
+/* ListView_InsertGroup  [function; shared; CE 5.0..699] */
+int ListView_InsertGroup(
+ HWND hwnd,
+ int index,
+ PLVGROUP pgrp
 );
 
 /* ListView_IsGroupViewEnabled  [function; shared; CE 5.0..699] */
@@ -2910,11 +3119,30 @@ int ListView_RemoveGroup(
  int iGroupId
 );
 
+/* ListView_SetBkImage  [function; shared; CE 5.0..699] */
+BOOL ListView_SetBkImage(
+ HWND hwndLV,
+ LPLVBKIMAGE plvbki
+);
+
 /* ListView_SetExtendedListViewStyleEx  [function; shared; CE 5.0..699] */
 void ListView_SetExtendedListViewStyleEx(
  HWND hwndLV,
  DWORD dwExMask,
  DWORD dwExStyle
+);
+
+/* ListView_SetGroupInfo  [function; shared; CE 5.0..699] */
+int ListView_SetGroupInfo(
+ HWND hwnd,
+ int iGroupId,
+ PLVGROUP pgrp
+);
+
+/* ListView_SetInfoTip  [function; shared; CE 5.0..699] */
+BOOL ListView_SetInfoTip(
+ HWND hwnd,
+ PLVSETINFOTIP plvSetInfoTip
 );
 
 /* ListView_SetToolTips  [function; shared; CE 5.0..699] */

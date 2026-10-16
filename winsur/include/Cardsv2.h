@@ -20,7 +20,4 @@
 /* CARD_WINDOW_HANDLE  [typedef; ce-only] */
 typedef PVOID CARD_WINDOW_HANDLE;
 
-/* PCARD_WINDOW_ADDRESS  [extra struct] */
-typedef struct CARD_WINDOW_ADDRESS {CARD_SOCKET_HANDLEhSocket;UINT32uCardAddress;UINT32uSize;UINT32uWindowPhAddr;UINT32uGranularity;UINT16fAttributes;UINT8fAccessSpeed;UINT8Reserved;} CARD_WINDOW_ADDRESS, *PCARD_WINDOW_ADDRESS;
-
 #endif /* _CARDSV2_ */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2 constants, 16 declarations, 3 outlines, 0 base types, 0 extra macros, 6 extra decls
+ * 2 constants, 15 declarations, 4 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _FMD_
 #define _FMD_
@@ -24,6 +24,8 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
+/* FlashInfoEx  [struct; ce-only] */
+
 /* FMDInterface  [struct; ce-only] */
 
 /* ReservedReq  [struct; ce-only] */
@@ -36,16 +38,6 @@
  * declaration body no page prints
  * ================================================================ */
 
-/* FlashInfoEx  [struct; ce-only] */
-typedef struct _FlashInfoEx {
- DWORDcbSize;
- FLASH_TYPEflashType;
- DWORD dwNumBlocks;
- WORD dwDataBytesPerSector;
- DWORD dwNumRegions;
- FlashRegion region[1];
-} FlashInfoEx, *PFlashInfoEx;
-
 /* RawWriteBlocksReq  [struct; ce-only] */
 typedef struct _RawWriteBlocksReq {
  DWORD dwStartBlock;
@@ -54,12 +46,6 @@ typedef struct _RawWriteBlocksReq {
  DWORD cbBuffer;
 } RawWriteBlocksReq, *PRawWriteBlocksReq;
 
-/* PFlashInfo  [extra struct] */
-typedef struct _FlashInfo {FLASH_TYPEflashType;DWORDdwNumBlocks;DWORDdwBytesPerBlock; WORD wSectorsPerBlock; WORD wDataBytesPerSector;}FlashInfo, *PFlashInfo;
-
-/* PSectorInfo  [extra struct] */
-typedef struct _SectorInfo {DWORDdwReserved1;BYTEbOEMReserved; BYTE bBadBlock; WORD wReserved2;}SectorInfo, *PSectorInfo;
-
 /* PSECTORINFO  [extra struct] */
 typedef struct _SECTORINFO {
   DWORD dwReserved1;
@@ -67,33 +53,6 @@ typedef struct _SECTORINFO {
   BYTE bBadBlock;
   BYTE wReserved2;
 } SECTORINFO, *PSECTORINFO;
-
-/* PRawWriteBlocksReq  [extra struct] */
-typedef struct _RawWriteBlocksReq {
-  DWORD dwStartBlock;
-  DWORD dwNumBlocks;
-  LPBYTE pBuffer;
-  DWORD cbBuffer;
-} RawWriteBlocksReq, *PRawWriteBlocksReq;
-
-/* PFlashInfoEx  [extra struct] */
-typedef struct _FlashInfoEx {
-  DWORDcbSize;
-  FLASH_TYPEflashType;
-  DWORD dwNumBlocks;
-  WORD dwDataBytesPerSector;
-  DWORD dwNumRegions;
-  FlashRegion region[1];
-} FlashInfoEx, *PFlashInfoEx;
-
-/* PFMDInfo  [extra struct] */
-typedef struct _FMDInfo {
-  DWORD cbSize;
-  FLASH_TYPE flashType;
-  DWORD dwBaseAddress;
-  DWORD dwNumRegions;
-  DWORD dwNumReserved;
-}FMDInfo, *PFMDInfo;
 
 /* ==================================================================
  * functions and callbacks
@@ -116,6 +75,15 @@ VOID FMD_PowerDown(VOID);
 
 /* FMD_PowerUp  [function; ce-only; CE 4.0..699] */
 VOID FMD_PowerUp(VOID);
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
+
+/* FMD_GetInfoEx  [function; ce-only; CE 6.0..699] */
+BOOL FMD_GetInfoEx(
+ PFlashInfoEx pFlashInfo,
+ PDWORD pdwNumRegions
+);
 #endif /* _WIN32_WCE */
 
 #endif /* _FMD_ */

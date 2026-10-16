@@ -12,6 +12,19 @@
 
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* MODULEINFO  [struct; shared] */
+typedef struct _MODULEINFO {
+ LPVOID lpBaseOfDll;
+ DWORD SizeOfImage;
+ LPVOID EntryPoint;
+} MODULEINFO, *LPMODULEINFO;
+
+/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
@@ -21,6 +34,14 @@
 BOOL CeSetProcessVersion(
  HANDLE hProcess,
  DWORD dwVersion
+);
+
+/* GetModuleInformation  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
+BOOL GetModuleInformation(
+ HANDLE hProcess,
+ HMODULE hModule,
+ LPMODULEINFO lpmodinfo,
+ DWORD cb
 );
 #endif /* _WIN32_WCE */
 

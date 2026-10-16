@@ -23,10 +23,22 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* FLASH_BLOCK_STATUS  [enum; ce-only] */
+enum FLASH_BLOCK_STATUS {
+ FLASH_BLOCK_STATUS_BAD = 0x1,
+ FLASH_BLOCK_STATUS_RESERVED = 0x2
+};
+
 /* FLASH_LIFE_CYCLE_INFO  [struct; ce-only] */
 typedef struct __FLASH_LIFE_CYCLE_INFO {
  DWORD ErasePerBlock;
 } FLASH_LIFE_CYCLE_INFO;
+typedef FLASH_LIFE_CYCLE_INFO *PFLASH_LIFE_CYCLE_INFO, *LPFLASH_LIFE_CYCLE_INFO;
+
+/* FLASH_READ_STATUS  [enum; ce-only] */
+enum FLASH_READ_STATUS {
+ FLASH_READ_STATUS_ECC_CORRECTION_REQUIRED = 0x1
+};
 
 /* x1  [extra enum] */
 enum FLASH_READ_STATUS { FLASH_READ_STATUS_ECC_CORRECTION_REQUIRED = 0x1 };

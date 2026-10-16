@@ -28,6 +28,7 @@ typedef struct {
  UCHAR bmAttributes;
  UCHAR MaxPower;
 } USB_CONFIGURATION_DESCRIPTOR;
+typedef USB_CONFIGURATION_DESCRIPTOR *PUSB_CONFIGURATION_DESCRIPTOR, *LPUSB_CONFIGURATION_DESCRIPTOR;
 
 /* USB_DEVICE_DESCRIPTOR  [struct; ce-only] */
 typedef struct {
@@ -45,6 +46,7 @@ typedef struct {
  UCHAR iSerialNumber;
  UCHAR bNumConfigurations;
 } USB_DEVICE_DESCRIPTOR;
+typedef USB_DEVICE_DESCRIPTOR *PUSB_DEVICE_DESCRIPTOR, *LPUSB_DEVICE_DESCRIPTOR;
 
 /* LPUSB_DEVICE  [extra struct] */
 typedef struct _USB_DEVICE { const DWORD dwCount; const USB_DEVICE_DESCRIPTOR Descriptor; const LPCUSB_CONFIGURATION lpConfigs; const LPCUSB_CONFIGURATION lpActiveConfig;} USB_DEVICE, * PUSB_DEVICE, * LPUSB_DEVICE;

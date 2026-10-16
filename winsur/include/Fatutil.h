@@ -35,14 +35,35 @@ typedef struct _FORMAT_OPTIONS {
  DWORD dwNumFats;
  DWORD dwFlags;
 } FORMAT_OPTIONS;
+typedef FORMAT_OPTIONS *PFORMAT_OPTIONS, *LPFORMAT_OPTIONS;
 
-/* PDEFRAG_RESULTS  [extra struct] */
-typedef struct _DEFRAG_RESULTS { SCAN_RESULTS sr;} DEFRAG_RESULTS, *PDEFRAG_RESULTS;
+/* FORMAT_RESULTS  [struct; ce-only] */
+typedef struct _FORMAT_RESULTS{
+ DWORD dwSectorsPerFat;
+ DWORD dwReservedSectors;
+ DWORD dwSectorsPerCluster;
+ DWORD dwRootSectors;
+ DWORD dwTotalSectors;
+ DWORD dwNumFats;
+ DWORD dwFatVersion;
+} FORMAT_RESULTS, *PFORMAT_RESULTS;
 
-/* PFORMAT_RESULTS  [extra struct] */
-typedef struct _FORMAT_RESULTS{ DWORD dwSectorsPerFat; DWORD dwReservedSectors; DWORD dwSectorsPerCluster; DWORD dwRootSectors; DWORD dwTotalSectors; DWORD dwNumFats; DWORD dwFatVersion;} FORMAT_RESULTS, *PFORMAT_RESULTS;
+/* SCAN_RESULTS  [struct; ce-only] */
+typedef struct _SCAN_RESULTS {
+ DWORD dwLostClusters;
+ DWORD dwInvalidClusters;
+ DWORD dwLostChains;
+ DWORD dwInvalidDirs;
+ DWORD dwInvalidFiles;
+ DWORD dwTotalErrors;
+ DWORD dwPercentFrag;
+ BOOL fConsistentFats;
+ BOOL fErrorNotFixed;
+} SCAN_RESULTS, *PSCAN_RESULTS;
 
-/* PSCAN_RESULTS  [extra struct] */
-typedef struct _SCAN_RESULTS { DWORD dwLostClusters; DWORD dwInvalidClusters; DWORD dwLostChains; DWORD dwInvalidDirs; DWORD dwInvalidFiles; DWORD dwTotalErrors; DWORD dwPercentFrag; BOOL fConsistentFats; BOOL fErrorNotFixed;} SCAN_RESULTS, *PSCAN_RESULTS;
+/* DEFRAG_RESULTS  [struct; ce-only] */
+typedef struct _DEFRAG_RESULTS {
+ SCAN_RESULTS sr;
+} DEFRAG_RESULTS, *PDEFRAG_RESULTS;
 
 #endif /* _FATUTIL_ */

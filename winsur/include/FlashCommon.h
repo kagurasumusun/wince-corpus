@@ -27,11 +27,22 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* FLASH_REGION_INFO_FLAGS  [enum; ce-only] */
+enum FLASH_REGION_INFO_FLAGS {
+ FLASH_FLAG_NAND = 0x00000001,
+ FLASH_FLAG_NOR = 0x00000002,
+ FLASH_FLAG_REQUIRE_SEQ_PAGE_PROGRAM = 0x00000004,
+ FLASH_FLAG_SUPPORTS_COPY = 0x00000008,
+ FLASH_FLAG_SUPPORTS_XIP = 0x00000010,
+ FLASH_FLAG_SUPPORTS_LOCKING = 0x00000020,
+};
+
 /* PARTITION_ID  [struct; ce-only] */
 typedef struct __PARTITION_ID {
  WORD RegionIndex;
  WORD PartitionIndex;
 } PARTITION_ID;
+typedef PARTITION_ID *PPARTITION_ID, *LPPARTITION_ID;
 
 /* x00000020  [extra enum] */
 enum FLASH_REGION_INFO_FLAGS {

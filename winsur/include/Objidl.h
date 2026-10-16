@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 45 constants, 15 declarations, 34 outlines, 0 base types, 0 extra macros, 88 extra decls
+ * 45 constants, 16 declarations, 33 outlines, 0 base types, 0 extra macros, 86 extra decls
  */
 #ifndef _OBJIDL_
 #define _OBJIDL_
@@ -146,6 +146,33 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* ADVF  [enum; shared] */
+typedef enum tagADVF { 
+ ADVF_NODATA = 1, 
+ ADVF_PRIMEFIRST = 2, 
+ ADVF_ONLYONCE = 4, 
+ ADVFCACHE_NOHANDLER = 8, 
+ ADVFCACHE_FORCEBUILTIN = 16, 
+ ADVFCACHE_ONSAVE = 32, 
+ ADVF_DATAONSTOP = 64 
+} ADVF;
+typedef ADVF *PADVF, *LPADVF;
+
+/* BIND_OPTS  [struct; shared] */
+typedef struct tagBIND_OPTS {
+ DWORD cbStruct; 
+ DWORD grfFlags; 
+ DWORD grfMode; 
+ DWORD dwTickCountDeadline; 
+} BIND_OPTS, *LPBIND_OPTS;
+
+/* DATADIR  [enum; shared] */
+typedef enum tagDATADIR { 
+ DATADIR_GET = 1, 
+ DATADIR_SET = 2 
+} DATADIR;
+typedef DATADIR *PDATADIR, *LPDATADIR;
+
 /* DVTARGETDEVICE  [struct; shared] */
 typedef struct tagDVTARGETDEVICE{
  DWORD tdSize;
@@ -155,6 +182,40 @@ typedef struct tagDVTARGETDEVICE{
  WORD tdExtDevmodeOffset;
  BYTE tdData;
 } DVTARGETDEVICE;
+typedef DVTARGETDEVICE *PDVTARGETDEVICE, *LPDVTARGETDEVICE;
+
+/* MKRREDUCE  [enum; shared] */
+typedef enum tagMKRREDUCE { 
+ MKRREDUCE_ONE = 3<<16, 
+ MKRREDUCE_TOUSER = 2<<16, 
+ MKRREDUCE_THROUGHUSER = 1<<16, 
+ MKRREDUCE_ALL = 0 
+} MKRREDUCE;
+typedef MKRREDUCE *PMKRREDUCE, *LPMKRREDUCE;
+
+/* MKSYS  [enum; shared] */
+typedef enum tagMKSYS { 
+ MKSYS_NONE = 0,
+ MKSYS_GENERICCOMPOSITE = 1,
+ MKSYS_FILEMONIKER = 2,
+ MKSYS_ANTIMONIKER = 3,
+ MKSYS_ITEMMONIKER = 4,
+ MKSYS_POINTERMONIKER = 5,
+ MKSYS_CLASSMONIKER = 7,
+ MKSYS_OBJREFMONIKER = 8,
+ MKSYS_SESSIONMONIKER = 9
+} MKSYS;
+typedef MKSYS *PMKSYS, *LPMKSYS;
+
+/* TYMED  [enum; shared] */
+typedef enum tagTYMED {
+ TYMED_HGLOBAL = 1,
+ TYMED_FILE = 2,
+ TYMED_ISTREAM = 4,
+ TYMED_ISTORAGE = 8,
+ TYMED_NULL = 0,
+} TYMED;
+typedef TYMED *PTYMED, *LPTYMED;
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 3.0..399, 5.0..599 */
 
@@ -174,29 +235,11 @@ HRESULT Clone(
 #endif /* _WIN32_WCE */
 
 
-/* INTERFACEINFO  [struct; shared] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   pUnk */
-/*   iid */
-/*   wMethod */
-
 /* MULTI_QI  [struct; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   pIID */
 /*   pItf */
 /*   hr */
-
-/* LPSTGMEDIUM  [extra typedef] */
-typedef STGMEDIUM *LPSTGMEDIUM;
-
-/* LPFORMATETC  [extra struct] */
-typedef struct FARSTRUCT tagFORMATETC {unsigned long cfFormat;DVTARGETDEVICE* ptd;unsigned long dwAspect;long lindex;unsigned long tymed;} FORMATETC, *LPFORMATETC;
-
-/* LPBIND_OPTS  [extra struct] */
-typedef struct tagBIND_OPTS {DWORDcbStruct;DWORDgrfFlags;DWORDgrfMode;DWORDdwTickCountDeadline;} BIND_OPTS, *LPBIND_OPTS;
-
-/* LPBIND_OPTS2  [extra struct] */
-typedef struct tagBIND_OPTS2 {DWORDcbStruct;DWORDgrfFlags;DWORDgrfMode;DWORDdwTickCountDeadline;DWORDdwTrackFlags;DWORDdwClassContext;LCIDlocale;COSERVERINFO* pServerInfo;} BIND_OPTS2, *LPBIND_OPTS2;
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

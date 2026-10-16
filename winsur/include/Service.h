@@ -61,6 +61,13 @@ BOOL DeregisterService(
  HANDLE hDevice
 );
 
+/* EnumServices  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
+BOOL EnumServices(
+ PBYTE pBuffer,
+ DWORD pdwServiceEntries,
+ DWORD pdwBufferLen
+);
+
 /* GetServiceHandle  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
 HANDLE GetServiceHandle(
  LPWSTR szPrefix,
@@ -74,6 +81,18 @@ HANDLE RegisterService(
  DWORD dwIndex,
  LPCWSTR lpszLib,
  DWORD dwInfo
+);
+
+/* ServiceIoControl  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
+BOOL ServiceIoControl(
+ HANDLE hService,
+ DWORD dwIoControlCode,
+ LPVOID lpInBuf,
+ DWORD nInBufSize,
+ LPVOID lpOutBuf,
+ DWORD nOutBufSize,
+ LPDWORD lpBytesReturned,
+ LPOVERLAPPED lpOverlapped
 );
 
 /* ServiceUnbindPorts  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */

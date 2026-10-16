@@ -178,10 +178,56 @@ LPTSTR MAKEINTATOM(
  * declaration body no page prints
  * ================================================================ */
 
+/* ABC  [struct; shared] */
+typedef struct _ABC {
+ int abcA; 
+ UINT abcB; 
+ int abcC; 
+} ABC, *PABC;
+
+/* BLENDFUNCTION  [struct; shared] */
+typedef struct _BLENDFUNCTION {
+ BYTE BlendOp;
+ BYTE BlendFlags;
+ BYTE SourceConstantAlpha;
+ BYTE AlphaFormat;
+}BLENDFUNCTION, *PBLENDFUNCTION, *LPBLENDFUNCTION;
+
+/* DISPLAY_DEVICE  [struct; shared; A/W DISPLAY_DEVICEA,DISPLAY_DEVICEW (CE is W-side)] */
+typedef struct _DISPLAY_DEVICE {
+ DWORD cb;
+ WCHAR DeviceName[32];
+ WCHAR DeviceString[128];
+ DWORD StateFlags;
+ WCHAR DeviceID[128];
+ WCHAR DeviceKey[128];
+} DISPLAY_DEVICE, *PDISPLAY_DEVICE;
+
+/* EXTENDED_NAME_FORMAT  [enum; shared] */
+typedef enum {
+ NameUnknown = 0,
+ NameFullyQualifiedDN = 1,
+ NameSamCompatible = 2,
+ NameDisplay = 3,
+ NameUniqueId = 6,
+ NameCanonical = 7,
+ NameUserPrincipal = 8,
+ NameCanonicalEx = 9,
+ NameServicePrincipal = 10,
+ NameWindowsCeLocal = 0x80000001
+} EXTENDED_NAME_FORMAT, *PEXTENDED_NAME_FORMAT;
+
+/* GRADIENT_RECT  [struct; shared] */
+typedef struct _GRADIENT_RECT {
+ ULONG UpperLeft;
+ ULONG LowerRight;
+}GRADIENT_RECT, *PGRADIENT_RECT;
+
 /* PERF_COUNTER_BLOCK  [struct, typedef; shared] */
 typedef struct _PERF_COUNTER_BLOCK {
  DWORD ByteLength;
 } PERF_COUNTER_BLOCK;
+typedef PERF_COUNTER_BLOCK *PPERF_COUNTER_BLOCK, *LPPERF_COUNTER_BLOCK;
 
 /* PERF_COUNTER_DEFINITION  [struct, typedef; shared] */
 typedef struct _PERF_COUNTER_DEFINITION {
@@ -196,6 +242,7 @@ typedef struct _PERF_COUNTER_DEFINITION {
  DWORD CounterSize;
  DWORD CounterOffset;
 } PERF_COUNTER_DEFINITION;
+typedef PERF_COUNTER_DEFINITION *PPERF_COUNTER_DEFINITION, *LPPERF_COUNTER_DEFINITION;
 
 /* PERF_DATA_BLOCK  [struct, typedef; shared] */
 typedef struct _PERF_DATA_BLOCK {
@@ -214,6 +261,7 @@ typedef struct _PERF_DATA_BLOCK {
  DWORD SystemNameLength;
  DWORD SystemNameOffset;
 } PERF_DATA_BLOCK;
+typedef PERF_DATA_BLOCK *PPERF_DATA_BLOCK, *LPPERF_DATA_BLOCK;
 
 /* PERF_INSTANCE_DEFINITION  [struct, typedef; shared] */
 typedef struct _PERF_INSTANCE_DEFINITION {
@@ -224,6 +272,7 @@ typedef struct _PERF_INSTANCE_DEFINITION {
  DWORD NameOffset;
  DWORD NameLength;
 } PERF_INSTANCE_DEFINITION;
+typedef PERF_INSTANCE_DEFINITION *PPERF_INSTANCE_DEFINITION, *LPPERF_INSTANCE_DEFINITION;
 
 /* PERF_OBJECT_TYPE  [struct, typedef; shared] */
 typedef struct _PERF_OBJECT_TYPE {
@@ -242,6 +291,10 @@ typedef struct _PERF_OBJECT_TYPE {
  LARGE_INTEGER PerfTime;
  LARGE_INTEGER PerfFreq;
 } PERF_OBJECT_TYPE;
+typedef PERF_OBJECT_TYPE *PPERF_OBJECT_TYPE, *LPPERF_OBJECT_TYPE;
+
+/* SECURITY_DESCRIPTOR  [typedef, struct; shared; entity-headers] */
+typedef PVOID PSECURITY_DESCRIPTOR;
 
 /* COMMCONFIG  [struct; shared; entity-headers] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
@@ -258,7 +311,33 @@ typedef struct _PERF_OBJECT_TYPE {
  * functions and callbacks
  * ================================================================ */
 
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
+
+/* GetCharABCWidths  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib; A/W GetCharABCWidthsA,GetCharABCWidthsW (CE is W-side)] */
+BOOL GetCharABCWidths(
+ HDC hdc,
+ UINT uFirstChar,
+ UINT uLastChar,
+ LPABC lpabc
+);
+#endif /* _WIN32_WCE */
+
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
+
+/* AlphaBlend  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
+BOOL AlphaBlend(
+ HDC hdcDest,
+ int nXOriginDest,
+ int nYOriginDest,
+ int nWidthDest,
+ int nHeightDest,
+ HDC hdcSrc,
+ int nXOriginSrc,
+ int nYOriginSrc,
+ int nWidthSrc,
+ int nHeightSrc,
+ BLENDFUNCTION blendFunction
+);
 
 /* DuplicateHandle  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL DuplicateHandle(
@@ -269,6 +348,23 @@ BOOL DuplicateHandle(
  DWORD dwDesiredAccess,
  BOOL bInheritHandle,
  DWORD dwOptions
+);
+
+/* EnumDisplayDevices  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W EnumDisplayDevicesA,EnumDisplayDevicesW (CE is W-side)] */
+BOOL EnumDisplayDevices(
+ LPCTSTR lpDevice, 
+ DWORD iDevNum, 
+ PDISPLAY_DEVICE lpDisplayDevice, 
+ DWORD dwFlags 
+);
+
+/* GetCharABCWidthsI  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
+BOOL GetCharABCWidthsI(
+ HDC hdc,
+ UINT giFirst,
+ UINT cgi,
+ LPWORD pgi,
+ LPABC lpabc
 );
 
 /* GetFontData  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
@@ -339,6 +435,17 @@ BOOL InvertRect(
 HANDLE RemoveProp(
  HWND hWnd,
  LPCTSTR lpString
+);
+
+/* SendMessageTimeout  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W SendMessageTimeoutA,SendMessageTimeoutW (CE is W-side)] */
+LRESULT SendMessageTimeout(
+ HWND hWnd,
+ UINT Msg,
+ WPARAM wParam,
+ LPARAM lParam,
+ UINT fuFlags,
+ UINT uTimeout,
+ PDWORD_PTR lpdwResult
 );
 
 /* SetBitmapBits  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */

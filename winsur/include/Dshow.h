@@ -49,6 +49,13 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* _AM_FILTER_MISC_FLAGS  [enum; shared; entity-headers] */
+typedef enum _AM_FILTER_MISC_FLAGS {
+ AM_FILTER_MISC_FLAGS_IS_RENDERER = 0x00000001,
+ AM_FILTER_MISC_FLAGS_IS_SOURCE = 0x00000002,
+ AM_FILTER_MISC_FLAG_NO_CAPTURE_PAUSE = 0x00000004
+};
+
 /* ALLOCATOR_PROPERTIES  [struct, typedef; shared] */
 typedef struct _AllocatorProperties {
  long cBuffers;
@@ -56,6 +63,50 @@ typedef struct _AllocatorProperties {
  long cbAlign;
  long cbPrefix;
 } ALLOCATOR_PROPERTIES;
+typedef ALLOCATOR_PROPERTIES *PALLOCATOR_PROPERTIES, *LPALLOCATOR_PROPERTIES;
+
+/* AM_FILESINK_FLAGS  [enum; ce-only; heuristic-prefix] */
+typedef enum {
+ AM_FILE_OVERWRITE = 0x00000001,
+} AM_FILESINK_FLAGS;
+typedef AM_FILESINK_FLAGS *PAM_FILESINK_FLAGS, *LPAM_FILESINK_FLAGS;
+
+/* AM_SAMPLE_PROPERTY_FLAGS  [enum, typedef; ce-only; heuristic-prefix] */
+enum tagAM_SAMPLE_PROPERTY_FLAGS { 
+ AM_SAMPLE_SPLICEPOINT = 0x01, 
+ AM_SAMPLE_PREROLL = 0x02, 
+ AM_SAMPLE_DATADISCONTINUITY = 0x04, 
+ AM_SAMPLE_TYPECHANGED = 0x08, 
+ AM_SAMPLE_TIMEVALID = 0x10, 
+ AM_SAMPLE_TIMEDISCONTINUITY = 0x40, 
+ AM_SAMPLE_FLUSH_ON_PAUSE = 0x80, 
+ AM_SAMPLE_STOPVALID = 0x100, 
+ AM_SAMPLE_ENDOFSTREAM = 0x200, 
+ AM_STREAM_MEDIA = 0, 
+ AM_STREAM_CONTROL = 1 
+};
+
+/* AM_STREAM_INFO_FLAGS  [enum, typedef; shared; entity-headers] */
+typedef enum {
+ AM_STREAM_INFO_START_DEFINED = 0x00000001,
+ AM_STREAM_INFO_STOP_DEFINED = 0x00000002,
+ AM_STREAM_INFO_DISCARDING = 0x00000004,
+ AM_STREAM_INFO_STOP_SEND_EXTRA = 0x00000010
+} AM_STREAM_INFO_FLAGS;
+typedef AM_STREAM_INFO_FLAGS *PAM_STREAM_INFO_FLAGS, *LPAM_STREAM_INFO_FLAGS;
+
+/* AM_VIDEO_RENDERER_MODE  [enum; ce-only; heuristic-prefix] */
+typedef enum {
+ AM_VIDEO_RENDERER_MODE_DDRAW,
+ AM_VIDEO_RENDERER_MODE_GDI
+} AM_VIDEO_RENDERER_MODE;
+typedef AM_VIDEO_RENDERER_MODE *PAM_VIDEO_RENDERER_MODE, *LPAM_VIDEO_RENDERER_MODE;
+
+/* AMVPSIZE  [struct, typedef; shared] */
+typedef struct _AMVPSIZE{
+ DWORD dwWidth;
+ DWORD dwHeight;
+} AMVPSIZE, *LPAMVPSIZE;
 
 /* AnalogVideoStandard  [enum, typedef; shared; entity-headers] */
 typedef enum {
@@ -79,12 +130,14 @@ typedef enum {
  AnalogVideo_SECAM_L = 0x00040000,
  AnalogVideo_SECAM_L1 = 0x00080000,
 } AnalogVideoStandard;
+typedef AnalogVideoStandard *PAnalogVideoStandard, *LPAnalogVideoStandard;
 
 /* CameraControlFlags  [enum; shared; entity-headers] */
 typedef enum{
  CameraControl_Flags_Auto = 0x0001,
  CameraControl_Flags_Manual = 0x0002
 } CameraControlFlags;
+typedef CameraControlFlags *PCameraControlFlags, *LPCameraControlFlags;
 
 /* CameraControlProperty  [enum; shared; entity-headers] */
 typedef enum {
@@ -97,6 +150,7 @@ typedef enum {
  CameraControl_Focus
  CameraControl_Flash
 } CameraControlProperty;
+typedef CameraControlProperty *PCameraControlProperty, *LPCameraControlProperty;
 
 /* COLORKEY  [struct, typedef, function; shared] */
 typedef struct tagCOLORKEY{
@@ -105,6 +159,7 @@ typedef struct tagCOLORKEY{
  COLORREF LowColorValue;
  COLORREF HighColorValue;
 } COLORKEY;
+typedef COLORKEY *PCOLORKEY, *LPCOLORKEY;
 
 /* CompressionCaps  [enum; shared; entity-headers] */
 typedef enum {
@@ -114,12 +169,14 @@ typedef enum {
  CompressionCaps_CanBFrame = 0x08,
  CompressionCaps_CanWindow = 0x10
 } CompressionCaps;
+typedef CompressionCaps *PCompressionCaps, *LPCompressionCaps;
 
 /* FILTER_INFO  [struct, typedef; shared] */
 typedef struct _FilterInfo{
  WCHAR achName[128];
  IFilterGraph __RPC_FAR* pGraph;
 } FILTER_INFO;
+typedef FILTER_INFO *PFILTER_INFO, *LPFILTER_INFO;
 
 /* FILTER_STATE  [enum, typedef; shared; entity-headers] */
 typedef enum _FilterState {
@@ -127,6 +184,22 @@ typedef enum _FilterState {
  State_Paused = State_Stopped + 1,
  State_Running = State_Paused + 1
 } FILTER_STATE;
+typedef FILTER_STATE *PFILTER_STATE, *LPFILTER_STATE;
+
+/* PIN_DIRECTION  [enum, typedef; shared; entity-headers] */
+typedef enum _PinDirection {
+ PINDIR_INPUT,
+ PINDIR_OUTPUT
+} PIN_DIRECTION;
+typedef PIN_DIRECTION *PPIN_DIRECTION, *LPPIN_DIRECTION;
+
+/* PIN_INFO  [struct, typedef; shared] */
+typedef struct _PinInfo {
+ IBaseFilter* pFilter;
+ PIN_DIRECTION dir;
+ WCHAR achName[128];
+} PIN_INFO;
+typedef PIN_INFO *PPIN_INFO, *LPPIN_INFO;
 
 /* POSITION  [struct, typedef; ce-only] */
 struct __POSITION { int unused; };
@@ -137,6 +210,7 @@ typedef enum {
  Famine,
  Flood
 } QualityMessageType;
+typedef QualityMessageType *PQualityMessageType, *LPQualityMessageType;
 
 /* TIMECODE  [struct, typedef; shared] */
 typedef struct tagTIMECODE {
@@ -144,6 +218,7 @@ typedef struct tagTIMECODE {
  WORD wFrameFract;
  WORD dwFrames;
 }TIMECODE;
+typedef TIMECODE *PTIMECODE, *LPTIMECODE;
 
 /* VideoControlFlags  [enum; shared; entity-headers] */
 typedef enum tagVideoControlFlags {
@@ -152,12 +227,14 @@ typedef enum tagVideoControlFlags {
  VideoControlFlag_ExternalTriggerEnable = 0x0004,
  VideoControlFlag_Trigger = 0x0008
 } VideoControlFlags;
+typedef VideoControlFlags *PVideoControlFlags, *LPVideoControlFlags;
 
 /* VideoProcAmpFlags  [enum; shared; entity-headers] */
 typedef enum tagVideoProcAmpFlags {
  VideoProcAmp_Flags_Auto = 0x0001,
  VideoProcAmp_Flags_Manual = 0x0002,
 } VideoProcAmpFlags;
+typedef VideoProcAmpFlags *PVideoProcAmpFlags, *LPVideoProcAmpFlags;
 
 /* VideoProcAmpProperty  [enum; shared; entity-headers] */
 typedef enum tagVideoProcAmpProperty {
@@ -172,6 +249,7 @@ typedef enum tagVideoProcAmpProperty {
  VideoProcAmp_BacklightCompensation,
  VideoProcAmp_Gain
 } VideoProcAmpProperty;
+typedef VideoProcAmpProperty *PVideoProcAmpProperty, *LPVideoProcAmpProperty;
 
 /* AM_MEDIA_TYPE  [struct, typedef; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
@@ -215,12 +293,6 @@ typedef enum tagVideoProcAmpProperty {
 /*   MaxFrameInterval */
 /*   MinBitsPerSecond */
 /*   MaxBitsPerSecond */
-
-/* LPAMVPDATAINFO  [extra struct] */
-typedef struct _AMVPDATAINFO{DWORD dwSize; DWORD dwMicrosecondsPerField; AMVPDIMINFO amvpDimInfo; DWORD dwPictAspectRatioX;DWORD dwPictAspectRatioY;BOOL bEnableDoubleClock;BOOL bEnableVACT;BOOL bDataIsInterlaced;LONG lHalfLinesOdd;BOOL bFieldPolarityInverted;DWORD dwNumLinesInVREF;LONG lHalfLinesEven;DWORD dwReserved1;} AMVPDATAINFO, *LPAMVPDATAINFO;
-
-/* LPAMVPSIZE  [extra struct] */
-typedef struct _AMVPSIZE{DWORD dwWidth;DWORD dwHeight;} AMVPSIZE, *LPAMVPSIZE;
 
 /* ==================================================================
  * functions and callbacks

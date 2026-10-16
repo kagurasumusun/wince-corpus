@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2 constants, 6 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 2 constants, 5 declarations, 1 outlines, 0 base types, 0 extra macros, 5 extra decls
  */
 #ifndef _DDGPE_
 #define _DDGPE_
@@ -49,14 +49,6 @@ struct DDGPEAllocSurfaceData{
 };
 
 /* DDGPEStandardHeader  [macro; ce-only; Ddgpe.lib] */
-#define DDGPEStandardHeader\ 
-DWORD dwSize;\ 
-DWORD dwDriverSignature;\ 
-DWORD dwVersion;\ 
-DWORD dwReserved0;\ 
-DWORD dwReserved1;\ 
-DWORD dwReserved2;\ 
-DWORDdwReserved3
 
 /* GPEModeEx  [struct, macro; ce-only; Ddgpe.lib] */
 #define GPEMODEEX_VERSION0(0)
@@ -86,6 +78,7 @@ typedef struct DDGPEDriverData {
  DDGPEStandardHeader;
  DWORD dwDriverFlag
 } DDGPEDriverData;
+typedef DDGPEDriverData *PDDGPEDriverData, *LPDDGPEDriverData;
 
 /* EDDGPEPixelFormat  [enum; ce-only; Ddgpe.lib] */
 typedef enum EDDGPEPixelFormat{

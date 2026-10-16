@@ -25,6 +25,7 @@ typedef struct {
  LPARAM lParam1;
  LPARAM lParam2;
 } ACMDRV_MESSAGE_PARAMS;
+typedef ACMDRV_MESSAGE_PARAMS *PACMDRV_MESSAGE_PARAMS, *LPACMDRV_MESSAGE_PARAMS;
 
 /* MMDRV_MESSAGE_PARAMS  [struct; ce-only] */
 typedef struct {
@@ -34,6 +35,7 @@ typedef struct {
  DWORD dwParam1;
  DWORD dwParam2;
 } MMDRV_MESSAGE_PARAMS;
+typedef MMDRV_MESSAGE_PARAMS *PMMDRV_MESSAGE_PARAMS, *LPMMDRV_MESSAGE_PARAMS;
 
 /* CMDRV_MESSAGE_PARAMS  [extra struct] */
 typedef struct {

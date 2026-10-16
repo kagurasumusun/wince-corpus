@@ -35,12 +35,14 @@ typedef struct tagCFF_CONVERTINFO {
  BOOL bYesToAll;
  ICeFileFilterSite* pffs;
 } CFF_CONVERTINFO;
+typedef CFF_CONVERTINFO *PCFF_CONVERTINFO, *LPCFF_CONVERTINFO;
 
 /* CFF_CONVERTOPTIONS  [struct; ce-only] */
 typedef struct tagCFF_CONVERTOPTIONS {
  ULONG cbSize;
  BOOL bNoModalUI;
 } CFF_CONVERTOPTIONS;
+typedef CFF_CONVERTOPTIONS *PCFF_CONVERTOPTIONS, *LPCFF_CONVERTOPTIONS;
 
 /* CFF_DESTINATIONFILE  [struct; ce-only] */
 typedef struct tagCFF_DESTINATIONFILE {
@@ -49,6 +51,7 @@ typedef struct tagCFF_DESTINATIONFILE {
  TCHAR szFilename[_MAX_FNAME];
  TCHAR szExtension[_MAX_FNAME];
 } CFF_DESTINATIONFILE;
+typedef CFF_DESTINATIONFILE *PCFF_DESTINATIONFILE, *LPCFF_DESTINATIONFILE;
 
 /* CFF_SOURCEFILE  [struct; ce-only] */
 typedef struct tagCFF_SOURCEFILE {
@@ -60,6 +63,7 @@ typedef struct tagCFF_SOURCEFILE {
  FILETIME ftCreated;
  FILETIME ftModified;
 } CFF_SOURCEFILE;
+typedef CFF_SOURCEFILE *PCFF_SOURCEFILE, *LPCFF_SOURCEFILE;
 
 /* PFF_CONVERTINFO  [struct; ce-only] */
 typedef struct tagPFF_CONVERTINFO {
@@ -68,6 +72,7 @@ typedef struct tagPFF_CONVERTINFO {
  BOOL bYesToAll;
  IPegasusFileFilterSite* pffs;
 } PFF_CONVERTINFO;
+typedef PFF_CONVERTINFO *PPFF_CONVERTINFO, *LPPFF_CONVERTINFO;
 
 /* PFF_DESTINATIONFILE  [struct; ce-only] */
 typedef struct tagPFF_DESTINATIONFILE {
@@ -76,6 +81,7 @@ typedef struct tagPFF_DESTINATIONFILE {
  TCHAR szFilename[_MAX_FNAME];
  TCHAR szExtension[_MAX_EXT];
 } PFF_DESTINATIONFILE;
+typedef PFF_DESTINATIONFILE *PPFF_DESTINATIONFILE, *LPPFF_DESTINATIONFILE;
 
 /* PFF_SOURCEFILE  [struct; ce-only] */
 typedef struct tagPFF_SOURCEFILE {
@@ -87,5 +93,6 @@ typedef struct tagPFF_SOURCEFILE {
  FILETIME ftCreated;
  FILETIME ftModified;
 } PFF_SOURCEFILE;
+typedef PFF_SOURCEFILE *PPFF_SOURCEFILE, *LPPFF_SOURCEFILE;
 
 #endif /* _REPLFILT_ */

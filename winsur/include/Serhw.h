@@ -23,6 +23,15 @@
  * functions and callbacks
  * ================================================================ */
 
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400)) /* CE 2.11..2.12, 3.0..399 */
+
+/* HWGetBytes  [function; ce-only; CE 2.11..2.12, 3.0..399] */
+ULONG HWGetBytes( 
+PVOID pContext, 
+PUCHAR pTargetBuffer, 
+PULONG pByteNumber );
+#endif /* _WIN32_WCE */
+
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
 
 /* HWClearBreak  [function; ce-only; CE 2.11..2.12, 3.0..699] */
@@ -61,6 +70,12 @@ BOOL HWEnableIR(
  ULONG BaudRate 
 );
 
+/* HWGetModemStatus  [function; ce-only; CE 2.11..2.12, 3.0..699] */
+VOID HWGetModemStatus(
+ PVOID pContext,
+ PULONG pModemStatus 
+);
+
 /* HWGetRxBufferSize  [function; ce-only; CE 2.11..2.12, 3.0..699] */
 ULONG HWGetRxBufferSize(
  PVOID pContext 
@@ -69,6 +84,17 @@ ULONG HWGetRxBufferSize(
 /* HWGetRxStart  [function; ce-only; CE 2.11..2.12, 3.0..699] */
 PVOID HWGetRxStart(
  PVOID pContext 
+);
+
+/* HWIoctl  [function; ce-only; CE 2.11..2.12, 3.0..699] */
+BOOL HWIoctl(
+ DWORD dwOpenData,
+ DWORD dwCode,
+ PBYTE pBufIn,
+ DWORD dwLenIn,
+ PBYTE pBufOut,
+ DWORD dwLenOut,
+ PDWORD pdwActualOut 
 );
 
 /* HWOpen  [function; ce-only; CE 2.11..2.12, 3.0..699] */
@@ -92,6 +118,14 @@ VOID HWPurgeComm(
  DWORD fdwAction 
 );
 
+/* HWPutBytes  [function; ce-only; CE 2.11..2.12, 3.0..699] */
+ULONG HWPutBytes(
+ PVOID pContext,
+ PUCHAR pSrc,
+ ULONG NumberOfBytes,
+ PULONG pBytesSent 
+);
+
 /* HWReset  [function; ce-only; CE 2.11..2.12, 3.0..699] */
 void HWReset(
  PVOID pContext 
@@ -110,6 +144,13 @@ VOID HWSetDTR(
 /* HWSetRTS  [function; ce-only; CE 2.11..2.12, 3.0..699] */
 VOID HWSetRTS(
  PVOID pContext 
+);
+
+/* HWTxIntrHandler  [function; ce-only; CE 2.11..2.12, 3.0..699] */
+VOID HWTxIntrHandler(
+ PVOID pContext, 
+ PUCHAR pSourceBuffer, 
+ PULONG pByteNumber 
 );
 
 /* HWXmitComChar  [function; ce-only; CE 2.11..2.12, 3.0..699] */
@@ -139,6 +180,13 @@ VOID HWOtherHandler(
 /* HWPostInit  [function; ce-only; CE 3.0..699] */
 BOOL HWPostInit(
  PVOID pContext 
+);
+
+/* HWRxIntrHandler  [function; ce-only; CE 3.0..699] */
+ULONG HWRxIntrHandler(
+ PVOID pContext,
+ PUCHAR pTargetBuffer,
+ PULONG pByteNumber 
 );
 #endif /* _WIN32_WCE */
 

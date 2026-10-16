@@ -60,4 +60,25 @@
 
 /* NIC_STATISTICS  [struct; ce-only] */
 
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* NDISUIO_QUERY_BINDING  [struct; ce-only] */
+typedef struct _NDISUIO_QUERY_BINDING {
+ ULONG BindingIndex;
+ ULONG DeviceNameOffset;
+ ULONG DeviceNameLength;
+ ULONG DeviceDescrOffset;
+ ULONG DeviceDescrLength;
+} NDISUIO_QUERY_BINDING, *PNDISUIO_QUERY_BINDING;
+
+/* NDISUIO_REQUEST_NOTIFICATION  [struct; ce-only] */
+typedef struct{
+ HANDLE hMsgQueue;
+ DWORD dwNotificationTypes;
+}NDISUIO_REQUEST_NOTIFICATION, *PNDISUIO_REQUEST_NOTIFICATION;
+
 #endif /* _NUIOUSER_ */

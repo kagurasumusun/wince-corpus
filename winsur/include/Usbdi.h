@@ -50,6 +50,7 @@ typedef struct {
  DWORD dwInterfaceSubClass;
  DWORD dwInterfaceProtocol;
 } USB_DRIVER_SETTINGS;
+typedef USB_DRIVER_SETTINGS *PUSB_DRIVER_SETTINGS, *LPUSB_DRIVER_SETTINGS;
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 

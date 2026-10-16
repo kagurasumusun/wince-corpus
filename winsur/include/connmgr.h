@@ -40,5 +40,6 @@ typedef enum _ConnMgrConRefTypeEnum{
  ConRefType_NAP = 0,
  ConRefType_PROXY
 } ConnMgrConRefTypeEnum;
+typedef ConnMgrConRefTypeEnum *PConnMgrConRefTypeEnum, *LPConnMgrConRefTypeEnum;
 
 #endif /* _CONNMGR_ */

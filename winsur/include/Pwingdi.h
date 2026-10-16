@@ -26,13 +26,6 @@ struct ContrastCmdInputParm {
 /* parm  [extra struct] */
 struct ContrastCmdInputParm {  int command;  int parm;  };
 
-/* PVIDEO_POWER_MANAGEMENT  [extra struct] */
-typedef struct VIDEOPOWER_MANAGEMENT {
-  ULONG Length;
-  ULONG DPMSVersion;
-  ULONG PowerState;
-} VIDEO_POWER_MANAGEMENT, *PVIDEO_POWER_MANAGEMENT;
-
 /* intparm  [extra struct] */
 struct ContrastCmdInputParm{intcommand;intparm;};
 

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 236 constants, 17 declarations, 2 outlines, 0 base types, 0 extra macros, 3 extra decls
+ * 236 constants, 12 declarations, 2 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _IMM_
 #define _IMM_
@@ -267,6 +267,7 @@ typedef struct _tagCANDIDATEFORM {
  POINT ptCurrentPos;
  RECT rcArea;
 } CANDIDATEFORM;
+typedef CANDIDATEFORM *PCANDIDATEFORM, *LPCANDIDATEFORM;
 
 /* CANDIDATEINFO  [struct; ce-only] */
 typedef struct tagCANDIDATEINFO {
@@ -276,6 +277,7 @@ typedef struct tagCANDIDATEINFO {
  DWORD dwPrivateSize;
  DWORD dwPrivateOffset;
 } CANDIDATEINFO;
+typedef CANDIDATEINFO *PCANDIDATEINFO, *LPCANDIDATEINFO;
 
 /* CANDIDATELIST  [struct; shared] */
 typedef struct _tagCANDIDATELIST {
@@ -287,6 +289,7 @@ typedef struct _tagCANDIDATELIST {
  DWORD dwPageSize;
  DWORD dwOffset[];
 } CANDIDATELIST;
+typedef CANDIDATELIST *PCANDIDATELIST, *LPCANDIDATELIST;
 
 /* COMPOSITIONSTR  [struct; ce-only] */
 typedef struct tagCOMPOSITIONSTR { 
@@ -316,6 +319,7 @@ typedef struct tagCOMPOSITIONSTR {
  DWORD dwPrivateSize; 
  DWORD dwPrivateOffset; 
 } COMPOSITIONSTR;
+typedef COMPOSITIONSTR *PCOMPOSITIONSTR, *LPCOMPOSITIONSTR;
 
 /* COMPOSITIONSTRING  [struct; ce-only] */
 typedef struct tagCOMPOSITIONSTRING {
@@ -345,6 +349,7 @@ typedef struct tagCOMPOSITIONSTRING {
  DWORD dwPrivateSize;
  DWORD dwPrivateOffset;
 } COMPOSITIONSTRING;
+typedef COMPOSITIONSTRING *PCOMPOSITIONSTRING, *LPCOMPOSITIONSTRING;
 
 /* GUIDELINE  [struct; ce-only] */
 typedef struct tagGUIDELINE {
@@ -356,18 +361,21 @@ typedef struct tagGUIDELINE {
  DWORD dwPrivateSize;
  DWORD dwPrivateOffset;
 } GUIDELINE;
+typedef GUIDELINE *PGUIDELINE, *LPGUIDELINE;
 
 /* REGISTERWORD  [struct; shared; A/W REGISTERWORDA,REGISTERWORDW (CE is W-side)] */
 typedef struct tagREGISTERWORD {
  LPTSTR lpReading; 
  LPTSTR lpWord;
 } REGISTERWORD;
+typedef REGISTERWORD *PREGISTERWORD, *LPREGISTERWORD;
 
 /* STYLEBUF  [struct; shared; A/W STYLEBUFA,STYLEBUFW (CE is W-side)] */
 typedef struct _tagSTYLEBUF {
  DWORD dwStyle;
  CHAR szDescription[32];
 } STYLEBUF;
+typedef STYLEBUF *PSTYLEBUF, *LPSTYLEBUF;
 
 /* COMPOSITIONFORM  [struct, typedef; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
@@ -386,33 +394,5 @@ typedef struct _tagSTYLEBUF {
 /*   dwItemData */
 /*   szString */
 /*   hbmpItem */
-
-/* PIMECHARPOSITION  [extra struct] */
-typedef struct tagIMECHARPOSITION {DWORDdwSize;DWORDdwCharPos;POINTpt;UNITcLineHeight;RECTrcDocument;} IMECHARPOSITION, *PIMECHARPOSITION;
-
-/* LPINPUTCONTEXT  [extra struct] */
-typedef struct tagINPUTCONTEXT{
-  HWND hWnd;
-  BOOL fOpen;
-  HWND hwndImeInUse;
-  POINT ptStatusWndPos;
-  POINT ptSoftKbdPos;
-  DWORD fdwConversion;
-  DWORD fdwSentence;
-  union{
-    LOGFONTA A;
-    LOGFONTW W;
-  } lfFont;
-  COMPOSITIONFORM cfCompForm;
-  CANDIDATEFORM cfCandForm[4];
-  HIMCC hCompStr;
-  HIMCC hCandInfo;
-  HIMCC hGuideLine;
-  HIMCC hPrivate;
-  DWORD dwNumMsgBuf;
-  HIMCC hMsgBuf;
-  DWORD fdwInit;
-  DWORD dwReserve[3]
-} INPUTCONTEXT, *PINPUTCONTEXT, NEAR *NPINPUTCONTEXT, FAR *LPINPUTCONTEXT;
 
 #endif /* _IMM_ */

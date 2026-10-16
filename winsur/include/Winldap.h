@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 146 constants, 92 declarations, 0 outlines, 0 base types, 0 extra macros, 20 extra decls
+ * 146 constants, 92 declarations, 0 outlines, 0 base types, 0 extra macros, 17 extra decls
  */
 #ifndef _WINLDAP_
 #define _WINLDAP_
@@ -179,30 +179,175 @@ ULONG ldap_set_option(
  * declaration body no page prints
  * ================================================================ */
 
+/* DEREFERENCECONNECTION  [typedef; ce-only; Wldap32.lib, wldap32.lib] */
+typedef ULONG (_cdecl DEREFERENCECONNECTION)(
+ PLDAP PrimaryConnection,
+ PLDAP ConnectionToDereference
+);
+
+/* LDAP  [typedef, struct; shared] */
+typedef ldap LDAP, *PLDAP;
+
 /* ldap_count_values_len  [struct, function; shared; Wldap32.lib, wldap32.lib] */
 ULONG ldap_count_values_len(
  struct berval** vals
 );
+
+/* ldap_create_page_control  [struct, function; shared; Wldap32.lib, wldap32.lib; A/W ldap_create_page_controlA,ldap_create_page_controlW (CE is W-side)] */
+ULONG ldap_create_page_control(
+ LDAP* ExternalHandle,
+ ULONG PageSize,
+ struct berval* Cookie,
+ UCHAR IsCritical,
+ LDAPControl** Control
+);
+
+/* ldap_parse_page_control  [struct, function; shared; Wldap32.lib, wldap32.lib; A/W ldap_parse_page_controlA,ldap_parse_page_controlW (CE is W-side)] */
+ULONG ldap_parse_page_control(
+ LDAP* ExternalHandle,
+ LDAPControl** ServerControls,
+ ULONG* TotalCount,
+ struct berval** Cookie
+);
+
+/* LDAP_RETCODE  [enum; ce-only] */
+typedef enum {
+ LDAP_SUCCESS = 0x00,
+ LDAP_OPERATIONS_ERROR = 0x01,
+ LDAP_PROTOCOL_ERROR = 0x02,
+ LDAP_TIMELIMIT_EXCEEDED = 0x03,
+ LDAP_SIZELIMIT_EXCEEDED = 0x04,
+ LDAP_COMPARE_FALSE = 0x05,
+ LDAP_COMPARE_TRUE = 0x06,
+ LDAP_AUTH_METHOD_NOT_SUPPORTED = 0x07,
+ LDAP_STRONG_AUTH_REQUIRED = 0x08,
+ LDAP_REFERRAL_V2 = 0x09,
+ LDAP_PARTIAL_RESULTS = 0x09, 
+ LDAP_REFERRAL = 0x0a,
+ LDAP_ADMIN_LIMIT_EXCEEDED = 0x0b,
+ LDAP_UNAVAILABLE_CRIT_EXTENSION = 0x0c,
+ LDAP_CONFIDENTIALITY_REQUIRED = 0x0d,
+ LDAP_SASL_BIND_IN_PROGRESS = 0x0e,
+ LDAP_NO_SUCH_ATTRIBUTE = 0x10,
+ LDAP_UNDEFINED_TYPE = 0x11,
+ LDAP_INAPPROPRIATE_MATCHING = 0x12,
+ LDAP_CONSTRAINT_VIOLATION = 0x13,
+ LDAP_ATTRIBUTE_OR_VALUE_EXISTS = 0x14,
+ LDAP_INVALID_SYNTAX = 0x15,
+ LDAP_NO_SUCH_OBJECT = 0x20,
+ LDAP_ALIAS_PROBLEM = 0x21,
+ LDAP_INVALID_DN_SYNTAX = 0x22,
+ LDAP_IS_LEAF = 0x23,
+ LDAP_ALIAS_DEREF_PROBLEM = 0x24,
+ LDAP_INAPPROPRIATE_AUTH = 0x30,
+ LDAP_INVALID_CREDENTIALS = 0x31,
+ LDAP_INSUFFICIENT_RIGHTS = 0x32,
+ LDAP_BUSY = 0x33,
+ LDAP_UNAVAILABLE = 0x34,
+ LDAP_UNWILLING_TO_PERFORM = 0x35,
+ LDAP_LOOP_DETECT = 0x36,
+ LDAP_NAMING_VIOLATION = 0x40,
+ LDAP_OBJECT_CLASS_VIOLATION = 0x41,
+ LDAP_NOT_ALLOWED_ON_NONLEAF = 0x42,
+ LDAP_NOT_ALLOWED_ON_RDN = 0x43,
+ LDAP_ALREADY_EXISTS = 0x44,
+ LDAP_NO_OBJECT_CLASS_MODS = 0x45,
+ LDAP_RESULTS_TOO_LARGE = 0x46,
+ LDAP_AFFECTS_MULTIPLE_DSAS = 0x47,
+ LDAP_OTHER = 0x50,
+ LDAP_SERVER_DOWN = 0x51,
+ LDAP_LOCAL_ERROR = 0x52,
+ LDAP_ENCODING_ERROR = 0x53,
+ LDAP_DECODING_ERROR = 0x54,
+ LDAP_TIMEOUT = 0x55,
+ LDAP_AUTH_UNKNOWN = 0x56,
+ LDAP_FILTER_ERROR = 0x57,
+ LDAP_USER_CANCELLED = 0x58,
+ LDAP_PARAM_ERROR = 0x59,
+ LDAP_NO_MEMORY = 0x5a,
+ LDAP_CONNECT_ERROR = 0x5b,
+ LDAP_NOT_SUPPORTED = 0x5c,
+ LDAP_CONTROL_NOT_FOUND = 0x5d,
+ LDAP_NO_RESULTS_RETURNED = 0x5e,
+ LDAP_MORE_RESULTS_TO_RETURN = 0x5f,
+ LDAP_CLIENT_LOOP = 0x60,
+ LDAP_REFERRAL_LIMIT_EXCEEDED = 0x61
+} LDAP_RETCODE;
+typedef LDAP_RETCODE *PLDAP_RETCODE, *LPLDAP_RETCODE;
+
+/* LDAP_TIMEVAL  [struct; shared] */
+typedef struct l_timeval {
+ LONG tv_sec;
+ LONG tv_usec;
+} LDAP_TIMEVAL, * PLDAP_TIMEVAL;
 
 /* ldap_value_free_len  [struct, function; shared; Wldap32.lib, wldap32.lib] */
 ULONG ldap_value_free_len(
  struct berval** vals
 );
 
+/* LDAPControl  [struct; shared; A/W LDAPControlA,LDAPControlW (CE is W-side)] */
+typedef struct ldapcontrol {
+ PWCHAR ldctl_oid;
+ struct berval ldctl_value;
+ BOOLEAN ldctl_iscritical;
+} LDAPControl, *PLDAPControl;
+
 /* LDAPMessage  [typedef, struct; shared] */
 typedef ldapmsg LDAPMessage, *PLDAPMessage;
+
+/* LDAPMod  [struct; shared; A/W LDAPModA,LDAPModW (CE is W-side)] */
+typedef struct ldapmod {
+ ULONG mod_op;
+ PWCHAR mod_type;
+ union {
+ PWCHAR* modv_strvals;
+ struct berval** modv_bvals;
+ } mod_vals;
+} LDAPMod, *PLDAPMod;
 
 /* LDAPSearch  [struct; ce-only] */
 typedef struct ldapsearch LDAPSearch, *PLDAPSearch;
 
-/* PLDAP  [extra typedef] */
-typedef ldap LDAP, *PLDAP;
+/* LDAPSortKey  [struct; shared; A/W LDAPSortKeyA,LDAPSortKeyW (CE is W-side)] */
+typedef struct ldapsortkey {
+ PWCHAR sk_attrtype;
+ PWCHAR sk_matchruleoid;
+ BOOLEAN sk_reverseorder;
+} LDAPSortKey, *PLDAPSortKey;
 
-/* PLDAPMessage  [extra typedef] */
-typedef ldapmsg LDAPMessage, *PLDAPMessage;
+/* NOTIFYOFNEWCONNECTION  [typedef; ce-only; Wldap32.lib, wldap32.lib] */
+typedef BOOLEAN (_cdecl NOTIFYOFNEWCONNECTION) (
+ PLDAP PrimaryConnection,
+ PLDAP ReferralFromConnection,
+ PWCHAR NewDN,
+ PCHAR HostName,
+ PLDAP NewConnection,
+ ULONG PortNumber,
+ PVOID SecAuthIdentity,
+ PVOID CurrentUser,
+ ULONG ErrorCodeFromBind
+);
 
-/* PBERVAL  [extra struct] */
-typedef struct berval {ULONGbv_len;UNICODE PTCHARbv_val;} LDAP_BERVAL, *PLDAP_BERVAL, BERVAL, *PBERVAL;
+/* QUERYFORCONNECTION  [typedef; ce-only; Wldap32.lib, wldap32.lib] */
+typedef ULONG (_cdecl QUERYFORCONNECTION)(
+ PLDAP PrimaryConnection,
+ PLDAP ReferralFromConnection,
+ PWCHAR NewDN,
+ PCHAR HostName,
+ ULONG PortNumber,
+ PVOID SecAuthIdentity,
+ PVOID CurrentUserToken,
+ PLDAP* ConnectionToUse
+);
+
+/* LDAP_REFERRAL_CALLBACK  [struct; shared] */
+typedef struct LdapReferralCallback {
+ ULONG SizeOfCallbacks;
+ QUERYFORCONNECTION* QueryForConnection;
+ NOTIFYOFNEWCONNECTION* NotifyRoutine;
+ DEREFERENCECONNECTION* DereferenceRoutine;
+} LDAP_REFERRAL_CALLBACK, *PLDAP_REFERRAL_CALLBACK;
 
 /* PLDAPConnectionToDereference  [extra typedef] */
 typedef ULONG (_cdecl DEREFERENCECONNECTION)(PLDAPPrimaryConnection,PLDAPConnectionToDereference);
@@ -213,29 +358,14 @@ ULONG ldap_compare_ext(LDAP* ld,UNICODE PTCHARdn,UNICODE PTCHARAttr,UNICODE PTCH
 /* ClientControls  [extra struct] */
 ULONG ldap_compare_ext_s(LDAP* ld,UNICODE PTCHARdn,UNICODE PTCHARAttr,UNICODE PTCHARValue,struct berval* Data,LDAPControl** ServerControls,LDAPControl** ClientControls);
 
-/* PLDAPControl  [extra struct] */
-typedef struct ldapcontrol {PWCHARldctl_oid;structbervalldctl_value;BOOLEANldctl_iscritical;}LDAPControl,*PLDAPControl;
-
 /* vals  [extra struct] */
 ULONG ldap_count_values_len(struct berval** vals);
 
 /* PTCHARattr  [extra struct] */
 struct berval** ldap_get_values_len(LDAP* ExternalHandle,LDAPMessage* Message,UNICODE PTCHARattr);
 
-/* PLDAPMod  [extra struct] */
-typedef struct ldapmod {ULONGmod_op;PWCHARmod_type;union{PWCHAR* modv_strvals;structberval** modv_bvals;}mod_vals;}LDAPMod,*PLDAPMod;
-
 /* Cookie  [extra struct] */
 ULONG ldap_parse_page_control(LDAP*ExternalHandle,LDAPControl** ServerControls,ULONG* TotalCount,struct berva**l Cookie);
-
-/* PLDAPSearch  [extra struct] */
-typedef struct ldapsearch LDAPSearch, *PLDAPSearch;
-
-/* PLDAPSortKey  [extra struct] */
-typedef struct ldapsortkey {PWCHARsk_attrtype;PWCHARsk_matchruleoid;BOOLEANsk_reverseorder;} LDAPSortKey, *PLDAPSortKey;
-
-/* PLDAP_TIMEVAL  [extra struct] */
-typedef struct l_timeval {LONGtv_sec;LONGtv_usec;} LDAP_TIMEVAL, * PLDAP_TIMEVAL;
 
 /* PCCERT_CONTEXTpServerCert  [extra typedef] */
 typedef BOOLEAN (_cdecl VERIFYSERVERCERT) (PLDAPConnection,PCCERT_CONTEXTpServerCert);
@@ -261,6 +391,24 @@ struct berval** ldap_get_values_len( LDAP* ExternalHandle, LDAPMessage* Message,
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
+/* ldap_abandon  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib] */
+ULONG ldap_abandon(
+ LDAP* ld,
+ ULONG msgid
+);
+
+/* ldap_close_extended_op  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib] */
+ULONG ldap_close_extended_op(
+ LDAP* ld,
+ ULONG MessageNumber
+);
+
+/* ldap_connect  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib] */
+ULONG ldap_connect(
+ LDAP* ld,
+ PLDAP_TIMEVAL* timeout
+);
+
 /* ldap_control_free  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib; A/W ldap_control_freeA,ldap_control_freeW (CE is W-side)] */
 ULONG ldap_control_free(
  LDAPControl* Control
@@ -269,6 +417,59 @@ ULONG ldap_control_free(
 /* ldap_controls_free  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib; A/W ldap_controls_freeA,ldap_controls_freeW (CE is W-side)] */
 ULONG ldap_controls_free(
  LDAPControl** Controls
+);
+
+/* ldap_count_entries  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib] */
+ULONG ldap_count_entries(
+ LDAP* ld,
+ LDAPMessage* res
+);
+
+/* ldap_count_references  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib] */
+ULONG ldap_count_references(
+ LDAP* ld,
+ LDAPMessage* res
+);
+
+/* ldap_create_sort_control  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib; A/W ldap_create_sort_controlA,ldap_create_sort_controlW (CE is W-side)] */
+ULONG ldap_create_sort_control(
+ LDAP* ExternalHandle,
+ LDAPSortKey** SortKeys,
+ UCHAR IsCritical,
+ LDAPControl** Control
+);
+
+/* ldap_get_next_page  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib] */
+ULONG ldap_get_next_page(
+ LDAP* ExternalHandle,
+ LDAPSearch* SearchHandle,
+ ULONG PageSize,
+ ULONG* MessageNumber
+);
+
+/* ldap_get_next_page_s  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib] */
+ULONG ldap_get_next_page_s(
+ LDAP* ExternalHandle,
+ LDAPSearch* SearchHandle,
+ LDAP_TIMEVAL* timeout,
+ ULONG PageSize,
+ ULONG* TotalCount,
+ LDAPMessage** Results
+);
+
+/* ldap_get_option  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib; A/W ldap_get_optionW (CE is W-side)] */
+ULONG ldap_get_option(
+ LDAP* ld,
+ int option,
+ void* outvalue
+);
+
+/* ldap_get_paged_count  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib] */
+ULONG ldap_get_paged_count(
+ LDAP* ExternalHandle,
+ LDAPSearch* SearchBlock,
+ ULONG* TotalCount,
+ LDAPMessage* Results
 );
 
 /* LdapGetLastError  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib] */
@@ -301,6 +502,38 @@ int LdapUTF8ToUnicode(
 /* ldap_msgfree  [function; shared; CE 5.0..699; Wldap32.lib, wldap32.lib] */
 ULONG ldap_msgfree(
  LDAPMessage* res
+);
+
+/* ldap_result  [function; shared; CE 5.0..699; Wldap32.lib, wldap32.lib] */
+ULONG ldap_result(
+ LDAP* ld,
+ ULONG msgid,
+ ULONG all,
+ LDAP_TIMEVAL* timeout,
+ LDAPMessage** res
+);
+
+/* ldap_result2error  [function; shared; CE 5.0..699; Wldap32.lib, wldap32.lib] */
+ULONG ldap_result2error(
+ LDAP* ld,
+ LDAPMessage* res,
+ ULONG freeit
+);
+
+/* ldap_search_abandon_page  [function; shared; CE 5.0..699; Wldap32.lib, wldap32.lib] */
+ULONG ldap_search_abandon_page(
+ LDAP* ExternalHandle,
+ LDAPSearch* SearchBlock
+);
+
+/* ldap_unbind  [function; shared; CE 5.0..699; Wldap32.lib, wldap32.lib] */
+ULONG ldap_unbind(
+ LDAP* ld
+);
+
+/* ldap_unbind_s  [function; shared; CE 5.0..699; Wldap32.lib, wldap32.lib] */
+ULONG ldap_unbind_s(
+ LDAP *ld
 );
 #endif /* _WIN32_WCE */
 

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 42 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 39 extra decls
  */
 #ifndef _AFXCMN_
 #define _AFXCMN_
@@ -17,11 +17,9 @@
  * ================================================================ */
 
 /* function */
-BOOL BeginDrag( int nImage, CPoint ptHotSpot );
 BOOL DeleteAllItems( );
 BOOL DeleteColumn( int nCol );
 BOOL DeleteImageList( );
-static BOOL DragMove( CPoint pt );
 static BOOL DragShowNolock( BOOL bShow );
 CEdit* EditLabel( int nItem );
 static void EndDrag( );
@@ -33,7 +31,6 @@ BOOL RedrawItems( int nFirst, int nLast );
 BOOL Replace( int nImage, CBitmap* pbmImage, CBitmap* pbmMask );
 int SetBase( int nBase );
 BOOL SetCallbackMask( UINT nMask );
-BOOL SetDragCursorImage( int nDrag, CPoint ptHotSpot );
 CImageList* SetImageList( CImageList* pImageList, int nImageList );
 void SetIndent( UINT nIndent );
 void SetItemCount( int nItems );

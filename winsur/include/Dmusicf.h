@@ -23,5 +23,6 @@ typedef struct _DMUS_MUTE_PARAM {
  DWORD dwPChannelMap;
  BOOL fMute;
  } DMUS_MUTE_PARAM;
+typedef DMUS_MUTE_PARAM *PDMUS_MUTE_PARAM, *LPDMUS_MUTE_PARAM;
 
 #endif /* _DMUSICF_ */

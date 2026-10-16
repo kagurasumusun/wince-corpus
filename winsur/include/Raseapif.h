@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 14 constants, 13 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
+ * 14 constants, 13 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _RASEAPIF_
 #define _RASEAPIF_
@@ -48,6 +48,15 @@ typedef enum _PPP_EAP_ACTION {
  EAPACTION_SendWithTimeout,
  EAPACTION_SendWithTimeoutInteractive
 } PPP_EAP_ACTION;
+typedef PPP_EAP_ACTION *PPPP_EAP_ACTION, *LPPPP_EAP_ACTION;
+
+/* PPP_EAP_PACKET  [struct; shared] */
+typedef struct _PPP_EAP_PACKET {
+ BYTE Code;
+ BYTE Id;
+ BYTE Length[2];
+ BYTE Data[1];
+} PPP_EAP_PACKET, *PPPP_EAP_PACKET;
 
 /* RAS_AUTH_ATTRIBUTE_TYPE  [enum; shared] */
 typedef enum _RAS_AUTH_ATTRIBUTE_TYPE_ {
@@ -128,18 +137,78 @@ typedef enum _RAS_AUTH_ATTRIBUTE_TYPE_ {
  raatARAPGuestLogon = 8096,
  raatReserved = 0xFFFFFFFF
 } RAS_AUTH_ATTRIBUTE_TYPE;
+typedef RAS_AUTH_ATTRIBUTE_TYPE *PRAS_AUTH_ATTRIBUTE_TYPE, *LPRAS_AUTH_ATTRIBUTE_TYPE;
 
-/* PPPP_EAP_INFO  [extra struct] */
-typedef struct _PPP_EAP_INFO {DWORDdwSizeInBytes;DWORDdwEapTypeId;DWORD(*RasEapInitialize)(BOOLfInitialize);DWORD(*RasEapBegin)(VOID** ppWorkBuffer,PPP_EAP_INPUT* pPppEapInput);DWORD(*RasEapEnd)(VOID* pWorkBuffer);DWORD(*RasEapMakeMessage)(VOID* pWorkBuf,PPP_EAP_PACKET* pReceivePacket,PPP_EAP_PACKET* pSendPacket,DWORDcbSendPacket,PPP_EAP_OUTPUT* pEapOutput,PPP_EAP_INPUT* pEapInput);}PPP_EAP_INFO,*PPPP_EAP_INFO;
+/* RAS_AUTH_ATTRIBUTE  [struct; shared] */
+typedef struct _RAS_AUTH_ATTRIBUTE {
+ RAS_AUTH_ATTRIBUTE_TYPE raaType;
+ DWORD dwLength;
+ PVOID Value;
+} RAS_AUTH_ATTRIBUTE, *PRAS_AUTH_ATTRIBUTE;
 
-/* PPPP_EAP_INPUT  [extra struct] */
-typedef struct _PPP_EAP_INPUT {DWORDdwSizeInBytes;DWORDfFlags;BOOLfAuthenticator; WCHAR* pwszIdentity; WCHAR* pwszPassword; BYTEbInitialId; RAS_AUTH_ATTRIBUTE* pUserAttributes; BOOLfAuthenticationComplete; DWORDdwAuthResultCode; HANDLEhTokenImpersonateUser;BOOLfSuccessPacketReceived;BOOLfDataReceivedFromInteractiveUI;PBYTEpDataFromInteractiveUI;DWORDdwSizeOfDataFromInteractiveUI;PBYTEpConnectionData;DWORDdwSizeOfConnectionData;PBYTEpUserData;DWORDdwSizeOfUserData;HANDLEhReserved;} PPP_EAP_INPUT, *PPPP_EAP_INPUT;
+/* PPP_EAP_INPUT  [struct; shared] */
+typedef struct _PPP_EAP_INPUT {
+ DWORD dwSizeInBytes;
+ DWORD fFlags;
+ BOOL fAuthenticator; 
+ WCHAR* pwszIdentity; 
+ WCHAR* pwszPassword; 
+ BYTE bInitialId; 
+ RAS_AUTH_ATTRIBUTE* pUserAttributes; 
+ BOOL fAuthenticationComplete; 
+ DWORD dwAuthResultCode; 
+ HANDLE hTokenImpersonateUser;
+ BOOL fSuccessPacketReceived;
+ BOOL fDataReceivedFromInteractiveUI;
+ PBYTE pDataFromInteractiveUI;
+ DWORD dwSizeOfDataFromInteractiveUI;
+ PBYTE pConnectionData;
+ DWORD dwSizeOfConnectionData;
+ PBYTE pUserData;
+ DWORD dwSizeOfUserData;
+ HANDLE hReserved;
+} PPP_EAP_INPUT, *PPPP_EAP_INPUT;
 
-/* PPPP_EAP_OUTPUT  [extra struct] */
-typedef struct _PPP_EAP_OUTPUT {DWORD dwSizeInBytes;PPP_EAP_ACTION Action;DWORD dwAuthResultCode;RAS_AUTH_ATTRIBUTE* pUserAttributes;BOOL fInvokeInteractiveUI;PBYTE pUIContextData;DWORD dwSizeOfUIContextData;BOOL fSaveConnectionData;PBYTE pConnectionData;DWORD dwSizeOfConnectionData;BOOL fSaveUserData;PBYTE pUserData;DWORD dwSizeOfUserData;} PPP_EAP_OUTPUT, *PPPP_EAP_OUTPUT;
+/* PPP_EAP_OUTPUT  [struct; shared] */
+typedef struct _PPP_EAP_OUTPUT {
+ DWORD dwSizeInBytes;
+ PPP_EAP_ACTION Action;
+ DWORD dwAuthResultCode;
+ RAS_AUTH_ATTRIBUTE* pUserAttributes;
+ BOOL fInvokeInteractiveUI;
+ PBYTE pUIContextData;
+ DWORD dwSizeOfUIContextData;
+ BOOL fSaveConnectionData;
+ PBYTE pConnectionData;
+ DWORD dwSizeOfConnectionData;
+ BOOL fSaveUserData;
+ PBYTE pUserData;
+ DWORD dwSizeOfUserData;
+} PPP_EAP_OUTPUT, *PPPP_EAP_OUTPUT;
 
-/* PRAS_AUTH_ATTRIBUTE  [extra struct] */
-typedef struct _RAS_AUTH_ATTRIBUTE {RAS_AUTH_ATTRIBUTE_TYPEraaType;DWORDdwLength;PVOIDValue;} RAS_AUTH_ATTRIBUTE, *PRAS_AUTH_ATTRIBUTE;
+/* PPP_EAP_INFO  [struct; shared] */
+typedef struct _PPP_EAP_INFO {
+ DWORD dwSizeInBytes;
+ DWORD dwEapTypeId; 
+ DWORD (*RasEapInitialize) (
+ BOOL fInitialize
+ );
+ DWORD (*RasEapBegin) (
+ VOID** ppWorkBuffer,
+ PPP_EAP_INPUT* pPppEapInput
+ );
+ DWORD (*RasEapEnd) (
+ VOID* pWorkBuffer
+ );
+ DWORD (*RasEapMakeMessage) (
+ VOID* pWorkBuf,
+ PPP_EAP_PACKET* pReceivePacket,
+ PPP_EAP_PACKET* pSendPacket,
+ DWORD cbSendPacket,
+ PPP_EAP_OUTPUT* pEapOutput,
+ PPP_EAP_INPUT* pEapInput
+ );
+} PPP_EAP_INFO, *PPPP_EAP_INFO;
 
 /* ==================================================================
  * functions and callbacks
@@ -166,6 +235,12 @@ DWORD RasEapGetIdentity(
  BYTE** ppUserDataOut, 
  DWORD* pdwSizeOfUserDataOut, 
  WCHAR** ppwszIdentity
+);
+
+/* RasEapGetInfo  [function; shared; CE 4.0..699] */
+DWORD RasEapGetInfo(
+ DWORD dwEapTypeId,
+ PPP_EAP_INFO* pEapInfo
 );
 
 /* RasEapInitialize  [function; ce-only; CE 4.0..699] */

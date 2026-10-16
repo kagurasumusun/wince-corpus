@@ -165,6 +165,15 @@ HRESULT CeRapiInvoke(
 /* CeRapiUninit  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
 HRESULT CeRapiUninit ();
 
+/* CeReadFile  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
+BOOL CeReadFile ( 
+ HANDLE hFile, 
+ LPVOID lpBuffer, 
+ DWORD nNumberOfBytesToRead, 
+ LPDWORD lpNumberOfBytesRead, 
+ LPOVERLAPPED lpOverlapped 
+);
+
 /* CeRegCloseKey  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
 LONG CeRegCloseKey(
  HKEY hKey 
@@ -266,6 +275,14 @@ BOOL CeSetFileAttributes(
  DWORD dwFileAttributes 
 );
 
+/* CeSetFilePointer  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
+DWORD CeSetFilePointer( 
+ HANDLE hFile, 
+ LONG lDistanceToMove, 
+ PLONG lpDistanceToMoveHigh, 
+ DWORD dwMoveMethod 
+);
+
 /* CeSetFileTime  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
 BOOL CeSetFileTime (
  HANDLE hFile,
@@ -285,6 +302,15 @@ BOOL CeSHGetShortcutTarget(
  LPWSTR lpszShortcut, 
  LPWSTR lpszTarget, 
  Int cbMax 
+);
+
+/* CeWriteFile  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
+BOOL CeWriteFile( 
+ HANDLE hFile, 
+ LPCVOID lpBuffer, 
+ DWORD nNumberOfBytesToWrite, 
+ LPDWORD lpNumberOfBytesWritten, 
+ LPOVERLAPPED lpOverlapped 
 );
 #endif /* _WIN32_WCE */
 

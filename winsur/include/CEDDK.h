@@ -5,29 +5,69 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1 constants, 49 declarations, 3 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 58 declarations, 1 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _CEDDK_
 #define _CEDDK_
 
 
 /* ==================================================================
- * constants (one evidence comment per #define; the
- * #if of a batch covers every #define in it; values
- * that differ per generation pool into #if/#elif
- * chains with the evidence after the #endif)
- * ================================================================ */
-#define InterfaceTypeUndefined -1
-
-/* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-/* DMA_ADAPTER_OBJECT  [struct; ce-only] */
+/* PCI_COMMON_CONFIG  [struct; ce-only] */
+
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* BUS_DATA_TYPE  [enum; ce-only] */
+typedef enum _BUS_DATA_TYPE {
+ ConfigurationSpaceUndefined = -1,
+ Cmos,
+ EisaConfiguration,
+ Pos,
+ CbusConfiguration,
+ PCIConfiguration,
+ VMEConfiguration,
+ NuBusConfiguration,
+ PCMCIAConfiguration,
+ MPIConfiguration,
+ MPSAConfiguration,
+ PNPISAConfiguration,
+ MaximumBusDataType
+} BUS_DATA_TYPE, *PBUS_DATA_TYPE;
 
 /* INTERFACE_TYPE  [enum; ce-only] */
+typedef enum _INTERFACE_TYPE {
+ InterfaceTypeUndefined = -1,
+ Internal,
+ Isa,
+ Eisa,
+ MicroChannel,
+ TurboChannel,
+ PCIBus,
+ VMEBus,
+ NuBus,
+ PCMCIABus,
+ CBus,
+ MPIBus,
+ MPSABus,
+ ProcessorInternal,
+ InternalPowerBus,
+ PNPISABus,
+ PNPBus,
+ MaximumInterfaceType
+} INTERFACE_TYPE, *PINTERFACE_TYPE;
 
-/* PCI_COMMON_CONFIG  [struct; ce-only] */
+/* DMA_ADAPTER_OBJECT  [struct; ce-only] */
+typedef struct _DMA_ADAPTER_OBJECT_ {
+ USHORT ObjectSize;
+ INTERFACE_TYPE InterfaceType;
+ ULONG BusNumber;
+} DMA_ADAPTER_OBJECT , *PDMA_ADAPTER_OBJECT;
 
 /* ==================================================================
  * functions and callbacks
@@ -49,7 +89,109 @@ VOID MmUnmapIoSpace(
 );
 #endif /* _WIN32_WCE */
 
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
+
+/* HalGetBusData  [function; ce-only; CE 3.0..699; CEDDK.lib] */
+ULONG HalGetBusData( 
+ BUS_DATA_TYPE BusDataType, 
+ ULONG BusNumber, 
+ ULONG SlotNumber, 
+ PVOID Buffer, 
+ ULONG Length 
+);
+
+/* HalGetBusDataByOffset  [function; ce-only; CE 3.0..699; CEDDK.lib] */
+ULONG HalGetBusDataByOffset( 
+ BUS_DATA_TYPE BusDataType, 
+ ULONG BusNumber, 
+ ULONG SlotNumber, 
+ PVOID Buffer, 
+ ULONG Offset, 
+ ULONG Length 
+);
+
+/* HalSetBusData  [function; ce-only; CE 3.0..699; CEDDK.lib] */
+ULONG HalSetBusData( 
+ BUS_DATA_TYPE BusDataType, 
+ ULONG BusNumber, 
+ ULONG SlotNumber, 
+ PVOID Buffer, 
+ ULONG Length 
+);
+
+/* HalSetBusDataByOffset  [function; ce-only; CE 3.0..699; CEDDK.lib] */
+ULONG HalSetBusDataByOffset( 
+ BUS_DATA_TYPE BusDataType, 
+ ULONG BusNumber, 
+ ULONG SlotNumber, 
+ PVOID Buffer, 
+ ULONG Offset, 
+ ULONG Length 
+);
+
+/* HalTranslateBusAddress  [function; ce-only; CE 3.0..699; CEDDK.lib] */
+BOOL HalTranslateBusAddress( 
+ INTERFACE_TYPE InterfaceType, 
+ ULONG BusNumber, 
+ PHYSICAL_ADDRESS BusAddress, 
+ PULONG AddressSpace, 
+ PPHYSICAL_ADDRESS TranslatedAddress 
+);
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
+
+/* HalAllocateCommonBuffer  [function; ce-only; CE 4.0..699; CEDDK.lib] */
+PVOID HalAllocateCommonBuffer(
+ PDMA_ADAPTER_OBJECT DmaAdapter,
+ ULONG Length,
+ PPHYSICAL_ADDRESS LogicalAddress,
+ BOOLEAN CacheEnabled
+);
+
+/* HalFreeCommonBuffer  [function; ce-only; CE 4.0..699; CEDDK.lib] */
+VOID HalFreeCommonBuffer(
+ PDMA_ADAPTER_OBJECT DmaAdapter,
+ ULONG Length,
+ PHYSICAL_ADDRESS LogicalAddress,
+ PVOID VirtualAddress,
+ BOOLEAN CacheEnabled
+);
+
+/* TransBusAddrToStatic  [function; ce-only; CE 4.0..699; CEDDK.lib] */
+BOOL TransBusAddrToStatic(
+ INTERFACE_TYPE InterfaceType,
+ ULONG BusNumber,
+ PHYSICAL_ADDRESS BusAddress,
+ ULONG Length,
+ PULONG AddressSpace,
+ PPVOID MappedAddress
+);
+
+/* TransBusAddrToVirtual  [function; ce-only; CE 4.0..699; CEDDK.lib] */
+BOOL TransBusAddrToVirtual(
+ INTERFACE_TYPE InterfaceType,
+ ULONG BusNumber,
+ PHYSICAL_ADDRESS BusAddress,
+ ULONG Length,
+ PULONG AddressSpace,
+ PPVOID MappedAddress
+);
+#endif /* _WIN32_WCE */
+
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
+
+/* BusIoControl  [function; ce-only; CE 5.0..699; CEDDK.lib] */
+BOOL BusIoControl (
+ HANDLE hBusAccess,
+ DWORD dwIoControlCode, 
+ LPVOID lpInBuffer, 
+ DWORD nInBufferSize, 
+ LPVOID lpOutBuffer, 
+ DWORD nOutBufferSize, 
+ LPDWORD lpBytesReturned, 
+ LPOVERLAPPED lpOverlapped
+);
 
 /* CalibrateStallCounter  [function; ce-only; CE 5.0..699; CEDDK.lib] */
 VOID CalibrateStallCounter(
@@ -71,6 +213,12 @@ BOOL GetBusNamePrefix (
  HANDLE hBusAccess,
  LPTSTR lpReturnStr,
  DWORD dwSizeInCharacters
+);
+
+/* GetChildDeviceRemoveState  [function; ce-only; CE 5.0..699; CEDDK.lib] */
+BOOL GetChildDeviceRemoveState (
+ HANDLE hBusAccess,
+ PDWORD lpdChildDeviceState
 );
 
 /* GetDeviceConfigurationData  [function; ce-only; CE 5.0..699; CEDDK.lib] */
@@ -99,6 +247,25 @@ ULONG SetDeviceConfigurationData (
 VOID StallExecution(
  DWORD dwMicroSec 
 );
+
+/* TranslateBusAddr  [function; ce-only; CE 5.0..699; CEDDK.lib] */
+BOOL TranslateBusAddr (
+ HANDLE hBusAccess,
+ INTERFACE_TYPE InterfaceType,
+ ULONG BusNumber,
+ PHYSICAL_ADDRESS BusAddress,
+ PULONG AddressSpace,
+ PPHYSICAL_ADDRESS TranslatedAddress 
+);
+
+/* TranslateSystemAddr  [function; ce-only; CE 5.0..699; CEDDK.lib] */
+BOOL TranslateSystemAddr (
+ HANDLE hBusAccess,
+ INTERFACE_TYPE InterfaceType,
+ ULONG BusNumber,
+ PHYSICAL_ADDRESS SystemAddress,
+ PPHYSICAL_ADDRESS TranslatedAddress 
+);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
@@ -117,6 +284,18 @@ HANDLE CeDriverDuplicateCallerHandle(
  DWORD dwDesiredAccess,
  BOOL bInheritHandle,
  DWORD dwOptions
+);
+
+/* CeDriverPerformCallback  [function; ce-only; CE 6.0..699; CEDDK.lib] */
+BOOL CeDriverPerformCallback(
+ HANDLE hCallback,
+ DWORD dwIoControlCode,
+ LPVOID lpInBuf,
+ DWORD nInBufSize,
+ LPVOID lpOutBuf,
+ DWORD nOutBufSize,
+ LPDWORD lpBytesReturned,
+ LPOVERLAPPED lpOverlapped
 );
 #endif /* _WIN32_WCE */
 

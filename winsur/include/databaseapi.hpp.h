@@ -24,6 +24,7 @@ typedef struct tagPH_SPEEDDIAL_ENTRY
  WCHAR pName[100];
  WCHAR pNumber[100];
 } PH_SPEEDDIAL_ENTRY;
+typedef PH_SPEEDDIAL_ENTRY *PPH_SPEEDDIAL_ENTRY, *LPPH_SPEEDDIAL_ENTRY;
 
 /* ==================================================================
  * functions and callbacks

@@ -49,6 +49,7 @@ LRESULT OnGetDlgCode( UINT nMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled );
 HRESULT OnInactiveMouseMove( LPCRECT pRectBounds, long x, long y, DWORD dwMouseMsg );
 HRESULT OnInactiveSetCursor( LPCRECT pRectBounds, long x, long y, DWORD dwMouseMsg, BOOL fSetAlways);
 LRESULT OnKillFocus( UINT nMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled );
+HRESULT OnMnemonic( LPMSG pMsg );
 LRESULT OnPaint( UINT nMsg, WPARAM wParam, LPARAM lParam, BOOL& lResult );
 LRESULT OnSetFocus( UINT nMsg, WPARAM wParam, LPARAM lParam, BOOL& bHandled );
 HRESULT OnWindowMessage( UINT msg, WPARAM WParam, LPARAM LParam, LRESULT plResultParam );

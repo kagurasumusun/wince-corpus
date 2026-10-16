@@ -5,11 +5,35 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 13 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 0 constants, 13 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _KITLTRAN_
 #define _KITLTRAN_
 
+
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* TRANPORTINFOSTRUCT  [struct; ce-only] */
+typedef struct _TRANPORTINFOSTRUCT {
+ WORD cbData;
+ WORD wVersion;
+ WORD wTranGuid;
+ WORD wFlags;
+ DWORD dwBandWidth;
+} TRANPORTINFOSTRUCT, *PTRANPORTINFOSTRUCT;
+
+/* TRANPORTINFOSTRUCT_deleted  [struct; ce-only] */
+typedef struct _TRANPORTINFOSTRUCT {
+ WORD cbData;
+ WORD wVersion;
+ WORD wTranGuid;
+ WORD wFlags;
+ DWORD dwBandWidth;
+} TRANPORTINFOSTRUCT, *PTRANPORTINFOSTRUCT;
 
 /* ==================================================================
  * functions and callbacks
@@ -19,6 +43,11 @@
 
 /* TranDeInitLibrary  [function; ce-only; CE 4.0..699] */
 BOOL TranDeInit Library (void);
+
+/* TranGetInfo  [function; ce-only; CE 4.0..699] */
+BOOL TranGetInfo(
+ PTRANPORTINFOSTRUCT pInfo
+);
 
 /* TranInitLibrary  [function; ce-only; CE 4.0..699] */
 BOOL TranInit Library(

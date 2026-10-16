@@ -103,9 +103,6 @@ typedef struct {
   UINT32 uClientData;
 } CARD_REGISTER_PARMS, *PCARD_REGISTER_PARMS;
 
-/* PCARD_SOCKET_HANDLE  [extra struct] */
-typedef struct {  UINT8 uSocket;  UINT8 uFunction;  } CARD_SOCKET_HANDLE, *PCARD_SOCKET_HANDLE;
-
 /* PCARD_STATUS  [extra struct] */
 typedef struct {
   CARD_SOCKET_HANDLE hSocket;

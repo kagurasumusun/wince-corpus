@@ -51,6 +51,44 @@
 #define PUN_VIBRATE 2
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* CE_NOTIFICATION_TRIGGER  [struct; ce-only] */
+typedef struct UserNotificationTrigger { DWORD dwSize; DWORD dwType; DWORD dwEvent; WCHAR* lpszApplication; WCHAR* lpszArguments; SYSTEMTIME stStartTime; SYSTEMTIME stEndTime;} CE_NOTIFICATION_TRIGGER, *PCE_NOTIFICATION_TRIGGER;
+
+/* CE_USER_NOTIFICATION  [struct; ce-only] */
+typedef struct UserNotificationType {
+ DWORD ActionFlags;
+ TCHAR* pwszDialogTitle;
+ TCHAR* pwszDialogText;
+ TCHAR* pwszSound;
+ DWORD nMaxSound;
+ DWORD dwReserved;
+} CE_USER_NOTIFICATION, *PCE_USER_NOTIFICATION;
+
+/* UserNotificationTrigger  [struct; ce-only] */
+typedef struct UserNotificationTrigger { 
+DWORD dwSize; 
+DWORD dwType; 
+DWORD dwEvent; 
+WCHAR *lpszApplication; 
+WCHAR *lpszArguments; 
+SYSTEMTIME stStartTime; 
+SYSTEMTIME stEndTime; 
+} CE_NOTIFICATION_TRIGGER, *PCE_NOTIFICATION_TRIGGER;
+
+/* CE_NOTIFICATION_INFO_HEADER  [struct; ce-only] */
+typedef struct UserNotificationInfoHeader {
+ HANDLE hNotification;
+ DWORD dwStatus;
+ CE_NOTIFICATION_TRIGGER* pcent;
+ CE_USER_NOTIFICATION* pceun;
+} CE_NOTIFICATION_INFO_HEADER, *PCE_NOTIFICATION_INFO_HEADER;
+
+/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
@@ -59,6 +97,12 @@
 /* CeClearUserNotification  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Notify.lib, notify.lib] */
 BOOL CeClearUserNotification(
  HANDLE hNotification 
+);
+
+/* CeGetUserNotificationPreferences  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Notify.lib, notify.lib] */
+BOOL CeGetUserNotificationPreferences(
+ HWND hWndParent, 
+ PCE_USER_NOTIFICATION lpNotification 
 );
 
 /* CeHandleAppNotifications  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Notify.lib, notify.lib] */
@@ -76,6 +120,24 @@ BOOL CeRunAppAtEvent(
 BOOL CeRunAppAtTime(
  TCHAR* pwszAppName, 
  SYSTEMTIME* lpTime 
+);
+
+/* CeSetUserNotification  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Notify.lib, notify.lib] */
+HANDLE CeSetUserNotification(
+ HANDLE hNotification, 
+ TCHAR* pwszAppName, 
+ SYSTEMTIME* lpTime, 
+ PCE_USER_NOTIFICATION lpUserNotification 
+);
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
+
+/* CeSetUserNotificationEx  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Notify.lib, notify.lib] */
+HANDLE CeSetUserNotificationEx(
+ HANDLE hNotification, 
+ CE_NOTIFICATION_TRIGGER* pcnt, 
+ CE_USER_NOTIFICATION* pceun 
 );
 #endif /* _WIN32_WCE */
 

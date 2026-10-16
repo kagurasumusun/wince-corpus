@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 6 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 0 constants, 6 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _WS2TCPIP_
 #define _WS2TCPIP_
@@ -66,9 +66,6 @@ struct addrinfo {intai_flags;intai_family;intai_socktype;intai_protocol;size_tai
 
 /* ai  [extra struct] */
 void freeaddrinfo(struct addrinfo FAR* ai);
-
-/* intflags  [extra struct] */
-int getnameinfo(const struct sockaddr FAR* sa,socklen_tsalen,char FAR* host,DWORDhostlen,char FAR* serv,DWORDservlen,intflags);
 
 /* sin6_scope_id  [extra struct] */
 struct sockaddr_in6 {short sin6_family;u_short sin6_port;u_longsin6_flowinfo;struct in6_addrsin6_addr;u_long sin6_scope_id;};

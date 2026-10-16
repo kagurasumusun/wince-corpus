@@ -43,9 +43,6 @@ struct TPDC_SAMPLE_RATE {
  INT CurrentSampleRateSetting; 
 };
 
-/* PTOUCH_PANEL_SAMPLE_FLAGS  [extra typedef] */
-typedef UINT32 TOUCH_PANEL_SAMPLE_FLAGS, *PTOUCH_PANEL_SAMPLE_FLAGS;
-
 /* x40000000  [extra enum] */
 enum enumTouchPanelSampleFlags {TouchSampleValidFlag = 0x01,TouchSampleDownFlag = 0x02,TouchSampleIsCalibratedFlag = 0x04,TouchSamplePreviousDownFlag = 0x08,TouchSampleIgnore = 0x10,TouchSampleMouse = 0x40000000};
 

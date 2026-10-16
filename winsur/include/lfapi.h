@@ -31,4 +31,19 @@
 
 /* RESOLVER_INFORMATION  [struct; ce-only] */
 
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* LOCATION_SERVICE_STATE  [struct; ce-only] */
+typedef struct _LOCATION_SERVICE_STATE {
+ DWORD serviceState; 
+ DWORD numLoadedProviders;
+ DWORD numLoadedResolvers;
+ DWORD numActiveProviders;
+ DWORD numActiveResolvers;
+} LOCATION_SERVICE_STATE, *PLOCATION_SERVICE_STATE;
+
 #endif /* _LFAPI_ */

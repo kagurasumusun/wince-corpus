@@ -32,12 +32,14 @@ BYTE fBatteriesChangedSinceLastCall;
 DWORD BackupBatteryLifeTime; 
 DWORD BackupBatteryFullLifeTime; 
 } BATTERY_STATUS;
+typedef BATTERY_STATUS *PBATTERY_STATUS, *LPBATTERY_STATUS;
 
-/* PBATTERY_STATUS  [extra struct] */
-typedef struct tagBATTERY_STATUS{ DWORD ACLineStatus; DWORD BatteryFlag; DWORD BatteryLifePercent; DWORD_t BatteryLifeTime; DWORD BatteryFullLifeTime; } PBATTERY_STATUS;
-
-/* PBATTERYLIFETIMEINFO  [extra struct] */
-typedef struct _BatteryLifetimeInfo_tag { SYSTEMTIME stLastChange; DWORD cmsCpuUsage; DWORD cmsPreviousCpuUsage;} BATTERYLIFETIMEINFO, *PBATTERYLIFETIMEINFO;
+/* BATTERYLIFETIMEINFO  [struct; ce-only] */
+typedef struct _BatteryLifetimeInfo_tag {
+ SYSTEMTIME stLastChange;
+ DWORD cmsCpuUsage;
+ DWORD cmsPreviousCpuUsage;
+} BATTERYLIFETIMEINFO, *PBATTERYLIFETIMEINFO;
 
 /* ==================================================================
  * functions and callbacks

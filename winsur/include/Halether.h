@@ -23,6 +23,7 @@ typedef struct _EDBG_ADDR{
  USHORT wMAC[3];
  USHORT wPort;
 } EDBG_ADDR;
+typedef EDBG_ADDR *PEDBG_ADDR, *LPEDBG_ADDR;
 
 /* EDBG_ADAPTER  [struct; ce-only] */
 typedef struct { 
@@ -31,6 +32,7 @@ DWORD SysIntrVal;
 DWORD DHCPLeaseTime; 
 DWORD EdbgFlags;} 
 EDBG_ADAPTER;
+typedef EDBG_ADAPTER *PEDBG_ADAPTER, *LPEDBG_ADAPTER;
 
 /* ==================================================================
  * functions and callbacks
@@ -66,6 +68,14 @@ DWORD OEMEthGetSecs (void);
 
 /* OEMEthISR  [function; ce-only; CE 3.0..399, 5.0..699; Hal.lib, hal.lib] */
 void OEMEthISR (void);
+
+/* OEMEthQueryClientInfo  [function; ce-only; CE 3.0..399, 5.0..699; Hal.lib, hal.lib] */
+BOOL OEMEthQueryClientInfo(
+ UCHAR Id, 
+ EDBG_ADDR* pPeerAddr, 
+ PUCHAR pWindowSize, 
+ PUCHAR* ppBufferPool 
+);
 
 /* OEMEthSendFrame  [function; ce-only; CE 3.0..399, 5.0..699; Hal.lib, hal.lib] */
 BOOL OEMEthSendFrame( 

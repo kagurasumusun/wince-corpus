@@ -476,6 +476,7 @@ typedef struct _currencyfmt {
  UINT PositiveOrder; 
  LPTSTR lpCurrencySymbol;
 } CURRENCYFMT;
+typedef CURRENCYFMT *PCURRENCYFMT, *LPCURRENCYFMT;
 
 /* NUMBERFMT  [struct; shared; A/W NUMBERFMTA,NUMBERFMTW (CE is W-side)] */
 typedef struct _numberfmt { 
@@ -486,6 +487,7 @@ typedef struct _numberfmt {
  LPTSTR lpThousandSep; 
  UINT NegativeOrder; 
 } NUMBERFMT;
+typedef NUMBERFMT *PNUMBERFMT, *LPNUMBERFMT;
 
 /* CPINFO  [struct; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */

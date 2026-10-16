@@ -1536,7 +1536,8 @@ def overlay_unified_surface(by_header, printed_forms, by_module, all_entities):
             continue
         if not _keepable_c_decl(text, name, kind):
             continue
-        if kind == "function" and name.isupper():
+        if kind == "function" and name.isupper() \
+                and not name.startswith(("READ_", "WRITE_")):
             continue
         if name.startswith(("CBase", "CAgg", "CAM")):
             continue
@@ -1546,10 +1547,17 @@ def overlay_unified_surface(by_header, printed_forms, by_module, all_entities):
             hdr = mapped or hdr
         if not hdr or hdr.lower() in ("windows.h",):
             continue
-        # Only fill driver headers from unified; dumping every keepable
-        # quote into Winuser/Winbase reintroduced COM and SAL.
-        if hdr.lower() not in {"ceddk.h", "pkfuncs.h", "kfuncs.h",
-                               "nkintr.h", "winddi.h"}:
+        hl = hdr.lower()
+        if hl in DESKTOP_SPLIT_HEADERS:
+            hdr = "Winbase.h"
+            hl = "winbase.h"
+        if hl in {"ceddk.h", "pkfuncs.h", "kfuncs.h", "nkintr.h", "winddi.h"}:
+            pass
+        elif name in _OVERLAY_NAMED and hl in {
+                "windef.h", "winnt.h", "winbase.h", "winuser.h", "wingdi.h",
+                "winreg.h", "winerror.h", "winioctl.h"}:
+            pass
+        else:
             continue
         entity = {
             "id": "unified:" + name, "name": name, "kinds": [kind],
@@ -1606,12 +1614,24 @@ def overlay_unified_surface(by_header, printed_forms, by_module, all_entities):
                     continue
                 if not _keepable_c_decl(text, name, kind):
                     continue
-                if kind == "function" and name.isupper():
+                if kind == "function" and name.isupper() \
+                        and not name.startswith(("READ_", "WRITE_")):
                     continue
                 hdr = rec.get("header") or name_to_header.get(name)
-                if not hdr or hdr.lower() not in {
-                        "ceddk.h", "pkfuncs.h", "kfuncs.h",
-                        "nkintr.h", "winddi.h"}:
+                if not hdr:
+                    continue
+                hl = hdr.lower()
+                if hl in DESKTOP_SPLIT_HEADERS:
+                    hdr = "Winbase.h"
+                    hl = "winbase.h"
+                if hl in {"ceddk.h", "pkfuncs.h", "kfuncs.h", "nkintr.h",
+                          "winddi.h"}:
+                    pass
+                elif name in _OVERLAY_NAMED and hl in {
+                        "windef.h", "winnt.h", "winbase.h", "winuser.h",
+                        "wingdi.h", "winreg.h", "winerror.h", "winioctl.h"}:
+                    pass
+                else:
                     continue
                 entity = {
                     "id": "harvest:" + name, "name": name, "kinds": [kind],
@@ -1857,6 +1877,30 @@ _WINDOWS_UMBRELLA = (
 
 # Pages often name Windows.h (the umbrella) or a desktop-split SDK
 # header.  Prefer the CE header the same entity also names.
+# Keepable unified/harvest quotes filed into app headers only for
+# these names (driver headers take every keepable C quote).
+_OVERLAY_NAMED = {
+    "GetMessage", "PeekMessage", "BeginPaint", "EndPaint",
+    "ReadFile", "WriteFile", "DeviceIoControl",
+    "InitializeCriticalSection", "EnterCriticalSection",
+    "LeaveCriticalSection", "DeleteCriticalSection",
+    "wsprintf", "wvsprintf", "lstrlen", "lstrcpy", "lstrcmp",
+    "lstrcat", "lstrcmpi",
+    "HalGetBusData", "HalGetBusDataByOffset", "HalSetBusData",
+    "HalSetBusDataByOffset", "HalTranslateBusAddress",
+    "READ_PORT_UCHAR", "READ_PORT_USHORT", "READ_PORT_ULONG",
+    "WRITE_PORT_UCHAR", "WRITE_PORT_USHORT", "WRITE_PORT_ULONG",
+    "READ_REGISTER_UCHAR", "READ_REGISTER_USHORT", "READ_REGISTER_ULONG",
+    "WRITE_REGISTER_UCHAR", "WRITE_REGISTER_USHORT", "WRITE_REGISTER_ULONG",
+    "READ_PORT_BUFFER_UCHAR", "READ_PORT_BUFFER_USHORT",
+    "READ_PORT_BUFFER_ULONG", "WRITE_PORT_BUFFER_UCHAR",
+    "WRITE_PORT_BUFFER_USHORT", "WRITE_PORT_BUFFER_ULONG",
+    "MmUnmapIoSpace", "PAINTSTRUCT", "BUS_DATA_TYPE", "INTERFACE_TYPE",
+    "LOGFONT", "WNDCLASS", "TranslateMessage", "DispatchMessage",
+    "DefWindowProc", "PostQuitMessage", "RegisterClass", "CreateWindowEx",
+    "ShowWindow", "UpdateWindow", "GetClientRect", "InvalidateRect",
+}
+
 CE_CORE_HEADERS = {
     "windef.h", "winnt.h", "basetsd.h", "winbase.h", "winuser.h",
     "wingdi.h", "winerror.h", "winreg.h", "winioctl.h", "commctrl.h",
@@ -1939,7 +1983,9 @@ _CORE_TYPEDEFS = (
      "WORD wDay; WORD wHour; WORD wMinute; WORD wSecond; WORD wMilliseconds; } "
      "SYSTEMTIME, *PSYSTEMTIME, *LPSYSTEMTIME;"),
     ("CEOID", "typedef DWORD CEOID;"),
+    ("PCEOID", "typedef CEOID *PCEOID;"),
     ("CEPROPID", "typedef DWORD CEPROPID;"),
+    ("PPVOID", "typedef PVOID *PPVOID;"),
     ("LPTHREAD_START_ROUTINE",
      "typedef DWORD (WINAPI *LPTHREAD_START_ROUTINE)(LPVOID);"),
     ("LARGE_INTEGER",
@@ -1947,6 +1993,9 @@ _CORE_TYPEDEFS = (
      "LONGLONG QuadPart; } LARGE_INTEGER, *PLARGE_INTEGER;"),
     ("PHYSICAL_ADDRESS",
      "typedef LARGE_INTEGER PHYSICAL_ADDRESS, *PPHYSICAL_ADDRESS;"),
+    ("CRITICAL_SECTION",
+     "typedef struct _CRITICAL_SECTION CRITICAL_SECTION, "
+     "*PCRITICAL_SECTION, *LPCRITICAL_SECTION;"),
 )
 
 _WINDEF_NEED = (
@@ -1981,7 +2030,11 @@ _C_KNOWN_TYPES = {
     "PRECT", "LPRECT", "LPCRECT", "PPOINT", "LPPOINT", "PSIZE", "LPSIZE",
     "HCURSOR", "HACCEL", "HRSRC", "HGLOBAL", "HLOCAL", "HDWP", "HGDIOBJ",
     "LARGE_INTEGER", "PLARGE_INTEGER", "PHYSICAL_ADDRESS", "PPHYSICAL_ADDRESS",
-    "INTERFACE_TYPE", "BOOLEAN",
+    "INTERFACE_TYPE", "BOOLEAN", "HKEY", "PHKEY", "PUCHAR", "PULONG",
+    "LPMSG", "PMSG", "LPPAINTSTRUCT", "PPAINTSTRUCT",
+    "LPOVERLAPPED", "POVERLAPPED", "OVERLAPPED",
+    "LPCRITICAL_SECTION", "PCRITICAL_SECTION", "CRITICAL_SECTION",
+    "LPSECURITY_ATTRIBUTES",
 }
 
 
@@ -2018,12 +2071,30 @@ def order_type_infos(items):
     return unnamed + emitted
 
 
+def _type_token_known(tok, local_names):
+    if tok in _C_KNOWN_TYPES or tok in local_names:
+        return True
+    # LPMSG / PMSG follow MSG; LPOVERLAPPED follows OVERLAPPED.
+    for prefix in ("LP", "P"):
+        if tok.startswith(prefix) and len(tok) > len(prefix) + 1:
+            base = tok[len(prefix):]
+            if base in _C_KNOWN_TYPES or base in local_names:
+                return True
+    return False
+
+
 def type_mentions_unknown(text, local_names):
-    """True if a struct body names a type this header does not define."""
+    """True if a struct/function names a type this header does not define.
+
+    Enumerator names inside ``typedef enum`` are values, not types.
+    """
+    body = text or ""
+    if re.search(r"\btypedef\s+enum\b|\benum\s+\w+\s*\{", body):
+        return False
     skip = {"TYPEDEF", "STRUCT", "UNION", "ENUM", "CONST", "VOID", "INT",
             "CHAR", "SHORT", "LONG", "UNSIGNED", "SIGNED", "FLOAT", "DOUBLE"}
-    for tok in _ident_tokens(text) - skip:
-        if tok in _C_KNOWN_TYPES or tok in local_names:
+    for tok in _ident_tokens(body) - skip:
+        if _type_token_known(tok, local_names):
             continue
         if re.match(r"^[A-Z][A-Z0-9_]+$", tok) and len(tok) >= 3:
             return True
@@ -2624,7 +2695,7 @@ def run_unified(args):
             leftover_defines.append(d)
             continue
         hdr = _pick_header_for_extra(name, d.get("source") or "", ["macro"])
-        if hdr and hdr.lower() in {"ceddk.h", "pkfuncs.h", "kfuncs.h"}:
+        if hdr and hdr.lower() in CE_CORE_HEADERS:
             leftover_defines.append(d)
             continue
         if hdr:
@@ -2880,6 +2951,15 @@ def run_unified(args):
                 "#define __declspec(x)",
                 "#endif",
                 "#endif /* _MSC_VER */",
+                "#ifndef WINAPI",
+                "#define WINAPI __stdcall",
+                "#endif",
+                "#ifndef CALLBACK",
+                "#define CALLBACK __stdcall",
+                "#endif",
+                "#ifndef APIENTRY",
+                "#define APIENTRY WINAPI",
+                "#endif",
                 "#ifndef TEXT",
                 "#define TEXT(s) L ## s",
                 "#endif",
@@ -3125,6 +3205,10 @@ def run_unified(args):
             text = (d.get("declaration") or "").replace("\\n", "\n")
             if not name or name in already_decl_pre:
                 continue
+            if name.startswith("LP") and name[2:] in already_decl_pre:
+                continue
+            if name.startswith("P") and name[1:] in already_decl_pre:
+                continue
             if kind not in ("typedef", "enum", "struct"):
                 continue
             if not quality_filters.is_c_toolchain_declaration(text, name, kind):
@@ -3236,6 +3320,13 @@ def run_unified(args):
                     head.append(f"/* {item['text']} */")
                 if declaration is not None:
                     head.append(declaration["text"])
+                    if bucket_key == "types" and ename:
+                        body = declaration.get("text") or ""
+                        if re.search(r"\btypedef\s+(struct|union|enum)\b", body) \
+                                and re.search(r"\b" + re.escape(ename) + r"\s*;", body) \
+                                and ("LP" + ename) not in body:
+                            head.append(
+                                f"typedef {ename} *P{ename}, *LP{ename};")
                 elif info.get("name_only"):
                     pass  # comment above is the whole record
                 else:
@@ -3250,6 +3341,8 @@ def run_unified(args):
                     close_guard(lines, open_decl_guard)
                     open_decl_guard = None
                 for d in extra_type_ds:
+                    if d.get("name") in emitted_type_names:
+                        continue
                     text = (d.get("declaration") or "").replace("\\n", "\n")
                     lines.append("")
                     lines.append(
@@ -3266,6 +3359,7 @@ def run_unified(args):
         extra_ds = [
             d for d in extra_decls_by_header.get(key.lower(), [])
             if d.get("name") not in already_decl_names
+            and (d.get("type") or "function") not in ("typedef", "enum", "struct")
             and quality_filters.is_c_toolchain_declaration(
                 d.get("declaration") or "", d.get("name") or "",
                 d.get("type") or "")

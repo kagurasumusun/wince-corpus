@@ -1285,6 +1285,7 @@ double _xor_ob(
  * ================================================================ */
 
 /* function */
+LONG ExpInterlockedCompareExchange64( PLONGLONG Destination, PLONGLONG Exchange, PLONGLONG Comparand );
 double __cdecl _esrqrt_ps( arg1 );
 float __cdecl _esrqrt_sl( arg1 );
 float __cdecl _esrqrt_su( arg1 );

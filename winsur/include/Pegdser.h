@@ -11,4 +11,16 @@
 #define _PEGDSER_
 
 
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* SERIAL_QUEUE_SIZES  [struct; ce-only] */
+typedef struct _SERIAL_QUEUE_SIZES {
+ DWORD cbInQueue;
+ DWORD cbOutQueue;
+} SERIAL_QUEUE_SIZES, *PSERIAL_QUEUE_SIZES;
+
 #endif /* _PEGDSER_ */

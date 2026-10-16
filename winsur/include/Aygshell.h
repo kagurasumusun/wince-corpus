@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 59 constants, 43 declarations, 2 outlines, 0 base types, 3 extra macros, 0 extra decls
+ * 59 constants, 43 declarations, 2 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _AYGSHELL_
 #define _AYGSHELL_
@@ -78,13 +78,6 @@
 #define WS_NONAVDONEBUTTON WS_MINIMIZEBOX
 
 /* ==================================================================
- * macros -- supplementary #define from CE pages
- * ================================================================ */
-#define SHIC_CLASS_DEFAULT TEXT("")
-#define SHIC_CLASS_EMAIL TEXT("email")
-#define SHIC_CLASS_PHONE TEXT("phone")
-
-/* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
@@ -117,12 +110,51 @@ typedef struct tagSHINITDIALOG {
  * declaration body no page prints
  * ================================================================ */
 
+/* SHACTIVATEINFO  [struct; ce-only; aygshell.lib] */
+typedef struct {
+ DWORD cbSize.;
+ HWND hwndLastFocus.;
+ UINT fSipUp.:1;
+ UINT fSipOnDeactivation. :1;
+ UINT fActive :1;
+ UINT fReserved :29;
+} SHACTIVATEINFO, *PSHACTIVATEINFO;
+
 /* SHCHANGENOTIFYENTRY  [struct; shared; ceshell.lib] */
 typedef struct tagSHCHANGENOTIFYENTRY {
  DWORD dwEventMask;
  LPTSTR pszWatchDir;
  BOOL fRecursive;
 } SHCHANGENOTIFYENTRY;
+typedef SHCHANGENOTIFYENTRY *PSHCHANGENOTIFYENTRY, *LPSHCHANGENOTIFYENTRY;
+
+/* SHMENUBARINFO  [struct; ce-only; aygshell.lib] */
+typedef struct tagSHMENUBARINFO {
+ DWORD cbSize;
+ HWND hwndParent;
+ DWORD dwFlags;
+ UINT nToolBarId;
+ HINSTANCE hInstRes;
+ int nBmpId;
+ int cBmpImages;
+ HWND hwndMB;
+ COLORREF clrBk;
+} SHMENUBARINFO, *PSHMENUBARINFO;
+
+/* SHNP  [enum; ce-only] */
+typedef enum _SHNP {
+ SHNP_INFORM,
+ SHNP_ICONIC
+} SHNP;
+typedef SHNP *PSHNP, *LPSHNP;
+
+/* SHRGINFO  [struct; ce-only; aygshell.lib] */
+typedef struct tagSHRGI {
+ DWORD cbSize;
+ HWND hwndClient;
+ POINT ptDown;
+ DWORD dwFlags;
+} SHRGINFO, *PSHRGINFO;
 
 /* ==================================================================
  * functions and callbacks
@@ -145,6 +177,11 @@ BOOL SHInitExtraControls(void);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
+
+/* SHCreateMenuBar  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
+BOOL SHCreateMenuBar(
+ SHMENUBARINFO * pmb
+);
 
 /* SHDoneButton  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
 BOOL SHDoneButton(

@@ -5,23 +5,33 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 10 declarations, 0 outlines, 0 base types, 0 extra macros, 26 extra decls
+ * 0 constants, 0 declarations, 9 outlines, 0 base types, 0 extra macros, 17 extra decls
  */
 #ifndef _D3D8_
 #define _D3D8_
 
 
 /* ==================================================================
- * functions and callbacks
+ * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x500)) /* CE 4.0..499 */
+/* IDirect3D8  [struct; ce-only; D3d8.lib] */
 
-/* Direct3DCreate8  [function; ce-only; CE 4.0..499; D3d8.lib] */
-IDirect3D8* Direct3DCreate8(
- UINT SDKVersion
-);
-#endif /* _WIN32_WCE */
+/* IDirect3DBaseTexture8  [struct; ce-only; D3d8.lib] */
+
+/* IDirect3DDevice8  [struct; ce-only; D3d8.lib] */
+
+/* IDirect3DIndexBuffer8  [struct; ce-only; D3d8.lib] */
+
+/* IDirect3DResource8  [struct; ce-only; D3d8.lib] */
+
+/* IDirect3DSurface8  [struct; ce-only; D3d8.lib] */
+
+/* IDirect3DSwapChain8  [struct; ce-only; D3d8.lib] */
+
+/* IDirect3DTexture8  [struct; ce-only; D3d8.lib] */
+
+/* IDirect3DVertexBuffer8  [struct; ce-only; D3d8.lib] */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 15 constants, 6 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 15 constants, 3 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _CPL_
 #define _CPL_
@@ -46,6 +46,7 @@ typedef struct tagCPLINFO {
  int idInfo; 
  LONG lData; 
 } CPLINFO;
+typedef CPLINFO *PCPLINFO, *LPCPLINFO;
 
 /* NEWCPLINFO  [struct; shared; A/W NEWCPLINFOA,NEWCPLINFOW (CE is W-side)] */
 typedef struct tagNEWCPLINFO { 
@@ -58,6 +59,7 @@ typedef struct tagNEWCPLINFO {
  TCHAR szInfo[64]; 
  TCHAR szHelpFile[128]; 
 } NEWCPLINFO;
+typedef NEWCPLINFO *PNEWCPLINFO, *LPNEWCPLINFO;
 
 /* ==================================================================
  * functions and callbacks

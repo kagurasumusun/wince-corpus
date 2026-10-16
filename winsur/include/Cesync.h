@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 14 constants, 12 declarations, 4 outlines, 0 base types, 0 extra macros, 41 extra decls
+ * 14 constants, 12 declarations, 4 outlines, 0 base types, 0 extra macros, 39 extra decls
  */
 #ifndef _CESYNC_
 #define _CESYNC_
@@ -48,6 +48,23 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* ReplDialogs  [enum; ce-only] */
+enum ReplDialogs {
+ OPTIONS_DIALOG
+};
+
+/* STOREINFO  [struct; ce-only] */
+typedef struct tagStoreInfo {
+ UINT cbStruct;
+ UINT uFlags;
+ TCHAR szProgId[ 256 ];
+ TCHAR szStoreDesc[ 200 ];
+ UINT uTimerRes;
+ UINT cbMaxStoreId;
+ UINT cbStoreId;
+ LPBYTE lpbStoreId;
+} STOREINFO, *PSTOREINFO;
+
 /* DEVINFO  [struct; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   flGraphicsCaps */
@@ -60,32 +77,8 @@
 /*   hpalDefault */
 /*   flGraphicsCaps2 */
 
-/* PSTOREINFO  [extra struct] */
-typedef struct tagStoreInfo {
-  UINT cbStruct;
-  UINT uFlags;
-  TCHAR szProgId[256];
-  TCHAR szStoreDesc[200];
-  UINT uTimerRes;
-  UINT cbMaxStoreId;
-  UINT cbStoreId;
-  LPBYTE lpbStoreId;
-} STOREINFO, *PSTOREINFO;
-
-/* POBJTYPEINFO  [extra struct] */
-typedef struct tagObjTypeInfo {UINT cbStruct;OBJTYPENAMEW szObjType;UINT uFlags;WCHAR szName[80];UINT cObjects;UINT cbAllObj;FILETIME ftLastModified;} OBJTPYEINFO, *POBJTYPEINFO;
-
-/* PREPLSETUP  [extra struct] */
-typedef struct tagReplSetup { UINT cbStruct; BOOL fRead; DWORD dwFlags; HRESULT hr; OBJTYPENAME szObjType; IReplNotify * pNotify; DWORD oid; DWORD oidNew; IReplStore * pStore; HREPLFLD hFolder; HREPLITEM hItem; LPBYTE lpbVolumeID; UINT cbVolumeID;} REPLSETUP, * PREPLSETUP;
-
-/* PSDREQUEST  [extra struct] */
-typedef struct SDREQUEST { OBJTYPENAMEszObjType; BOOLfSet; UINTuCode; LPBYTElpbData; UINTcbData;} SDREQUEST, *PSDREQUEST;
-
 /* OPTIONS_DIALOG  [extra enum] */
 enum ReplDialogs {OPTIONS_DIALOG };
-
-/* PFINDOBJINFO  [extra struct] */
-typedef struct tagFindObjInfo { UINTuFlags; OBJTYPENAMEszObjType; UINT *poid; UINTcUnChg; UINTcChg; LPBYTElpbVolumeID; UINTcbVolumeID; LPVOIDlpvUser;} FINDOBJINFO, *PFINDOBJINFO;
 
 /* ==================================================================
  * functions and callbacks
@@ -117,13 +110,16 @@ HRESULT FindFirstItem( HREPLFLD hFolder, HREPLITEM *phItem, BOOL *pfExist);
 HRESULT FindItemClose( HREPLFLD hFolder);
 HRESULT FindNextItem( HREPLFLD hFolder, HREPLITEM *phItem, BOOL *pfExist);
 void FreeObject( HREPLOBJ hObject);
+HRESULT GetConflictInfo( PCONFINFO pConfInfo);
 hHREPLFLD GetFolderHandle ( );
 BOOL GetObjTypeInfo (POBJTYPEINFO pObjTypeInfo);
+HRESULT GetObjTypeUIData( HREPLFLD hFolder, POBJUIDATA pData);
 HRESULT GetPacket( LPBYTE *lppbData, DWORD *pcbData, DWORD cbRecommend);
 BOOL InitObjType ( LPWSTR lpszObjType, IReplObjHandler *ppObjHandler, UINT uPartnerBit);
 HRESULT IsFolderChanged( HREPLFLD hFolder, BOOL *pfChanged);
 BOOL IsItemChanged( HREPLFLD hFolder, HREPLITEM hItem, HREPLITEM hItemComp);
 HRESULT IsValidObject( HREPLFLD hFolder, HREPLITEM hItem, UINT uFlags);
+BOOL ObjectNotify( POBJNOTIFY pNotify);
 UINT ObjectToBytes( HREPLOBJ hObject, LPBYTE lpb);
 HRESULT OnItemNotify( UINT uCode, LPSTR lpszProgId, LPSTR lpszObjType, HREPLITEM hItem, ULONG ulFlags);
 HRESULT OnObjectCompleted( PREPLSETUP pSetup);

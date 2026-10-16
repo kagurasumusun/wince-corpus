@@ -49,6 +49,36 @@
 /* GPS_POSITION  [struct; ce-only] */
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* GPS_FIX_QUALITY  [enum; ce-only] */
+typedef enum {
+ GPS_FIX_QUALITY_UNKNOWN = 0,
+ GPS_FIX_QUALITY_GPS,
+ GPS_FIX_QUALITY_DGPS
+} GPS_FIX_QUALITY;
+typedef GPS_FIX_QUALITY *PGPS_FIX_QUALITY, *LPGPS_FIX_QUALITY;
+
+/* GPS_FIX_SELECTION  [enum; ce-only] */
+typedef enum {
+ GPS_FIX_SELECTION_UNKNOWN = 0,
+ GPS_FIX_SELECTION_AUTO,
+ GPS_FIX_SELECTION_MANUAL
+} GPS_FIX_SELECTION;
+typedef GPS_FIX_SELECTION *PGPS_FIX_SELECTION, *LPGPS_FIX_SELECTION;
+
+/* GPS_FIX_TYPE  [enum; ce-only] */
+typedef enum {
+ GPS_FIX_UNKNOWN = 0,
+ GPS_FIX_2D,
+ GPS_FIX_3D
+} GPS_FIX_TYPE;
+typedef GPS_FIX_TYPE *PGPS_FIX_TYPE, *LPGPS_FIX_TYPE;
+
+/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

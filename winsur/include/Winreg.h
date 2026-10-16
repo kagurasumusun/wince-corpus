@@ -68,6 +68,20 @@
 #define TokenUser 1
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* REG_NOTIFY_INFORMATION  [struct; ce-only] */
+typedef struct _REG_NOTIFY_INFORMATION {
+ DWORD NextEntryOffset; 
+ DWORD Action; 
+ DWORD RegNameLength; 
+ WCHAR RegName[1]; 
+} REG_NOTIFY_INFORMATION, *PREG_NOTIFY_INFORMATION;
+
+/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

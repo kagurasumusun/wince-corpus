@@ -143,17 +143,153 @@ typedef struct FARSTRUCT tagSAFEARRAY {
  * declaration body no page prints
  * ================================================================ */
 
+/* CALLCONV  [enum; shared] */
+typedef enum tagCALLCONV {
+ CC_CDECL = 1,
+ CC_MSCPASCAL = 2,
+ CC_PASCAL = CC_MSCPASCAL,
+ CC_MACPASCAL = 3,
+ CC_STDCALL = 4,
+ CC_RESERVED = 5,
+ CC_SYSCALL = 6,
+ CC_MPWCDECL = 7,
+ CC_MPWPASCAL = 8,
+ CC_MAX = 9
+} CALLCONV;
+typedef CALLCONV *PCALLCONV, *LPCALLCONV;
+
 /* CURRENCY  [typedef; ce-only] */
 typedef CY CURRENCY;
 
+/* DESCKIND  [enum; shared] */
+typedef enum tagDESCKIND {
+ DESCKIND_NONE,
+ DESCKIND_FUNCDESC,
+ DESCKIND_VARDESC,
+ DESCKIND_TYPECOMP,
+ DESCKIND_IMPLICITAPPOBJ
+} DESCKIND;
+typedef DESCKIND *PDESCKIND, *LPDESCKIND;
+
+/* FUNCFLAGS  [enum; shared] */
+typedef enum tagFUNCFLAGS {
+ FUNCFLAG_FRESTRICTED = 0x1,
+ FUNCFLAG_FSOURCE = 0x2,
+ FUNCFLAG_FBINDABLE = 0x4,
+ FUNCFLAG_FREQUESTEDIT = 0x8,
+ FUNCFLAG_FDISPLAYBIND = 0x10,
+ FUNCFLAG_FDEFAULTBIND = 0x20,
+ FUNCFLAG_FHIDDEN = 0x40,
+ FUNCFLAG_FUSESGETLASTERROR = 0x80,
+ FUNCFLAG_FDEFAULTCOLLELEM = 0x100,
+ FUNCFLAG_FUIDEFAULT = 0x200,
+ FUNCFLAG_FNONBROWSABLE = 0x400,
+ FUNCFLAG_FREPLACEABLE = 0x800,
+ FUNCFLAG_FIMMEDIATEBIND = 0x1000
+} FUNCFLAGS;
+typedef FUNCFLAGS *PFUNCFLAGS, *LPFUNCFLAGS;
+
+/* FUNCKIND  [enum; shared] */
+typedef enum tagFUNCKIND {
+ FUNC_VIRTUAL,
+ FUNC_PUREVIRTUAL,
+ FUNC_NONVIRTUAL,
+ FUNC_STATIC,
+ FUNC_DISPATCH,
+} FUNCKIND;
+typedef FUNCKIND *PFUNCKIND, *LPFUNCKIND;
+
 /* HREFTYPE  [typedef; ce-only] */
 typedef unsigned long HREFTYPE;
+
+/* INVOKEKIND  [enum; shared] */
+typedef enum tagINVOKEKIND {
+ INVOKE_FUNC = DISPATCH_METHOD,
+ INVOKE_PROPERTYGET = DISPATCH_PROPERTYGET,
+ INVOKE_PROPERTYPUT = DISPATCH_PROPERTYPUT,
+ INVOKE_PROPERTYPUTREF = DISPATCH_PROPERTYPUTREF
+} INVOKEKIND;
+typedef INVOKEKIND *PINVOKEKIND, *LPINVOKEKIND;
 
 /* SAFEARRAYBOUND  [struct; shared] */
 typedef struct tagSAFEARRAYBOUND {
  unsigned long cElements;
  long lLbound;
 } SAFEARRAYBOUND;
+typedef SAFEARRAYBOUND *PSAFEARRAYBOUND, *LPSAFEARRAYBOUND;
+
+/* SYSKIND  [enum; shared] */
+typedef enum tagSYSKIND {
+ SYS_WIN16 = 0, 
+ SYS_WIN32 = SYS_WIN16 +1, 
+ SYS_MAC = SYS_WIN32 +1
+} SYSKIND;
+typedef SYSKIND *PSYSKIND, *LPSYSKIND;
+
+/* TYPEFLAGS  [enum; shared] */
+typedef enum tagTYPEFLAGS {
+ TYPEFLAG_FAPPOBJECT = 0x01, 
+ TYPEFLAG_FCANCREATE = 0x02, 
+ TYPEFLAG_FLICENSED = 0x04, 
+ TYPEFLAG_FPREDECLID = 0x08,
+ TYPEFLAG_FHIDDEN = 0x10, 
+ TYPEFLAG_FCONTROL = 0x20, 
+ TYPEFLAG_FDUAL = 0x40, 
+ TYPEFLAG_FNONEXTENSIBLE = 0x80, 
+ TYPEFLAG_FOLEAUTOMATION = 0x100, 
+ TYPEFLAG_FRESTRICTED = 0x200, 
+ TYPEFLAG_FAGGREGATABLE = 0x400, 
+ TYPEFLAG_FREPLACEABLE = 0x800, 
+ TYPEFLAG_FDISPATCHABLE = 0x1000, 
+ TYPEFLAG_FREVERSEBIND = 0x2000, 
+} TYPEFLAGS;
+typedef TYPEFLAGS *PTYPEFLAGS, *LPTYPEFLAGS;
+
+/* TYPEKIND  [enum; shared] */
+typedef enum tagTYPEKIND {
+ TKIND_ENUM = 0,
+ TKIND_RECORD,
+ TKIND_MODULE,
+ TKIND_INTERFACE,
+ TKIND_DISPATCH,
+ TKIND_COCLASS,
+ TKIND_ALIAS,
+ TKIND_UNION,
+ TKIND_MAX
+} TYPEKIND;
+typedef TYPEKIND *PTYPEKIND, *LPTYPEKIND;
+
+/* VARKIND  [enum; shared] */
+typedef enum tagVARKIND { 
+ VAR_PERINSTANCE = 0, 
+ VAR_STATIC = VAR_PERINSTANCE +1, 
+ VAR_CONST = VAR_STATIC +1, 
+ VAR_DISPATCH = VAR_CONST +1 
+} VARKIND;
+typedef VARKIND *PVARKIND, *LPVARKIND;
+
+/* VARTYPE  [enum, function; ce-only] */
+typedef unsigned short VARTYPE;
+enum VARENUM {
+ VT_EMPTY = 0, 
+ VT_NULL = 1, 
+ VT_I2 = 2, 
+ VT_I4 = 3, 
+ VT_R4 = 4, 
+ VT_R8 = 5, 
+ VT_CY = 6, 
+ VT_DATE = 7, 
+ VT_BSTR = 8, 
+ VT_DISPATCH = 9, 
+ VT_ERROR = 10, 
+ VT_BOOL = 11, 
+ VT_VARIANT = 12, 
+ VT_UNKNOWN = 13, 
+ VT_UI1 = 17, 
+};
+VT_RESERVED = 0x8000
+VT_BYREF = 0x4000
+VT_ARRAY = 0x2000
 
 /* SAFEARRAYBOUDN  [struct; ce-only] */
 typedef struct tagSAFEARRAYBOUND {
@@ -192,24 +328,6 @@ typedef struct FARSTRUCT tagPARAMDESC { unsigned long lpVarValue; unsigned short
 
 /* VARIANT_BOOL  [extra typedef] */
 typedef short VARIANT_BOOL;
-
-/* LPIDLDESC  [extra struct] */
-typedef struct tagIDLDESC {ULONG dwReserved;USHORT wIDLFlags;};IDLDESC, *LPIDLDESC;
-
-/* LPCUSTDATA  [extra struct] */
-typedef struct tagCUSTDATA {DWORD cCustData;LPCUSTDATAITEM prgCustData;} CUSTDATA, *LPCUSTDATA;
-
-/* LPCUSTDATAITEM  [extra struct] */
-typedef struct tagCUSTDATAITEM {GUID guid;VARIANTARG varValue;} CUSTDATAITEM, *LPCUSTDATAITEM;
-
-/* LPELEMDESC  [extra struct] */
-typedef struct tagELEMDESC {TYPEDESC tdesc;union {IDLDESC idldesc;PARAMDESC paramdesc; };} ELEMDES, *LPELEMDESC;
-
-/* LPTLIBATTR  [extra struct] */
-typedef struct FARSTRUCT tagTLIBATTR {GUIDguid;LCIDlcid;SYSKINDsyskind;unsignedshort wMajorVerNum;unsignedshort wMinorVerNum;unsignedshort wLibFlags;} TLIBATTR, FAR* LPTLIBATTR;
-
-/* LPTYPEATTR  [extra struct] */
-typedef struct FARSTRUCT tagTYPEATTR {GUID guid;LCID lcid;unsigned long dwReserved;MEMBERID memidConstructor;MEMBERID memidDestructor;OLECHAR FAR* lpstrSchema;unsigned long cbSizeInstance;TYPEKIND typekind;unsigned short cFuncs;unsigned short cVars;unsigned short cImplTypes;unsigned short cbAlignment;unsigned short wTypeFlags;unsigned short wMajorVerNum;unsigned short wMinorVerNum;TYPEDESC tdescAlias;IDLDESC idldescType;} TYPEATTR, FAR *LPTYPEATTR;
 
 /* x2000  [extra enum] */
 typedef unsigned short VARTYPE;

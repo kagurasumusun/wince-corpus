@@ -47,6 +47,7 @@ typedef enum _PH_COLOR
  phcDisplayItemSelectedBorderColor,
  phcLast,
 } PH_COLOR;
+typedef PH_COLOR *PPH_COLOR, *LPPH_COLOR;
 
 /* PH_FONT  [enum; ce-only; PhCommon.dll] */
 typedef enum _PH_FONT
@@ -58,6 +59,7 @@ typedef enum _PH_FONT
  phfBigNumbersText,
  phfLast,
 } PH_FONT;
+typedef PH_FONT *PPH_FONT, *LPPH_FONT;
 
 /* PH_MESSAGE_BOX_PARAMETERS  [struct; ce-only; PhCommon.dll] */
 typedef struct _PH_MESSAGE_BOX_PARAMETERS
@@ -75,6 +77,7 @@ typedef struct _PH_MESSAGE_BOX_PARAMETERS
  HWND Dialog; 
  } result;
 } PH_MESSAGE_BOX_PARAMETERS;
+typedef PH_MESSAGE_BOX_PARAMETERS *PPH_MESSAGE_BOX_PARAMETERS, *LPPH_MESSAGE_BOX_PARAMETERS;
 
 /* PHMS_ITEM  [struct; ce-only; PhCommon.dll] */
 typedef struct _PHMS_ITEM
@@ -82,6 +85,7 @@ typedef struct _PHMS_ITEM
  int Identifier;
  int StringId;
 } PHMS_ITEM;
+typedef PHMS_ITEM *PPHMS_ITEM, *LPPHMS_ITEM;
 
 /* STATUS_HEADER_PRIORITY  [enum; ce-only; PhCommon.dll] */
 typedef enum _STATUS_HEADER_PRIORITY
@@ -97,6 +101,7 @@ typedef enum _STATUS_HEADER_PRIORITY
  shpDefault, 
  StatusHeaderPriorities, 
 } STATUS_HEADER_PRIORITY;
+typedef STATUS_HEADER_PRIORITY *PSTATUS_HEADER_PRIORITY, *LPSTATUS_HEADER_PRIORITY;
 
 /* PH_MENU_SCREEN_PARAMETERS  [struct; ce-only; PhCommon.dll] */
 typedef struct _PH_MENU_SCREEN_PARAMETERS
@@ -115,6 +120,7 @@ typedef struct _PH_MENU_SCREEN_PARAMETERS
  HWND Dialog; 
  } result;
 } PH_MENU_SCREEN_PARAMETERS;
+typedef PH_MENU_SCREEN_PARAMETERS *PPH_MENU_SCREEN_PARAMETERS, *LPPH_MENU_SCREEN_PARAMETERS;
 
 /* ==================================================================
  * functions and callbacks

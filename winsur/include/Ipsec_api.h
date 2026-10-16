@@ -12,6 +12,35 @@
 
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* IPSEC_API_MODE_INFO  [struct, typedef; ce-only] */
+typedef struct {
+ DWORD inAction;
+ DWORD outAction;
+ DWORD auth;
+ PBYTE authInfo;
+ DWORD authInfoSize;
+ DWORD mmHashMask;
+ DWORD mmEncMask;
+ DWORD qmHashMask;
+ DWORD qmEncMask;
+ DWORD dhMask;
+ DWORD protocol;
+ DWORD scrIP;
+} IPSEC_API_MODE_INFO, *PIPSEC_API_MODE_INFO;
+
+/* IPSEC_API_PARAM  [struct, typedef; ce-only] */
+typedef struct {
+ DWORD id;
+ PVOID val;
+ DWORD valSize;
+} IPSEC_API_PARAM, *PIPSEC_API_PARAM;
+
+/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
@@ -19,6 +48,18 @@
 
 /* IsIPSecRunning  [function; ce-only; CE 5.0..699; Ipsec_api.lib] */
 HRESULT IsIPSecRunning(void);
+
+/* SetIPSecConfig  [function; ce-only; CE 5.0..699; Ipsec_api.lib] */
+HRESULT SetIPSecConfig(
+ IPSEC_API_PARAM param,
+ DWORD flags
+);
+
+/* SetIPSecMode  [function; ce-only; CE 5.0..699; Ipsec_api.lib] */
+HRESULT SetIPSecMode(
+ IPSEC_API_MODE_INFO modeInfo,
+ DWORD flags
+);
 
 /* StartIPSec  [function; ce-only; CE 5.0..699; Ipsec_api.lib] */
 HRESULT StartIPSec(void);

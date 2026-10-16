@@ -12,6 +12,28 @@
 
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* DEFRAG_OPTIONS  [struct; ce-only] */
+typedef struct _DEFRAG_OPTIONS {
+ DWORD dwFatToUse;
+ DWORD dwFlags;
+} DEFRAG_OPTIONS, *PDEFRAG_OPTIONS;
+
+/* FRAGNODE  [struct; ce-only] */
+typedef struct _FRAGNODE {
+ DWORD dwStartCluster;
+ DWORD dwLength;
+ DWORD dwPrevCluster;
+ DWORD dwNextCluster;
+ DWORD dwDirEntryOffset;
+ _FRAGNODE* pNext;
+} FRAGNODE, *PFRAGNODE;
+
+/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

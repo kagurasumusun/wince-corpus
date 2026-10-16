@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 591 constants, 1 declarations, 0 outlines, 0 base types, 13 extra macros, 86 extra decls
+ * 591 constants, 0 declarations, 0 outlines, 0 base types, 13 extra macros, 62 extra decls
  */
 #ifndef _D3DM_
 #define _D3DM_
@@ -639,32 +639,18 @@ HRESULT EndScene();
 UINT GetAdapterCount();
 UINT GetAdapterModeCount( UINT Adapter );
 HRESULT GetCurrentTexturePalette( UINT* PaletteNumber );
-HRESULT GetDepthStencilSurface( IDirect3DMobileSurface** ppZStencilSurface );
-HRESULT GetDirect3D( IDirect3DMobile** ppD3DM );
-HRESULT GetFrontBuffer( IDirect3DMobileSurface** pFrontBuffer );
-HRESULT GetIndices( IDirect3DMobileIndexBuffer** ppIndexData );
 DWORD GetLOD();
 DWORD GetLevelCount();
 HRESULT GetLightEnable( DWORD Index, BOOL* pEnable );
 DWORD GetPriority();
-HRESULT GetRenderTarget( IDirect3DMobileSurface** ppRenderTarget );
-HRESULT GetStreamSource( UINT StreamNumber, IDirect3DMobileVertexBuffer** ppStreamData, UINT* pStride );
-HRESULT GetSurfaceLevel( UINT Level, IDirect3DMobileSurface** ppSurfaceLevel );
-HRESULT GetTexture( DWORD Stage, IDirect3DMobileBaseTexture** ppTexture );
 HRESULT LightEnable( DWORD Index, BOOL Enable );
 void PreLoad();
-HRESULT ProcessVertices( UINT SrcStartIndex, UINT DestIndex, UINT VertexCount, IDirect3DMobileVertexBuffer* pDestBuffer, DWORD Flags );
 HRESULT RegisterSoftwareDevice( VOID* pInitializeFunction );
 HRESULT ResourceManagerDiscardBytes( DWORD Bytes );
 HRESULT SetCurrentTexturePalette( UINT PaletteNumber );
-HRESULT SetIndices( IDirect3DMobileIndexBuffer* pIndexData );
 DWORD SetLOD( DWORD LODNew );
 DWORD SetPriority( DWORD PriorityNew );
-HRESULT SetRenderTarget( IDirect3DMobileSurface* pRenderTarget, IDirect3DMobileSurface* pNewZStencil );
-HRESULT SetStreamSource( UINT StreamNumber, IDirect3DMobileVertexBuffer* pStreamData, UINT Stride );
-HRESULT SetTexture( DWORD Stage, IDirect3DMobileBaseTexture* pTexture );
 HRESULT UnlockRect();
-HRESULT UpdateTexture( IDirect3DMobileBaseTexture* pSourceTexture, IDirect3DMobileBaseTexture* pDestinationTexture );
 HRESULT ValidateDevice( DWORD* pNumPasses );
 
 #endif /* _D3DM_ */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 26 constants, 11 declarations, 8 outlines, 0 base types, 0 extra macros, 4 extra decls
+ * 26 constants, 11 declarations, 8 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _IPRTRMIB_
 #define _IPRTRMIB_
@@ -56,6 +56,112 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* MIB_IPADDRROW  [struct; ce-only] */
+typedef struct _MIB_IPADDRROW {
+ DWORD dwAddr; 
+ DWORD dwIndex; 
+ DWORD dwMask; 
+ DWORD dwBCastAddr; 
+ DWORD dwReasmSize; 
+ unsigned short unused1; 
+ unsigned short unused2; 
+} MIB_IPADDRROW, *PMIB_IPADDRROW;
+
+/* MIB_IPFORWARDROW  [struct; shared] */
+typedef struct _MIB_IPFORWARDROW {
+ DWORD dwForwardDest; 
+ DWORD dwForwardMask; 
+ DWORD dwForwardPolicy; 
+ DWORD dwForwardNextHop; 
+ DWORD dwForwardIfIndex; 
+ DWORD dwForwardType; 
+ DWORD dwForwardProto; 
+ DWORD dwForwardAge; 
+ DWORD dwForwardNextHopAS; 
+ DWORD dwForwardMetric1; 
+ DWORD dwForwardMetric2; 
+ DWORD dwForwardMetric3; 
+ DWORD dwForwardMetric4; 
+ DWORD dwForwardMetric5; 
+} MIB_IPFORWARDROW, *PMIB_IPFORWARDROW;
+
+/* MIB_IPSTATS  [struct; ce-only] */
+typedef struct _MIB_IPSTATS {
+ DWORD dwForwarding; 
+ DWORD dwDefaultTTL; 
+ DWORD dwInReceives; 
+ DWORD dwInHdrErrors; 
+ DWORD dwInAddrErrors; 
+ DWORD dwForwDatagrams; 
+ DWORD dwInUnknownProtos; 
+ DWORD dwInDiscards; 
+ DWORD dwInDelivers; 
+ DWORD dwOutRequests; 
+ DWORD dwRoutingDiscards; 
+ DWORD dwOutDiscards; 
+ DWORD dwOutNoRoutes; 
+ DWORD dwReasmTimeout; 
+ DWORD dwReasmReqds; 
+ DWORD dwReasmOks; 
+ DWORD dwReasmFails; 
+ DWORD dwFragOks; 
+ DWORD dwFragFails; 
+ DWORD dwFragCreates; 
+ DWORD dwNumIf; 
+ DWORD dwNumAddr; 
+ DWORD dwNumRoutes; 
+} MIB_IPSTATS, *PMIB_IPSTATS;
+
+/* MIB_PROXYARP  [struct; shared] */
+typedef struct _MIB_PROXYARP {
+ DWORD dwAddress; 
+ DWORD dwMask; 
+ DWORD dwIfIndex; 
+} MIB_PROXYARP, *PMIB_PROXYARP;
+
+/* MIB_TCPROW  [struct; ce-only] */
+typedef struct _MIB_TCPROW {
+ DWORD dwState; 
+ DWORD dwLocalAddr; 
+ DWORD dwLocalPort; 
+ DWORD dwRemoteAddr; 
+ DWORD dwRemotePort; 
+} MIB_TCPROW, *PMIB_TCPROW;
+
+/* MIB_TCPSTATS  [struct; ce-only] */
+typedef struct _MIB_TCPSTATS {
+ DWORD dwRtoAlgorithm; 
+ DWORD dwRtoMin; 
+ DWORD dwRtoMax; 
+ DWORD dwMaxConn; 
+ DWORD dwActiveOpens; 
+ DWORD dwPassiveOpens; 
+ DWORD dwAttemptFails; 
+ DWORD dwEstabResets; 
+ DWORD dwCurrEstab; 
+ DWORD dwInSegs; 
+ DWORD dwOutSegs; 
+ DWORD dwRetransSegs; 
+ DWORD dwInErrs; 
+ DWORD dwOutRsts; 
+ DWORD dwNumConns; 
+} MIB_TCPSTATS, *PMIB_TCPSTATS;
+
+/* MIB_UDPROW  [struct; shared] */
+typedef struct _MIB_UDPROW {
+ DWORD dwLocalAddr; 
+ DWORD dwLocalPort; 
+} MIB_UDPROW, *PMIB_UDPROW;
+
+/* MIB_UDPSTATS  [struct; shared] */
+typedef struct _MIB_UDPSTATS {
+ DWORD dwInDatagrams; 
+ DWORD dwNoPorts; 
+ DWORD dwInErrors; 
+ DWORD dwOutDatagrams; 
+ DWORD dwNumAddrs; 
+} MIB_UDPSTATS, *PMIB_UDPSTATS;
+
 /* MIBICMPSTATS  [struct; shared] */
 typedef struct _MIBICMPSTATS {
  DWORD dwMsgs; 
@@ -72,12 +178,19 @@ typedef struct _MIBICMPSTATS {
  DWORD dwAddrMasks; 
  DWORD dwAddrMaskReps; 
 } MIBICMPSTATS;
+typedef MIBICMPSTATS *PMIBICMPSTATS, *LPMIBICMPSTATS;
 
 /* MIBICMPINFO  [struct; shared] */
 typedef struct _MIBICMPINFO {
  MIBICMPSTATS icmpInStats; 
  MIBICMPSTATS icmpOutStats; 
 } MIBICMPINFO;
+typedef MIBICMPINFO *PMIBICMPINFO, *LPMIBICMPINFO;
+
+/* MIB_ICMP  [struct, typedef; shared] */
+typedef struct _MIB_ICMP {
+ MIBICMPINFO stats; 
+} MIB_ICMP, *PMIB_ICMP;
 
 /* MIB_IFROW  [struct; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
@@ -135,17 +248,5 @@ typedef struct _MIBICMPINFO {
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   dwNumEntries */
 /*   table */
-
-/* PMIB_IPADDRROW  [extra struct] */
-typedef struct _MIB_IPADDRROW {DWORDdwAddr;DWORDdwIndex;DWORDdwMask;DWORDdwBCastAddr;DWORDdwReasmSize;unsignedshortunused1;unsignedshortunused2;} MIB_IPADDRROW,*PMIB_IPADDRROW;
-
-/* PMIB_IPSTATS  [extra struct] */
-typedef struct _MIB_IPSTATS {DWORD dwForwarding; DWORD dwDefaultTTL; DWORD dwInReceives; DWORD dwInHdrErrors; DWORD dwInAddrErrors; DWORD dwForwDatagrams; DWORD dwInUnknownProtos; DWORD dwInDiscards; DWORD dwInDelivers; DWORD dwOutRequests; DWORD dwRoutingDiscards; DWORD dwOutDiscards; DWORD dwOutNoRoutes; DWORD dwReasmTimeout; DWORD dwReasmReqds; DWORD dwReasmOks; DWORD dwReasmFails; DWORD dwFragOks; DWORD dwFragFails; DWORD dwFragCreates;DWORD dwNumIf; DWORD dwNumAddr; DWORD dwNumRoutes; } MIB_IPSTATS, *PMIB_IPSTATS;
-
-/* PMIB_TCPROW  [extra struct] */
-typedef struct _MIB_TCPROW {DWORD dwState; DWORD dwLocalAddr; DWORD dwLocalPort; DWORD dwRemoteAddr; DWORD dwRemotePort;} MIB_TCPROW,*PMIB_TCPROW;
-
-/* PMIB_TCPSTATS  [extra struct] */
-typedef struct _MIB_TCPSTATS {DWORD dwRtoAlgorithm;DWORD dwRtoMin; DWORD dwRtoMax; DWORD dwMaxConn; DWORD dwActiveOpens; DWORD dwPassiveOpens; DWORD dwAttemptFails; DWORD dwEstabResets; DWORD dwCurrEstab; DWORD dwInSegs; DWORD dwOutSegs; DWORD dwRetransSegs; DWORD dwInErrs; DWORD dwOutRsts; DWORD dwNumConns; } MIB_TCPSTATS,*PMIB_TCPSTATS;
 
 #endif /* _IPRTRMIB_ */

@@ -96,6 +96,7 @@ typedef struct Var {
  WORD Padding[];
  DWORD Value[];
 } Var;
+typedef Var *PVar, *LPVar;
 
 /* VarFileInfo  [struct; ce-only; heuristic-prefix] */
 typedef struct VarFileInfo {
@@ -106,6 +107,7 @@ typedef struct VarFileInfo {
  WORD Padding[];
  Var Children[];
 } VarFileInfo;
+typedef VarFileInfo *PVarFileInfo, *LPVarFileInfo;
 
 /* MEMBERID  [extra typedef] */
 typedef [public] long MEMBERID;
@@ -314,6 +316,12 @@ HRESULT GetErrorInfo(
 int SystemTimeToVariantTime(
  SYSTEMTIME lpSystemTime, 
  double* pvtime 
+);
+
+/* VariantTimeToSystemTime  [function; shared; CE 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
+int VariantTimeToSystemTime(
+ double vtime, 
+ LPSYSTEMTIME lpSystemTime 
 );
 #endif /* _WIN32_WCE */
 

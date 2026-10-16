@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2 constants, 9 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 2 constants, 9 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _MSGQUEUE_
 #define _MSGQUEUE_
@@ -48,6 +48,20 @@ BOOL WriteMsgQueue(
  DWORD cbDataSize,
  DWORD dwTimeout,
  DWORD dwFlags
+);
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
+
+/* ReadMsgQueueEx  [function; ce-only; CE 6.0..699; coredll.lib] */
+BOOL ReadMsgQueueEx(
+ HANDLE hMsgQ, 
+ LPVOID lpBuffer,
+ DWORD cbBufferSize,
+ LPDWORD lpNumberOfBytesRead,
+ DWORD dwTimeout,
+ DWORD *pdwFlags,
+ PHANDLE phTok
 );
 #endif /* _WIN32_WCE */
 

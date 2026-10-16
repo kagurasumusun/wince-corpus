@@ -50,11 +50,6 @@ void _cdecl AtlTrace( LPCTSTR lpszFormat, ... );
  * parser did not turn into an entity declaration
  * ================================================================ */
 
-/* typedef */
-typedef CComAutoCriticalSection AutoCriticalSection;
-typedef CComCriticalSection CriticalSection;
-typedef CComMultiThreadModelNoCS ThreadModelNoCS;
-
 /* function */
 void Append( const CComBSTR& bstrSrc );
 void CComAutoCriticalSection( );

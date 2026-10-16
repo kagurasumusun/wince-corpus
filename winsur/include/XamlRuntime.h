@@ -29,6 +29,26 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* VALUE_TYPE  [enum; ce-only] */
+enum VALUE_TYPE
+{
+ VTYPE_NONE = 0,
+ VTYPE_FLOAT = 1,
+ VTYPE_INT = 2,
+ VTYPE_BOOL = 3,
+ VTYPE_UINT = 4,
+ VTYPE_COLOR = 5,
+ VTYPE_READONLY_STRING = 6,
+ VTYPE_BSTR = 7
+ VTYPE_POINT = 8,
+ VTYPE_RECT = 9,
+ VTYPE_THICKNESS = 10,
+ VTYPE_SIZE = 11,
+ VTYPE_GRIDLENGTH = 12,
+ VTYPE_CORNER_RADIUS = 13,
+ VTYPE_OBJECT = 14
+};
+
 /* XRAlignmentX  [enum; ce-only] */
 enum XRAlignmentX{
  XRAlignmentX_Left=0,
@@ -441,6 +461,41 @@ enum XRVerticalAlignment{
 enum XRVisibility{
  XRVisibility_Visible = 0,
  XRVisibility_Collapsed = 1
+};
+
+/* XRXamlSource  [struct; ce-only] */
+struct XRXamlSource {
+ enum SourceType {
+ XRS_STRING = 0,
+ XRS_FILENAME,
+ XRS_RESOURCE,
+ XRS_STREAM
+ };
+ SourceType Type; 
+ union{
+ const WCHAR *pStr; 
+ IStream *pStream;
+ struct tagResouce {
+ HMODULE hMod;
+ const WCHAR *pResType;
+ const WCHAR *pResID;
+ } Resource;
+ } Value;
+ Void SetFile(const WCHAR *psz) {
+ Type = XRS_FILENAME; Value.pStr = psz;
+ }
+ void SetString(const WCHAR *psz) {
+ Type = XRS_STRING; Value.pStr = psz;
+ }
+ void SetResource(HMODULE h, const WCHAR *pType, const WCHAR *pID) {
+ Type = XRS_RESOURCE;
+ Value.Resource.hMod = h;
+ Value.Resource.pResType = pType;
+ Value.Resource.pResID = pID;
+ }
+ void SetStream(IStream* p) {
+ Type = XRS_STREAM; Value.pStream = p; 
+ }
 };
 
 /* DurationType  [extra struct] */

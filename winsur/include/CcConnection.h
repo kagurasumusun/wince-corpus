@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 16 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 13 extra decls
  */
 #ifndef _CCCONNECTION_
 #define _CCCONNECTION_
@@ -17,7 +17,6 @@
  * ================================================================ */
 
 /* function */
-HRESULT CloseProcessHandle ( DWORDin_ProcessHandle);
 HRESULT DisconnectDevice ();
 HRESULT GetFileInfo( LPCOLESTRin_szDeviceFile,FileInfo*out_pFileInfo);
 HRESULT MakeDirectory( LPCOLESTRin_szDeviceDirectory);

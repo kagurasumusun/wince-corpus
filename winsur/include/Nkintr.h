@@ -12,6 +12,19 @@
 
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* MEMORY_SECTION  [struct; ce-only] */
+typedef struct _MEMORY_SECTION {
+ DWORD dwFlags;
+ DWORD dwStart;
+ DWORD dwLen;
+} MEMORY_SECTION, *PMEMORY_SECTION;
+
+/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
@@ -44,6 +57,18 @@ LONG KCompareFileTime(
  LPFILETIME lpft2
 );
 
+/* KFileTimeToSystemTime  [function; ce-only; CE 3.0..399, 5.0..699; Nk.lib, Nkstub.lib] */
+BOOL KFileTimeToSystemTime(
+ const FILETIME* lpft,
+ LPSYSTEMTIME lpst
+);
+
+/* KSystemTimeToFileTime  [function; ce-only; CE 3.0..399, 5.0..699; Nk.lib, Nkstub.lib] */
+BOOL KSystemTimeToFileTime(
+ LPSYSTEMTIME lpst,
+ LPFILETIME lpft
+);
+
 /* OEMClearDebugCommError  [function; ce-only; CE 3.0..399, 5.0..699; Nk.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
 void OEMClearDebugCommError (void);
 
@@ -51,6 +76,11 @@ void OEMClearDebugCommError (void);
 BOOL OEMGetExtensionDRAM( 
  LPDWORD lpMemStart, 
  LPDWORD lpMemLen 
+);
+
+/* OEMGetRealTime  [function; ce-only; CE 3.0..399, 5.0..699; Nk.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
+BOOL OEMGetRealTime(
+ LPSYSTEMTIME lpst 
 );
 
 /* OEMInit  [function; ce-only; CE 3.0..399, 5.0..699; Nk.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
@@ -96,6 +126,16 @@ void OEMPowerOff (void);
 /* OEMReadDebugByte  [function; ce-only; CE 3.0..699; Nk.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
 int OEMReadDebugByte (void);
 
+/* OEMSetAlarmTime  [function; ce-only; CE 3.0..699; Nk.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
+BOOL OEMSetAlarmTime(
+ LPSYSTEMTIME lpst 
+);
+
+/* OEMSetRealTime  [function; ce-only; CE 3.0..699; Nk.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
+BOOL OEMSetRealTime( 
+ LPSYSTEMTIME lpst 
+);
+
 /* OEMWriteDebugByte  [function; ce-only; CE 3.0..699; Nk.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
 void OEMWriteDebugByte(
  BYTE ch 
@@ -128,6 +168,12 @@ DWORD NKCallIntChain(
 /* NKIsSysIntrValid  [function; ce-only; CE 5.0..699; Nk.lib, Nkstub.lib] */
 BOOL NKIsSysIntrValid( 
  DWORD idInt 
+);
+
+/* OEMEnumExtensionDRAM  [function; ce-only; CE 5.0..699; Nk.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
+DWORD OEMEnumExtensionDRAM(
+ PMEMORY_SECTION pMemSections,
+ DWORD cMemSections
 );
 #endif /* _WIN32_WCE */
 

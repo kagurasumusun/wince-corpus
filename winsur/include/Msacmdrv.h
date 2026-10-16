@@ -17,6 +17,31 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* ACMDRVSTREAMHEADER  [struct; ce-only] */
+typedef struct {
+ DWORD cbStruct; 
+ DWORD fdwStatus; 
+ DWORD dwUser; 
+ LPBYTE pbSrc; 
+ DWORD cbSrcLength; 
+ DWORD cbSrcLengthUsed;
+ DWORD dwSrcUser; 
+ LPBYTE pbDst; 
+ DWORD cbDstLength; 
+ DWORD cbDstLengthUsed; 
+ DWORD dwDstUser; 
+ DWORD fdwConvert; 
+ LPACMDRVSTREAMHEADER padshNext; 
+ DWORD fdwDriver; 
+ DWORD dwDriver; 
+ DWORD fdwPrepared; 
+ DWORD dwPrepared; 
+ LPBYTE pbPreparedSrc; 
+ DWORD cbPreparedSrcLength; 
+ LPBYTE pbPreparedDst; 
+ DWORD cbPreparedDstLength; 
+} ACMDRVSTREAMHEADER;
+
 /* ACMDRVSTREAMSIZE  [struct; ce-only] */
 typedef struct {
  DWORD cbStruct;
@@ -24,5 +49,6 @@ typedef struct {
  DWORD cbSrcLength;
  DWORD cbDstLength;
 } ACMDRVSTREAMSIZE;
+typedef ACMDRVSTREAMSIZE *PACMDRVSTREAMSIZE, *LPACMDRVSTREAMSIZE;
 
 #endif /* _MSACMDRV_ */

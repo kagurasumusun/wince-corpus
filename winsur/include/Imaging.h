@@ -57,6 +57,7 @@ typedef struct tagColorPalette {
  UINT Count;
  ARGB Entries[1];
 } ColorPalette;
+typedef ColorPalette *PColorPalette, *LPColorPalette;
 
 /* DecoderInitFlag  [enum; ce-only] */
 enum DecoderInitFlag {

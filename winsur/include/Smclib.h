@@ -18,6 +18,35 @@
 /* SCARD_VENDOR_ATTR  [struct; ce-only] */
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* SCARD_READER_CAPABILITIES  [struct; ce-only] */
+typedef struct _SCARD_READER_CAPABILITIES {
+ struct {
+ ULONG Async;
+ ULONG Sync;
+ } SupportedProtocols;
+ ULONG ReaderType;
+ ULONG MechProperties;
+ ULONG CurrentState;
+ ULONG Channel;
+ struct {
+ ULONG Default;
+ ULONG Max;
+ } CLKFrequency;
+ struct {
+ ULONG Default;
+ ULONG Max;
+ } DataRate;
+ ULONG MaxIFSD;
+ ULONG PowerMgmtSupport;
+ ULONG Reserved[25];
+} SCARD_READER_CAPABILITIES, *PSCARD_READER_CAPABILITIES;
+
+/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

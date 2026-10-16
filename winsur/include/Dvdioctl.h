@@ -11,4 +11,19 @@
 #define _DVDIOCTL_
 
 
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* DVD_REGIONCE  [struct; ce-only] */
+typedef struct _DVD_REGIONCE {
+ HANDLE hDrive;
+ UCHAR CopySystem;
+ UCHAR RegionData;
+ UCHAR SystemRegion;
+ UCHAR ResetCount;
+} DVD_REGIONCE, *PDVD_REGIONCE;
+
 #endif /* _DVDIOCTL_ */

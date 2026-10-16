@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 18 constants, 15 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 18 constants, 13 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _OLE2_
 #define _OLE2_

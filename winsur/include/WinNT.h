@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1520 constants, 39 declarations, 24 outlines, 21 base types, 0 extra macros, 0 extra decls
+ * 1520 constants, 39 declarations, 14 outlines, 21 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINNT_
 #define _WINNT_
@@ -1648,16 +1648,6 @@ typedef WCHAR TBYTE;
 
 /* _IMAGE_ALPHA_RUNTIME_FUNCTION_ENTRY  [typedef; ce-only] */
 
-/* CRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
-
-/* HIMAGELIST  [typedef; ce-only; heuristic-prefix] */
-
-/* HIMC  [typedef; ce-only; heuristic-prefix] */
-
-/* LPCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
-
-/* LUID  [typedef; ce-only; heuristic-prefix] */
-
 /* MAKELANGID  [macro, function; shared] */
 WORD MAKELANGID( 
  USHORT usPrimaryLanguage, 
@@ -1669,24 +1659,14 @@ WORD MAKELANGID(
  ((DWORD)((((DWORD)((WORD )(srtid))) << 16) | \ 
  ((DWORD)((WORD )(lgid)))))
 
-/* PCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
-
-/* PCWCH  [typedef; ce-only; heuristic-prefix] */
-
-/* PLUID  [typedef; ce-only; heuristic-prefix] */
-
 /* PRIMARYLANGID  [macro, function; shared] */
 WORD PRIMARYLANGID( 
  WORD lgid 
 );
 
-/* REGSAM  [typedef; ce-only; heuristic-prefix] */
-
 /* SUBLANGID  [macro, function; shared] */
 
 /* TEXT  [macro, typedef, function; shared] */
-
-/* UNSIGNED  [typedef; ce-only; heuristic-prefix] */
 
 /* VOID  [typedef, macro; shared; entity-headers] */
 
@@ -1698,6 +1678,12 @@ WORD PRIMARYLANGID(
 
 /* BOOLEAN  [typedef; shared; entity-headers; win32-reference] */
 typedef BYTE BOOLEAN;
+
+/* IMAGE_DATA_DIRECTORY  [struct; shared] */
+typedef struct _IMAGE_DATA_DIRECTORY {
+ DWORD VirtualAddress;
+ DWORD Size;
+} IMAGE_DATA_DIRECTORY, *PIMAGE_DATA_DIRECTORY;
 
 /* LCID  [typedef; shared; entity-headers] */
 typedef unsigned long LCID;
@@ -1728,6 +1714,14 @@ typedef TCHAR *PTCHAR;
 
 /* SHORT  [typedef; shared; entity-headers; win32-reference] */
 typedef short SHORT;
+
+/* FILE_NOTIFY_INFORMATION  [struct; shared] */
+typedef struct _FILE_NOTIFY_INFORMATION {
+ DWORD NextEntryOffset; 
+ DWORD Action; 
+ DWORD FileNameLength; 
+ WCHAR FileName[1]; 
+} FILE_NOTIFY_INFORMATION, *PFILE_NOTIFY_INFORMATION;
 
 /* PCWSTR  [typedef; shared; entity-headers; win32-reference] */
 typedef CONST WCHAR *PCWSTR;

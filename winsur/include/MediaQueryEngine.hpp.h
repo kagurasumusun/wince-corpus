@@ -17,6 +17,13 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* DeviceStatus_e  [enum; ce-only; MQELib.lib] */
+enum DeviceStatus_e { 
+ DETACHED = 0, 
+ ATTACHED, 
+ ACTIVE 
+};
+
 /* Item_Attribute_e  [enum; ce-only; MQELib.lib] */
 enum Item_Attribute_e { 
  Attr_Title = 0, 
@@ -63,6 +70,24 @@ enum QueryEngineState_e {
  Error, 
  Stopped, 
  Running 
+};
+
+/* QuerySinkEvent_e  [enum; ce-only; MQELib.lib] */
+enum QuerySinkEvent_e { 
+ MQE_EVENT_NETWORKAVAILABLE = 0, 
+ MQE_EVENT_NETWORKNOTAVAILABLE, 
+ MQE_EVENT_SERVERCONNECTED, 
+ MQE_EVENT_SERVERDISCONNECTED, 
+ MQE_EVENT_SERVERACTIVATED, 
+ MQE_EVENT_SERVERDEACTIVATED, 
+ MQE_EVENT_DEVICEAUTHORIZED, 
+ MQE_EVENT_DEVICEAUTHORIZATIONREVOKED, 
+ MQE_EVENT_DEVICEREGISTERED, 
+ MQE_EVENT_DEVICEREGISTRATIONREVOKED, 
+ MQE_EVENT_CONTENTUPDATE_MUSIC, 
+ MQE_EVENT_CONTENTUPDATE_VIDEO, 
+ MQE_EVENT_CONTENTUPDATE_PICTURE, 
+ MQE_EVENT_CRITICALERROR 
 };
 
 /* SearchBy_e  [enum; ce-only; MQELib.lib] */

@@ -49,6 +49,12 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* POST_INIT_BUF  [struct; ce-only] */
+struct _POST_INIT_BUF {
+ HANDLE p_hDevice;
+ HKEY p_hDeviceKey;
+} POST_INIT_BUF, *PPOST_INIT_BUF;
+
 /* REGINI  [struct; ce-only] */
 typedef struct _REGINI {
  LPCWSTR lpszVal;
@@ -56,9 +62,7 @@ typedef struct _REGINI {
  DWORD dwLen;
  DWORD dwType;
 } REGINI;
-
-/* PPOST_INIT_BUF  [extra struct] */
-struct _POST_INIT_BUF {HANDLE p_hDevice;HKEY p_hDeviceKey;} POST_INIT_BUF, *PPOST_INIT_BUF;
+typedef REGINI *PREGINI, *LPREGINI;
 
 /* ==================================================================
  * functions and callbacks

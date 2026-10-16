@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 62 constants, 46 declarations, 0 outlines, 0 base types, 1 extra macros, 13 extra decls
+ * 62 constants, 46 declarations, 0 outlines, 0 base types, 1 extra macros, 11 extra decls
  */
 #ifndef _IPHLPAPI_
 #define _IPHLPAPI_
@@ -91,7 +91,19 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* GetBestInterfaceEx  [struct, function; shared; Iphlpapi.lib] */
+DWORD GetBestInterfaceEX(
+ struct sockaddr* pDestAddr, 
+ PDWORD pdwBestIfIndex 
+);
+
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
+
+/* GetBestInterface  [function, interface; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
+DWORD GetBestInterface(
+ IPAddr dwDestAddr, 
+ PDWORD pdwBestIfIndex 
+);
 
 /* GetFriendlyIfIndex  [function, interface; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
 DWORD GetFriendlyIfIndex(
@@ -105,17 +117,11 @@ typedef struct mib_entry { AsnObjectIdentifier Oid; void * Storage; BYTE Type; U
 /* PIP_ADDR_STRING  [extra struct] */
 typedef struct _IP_ADDR_STRING { struct _IP_ADDR_STRING* Next; IP_ADDRESS_STRING IpAddress; IP_MASK_STRING IpMask; DWORD Context;} IP_ADDR_STRING, *PIP_ADDR_STRING;
 
-/* PMIB_BEST_IF  [extra struct] */
-typedef struct _MIB_BEST_IF {DWORDdwDestAddr;DWORDdwIfIndex;} MIB_BEST_IF*, PMIB_BEST_IF;
-
 /* PMIB_IPFORWARDROW  [extra struct] */
 typedef struct _MIB_IPFORWARDROW {DWORD dwForwardDest;DWORD dwForwardMask;DWORD dwForwardPolicy;DWORD dwForwardNextHop;DWORD dwForwardIfIndex;DWORD dwForwardType;DWORD dwForwardProto;DWORD dwForwardAge;DWORD dwForwardNextHopAS;DWORD dwForwardMetric1;DWORD dwForwardMetric2;DWORD dwForwardMetric3;DWORD dwForwardMetric4;DWORD dwForwardMetric5;} MIB_IPFORWARDROW, *PMIB_IPFORWARDROW;
 
 /* PMIB_PROXYARP  [extra struct] */
 typedef struct _MIB_PROXYARP {DWORD dwAddress;DWORD dwMask;DWORD dwIfIndex;} MIB_PROXYARP,*PMIB_PROXYARP;
-
-/* PMIB_UDPROW  [extra struct] */
-typedef struct _MIB_UDPROW{DWORDdwLocalAddr;DWORDdwLocalPort;}MIB_UDPROW,*PMIB_UDPROW;
 
 /* PMIB_UDPSTATS  [extra struct] */
 typedef struct _MIB_UDPSTATS {DWORD dwInDatagrams; DWORD dwNoPorts; DWORD dwInErrors; DWORD dwOutDatagrams; DWORD dwNumAddrs; } MIB_UDPSTATS, *PMIB_UDPSTATS;
@@ -128,6 +134,15 @@ DWORD GetBestInterfaceEX( struct sockaddr* pDestAddr,  PDWORD pdwBestIfIndex  );
  * ================================================================ */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
+
+/* AddIPAddress  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
+DWORD AddIPAddress(
+ IPAddr Address,
+ IPMask IpMask,
+ DWORD IfIndex,
+ PULONG NTEContext,
+ PULONG NTEInstance 
+);
 
 /* CreateIpForwardEntry  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
 DWORD CreateIpForwardEntry( 
@@ -162,6 +177,12 @@ DWORD FlushIpNetTable(
  DWORD dwIfIndex 
 );
 
+/* GetAdapterIndex  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
+DWORD GetAdapterIndex(
+ LPWSTR AdapterName, 
+ PULONG IfIndex
+);
+
 /* GetBestRoute  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
 DWORD GetBestRoute(
  DWORD dwDestAddr, 
@@ -169,9 +190,22 @@ DWORD GetBestRoute(
  PMIB_IPFORWARDROW pBestRoute 
 );
 
+/* GetNumberOfInterfaces  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
+DWORD GetNumberOfInterfaces(
+ PDWORD pdwNumIf
+);
+
 /* GetUdpStatistics  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
 DWORD GetUdpStatistics(
  PMIB_UDPSTATS pStats
+);
+
+/* SendARP  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
+DWORD SendARP(
+ IPAddr DestIP, 
+ IPAddr SrcIP, 
+ PULONG pMacAddr,
+ PULONG PhyAddrLen 
 );
 
 /* SetIpForwardEntry  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
@@ -200,6 +234,7 @@ DWORD GetUdpStatisticsEx(
  * ================================================================ */
 
 /* function */
+DWORD GetBestInterfaceEX( struct sockaddr* pDestAddr, PDWORD pdwBestIfIndex );
 UINT MIB_control_func ( IN UINT Action, IN MIB_ENTRY *MibPtr, IN RFC1157VarBind *VarBind );
 UINT MIB_doneness_func ( IN UINT Action, IN MIB_ENTRY *MibPtr, IN RFC1157VarBind *VarBind );
 UINT MIB_leaf_func ( IN UINT Action, IN MIB_ENTRY *MibPtr, IN RFC1157VarBind *VarBind );

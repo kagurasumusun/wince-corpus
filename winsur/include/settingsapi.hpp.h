@@ -41,6 +41,7 @@ typedef struct tagPH_AUTHENTICATE_USER_PARAMETERS
  UINT NotificationMessage; 
  AuthenticationResult_e Result; 
 } PH_AUTHENTICATE_USER_PARAMETERS;
+typedef PH_AUTHENTICATE_USER_PARAMETERS *PPH_AUTHENTICATE_USER_PARAMETERS, *LPPH_AUTHENTICATE_USER_PARAMETERS;
 
 /* PHActiveVolumeMode  [enum; ce-only; PhCommon.dll] */
 enum PHActiveVolumeMode

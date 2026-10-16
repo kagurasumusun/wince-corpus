@@ -222,6 +222,30 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* _DSCP_TRAFFIC_TYPE  [enum; ce-only] */
+typedef enum _DSCP_TRAFFIC_TYPE {
+ DSCPTypeNotSet = 0,
+ DSCPBestEffort = 1,
+ DSCPBackground = 2,
+ DSCPExcellentEffort = 3,
+ DSCPVideo = 4,
+ DSCPAudio = 5,
+ DSCPControl = 6,
+ NumDSCPTrafficTypes = 6
+} DSCP_TRAFFIC_TYPE
+
+/* AFPROTOCOLS  [struct; shared] */
+typedef struct _AFPROTOCOLS {
+ INT iAddressFamily;
+ INT iProtocol;
+} AFPROTOCOLS, *PAFPROTOCOLS, *LPAFPROTOCOLS;
+
+/* BLOB  [struct; shared] */
+typedef struct _BLOB {
+ ULONG cbSize; 
+ BYTE* pBlobData; 
+} BLOB, LPBLOB;
+
 /* IN_ADDR  [struct, typedef; shared] */
 struct in_addr {
  union {
@@ -248,6 +272,7 @@ typedef struct _PROTOCOL_INFO {
  DWORD dwMessageSize; 
  LPTSTR lpProtocol;
 } PROTOCOL_INFO;
+typedef PROTOCOL_INFO *PPROTOCOL_INFO, *LPPROTOCOL_INFO;
 
 /* SERVICE_ADDRESS  [struct; shared] */
 typedef struct _SERVICE_ADDRESS { 
@@ -258,12 +283,14 @@ typedef struct _SERVICE_ADDRESS {
  BYTE* lpAddress; 
  BYTE* lpPrincipal; 
 } SERVICE_ADDRESS;
+typedef SERVICE_ADDRESS *PSERVICE_ADDRESS, *LPSERVICE_ADDRESS;
 
 /* SERVICE_ADDRESSES  [struct; shared] */
 typedef struct _SERVICE_ADDRESSES { 
  DWORD dwAddressCount; 
  SERVICE_ADDRESS Addresses[1]; 
 } SERVICE_ADDRESSES;
+typedef SERVICE_ADDRESSES *PSERVICE_ADDRESSES, *LPSERVICE_ADDRESSES;
 
 /* SERVICE_TYPE_VALUE_ABS  [struct; shared; A/W SERVICE_TYPE_VALUE_ABSA,SERVICE_TYPE_VALUE_ABSW (CE is W-side)] */
 typedef struct _SERVICE_TYPE_VALUE_ABS { 
@@ -273,6 +300,7 @@ typedef struct _SERVICE_TYPE_VALUE_ABS {
  LPTSTR lpValueName; 
  PVOID lpValue; 
 } SERVICE_TYPE_VALUE_ABS;
+typedef SERVICE_TYPE_VALUE_ABS *PSERVICE_TYPE_VALUE_ABS, *LPSERVICE_TYPE_VALUE_ABS;
 
 /* SOCKADDR  [struct, typedef; shared] */
 struct sockaddr {
@@ -294,6 +322,20 @@ struct sockaddr_irda {
  u_char irdaDeviceID[4]; 
  char irdaServiceName[25];};
 
+/* SOCKADDR_STORAGE  [struct; ce-only] */
+typedef struct sockaddr_storage {
+ short ss_family;
+ char __ss_pad1[_SS_PAD1SIZE];
+ __int64 __ss_align;
+ char __ss_pad2[_SS_PAD2SIZE];
+} SOCKADDR_STORAGE, *PSOCKADDR_STORAGE;
+
+/* SOCKET_ADDRESS  [struct; shared] */
+typedef struct _SOCKET_ADDRESS {
+ LPSOCKADDR lpSockaddr;
+ INT iSockaddrLength;
+} SOCKET_ADDRESS, *PSOCKET_ADDRESS;
+
 /* timeval  [struct; shared] */
 struct timeval {
  long tv_sec;
@@ -307,6 +349,22 @@ typedef struct _TRANSMIT_FILE_BUFFERS {
  PVOID Tail; 
  DWORD TailLength; 
 } TRANSMIT_FILE_BUFFERS;
+typedef TRANSMIT_FILE_BUFFERS *PTRANSMIT_FILE_BUFFERS, *LPTRANSMIT_FILE_BUFFERS;
+
+/* WSAECOMPARATOR  [enum; shared] */
+typedef enum _WSAEcomparator {
+ COMP_EQUAL = 0,
+ COMP_NOTLESS
+} WSAECOMPARATOR, *PWSAECOMPARATOR;
+
+/* CSADDR_INFO  [struct; shared] */
+typedef struct _CSADDR_INFO { 
+ SOCKET_ADDRESS LocalAddr; 
+ SOCKET_ADDRESS RemoteAddr; 
+ INT iSocketType; 
+ INT iProtocol; 
+} CSADDR_INFO;
+typedef CSADDR_INFO *PCSADDR_INFO, *LPCSADDR_INFO;
 
 /* SERVICE_TYPE_INFO_ABS  [struct; shared; A/W SERVICE_TYPE_INFO_ABSA,SERVICE_TYPE_INFO_ABSW (CE is W-side)] */
 typedef struct _SERVICE_TYPE_INFO_ABS { 
@@ -314,6 +372,7 @@ typedef struct _SERVICE_TYPE_INFO_ABS {
  DWORD dwValueCount; 
  SERVICE_TYPE_VALUE_ABS Values[1]; 
 } SERVICE_TYPE_INFO_ABS;
+typedef SERVICE_TYPE_INFO_ABS *PSERVICE_TYPE_INFO_ABS, *LPSERVICE_TYPE_INFO_ABS;
 
 /* fd_set  [struct, function; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */

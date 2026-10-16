@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 10 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _MINISH_
 #define _MINISH_
@@ -18,9 +18,7 @@
 
 /* function */
 HRESULT GetNearestLineFromAddress( ADDRESS_TYPEAddress, LPWSTR*ppszModule, LPWSTR*ppszSource, DWORD*dwLine);
-HRESULT GetNearestLineFromOffset( ADDRESS_TYPEOffset,LPCWSTRpszModule,LPWSTR*ppszSource,DWORD*pdwLine);
 HRESULT GetNearestSymbolFromAddress( ADDRESS_TYPEAddress,DWORD*pdwPid,LPWSTR*ppszModule,LPWSTR*ppszSource,LPWSTR* ppszRoutine,LPWSTR*ppszSymbol,DWORD*pdwDistance);
-HRESULT GetNearestSymbolFromOffset( ADDRESS_TYPEOffset,LPCWSTRpszModule,LPWSTR*ppszSource,LPWSTR*ppszRoutine, LPWSTR*ppszSymbol,DWORD*pdwDistance);
 HRESULT GetSymbolPath( LPWSTR* ppszPath);
 HRESULT SetSymbolPath( LPCWSTR pszPath);
 

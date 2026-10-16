@@ -156,18 +156,21 @@ typedef struct {
  AsnOpaque arbitrary;
  } asnValue;
 } AsnAny;
+typedef AsnAny *PAsnAny, *LPAsnAny;
 
 /* AsnCounter64  [struct, typedef; ce-only; snmp.lib] */
 typedef struct {
  ULONG LowPart;
  ULONG HighPart;
 } AsnCounter64;
+typedef AsnCounter64 *PAsnCounter64, *LPAsnCounter64;
 
 /* AsnObjectIdentifier  [struct, typedef; shared; snmp.lib] */
 typedef struct {
  UINT idLength;
  UINT* ids;
 } AsnObjectIdentifier;
+typedef AsnObjectIdentifier *PAsnObjectIdentifier, *LPAsnObjectIdentifier;
 
 /* AsnOctetString  [struct, typedef; shared; snmp.lib] */
 typedef struct {
@@ -175,18 +178,21 @@ typedef struct {
  UINT length;
  BOOL dynamic;
 } AsnOctetString;
+typedef AsnOctetString *PAsnOctetString, *LPAsnOctetString;
 
 /* SnmpVarBind  [struct, typedef; shared; snmp.lib] */
 typedef struct {
  AsnObjectName name;
  AsnObjectSyntax value;
 }SnmpVarBind;
+typedef SnmpVarBind *PSnmpVarBind, *LPSnmpVarBind;
 
 /* SnmpVarBindList  [struct, typedef; shared; snmp.lib] */
 typedef struct {
  SnmpVarBind* list;
  UINT len;
 }SnmpVarBindList;
+typedef SnmpVarBindList *PSnmpVarBindList, *LPSnmpVarBindList;
 
 /* ==================================================================
  * functions and callbacks
