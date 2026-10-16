@@ -75,18 +75,4 @@ BOOL WriteMsgQueue(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
-
-/* ReadMsgQueueEx  [function; ce-only; CE 6.0..699; coredll.lib] */
-BOOL ReadMsgQueueEx(
- HANDLE hMsgQ, 
- LPVOID lpBuffer,
- DWORD cbBufferSize,
- LPDWORD lpNumberOfBytesRead,
- DWORD dwTimeout,
- DWORD *pdwFlags,
- PHANDLE phTok
-);
-#endif /* _WIN32_WCE */
-
 #endif /* _MSGQUEUE_ */

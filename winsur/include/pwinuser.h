@@ -60,6 +60,20 @@ typedef struct tagGESTUREMETRICS {
  DWORD dwExtraInfo;
 } GESTUREMETRICS, *LPGESTUREMETRICS;
 
+/* GET_FOREGROUND_INFO  [struct; ce-only] */
+typedef struct tagGetForegroundInfo {
+ HWND hwndActive;
+ HWND hwndFocus;
+ HWND hwndMenu;
+ HWND hwndKeyboardDest;
+ DWORD fdwConversion;
+ DWORD fdwSentence;
+ BOOL fOpen;
+ DWORD dwCompStrLen;
+ HKL KeyboardLayoutHandle;
+} GET_FOREGROUND_INFO;
+typedef GET_FOREGROUND_INFO *PGET_FOREGROUND_INFO, *LPGET_FOREGROUND_INFO;
+
 /* PHYSICSENGINEINIT  [struct; ce-only] */
 typedef struct tagPHYSICSENGINEINIT {
  DWORD cbSize;
@@ -170,6 +184,14 @@ BOOL WINAPI NLedSetDevice(
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
+/* GetForegroundInfo  [function; ce-only; CE 5.0..699] */
+BOOL WINAPI GetForegroundInfo(
+ GET_FOREGROUND_INFO* pgfi
+);
+
+/* GetForegroundKeyboardLayoutHandle  [function; ce-only; CE 5.0..699] */
+HKL GetForegroundKeyboardLayoutHandle( void );
+
 /* GetForegroundKeyboardTarget  [function; ce-only; CE 5.0..699] */
 HWND GetForegroundKeyboardTarget(void);
 
@@ -214,19 +236,6 @@ BOOL GetAnimateMessageInfo(
 BOOL GetWindowAutoGesture(
  HWND hWnd, 
  LPWAGINFO lpAutoGestureInfo
-);
-
-/* QueryGestures  [function; ce-only; CE 6.0..699; TouchGesture.lib] */
-BOOL QueryGestures (
- HWND hwnd,
- UINT uScope,
- PULONGLONG pullFlags
-);
-
-/* RegisterGesture  [function; ce-only; CE 6.0..699; TouchGesture.lib] */
-BOOL RegisterGesture (
- LPCWSTR pszName,
- PDWORD_PTR pdwID
 );
 
 /* SetWindowAutoGesture  [function; ce-only; CE 6.0..699] */

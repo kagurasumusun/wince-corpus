@@ -500,11 +500,6 @@ VOID KdBreakPoint();
 /* KdPrint  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399] */
 VOID KdPrint(LPSTR *lpszString);
 
-/* NdisQueryMapRegisterCount  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399; Ndislib.lib] */
-NDIS_STATUS NdisQueryMapRegisterCount( 
-IN NDIS_INTERFACE_TYPE BusType, 
-OUT PUINT MapRegisterCount );
-
 /* NdisResetComplete  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399] */
 VOID NdisReset(OUT PNDIS_STATUS Status, 
 IN NDIS_HANDLE NdisBindingHandle );
@@ -618,13 +613,6 @@ VOID NdisRawReadPortBufferUlong(
  ULONG Length
 );
 
-/* NdisRawReadPortBufferUshort  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
-VOID NdisRawReadPortBufferUshort(
- ULONG Port,
- PUSHORT Buffer,
- ULONG Length
-);
-
 /* NdisRawReadPortUchar  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
 VOID NdisRawReadPortUchar(
  ULONG Port,
@@ -635,12 +623,6 @@ VOID NdisRawReadPortUchar(
 VOID NdisRawReadPortUlong(
  ULONG Port,
  PULONG Data
-);
-
-/* NdisRawReadPortUshort  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
-VOID NdisRawReadPortUshort(
- ULONG Port,
- PUSHORT Data
 );
 
 /* NdisRawWritePortBufferUchar  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
@@ -654,13 +636,6 @@ VOID NdisRawWritePortBufferUchar(
 VOID NdisRawWritePortBufferUlong(
  ULONG Port,
  PULONG Buffer,
- ULONG Length
-);
-
-/* NdisRawWritePortBufferUshort  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
-VOID NdisRawWritePortBufferUshort(
- ULONG Port,
- PUSHORT Buffer,
  ULONG Length
 );
 
@@ -680,14 +655,6 @@ VOID NdisRawWritePortUlong(
 VOID NdisRawWritePortUshort(
  ULONG Port,
  USHORT Data
-);
-
-/* NdisReadNetworkAddress  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
-VOID NdisReadNetworkAddress(
- PNDIS_STATUS Status,
- PVOID* NetworkAddress,
- PUINT NetworkAddressLength,
- NDIS_HANDLE ConfigurationHandle
 );
 
 /* NdisReadPciSlotInformation  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
@@ -1111,14 +1078,6 @@ VOID NdisFillMemory(
 /* NdisGeneratePartialCancelId  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
 UCHAR NdisGeneratePartialCancelId(void);
 
-/* NdisGetAdapterNames  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
-VOID NdisGetAdapterNames(
- PNDIS_STATUS Status,
- PBYTE pOutBuf,
- DWORD cbOutBufSize,
- PDWORD pcbReturned
-);
-
 /* NdisGetCacheFillSize  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
 ULONG NdisGetCacheFillSize();
 
@@ -1131,14 +1090,6 @@ VOID NdisGetCurrentSystemTime(
 VOID NdisGetDriverHandle(
  PNDIS_HANDLE NdisBindingHandle,
  PNDIS_HANDLE NdisDriverHandle
-);
-
-/* NdisGetProtocolNames  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
-VOID NdisGetProtocolNames(
- PNDIS_STATUS pStatus,
- PBYTE pOutBuf,
- DWORD cbOutBufSize,
- PDWORD pcbReturned
 );
 
 /* NdisGetSystemUpTime  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
@@ -1160,16 +1111,6 @@ VOID NdisIMDeregisterLayeredMiniport(
 /* NdisIMGetBindingContext  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
 NDIS_HANDLE NdisIMGetBindingContext(
  NDIS_HANDLE NdisBindingHandle
-);
-
-/* NdisInterlockedDecrement  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
-LONG NdisInterlockedDecrement(
- PLONG Addend
-);
-
-/* NdisInterlockedIncrement  [function; ce-only; CE 4.0..699; Ndis.lib, ndis.lib] */
-LONG NdisInterlockedIncrement(
- PLONG Addend
 );
 #endif /* _WIN32_WCE */
 
@@ -1293,13 +1234,6 @@ VOID NdisReadPortUlong(
  PULONG Data 
 );
 
-/* NdisReadPortUshort  [function; ce-only; CE 5.0..699] */
-VOID NdisReadPortUshort(
- NDIS_HANDLE NdisAdapterHandle,
- ULONG Port,
- PUSHORT Data 
-);
-
 /* NdisReadRegisterUchar  [function; ce-only; CE 5.0..699] */
 VOID NdisReadRegisterUchar(
  PUCHAR Register,
@@ -1310,12 +1244,6 @@ VOID NdisReadRegisterUchar(
 VOID NdisReadRegisterUlong(
  PULONG Register,
  PULONG Data
-);
-
-/* NdisReadRegisterUshort  [function; ce-only; CE 5.0..699] */
-VOID NdisReadRegisterUshort(
- PUSHORT Register,
- PUSHORT Data
 );
 
 /* NdisReEnumerateProtocolBindings  [function; ce-only; CE 5.0..699] */
@@ -1392,12 +1320,6 @@ VOID NdisWriteRegisterUchar(
 VOID NdisWriteRegisterUlong(
  PULONG Register,
  ULONG Data
-);
-
-/* NdisWriteRegisterUshort  [function; ce-only; CE 5.0..699] */
-VOID NdisWriteRegisterUshort(
- PUSHORT Register,
- USHORT Data
 );
 #endif /* _WIN32_WCE */
 

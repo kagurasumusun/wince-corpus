@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2457 constants, 306 declarations, 6 outlines, 1 base types, 0 extra macros, 0 extra decls
+ * 2457 constants, 309 declarations, 6 outlines, 1 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINUSER_
 #define _WINUSER_
@@ -3738,6 +3738,11 @@ HWND GetFocus(void);
 /* GetForegroundWindow  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; caret.lib, foregnd.lib] */
 HWND GetForegroundWindow(void);
 
+/* GetKeyboardLayout  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coreimm.lib, coreimm.lib] */
+HKL GetKeyboardLayout(
+ DWORD idThread
+);
+
 /* GetKeyboardLayoutName  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Kbdui.lib, kbdui.lib; A/W GetKeyboardLayoutNameA,GetKeyboardLayoutNameW (CE is W-side)] */
 BOOL GetKeyboardLayoutName( 
  LPTSTR pwszKLID 
@@ -4480,6 +4485,14 @@ BOOL GetCursorPos(
 /* GetDoubleClickTime  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Wmbase.lib, wmbase.lib] */
 UINT GetDoubleClickTime(void);
 
+/* ImmConfigureIME  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmConfigureIMEA,ImmConfigureIMEW (CE is W-side)] */
+BOOL ImmConfigureIME( 
+ HKL hKL, 
+ HWND hWnd, 
+ DWORD dwMode, 
+ LPVOID lpData
+);
+
 /* ImmDisableIME  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
 BOOL ImmDisableIME( 
  DWORD idThread
@@ -4490,9 +4503,34 @@ HWND ImmGetDefaultIMEWnd(
  HWND hWnd
 );
 
+/* ImmGetDescription  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetDescriptionA,ImmGetDescriptionW (CE is W-side)] */
+UINT ImmGetDescription( 
+ HKL hKL, 
+ LPTSTR lpszDescription, 
+ UINT uBufLen
+);
+
+/* ImmGetIMEFileName  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetIMEFileNameA,ImmGetIMEFileNameW (CE is W-side)] */
+BOOL ImmGetIMEFileName( 
+ HKL hKL, 
+ LPTSTR lpszFileName, 
+ UINT uBufLen
+);
+
+/* ImmGetProperty  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmGetProperty(
+ HKL hKL, 
+ DWORD fdwIndex 
+);
+
 /* ImmGetVirtualKey  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
 UINT ImmGetVirtualKey( 
  HWND hWnd
+);
+
+/* ImmIsIME  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL ImmIsIME( 
+ HKL hKL
 );
 
 /* ImmIsUIMessage  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmIsUIMessageA,ImmIsUIMessageW (CE is W-side)] */
@@ -4501,6 +4539,14 @@ BOOL ImmIsUIMessage(
  UINT msg, 
  WPARAM wParam, 
  LPARAM lParam
+);
+
+/* ImmSetHotKey  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
+BOOL WINAPI ImmSetHotKey( 
+ DWORD dwHotKeyID,
+ UINT uModifiers,
+ UINT uVKey,
+ HKL hKL
 );
 
 /* ImmSimulateHotKey  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
@@ -4513,6 +4559,14 @@ BOOL ImmSimulateHotKey(
 BOOL ImmSIPanelState(
  UINT dwCmd, 
  LPVOID pValue
+);
+
+/* ImmUnregisterWord  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmUnregisterWordA,ImmUnregisterWordW (CE is W-side)] */
+BOOL ImmUnregisterWord( 
+ HKL hKL,
+ LPCTSTR lpszReading,
+ DWORD dwStyle,
+ LPCTSTR lpszUnregister
 );
 
 /* LoadCursor  [function; shared; CE 2.11..2.12, 3.0..699; Cursor.lib, cursor.lib, Mcursor.lib, mcursor.lib; A/W LoadCursorA,LoadCursorW (CE is W-side)] */
@@ -4580,7 +4634,54 @@ int SetWindowRgn(
 );
 #endif /* _WIN32_WCE */
 
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
+
+/* GetMonitorInfo  [function; shared; CE 3.0..699; Coredll.lib, coredll.lib, User32.lib; A/W GetMonitorInfoA,GetMonitorInfoW (CE is W-side)] */
+BOOL GetMonitorInfo(
+ HMONITOR hMonitor, 
+ LPMONITORINFO lpmi 
+);
+
+/* MonitorEnumProc  [function, callback; shared; CE 3.0..699; Coredll.lib, coredll.lib] */
+BOOL CALLBACK MonitorEnumProc(
+ HMONITOR hMonitor,
+ HDC hdcMonitor,
+ LPRECT lprcMonitor,
+ LPARAM dwData
+);
+
+/* MonitorFromPoint  [function; shared; CE 3.0..699; Coredll.lib, coredll.lib, User32.lib] */
+HMONITOR MonitorFromPoint(
+ POINT pt,
+ DWORD dwFlags
+);
+
+/* MonitorFromRect  [function; shared; CE 3.0..699; Coredll.lib, coredll.lib, User32.lib] */
+HMONITOR MonitorFromRect(
+ LPCRECT lprc,
+ DWORD dwFlags
+);
+
+/* MonitorFromWindow  [function; shared; CE 3.0..699; Coredll.lib, coredll.lib, User32.lib] */
+HMONITOR MonitorFromWindow(
+ HWND hwnd,
+ DWORD dwFlags
+);
+#endif /* _WIN32_WCE */
+
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
+
+/* ActivateKeyboardLayout  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib] */
+HKL ActivateKeyboardLayout(
+ HKL hkl,
+ UINT Flags
+);
+
+/* GetKeyboardLayoutList  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib] */
+UINT GetKeyboardLayoutList(
+ int nBuff, 
+ HKL* lpList
+);
 
 /* GetKeyboardType  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib] */
 int GetKeyboardType(
@@ -4603,9 +4704,26 @@ HICON ExtractIcon(
 /* GetDesktopWindow  [function; shared; CE 5.0..699; User32.dll, User32.lib; lib:win32-reference] */
 HWND GetDesktopWindow(void);
 
+/* GetMessageQueueReadyTimeStamp  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
+DWORD WINAPI GetMessageQueueReadyTimeStamp(
+ HWND hWnd
+);
+
 /* GetQueueStatus  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 DWORD GetQueueStatus(
  UINT flags
+);
+
+/* InvertRect  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
+BOOL InvertRect(
+ HDC hDC,
+ CONST RECT* lprc
+);
+
+/* LoadKeyboardLayout  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W LoadKeyboardLayoutA,LoadKeyboardLayoutW (CE is W-side)] */
+HKL LoadKeyboardLayout(
+ LPCSTR pwszKLID,
+ UINT Flags
 );
 #endif /* _WIN32_WCE */
 

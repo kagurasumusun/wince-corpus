@@ -38,18 +38,4 @@ VOID PDD_AudioPowerHandler(
 );
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
-
-/* PDD_IoControl  [function; ce-only; CE 5.0..699] */
-BOOL PDD_IoControl(
- PDWORD pdwOpenData,
- DWORD dwCode,
- PBYTE pBufIn,
- DWORD dwLenIn,
- PBYTE pBufOut,
- DWORD dwLenOut,
- PDWORD pdwActualOut
-);
-#endif /* _WIN32_WCE */
-
 #endif /* _WAVEDDSI_ */

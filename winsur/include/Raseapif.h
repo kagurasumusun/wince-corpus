@@ -146,70 +146,6 @@ typedef struct _RAS_AUTH_ATTRIBUTE {
  PVOID Value;
 } RAS_AUTH_ATTRIBUTE, *PRAS_AUTH_ATTRIBUTE;
 
-/* PPP_EAP_INPUT  [struct; shared] */
-typedef struct _PPP_EAP_INPUT {
- DWORD dwSizeInBytes;
- DWORD fFlags;
- BOOL fAuthenticator; 
- WCHAR* pwszIdentity; 
- WCHAR* pwszPassword; 
- BYTE bInitialId; 
- RAS_AUTH_ATTRIBUTE* pUserAttributes; 
- BOOL fAuthenticationComplete; 
- DWORD dwAuthResultCode; 
- HANDLE hTokenImpersonateUser;
- BOOL fSuccessPacketReceived;
- BOOL fDataReceivedFromInteractiveUI;
- PBYTE pDataFromInteractiveUI;
- DWORD dwSizeOfDataFromInteractiveUI;
- PBYTE pConnectionData;
- DWORD dwSizeOfConnectionData;
- PBYTE pUserData;
- DWORD dwSizeOfUserData;
- HANDLE hReserved;
-} PPP_EAP_INPUT, *PPPP_EAP_INPUT;
-
-/* PPP_EAP_OUTPUT  [struct; shared] */
-typedef struct _PPP_EAP_OUTPUT {
- DWORD dwSizeInBytes;
- PPP_EAP_ACTION Action;
- DWORD dwAuthResultCode;
- RAS_AUTH_ATTRIBUTE* pUserAttributes;
- BOOL fInvokeInteractiveUI;
- PBYTE pUIContextData;
- DWORD dwSizeOfUIContextData;
- BOOL fSaveConnectionData;
- PBYTE pConnectionData;
- DWORD dwSizeOfConnectionData;
- BOOL fSaveUserData;
- PBYTE pUserData;
- DWORD dwSizeOfUserData;
-} PPP_EAP_OUTPUT, *PPPP_EAP_OUTPUT;
-
-/* PPP_EAP_INFO  [struct; shared] */
-typedef struct _PPP_EAP_INFO {
- DWORD dwSizeInBytes;
- DWORD dwEapTypeId; 
- DWORD (*RasEapInitialize) (
- BOOL fInitialize
- );
- DWORD (*RasEapBegin) (
- VOID** ppWorkBuffer,
- PPP_EAP_INPUT* pPppEapInput
- );
- DWORD (*RasEapEnd) (
- VOID* pWorkBuffer
- );
- DWORD (*RasEapMakeMessage) (
- VOID* pWorkBuf,
- PPP_EAP_PACKET* pReceivePacket,
- PPP_EAP_PACKET* pSendPacket,
- DWORD cbSendPacket,
- PPP_EAP_OUTPUT* pEapOutput,
- PPP_EAP_INPUT* pEapInput
- );
-} PPP_EAP_INFO, *PPPP_EAP_INFO;
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
@@ -235,12 +171,6 @@ DWORD RasEapGetIdentity(
  BYTE** ppUserDataOut, 
  DWORD* pdwSizeOfUserDataOut, 
  WCHAR** ppwszIdentity
-);
-
-/* RasEapGetInfo  [function; shared; CE 4.0..699] */
-DWORD RasEapGetInfo(
- DWORD dwEapTypeId,
- PPP_EAP_INFO* pEapInfo
 );
 
 /* RasEapInitialize  [function; ce-only; CE 4.0..699] */

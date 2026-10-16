@@ -161,13 +161,6 @@ DWORD GetDevicePower(
  PCEDEVICE_POWER_STATE pDeviceState
 );
 
-/* GetSystemPowerState  [function; ce-only; CE 4.0..699; Coredll.lib] */
-DWORD GetSystemPowerState(
- LPWSTR pBuffer,
- DWORD Length,
- PDWORD pFlags
-);
-
 /* RegisterPowerRelationship  [function; ce-only; CE 4.0..699; Coredll.lib] */
 HANDLE RegisterPowerRelationship(
  PVOID pvParent,

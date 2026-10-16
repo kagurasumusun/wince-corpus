@@ -17,14 +17,6 @@
  * declaration body no page prints
  * ================================================================ */
 
-/* REG_VALUE_DESCR  [struct; ce-only] */
-typedef struct _REG_VALUE_DESCR {
- LPWSTR Name;
- DWORD Type;
- DWORD Size;
- PBYTE Data;
-} REG_VALUE_DESCR, *PREG_VALUE_DESCR;
-
 /* REMOVE_LOCK  [struct; ce-only] */
 typedef struct _REMOVE_LOCK {
  BOOL Removed;
@@ -47,14 +39,6 @@ DWORD AcquireRemoveLock(
 /* DefaultTransferComplete  [function; ce-only; CE 5.0..699] */
 DWORD DefaultTransferComplete(
  PVOID Context
-);
-
-/* GetSetKeyValues  [function; ce-only; CE 5.0..699] */
-BOOL GetSetKeyValues(
- LPCTSTR KeyName,
- PREG_VALUE_DESCR ValDesc,
- BOOL bSet,
- BOOL bOverwrite
 );
 
 /* InitializeRemoveLock  [function; ce-only; CE 5.0..699] */

@@ -342,42 +342,6 @@ DWORD RasValidateEntryName(
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
-/* RasGetEapConnectionData  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-DWORD RasGetEapConnectionData(
- LPCTSTR pszPhonebook,
- LPCTSTR pszEntry, 
- PBYTE pbEapData, 
- PDWORD pdwSizeofEapData
-);
-
-/* RasGetEapUserData  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib; A/W RasGetEapUserDataA,RasGetEapUserDataW (CE is W-side)] */
-DWORD RasGetEapUserData(
- HANDLE hToken,
- LPCTSTR pszPhonebook, 
- LPCTSTR pszEntry, 
- PBYTE pbEapData, 
- PDWORD pdwSizeofEapData
-);
-
-/* RasIOControl  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-RasIOControl IMPLICIT_DECL(
- LPVOID hRasConn,
- DWORD dwCode,
- PBYTE pBufIn,
- DWORD dwLenIn,
- PBYTE pBufOut,
- DWORD dwLenOut,
- PDWORD pdwActualOut
-);
-
-/* RasSetEapConnectionData  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-DWORD RasSetEapConnectionData (
- LPCTSTR pszPhonebook,
- LPCTSTR pszEntry, 
- PBYTE pbEapData, 
- PDWORD pdwSizeofEapData
-);
-
 /* RasSetEapUserData  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib; A/W RasSetEapUserDataA,RasSetEapUserDataW (CE is W-side)] */
 DWORD RasSetEapUserData(
  HANDLE hToken,
@@ -387,13 +351,5 @@ DWORD RasSetEapUserData(
  DWORD dwSizeofEapData
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-RasIOControl IMPLICIT_DECL(  LPVOID hRasConn,  DWORD dwCode,  PBYTE pBufIn,  DWORD dwLenIn,  PBYTE pBufOut,  DWORD dwLenOut,  PDWORD pdwActualOut  );
 
 #endif /* _RAS_ */

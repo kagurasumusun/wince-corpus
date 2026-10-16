@@ -137,6 +137,15 @@ class GeneratorApiTests(unittest.TestCase):
         self.assertEqual(len(targets), 1)
         self.assertEqual(targets[0]["header"], "Wingdi.h")
 
+    def test_lpuint_is_not_known_just_because_uint_is(self):
+        gen = self._load()
+        self.assertTrue(gen.type_mentions_unknown(
+            "BOOL ImmGetVirtualKey(LPUINT lpuVKey, LPHKL lphKL);",
+            set(), "ImmGetVirtualKey"))
+        self.assertFalse(gen.type_mentions_unknown(
+            "HPALETTE SelectPalette(HDC hdc, HPALETTE hpal, BOOL b);",
+            set(), "SelectPalette"))
+
 
 if __name__ == "__main__":
     unittest.main()

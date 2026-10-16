@@ -290,14 +290,6 @@ HINSTANCE LoadDriver(
  LPCWSTR lpszFileName
 );
 
-/* LockPages  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-BOOL LockPages(
- LPVOID lpvAddress,
- DWORD cbSize,
- PDWORD pPFNs,
- int fOptions
-);
-
 /* MapPtrToProcess  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
 LPVOID MapPtrToProcess(
  LPVOID lpv,

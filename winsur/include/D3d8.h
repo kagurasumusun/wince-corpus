@@ -44,6 +44,7 @@ HRESULT BeginStateBlock();
 HRESULT CaptureStateBlock( DWORD Token );
 HRESULT DeleteStateBlock( DWORD Token );
 HRESULT EndStateBlock( DWORD* pToken );
+HMONITOR GetAdapterMonitor( UINT Adapter );
 UINT GetAvailableTextureMem();
 HRESULT GetClipPlane( DWORD Index, float* pPlane );
 HRESULT GetVertexShader( DWORD* pHandle );

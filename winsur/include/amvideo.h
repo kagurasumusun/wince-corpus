@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 17 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 12 extra decls
+ * 17 constants, 0 declarations, 1 outlines, 0 base types, 0 extra macros, 12 extra decls
  */
 #ifndef _AMVIDEO_
 #define _AMVIDEO_
@@ -34,6 +34,12 @@
 #define SIZE_EGA_PALETTE (16*sizeof(RGBQUAD))
 #define SIZE_MASKS (3*sizeof(DWORD))
 #define SIZE_PALETTE (256*sizeof(RGBQUAD))
+
+/* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* HEADER  [function, struct, typedef; shared; entity-headers] */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

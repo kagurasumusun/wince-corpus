@@ -1204,13 +1204,6 @@ LONG WINAPI lineGetAppPriority(
  LPDWORD lpdwPriority 
 );
 
-/* lineGetIcon  [function; shared; CE 3.0..699; Coredll.lib, coredll.lib; A/W lineGetIconA,lineGetIconW (CE is W-side)] */
-LONG WINAPI lineGetIcon(
- DWORD dwDeviceID,
- LPCWSTR lpszDeviceClass,
- LPHICON lphIcon 
-);
-
 /* lineGetProviderList  [function; shared; CE 3.0..699; Coredll.lib, coredll.lib; A/W lineGetProviderListA,lineGetProviderListW (CE is W-side)] */
 LONG WINAPI lineGetProviderList(
  DWORD dwAPIVersion,
@@ -1242,13 +1235,6 @@ LONG WINAPI phoneConfigDialog(
  DWORD dwDeviceID,
  HWND hwndOwner,
  LPCSTR lpszDeviceClass 
-);
-
-/* phoneGetIcon  [function; shared; CE 3.0..699; Coredll.lib, coredll.lib; A/W phoneGetIconA,phoneGetIconW (CE is W-side)] */
-LONG WINAPI phoneGetIcon(
- DWORD dwDeviceID,
- LPCWSTR lpszDeviceClass,
- LPHICON lphIcon 
 );
 #endif /* _WIN32_WCE */
 

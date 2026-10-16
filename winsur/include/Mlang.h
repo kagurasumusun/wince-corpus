@@ -195,37 +195,6 @@ typedef struct tagDetectEncodingInfo {
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
-/* ConvertINetMultiByteToUnicode  [function; ce-only; CE 4.0..699; Mlang.dll, mlang.dll] */
-HRESULT ConvertINetMultiByteToUnicode(
- LPDWORD lpdwMode,
- DWORD dwSrcEncoding,
- LPCSTR lpSrcStr,
- LPINT lpnMultiCharCount,
- LPWSTR lpDstStr,
- LPINT lpnWideCharCount
-);
-
-/* ConvertINetString  [function; ce-only; CE 4.0..699; Mlang.dll, mlang.dll] */
-HRESULT ConvertINetString(
- LPDWORD lpdwMode,
- DWORD dwSrcEncoding,
- DWORD dwDstEncoding,
- LPCSTR lpSrcStr,
- LPINT lpnSrcSize,
- LPBYTE lpDstStr,
- LPINT lpnDstSize
-);
-
-/* ConvertINetUnicodeToMultiByte  [function; ce-only; CE 4.0..699; Mlang.dll, mlang.dll] */
-HRESULT ConvertINetUnicodeToMultiByte(
- LPDWORD lpdwMode,
- DWORD dwEncoding,
- LPCWSTR lpSrcStr,
- LPINT lpnWideCharCount,
- LPSTR lpDstStr,
- LPINT lpnMultiCharCount
-);
-
 /* IsConvertINetStringAvailable  [function; ce-only; CE 4.0..699; Mlang.dll, mlang.dll] */
 HRESULT IsConvertINetStringAvailable(
  DWORD dwSrcEncoding,

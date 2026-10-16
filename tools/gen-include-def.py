@@ -2046,6 +2046,11 @@ _CORE_TYPEDEFS = (
      "typedef void (CALLBACK *TIMERPROC)(HWND, UINT, UINT, DWORD);"),
     ("DLGPROC",
      "typedef INT_PTR (CALLBACK *DLGPROC)(HWND, UINT, WPARAM, LPARAM);"),
+    ("BITMAPINFOHEADER",
+     "typedef struct tagBITMAPINFOHEADER BITMAPINFOHEADER, "
+     "*PBITMAPINFOHEADER, *LPBITMAPINFOHEADER;"),
+    ("BITMAPINFO",
+     "typedef struct tagBITMAPINFO BITMAPINFO, *PBITMAPINFO, *LPBITMAPINFO;"),
 )
 
 _WINDEF_NEED = (
@@ -2089,6 +2094,9 @@ _C_KNOWN_TYPES = {
     "PROCESS_INFORMATION", "LPPROCESS_INFORMATION", "PPROCESS_INFORMATION",
     "TIMERPROC", "DLGPROC",
     "WIN32_FIND_DATA", "LOGFONT", "LOGFONTW", "LPLOGFONT",
+    "HPALETTE", "HGDIOBJ", "HKL", "HMONITOR", "HHOOK",
+    "BITMAPINFOHEADER", "PBITMAPINFOHEADER", "LPBITMAPINFOHEADER",
+    "BITMAPINFO", "PBITMAPINFO", "LPBITMAPINFO",
 }
 
 
@@ -2125,13 +2133,30 @@ def order_type_infos(items):
     return unnamed + emitted
 
 
+# Scalars / handles: ``LPUINT`` is not automatically a type just because
+# UINT is.  Pointer aliases follow structure names (LPMSG, LPRECT).
+_SCALAR_OR_HANDLE = {
+    "DWORD", "BOOL", "BYTE", "WORD", "UINT", "INT", "LONG", "ULONG", "SHORT",
+    "CHAR", "WCHAR", "TCHAR", "FLOAT", "VOID", "HANDLE", "HWND", "HDC",
+    "HINSTANCE", "HMODULE", "HMENU", "HICON", "HBITMAP", "HBRUSH", "HFONT",
+    "HPEN", "HRGN", "HKEY", "HCURSOR", "HACCEL", "HRSRC", "HGLOBAL", "HLOCAL",
+    "HDWP", "HGDIOBJ", "HPALETTE", "HKL", "HMONITOR", "HHOOK", "HDESK",
+    "HRESULT", "NTSTATUS", "ATOM", "COLORREF", "UCHAR", "USHORT",
+    "LONGLONG", "ULONGLONG", "CEOID", "CEPROPID", "BOOLEAN", "SIZE_T",
+    "SSIZE_T", "UINT_PTR", "LONG_PTR", "ULONG_PTR", "DWORD_PTR", "INT_PTR",
+}
+
+
 def _type_token_known(tok, local_names):
     if tok in _C_KNOWN_TYPES or tok in local_names:
         return True
     # LPMSG / PMSG follow MSG; LPOVERLAPPED follows OVERLAPPED.
+    # Not LPUINT -- that typedef is a separate printed fact.
     for prefix in ("LP", "P"):
         if tok.startswith(prefix) and len(tok) > len(prefix) + 1:
             base = tok[len(prefix):]
+            if base in _SCALAR_OR_HANDLE:
+                continue
             if base in _C_KNOWN_TYPES or base in local_names:
                 return True
     return False
@@ -2164,6 +2189,13 @@ def type_mentions_unknown(text, local_names, self_name=None, macros=None):
     if self_name:
         skip.add(self_name)
     skip.update(re.findall(r"\b([A-Z][A-Z0-9_]*)\s*\(", body))
+    # Incomplete structs cannot be non-pointer fields.
+    if "{" in body:
+        for inc in ("BITMAPINFOHEADER", "BITMAPINFO", "CRITICAL_SECTION",
+                    "SECURITY_ATTRIBUTES", "STARTUPINFOW", "STARTUPINFO",
+                    "PROCESS_INFORMATION"):
+            if re.search(r"\b" + inc + r"\s+[A-Za-z_]\w*\s*;", body):
+                return True
     for tok in _ident_tokens(body) - skip:
         if _type_token_known(tok, local_names):
             continue
@@ -2417,6 +2449,11 @@ def run_unified(args):
                           sorted(header_cands.items()) if k != primary_key]
         elif entity.get("headers"):
             files = header_files(entity.get("headers") or [])
+            files = sorted(files, key=lambda h: (
+                header_preference(h.lower()), h.lower()))
+            # Never file a prototype into the umbrella Windows.h.
+            files = [h for h in files if h.lower() not in
+                     ("windows.h", "windowsapis.h")] or files
             primary = files[0] if files else ""
             alternates = [(h, set()) for h in files[1:]]
             header_mark = "entity-headers" if primary else ""
@@ -2496,6 +2533,12 @@ def run_unified(args):
             if mapped:
                 primary = mapped
                 header_mark = "heuristic-prefix"
+        if primary and primary.lower() in ("windows.h", "windowsapis.h"):
+            mapped = header_map.header_for_entity(
+                entity.get("name") or "", entity.get("kinds") or [])
+            if mapped and mapped.lower() not in ("windows.h", "windowsapis.h"):
+                primary = mapped
+                header_mark = (header_mark or "") + "+not-umbrella"
         if not primary:
             skipped["no header stated"] += 1
             if chosen:
@@ -3300,6 +3343,8 @@ def run_unified(args):
                     ename = (info.get("entity") or {}).get("name")
                     text = ((info.get("declaration") or {}).get("text") or "")
                     cname = (ename or "").lstrip("_")
+                    if not (text or "").strip():
+                        continue
                     if ename and (ename in seen_fn or ename in global_fn_names
                                   or cname in global_fn_names):
                         continue

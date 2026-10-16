@@ -1061,18 +1061,6 @@ DWORD WINAPI CertGetNameString(
  DWORD cchNameString
 );
 
-/* CertifyModule  [function; ce-only; CE 3.0..699; Loadauth.lib, loadauth.lib; heuristic-prefix] */
-BOOL CertifyModule(
- PBYTE pbBlock,
- DWORD cbBlock 
-);
-
-/* CertifyModuleFinal  [function; ce-only; CE 3.0..699; Loadauth.lib, loadauth.lib; heuristic-prefix] */
-BOOL CertifyModuleFinal(
- PBYTE* ppbSignData,
- PDWORD pcbSignData 
-);
-
 /* CertifyModuleInit  [function; ce-only; CE 3.0..699; Loadauth.lib, loadauth.lib; heuristic-prefix] */
 BOOL CertifyModuleInit (void);
 

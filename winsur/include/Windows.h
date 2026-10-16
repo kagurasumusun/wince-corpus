@@ -8,7 +8,7 @@
 #define _WINDOWS_
 
 #include "WinDef.h"
-#include "Winnt.h"
+#include "WinNT.h"
 #include "winerror.h"
 #include "Winbase.h"
 #include "Winuser.h"

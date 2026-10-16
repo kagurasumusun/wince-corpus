@@ -23,12 +23,6 @@
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x600)) /* CE 1.0..199, 2.11..2.12, 4.0..599 */
 
-/* TransportRecv  [function; ce-only; CE 1.0..199, 2.11..2.12, 4.0..599; Kitl.lib] */
-BOOL TransportRecv(
- LPBYTE pbBuffer,
- PUSHORT pcbBuffer
-);
-
 /* TransportSend  [function; ce-only; CE 1.0..199, 2.11..2.12, 4.0..599; Kitl.lib] */
 BOOL TransportSend(LPBYTE pbFrame,USHORT cbFrame);
 #endif /* _WIN32_WCE */
@@ -51,12 +45,6 @@ BOOL KitlSendRawData(
  WORD wLength
 );
 
-/* TransportDecode  [function; ce-only; CE 4.0..599; Kitl.lib] */
-LPBYTE TransportDecode(
- LPBYTE pbFrame,
- PUSHORT pcbData
-);
-
 /* TransportEnableInt  [function; ce-only; CE 4.0..599; Kitl.lib] */
 void TransportEnableInt(BOOL fEnable);
 
@@ -64,18 +52,6 @@ void TransportEnableInt(BOOL fEnable);
 BOOL TransportEncode(
  LPBYTE pbFrame,
  USHORT cbData
-);
-
-/* TransportGetDevCfg  [function; ce-only; CE 4.0..599; Kitl.lib] */
-BOOL TransportGetDevCfg(
- LPBYTE pbBuffer,
- PUSHORT pcbBuffer
-);
-
-/* TransportSetHostCfg  [function; ce-only; CE 4.0..599; Kitl.lib] */
-BOOL TransportSetHostCfg(
- LPBYTE pbBuffer,
- PUSHORT pcbBuffer
 );
 #endif /* _WIN32_WCE */
 
@@ -86,12 +62,6 @@ DWORD OEMKitlGetSecs(void);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
-
-/* PFN_DECODE  [function; ce-only; CE 6.0..699; Kitl.lib] */
-LPBYTE TransportDecode(
- LPBYTE pbFrame,
- PUSHORT pcbData
-);
 
 /* PFN_ENABLEINT  [function; ce-only; CE 6.0..699; Kitl.lib] */
 void TransportEnableInt(
@@ -104,28 +74,10 @@ BOOL TransportEncode(
  USHORT cbData
 );
 
-/* PFN_GETDEVCFG  [function; ce-only; CE 6.0..699; Kitl.lib] */
-BOOL TransportGetDevCfg(
- LPBYTE pbBuffer,
- PUSHORT pcbBuffer
-);
-
-/* PFN_RECVFRAME  [function; ce-only; CE 6.0..699; Kitl.lib] */
-BOOL TransportRecv(
- LPBYTE pbBuffer,
- PUSHORT pcbBuffer
-);
-
 /* PFN_SENDFRAME  [function; ce-only; CE 6.0..699; Kitl.lib] */
 BOOL TransportSend(
  LPBYTE pbFrame,
  USHORT cbFrame
-);
-
-/* PFN_SETHOSTCFG  [function; ce-only; CE 6.0..699; Kitl.lib] */
-BOOL TransportSetHostCfg(
- LPBYTE pbBuffer,
- PUSHORT pcbBuffer
 );
 #endif /* _WIN32_WCE */
 

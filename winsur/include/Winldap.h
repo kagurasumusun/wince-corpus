@@ -286,68 +286,11 @@ ULONG ldap_value_free_len(
  struct berval** vals
 );
 
-/* LDAPControl  [struct; shared; A/W LDAPControlA,LDAPControlW (CE is W-side)] */
-typedef struct ldapcontrol {
- PWCHAR ldctl_oid;
- struct berval ldctl_value;
- BOOLEAN ldctl_iscritical;
-} LDAPControl, *PLDAPControl;
-
 /* LDAPMessage  [typedef, struct; shared] */
 typedef ldapmsg LDAPMessage, *PLDAPMessage;
 
-/* LDAPMod  [struct; shared; A/W LDAPModA,LDAPModW (CE is W-side)] */
-typedef struct ldapmod {
- ULONG mod_op;
- PWCHAR mod_type;
- union {
- PWCHAR* modv_strvals;
- struct berval** modv_bvals;
- } mod_vals;
-} LDAPMod, *PLDAPMod;
-
 /* LDAPSearch  [struct; ce-only] */
 typedef struct ldapsearch LDAPSearch, *PLDAPSearch;
-
-/* LDAPSortKey  [struct; shared; A/W LDAPSortKeyA,LDAPSortKeyW (CE is W-side)] */
-typedef struct ldapsortkey {
- PWCHAR sk_attrtype;
- PWCHAR sk_matchruleoid;
- BOOLEAN sk_reverseorder;
-} LDAPSortKey, *PLDAPSortKey;
-
-/* NOTIFYOFNEWCONNECTION  [typedef; ce-only; Wldap32.lib, wldap32.lib] */
-typedef BOOLEAN (_cdecl NOTIFYOFNEWCONNECTION) (
- PLDAP PrimaryConnection,
- PLDAP ReferralFromConnection,
- PWCHAR NewDN,
- PCHAR HostName,
- PLDAP NewConnection,
- ULONG PortNumber,
- PVOID SecAuthIdentity,
- PVOID CurrentUser,
- ULONG ErrorCodeFromBind
-);
-
-/* QUERYFORCONNECTION  [typedef; ce-only; Wldap32.lib, wldap32.lib] */
-typedef ULONG (_cdecl QUERYFORCONNECTION)(
- PLDAP PrimaryConnection,
- PLDAP ReferralFromConnection,
- PWCHAR NewDN,
- PCHAR HostName,
- ULONG PortNumber,
- PVOID SecAuthIdentity,
- PVOID CurrentUserToken,
- PLDAP* ConnectionToUse
-);
-
-/* LDAP_REFERRAL_CALLBACK  [struct; shared] */
-typedef struct LdapReferralCallback {
- ULONG SizeOfCallbacks;
- QUERYFORCONNECTION* QueryForConnection;
- NOTIFYOFNEWCONNECTION* NotifyRoutine;
- DEREFERENCECONNECTION* DereferenceRoutine;
-} LDAP_REFERRAL_CALLBACK, *PLDAP_REFERRAL_CALLBACK;
 
 /* ConnectionToDereference  [extra typedef] */
 typedef ULONG (_cdecl DEREFERENCECONNECTION)(  PLDAP PrimaryConnection,  PLDAP ConnectionToDereference  );

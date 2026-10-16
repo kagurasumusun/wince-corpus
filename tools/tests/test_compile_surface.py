@@ -35,6 +35,9 @@ int WINAPI WinMain(HINSTANCE h, HINSTANCE p, LPWSTR cmd, int show) {
     FindFirstFile(TEXT("x"), NULL);
     SetTimer(NULL, 1, 0, NULL);
     CreateFontIndirect(NULL);
+    SelectPalette(NULL, NULL, FALSE);
+    CreateDIBSection(NULL, NULL, 0, NULL, NULL, 0);
+    StretchDIBits(NULL, 0, 0, 0, 0, 0, 0, 0, 0, NULL, NULL, 0, 0);
     return 0;
 }
 '''

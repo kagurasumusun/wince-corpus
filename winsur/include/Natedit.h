@@ -50,18 +50,6 @@ NTSTATUS CreateHandler(
  PVOID* EditorSessionContextp 
 );
 
-/* CreateTicket  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.dll, coredll.dll] */
-NTSTATUS CreateTicket( 
- PVOID InterfaceHandle, 
- UCHAR Protocol, 
- ULONG PrivateAddress, 
- USHORT PrivatePort, 
- ULONG RemoteAddress, 
- USHORT RemotePort, 
- PULONG PublicAddress, 
- PUSHORT PublicPort 
-);
-
 /* DeleteHandler  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.dll, coredll.dll] */
 NTSTATUS DeleteHandler( 
  PVOID InterfaceHandle, 

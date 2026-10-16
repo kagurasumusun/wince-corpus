@@ -24,13 +24,6 @@ typedef enum peer_connection_flags_tag
  PEER_CONNECTION_DIRECT 
 } PEER_CONNECTION_FLAGS;
 
-/* PEER_DATA  [struct; shared; p2p.lib] */
-typedef struct peer_data_tag { 
- ULONG cbData; 
- PBYTE pbData; 
-} PEER_DATA, 
-*PPEER_DATA;
-
 /* PEER_RECORD_CHANGE_TYPE_TAG  [enum; ce-only; p2p.lib] */
 typedef enum peer_record_change_type_tag 
 { 

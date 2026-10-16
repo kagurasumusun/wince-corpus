@@ -432,6 +432,21 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: 傘ヘッダ誤振りと GDI 面（第16弾、10回連続）
+
+コピーはしない。10回続けて生ページと誤判定を当たった。
+
+1. `HPALETTE` は WinDef の HANDLE 別名なのに未知型扱い → `SelectPalette` が落ちていた。
+2. `BITMAPINFO` 頁は名前がある。BITMAPINFOHEADER 本文は `biBitCount` の `;` 欠けるので不完全 typedef だけ。
+3. `LPUINT` を UINT から捏造していた。スカラーの LP 接頭辞は自動既知にしない。
+4. 不完全型を構造体の値フィールドにしない（DIBSECTION.dsBmih）。
+5. 空のエンティティ概要が overlay 本文を名前衝突で消していた。
+6. `SetViewportOrgEx` 頁は戻り値型が無い。BOOL は足さない。
+7. `entity.headers` の先頭 `Windows.h` に原型を振っていた。傘には出さない。
+8. `StretchDIBits` / `SetDIBitsToDevice` / `CreateDIBSection` を Wingdi と coredll.def に載せる。
+9. `waveOutOpen` は MMRESULT の typedef 頁が無い。`DialogBoxParam` は `PARAM`。`NdisMRegisterMiniport` は NDIS 型が無い。出さない。
+10. gcc で SelectPalette / CreateDIBSection / StretchDIBits が通る。テスト 68。
+
 ### 2026-10-16: 配列サイズ誤判定と KB 構造体本文（第15弾）
 
 コピーはしない。`[MAX_PATH]` / `[LF_FACESIZE]` を SAL と誤認して WIN32_FIND_DATA / LOGFONT を落としていた。空のエンティティ宣言が harvest 本文を塞いでいた。配列境界は `#define` があるときだけ出す。`MAX_PATH` 128 は CE 頁。`LF_FACESIZE` 32 は CE が名前だけ印刷し w32api 公有領域で穴埋め。`TIMERPROC` は TimerProc 頁の原型。gcc で FindFirstFile / SetTimer / CreateFontIndirect が通る。コーパス 122,186 ファイルを1つずつ開いた（読めないもの 0）。DrawText の `UNIT`、DialogBoxParam の `PARAM`、REGSAM、lstrlen は頁が無い／誤植のまま出さない。

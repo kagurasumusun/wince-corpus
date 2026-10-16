@@ -11,18 +11,4 @@
 #define _SMCCE_
 
 
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-/* OS_DEP_DATA  [struct; ce-only] */
-typedef struct _OS_DEP_DATA {
- struct _SMARTCARD_EXTENSION* pSmartCardExtension;
- CRITICAL_SECTION CritSect; 
- HANDLE hChangeEvent; 
- HANDLE hCancelEvent; 
-} OS_DEP_DATA, *POS_DEP_DATA;
-
 #endif /* _SMCCE_ */

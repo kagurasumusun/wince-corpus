@@ -11,23 +11,4 @@
 #define _CRED_PROV_
 
 
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
-
-/* HandleBlob  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-DWORD HandleBlob(
- DWORD dwType,
- PWCHAR szTarget,
- PWCHAR szUser,
- PBYTE pInBlob,
- DWORD dwInSize,
- PBYTE pOutBlob,
- PDWORD pdwOutSize,
- DWORD dwFlag
-);
-#endif /* _WIN32_WCE */
-
 #endif /* _CRED_PROV_ */

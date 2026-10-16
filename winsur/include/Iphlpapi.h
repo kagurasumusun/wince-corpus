@@ -91,19 +91,7 @@
  * declaration body no page prints
  * ================================================================ */
 
-/* GetBestInterfaceEx  [struct, function; shared; Iphlpapi.lib] */
-DWORD GetBestInterfaceEX(
- struct sockaddr* pDestAddr, 
- PDWORD pdwBestIfIndex 
-);
-
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
-
-/* GetBestInterface  [function, interface; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
-DWORD GetBestInterface(
- IPAddr dwDestAddr, 
- PDWORD pdwBestIfIndex 
-);
 
 /* GetFriendlyIfIndex  [function, interface; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
 DWORD GetFriendlyIfIndex(
@@ -298,28 +286,9 @@ DWORD GetIpNetTable(
  BOOL bOrder 
 );
 
-/* GetNumberOfInterfaces  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
-DWORD GetNumberOfInterfaces(
- PDWORD pdwNumIf
-);
-
-/* GetTcpTable  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
-DWORD GetTcpTable(
- PMIB_TCPTABLE pTcpTable, 
- PDWORD pdwSize, 
- BOOL bOrder 
-);
-
 /* GetUdpStatistics  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
 DWORD GetUdpStatistics(
  PMIB_UDPSTATS pStats
-);
-
-/* GetUdpTable  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
-DWORD GetUdpTable(
- PMIB_UDPTABLE pUdpTable, 
- PDWORD pdwSize, 
- BOOL bOrder 
 );
 
 /* SendARP  [function; shared; CE 3.0..399, 5.0..699; Iphlpapi.lib, iphlpapi.lib] */
@@ -362,7 +331,6 @@ DWORD GetUdpStatisticsEx(
  * ================================================================ */
 
 /* function */
-DWORD GetBestInterfaceEX( struct sockaddr* pDestAddr, PDWORD pdwBestIfIndex );
 UINT MIB_control_func ( IN UINT Action, IN MIB_ENTRY *MibPtr, IN RFC1157VarBind *VarBind );
 UINT MIB_doneness_func ( IN UINT Action, IN MIB_ENTRY *MibPtr, IN RFC1157VarBind *VarBind );
 UINT MIB_leaf_func ( IN UINT Action, IN MIB_ENTRY *MibPtr, IN RFC1157VarBind *VarBind );

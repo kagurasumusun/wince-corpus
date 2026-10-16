@@ -35,17 +35,6 @@ PVOID ACM_Init(
  DWORD dwInfo
 );
 
-/* ACM_IOControl  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Acmdwrap.lib] */
-BOOL ACM_IOControl(
- DWORD dwOpenData,
- DWORD dwCode,
- PBYTE pBufIn,
- DWORD dwLenIn,
- PBYTE pBufOut,
- DWORD dwLenOut,
- PDWORD pdwActualOut
-);
-
 /* ACM_PowerDown  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Acmdwrap.lib] */
 void ACM_PowerDown(void);
 

@@ -33,17 +33,6 @@ DWORD PD_DeletePartition(
  LPCTSTR szPartName
 );
 
-/* PD_DeviceIoControl  [function; ce-only; CE 5.0..699] */
-DWORD PD_DeviceIoControl(
- DWORD dwPartitionId, 
- DWORD dwCode, 
- PBYTE pInBuf, 
- DWORD nInBufSize, 
- PBYTE pOutBuf, 
- DWORD nOutBufSize, 
- PDWORD pBytesReturned
-);
-
 /* PD_FindPartitionClose  [function; ce-only; CE 5.0..699] */
 void PD_FindPartitionClose(
  DWORD dwSearchId

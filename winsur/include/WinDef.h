@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 30 constants, 67 declarations, 9 outlines, 97 base types, 0 extra macros, 0 extra decls
+ * 30 constants, 67 declarations, 9 outlines, 99 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDEF_
 #define _WINDEF_
@@ -457,6 +457,16 @@ typedef STARTUPINFOW STARTUPINFO, *LPSTARTUPINFO;
  * CE Unicode / 32-bit data-types row
  * source: win32/common/windows-data-types.md */
 typedef struct _PROCESS_INFORMATION PROCESS_INFORMATION, *LPPROCESS_INFORMATION, *PPROCESS_INFORMATION;
+
+/* BITMAPINFOHEADER [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef struct tagBITMAPINFOHEADER BITMAPINFOHEADER, *PBITMAPINFOHEADER, *LPBITMAPINFOHEADER;
+
+/* BITMAPINFO [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef struct tagBITMAPINFO BITMAPINFO, *PBITMAPINFO, *LPBITMAPINFO;
 
 /* ATOM
  * source: win32/common/windows-data-types.md */

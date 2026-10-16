@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 105 constants, 68 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 105 constants, 42 declarations, 17 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDOWSAPIS_
 #define _WINDOWSAPIS_
@@ -127,16 +127,50 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
+/* definition  [typedef; ce-only; heuristic-prefix] */
+
+/* firstChild  [typedef; ce-only; heuristic-prefix] */
+
+/* lastChild  [typedef; ce-only; heuristic-prefix] */
+
 /* MAKEINTATOM  [macro, function; shared] */
 LPTSTR MAKEINTATOM(
  WORD wInteger
 );
+
+/* namespaceURI  [typedef; ce-only; heuristic-prefix] */
+
+/* nextSibling  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeName  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeType  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeTypedValue  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeTypeString  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeValue  [typedef; ce-only; heuristic-prefix] */
+
+/* ownerDocument  [typedef; ce-only; heuristic-prefix] */
 
 /* PALETTEINDEX2BPP  [macro; ce-only] */
 #define PALETTEINDEX2BPP (i) \
  (((i)==0)?0x00000000: \
  (((i)==1)?0x00808080: \
  (((i)==2)?0x00C0C0C0:0x00FFFFFF)));
+
+/* parentNode  [typedef; ce-only; heuristic-prefix] */
+
+/* parsed  [typedef; ce-only; heuristic-prefix] */
+
+/* prefix  [typedef; ce-only; heuristic-prefix] */
+
+/* previousSibling  [typedef; ce-only; heuristic-prefix] */
+
+/* specified  [typedef; ce-only; heuristic-prefix] */
+
+/* xml  [typedef; ce-only; heuristic-prefix] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -158,16 +192,6 @@ typedef struct _BLENDFUNCTION {
  BYTE SourceConstantAlpha;
  BYTE AlphaFormat;
 }BLENDFUNCTION, *PBLENDFUNCTION, *LPBLENDFUNCTION;
-
-/* DISPLAY_DEVICE  [struct; shared; A/W DISPLAY_DEVICEA,DISPLAY_DEVICEW (CE is W-side)] */
-typedef struct _DISPLAY_DEVICE {
- DWORD cb;
- WCHAR DeviceName[32];
- WCHAR DeviceString[128];
- DWORD StateFlags;
- WCHAR DeviceID[128];
- WCHAR DeviceKey[128];
-} DISPLAY_DEVICE, *PDISPLAY_DEVICE;
 
 /* EXTENDED_NAME_FORMAT  [enum; shared] */
 typedef enum {
@@ -259,28 +283,9 @@ typedef struct _PERF_OBJECT_TYPE {
 } PERF_OBJECT_TYPE;
 typedef PERF_OBJECT_TYPE *PPERF_OBJECT_TYPE, *LPPERF_OBJECT_TYPE;
 
-/* SECURITY_DESCRIPTOR  [typedef, struct; shared; entity-headers] */
-typedef PVOID PSECURITY_DESCRIPTOR;
-
-/* COMMCONFIG  [struct; shared; entity-headers] */
-/* DERIVED member outline -- documented order, types/offsets not stated */
-/*   dwSize */
-/*   wVersion */
-/*   wReserved */
-/*   dcb */
-/*   dwProviderSubType */
-/*   dwProviderOffset */
-/*   dwProviderSize */
-/*   wcProviderData */
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
-
-/* PALETTEINDEX  [function; shared; entity-headers; win32-reference] */
-COLORREF PALETTEINDEX(
-    WORD i
-);
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
@@ -288,83 +293,13 @@ COLORREF PALETTEINDEX(
 BOOL CALLBACK EnumUILanguagesProc(
  LPTSTR lpUILanguageString
 );
-
-/* GetCharABCWidths  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib; A/W GetCharABCWidthsA,GetCharABCWidthsW (CE is W-side)] */
-BOOL GetCharABCWidths(
- HDC hdc,
- UINT uFirstChar,
- UINT uLastChar,
- LPABC lpabc
-);
-
-/* GetCharWidth32  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib; A/W GetCharWidth32A,GetCharWidth32W (CE is W-side)] */
-WINGDIAPI BOOL WINAPI GetCharWidth32(
- HDC hdc,
- UINT iFirstChar,
- UINT iLastChar,
- LPINT lpBuffer
-);
-
-/* GetTextAlign  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib] */
-WINGDIAPI UINT WINAPI GetTextAlign(
- HDC hdc
-);
-
-/* SetTextAlign  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib] */
-WINGDIAPI UINT WINAPI SetTextAlign(
- HDC hdc,
- UINT fmode
-);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
-/* AlphaBlend  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL AlphaBlend(
- HDC hdcDest,
- int nXOriginDest,
- int nYOriginDest,
- int nWidthDest,
- int nHeightDest,
- HDC hdcSrc,
- int nXOriginSrc,
- int nYOriginSrc,
- int nWidthSrc,
- int nHeightSrc,
- BLENDFUNCTION blendFunction
-);
-
-/* DuplicateHandle  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL DuplicateHandle(
- HANDLE hSourceProcessHandle,
- HANDLE hSourceHandle,
- HANDLE hTargetProcessHandle,
- LPHANDLE lpTargetHandle,
- DWORD dwDesiredAccess,
- BOOL bInheritHandle,
- DWORD dwOptions
-);
-
-/* EnumDisplayDevices  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W EnumDisplayDevicesA,EnumDisplayDevicesW (CE is W-side)] */
-BOOL EnumDisplayDevices(
- LPCTSTR lpDevice, 
- DWORD iDevNum, 
- PDISPLAY_DEVICE lpDisplayDevice, 
- DWORD dwFlags 
-);
-
 /* FiberProc  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 VOID CALLBACK FiberProc(
  PVOID lpParameter
-);
-
-/* GetCharABCWidthsI  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL GetCharABCWidthsI(
- HDC hdc,
- UINT giFirst,
- UINT cgi,
- LPWORD pgi,
- LPABC lpabc
 );
 
 /* GetCurrentPositionEx  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
@@ -387,25 +322,10 @@ DWORD GetLayout(
  HDC hdc
 );
 
-/* GetMessageQueueReadyTimeStamp  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-DWORD WINAPI GetMessageQueueReadyTimeStamp(
- HWND hWnd
-);
-
 /* GetProp  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W GetPropA,GetPropW (CE is W-side)] */
 HANDLE GetProp(
  HWND hWnd,
  LPCTSTR lpString
-);
-
-/* GetROP2  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-int GetROP2(
- HDC hdc
-);
-
-/* GetStretchBltMode  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-int GetStretchBltMode(
- HDC hdc
 );
 
 /* GlobalAddAtom  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W GlobalAddAtomA,GlobalAddAtomW (CE is W-side)] */
@@ -423,45 +343,11 @@ ATOM GlobalFindAtom(
  LPCTSTR lpString
 );
 
-/* InterlockedCompareExchange  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-LONG InterlockedCompareExchange(
- LPLONG Destination,
- LONG Exchange,
- LONG Comperand
-);
-
-/* InterlockedExchangeAdd  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-LONG InterlockedExchangeAdd(
- LPLONG Addend,
- LONG Increment
-);
-
 /* InvalidateRgn  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL WINAPI InvalidateRgn(
  HWND hWnd,
  HRGN hRgn,
  BOOL fErase
-);
-
-/* InvertRect  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL InvertRect(
- HDC hDC,
- CONST RECT* lprc
-);
-
-/* LineTo  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-WINGDIAPI BOOL WINAPI LineTo(
- HDC hdc,
- int nXEnd,
- int nYEnd
-);
-
-/* MoveToEx  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-WINGDIAPI BOOL WINAPI MoveToEx(
- HDC hdc,
- int X,
- int Y,
- LPPOINT lpPoint
 );
 
 /* PropEnumProcEx  [function; shared; CE 5.0..699; A/W PROPENUMPROCEXA,PROPENUMPROCEXW (CE is W-side)] */
@@ -486,24 +372,6 @@ HANDLE RemoveProp(
  LPCTSTR lpString
 );
 
-/* SendMessageTimeout  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W SendMessageTimeoutA,SendMessageTimeoutW (CE is W-side)] */
-LRESULT SendMessageTimeout(
- HWND hWnd,
- UINT Msg,
- WPARAM wParam,
- LPARAM lParam,
- UINT fuFlags,
- UINT uTimeout,
- PDWORD_PTR lpdwResult
-);
-
-/* SetBitmapBits  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-LONG SetBitmapBits(
- HBITMAP hbmp,
- DWORD cBytes,
- CONST VOID *lpBits
-);
-
 /* SetLayout  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 DWORD SetLayout(
  HDC hdc,
@@ -515,27 +383,6 @@ BOOL SetProp(
  HWND hWnd,
  LPCTSTR lpString,
  HANDLE hData
-);
-
-/* SetStretchBltMode  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-int SetStretchBltMode(
- HDC hdc,
- int iStretchMode
-);
-
-/* TransparentBlt  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL TransparentBlt(
- HDC hdcDest,
- int nXOriginDest,
- int nYOriginDest,
- int nWidthDest,
- int hHeightDest,
- HDC hdcSrc,
- int nXOriginSrc,
- int nYOriginSrc,
- int nWidthSrc,
- int nHeightSrc,
- UINT crTransparent
 );
 
 /* ValidateRgn  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */

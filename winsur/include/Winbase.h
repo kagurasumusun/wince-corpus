@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 566 constants, 315 declarations, 7 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 566 constants, 318 declarations, 8 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINBASE_
 #define _WINBASE_
@@ -933,6 +933,17 @@ typedef struct _CEFILEINFO {
 } CEFILEINFO;
 typedef CEFILEINFO *PCEFILEINFO, *LPCEFILEINFO;
 
+/* COMMCONFIG  [struct; shared; entity-headers] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   dwSize */
+/*   wVersion */
+/*   wReserved */
+/*   dcb */
+/*   dwProviderSubType */
+/*   dwProviderOffset */
+/*   dwProviderSize */
+/*   wcProviderData */
+
 /* DCB  [struct; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   DCBlength */
@@ -1766,14 +1777,6 @@ BOOL SetFileAttributes(
  DWORD dwFileAttributes
 );
 
-/* SetFilePointer  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Fsmain.lib] */
-DWORD SetFilePointer( 
- HANDLE hFile, 
- LONG lDistanceToMove, 
- PLONG lpDistanceToMoveHigh, 
- DWORD dwMoveMethod
-);
-
 /* SetFileTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, fsmain.lib] */
 BOOL SetFileTime(
  HANDLE hFile,
@@ -1906,14 +1909,6 @@ BOOL VirtualFree(
  LPVOID lpAddress,
  DWORD dwSize,
  DWORD dwFreeType
-);
-
-/* VirtualProtect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, nk.lib] */
-BOOL VirtualProtect(
- LPVOID lpAddress,
- DWORD dwSize,
- DWORD flNewProtect,
- PDWORD lpflOldProtect
 );
 
 /* WaitCommEvent  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
@@ -2203,14 +2198,6 @@ VOID SignalStarted(
 BOOL TryEnterCriticalSection(
  LPCRITICAL_SECTION lpCriticalSection
 );
-
-/* VerQueryValue  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib; A/W VerQueryValueA,VerQueryValueW (CE is W-side)] */
-BOOL VerQueryValue(
- const LPVOID pBlock,
- LPTSTR lpSubBlock,
- LPVOID* lplpBuffer,
- PUINT puLen
-);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
@@ -2318,6 +2305,17 @@ VOID WINAPI DeleteFiber(
  LPVOID lpFiber
 );
 
+/* DuplicateHandle  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
+BOOL DuplicateHandle(
+ HANDLE hSourceProcessHandle,
+ HANDLE hSourceHandle,
+ HANDLE hTargetProcessHandle,
+ LPHANDLE lpTargetHandle,
+ DWORD dwDesiredAccess,
+ BOOL bInheritHandle,
+ DWORD dwOptions
+);
+
 /* FindFirstDevice  [function; ce-only; CE 5.0..699] */
 HANDLE FindFirstDevice(
  DeviceSearchType searchType,
@@ -2383,11 +2381,24 @@ BOOL HeapValidate(
  LPCVOID lpMem 
 );
 
+/* InterlockedCompareExchange  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
+LONG InterlockedCompareExchange(
+ LPLONG Destination,
+ LONG Exchange,
+ LONG Comperand
+);
+
 /* InterlockedCompareExchangePointer  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 PVOID InterlockedCompareExchangePointer(
  PVOID* Destination,
  PVOID ExChange,
  PVOID Comperand
+);
+
+/* InterlockedExchangeAdd  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
+LONG InterlockedExchangeAdd(
+ LPLONG Addend,
+ LONG Increment
 );
 
 /* InterlockedExchangePointer  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
@@ -2493,12 +2504,6 @@ BOOL UnlockFileEx(
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
-/* CheckRemoteDebuggerPresent  [function; shared; CE 6.0..699; coredll.dll] */
-BOOL CheckRemoteDebuggerPresent(
- HANDLE hProcess,
- PBOOL pbDebuggerPresent
-);
-
 /* DebugActiveProcessStop  [function; shared; CE 6.0..699; coredll.lib] */
 BOOL DebugActiveProcessStop (
  DWORD dwProcessId
@@ -2539,15 +2544,6 @@ BOOL VirtualFreeEx(
  LPVOID lpAddress,
  DWORD dwSize,
  DWORD dwFreeType
-);
-
-/* VirtualProtectEx  [function; shared; CE 6.0..699; coredll.lib] */
-BOOL VirtualProtectEx(
- HANDLE hProcess,
- LPVOID lpAddress,
- DWORD dwSize,
- DWORD flNewProtect,
- PDWORD lpflOldProtect
 );
 #endif /* _WIN32_WCE */
 
