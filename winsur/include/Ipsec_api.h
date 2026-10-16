@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _IPSEC_API_
 #define _IPSEC_API_
@@ -67,13 +67,5 @@ HRESULT StartIPSec(void);
 /* StopIPSec  [function; ce-only; CE 5.0..699; Ipsec_api.lib] */
 HRESULT StopIPSec(void);
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-HRESULT ResetIPSecMode( DWORD srcIP DWORD flags );
 
 #endif /* _IPSEC_API_ */

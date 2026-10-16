@@ -19,6 +19,14 @@ class DefineTests(unittest.TestCase):
         self.assertNotIn("<", line)
         self.assertIn("MAKEINTRESOURCE", line)
 
+    def test_missing_comma_between_params_is_broken(self):
+        self.assertTrue(q.is_broken_c(
+            "HRESULT CeOpenCallerBuffer(PVOID *ppDestMarshalled, PVOID pSrcUnmarshalled, "
+            "DWORD cbSrc, DWORD ArgumentDescriptor BOOL ForceDuplicate);"))
+        self.assertFalse(q.is_broken_c(
+            "HANDLE GPSOpenDevice(HANDLE hNewLocationData, HANDLE hDeviceStateChange, "
+            "const WCHAR *szDeviceName, DWORD dwFlags);"))
+
     def test_makelong_as_parameter_is_broken(self):
         self.assertTrue(q.is_broken_c(
             "void DateTime_SetMonthCalFont(HWND hwndDP, HFONT hFont, "

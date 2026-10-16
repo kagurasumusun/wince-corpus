@@ -40,7 +40,7 @@ the SAME tree, marked 'Win32 reference' -- never a second tree.
   tree, every one marked 'verify against the CE SDK'; a number a
   CE page prints always wins
 * spacing-only repairs across CE generations: **0**
-* pages behind this output: 8,328
+* pages behind this output: 8,325
 
 ## Constant/header linkage (kb/constant-headers.tsv)
 
@@ -97,8 +97,8 @@ every `#define` number above is a CE documentation quotation.
 
 | reason | entities |
 |--------|----------|
-| no declaration in the corpus | 20,580 |
-| declaration is not a C declaration | 17,068 |
+| no declaration in the corpus | 20,583 |
+| declaration is not a C declaration | 17,071 |
 | no header stated | 5,510 |
 | no CE version evidence | 1,504 |
 

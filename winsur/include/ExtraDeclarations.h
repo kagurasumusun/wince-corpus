@@ -1,5 +1,5 @@
 /* ExtraDeclarations.h -- declarations without header assignment
- * 5633 unassigned declarations
+ * 5628 unassigned declarations
  */
 #ifndef _EXTRADECLARATIONS_H_
 #define _EXTRADECLARATIONS_H_
@@ -310,7 +310,6 @@ typedef enum {
  };
 DWORD AAM_AudioIoControl ( DWORD dwFlag, DWORD dwIoControlCode, LPVOID lpInBuf, DWORD nInBufSize, LPVOID lpOutBuf, DWORD nOutBufSize, LPDWORD lpBytesReturned, LPOVERLAPPED lpOverLapped );
 DWORD AAM_EQBandControl( DWORD dwIndex, DWORD dwFlags, LONG *plValue );
-DWORD AAM_EQPreset( DWORD dwFlag LONG *plValue);
 DWORD AAM_EnableSSD ( BOOL bEnable );
 DWORD AAM_FilterControl ( DWORD dwFlags, DWORD *plEnable, DWORD *plFreq );
 DWORD AAM_GetEQCaps( DWORD *pdwCap );
@@ -319,7 +318,6 @@ DWORD AAM_GetSSDCaps( DWORD *pdwCap );
 DWORD AAM_GetSourceCap( IN DWORD dwIndex, OUT AAM_SRCCAP *pASC );
 DWORD AAM_RegisterAudioCtrl( AAM_SRCCAP pSrc, BOOL bRegister );
 DWORD AAM_RegisterCallback( DWORD idThread, BOOL bRegister );
-DWORD AAM_SSDControl( DWORD dwFlag LONG *plValue );
 DWORD AAM_SelectSource( DWORD dwAudioSourceID );
 DWORD AAM_VolumeControl( DWORD dwFlag, LONG *plValue );
 DWORD AMGetErrorText( HRESULT hr, TCHAR *pBuffer, DWORD MaxLen);
@@ -1366,7 +1364,6 @@ DWORD PDD_DeInit( LPVOID PDDContext );
 DWORD PDD_DeInitSensorMode( LPVOID PDDContext, ULONG ulModeType );
 DWORD PDD_FillBuffer( LPVOID PDDContext, ULONG ulModeType, PUCHAR pImage );
 DWORD PDD_GetAdapterInfo( LPVOID PDDContext, PADAPTERINFO pAdapterInfo );
-DWORD PDD_GetSensorModeInfo( LPVOID PDDContext ULONG ulModeType PSUBDEVICEINFO pSubDevInfo );
 DWORD PDD_HandleCamControlChanges( LPVOID PDDContext, DWORD dwPropId, LONG lFlags, LONG lValue );
 DWORD PDD_HandleModeCustomProperties( LPVOID PDDContext, ULONG ulModeType, PUCHAR pInBuf, DWORD InBufLen, PUCHAR pOutBuf, DWORD OutBufLen, PDWORD pdwBytesTransferred );
 DWORD PDD_HandleVidProcAmpChanges( LPVOID PDDContext, DWORD dwPropId, LONG lFlags, LONG lValue );
@@ -1503,7 +1500,6 @@ HRESULT RegisterObjectBound( IUnknown* punk );
 HRESULT RegisterObjectParam( LPOLESTR pszKey, IUnknown* punk );
 void RegisterPerfId( );
 HRESULT RegisterScopeMatchingRule( IWSDScopeMatchingRule* pScopeMatchingRule );
-HRESULT RegisterStartedApplication( OLE_HANDLE hFC BSTR bstrAppName LONG AppMsgID LONG Flags );
 HRESULT RegisterUnsolicitedNotification ( BSTR bstrAcceptedContent, BSTR bstrEventPackage, IRTCUnsolicitedSubscription** ppSubscription );
 HRESULT RelativePathTo( IMoniker *pmkOther, IMoniker **ppmkRelPath);
 HRESULT ReleaseBuffer( IMediaSample *pSample);
@@ -1733,7 +1729,6 @@ HRESULT SpeakingDone ( void );
 HRESULT SpeakingStarted(void);
 HRESULT SpeedGet( DWORD *pdwSpeed);
 HRESULT SpeedSet( DWORD dwSpeed);
-int SslValidate ( DWORD dwType LPVOID pvArg DWORD dwChainLen LPBLOB pCertChain DWORD dwFlags );
 HRESULT Start( DWORD dwFlags );
 HRESULT StartBrowser(LPWSTR szURL);
 HRESULT StartCall ( hPNDevice hPN, PNData_t Call, DWORD dwPeriod );

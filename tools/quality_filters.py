@@ -255,6 +255,15 @@ def is_broken_c(text: str) -> bool:
     if re.search(r"\b(?:MAKELONG|MAKEWORD|MAKEINTRESOURCE)\s*\(", body) \
             and not body.lstrip().startswith("#"):
         return True
+    # ``DWORD cbSrc, DWORD ArgumentDescriptor BOOL ForceDuplicate`` -- missing comma.
+    if re.search(
+        r"\b(?:DWORD|BOOL|UINT|ULONG|LONG|WORD|BYTE|HANDLE|HWND|HDC|"
+        r"HRESULT|PVOID|LPVOID)\s+[A-Za-z_][A-Za-z0-9_]*\s+"
+        r"(?:DWORD|BOOL|UINT|ULONG|LONG|WORD|BYTE|HANDLE|HWND|HDC|"
+        r"HRESULT|PVOID|LPVOID)\b",
+        body,
+    ):
+        return True
     if body.count("{") != body.count("}"):
         return True
     if body.count("(") != body.count(")"):
