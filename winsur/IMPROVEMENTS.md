@@ -432,6 +432,10 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: LCID/PDWORD と列挙コールバック（第18弾）
+
+コピーはしない。windows-data-types.md（CC-BY-4.0）が印刷する `typedef DWORD LCID` / `DWORD *PDWORD` / `UINT *PUINT` / `int *LPINT` / `USHORT *PUSHORT`。CE 3.0/5.0 の EnumWindowsProc / EnumFontFamProc 頁から `WNDENUMPROC` / `FONTENUMPROC`。CE 5.0 core/wave/imm/registry HTML 400 頁を生で開いた。gcc で EnumWindows / EnumFontFamilies が通る。MMRESULT / HIMC / REGSAM の typedef 頁は無いので出さない。
+
 ### 2026-10-16: CommDlg と typedef 別名（第17弾）
 
 コピーはしない。CE 3.0 の `_wcesdk_Win32_*` を 345 頁すべて生で開いた（PRE 付き 344）。harvest は CE 105,096 頁を再読。`} CHOOSECOLOR, *LPCHOOSECOLOR` の識別子を最後のポインタ別名に取っていた誤判定を直し、型名を取る。`OPENFILENAME` / `CHOOSECOLOR` / `DLGTEMPLATE` は頁が名指しする不完全 typedef。`Windows.h` が `Commdlg.h` を含む。gcc で GetOpenFileName / ChooseColor / AppendMenu / CreateDialogParam が通る。commctrl への一括 overlay はマクロ衝突で戻した。`DialogBoxParam` の `PARAM`、`waveOutOpen` の `MMRESULT` は出さない。

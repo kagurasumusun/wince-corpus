@@ -17,6 +17,17 @@
  * declaration body no page prints
  * ================================================================ */
 
+/* ACMDRVFORMATSUGGEST  [struct; ce-only] */
+typedef struct { 
+ DWORD cbStruct; 
+ DWORD fdwSuggest; 
+ LPWAVEFORMATEX pwfxSrc; 
+ DWORD cbwfxSrc; 
+ LPWAVEFORMATEX pwfxDst; 
+ DWORD cbwfxDst;
+} ACMDRVFORMATSUGGEST;
+typedef ACMDRVFORMATSUGGEST *PACMDRVFORMATSUGGEST, *LPACMDRVFORMATSUGGEST;
+
 /* ACMDRVSTREAMHEADER  [struct; ce-only] */
 typedef struct {
  DWORD cbStruct; 

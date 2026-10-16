@@ -146,6 +146,13 @@ VOID READ_PORT_BUFFER_ULONG(
  ULONG Count 
 );
 
+/* READ_PORT_BUFFER_USHORT  [function; ce-only; CE 3.0..699; CEDDK.lib] */
+VOID READ_PORT_BUFFER_USHORT(
+ PUSHORT Port, 
+ PUSHORT Buffer, 
+ ULONG Count 
+);
+
 /* READ_PORT_UCHAR  [function; ce-only; CE 3.0..699; CEDDK.lib] */
 UCHAR READ_PORT_UCHAR(
  PUCHAR Port 
@@ -154,6 +161,11 @@ UCHAR READ_PORT_UCHAR(
 /* READ_PORT_ULONG  [function; ce-only; CE 3.0..699; CEDDK.lib] */
 ULONG READ_PORT_ULONG(
  PULONG Port 
+);
+
+/* READ_PORT_USHORT  [function; ce-only; CE 3.0..699; CEDDK.lib] */
+USHORT READ_PORT_USHORT(
+ PUSHORT Port 
 );
 
 /* READ_REGISTER_BUFFER_UCHAR  [function; ce-only; CE 3.0..699; CEDDK.lib] */
@@ -170,6 +182,13 @@ VOID READ_REGISTER_BUFFER_ULONG(
  ULONG Count 
 );
 
+/* READ_REGISTER_BUFFER_USHORT  [function; ce-only; CE 3.0..699; CEDDK.lib] */
+VOID READ_REGISTER_BUFFER_USHORT(
+ PUSHORT Register, 
+ PUSHORT Buffer, 
+ ULONG Count 
+);
+
 /* READ_REGISTER_UCHAR  [function; ce-only; CE 3.0..699; CEDDK.lib] */
 UCHAR READ_REGISTER_UCHAR(
  PUCHAR Register 
@@ -178,6 +197,11 @@ UCHAR READ_REGISTER_UCHAR(
 /* READ_REGISTER_ULONG  [function; ce-only; CE 3.0..699; CEDDK.lib] */
 ULONG READ_REGISTER_ULONG(
  PULONG Register 
+);
+
+/* READ_REGISTER_USHORT  [function; ce-only; CE 3.0..699; CEDDK.lib] */
+USHORT READ_REGISTER_USHORT(
+ PUSHORT Register 
 );
 
 /* WRITE_PORT_BUFFER_UCHAR  [function; ce-only; CE 3.0..699; CEDDK.lib] */
@@ -213,6 +237,12 @@ VOID WRITE_PORT_ULONG(
  ULONG Value 
 );
 
+/* WRITE_PORT_USHORT  [function; ce-only; CE 3.0..699; CEDDK.lib] */
+VOID WRITE_PORT_USHORT(
+ PUSHORT Port, 
+ USHORT Value 
+);
+
 /* WRITE_REGISTER_BUFFER_UCHAR  [function; ce-only; CE 3.0..699; CEDDK.lib] */
 VOID WRITE_REGISTER_BUFFER_UCHAR(
  PUCHAR Register, 
@@ -227,6 +257,13 @@ VOID WRITE_REGISTER_BUFFER_ULONG(
  ULONG Count 
 );
 
+/* WRITE_REGISTER_BUFFER_USHORT  [function; ce-only; CE 3.0..699; CEDDK.lib] */
+VOID WRITE_REGISTER_BUFFER_USHORT(
+ PUSHORT Register, 
+ PUSHORT Buffer, 
+ ULONG Count 
+);
+
 /* WRITE_REGISTER_UCHAR  [function; ce-only; CE 3.0..699; CEDDK.lib] */
 VOID WRITE_REGISTER_UCHAR(
  PUCHAR Register, 
@@ -237,6 +274,12 @@ VOID WRITE_REGISTER_UCHAR(
 VOID WRITE_REGISTER_ULONG(
  PULONG Register, 
  ULONG Value 
+);
+
+/* WRITE_REGISTER_USHORT  [function; ce-only; CE 3.0..699; CEDDK.lib] */
+VOID WRITE_REGISTER_USHORT(
+ PUSHORT Register, 
+ USHORT Value 
 );
 #endif /* _WIN32_WCE */
 
@@ -344,6 +387,12 @@ BOOL GetBusNamePrefix (
  HANDLE hBusAccess,
  LPTSTR lpReturnStr,
  DWORD dwSizeInCharacters
+);
+
+/* GetChildDeviceRemoveState  [function; ce-only; CE 5.0..699; CEDDK.lib] */
+BOOL GetChildDeviceRemoveState (
+ HANDLE hBusAccess,
+ PDWORD lpdChildDeviceState
 );
 
 /* GetDeviceConfigurationData  [function; ce-only; CE 5.0..699; CEDDK.lib] */

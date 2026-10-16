@@ -1446,14 +1446,6 @@ typedef struct {
 } DOCINFO;
 typedef DOCINFO *PDOCINFO, *LPDOCINFO;
 
-/* ENUMLOGFONT  [struct; shared; A/W ENUMLOGFONTA,ENUMLOGFONTW (CE is W-side)] */
-typedef struct tagENUMLOGFONT {
- LOGFONT elfLogFont; 
- TCHAR elfFullName[LF_FULLFACESIZE]; 
- TCHAR elfStyle[LF_FACESIZE]; 
-} ENUMLOGFONT;
-typedef ENUMLOGFONT *PENUMLOGFONT, *LPENUMLOGFONT;
-
 /* FONTSIGNATURE  [struct; shared] */
 typedef struct tagFONTSIGNATURE {
  DWORD fsUsb[4];
@@ -1512,31 +1504,6 @@ typedef struct _RGNDATAHEADER {
  RECT rcBound; 
 } RGNDATAHEADER;
 typedef RGNDATAHEADER *PRGNDATAHEADER, *LPRGNDATAHEADER;
-
-/* TEXTMETRIC  [struct; shared; A/W TEXTMETRICA,TEXTMETRICW (CE is W-side)] */
-typedef struct tagTEXTMETRIC {
- LONG tmHeight; 
- LONG tmAscent; 
- LONG tmDescent; 
- LONG tmInternalLeading; 
- LONG tmExternalLeading; 
- LONG tmAveCharWidth; 
- LONG tmMaxCharWidth; 
- LONG tmWeight; 
- LONG tmOverhang; 
- LONG tmDigitizedAspectX; 
- LONG tmDigitizedAspectY; 
- char tmFirstChar; 
- char tmLastChar; 
- char tmDefaultChar; 
- char tmBreakChar; 
- BYTE tmItalic; 
- BYTE tmUnderlined; 
- BYTE tmStruckOut; 
- BYTE tmPitchAndFamily; 
- BYTE tmCharSet; 
-} TEXTMETRIC;
-typedef TEXTMETRIC *PTEXTMETRIC, *LPTEXTMETRIC;
 
 /* BITMAPCOREINFO  [struct; shared] */
 typedef struct _BITMAPCOREINFO { 
@@ -2113,11 +2080,27 @@ int EndPage(
  HDC hdc
 );
 
+/* EnumFontFamilies  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Mgrast2.lib, mgrast2.lib, mgtt.lib; A/W EnumFontFamiliesA,EnumFontFamiliesW (CE is W-side)] */
+int EnumFontFamilies(
+ HDC hdc, 
+ LPCTSTR lpszFamily, 
+ FONTENUMPROC lpEnumFontFamProc, 
+ LPARAM lParam
+);
+
 /* EnumFontFamProc  [function; ce-only; CE 2.11..2.12, 3.0..699] */
 int CALLBACK EnumFontFamProc(
  const LOGFONT FAR* lpelf, 
  const TEXTMETRIC FAR* lpntm, 
  DWORD FontType, 
+ LPARAM lParam
+);
+
+/* EnumFonts  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Mgrast2.lib, mgrast2.lib, mgtt.lib; A/W EnumFontsA,EnumFontsW (CE is W-side)] */
+int EnumFonts(
+ HDC hdc, 
+ LPCTSTR lpFaceName, 
+ FONTENUMPROC lpFontFunc, 
  LPARAM lParam
 );
 
@@ -2136,6 +2119,17 @@ BOOL ExtTextOut(
 /* GetTextColor  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, mgbase.lib, Winmgr.lib] */
 COLORREF GetTextColor(
  HDC hdc
+);
+
+/* GetTextExtentExPoint  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Mgrast.lib, mgrast.lib, Mgtt.lib, mgtt.lib; A/W GetTextExtentExPointA,GetTextExtentExPointW (CE is W-side)] */
+BOOL GetTextExtentExPoint(
+ HDC hdc, 
+ LPCTSTR lpszStr, 
+ int cchString, 
+ int nMaxExtent, 
+ LPINT lpnFit, 
+ LPINT alpDx, 
+ LPSIZE lpSize
 );
 
 /* GetTextExtentPoint  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib; A/W GetTextExtentPointA,GetTextExtentPointW (CE is W-side)] */
@@ -2192,6 +2186,14 @@ int StartPage(
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
+/* GetCharWidth32  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib; +not-umbrella; A/W GetCharWidth32A,GetCharWidth32W (CE is W-side)] */
+WINGDIAPI BOOL WINAPI GetCharWidth32(
+ HDC hdc,
+ UINT iFirstChar,
+ UINT iLastChar,
+ LPINT lpBuffer
+);
+
 /* GetTextAlign  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
 WINGDIAPI UINT WINAPI GetTextAlign(
  HDC hdc
@@ -2210,6 +2212,15 @@ WINGDIAPI UINT WINAPI SetTextAlign(
 BOOL CALLBACK AbortProc(
  HDC hdc, // handle to DC
  int iError // error value
+);
+
+/* EnumFontFamiliesEx  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W EnumFontFamiliesExA,EnumFontFamiliesExW (CE is W-side)] */
+int EnumFontFamiliesEx(
+ HDC hdc, // handle to DC
+ LPLOGFONT lpLogfont, // font information
+ FONTENUMPROC lpEnumFontFamExProc, // callback function
+ LPARAM lParam, // additional data
+ DWORD dwFlags // not used; must be 0
 );
 
 /* GetROP2  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */

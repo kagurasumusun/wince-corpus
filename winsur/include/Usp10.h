@@ -327,6 +327,12 @@ HRESULT WINAPI ScriptLayout(
  int* piLogicalToVisual 
 );
 
+/* ScriptRecordDigitSubstitution  [function; shared; CE 5.0..699; Uspce.lib] */
+HRESULT WINAPI ScriptRecordDigitSubstitution(
+ LCID Locale,
+ SCRIPT_DIGITSUBSTITUTE* psds
+);
+
 /* ScriptShape  [function; shared; CE 5.0..699; Uspce.lib] */
 HRESULT WINAPI ScriptShape(
  HDC hdc, 

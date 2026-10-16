@@ -33,6 +33,7 @@
  * ================================================================ */
 
 /* function */
+HRESULT GetFormat( LPWAVEFORMATEX lpwfxFormat, DWORD dwSizeAllocated, LPDWORD lpdwSizeWritten );
 HRESULT GetFrequency( LPDWORD lpdwFrequency );
 HRESULT GetPan( LPLONG lplPan );
 HRESULT GetVolume( LPLONG lplVolume );

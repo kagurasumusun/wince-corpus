@@ -23,6 +23,15 @@ DWORD dwLowNote;
 DWORD dwHighNote;
 } DMUS_NOTERANGE, *LPDMUS_NOTERANGE;
 
+/* DMUS_WAVE  [struct; ce-only] */
+typedef struct {
+ ULONG ulFirstExtCkIdx;
+ ULONG ulCopyrightIdx;
+ ULONG ulWaveDataIdx;
+ WAVEFORMATEX WaveformatEx;
+} DMUS_WAVE;
+typedef DMUS_WAVE *PDMUS_WAVE, *LPDMUS_WAVE;
+
 /* DMUS_WAVEDATA  [struct; ce-only] */
 typedef struct {
  ULONG cbSize;

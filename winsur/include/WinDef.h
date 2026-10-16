@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 30 constants, 67 declarations, 9 outlines, 103 base types, 0 extra macros, 0 extra decls
+ * 30 constants, 67 declarations, 9 outlines, 117 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDEF_
 #define _WINDEF_
@@ -488,6 +488,56 @@ typedef struct tagOPENFILENAME OPENFILENAME, *LPOPENFILENAME;
  * source: win32/common/windows-data-types.md */
 typedef struct tagDLGTEMPLATE DLGTEMPLATE, *LPDLGTEMPLATE, *LPCDLGTEMPLATE;
 
+/* LCID [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef DWORD LCID;
+
+/* PDWORD [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef DWORD *PDWORD;
+
+/* PUINT [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef UINT *PUINT;
+
+/* LPINT [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef int *LPINT;
+
+/* PINT [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef int *PINT;
+
+/* PUSHORT [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef USHORT *PUSHORT;
+
+/* LPLOGFONT [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef struct tagLOGFONT *PLOGFONT, *LPLOGFONT;
+
+/* TEXTMETRIC [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef struct tagTEXTMETRIC TEXTMETRIC, *PTEXTMETRIC, *LPTEXTMETRIC;
+
+/* ENUMLOGFONT [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef struct tagENUMLOGFONT ENUMLOGFONT, *PENUMLOGFONT, *LPENUMLOGFONT;
+
+/* WAVEFORMATEX [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef struct tWAVEFORMATEX WAVEFORMATEX, *PWAVEFORMATEX, *LPWAVEFORMATEX;
+
 /* ATOM
  * source: win32/common/windows-data-types.md */
 typedef WORD ATOM;
@@ -635,6 +685,26 @@ typedef void (CALLBACK *TIMERPROC)(HWND, UINT, UINT, DWORD);
  * source: win32/common/windows-data-types.md */
 typedef INT_PTR (CALLBACK *DLGPROC)(HWND, UINT, WPARAM, LPARAM);
 
+/* WNDENUMPROC [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef BOOL (CALLBACK *WNDENUMPROC)(HWND, LPARAM);
+
+/* WNDENUMPROCW [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef BOOL (CALLBACK *WNDENUMPROCW)(HWND, LPARAM);
+
+/* FONTENUMPROC [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef int (CALLBACK *FONTENUMPROC)(ENUMLOGFONT FAR *, TEXTMETRIC FAR *, int, LPARAM);
+
+/* FONTENUMPROCW [CE-SPECIFIC]
+ * CE Unicode / 32-bit data-types row
+ * source: win32/common/windows-data-types.md */
+typedef int (CALLBACK *FONTENUMPROCW)(ENUMLOGFONT FAR *, TEXTMETRIC FAR *, int, LPARAM);
+
 /* HCURSOR
  * source: win32/common/windows-data-types.md */
 typedef HICON HCURSOR;
@@ -697,9 +767,6 @@ typedef DWORD *LPDWORD;
 /* LPHANDLE  [typedef; shared; entity-headers; win32-reference] */
 typedef HANDLE *LPHANDLE;
 
-/* LPINT  [typedef; shared; entity-headers; win32-reference] */
-typedef int *LPINT;
-
 /* LPLONG  [typedef; shared; entity-headers; win32-reference] */
 typedef long *LPLONG;
 
@@ -709,17 +776,11 @@ typedef BOOL *PBOOL;
 /* PBYTE  [typedef; shared; entity-headers; win32-reference] */
 typedef BYTE *PBYTE;
 
-/* PDWORD  [typedef; shared; entity-headers; win32-reference] */
-typedef DWORD *PDWORD;
-
 /* PFLOAT  [typedef; shared; entity-headers; win32-reference] */
 typedef FLOAT *PFLOAT;
 
 /* PHKEY  [typedef; shared; entity-headers; win32-reference] */
 typedef HKEY *PHKEY;
-
-/* PINT  [typedef; shared; entity-headers; win32-reference] */
-typedef int *PINT;
 
 /* POINT  [struct, function, library; shared] */
 typedef struct tagPOINT {
@@ -765,14 +826,8 @@ typedef WORD *LPWORD;
 /* PUCHAR  [typedef; shared; entity-headers; win32-reference] */
 typedef UCHAR *PUCHAR;
 
-/* PUINT  [typedef; shared; entity-headers; win32-reference] */
-typedef UINT *PUINT;
-
 /* PULONG  [typedef; shared; entity-headers; win32-reference] */
 typedef ULONG *PULONG;
-
-/* PUSHORT  [typedef; shared; entity-headers; win32-reference] */
-typedef USHORT *PUSHORT;
 
 /* PWORD  [typedef; shared; entity-headers; win32-reference] */
 typedef WORD *PWORD;

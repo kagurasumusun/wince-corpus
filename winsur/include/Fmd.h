@@ -75,4 +75,13 @@ VOID FMD_PowerDown(VOID);
 VOID FMD_PowerUp(VOID);
 #endif /* _WIN32_WCE */
 
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
+
+/* FMD_GetInfoEx  [function; ce-only; CE 6.0..699] */
+BOOL FMD_GetInfoEx(
+ PFlashInfoEx pFlashInfo,
+ PDWORD pdwNumRegions
+);
+#endif /* _WIN32_WCE */
+
 #endif /* _FMD_ */

@@ -1911,6 +1911,14 @@ BOOL VirtualFree(
  DWORD dwFreeType
 );
 
+/* VirtualProtect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, nk.lib] */
+BOOL VirtualProtect(
+ LPVOID lpAddress,
+ DWORD dwSize,
+ DWORD flNewProtect,
+ PDWORD lpflOldProtect
+);
+
 /* WaitCommEvent  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
 BOOL WaitCommEvent(
  HANDLE hFile,
@@ -2197,6 +2205,14 @@ VOID SignalStarted(
 /* TryEnterCriticalSection  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
 BOOL TryEnterCriticalSection(
  LPCRITICAL_SECTION lpCriticalSection
+);
+
+/* VerQueryValue  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib; A/W VerQueryValueA,VerQueryValueW (CE is W-side)] */
+BOOL VerQueryValue(
+ const LPVOID pBlock,
+ LPTSTR lpSubBlock,
+ LPVOID* lplpBuffer,
+ PUINT puLen
 );
 #endif /* _WIN32_WCE */
 
@@ -2544,6 +2560,15 @@ BOOL VirtualFreeEx(
  LPVOID lpAddress,
  DWORD dwSize,
  DWORD dwFreeType
+);
+
+/* VirtualProtectEx  [function; shared; CE 6.0..699; coredll.lib] */
+BOOL VirtualProtectEx(
+ HANDLE hProcess,
+ LPVOID lpAddress,
+ DWORD dwSize,
+ DWORD flNewProtect,
+ PDWORD lpflOldProtect
 );
 #endif /* _WIN32_WCE */
 

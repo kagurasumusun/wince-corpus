@@ -3629,6 +3629,12 @@ UINT EnumClipboardFormats(
  UINT format
 );
 
+/* EnumWindows  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib] */
+BOOL EnumWindows( 
+ WNDENUMPROC lpEnumFunc, 
+ LPARAM lParam 
+);
+
 /* EnumWindowsProc  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
 BOOL CALLBACK EnumWindowsProc(
  HWND hwnd, 

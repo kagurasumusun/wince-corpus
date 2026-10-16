@@ -34,6 +34,7 @@ HRESULT GetActivationPolicy( DWORD* pdwPolicy );
 HRESULT GetAmbientAppearance( short& nAppearance);
 HRESULT GetAmbientAutoClip( BOOL& bAutoClip );
 HRESULT GetAmbientDisplayAsDefault( BOOL& bDisplayAsDefault );
+HRESULT GetAmbientLocaleID( LCID& lcid );
 HRESULT GetAmbientMessageReflect( BOOL& bMessageReflect );
 HRESULT GetAmbientPalette( HPALETTE& hPalette );
 HRESULT GetAmbientShowGrabHandles( BOOL& bShowGrabHandles );

@@ -77,6 +77,9 @@ DWORD BthAGNetworkDialNumber(LPSTR pszNumber);
 /* BthAGNetworkDropCall  [function; ce-only; CE 5.0..699; Btagsvc_network.lib] */
 DWORD BthAGNetworkHangupCall(DWORD dwFlags);
 
+/* BthAGNetworkGetCallState  [function; ce-only; CE 5.0..699; Btagsvc_network.lib] */
+DWORD BthAGNetworkGetCallState ( PDWORD pdwFlags);
+
 /* BthAGNetworkHoldCall  [function; ce-only; CE 5.0..699; Btagsvc_network.lib] */
 DWORD BthAgNetworkHoldCall(void);
 

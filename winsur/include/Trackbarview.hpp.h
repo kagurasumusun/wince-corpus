@@ -19,5 +19,6 @@
 /* function */
 void DrawChannel( HDC hdc, DWORD style, BOOL bSelection, LONG lSelStart, LONG lSelEnd, LONG lLogMin, LONG lLogMax, LONG iSizePhys, int left, LPRECT lprc );
 void DrawThumb( HWND hwnd, HDC hdc, DWORD style, int iThumbHeight, int iThumbWidth, LPRECT lprc, BOOL fSelected );
+void DrawTics( HDC hdc, DWORD style, RECT* prc, PDWORD pTics, int nTics, int ticFreq, LONG lSelStart, LONG lSelEnd, LONG lLogMin, LONG lLogMax, LONG iSizePhys, bool bDrawSelectionTriangles );
 
 #endif /* _TRACKBARVIEW_HPP_ */

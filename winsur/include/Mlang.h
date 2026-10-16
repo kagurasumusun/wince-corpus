@@ -116,6 +116,13 @@ typedef enum tagMLDETECTCP {
 } MLDETECTCP;
 typedef MLDETECTCP *PMLDETECTCP, *LPMLDETECTCP;
 
+/* RFC1766INFO  [struct; ce-only] */
+typedef struct tagRFC1766INFO {
+ LCID lcid;
+ WCHAR wszRfc1766[MAX_RFC1766_NAME];
+ WCHAR wszLocaleName[MAX_LOCALE_NAME];
+} RFC1766INFO, *PRFC1766INFO;
+
 /* SCRIPTCONTF  [enum; ce-only] */
 typedef enum tagSCRIPTCONTF {
  sidDefault,
@@ -187,10 +194,54 @@ typedef UNICODERANGE *PUNICODERANGE, *LPUNICODERANGE;
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
+/* ConvertINetMultiByteToUnicode  [function; ce-only; CE 4.0..699; Mlang.dll, mlang.dll] */
+HRESULT ConvertINetMultiByteToUnicode(
+ LPDWORD lpdwMode,
+ DWORD dwSrcEncoding,
+ LPCSTR lpSrcStr,
+ LPINT lpnMultiCharCount,
+ LPWSTR lpDstStr,
+ LPINT lpnWideCharCount
+);
+
+/* ConvertINetString  [function; ce-only; CE 4.0..699; Mlang.dll, mlang.dll] */
+HRESULT ConvertINetString(
+ LPDWORD lpdwMode,
+ DWORD dwSrcEncoding,
+ DWORD dwDstEncoding,
+ LPCSTR lpSrcStr,
+ LPINT lpnSrcSize,
+ LPBYTE lpDstStr,
+ LPINT lpnDstSize
+);
+
+/* ConvertINetUnicodeToMultiByte  [function; ce-only; CE 4.0..699; Mlang.dll, mlang.dll] */
+HRESULT ConvertINetUnicodeToMultiByte(
+ LPDWORD lpdwMode,
+ DWORD dwEncoding,
+ LPCWSTR lpSrcStr,
+ LPINT lpnWideCharCount,
+ LPSTR lpDstStr,
+ LPINT lpnMultiCharCount
+);
+
 /* IsConvertINetStringAvailable  [function; ce-only; CE 4.0..699; Mlang.dll, mlang.dll] */
 HRESULT IsConvertINetStringAvailable(
  DWORD dwSrcEncoding,
  DWORD dwDstEncoding
+);
+
+/* LcidToRfc1766  [function; ce-only; CE 4.0..699; Mlang.dll, mlang.dll] */
+HRESULT LcidToRfc1766(
+ LCID Locale,
+ LPTSTR pszRfc1766,
+ int nChar
+);
+
+/* Rfc1766ToLcid  [function; ce-only; CE 4.0..699; Mlang.dll, mlang.dll] */
+HRESULT Rfc1766ToLcid(
+ LCID* pLocale,
+ LPTSTR pszRfc1766
 );
 #endif /* _WIN32_WCE */
 
@@ -200,6 +251,8 @@ HRESULT IsConvertINetStringAvailable(
  * ================================================================ */
 
 /* function */
+HRESULT BreakLineA( LCID locale, UINT uCodePage, const CHAR* pszSrc, long cchSrc, long cMaxColumns, long* pcchLine, long* pcchSkip );
+HRESULT BreakLineW( LCID locale, const WCHAR* pszSrc, long cchSrc, long cMaxColumns, long* pcchLine, long* pcchSkip );
 HRESULT CodePageToCodePages( UINT uCodePage, DWORD* pdwCodePages );
 HRESULT CodePagesToCodePage( DWORD dwCodePages, UINT uDefaultCodePage, UINT* puCodePage );
 HRESULT ConvertString( DWORD* pdwMode, DWORD dwSrcEncoding, DWORD dwDstEncoding, BYTE* pSrcStr, UINT* pcSrcSize, BYTE* pDstStr, UINT* pcDstSize );
@@ -212,6 +265,7 @@ HRESULT DoConversion( BYTE* pSrcStr, UINT* pcSrcSize, BYTE* pDstStr, UINT* pcDst
 HRESULT DoConversionFromUnicode( WCHAR* pSrcStr, UINT* pcSrcSize, CHAR* pDstStr, UINT* pcDstSize );
 HRESULT DoConversionToUnicode( CHAR* pSrcStr, UINT* pcSrcSize, WCHAR* pDstStr, UINT* pcDstSize );
 HRESULT GetCharCodePages( WCHAR chSrc, DWORD* pdwCodePages );
+HRESULT GetCodePageDescription( UINT uiCodePage, LCID lcid, LPWSTR lpWideCharStr, int cchWideChar );
 HRESULT GetDestinationCodePage( UINT* puiDstCodePage );
 HRESULT GetFamilyCodePage( UINT uiCodePage, UINT* puiFamilyCodePage );
 HRESULT GetFontCodePages( HDC hDC, HFONT hFont, DWORD* pdwCodePages );

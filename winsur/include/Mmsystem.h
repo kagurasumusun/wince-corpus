@@ -1007,18 +1007,6 @@ typedef struct timecaps_tag {
  UINT wPeriodMax; 
 } TIMECAPS, *PTIMECAPS;
 
-/* WAVEFORMATEX  [struct; shared] */
-typedef struct WAVEFORMATEX{
- WORD wFormatTag;
- WORD nChannels;
- DWORD nSamplesPerSec;
- DWORD nAvgBytesPerSec;
- WORD nBlockAlign;
- WORD wBitsPerSample;
- WORD cbSize;
-} WAVEFORMATEX;
-typedef WAVEFORMATEX *PWAVEFORMATEX, *LPWAVEFORMATEX;
-
 /* WAVEHDR  [struct; shared] */
 typedef struct {
  LPSTR lpData;

@@ -366,6 +366,7 @@ HRESULT GetRefTypeOfImplType( unsigned int index, HREFTYPE FAR *pRefType );
 HRESULT GetTypeAttr( TYPEATTR FAR *FAR *ppTypeAttr );
 HRESULT GetTypeComp( ITypeComp FAR *FAR *ppTComp );
 HRESULT GetTypeFlags( unsigned long *pTypeFlags);
+HRESULT GetTypeInfo( unsigned int iTInfo, LCID lcid, ITypeInfo FAR *FAR *ppTInfo);
 HRESULT GetTypeInfoCount( unsigned int FAR *pctinfo);
 HRESULT GetTypeInfoType( unsigned int index, TYPEKIND FAR *pTKind );
 HRESULT GetTypeKind( TYPEKIND *pTypeKind);
@@ -386,6 +387,7 @@ HRESULT SetFuncHelpStringContext( unsigned int index, DWORD dwHelpStringContext)
 HRESULT SetHelpContext( DWORD dwHelpContext);
 HRESULT SetHelpStringContext( DWORD *dwHelpStringContext);
 HRESULT SetImplTypeFlags( unsigned int index, int implTypeFlags);
+HRESULT SetLcid( LCID lcid);
 HRESULT SetLibFlags( unsigned int uLibFlags);
 HRESULT SetTypeDescAlias( TYPEDESC FAR *pTDescAlias);
 HRESULT SetTypeFlags( unsigned int uTypeFlags);

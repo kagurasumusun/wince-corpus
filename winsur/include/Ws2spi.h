@@ -39,6 +39,16 @@ typedef struct WSPData {
  WCHAR szDescription[WSPDESCRIPTION_LEN+1];
 } WSPDATA, FAR * LPWSPDATA;
 
+/* WSPSelect  [struct; ce-only; Ws2.lib] */
+int WSPSelect(
+ int nfds,
+ fd_set FAR* readfds,
+ fd_set FAR* writefds,
+ fd_set FAR* exceptfds,
+ const struct timeval FAR* timeout,
+ LPINT lpErrno 
+);
+
 /* lpErrno  [extra struct] */
 SOCKET WSPAccept(SOCKET s,struct sockaddr FAR* addr,LPINT addrlen,LPCONDITIONPROC lpfnCondition,DWORD dwCallbackData,LPINT lpErrno );
 
@@ -66,6 +76,11 @@ typedef struct _NSP_ROUTINE {
 /* NSPLookupServiceEnd  [function; ce-only; CE 5.0..699; Ws2.lib] */
 int NSPLookupServiceEnd(
  HANDLE hLookup
+);
+
+/* WSPCleanup  [function; ce-only; CE 5.0..699; Ws2.lib] */
+int WSPCleanup(
+ LPINT lpErrno 
 );
 #endif /* _WIN32_WCE */
 

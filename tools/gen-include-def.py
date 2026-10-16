@@ -1925,6 +1925,8 @@ _OVERLAY_NAMED = {
     "GetOpenFileName", "GetSaveFileName", "ChooseColor", "ChooseFont",
     "OPENFILENAME", "CHOOSECOLOR", "CreateDialogIndirectParam",
     "AppendMenu", "CreateDialogParam",
+    "EnumWindows", "EnumFontFamilies", "EnumFonts", "TEXTMETRIC",
+    "WAVEFORMATEX",
 }
 
 _OVERLAY_HEADERS = {
@@ -2064,6 +2066,32 @@ _CORE_TYPEDEFS = (
     ("DLGTEMPLATE",
      "typedef struct tagDLGTEMPLATE DLGTEMPLATE, *LPDLGTEMPLATE, "
      "*LPCDLGTEMPLATE;"),
+    ("LCID", "typedef DWORD LCID;"),
+    ("PDWORD", "typedef DWORD *PDWORD;"),
+    ("PUINT", "typedef UINT *PUINT;"),
+    ("LPINT", "typedef int *LPINT;"),
+    ("PINT", "typedef int *PINT;"),
+    ("PUSHORT", "typedef USHORT *PUSHORT;"),
+    ("WNDENUMPROC",
+     "typedef BOOL (CALLBACK *WNDENUMPROC)(HWND, LPARAM);"),
+    ("WNDENUMPROCW",
+     "typedef BOOL (CALLBACK *WNDENUMPROCW)(HWND, LPARAM);"),
+    ("FONTENUMPROC",
+     "typedef int (CALLBACK *FONTENUMPROC)(ENUMLOGFONT FAR *, "
+     "TEXTMETRIC FAR *, int, LPARAM);"),
+    ("FONTENUMPROCW",
+     "typedef int (CALLBACK *FONTENUMPROCW)(ENUMLOGFONT FAR *, "
+     "TEXTMETRIC FAR *, int, LPARAM);"),
+    ("LPLOGFONT",
+     "typedef struct tagLOGFONT *PLOGFONT, *LPLOGFONT;"),
+    ("TEXTMETRIC",
+     "typedef struct tagTEXTMETRIC TEXTMETRIC, *PTEXTMETRIC, *LPTEXTMETRIC;"),
+    ("ENUMLOGFONT",
+     "typedef struct tagENUMLOGFONT ENUMLOGFONT, *PENUMLOGFONT, "
+     "*LPENUMLOGFONT;"),
+    ("WAVEFORMATEX",
+     "typedef struct tWAVEFORMATEX WAVEFORMATEX, *PWAVEFORMATEX, "
+     "*LPWAVEFORMATEX;"),
 )
 
 _WINDEF_NEED = (
@@ -2114,6 +2142,11 @@ _C_KNOWN_TYPES = {
     "CHOOSEFONT", "LPCHOOSEFONT",
     "OPENFILENAME", "LPOPENFILENAME",
     "DLGTEMPLATE", "LPDLGTEMPLATE", "LPCDLGTEMPLATE",
+    "LCID", "PDWORD", "PUINT", "LPINT", "PINT", "PUSHORT",
+    "WNDENUMPROC", "FONTENUMPROC",
+    "TEXTMETRIC", "PTEXTMETRIC", "LPTEXTMETRIC",
+    "ENUMLOGFONT", "PENUMLOGFONT", "LPENUMLOGFONT",
+    "WAVEFORMATEX", "PWAVEFORMATEX", "LPWAVEFORMATEX",
 }
 
 
