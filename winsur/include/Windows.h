@@ -27,6 +27,7 @@
 #include "Fsdmgr.h"
 #include "Halether.h"
 #include "Fwapi.h"
+#include "Pm.h"
 
 #endif /* _WINDOWS_ */
 

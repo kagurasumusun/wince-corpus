@@ -96,6 +96,7 @@ int WINAPI WinMain(HINSTANCE h, HINSTANCE p, LPWSTR cmd, int show) {
     AdjustWindowRectEx(NULL, 0, 0, 0);
     GetDoubleClickTime();
     IsFirewallEnabled(0);
+    GetSystemPowerState(NULL, 0, NULL);
     return 0;
 }
 '''

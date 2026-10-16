@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 14 constants, 16 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 14 constants, 23 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _PM_
 #define _PM_
@@ -92,6 +92,20 @@ typedef struct _POWER_RELATIONSHIP {
  * functions and callbacks
  * ================================================================ */
 
+/* GetSystemPowerState  [function; ce-only; unified-kb; unified-kb] */
+DWORD GetSystemPowerState(
+ LPWSTR pBuffer,
+ DWORD Length,
+ PDWORD pFlags
+);
+
+/* SetSystemPowerState  [function; shared; unified-kb; unified-kb] */
+DWORD SetSystemPowerState(
+ LPCWSTR psState,
+ DWORD StateFlags,
+ DWORD Options
+);
+
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* DevicePowerNotify  [function; ce-only; CE 4.0..699; Coredll.lib] */
@@ -106,13 +120,6 @@ DWORD GetDevicePower(
  PVOID pvDevice,
  DWORD dwDeviceFlags,
  PCEDEVICE_POWER_STATE pDeviceState
-);
-
-/* GetSystemPowerState  [function; ce-only; CE 4.0..699; Coredll.lib] */
-DWORD GetSystemPowerState(
- LPWSTR pBuffer,
- DWORD Length,
- PDWORD pFlags
 );
 
 /* RegisterPowerRelationship  [function; ce-only; CE 4.0..699; Coredll.lib] */
@@ -156,13 +163,6 @@ HANDLE SetPowerRequirement(
  ULONG DeviceFlags,
  PVOID pvSystemState,
  ULONG StateFlags
-);
-
-/* SetSystemPowerState  [function; shared; CE 5.0..699; Coredll.lib] */
-DWORD SetSystemPowerState(
- LPCWSTR psState,
- DWORD StateFlags,
- DWORD Options
 );
 
 /* StopPowerNotifications  [function; ce-only; CE 5.0..699; Coredll.lib] */

@@ -432,6 +432,10 @@ winsur/
 
 ## 変更履歴
 
+### 2026-10-16: Pm.h を Windows.h へ（第32弾）
+
+コピーはしない。電源管理 GetSystemPowerState / SetSystemPowerState は既に生成済みで gcc できるのに umbrella から見えない。
+
 ### 2026-10-16: MAKELONG 引数と typedef_struct_（第31弾）
 
 コピーはしない。DateTime_SetMonthCalFont の `LPARAM MAKELONG(fRedraw, 0)` はマクロ呼び出し。`typedef_struct_RASENTRY` はスペース落ち。harvest 53,949。gcc 通過。
