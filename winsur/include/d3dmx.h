@@ -15,33 +15,17 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-/* D3DMXDivFxd  [macro; ce-only] */
-#define D3DMXDivFxd( fxdA, fxdB ) ((FIXED) \
- (((_int64)(fxdA) << 16) / (_int64)(fxdB)));
-
 /* D3DMXMATRIX  [struct; ce-only] */
 
 /* D3DMXMATRIXFXD  [struct; ce-only] */
 
-/* D3DMXMulFxd  [macro; ce-only] */
-#define D3DMXMulFxd( fxdA, fxdB ) ((FIXED) \
- (((_int64)(fxdA) * (_int64)(fxdB)) >> 16));
-
 /* D3DMXToDegree  [macro; ce-only] */
-
-/* D3DMXToDegreeFxd  [macro; ce-only] */
-#define D3DMXToDegreeFxd( radian ) \
- D3DMXMulFxd(radian, D3DMXDivFxd(D3DMXToFixed(180.0f), D3DMX_PI_FXD));
 
 /* D3DMXToFixed  [macro; ce-only] */
 
 /* D3DMXToFloat  [macro; ce-only] */
 
 /* D3DMXToRadian  [macro; ce-only] */
-
-/* D3DMXToRadianFxd  [macro; ce-only] */
-#define D3DMXToRadianFxd( degree ) \
- D3DMXMulFxd(degree, D3DMXDivFxd(D3DMX_PI_FXD, D3DMXToFixed(180.0f)));
 
 /* D3DMXVECTOR3  [struct; ce-only] */
 

@@ -155,6 +155,47 @@ enum _DMO_OUTPUT_STREAM_INFO_FLAGS {
 enum _DMO_SET_TYPE_FLAGS {  DMO_SET_TYPEF_TEST_ONLY = 0x00000001,  DMO_SET_TYPEF_CLEAR = 0x00000002  };
 
 /* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
+
+/* MoCopyMediaType  [function; shared; CE 4.0..699; Msdmo.lib, msdmo.lib] */
+HRESULT MoCopyMediaType(
+ DMO_MEDIA_TYPE* pmtDest, 
+ const DMO_MEDIA_TYPE* pmtSrc
+);
+
+/* MoCreateMediaType  [function; shared; CE 4.0..699; Msdmo.lib, msdmo.lib] */
+HRESULT MoCreateMediaType(
+ DMO_MEDIA_TYPE** ppmt, 
+ DWORD cbFormat
+);
+
+/* MoDeleteMediaType  [function; shared; CE 4.0..699; Msdmo.lib, msdmo.lib] */
+HRESULT MoDeleteMediaType(
+ DMO_MEDIA_TYPE* pmt
+);
+
+/* MoDuplicateMediaType  [function; shared; CE 4.0..699; Msdmo.lib, msdmo.lib] */
+HRESULT MoDuplicateMediaType(
+ DMO_MEDIA_TYPE** ppmtDest, 
+ const DMO_MEDIA_TYPE* pmtSrc
+);
+
+/* MoFreeMediaType  [function; shared; CE 4.0..699; Msdmo.lib, msdmo.lib] */
+HRESULT MoFreeMediaType(
+ DMO_MEDIA_TYPE* pmt
+);
+
+/* MoInitMediaType  [function; shared; CE 4.0..699; Msdmo.lib, msdmo.lib] */
+HRESULT MoInitMediaType(
+ DMO_MEDIA_TYPE* pmt, 
+ DWORD cbFormat
+);
+#endif /* _WIN32_WCE */
+
+/* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration
  * ================================================================ */

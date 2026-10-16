@@ -52,7 +52,4 @@ typedef enum _MINIDUMP_STREAM_TYPE {
  LastReservedStream = 0xffff
 } MINIDUMP_STREAM_TYPE;
 
-/* MINIDUMP_STREAM_TYPE  [extra enum] */
-typedef enum _MINIDUMP_STREAM_TYPE { UnusedStream = 0,// 1 to 0x7FFF - Reserved for Desktop Windows// 0x8000 to 0xFFFE - Windows CE stream types ceStreamNull = 0x8000, ceStreamSystemInfo = 0x8001, ceStreamException = 0x8002, ceStreamModuleList = 0x8003, ceStreamProcessList = 0x8004, ceStreamThreadList = 0x8005, ceStreamThreadContextList = 0x8006, ceStreamThreadCallStackList = 0x8007, ceStreamMemoryVirtualList = 0x8008, ceStreamMemoryPhysicalList = 0x8009, ceStreamBucketParameters = 0x800A, LastReservedStream = 0xffff} MINIDUMP_STREAM_TYPE;
-
 #endif /* _DWCEDUMP_ */

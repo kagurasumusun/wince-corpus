@@ -83,14 +83,6 @@
 
 /* SHACTIVATEINFO  [struct; ce-only; aygshell.lib] */
 
-/* SHGetMenu  [macro; ce-only] */
-#define SHGetMenu(hWndMB) (HMENU)SendMessage((hWndMB), \
- SHCMBM_GETMENU, (WPARAM)0, (LPARAM)0);
-
-/* SHGetSubMenu  [macro; ce-only] */
-#define SHGetSubMenu(hWndMB,ID_MENU) (HMENU)SendMessage((hWndMB), \
- SHCMBM_GETSUBMENU, (WPARAM)0, (LPARAM)ID_MENU);
-
 /* SHINITDLGINFO  [struct, macro; ce-only; aygshell.lib] */
 typedef struct tagSHINITDIALOG {
  DWORD dwMask;
@@ -99,10 +91,6 @@ typedef struct tagSHINITDIALOG {
 } SHINITDLGINFO, *PSHINITDLGINFO;
 
 /* SHORTS  [typedef; ce-only; heuristic-prefix] */
-
-/* SHSetSubMenu  [macro; ce-only] */
-#define SHSetSubMenu(hWndMB,ID_MENU) (HMENU)SendMessage((hWndMB), \
- SHCMBM_SETSUBMENU, (WPARAM)0, (LPARAM)ID_MENU);
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

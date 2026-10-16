@@ -136,15 +136,6 @@ typedef VIEWSTATUS *PVIEWSTATUS, *LPVIEWSTATUS;
 /*   pUnk */
 /*   dwCookie */
 
-/* READYSTATE  [extra enum] */
-typedef enum tagREADYSTATE {
-  READYSTATE_UNINITIALIZED = 0,
-  READYSTATE_LOADING = 1,
-  READYSTATE_LOADED = 2,
-  READYSTATE_INTERACTIVE = 3,
-  READYSTATE_COMPLETE = 4
-} READYSTATE;
-
 /* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration

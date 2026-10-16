@@ -1828,22 +1828,9 @@ HIMAGELIST Header_CreateDragImage(
 HWND hwndHD, 
 int iIndex);
 
-/* Header_DeleteItem  [macro, function; shared; Commctrl.lib] */
-#define Header_DeleteItem(hwndHD, i) \
- (BOOL)SNDMSG((hwndHD), HDM_DELETEITEM, (WPARAM)(int)(i), 0L);
-
 /* Header_GetImageList  [function, macro; shared; Commctrl.lib] */
 HIMAGELIST Header_GetImageList( 
 HWND hwndHD);
-
-/* Header_GetItem  [macro, function; shared; Commctrl.lib] */
-#define Header_GetItem(hwndHD, i, phdi) \
- (BOOL)SNDMSG((hwndHD), HDM_GETITEM, (WPARAM)(int)(i), \
- (LPARAM)(HD_ITEM FAR*)(phdi));
-
-/* Header_GetItemCount  [macro, function; shared; Commctrl.lib] */
-#define Header_GetItemCount(hwndHD) \
- (int)SNDMSG((hwndHD), HDM_GETITEMCOUNT, 0, 0L);
 
 /* Header_GetItemRect  [function, macro; shared; Commctrl.lib] */
 BOOL Header_GetItemRect( 
@@ -1856,16 +1843,6 @@ BOOL Header_GetOrderArray(
 HWND hwndHD, 
 int iSize, 
 int *lpiArray );
-
-/* Header_InsertItem  [macro, function; shared; Commctrl.lib] */
-#define Header_InsertItem(hwndHD, i, phdi) \
- (int)SNDMSG((hwndHD), HDM_INSERTITEM, (WPARAM)(int)(i), \
- (LPARAM)(const HD_ITEM FAR*)(phdi));
-
-/* Header_Layout  [macro, function; shared; Commctrl.lib] */
-#define Header_Layout(hwndHD, playout) \
- (BOOL)SNDMSG((hwndHD), HDM_LAYOUT, 0, \
- (LPARAM)(HD_LAYOUT FAR*)(playout));
 
 /* Header_OrderToIndex  [function, macro; shared; Commctrl.lib] */
 int Header_OrderToIndex( 
@@ -1943,13 +1920,6 @@ typedef struct _HD_HITTESTINFO {
  int iItem; 
 } HD_HITTESTINFO;
 typedef HD_HITTESTINFO *PHD_HITTESTINFO, *LPHD_HITTESTINFO;
-
-/* HDHITTESTINFO  [struct; shared] */
-typedef struct _HD_HITTESTINFO { 
- POINT pt; 
- UINT flags; 
- int iItem; 
-} HD_HITTESTINFO;
 
 /* HDITEM  [struct; shared; A/W HDITEMA,HDITEMW (CE is W-side)] */
 typedef struct _HDITEM {

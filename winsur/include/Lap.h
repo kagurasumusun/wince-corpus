@@ -23,9 +23,6 @@ typedef struct _InitLap {
  DWORD capabilities;
 } InitLap;
 
-/* InitLap  [extra struct] */
-typedef struct _InitLap { DWORD size; DWORD Capabilities; } InitLap;
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */

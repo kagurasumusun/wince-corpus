@@ -40,12 +40,6 @@ typedef enum peer_record_change_type_tag
  PEER_RECORD_EXPIRED 
 } PEER_RECORD_CHANGE_TYPE;
 
-/* PEER_CONNECTION_FLAGS  [extra enum] */
-typedef enum peer_connection_flags_tag { PEER_CONNECTION_NEIGHBOR, PEER_CONNECTION_DIRECT } PEER_CONNECTION_FLAGS;
-
-/* PEER_RECORD_CHANGE_TYPE  [extra enum] */
-typedef enum peer_record_change_type_tag { PEER_RECORD_ADDED, PEER_RECORD_UPDATED, PEER_RECORD_DELETED, PEER_RECORD_EXPIRED } PEER_RECORD_CHANGE_TYPE;
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */

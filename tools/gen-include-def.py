@@ -1901,7 +1901,7 @@ _WINDOWS_UMBRELLA = (
     "WinDef.h", "WinNT.h", "winerror.h", "Winbase.h", "Winuser.h",
     "Wingdi.h", "Winreg.h", "Commdlg.h", "Winnls.h",
     "Tlhelp32.h", "shellapi.h", "Mmsystem.h", "Aygshell.h",
-    "Storemgr.h",
+    "Storemgr.h", "winioctl.h", "Notify.h", "Dbgapi.h",
 )
 
 # Pages often name Windows.h (the umbrella) or a desktop-split SDK
@@ -1976,6 +1976,8 @@ _OVERLAY_NAMED = {
     "waveInGetNumDevs", "waveOutGetNumDevs",
     "SHCreateMenuBar", "SHFullScreen", "SHSipInfo",
     "OpenStore", "FormatStore", "FindCloseStore", "FindClosePartition",
+    "CeSetUserNotification", "CeSetUserNotificationEx",
+    "CeClearUserNotification", "WriteDebugLED", "NKDbgPrintfW",
 }
 
 _OVERLAY_HEADERS = {
@@ -1983,6 +1985,7 @@ _OVERLAY_HEADERS = {
     "winreg.h", "winerror.h", "winioctl.h", "mmsystem.h", "imm.h",
     "winnls.h", "windbase.h", "dbgapi.h", "commdlg.h",
     "aygshell.h", "tlhelp32.h", "shellapi.h", "storemgr.h",
+    "notify.h", "dbgapi.h",
 }
 _APP_OVERLAY_HEADERS = {
     "windef.h", "winnt.h", "winerror.h", "winbase.h", "winuser.h",
@@ -3545,16 +3548,35 @@ def run_unified(args):
             for info in items:
                 entity = info["entity"]
                 ename = entity.get("name")
-                if ename in emitted_type_names:
+                declaration = info["declaration"]
+                _dt = declaration.get("text") if isinstance(declaration, dict) else ""
+                if bucket_key == "macros" and _dt:
+                    if _dt.lstrip().startswith("#define") and \
+                            quality_filters.sanitize_define_line(_dt, ename) is None:
+                        continue
+                    if quality_filters.is_broken_c(_dt):
+                        continue
+                aliases = set()
+                if ename:
+                    aliases.add(ename)
+                if _dt and "}" in _dt:
+                    _tail_skip = {
+                        "FAR", "NEAR", "CONST", "const", "volatile",
+                        "struct", "union", "enum", "typedef", "WINAPI",
+                        "CALLBACK", "STDCALL", "PASCAL",
+                    }
+                    aliases.update(
+                        tok for tok in re.findall(
+                            r"[A-Za-z_][A-Za-z0-9_]*",
+                            _dt.rsplit("}", 1)[-1])
+                        if tok not in _tail_skip)
+                if aliases & emitted_type_names:
                     continue
                 if key.lower() != "windef.h" and ename in {
                         n for n, _d in _CORE_TYPEDEFS}:
                     continue
-                declaration = info["declaration"]
-                if bucket_key == "types" and ename:
-                    _dt = declaration.get("text") if isinstance(declaration, dict) else ""
-                    if _dt:
-                        emitted_type_names.add(ename)
+                if bucket_key == "types" and aliases:
+                    emitted_type_names.update(aliases)
                 libs = ", ".join(
                     name for names in info["modules"].values()
                     for name in sorted(names)) or "-"

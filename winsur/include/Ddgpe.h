@@ -24,48 +24,7 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-/* DDGPEAllocSurfaceData  [struct, macro; ce-only; Ddgpe.lib] */
-#define DDGPEALLOCSURFACEDATA_VERSION0(0)
-#define DDGPEALLOCSURFACEDATA_CURRENTVERSION 
-(DDGPEBLTPARMS_VERSION0)
-struct DDGPEAllocSurfaceData{
- DDGPEStandardHeader; 
- DWORD dwCreateFlags; 
- int nWidth; 
- int nHeight; 
- int nStride; 
- int nSurfaceFlags; 
- unsigned char* pBits; 
- EGPEFormat gpeFormat; 
- EDDGPEPixelFormat* ddgpePixelFormat 
-}
-
-/* DDGPEBltParams  [struct, macro; ce-only; Ddgpe.lib] */
-#define DDGPEBLTPARMS_VERSION0(0)
-#define DDGPEBLTPARMS_CURRENTVERSION(DDGPEBLTPARMS_VERSION0)
- struct DDGPEBltParms {
- GPEBltParms gpeBltParms; 
- DDGPEStandardHeader 
-};
-
 /* DDGPEStandardHeader  [macro; ce-only; Ddgpe.lib] */
-
-/* GPEModeEx  [struct, macro; ce-only; Ddgpe.lib] */
-#define GPEMODEEX_VERSION0(0)
-#define GPEMODEEX_CURRENTVERSION(GPEMODEEX_VERSION0)
- struct GPEModeEx {
- GPEMode modeInfo; 
- DDGPEStandardHeader; 
- EDDGPEPixelFormat ePixelFormat; 
- DWORD dwPixelFourCC; 
- DWORD dwPixelFormatData; 
- LONG lPitch; 
- DWORD dwFlags; 
- DWORD dwRBitMask; 
- DWORD dwGBitMask; 
- DWORD dwBBitMask; 
- DWORD dwAlphaBitMask 
-};
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

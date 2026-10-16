@@ -26,15 +26,6 @@ typedef struct _TRANPORTINFOSTRUCT {
  DWORD dwBandWidth;
 } TRANPORTINFOSTRUCT, *PTRANPORTINFOSTRUCT;
 
-/* TRANPORTINFOSTRUCT_deleted  [struct; ce-only] */
-typedef struct _TRANPORTINFOSTRUCT {
- WORD cbData;
- WORD wVersion;
- WORD wTranGuid;
- WORD wFlags;
- DWORD dwBandWidth;
-} TRANPORTINFOSTRUCT, *PTRANPORTINFOSTRUCT;
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */

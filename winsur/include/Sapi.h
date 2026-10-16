@@ -571,12 +571,6 @@ typedef enum SPWORDTYPE{
 } SPWORDTYPE;
 typedef SPWORDTYPE *PSPWORDTYPE, *LPSPWORDTYPE;
 
-/* SPRECOECOEVENTFLAGS  [extra enum] */
-typedef enum SPRECOEVENTFLAGS{ SPREF_AutoPause = (1 << 0) SPREF_Emulated = (1 << 1) } SPRECOECOEVENTFLAGS;
-
-/* SPSTREAMFORMATTYPE  [extra enum] */
-typedef enum SPWAVEFORMATTYPE{ SPWF_INPUT, SPWF_SRENGINE } SPSTREAMFORMATTYPE;
-
 /* ==================================================================
  * extra declarations -- corpus pages the main
  * parser did not turn into an entity declaration

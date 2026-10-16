@@ -67,7 +67,4 @@ typedef struct tagPlatformInfo{
 } SystemInfo;
 typedef SystemInfo *PSystemInfo, *LPSystemInfo;
 
-/* FileAction  [extra enum] */
-typedef enum tagFileCustomAction{ FileCustomAction_None = 0x0000, FileCustomAction_COM = 0x0001,} FileAction;
-
 #endif /* _CCCOMMON_IDL_ */

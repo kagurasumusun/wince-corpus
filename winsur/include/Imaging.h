@@ -24,18 +24,6 @@
 
 /* InterpolationHint  [enum; ce-only] */
 
-/* MAKEARGB  [macro; ce-only] */
-#define ALPHA_SHIFT 24
-#define RED_SHIFT 16
-#define GREEN_SHIFT 8
-#define BLUE_SHIFT 0
-#define ALPHA_MASK ((ARGB) 0xff << ALPHA_SHIFT)
-#define MAKEARGB(a, r, g, b) \
- (((ARGB) ((a) & 0xff) << ALPHA_SHIFT)| \
- ((ARGB) ((r) & 0xff) << RED_SHIFT) | \
- ((ARGB) ((g) & 0xff) << GREEN_SHIFT)| \
- ((ARGB) ((b) & 0xff) << BLUE_SHIFT));
-
 /* PixelFormat  [typedef, function; ce-only] */
 
 /* PixelFormatID  [typedef; ce-only] */

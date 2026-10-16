@@ -41,9 +41,6 @@ enum {
 };
 #endif /* _WIN32_WCE */
 
-/* BucketResponse  [extra struct] */
-typedef struct _BucketResponse { BOOL fUploadSucceeded; DWORD dwUploadError; char* pchUploadFile; int iBucket; int iBucketTable; char* pchResponse; int iResponseType; } BucketResponse;
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */

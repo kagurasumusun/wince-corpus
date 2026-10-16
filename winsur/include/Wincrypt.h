@@ -1004,6 +1004,17 @@ BOOL WINAPI CertStrToName(
  LPCTSTR* ppszError
 );
 
+/* CryptEncodeObjectEx  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
+BOOL WINAPI CryptEncodeObjectEx(
+ DWORD dwCertEncodingType, 
+ LPCSTR lpszStructType, 
+ const void* pvStructInfo, 
+ DWORD dwFlags, 
+ PCRYPT_ENCODE_PARA pEncodePara, 
+ void* pvEncoded, 
+ DWORD* pcbEncoded
+);
+
 /* CryptHashCertificate  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
 BOOL WINAPI CryptHashCertificate(
  HCRYPTPROV hCryptProv,
@@ -1076,7 +1087,5 @@ BOOL CRYPTFUNCCryptExportKey(HCRYPTKEY hKey,HCRYPTKEY hExpKey,DWORD dwBlobType,D
 VOID WINAPI CertEnumStoreLocationCallback( LPCWSTR pvszStoreLoocations DWORD dwFlags, void *pvReserved, void *pvArg );
 VOID WINAPI CertEnumSystemStoreCallback( const void *pvSystemStore, DWORD dwFlags, PCERT_SYSTEM_STORE_INFO pStoreInfo, void *pvReserved, void *pvArg );
 VOID WINAPI CmsgStreamOutputCallback( const void *pvArg, //in BYTE *pbData, //in DWORD cbData, //in BOOL fFinal //in );
-BOOL FuncReturnhWnd(DWORD *phWnd);
-BOOL FuncVerifyImage(LPCSTR lpszImage, BYTE *pSigData);
 
 #endif /* _WINCRYPT_ */

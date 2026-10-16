@@ -41,6 +41,9 @@ BOOL AbnormalTermination(void);
 
 /* GetExceptionCode  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
 DWORD GetExceptionCode(void);
+
+/* GetExceptionInformation  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
+LPEXCEPTION_POINTERS GetExceptionInformation(void);
 #endif /* _WIN32_WCE */
 
 #endif /* _EXCPT_ */

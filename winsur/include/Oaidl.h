@@ -291,12 +291,6 @@ VT_RESERVED = 0x8000
 VT_BYREF = 0x4000
 VT_ARRAY = 0x2000
 
-/* SAFEARRAYBOUDN  [struct; ce-only] */
-typedef struct tagSAFEARRAYBOUND {
- unsiggned long cElements;
- long lLbound;
-} SAFEARRAYBOUND;
-
 /* EXCEPINFO  [struct; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   wCode */
@@ -356,6 +350,26 @@ enum VARENUM{
 
 /* DISPID  [?; ce-only; CE 4.0..699] */
 Typedef LONG DISPID;
+#endif /* _WIN32_WCE */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
+
+/* FreePropVariantArray  [function; shared; CE 5.0..699; Oleaut32.lib, oleaut32.lib] */
+WINOLEAPI FreePropVariantArray(
+ ULONG cVariants,
+ PROPVARIANT* rgvars
+);
+
+/* PropVariantClear  [function; shared; CE 5.0..699; Oleaut32.lib, oleaut32.lib] */
+WINOLEAPI PropVariantClear(
+ PROPVARIANT* pvar
+);
+
+/* PropVariantCopy  [function; shared; CE 5.0..699; Oleaut32.lib, oleaut32.lib] */
+WINOLEAPI PropVariantCopy(
+ PROPVARIANT* pvarDest,
+ const PROPVARIANT* pvarSrc
+);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

@@ -170,13 +170,4 @@ typedef DWORD (* LPUpdateFlags)(
 );
 #endif /* _WIN32_WCE */
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* callback */
-typedef PDMA_PDD_CHANNEL_CONTEXT (* LPAllocateChannel)( PDMA_PDD_ADAPTER_CONTEXT lpAdapterContext, PDMA_MDD_CHANNEL_CONTEXT lpDmaMDDChannelContext );
-typedef PDMA_PDD_TRANFER_CONTEXT (* LPCreateDmaPDDTransfer)( PDMA_PDD_CHANNEL_CONTEXT pDmaPDDChannelContext, PDMA_MDD_TRANFER_CONTEXT pDmaMddTransferContext );
-
 #endif /* _DMAMIF_ */

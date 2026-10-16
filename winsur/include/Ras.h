@@ -43,34 +43,6 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-/* RASPPPIP  [struct; ce-only] */
-#define RASPPPIPW struct tagRASPPPIPW
-RASPPPIPW
-{
- // Required members
- DWORD dwSize;
- DWORD dwError;
- WCHAR szIpAddress[ RAS_MaxIpAddress + 1 ];
- // Optional members
- WCHAR szServerIpAddress[ RAS_MaxIpAddress + 1 ];
- DWORD dwOptions;
- DWORD dwServerOptions;
-};
-#define RASPPPIP RASPPPIPW
-
-/* RASPPPIPV6  [struct, macro; ce-only] */
-#define RASPPPIPV6 struct tagRASPPPIPV6
-RASPPPIPV6
-{
- DWORD dwSize;
- DWORD dwError;
- BYTE LocalInterfaceIdentifier[8];
- BYTE PeerInterfaceIdentifier[8];
- BYTE LocalCompressionProtocol[2];
- BYTE PeerCompressionProtocol[2];
-};
-#define LPRASPPPIPV6 RASPPPIPV6*
-
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose

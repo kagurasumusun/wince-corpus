@@ -63,26 +63,6 @@ PVOID NDIS_GET_PACKET_CANCEL_ID(
 ((PNDIS_PACKET_OOB_DATA)((PUCHAR)(_Packet) + \
 (_Packet)->Private.NdisPacketOobOffset))->HeaderSize
 
-/* NDIS_GET_PACKET_MEDIA_SPECIFIC_INFO  [macro, function; ce-only] */
-#define NDIS_GET_PACKET_MEDIA_SPECIFIC_INFO(_Packet, \
- _pMediaSpecificInfo, \
- _pSizeMediaSpecificInfo) \
-{ \
- if (!((_Packet)->Private.NdisPacketFlags & fPACKET_ALLOCATED_BY_NDIS) ||\
- !((_Packet)->Private.NdisPacketFlags & fPACKET_CONTAINS_MEDIA_SPECIFIC_INFO))\
- { \
- *(_pMediaSpecificInfo) = NULL; \
- *(_pSizeMediaSpecificInfo) = 0; \
- } \
- else \
- { \
- *(_pMediaSpecificInfo) =((PNDIS_PACKET_OOB_DATA)((PUCHAR)(_Packet) +\
- (_Packet)->Private.NdisPacketOobOffset))->MediaSpecificInformation;\
- *(_pSizeMediaSpecificInfo) = ((PNDIS_PACKET_OOB_DATA)((PUCHAR)(_Packet) +\
- (_Packet)->Private.NdisPacketOobOffset))->SizeMediaSpecificInfo;\
- } \
-}
-
 /* NDIS_GET_PACKET_STATUS  [macro, function; ce-only] */
 #define NDIS_GET_PACKET_STATUS(_Packet) \
  ((PNDIS_PACKET_OOB_DATA)((PUCHAR)(_Packet) + \

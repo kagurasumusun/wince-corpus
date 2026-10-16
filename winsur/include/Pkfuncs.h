@@ -41,18 +41,6 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-/* IsCeLogEnabled  [macro; ce-only] */
-#define IsCeLogEnabled(Status, ZoneCE)
- (IsCeLogStatus(Status) && ((UserKInfo[KINX_CELOGSTATUS] & (ZoneCE)) != 0));
-
-/* IsCeLogStatus  [macro; ce-only] */
-#define IsCeLogStatus(Status)
- ((UserKInfo[KINX_CELOGSTATUS] & (Status)) != 0);
-
-/* IsCeLogZoneEnabled  [macro; ce-only] */
-#define IsCeLogZoneEnabled(ZoneCE)
- (IsCeLogEnabled(CELOGSTATUS_ENABLED_GENERAL, (ZoneCE)));
-
 /* IsInPwrHdlr  [macro; ce-only] */
 
 /* ==================================================================

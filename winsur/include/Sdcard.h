@@ -27,23 +27,6 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-/* SD_DEBUG_INSTANTIATE_ZONES  [macro; ce-only] */
-#define SD_DEBUG_INSTANTIATE_ZONES(
- TCHAR ModuleName,
- DWORD InitialValue,
- TCHAR Slot0,
- TCHAR Slot1,
- TCHAR Slot2,
- TCHAR Slot3,
- TCHAR Slot4,
- TCHAR Slot5,
- TCHAR Slot6,
- TCHAR Slot7,
- TCHAR Slot8,
- TCHAR Slot9,
- TCHAR Slot10
-);
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */

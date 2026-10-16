@@ -91,6 +91,8 @@ int WINAPI WinMain(HINSTANCE h, HINSTANCE p, LPWSTR cmd, int show) {
     OpenStore(NULL);
     FormatStore(NULL);
     FindCloseStore(NULL);
+    CeSetUserNotification(NULL, NULL, NULL, NULL);
+    WriteDebugLED(0, 0);
     return 0;
 }
 '''
