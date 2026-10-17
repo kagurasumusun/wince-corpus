@@ -4,7 +4,7 @@
 #ifndef _EXTRADECLARATIONS_H_
 #define _EXTRADECLARATIONS_H_
 
-Typedef BOOL(* PFN_PDD_GET)(UINT uiRequestId,PVOID pvData,ULONG ulDataLength,ULONG* pulRequiredLength);
+typedef BOOL(* PFN_PDD_GET)(UINT uiRequestId,PVOID pvData,ULONG ulDataLength,ULONG* pulRequiredLength);
 typedef int (*HCI_InquiryCompleteEvent) (
  void* pUserContext,
  void* pCallContext,

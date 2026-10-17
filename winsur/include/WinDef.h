@@ -1,11 +1,11 @@
-/* Windef.h -- Windows CE unified surface
+/* WinDef.h -- Windows CE unified surface
  *
  * ONE tree for every CE generation.  Version differences use
  * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 23 constants, 8 declarations, 4 outlines, 122 base types, 0 extra macros, 0 extra decls
+ * 23 constants, 8 declarations, 7 outlines, 122 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDEF_
 #define _WINDEF_
@@ -733,6 +733,10 @@ typedef HICON HCURSOR;
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
+/* EDITSTREAM  [macro, typedef; ce-only; heuristic-prefix] */
+
+/* EM_CANPASTE  [macro, typedef; ce-only; heuristic-prefix] */
+
 /* HIBYTE  [macro; shared] */
 
 /* HIWORD  [macro; shared] */
@@ -748,6 +752,8 @@ typedef HICON HCURSOR;
 /* MAKEWORD  [macro; shared] */
 #define MAKEWORD(a, b) \ 
  ((WORD) (((BYTE) (a)) | ((WORD) ((BYTE) (b))) << 8));
+
+/* VIEWATTRIBUTES  [macro, typedef; ce-only; heuristic-prefix] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

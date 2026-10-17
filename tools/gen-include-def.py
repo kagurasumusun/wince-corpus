@@ -218,6 +218,29 @@ def looks_like_c_declaration(text):
     return quality_filters.looks_like_c_declaration(text or "")
 
 
+_DECL_KEYWORD_HEAD = re.compile(
+    r"(?i)^(?P<pre>(?:extern|static)\s+)*"
+    r"(?P<kw>typedef|struct|union|enum|extern)\b")
+
+
+def c_decl_text(text):
+    """Derived repair at emission only: C declaration keywords are
+    lowercase in C, and some documentation pages print ``Typedef``
+    (learn/windows-ce-5.0 aa447838 and kin).  The KB keeps the pages'
+    spelling verbatim (docs/clean-room.md); the surface applies this
+    repair so the text compiles, and reports it as a derived change."""
+    if not text:
+        return text
+    match = _DECL_KEYWORD_HEAD.match(text.lstrip())
+    if not match:
+        return text
+    body = text.lstrip()
+    leading = text[:len(text) - len(body)]
+    pre = (match.group("pre") or "").lower()
+    kw = match.group("kw").lower()
+    return leading + pre + kw + body[match.end():]
+
+
 def load_heuristic_headers():
     """kb/heuristic-headers.tsv -> {name: header}."""
     path = os.path.join(KB, "heuristic-headers.tsv")
@@ -576,7 +599,7 @@ def write_includes(out, by_header, generated):
                              "declaration (spacing: collapsed) -- prefer "
                              "another page's copy")
             lines.append(" */")
-            lines.append(declaration["text"])
+            lines.append(c_decl_text(declaration["text"]))
         with open(path, "w", encoding="utf-8") as fh:
             fh.write("\n".join(lines) + "\n")
     return include_dir
@@ -772,7 +795,11 @@ def write_ordinal_defs(out, target):
             ";",
         ]
         lines += [f"; source: {page}" for page in pages]
-        lines += [f"; {len(items)} name(s)", "EXPORTS"]
+        lines += [f"; {len(items)} name(s)",
+                  f"; LIBRARY names the documented DLL so lib.exe /",
+                  f"; dlltool can build an import library from this file.",
+                  f"LIBRARY {dll}",
+                  "EXPORTS"]
         for row in sorted(items, key=lambda r: int(r["ordinal"])):
             lines.append(f"    {row['name'] + ' @' + row['ordinal']:32s}"
                          f"; printed in table {row['table']}")
@@ -841,6 +868,7 @@ def write_defs(out, by_module, generated, ordinals=None,
             ";",
             f"; stated as: {', '.join(worklist['stated'])}",
             f"; {len(entries)} name(s)",
+            f"LIBRARY {re.sub(r'(?i)[.]lib$', '', module)}",
             "EXPORTS",
         ]
         module_stem = safe_name(module).lower()
@@ -3691,7 +3719,8 @@ def run_unified(args):
                 for d in extra_type_ds:
                     if d.get("name") in emitted_type_names:
                         continue
-                    text = (d.get("declaration") or "").replace("\\n", "\n")
+                    text = c_decl_text(
+                        (d.get("declaration") or "").replace("\\n", "\n"))
                     lines.append("")
                     lines.append(
                         f"/* {d.get('name')}  [extra {d.get('type')}] */")
@@ -3734,7 +3763,7 @@ def run_unified(args):
                 lines.append("")
                 lines.append(f"/* {decl_type} */")
                 for d in sorted(group, key=lambda x: x.get("name") or ""):
-                    text = d.get("declaration") or ""
+                    text = c_decl_text(d.get("declaration") or "")
                     if text:
                         lines.append(text)
         if key.lower() == "windef.h":
@@ -3864,7 +3893,7 @@ def run_unified(args):
                 extra_decl_lines.append("")
             
             for decl in decls:
-                decl_text = decl.get('declaration', '').strip()
+                decl_text = c_decl_text(decl.get('declaration', '').strip())
                 if decl_text and quality_filters.is_c_toolchain_declaration(
                         decl_text, decl.get("name") or "", dtype):
                     extra_decl_lines.append(decl_text)
@@ -3889,6 +3918,7 @@ def run_unified(args):
         if args.minimal_comments:
             ch = [f"; {stem} -- EXPORTS",
                   f"; {len(entries)} name(s)",
+                  f"LIBRARY {stem}",
                   "EXPORTS"]
         else:
             ch = [f"; {stem} -- EXPORTS worklist for the whole of Windows CE",
@@ -3901,7 +3931,11 @@ def run_unified(args):
                   "; decorated symbols the documentation does not print.",
                   ";",
                   f"; stated as: {', '.join(sorted(worklist['stated']))}",
-                  f"; {len(entries)} name(s)", "EXPORTS"]
+                  f"; {len(entries)} name(s)",
+                  f"; LIBRARY names the documented module so lib.exe /",
+                  f"; dlltool can build an import library from this file.",
+                  f"LIBRARY {stem}",
+                  "EXPORTS"]
         known = {info["entity"]["name"].lower() for info in entries}
         leads = [(name, member) for name, member in
                  (reference_exports or {}).get(safe_name(stem).lower(), [])
@@ -3944,6 +3978,7 @@ def run_unified(args):
         stem_dll = safe_name(re.sub(r"(?i)\.(dll|lib|exe)$", "", dll))
         ch = [f"; {dll} -- exports as printed by the documentation",
               "; (unified across every CE set whose pages print the table)",
+              f"LIBRARY {dll}",
               "EXPORTS"]
         for row in sorted(items, key=lambda r: int(r["ordinal"])):
             ch.append(f"    {row['name'] + ' @' + row['ordinal']:32s}"
@@ -3998,6 +4033,10 @@ def run_unified(args):
 
 
 def _write_lines(path, lines):
+    # a backslash must be the LAST character of a continued line: some
+    # joins leave "\ " behind (the page's own trailing space) and the C
+    # compiler stops continuing -- derived repair at emission only
+    lines = [re.sub(r"\\[ \t]+$", r"\\", line) for line in lines]
     with open(path, "w", encoding="utf-8") as fh:
         fh.write("\n".join(lines) + "\n")
 
