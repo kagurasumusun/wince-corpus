@@ -17,15 +17,6 @@
  * declaration body no page prints
  * ================================================================ */
 
-/* DMSDLINFO  [struct, typedef; ce-only] */
-typedef struct {
- SYSTEMTIME stStartTime;
- SYSTEMTIME stDeltaTime;
- DWORD dwFlags;
- TCHAR wzDest [MAX_PATH];
- TCHAR wzCmdLine [MAX_PATH];
-} DMSDLINFO, *PDMSDLINFO;
-
 /* DMTASKINFO  [struct, typedef; ce-only] */
 typedef struct {
  DWORD dwSize;

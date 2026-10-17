@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 236 constants, 14 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 232 constants, 14 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _IMM_
 #define _IMM_
@@ -216,15 +216,11 @@
 #define NI_COMPOSITIONSTR 21
 #define NI_FINALIZECONVERSIONRESULT 20
 #define NI_IMEMENUSELECTED 24
-#define NI_MAXHOST 1025
-#define NI_MAXSERV 32
 #define NI_OPENCANDIDATE 16
 #define NI_SELECTCANDIDATESTR 18
 #define NI_SETCANDIDATE_PAGESIZE 23
 #define NI_SETCANDIDATE_PAGESTART 22
 #define REGISTERWORDENUMPROC REGISTERWORDENUMPROCW
-#define SCF_SIMULATE_RTS 0x00000002
-#define SCF_SINGLE_THREAD 0x00000001
 #define SCS_CAP_COMPSTR 1
 #define SCS_CAP_MAKEREAD 2
 #define SCS_CHANGEATTR (GCS_COMPREADATTR|GCS_COMPATTR)

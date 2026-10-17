@@ -5,11 +5,29 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 11 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 11 constants, 11 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _TUX_
 #define _TUX_
 
+
+/* ==================================================================
+ * constants (one evidence comment per #define; the
+ * #if of a batch covers every #define in it; values
+ * that differ per generation pool into #if/#elif
+ * chains with the evidence after the #endif)
+ * ================================================================ */
+#define HSHELL_ACCESSIBILITYSTATE 11
+#define HSHELL_ACTIVATESHELLWINDOW 3
+#define HSHELL_APPCOMMAND 12
+#define HSHELL_GETMINRECT 5
+#define HSHELL_LANGUAGE 8
+#define HSHELL_REDRAW 6
+#define HSHELL_TASKMAN 7
+#define HSHELL_WINDOWACTIVATED 4
+#define HSHELL_WINDOWCREATED 1
+#define HSHELL_WINDOWDESTROYED 2
+#define HSHELL_WINDOWREPLACED 13
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

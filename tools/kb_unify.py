@@ -192,11 +192,15 @@ def choose_constant_value(records, resolved=None):
     return best[0].get("value"), layer, best[0].get("origin"), discarded
 
 
-def choose_header(name, headers, kinds=None):
+def choose_header(name, headers, kinds=None, allow_map=True):
     """One header file for *name*.
 
-    Page-stated files win when they agree with ``header_map``; otherwise
-    the map; otherwise the first .h the pages named.
+    A header the pages state always wins over the name-pattern map --
+    the map used to override statements ("MB_LEN_MAX" patterned into
+    Winuser.h although the page says Limits.h).  The map is only a
+    fallback when no page states a header, and ``allow_map=False``
+    leaves such names unassigned (the reviewed table is the only
+    authority that may file them).
     """
     files = []
     for raw in headers or []:
@@ -214,17 +218,14 @@ def choose_header(name, headers, kinds=None):
             continue
         seen.add(key)
         uniq.append(h)
+    if uniq:
+        picked = prefer_h(uniq)
+        return picked[0] if picked else None
+    if not allow_map:
+        return None
     mapped = header_map.header_for_constant(name) \
         or header_map.header_for_entity(name, kinds or [])
-    if mapped:
-        mapped_key = mapped.lower()
-        for h in uniq:
-            if h.lower() == mapped_key:
-                return h
-        # map wins over a weak win32-only / correspondence header
-        return mapped
-    picked = prefer_h(uniq)
-    return picked[0] if picked else None
+    return mapped or None
 
 
 def source_layer(record):

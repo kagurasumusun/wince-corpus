@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 15 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 16 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _RPCNTERR_
 #define _RPCNTERR_
@@ -29,6 +29,7 @@
 #define RPC_X_ENUM_VALUE_TOO_LARGE RPC_X_ENUM_VALUE_OUT_OF_RANGE
 #define RPC_X_INVALID_BOUND RPC_S_INVALID_BOUND
 #define RPC_X_INVALID_BUFFER ERROR_INVALID_USER_BUFFER
+#define RPC_X_INVALID_PIPE_OPERATION 1831
 #define RPC_X_INVALID_TAG RPC_S_INVALID_TAG
 #define RPC_X_NO_MEMORY RPC_S_OUT_OF_MEMORY
 #define RPC_X_SS_CONTEXT_MISMATCH ERROR_INVALID_HANDLE

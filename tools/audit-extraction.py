@@ -83,6 +83,26 @@ MEMBER_LABELS = {
 RE_FIRST_ROW = re.compile(r"(?is)<tr\b[^>]*>(.*?)</tr>")
 RE_CELL = re.compile(r"(?is)<t[dh]\b[^>]*>(.*?)</t[dh]>")
 
+# Example code is read (it is on the page) but it is not extraction
+# material: a sample's ``#define MEM_HEIGHT 1000`` is the sample's own,
+# and a call sequence is not a declaration.  A pre block introduced by
+# one of these cues (the sentence before it) is an example block and is
+# never reported as a pre/defines gap.  (tools/page_parse.py keeps the
+# same cue list for the promotion rules.)
+EXAMPLE_CUE = re.compile(
+    r"(?i)\b(?:code\s+example|following\s+example|following\s+code|"
+    r"example\s+(?:shows|demonstrates|illustrates|implements|sets|uses|"
+    r"creates|declares)|sample\s+(?:code|application|program|function|"
+    r"shows|demonstrates)|the\s+following\s+sample|shows\s+how|"
+    r"shown\s+in\s+(?:the\s+)?following|as\s+shown|usually\s+implemented|"
+    r"implementation\s+of\s+the\s+following|is\s+implemented\s+as\s+follows|"
+    r"following\s+(?:program|listing|function)\s+shows)")
+
+RE_PRE_ANY = re.compile(r"(?is)<pre\b[^>]*>(.*?)</pre>")
+RE_REQ_NONE = re.compile(
+    r"(?is)requirements\b[^<]{0,40}</h[1-6]>\s*(?:<[^>]+>\s*)*"
+    r"(?:none|not applicable|n/a)\s*[.!?]?\s*(?:<|$)")
+
 
 def page_text(path):
     """The readable text of one page (tags stripped)."""
@@ -126,18 +146,55 @@ def candidate_tables(raw, is_md):
 
 
 def decl_shaped_pre(raw):
-    """How many code blocks look like a declaration (not a sample call)."""
+    """How many code blocks look like a declaration (not a sample call).
+
+    Blocks the introducing prose announces as an example ("The following
+    code example shows how ...") are sample code: readable, not
+    extraction material, and never a gap.
+    """
     count = 0
-    for block in re.findall(r"(?is)<pre\b[^>]*>(.*?)</pre>", raw):
+    for match in RE_PRE_ANY.finditer(raw):
+        block, start = match.group(1), match.start()
+        cue = TAG.sub(" ", raw[max(0, start - 400):start])
+        if EXAMPLE_CUE.search(cue):
+            continue
         text = TAG.sub(" ", block)
         if re.search(r"typedef\b|#\s*define\s+\w+|\w+\s+\w+\s*\([^;]*\)\s*;",
                      text):
             count += 1
-    for block in RE_MD_FENCE.findall(raw):
+    for match in RE_MD_FENCE.finditer(raw):
+        block, start = match.group(0), match.start()
+        cue = raw[max(0, start - 400):start]
+        if EXAMPLE_CUE.search(cue):
+            continue
         if re.search(r"typedef\b|#\s*define\s+\w+|\w+\s+\w+\s*\([^;]*\)\s*;",
                      block):
             count += 1
     return count
+
+
+def example_pre(raw):
+    """How many code blocks the prose introduces as example code."""
+    count = 0
+    for match in RE_PRE_ANY.finditer(raw):
+        cue = TAG.sub(" ", raw[max(0, match.start() - 400):match.start()])
+        if EXAMPLE_CUE.search(cue):
+            count += 1
+    for match in RE_MD_FENCE.finditer(raw):
+        cue = raw[max(0, match.start() - 400):match.start()]
+        if EXAMPLE_CUE.search(cue):
+            count += 1
+    return count
+
+
+def loose_define_lines(raw, is_md):
+    """``#define`` lines OUTSIDE code blocks -- the ``printed #define``
+    reader's ground (page_parse.define_line_constants strips <pre> and
+    fences first).  A ``#define`` inside sample code is the sample's own
+    and never a defines gap."""
+    stripped = RE_PRE_ANY.sub(" ", raw)
+    stripped = RE_MD_FENCE.sub(" ", stripped)
+    return len(re.findall(r"(?m)^\s*#\s*define\s+[A-Za-z_]", stripped))
 
 
 def page_shapes(path):
@@ -151,31 +208,36 @@ def page_shapes(path):
             "tables": tables + (1 if md_rows >= 2 else 0),
             "table_rows": len(RE_TROW.findall(raw)) + md_rows,
             "pre_blocks": fences + len(RE_PRE.findall(raw)),
-            "define_lines": len(re.findall(
-                r"(?m)^\s*(?:#\s*define|```\w*\n#define)", raw)) + raw.count(
-                "\n#define"),
+            "define_lines": loose_define_lines(raw, True),
             "typedef_lines": len(RE_TYPEDEF.findall(raw)),
             "requirements_heading": int(bool(re.search(
                 r"(?im)^#{1,6}\s*-?\s*requirements\s*$", raw))),
+            "requirements_none": int(bool(re.search(
+                r"(?im)^#{1,6}\s*-?\s*requirements\s*$\s*"
+                r"(?:\r?\n\s*)*(?:\*\*)?(?:none|not applicable|n/a)",
+                raw))),
             "syntax_heading": int(bool(re.search(
                 r"(?im)^#{1,6}\s*-?\s*syntax\s*$", raw))),
             "prose_constants": len(RE_PROSE_CONST.findall(raw)),
             "candidate_tables": candidate_tables(raw, True),
             "decl_shaped_pre": decl_shaped_pre(raw),
+            "example_pre": example_pre(raw),
         }
     headings = [m.group(1).strip().lower() for m in RE_HEADINGS.finditer(raw)]
     return {
         "tables": len(RE_TABLE.findall(raw)),
         "table_rows": len(RE_TROW.findall(raw)),
         "pre_blocks": len(RE_PRE.findall(raw)),
-        "define_lines": len(RE_DEFINE.findall(raw)),
+        "define_lines": loose_define_lines(raw, False),
         "typedef_lines": len(RE_TYPEDEF.findall(raw)),
         "requirements_heading": int(any(
             h.startswith("requirement") for h in headings)),
+        "requirements_none": int(bool(RE_REQ_NONE.search(raw))),
         "syntax_heading": int(any(h.startswith("syntax") for h in headings)),
         "prose_constants": len(RE_PROSE_CONST.findall(raw)),
         "candidate_tables": candidate_tables(raw, False),
         "decl_shaped_pre": decl_shaped_pre(raw),
+        "example_pre": example_pre(raw),
     }
 
 
@@ -194,18 +256,26 @@ def load_kb():
                 if line:
                     yield json.loads(line)
 
+    def source_path(record):
+        # The re-harvest files write "source" as the path string, the
+        # quote store as a {path: ...} dict; both name the same page.
+        src = record.get("source")
+        if isinstance(src, dict):
+            return src.get("path") or ""
+        return src or ""
+
     for record in open_kb("declarations.jsonl.gz"):
         if record.get("implementation"):
             continue
-        path = (record.get("source") or {}).get("path")
+        path = source_path(record)
         if path:
             got[path]["declarations"] += 1
     for record in open_kb("declarations-dotnet.jsonl.gz"):
-        path = (record.get("source") or {}).get("path")
+        path = source_path(record)
         if path:
             got[path]["declarations"] += 1
     for record in open_kb("constants.jsonl.gz"):
-        path = (record.get("source") or {}).get("path")
+        path = source_path(record)
         if path:
             got[path]["constants"] += 1
     # name|description rows a page documents (constant-names.tsv): the
@@ -225,15 +295,15 @@ def load_kb():
                 if len(cells) > page_i and cells[page_i]:
                     got[cells[page_i]]["name_rows"] += 1
     for record in open_kb("requirements.jsonl.gz"):
-        path = (record.get("source") or {}).get("path")
+        path = source_path(record)
         if path:
             got[path]["requirements"] += 1
     for record in open_kb("abi-offsets.jsonl.gz"):
-        path = (record.get("source") or {}).get("path")
+        path = source_path(record)
         if path:
             got[path]["abi_offsets"] += 1
     for record in open_kb("export-ordinals.jsonl.gz"):
-        path = (record.get("source") or {}).get("path")
+        path = source_path(record)
         if path:
             got[path]["export_ordinals"] += 1
     for record in open_kb("entities.jsonl.gz"):
@@ -244,6 +314,36 @@ def load_kb():
             path = item.get("path")
             if path:
                 got[path]["entity_mentions"] += 1
+    # The re-harvest pass (harvest-*.jsonl) and the extra defines/
+    # declarations worklists are recorded facts of knowledge/kb/ too:
+    # a page whose material sits there is read, not unread.
+    for record in open_kb("harvest-declarations.jsonl"):
+        path = source_path(record)
+        if path:
+            got[path]["declarations"] += 1
+    for record in open_kb("harvest-constants.jsonl"):
+        path = source_path(record)
+        if path:
+            got[path]["constants"] += 1
+    for record in open_kb("extra-declarations.jsonl"):
+        path = source_path(record)
+        if not path:
+            path = record.get("source") if isinstance(
+                record.get("source"), str) else None
+        if path:
+            got[path]["declarations"] += 1
+    extra_defines = os.path.join(KB, "extra-defines.tsv")
+    if os.path.exists(extra_defines):
+        with open(extra_defines, encoding="utf-8") as fh:
+            header = fh.readline().rstrip("\n").split("\t")
+            try:
+                page_i = header.index("source")
+            except ValueError:
+                page_i = len(header) - 1
+            for line in fh:
+                cells = line.rstrip("\n").split("\t")
+                if len(cells) > page_i and cells[page_i]:
+                    got[cells[page_i]]["constants"] += 1
     return got
 
 
@@ -266,7 +366,11 @@ def audit_page(path, shapes, got):
         flags.append("tables-unread")
     if shapes["define_lines"] and not (decls or consts):
         flags.append("defines-unread")
-    if shapes["requirements_heading"] and not reqs:
+    # "Requirements: None." is the page stating it has none -- read, not
+    # a gap.  Only a Requirements section with content nothing was
+    # recorded from is requirements-unread.
+    if shapes["requirements_heading"] and not reqs \
+            and not shapes["requirements_none"]:
         flags.append("requirements-unread")
     if shapes["prose_constants"] >= 3 and not consts:
         flags.append("prose-constants-unread")
@@ -325,8 +429,8 @@ def main():
         out.write("page_id\tbook\tpath\ttitle\t"
                   "tables\ttable_rows\tpre_blocks\tdefine_lines\t"
                   "typedef_lines\tprose_constants\tcandidate_tables\t"
-                  "decl_shaped_pre\t"
-                  "syntax_heading\trequirements_heading\t"
+                  "decl_shaped_pre\texample_pre\t"
+                  "syntax_heading\trequirements_heading\trequirements_none\t"
                   "declarations\tconstants\tname_rows\trequirements\t"
                   "export_ordinals\tabi_offsets\tentities\t"
                   "verdict\tgaps\n")
@@ -348,8 +452,9 @@ def main():
                 shapes["tables"], shapes["table_rows"], shapes["pre_blocks"],
                 shapes["define_lines"], shapes["typedef_lines"],
                 shapes["prose_constants"], shapes["candidate_tables"],
-                shapes["decl_shaped_pre"], shapes["syntax_heading"],
-                shapes["requirements_heading"],
+                shapes["decl_shaped_pre"], shapes["example_pre"],
+                shapes["syntax_heading"],
+                shapes["requirements_heading"], shapes["requirements_none"],
                 row.get("declarations", 0), row.get("constants", 0),
                 row.get("name_rows", 0), row.get("requirements", 0),
                 row.get("export_ordinals", 0), row.get("abi_offsets", 0),
@@ -386,7 +491,8 @@ def main():
         out.write("| structure | occurrences |\n|---|---:|\n")
         for key in ("tables", "table_rows", "pre_blocks", "define_lines",
                     "typedef_lines", "prose_constants",
-                    "candidate_tables", "decl_shaped_pre"):
+                    "candidate_tables", "decl_shaped_pre", "example_pre",
+                    "requirements_none"):
             out.write(f"| {key} | {shape_totals[key]:,} |\n")
         out.write("\n## Gap flags (printed, nothing recorded)\n\n")
         out.write("| flag | pages | examples |\n|---|---:|---|\n")

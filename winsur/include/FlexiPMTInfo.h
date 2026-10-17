@@ -5,57 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 39 constants, 4 declarations, 2 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 4 declarations, 2 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _FLEXIPMTINFO_
 #define _FLEXIPMTINFO_
 
-
-/* ==================================================================
- * constants (one evidence comment per #define; the
- * #if of a batch covers every #define in it; values
- * that differ per generation pool into #if/#elif
- * chains with the evidence after the #endif)
- * ================================================================ */
-#define mfiName 0
-#define mfiUserDefined -1
-#define pfiBasePtr 4
-#define pfiCmdLine 7
-#define pfiCurDbgZoneMasks 5
-#define pfiDefaultAccessKey 3
-#define pfiHandle 9
-#define pfiName 6
-#define pfiProcessSlot 1
-#define pfiStartOfAddrSpace 2
-#define pfiStructAddr 0
-#define pfiTlsUsageBitMaskH 11
-#define pfiTlsUsageBitMaskL 10
-#define pfiTrustLevel 8
-#define pfiUserDefined -1
-#define tfiAddrSpaceAccessKey 2
-#define tfiBasePriority 8
-#define tfiCreationTimeLSW 19
-#define tfiCreationTimeMSW 18
-#define tfiCurrentPriority 6
-#define tfiHandle 14
-#define tfiHandleCurrentProcessRunIn 3
-#define tfiHandleOwnerProc 10
-#define tfiInfo 7
-#define tfiKernelTime 12
-#define tfiLastError 15
-#define tfiPC 22
-#define tfiQuantum 20
-#define tfiQuantumLeft 21
-#define tfiRunState 1
-#define tfiSleepCount 4
-#define tfiStackBase 16
-#define tfiStackLowBound 17
-#define tfiStructAddr 0
-#define tfiSuspendCount 5
-#define tfiTlsPtr 11
-#define tfiUserDefined -1
-#define tfiUserTime 13
-#define tfiWaitState 9
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

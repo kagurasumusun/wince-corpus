@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 62 constants, 46 declarations, 0 outlines, 0 base types, 1 extra macros, 7 extra decls
+ * 12 constants, 46 declarations, 0 outlines, 0 base types, 1 extra macros, 7 extra decls
  */
 #ifndef _IPHLPAPI_
 #define _IPHLPAPI_
@@ -17,6 +17,7 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
+#define AF_UNSPEC 0
 #define GAA_FLAG_INCLUDE_ALL_COMPARTMENTS 0x0200
 #define GAA_FLAG_INCLUDE_ALL_INTERFACES 0x0100
 #define GAA_FLAG_INCLUDE_GATEWAYS 0x0080
@@ -28,57 +29,6 @@
 #define GAA_FLAG_SKIP_FRIENDLY_NAME 0x0020
 #define GAA_FLAG_SKIP_MULTICAST 0x0004
 #define GAA_FLAG_SKIP_UNICAST 0x0001
-#define IF_TYPE_ATM 37
-#define IF_TYPE_ETHERNET_CSMACD 6
-#define IF_TYPE_FDDI 15
-#define IF_TYPE_IEEE1394 144
-#define IF_TYPE_IEEE80211 71
-#define IF_TYPE_IEEE80216_WMAN 237
-#define IF_TYPE_ISO88025_TOKENRING 9
-#define IF_TYPE_OTHER 1
-#define IF_TYPE_PPP 23
-#define IF_TYPE_SOFTWARE_LOOPBACK 24
-#define IF_TYPE_TUNNEL 131
-#define IF_TYPE_WWANPP 243
-#define IF_TYPE_WWANPP2 244
-#define MIB_ACCESS_READ 0
-#define MIB_ACCESS_READWRITE 2
-#define MIB_ACCESS_WRITE 1
-#define MIB_ACTION_GET ASN_RFC1157_GETREQUEST
-#define MIB_ACTION_GETNEXT ASN_RFC1157_GETNEXTREQUEST
-#define MIB_ACTION_SET ASN_RFC1157_SETREQUEST
-#define MIB_IF_TYPE_ETHERNET 6
-#define MIB_IF_TYPE_LOOPBACK 24
-#define MIB_IF_TYPE_OTHER 1
-#define MIB_IF_TYPE_PPP 23
-#define MIB_IF_TYPE_SLIP 28
-#define MIB_IPPROTO_BBN 12
-#define MIB_IPPROTO_BGP 14
-#define MIB_IPPROTO_CISCO 11
-#define MIB_IPPROTO_EGP 5
-#define MIB_IPPROTO_ES_IS 10
-#define MIB_IPPROTO_GGP 6
-#define MIB_IPPROTO_HELLO 7
-#define MIB_IPPROTO_ICMP 4
-#define MIB_IPPROTO_IS_IS 9
-#define MIB_IPPROTO_LOCAL 2
-#define MIB_IPPROTO_NETMGMT 3
-#define MIB_IPPROTO_NT_AUTOSTATIC 10002
-#define MIB_IPPROTO_NT_STATIC 10006
-#define MIB_IPPROTO_NT_STATIC_NON_DOD 10007
-#define MIB_IPPROTO_OSPF 13
-#define MIB_IPPROTO_OTHER 1
-#define MIB_IPPROTO_RIP 8
-#define MIB_IPROUTE_TYPE_DIRECT 3
-#define MIB_IPROUTE_TYPE_INDIRECT 4
-#define MIB_IPROUTE_TYPE_INVALID 2
-#define MIB_IPROUTE_TYPE_OTHER 1
-#define MIB_TOASTER_BURNT 10
-#define MIB_TOASTER_DOWN 2
-#define MIB_TOASTER_LIGHTLYWARM 1
-#define MIB_TOASTER_OTHERBREAD 7
-#define MIB_TOASTER_UP 1
-#define MIB_TOASTER_WHITEBREAD 1
 
 /* ==================================================================
  * macros -- supplementary #define from CE pages

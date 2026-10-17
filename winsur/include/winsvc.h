@@ -1,11 +1,11 @@
-/* WinSvc.h -- Windows CE unified surface
+/* winsvc.h -- Windows CE unified surface
  *
  * ONE tree for every CE generation.  Version differences use
  * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 62 constants, 3 declarations, 0 outlines, 2 base types, 0 extra macros, 0 extra decls
+ * 62 constants, 0 declarations, 0 outlines, 2 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINSVC_
 #define _WINSVC_
@@ -92,14 +92,5 @@ typedef HANDLE SC_HANDLE;
 /* SC_LOCK
  * source: win32/common/windows-data-types.md */
 typedef LPVOID SC_LOCK;
-
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-/* SERVICE_STATUS_HANDLE  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE SERVICE_STATUS_HANDLE;
 
 #endif /* _WINSVC_ */

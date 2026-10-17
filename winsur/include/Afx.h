@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 1 declarations, 1 outlines, 0 base types, 0 extra macros, 25 extra decls
+ * 0 constants, 1 declarations, 1 outlines, 0 base types, 0 extra macros, 17 extra decls
  */
 #ifndef _AFX_
 #define _AFX_
@@ -52,18 +52,12 @@ struct CFileStatus
 
 /* function */
 static int PASCAL ErrnoToException( int nErrno );
-LPTSTR GetBufferSetLength( int nNewLength ); throw( CMemoryException );
 void GrowFile( DWORD dwNewLen );
-void HexDump( LPCTSTR lpszLine, BYTE* pby, int nBytes, int nWidth ); throw( CFileException );
 void MakeLower( );
 void MakeReverse( );
 void MakeUpper( );
 BYTE * Memcpy( BYTE* lpMemTarget, BYTE* lpMemSource, UINT nBytes );
 static int PASCAL OsErrorToException( LONG lOsError );
-DWORD ReadHuge( void* lpBuffer, DWORD dwCount ); throw( CFileException );
-static void PASCAL Rename( LPCTSTR lpszOldName, LPCTSTR lpszNewName ); throw( CFileException );
-void SeekToBegin( ); throw( CFileException );
-DWORD SeekToEnd( ); throw( CFileException );
 void SerializeClass( const CRuntimeClass* pRuntimeClass );
 void SetDepth( int nNewDepth );
 void SetLoadParams( UINT nGrowBy = 1024 );
@@ -73,7 +67,5 @@ static void PASCAL ThrowErrno( int nErrno );
 void TrimLeft( );
 void TrimRight( );
 void WriteClass( const CRuntimeClass* pClassRef );
-void WriteHuge( const void* lpBuf, DWORD dwCount ); throw( CFileException );
-void WriteString( LPCTSTR lpsz ); throw( CFileException );
 
 #endif /* _AFX_ */

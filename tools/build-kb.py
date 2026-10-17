@@ -250,7 +250,9 @@ def parse_page(job):
             "documented_fields": [], "documented_fields_page": None,
             "abi_offsets": [], "constants": [], "module_facts": [],
             "export_ordinals": [], "def_rules": [], "unicode_only": [],
-            "unsupported_constants": []}
+            "unsupported_constants": [],
+            "name_headers": [], "family_headers": [],
+            "header_exclusions": [], "link_statements": []}
     # An open-source documentation page is evidence of what that project
     # printed about Windows CE.  It is not a CE API page: no entity is minted
     # from the title, and a code sample on the page is not a declaration.
@@ -343,6 +345,27 @@ def parse_page(job):
         # Constants the page documents but does not number (flag and
         # style name lists): one tuple per row, value left absent.
         fact["constant_names"] = page_parse.constant_name_rows_text(text)
+        # The same header-membership sentences the HTML reader takes:
+        # "FOO is defined in X.h", "include X.h for definitions of ...".
+        # plain=True: quote the raw markdown, character for character
+        # (the clean-room check compares .md records against the raw
+        # file; an HTML tag pass would delete "<winsock2.h>").
+        fact["name_headers"] = page_parse.name_header_statements(
+            text, plain=True)
+        fact["family_headers"] = page_parse.family_header_statements(
+            text, plain=True)
+        fact["header_exclusions"] = page_parse.header_exclusion_statements(
+            text, plain=True)
+        fact["link_statements"] = page_parse.link_statements(text, plain=True)
+        for item in fact["header_exclusions"]:
+            fact["constraints"].append({
+                "kind": "header-exclusion",
+                "pattern": "not included in " + item["header"],
+                "text": item["text"]})
+        for item in fact["link_statements"]:
+            fact["constraints"].append({
+                "kind": "link-statement",
+                "pattern": item["file"], "text": item["text"]})
         fact["front_matter"] = {k: v for k, v in fields.items()
                                 if k in ("title", "UID", "ms.date",
                                          "req.header", "req.lib", "req.dll")}
@@ -429,6 +452,19 @@ def parse_page(job):
                             for note in page_parse.abi_notes(
                                 page_parse.text_of(fragment,
                                                    keep_newlines=False))]
+    # Negative membership ("The cursor functions ... are not included in
+    # Winuser.h ...") and link statements ("you must link to X.lib") are
+    # quoted as KB notes -- they keep a wrong filing out of a header and
+    # they are the corpus/kb material the surface consults.
+    for item in fact["header_exclusions"]:
+        fact["constraints"].append({
+            "kind": "header-exclusion",
+            "pattern": "not included in " + item["header"],
+            "text": item["text"]})
+    for item in fact["link_statements"]:
+        fact["constraints"].append({
+            "kind": "link-statement",
+            "pattern": item["file"], "text": item["text"]})
     # A layout table (Offset | Field | Size | ...) is a documented ABI fact of
     # the page, quoted row by row (page_parse.offset_tables).  The sdk-api
     # markdown pages carry no such table (checked 2026-10-05), so this is the
@@ -439,6 +475,17 @@ def parse_page(job):
     # ``NAME (0x0001)`` is a numbered constant the page states.  Read only,
     # and only when the name is one identifier and the value one number.
     fact["constants"] = page_parse.constant_tables(fragment)
+    # Header-membership sentences of the page itself ("The following
+    # constants ... are defined in Limits.h", "FOO is defined in X.h",
+    # "Include Raserror.h for definitions of the ...", "predefined MFT_*
+    # ... #include "Winuser.h"", "not included in X.h").  The group
+    # sentences attach their header to the constant tables they govern;
+    # everything is quoted, never inferred.
+    page_parse.attach_group_headers(fragment, fact["constants"])
+    fact["name_headers"] = page_parse.name_header_statements(fragment)
+    fact["family_headers"] = page_parse.family_header_statements(fragment)
+    fact["header_exclusions"] = page_parse.header_exclusion_statements(fragment)
+    fact["link_statements"] = page_parse.link_statements(fragment)
     # The same rule for the other two shapes a page numbers a constant in:
     # running prose (``WM_USER (0x0400)``) and the page's own *syntax*
     # declarations (``#define OEM_BLOCK_RESERVED 0x01``, an enum member
@@ -518,8 +565,13 @@ def normalize_value(value, field=None):
     if field in ("library", "dll"):
         match = FILE_TOKEN.search(value)
         return match.group(0) if match else ""
-    if field == "header" and not HEADER_TOKEN.search(value):
-        return ""
+    if field == "header":
+        # "Winuser.h (include Windows.h)" keys as Winuser.h -- the
+        # parenthetical is an instruction, not a second header; the
+        # verbatim value stays in the record.
+        cleaned = re.sub(r"\([^)]*\)", " ", value)
+        match = HEADER_TOKEN.search(cleaned)
+        return match.group(0) if match else ""
     # ``Component: fsdbase`` is one identifier.  A template sentence in the
     # same cell is a statement, not a component name, and gets an empty key.
     if field == "component":
@@ -753,9 +805,18 @@ def constant_records(facts, entity_of):
         for req in fact.get("requirements") or []:
             if req.get("field") != "header":
                 continue
-            for match in HEADER_TOKEN.findall(req.get("value") or ""):
+            # "Winuser.h (include Windows.h)" names Winuser.h only.
+            cleaned = re.sub(r"\([^)]*\)", " ", req.get("value") or "")
+            for match in HEADER_TOKEN.findall(cleaned):
                 if match not in headers:
                     headers.append(match)
+        # "FOO is defined in X.h" on the same page: the header of the name
+        # it names (never of its neighbours).
+        name_headers = {}
+        for statement in fact.get("name_headers") or ():
+            name_headers.setdefault(statement["name"], [])
+            if statement["header"] not in name_headers[statement["name"]]:
+                name_headers[statement["name"]].append(statement["header"])
         page_entity = entity_of(fact)
         for index, item in enumerate(fact.get("constants") or []):
             key = hashlib.sha1(
@@ -764,6 +825,15 @@ def constant_records(facts, entity_of):
             ).hexdigest()[:12]
             own = ce_api_names.normalize(item["name"])
             value = re.sub(r"^0X", "0x", item["value"])
+            item_headers = list(headers)
+            # the family sentence that governs this table ("... are
+            # defined in Limits.h") and the name sentence ("FOO is
+            # defined in X.h") are the page's own header statements for
+            # this row
+            for extra in ((item.get("group_header"),) +
+                          tuple(name_headers.get(item["name"]) or ())):
+                if extra and extra not in item_headers:
+                    item_headers.append(extra)
             records.append({
                 "id": "k" + key,
                 "name": item["name"],
@@ -775,7 +845,7 @@ def constant_records(facts, entity_of):
                 # enum member of a syntax declaration ("enum"), or running
                 # prose, ``NAME (0x0400)`` ("prose").
                 "origin": item.get("origin") or "table",
-                "headers": headers,
+                "headers": item_headers,
                 "entity": own if own and own == page_entity else None,
                 "page_entity": page_entity,
                 "page_id": fact["page_id"],
@@ -976,15 +1046,25 @@ def pinvoke_records(facts):
 # which in turn outranks the pinned reference headers that *define* the
 # name (a definition is stronger membership evidence than a listing),
 # which outrank the co-mention evidence of other CE pages, which in turn
-# outranks the pinvoke.net weak auxiliary hint; within one name only the
-# best available rank is written out.
+# outranks the family sentence of a CE page ("predefined MFT_* ...
+# #include "Winuser.h""), which outranks the hand review
+# (data/constant-header-review.tsv), which in turn outranks the
+# pinvoke.net weak auxiliary hint; within one name only the best
+# available rank is written out.
+# There is NO prefix-guess rank: a name nothing states and nothing
+# reviewed stays in reports/constant-header-gaps.tsv (the old
+# ``heuristic-prefix`` rung guessed MB_LEN_MAX into Winuser.h and a
+# sample dialog's IDC_BUTTON1 with it).
 # Wine/ReactOS/MinGW-w64 are prohibited (not Windows CE); the
 # ``reference-header-secondary`` rung existed for MinGW-w64 and is
 # retired with it.
 LINK_RANKS = ("own-page", "entity-page", "constant-entity",
               "win32-reference",
               "reference-header",
-              "co-mention", "heuristic-prefix", "pinvoke-weak")
+              "co-mention",
+              "family-statement",
+              "reviewed",
+              "pinvoke-weak")
 LINK_RANK_INDEX = {rank: index for index, rank in enumerate(LINK_RANKS)}
 
 
@@ -1012,6 +1092,92 @@ def value_number(text):
 # inputs (data/win32-exclude.tsv and friends) so rebuilding knowledge/
 # stays reproducible.
 CONSTANT_VALUE_REVIEW = os.path.join(ROOT, "data", "constant-value-review.tsv")
+
+# The hand review of constant -> header assignments (the misjudgment
+# worklist closed one name at a time).  ``data/constant-header-review.tsv``
+# columns: scope, name, header, verdict, evidence_page, note.
+#
+#   scope=name        one constant name
+#   scope=prefix      a name family (name cell is ``PREFIX_*``)
+#   scope=value-base  names whose printed value is an expression on one
+#                     base (name cell is the base token, e.g. ``RASBASE``
+#                     for the rows the pages print as ``RASBASE+153``)
+#   verdict=approve   file the name in ``header`` at the ``reviewed`` rank
+#   verdict=reject    the name must NOT be filed in any header (it is a
+#                     sample's own identifier, a CRT constant, ...) -- it
+#                     stays in the gaps worklist, loudly
+#
+# This file is the ONLY source of reviewed assignments.  The prefix table
+# in header_map.py is descriptive material for the worklists and is never
+# consulted for linkage: an unreviewed guess is how MB_LEN_MAX landed in
+# Winuser.h.  evidence_page names the page the review rested on (a corpus
+# page, or the review file itself when the judgment is family knowledge
+# the pages do not print).
+REVIEW_PATH = os.path.join(ROOT, "data", "constant-header-review.tsv")
+
+
+class ConstantHeaderReview:
+    def __init__(self):
+        self.names = {}
+        self.prefixes = {}
+        self.value_bases = {}
+
+    def match(self, name, value):
+        row = self.names.get(name)
+        if row is not None:
+            return row
+        for prefix, row in sorted(self.prefixes.items(),
+                                  key=lambda kv: -len(kv[0])):
+            # the review file writes the prefix WITH its underscore
+            # ("VK_*" -> stem "VK_")
+            if name.startswith(prefix) and len(name) > len(prefix):
+                return row
+        value = (value or "").strip()
+        # The value-base rule ("RASBASE + n" -> Raserror.h) matches the
+        # base anywhere in the printed value or row text: the pages print
+        # "ERROR_PPP_NOT_SUPPORTED RASBASE + 133", the base is not at the
+        # front of the line.
+        match = re.search(r"\b([A-Z][A-Z0-9_]{1,40})\s*[+-]\s*\d", value)
+        if match and match.group(1) in self.value_bases:
+            return self.value_bases[match.group(1)]
+        return None
+
+
+def read_constant_header_review():
+    review = ConstantHeaderReview()
+    if not os.path.exists(REVIEW_PATH):
+        return review
+    with open(REVIEW_PATH, encoding="utf-8") as fh:
+        header = None
+        for line in fh:
+            if line.startswith("#"):
+                continue
+            cells = line.rstrip("\n").split("\t")
+            if header is None:
+                header = cells
+                continue
+            if len(cells) < 4:
+                continue
+            row = dict(zip(header, cells + [""] * (len(header) - len(cells))))
+            scope = (row.get("scope") or "name").strip()
+            name = (row.get("name") or "").strip()
+            verdict = (row.get("verdict") or "").strip().lower()
+            if not name or verdict not in ("approve", "reject"):
+                continue
+            row["verdict"] = verdict
+            row["header"] = (row.get("header") or "").strip()
+            row["evidence_page"] = (row.get("evidence_page") or "").strip()
+            row["set"] = (row.get("set") or "").strip()
+            if scope == "prefix":
+                # the file writes the stem or the star form ("VK_" /
+                # "VK_*"); the stem is what names start with
+                review.prefixes[name.rstrip("*")] = row
+            elif scope == "value-base":
+                # the file writes the base WITH its plus ("RASBASE+")
+                review.value_bases[name.rstrip("+")] = row
+            else:
+                review.names[name] = row
+    return review
 
 
 def read_constant_value_review():
@@ -1200,6 +1366,35 @@ def reference_define_headers():
     return out
 
 
+def family_prefix_links(facts):
+    """[(prefix, header, page, set)] from the pages' family sentences.
+
+    "To use the predefined MFT_* type values, include ... #include
+    "Winuser.h"" is a header statement about every MFT_ name.  Only CE
+    pages make these statements (a Win32 reference sentence is a
+    desktop statement), and only the printed prefix is used -- the
+    sentence never extends to a name the prefix does not cover.
+    """
+    out = []
+    seen = set()
+    for fact in facts:
+        if fact.get("layer") != "ce":
+            continue
+        for item in fact.get("family_headers") or ():
+            if item.get("kind") != "prefix":
+                continue
+            prefix = item.get("prefix") or ""
+            header = item.get("header") or ""
+            if not prefix or not header:
+                continue
+            key = (prefix, header.lower(), fact["path"])
+            if key in seen:
+                continue
+            seen.add(key)
+            out.append((prefix, header, fact["path"], fact["book"]))
+    return out
+
+
 def co_mention_links(names, requirements):
     """name -> [(header, page, headers_of_page)]: the CE pages that state a
     header while *listing* the name among their subject's values.
@@ -1259,7 +1454,8 @@ def co_mention_links(names, requirements):
 
 
 def constant_header_links(constants, requirements, pinvoke_records_pair,
-                          reference_links=None, mention_links=None):
+                          reference_links=None, mention_links=None,
+                          family_links=None, named=None):
     """constant name -> header file, ranked by the strength of the statement.
 
     Every row keeps its evidence: how many statements say it, one example
@@ -1283,7 +1479,12 @@ def constant_header_links(constants, requirements, pinvoke_records_pair,
     """
     def headers_of_value(value):
         files = []
-        for match in HEADER_TOKEN.findall(value or ""):
+        # "Winuser.h (include Windows.h)" names ONE header -- the one the
+        # name lives in.  The parenthetical is an instruction to the
+        # reader, not a second header of the name; scanning it would file
+        # every Windows.h-including constant into Windows.h as well.
+        cleaned = re.sub(r"\([^)]*\)", " ", value or "")
+        for match in HEADER_TOKEN.findall(cleaned):
             name = match.split("/")[-1].split("\\")[-1]
             if name and name.lower() not in [f.lower() for f in files]:
                 files.append(name)
@@ -1327,6 +1528,28 @@ def constant_header_links(constants, requirements, pinvoke_records_pair,
     by_name = collections.defaultdict(list)
     for record in constants:
         by_name[record["name"]].append(record)
+    # Every name the pages print as a constant joins the universe even
+    # without a number (``constant-names.tsv``): MFT_BYCOMMAND and the
+    # RASBASE + n error codes carry family/name/review statements that
+    # must file them.  The row is kept verbatim so the reviewed
+    # value-base rule (RASBASE + n -> Raserror.h) can see it; the value
+    # stays empty -- nothing is invented for a name without a number.
+    req_headers_by_name = collections.defaultdict(list)
+    for record in requirements:
+        if record.get("field") == "header" and record.get("name"):
+            for file_name in headers_of_value(record.get("value")):
+                req_headers_by_name[record["name"]].append(file_name)
+    for name, page, book, row in (named or ()):
+        if name in by_name:
+            continue
+        by_name[name].append({
+            "name": name,
+            "value": "",
+            "row": row,
+            "headers": req_headers_by_name.get(name) or [],
+            "source": {"path": page, "set": book},
+            "layer": "ce",
+            "page_entity": None})
     for name, rows in by_name.items():
         for record in rows:
             if record.get("layer") not in ("ce", "win32"):
@@ -1389,35 +1612,71 @@ def constant_header_links(constants, requirements, pinvoke_records_pair,
         for header, page, book in rows:
             offer(name, "co-mention", [header], page, book)
 
-    # rank: heuristic-prefix -- well-known constant name prefixes that
-    # reliably map to specific headers.  This is a fallback for constants
-    # with no other linkage, based on Windows API naming conventions.
-    # Only used when no stronger rank applies.
+    # rank: family-statement -- a CE page *states* the header of a name
+    # family ("To use the predefined MFT_* type values, include the
+    # following statement in your .rc file: #include "Winuser.h"").  Only
+    # the names the printed prefix actually covers are offered; the
+    # sentence is quoted in the page's own words and the rank is marked.
+    for prefix, header, page, book in (family_links or []):
+        stem = (prefix or "") + "_"
+        if len(stem) < 3:
+            continue
+        for name in by_name:
+            if name.startswith(stem) and len(name) > len(stem):
+                offer(name, "family-statement", [header], page, book)
+
+    # rank: reviewed -- the hand review in data/constant-header-review.tsv.
+    # This replaces the old prefix-guess fallback (header_map
+    # .header_for_constant): that table guessed MB_LEN_MAX into Winuser.h
+    # (it is a CRT limit) and filed a sample dialog's IDC_BUTTON1
+    # alongside the real IDC_* cursor constants.  A name the review does
+    # not cover gets NO row here -- an unverified name belongs in the
+    # gaps worklist, not in a header.  A ``reject`` row means the name
+    # must not be filed anywhere (sample identifiers), and suppresses the
+    # weaker pinvoke hint as well.
+    review_rows = read_constant_header_review()
     for name in by_name:
+        first = by_name[name][0]
+        row = review_rows.match(
+            name, first.get("row") or first.get("value") or "")
+        if row is None:
+            continue
+        if row["verdict"] == "reject":
+            # The name must not be filed anywhere on a guess.  A page
+            # that *states* the header for this name itself (own-page /
+            # entity-page / constant-entity) still wins -- the review
+            # rejects guessed assignments, not documented ones.
+            current = best[name]["rank"]
+            if current not in ("own-page", "entity-page", "constant-entity"):
+                best[name]["rank"] = "reject"
+                best[name]["headers"] = collections.defaultdict(dict)
+            continue
         if name in best and best[name]["rank"] is not None:
-            continue  # already has stronger linkage
-        header = header_map.header_for_constant(name)
-        if header:
-            first = by_name[name][0]
-            offer(name, "heuristic-prefix", [header],
-                  first["source"]["path"], first["source"]["set"])
+            continue  # a stronger rank already files this name
+        if row["verdict"] == "approve" and row["header"]:
+            offer(name, "reviewed", [row["header"]],
+                  row["evidence_page"] or REVIEW_PATH,
+                  row.get("set") or "review")
 
     # last rank: the pinvoke.net weak auxiliary hint.  It may only file a
     # name the CE (or CE-shared Win32) documentation actually numbers:
     # a community name with no documented value anywhere in the corpus
-    # mints no linkage row at all.
+    # mints no linkage row at all.  A review ``reject`` outranks even
+    # this hint.
     apis, pinvoke_constants = pinvoke_records_pair or ([], [])
     for item in apis + pinvoke_constants:
         header = item.get("header")
         name = item.get("name")
         if name and header and name in by_name:
+            if best[name]["rank"] == "reject":
+                continue
             offer(name, "pinvoke-weak", [header],
                   item["source"]["path"], item["source"]["set"])
 
     out = []
     for name in sorted(best, key=str.lower):
         slot = best[name]
-        if slot["rank"] is None:
+        if slot["rank"] is None or slot["rank"] == "reject":
             continue
         for lower, entry in sorted(slot["headers"].items()):
             out.append((
@@ -1540,13 +1799,17 @@ def entity_records(facts, declarations, requirements):
                 return sorted(found)
             if field == "header":
                 # Header values may contain multiple files (e.g., "Winuser.h Rapi.h")
+                # "Winuser.h (include Windows.h)" names Winuser.h only.
                 found = []
                 for record in reqs:
                     if record["field"] != field:
                         continue
-                    names = HEADER_TOKEN.findall(record.get("value") or "")
+                    cleaned = re.sub(r"\([^)]*\)", " ",
+                                     record.get("value") or "")
+                    names = HEADER_TOKEN.findall(cleaned)
                     if not names and record["key"]:
-                        names = HEADER_TOKEN.findall(record["key"])
+                        names = HEADER_TOKEN.findall(
+                            re.sub(r"\([^)]*\)", " ", record["key"]))
                     for name in names:
                         if name not in found:
                             found.append(name)
@@ -1723,7 +1986,12 @@ def add_relations(entities, requirements, declarations):
     for record in requirements:
         if record["field"] != "unicode_ansi" or not record["entity"]:
             continue
-        names = list(dict.fromkeys(UNICODE_PAIR.findall(record["value"])))
+        # The record's value is the page's printed text (markdown escapes
+        # kept for the quote-fidelity check).  Parsing the pair unescapes
+        # locally: ``**ACM\_OPENW** (Unicode)`` names ACM_OPENW.
+        parseable = re.sub(r"\\([_*\[\]()#+\-.!])", r"\1", record["value"])
+        parseable = parseable.replace("**", "")
+        names = list(dict.fromkeys(UNICODE_PAIR.findall(parseable)))
         if len(names) < 2:
             continue
         # keep the order the page printed: "X (Unicode) and Y (ANSI)"
@@ -2213,8 +2481,14 @@ def build(rows, workers, report_only, plain=False):
     ce_constant_names = {r["name"] for r in constants
                          if r.get("layer") == "ce"}
     mention_links = co_mention_links(ce_constant_names, requirements)
+    family_links = family_prefix_links(facts)
+    named_constants = [
+        (item["name"], fact["path"], fact["book"], item.get("row") or "")
+        for fact in facts
+        for item in fact.get("constant_names") or []]
     link_rows = constant_header_links(constants, requirements, pinvoke_pair,
-                                      reference_links, mention_links)
+                                      reference_links, mention_links,
+                                      family_links, named_constants)
     value_review = read_constant_value_review()
     conflict_rows = constant_conflict_rows(constants, value_review)
     entities = entity_records(facts, declarations, requirements)

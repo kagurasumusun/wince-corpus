@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 32 constants, 94 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 27 constants, 94 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _CELOG_
 #define _CELOG_
@@ -28,27 +28,22 @@
 #define BOOT_TIME_GWES_FINISHED 30
 #define BOOT_TIME_LAUNCHING_FS 01
 #define BOOT_TIME_SYSTEM_STARTED 40
-#define CELZONE_ALWAYSON 0x40000000
-#define CELZONE_BOOT_TIME 0x00010000
 #define CELZONE_CRITSECT 0x00000100
-#define CELZONE_DEBUG 0x00800000
 #define CELZONE_DEMANDPAGE 0x00000010
 #define CELZONE_HEAP 0x00000800
 #define CELZONE_INTERRUPT 0x00000001
 #define CELZONE_KCALL 0x00400000
 #define CELZONE_LOADER 0x00004000
 #define CELZONE_MEMTRACKING 0x00008000
-#define CELZONE_MIGRATE 0x00000004
 #define CELZONE_MISC 0x80000000
 #define CELZONE_PRIORITYINV 0x00000080
 #define CELZONE_PROCESS 0x00000040
 #define CELZONE_RESCHEDULE 0x00000002
-#define CELZONE_RESERVED1 0x20000000
-#define CELZONE_RESERVED2 0x10000000
 #define CELZONE_SYNCH 0x00000200
 #define CELZONE_THREAD 0x00000020
 #define CELZONE_TLB 0x00000008
 #define CELZONE_VIRTMEM 0x00001000
+#define INVALID_HANDLE_VALUE 0xFFFFFFFF
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

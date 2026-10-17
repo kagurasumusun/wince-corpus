@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 14 constants, 14 declarations, 1 outlines, 0 base types, 0 extra macros, 35 extra decls
+ * 18 constants, 14 declarations, 1 outlines, 0 base types, 0 extra macros, 35 extra decls
  */
 #ifndef _CESYNC_
 #define _CESYNC_
@@ -17,6 +17,8 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
+#define FO_DONE_ONE_VOL 0x00000002
+#define FO_MORE_VOLUME 0x00000001
 #define RSF_AUTO_COMBINE 0x00000200
 #define RSF_COMBINE 0x00000008
 #define RSF_CONFLICT_OBJECT 0x00000001
@@ -31,6 +33,8 @@
 #define RSF_SYNC_DESKTOP_ONLY 0x00000020
 #define RSF_SYNC_DEVICE_ONLY 0x00000010
 #define RSF_UPDATED_HANDLE 0x00000040
+#define SCF_SIMULATE_RTS 0x00000002
+#define SCF_SINGLE_THREAD 0x00000001
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
@@ -44,14 +48,6 @@
  * declaration body no page prints
  * ================================================================ */
 
-/* DEVINFO  [struct; shared] */
-typedef struct tagDevInfo {
- DWORD pid;
- char szName[MAX_PATH];
- char szType[80];
- char szPath[MAX_PATH];
-} DEVINFO, *PDEVINFO;
-
 /* HREPLFLD  [struct; ce-only] */
 typedef struct _REPLFLD FAR* HREPLFLD;
 typedef HREPLFLD *PHREPLFLD, *LPHREPLFLD;
@@ -63,17 +59,6 @@ typedef HREPLITEM *PHREPLITEM, *LPHREPLITEM;
 /* HREPLOBJ  [struct; ce-only] */
 typedef struct _REPLOBJ FAR* HREPLOBJ;
 typedef HREPLOBJ *PHREPLOBJ, *LPHREPLOBJ;
-
-/* OBJUIDATA  [struct; ce-only] */
-typedef struct tagObjUIData {
- UINT cbStruct;
- HICON hIconLarge;
- HICON hIconSmall;
- char szName[MAX_PATH];
- char szSyncText[MAX_PATH];
- char szTypeText[80];
- char szPlTypeText[80];
-} OBJUIDATA, *POBJUIDATA;
 
 /* ReplDialogs  [enum; ce-only] */
 enum ReplDialogs {

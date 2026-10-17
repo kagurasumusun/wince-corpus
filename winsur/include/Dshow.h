@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 25 constants, 47 declarations, 2 outlines, 0 base types, 0 extra macros, 70 extra decls
+ * 12 constants, 46 declarations, 2 outlines, 0 base types, 0 extra macros, 70 extra decls
  */
 #ifndef _DSHOW_
 #define _DSHOW_
@@ -17,13 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define AM_EXSEEK_BUFFERING 32
-#define AM_EXSEEK_CANSCAN 2
-#define AM_EXSEEK_CANSEEK 1
-#define AM_EXSEEK_MARKERSEEK 4
-#define AM_EXSEEK_NOSTANDARDREPAINT 16
-#define AM_EXSEEK_SCANWITHOUTCLOCK 8
-#define AM_EXSEEK_SENDS_VIDEOFRAMEREADY 64
 #define AM_VIDEO_FLAG_FIELD1 0x0001
 #define AM_VIDEO_FLAG_FIELD1FIRST 0x0004
 #define AM_VIDEO_FLAG_FIELD2 0x0002
@@ -36,12 +29,6 @@
 #define KSPROPERTY_CAMERACONTROL_FLAGS_MANUAL 0x0002L
 #define KSPROPERTY_CAMERACONTROL_FLAGS_RELATIVE 0x0010L
 #define MAXLONGLONG 0x7FFFFFFFFFFFFFFF
-#define MERIT_DO_NOT_USE 0x200000
-#define MERIT_HW_COMPRESSOR 0x100050
-#define MERIT_NORMAL 0x600000
-#define MERIT_PREFERRED 0x800000
-#define MERIT_SW_COMPRESSOR 0x100000
-#define MERIT_UNLIKELY 0x400000
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -70,21 +57,6 @@ typedef enum {
  AM_FILE_OVERWRITE = 0x00000001,
 } AM_FILESINK_FLAGS;
 typedef AM_FILESINK_FLAGS *PAM_FILESINK_FLAGS, *LPAM_FILESINK_FLAGS;
-
-/* AM_SAMPLE_PROPERTY_FLAGS  [enum, typedef; ce-only; heuristic-prefix] */
-enum tagAM_SAMPLE_PROPERTY_FLAGS { 
- AM_SAMPLE_SPLICEPOINT = 0x01, 
- AM_SAMPLE_PREROLL = 0x02, 
- AM_SAMPLE_DATADISCONTINUITY = 0x04, 
- AM_SAMPLE_TYPECHANGED = 0x08, 
- AM_SAMPLE_TIMEVALID = 0x10, 
- AM_SAMPLE_TIMEDISCONTINUITY = 0x40, 
- AM_SAMPLE_FLUSH_ON_PAUSE = 0x80, 
- AM_SAMPLE_STOPVALID = 0x100, 
- AM_SAMPLE_ENDOFSTREAM = 0x200, 
- AM_STREAM_MEDIA = 0, 
- AM_STREAM_CONTROL = 1 
-};
 
 /* AM_STREAM_INFO_FLAGS  [enum, typedef; shared; entity-headers] */
 typedef enum {

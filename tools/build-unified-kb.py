@@ -15,7 +15,8 @@ alone.  This writes a small, grep-friendly consumer view:
     python3 tools/build-unified-kb.py
     python3 tools/build-kb.py             # calls this after a full rebuild
 
-Clean-room: reads knowledge/ only.  Does not open corpus/.
+Clean-room: reads knowledge/ and the review registry under data/
+(``constant-header-review.tsv`` verdicts).  Does not open corpus/.
 """
 
 from __future__ import annotations
@@ -166,6 +167,19 @@ def load_constant_links():
     return out
 
 
+def load_review_rejects():
+    """``data/constant-header-review.tsv`` verdict=reject names: never
+    file them into any header (sample-suite identifiers, typos, vendor
+    keys) -- they stay on the review worklist instead."""
+    out = {}
+    path = os.path.join(ROOT, "data", "constant-header-review.tsv")
+    for row in load_tsv(path):
+        name = (row.get("name") or "").strip()
+        if name and (row.get("verdict") or "").strip() == "reject":
+            out[name] = (row.get("note") or "").strip()
+    return out
+
+
 def load_heuristic():
     out = {}
     for row in load_tsv(os.path.join(KB, "heuristic-headers.tsv")):
@@ -177,10 +191,12 @@ def load_heuristic():
 def build_constants():
     resolved = load_resolved()
     links = load_constant_links()
-    heuristic = load_heuristic()
+    rejected = load_review_rejects()
     rows = []
     discarded_n = 0
     for name, records in sorted(collect_constant_records().items()):
+        if name in rejected:
+            continue
         if quality_filters.is_language_runtime_constant(name):
             continue
         if quality_filters.is_sample_name(name):
@@ -190,13 +206,20 @@ def build_constants():
         discarded_n += len(discarded)
         if not value:
             continue
-        header_bits = []
-        for rec in records:
-            header_bits.extend(rec.get("headers") or [])
-        header_bits.extend(links.get(name) or [])
-        if heuristic.get(name):
-            header_bits.append(heuristic[name])
-        header = kb_unify.choose_header(name, header_bits)
+        # Header: the ranked linkage table (constant-headers.tsv: page
+        # statements, the pinned reference, the hand review) is the
+        # authority.  No prefix-guess vote -- an unlinked name keeps an
+        # empty header and surfaces as a worklist item instead of a
+        # misfiled #define.
+        linked = links.get(name) or []
+        if linked:
+            header = linked[0]
+        else:
+            header_bits = []
+            for rec in records:
+                header_bits.extend(rec.get("headers") or [])
+            header = kb_unify.choose_header(
+                name, header_bits, allow_map=False)
         src = None
         for rec in records:
             if str(rec.get("value")) == str(value) and rec.get("source"):

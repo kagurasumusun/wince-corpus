@@ -1,11 +1,11 @@
-/* Ddeml.h -- Windows CE unified surface
+/* ddeml.h -- Windows CE unified surface
  *
  * ONE tree for every CE generation.  Version differences use
  * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 134 constants, 4 declarations, 0 outlines, 4 base types, 0 extra macros, 0 extra decls
+ * 141 constants, 0 declarations, 0 outlines, 4 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _DDEML_
 #define _DDEML_
@@ -83,7 +83,14 @@
 #define EXPENTRY CALLBACK
 #define HDATA_APPOWNED 1
 #define MAX_MONITORS 4
+#define MF_CALLBACKS 0x08000000
+#define MF_CONV 0x40000000
+#define MF_ERRORS 0x10000000
+#define MF_HSZ_INFO 0x01000000
+#define MF_LINKS 0x20000000
 #define MF_MASK 0xFF000000
+#define MF_POSTMSGS 0x04000000
+#define MF_SENDMSGS 0x02000000
 #define MH_CLEANUP 4
 #define MH_CREATE 1
 #define MH_DELETE 3
@@ -172,20 +179,5 @@ typedef HANDLE HDC;
 /* HRSRC
  * source: win32/common/windows-data-types.md */
 typedef HANDLE HRSRC;
-
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-/* HCONVLIST  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HCONVLIST;
-
-/* HDDEDATA  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HDDEDATA;
-
-/* HSZ  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HSZ;
 
 #endif /* _DDEML_ */

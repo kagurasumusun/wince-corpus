@@ -213,6 +213,7 @@ def check_constant_headers():
     ranks = {"own-page", "entity-page", "constant-entity",
              "win32-reference", "co-mention",
              "reference-header",
+             "family-statement", "reviewed",
              "pinvoke-weak"}
     rows = 0
     with open(path, encoding="utf-8") as fh:
@@ -249,6 +250,18 @@ def check_constant_headers():
                     not cells[4].startswith("corpus/"):
                 problems.append(f"constant-headers: {name}: a co-mention "
                                 "row must name the CE page behind it")
+            if rows > 1 and cells[2] == "family-statement" and \
+                    not cells[4].startswith("corpus/"):
+                problems.append(f"constant-headers: {name}: a family-"
+                                "statement row must name the CE page that "
+                                "states the family header")
+            if rows > 1 and cells[2] == "reviewed" and \
+                    not (cells[4].startswith("corpus/") or
+                         cells[4] == "data/constant-header-review.tsv" or
+                         cells[4].startswith("data/")):
+                problems.append(f"constant-headers: {name}: a reviewed "
+                                "row must name the review file or the "
+                                "page the review rests on")
             if len(problems) > 200:
                 break
     if rows and not problems:
@@ -464,7 +477,7 @@ def main():
                     problems.append(f"constant {rid}: no row text")
             if kind == "constraint" and record.get("kind") not in (
                     "ce-restriction", "ce-note", "abi-note",
-                    "oss-statement"):
+                    "oss-statement", "header-exclusion", "link-statement"):
                 problems.append(f"constraint {rid}: kind "
                                 f"{record.get('kind')!r} is not known")
             seen[rid] = record

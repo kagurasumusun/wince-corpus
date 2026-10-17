@@ -1,4 +1,4 @@
-/* amvideo.h -- Windows CE unified surface
+/* Amvideo.h -- Windows CE unified surface
  *
  * ONE tree for every CE generation.  Version differences use
  * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1 constants, 7 declarations, 10 outlines, 0 base types, 0 extra macros, 34 extra decls
+ * 7 constants, 7 declarations, 10 outlines, 0 base types, 0 extra macros, 34 extra decls
  */
 #ifndef _OLEIDL_
 #define _OLEIDL_
@@ -18,6 +18,12 @@
  * chains with the evidence after the #endif)
  * ================================================================ */
 #define MK_ALT 32
+#define OLEIVERB_DISCARDUNDOSTATE -6
+#define OLEIVERB_HIDE -3
+#define OLEIVERB_INPLACEACTIVATE -5
+#define OLEIVERB_OPEN -2
+#define OLEIVERB_SHOW -1
+#define OLEIVERB_UIACTIVATE -4
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

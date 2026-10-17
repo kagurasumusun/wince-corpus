@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 4 constants, 11 declarations, 3 outlines, 0 base types, 0 extra macros, 45 extra decls
+ * 4 constants, 11 declarations, 3 outlines, 0 base types, 0 extra macros, 46 extra decls
  */
 #ifndef _IMAGING_
 #define _IMAGING_
@@ -165,6 +165,18 @@ enum DecoderInitFlag {
   DecoderInitFlagNone = 0,
   DecoderInitFlagNoBlock = 0x0001,
   DecoderInitFlagBuiltIn1st = 0x0002
+};
+
+/* EncoderParameterValueTypeRationalRange  [extra enum] */
+enum EncoderParameterValueType {
+  EncoderParameterValueTypeByte = 1,
+  EncoderParameterValueTypeASCII = 2,
+  EncoderParameterValueTypeShort = 3,
+  EncoderParameterValueTypeLong = 4,
+  EncoderParameterValueTypeRational = 5,
+  EncoderParameterValueTypeLongRange = 6,
+  EncoderParameterValueTypeUndefined = 7,
+  EncoderParameterValueTypeRationalRange = 8
 };
 
 /* EncoderValueFrameDimensionPage  [extra enum] */

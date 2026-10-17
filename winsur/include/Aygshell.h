@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 59 constants, 59 declarations, 2 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 56 constants, 57 declarations, 2 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _AYGSHELL_
 #define _AYGSHELL_
@@ -33,7 +33,6 @@
 #define NMN_INVOKECOMMAND 1103
 #define NMN_NEWMENUDESTROY 1102
 #define NOMENU 0xFFFF
-#define SHCIDS_COLUMNMASK 0x0000FFFF
 #define SHCMBF_COLORBK 0x08
 #define SHCMBF_EMPTYBAR 0x01
 #define SHCMBF_HIDDEN 0x02
@@ -71,8 +70,6 @@
 #define SHNF_SILENT 32
 #define SHNF_STRAIGHTTOTRAY 1
 #define SHRG_RETURNCMD 0x0001
-#define SHRT_MAX 32767
-#define SHRT_MIN -32768
 #define VK_TBACK VK_ESCAPE
 #define WC_SIPPREF L"SIPPREF"
 #define WS_NONAVDONEBUTTON WS_MINIMIZEBOX
@@ -147,14 +144,6 @@ BOOL SHCreateMenuBar(
 BOOL SHFullScreen( 
  HWND hwndRequester, 
  DWORD dwState 
-);
-
-/* SHGetSpecialFolderPath  [function; shared; unified-kb; unified-kb] */
-BOOL SHGetSpecialFolderPath( 
- HWND hwndOwner, 
- LPTSTR lpszPath, 
- int nFolder, 
- BOOL fCreate 
 );
 
 /* SHSipInfo  [function; ce-only; unified-kb; unified-kb] */

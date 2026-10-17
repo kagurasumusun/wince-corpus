@@ -396,6 +396,17 @@ def sanitize_declaration(text: str, name: str = "",
         return None
     if name and is_sample_name(name):
         return None
+    # One declaration is one statement.  A sample block glued together
+    # ("#define MEM_WIDTH_IN_PIXELS 640 #define PIXEL_BYTES 2 ...
+    # Node2D AllMem(...); pSurf1->Free();") is not a prototype even when
+    # its first tokens look like C -- a function prototype carries no
+    # preprocessor line and no second statement.
+    if "#define" in text or "#include" in text:
+        return None
+    if dtype == "function":
+        body = text.strip().rstrip(";")
+        if ";" in body or len(body) > 2000:
+            return None
     if dtype == "function" and name and name[:1].islower() and \
             not name.startswith(("wave", "midi", "mixer", "time", "keybd",
                                  "mouse", "snd", "lstr", "wsp", "wvs")):

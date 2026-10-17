@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 43 constants, 19 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 33 constants, 17 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINREG_
 #define _WINREG_
@@ -31,7 +31,6 @@
 #define HKEY_PERFORMANCE_DATA ((HKEY)0x80000004)
 #define HKEY_USERS ((HKEY)0x80000003)
 #define REG_BINARY 3
-#define REG_CREATED_NEW_KEY 0x00000001L
 #define REG_DWORD 4
 #define REG_DWORD_BIG_ENDIAN 5
 #define REG_DWORD_LITTLE_ENDIAN 4
@@ -45,15 +44,6 @@
 #define REG_NOTIFY_CHANGE_NAME 0x00000001L
 #define REG_NOTIFY_CHANGE_SECURITY 0x00000008L
 #define REG_NOTIFY_THREAD_AGNOSTIC 0x10000000L
-#define REG_OPENED_EXISTING_KEY 0x00000002L
-#define REG_OPTION_BACKUP_RESTORE 0x00000004L
-#define REG_OPTION_CREATE_LINK 0x00000002L
-#define REG_OPTION_NON_VOLATILE 0x00000000L
-#define REG_OPTION_VOLATILE 0x00000001L
-#define REG_PINFLAG_B_MANY 0x4
-#define REG_PINFLAG_B_OUTPUT 0x8
-#define REG_PINFLAG_B_RENDERER 0x2
-#define REG_PINFLAG_B_ZERO 0x1
 #define REG_QWORD 11
 #define REG_QWORD_LITTLE_ENDIAN 11
 #define REG_RESOURCE_LIST 8
@@ -84,14 +74,6 @@ typedef struct _REG_NOTIFY_INFORMATION {
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
-
-/* RegCopyFile  [function; ce-only; unified-kb; unified-kb] */
-BOOL RegCopyFile ( 
-LPCWSTR lpszFile );
-
-/* RegRestoreFile  [function; ce-only; unified-kb; unified-kb] */
-BOOL RegRestoreFile ( 
-LPCWSTR lpszFile );
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
 

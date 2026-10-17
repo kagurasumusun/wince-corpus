@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 27 constants, 19 declarations, 1 outlines, 0 base types, 0 extra macros, 63 extra decls
+ * 22 constants, 19 declarations, 1 outlines, 0 base types, 0 extra macros, 63 extra decls
  */
 #ifndef _EXDI2_
 #define _EXDI2_
@@ -36,14 +36,9 @@
 #define CPUF_SHX 1
 #define CPUF_UNK 0xFFFFFFF
 #define CPUF_X86 0
-#define ec1stChance 0
-#define eda2IgnoreAll 0
 #define LMM_IO 2
 #define LMM_PHYS 1
 #define LMM_VIRT 0
-#define tsDisable 0
-#define tsDontCare 2
-#define tsEnable 1
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

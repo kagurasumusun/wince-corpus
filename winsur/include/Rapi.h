@@ -5,30 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 12 constants, 58 declarations, 2 outlines, 0 base types, 0 extra macros, 4 extra decls
+ * 0 constants, 58 declarations, 2 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _RAPI_
 #define _RAPI_
 
-
-/* ==================================================================
- * constants (one evidence comment per #define; the
- * #if of a batch covers every #define in it; values
- * that differ per generation pool into #if/#elif
- * chains with the evidence after the #endif)
- * ================================================================ */
-#define NID_EXTERNAL_PEN 0x08
-#define NID_EXTERNAL_TOUCH 0x02
-#define NID_INTEGRATED_PEN 0x04
-#define NID_INTEGRATED_TOUCH 0x01
-#define NID_MULTI_INPUT 0x40
-#define NID_READY 0x80
-#define RAPI_CONNECTION_IR 1
-#define RAPI_CONNECTION_NETWORK 3
-#define RAPI_CONNECTION_SERIAL 2
-#define RAPI_CONNECTION_USB 0
-#define RAPI_DEVICE_CONNECTED 1
-#define RAPI_DEVICE_DISCONNECTED 0
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

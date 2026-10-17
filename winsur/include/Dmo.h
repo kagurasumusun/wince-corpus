@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 6 constants, 20 declarations, 8 outlines, 0 base types, 0 extra macros, 33 extra decls
+ * 6 constants, 20 declarations, 8 outlines, 0 base types, 0 extra macros, 35 extra decls
  */
 #ifndef _DMO_
 #define _DMO_
@@ -125,6 +125,16 @@ enum _DMO_VIDEO_OUTPUT_STREAM_FLAGS {
 /*   dwStatus */
 /*   rtTimestamp */
 /*   rtTimelength */
+
+/* x00000001  [extra enum] */
+enum DMO_ENUM_FLAGS {  DMO_ENUMF_INCLUDE_KEYED = 0x00000001  };
+
+/* x00000004  [extra enum] */
+enum _DMO_INPUT_DATA_BUFFER_FLAGS {
+  DMO_INPUT_DATA_BUFFERF_SYNCPOINT = 0x00000001,
+  DMO_INPUT_DATA_BUFFERF_TIME = 0x00000002,
+  DMO_INPUT_DATA_BUFFERF_TIMELENGTH = 0x00000004
+};
 
 /* x00000008  [extra enum] */
 enum _DMO_INPUT_STREAM_INFO_FLAGS {

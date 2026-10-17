@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 9 constants, 31 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 5 constants, 31 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINSCARD_
 #define _WINSCARD_
@@ -17,15 +17,11 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define SCARD_F_COMM_ERROR 0x80100013L
-#define SCARD_F_INTERNAL_ERROR 0x80100001L
-#define SCARD_F_UNKNOWN_ERROR 0x80100014L
-#define SCARD_F_WAITED_TOO_LONG 0x80100007L
-#define SCARD_P_SHUTDOWN 0x80100018L
 #define SCARD_PROVIDER_CARD_MODULE 0x80000001
 #define SCARD_PROVIDER_CSP 2
 #define SCARD_PROVIDER_KSP 3
 #define SCARD_PROVIDER_PRIMARY 1
+#define SCARD_W_RESET_CARD 0x80100068L
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

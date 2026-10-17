@@ -5,11 +5,22 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 21 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 4 constants, 21 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _SIDESHOW_
 #define _SIDESHOW_
 
+
+/* ==================================================================
+ * constants (one evidence comment per #define; the
+ * #if of a batch covers every #define in it; values
+ * that differ per generation pool into #if/#elif
+ * chains with the evidence after the #endif)
+ * ================================================================ */
+#define ERROR_BAD_LENGTH 24
+#define ERROR_INVALID_PARAMETER 87
+#define ERROR_NO_MORE_FILES 18
+#define ERROR_NOT_FOUND 1168
 
 /* ==================================================================
  * functions and callbacks

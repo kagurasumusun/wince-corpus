@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 40 constants, 3 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 60 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _STRMIF_
 #define _STRMIF_
@@ -17,6 +17,20 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
+#define AM_FILTER_MISC_FLAG_NO_CAPTURE_PAUSE 0x00000004
+#define AM_FILTER_MISC_FLAGS_IS_RENDERER 0x00000001
+#define AM_FILTER_MISC_FLAGS_IS_SOURCE 0x00000002
+#define AM_SAMPLE_DATADISCONTINUITY 0x04
+#define AM_SAMPLE_ENDOFSTREAM 0x200
+#define AM_SAMPLE_FLUSH_ON_PAUSE 0x80
+#define AM_SAMPLE_PREROLL 0x02
+#define AM_SAMPLE_SPLICEPOINT 0x01
+#define AM_SAMPLE_STOPVALID 0x100
+#define AM_SAMPLE_TIMEDISCONTINUITY 0x40
+#define AM_SAMPLE_TIMEVALID 0x10
+#define AM_SAMPLE_TYPECHANGED 0x08
+#define AM_STREAM_CONTROL 1
+#define AM_STREAM_MEDIA 0
 #define CK_INDEX 0x00000001
 #define CK_NOCOLORKEY 0x00000000
 #define CK_RGB 0x00000002
@@ -43,6 +57,12 @@
 #define KSAUDIO_SPEAKER_TOP 0x00000800
 #define MAX_FILTER_NAME 128
 #define MAX_PIN_NAME 128
+#define MERIT_DO_NOT_USE 0x200000
+#define MERIT_HW_COMPRESSOR 0x100050
+#define MERIT_NORMAL 0x600000
+#define MERIT_PREFERRED 0x800000
+#define MERIT_SW_COMPRESSOR 0x100000
+#define MERIT_UNLIKELY 0x400000
 #define MPEG2_PROGRAM_DIRECTORY_PES_PACKET 0x00000002
 #define MPEG2_PROGRAM_ELEMENTARY_STREAM 0x00000001
 #define MPEG2_PROGRAM_PACK_HEADER 0x00000003
@@ -57,34 +77,5 @@
 #define VMRBITMAP_HDC 0x00000002
 #define VMRBITMAP_SRCCOLORKEY 0x00000008
 #define VMRBITMAP_SRCRECT 0x00000010
-
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-/* MPEG2Level  [enum, typedef; ce-only; heuristic-prefix] */
-enum MPEG2Level {
- MPEG2Level_Low = 1,
- MPEG2Level_Main,
- MPEG2Level_High1440,
- MPEG2Level_High
-};
-
-/* MPEG2Profile  [enum, typedef; ce-only; heuristic-prefix] */
-enum MPEG2Profile {
- MPEG2Profile_Simple = 1,
- MPEG2Profile_Main,
- MPEG2Profile_SNRScalable,
- MPEG2Profile_SpatiallyScalable,
- MPEG2Profile_High
-};
-
-/* StreamControlState  [enum, typedef; ce-only; heuristic-prefix] */
-enum StreamControlState {
- STREAM_FLOWING,
- STREAM_DISCARDING
-};
 
 #endif /* _STRMIF_ */

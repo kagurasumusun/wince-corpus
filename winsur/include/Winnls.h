@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 424 constants, 70 declarations, 10 outlines, 2 base types, 0 extra macros, 0 extra decls
+ * 411 constants, 69 declarations, 0 outlines, 2 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINNLS_
 #define _WINNLS_
@@ -121,15 +121,8 @@
 #define CALINFO_ENUMPROC CALINFO_ENUMPROCW
 #define CALINFO_ENUMPROCEX CALINFO_ENUMPROCEXW
 #define CODEPAGE_ENUMPROC CODEPAGE_ENUMPROCW
-#define CP_ACP 0
 #define CP_INSTALLED 1
-#define CP_MACCP 2
-#define CP_OEMCP 1
 #define CP_SUPPORTED 2
-#define CP_SYMBOL 42
-#define CP_THREAD_ACP 3
-#define CP_UTF7 65000
-#define CP_UTF8 65001
 #define CSTR_EQUAL 2
 #define CSTR_GREATER_THAN 3
 #define CSTR_LESS_THAN 1
@@ -248,7 +241,6 @@
 #define CTRY_VIET_NAM 84
 #define CTRY_YEMEN 967
 #define CTRY_ZIMBABWE 263
-#define DATE 9
 #define DATE_LONGDATE 2
 #define DATE_LTRREADING 16
 #define DATE_RTLREADING 32
@@ -406,8 +398,6 @@
 #define LOCALE_STIMEFORMAT 0x1003
 #define LOCALE_SYEARMONTH 0x1006
 #define LOCALE_SYSTEM_DEFAULT 0x800
-#define LOCALE_TRANSIENT_KEYBOARD1 0x2000
-#define LOCALE_TRANSIENT_KEYBOARD2 0x2400
 #define LOCALE_USE_CP_ACP 0x40000000
 #define LOCALE_USER_DEFAULT 0x400
 #define MAP_COMPOSITE 64
@@ -435,9 +425,6 @@
 #define TIME_NOMINUTESORSECONDS 1
 #define TIME_NOSECONDS 2
 #define TIME_NOTIMEMARKER 4
-#define TIME_ZONE_ID_DAYLIGHT 2
-#define TIME_ZONE_ID_STANDARD 1
-#define TIME_ZONE_ID_UNKNOWN 0
 #define TIMEFMT_ENUMPROC TIMEFMT_ENUMPROCW
 #define UILANGUAGE_ENUMPROC UILANGUAGE_ENUMPROCW
 #define WC_COMPOSITECHECK 512
@@ -458,28 +445,6 @@ typedef DWORD LCID;
 /* LCTYPE
  * source: win32/common/windows-data-types.md */
 typedef DWORD LCTYPE;
-
-/* ==================================================================
- * macros -- the macro/#define blocks the pages print (verbatim)
- * ================================================================ */
-
-/* HIMAGELIST  [typedef; ce-only; heuristic-prefix] */
-
-/* HIMC  [typedef; ce-only; heuristic-prefix] */
-
-/* LPCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
-
-/* LUID  [typedef; ce-only; heuristic-prefix] */
-
-/* PCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
-
-/* PCWCH  [typedef; ce-only; heuristic-prefix] */
-
-/* PLUID  [typedef; ce-only; heuristic-prefix] */
-
-/* REGSAM  [typedef; ce-only; heuristic-prefix] */
-
-/* UNSIGNED  [typedef; ce-only; heuristic-prefix] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

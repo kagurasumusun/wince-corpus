@@ -5,19 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1 constants, 39 declarations, 0 outlines, 0 base types, 1 extra macros, 0 extra decls
+ * 0 constants, 39 declarations, 0 outlines, 0 base types, 1 extra macros, 0 extra decls
  */
 #ifndef _NTDDNDIS_
 #define _NTDDNDIS_
 
-
-/* ==================================================================
- * constants (one evidence comment per #define; the
- * #if of a batch covers every #define in it; values
- * that differ per generation pool into #if/#elif
- * chains with the evidence after the #endif)
- * ================================================================ */
-#define OID_GEN_RNDIS_CONFIG_PARAMETER 0x0001021B
 
 /* ==================================================================
  * macros -- supplementary #define from CE pages

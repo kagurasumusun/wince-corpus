@@ -1,4 +1,4 @@
-/* inaddr.h -- Windows CE unified surface
+/* VerRsrc.h -- Windows CE unified surface
  *
  * ONE tree for every CE generation.  Version differences use
  * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
@@ -7,8 +7,8 @@
  * tools/gen-include-def.py --unified.
  * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
-#ifndef _INADDR_
-#define _INADDR_
+#ifndef _VERRSRC_
+#define _VERRSRC_
 
 
-#endif /* _INADDR_ */
+#endif /* _VERRSRC_ */

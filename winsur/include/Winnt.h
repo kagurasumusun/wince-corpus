@@ -1,11 +1,11 @@
-/* WinNT.h -- Windows CE unified surface
+/* Winnt.h -- Windows CE unified surface
  *
  * ONE tree for every CE generation.  Version differences use
  * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1520 constants, 45 declarations, 14 outlines, 21 base types, 0 extra macros, 0 extra decls
+ * 1448 constants, 20 declarations, 5 outlines, 21 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINNT_
 #define _WINNT_
@@ -59,16 +59,9 @@
 #define CONTEXT_SEGMENTS (CONTEXT_i386|0x00000004L)
 #define CONTEXT_SH3 0x00000040
 #define CONTEXT_SH4 0x000000c0
-#define CONTEXT_TYPE_EnterScope 2
-#define CONTEXT_TYPE_ExitScope 3
-#define CONTEXT_TYPE_None 0
-#define CONTEXT_TYPE_NoScope 4
-#define CONTEXT_TYPE_Text 1
 #define DACL_SECURITY_INFORMATION 0x00000004
-#define DBG_CONTINUE 0x00010002L
 #define DBG_CONTROL_BREAK 0x40010008
 #define DBG_CONTROL_C 0x40010005
-#define DBG_EXCEPTION_NOT_HANDLED 0x80010001L
 #define DBG_TERMINATE_PROCESS 0x40010004
 #define DBG_TERMINATE_THREAD 0x40010003
 #define DECLSPEC_SELECTANY __attribute__((selectany))
@@ -104,18 +97,19 @@
 #define ES_DISPLAY_REQUIRED 0x00000002
 #define ES_SYSTEM_REQUIRED 0x00000001
 #define ES_USER_PRESENT 0x00000004
-#define EVENT_PACKET 4
-#define EXCEPTION_CONTINUE_EXECUTION 0xffffffff
-#define EXCEPTION_CONTINUE_SEARCH 0x0
-#define EXCEPTION_DEBUG_EVENT 1
 #define EXCEPTION_MAXIMUM_PARAMETERS 15
 #define EXCEPTION_NONCONTINUABLE 1
 #define FAILED_ACCESS_ACE_FLAG 128
+#define FILE_ACTION_ADDED 0x00000001
 #define FILE_ACTION_ADDED_STREAM 0x00000006
 #define FILE_ACTION_ID_NOT_TUNNELLED 0x0000000A
+#define FILE_ACTION_MODIFIED 0x00000003
 #define FILE_ACTION_MODIFIED_STREAM 0x00000008
+#define FILE_ACTION_REMOVED 0x00000002
 #define FILE_ACTION_REMOVED_BY_DELETE 0x00000009
 #define FILE_ACTION_REMOVED_STREAM 0x00000007
+#define FILE_ACTION_RENAMED_NEW_NAME 0x00000005
+#define FILE_ACTION_RENAMED_OLD_NAME 0x00000004
 #define FILE_ACTION_TUNNELLED_ID_COLLISION 0x0000000B
 #define FILE_ADD_FILE 0x00000002
 #define FILE_ADD_SUBDIRECTORY 0x00000004
@@ -220,19 +214,14 @@
 #define GENERIC_WRITE 0x40000000
 #define GROUP_SECURITY_INFORMATION 0x00000002
 #define HEAP_CREATE_ALIGN_16 0x0000
-#define HEAP_CREATE_ENABLE_EXECUTE 0x00040000
 #define HEAP_CREATE_ENABLE_TRACING 0x20000
 #define HEAP_DISABLE_COALESCE_ON_FREE 128
 #define HEAP_FREE_CHECKING_ENABLED 64
-#define HEAP_GENERATE_EXCEPTIONS 0x00000004
 #define HEAP_GROWABLE 2
 #define HEAP_MAXIMUM_TAG 0xFFF
-#define HEAP_NO_SERIALIZE 0x00000001
 #define HEAP_PSEUDO_TAG_FLAG 0x8000
-#define HEAP_REALLOC_IN_PLACE_ONLY 0x00000010
 #define HEAP_TAG_SHIFT 16
 #define HEAP_TAIL_CHECKING_ENABLED 32
-#define HEAP_ZERO_MEMORY 0x00000008
 #define IMAGE_ARCHIVE_END "`\n"
 #define IMAGE_ARCHIVE_PAD "\n"
 #define IMAGE_ARCHIVE_START "!<arch>\n"
@@ -830,35 +819,10 @@
 #define MAXSHORT 0x7fff
 #define MAXWORD 0xffff
 #define MEM_4MB_PAGES 0x80000000
-#define MEM_CAP_16BIT 0x0010
-#define MEM_CAP_8BIT 0x0008
-#define MEM_CAP_BASE_ALIGN 0x0020
-#define MEM_CAP_ENABLE_WIN 0x0004
-#define MEM_CAP_OFF_ALIGN 0x0080
-#define MEM_CAP_PAGING_EN 0x0400
-#define MEM_CAP_PAGING_HW 0x0100
-#define MEM_CAP_PAGING_SH 0x0200
-#define MEM_CAP_PRG_BASE 0x0001
-#define MEM_CAP_PRG_SIZE 0x0002
-#define MEM_CAP_WRITE_PROT 0x0800
-#define MEM_COALESCE_PLACEHOLDERS 0x00000001
-#define MEM_COMMIT 0x00001000
-#define MEM_DECOMMIT 0x00004000
 #define MEM_FREE 0x10000
-#define MEM_HEIGHT 1000
 #define MEM_IMAGE 0x1000000
-#define MEM_LARGE_PAGES 0x20000000
 #define MEM_MAPPED 0x40000
-#define MEM_PHYSICAL 0x00400000
-#define MEM_PRESERVE_PLACEHOLDER 0x00000002
 #define MEM_PRIVATE 0x20000
-#define MEM_RELEASE 0x00008000
-#define MEM_RESERVE 0x00002000
-#define MEM_RESET 0x00080000
-#define MEM_RESET_UNDO 0x1000000
-#define MEM_TOP_DOWN 0x00100000
-#define MEM_WIDTH_IN_PIXELS 640
-#define MEM_WRITE_WATCH 0x00200000
 #define MESSAGE_RESOURCE_UNICODE 1
 #define MIN_ACL_REVISION 2
 #define MINCHAR 0x80
@@ -880,16 +844,10 @@
 #define OBJECT_INHERIT_ACE 1
 #define OWNER_SECURITY_INFORMATION 0x00000001
 #define PAGE_EXECUTE 0x0010
-#define PAGE_EXECUTE_READ 0x20
-#define PAGE_EXECUTE_READWRITE 0x40
-#define PAGE_EXECUTE_WRITECOPY 0x80
 #define PAGE_GUARD 0x0100
 #define PAGE_NOACCESS 0x0001
 #define PAGE_NOCACHE 0x0200
 #define PAGE_PHYSICAL 0x0400
-#define PAGE_READONLY 0x02
-#define PAGE_READWRITE 0x04
-#define PAGE_WRITECOPY 0x08
 #define PF_ALPHA_BYTE_INSTRUCTIONS 5
 #define PF_PPC_MOVEMEM_64BIT_OK 4
 #define PO_THROTTLE_ADAPTIVE 3
@@ -928,17 +886,11 @@
 #define PROCESSOR_ALPHA_21064 21064
 #define PROCESSOR_ARCHITECTURE_ALPHA 2
 #define PROCESSOR_ARCHITECTURE_ALPHA64 7
-#define PROCESSOR_ARCHITECTURE_AMD64 9
-#define PROCESSOR_ARCHITECTURE_ARM 5
-#define PROCESSOR_ARCHITECTURE_ARM64 12
 #define PROCESSOR_ARCHITECTURE_IA32_ON_WIN64 10
-#define PROCESSOR_ARCHITECTURE_IA64 6
-#define PROCESSOR_ARCHITECTURE_INTEL 0
 #define PROCESSOR_ARCHITECTURE_MIPS 1
 #define PROCESSOR_ARCHITECTURE_MSIL 8
 #define PROCESSOR_ARCHITECTURE_PPC 3
 #define PROCESSOR_ARCHITECTURE_SHX 4
-#define PROCESSOR_ARCHITECTURE_UNKNOWN 0xffff
 #define PROCESSOR_INTEL_386 386
 #define PROCESSOR_INTEL_486 486
 #define PROCESSOR_INTEL_IA64 2200
@@ -1020,32 +972,9 @@
 #define SE_UNDOCK_NAME TEXT("SeUndockPrivilege")
 #define SE_UNSOLICITED_INPUT_NAME TEXT("SeUnsolicitedInputPrivilege")
 #define SEC_BASED 0x00200000
-#define SEC_COMMIT 0x8000000
-#define SEC_E_INCOMPLETE_MESSAGE 0x80090318L
-#define SEC_E_INSUFFICIENT_MEMORY 0x80090300L
-#define SEC_E_INTERNAL_ERROR 0x80090304L
-#define SEC_E_INVALID_HANDLE 0x80100003L
-#define SEC_E_INVALID_TOKEN 0x80090308L
-#define SEC_E_LOGON_DENIED 0x8009030CL
-#define SEC_E_NO_AUTHENTICATING_AUTHORITY 0x80090311L
-#define SEC_E_NO_CREDENTIALS 0x8009030EL
-#define SEC_E_OK 0x00000000L
-#define SEC_E_SECPKG_NOT_FOUND 0x80090305L
-#define SEC_E_UNSUPPORTED_FUNCTION 0x80090302L
 #define SEC_FILE 0x00800000
-#define SEC_I_COMPLETE_AND_CONTINUE 0x00090314L
-#define SEC_I_COMPLETE_NEEDED 0x00090313L
-#define SEC_I_CONTINUE_NEEDED 0x00090312L
-#define SEC_IMAGE 0x1000000
-#define SEC_IMAGE_NO_EXECUTE 0x11000000
-#define SEC_LARGE_PAGES 0x80000000
 #define SEC_NO_CHANGE 0x00400000
-#define SEC_NOCACHE 0x10000000
-#define SEC_RESERVE 0x4000000
 #define SEC_VLM 0x02000000
-#define SEC_WINNT_AUTH_IDENTITY_ANSI 0x1
-#define SEC_WINNT_AUTH_IDENTITY_UNICODE 0x2
-#define SEC_WRITECOMBINE 0x40000000
 #define SECTION_ALL_ACCESS 0xf001f
 #define SECTION_EXTEND_SIZE 16
 #define SECTION_MAP_EXECUTE 8
@@ -1461,8 +1390,6 @@
 #define THREAD_DIRECT_IMPERSONATION 0x200
 #define THREAD_GET_CONTEXT 8
 #define THREAD_IMPERSONATE 256
-#define THREAD_MODE_BACKGROUND_BEGIN 0x00010000
-#define THREAD_MODE_BACKGROUND_END 0x00020000
 #define THREAD_QUERY_INFORMATION 64
 #define THREAD_SET_CONTEXT 16
 #define THREAD_SET_INFORMATION 32
@@ -1507,6 +1434,7 @@
 #define VER_NT_WORKSTATION 1
 #define VER_OR 7
 #define VER_PLATFORM_WIN32_CE 3
+#define VER_PLATFORM_WIN32_NT 2
 #define VER_PLATFORM_WIN32_WINDOWS 1
 #define VER_PLATFORMID 0x0000008
 #define VER_PRODUCT_TYPE 0x0000080
@@ -1668,49 +1596,11 @@ WORD PRIMARYLANGID(
 
 /* TEXT  [macro, typedef, function; shared] */
 
-/* VOID  [typedef, macro; shared; entity-headers] */
-
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
-
-/* BOOLEAN  [typedef; shared; entity-headers; win32-reference] */
-typedef BYTE BOOLEAN;
-
-/* IMAGE_DATA_DIRECTORY  [struct; shared] */
-typedef struct _IMAGE_DATA_DIRECTORY {
- DWORD VirtualAddress;
- DWORD Size;
-} IMAGE_DATA_DIRECTORY, *PIMAGE_DATA_DIRECTORY;
-
-/* PBOOLEAN  [typedef; shared; entity-headers; win32-reference] */
-typedef BOOLEAN *PBOOLEAN;
-
-/* PCHAR  [typedef; shared; entity-headers; win32-reference] */
-typedef CHAR *PCHAR;
-
-/* PCSTR  [typedef; shared; entity-headers; win32-reference] */
-typedef CONST CHAR *PCSTR;
-
-/* PDATA_EH  [struct; ce-only] */
-struct PDATA_EH { unsigned int* pHandler; unsigned int* pHandlerData;};
-
-/* PSHORT  [typedef; shared; entity-headers; win32-reference] */
-typedef SHORT *PSHORT;
-
-/* PSTR  [typedef; shared; entity-headers; win32-reference] */
-typedef CHAR *PSTR;
-
-/* PTCHAR  [typedef; shared; entity-headers; win32-reference] */
-typedef TCHAR *PTCHAR;
-
-/* SECURITY_DESCRIPTOR  [typedef, struct; shared; entity-headers] */
-typedef PVOID PSECURITY_DESCRIPTOR;
-
-/* SHORT  [typedef; shared; entity-headers; win32-reference] */
-typedef short SHORT;
 
 /* FILE_NOTIFY_INFORMATION  [struct; shared] */
 typedef struct _FILE_NOTIFY_INFORMATION {
@@ -1719,6 +1609,12 @@ typedef struct _FILE_NOTIFY_INFORMATION {
  DWORD FileNameLength; 
  WCHAR FileName[1]; 
 } FILE_NOTIFY_INFORMATION, *PFILE_NOTIFY_INFORMATION;
+
+/* IMAGE_DATA_DIRECTORY  [struct; shared] */
+typedef struct _IMAGE_DATA_DIRECTORY {
+ DWORD VirtualAddress;
+ DWORD Size;
+} IMAGE_DATA_DIRECTORY, *PIMAGE_DATA_DIRECTORY;
 
 /* MEMORY_BASIC_INFORMATION  [struct; ce-only; harvest-kb; harvest-kb] */
 typedef struct _MEMORY_BASIC_INFORMATION { 
@@ -1733,17 +1629,11 @@ typedef struct _MEMORY_BASIC_INFORMATION {
 typedef MEMORY_BASIC_INFORMATION *PMEMORY_BASIC_INFORMATION;
 typedef MEMORY_BASIC_INFORMATION *PMEMORY_BASIC_INFORMATION, *LPMEMORY_BASIC_INFORMATION;
 
-/* PCWSTR  [typedef; shared; entity-headers; win32-reference] */
-typedef CONST WCHAR *PCWSTR;
+/* PDATA_EH  [struct; ce-only] */
+struct PDATA_EH { unsigned int* pHandler; unsigned int* pHandlerData;};
 
-/* PHANDLE  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE *PHANDLE;
-
-/* PWCHAR  [typedef; shared; entity-headers; win32-reference] */
-typedef WCHAR *PWCHAR;
-
-/* PWSTR  [typedef, struct; shared; entity-headers; win32-reference] */
-typedef WCHAR *PWSTR;
+/* SECURITY_DESCRIPTOR  [typedef, struct; shared; entity-headers] */
+typedef PVOID PSECURITY_DESCRIPTOR;
 
 /* EXCEPTION_RECORD  [struct; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */

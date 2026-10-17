@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 6 constants, 12 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 13 constants, 12 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _BT_HCIP_
 #define _BT_HCIP_
@@ -17,6 +17,13 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
+#define BTH_CONTROL_DEVICEONLY 0x00001000
+#define BTH_CONTROL_ROUTE_ALL 0x00000001
+#define BTH_CONTROL_ROUTE_BY_ADDR 0x00000010
+#define BTH_CONTROL_ROUTE_BY_COD 0x00000020
+#define BTH_CONTROL_ROUTE_BY_LINKTYPE 0x00000040
+#define BTH_CONTROL_ROUTE_HARDWARE 0x00000100
+#define BTH_CONTROL_ROUTE_SECURITY 0x00000080
 #define HCI_FLAGS_NOLOCALNAME 0x00000002
 #define HCI_FLAGS_NORESET 0x00000001
 #define HCI_FLAGS_NOROLESWITCH 0x00000004

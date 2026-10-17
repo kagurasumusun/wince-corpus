@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 162 constants, 37 declarations, 0 outlines, 1 base types, 0 extra macros, 0 extra decls
+ * 171 constants, 37 declarations, 0 outlines, 1 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _SHELLAPI_
 #define _SHELLAPI_
@@ -32,16 +32,27 @@
 #define ABM_SETAUTOHIDEBAR 8
 #define ABM_SETPOS 3
 #define ABM_WINDOWPOSCHANGED 9
-#define ABN_EXIT_USING_VOICE 0x0004
 #define ABN_FULLSCREENAPP 2
 #define ABN_POSCHANGED 1
-#define ABN_RECORDS_ADDED 0x0001
-#define ABN_RECORDS_DELETED 0x0002
-#define ABN_RESORT_DB 0x0008
 #define ABN_STATECHANGE 0
 #define ABN_WINDOWARRANGE 3
 #define ABS_ALWAYSONTOP 2
 #define ABS_AUTOHIDE 1
+#define CSIDL_APPDATA 0x001A
+#define CSIDL_DESKTOP 0x0000
+#define CSIDL_DESKTOPDIRECTORY 0x0010
+#define CSIDL_FAVORITES 0x0006
+#define CSIDL_FONTS 0x0014
+#define CSIDL_MYMUSIC 0x000d
+#define CSIDL_MYPICTURES 0x0027
+#define CSIDL_MYVIDEO 0x000e
+#define CSIDL_PERSONAL 0x0005
+#define CSIDL_PROFILE 0x0028
+#define CSIDL_PROGRAM_FILES 0x0026
+#define CSIDL_PROGRAMS 0x0002
+#define CSIDL_RECENT 0x0008
+#define CSIDL_STARTUP 0x0007
+#define CSIDL_WINDOWS 0x0024
 #define DE_ACCESSDENIEDSRC 0x78
 #define DE_DEST_IS_CDRECORD 0x84
 #define DE_DEST_IS_CDROM 0x82
@@ -67,8 +78,6 @@
 #define ERRORONDEST 0x10000
 #define FO_COPY 2
 #define FO_DELETE 3
-#define FO_DONE_ONE_VOL 0x00000002
-#define FO_MORE_VOLUME 0x00000001
 #define FO_MOVE 1
 #define FO_RENAME 4
 #define FOF_ALLOWUNDO 64
@@ -226,9 +235,6 @@ typedef HANDLE HDESK;
  * declaration body no page prints
  * ================================================================ */
 
-/* HDROP  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HDROP;
-
 /* NOTIFYICONDATA  [struct; shared; A/W NOTIFYICONDATAA,NOTIFYICONDATAW (CE is W-side)] */
 typedef struct _NOTIFYICONDATA { 
  DWORD cbSize;
@@ -242,37 +248,35 @@ typedef struct _NOTIFYICONDATA {
 
 /* SHELLEXECUTEINFO  [struct; ce-only; harvest-kb; harvest-kb] */
 typedef struct _SHELLEXECUTEINFO { 
-DWORD cbSize; 
-ULONG fMask; 
-HWND hwnd; 
-LPCSTR lpVerb; 
-LPCSTR lpFile; 
-LPCSTR lpParameters; 
-LPCSTR lpDirectory; 
-int nShow; 
-HINSTANCE hInstApp; 
-// Optional members 
-LPVOID lpIDList; 
-LPCSTR lpClass; 
-HKEY hkeyClass; 
-DWORD dwHotKey; 
-HANDLE hIcon; 
-HANDLE hProcess; 
+ DWORD cbSize; 
+ ULONG fMask; 
+ HWND hwnd; 
+ LPCSTR lpVerb; 
+ LPCSTR lpFile; 
+ LPCSTR lpParameters; 
+ LPCSTR lpDirectory; 
+ int nShow; 
+ HINSTANCE hInstApp; 
+ // Optional members 
+ LPVOID lpIDList; 
+ LPCSTR lpClass; 
+ HKEY hkeyClass; 
+ DWORD dwHotKey; 
+ HANDLE hIcon; 
+ HANDLE hProcess; 
 } SHELLEXECUTEINFO, FAR *LPSHELLEXECUTEINFO;
-
-/* SHFILEINFO  [struct; shared; A/W SHFILEINFOA,SHFILEINFOW (CE is W-side)] */
-typedef struct _SHFILEINFO { 
- HICON hIcon; 
- int iIcon; 
- DWORD dwAttributes; 
- TCHAR szDisplayName[MAX_PATH]; 
- TCHAR szTypeName[80]; 
-} SHFILEINFO;
-typedef SHFILEINFO *PSHFILEINFO, *LPSHFILEINFO;
 
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
+
+/* SHGetSpecialFolderPath  [function; shared; unified-kb; unified-kb] */
+BOOL SHGetSpecialFolderPath( 
+ HWND hwndOwner, 
+ LPTSTR lpszPath, 
+ int nFolder, 
+ BOOL fCreate 
+);
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
 

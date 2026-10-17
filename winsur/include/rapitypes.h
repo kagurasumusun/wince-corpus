@@ -5,11 +5,31 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 6 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 13 constants, 6 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _RAPITYPES_
 #define _RAPITYPES_
 
+
+/* ==================================================================
+ * constants (one evidence comment per #define; the
+ * #if of a batch covers every #define in it; values
+ * that differ per generation pool into #if/#elif
+ * chains with the evidence after the #endif)
+ * ================================================================ */
+#define CEDB_NOCOMPRESS 0x00010000
+#define CEDB_VALIDCREATE 0x0017
+#define CEDB_VALIDDBFLAGS 0x0010
+#define CEDB_VALIDMODTIME 0x0008
+#define CEDB_VALIDNAME 0x0001
+#define CEDB_VALIDSORTSPEC 0x0004
+#define CEDB_VALIDTYPE 0x0002
+#define RAPI_CONNECTION_IR 1
+#define RAPI_CONNECTION_NETWORK 3
+#define RAPI_CONNECTION_SERIAL 2
+#define RAPI_CONNECTION_USB 0
+#define RAPI_DEVICE_CONNECTED 1
+#define RAPI_DEVICE_DISCONNECTED 0
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
@@ -22,18 +42,6 @@
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
-
-/* CE_FIND_DATA  [struct; ce-only] */
-typedef struct _CE_FIND_DATA {
- DWORD dwFileAttributes;
- FILETIME ftCreationTime;
- FILETIME ftLastAccessTime;
- FILETIME ftLastWriteTime;
- DWORD nFileSizeHigh;
- DWORD nFileSizeLow;
- DWORD dwOID;
- WCHAR cFileName[MAX_PATH];
-} CE_FIND_DATA, *LPCE_FIND_DATA;
 
 /* CEGUID  [struct; ce-only] */
 typedef struct _CEGUID {

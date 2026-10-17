@@ -1,4 +1,4 @@
-/* qnetwork.h -- Windows CE unified surface
+/* Qnetwork.h -- Windows CE unified surface
  *
  * ONE tree for every CE generation.  Version differences use
  * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.

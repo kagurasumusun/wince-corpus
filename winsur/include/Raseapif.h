@@ -5,32 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 14 constants, 13 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 13 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _RASEAPIF_
 #define _RASEAPIF_
 
-
-/* ==================================================================
- * constants (one evidence comment per #define; the
- * #if of a batch covers every #define in it; values
- * that differ per generation pool into #if/#elif
- * chains with the evidence after the #endif)
- * ================================================================ */
-#define raatAcctEventTimeStamp 55
-#define raatAcctInterimInterval 85
-#define raatAcctMultiSessionId 50
-#define raatAcctStatusType 40
-#define raatARAPChallengeResponse 84
-#define raatARAPGuestLogon 8096
-#define raatARAPPassword 70
-#define raatCallbackNumber 20
-#define raatCalledStationId 30
-#define raatFramedRouting 10
-#define raatMD5CHAPChallenge 60
-#define raatMinimum 0
-#define raatReserved 0xFFFFFFFF
-#define raatSignature 80
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

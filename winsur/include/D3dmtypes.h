@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1 constants, 47 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 3 constants, 47 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _D3DMTYPES_
 #define _D3DMTYPES_
@@ -17,6 +17,8 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
+#define D3DMPRESENTFLAG_LOCKABLE_BACKBUFFER 0x00000001
+#define D3DMRENDERSTATE_WRAPBIAS 32
 #define MAX_DEVICE_IDENTIFIER_STRING 512
 
 /* ==================================================================

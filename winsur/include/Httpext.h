@@ -60,16 +60,6 @@ typedef struct _HSE_SEND_HEADER_EX_INFO{
  BOOL fKeepConn;
 } HSE_SEND_HEADER_EX_INFO, *LPHSE_SEND_HEADER_EX_INFO;
 
-/* HSE_URL_MAPEX_INFO  [typedef, struct; ce-only] */
-typedef struct _HSE_URL_MAPEX_INFO{
- CHAR lpszPath[MAX_PATH];
- DWORD dwFlags;
- DWORD cchMatchingPath;
- DWORD cchMatchingURL;
- DWORD dwReserved1;
- DWORD dwReserved2;
-} HSE_URL_MAPEX_INFO, *LPHSE_URL_MAPEX_INFO;
-
 /* HSE_VERSION_INFO  [struct; ce-only] */
 typedef struct _HSE_VERSION_INFO{
  DWORD dwExtensionVersion; 

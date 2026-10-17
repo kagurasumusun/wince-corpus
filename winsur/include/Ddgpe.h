@@ -5,20 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2 constants, 5 declarations, 1 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 0 constants, 5 declarations, 1 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _DDGPE_
 #define _DDGPE_
 
-
-/* ==================================================================
- * constants (one evidence comment per #define; the
- * #if of a batch covers every #define in it; values
- * that differ per generation pool into #if/#elif
- * chains with the evidence after the #endif)
- * ================================================================ */
-#define ddgpePixelFormat_1bpp 0
-#define ddgpePixelFormat_CustomFormat 0x1000
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
@@ -63,23 +54,6 @@ typedef enum EDDGPEPixelFormat{
  ddgpePixelFormat_UnknownFormat,
  // you can assign custom formats starting with this value
  ddgpePixelFormat_CustomFormat = 0x1000
-};
-
-/* ddgpePixelFormat  [extra struct] */
-#define DDGPEALLOCSURFACEDATA_VERSION0(0)
-#define DDGPEALLOCSURFACEDATA_CURRENTVERSION \
-(DDGPEBLTPARMS_VERSION0)
-struct DDGPEAllocSurfaceData
-{
-  DDGPEStandardHeader;
-  DWORD dwCreateFlags;
-  int nWidth;
-  int nHeight;
-  int nStride;
-  int nSurfaceFlags;
-  unsigned char *pBits;
-  EGPEFormat gpeFormat;
-  EDDGPEPixelFormat *ddgpePixelFormat;
 };
 
 /* x1000  [extra enum] */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 660 constants, 120 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 652 constants, 120 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _TAPI_
 #define _TAPI_
@@ -17,8 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define LINE_DIRECTION_LeftToRight 2
-#define LINE_DIRECTION_RightToLeft 1
 #define LINEADDRCAPFLAGS_ACCEPTTOALERT 0x00010000
 #define LINEADDRCAPFLAGS_AUTORECONNECT 0x00000400
 #define LINEADDRCAPFLAGS_BLOCKIDDEFAULT 0x00000008
@@ -671,12 +669,6 @@
 #define STRINGFORMAT_BINARY 0x00000004
 #define STRINGFORMAT_DBCS 0x00000002
 #define STRINGFORMAT_UNICODE 0x00000003
-#define TAPIERR_INVALDESTADDRESS -4L
-#define TAPIERR_INVALPOINTER -18L
-#define TAPIERR_NOREQUESTRECIPIENT -2L
-#define TAPIERR_REQUESTCANCELLED -17L
-#define TAPIERR_REQUESTFAILED -16L
-#define TAPIERR_REQUESTQUEUEFULL -3L
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 #define LINECALLORIGIN_INTERNAL 0x00000002
 #define LINEDIALTONEMODE_INTERNAL 0x00000004

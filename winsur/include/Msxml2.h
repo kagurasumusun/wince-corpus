@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 39 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 11 extra decls
+ * 42 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 11 extra decls
  */
 #ifndef _MSXML2_
 #define _MSXML2_
@@ -18,6 +18,7 @@
  * chains with the evidence after the #endif)
  * ================================================================ */
 #define COMPLETED 4
+#define E_PENDING 0x8000000A
 #define INTERACTIVE 3
 #define LOADED 2
 #define LOADING 1
@@ -33,6 +34,8 @@
 #define NODE_NOTATION 12
 #define NODE_PROCESSING_INSTRUCTION 7
 #define NODE_TEXT 3
+#define S_FALSE 1
+#define S_OK 0
 #define XML_ATTRIBUTE_FIXED 0xC00CE016L
 #define XML_ATTRIBUTE_NOT_DEFINED 0xC00CE015L
 #define XML_ATTRIBUTE_VALUE 0xC00CE017L

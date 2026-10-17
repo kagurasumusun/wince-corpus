@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 62 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 61 extra decls
  */
 #ifndef _MQOAI_
 #define _MQOAI_
@@ -18,7 +18,6 @@
 
 /* function */
 void ArrivedError( Idispatch* Queue, long ErrorCode, long Cursor );
-HRESULT get_ MaxTimeToReachQueue(  long* plMaxTimeToReachQueue  );  HRESULT put_MaxTimeToReachQueue(  long lMaxTimeToReachQueue  );
 HRESULT Refresh(void);
 HRESULT get_Access( long* plAccess );
 HRESULT get_Ack( long* plAck );

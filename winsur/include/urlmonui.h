@@ -1,0 +1,51 @@
+/* urlmonui.h -- Windows CE unified surface
+ *
+ * ONE tree for every CE generation.  Version differences use
+ * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
+ * Win32-shared entries are marked 'win32-ref'.
+ * Generated from wince-docs-corpus knowledge/ by
+ * tools/gen-include-def.py --unified.
+ * 30 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ */
+#ifndef _URLMONUI_
+#define _URLMONUI_
+
+
+/* ==================================================================
+ * constants (one evidence comment per #define; the
+ * #if of a batch covers every #define in it; values
+ * that differ per generation pool into #if/#elif
+ * chains with the evidence after the #endif)
+ * ================================================================ */
+#define URLACTION_ACTIVEX_CONFIRM_NOOBJECTSAFETY 0x00001204
+#define URLACTION_ACTIVEX_OVERRIDE_DATA_SAFETY 0x00001202
+#define URLACTION_ACTIVEX_OVERRIDE_OBJECT_SAFETY 0x00001201
+#define URLACTION_ACTIVEX_OVERRIDE_SCRIPT_SAFETY 0x00001203
+#define URLACTION_ACTIVEX_RUN 0x00001200
+#define URLACTION_AUTHENTICATE_CLIENT 0x00001A01
+#define URLACTION_CLIENT_CERT_PROMPT 0x00001A04
+#define URLACTION_COOKIES 0x00001A02
+#define URLACTION_COOKIES_SESSION 0x00001A03
+#define URLACTION_COOKIES_SESSION_THIRD_PARTY 0x00001A06
+#define URLACTION_COOKIES_THIRD_PARTY 0x00001A05
+#define URLACTION_CREDENTIALS_USE 0x00001A00
+#define URLACTION_CROSS_DOMAIN_DATA 0x00001406
+#define URLACTION_DOWNLOAD_SIGNED_ACTIVEX 0x00001001
+#define URLACTION_DOWNLOAD_UNSIGNED_ACTIVEX 0x00001004
+#define URLACTION_HTML_FONT_DOWNLOAD 0x00001604
+#define URLACTION_HTML_JAVA_RUN 0x00001605
+#define URLACTION_HTML_SUBFRAME_NAVIGATE 0x00001607
+#define URLACTION_HTML_SUBMIT_FORMS 0x00001601
+#define URLACTION_HTML_SUBMIT_FORMS_FROM 0x00001602
+#define URLACTION_SCRIPT_JAVA_USE 0x00001402
+#define URLACTION_SCRIPT_OVERRIDE_SAFETY 0x00001401
+#define URLACTION_SCRIPT_PASTE 0x00001407
+#define URLACTION_SCRIPT_RUN 0x00001400
+#define URLACTION_SCRIPT_SAFE_ACTIVEX 0x00001405
+#define URLACTION_SHELL_FILE_DOWNLOAD 0x00001803
+#define URLACTION_SHELL_INSTALL_DTITEMS 0x00001800
+#define URLACTION_SHELL_MOVE_OR_COPY 0x00001802
+#define URLACTION_SHELL_VERB 0x00001804
+#define URLACTION_SHELL_WEBVIEW_VERB 0x00001805
+
+#endif /* _URLMONUI_ */

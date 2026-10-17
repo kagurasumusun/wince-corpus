@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 14 constants, 23 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 13 constants, 23 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _PM_
 #define _PM_
@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define DX 176
 #define PBT_RESUME 2
 #define POWER_FORCE (DWORD)(0x00001000)
 #define POWER_NAME (DWORD)(0x00000001)

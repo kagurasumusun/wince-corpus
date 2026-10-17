@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1265 constants, 147 declarations, 4 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 1264 constants, 147 declarations, 4 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINGDI_
 #define _WINGDI_
@@ -580,6 +580,7 @@
 #define ENUMPAPERMETRICS 34
 #define EPS_SIGNATURE 0x46535045
 #define EPSPRINTING 33
+#define ERROR 1
 #define ETO_CLIPPED 0x0004
 #define ETO_GLYPH_INDEX 0x0010
 #define ETO_IGNORELANGUAGE 0x1000
@@ -924,7 +925,6 @@
 #define OUT_STROKE_PRECIS 3
 #define OUT_TT_ONLY_PRECIS 7
 #define OUT_TT_PRECIS 4
-#define PAN 0x0446
 #define PAN_ANY 0
 #define PAN_ARMSTYLE_INDEX 6
 #define PAN_BENT_ARMS_DOUBLE_SERIF 11
@@ -1123,7 +1123,6 @@
 #define PS_JOIN_BEVEL 4096
 #define PS_JOIN_MITER 8192
 #define PS_JOIN_ROUND 0
-#define PS_MESSAGE_CLASS0 0
 #define PS_NULL 5
 #define PS_SOLID 0
 #define PS_STYLE_MASK 15

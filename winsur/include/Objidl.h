@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 45 constants, 12 declarations, 37 outlines, 0 base types, 0 extra macros, 71 extra decls
+ * 39 constants, 12 declarations, 37 outlines, 0 base types, 0 extra macros, 71 extra decls
  */
 #ifndef _OBJIDL_
 #define _OBJIDL_
@@ -19,12 +19,6 @@
  * ================================================================ */
 #define COLE_DEFAULT_AUTHINFO (
 #define COLE_DEFAULT_PRINCIPAL (
-#define DVASPECT_CONTENT 1
-#define DVASPECT_DOCPRINT 8
-#define DVASPECT_ICON 4
-#define DVASPECT_OPAQUE 16
-#define DVASPECT_THUMBNAIL 2
-#define DVASPECT_TRANSPARENT 32
 #define EXTCONN_STRONG 0x0001
 #define PIDDSI_BYTECOUNT 0x00000004
 #define PIDDSI_CATEGORY 0x00000002

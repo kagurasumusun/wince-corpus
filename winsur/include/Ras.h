@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 21 constants, 43 declarations, 1 outlines, 0 base types, 0 extra macros, 4 extra decls
+ * 20 constants, 43 declarations, 1 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _RAS_
 #define _RAS_
@@ -17,7 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define RAS_SIZE 128
 #define RASADFUNC RASADFUNCW
 #define RASCS_DONE 0x2000
 #define RASCS_PAUSED 0x1000
@@ -207,19 +206,6 @@ typedef struct tagRasCntlServerLine {
  DWORD dwDevConfigSize;
  BYTE DevConfig[1];
 } RASCNTL_SERVERLINE, *PRASCNTL_SERVERLINE;
-
-/* define  [extra struct] */
-#define RASPPPIPV6 struct tagRASPPPIPV6
-RASPPPIPV6
-{
-  DWORD dwSize;
-  DWORD dwError;
-  BYTE LocalInterfaceIdentifier[8];
-  BYTE PeerInterfaceIdentifier[8];
-  BYTE LocalCompressionProtocol[2];
-  BYTE PeerCompressionProtocol[2];
-};
-#define LPRASPPPIPV6 RASPPPIPV6*;
 
 /* ==================================================================
  * functions and callbacks

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 1 outlines, 0 base types, 0 extra macros, 128 extra decls
+ * 0 constants, 0 declarations, 1 outlines, 0 base types, 0 extra macros, 125 extra decls
  */
 #ifndef _AFXWIN_
 #define _AFXWIN_
@@ -50,7 +50,6 @@ void EnableAutomation( );
 void EndModalLoop( int nResult );
 void EndWaitCursor( );
 BOOL ExecuteDlgInit( LPCTSTR lpszResourceName );
-void Fail( ); throw( CUserException );
 void FillSolidRect( LPCRECT lpRect, COLORREF clr );
 BOOL FmtLines( BOOL bAddEOL );
 int GetBitmap( BITMAP* pBitMap );
@@ -101,8 +100,6 @@ afx_msg void OnVScroll( UINT nSBCode, UINT nPos, CScrollBar* pScrollBar );
 afx_msg void OnWinIniChange ( LPCTSTR lpszSection );
 void ParseCommandLine( CCommandLineInfo& rCmdInfo );
 void Paste( );
-HWND PrepareCtrl( int nIDC ); throw( CNotSupportedException );
-HWND PrepareEditCtrl( int nIDC ); throw( CNotSupportedException );
 BOOL ProcessShellCommand( CCommandLineInfo& rCmdInfo );
 BOOL ReflectChildNotify( UINT message, WPARAM wParam, LPARAM lParam, LRESULT* pResult );
 void RemoveView( CView* pView );

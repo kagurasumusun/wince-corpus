@@ -5,22 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 4 constants, 8 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 8 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _CE_SETUP_
 #define _CE_SETUP_
 
-
-/* ==================================================================
- * constants (one evidence comment per #define; the
- * #if of a batch covers every #define in it; values
- * that differ per generation pool into #if/#elif
- * chains with the evidence after the #endif)
- * ================================================================ */
-#define codeINSTALL_EXIT_DONE 0
-#define codeINSTALL_INIT_CONTINUE 0
-#define codeUNINSTALL_EXIT_DONE 0
-#define codeUNINSTALL_INIT_CONTINUE 0
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

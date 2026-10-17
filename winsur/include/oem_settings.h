@@ -12,19 +12,6 @@
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-/* RDP_TAB_INFO  [struct; ce-only] */
-typedef struct {
- TCHAR szTabName[MAX_PATH];
- DLGPROC pDlgProc;
- UINT uTemplateId;
-} RDP_TAB_INFO, *PRDP_TAB_INFO;
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

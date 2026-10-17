@@ -15,18 +15,18 @@ the SAME tree, marked 'Win32 reference' -- never a second tree.
   with its documented constants first, then the macros, the types
   and the functions; quoted text is verbatim, the `#define`
   keyword and the header/constant filing are derived and say so
-* derived `#define` lines written: **28,747**
+* derived `#define` lines written: **27,859**
 * derived member outlines (structures whose body no page prints):
-  **564** -- marked DERIVED in the fragment
-* constants whose pages disagree / overlap: **33** name(s) examined in `kb/constant-conflicts.tsv`
+  **563** -- marked DERIVED in the fragment
+* constants whose pages disagree / overlap: **31** name(s) examined in `kb/constant-conflicts.tsv`
   (2 of them reach a header fragment in this build;
   **0** resolved by the review in
   `data/constant-value-review.tsv` to a print the pages themselves
   state, the rest get no `#define` -- every one keeps its
   CONFLICT block with the verdict)
-* constants with no header linkage at all: **1,986**
+* constants with no header linkage at all: **2,145**
   (worklist only -- they stay in `constants.tsv`)
-* module `.def` worklists: **266** under `link/`
+* module `.def` worklists: **296** under `link/`
   (per-line version range is a comment; `.def` has no
   conditionals)
 * printed export ordinals: 1 file(s),
@@ -36,11 +36,11 @@ the SAME tree, marked 'Win32 reference' -- never a second tree.
   one marked in the fragment and the manifest; CE and desktop
   values are never assumed equal
 * constants numbered only by the Win32 shared reference (and only
-  for names a CE page documents): **2,046** -- same
+  for names a CE page documents): **2,045** -- same
   tree, every one marked 'verify against the CE SDK'; a number a
   CE page prints always wins
 * spacing-only repairs across CE generations: **0**
-* pages behind this output: 8,325
+* pages behind this output: 8,316
 
 ## Constant/header linkage (kb/constant-headers.tsv)
 
@@ -52,14 +52,15 @@ hint):
 
 | rank | link rows |
 |------|----------:|
-| own-page | 4,466 |
+| own-page | 4,056 |
 | entity-page | 1,366 |
-| constant-entity | 63 |
-| win32-reference | 1,636 |
+| constant-entity | 655 |
+| win32-reference | 1,806 |
 | co-mention | 20 |
-| reference-header | 1,632 |
-| heuristic-prefix | 123 |
-| pinvoke-weak | 18 |
+| reference-header | 4,863 |
+| family-statement | 0 |
+| reviewed | 109 |
+| pinvoke-weak | 84 |
 
 The reference-header ranks come from the pinned, licence-vetted
 public references under `sources/`: their header files *define*
@@ -77,7 +78,7 @@ every `#define` number above is a CE documentation quotation.
 * what they are used for: ONLY the weakest constant/header
   linkage rank above, consumed so that the gap between official
   documentation and community reference is reviewable;
-  **18** linkage rows rest on
+  **84** linkage rows rest on
   them directly, each loudly marked in its header comment, and
   `reports/constant-pinvoke-review.tsv` compares every such
   community value with the documented CE value
@@ -85,7 +86,7 @@ every `#define` number above is a CE documentation quotation.
   pinvoke material (values are CE-page quotations only), no
   entity, no declaration, no requirement is minted from it, and
   no pinvoke statement overrides a documented one
-* Win32-only numbers seen but not used: **2,241**
+* Win32-only numbers seen but not used: **2,240**
   constants (CE and desktop values are not assumed to match)
 
 ## The wall this generator keeps
@@ -97,10 +98,11 @@ every `#define` number above is a CE documentation quotation.
 
 | reason | entities |
 |--------|----------|
-| no declaration in the corpus | 20,583 |
-| declaration is not a C declaration | 17,071 |
+| no declaration in the corpus | 20,592 |
+| declaration is not a C declaration | 17,006 |
 | no header stated | 5,510 |
-| no CE version evidence | 1,504 |
+| no CE version evidence | 1,531 |
+| constant review-rejected (data/constant-header-review.tsv) | 13 |
 
 The skipped entities are the collection worklist, same as in the
 per-version build: `knowledge/reports/gaps.tsv` has the per-entity

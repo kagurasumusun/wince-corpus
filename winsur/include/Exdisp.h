@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 20 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 20 extra decls
+ * 1 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 20 extra decls
  */
 #ifndef _EXDISP_
 #define _EXDISP_
@@ -18,25 +18,6 @@
  * chains with the evidence after the #endif)
  * ================================================================ */
 #define CSC_UPDATECOMMANDS 0xFFFFFFFF
-#define navAllowAutosearch 0x10
-#define navBrowserBar 0x20
-#define navHyperlink 0x40
-#define navNoHistory 0x2
-#define navNoReadFromCache 0x4
-#define navNoWriteToCache 0x8
-#define navOpenInNewWindow 0x1
-#define secureLockIcon128Bit 0x6
-#define secureLockIcon40Bit 0x3
-#define secureLockIcon56Bit 0x4
-#define secureLockIconFortezza 0x5
-#define secureLockIconMixed 0x1
-#define secureLockIconSecure128Bit 0x6
-#define secureLockIconSecure40Bit 0x3
-#define secureLockIconSecure56Bit 0x4
-#define secureLockIconSecureFortezza 0x5
-#define secureLockIconSecureUnknownBits 0x2
-#define secureLockIconUnknownBits 0x2
-#define secureLockIconUnsecure 0
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

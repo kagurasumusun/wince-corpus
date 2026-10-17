@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 254 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 256 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _RICHEDIT_
 #define _RICHEDIT_
@@ -232,8 +232,10 @@
 #define SEL_OBJECT 2
 #define SEL_TEXT 1
 #define SF_NCRFORNONASCII 64
+#define SF_RTF 0x0002
 #define SF_RTFNOOBJS 3
 #define SF_RTFVAL 0x0700
+#define SF_TEXT 0x0001
 #define SF_TEXTIZED 4
 #define SF_UNICODE 16
 #define SF_USECODEPAGE 32

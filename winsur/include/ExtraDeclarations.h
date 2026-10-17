@@ -1,12 +1,10 @@
 /* ExtraDeclarations.h -- declarations without header assignment
- * 5628 unassigned declarations
+ * 5201 unassigned declarations
  */
 #ifndef _EXTRADECLARATIONS_H_
 #define _EXTRADECLARATIONS_H_
 
-typedef int (*HCI_CreateConnection_In)  (HANDLE hDeviceContext,  void *pCallContext,  BD_ADDR *pba,  unsigned short packet_type,  unsigned char page_scan_repetition_mode,  unsigned char page_scan_mode,  unsigned short clock_offset,  unsigned char allow_role_switch);
 Typedef BOOL(* PFN_PDD_GET)(UINT uiRequestId,PVOID pvData,ULONG ulDataLength,ULONG* pulRequiredLength);
-typedef PFN_BltFunction (*PFN_PCodeToCpuCode)(int FnIndex, DWORD * pPCode, GenBltSignature * pBltSig, void * pBltFn);
 typedef int (*HCI_InquiryCompleteEvent) (
  void* pUserContext,
  void* pCallContext,
@@ -2845,18 +2843,6 @@ WINOLEAPI WriteClassStg(  IStorage *pStg,  REFCLSID rclsid  );
 WINOLEAPI WriteClassStm(  IStream *pStm,  REFCLSID rclsid  );
 VOID CREATE_INVALIDGUID(  PCEGUID pceguid);
 VOID CREATE_SYSTEMGUID(  PCEGUID pceguid);
-void GetFirstExceptionItem(IAppointment *pAppt)
-{
-  IRecurrencePattern *pRec;
-  IExceptions *pExceptions;
-  IException *pException;
-  pAppt->GetRecurrencePattern(&pRec);
-  pRec->get_Exceptions(&pExceptions);
-  pExceptions->Item(1, &pException);
-  pRec->Release();
-  pExceptions->Release();
-  pException->Release();
-}
 HTREEITEM TreeView_GetChild(  hwnd,  hitem );
 HTREEITEM TreeView_GetDropHilight(hwnd);
 HTREEITEM TreeView_GetFirstVisible(  hwnd);
@@ -2895,7 +2881,6 @@ BOOL CALLBACK AddPropSheetPageProc(  HPROPSHEETPAGE hpage, LPARAM lParam );
 LONG TSPIAPI TSPI_lineGetProcTable  (  LPTSPI_PROCS *lplpTSpiProcs  )  ;
 ADDRESS Address (void );
 PCHAR CONTAINING_RECORD(  IN PCHAR Address,  IN TYPE Type,  IN PCHAR Field );
-#define MEM_WIDTH_IN_PIXELS 640  #define PIXEL_BYTES 2  #define MEM_HEIGHT 1000  extern unsigned char *memBase;  Node2D AllMem(MEM_WIDTH_IN_PIXELS, MEM_HEIGHT);  Node2D *pSurf1 = AllMem->Alloc( 20, 40 );  Node2D *pSurf2 = AllMem->Alloc( 100, 100 );  int strideInBytes = MEM_WIDTH_IN_PIXELS * PIXEL_BYTES;  unsigned char *ptr1 = memBase + strideInBytes * pSurf1->Top()  + PIXEL_BYTES * pSurf1->Left();  pSurf1->Free();  pSurf2->free();
 extern "C" __declspec(dllexport) DWORD GPS_Init(DWORD dwContext);
 USB_TRANSFER SetFeature(  USB_HANDLE hDevice,  LPTRANSFER_NOTIFY_ROUTINE lpStartAddress,  LPVOID lpvNotifyParameter,  DWORD dwFlags,  WORD wFeature,  UCHAR bIndex );
 USB_TRANSFER SetInterface(  USB_HANDLE hDevice,  LPTRANSFER_NOTIFY_ROUTINE lpStartAddress,  LPVOID lpvNotifyParameter,  DWORD dwFlags,  UCHAR bInterfaceNumber,  UCHAR bAlternateSetting );
@@ -2905,7 +2890,6 @@ VOID TouchPanelSetCalibration(  INT32 cCalibrationPoints,  INT32 *pScreenXBuffer
 DWORD __stdcall ColorControl(  LPDDHAL_COLORCONTROLDATA pccd );
 DWORD __stdcall DestroyDriver(  LPDDHAL_DESTROYDRIVERDATA pddd );
 DWORD __stdcall SetExclusiveMode(  LPDDHAL_SETEXCLUSIVEMODEDATA psemd );
-RECT rcSource, rcDest; DDBLTFX ddbltfx; ZeroMemory(&ddbltfx, sizeof(ddbltfx)); ddbltfx.dwSize = sizeof(ddbltfx); ddbltfx.dwDDFX = DDBLTFX_MIRRORLEFTRIGHT; rcSource.top = 0; rcSource.left = 0; rcSource.bottom = 100; rcSource.right = 200; rcDest.top = 0; rcDest.left = 201; rcDest.bottom = 100; rcDest.right = 401; HRESULT hr = lpDDS->Blt(&rcDest, lpDDS, &rcSource, DDBLT_WAIT | DDBLT_DDFX, &ddbltfx);
 WORD GetBitCount(  const GUID *pSubtype);
 const RGBQUAD * GetBitmapPalette(  const VIDEOINFOHEADER *pVideoInfo);
 const GUID GetBitmapSubtype(  const BITMAPINFOHEADER *pHeader);
@@ -2942,14 +2926,6 @@ POSITION GetHeadPosition( );
 POSITION GetTailPosition( );
 OBJECT *RemoveHead( );
 OBJECT *RemoveTail( );
-int MyFunc(AM_MEDIA_TYPE mt)
-{
-  DbgLog((LOG_TRACE, 2, TEXT("MyFunc: Type %s, Subtype %s"),
-  GuidNames[mt.majortype],
-  GuidNames[mt.subtype]
-  ));
-  ...
-}
 IAsyncReader* GetReader(void);
 T GetQueueObject( );
 CTransInPlaceInputPin *InputPin( );
@@ -2962,7 +2938,6 @@ HINSTANCE LoadOLEAut32( );
 Private Sub object_OpenComplete()
 Private Sub object_StateChange(ByVal oldState As Long, ByVal newState As Long)
 Unable to Start Up ConPMon (earlier conpmon could be shutting down)
-DWORD CALLBACK OpenPerformanceData(  LPWSTR lpDeviceNames  );
 ~CBasePropertyPage(void);
 RESULT GetSourceURL(  DWORD dwSourceIndex,  BSTR* pbstrURL  );
 HRESULT CreateBitmapFromBuffer(  BitmapData* bitmapData,  IBitmapImage** bitmap  )
@@ -3138,33 +3113,6 @@ HRESULT CreateTimer(  ITimer *pReferenceTimer,  ITimer **ppNewTimer  );
 HRESULT GetNamedTimer(  REFGUID rguidName,  ITimer **ppTimer  );
 HRESULT SetNamedTimerReference(  REFGUID rguidName,  ITimer *pReferenceTimer  );
 HRESULT OnTimer(  VARIANT vtimeAdvise  );
-IHeaderCollection *pAbortHeaderCollection = NULL;
-IObexDevice *pObexDevice = NULL;
-If(SUCCEEDED(CoCreateInstance(CLSID_HeaderCollection,
-NULL,
-CLSCTX_INPROC_SERVER,
-IID_IHeaderCollection,
-(void**)&pAbortHeaderCollection))
-&& NULL !=pAbortHeaderCollection)
-{
-  pObexDevice->Abort(pAbortHeaderCollection);
-  pAbortHeaderCollection->Release();
-}
-void GetCalendarFolder (IPOutlookApplication *polApp)
-{
-  IFolder *pFolder;
-  polApp->GetDefaultFolder (olFolderCalendar, &pFolder);
-  pFolder->Release ();
-}
-void GetAnItemsCollection (IPOutlookApp *polApp)
-{
-  IPOutlookItemCollection *pItems;
-  IFolder *pFolder;
-  polApp->GetDefaultFolder (olFolderTasks, &pFolder);
-  pFolder->get_Items (&pItems);
-  pItems->Release ();
-  pFolder->Release ();
-}
 inline HRESULT SpGetDescription(  ISpObjectToken* pObjToken,  WCHAR** ppszDescription,  LANGID* Language = SpGetUserDefaultUILanguage()  );
 BOOL LaunchConnectionDialog(  HWND hParent  );
 BOOL LaunchInternetControlPanel(  HWND hParent  );
@@ -3222,24 +3170,6 @@ BSTR _GetOSVer( void );
 long _LangHost( void );
 BSTR _Name( void );
 BSTR _StrConv( BSTR string, Integer convertFlag );
-LRESULT FNEXPORT DriverProc ( DWORD dwID, HDRVR hdrvr, UINT uMsg, LPARAM lParam1, LPARAM lParam2 )
-BOOL DM_DevDeviceIoControl(
-fsopendev_t *fsodev,
-DWORD dwIoControlCode,
-LPVOID lpInBuf,
-DWORD nInBufSize,
-LPVOID lpOutBuf,
-DWORD nOutBufSize,
-LPDWORD lpBytesReturned,
-LPOVERLAPPED lpOverlapped)
-{
-  BOOL retval = FALSE;
-  DWORD dodec = 0;
-  LPEXCEPTION_POINTERS pep;
-  lpInBuf = MapCallerPtr(lpInBuf,nInBufSize);
-  lpOutBuf = MapCallerPtr(lpOutBuf,nOutBufSize);
-}
-NTSTATUS UsbClassVendorCommand( IN PDEVICE_OBJECT PDevObj,  IN UCHAR Request, IN USHORT Value,  IN USHORT Index,  IN PVOID Buffer, IN OUT PULONG BufferLen,  IN BOOLEAN Read,  IN ULONG Class  );
 Private Subobject_StateChange(ByValoldStateAs Long,ByValnewStateAs Long)
 long DRM_ND_DeregisterFromService ( BSTR sServerUDN, );
 long DRM_ND_RegisterWithService ( BSTR sOurUDN, BSTR sServerUDN, IUPnPService *pService );
@@ -3281,35 +3211,9 @@ enum {
   CESVC_CUSTOM_MENUS,
   CESVC_SYNCX
 };
-char *_strnset( char *string, int c, size_t count );wchar_t *_wcsnset( wchar_t *string, wchar_tc, size_tcount );
 FILE *_wfreopen( const wchar_t*path,constwchar_t*mode,FILE*stream);
-Class ClearTypeBlt : public GPE SCODE ClearTypeBltDst16 (GPEBltParms *); SCODE ClearTypeBltDst24 (GPEBltParms *); SCODE ClearTypeBltDst32 (GPEBltParms *);
-SVSCookie btutil_ScheduleEvent ( LPTHREAD_START_ROUTINE pfn, LPVOID lpParameter, unsigned long ulDelayTime ); int btutil_UnScheduleEvent (SVSCookie ulCookie);
 HRESULT GetDescriptionTables( [out, size_is(, *pcProcField)] PTM_FIELD_DESC**ppfdProcDescTable, [out] DWORD*pcProcField, [out, size_is(,*pcThreadField)] PTM_FIELD_DESC**ppfdThreadDescTable, [out] DWORD*pcThreadField, [out, size_is(, *pcModField)] PTM_FIELD_DESC**ppfdModDescTable, [out] DWORD*pcModField);
-void PrintTimeStamp(
-DWORD dwTimeStamp,
-DWORD dwFrequency
-)
-{
-  __int64 iVal;
-  DWORD dwHours, dwMinutes, dwSeconds, dwMilli, dwMicro;
-  iVal = (__int64) dwTimeStamp * 1000000;
-  iVal = iVal / dwFrequency;
-  dwMicro = (DWORD) ((iVal / (1)) % 1000);
-  dwMilli = (DWORD) ((iVal / (1000)) % 1000);
-  dwSeconds = (DWORD) ((iVal / (1000 * 1000)) % 60);
-  dwMinutes = (DWORD) ((iVal / (1000 * 1000 * 60)) % 60);
-  dwHours = (DWORD) ((iVal / ((__int64) 1000 * 1000 * 60 * 60)));
-  printf(TEXT("%2d:%02d:%02d.%03d.%03d"),
-  dwHours, dwMinutes, dwSeconds, dwMilli, dwMicro);
-}
-#pragma include_alias("StandardIO", ) // warning
-#pragma code_seg("") // warning void main() {}
 DWORD IsMessageBoxHandled( HWND hWnd, UINT uText, UINT uCaption, UINT uType)
-#pragma data_seg("MYDATA") #pragma code_seg("MYDATA") // error
-inline inline void no_op( void ) { };
-#pragma check_stack yes // warning #pragma check_stack + #pragma check_stack (on)
-#pragma inline_depth( 10, 18, 67 ) // warning
 #pragma runtime_checks("",off) // ignore any RTC compiler options ... #pragma runtime_checks("",restore) // restore compiler option settings
 Private Subobject_OpenComplete()
 unsigned __int64 __cdecl __ull_rshift(unsigned__int64,int);
@@ -3397,17 +3301,6 @@ RESULT get_EventPackage( BSTR* pbstrEventPackage );
 HRESULT PHCreateLabeledEditDisplayItem( WCHAR* pLabelText, DWORD EditStyle, int EditTextLimit, IVoIPDisplayItem** ppItem, int DefaultLabelWidth = -1,  UINT DefaultInputMode = (UINT)-1  );
 void* WSDAllocateLinkedMemory( void* pParent, size_t cbSize );
 COLORREF RGBA( BYTE byRed, BYTE byGreen, BYTE byBlue, BYTE alpha );
-protected override void
-OnCommandPacketCreated (CommandTransport transport)
-{
-  transport.CommandReceived +=
-  new EventHandler
-  (transport_CommandReceived);
-}
-void transport_CommandReceived
-(object sender, CommandTransportCommandEventArgs e)
-{
-}
 public void RunOnThread ( Control control, AnonymousDelegate handler )
 DeviceConnection get_DeviceConnection ()
 public boolean get_PluginClosing ()
@@ -3633,96 +3526,6 @@ BOOL CAM_IOControl(
  DWORD OutBufLen,
  DWORD* pdwBytesTransferred
 );
-Class ClearTypeBlt : public GPE
-SCODE ClearTypeBltDst16 (GPEBltParms *);
-SCODE ClearTypeBltDst24 (GPEBltParms *);
-SCODE ClearTypeBltDst32 (GPEBltParms *);
-HRESULT hr; 
-IVIO_Device *pEngineRPM; 
-//Create the event sink; CEngineRPMSink is derived from //IVIO_EventSink. 
-IVIO_EventSink *iRpmSink = new CEngineRPMSink; 
-//Create an instance of the engine RPM device and get its 
-//IVIO_Device interface. 
-hr = CoCreateInstance(CLSID_VIO_ENGINE_RPM, NULL, 
- CLSCTX_INPROC_SERVER, IID_VIODEVICE, 
- &pEngineRPM); 
-//Set the notification sink to notify every half second. 
-pEngineRPM->SetNotify(NULL, iRpmSink, 500); 
-. 
-. 
-. //Turn off the notification sink. 
-pVehicleSpeed->SetNotify(NULL, NULL, 0); 
-//Release the reference to the event sink. 
-iRpmSink->Release(); 
-//Release the reference to the interface. 
-pEngineRPM->Release();
-HRESULT hr; 
-IVIO_Device *pLatchControl; 
-VARIANT vLatchState; 
-//Initialize the VARIANT. 
-VariantInit(&vLatchState); 
-hr = CoCreateInstance(CLSID_VIO_LATCH_CONTROL, NULL, 
- CLSCTX_INPROC_SERVER, IID_VIODEVICE, 
- &pLatchControl); 
-//Set the VARIANT to pop the gas cap switch. 
-vLatchState.vt = VT_UI4; 
-vLatchState.ulVal = VIOLATCH_GAS_CAP; 
-//Send the command to the vehicle. 
-pLatchControl->SetData(&vLatchState, 3000); 
-//Release the reference to the interface. 
-pLatchControl->Release();
-HRESULT hr; 
-IVIO_Device *pLockState; 
-VARIANT vLockInfo; 
-//Initialize the VARIANT. 
-VariantInit(&vLockInfo); 
-hr = CoCreateInstance(CLSID_VIO_LOCK_STATE, NULL, 
- CLSCTX_INPROC_SERVER, IID_VIODEVICE, 
- &pLockState); 
-//Set the VARIANT to lock the doors. 
-vLockInfo.vt = VT_UI4; 
-vLockInfo.ulVal = VIOLOCKS_LOCKED; 
-//Send the command to the vehicle. 
-pLatchControl->SetData(&vLatchState, 3000); 
-//Release the reference to the interface. 
-pLockState->Release();
-HRESULT hr; 
-IVIO_Device *pOdometer; 
-//Create an event sink object; iOdometerSink is derived from //IVIO_EventSink. 
-IVIO_EventSink *iOdometerSink = new COdometerSink; 
-//Create an instance of the odometer device and get its 
-//IVIO_Device interface. 
-hr = CoCreateInstance(CLSID_VIO_ODOMETER, NULL, 
- CLSCTX_INPROC_SERVER, IID_VIODEVICE, 
- &pOdometer); 
-//Set the notification sink to notify every five seconds. 
-pOdometer->SetNotify(NULL, iOdometerSink, 5000); 
-. . . 
-//Remove the notification sink. 
-pOdometer->SetNotify(NULL, NULL, 0); 
-//Release the reference to the interface. 
-pOdometer->Release(); 
-//Release the event sink object. 
-iOdometerSink->Release();
-HRESULT hr; 
-IVIO_Device *pVehicleSpeed; 
-//Create the event sink - CVehicleSpeedSink is derived from //IVIO_EventSink. 
-IVIO_EventSink *iSpeedSink = new CVehicleSpeedSink; 
-//Create an instance of the vehicle speed device and get its 
-//IVIO_Device interface. 
-hr = CoCreateInstance(CLSID_VIO_VEHICLE_SPEED, NULL, 
- CLSCTX_INPROC_SERVER, IID_VIODEVICE, 
- &pVehicleSpeed); 
-//Set the notification sink to notify every half second. 
-pVehicleSpeed->SetNotify(NULL, iSpeedSink, 500); 
-. 
-. 
-//Turn off the notification sink. 
-pVehicleSpeed->SetNotify(NULL, NULL, 0); 
-//Release the reference to the vehicle speed device. 
-pVehicleSpeed->Release(); 
-//Release the reference to the event sink. 
-iSpeedSink->Release();
 Private Sub treeview_Collapse(index)
 Private Sub listview_ColumnClick(index)
 Private Sub commandbar_ComboBoxChange(combobox)
@@ -3750,42 +3553,7 @@ public DataSchemaErrorTask(
 )
 Private Sub object_ItemCheck()
 Private Sub grid_LeaveCell( )
-/// <summary>
-/// Test cases always want logging, so they generally use the
-/// Summary level (lowest level) which is always logged.
-/// </summary>
-public void TestCaseMethod()
-{
- // This will always be logged
- GlobalLogger.AddComment(
- GlobalLogger.VerboseLevel.Summary, "Test case");
- // This will also always be logged
- GlobalLogger.AddComment("Test case comment");
-}
 Private Sub object_MenuClick(menu)
-// Assume there is a 640x1000-pixel line 
-// block of memory starting at memBase 
-// to be allocated as a rectangle. 
-#define MEM_WIDTH_IN_PIXELS 640 
-#define PIXEL_BYTES 2 
-#define MEM_HEIGHT 1000 
-extern unsigned char *memBase; 
-Node2D AllMem(MEM_WIDTH_IN_PIXELS, MEM_HEIGHT); 
-// Allocations are done in pixels. 
-// Create a 20x40 surface. 
-Node2D *pSurf1 = AllMem->Alloc( 20, 40 ); 
-// Check that pSurf1 is not NULL. 
-// Create a 100x100 surface. 
-Node2D *pSurf2 = AllMem->Alloc( 100, 100 ); 
-// Check that pSurf2 is not NULL. 
-int strideInBytes = MEM_WIDTH_IN_PIXELS * PIXEL_BYTES; 
-// Create a pointer the the top left of the block of 
-// memory in surf1. 
-unsigned char *ptr1 = memBase + strideInBytes * pSurf1->Top() 
-+ PIXEL_BYTES * pSurf1->Left(); 
-// Now delete the surface(s). 
-pSurf1->Free(); 
-pSurf2->free();
 Private Sub treeview_NodeClick(index)
 BOOL OEMIsROM(
  LPVOID pvAddr,
@@ -3822,9 +3590,9 @@ Private Sub timer_Timer( )
 interface IFst { HRESULT fst(BSTR b); HRESULT fst(long l); };
 #pragma keyword("interface", on)
 #pragma warning(disable:4199)
-interface IX1 {
+interface IX2 {
   public:
-  [ property(get={0, 1}) ]
+  [ property(get=3) ] // 3 is not a valid value to the get parameter
   int Size;
 };
 interface I1 {
@@ -3834,176 +3602,6 @@ interface I2 {
 interface I3 : I1, I2 {
 };
 interface IX11 { [ property, id(1), helpstring("Help!") ] // id and helpstring not valid on property int Size; };
-#define ARRAYSIZE(hArray) sizeof (hArray) / sizeof (HANDLE)
-enum
-{
-  WAD_ALLINPUT = 0x0000,
-  WAD_SENDMESSAGE = 0x0001,
-};
-DWORD WaitAndDispatch (DWORD nCount, HANDLE *phWait, DWORD dwTimeout,
-UINT uFlags)
-{
-  DWORD dwObj;
-  DWORD dwStart = GetTickCount ();
-  DWORD dwTimeLeft = dwTimeout;
-  for (;;)
-  {
-    dwObj= MsgWaitForMultipleObjects (nCount, phWait, FALSE, dwTimeLeft,
-    (uFlags & WAD_SENDMESSAGE) ? QS_SENDMESSAGE : QS_ALLINPUT);
-    if (dwObj == (DWORD)-1)
-    {
-      dwObj = WaitForMultipleObjects (nCount, phWait, FALSE, 100);
-      if (dwObj == (DWORD)-1)
-      break;
-    }
-    else
-    {
-      if (dwObj == WAIT_TIMEOUT)
-      break;
-    }
-    if ((UINT)(dwObj - WAIT_OBJECT_0) < nCount)
-    break;
-    MSG msg;
-    if (uFlags & WAD_SENDMESSAGE)
-    PeekMessage (&msg, NULL, 0, 0, PM_NOREMOVE);
-    else
-    {
-      while (PeekMessage (&msg, NULL, 0, 0, PM_REMOVE))
-      DispatchMessage (&msg);
-    }
-    if (INFINITE != dwTimeout)
-    {
-      dwTimeLeft = dwTimeout - (GetTickCount () - dwStart);
-      if ((int)dwTimeLeft < 0)
-      break;
-    }
-  }
-  return dwObj;
-}
-HRESULT InitRapi (HANDLE hExit)
-{
-  RAPIINIT rapiinit = {sizeof (RAPIINIT)};
-  HRESULT hResult = CeRapiInitEx (&rapiinit);
-  if (FAILED(hResult))
-  return hResult;
-  HANDLE hWait[] = {hExit, rapiinit.heRapiInit};
-  enum {WAIT_EXIT=WAIT_OBJECT_0, WAIT_INIT};
-  DWORD dwObj = WaitAndDispatch (ARRAYSIZE(hWait), hWait, 1000, 1);
-  if (WAIT_INIT == dwObj)
-  {
-    if (FAILED(rapiinit.hrRapiInit))
-    CeRapiUninit ();
-    return rapiinit.hrRapiInit;
-  }
-  CeRapiUninit ();
-  if (WAIT_EXIT == dwObj)
-  return HRESULT_FROM_WIN32(ERROR_CANCELLED);
-  return E_FAIL;
-};
-#define MAX_HWXRESULT 10
-HANDLE hMem = GlobalAlloc(GHND, MAX_HWXRESULT * (sizeof(HWXRESULTS) + (5-1) * sizeof(WCHAR)) );
-HWXRESULTS * rgBoxR = (HWXRESULTS * ) GlobalLock( hMem);
-do
-{
-  int iRes = HwxGetResults ( hrc, 5, indx, MAX_HWXRESULT, rgBoxR);
-  if( HRCR_ERROR == iRes )
-  {
-    break;
-  }
-  if( (0 iRes) )
-  {
-    indx += (UINT) iRes;
-  }
-  else
-  {
-  }
-}
-while (iRes == 10);
-#define SF_UTEXT 0x0005
-#define HSE_URL_FLAGS_READ 0x00000001 #define HSE_URL_FLAGS_EXECUTE 0x00000004 #define HSE_URL_FLAGS_SCRIPT 0x00000200
-#define DECLARE_IUNKNOWN
-#define FADF_AUTO 0x0001 #define FADF_STATIC 0x0002 #define FADF_EMBEDDED 0x0004 #define FADF_FIXEDSIZE 0x0010 #define FADF_BSTR 0x0100 #define FADF_UNKNOWN 0x0200 #define FADF_DISPATCH 0x0400 #define FADF_VARIANT 0x0800 #define FADF_RESERVED 0xF0E8
-#define MSR_START(  int Id)
-#define MSR_STOP(  int Id)
-#define BSF_SHOW_FATAL_ERRORS ((UINT)0x00000004)  #define BSF_SHOW_RESOLVE_ERRORS ((UINT)0x00000008)
-#define SDP_RECORD_SIZE 0x00000043
-#define OEM_CUSTOM_PRIMITIVE_TYPE 0x2
-#define OEM_CUSTOM_VIRTUAL_TYPE 0x1
-#define SetTextureColorStage( dev, i, arg1, op, arg2 ) \  dev->SetTextureStageState( i, D3DMTSS_COLOROP, op); \  dev->SetTextureStageState( i, D3DMTSS_COLORARG1, arg1 ); \  dev->SetTextureStageState( i, D3DMTSS_COLORARG2, arg2 );  #define SetTextureAlphaStage( dev, i, arg1, op, arg2 ) \  dev->SetTextureStageState( i, D3DMTSS_ALPHAOP, op); \  dev->SetTextureStageState( i, D3DMTSS_ALPHARG1, arg1 ); \  dev->SetTextureStageState( i D3DMTSS_ALPHARG2, arg2 );
-#define D3DMCREATE_MULTITHREADED 0x00000004
-#define D3DMCURRENT_DISPLAY_MODE 0x00EFFFFF
-#define D3DMPRESENTFLAG_LOCKABLE_BACKBUFFER 0x00000001
-#define IMPLTYPEFLAG_FDEFAULT 0x1  #define IMPLTYPEFLAG_FSOURCE 0x2  #define IMPLTYPEFLAG_FRESTRICTED 0x4  #define IMPLTYPEFLAG_FDEFAULTVTABLE 0x8
-#define DVD_SYSTEM_SPACE_BIT 1 #define DVD_MENU_SPACE_BIT (DVD_SYSTEM_SPACE_BIT << 1) #define DVD_VMG_SPACE_BIT (DVD_MENU_SPACE_BIT << 1) #define DVD_VTS_SPACE_BIT (DVD_VMG_SPACE_BIT << 1) #define DVD_NAVSTATREQ_VOLUME_BIT 1 #define DVD_NAVSTATREQ_HIGHLIGHT_BIT (DVD_NAVSTATREQ_VOLUME_BIT << 1) #define DVD_NAVSTATREQ_PCI_BIT (DVD_NAVSTATREQ_HIGHLIGHT_BIT << 1) #define DVD_PROGRAM_PREVIOUS 0 #define DVD_PROGRAM_NEXT 1 #define DVD_PROGRAM_TOP 2 #define DVD_MENU_TITLE 0 #define DVD_MENU_ROOT 1 #define DVD_MENU_SUBPICTURE 2 #define DVD_MENU_AUDIO 3 #define DVD_MENU_ANGLE 4 #define DVD_MENU_PTT 5 #define DVD_SELECT_UPPER 0 #define DVD_SELECT_RIGHT 1 #define DVD_SELECT_LOWER 2 #define DVD_SELECT_LEFT 3 #define DVD_SCANCAP_FORWARD_SCAN 0x1 #define DVD_SCANCAP_FORWARD_SLOW 0x2 #define DVD_SCANCAP_FORWARD_SINGLE 0x4 #define DVD_SCANCAP_BACKWARD_SCAN 0x8 #define DVD_SCANCAP_BACKWARD_SLOW 0x10 #define DVD_SCANCAP_BACKWARD_SINGLE 0x20 #define SPRM_M_LCD 0 #define SPRM_ASTN 1 #define SPRM_SPSTN 2 #define SPRM_AGLN 3 #define SPRM_TTN 4 #define SPRM_VTS_TTN 5 #define SPRM_TT_PGCN 6 #define SPRM_PTTN 7 #define SPRM_HL_BTNN 8 #define SPRM_NV_TMR 9 #define SPRM_NV_TMR_PGCN 10 #define SPRM_P_AMXMD 11 #define SPRM_CTY_CD 12 #define SPRM_PTL_LVL 13 #define SPRM_P_CFG_VIDEO 14 #define SPRM_P_CFG_AUDIO 15 #define SPRM_INI_LCD_AST 16 #define SPRM_INI_LCD_EXT_AST 17 #define SPRM_INI_LCD_SPST 18 #define SPRM_INI_LCD_EXT_SPST 19 #define SPRM_REGION 20
-#define MulDiv(a,b,c) (((a)*(b))/(c))
-#define ALPHA_SHIFT 24 #define RED_SHIFT 16 #define GREEN_SHIFT 8 #define BLUE_SHIFT 0 #define ALPHA_MASK ((ARGB) 0xff << ALPHA_SHIFT) #define MAKEARGB(a, r, g, b) \ (((ARGB) ((a) & 0xff) << ALPHA_SHIFT)| \ ((ARGB) ((r) & 0xff) << RED_SHIFT) | \ ((ARGB) ((g) & 0xff) << GREEN_SHIFT)| \ ((ARGB) ((b) & 0xff) << BLUE_SHIFT))
-#define LDAP_OPT_SIGN 0x95  #define LDAP_OPT_ENCRYPT 0x96
-#define OBEX_RESP_RESPOND 0x00000001  #define OBEX_RESP_OK 0x00000002  #define OBEX_RESP_ACCEPT 0x00000003  #define OBEX_RESP_REJECT 0x00000004  #define OBEX_RESP_DENY 0x00000005  #define OBEX_RESP_CONTINUE 0x00000006  #define OBEX_RESP_ABORT 0x00000007  #define OBEX_RESP_DISCONNECT 0x00000008  #define OBEX_RESP_HANGUP 0x00000009
-#define SPDUI_AddRemoveWord L"AddRemoveWord"
-#define SPDUI_AudioProperties L"AudioProperties"
-#define SPDUI_AudioVolume L"AudioVolume"
-#define SPDUI_EngineProperties L"EngineProperties"
-#define SPDUI_MicTraining L"MicTraining"
-#define SPDUI_RecoProfileProperties L"RecoProfileProperties"
-#define SPDUI_UserTraining L"UserTraining"
-#define DNS_TEXT_RECORD_LENGTH(StringCount) \  (sizeof(DWORD) + ((StringCount) * sizeof(PCHAR)))  #define DNS_NULL_RECORD_LENGTH(ByteCount) \  (sizeof(DWORD) + (ByteCount))  #define DNS_WKS_RECORD_LENGTH(ByteCount) \  (sizeof(DNS_WKS_DATA) + (ByteCount-1))  #define DNS_WINS_RECORD_LENGTH(IpCount) \  (sizeof(DNS_WINS_DATA) + ((IpCount-1) * sizeof(IP_ADDRESS)))
-#define PATHLENGTH 256  HWND hwndSubclass; HANDLE hIconProp, hCursProp;  TCHAR *lpFilename;  TCHAR tchBuffer[PATHLENGTH];  int nSize;  HDC hdc;  hIconProp = (HICON) GetProp(hwndSubclass, TEXT("PROP_ICON"));  ExtTextOut(hdc, 10, 40, 0, NULL, TEXT("PROP_ICON"),  _tcslen(TEXT("PROP_ICON")));  DrawIcon(hdc, 90, 40, hIconProp);  hCursProp = (HCURSOR) GetProp(hwndSubclass, TEXT("PROP_CURSOR"));  ExtTextOut(hdc, 10, 85, 0, NULL, TEXT("PROP_CURSOR"),  _tcslen(TEXT("PROP_CURSOR")));  DrawIcon(hdc, 110, 85, hCursProp);  lpFilename = (TCHAR*) GetProp(hwndSubclass, TEXT("PROP_BUFFER"));  nSize = _stprintf(tchBuffer, TEXT("Path to file: %s"), lpFilename);  ExtTextOut(hdc, 10, 10, 0, NULL, tchBuffer, nSize);
-#define WC_CAPEDIT L"CAPEDIT"
-#define WC_SBEDIT L"sbedit"
-#define SHIDIM_FLAGS 0x0001
-#define WC_SIPPREF L"SIPPREF"
-#define FL2FX(x) ((ULONG) (32768.0 * (x)))
-MMRESULT SetRate(HWAVEOUT hwo, double rate)
-{
-  return waveOutSetPlaybackRate(hwo, FL2FX(rate));
-}
-#define OALLogV NkvDbgPrintfW
-#define toupper(c) ( (islower(c)) ? _toupper(c) : (c) )
-#define STRSAFE_NO_DEPRECATE
-#define STRSAFE_NO_CB_FUNCTIONS
-#define STRSAFE_NO_CCH_FUNCTIONS
-#define PROTECTION_LEVEL_RESTRICTED 10 /* for Intranet apps /* #define PROTECTION_LEVEL_DEFAULT 20 /* default level /* #define PROTECTION_LEVEL_UNRESTRICTED 30 /* for peer-to-peer apps /*
-#define HSE_URL_FLAGS_READ 0x00000001 #define HSE_URL_FLAGS_WRITE 0x00000002 #define HSE_URL_FLAGS_EXECUTE 0x00000004 #define HSE_URL_FLAGS_SSL 0x00000008 #define HSE_URL_FLAGS_NEGO_CERT 0x00000020 #define HSE_URL_FLAGS_REQUIRE_CERT 0x00000040 #define HSE_URL_FLAGS_MAP_CERT 0x00000080 #define HSE_URL_FLAGS_SSL128 0x00000100 #define HSE_URL_FLAGS_SCRIPT 0x00000200 #define HSE_URL_FLAGS_SCRIPT_SOURCE 0x00000400
-#define DVD_AUDIOCAP_AC3 0x4000#define DVD_AUDIOCAP_MPEG 0x1000#define DVD_AUDIOCAP_DTS 0x0800#define DVD_AUDIOCAP_SDDS 0x0400#define DVD_AUDIOCAP_LPCM_KARAOKE 0x0080#define DVD_AUDIOCAP_AC3_KARAOKE 0x0040#define DVD_AUDIOCAP_MPEG_KARAOKE 0x0010#define DVD_AUDIOCAP_DTS_KARAOKE 0x0008#define DVD_AUDIOCAP_SDDS_KARAOKE 0x0004#define DVD_SCANCAP_FORWARD_SCAN 0x1#define DVD_SCANCAP_FORWARD_SLOW 0x2#define DVD_SCANCAP_FORWARD_SINGLE 0x4#define DVD_SCANCAP_BACKWARD_SCAN 0x8#define DVD_SCANCAP_BACKWARD_SLOW 0x10#define DVD_SCANCAP_BACKWARD_SINGLE 0x20
-#define keybd_driver "MyKeyboardDriver.dll"
-#define DEBUG_IOCTL ((ULONG) 0x00000001) #define DEBUG_ATR ((ULONG) 0x00000002) #define DEBUG_PROTOCOL ((ULONG) 0x00000004) #define DEBUG_DRIVER ((ULONG) 0x00000008) #define DEBUG_TRACE ((ULONG) 0x00000010) #define DEBUG_ERROR ((ULONG) 0x00000020) #define DEBUG_BREAK ((ULONG) 0x80000000) #define DEBUG_ALL ((ULONG) 0x7FFFFFFF)
-#define DRIVERS_DIR $(_WINCEROOT)\public\common\oak\drivers
-#define DDGPEALLOCSURFACEDATA_VERSION0(0)#define DDGPEALLOCSURFACEDATA_CURRENTVERSION (DDGPEBLTPARMS_VERSION0)struct DDGPEAllocSurfaceData{DDGPEStandardHeader; DWORD dwCreateFlags; int nWidth; int nHeight; int nStride; int nSurfaceFlags; unsigned char*pBits; EGPEFormat gpeFormat; EDDGPEPixelFormat* ddgpePixelFormat};
-#define DDGPEBLTPARMS_VERSION0(0)#define DDGPEBLTPARMS_CURRENTVERSION(DDGPEBLTPARMS_VERSION0) struct DDGPEBltParms {GPEBltParms gpeBltParms;DDGPEStandardHeader};
-#define GPEMODEEX_VERSION0(0)#define GPEMODEEX_CURRENTVERSION(GPEMODEEX_VERSION0) struct GPEModeEx {GPEMode modeInfo;DDGPEStandardHeader;EDDGPEPixelFormat ePixelFormat;DWORD dwPixelFourCC;DWORD dwPixelFormatData;LONG lPitch;DWORD dwFlags;DWORD dwRBitMask;DWORD dwGBitMask;DWORD dwBBitMask;DWORD dwAlphaBitMask };
-#define LOC_HKL_DEFAULT ""
-#define CACHE_ENTRY_BUFFER_SIZE (1024*5) DWORD dwBufferSize=0; LPINTERNET_CACHE_ENTRY_INFO lpCacheEntry; dwBufferSize = CACHE_ENTRY_BUFFER_SIZE; lpCacheEntry = (LPINTERNET_CACHE_ENTRY_INFO)LocalAlloc(LPTR,CACHE_ENTRY_BUFFER_SIZE); BOOL bValue = GetUrlCacheEntryInfo(lpszUrl,lpCacheEntry,&dwBufferSize);
-#define variable_name [variable_value]
-#define DISABLEFAULTS() (UTlsPtr () [TLSSLOT_KERNEL] |= (TLSKERN_NOFAULTMSG | TLSKERN_NOFAULT))
-#define ENABLEFAULTS() (UTlsPtr () [TLSSLOT_KERNEL] &= ~(TLSKERN_NOFAULTMSG | TLSKERN_NOFAULT))
-DISABLEFAULTS();
-__try
-{
-  bDataOut = *((BYTE *)pAddr);
-}
-__except (EXCEPTION_EXECUTE_HANDLER)
-{
-  ++ dwExceptionCount;
-}
-ENABLEFAULTS();
-#define mac(a,b) ##a // error
-#define print(a) printf(#b) // error
-#define BOTTESINI \ if (1) { \ } \
-#define DOSWIN32
-#define declint( varname ) int #varname; declint( a ); //Warning, int a;; declint( b ) //OK, int b;
-#define ALTERNATE_ENTRY(Name) \ .globl Name; \ Name:; #define LEAF_ENTRY(Name) \ .text; \ .globl Name; \ .ent Name, 0; \ Name:; \ .frame sp, 0, ra; \ .prologue 0; #define NESTED_ENTRY(Name, fsize, retrg) \ .text; \ .globl Name; \ .ent Name, 0; \ Name:; \ .frame sp, fsize, retrg; #define ALTERNATE_ENTRY_S(Name) \ .globl Name; \ Name:; #define SYSTEM_ENTRY(Name) \ .text; \ .globl Name; \ .ent Name, 0; \ Name:; \ .frame sp, 0, ra; \ .prologue 0; #define LEAF_ENTRY_S(Name, Section) \ .text Section; \ .globl Name; \ .ent Name, 0; \ Name:; \ .frame sp, 0, ra; \ .prologue 0; #define NESTED_ENTRY_S(Name, fsize, retrg, Section) \ .text Section; \ .globl Name; \ .ent Name, 0; \ Name:; \ .frame sp, fsize, retrg; #define EXCEPTION_HANDLER(Handler) \ .edata 1, Handler; #define PROLOGUE_END .prologue 1;
-#define D3DFVF_TEXTUREFORMAT1 3 // one floating point value #define D3DFVF_TEXTUREFORMAT2 0 // two floating point values #define D3DFVF_TEXTUREFORMAT3 1 // three floating point values #define D3DFVF_TEXTUREFORMAT4 2 // four floating point values
-#define CeCreateTokenFromAccount
-#define CeCreateTokenFromAccount_Trap WIN32_FS_CALL( HANDLE, 100, (LPCWSTR pszAccountName)).
-#define OEM_BLOCK_RESERVED 0x01 #define OEM_BLOCK_READONLY 0x02
-#define DRVM_MAPPER 0x2000 #define DRVM_MAPPER_PREFERRED_GET (DRVM_MAPPER+21)  #define DRVM_MAPPER_PREFERRED_SET (DRVM_MAPPER+22)
-#define OEM_FLASH_PARAMETER_GUID 0A0C7E46-3399-4021-90C8-FA6D389C4BA2
-#define LINE_GPRSCLASS dwParam1 = LINE_GPRSCLASS; dwParam2; dwParam3;
-#define _OLE2_H_ #define NOIME
-#define WINAPI __declspec(nothrow) __stdcall 
-void WINAPI foo1();
-void __declspec(nothrow) __stdcall foo2();
-void __stdcall foo3() throw();
 typedef struct CVF { D3DMVECTOR position; D3DMVECTOR normal; D3DMCOLOR diffuse; float u, v; // 1st set, 2-D float t; // 2nd set, 1-D } CustomVertexFormat;
 typedef struct _DDHAL_DDEXEBUFCALLBACKS { DWORD dwSize; DWORD dwFlags; LPDDHALEXEBUFCB_CANCREATEEXEBUF CanCreateExecuteBuffer; LPDDHALEXEBUFCB_CREATEEXEBUF CreateExecuteBuffer; LPDDHALEXEBUFCB_DESTROYEXEBUF DestroyExecuteBuffer; LPDDHALEXEBUFCB_LOCKEXEBUF LockExecuteBuffer; LPDDHALEXEBUFCB_UNLOCKEXEBUF UnlockExecuteBuffer; } DDHAL_DDEXEBUFCALLBACKS;
 typedef struct _GUID { DWORD Data1; WORD Data2; WORD Data3; BYTE Data4[8]; } GUID;
@@ -4042,14 +3640,6 @@ typedef struct _ServicesExeCallbackFunctions { PFN_SERVICE_SHUTDOWN pfnServiceSh
 typedef struct StringFileInfo { WORD wLength; WORD wValueLength; WORD wType; WCHAR szKey[]; WORD Padding[]; StringTable Children[]; } StringFileInfo;
 typedef struct tagTZREG { LONG Bias; LONG StandardBias; LONG DaylightBias; SYSTEMTIME StandardDate; SYSTEMTIME DaylightDate; } TZREG;
 typedef struct _WAVEFORMATEX_G711 { WAVEFORMATEX WaveFormatEx; WORD wSamplesPerBlock; } WAVEFORMATEX_G711;
-typedef struct {
-  DWORD dwLength;
-  WORD wRevision;
-  WORD wCertificateType; // = WIN_CERT_TYPE_PKCS1_SIGN
-  DWORD cbSignedData;
-  BYTE bSignedData[MAX_WIN_CERT_SIGN_DATA_LEN];
-  BYTE bSign[MAX_RSA_KEY_BITS/8];
-} PKCS1_MODULE_SIGN ;
 typedef struct tagINITCOMMONCONTROLSEX {  DWORD dwSize;  DWORD dwICC;}  INITCOMMONCONTROLSEX, *LPINITCOMMONCONTROLSEX;
 typedef struct {
   UINT cbSize;
@@ -4219,56 +3809,13 @@ struct ConnectionInfo
   DIRECTION Direction;
   wstring strStatus;
 };
-struct X { int a[0]; // error, unsized array };
-struct A {
-  __declspec(property(get=GetProp)) int prop;
-  int GetProp(void);
-};
-void f(A* pa, int val)
-{
-  pa->prop = val; // error C2774
-  pa->prop++;// error C2774
-};
-struct __declspec(uuid("00000000-0000-0000-0000-000000000000")) A {
-};
-void sample(void)
-{
-  __uuidof(int); // error C2786
-  __uuidof(int *); // error C2786
-  __uuidof(A **); // error C2786
-  __uuidof(A);
-  __uuidof(A *);
-  __uuidof(A &);
-  __uuidof(A[]);
-  int i;
-  int *pi;
-  A **ppa;
-  __uuidof(i);// error C2786
-  __uuidof(pi);// error C2786
-  __uuidof(ppa);// error C2786
-};
-struct B {
-  void mf();
-};
-struct D : B {
-  void mf() {
-    __super.();
-  }
-};
-struct S
-{
-  float y;
-  struct
-  {
-    int a, b, c; // warning
-  };
-} *p_s;
 struct servent {char FAR* s_name;char FAR* FAR* s_aliases;short s_port;char FAR* s_proto;};
 struct timeval {long tv_sec;long tv_usec;};
 struct protoent {char FAR* p_name;char FAR* FAR* p_aliases;short p_proto;};
 int WSAConnect(SOCKET s,const struct sockaddr FAR* name,int namelen,LPWSABUF lpCallerData,LPWSABUF lpCalleeData,LPQOS lpSQOS,LPQOS lpGQOS);
 SOCKET WSAJoinLeaf(SOCKET s,const struct sockaddr FAR* name,int namelen,LPWSABUF lpCallerData,LPWSABUF lpCalleeData,LPQOS lpSQOS,LPQOS lpGQOS,DWORD dwFlags);
 int WSARecvFrom(SOCKET s,LPWSABUF lpBuffers,DWORD dwBufferCount,LPDWORD lpNumberOfBytesRecvd,LPDWORD lpFlags,struct sockaddr FAR* lpFrom,LPINT lpFromlen,LPWSAOVERLAPPED lpOverlapped,LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine);
+struct S { int *b : 1; // error };
 struct A* pA;
 struct B { int i; };
 B* pB;
@@ -4277,28 +3824,18 @@ void main()
   pA++; // error, size of A not known
   pB++;
 };
-#pragma keyword("interface", on)
-struct IUnknown {
-};
-interface IMyIF {
-  [ property(put=0, put=0) ]
-  int data;
+struct S
+{
+  int mem0;
+} *pS;
+void main()
+{
+  pS->mem1 = 0; // error, mem1 is not a member
+  pS->mem0 = 0;
 };
 struct S; union S;
 typedef struct _IMAGE_CE_RUNTIME_FUNCTION_ENTRY { unsigned int FuncStart : 32; unsigned int PrologLen : 8; unsigned int FuncLen : 22; unsigned int ThirtyTwoBit : 1; unsigned int ExceptionFlag : 1;} IMAGE_CE_RUNTIME_FUNCTION_ENTRY,*PIMAGE_CE_RUNTIME_FUNCTION_ENTRY;
 struct PDATA_EH { unsigned int* pHandler; unsigned int* pHandlerData;};
-struct {
-  float x;
-  float y;
-} point;
-int myfunction(struct point p1,
-float u,
-struct point p2,
-double v,
-float w,
-float x,
-double y,
-double z);
 typedef struct IDirect3D8 *LPDIRECT3D8, *PDIRECT3D8;
 typedef struct IDirect3DBaseTexture8 *LPDIRECT3DBASETEXTURE8, *PDIRECT3DBASETEXTURE8;
 typedef struct IDirect3DDevice8 *LPDIRECT3DDEVICE8, *PDIRECT3DDEVICE8;
@@ -4308,7 +3845,6 @@ typedef struct IDirect3DSurface8 *LPDIRECT3DSURFACE8, *PDIRECT3DSURFACE8;
 typedef struct IDirect3DSwapChain8 *LPDIRECT3DSWAPCHAIN8, *PDIRECT3DSWAPCHAIN8;
 typedef struct IDirect3DTexture8 *LPDIRECT3DTEXTURE8, *PDIRECT3DTEXTURE8;
 typedef struct IDirect3DVertexBuffer8 *LPDIRECT3DVERTEXBUFFER8, *PDIRECT3DVERTEXBUFFER8;
-typedef struct IKsPropertySet *LPKSPROPERTYSET;
 SOCKET WSAAccept( SOCKET s, struct SOCK_ADDR* addr, LPINT addrlen, LPCONDITIONPROC lpfnCondition, DWORD dwCallbackData );
 struct RNDIS_PDD_CHARACTERISTICS {
   PFN_PDD_SEND_RNDIS_MESSAGE SendRndisMessageHandler;
@@ -4671,15 +4207,7 @@ typedef wchar_t wchar;
 typedef unsigned char wchar_t;
 typedef HRESULT (CALLBACK *SHOWHTMLDIALOGEXFN)(  HWND hwndParent,  IMoniker *pMk,  DWORD dwDialogFlags,  VARIANT *pvarArgIn,  TCHAR *pchOptions,  VARIANT *pvarArgOut  );
 typedef HRESULT (CALLBACK *SHOWMODELESSHTMLDIALOGFN)(  HWND hwndParent,  IMoniker *pMk,  VARIANT *pvarArgIn,  TCHAR *pchOptions,  IHTMLWindow2 **ppWindow  );
-typedef void (F) ();// OK
-typedef F AT[10];// Error
-void main()
-{
-};
-typedef int *p_int; typedef short *p_short; p_short p_int p; // error;
-typedef long lPulseWidth; typedef long lPulseWidth; // warning;
 typedef HRESULT (STDAPICALLTYPE RAPIEXT)(DWORD cbInput,BYTE * pInput,DWORD * pcbOutput,BYTE ** ppOutput,IRAPIStream * pIRAPIStream);
-typedef int int I; const RefInt cri=i; //generates warning C4181;
 typedef void (CALLBACK* PFN_PROPERTY_CHANGE)( IXRDependencyObject* pControl,  XRValue* pOldValue,  XRValue* pNewValue );
 typedef HRESULT STDAPICALLTYPE pfnCommandCallback( DWORD dwCmd, const CCommandPacket *pCmdIn, CCommandPacket *pCmdOut );
 typedef HRESULT (CALLBACK *PFN_CREATE_CONTROL)( IXRDependencyObject *pExistingAXDO, IXRDependencyObject** pNewAXDO );

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 16 constants, 4 declarations, 2 outlines, 0 base types, 0 extra macros, 12 extra decls
+ * 12 constants, 4 declarations, 2 outlines, 0 base types, 0 extra macros, 12 extra decls
  */
 #ifndef _VOIPMANAGER_
 #define _VOIPMANAGER_
@@ -21,10 +21,6 @@
 #define DCRP_VALID_PASSWORD 0x00000002
 #define DCRP_VALID_USERNAME 0x00000001
 #define DCRP_VALID_XML 0x00000004
-#define e_vceInvalid 0
-#define e_vcsInvalid 0
-#define e_vctInvalid 0
-#define e_vseInvalid 0
 #define VMS_AUTOFORWARDING 0x00000020
 #define VMS_CALL_LOG_DB_READY 0x00000008
 #define VMS_CALLER_INFO_DB_READY 0x00000010

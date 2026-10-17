@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 12 constants, 67 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
+ * 9 constants, 67 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _BT_API_
 #define _BT_API_
@@ -18,9 +18,6 @@
  * chains with the evidence after the #endif)
  * ================================================================ */
 #define ACTIVE 0x00
-#define BT_AVDTP_STATE_DISCONNECTED 0
-#define BT_AVDTP_STATE_STREAMING 2
-#define BT_AVDTP_STATE_SUSPENDED 1
 #define BTE_CLASS_CONNECTIONS 1
 #define BTE_CLASS_DEVICE 4
 #define BTE_CLASS_PAIRING 2

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 9 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 13 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _LIBLOADERAPI_
 #define _LIBLOADERAPI_
@@ -17,7 +17,10 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
+#define DONT_RESOLVE_DLL_REFERENCES 0x00000001
 #define LOAD_IGNORE_CODE_AUTHZ_LEVEL 0x00000010
+#define LOAD_LIBRARY_AS_DATAFILE 0x00000002
+#define LOAD_LIBRARY_AS_DATAFILE_EXCLUSIVE 0x00000040
 #define LOAD_LIBRARY_AS_IMAGE_RESOURCE 0x00000020
 #define LOAD_LIBRARY_REQUIRE_SIGNED_TARGET 0x00000080
 #define LOAD_LIBRARY_SAFE_CURRENT_DIRS 0x00002000
@@ -26,5 +29,6 @@
 #define LOAD_LIBRARY_SEARCH_DLL_LOAD_DIR 0x00000100
 #define LOAD_LIBRARY_SEARCH_SYSTEM32 0x00000800
 #define LOAD_LIBRARY_SEARCH_USER_DIRS 0x00000400
+#define LOAD_WITH_ALTERED_SEARCH_PATH 0x00000008
 
 #endif /* _LIBLOADERAPI_ */

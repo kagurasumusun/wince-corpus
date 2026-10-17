@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 42 constants, 66 declarations, 0 outlines, 0 base types, 0 extra macros, 10 extra decls
+ * 33 constants, 66 declarations, 0 outlines, 0 base types, 0 extra macros, 10 extra decls
  */
 #ifndef _OBJBASE_
 #define _OBJBASE_
@@ -21,23 +21,14 @@
 #define ASYNC_MODE_DEFAULT 0
 #define CLSCTX_ALL (CLSCTX_INPROC_SERVER|CLSCTX_INPROC_HANDLER|CLSCTX_LOCAL_SERVER)
 #define CLSCTX_INPROC (CLSCTX_INPROC_SERVER|CLSCTX_INPROC_HANDLER)
-#define CLSCTX_INPROC_HANDLER 0x2
-#define CLSCTX_INPROC_SERVER 0x1
-#define CLSCTX_LOCAL_SERVER 0x4
-#define CLSCTX_REMOTE_SERVER 0x10
 #define CLSCTX_SERVER (CLSCTX_INPROC_SERVER|CLSCTX_LOCAL_SERVER|CLSCTX_REMOTE_SERVER)
 #define COM_RIGHTS_EXECUTE 1
 #define COM_RIGHTS_SAFE_FOR_SCRIPTING 2
 #define CWCSTORAGENAME 32
-#define EOAC_NONE 0x0
 #define MARSHALINTERFACE_MIN 500
 #define STG_LAYOUT_INTERLEAVED 1
 #define STG_LAYOUT_SEQUENTIAL 0
 #define STG_TOEND 0xFFFFFFFF
-#define STGC_DANGEROUSLYCOMMITMERELYTODISKCACHE 4
-#define STGC_DEFAULT 0
-#define STGC_ONLYIFCURRENT 2
-#define STGC_OVERWRITE 1
 #define STGM_CONVERT 0x00020000L
 #define STGM_CREATE 0x00001000L
 #define STGM_DELETEONRELEASE 0x04000000L

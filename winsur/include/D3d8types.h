@@ -5,11 +5,22 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 44 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 4 constants, 44 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _D3D8TYPES_
 #define _D3D8TYPES_
 
+
+/* ==================================================================
+ * constants (one evidence comment per #define; the
+ * #if of a batch covers every #define in it; values
+ * that differ per generation pool into #if/#elif
+ * chains with the evidence after the #endif)
+ * ================================================================ */
+#define D3DFVF_TEXTUREFORMAT1 3
+#define D3DFVF_TEXTUREFORMAT2 0
+#define D3DFVF_TEXTUREFORMAT3 1
+#define D3DFVF_TEXTUREFORMAT4 2
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

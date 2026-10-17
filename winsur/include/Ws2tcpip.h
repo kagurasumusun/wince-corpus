@@ -5,11 +5,20 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 6 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
+ * 2 constants, 6 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _WS2TCPIP_
 #define _WS2TCPIP_
 
+
+/* ==================================================================
+ * constants (one evidence comment per #define; the
+ * #if of a batch covers every #define in it; values
+ * that differ per generation pool into #if/#elif
+ * chains with the evidence after the #endif)
+ * ================================================================ */
+#define NI_MAXHOST 1025
+#define NI_MAXSERV 32
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

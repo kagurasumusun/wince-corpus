@@ -20,32 +20,10 @@
 #define MPCF_DEFAULT 0x00000000
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
-/* PH_MAKEPHONECALL_PARAMETERS  [struct; ce-only; PhCommon.dll] */
-typedef struct _PH_MAKEPHONECALL_PARAMETERS{
- DWORD StructSize; // Struct size in bytes
- DWORD Flags; // Flags
- WCHAR DestAddress[MAX_PATH]; 
- WCHAR ApplicationName[MAX_PATH]; 
- WCHAR CalledParty[MAX_PATH]; 
- WCHAR Comment[MAX_PATH]; 
-} PH_MAKEPHONECALL_PARAMETERS;
-typedef PH_MAKEPHONECALL_PARAMETERS *PPH_MAKEPHONECALL_PARAMETERS, *LPPH_MAKEPHONECALL_PARAMETERS;
-
-/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
-
-/* PHMakePhoneCall  [function; ce-only; CE 6.0..699; PhCommon.dll] */
-HRESULT PHMakePhoneCall(
- const PH_MAKEPHONECALL_PARAMETERS* pParameters
- );
 
 /* PHOnHookDialing  [function; ce-only; CE 6.0..699; PhCommon.dll] */
 HRESULT PHOnHookDialing(

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 25 constants, 14 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 30 constants, 14 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _IPTYPES_
 #define _IPTYPES_
@@ -40,6 +40,11 @@
 #define MAX_DOMAIN_NAME_LEN 128
 #define MAX_HOSTNAME_LEN 128
 #define MAX_SCOPE_ID_LEN 256
+#define MIB_IF_TYPE_ETHERNET 6
+#define MIB_IF_TYPE_LOOPBACK 24
+#define MIB_IF_TYPE_OTHER 1
+#define MIB_IF_TYPE_PPP 23
+#define MIB_IF_TYPE_SLIP 28
 #define MIXED_NODETYPE 4
 #define PEER_TO_PEER_NODETYPE 2
 

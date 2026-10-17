@@ -69,39 +69,6 @@ typedef struct tagHEAPLIST32 {
  typedef HEAPLIST32* PHEAPLIST32; 
 typedef HEAPLIST32* LPHEAPLIST32;
 
-/* MODULEENTRY32  [struct; shared; A/W MODULEENTRY32W (CE is W-side)] */
-typedef struct tagMODULEENTRY32 {
- DWORD dwSize;
- DWORD th32ModuleID;
- DWORD th32ProcessID;
- DWORD GlblcntUsage;
- DWORD ProccntUsage;
- BYTE *modBaseAddr;
- DWORD modBaseSize;
- HMODULE hModule;
- TCHAR szModule[MAX_PATH];
- TCHAR szExePath[MAX_PATH];
- DWORD dwFlags;
-} MODULEENTRY32, *PMODULEENTRY32, *LPMODULEENTRY32;
-
-/* PROCESSENTRY32  [struct; shared; A/W PROCESSENTRY32W (CE is W-side)] */
-typedef struct tagPROCESSENTRY32 {
- DWORD dwSize;
- DWORD cntUsage;
- DWORD th32ProcessID;
- DWORD th32DefaultHeapID;
- DWORD th32ModuleID;
- DWORD cntThreads;
- DWORD th32ParentProcessID;
- LONG pcPriClassBase;
- DWORD dwFlags;
- TCHAR szExeFile[MAX_PATH];
- DWORD th32MemoryBase;
- DWORD th32AccessKey;
- } PROCESSENTRY32;
- typedef PROCESSENTRY32* PPROCESSENTRY32;
-typedef PROCESSENTRY32* LPPROCESSENTRY32;
-
 /* THREADENTRY32  [struct; shared] */
 typedef struct tagTHREADENTRY32 {
  DWORD dwSize;

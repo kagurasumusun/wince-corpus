@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 16 constants, 18 declarations, 2 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 7 constants, 18 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _SERVICE_
 #define _SERVICE_
@@ -17,15 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define SERVICE_INIT_CONFIGURE_CONNECT 0x4
-#define SERVICE_INIT_CONFIGURE_NO_CONNECT 0x2
-#define SERVICE_INIT_CONFIGURE_PENDING_CONNECT 0x3
-#define SERVICE_INIT_NO_CONFIGURE 0x1
-#define SERVICE_INIT_STANDALONE 0x02
-#define SERVICE_INIT_STARTED 0x00000000
-#define SERVICE_INIT_STOPPED 0x00000001
-#define SERVICE_LOCKED 0x8
-#define SERVICE_NO_INIT 0x0
 #define SERVICE_STATE_OFF 0
 #define SERVICE_STATE_ON 1
 #define SERVICE_STATE_SHUTTING_DOWN 3
@@ -37,8 +28,6 @@
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
-
-/* SERVICE  [typedef; ce-only; heuristic-prefix] */
 
 /* ServicesexeCallbackFunctions  [struct; ce-only] */
 

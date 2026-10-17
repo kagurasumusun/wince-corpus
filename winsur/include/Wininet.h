@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 540 constants, 100 declarations, 1 outlines, 0 base types, 1 extra macros, 3 extra decls
+ * 539 constants, 100 declarations, 1 outlines, 0 base types, 1 extra macros, 3 extra decls
  */
 #ifndef _WININET_
 #define _WININET_
@@ -33,6 +33,7 @@
 #define CONNECTION 23
 #define COOKIE 44
 #define COOKIE_CACHE_ENTRY 0x100000
+#define DATE 9
 #define ERROR_FTP_DROPPED (INTERNET_ERROR_BASE+111)
 #define ERROR_FTP_TRANSFER_IN_PROGRESS (INTERNET_ERROR_BASE+110)
 #define ERROR_GOPHER_ATTRIBUTE_NOT_FOUND (INTERNET_ERROR_BASE+137)
@@ -110,7 +111,6 @@
 #define FLAGS_ERROR_UI_FLAGS_GENERATE_DATA 0x04
 #define FLAGS_ERROR_UI_FLAGS_NO_UI 0x08
 #define FROM 31
-#define FTP 21
 #define FTP_TRANSFER_TYPE_ASCII 1
 #define FTP_TRANSFER_TYPE_BINARY 2
 #define FTP_TRANSFER_TYPE_MASK (FTP_TRANSFER_TYPE_ASCII
@@ -196,7 +196,6 @@
 #define HSR_INITIATE 8
 #define HSR_SYNC WININET_API_FLAG_SYNC
 #define HSR_USE_CONTEXT WININET_API_FLAG_USE_CONTEXT
-#define HTTP 80
 #define HTTP_ADDREQ_FLAG_ADD 0x20000000
 #define HTTP_ADDREQ_FLAG_ADD_IF_NEW 0x10000000
 #define HTTP_ADDREQ_FLAG_COALESCE HTTP_ADDREQ_FLAG_COALESCE_WITH_COMMA
@@ -742,6 +741,11 @@ BOOL CreateUrlCacheEntry(
 /* DeleteUrlCacheEntry  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W DeleteUrlCacheEntryA,DeleteUrlCacheEntryW (CE is W-side)] */
 BOOL DeleteUrlCacheEntry( 
  LPCTSTR lpszUrlName
+);
+
+/* FindCloseUrlCache  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib] */
+BOOL FindCloseUrlCache( 
+ HANDLE hEnumHandle
 );
 
 /* FindFirstUrlCacheEntry  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W FindFirstUrlCacheEntryA,FindFirstUrlCacheEntryW (CE is W-side)] */

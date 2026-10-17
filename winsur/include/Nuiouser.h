@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 34 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 33 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _NUIOUSER_
 #define _NUIOUSER_
@@ -17,9 +17,8 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define MEDIA_STATE_CONNECTED 0
-#define MEDIA_STATE_DISCONNECTED 0
-#define MEDIA_STATE_UNKNOWN -1
+#define DEVICE_STATE_CONNECTED 1
+#define DEVICE_STATE_DISCONNECTED 0
 #define NDISUIO_NOTIFICATION_ADAPTER_ARRIVAL 0x00000040
 #define NDISUIO_NOTIFICATION_ADAPTER_REMOVAL 0x00000080
 #define NDISUIO_NOTIFICATION_BIND 0x00000010
@@ -57,14 +56,6 @@
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
-
-/* NDISUIO_DEVICE_NOTIFICATION  [struct; ce-only] */
-typedef struct {
- DWORD dwNotificationType;
- TCHAR ptcDeviceName[MAX_PATH];
- UINT uiOffsetToStatusBuffer;
- UINT uiStatusBufferSize;
-} NDISUIO_DEVICE_NOTIFICATION, *PNDISUIO_DEVICE_NOTIFICATION;
 
 /* NDISUIO_QUERY_BINDING  [struct; ce-only] */
 typedef struct _NDISUIO_QUERY_BINDING {

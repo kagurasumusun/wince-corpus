@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 10 constants, 18 declarations, 0 outlines, 0 base types, 0 extra macros, 32 extra decls
+ * 6 constants, 18 declarations, 0 outlines, 0 base types, 0 extra macros, 32 extra decls
  */
 #ifndef _MLANG_
 #define _MLANG_
@@ -17,18 +17,12 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define ABCD 1
-#define BCD 1
-#define CD 1
 #define MAX_LOCALE_NAME 32
 #define MAX_MIMECP_NAME 64
 #define MAX_MIMECSET_NAME 50
 #define MAX_MIMEFACE_NAME 32
 #define MAX_RFC1766_NAME 6
 #define MAX_SCRIPT_NAME 48
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
-#define D 1
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

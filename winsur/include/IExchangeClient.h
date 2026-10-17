@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 8 constants, 5 declarations, 6 outlines, 0 base types, 0 extra macros, 24 extra decls
+ * 6 constants, 5 declarations, 6 outlines, 0 base types, 0 extra macros, 24 extra decls
  */
 #ifndef _IEXCHANGECLIENT_
 #define _IEXCHANGECLIENT_
@@ -17,8 +17,6 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define e_ecrsPending 0
-#define e_ecrtInvalid 0
 #define OWAEC_E_ALREADYINITIALIZED 0x80bb0006
 #define OWAEC_E_INVALIDSEARCH 0x80bb0004
 #define OWAEC_E_NODATA 0x80bb0005

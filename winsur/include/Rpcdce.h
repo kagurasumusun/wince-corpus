@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 62 constants, 1 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 61 constants, 1 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _RPCDCE_
 #define _RPCDCE_
@@ -60,7 +60,6 @@
 #define RPC_C_PARM_MAX_PACKET_LENGTH 1
 #define RPC_C_PROTSEQ_MAX_REQS_DEFAULT 10
 #define RPC_C_QOS_CAPABILITIES_DEFAULT 0
-#define RPC_C_QOS_CAPABILITIES_MUTUAL_AUTH 0x1
 #define RPC_C_QOS_IDENTITY_DYNAMIC 1
 #define RPC_C_QOS_IDENTITY_STATIC 0
 #define RPC_C_STATS_CALLS_IN 0

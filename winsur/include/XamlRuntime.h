@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1 constants, 57 declarations, 7 outlines, 0 base types, 0 extra macros, 21 extra decls
+ * 1 constants, 57 declarations, 7 outlines, 0 base types, 0 extra macros, 48 extra decls
  */
 #ifndef _XAMLRUNTIME_
 #define _XAMLRUNTIME_
@@ -465,6 +465,41 @@ enum XRVisibility{
  XRVisibility_Collapsed = 1
 };
 
+/* XRLineStackingStrategy_BlockLineHeight  [extra enum] */
+enum XRLineStackingStrategy{ XRLineStackingStrategy_MaxHeight=0, XRLineStackingStrategy_BlockLineHeight=1 };
+
+/* XRTextWrapping_Wrap  [extra enum] */
+enum XRTextWrapping{ XRTextWrapping_NoWrap = 1, XRTextWrapping_Wrap = 2 };
+
+/* XRFontWeight_ExtraBlack  [extra enum] */
+enum XRFontWeight{
+  XRFontWeight_Thin=100,
+  XRFontWeight_ExtraLight=200,
+  XRFontWeight_Light=300,
+  XRFontWeight_Normal=400,
+  XRFontWeight_Medium=500,
+  XRFontWeight_SemiBold=600,
+  XRFontWeight_Bold=700,
+  XRFontWeight_ExtraBold=800,
+  XRFontWeight_Black=900,
+  XRFontWeight_ExtraBlack=950
+};
+
+/* XRPenLineJoin_Round  [extra enum] */
+enum XRPenLineJoin{
+  XRPenLineJoin_Miter=0,
+  XRPenLineJoin_Bevel=1,
+  XRPenLineJoin_Round=2
+};
+
+/* XRClockState_Stopped  [extra enum] */
+enum XRClockState
+{
+  XRClockState_Active=0,
+  XRClockState_Filling=1,
+  XRClockState_Stopped=2
+};
+
 /* DurationType  [extra struct] */
 struct XRDuration{
   enum _DurationType{
@@ -476,12 +511,67 @@ struct XRDuration{
   _DurationType DurationType;
 };
 
+/* XRColorInterpolationMode_SRgbLinearInterpolation  [extra enum] */
+enum XRColorInterpolationMode{ XRColorInterpolationMode_ScRgbLinearInterpolation=0, XRColorInterpolationMode_SRgbLinearInterpolation=1 };
+
+/* XRGridUnitType_Star  [extra enum] */
+enum XRGridUnitType{
+  XRGridUnitType_Auto=0,
+  XRGridUnitType_Pixel=1,
+  XRGridUnitType_Star=2
+};
+
+/* XRStretch_UniformToFill  [extra enum] */
+enum XRStretch{
+  XRStretch_None=0,
+  XRStretch_Fill=1,
+  XRStretch_Uniform=2,
+  XRStretch_UniformToFill=3
+};
+
+/* XRStyleSimulations_BoldItalicSimulation  [extra enum] */
+enum XRStyleSimulations{
+  XRStyleSimulations_None=0,
+  XRStyleSimulations_BoldSimulation=1,
+  XRStyleSimulations_ItalicSimulation=2,
+  XRStyleSimulations_BoldItalicSimulation=3
+};
+
+/* XRGradientSpreadMethod_Repeat  [extra enum] */
+enum XRGradientSpreadMethod{
+  XRGradientSpreadMethod_Pad=0,
+  XRGradientSpreadMethod_Reflect=1,
+  XRGradientSpreadMethod_Repeat=2
+};
+
 /* XRThreeState_Indeterminate  [extra enum] */
 enum XRThreeState
 {
   XRThreeState_Unchecked = 0,
   XRThreeState_Checked,
   XRThreeState_Indeterminate
+};
+
+/* XRPenLineCap_Triangle  [extra enum] */
+enum XRPenLineCap{
+  XRPenLineCap_Flat=0,
+  XRPenLineCap_Square=1,
+  XRPenLineCap_Round=2,
+  XRPenLineCap_Triangle=3
+};
+
+/* XRAlignmentY_Bottom  [extra enum] */
+enum XRAlignmentY{
+  XRAlignmentY_Top=0,
+  XRAlignmentY_Center=1,
+  XRAlignmentY_Bottom=2
+};
+
+/* XRBrushMappingMode_RelativeToBoundingBox  [extra enum] */
+enum XRBrushMappingMode
+{
+  XRBrushMappingMode_Absolute=0,
+  XRBrushMappingMode_RelativeToBoundingBox=1
 };
 
 /* NewSize  [extra struct] */
@@ -503,11 +593,39 @@ struct XRRepeatBehavior{
   RepeatBehaviorType BehaviorType;
 };
 
+/* XRVerticalAlignment_Stretch  [extra enum] */
+enum XRVerticalAlignment{
+  XRVerticalAlignment_Top=0,
+  XRVerticalAlignment_Center=1,
+  XRVerticalAlignment_Bottom=2,
+  XRVerticalAlignment_Stretch=3
+};
+
+/* XRVisibility_Collapsed  [extra enum] */
+enum XRVisibility{ XRVisibility_Visible = 0, XRVisibility_Collapsed = 1 };
+
 /* Handled  [extra struct] */
 struct XRMouseButtonEventArgs : XRMouseEventArgs{ BOOL Handled; };
 
+/* XRSweepDirection_Clockwise  [extra enum] */
+enum XRSweepDirection
+{
+  XRSweepDirection_Counterclockwise=0,
+  XRSweepDirection_Clockwise=1
+};
+
 /* HorizontalOffset  [extra struct] */
 struct XRDragStartedEventArgs : XRRoutedEventArgs{ double VerticalOffset; double HorizontalOffset; };
+
+/* XRTextDecorationType_Underline  [extra enum] */
+enum XRTextDecorationType{ XRTextDecorationType_None=0, XRTextDecorationType_Underline=1 };
+
+/* XRTextAlignment_Right  [extra enum] */
+enum XRTextAlignment{
+  XRTextAlignment_Center=0,
+  XRTextAlignment_Left=1,
+  XRTextAlignment_Right=2
+};
 
 /* PlatformKeyCode  [extra struct] */
 struct XRKeyEventArgs : XRRoutedEventArgs{ BOOL Handled; UINT PlatformKeyCode; };
@@ -527,12 +645,50 @@ struct XRCornerRadius{
   float BottomLeft;
 };
 
+/* XRFillRule_Nonzero  [extra enum] */
+enum XRFillRule
+{
+  XRFillRule_EvenOdd=0,
+  XRFillRule_Nonzero=1
+};
+
+/* XRKeyboardNavigationMode_Once  [extra enum] */
+enum XRKeyboardNavigationMode{
+  XRKeyboardNavigationMode_Local=0,
+  XRKeyboardNavigationMode_Cycle=1,
+  XRKeyboardNavigationMode_Once=2
+};
+
+/* XRHorizontalAlignment_Stretch  [extra enum] */
+enum XRHorizontalAlignment{
+  XRHorizontalAlignment_Left=0,
+  XRHorizontalAlignment_Center=1,
+  XRHorizontalAlignment_Right=2,
+  XRHorizontalAlignment_Stretch=3
+};
+
 /* Bottom  [extra struct] */
 struct XRThickness{
   float Left;
   float Top;
   float Right;
   float Bottom;
+};
+
+/* XROrientation_Horizontal  [extra enum] */
+enum XROrientation{ XROrientation_Vertical=0, XROrientation_Horizontal=1 };
+
+/* XRScrollEventType_ThumbTrack  [extra enum] */
+enum XRScrollEventType{
+  XRScrollEventType_EndScroll = 8,
+  XRScrollEventType_First = 6,
+  XRScrollEventType_LargeDecrement = 2,
+  XRScrollEventType_LargeIncrement = 3,
+  XRScrollEventType_Last = 7,
+  XRScrollEventType_SmallDecrement = 0,
+  XRScrollEventType_SmallIncrement = 1,
+  XRScrollEventType_ThumbPosition = 4,
+  XRScrollEventType_ThumbTrack = 5
 };
 
 /* YOffset  [extra struct] */
@@ -547,6 +703,16 @@ enum XRClickMode{
   XRClickMode_Release = 0,
   XRClickMode_Press,
   XRClickMode_Hover,
+};
+
+/* XRFillBehavior_Stop  [extra enum] */
+enum XRFillBehavior{ XRFillBehavior_HoldEnd=0, XRFillBehavior_Stop=1 };
+
+/* XRAlignmentX_Right  [extra enum] */
+enum XRAlignmentX{
+  XRAlignmentX_Left=0,
+  XRAlignmentX_Center=1,
+  XRAlignmentX_Right=2
 };
 
 /* cy  [extra struct] */
@@ -593,6 +759,21 @@ enum XRScrollBarVisibility
   XRScrollBarVisibility_Visible
 };
 
+/* XRCursor_None  [extra enum] */
+enum XRCursor
+{
+  XRCursor_Default = 0,
+  XRCursor_Arrow = 1,
+  XRCursor_Hand = 2,
+  XRCursor_Wait = 3,
+  XRCursor_IBeam = 4,
+  XRCursor_Stylus = 5,
+  XRCursor_Eraser = 6,
+  XRCursor_SizeNS = 7,
+  XRCursor_SizeWE = 8,
+  XRCursor_None = 9
+};
+
 /* VeriticalDelta  [extra struct] */
 struct XRDragDeltaEventArgs : XRRoutedEventArgs{ double HorizontalDelta; double VeriticalDelta; };
 
@@ -602,6 +783,13 @@ struct XRRect{
   float top;
   float right;
   float bottom;
+};
+
+/* XRFontStyle_Italic  [extra enum] */
+enum XRFontStyle{
+  XRFontStyle_Normal=0,
+  XRFontStyle_Oblique=1,
+  XRFontStyle_Italic=2
 };
 
 /* UnitType  [extra struct] */

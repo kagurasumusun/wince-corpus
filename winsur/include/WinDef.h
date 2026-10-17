@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 30 constants, 67 declarations, 9 outlines, 122 base types, 0 extra macros, 0 extra decls
+ * 23 constants, 8 declarations, 7 outlines, 122 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDEF_
 #define _WINDEF_
@@ -105,9 +105,7 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define APIENTRY WINAPI
 #define APIPRIVATE __stdcall
-#define CALLBACK __stdcall
 #define CDECL _cdecl
 #define DECLSPEC_EXPORT __declspec(dllexport)
 #define DECLSPEC_IMPORT __declspec(dllimport)
@@ -122,19 +120,14 @@
 #define DUMMYUNIONNAME6 u6
 #define DUMMYUNIONNAME7 u7
 #define DUMMYUNIONNAME8 u8
-#define FALSE 0
 #define FASTCALL __fastcall
 #define HMONITOR_DECLARED 1
-#define MAX_PATH 128
 #ifndef NULL
 #define NULL 0
 #endif
 #define PACKED __attribute__((packed))
 #define STDCALL __stdcall
 #define STRICT 1
-#define TRUE 1
-#define VOID void
-#define WINAPI __stdcall
 #define WINAPIV __cdecl
 #define WINVER 0x0400
 
@@ -740,15 +733,13 @@ typedef HICON HCURSOR;
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-/* CALLBACK  [typedef, macro; shared; entity-headers] */
+/* EDITSTREAM  [macro, typedef; ce-only; heuristic-prefix] */
 
-/* CONST  [struct, typedef, macro; shared; entity-headers] */
+/* EM_CANPASTE  [macro, typedef; ce-only; heuristic-prefix] */
 
 /* HIBYTE  [macro; shared] */
 
 /* HIWORD  [macro; shared] */
-
-/* HWINSTA  [typedef; shared; entity-headers] */
 
 /* LOBYTE  [macro; shared] */
 
@@ -762,52 +753,13 @@ typedef HICON HCURSOR;
 #define MAKEWORD(a, b) \ 
  ((WORD) (((BYTE) (a)) | ((WORD) ((BYTE) (b))) << 8));
 
-/* WINAPI  [typedef, macro; shared; entity-headers] */
+/* VIEWATTRIBUTES  [macro, typedef; ce-only; heuristic-prefix] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
-
-/* HACCEL  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HACCEL;
-
-/* HDESK  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HDESK;
-
-/* HRSRC  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE HRSRC;
-
-/* LPBOOL  [typedef; shared; entity-headers; win32-reference] */
-typedef BOOL far *LPBOOL;
-
-/* LPBYTE  [typedef; shared; entity-headers; win32-reference] */
-typedef BYTE far *LPBYTE;
-
-/* LPCOLORREF  [typedef; shared; entity-headers; win32-reference] */
-typedef DWORD *LPCOLORREF;
-
-/* LPDWORD  [typedef; shared; entity-headers; win32-reference] */
-typedef DWORD *LPDWORD;
-
-/* LPHANDLE  [typedef; shared; entity-headers; win32-reference] */
-typedef HANDLE *LPHANDLE;
-
-/* LPLONG  [typedef; shared; entity-headers; win32-reference] */
-typedef long *LPLONG;
-
-/* PBOOL  [typedef; shared; entity-headers; win32-reference] */
-typedef BOOL *PBOOL;
-
-/* PBYTE  [typedef; shared; entity-headers; win32-reference] */
-typedef BYTE *PBYTE;
-
-/* PFLOAT  [typedef; shared; entity-headers; win32-reference] */
-typedef FLOAT *PFLOAT;
-
-/* PHKEY  [typedef; shared; entity-headers; win32-reference] */
-typedef HKEY *PHKEY;
 
 /* POINT  [struct, function, library; shared] */
 typedef struct tagPOINT {
@@ -846,15 +798,6 @@ typedef struct tagSIZE {
  LONG cy; 
 } SIZE;
 typedef SIZE *PSIZE, *LPSIZE;
-
-/* LPWORD  [typedef; shared; entity-headers; win32-reference] */
-typedef WORD *LPWORD;
-
-/* PUCHAR  [typedef; shared; entity-headers; win32-reference] */
-typedef UCHAR *PUCHAR;
-
-/* PWORD  [typedef; shared; entity-headers; win32-reference] */
-typedef WORD *PWORD;
 typedef RECT *PRECT, *LPRECT;
 typedef CONST RECT *LPCRECT;
 typedef POINT *PPOINT, *LPPOINT;

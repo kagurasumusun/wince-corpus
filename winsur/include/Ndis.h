@@ -5,27 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 9 constants, 342 declarations, 2 outlines, 0 base types, 2 extra macros, 18 extra decls
+ * 0 constants, 343 declarations, 1 outlines, 0 base types, 2 extra macros, 18 extra decls
  */
 #ifndef _NDIS_
 #define _NDIS_
 
-
-/* ==================================================================
- * constants (one evidence comment per #define; the
- * #if of a batch covers every #define in it; values
- * that differ per generation pool into #if/#elif
- * chains with the evidence after the #endif)
- * ================================================================ */
-#define Ndis802_11RadioPowerState_Off 0
-#define Ndis802_11RadioPowerState_On 1
-#define NDIS_802_11_AUTH_REQUEST_GROUP_ERROR 0x0E
-#define NDIS_802_11_AUTH_REQUEST_KEYUPDATE 0x02
-#define NDIS_802_11_AUTH_REQUEST_PAIRWISE_ERROR 0x06
-#define NDIS_802_11_AUTH_REQUEST_REAUTH 0x01
-#define NDIS_802_11_PMKID_CANDIDATE_PREAUTH_ENABLED 0x01
-#define NDIS_ERROR_CODE ULONG
-#define NdisRingStateOpened 1
 
 /* ==================================================================
  * macros -- supplementary #define from CE pages
@@ -170,8 +154,6 @@ VOID TR_IS_GROUP(
 { \
  *(_Result) = (BOOLEAN)((_Address)[0] & 0x80); \
 }
-
-/* XXX_Init  [function, macro; ce-only; Ndislib.lib] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -859,6 +841,11 @@ VOID NdisMoveToMappedMemory(
  PVOID Source,
  ULONG Length
 );
+
+/* XXX_Init  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Ndislib.lib] */
+DWORD xxx_Init(
+ DWORD dwData
+);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 2.11..2.12, 3.0..399, 5.0..599 */
@@ -1383,6 +1370,8 @@ UINT NdisPacketPoolUsage(
 PVOID NDIS_BUFFER_LINKAGE(  IN PNDIS_BUFFER Buffer );
 UINT NDIS_GET_PACKET_PROTOCOL_TYPE(PNDIS_PACKET_Packet_,);
 UINT NDIS_SET_PACKET_HEADER_SIZE(PNDIS_PACKET _Packet,UINT _HdrSize);
+VOID NDIS_SET_PACKET_MEDIA_SPECIFIC_INFO( PNDIS_PACKET _Packet, PVOID _MediaSpecificInfo, UINT _SizeMediaSpecificInfo );
+NDIS_STATUS NDIS_SET_PACKET_STATUS( PNDIS_PACKET _Packet, NDIS_STATUS _Status );
 LONG NDIS_SET_PACKET_TIME_RECEIVED( PNDIS_PACKET _Packet, ULONGLONG _TimeReceived );
 LONG NDIS_SET_PACKET_TIME_SENT(PNDIS_PACKET _Packet,ULONGLONG _TimeSent);
 LONG NDIS_SET_PACKET_TIME_TO_SEND(PNDIS_PACKET _Packet,ULONGLONG _TimeToSend);

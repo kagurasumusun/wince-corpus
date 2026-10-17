@@ -167,6 +167,8 @@ UNIFIED_CONSTANTS = os.path.join(UNIFIED_DIR, "constants.jsonl")
 UNIFIED_DECLARATIONS = os.path.join(UNIFIED_DIR, "declarations.jsonl")
 CONSTANT_HEADERS = os.path.join(KB, "constant-headers.tsv")
 CONSTANT_CONFLICTS = os.path.join(KB, "constant-conflicts.tsv")
+CONSTANT_HEADER_REVIEW = os.path.join(ROOT, "data",
+                                      "constant-header-review.tsv")
 PINVOKE_APIS = os.path.join(ROOT, "knowledge", "aux",
                             "pinvoke-apis.jsonl.gz")
 PINVOKE_CONSTANTS = os.path.join(ROOT, "knowledge", "aux",
@@ -182,28 +184,33 @@ MODULE_FILE = re.compile(r"(?P<base>[\w.+-]+?)\.(?P<ext>lib|dll|drv|sys|ocx|tlb)
 EXPORTABLE = ("function", "callback")
 
 def heuristic_entity_header(entity, lib_to_header=None, heuristic_rows=None):
-    """Assign a header to an entity from naming conventions / library map.
+    """Last-resort header for an entity no page states a header for.
 
-    Returns the header name if a pattern matches, None otherwise.  Marked
-    ``heuristic-prefix`` by the caller -- never passed off as a page statement.
+    Evidence first: the import-library mapping derived from documented
+    entities (every documented user of Foo.lib sits in Foo.h), then the
+    curated library->header map, and only then the name-pattern table --
+    marked ``heuristic-prefix`` by the caller, never passed off as a page
+    statement.  A name that is not an identifier-shaped API name gets
+    nothing (``Architecture`` is a requirement label, not an API).
     """
     name = entity.get("name") or ""
-    if not name:
+    if not name or not re.match(r"^[A-Za-z_][A-Za-z0-9_]*$", name):
         return None
+    libs = (entity.get("libraries") or []) + (entity.get("dlls") or [])
+    if lib_to_header:
+        for lib in libs:
+            stem = (module_of(lib) or (lib.lower(), ""))[0].lower()
+            if stem in lib_to_header:
+                return lib_to_header[stem]
+    for lib in libs:
+        mapped = header_map.header_for_library(lib)
+        if mapped:
+            return mapped
     if heuristic_rows and name in heuristic_rows:
         return heuristic_rows[name]
     header = header_map.header_for_entity(name, entity.get("kinds") or [])
     if header:
         return header
-    libs = (entity.get("libraries") or []) + (entity.get("dlls") or [])
-    for lib in libs:
-        mapped = header_map.header_for_library(lib)
-        if mapped:
-            return mapped
-        if lib_to_header:
-            stem = (module_of(lib) or (lib.lower(), ""))[0].lower()
-            if stem in lib_to_header:
-                return lib_to_header[stem]
     return None
 
 
@@ -282,12 +289,17 @@ def load_extra_surface():
     """Load extra-defines / extra-declarations, quality-filtered.
 
     Returns (defines, declarations) -- each item already sanitised.
+    A name the hand review rejects (sample-suite identifiers, page
+    typos) is not surface at all and is dropped here.
     """
+    rejected = load_review_rejects()
     defines = []
     by_name = collections.defaultdict(list)
     for row in load_extra_defines():
         by_name[row.get("name") or ""].append(row)
     for name, rows in by_name.items():
+        if name in rejected:
+            continue
         best = quality_filters.pick_best_define(rows)
         if best:
             defines.append(best)
@@ -302,6 +314,8 @@ def load_extra_surface():
                 rec = json.loads(line)
                 name = rec.get("name") or ""
                 if not name or name in seen:
+                    continue
+                if name in rejected:
                     continue
                 cleaned = quality_filters.sanitize_declaration(
                     rec.get("declaration") or "",
@@ -808,7 +822,7 @@ def load_reference_exports():
 
 
 def write_defs(out, by_module, generated, ordinals=None,
-               reference_exports=None):
+               reference_exports=None, minimal_comments=False):
     link_dir = os.path.join(out, "link")
     os.makedirs(link_dir, exist_ok=True)
     for module, worklist in sorted(by_module.items()):
@@ -835,7 +849,7 @@ def write_defs(out, by_module, generated, ordinals=None,
                  (reference_exports or {}).get(module_stem, [])
                  if name.lower() not in known]
         if leads:
-            if not args.minimal_comments:
+            if not minimal_comments:
                 lines += [
                     ";",
                     f"; reference-export leads ({len(leads)}): names the pinned",
@@ -849,7 +863,7 @@ def write_defs(out, by_module, generated, ordinals=None,
                     ";",
                 ]
             for name, member in leads:
-                if not args.minimal_comments:
+                if not minimal_comments:
                     lines.append(f";   {name:38s}; lead  {member}")
         for entry in entries:
             entity, declaration = entry[0], entry[1]
@@ -1290,48 +1304,38 @@ _LINK_RANK = {
     "own-page": 0,
     "entity-page": 1,
     "constant-entity": 2,
-    "reference-header": 3,
-    "heuristic-prefix": 4,
-    "win32-reference": 5,
-    "co-mention": 6,
-    "pinvoke-weak": 7,
+    "family-statement": 3,
+    "reviewed": 4,
+    "reference-header": 5,
+    "win32-reference": 6,
+    "co-mention": 7,
+    "pinvoke-weak": 8,
 }
 
 
 def pick_constant_targets(name, targets):
     """One primary header for a numbered constant.
 
-    CE documentation ranks first.  A weak win32-reference that disagrees
-    with the shared name map is not used (ERROR_FILE_NOT_FOUND must not
-    follow a crypto page into wincrypt.h).  A reference-header (raserror.h
-    for RAS ERROR_*) outranks the name map.  Among equal ranks prefer the
-    public ``.h`` over an internal ``.hpp`` / ``.idl``.
+    The knowledge base's linkage rows are the ONLY source: when nothing
+    states a header and nothing is reviewed, the constant gets none (it
+    stays in the no-header worklist).  The name-prefix table is never
+    consulted here -- that is how MB_LEN_MAX, a CRT limit, was filed
+    into Winuser.h.  Among equal ranks prefer the public ``.h`` over an
+    internal ``.hpp`` / ``.idl``, and more statements over fewer.
     """
-    mapped = header_map.header_for_constant(name)
     if not targets:
-        if mapped:
-            return [{"header": mapped, "strength": "heuristic-prefix",
-                     "statements": 0, "example_page": "-"}]
         return []
-    if mapped:
-        for t in targets:
-            if (t.get("header") or "").lower() == mapped.lower():
-                return [t]
     by_rank = collections.defaultdict(list)
     for t in targets:
         rank = _LINK_RANK.get(t.get("strength") or "", 99)
         by_rank[rank].append(t)
     best = min(by_rank)
-    if mapped and best >= _LINK_RANK["win32-reference"]:
-        return [{"header": mapped, "strength": "heuristic-prefix",
-                 "statements": 0, "example_page": "-"}]
     cands = by_rank[best]
 
     def sort_key(t):
         h = t.get("header") or ""
         hl = h.lower()
         return (
-            0 if mapped and hl == mapped.lower() else 1,
             1 if hl.endswith(".hpp") else 0,
             1 if hl.endswith(".idl") else 0,
             -int(t.get("statements") or 0 or 0),
@@ -1423,6 +1427,26 @@ def load_constant_links():
                 "example_page": row.get("example_page"),
                 "sets": [s for s in (row.get("sets") or "").split(";") if s],
             })
+    return out
+
+
+def load_review_rejects():
+    """``data/constant-header-review.tsv`` verdict=reject names.
+
+    The reviewed misjudgments (sample-suite identifiers, page typos,
+    vendor keys): a ``#define`` is never emitted for them -- the review
+    note is the record, not a header row.
+    """
+    out = {}
+    if not os.path.exists(CONSTANT_HEADER_REVIEW):
+        return out
+    with open(CONSTANT_HEADER_REVIEW, encoding="utf-8") as fh:
+        for line in fh:
+            if not line.strip() or line.startswith("scope\t"):
+                continue
+            row = line.rstrip("\n").split("\t")
+            if len(row) > 3 and row[3] == "reject":
+                out[row[1]] = row[6] if len(row) > 6 else ""
     return out
 
 
@@ -2489,6 +2513,7 @@ def run_unified(args):
     UNSUPPORTED.update(load_unsupported())
     links = load_constant_links()
     conflict_rows = load_constant_conflicts()
+    review_rejects = load_review_rejects()
     pinvoke_apis = load_pinvoke_aux(PINVOKE_APIS)
     pinvoke_consts = load_pinvoke_aux(PINVOKE_CONSTANTS)
     base_types_by_header = load_base_types()
@@ -2655,11 +2680,22 @@ def run_unified(args):
         if not chosen and not outline:
             skipped["no declaration in the corpus"] += 1
         name_only = False
-        # Heuristic header assignment for entities without headers
+        # Header fallback for entities without a stated header.  Page
+        # evidence first (the pages that document the name state their
+        # headers), then the CE module page's own header statement, then
+        # the import-library mapping derived from documented entities,
+        # and only last the name-pattern table (heuristic-headers.tsv /
+        # header_map) -- a guess never outranks a statement, and the old
+        # order let the guess win ("Architecture" was filed into
+        # Wingdi.h by name pattern).
         if not primary:
-            heuristic_header = heuristic_entity_header(
-                entity, lib_to_header=lib_to_header,
-                heuristic_rows=heuristic_rows)
+            heuristic_header = None
+            votes = collections.Counter()
+            for page in entity.get("ce_pages") or ():
+                for h in page_to_headers.get(page) or ():
+                    votes[h] += 1
+            if votes:
+                heuristic_header = votes.most_common(1)[0][0]
             if not heuristic_header:
                 for lib in (entity.get("libraries") or []) + (
                         entity.get("dlls") or []):
@@ -2669,12 +2705,9 @@ def run_unified(args):
                         heuristic_header = modules_ce_headers[stem]
                         break
             if not heuristic_header:
-                votes = collections.Counter()
-                for page in entity.get("ce_pages") or ():
-                    for h in page_to_headers.get(page) or ():
-                        votes[h] += 1
-                if votes:
-                    heuristic_header = votes.most_common(1)[0][0]
+                heuristic_header = heuristic_entity_header(
+                    entity, lib_to_header=lib_to_header,
+                    heuristic_rows=heuristic_rows)
             if heuristic_header:
                 primary = heuristic_header
                 alternates = []
@@ -2866,19 +2899,25 @@ def run_unified(args):
         unsupported = UNSUPPORTED.get(name) or []
         if not groups:
             continue
+        if name in review_rejects:
+            skipped["constant review-rejected "
+                    "(data/constant-header-review.tsv)"] += 1
+            continue
         if quality_filters.is_language_runtime_constant(name):
             no_header += 1
             continue
         if name in w32api_gaps.NEVER and name != "MAX_PATH":
             continue
         unified_rec = unified_consts.get(name) or {}
-        if unified_rec.get("header"):
+        # Ranked linkage first (page statements / pinned reference /
+        # reviewed rows), then the unified view, then the NoStatedHeader
+        # worklist.  The unified header used to shadow the ranked table.
+        targets = pick_constant_targets(name, links.get(name) or [])
+        if not targets and unified_rec.get("header"):
             targets = [{"header": unified_rec["header"],
                         "strength": "unified-kb",
                         "statements": 1,
                         "example_page": (unified_rec.get("source") or {}).get("path") or "-"}]
-        else:
-            targets = pick_constant_targets(name, links.get(name) or [])
         if not targets:
             no_header += 1
             printed_forms.setdefault("nostatedheader.h", "NoStatedHeader.h")
@@ -3062,7 +3101,8 @@ def run_unified(args):
             "win32-reference": "w32",
             "reference-header": "ref",
             "co-mention": "co",
-            "heuristic-prefix": "prefix",
+            "family-statement": "family",
+            "reviewed": "review",
             "pinvoke-weak": "pinvoke",
         }
         label = rank_labels.get(strength, strength)
@@ -4037,7 +4077,8 @@ def _unified_report(args, entities, by_header, by_module, header_files,
     for rank in ("own-page", "entity-page", "constant-entity",
                  "win32-reference", "co-mention",
                  "reference-header",
-                 "heuristic-prefix",
+                 "family-statement",
+                 "reviewed",
                  "pinvoke-weak"):
         lines.append(f"| {rank} | {strengths.get(rank, 0):,} |")
     lines += [
@@ -4354,7 +4395,8 @@ def main():
     generated = {"set": args.target, "pages": len(pages)}
     include_dir = write_includes(out, by_header, generated)
     link_dir = write_defs(out, by_module, generated, load_ordinals(),
-                          reference_exports=load_reference_exports())
+                          reference_exports=load_reference_exports(),
+                          minimal_comments=args.minimal_comments)
     ordinal_files, ordinal_names = write_ordinal_defs(out, args.target)
     UNSUPPORTED.update(load_unsupported())
     constant_report = write_constants(out, constants, args.target,

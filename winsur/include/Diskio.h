@@ -30,18 +30,6 @@ typedef struct _DELETE_SECTOR_INFO {
  DWORD numsectors;
 } DELETE_SECTOR_INFO, *PDELETE_SECTOR_INFO;
 
-/* DISK_COPY_EXTERNAL  [struct; ce-only] */
-typedef struct _DISK_COPY_EXTERNAL {
- DWORD cbSize; 
- DWORD dwDirection; 
- PVOID pUserData; 
- DWORD cbUserDataSize; 
- TCHAR szCancelEventName[MAX_PATH];
- ULARGE_INTEGER ulFileSize;
- HANDLE hCallerProc;
- DWORD cbSectorListSize;
-} DISK_COPY_EXTERNAL, *PDISK_COPY_EXTERNAL;
-
 /* DISK_INFO  [struct; ce-only] */
 typedef struct _DISK_INFO {
  DWORD di_total_sectors;

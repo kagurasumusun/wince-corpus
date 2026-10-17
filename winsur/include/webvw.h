@@ -5,11 +5,25 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 49 extra decls
+ * 7 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 49 extra decls
  */
 #ifndef _WEBVW_
 #define _WEBVW_
 
+
+/* ==================================================================
+ * constants (one evidence comment per #define; the
+ * #if of a batch covers every #define in it; values
+ * that differ per generation pool into #if/#elif
+ * chains with the evidence after the #endif)
+ * ================================================================ */
+#define CP_ACP 0
+#define CP_MACCP 2
+#define CP_OEMCP 1
+#define CP_SYMBOL 42
+#define CP_THREAD_ACP 3
+#define CP_UTF7 65000
+#define CP_UTF8 65001
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

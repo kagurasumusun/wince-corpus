@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 12 declarations, 6 outlines, 0 base types, 0 extra macros, 16 extra decls
+ * 0 constants, 12 declarations, 5 outlines, 0 base types, 0 extra macros, 16 extra decls
  */
 #ifndef _DSOUND_
 #define _DSOUND_
@@ -24,8 +24,6 @@
 /* IDirectSoundCaptureBuffer  [struct; ce-only; Dsound.lib, dsound.lib] */
 
 /* IDirectSoundNotify  [struct; ce-only; Dsound.lib, dsound.lib] */
-
-/* IKsPropertySet  [struct; ce-only; Dsound.lib] */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

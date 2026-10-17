@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 860 constants, 106 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 860 constants, 104 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _MMSYSTEM_
 #define _MMSYSTEM_
@@ -1040,10 +1040,10 @@ BOOL sndPlaySound(
 /* timeGetTime  [function; shared; unified-kb; unified-kb] */
 DWORD timeGetTime(void);
 
-/* waveInGetNumDevs  [function; shared; unified-kb; unified-kb] */
+/* waveInGetNumDevs  [function; ce-only; harvest-kb; harvest-kb] */
 UINT waveInGetNumDevs(void);
 
-/* waveOutGetNumDevs  [function; shared; unified-kb; unified-kb] */
+/* waveOutGetNumDevs  [function; ce-only; harvest-kb; harvest-kb] */
 UINT waveOutGetNumDevs(void);
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */

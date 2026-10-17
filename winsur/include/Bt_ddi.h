@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 3 constants, 13 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 31 constants, 13 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _BT_DDI_
 #define _BT_DDI_
@@ -17,6 +17,34 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
+#define BT_AVDTP_STATE_DISCONNECTED 0
+#define BT_AVDTP_STATE_STREAMING 2
+#define BT_AVDTP_STATE_SUSPENDED 1
+#define BTH_HCI_IOCTL_GET_BASEBAND_CONNECTIONS 0x00000013
+#define BTH_HCI_IOCTL_GET_BASEBAND_HANDLES 0x00000010
+#define BTH_HCI_IOCTL_GET_BD_FOR_HANDLE 0x00000001
+#define BTH_HCI_IOCTL_GET_COMMANDSIZE 0x0000000b
+#define BTH_HCI_IOCTL_GET_ERRORS 0x00000009
+#define BTH_HCI_IOCTL_GET_FLOW 0x0000000a
+#define BTH_HCI_IOCTL_GET_HANDLE_FOR_BD 0x00000002
+#define BTH_HCI_IOCTL_GET_HANDLE_MODE 0x00000011
+#define BTH_HCI_IOCTL_GET_HARDWARE_STATUS 0x00000014
+#define BTH_HCI_IOCTL_GET_INQUIRY 0x00000006
+#define BTH_HCI_IOCTL_GET_LAST_INQUIRY_DATA 0x0000000f
+#define BTH_HCI_IOCTL_GET_LOOPBACK 0x00000008
+#define BTH_HCI_IOCTL_GET_NUM_ONDEVICE 0x00000004
+#define BTH_HCI_IOCTL_GET_NUM_PENDING 0x00000005
+#define BTH_HCI_IOCTL_GET_NUM_UNSENT 0x00000003
+#define BTH_HCI_IOCTL_GET_PERIODIC_INQUIRY 0x00000007
+#define BTH_HCI_IOCTL_GET_REMOTE_COD 0x00000015
+#define BTH_HCI_IOCTL_GET_SCO_PARAMETERS 0x00000012
+#define BTH_HCI_IOCTL_GET_UNDER_TEST 0x0000000e
+#define BTH_HCI_IOCTL_HANDLE_AUTHENTICATED 0x0000000c
+#define BTH_HCI_IOCTL_HANDLE_ENCRYPTED 0x0000000d
+#define BTH_MARKER_ADDRESS 2
+#define BTH_MARKER_CONNECTION 1
+#define BTH_MARKER_NONE 0
+#define BTH_STACK_IOCTL_GET_CONNECTED 0x80000001
 #define WODM_PARAM_CLOSE_A2DP 0
 #define WODM_PARAM_OPEN_A2DP 1
 #define WODM_PARAM_OPENASYNC_A2DP 2

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 116 constants, 11 declarations, 24 outlines, 0 base types, 0 extra macros, 15 extra decls
+ * 71 constants, 11 declarations, 24 outlines, 0 base types, 0 extra macros, 17 extra decls
  */
 #ifndef _PIMSTORE_
 #define _PIMSTORE_
@@ -19,51 +19,6 @@
  * ================================================================ */
 #define CEVT_PIM_AUTO_I4 (102)
 #define CEVT_PIM_STREAM (100)
-#define olAppointmentItem 1
-#define olBusy 2
-#define olCityItem 102
-#define olConfidential 3
-#define olContactItem 2
-#define olDialog 4
-#define olFolderCalendar 9
-#define olFolderCities 101
-#define olFolderContacts 10
-#define olFolderInfrared 102
-#define olFolderTasks 13
-#define olFree 0
-#define olFriday 32
-#define olHomeCity 0
-#define olImportanceHigh 2
-#define olImportanceLow 0
-#define olImportanceNormal 1
-#define olLED 1
-#define olMeeting 1
-#define olMeetingAccepted 3
-#define olMeetingCanceled 7
-#define olMonday 2
-#define olNonMeeting 0
-#define olNormal 0
-#define olOutOfOffice 3
-#define olPersonal 1
-#define olPrivate 2
-#define olRecursDaily 0
-#define olRecursMonthly 2
-#define olRecursMonthNth 3
-#define olRecursOnce -1
-#define olRecursWeekly 1
-#define olRecursYearly 5
-#define olRecursYearNth 6
-#define olRepeat 16
-#define olSaturday 64
-#define olSound 8
-#define olSunday 1
-#define olTaskItem 3
-#define olTentative 1
-#define olThursday 16
-#define olTuesday 4
-#define olVibrate 2
-#define olVisitingCity 1
-#define olWednesday 8
 #define PIMPR_ACCOUNT_NAME PROP_TAG(
 #define PIMPR_ANNIVERSARY PROP_TAG(
 #define PIMPR_ASSISTANT_NAME PROP_TAG(
@@ -279,6 +234,22 @@ enum OlSensitivity {
 
 /* PIMTYPE  [extra enum] */
 typedef enum tagPIMTYPE { PT_CALENDAR = 0, PT_TASKS, PT_CONTACT } PIMTYPE;
+
+/* olConfidential  [extra enum] */
+enum OlSensitivity {
+  olNormal = 0,
+  olPersonal = 1,
+  olPrivate = 2,
+  olConfidential = 3
+};
+
+/* olMeetingCanceled  [extra enum] */
+enum OlMeetingStatus {
+  olNonMeeting = 0,
+  olMeeting = 1,
+  olMeetingAccepted = 3,
+  olMeetingCanceled = 7
+};
 
 /* ==================================================================
  * functions and callbacks

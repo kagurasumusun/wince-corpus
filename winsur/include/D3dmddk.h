@@ -5,11 +5,19 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 63 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 1 constants, 63 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _D3DMDDK_
 #define _D3DMDDK_
 
+
+/* ==================================================================
+ * constants (one evidence comment per #define; the
+ * #if of a batch covers every #define in it; values
+ * that differ per generation pool into #if/#elif
+ * chains with the evidence after the #endif)
+ * ================================================================ */
+#define D3DMTSS_TEXTURE 0
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 178 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 180 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _CEDDK_
 #define _CEDDK_
@@ -105,13 +105,14 @@ ULONG HalSetBusDataByOffset(
  ULONG Length 
 );
 
-/* HalTranslateBusAddress  [function; ce-only; harvest-kb; harvest-kb] */
-BOOL HalTranslateBusAddress ( 
-INTERFACE_TYPE InterfaceType, 
-ULONG BusNumber, 
-PHYSICAL_ADDRESS BusAddress, 
-PULONG AddressSpace, 
-PPHYSICAL_ADDRESS TranslatedAddress );
+/* HalTranslateBusAddress  [function; ce-only; unified-kb; unified-kb] */
+BOOL HalTranslateBusAddress( 
+ INTERFACE_TYPE InterfaceType, 
+ ULONG BusNumber, 
+ PHYSICAL_ADDRESS BusAddress, 
+ PULONG AddressSpace, 
+ PPHYSICAL_ADDRESS TranslatedAddress 
+);
 
 /* MmUnmapIoSpace  [function; ce-only; unified-kb; unified-kb] */
 VOID MmUnmapIoSpace( 

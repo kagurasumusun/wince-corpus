@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 3 declarations, 25 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 4 declarations, 24 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _INTERNED_
 #define _INTERNED_
@@ -20,8 +20,6 @@
 /* blur  [typedef; ce-only; heuristic-prefix] */
 
 /* clearTimeout  [typedef; ce-only; heuristic-prefix] */
-
-/* Close  [function, typedef; ce-only; heuristic-prefix] */
 
 /* confirm  [typedef; ce-only; heuristic-prefix] */
 
@@ -68,6 +66,9 @@
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
+
+/* Close  [function, typedef; ce-only; heuristic-prefix] */
+Private Sub winsock_Close( );
 
 /* EVENT  [function, typedef; ce-only] */
 HRESULT Event(

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _DWUI_
 #define _DWUI_
@@ -58,5 +58,20 @@ HRESULT WatsonUploadResponse(
  BucketResponse* pBucketResponse
 );
 #endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* function */
+enum {
+  ResponseTypeMin = 0,
+  ResponseTypeDialogLink = 0,
+  ResponseTypeAutolaunch = 1,
+  ResponseTypeDialogSurvey = 2,
+  ResponseTypeLightweight = 3,
+  ResponseTypeMax = 4,
+};
 
 #endif /* _DWUI_ */

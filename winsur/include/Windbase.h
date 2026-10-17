@@ -5,25 +5,11 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 7 constants, 47 declarations, 13 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 47 declarations, 13 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _WINDBASE_
 #define _WINDBASE_
 
-
-/* ==================================================================
- * constants (one evidence comment per #define; the
- * #if of a batch covers every #define in it; values
- * that differ per generation pool into #if/#elif
- * chains with the evidence after the #endif)
- * ================================================================ */
-#define CEDB_NOCOMPRESS 0x00010000
-#define CEDB_VALIDCREATE 0x0017
-#define CEDB_VALIDDBFLAGS 0x0010
-#define CEDB_VALIDMODTIME 0x0008
-#define CEDB_VALIDNAME 0x0001
-#define CEDB_VALIDSORTSPEC 0x0004
-#define CEDB_VALIDTYPE 0x0002
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

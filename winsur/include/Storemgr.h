@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 40 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 42 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _STOREMGR_
 #define _STOREMGR_
@@ -15,12 +15,12 @@
  * functions and callbacks
  * ================================================================ */
 
-/* FindClosePartition  [function; ce-only; harvest-kb; harvest-kb] */
+/* FindClosePartition  [function; ce-only; unified-kb; unified-kb] */
 BOOL WINAPI FindClosePartition( 
  HANDLE hSearch 
 );
 
-/* FindCloseStore  [function; ce-only; harvest-kb; harvest-kb] */
+/* FindCloseStore  [function; ce-only; unified-kb; unified-kb] */
 BOOL WINAPI FindCloseStore( 
  HANDLE hSearch 
 );

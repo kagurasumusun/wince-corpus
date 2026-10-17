@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 17 constants, 6 declarations, 0 outlines, 0 base types, 4 extra macros, 1 extra decls
+ * 4 constants, 6 declarations, 0 outlines, 0 base types, 4 extra macros, 1 extra decls
  */
 #ifndef _DEVLOAD_
 #define _DEVLOAD_
@@ -17,23 +17,10 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define DEVFLAGS_BOOTPHASE_1 0x00001000
-#define DEVFLAGS_IRQ_EXCLUSIVE 0x00000100
-#define DEVFLAGS_LOAD_ASYNC 0x01000000
-#define DEVFLAGS_LOADLIBRARY 0x00000002
-#define DEVFLAGS_NAKEDENTRIES 0x00000008
-#define DEVFLAGS_NOLOAD 0x00000004
-#define DEVFLAGS_NONE 0x00000000
-#define DEVFLAGS_TRUSTEDCALLERONLY 0x00010000
-#define DEVFLAGS_UNLOAD 0x00000001
-#define DEVLOAD_BUSINITCODE_VALTYPE REG_DWORD
 #define DEVLOAD_CLIENTINFO_VALNAME L"ClientInfo"
 #define DEVLOAD_DEVKEY_VALNAME L"Key"
 #define DEVLOAD_DEVNAME_VALNAME L"Name"
 #define DEVLOAD_HANDLE_VALNAME L"Hnd"
-#define DEVLOAD_INITCODE_VALTYPE REG_DWORD
-#define DEVLOAD_LOAD_ASYNC_EVENT_TIMEOUT_VALTYPE REG_DWORD
-#define DEVLOAD_LOAD_ASYNC_EVENT_VALTYPE REG_SZ
 
 /* ==================================================================
  * macros -- supplementary #define from CE pages

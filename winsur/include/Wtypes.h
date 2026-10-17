@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 7 constants, 6 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 11 constants, 6 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WTYPES_
 #define _WTYPES_
@@ -19,9 +19,13 @@
  * ================================================================ */
 #define CLSID_NULL GUID_NULL
 #define DECIMAL_NEG ((BYTE)0x80)
+#define EOAC_NONE 0x0
 #define IID_NULL GUID_NULL
 #define ROTFLAGS_ALLOWANYCLIENT 0x02
 #define ROTFLAGS_REGISTRATIONKEEPSALIVE 0x01
+#define RPC_C_QOS_CAPABILITIES_MUTUAL_AUTH 0x1
+#define SEC_WINNT_AUTH_IDENTITY_ANSI 0x1
+#define SEC_WINNT_AUTH_IDENTITY_UNICODE 0x2
 #define VARIANT_FALSE ((VARIANT_BOOL)0)
 #define VARIANT_TRUE ((VARIANT_BOOL)0xffff)
 

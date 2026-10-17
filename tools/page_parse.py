@@ -91,6 +91,14 @@ LABEL_MAP = {
     "complete documentation": None, "online documentation": None,
     "sample application": None, "example": None, "unicode": "unicode_ansi",
     "unicode/ansi": "unicode_ansi", "ansi": "unicode_ansi",
+    # sdk-api markdown Requirement tables (| Requirement | Value |):
+    # the Unicode/ANSI row is the page's own A/W statement, and the
+    # "Minimum supported" rows are the OS-version statements of the page.
+    "unicode and ansi names": "unicode_ansi",
+    "unicode and ansi name": "unicode_ansi",
+    "minimum supported client": "os_versions",
+    "minimum supported server": "os_versions",
+    "minimum supported phone": "os_versions",
 }
 
 CONSTRAINT_WORDS = (
@@ -929,6 +937,238 @@ def listed_function_requirements(fragment):
     return out
 
 
+# ---------------------------------------------- header evidence in prose
+#
+# A page often *states* where a name lives without a Requirements block:
+# "The following constants give the ranges for the integral data types and
+# are defined in Limits.h.", "Include Raserror.h for definitions of the RAS
+# error codes.", "To use the predefined MFT_* type values, include the
+# following statement in your .rc file: #include "Winuser.h"", "The cursor
+# functions ... are not included in Winuser.h for the Handheld PC ...".
+# These are header-membership statements of the page -- quoted, never
+# inferred -- and they are the strongest evidence a constant can have
+# short of its own Requirements block.  Everything here is read, nothing
+# is guessed: a sentence that names no file yields nothing.
+
+_HDR_FILE = r"([A-Za-z_][\w.+-]*\.(?:h|hpp|hh|hxx|idl|inc))"
+_LIB_FILE = r"([A-Za-z_][\w.+-]*\.(?:lib|dll))"
+
+# "The following constants ... are defined in Limits.h."  The sentence
+# both introduces the rows that follow and names their header.  The
+# region it governs runs from just after the header token to the next
+# such sentence -- the match ends AT the header on purpose: table cells
+# follow immediately ("... in Float.h: Constant Value Description
+# DBL_DIG ...") and any trailing run would swallow the table it governs.
+_GROUP_STATEMENT = re.compile(
+    r"[^.]{0,300}\bfollowing\b[^.]{0,220}?\b(?:defined|declared|specified)"
+    r"\s+in\s+(?:the\s+)?"
+    r"(?P<header>[A-Za-z_][\w.+-]*\.(?:h|hpp|hh|hxx|idl|inc))\b",
+    re.I)
+_GROUP_FAMILY = re.compile(
+    r"(?i)\b(?:constants?|values?|flags?|styles?|messages?|identifiers?|"
+    r"macros?|symbols?|codes?|errors?|names?|elements?)\b")
+
+# "FOO is defined in X.h" / "the FOO structure is declared in X.h" --
+# one name, one header, same sentence.
+_NAME_HEADER_STATEMENT = re.compile(
+    r"\b(?P<name>[A-Z][A-Z0-9_]{2,})\b(?:\s+\w+){0,6}?\s+"
+    r"(?:is|are|was|were)?\s*(?:also\s+)?"
+    r"(?:defined|declared|specified)\s+in\s+(?:the\s+)?"
+    r"(?P<header>[A-Za-z_][\w.+-]*\.(?:h|hpp|hh|hxx|idl|inc))\b")
+
+# "Include Raserror.h for definitions of the RAS error codes." -- a
+# family statement: the header of the names the sentence names.
+_INCLUDE_FOR_DEFS = re.compile(
+    r"(?i)\binclude\s+(?P<header>[A-Za-z_][\w.+-]*\.(?:h|hpp|hh|hxx|idl|inc))\b"
+    r"[^.]{0,120}\bfor\s+(?:the\s+)?definitions?\s+of\s+(?:the\s+)?"
+    r"(?P<family>[^.]{2,120}?)\s*[.]")
+
+# "To use the predefined MFT_* type values, include ... #include "Winuser.h""
+# -- the page names a name prefix and the header that defines it.  The
+# bridge spans ".rc file:" (a period inside a file name), so it is any
+# short run up to the quoted include.
+_PREFIX_INCLUDE = re.compile(
+    r"(?i)\bpredefined\s+(?P<prefix>[A-Z][A-Z0-9_]*)_\*\s*"
+    r"(?:type\s+|state\s+|style\s+|option\s+)*"
+    r"(?:values?|flags?|styles?|options?)"
+    r".{0,200}?"
+    r"#?\s*include\s+[<\"](?P<header>[A-Za-z_][\w.+-]*"
+    r"\.(?:h|hpp|hh|hxx|idl|inc))[>\"]")
+
+# "The cursor functions ... are not included in Winuser.h ..." -- a
+# negative membership statement; kept as a quoted exclusion so no
+# generator files the names into that header on family resemblance.
+_NOT_IN_HEADER = re.compile(
+    r"[^.]{0,200}\bnot\s+(?:be\s+)?included\s+in\s+(?:the\s+)?"
+    r"(?P<header>[A-Za-z_][\w.+-]*\.(?:h|hpp|hh|hxx|idl|inc))\b[^.]{0,140}",
+    re.I)
+
+
+def header_group_statements(fragment):
+    """Header-per-family sentences and the fragment regions they govern.
+
+    Returns one dict per sentence: ``header`` as printed, ``start`` /
+    ``end`` (the region of ``fragment`` the sentence governs -- from just
+    after the sentence to the next family-header sentence), and ``text``
+    (the sentence, quoted).  A table inside the region belongs to that
+    header; nothing is attached to a table outside every region.
+    """
+    text = text_of(fragment, keep_newlines=False)
+    out = []
+    for match in _GROUP_STATEMENT.finditer(text):
+        sentence = re.sub(r"\s+", " ", match.group(0)).strip()
+        if not _GROUP_FAMILY.search(sentence):
+            continue
+        out.append({"header": match.group("header"),
+                    "start": match.end(), "end": len(text),
+                    "text": sentence})
+    for index, item in enumerate(out):
+        if index + 1 < len(out):
+            item["end"] = out[index + 1]["start"]
+    return out
+
+
+def attach_group_headers(fragment, rows):
+    """Annotate constant rows with the header their family sentence names.
+
+    Each row carries ``pos`` (its table's position in ``fragment``).  The
+    governing sentence is the last family sentence printed before the
+    table, and only when the table follows it closely (under 2,500
+    characters of the flattened text): a table of a later section is not
+    claimed by a sentence that governs an earlier one.  Rows get
+    ``group_header`` (as printed) or nothing -- no header is inferred.
+    """
+    if not rows:
+        return rows
+    groups = header_group_statements(fragment)
+    if not groups:
+        return rows
+    flat = text_of(fragment, keep_newlines=False)
+    # Approximate the table's position in the flattened text by counting
+    # the flattened length of the fragment prefix: text_of keeps document
+    # order, so the mapping is monotone even if not exact.
+    prefix_cache = {}
+
+    def flat_len(upto):
+        if upto not in prefix_cache:
+            prefix_cache[upto] = len(text_of(fragment[:upto],
+                                            keep_newlines=False))
+        return prefix_cache[upto]
+
+    for row in rows:
+        pos = row.get("pos")
+        if pos is None:
+            continue
+        target = flat_len(pos)
+        match = None
+        for group in groups:
+            if group["start"] <= target and target - group["start"] < 2500:
+                match = group
+        if match:
+            row["group_header"] = match["header"]
+            row["group_evidence"] = match["text"][:240]
+    return rows
+
+
+def name_header_statements(fragment, plain=False):
+    """Per-name header sentences: ``NAME ... defined in X.h``.
+
+    The name has to be an identifier-shaped token and the sentence has to
+    name a file.  The sentence is quoted as the evidence.  This is
+    ``own-page`` material for the name it names -- the page states the
+    header of that name.
+    """
+    text = statement_text(fragment, plain)
+    out = []
+    seen = set()
+    for match in _NAME_HEADER_STATEMENT.finditer(text):
+        name, header = match.group("name"), match.group("header")
+        key = (name, header.lower())
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append({"name": name, "header": header,
+                    "text": re.sub(r"\s+", " ", match.group(0)).strip()})
+    return out
+
+
+def family_header_statements(fragment, plain=False):
+    """Family sentences (``Include X.h for definitions of the ...``) and
+    prefix sentences (``predefined MFT_* ... #include "X.h"``).
+
+    Each row quotes the sentence.  The consumer attaches the header only
+    to names the family/prefix actually covers -- never to a name that
+    merely resembles it.
+    """
+    text = statement_text(fragment, plain)
+    out = []
+    for match in _INCLUDE_FOR_DEFS.finditer(text):
+        family = re.sub(r"\s+", " ", match.group("family")).strip()
+        out.append({"kind": "family", "family": family,
+                    "header": match.group("header"),
+                    "text": re.sub(r"\s+", " ", match.group(0)).strip()})
+    for match in _PREFIX_INCLUDE.finditer(text):
+        out.append({"kind": "prefix", "family": match.group("prefix") + "_*",
+                    "prefix": match.group("prefix"),
+                    "header": match.group("header"),
+                    "text": re.sub(r"\s+", " ", match.group(0)).strip()})
+    return out
+
+
+def header_exclusion_statements(fragment, plain=False):
+    """``not included in X.h`` sentences -- negative membership, quoted."""
+    text = statement_text(fragment, plain)
+    out = []
+    for match in _NOT_IN_HEADER.finditer(text):
+        out.append({"header": match.group("header"),
+                    "text": re.sub(r"\s+", " ", match.group(0)).strip()})
+    return out
+
+
+# "To import these functions, you need to link to the fsdmgr.lib file."
+# is already read by listed_function_requirements; this weaker sentence
+# shape ("you must add Uuid.lib to your project") is kept only as a
+# quoted module statement -- a name is never minted from it.
+_LINK_STATEMENT = re.compile(
+    r"[^.\n]{0,160}\b(?:must|need\s+to|have\s+to|required\s+to)\s+"
+    r"(?:also\s+)?(?:link|add|include)[^.\n]{0,80}?\b"
+    r"(?P<file>[A-Za-z_][\w.+-]*\.(?:lib|dll))\b[^.\n]{0,80}",
+    re.I)
+
+
+def statement_text(fragment, plain=False):
+    """The text a quote-taking statement reader matches over.
+
+    ``plain=True``: *fragment* is already the page's own text (the
+    markdown reader's raw file) and is passed through untouched -- the
+    clean-room quote check compares markdown records against the raw
+    .md page, so ``#include <winsock2.h>`` must keep every character
+    (running the HTML tag stripper over it would delete ``<winsock2.h>``
+    and the quote would no longer be on the page).  An HTML fragment is
+    read with its tags removed, the check's ground for .html pages.
+    """
+    if plain:
+        return fragment
+    return text_of(fragment, keep_newlines=False)
+
+
+def link_statements(fragment, plain=False):
+    """``you must link to X.lib`` sentences, quoted -- module evidence."""
+    text = statement_text(fragment, plain)
+    out = []
+    seen = set()
+    for match in _LINK_STATEMENT.finditer(text):
+        sentence = re.sub(r"\s+", " ", match.group(0)).strip()
+        key = (match.group("file").lower(), sentence)
+        if key in seen:
+            continue
+        seen.add(key)
+        out.append({"file": match.group("file"), "text": sentence})
+        if len(out) >= 8:
+            break
+    return out
+
+
 _MODULE_TITLE = re.compile(
     r"(?i)^([A-Za-z_][A-Za-z0-9_]*)\s+(?:Module|Components)$")
 # ``The coredll module contains the following components.`` and
@@ -1570,6 +1810,7 @@ def constant_tables(fragment, raw_row=False):
                 "decimal": decimal,
                 "table": header,
                 "origin": "table",
+                "pos": table.start(),
                 "row": (row_quote if raw_row else " ".join(cells)),
             })
     out.extend(_constants_in_cells(fragment, out, raw_row=raw_row))
@@ -2093,7 +2334,7 @@ _ROW_DECL = re.compile(
 _ROW_HEADER = re.compile(
     r"(?i)(?:declared|defined|prototype\s+d)?\s*in\s+([A-Za-z][A-Za-z0-9_]*\.h)"
     r"|(?:header|headers)\s*:\s*([A-Za-z][A-Za-z0-9_,\.\s]*\.h)")
-_PRE_BLOCK = re.compile(r"(?is)<pre\b[^>]*>(.*?)</pre>")
+_PRE_IN_CELL = re.compile(r"(?is)<pre\b[^>]*>(.*?)</pre>")
 
 
 def _row_code_spans(cell):
@@ -2110,7 +2351,7 @@ def _pre_blocks(cell):
     """The <pre> blocks of one cell, newlines preserved (a ``#ifdef``
     branch block is only readable line by line)."""
     out = []
-    for match in _PRE_BLOCK.finditer(cell):
+    for match in _PRE_IN_CELL.finditer(cell):
         inner = re.sub(r"(?is)</?code\b[^>]*>", "", match.group(1))
         text = text_of(inner, keep_newlines=True).strip("\n")
         if text.strip():
@@ -2478,24 +2719,29 @@ _MD_CODE = re.compile(r"`([^`\n]+)`")
 def prose_constants_text(text):
     """The markdown twin of :func:`prose_constants` (no HTML to strip).
 
-    Fenced code (````` ``` `````) and inline code spans are read by the
-    declaration reader (or are example code), so the prose reader sees
-    the text with them removed -- the same no-double-record rule as the
-    PRE/TABLE/CODE stripping on the HTML side.
+    Fenced code (````` ``` `````) is blanked and the backticks of inline
+    code spans are blanked (their content is ordinary prose: ``NAME
+    (0x0001)`` inside a code span is a printed constant) -- but every
+    blanking keeps the character count, so a match's offsets still point
+    into the raw page and the row quote is the page's own characters,
+    backticks included (check-cleanroom compares the quote against the
+    raw markdown file).
     """
     out = []
     seen = set()
-    text = _MD_FENCE.sub(" ", text or "")
-    text = _MD_CODE.sub(r" \1 ", text)
+    raw = text or ""
+    masked = _MD_FENCE.sub(lambda m: " " * (m.end() - m.start()), raw)
+    masked = _MD_CODE.sub(lambda m: m.group(0).replace("`", " "), masked)
     for pattern in (_PROSE_EQ, _PROSE_PAREN):
-        for match in pattern.finditer(text):
+        for match in pattern.finditer(masked):
             name, value = match.group(1), match.group(2)
             if not _PROSE_NAME_OK.match(name) or (name, value) in seen:
                 continue
             seen.add((name, value))
             out.append({"name": name, "value": value,
                         "table": "prose value", "origin": "prose",
-                        "row": match.group(0)})
+                        "row": re.sub(r"\s+", " ",
+                                      raw[match.start():match.end()]).strip()})
     return out
 
 
@@ -2901,6 +3147,33 @@ def _section_title_before(fragment, pos):
 _EXAMPLE_SECTION = ("example", "examples", "code example", "sample",
                     "samples", "example code")
 
+# The prose *immediately before* a code block can say what the block is
+# without a heading: "The following code example shows how the Free method
+# is usually implemented."  A block introduced this way is example code
+# even on a page with no Example heading and even when it is the page's
+# only block -- its ``#define MEM_HEIGHT 1000`` is the sample's own, not a
+# documented constant of the SDK.  Promotion to ``syntax`` is refused when
+# the introducing sentence carries one of these cues (checked in the
+# ~400 characters before the block, cutting at the previous heading).
+_EXAMPLE_CUE = re.compile(
+    r"(?i)\b(?:code\s+example|following\s+example|following\s+code|"
+    r"example\s+(?:shows|demonstrates|illustrates|implements|sets|uses|"
+    r"creates|declares)|sample\s+(?:code|application|program|function|"
+    r"shows|demonstrates)|the\s+following\s+sample|shows\s+how|"
+    r"shown\s+in\s+(?:the\s+)?following|as\s+shown|usually\s+implemented|"
+    r"implementation\s+of\s+the\s+following|is\s+implemented\s+as\s+follows|"
+    r"following\s+(?:program|listing|function)\s+shows)")
+
+
+def _example_cued(fragment, pos, window=400):
+    """True when the prose before position ``pos`` introduces example code."""
+    before = fragment[max(0, pos - window):pos]
+    # never look past the previous heading
+    cut = re.split(r"(?is)<h[1-6][^>]*>", before)
+    before = cut[-1] if cut else before
+    plain = text_of(before, keep_newlines=False)
+    return bool(_EXAMPLE_CUE.search(plain))
+
 
 def _looks_like_declaration(text):
     if _is_macro_block(text):
@@ -2961,9 +3234,11 @@ def declarations(fragment, page_title=None):
         # so a header generator never saw them.
         if role == "example" and macro_block and not implementation:
             title = _section_title_before(fragment, match.start())
-            if title not in _EXAMPLE_SECTION and not title.startswith("example"):
+            if title not in _EXAMPLE_SECTION and not title.startswith("example") \
+                    and not _example_cued(fragment, match.start()):
                 role = "syntax"
-        if role == "example" and not implementation and not syntax_region:
+        if role == "example" and not implementation and not syntax_region \
+                and not _example_cued(fragment, match.start()):
             # Templates without a Syntax heading put the prototype between the
             # description and the Parameters/Remarks heading; a page with a
             # single code block there is documenting a declaration, not
@@ -3150,6 +3425,93 @@ def markdown_struct_fields(text):
     return fields
 
 
+def markdown_structured_requirements(text):
+    """The body ``| Requirement | Value |`` table of an sdk-api page.
+
+    Every Win32 reference page closes with one: ``Header | Winuser.h
+    (include Windows.h)``, ``Unicode and ANSI names | **ACM_OPENW**
+    (Unicode) and **ACM_OPENA** (ANSI)``, ``Minimum supported client |
+    Windows Vista [desktop apps only]``.  The rows are requirement
+    statements of the page -- the only place a message or notification
+    page names its header -- so they are read like every other
+    Requirements block.  The value is the cell's own characters (markup
+    and markdown escapes included -- a quote must match the raw page);
+    the label goes through the same ``_field`` map as the HTML templates.
+
+    A row whose label maps to no field (``Minimum supported ...`` maps to
+    ``os_versions``) is kept under its mapped field; ``None.`` cells stay
+    out (the page states no such requirement).  The desktop minimum-OS
+    rows are statements of the *Win32 reference* (the layer mark lives on
+    the record); they are never read as a Windows CE version.
+    """
+    out = []
+    if not text:
+        return out
+    # One table after a Requirements heading.  Rows look like
+    # ``| Header<br/> | <dl> <dt>Winuser.h</dt> </dl> |``.  A page with
+    # no Requirements heading states no requirement table -- never scan
+    # the whole page for label-shaped cells (a ``| Type | Description |``
+    # parameter table is not a requirement).
+    section = re.search(
+        r"(?im)^#{2,6}\s*-?\s*requirements\s*$([\s\S]{0,4000})", text)
+    if not section:
+        return out
+    body = section.group(1)
+    for line in body.splitlines():
+        stripped = line.strip()
+        if not stripped.startswith("|") or stripped.startswith("|--") \
+                or stripped.startswith("| --"):
+            continue
+        cells = [c for c in stripped.strip("|").split("|")]
+        if len(cells) < 2:
+            continue
+        label = re.sub(r"<[^>]+>", " ", cells[0])
+        label = re.sub(r"[*\\`_]", "", label)
+        label = re.sub(r"\s+", " ", label).strip().rstrip(":")
+        field = _field(label)
+        if field in (None, "other") or field == "requires":
+            continue
+        value = " ".join(cells[1:])
+        # The value keeps every character the cell prints -- tags
+        # included.  ``<dl> <dt>BaseTsd.h; </dt> ...`` is the page's own
+        # spelling of a multi-file header cell, and check-cleanroom
+        # verifies the value against the raw markdown file character for
+        # character (whitespace aside): stripping the tags would delete
+        # printed characters and the quote would no longer be on the
+        # page.  Consumers parse names out of the raw value locally
+        # (HEADER_TOKEN finds BaseTsd.h inside the markup).
+        # The value stays as PRINTED -- markdown escapes (`\_`) and bold
+        # markers are the page's own characters (check-cleanroom verifies
+        # the value character-for-character against the page).  Consumers
+        # that parse names out of the value unescape locally.
+        value = re.sub(r"\s+", " ", value).strip()
+        if not value or stated_none(value):
+            continue
+        if not _plausible(field, value):
+            continue
+        out.append({"field": field, "label": label, "value": value,
+                    "evidence": f"Requirements table: {label} | {value}"})
+        if len(out) >= 24:
+            break
+    return out
+
+
+# ``title: ACM_OPEN message (Commctrl.h)`` -- the title parenthetical is
+# the page's own header statement (sdk-api prints it on every page).
+_MD_TITLE_HEADER = re.compile(
+    r"\(([A-Za-z_][\w.+-]*\.(?:h|hpp|hh|hxx|idl|inc))\)\s*$")
+
+
+def markdown_title_header(title):
+    """The header file an sdk-api title parenthetical states, or None."""
+    if not title:
+        return None
+    match = _MD_TITLE_HEADER.search(title.strip())
+    if not match:
+        return None
+    return match.group(1)
+
+
 def markdown(text):
     """sdk-api page -> (fields, requirements, declarations, struct fields).
 
@@ -3158,38 +3520,96 @@ def markdown(text):
     declaration is the fenced code block, usually under ``## -syntax``, and a
     structure page may instead (or also) document its members under
     ``## -struct-fields``.
+
+    YAML *list* fields (``api_location:`` followed by ``- Winuser.h``) are
+    read as their items -- every win32/common page ships its header that
+    way, and the previous same-line-only reading left those pages with no
+    requirement at all.  ``api_location`` is classified by the file
+    extension the page prints (a header, a library or a DLL -- never
+    re-tagged), and the body ``| Requirement | Value |`` table is read by
+    :func:`markdown_structured_requirements`.
     """
     fields = {}
+    body = text
     if text.startswith("---"):
         end = text.find("\n---", 3)
         head = text[3:end if end > 0 else len(text)]
+        body = text[end + 4:] if end > 0 else ""
+        pending = None
         for line in head.splitlines():
+            # A YAML list item under the pending key (``- Winuser.h``).
+            item = re.match(r"^\s*-\s+(.+?)\s*$", line)
+            if item and pending:
+                value = item.group(1).strip().strip("\"'")
+                if value:
+                    fields.setdefault(pending, [])
+                    if isinstance(fields[pending], list):
+                        fields[pending].append(value)
+                continue
             match = FRONT_FIELD.match(line.strip())
             if match:
                 key = match.group("key").strip()
                 value = match.group("value").strip()
+                pending = None
                 if value and not value.startswith("|"):
                     fields.setdefault(key, value)
-        text = text[end + 4:] if end > 0 else ""
+                elif not value:
+                    # ``api_location:`` with the items on the lines below.
+                    pending = key
+                    fields.setdefault(key, [])
+                continue
+            pending = None
+
+    def field_values(key):
+        value = fields.get(key)
+        if not value:
+            return []
+        if isinstance(value, list):
+            return [v for v in value if v]
+        return [item.strip() for item in re.split(r",|;", value) if item.strip()]
 
     reqs = []
     for key, field in (("req.header", "header"),
                        ("req.include-header", "header"),
                        ("req.lib", "library"),
                        ("req.dll", "dll"),
-                       ("api_location", "dll"),
                        ("req.unicode-ansi", "unicode_ansi"),
                        ("req.typenames", "type"),
                        ("req.namespace", "namespace"),
                        ("req.assembly", "assembly")):
-        value = fields.get(key)
-        if not value:
-            continue
-        for item in re.split(r",|;", value):
+        for item in field_values(key):
             item = item.strip().strip("-").strip()
             if item:
                 reqs.append({"field": field, "label": key, "value": item,
                              "evidence": f"{key}: {item}"})
+    # ``api_location`` prints the file the name lives in: a header
+    # (``Winuser.h``), an import library or the DLL itself.  The extension
+    # the page prints decides the field -- the value is never re-tagged
+    # from its shape, and a value naming no file gets no requirement.
+    for item in field_values("api_location"):
+        item = item.strip().strip("-").strip()
+        if not item:
+            continue
+        low = item.lower()
+        if re.search(r"\.(h|hpp|hh|hxx|idl|inc)\b", low):
+            field = "header"
+        elif re.search(r"\.(lib)\b", low):
+            field = "library"
+        elif re.search(r"\.(dll|drv|ocx|exe|sys)\b", low):
+            field = "dll"
+        else:
+            continue
+        reqs.append({"field": field, "label": "api_location", "value": item,
+                     "evidence": f"api_location: {item}"})
+    # The title parenthetical is the same header statement sdk-api prints
+    # on every page: ``BN_CLICKED notification code (Winuser.h)``.
+    title_header = markdown_title_header(fields.get("title", ""))
+    if title_header:
+        reqs.append({"field": "header", "label": "title",
+                     "value": title_header,
+                     "evidence": f"title: {fields.get('title', '')}"})
+    # The body Requirements table (Header | ..., Unicode and ANSI names | ...).
+    reqs.extend(markdown_structured_requirements(body))
 
     # The UID names the API exactly and its module:
     #   UID: NF:fileapi.CreateFileW  ->  module "fileapi", name "CreateFileW"
@@ -3202,36 +3622,39 @@ def markdown(text):
 
     decls = []
     for match in FENCE.finditer(text):
-        language, body = match.group(1), match.group(2)
-        body = body.strip()
-        if not body or not _looks_like_declaration(body):
+        language, fence_body = match.group(1), match.group(2)
+        fence_body = fence_body.strip()
+        if not fence_body or not _looks_like_declaration(fence_body):
             continue
         before = text[:match.start()]
-        implementation = is_implementation(body)
+        implementation = is_implementation(fence_body)
         role = "example" if implementation else (
             "syntax" if re.search(r"(?im)^##\s+-?syntax\s*$", before)
             else "example")
         # A block that is only #define definition lines is the declaration
         # of those macros (the message reference prints ``#define WM_CREATE
         # 0x0001`` with no Syntax heading at all), unless the page put it
-        # under an Example heading -- same rule as the HTML reader.
-        if role == "example" and _is_macro_block(body) and not implementation:
+        # under an Example heading -- same rule as the HTML reader, with
+        # the same example-cue guard on the introducing sentence.
+        if role == "example" and _is_macro_block(fence_body) and not implementation:
             title = ""
             for line in before.splitlines()[::-1]:
                 m = re.match(r"(?im)^#{1,6}\s+(.+?)\s*$", line)
                 if m:
                     title = m.group(1).strip().lower()
                     break
+            cued = bool(_EXAMPLE_CUE.search(
+                text_of(before[-400:], keep_newlines=False)))
             if title not in _EXAMPLE_SECTION and \
-                    not title.startswith("example"):
+                    not title.startswith("example") and not cued:
                 role = "syntax"
-        decls.append({"text": body, "markup": f"fence:{language or 'text'}",
-                      "spacing": _spacing(body), "role": role,
-                      "calling_convention": _calling_convention(body),
-                      "kind": _kind_of(body), "members": _members(body),
+        decls.append({"text": fence_body, "markup": f"fence:{language or 'text'}",
+                      "spacing": _spacing(fence_body), "role": role,
+                      "calling_convention": _calling_convention(fence_body),
+                      "kind": _kind_of(fence_body), "members": _members(fence_body),
                       "member_types": [member_type(line)
-                                       for line in _members(body)],
-                      "abi_flags": abi_flags(body),
+                                       for line in _members(fence_body)],
+                      "abi_flags": abi_flags(fence_body),
                       "implementation": implementation})
     return fields, reqs, decls, markdown_struct_fields(text)
 

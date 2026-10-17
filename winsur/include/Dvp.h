@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 8 declarations, 0 outlines, 0 base types, 0 extra macros, 13 extra decls
+ * 0 constants, 6 declarations, 0 outlines, 0 base types, 0 extra macros, 11 extra decls
  */
 #ifndef _DVP_
 #define _DVP_
@@ -51,12 +51,6 @@ typedef struct _DDVIDEOPORTCAPS {
  WORD wNumFilterTapsX; 
  WORD wNumFilterTapsY; 
 } DDVIDEOPORTCAPS, *LPDDVIDEOPORTCAPS;
-
-/* LPDDVIDEOPORTCONTAINER  [extra struct] */
-typedef struct IDDVideoPortContainer FAR *LPDDVIDEOPORTCONTAINER;
-
-/* LPDIRECTDRAWVIDEOPORT  [extra struct] */
-typedef struct IDirectDrawVideoPort FAR *LPDIRECTDRAWVIDEOPORT;
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

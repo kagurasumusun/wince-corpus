@@ -5,11 +5,24 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 31 declarations, 0 outlines, 0 base types, 0 extra macros, 56 extra decls
+ * 0 constants, 26 declarations, 3 outlines, 0 base types, 0 extra macros, 51 extra decls
  */
 #ifndef _DDRAW_
 #define _DDRAW_
 
+
+/* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x600)) /* CE 3.0..599 */
+
+/* IDirectDrawClipper  [interface; shared; CE 3.0..599; Ddraw.lib, ddraw.lib] */
+
+/* IDirectDrawColorControl  [interface; shared; CE 3.0..599; Ddraw.lib, ddraw.lib] */
+
+/* IDirectDrawPalette  [interface; shared; CE 3.0..599; Ddraw.lib, ddraw.lib] */
+#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -178,15 +191,6 @@ typedef struct _DDBLTFX{
  DDCOLORKEY ddckSrcColorkey; 
 } DDBLTFX,FAR* LPDDBLTFX;
 
-/* LPDIRECTDRAWCLIPPER  [extra struct] */
-typedef struct IDirectDrawClipper FAR *LPDIRECTDRAWCLIPPER;
-
-/* LPDIRECTDRAWCOLORCONTROL  [extra struct] */
-typedef struct IDirectDrawColorControl FAR *LPDIRECTDRAWCOLORCONTROL;
-
-/* LPDIRECTDRAWPALETTE  [extra struct] */
-typedef struct IDirectDrawPalette FAR *LPDIRECTDRAWPALETTE;
-
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
@@ -220,7 +224,6 @@ HRESULT ChangeUniquenessValue();
 HRESULT Compact();
 HRESULT FlipToGDISurface();
 HRESULT GetAvailableVidMem( LPDDSCAPS2 lpDDSCaps2, LPDWORD lpdwTotal, LPDWORD lpdwFree);
-HRESULT GetClipper( LPDIRECTDRAWCLIPPER FAR *lplpDDClipper);
 HRESULT GetColorControls( LPDDCOLORCONTROL lpColorControl);
 HRESULT GetColorKey( DWORD dwFlags, LPDDCOLORKEY lpDDColorKey);
 HRESULT GetDDInterface( LPVOID FAR *lplpDD);
@@ -231,7 +234,6 @@ HRESULT GetFourCCCodes( LPDWORD lpNumCodes, LPDWORD lpCodes);
 HRESULT GetHWnd( HWND FAR *lphWnd);
 HRESULT GetMonitorFrequency( LPDWORD lpdwFrequency);
 HRESULT GetOverlayPosition( LPLONG lplX, LPLONG lplY);
-HRESULT GetPalette( LPDIRECTDRAWPALETTE FAR *lplpDDPalette);
 HRESULT GetScanLine( LPDWORD lpdwScanLine);
 HRESULT GetSurfaceDesc( LPDDSURFACEDESC2 lpDDSurfaceDesc);
 HRESULT GetUniquenessValue( LPDWORD lpValue,);
@@ -243,7 +245,6 @@ HRESULT PageUnlock( DWORD dwFlags);
 HRESULT Restore();
 HRESULT RestoreAllSurfaces();
 HRESULT RestoreDisplayMode();
-HRESULT SetClipper( LPDIRECTDRAWCLIPPER lpDDClipper);
 HRESULT SetColorControls( LPDDCOLORCONTROL lpColorControl);
 HRESULT SetCooperativeLevel( HWND hWnd, DWORD dwFlags);
 HRESULT SetDisplayMode( DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwRefreshRate, DWORD dwFlags);
