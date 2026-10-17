@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 370 constants, 39 declarations, 17 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 350 constants, 39 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDOWSAPIS_
 #define _WINDOWSAPIS_
@@ -83,33 +83,6 @@
 #define MAPVK_VK_TO_VSC_EX 4
 #define MAPVK_VSC_TO_VK 1
 #define MAPVK_VSC_TO_VK_EX 3
-#define MB_ABORTRETRYIGNORE 0x00000002L
-#define MB_APPLMODAL 0x00000000L
-#define MB_CANCELTRYCONTINUE 0x00000006L
-/* NOT SUPPORTED per mvb/windows-ce-1.0/PEGSDK: Windows CE Notes The follwing styles are not supported: [corpus/mvb/windows-ce-1.0/PEGSDK/AB109K.html] */
-#define MB_DEFAULT_DESKTOP_ONLY 0x00020000L
-#define MB_DEFBUTTON1 0x00000000L
-#define MB_DEFBUTTON2 0x00000100L
-#define MB_DEFBUTTON3 0x00000200L
-#define MB_DEFBUTTON4 0x00000300L
-/* NOT SUPPORTED per mvb/windows-ce-1.0/PEGSDK: Windows CE Notes The follwing styles are not supported: [corpus/mvb/windows-ce-1.0/PEGSDK/AB109K.html] */
-#define MB_HELP 0x00004000L
-#define MB_OKCANCEL 0x00000001L
-#define MB_RETRYCANCEL 0x00000005L
-/* NOT SUPPORTED per mvb/windows-ce-1.0/PEGSDK: Windows CE Notes The follwing styles are not supported: [corpus/mvb/windows-ce-1.0/PEGSDK/AB109K.html] */
-#define MB_RIGHT 0x00080000L
-/* NOT SUPPORTED per mvb/windows-ce-1.0/PEGSDK: Windows CE Notes The follwing styles are not supported: [corpus/mvb/windows-ce-1.0/PEGSDK/AB109K.html] */
-#define MB_RTLREADING 0x00100000L
-/* NOT SUPPORTED per mvb/windows-ce-1.0/PEGSDK: Windows CE Notes The follwing styles are not supported: [corpus/mvb/windows-ce-1.0/PEGSDK/AB109K.html] */
-#define MB_SERVICE_NOTIFICATION 0x00200000L
-#define MB_SETFOREGROUND 0x00010000L
-/* NOT SUPPORTED per mvb/windows-ce-1.0/PEGSDK: Windows CE Notes The follwing styles are not supported: [corpus/mvb/windows-ce-1.0/PEGSDK/AB109K.html] */
-#define MB_SYSTEMMODAL 0x00001000L
-/* NOT SUPPORTED per mvb/windows-ce-1.0/PEGSDK: Windows CE Notes The follwing styles are not supported: [corpus/mvb/windows-ce-1.0/PEGSDK/AB109K.html] */
-#define MB_TASKMODAL 0x00002000L
-#define MB_TOPMOST 0x00040000L
-#define MB_YESNO 0x00000004L
-#define MB_YESNOCANCEL 0x00000003L
 #define MENU 56
 #define MF_BITMAP 0x00000004L
 #define MF_MENUBARBREAK 0x00000020L
@@ -125,16 +98,16 @@
 #define NONAME 0
 #define None 0
 #define NONE 0
-#define NUMPAD0 0
-#define NUMPAD1 0
-#define NUMPAD2 0
-#define NUMPAD3 0
-#define NUMPAD4 0
-#define NUMPAD5 0
-#define NUMPAD6 0
-#define NUMPAD7 0
-#define NUMPAD8 0
-#define NUMPAD9 0
+#define NUMPAD0 0x0
+#define NUMPAD1 0x0
+#define NUMPAD2 0x0
+#define NUMPAD3 0x0
+#define NUMPAD4 0x0
+#define NUMPAD5 0x0
+#define NUMPAD6 0x0
+#define NUMPAD7 0x0
+#define NUMPAD8 0x0
+#define NUMPAD9 0x0
 #define PM_NOREMOVE 0x0000
 #define PM_NOYIELD 0x0002
 #define PM_REMOVE 0x0001
@@ -400,50 +373,16 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-/* definition  [typedef; ce-only; heuristic-prefix] */
-
-/* firstChild  [typedef; ce-only; heuristic-prefix] */
-
-/* lastChild  [typedef; ce-only; heuristic-prefix] */
-
 /* MAKEINTATOM  [macro, function; shared] */
 LPTSTR MAKEINTATOM(
  WORD wInteger
 );
-
-/* namespaceURI  [typedef; ce-only; heuristic-prefix] */
-
-/* nextSibling  [typedef; ce-only; heuristic-prefix] */
-
-/* nodeName  [typedef; ce-only; heuristic-prefix] */
-
-/* nodeType  [typedef; ce-only; heuristic-prefix] */
-
-/* nodeTypedValue  [typedef; ce-only; heuristic-prefix] */
-
-/* nodeTypeString  [typedef; ce-only; heuristic-prefix] */
-
-/* nodeValue  [typedef; ce-only; heuristic-prefix] */
-
-/* ownerDocument  [typedef; ce-only; heuristic-prefix] */
 
 /* PALETTEINDEX2BPP  [macro; ce-only] */
 #define PALETTEINDEX2BPP (i) \
  (((i)==0)?0x00000000: \
  (((i)==1)?0x00808080: \
  (((i)==2)?0x00C0C0C0:0x00FFFFFF)));
-
-/* parentNode  [typedef; ce-only; heuristic-prefix] */
-
-/* parsed  [typedef; ce-only; heuristic-prefix] */
-
-/* prefix  [typedef; ce-only; heuristic-prefix] */
-
-/* previousSibling  [typedef; ce-only; heuristic-prefix] */
-
-/* specified  [typedef; ce-only; heuristic-prefix] */
-
-/* xml  [typedef; ce-only; heuristic-prefix] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

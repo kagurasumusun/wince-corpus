@@ -17,11 +17,11 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define SDCARD_ZONE_ERROR 15
-#define SDCARD_ZONE_FUNC 11
-#define SDCARD_ZONE_INFO 12
-#define SDCARD_ZONE_INIT 13
-#define SDCARD_ZONE_WARN 14
+#define SDCARD_ZONE_ERROR 0x15
+#define SDCARD_ZONE_FUNC 0x11
+#define SDCARD_ZONE_INFO 0x12
+#define SDCARD_ZONE_INIT 0x13
+#define SDCARD_ZONE_WARN 0x14
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

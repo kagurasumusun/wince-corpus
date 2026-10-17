@@ -1183,7 +1183,7 @@ def read_constant_header_review():
             scope = (row.get("scope") or "name").strip()
             name = (row.get("name") or "").strip()
             verdict = (row.get("verdict") or "").strip().lower()
-            if not name or verdict not in ("approve", "reject"):
+            if not name or verdict not in ("approve", "reject", "prefer"):
                 continue
             row["verdict"] = verdict
             row["header"] = (row.get("header") or "").strip()

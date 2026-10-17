@@ -11,20 +11,20 @@ the SAME tree, marked 'Win32 reference' -- never a second tree.
 ## What was generated
 
 * entities in scope: **29,161** (by surface: `ce-only` 24,666, `shared` 4,495)
-* header fragments: **650** under `include/`, each
+* header fragments: **649** under `include/`, each
   with its documented constants first, then the macros, the types
   and the functions; quoted text is verbatim, the `#define`
   keyword and the header/constant filing are derived and say so
-* derived `#define` lines written: **27,859**
+* derived `#define` lines written: **27,695**
 * derived member outlines (structures whose body no page prints):
   **563** -- marked DERIVED in the fragment
-* constants whose pages disagree / overlap: **31** name(s) examined in `kb/constant-conflicts.tsv`
-  (2 of them reach a header fragment in this build;
+* constants whose pages disagree / overlap: **15** name(s) examined in `kb/constant-conflicts.tsv`
+  (0 of them reach a header fragment in this build;
   **0** resolved by the review in
   `data/constant-value-review.tsv` to a print the pages themselves
   state, the rest get no `#define` -- every one keeps its
   CONFLICT block with the verdict)
-* constants with no header linkage at all: **2,145**
+* constants with no header linkage at all: **1,980**
   (worklist only -- they stay in `constants.tsv`)
 * module `.def` worklists: **296** under `link/`
   (per-line version range is a comment; `.def` has no
@@ -53,13 +53,13 @@ hint):
 | rank | link rows |
 |------|----------:|
 | own-page | 4,056 |
-| entity-page | 1,366 |
+| entity-page | 1,299 |
 | constant-entity | 655 |
 | win32-reference | 1,806 |
 | co-mention | 20 |
-| reference-header | 4,863 |
+| reference-header | 4,862 |
 | family-statement | 0 |
-| reviewed | 109 |
+| reviewed | 138 |
 | pinvoke-weak | 84 |
 
 The reference-header ranks come from the pinned, licence-vetted

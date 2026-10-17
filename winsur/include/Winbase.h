@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 695 constants, 342 declarations, 8 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 686 constants, 342 declarations, 8 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINBASE_
 #define _WINBASE_
@@ -329,15 +329,6 @@
 #define MAXIMUM_SUSPEND_COUNT 0x7F
 #define MAXIMUM_WAIT_OBJECTS 64
 #define MAXINTATOM 0xC000
-#define MB_ICONASTERISK 0x00000040L
-#define MB_ICONERROR 0x00000010L
-#define MB_ICONEXCLAMATION 0x00000030L
-#define MB_ICONHAND 0x00000010L
-#define MB_ICONINFORMATION 0x00000040L
-#define MB_ICONQUESTION 0x00000020L
-#define MB_ICONSTOP 0x00000010L
-#define MB_ICONWARNING 0x00000030L
-#define MB_OK 0x00000000L
 #define MEM_COALESCE_PLACEHOLDERS 0x00000001
 #define MEM_COMMIT 0x00001000
 #define MEM_DECOMMIT 0x00004000

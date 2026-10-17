@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1448 constants, 20 declarations, 5 outlines, 21 base types, 0 extra macros, 0 extra decls
+ * 1447 constants, 20 declarations, 22 outlines, 21 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINNT_
 #define _WINNT_
@@ -39,7 +39,6 @@
 #define ANSI_NULL '\0'
 #define ANYSIZE_ARRAY 1
 #define APPLICATION_ERROR_MASK 0x20000000
-#define ARM 0x1801
 #define COMPRESSION_ENGINE_HIBER (0x0200)
 #define COMPRESSION_ENGINE_MAXIMUM (0x0100)
 #define COMPRESSION_ENGINE_STANDARD (0x0000)
@@ -1576,6 +1575,12 @@ typedef WCHAR TBYTE;
 
 /* _IMAGE_ALPHA_RUNTIME_FUNCTION_ENTRY  [typedef; ce-only] */
 
+/* definition  [typedef; ce-only; heuristic-prefix] */
+
+/* firstChild  [typedef; ce-only; heuristic-prefix] */
+
+/* lastChild  [typedef; ce-only; heuristic-prefix] */
+
 /* MAKELANGID  [macro, function; shared] */
 WORD MAKELANGID( 
  USHORT usPrimaryLanguage, 
@@ -1587,14 +1592,42 @@ WORD MAKELANGID(
  ((DWORD)((((DWORD)((WORD )(srtid))) << 16) | \ 
  ((DWORD)((WORD )(lgid)))));
 
+/* namespaceURI  [typedef; ce-only; heuristic-prefix] */
+
+/* nextSibling  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeName  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeType  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeTypedValue  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeTypeString  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeValue  [typedef; ce-only; heuristic-prefix] */
+
+/* ownerDocument  [typedef; ce-only; heuristic-prefix] */
+
+/* parentNode  [typedef; ce-only; heuristic-prefix] */
+
+/* parsed  [typedef; ce-only; heuristic-prefix] */
+
+/* prefix  [typedef; ce-only; heuristic-prefix] */
+
+/* previousSibling  [typedef; ce-only; heuristic-prefix] */
+
 /* PRIMARYLANGID  [macro, function; shared] */
 WORD PRIMARYLANGID( 
  WORD lgid 
 );
 
+/* specified  [typedef; ce-only; heuristic-prefix] */
+
 /* SUBLANGID  [macro, function; shared] */
 
 /* TEXT  [macro, typedef, function; shared] */
+
+/* xml  [typedef; ce-only; heuristic-prefix] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

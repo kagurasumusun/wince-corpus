@@ -534,7 +534,7 @@ def main():
                                    "statements": [], "ordinals": 0, "abi": 0}
         if rel.endswith((".md", ".html", ".htm")):
             try:
-                page = census(rel, raw)
+                page = census(rel, raw, title=titles.get(rel))
                 misses, misjudgments = check_page(rel, page, got,
                                                  links, review, glob)
             except Exception as exc:  # a reader crash is a finding too

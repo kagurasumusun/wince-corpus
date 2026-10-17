@@ -18,13 +18,13 @@ Rebuild with `python3 tools/build-unified-kb.py`.
 
 ## Counts
 
-- **constants**: 9,083
-- **constants_with_header**: 7,121
+- **constants**: 8,914
+- **constants_with_header**: 7,117
 - **constants_win32_fallback**: 2,053
-- **discarded_values**: 369
+- **discarded_values**: 93
 - **declarations**: 30,997
 - **declarations_with_header**: 19,780
 - **macros**: 184
-- **headers**: 693
+- **headers**: 691
 - **modules**: 653
 - **entities**: 30,372
