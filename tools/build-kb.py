@@ -366,6 +366,16 @@ def parse_page(job):
             fact["constraints"].append({
                 "kind": "link-statement",
                 "pattern": item["file"], "text": item["text"]})
+        for item in fact["name_headers"]:
+            fact["constraints"].append({
+                "kind": "name-header",
+                "pattern": item["name"] + " -> " + item["header"],
+                "text": item["text"]})
+        for item in fact["family_headers"]:
+            fact["constraints"].append({
+                "kind": "family-header",
+                "pattern": item.get("family", "") + " -> " + item["header"],
+                "text": item["text"]})
         fact["front_matter"] = {k: v for k, v in fields.items()
                                 if k in ("title", "UID", "ms.date",
                                          "req.header", "req.lib", "req.dll")}
@@ -455,16 +465,8 @@ def parse_page(job):
     # Negative membership ("The cursor functions ... are not included in
     # Winuser.h ...") and link statements ("you must link to X.lib") are
     # quoted as KB notes -- they keep a wrong filing out of a header and
-    # they are the corpus/kb material the surface consults.
-    for item in fact["header_exclusions"]:
-        fact["constraints"].append({
-            "kind": "header-exclusion",
-            "pattern": "not included in " + item["header"],
-            "text": item["text"]})
-    for item in fact["link_statements"]:
-        fact["constraints"].append({
-            "kind": "link-statement",
-            "pattern": item["file"], "text": item["text"]})
+    # they are the corpus/kb material the surface consults.  (The loop
+    # runs AFTER the statements are harvested below.)
     # A layout table (Offset | Field | Size | ...) is a documented ABI fact of
     # the page, quoted row by row (page_parse.offset_tables).  The sdk-api
     # markdown pages carry no such table (checked 2026-10-05), so this is the
@@ -486,6 +488,25 @@ def parse_page(job):
     fact["family_headers"] = page_parse.family_header_statements(fragment)
     fact["header_exclusions"] = page_parse.header_exclusion_statements(fragment)
     fact["link_statements"] = page_parse.link_statements(fragment)
+    for item in fact["header_exclusions"]:
+        fact["constraints"].append({
+            "kind": "header-exclusion",
+            "pattern": "not included in " + item["header"],
+            "text": item["text"]})
+    for item in fact["link_statements"]:
+        fact["constraints"].append({
+            "kind": "link-statement",
+            "pattern": item["file"], "text": item["text"]})
+    for item in fact["name_headers"]:
+        fact["constraints"].append({
+            "kind": "name-header",
+            "pattern": item["name"] + " -> " + item["header"],
+            "text": item["text"]})
+    for item in fact["family_headers"]:
+        fact["constraints"].append({
+            "kind": "family-header",
+            "pattern": item.get("family", "") + " -> " + item["header"],
+            "text": item["text"]})
     # The same rule for the other two shapes a page numbers a constant in:
     # running prose (``WM_USER (0x0400)``) and the page's own *syntax*
     # declarations (``#define OEM_BLOCK_RESERVED 0x01``, an enum member
@@ -1650,6 +1671,18 @@ def constant_header_links(constants, requirements, pinvoke_records_pair,
             if current not in ("own-page", "entity-page", "constant-entity"):
                 best[name]["rank"] = "reject"
                 best[name]["headers"] = collections.defaultdict(dict)
+            continue
+        if row["verdict"] == "prefer" and row["header"]:
+            # The human adjudication of conflicting statements the
+            # corpus itself cannot settle (MessageBeep's page states
+            # Winbase.h on one CE version and Winuser.h on another).
+            # It outranks the tie, and nothing else.
+            best[name]["rank"] = None
+            best[name]["headers"] = collections.defaultdict(
+                lambda: {"count": 0, "page": "", "sets": set()})
+            offer(name, "reviewed", [row["header"]],
+                  row["evidence_page"] or REVIEW_PATH,
+                  row.get("set") or "review")
             continue
         if name in best and best[name]["rank"] is not None:
             continue  # a stronger rank already files this name

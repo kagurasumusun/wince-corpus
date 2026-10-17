@@ -29,6 +29,7 @@ Two things *are* derived, and are labelled as such:
   -> ``header``).  The original label is kept next to it.
 """
 
+import collections
 import html as _html
 import re
 
@@ -1721,6 +1722,7 @@ def constant_tables(fragment, raw_row=False):
                     if not text:
                         continue
                     if not CONSTANT_IDENT.match(text) or \
+                            not _constant_name(text) or \
                             (text.upper() != text and "_" not in text):
                         return False
                     seen += 1
@@ -1794,6 +1796,17 @@ def constant_tables(fragment, raw_row=False):
                         break
             if not value:
                 continue
+            # A cell from a column the table labels hex ("Value (Hex)")
+            # prints hexadecimal digits ("08", "4F", "20").  The row is
+            # quoted as printed; the value recorded is the C literal of
+            # those printed digits (0x08) so the surface compiles to the
+            # number the page states.  Pure digits only -- an expression
+            # cell is left exactly as printed.
+            if value_from == hex_i and \
+                    re.fullmatch(r"-?[0-9A-Fa-f]{1,16}", value) and \
+                    not value.lower().lstrip("-").startswith("0x"):
+                sign = "-" if value.startswith("-") else ""
+                value = sign + "0x" + (value[1:] if sign else value)
             # A decimal is kept only when the page prints one *beside* the
             # value (a separate decimal column, or the second half of a
             # compound ``255 (0xff)`` cell), never by converting a
@@ -1813,6 +1826,17 @@ def constant_tables(fragment, raw_row=False):
                 "pos": table.start(),
                 "row": (row_quote if raw_row else " ".join(cells)),
             })
+        # one name cannot stand for two different values in one table
+        # (a DIP-switch chart whose columns read Setting|Position is not
+        # a constant table)
+        table_rows = [row for row in out if row["table"] == header and
+                      row.get("origin") == "table" and
+                      row.get("pos") == table.start()]
+        counts = collections.defaultdict(set)
+        for row in table_rows:
+            counts[row["name"]].add(row["value"])
+        out = [row for row in out if row not in table_rows or
+               len(counts[row["name"]]) == 1]
     out.extend(_constants_in_cells(fragment, out, raw_row=raw_row))
     return out
 
@@ -2233,7 +2257,23 @@ def constant_tables_text(text):
                     value_from = index
                     break
             if not value:
+                # printed expression values (``RASBASE+1``) stay printed
+                for index in (val_i, hex_i, dec_i):
+                    if index is None or index >= len(cells):
+                        continue
+                    got = expression_cell(cells[index])
+                    if got:
+                        value = got
+                        value_from = index
+                        break
+            if not value:
                 continue
+            # hex-labelled column: the C literal of the printed digits
+            if value_from == hex_i and \
+                    re.fullmatch(r"-?[0-9A-Fa-f]{1,16}", value) and \
+                    not value.lower().lstrip("-").startswith("0x"):
+                sign = "-" if value.startswith("-") else ""
+                value = sign + "0x" + (value[1:] if sign else value)
             decimal = number_at(dec_i)[0]
             if not decimal or decimal.lower().startswith("0x") \
                     or value_from == dec_i:
@@ -2252,6 +2292,13 @@ def constant_tables_text(text):
                 "origin": "table",
                 "row": row_quote,
             })
+    # one name cannot stand for two different values in one table
+    counts = collections.defaultdict(lambda: collections.defaultdict(set))
+    for row in out:
+        counts[(row.get("table"), row["name"])][row["value"]].add(id(row))
+    drop = {key for key, values in counts.items() if len(values) > 1}
+    out = [row for row in out
+           if (row.get("table"), row["name"]) not in drop]
     return out
 
 

@@ -212,12 +212,56 @@ md ページの引用は生ファイルと文字単位で突き合わされる�
   無いため、確認できたものだけを `data/constant-header-review.tsv` に追記
   していく。
 * `reports/extraction-audit.md` の残ギャップ（tables-unread 等）は
-  「読んだが抽出可能な事実が無い表」を含む作業リスト。次周は各フラグの
-  例示ページから順に潰す。
+  「読んだが抽出可能な事実が無い表」を含む作業リスト。`tools/full-pass.py`
+  のページ判定（§5）がこの領域の正典であり、audit フラグはシグナル扱い。
 * `reference-disagrees`（`reports/assignment-review.tsv`）は CE とデスク
   トップでヘッダ所属が異なる正当な差分を含む監視リスト。ページ声明が
   ある行はページが優先される。
 * 記号値の `#define`（`ERROR_PPP_NOT_SUPPORTED (RASBASE + 133)` のように
-  ページが `RASBASE + 133` と印字する行）は現状 `#define` 行に展開され
-  ない（数値値のみ展開）。Raserror.h への振り分け自体は成立しており、
-  式をそのまま引用する展開は次周の作業。
+  ページが `RASBASE + 133` と印字する行）は印字どおり式ごと `#define`
+  行に出る（勝手に数値化しない）。Raserror.h への振り分けも成立している。
+
+## 5. 全ファイル 1 パスの生ページ検証と誤判定つぶし（2026-10-17 追加）
+
+依頼は「corpus の全ファイルを生ページのまま 1 回で連続して検証し、
+その同じパスで誤判定も潰す」。`tools/full-pass.py` がそれを実装する:
+corpus 配下を順に全開封（サンプリングなし・スキップなし）、各ファイルで
+
+* **miss（読み落とし）**: ページが印字する要求行・宣言・定数・名前表・
+  ordinal・ABI・声明のうち、`knowledge/kb/` に記録が無いもの。判定は
+  ページ内一致 + KB 全体一致（重複ページ・家族共有行は一度記録されれば
+  可。例示コードは読取側で除外済みなので miss にも example にも数えない）。
+* **misjudgment（誤認）**: 記録済み引用が生ページに無い、`reject` 名が
+  ヘッダに振り分けられている、rank が未知、ドキュメントの宣言が
+  `example` に降格（role-misjudged）など。
+
+結果（`reports/full-pass.tsv` / `full-pass.md` に全ファイル分を記録）:
+
+* パス 1（旧 KB・旧カバレッジ判定）: missed 17,342 — 大半は判定器側の
+  重複ページ/共有行の過大カウントと、dotnet 宣言の別ファイル
+  （`declarations-dotnet.jsonl.gz`）未読込という判定器の誤り。
+* パス 2（判定器修正後・旧 KB）: missed 289 / misjudged 38 に収束。
+  残った実問題を潰した: 名前ヘッダ/ファミリ/ヘッダ除外/リンク声明が
+  HTML ページで constraints に記録されていなかった（読込順のバグ）、
+  など。
+* パス 3（KB 再構築後）: 下記 §6 の修正を載せた最終確認パス。
+
+### このパスで潰した誤認・読み落とし（根本原因）
+
+1. **複合 `typedef X; enum {...}` ブロック**が `example` 扱い → 型ページの
+   宣言・enum 定数（VARTYPE の VT_* など）を落としていた。宣言として読む
+   修正で `wce50lrfVARTYPE.html` は role=syntax・18 定数行が記録。
+2. **16 進表（"Value (Hex)" 列）の印字 "08"/"4F"/"20"** がそのまま
+   `#define VK_BACK 08` と出力され、C として壊れていた。列が 16 進と
+   名ざす表の印字桁は C リテラル `0x08` に変換（行引用は印字のまま）。
+3. **DIP スイッチ表（"S1-1 | OFF" 等）** が定数表と誤読され
+   `OFF=0xS1-1` の類のゴミ行を生んでいた。列推定の名前セルは定数名
+   らしさを要求、同一表内の同名異値行を不採用に。
+4. **名前ヘッダ声明（"BLOB struct is defined in Sslsock.h" 等）が HTML
+   で constraints に記録されていなかった**（harvest より前の空リストへ
+   遍歴していた）。name-header / family-header を constraints に記録。
+5. **同一宣言の重複ページ・VB/C#/C++ 多言語列記**のカバレッジ判定を
+   文字列一致 + KB 全体参照に正した（パス 1 の 17,342 の大半）。
+6. **ヘッダ声明の競合（MessageBeep が Winbase.h と Winuser.h の両方を
+   声明）** は corpus 内で決着しない。`verdict=prefer`（人手裁定）を
+   導入し、MB_*（MessageBox 系 29 名）を Winuser.h に裁定。

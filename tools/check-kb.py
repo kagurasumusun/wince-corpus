@@ -477,7 +477,8 @@ def main():
                     problems.append(f"constant {rid}: no row text")
             if kind == "constraint" and record.get("kind") not in (
                     "ce-restriction", "ce-note", "abi-note",
-                    "oss-statement", "header-exclusion", "link-statement"):
+                    "oss-statement", "header-exclusion", "link-statement",
+                    "name-header", "family-header"):
                 problems.append(f"constraint {rid}: kind "
                                 f"{record.get('kind')!r} is not known")
             seen[rid] = record
