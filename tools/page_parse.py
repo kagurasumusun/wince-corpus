@@ -3112,6 +3112,13 @@ def _is_documented_prototype(text):
     if lowered.startswith(("typedef enum", "typedef struct", "typedef union",
                            "enum ", "struct ", "union ")):
         return True
+    # A type page prints its typedef line above the enum/struct body
+    # (VARTYPE: "typedef unsigned short VARTYPE;" then "enum VARENUM {").
+    # That composite IS the declaration; the sample guard below still
+    # demotes blocks whose name is not the page's own.
+    if lowered.startswith("typedef ") and "{" in body and \
+            ";" in body.split("{", 1)[0]:
+        return True
     lines = [line.strip() for line in body.splitlines()
              if line.strip() and not line.strip().startswith(("/*", "*", "//"))]
     # A long parameter list is still the declaration.  A long block with a
@@ -3250,7 +3257,9 @@ def declarations(fragment, page_title=None):
             nxt = head.group(1).strip().lower() if head else ""
             if len(PRE.findall(fragment)) == 1 and \
                     tail and nxt in ("parameters", "return values", "remarks",
-                                     "members", "see also", "requirements", ""):
+                                     "members", "elements", "constants",
+                                     "enumerators", "see also",
+                                     "requirements", ""):
                 role = "syntax"
             # A page with an Example pre as well still prints the prototype
             # immediately before Parameters / Members / Elements.  That slot
