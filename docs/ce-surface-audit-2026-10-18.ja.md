@@ -131,3 +131,18 @@ wince 版 mingw-header/mingw-library 級（目安であり完全同等は求め�
 ---
 点検の再現: `python3 tools/check-compile-surface.py` /
 `python3 tools/verify-assignments.py` / `python3 tools/full-pass.py`。
+
+---
+
+## 追記（2026-10-18・FIX-ALL 完走）: 残 13 → **残 1**（never-defined 0）
+
+審査後の潰し込み（データ駆動の未解決 enum 定数のコメント化＋参照の値スコープ修理、
+derived-forward の matching-tag 形とファイル検証定数のグルー拒否、依存順修理の全使用箇所対応、
+P-family の本体テキスト条件化、マクロ・エイリアス解決ガード、フラグメント内型の
+トポロジカル整列、ビットフィールドのセミコロン・カンマ・早期 `};`・二重 `*X` 尾の派生修理、
+VB/Java/MIDL 属性残骸の抽出拒否）により、whole-TU 実測は
+**5,520（審査時）→ 29 → 21 → 13 → 2 → 1**、never-defined は **0**、.def は **297/297**。
+
+残る 1 件は Oaidl.h の CLIPDATA 一行本体。ページ印刷の `//` コメントが同行のメンバ・閉じ括弧を
+飲み込む類で、コメント/コード混在一行の復元は誤爆が大きいため保留。これが樹上で唯一、
+コンパイラが文句を言う箇所。
