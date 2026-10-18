@@ -1,25 +1,9 @@
 /* ExtraDeclarations.h -- declarations without header assignment
- * 4017 unassigned declarations
+ * 4016 unassigned declarations
  */
 #ifndef _EXTRADECLARATIONS_H_
 #define _EXTRADECLARATIONS_H_
 
-typedef BOOL(* PFN_PDD_GET)(UINT uiRequestId,PVOID pvData,ULONG ulDataLength,ULONG* pulRequiredLength);
-typedef int (*HCI_InquiryCompleteEvent) (void* pUserContext,
- void* pCallContext,
- unsigned char status,
- unsigned char num_responses);
-#ifndef __WINCE_DEFINED_SPCFGRULEATTRIBUTES
-#define __WINCE_DEFINED_SPCFGRULEATTRIBUTES
-typedef enum SPCFGRULEATTRIBUTES{ SPRAF_TopLevel = (1 << 0), SPRAF_Active = (1 << 1), SPRAF_Export = (1 << 2), SPRAF_Import = (1 << 3), SPRAF_Interpreter = (1 << 4), SPRAF_Dynamic = (1 << 5), SPRAF_AutoPause = (1 << 16) } SPCFGRULEATTRIBUTES;
-#endif /* __WINCE_DEFINED_SPCFGRULEATTRIBUTES */
-#ifndef __WINCE_DEFINED_CAPTUREMODE
-#define __WINCE_DEFINED_CAPTUREMODE
-#ifndef __WINCE_DEFINED_STRMBUF_CAPTURE_MODE
-#define __WINCE_DEFINED_STRMBUF_CAPTURE_MODE
-typedef enum CaptureMode { STRMBUF_TEMPORARY_RECORDING = 0, STRMBUF_PERMANENT_RECORDING} STRMBUF_CAPTURE_MODE;
-#endif /* __WINCE_DEFINED_STRMBUF_CAPTURE_MODE */
-#endif /* __WINCE_DEFINED_CAPTUREMODE */
 #ifndef __WINCE_DEFINED_PSAMPLE
 #define __WINCE_DEFINED_PSAMPLE
 enum StreamControlState CheckStreamState(IMediaSample *pSample);
@@ -49,24 +33,6 @@ enum MPEG2Profile {
 };
 #endif /* __WINCE_DEFINED_MPEG2PROFILE_HIGH */
 #endif /* __WINCE_DEFINED_MPEG2PROFILE */
-#ifndef __WINCE_DEFINED_STREAMCONTROLSTATE
-#define __WINCE_DEFINED_STREAMCONTROLSTATE
-#ifndef __WINCE_DEFINED_STREAM_DISCARDING
-#define __WINCE_DEFINED_STREAM_DISCARDING
-enum StreamControlState { STREAM_FLOWING, STREAM_DISCARDING };
-#endif /* __WINCE_DEFINED_STREAM_DISCARDING */
-#endif /* __WINCE_DEFINED_STREAMCONTROLSTATE */
-#ifndef __WINCE_DEFINED_X100050
-#define __WINCE_DEFINED_X100050
-typedef enum {
- MERIT_PREFERRED = 0x800000,
- MERIT_NORMAL = 0x600000,
- MERIT_UNLIKELY = 0x400000,
- MERIT_DO_NOT_USE = 0x200000,
- MERIT_SW_COMPRESSOR = 0x100000,
- MERIT_HW_COMPRESSOR = 0x100050
-};
-#endif /* __WINCE_DEFINED_X100050 */
 #ifndef __WINCE_DEFINED_STATUS
 #define __WINCE_DEFINED_STATUS
 HRESULT OnRequestProgress(IExchangeClientRequest* pRequest, enum ExchangeClientRequestStatus status);
@@ -84,247 +50,6 @@ enum InterpolationHint {
 };
 #endif /* __WINCE_DEFINED_INTERPOLATIONHINTBICUBIC */
 #endif /* __WINCE_DEFINED_INTERPOLATIONHINT */
-#ifndef __WINCE_DEFINED_ELEMENT_ADJACENCY
-#define __WINCE_DEFINED_ELEMENT_ADJACENCY
-typedef enum {
- ELEM_ADJ_BeforeBegin = 0,
- ELEM_ADJ_AfterBegin = 1,
- ELEM_ADJ_BeforeEnd = 2,
- ELEM_ADJ_AfterEnd = 3,
- ELEMENT_ADJACENCY_Max = 2147483647L
-} ELEMENT_ADJACENCY;
-#endif /* __WINCE_DEFINED_ELEMENT_ADJACENCY */
-#ifndef __WINCE_DEFINED_ELEMENT_TAG_ID
-#define __WINCE_DEFINED_ELEMENT_TAG_ID
-typedef enum {
- TAGID_NULL = 0,
- TAGID_UNKNOWN = 1,
- TAGID_A = 2,
- TAGID_ACRONYM = 3,
- TAGID_ADDRESS = 4,
- TAGID_APPLET = 5,
- TAGID_AREA = 6,
- TAGID_B = 7,
- TAGID_BASE = 8,
- TAGID_BASEFONT = 9,
- TAGID_BDO = 10,
- TAGID_BGSOUND = 11,
- TAGID_BIG = 12,
- TAGID_BLINK = 13,
- TAGID_BLOCKQUOTE = 14,
- TAGID_BODY = 15,
- TAGID_BR = 16,
- TAGID_BUTTON = 17,
- TAGID_CAPTION = 18,
- TAGID_CENTER = 19,
- TAGID_CITE = 20,
- TAGID_CODE = 21,
- TAGID_COL = 22,
- TAGID_COLGROUP = 23,
- TAGID_COMMENT = 24,
- TAGID_COMMENT_RAW = 25,
- TAGID_DD = 26,
- TAGID_DEL = 27,
- TAGID_DFN = 28,
- TAGID_DIR = 29,
- TAGID_DIV = 30,
- TAGID_DL = 31,
- TAGID_DT = 32,
- TAGID_EM = 33,
- TAGID_EMBED = 34,
- TAGID_EVENT = 35,
- TAGID_FIELDSET = 36,
- TAGID_FONT = 37,
- TAGID_FORM = 38,
- TAGID_FRAME = 39,
- TAGID_FRAMESET = 40,
- TAGID_GENERIC = 41,
- TAGID_H1 = 42,
- TAGID_H2 = 43,
- TAGID_H3 = 44,
- TAGID_H4 = 45,
- TAGID_H5 = 46,
- TAGID_H6 = 47,
- TAGID_HEAD = 48,
- TAGID_HR = 49,
- TAGID_HTML = 50,
- TAGID_I = 51,
- TAGID_IFRAME = 52,
- TAGID_IMG = 53,
- TAGID_INPUT = 54,
- TAGID_INS = 55,
- TAGID_KBD = 56,
- TAGID_LABEL = 57,
- TAGID_LEGEND = 58,
- TAGID_LI = 59,
- TAGID_LINK = 60,
- TAGID_LISTING = 61,
- TAGID_MAP = 62,
- TAGID_MARQUEE = 63,
- TAGID_MENU = 64,
- TAGID_META = 65,
- TAGID_NEXTID = 66,
- TAGID_NOBR = 67,
- TAGID_NOEMBED = 68,
- TAGID_NOFRAMES = 69,
- TAGID_NOSCRIPT = 70,
- TAGID_OBJECT = 71,
- TAGID_OL = 72,
- TAGID_OPTION = 73,
- TAGID_P = 74,
- TAGID_PARAM = 75,
- TAGID_PLAINTEXT = 76,
- TAGID_PRE = 77,
- TAGID_Q = 78,
- TAGID_HTMLAREA = 79,
- TAGID_RP = 80,
- TAGID_RT = 81,
- TAGID_RUBY = 82,
- TAGID_S = 83,
- TAGID_SAMP = 84,
- TAGID_SCRIPT = 85,
- TAGID_SELECT = 86,
- TAGID_SMALL = 87,
- TAGID_SPAN = 88,
- TAGID_STRIKE = 89,
- TAGID_STRONG = 90,
- TAGID_STYLE = 91,
- TAGID_SUB = 92,
- TAGID_SUP = 93,
- TAGID_TABLE = 94,
- TAGID_TBODY = 95,
- TAGID_TC = 96,
- TAGID_TD = 97,
- TAGID_TEXTAREA = 98,
- TAGID_TFOOT = 99,
- TAGID_TH = 100,
- TAGID_THEAD = 101,
- TAGID_TITLE = 102,
- TAGID_TR = 103,
- TAGID_TT = 104,
- TAGID_U = 105,
- TAGID_UL = 106,
- TAGID_VAR = 107,
- TAGID_WBR = 108,
- TAGID_XMP = 109,
- TAGID_COUNT = 110,
- TAGID_LAST_PREDEFINED = 10000,
- ELEMENT_TAG_ID_Max = 2147483647L
-} ELEMENT_TAG_ID;
-#endif /* __WINCE_DEFINED_ELEMENT_TAG_ID */
-#ifndef __WINCE_DEFINED_MOVEUNIT_ACTION
-#define __WINCE_DEFINED_MOVEUNIT_ACTION
-typedef enum {
- MOVEUNIT_PREVCHAR = 0,
- MOVEUNIT_NEXTCHAR = 1,
- MOVEUNIT_PREVCLUSTERBEG = 2,
- MOVEUNIT_NEXTCLUSTERBEG = 3,
- MOVEUNIT_PREVCLUSTEREND = 4,
- MOVEUNIT_NEXTCLUSTEREND = 5,
- MOVEUNIT_PREVWORDBEG = 6,
- MOVEUNIT_NEXTWORDBEG = 7,
- MOVEUNIT_PREVWORDEND = 8,
- MOVEUNIT_NEXTWORDEND = 9,
- MOVEUNIT_PREVPROOFWORD = 10,
- MOVEUNIT_NEXTPROOFWORD = 11,
- MOVEUNIT_NEXTURLBEG = 12,
- MOVEUNIT_PREVURLBEG = 13,
- MOVEUNIT_NEXTURLEND = 14,
- MOVEUNIT_PREVURLEND = 15,
- MOVEUNIT_PREVSENTENCE = 16,
- MOVEUNIT_NEXTSENTENCE = 17,
- MOVEUNIT_PREVBLOCK = 18,
- MOVEUNIT_NEXTBLOCK = 19,
- MOVEUNIT_ACTION_Max = 2147483647L
-} MOVEUNIT_ACTION;
-#endif /* __WINCE_DEFINED_MOVEUNIT_ACTION */
-#ifndef __WINCE_DEFINED_POINTER_GRAVITY
-#define __WINCE_DEFINED_POINTER_GRAVITY
-typedef enum { POINTER_GRAVITY_Left = 0, POINTER_GRAVITY_Right = 1 } POINTER_GRAVITY;
-#endif /* __WINCE_DEFINED_POINTER_GRAVITY */
-#ifndef __WINCE_DEFINED_TLENUMF
-#define __WINCE_DEFINED_TLENUMF
-typedef enum {
- TLEF_RELATIVE_INCLUDE_CURRENT = 0x00000001,
- TLEF_RELATIVE_BACK = 0x00000010,
- TLEF_RELATIVE_FORE = 0x00000020,
- TLEF_INCLUDE_UNINVOKEABLE = 0x00000040,
- TLEF_ABSOLUTE = 0x00000031
-} TLENUMF;
-#endif /* __WINCE_DEFINED_TLENUMF */
-#ifndef __WINCE_DEFINED_BUTTONCONTROLRECTANGLESTYLE_T
-#define __WINCE_DEFINED_BUTTONCONTROLRECTANGLESTYLE_T
-#ifndef __WINCE_DEFINED_CBR_PUSHBUTTON
-#define __WINCE_DEFINED_CBR_PUSHBUTTON
-enum ButtonControlRectangleStyle_t {
- CBR_CLIENTRECT,
- CBR_CHECKBOX,
- CBR_CHECKTEXT,
- CBR_GROUPTEXT,
- CBR_GROUPFRAME,
- CBR_PUSHBUTTON
-};
-#endif /* __WINCE_DEFINED_CBR_PUSHBUTTON */
-#endif /* __WINCE_DEFINED_BUTTONCONTROLRECTANGLESTYLE_T */
-#ifndef __WINCE_DEFINED_STREAMBUFFER_EC_READ_FAILURE
-#define __WINCE_DEFINED_STREAMBUFFER_EC_READ_FAILURE
-typedef enum {
- STREAMBUFFER_EC_TIMEHOLE = 0x326,
- STREAMBUFFER_EC_STALE_DATA_READ =
- STREAMBUFFER_EC_TIMEHOLE + 1,
- STREAMBUFFER_EC_STALE_FILE_DELETED =
- STREAMBUFFER_EC_STALE_DATA_READ + 1,
- STREAMBUFFER_EC_CONTENT_BECOMING_STALE =
- STREAMBUFFER_EC_STALE_FILE_DELETED + 1,
- STREAMBUFFER_EC_WRITE_FAILURE =
- STREAMBUFFER_EC_CONTENT_BECOMING_STALE + 1,
- STREAMBUFFER_EC_READ_FAILURE =
- STREAMBUFFER_EC_WRITE_FAILURE + 1,
- STREAMBUFFER_EC_RATE_CHANGED =
- STREAMBUFFER_EC_READ_FAILURE + 1
-};
-#endif /* __WINCE_DEFINED_STREAMBUFFER_EC_READ_FAILURE */
-#ifndef __WINCE_DEFINED_STRMBUF_PLAYBACK_TUNE_POLICY
-#define __WINCE_DEFINED_STRMBUF_PLAYBACK_TUNE_POLICY
-typedef enum STRMBUF_PLAYBACK_TUNE_POLICY { STRMBUF_PLAYBACK_TUNE_FLUSH_AND_GO_TO_LIVE, STRMBUF_PLAYBACK_TUNE_IGNORED} STRMBUF_PLAYBACK_TUNE_POLICY;
-#endif /* __WINCE_DEFINED_STRMBUF_PLAYBACK_TUNE_POLICY */
-#ifndef __WINCE_DEFINED_HCI_EVENT
-#define __WINCE_DEFINED_HCI_EVENT
-#ifndef __WINCE_DEFINED_DEVICE_ERROR
-#define __WINCE_DEFINED_DEVICE_ERROR
-enum HCI_EVENT {DEVICE_UP,DEVICE_DOWN,DEVICE_ERROR};
-#endif /* __WINCE_DEFINED_DEVICE_ERROR */
-#endif /* __WINCE_DEFINED_HCI_EVENT */
-#ifndef __WINCE_DEFINED_PROVIDER_SPECIFIC_MESSAGE_CLASS
-#define __WINCE_DEFINED_PROVIDER_SPECIFIC_MESSAGE_CLASS
-#ifndef __WINCE_DEFINED_PS_MESSAGE_CLASSUNSPECIFIED
-#define __WINCE_DEFINED_PS_MESSAGE_CLASSUNSPECIFIED
-enum PROVIDER_SPECIFIC_MESSAGE_CLASS {
- PS_MESSAGE_CLASS0 = 0,
- PS_MESSAGE_CLASS1,
- PS_MESSAGE_CLASS2,
- PS_MESSAGE_CLASS3,
- PS_MESSAGE_CLASSUNSPECIFIED,
-};
-#endif /* __WINCE_DEFINED_PS_MESSAGE_CLASSUNSPECIFIED */
-#endif /* __WINCE_DEFINED_PROVIDER_SPECIFIC_MESSAGE_CLASS */
-#ifndef __WINCE_DEFINED_MANAGED_COMMANDHANDLER_TYPE
-#define __WINCE_DEFINED_MANAGED_COMMANDHANDLER_TYPE
-enum MANAGED_COMMANDHANDLER_TYPE {
- MANAGED_COMMANDHANDLER_SYNC = 1,
- MANAGED_COMMANDHANDLER_ASYNC = 2
-};
-#endif /* __WINCE_DEFINED_MANAGED_COMMANDHANDLER_TYPE */
-#ifndef __WINCE_DEFINED_MANAGED_DATATYPE
-#define __WINCE_DEFINED_MANAGED_DATATYPE
-enum MANAGED_DATATYPE {
- MANAGED_DATATYPE_BYTES = 0,
- MANAGED_DATATYPE_WORD = 2,
- MANAGED_DATATYPE_DWORD = 3,
- MANAGED_DATATYPE_WSTR = 5,
- MANAGED_DATATYPE_END = 6
-};
-#endif /* __WINCE_DEFINED_MANAGED_DATATYPE */
 #ifndef __WINCE_DEFINED_MERIT
 #define __WINCE_DEFINED_MERIT
 typedef enum {
@@ -336,24 +61,6 @@ typedef enum {
  MERIT_HW_COMPRESSOR = 0x100050
 };
 #endif /* __WINCE_DEFINED_MERIT */
-#ifndef __WINCE_DEFINED_STREAMBUFFER_EC
-#define __WINCE_DEFINED_STREAMBUFFER_EC
-typedef enum {
- STREAMBUFFER_EC_TIMEHOLE = 0x326,
- STREAMBUFFER_EC_STALE_DATA_READ =
- STREAMBUFFER_EC_TIMEHOLE + 1,
- STREAMBUFFER_EC_STALE_FILE_DELETED =
- STREAMBUFFER_EC_STALE_DATA_READ + 1,
- STREAMBUFFER_EC_CONTENT_BECOMING_STALE =
- STREAMBUFFER_EC_STALE_FILE_DELETED + 1,
- STREAMBUFFER_EC_WRITE_FAILURE =
- STREAMBUFFER_EC_CONTENT_BECOMING_STALE + 1,
- STREAMBUFFER_EC_READ_FAILURE =
- STREAMBUFFER_EC_WRITE_FAILURE + 1,
- STREAMBUFFER_EC_RATE_CHANGED =
- STREAMBUFFER_EC_READ_FAILURE + 1
- };
-#endif /* __WINCE_DEFINED_STREAMBUFFER_EC */
 DWORD AAM_AudioIoControl (DWORD dwFlag, DWORD dwIoControlCode, LPVOID lpInBuf, DWORD nInBufSize, LPVOID lpOutBuf, DWORD nOutBufSize, LPDWORD lpBytesReturned, LPOVERLAPPED lpOverLapped);
 DWORD AAM_EQBandControl(DWORD dwIndex, DWORD dwFlags, LONG *plValue);
 DWORD AAM_EnableSSD (BOOL bEnable);
@@ -370,7 +77,6 @@ HRESULT AMovieDllRegisterServer(void);
 HRESULT AMovieDllUnregisterServer(void);
 HRESULT Abort(IHeaderCollection* pHeaders);
 BOOL AbortPipeTransfers(USB_PIPE hPipe, DWORD dwFlags);
-HRESULT Accept(ITransportConnection** ppiTransportConnection);
 HRESULT AcceptedContentType (BSTR* pbstrAcceptedContentType);
 HRESULT Activate(HWND hwndParent, LPCRECT prect, BOOL fModal);
 HRESULT ActivateDialog(UINT uDlg, HWND hwndParent, HREPLFLD hFolder, IEnumReplItem *penum);
@@ -407,7 +113,6 @@ HRESULT AddWithIndex(BSTR bstr, long lData, long *lpIndex);
 HRESULT Advise(IUnknown *pUnk, DWORD *pdwCookie);
 HRESULT AdvisePeriodic(REFERENCE_TIME StartTime, REFERENCE_TIME PeriodTime, HSEMAPHORE hSemaphore, DWORD *pdwAdviseToken);
 HRESULT AdviseTime(REFERENCE_TIME baseTime, REFERENCE_TIME streamTime, HEVENT hEvent, DWORD *pdwAdviseToken);
-int Alert(HWND hwndParent, UINT uType, UINT uMessage, ...);
 LONG AlignDown(LONGLONG ll, LONG lAlign);
 LONG AlignUp(LONGLONG ll, LONG lAlign);
 DWORD AlignedWidth (void);
@@ -449,7 +154,6 @@ DWORD BthAGSetServiceCallback(PFN_PhoneExtServiceCallback pfn);
 void BufferFree (BD_BUFFER *pBuf);
 HRESULT Buffering(VARIANT_BOOL bBuffering);
 HRESULT ByteSwapUint64(ULONGLONG inUint64, ULONGLONG* pOutUint64);
-HRESULT CLSID (BSTR* pbstrServiceCLSID);
 HRESULT CacheObject(IDirectMusicObject* pObject);
 void CalculatePrimes(UINT n);
 HRESULT Call(BSTR bstrURI, IVoIPCurrentCall** ppiCurrentCall);
@@ -523,7 +227,6 @@ BOOL ConfigRsrc(PPCI_DEV_INFO pInfo,PPCI_RSRC pMemHead,PPCI_RSRC pIoHead,DWORD* 
 BOOL ConfigSet(PPCI_RSRC pRsrc);
 BOOL ConfigSize(PPCI_DEV_INFO pInfo);
 HRESULT Configure(HWND hWnd, IRemoteDevice* piDevice);
-HRESULT Connect(IPin *pReceivePin, const AM_MEDIA_TYPE *pmt);
 HRESULT ConnectDirect(IPin *ppinOut, IPin *ppinIn, const AM_MEDIA_TYPE *pmt);
 HRESULT ConnectedTo(IPin **ppPin);
 HRESULT ConnectionMediaType(AM_MEDIA_TYPE *pmt);
@@ -599,7 +302,6 @@ void CurrentItemChange(IDispatch* pdispMedia);
 BOOL CustomTrackPopupMenu(HMENU hmenu, UNIT uFlags, Int x, Int y, HWND hWnd, LPTPMPARAMS lpTpm, BOOL fSelectFirst, BOOL *pfCustomTracked);
 HRESULT DAdvise(FORMATETC* pFormatetc, DWORD advf, IAdviseSink* pAdvSink, DWORD* pdwConnection);
 BOOL DRM_ND_GetPrivateKey(PrivateKeyDef *pDef);
-int Data();
 VOID WINAPI DbgAssert(const TCHAR *pCondition, const TCHAR *pFileName, INT iLine);
 VOID WINAPI DbgBreakPoint(const TCHAR *pCondition, const TCHAR *pFileName, INT iLine);
 VOID WINAPI DbgDumpObjectRegister();
@@ -679,8 +381,7 @@ HRESULT Drop(IDataObject* pDataObject, DWORD grfKeyState, POINTL pt, DWORD* pdwE
 void DumpBuff (unsigned int cMask, unsigned char *lpBuffer, unsigned int cBuffer);
 HRESULT DuplicateSoundBuffer(IDSDRIVERBUFFER pIDsDriverBuffer, LPVOID *ppv);
 HRESULT Duration(REFERENCE_TIME *ptDuration);
-void EOS();
-BOOL EdbgCancelRegisterClient(CHAR * ServiceName CHAR * DeviceName);
+BOOL EdbgCancelRegisterClient(CHAR * ServiceName, CHAR * DeviceName);
 HRESULT EmulateRecognition(ISpPhrase* pPhrase);
 HRESULT EnableItem(DWORD dwEnable, DWORD dwCmdNum, DWORD dwFlag);
 HRESULT EnabledGet(DWORD *dwEnabled);
@@ -689,7 +390,6 @@ BOOL EncryptFile (LPTSTR, LPTSTR, LPTSTR);
 HRESULT EndFlush(void);
 HRESULT EndMessage(void);
 HRESULT EndOfStream(void);
-HRESULT Enum(IEnumMoniker **ppenumMoniker);
 HRESULT EnumAllModules(IOsAxsEnumModule** ppienum);
 HRESULT EnumAllProcesses(IOsAxsEnumProcess** ppienum);
 HRESULT EnumAllThreads(IOsAxsEnumThread** ppienum);
@@ -876,7 +576,7 @@ HRESULT GetMessageText(BSTR* pbstrMessage);
 HRESULT GetMinIdealImageSize(long *pWidth, long *pHeight);
 HRESULT GetMode (IPin* pPin, long* Mode);
 HRESULT GetModuleByID(DWORD dwID, IOsAxsProcess** ppiOsAxsModule);
-HRESULT GetModuleFromAddress(ADDRESS_TYPEAddr, IOsAxsModule** ppiModule);
+HRESULT GetModuleFromAddress(ADDRESS_TYPE Addr, IOsAxsModule** ppiModule);
 HRESULT GetMoinker(DWORD dwAssign, DWORD dwWhichMoniker, IMoniker ** ppmk);
 HRESULT GetMoniker(DWORD dwAssign, DWORD dwWhichMoniker, IMoniker **ppmk);
 HRESULT GetMops(MEMBERID memid, BSTR FAR *pBstrMops);
@@ -930,7 +630,7 @@ DWORD GetRequest();
 HRESULT GetRequestLine(BSTR* pbstrRequestLine);
 HRESULT GetRestorePosition(long *pLeft, long *pTop, long *pWidth, long *pHeight);
 HRESULT GetRfc1766FromLcid(LCID Locale, BSTR* pbstrRfc1766);
-HRESULT GetRoutineDataByAddress(ADDRESS_TYPEAddrCode, ROUTINE_DATA*pPData, IOsAxsModule **ppiModule);
+HRESULT GetRoutineDataByAddress(ADDRESS_TYPE AddrCode, ROUTINE_DATA*pPData, IOsAxsModule **ppiModule);
 HRESULT GetSampleTimes(IMediaSample *pMediaSample, REFERENCE_TIME *pStartTime, REFERENCE_TIME *pEndTime);
 HRESULT GetSecuritySite(IInternetSecurityMgrSite** ppSite);
 HRESULT GetSegment(IDirectMusicSegment** ppSegment);
@@ -1091,8 +791,7 @@ VOID WINAPI KeybdPdd_PowerHandler(BOOL bOff);
 int L2CAP_EstablishDeviceContext(void* *pUserContext, unsigned short psm, L2CAP_EVENT_INDICATION* pInd, L2CAP_CALLBACKS* pCall, L2CAP_INTERFACE* pInt, int* pcDataHeaders, int* pcDataTrailers, HANDLE* phDeviceContext);
 int LAYER_CloseDeviceContext (HANDLE hDeviceContext);
 int LAYER_EstablishDeviceConect(void* pUserContext, filters for the incomming connection, LAYER_EVENT_INDICATION* pInd, LAYER_CALLBACKS* pCall, LAYER_INTERFACE* pInt, int* pcDataHeaders, int* pcDataTrailers, HANDLE* phDeviceContext);
-DWORD LED (BYTE ucPort, BOOL fState);
-int Largest(MyInt ia,out MyInt element);
+int Largest(MyInt ia,out, MyInt element);
 HRESULT Launch(BSTR bstrRemotePath, BSTR bstrCmdLine);
 int Layer_CloseDeviceContext (HANDLE hDeviceContext);
 int Layer_EstablishDeviceConnect(void* pUserContext, //Layer specific filtering parameters ... LAYER_EVENT_INDICATION* pInd, LAYER_CALLBACKS* pCall, LAYER_INTERFACE* pInt, int* pcDataHeaders, int* pcDataTrailers, HANDLE* phDeviceContext);
@@ -1115,8 +814,6 @@ void LogThreadDelete (DWORD dwThreadID, DWORD dwProcID);
 void LogThreadSwitch (DWORD dwThreadID, DWORD dwProcID);
 HRESULT LostFocus(void);
 VOID WINAPI LowPriority(HANDLE h);
-VOID WINAPI MBX_TA(void);
-VOID WINAPI MBX_TB(void);
 HRESULT MarshalInterface(IStream *pStm, REFIID riid, void *pv, DWORD dwDestContext, void *pvDestContext, DWORD mshlflags);
 VOID WINAPI MedPriority(HANDLE h);
 HRESULT MediaParameter(long EntryNum, BSTR bstrName, BSTR* pbstrValue);
@@ -1134,7 +831,6 @@ HRESULT MoveAppToForeground(LONG ProcID, LONG *pZOrder, LONG Flags);
 HRESULT MoveElementTo(const WCHAR *pwcsName, IStorage *pstgDest, LPWSTR pwcsNewName, DWORD grfFlags);
 HRESULT MoveToForeground(BOOL fThis, LONG *pZOrder);
 void MyFunction();
-HRESULT Navigate(BSTR URL, VARIANT *Flags, VARIANT *TargetFrameName, VARIANT *PostData, VARIANT *Headers);
 void NavigateComplete2(IDispatch* pdisp, VARIANT vtURL);
 void NavigateError(IDispatch* pDisp, VARIANT* pvtURL, VARIANT* pvtFrame, VARIANT* pvtStatusCode, VARIANT_BOOL* pvbCancel);
 HRESULT NavigateToURL(LPWSTR szURL);
@@ -1208,8 +904,6 @@ BOOL PIN_Deinit(DWORD dwContext);
 BOOL PIN_IOControl(DWORD dwContext, DWORD Ioctl, PUCHAR pInBuf, DWORD InBufLen, PUCHAR pOutBuf, DWORD OutBufLen, PDWORD pdwBytesTransferred);
 DWORD PIN_Init(LPCTSTR Context, LPVOID lpvBusContext);
 DWORD PIN_Open(DWORD Context, DWORD Access, DWORD ShareMode);
-DWORD PRLED (BYTE ucPort, BOOL fState);
-BOOL PageSetupDlg(LPPAGESETUPDLG lppsd);
 void PaintWindow(BOOL bErase);
 HRESULT ParkSession (BSTR bstrParkServerURI);
 BOOL ParseCommand(LPCTSTR szCmd, LPCTSTR szCmdLine, PFN_FmtPuts pfnFmtPuts, PFN_Gets pfnGets);
@@ -1235,7 +929,6 @@ void PrepareRender(void);
 HRESULT PrepareWindow();
 HRESULT PrevChar();
 void Print(TCHAR *pFormat, ...);
-BOOL PrintDlg(LPPRINTDLG lppd);
 HRESULT ProcessInput(DWORD dwInputStreamIndex, IMediaBuffer* pBuffer, DWORD dwFlags, REFERENCE_TIME rtTimestamp, REFERENCE_TIME rtTimelength);
 void ProcessStartupFolder();
 HRESULT ProcessVertices(UINT SrcStartIndex, UINT DestIndex, UINT VertexCount, IDirect3DMobileVertexBuffer* pDestBuffer, DWORD Flags);
@@ -1279,7 +972,6 @@ HRESULT ReadFromStream(IStream* pStream);
 HRESULT ReadVOB(UINT16 hVOB, INT8* buf, UINT32 startBlock, UINT32 endBlock);
 void Ready(void);
 void ReallyFree (void);
-HRESULT Receive(IMediaSample *pSample);
 HRESULT ReceiveAllocator(IMemAllocator *pAllocator, BOOL bReadOnly);
 HRESULT ReceiveCanBlock(void);
 HRESULT ReceiveConnection(IPin *pConnector, AM_MEDIA_TYPE *pmt);
@@ -1809,7 +1501,7 @@ HRESULT get_ID(BSTR*out_pbstrID);
 HRESULT get_IVideoWindow(RTC_VIDEO_DEVICE enDevice, IVideoWindow** ppIVideoWindow);
 HRESULT get_Icon(OLE_HANDLE *phIcon);
 HRESULT get_Id(BSTR* pbstrId);
-HRESULT get_Image(OLE_HANDLE *phImage OLE_HANDLE *phImageMask);
+HRESULT get_Image(OLE_HANDLE *phImage, OLE_HANDLE *phImageMask);
 HRESULT get_ImageAlignH(short*pwAlign);
 HRESULT get_ImageAlignV(short *pwAlign);
 HRESULT get_ImageHeight(long *plHeight);
@@ -1994,7 +1686,7 @@ HRESULT get_StartProgram(BSTR* pStartProgram);
 HRESULT get_StartTime (DATE *pdaStartTime);
 HRESULT get_StatusFlags(long *plStatusFlags);
 HRESULT get_StatusImageList(OLE_HANDLE *phbmImage, OLE_HANDLE *phbmImageMask, long *pcxImage, long *pcyImage);
-HRESULT get_StatusItemsImageList(OLE_HANDLE *phImage OLE_HANDLE *phImageMask short *pcImages);
+HRESULT get_StatusItemsImageList(OLE_HANDLE *phImage OLE_HANDLE *phImageMask, short *pcImages);
 HRESULT get_StatusItemsMask(long *plMask);
 HRESULT get_StatusText(BSTR* pbstrStatusText);
 HRESULT get_Step(long *plStep);
@@ -2340,7 +2032,7 @@ HRESULT put_PresentityURI(BSTR bstrPresentityURI);
 HRESULT put_Property(BSTR pPropertyName, VARIANT PropertyValue);
 HRESULT put_RadioTelephoneNumber (BSTR bstrRadioTelephoneNumber);
 HRESULT put_RamUsed(long lRamUsed);
-HRESULT put_RangeColor(long lRangeIndex OLE_COLOR clr);
+HRESULT put_RangeColor(long lRangeIndex, OLE_COLOR clr);
 HRESULT put_RangeCount(long lCount);
 HRESULT put_RangeValue(long lRangeIndex long lRangeValue);
 HRESULT put_Rate(double dRate);
@@ -2469,8 +2161,6 @@ WINOLEAPI StgOpenStorage(const WCHAR *pwcsName, IStorage *pstgPriority, DWORD gr
 WINOLEAPI StgOpenStorageOnILockBytes(ILockBytes *plkbyt, IStorage *pStgPriority, DWORD grfMode, SNB snbExclude, DWORD reserved, IStorage **ppstgOpen);
 WINOLEAPI WriteClassStg(IStorage *pStg, REFCLSID rclsid);
 WINOLEAPI WriteClassStm(IStream *pStm, REFCLSID rclsid);
-VOID CREATE_INVALIDGUID(PCEGUID pceguid);
-VOID CREATE_SYSTEMGUID(PCEGUID pceguid);
 HTREEITEM TreeView_GetChild(hwnd, hitem);
 HTREEITEM TreeView_GetDropHilight(hwnd);
 HTREEITEM TreeView_GetFirstVisible(hwnd);
@@ -2507,7 +2197,6 @@ BSTR SysAllocStringLen(OLECHAR FAR *pch, unsigned int cch);
 BOOL CALLBACK AddPropSheetPageProc(HPROPSHEETPAGE hpage, LPARAM lParam);
 LONG TSPIAPI TSPI_lineGetProcTable (LPTSPI_PROCS *lplpTSpiProcs);
 ADDRESS Address (void);
-PCHAR CONTAINING_RECORD(IN PCHAR Address, IN TYPE Type, IN PCHAR Field);
 extern "C" __declspec(dllexport) DWORD GPS_Init(DWORD dwContext);
 USB_TRANSFER SetFeature(USB_HANDLE hDevice, LPTRANSFER_NOTIFY_ROUTINE lpStartAddress, LPVOID lpvNotifyParameter, DWORD dwFlags, WORD wFeature, UCHAR bIndex);
 USB_TRANSFER SetInterface(USB_HANDLE hDevice, LPTRANSFER_NOTIFY_ROUTINE lpStartAddress, LPVOID lpvNotifyParameter, DWORD dwFlags, UCHAR bInterfaceNumber, UCHAR bAlternateSetting);
@@ -2773,24 +2462,6 @@ HRESULT ReadRegsFromThdCtx(IeXdi2EnumCpuRegs* piOsAxsEnumCpuRegThreadCtx, DWORD*
 HRESULT AddFile(BSTR bstrFullPath,BSTR bstrKeyName,IPMCPU* piPMCPU,IPMOS* piPMOS,long dwLocaleId,long dwFlagsIPMPackageFile** ppiPMPackageFile);
 HRESULT GetData2(FLEXI_GETDATA_TYPE2 fgds2, PTM_RAW_DATA **ppdatProcess, DWORD *pcProcess, DWORD *pcProcessTotal, PTM_RAW_DATA **ppdatThread, DWORD *pcThread, DWORD *pcThreadTotal, PTM_RAW_DATA **ppdatModule, DWORD *pcModule, DWORD *pcModuleTotal, PTM_RAW_DATA **ppdatContext, DWORD *pcContext, DWORD *pcContextTotal);
 HRESULT GetDescriptionTables2(PTM_FIELD_DESC** ppfdProcDescTable, DWORD* pcProcField, PTM_FIELD_DESC** ppfdThreadDescTable, DWORD* pcThreadField, PTM_FIELD_DESC** ppfdModDescTable, DWORD* pcModField, PTM_FIELD_DESC **ppfdCtxDescTable, DWORD *pcCtxField);
-enum {
- CESVC_ROOT_COMMON = 0,
- CESVC_ROOT_MACHINE = CESVC_ROOT_COMMON,
- CESVC_ROOT_USER,
- CESVC_DEVICES,
- CESVC_DEVICEX,
- CESVC_DEVICE,
- CESVC_DEVICE_SELECTED,
- CESVC_SERVICES,
- CESVC_SERVICES_USER = CESVC_SERVICES,
- CESVC_SERVICES_COMMON,
- CESVC_SYNC,
- CESVC_SYNC_COMMON,
- CESVC_FILTERS,
- CESVC_SPECIAL_DEFAULTS,
- CESVC_CUSTOM_MENUS,
- CESVC_SYNCX
-};
 FILE *_wfreopen(const wchar_t*path,constwchar_t*mode,FILE*stream);
 HRESULT GetDescriptionTables(PTM_FIELD_DESC**ppfdProcDescTable, DWORD*pcProcField, PTM_FIELD_DESC**ppfdThreadDescTable, DWORD*pcThreadField, PTM_FIELD_DESC**ppfdModDescTable, DWORD*pcModField);
 DWORD IsMessageBoxHandled(HWND hWnd, UINT uText, UINT uCaption, UINT uType);
@@ -2805,7 +2476,7 @@ BOOL TranEnumKnownDevice(PFN_EnumProc pfnCB, LPVOID pUserData);
 HRESULT AddCommand(BSTR szCmdName, BSTR szMethodName, long nBitmapOffset, long dwCookie VARIANT_BOOL FAR* pbResult);
 HRESULT AddCommandBarButton(long nButtonType, BSTR szCmdName, long dwCookie);
 HRESULT SetAddInInfo(long nInstanceHandle, IDispatch* pCmdDispatch, long nIDBitmapResourceMedium, long nIDBitmapResourceLarge, long dwCookie);
-HRESULT OnConnection (IApplication* pApp, VARIANT, BOOL bFirstTime Long dwCookie VARIANT_BOOL* OnConnection);
+HRESULT OnConnection (IApplication* pApp, VARIANT BOOL bFirstTime, Long dwCookie VARIANT_BOOL* OnConnection);
 public override string ToString ();
 public PluginDataView (PluginData data);
 public CommandPacket ReceiveCommand (PluginData pluginData);
@@ -2814,7 +2485,6 @@ public CommandPacket ();
 public void CopyToClipboard ();
 public void RenderGeneric (GenericDataAcceptor acceptor);
 public GenericDataAcceptor (ListView listView);
-protected override void WndProc (ref Message m);
 public CommandPacketEventArgs (CommandPacket commandPacket);
 public CommandPacketParameter GetNextParameter ();
 public delegate void AnonymousDelegate ();
@@ -2865,7 +2535,6 @@ DWORD FormatVolume(HANDLE hVolume, PDISK_INFO pdi, PFORMAT_OPTIONS pfo, PFN_PROG
 BOOL WriteFileGather(HANDLE hFile, FILE_SEGMENT_ELEMENT aSegmentArray, DWORD nNumberOfBytesToWrite, LPDWORD lpReserved, LPOVERLAPPED lpOverlapped);
 HRESULT MatchResolve(LPCWSTR pszId, ULONGLONG ullMetadataVersion, ULONGLONG ullInstanceId, ULONGLONG ullMessageNumber, LPCWSTR pszSessionId, const WSD_NAME_LIST* pTypesList, const WSD_URI_LIST* pScopesList, const WSD_URI_LIST* pXAddrsList const WSDXML_ELEMENT* pHeaderAny, const WSDXML_ELEMENT* pReferenceParameterAny, const WSDXML_ELEMENT* pPolicyAny, const WSDXML_ELEMENT* pEndpointReferenceAny, const WSDXML_ELEMENT* pAny);
 RESULT get_EventPackage(BSTR* pbstrEventPackage);
-COLORREF RGBA(BYTE byRed, BYTE byGreen, BYTE byBlue, BYTE alpha);
 public void RunOnThread (Control control, AnonymousDelegate handler);
 DeviceConnection get_DeviceConnection ();
 public boolean get_PluginClosing ();
@@ -2962,13 +2631,6 @@ BOOL SortChildren(HTREEITEM hItem);
 BOOL Expand(HTREEITEM hItem, UINT nCode);
 HRESULT get_Items(BSTR *pbstrItems);
 HTREEITEM TreeView_GetDropHilite(hwnd);
-enum {
- SHIC_FEATURE_RESTOREDEFAULT = 0,
- SHIC_FEATURE_AUTOCORRECT = 0x00000001L,
- SHIC_FEATURE_AUTOSUGGEST = 0x00000002L,
- SHIC_FEATURE_HAVETRAILER = 0x00000003L,
- SHIC_FEATURE_CLASS = 0x00000004L
-} SHIC_FEATURE;
 void LogMemUse(void);
 void WINAPI (IfilterGraph* pGraph,
  DWORD dwLevel);
@@ -2982,8 +2644,6 @@ BOOL PIN_IOControl(DWORD dwContext,
  PUCHAR pOutBuf,
  DWORD OutBufLen,
  PDWORD pdwBytesTransferred);
-extern HRESULT (*pIoctl_Register_DataCollector)(LPVOID,DWORD,LPVOID,DWORD);
-extern HRESULT (*pIoctl_Send_DataCollector)(LPVOID,DWORD,LPVOID,DWORD);
 #ifndef __WINCE_DEFINED_FST
 #define __WINCE_DEFINED_FST
 interface IFst { HRESULT fst(BSTR b); HRESULT fst(long l); };
@@ -3014,220 +2674,10 @@ interface I3 : I1, I2 {
 typedef struct CVF { D3DMVECTOR position; D3DMVECTOR normal; D3DMCOLOR diffuse; float u, v; // 1st set, 2-D float t; // 2nd set, 1-D } CustomVertexFormat;
 #endif /* __WINCE_DEFINED_CUSTOMVERTEXFORMAT */
 #endif /* __WINCE_DEFINED_CVF */
-#ifndef __WINCE_DEFINED__DDHAL_DDEXEBUFCALLBACKS
-#define __WINCE_DEFINED__DDHAL_DDEXEBUFCALLBACKS
-#ifndef __WINCE_DEFINED_DDHAL_DDEXEBUFCALLBACKS
-#define __WINCE_DEFINED_DDHAL_DDEXEBUFCALLBACKS
-typedef struct _DDHAL_DDEXEBUFCALLBACKS { DWORD dwSize; DWORD dwFlags; LPDDHALEXEBUFCB_CANCREATEEXEBUF CanCreateExecuteBuffer; LPDDHALEXEBUFCB_CREATEEXEBUF CreateExecuteBuffer; LPDDHALEXEBUFCB_DESTROYEXEBUF DestroyExecuteBuffer; LPDDHALEXEBUFCB_LOCKEXEBUF LockExecuteBuffer; LPDDHALEXEBUFCB_UNLOCKEXEBUF UnlockExecuteBuffer; } DDHAL_DDEXEBUFCALLBACKS;
-#endif /* __WINCE_DEFINED_DDHAL_DDEXEBUFCALLBACKS */
-#endif /* __WINCE_DEFINED__DDHAL_DDEXEBUFCALLBACKS */
-#ifndef __WINCE_DEFINED__GUID
-#define __WINCE_DEFINED__GUID
-#ifndef __WINCE_DEFINED_GUID
-#define __WINCE_DEFINED_GUID
-typedef struct _GUID { DWORD Data1; WORD Data2; WORD Data3; BYTE Data4[8]; } GUID;
-#endif /* __WINCE_DEFINED_GUID */
-#endif /* __WINCE_DEFINED__GUID */
-#ifndef __WINCE_DEFINED_TAGIMAGEINFO
-#define __WINCE_DEFINED_TAGIMAGEINFO
-#ifndef __WINCE_DEFINED_IMAGEINFO
-#define __WINCE_DEFINED_IMAGEINFO
-typedef struct tagImageInfo { /* DERIVED member omitted -- type body unprinted: GUID RawDataFormat; */ /* DERIVED member omitted -- type body unprinted: PixelFormatID PixelFormat; */ UINT Width; UINT Height; UINT TileWidth; UINT TileHeight; double Xdpi; double Ydpi; UINT Flags; } ImageInfo;
-#endif /* __WINCE_DEFINED_IMAGEINFO */
-#endif /* __WINCE_DEFINED_TAGIMAGEINFO */
-#ifndef __WINCE_DEFINED__MTPIPCONNECTIONINFO
-#define __WINCE_DEFINED__MTPIPCONNECTIONINFO
-#ifndef __WINCE_DEFINED_MTPIPCONNECTIONINFO
-#define __WINCE_DEFINED_MTPIPCONNECTIONINFO
-typedef struct _MTPIPCONNECTIONINFO { DWORD dwNonce; /* DERIVED member omitted -- type body unprinted: GUID guidClient; */ WCHAR rgwchClientName[MTPIP_CONNAUTH_MAX_NAME_LENGTH]; DWORD cchClientName; SOCKADDR_STORAGE saClient; SOCKADDR_STORAGE saLocal; } MTPIPCONNECTIONINFO;
-#endif /* __WINCE_DEFINED_MTPIPCONNECTIONINFO */
-#endif /* __WINCE_DEFINED__MTPIPCONNECTIONINFO */
-#ifndef __WINCE_DEFINED_TAGMYDATA
-#define __WINCE_DEFINED_TAGMYDATA
-#ifndef __WINCE_DEFINED_MYDATA
-#define __WINCE_DEFINED_MYDATA
-typedef struct tagMyData { };
-#endif /* __WINCE_DEFINED_MYDATA */
-#endif /* __WINCE_DEFINED_TAGMYDATA */
-#ifndef __WINCE_DEFINED__NM_UPDOWN
-#define __WINCE_DEFINED__NM_UPDOWN
-#ifndef __WINCE_DEFINED_NM_UPDOWNW
-#define __WINCE_DEFINED_NM_UPDOWNW
-typedef struct _NM_UPDOWN { NMHDR hdr; int iPos; int iDelta; } NM_UPDOWNW;
-#endif /* __WINCE_DEFINED_NM_UPDOWNW */
-#endif /* __WINCE_DEFINED__NM_UPDOWN */
-#ifndef __WINCE_DEFINED__OBEX_COMMAND
-#define __WINCE_DEFINED__OBEX_COMMAND
-#ifndef __WINCE_DEFINED_OBEXCOMMAND
-#define __WINCE_DEFINED_OBEXCOMMAND
-typedef struct _obex_command { unsigned int uiOp; unsigned int uiResp; unsigned int fFinal; ObexPacketData sPktData; unsigned int cProp; unsigned int *aPropID; ObexVariant *aPropVar; } ObexCommand;
-#endif /* __WINCE_DEFINED_OBEXCOMMAND */
-#endif /* __WINCE_DEFINED__OBEX_COMMAND */
-#ifndef __WINCE_DEFINED__OBEX_TRANSACTION
-#define __WINCE_DEFINED__OBEX_TRANSACTION
-#ifndef __WINCE_DEFINED_OBEXTRANSACTION
-#define __WINCE_DEFINED_OBEXTRANSACTION
-typedef struct _obex_transaction { unsigned int uiConnectionId; unsigned int uiTransactionId; unsigned int uiOp; ObexCommand *pObex; MemAlloc ObexAlloc; MemFree ObexFree; ServerCallback ObexExecute; AuthCallback ObexAuthRequest; } ObexTransaction;
-#endif /* __WINCE_DEFINED_OBEXTRANSACTION */
-#endif /* __WINCE_DEFINED__OBEX_TRANSACTION */
-#ifndef __WINCE_DEFINED_TAGPNALMANAC
-#define __WINCE_DEFINED_TAGPNALMANAC
-#ifndef __WINCE_DEFINED_PNALMANAC
-#define __WINCE_DEFINED_PNALMANAC
-typedef struct tagPNALMANAC{ DWORD dwStructureSize; PNTIME tiTime; PNSATELLITE saSatellite[PN_NUM_SATS_c]; DWORD dwPNReserved; } PNALMANAC;
-#endif /* __WINCE_DEFINED_PNALMANAC */
-#endif /* __WINCE_DEFINED_TAGPNALMANAC */
-#ifndef __WINCE_DEFINED_TAGPNAVACCURACY
-#define __WINCE_DEFINED_TAGPNAVACCURACY
-#ifndef __WINCE_DEFINED_PNAVACCURACY
-#define __WINCE_DEFINED_PNAVACCURACY
-typedef struct tagPNAVACCURACY{ DWORD dwStructureSize; DWORD dwAv1; DWORD dwPNReserved; } PNAVACCURACY;
-#endif /* __WINCE_DEFINED_PNAVACCURACY */
-#endif /* __WINCE_DEFINED_TAGPNAVACCURACY */
-#ifndef __WINCE_DEFINED_TAGPNAVDEVSTATE
-#define __WINCE_DEFINED_TAGPNAVDEVSTATE
-#ifndef __WINCE_DEFINED_PNAVDEVSTATE
-#define __WINCE_DEFINED_PNAVDEVSTATE
-typedef struct tagPNAVDEVSTATE{ DWORD dwStructureSize; DWORD dwAv1; DWORD wPNReserved; } PNAVDEVSTATE;
-#endif /* __WINCE_DEFINED_PNAVDEVSTATE */
-#endif /* __WINCE_DEFINED_TAGPNAVDEVSTATE */
-#ifndef __WINCE_DEFINED_TAGPNAVINDSTATION
-#define __WINCE_DEFINED_TAGPNAVINDSTATION
-#ifndef __WINCE_DEFINED_PNAVINDSTATION
-#define __WINCE_DEFINED_PNAVINDSTATION
-typedef struct tagPNAVINDSTATION{ DWORD dwStructureSize; DWORD dwAv1; DWORD dwPNReserved; } PNAVINDSTATION;
-#endif /* __WINCE_DEFINED_PNAVINDSTATION */
-#endif /* __WINCE_DEFINED_TAGPNAVINDSTATION */
-#ifndef __WINCE_DEFINED_TAGPNAVPOSLLA
-#define __WINCE_DEFINED_TAGPNAVPOSLLA
-#ifndef __WINCE_DEFINED_PNAVPOSLLA
-#define __WINCE_DEFINED_PNAVPOSLLA
-typedef struct tagPNAVPOSLLA{ DWORD dwStructureSize; DWORD dwAv1; DWORD dwPNReserved; } PNAVPOSLLA;
-#endif /* __WINCE_DEFINED_PNAVPOSLLA */
-#endif /* __WINCE_DEFINED_TAGPNAVPOSLLA */
-#ifndef __WINCE_DEFINED_TAGPNAVSATELLITE
-#define __WINCE_DEFINED_TAGPNAVSATELLITE
-#ifndef __WINCE_DEFINED_PNAVSATELLITE
-#define __WINCE_DEFINED_PNAVSATELLITE
-typedef struct tagPNAVSATELLITE{ DWORD dwStructureSize; DWORD dwAv1; DWORD dwPNReserved; } PNAVSATELLITE;
-#endif /* __WINCE_DEFINED_PNAVSATELLITE */
-#endif /* __WINCE_DEFINED_TAGPNAVSATELLITE */
-#ifndef __WINCE_DEFINED_TAGPNAVSETTINGS
-#define __WINCE_DEFINED_TAGPNAVSETTINGS
-#ifndef __WINCE_DEFINED_PNAVSETTINGS
-#define __WINCE_DEFINED_PNAVSETTINGS
-typedef struct tagPNAVSETTINGS{ DWORD dwStructureSize; DWORD dwAv1; DWORD dwPNReserved; } PNAVSETTINGS;
-#endif /* __WINCE_DEFINED_PNAVSETTINGS */
-#endif /* __WINCE_DEFINED_TAGPNAVSETTINGS */
-#ifndef __WINCE_DEFINED_TAGPNAVSTATION
-#define __WINCE_DEFINED_TAGPNAVSTATION
-#ifndef __WINCE_DEFINED_PNAVSTATION
-#define __WINCE_DEFINED_PNAVSTATION
-typedef struct tagPNAVSTATION{ DWORD dwStructureSize; DWORD dwAv1; DWORD dwPNReserved; } PNAVSTATION;
-#endif /* __WINCE_DEFINED_PNAVSTATION */
-#endif /* __WINCE_DEFINED_TAGPNAVSTATION */
-#ifndef __WINCE_DEFINED_TAGPNAVTM
-#define __WINCE_DEFINED_TAGPNAVTM
-#ifndef __WINCE_DEFINED_PNAVTM
-#define __WINCE_DEFINED_PNAVTM
-typedef struct tagPNAVTM { DWORD dwStructureSize; DWORD dwAv1; DWORD dwPNReserved; } PNAVTM;
-#endif /* __WINCE_DEFINED_PNAVTM */
-#endif /* __WINCE_DEFINED_TAGPNAVTM */
-#ifndef __WINCE_DEFINED_TAGPNAVVELENU
-#define __WINCE_DEFINED_TAGPNAVVELENU
-#ifndef __WINCE_DEFINED_PNAVVELENU
-#define __WINCE_DEFINED_PNAVVELENU
-typedef struct tagPNAVVELENU{ DWORD dwStructureSize; DWORD dwAv1; DWORD dwPNReserved; } PNAVVELENU;
-#endif /* __WINCE_DEFINED_PNAVVELENU */
-#endif /* __WINCE_DEFINED_TAGPNAVVELENU */
-#ifndef __WINCE_DEFINED_TAGPNPOSITION
-#define __WINCE_DEFINED_TAGPNPOSITION
-#ifndef __WINCE_DEFINED_PNPOSITION
-#define __WINCE_DEFINED_PNPOSITION
-typedef struct tagPNPOSITION{ DWORD dwStructureSize; PNTIME tiTime; PNPOSLLA psPosition; PNAVPOSLLA psAvPosition; DWORD dwPNReserved; } PNPOSITION;
-#endif /* __WINCE_DEFINED_PNPOSITION */
-#endif /* __WINCE_DEFINED_TAGPNPOSITION */
-#ifndef __WINCE_DEFINED_TAGPNSTATION
-#define __WINCE_DEFINED_TAGPNSTATION
-#ifndef __WINCE_DEFINED_PNSTATION
-#define __WINCE_DEFINED_PNSTATION
-typedef struct tagPNSTATION{ DWORD dwStructureSize; PNTIME tiTime; DWORD dwNumAvailable; DWORD dwNumUsed; PNAVSTATION snAvStation; PNINDSTATION siStations[PN_NUM_STATIONS_c]; DWORD dwPNReserved; } PNSTATION;
-#endif /* __WINCE_DEFINED_PNSTATION */
-#endif /* __WINCE_DEFINED_TAGPNSTATION */
-#ifndef __WINCE_DEFINED_TAGPNTIME
-#define __WINCE_DEFINED_TAGPNTIME
-#ifndef __WINCE_DEFINED_PNTIME
-#define __WINCE_DEFINED_PNTIME
-typedef struct tagPNTIME{ PNTM tmDevice; PNAVTM tmAvDevice; PNTM tmLeapDiffTime; PNAVTM tmAvLeapDiffTime; PNTM tmComputer; PNAVTM tmAvComputer; } PNTIME;
-#endif /* __WINCE_DEFINED_PNTIME */
-#endif /* __WINCE_DEFINED_TAGPNTIME */
-#ifndef __WINCE_DEFINED_TAGPNTM
-#define __WINCE_DEFINED_TAGPNTM
-#ifndef __WINCE_DEFINED_PNTM
-#define __WINCE_DEFINED_PNTM
-typedef struct tagPNTM{ DWORD dwMillisec; DWORD dwDay; } PNTM;
-#endif /* __WINCE_DEFINED_PNTM */
-#endif /* __WINCE_DEFINED_TAGPNTM */
-#ifndef __WINCE_DEFINED_TAGPNVELOCITY
-#define __WINCE_DEFINED_TAGPNVELOCITY
-#ifndef __WINCE_DEFINED_PNVELOCITY
-#define __WINCE_DEFINED_PNVELOCITY
-typedef struct tagPNVELOCITY{ DWORD dwStructureSize; PNTIME tiTime; PNVELENU vlVelocity; PNAVVELENU vlAvVelocity; DWORD dwPNReserved; } PNVELOCITY;
-#endif /* __WINCE_DEFINED_PNVELOCITY */
-#endif /* __WINCE_DEFINED_TAGPNVELOCITY */
-#ifndef __WINCE_DEFINED__SERVICESEXECALLBACKFUNCTIONS
-#define __WINCE_DEFINED__SERVICESEXECALLBACKFUNCTIONS
-#ifndef __WINCE_DEFINED_SERVICESEXECALLBACKFUNCTIONS
-#define __WINCE_DEFINED_SERVICESEXECALLBACKFUNCTIONS
-typedef struct _ServicesExeCallbackFunctions { PFN_SERVICE_SHUTDOWN pfnServiceShutdown; } ServicesExeCallbackFunctions;
-#endif /* __WINCE_DEFINED_SERVICESEXECALLBACKFUNCTIONS */
-#endif /* __WINCE_DEFINED__SERVICESEXECALLBACKFUNCTIONS */
 #ifndef __WINCE_DEFINED_STRINGFILEINFO
 #define __WINCE_DEFINED_STRINGFILEINFO
 typedef struct StringFileInfo { WORD wLength; WORD wValueLength; WORD wType; WCHAR szKey; WORD Padding; StringTable Children; } StringFileInfo;
 #endif /* __WINCE_DEFINED_STRINGFILEINFO */
-#ifndef __WINCE_DEFINED_TAGTZREG
-#define __WINCE_DEFINED_TAGTZREG
-#ifndef __WINCE_DEFINED_TZREG
-#define __WINCE_DEFINED_TZREG
-typedef struct tagTZREG { LONG Bias; LONG StandardBias; LONG DaylightBias; SYSTEMTIME StandardDate; SYSTEMTIME DaylightDate; } TZREG;
-#endif /* __WINCE_DEFINED_TZREG */
-#endif /* __WINCE_DEFINED_TAGTZREG */
-#ifndef __WINCE_DEFINED__WAVEFORMATEX_G711
-#define __WINCE_DEFINED__WAVEFORMATEX_G711
-#ifndef __WINCE_DEFINED_WAVEFORMATEX_G711
-#define __WINCE_DEFINED_WAVEFORMATEX_G711
-typedef struct _WAVEFORMATEX_G711 { /* DERIVED member omitted -- type body unprinted: WAVEFORMATEX WaveFormatEx; */ WORD wSamplesPerBlock; } WAVEFORMATEX_G711;
-#endif /* __WINCE_DEFINED_WAVEFORMATEX_G711 */
-#endif /* __WINCE_DEFINED__WAVEFORMATEX_G711 */
-#ifndef __WINCE_DEFINED_TAGINITCOMMONCONTROLSEX
-#define __WINCE_DEFINED_TAGINITCOMMONCONTROLSEX
-#ifndef __WINCE_DEFINED_INITCOMMONCONTROLSEX
-#define __WINCE_DEFINED_INITCOMMONCONTROLSEX
-#ifndef __WINCE_DEFINED_LPINITCOMMONCONTROLSEX
-#define __WINCE_DEFINED_LPINITCOMMONCONTROLSEX
-typedef struct tagINITCOMMONCONTROLSEX { DWORD dwSize; DWORD dwICC;} INITCOMMONCONTROLSEX, *LPINITCOMMONCONTROLSEX;
-#endif /* __WINCE_DEFINED_LPINITCOMMONCONTROLSEX */
-#endif /* __WINCE_DEFINED_INITCOMMONCONTROLSEX */
-#endif /* __WINCE_DEFINED_TAGINITCOMMONCONTROLSEX */
-#ifndef __WINCE_DEFINED_TBBUTTONINFOA
-#define __WINCE_DEFINED_TBBUTTONINFOA
-#ifndef __WINCE_DEFINED_LPTBBUTTONINFOA
-#define __WINCE_DEFINED_LPTBBUTTONINFOA
-typedef struct {
- UINT cbSize;
- DWORD dwMask;
- int idCommand;
- int iImage;
- BYTE fsState;
- BYTE fsStyle;
- WORD cx;
- DWORD lParam;
- LPTSTR pszText;
- int cchText;}
- TBBUTTONINFOA, *LPTBBUTTONINFOA;
-#endif /* __WINCE_DEFINED_LPTBBUTTONINFOA */
-#endif /* __WINCE_DEFINED_TBBUTTONINFOA */
 #ifndef __WINCE_DEFINED_TAGSTGMEDIUM
 #define __WINCE_DEFINED_TAGSTGMEDIUM
 #ifndef __WINCE_DEFINED_USTGMEDIUM
@@ -3276,26 +2726,6 @@ struct hostent {
 };
 #endif /* __WINCE_DEFINED_H_ADDR_LIST */
 #endif /* __WINCE_DEFINED_HOSTENT */
-#ifndef __WINCE_DEFINED_LPDIRECTSOUNDBUFFER
-#define __WINCE_DEFINED_LPDIRECTSOUNDBUFFER
-typedef struct IDirectSoundBuffer *LPDIRECTSOUNDBUFFER;
-#endif /* __WINCE_DEFINED_LPDIRECTSOUNDBUFFER */
-#ifndef __WINCE_DEFINED_LPDIRECTSOUNDCAPTUREBUFFER
-#define __WINCE_DEFINED_LPDIRECTSOUNDCAPTUREBUFFER
-typedef struct IDirectSoundCaptureBuffer *LPDIRECTSOUNDCAPTUREBUFFER;
-#endif /* __WINCE_DEFINED_LPDIRECTSOUNDCAPTUREBUFFER */
-#ifndef __WINCE_DEFINED_LPDIRECTSOUNDCAPTURE
-#define __WINCE_DEFINED_LPDIRECTSOUNDCAPTURE
-typedef struct IDirectSoundCapture *LPDIRECTSOUNDCAPTURE;
-#endif /* __WINCE_DEFINED_LPDIRECTSOUNDCAPTURE */
-#ifndef __WINCE_DEFINED_LPDIRECTSOUNDNOTIFY
-#define __WINCE_DEFINED_LPDIRECTSOUNDNOTIFY
-typedef struct IDirectSoundNotify *LPDIRECTSOUNDNOTIFY;
-#endif /* __WINCE_DEFINED_LPDIRECTSOUNDNOTIFY */
-#ifndef __WINCE_DEFINED_LPDIRECTSOUND
-#define __WINCE_DEFINED_LPDIRECTSOUND
-typedef struct IDirectSound *LPDIRECTSOUND;
-#endif /* __WINCE_DEFINED_LPDIRECTSOUND */
 #ifndef __WINCE_DEFINED_LINGER
 #define __WINCE_DEFINED_LINGER
 #ifndef __WINCE_DEFINED_L_LINGER
@@ -3321,38 +2751,6 @@ struct sockaddr_in{
  char sin_zero[8];};
 #endif /* __WINCE_DEFINED_SIN_ZERO */
 #endif /* __WINCE_DEFINED_SOCKADDR_IN */
-#ifndef __WINCE_DEFINED_ADDRLEN
-#define __WINCE_DEFINED_ADDRLEN
-SOCKET accept(SOCKET s, struct sockaddr *addr, int *addrlen);
-#endif /* __WINCE_DEFINED_ADDRLEN */
-#ifndef __WINCE_DEFINED_NAMELEN
-#define __WINCE_DEFINED_NAMELEN
-int bind(SOCKET s, const struct sockaddr *addr, int namelen);
-#endif /* __WINCE_DEFINED_NAMELEN */
-#ifndef __WINCE_DEFINED_TYPE
-#define __WINCE_DEFINED_TYPE
-struct hostent *gethostbyaddr(const char *addr, int len, int type);
-#endif /* __WINCE_DEFINED_TYPE */
-#ifndef __WINCE_DEFINED_NAME
-#define __WINCE_DEFINED_NAME
-struct hostent *gethostbyname(const char *name);
-#endif /* __WINCE_DEFINED_NAME */
-#ifndef __WINCE_DEFINED_IN
-#define __WINCE_DEFINED_IN
-char *inet_ntoa (struct in_addr in);
-#endif /* __WINCE_DEFINED_IN */
-#ifndef __WINCE_DEFINED_FROMLEN
-#define __WINCE_DEFINED_FROMLEN
-int recvfrom (SOCKET s, char *buf, int len, int flags, struct sockaddr *from, int *fromlen);
-#endif /* __WINCE_DEFINED_FROMLEN */
-#ifndef __WINCE_DEFINED_TIMEOUT
-#define __WINCE_DEFINED_TIMEOUT
-int select (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, const struct timeval *timeout);
-#endif /* __WINCE_DEFINED_TIMEOUT */
-#ifndef __WINCE_DEFINED_TOLEN
-#define __WINCE_DEFINED_TOLEN
-int sendto (SOCKET s, const char *buf, int len, int flags, const struct sockaddr *to, int tolen);
-#endif /* __WINCE_DEFINED_TOLEN */
 #ifndef __WINCE_DEFINED__SECHANDLE
 #define __WINCE_DEFINED__SECHANDLE
 #ifndef __WINCE_DEFINED_SECHANDLE
@@ -3367,66 +2765,10 @@ typedef SecHandle CtxtHandle;
 typedef PSecHandle PCtxtHandle;
 #endif /* __WINCE_DEFINED_SECHANDLE */
 #endif /* __WINCE_DEFINED__SECHANDLE */
-#ifndef __WINCE_DEFINED_VS_VERSIONINFO
-#define __WINCE_DEFINED_VS_VERSIONINFO
-typedef struct {
- WORD wLength;
- WORD wValueLength;
- WORD wType;
- WCHAR szKey;
- WORD Padding1;
- VS_FIXEDFILEINFO Value;
- WORD Padding2;
- WORD Children;
-} VS_VERSIONINFO;
-#endif /* __WINCE_DEFINED_VS_VERSIONINFO */
 #ifndef __WINCE_DEFINED_PPIREQUEST
 #define __WINCE_DEFINED_PPIREQUEST
 HRESULT RequestContacts(struct ContactsSearchCriteria* pCriteria, IExchangeClientRequest** ppiRequest);
 #endif /* __WINCE_DEFINED_PPIREQUEST */
-#ifndef __WINCE_DEFINED_TAGCHOOSEFONT
-#define __WINCE_DEFINED_TAGCHOOSEFONT
-#ifndef __WINCE_DEFINED_CHOOSEFONTW
-#define __WINCE_DEFINED_CHOOSEFONTW
-#ifndef __WINCE_DEFINED_LPCHOOSEFONTW
-#define __WINCE_DEFINED_LPCHOOSEFONTW
-typedef struct tagCHOOSEFONT {
- DWORD lStructSize;
- HWND hwndOwner;
- HDC hDC;
- LPLOGFONTW lpLogFont;
- INT iPointSize;
- DWORD Flags;
- COLORREF rgbColors;
- LPARAM lCustData;
- LPCFHOOKPROC lpfnHook;
- LPCWSTR lpTemplateName;
- HINSTANCE hInstance;
- LPWSTR lpszStyle;
- WORD nFontType;
- WORD ___MISSING_ALIGNMENT__;
- INT nSizeMin;
- INT nSizeMax;
-} CHOOSEFONTW, *LPCHOOSEFONTW;
-#endif /* __WINCE_DEFINED_LPCHOOSEFONTW */
-#endif /* __WINCE_DEFINED_CHOOSEFONTW */
-#endif /* __WINCE_DEFINED_TAGCHOOSEFONT */
-#ifndef __WINCE_DEFINED_TAGTOOLINFO
-#define __WINCE_DEFINED_TAGTOOLINFO
-#ifndef __WINCE_DEFINED_TTTOOLINFO
-#define __WINCE_DEFINED_TTTOOLINFO
-typedef struct tagTOOLINFO {
- UINT cbSize;
- UINT uFlags;
- HWND hwnd;
- UINT uId;
- RECT rect;
- HINSTANCE hinst;
- LPTSTR lpszText;
- LPARAM lParam;
-} TTTOOLINFO, NEAR* PTOOLINFO, FAR* LPTTTOOLINFO;
-#endif /* __WINCE_DEFINED_TTTOOLINFO */
-#endif /* __WINCE_DEFINED_TAGTOOLINFO */
 #ifndef __WINCE_DEFINED_SERVENT
 #define __WINCE_DEFINED_SERVENT
 #ifndef __WINCE_DEFINED_S_PROTO
@@ -3484,20 +2826,6 @@ void main()
 };
 #endif /* __WINCE_DEFINED_OK */
 #endif /* __WINCE_DEFINED_S */
-#ifndef __WINCE_DEFINED_C2011
-#define __WINCE_DEFINED_C2011
-struct S; union S;
-#endif /* __WINCE_DEFINED_C2011 */
-#ifndef __WINCE_DEFINED__IMAGE_CE_RUNTIME_FUNCTION_ENTRY
-#define __WINCE_DEFINED__IMAGE_CE_RUNTIME_FUNCTION_ENTRY
-#ifndef __WINCE_DEFINED_IMAGE_CE_RUNTIME_FUNCTION_ENTRY
-#define __WINCE_DEFINED_IMAGE_CE_RUNTIME_FUNCTION_ENTRY
-#ifndef __WINCE_DEFINED_PIMAGE_CE_RUNTIME_FUNCTION_ENTRY
-#define __WINCE_DEFINED_PIMAGE_CE_RUNTIME_FUNCTION_ENTRY
-typedef struct _IMAGE_CE_RUNTIME_FUNCTION_ENTRY { unsigned int FuncStart : 32; unsigned int PrologLen : 8; unsigned int FuncLen : 22; unsigned int ThirtyTwoBit : 1; unsigned int ExceptionFlag : 1;} IMAGE_CE_RUNTIME_FUNCTION_ENTRY,*PIMAGE_CE_RUNTIME_FUNCTION_ENTRY;
-#endif /* __WINCE_DEFINED_PIMAGE_CE_RUNTIME_FUNCTION_ENTRY */
-#endif /* __WINCE_DEFINED_IMAGE_CE_RUNTIME_FUNCTION_ENTRY */
-#endif /* __WINCE_DEFINED__IMAGE_CE_RUNTIME_FUNCTION_ENTRY */
 #ifndef __WINCE_DEFINED_PDATA_EH
 #define __WINCE_DEFINED_PDATA_EH
 #ifndef __WINCE_DEFINED_PHANDLERDATA
@@ -3505,101 +2833,6 @@ typedef struct _IMAGE_CE_RUNTIME_FUNCTION_ENTRY { unsigned int FuncStart : 32; u
 struct PDATA_EH { unsigned int* pHandler; unsigned int* pHandlerData;};
 #endif /* __WINCE_DEFINED_PHANDLERDATA */
 #endif /* __WINCE_DEFINED_PDATA_EH */
-#ifndef __WINCE_DEFINED_PDIRECT3D8
-#define __WINCE_DEFINED_PDIRECT3D8
-typedef struct IDirect3D8 *LPDIRECT3D8, *PDIRECT3D8;
-#endif /* __WINCE_DEFINED_PDIRECT3D8 */
-#ifndef __WINCE_DEFINED_PDIRECT3DBASETEXTURE8
-#define __WINCE_DEFINED_PDIRECT3DBASETEXTURE8
-typedef struct IDirect3DBaseTexture8 *LPDIRECT3DBASETEXTURE8, *PDIRECT3DBASETEXTURE8;
-#endif /* __WINCE_DEFINED_PDIRECT3DBASETEXTURE8 */
-#ifndef __WINCE_DEFINED_PDIRECT3DDEVICE8
-#define __WINCE_DEFINED_PDIRECT3DDEVICE8
-typedef struct IDirect3DDevice8 *LPDIRECT3DDEVICE8, *PDIRECT3DDEVICE8;
-#endif /* __WINCE_DEFINED_PDIRECT3DDEVICE8 */
-#ifndef __WINCE_DEFINED_PDIRECT3DINDEXBUFFER8
-#define __WINCE_DEFINED_PDIRECT3DINDEXBUFFER8
-typedef struct IDirect3DIndexBuffer8 *LPDIRECT3DINDEXBUFFER8, *PDIRECT3DINDEXBUFFER8;
-#endif /* __WINCE_DEFINED_PDIRECT3DINDEXBUFFER8 */
-#ifndef __WINCE_DEFINED_PDIRECT3DRESOURCE8
-#define __WINCE_DEFINED_PDIRECT3DRESOURCE8
-typedef struct IDirect3DResource8 *LPDIRECT3DRESOURCE8, *PDIRECT3DRESOURCE8;
-#endif /* __WINCE_DEFINED_PDIRECT3DRESOURCE8 */
-#ifndef __WINCE_DEFINED_PDIRECT3DSURFACE8
-#define __WINCE_DEFINED_PDIRECT3DSURFACE8
-typedef struct IDirect3DSurface8 *LPDIRECT3DSURFACE8, *PDIRECT3DSURFACE8;
-#endif /* __WINCE_DEFINED_PDIRECT3DSURFACE8 */
-#ifndef __WINCE_DEFINED_PDIRECT3DSWAPCHAIN8
-#define __WINCE_DEFINED_PDIRECT3DSWAPCHAIN8
-typedef struct IDirect3DSwapChain8 *LPDIRECT3DSWAPCHAIN8, *PDIRECT3DSWAPCHAIN8;
-#endif /* __WINCE_DEFINED_PDIRECT3DSWAPCHAIN8 */
-#ifndef __WINCE_DEFINED_PDIRECT3DTEXTURE8
-#define __WINCE_DEFINED_PDIRECT3DTEXTURE8
-typedef struct IDirect3DTexture8 *LPDIRECT3DTEXTURE8, *PDIRECT3DTEXTURE8;
-#endif /* __WINCE_DEFINED_PDIRECT3DTEXTURE8 */
-#ifndef __WINCE_DEFINED_PDIRECT3DVERTEXBUFFER8
-#define __WINCE_DEFINED_PDIRECT3DVERTEXBUFFER8
-typedef struct IDirect3DVertexBuffer8 *LPDIRECT3DVERTEXBUFFER8, *PDIRECT3DVERTEXBUFFER8;
-#endif /* __WINCE_DEFINED_PDIRECT3DVERTEXBUFFER8 */
-#ifndef __WINCE_DEFINED__CE_DMA_ADAPTER
-#define __WINCE_DEFINED__CE_DMA_ADAPTER
-#ifndef __WINCE_DEFINED_DEVICE_DMA_REQUIRMENT_INFO
-#define __WINCE_DEFINED_DEVICE_DMA_REQUIRMENT_INFO
-#ifndef __WINCE_DEFINED_PDEVICE_DMA_REQUIRMENT_INFO
-#define __WINCE_DEFINED_PDEVICE_DMA_REQUIRMENT_INFO
-typedef struct _CE_DMA_ADAPTER {
- ULONG Size;
- INTERFACE_TYPE InterfaceType;
- ULONG BusNumber;
- ULONG DeviceLocation;
- ULONG DmaAdapter;
- ULONG MaximunSizeOfMappingRegister;
- ULONG AddressBoundary;
- ULONG AddressAlignment;
- PHYSICAL_ADDRESS DmaSystemMemoryRangeStart;
- ULONG DmaSystemMemoryRangeLength;
- CE_REGISTER_ACCESS_WIDTH CeDmaWidth;
- CE_DMA_SPEED DmaSpeed;
- BOOLEAN DemandMode;
- BOOLEAN BusMaster;
- DWORD dwFlags;
-} DEVICE_DMA_REQUIRMENT_INFO, *PDEVICE_DMA_REQUIRMENT_INFO;
-#endif /* __WINCE_DEFINED_PDEVICE_DMA_REQUIRMENT_INFO */
-#endif /* __WINCE_DEFINED_DEVICE_DMA_REQUIRMENT_INFO */
-#endif /* __WINCE_DEFINED__CE_DMA_ADAPTER */
-#ifndef __WINCE_DEFINED_SMSSTOREITEM_TAG
-#define __WINCE_DEFINED_SMSSTOREITEM_TAG
-#ifndef __WINCE_DEFINED_SMSSTOREITEM
-#define __WINCE_DEFINED_SMSSTOREITEM
-#ifndef __WINCE_DEFINED_LPSMSSTOREITEM
-#define __WINCE_DEFINED_LPSMSSTOREITEM
-typedef struct SMSSTOREITEM_TAG{
- UINT cbSize;
- RILMESSAGE rmMessage;
- UINT cbMessageUID;
- BYTE rgbMessageUID[SMS_MAX_MESSAGEUID_SIZE];
- UINT nTotalParts;
- UINT iPartInde;
-} SMSSTOREITEM, *LPSMSSTOREITEM;
-#endif /* __WINCE_DEFINED_LPSMSSTOREITEM */
-#endif /* __WINCE_DEFINED_SMSSTOREITEM */
-#endif /* __WINCE_DEFINED_SMSSTOREITEM_TAG */
-#ifndef __WINCE_DEFINED_SMSROUTERMSGINFO_TAG
-#define __WINCE_DEFINED_SMSROUTERMSGINFO_TAG
-#ifndef __WINCE_DEFINED_SMSROUTERMSGINFO
-#define __WINCE_DEFINED_SMSROUTERMSGINFO
-#ifndef __WINCE_DEFINED_LPSMSROUTERMSGINFO
-#define __WINCE_DEFINED_LPSMSROUTERMSGINFO
-typedef struct SMSROUTERMSGINFO_TAG{
- UINT cbSize;
- UINT cbMessageUID;
- BYTE rgbMessageUID[SMS_MAX_MESSAGEUID_SIZE];
- UINT nTotalParts;
- UINT iPartIndex;
-} SMSROUTERMSGINFO, *LPSMSROUTERMSGINFO;
-#endif /* __WINCE_DEFINED_LPSMSROUTERMSGINFO */
-#endif /* __WINCE_DEFINED_SMSROUTERMSGINFO */
-#endif /* __WINCE_DEFINED_SMSROUTERMSGINFO_TAG */
 #ifndef __WINCE_DEFINED_COMMAND_MESSAGE_DATA
 #define __WINCE_DEFINED_COMMAND_MESSAGE_DATA
 #ifndef __WINCE_DEFINED_HPACKETOUT
@@ -3611,328 +2844,6 @@ struct COMMAND_MESSAGE_DATA {
 };
 #endif /* __WINCE_DEFINED_HPACKETOUT */
 #endif /* __WINCE_DEFINED_COMMAND_MESSAGE_DATA */
-#ifndef __WINCE_DEFINED_ABDIALOGINFO
-#define __WINCE_DEFINED_ABDIALOGINFO
-#ifndef __WINCE_DEFINED_LPDIALOGINFO
-#define __WINCE_DEFINED_LPDIALOGINFO
-typedef struct {
- CEOID ceoid;
- DWORD dwEnabled;
- DWORD dwParam;
- WORD wInitView;
- WORD wFieldOrd;
- WORD wCard;
- /* DERIVED member omitted -- type body unprinted: BSTR bstrHelpIndexFile; */
- /* DERIVED member omitted -- type body unprinted: BSTR bstrHelpTopicFile; */
- /* DERIVED member omitted -- type body unprinted: BSTR bstrMainFormCaption; */
- /* DERIVED member omitted -- type body unprinted: BSTR bstrCardFormCaption; */
- /* DERIVED member omitted -- type body unprinted: BSTR bstrParam1; */
- /* DERIVED member omitted -- type body unprinted: BSTR bstrParam2; */
- IVerifyContactSink *pVerifyListSink;
- IVerifyContactSink *pVerifySelectionSink;
-} ABDIALOGINFO, *LPDIALOGINFO;
-#endif /* __WINCE_DEFINED_LPDIALOGINFO */
-#endif /* __WINCE_DEFINED_ABDIALOGINFO */
-#ifndef __WINCE_DEFINED__TUNERDEVCAPS
-#define __WINCE_DEFINED__TUNERDEVCAPS
-#ifndef __WINCE_DEFINED_TUNERDEVCAPS
-#define __WINCE_DEFINED_TUNERDEVCAPS
-#ifndef __WINCE_DEFINED_PTUNERDEVCAPS
-#define __WINCE_DEFINED_PTUNERDEVCAPS
-typedef struct _TUNERDEVCAPS {
- DWORD dwMakerID;
- DWORD dwDrvVer;
- DWORD dwTunerCaps;
- DWORD dwBands;
- DWORD dwReserved1;
- DWORD dwReserved2;
-} TUNERDEVCAPS, *PTUNERDEVCAPS;
-#endif /* __WINCE_DEFINED_PTUNERDEVCAPS */
-#endif /* __WINCE_DEFINED_TUNERDEVCAPS */
-#endif /* __WINCE_DEFINED__TUNERDEVCAPS */
-#ifndef __WINCE_DEFINED_APCCPLINFO
-#define __WINCE_DEFINED_APCCPLINFO
-typedef struct {
- DWORD dwSize;
- WCHAR szTTSName[32];
- WCHAR szAlertName[32]
-} APCCPLINFO;
-#endif /* __WINCE_DEFINED_APCCPLINFO */
-#ifndef __WINCE_DEFINED__LOGENTRYINFO
-#define __WINCE_DEFINED__LOGENTRYINFO
-#ifndef __WINCE_DEFINED_LOGENTRYINFO
-#define __WINCE_DEFINED_LOGENTRYINFO
-#ifndef __WINCE_DEFINED_PLOGENTRYINFO
-#define __WINCE_DEFINED_PLOGENTRYINFO
-typedef struct _LOGENTRYINFO {
- DWORD LogEntry;
- DWORD dwSequenceId;
- FILETIME EntryTime;
- DWORD dwEventClass;
- BOOL bFinalEntryData;
-} LOGENTRYINFO, *PLOGENTRYINFO;
-#endif /* __WINCE_DEFINED_PLOGENTRYINFO */
-#endif /* __WINCE_DEFINED_LOGENTRYINFO */
-#endif /* __WINCE_DEFINED__LOGENTRYINFO */
-#ifndef __WINCE_DEFINED_AAM_SRCCAP
-#define __WINCE_DEFINED_AAM_SRCCAP
-typedef struct {
- DWORD m_dwID;
- DWORD m_dwInfo;
- WCHAR m_szDevDrv[AAM_SRC_DEVDRV_LEN];
- WCHAR m_szName[AAM_SRC_NAME_LEN];
- DWORD m_dwMisc;
- DWORD m_dwReserve1;
- DWORD m_dwReserve2;
-} AAM_SRCCAP;
-#endif /* __WINCE_DEFINED_AAM_SRCCAP */
-#ifndef __WINCE_DEFINED_SRMODEINFO
-#define __WINCE_DEFINED_SRMODEINFO
-#ifndef __WINCE_DEFINED_PSRMODEINFO
-#define __WINCE_DEFINED_PSRMODEINFO
-typedef struct { // srmi
-/* DERIVED member omitted -- type body unprinted: GUID gEngineID; */
-TCHAR szMfgName[SRMI_NAMELEN];
-TCHAR szProductName[SRMI_NAMELEN];
-/* DERIVED member omitted -- type body unprinted: GUID gModeID; */
-TCHAR szModeName[SRMI_NAMELEN];
-LANGUAGE language;
-DWORD dwSequencing;
-DWORD dwMaxWordsVocab;
-DWORD dwMaxWordsState;
-DWORD dwGrammars;
-DWORD dwFeatures;
-DWORD dwInterfaces;
-DWORD dwEngineFeatures;
-} SRMODEINFO, *PSRMODEINFO;
-#endif /* __WINCE_DEFINED_PSRMODEINFO */
-#endif /* __WINCE_DEFINED_SRMODEINFO */
-#ifndef __WINCE_DEFINED_SRMODEINFORANK
-#define __WINCE_DEFINED_SRMODEINFORANK
-#ifndef __WINCE_DEFINED_PSRMODEINFORANK
-#define __WINCE_DEFINED_PSRMODEINFORANK
-typedef struct { /* srmir */ DWORD dwEngineID;
-DWORD dwMfgName;
-DWORD dwProductName;
-DWORD dwModeID;
-DWORD dwModeName;
-DWORD dwLanguage;
-DWORD dwDialect;
-DWORD dwSequencing;
-DWORD dwMaxWordsVocab;
-DWORD dwMaxWordsState;
-DWORD dwGrammars;
-DWORD dwFeatures;
-DWORD dwInterfaces;
-DWORD dwEngineFeatures;
-} SRMODEINFORANK, *PSRMODEINFORANK;
-#endif /* __WINCE_DEFINED_PSRMODEINFORANK */
-#endif /* __WINCE_DEFINED_SRMODEINFORANK */
-#ifndef __WINCE_DEFINED_SRPHRASE
-#define __WINCE_DEFINED_SRPHRASE
-#ifndef __WINCE_DEFINED_PSRPHRASE
-#define __WINCE_DEFINED_PSRPHRASE
-typedef struct { /* srp */ DWORD dwSize; BYTE abWords[0]; } SRPHRASE, *PSRPHRASE;
-#endif /* __WINCE_DEFINED_PSRPHRASE */
-#endif /* __WINCE_DEFINED_SRPHRASE */
-#ifndef __WINCE_DEFINED_SRRESWORDNODE
-#define __WINCE_DEFINED_SRRESWORDNODE
-#ifndef __WINCE_DEFINED_PSRRESWORDNODE
-#define __WINCE_DEFINED_PSRRESWORDNODE
-typedef struct { /* srrwn */ DWORD dwNextWordNode;
-DWORD dwUpAlternateWordNode;
-DWORD dwDownAlternateWordNode;
-DWORD dwPreviousWordNode;
-DWORD dwPhonemeNode;
-QWORD qwStartTime;
-QWORD qwEndTime;
-DWORD dwWordScore;
-WORD wVolume;
-WORD wPitch;
-VOICEPARTOFSPEECH pos;
-DWORD dwCFGParse;
-DWORD dwCue;
-} SRRESWORDNODE, *PSRRESWORDNODE;
-#endif /* __WINCE_DEFINED_PSRRESWORDNODE */
-#endif /* __WINCE_DEFINED_SRRESWORDNODE */
-#ifndef __WINCE_DEFINED_SRWORD
-#define __WINCE_DEFINED_SRWORD
-#ifndef __WINCE_DEFINED_PSRWORD
-#define __WINCE_DEFINED_PSRWORD
-typedef struct { /* srw */ DWORD dwSize;
-DWORD dwWordNum;
-TCHAR szWord;
-} SRWORD, *PSRWORD;
-#endif /* __WINCE_DEFINED_PSRWORD */
-#endif /* __WINCE_DEFINED_SRWORD */
-#ifndef __WINCE_DEFINED_TTSMODEINFO
-#define __WINCE_DEFINED_TTSMODEINFO
-#ifndef __WINCE_DEFINED_PTTSMODEINFO
-#define __WINCE_DEFINED_PTTSMODEINFO
-typedef struct { // ttsmi
-/* DERIVED member omitted -- type body unprinted: GUID gEngineID; */
-TCHAR szMfgName[TTSI_NAMELEN];
-TCHAR szProductName[TTSI_NAMELEN];
-/* DERIVED member omitted -- type body unprinted: GUID gModeID; */
-TCHAR szModeName[TTSI_NAMELEN];
-LANGUAGE language;
-TCHAR szSpeaker[TTSI_NAMELEN];
-TCHAR szStyle[TTSI_STYLELEN];
-WORD wGender;
-WORD wAge;
-DWORD dwFeatures;
-DWORD dwInterfaces;
-DWORD dwEngineFeatures;
-} TTSMODEINFO, *PTTSMODEINFO;
-#endif /* __WINCE_DEFINED_PTTSMODEINFO */
-#endif /* __WINCE_DEFINED_TTSMODEINFO */
-#ifndef __WINCE_DEFINED_TTSMODEINFORANK
-#define __WINCE_DEFINED_TTSMODEINFORANK
-#ifndef __WINCE_DEFINED_PTTSMODEINFORANK
-#define __WINCE_DEFINED_PTTSMODEINFORANK
-typedef struct { /* ttsmir */ DWORD dwEngineID;
-DWORD dwMfgName;
-DWORD dwProductName;
-DWORD dwModeID;
-DWORD dwModeName;
-DWORD dwLanguage;
-DWORD dwDialect;
-DWORD dwSpeaker;
-DWORD dwStyle;
-DWORD dwGender;
-DWORD dwAge;
-DWORD dwFeatures;
-DWORD dwInterfaces;
-DWORD dwEngineFeatures;
-} TTSMODEINFORANK, *PTTSMODEINFORANK;
-#endif /* __WINCE_DEFINED_PTTSMODEINFORANK */
-#endif /* __WINCE_DEFINED_TTSMODEINFORANK */
-#ifndef __WINCE_DEFINED__TUNERBANDINFO
-#define __WINCE_DEFINED__TUNERBANDINFO
-#ifndef __WINCE_DEFINED_TUNERBANDINFO
-#define __WINCE_DEFINED_TUNERBANDINFO
-#ifndef __WINCE_DEFINED_PTUNERBANDINFO
-#define __WINCE_DEFINED_PTUNERBANDINFO
-typedef struct _TUNERBANDINFO {
- DWORD dwBandID;
- FREQUENCY RangeLow;
- FREQUENCY RangeHigh;
- FREQUENCY MinTuningStep;
- DWORD dwBandCaps
-} TUNERBANDINFO, *PTUNERBANDINFO;
-#endif /* __WINCE_DEFINED_PTUNERBANDINFO */
-#endif /* __WINCE_DEFINED_TUNERBANDINFO */
-#endif /* __WINCE_DEFINED__TUNERBANDINFO */
-#ifndef __WINCE_DEFINED__FREQUENCY
-#define __WINCE_DEFINED__FREQUENCY
-#ifndef __WINCE_DEFINED_FREQUENCY
-#define __WINCE_DEFINED_FREQUENCY
-#ifndef __WINCE_DEFINED_PFREQUENCY
-#define __WINCE_DEFINED_PFREQUENCY
-typedef struct _FREQUENCY { DWORD dwFreqValue; DWORD dwFreqUnit; } FREQUENCY, *PFREQUENCY;
-#endif /* __WINCE_DEFINED_PFREQUENCY */
-#endif /* __WINCE_DEFINED_FREQUENCY */
-#endif /* __WINCE_DEFINED__FREQUENCY */
-#ifndef __WINCE_DEFINED__TUNERCONFIG
-#define __WINCE_DEFINED__TUNERCONFIG
-#ifndef __WINCE_DEFINED_TUNERCONFIG
-#define __WINCE_DEFINED_TUNERCONFIG
-#ifndef __WINCE_DEFINED_PTUNERCONFIG
-#define __WINCE_DEFINED_PTUNERCONFIG
-typedef struct _TUNERCONFIG {
- DWORD dwBand;
- FREQUENCY CurrentFreq;
- FREQUENCY SeekStep;
- FREQUENCY RangeLow;
- FREQUENCY RangeHigh;
- DWORD dwState;
-} TUNERCONFIG, *PTUNERCONFIG;
-#endif /* __WINCE_DEFINED_PTUNERCONFIG */
-#endif /* __WINCE_DEFINED_TUNERCONFIG */
-#endif /* __WINCE_DEFINED__TUNERCONFIG */
-#ifndef __WINCE_DEFINED__SIGNALINFO
-#define __WINCE_DEFINED__SIGNALINFO
-#ifndef __WINCE_DEFINED_SIGNALINFO
-#define __WINCE_DEFINED_SIGNALINFO
-#ifndef __WINCE_DEFINED_PSIGNALINFO
-#define __WINCE_DEFINED_PSIGNALINFO
-typedef struct _SIGNALINFO {
- BOOL fIsStation;
- FREQUENCY CurrentFreq;
- FIELDSTRENGTH FieldStrength;
- DWORD dwMultiPath;
- BOOL fStereoPresent;
- DWORD dwReserved;
-} SIGNALINFO, *PSIGNALINFO;
-#endif /* __WINCE_DEFINED_PSIGNALINFO */
-#endif /* __WINCE_DEFINED_SIGNALINFO */
-#endif /* __WINCE_DEFINED__SIGNALINFO */
-#ifndef __WINCE_DEFINED__FIELDSTRENGTH
-#define __WINCE_DEFINED__FIELDSTRENGTH
-#ifndef __WINCE_DEFINED_FIELDSTRENGTH
-#define __WINCE_DEFINED_FIELDSTRENGTH
-#ifndef __WINCE_DEFINED_PFIELDSTRENGTH
-#define __WINCE_DEFINED_PFIELDSTRENGTH
-typedef struct _FIELDSTRENGTH { unsigned short MaxStrength; unsigned short CurrentStrength; } FIELDSTRENGTH, *PFIELDSTRENGTH;
-#endif /* __WINCE_DEFINED_PFIELDSTRENGTH */
-#endif /* __WINCE_DEFINED_FIELDSTRENGTH */
-#endif /* __WINCE_DEFINED__FIELDSTRENGTH */
-#ifndef __WINCE_DEFINED__TUNERSEEKINFO
-#define __WINCE_DEFINED__TUNERSEEKINFO
-#ifndef __WINCE_DEFINED_TUNERSEEKINFO
-#define __WINCE_DEFINED_TUNERSEEKINFO
-#ifndef __WINCE_DEFINED_PTUNERSEEKINFO
-#define __WINCE_DEFINED_PTUNERSEEKINFO
-typedef struct _TUNERSEEKINFO {
- WORD wSeekOptions;
- WORD wSensitivity;
- FREQUENCY RangeLow;
- FREQUENCY RangeHigh;
- SEEK_STATUS_NOTIFY fnCallBack;
- DWORD Reserved;
-} TUNERSEEKINFO, *PTUNERSEEKINFO;
-#endif /* __WINCE_DEFINED_PTUNERSEEKINFO */
-#endif /* __WINCE_DEFINED_TUNERSEEKINFO */
-#endif /* __WINCE_DEFINED__TUNERSEEKINFO */
-#ifndef __WINCE_DEFINED_VCMDCOMMAND
-#define __WINCE_DEFINED_VCMDCOMMAND
-#ifndef __WINCE_DEFINED_PVCMDCOMMAND
-#define __WINCE_DEFINED_PVCMDCOMMAND
-typedef struct { /* vccmd */ DWORD dwSize;
-DWORD dwFlags;
-DWORD dwID;
-DWORD dwCommand;
-DWORD dwDescription;
-DWORD dwCategory;
-DWORD dwCommandText;
-DWORD dwAction;
-DWORD dwActionSize;
-BYTE abData;
-} VCMDCOMMAND, *PVCMDCOMMAND;
-#endif /* __WINCE_DEFINED_PVCMDCOMMAND */
-#endif /* __WINCE_DEFINED_VCMDCOMMAND */
-#ifndef __WINCE_DEFINED_VCMDNAME
-#define __WINCE_DEFINED_VCMDNAME
-#ifndef __WINCE_DEFINED_PVCMDNAME
-#define __WINCE_DEFINED_PVCMDNAME
-typedef struct { // vcn TCHAR szApplication[VCMD_APPLEN]; TCHAR szState[VCMD_STATELEN]; } VCMDNAME, *PVCMDNAME;
-#endif /* __WINCE_DEFINED_PVCMDNAME */
-#endif /* __WINCE_DEFINED_VCMDNAME */
-#ifndef __WINCE_DEFINED_VCSITEINFO
-#define __WINCE_DEFINED_VCSITEINFO
-#ifndef __WINCE_DEFINED_PVCSITEINFO
-#define __WINCE_DEFINED_PVCSITEINFO
-typedef struct { /* vcsi */ DWORD dwAutoGainEnable;
-DWORD dwAwakeState;
-DWORD dwThreshold;
-DWORD dwDevice;
-DWORD dwEnable;
-TCHAR szMicrophone[VCMD_MICLEN];
-TCHAR szSpeaker[VCMD_SPEAKERLEN];
-/* DERIVED member omitted -- type body unprinted: GUID gModeID; */
-} VCSITEINFO, *PVCSITEINFO;
-#endif /* __WINCE_DEFINED_PVCSITEINFO */
-#endif /* __WINCE_DEFINED_VCSITEINFO */
 #ifndef __WINCE_DEFINED_LEXPONENT
 #define __WINCE_DEFINED_LEXPONENT
 typedef struct {
@@ -3974,74 +2885,6 @@ typedef struct {
  BYTE vdfData[1];
 };
 #endif /* __WINCE_DEFINED_VDFDATA */
-#ifndef __WINCE_DEFINED_VTSITEINFO
-#define __WINCE_DEFINED_VTSITEINFO
-#ifndef __WINCE_DEFINED_PVTSITEINFO
-#define __WINCE_DEFINED_PVTSITEINFO
-typedef struct { /* vtsi */ DWORD dwDevice;
-DWORD dwEnable;
-DWORD dwSpeed;
-/* DERIVED member omitted -- type body unprinted: GUID gModeID; */
-} VTSITEINFO, *PVTSITEINFO;
-#endif /* __WINCE_DEFINED_PVTSITEINFO */
-#endif /* __WINCE_DEFINED_VTSITEINFO */
-#ifndef __WINCE_DEFINED_TOKEN
-#define __WINCE_DEFINED_TOKEN
-int sendto (SOCKET s, const char *buf, int len, int flags, const struct sockaddr *to, int token);
-#endif /* __WINCE_DEFINED_TOKEN */
-#ifndef __WINCE_DEFINED_COMMAND_MESSAGE_DATA
-#define __WINCE_DEFINED_COMMAND_MESSAGE_DATA
-struct COMMAND_MESSAGE_DATA {
- DWORD dwCommand;
- /* DERIVED member omitted -- type body unprinted: HPACKET hPacketIn; */
- /* DERIVED member omitted -- type body unprinted: HPACKET hPacketOut; */
-};
-#endif /* __WINCE_DEFINED_COMMAND_MESSAGE_DATA */
-#ifndef __WINCE_DEFINED_VIODEVICEMETRICS
-#define __WINCE_DEFINED_VIODEVICEMETRICS
-typedef struct {
-/* DERIVED member omitted -- type body unprinted: CLSID clsidDevice; */
-TCHAR szDeviceName[VIODEVICENAMESIZE];
-DWORD grfModes;
-/* DERIVED member omitted -- type body unprinted: VARIANT vRangeLow; */
-/* DERIVED member omitted -- type body unprinted: VARIANT vRangeHigh; */
-DWORD dwValueType;
-DWORD dwValueUnits;
-LONG lExponent;
-}
-#endif /* __WINCE_DEFINED_VIODEVICEMETRICS */
-#ifndef __WINCE_DEFINED_VIODIAGNOSTICFIELD
-#define __WINCE_DEFINED_VIODIAGNOSTICFIELD
-typedef struct {
-DWORD cbFixed;
-DWORD cbData;
-DWORD vdfID;
-VARTYPE vdfType;
-BYTE vdfData[1];
-}
-#endif /* __WINCE_DEFINED_VIODIAGNOSTICFIELD */
-#ifndef __WINCE_DEFINED_VIODIAGNOSTICINFO
-#define __WINCE_DEFINED_VIODIAGNOSTICINFO
-typedef struct {
-DWORD cbFixed;
-DWORD cExtraFields;
-DWORD dwSystem;
-DWORD dwSubsystem;
-VIODIAGNOSTICFIELD vdiFields[1];
-}
-#endif /* __WINCE_DEFINED_VIODIAGNOSTICINFO */
-#ifndef __WINCE_DEFINED_VIODIAGNOSTICITEMSARRAY
-#define __WINCE_DEFINED_VIODIAGNOSTICITEMSARRAY
-typedef struct {
-DWORD cDiagnosticInfo;
-DWORD cbDiagnosticInfo;
-VIODIAGNOSTICINFO vdiItems[1];
-}
-#endif /* __WINCE_DEFINED_VIODIAGNOSTICITEMSARRAY */
-#ifndef __WINCE_DEFINED_BSTR
-#define __WINCE_DEFINED_BSTR
-typedef OLECHAR * BSTR;
-#endif /* __WINCE_DEFINED_BSTR */
 #ifdef __cplusplus
 typedef CStaticIOWindow CPcmciaIoWindow;
 #endif /* __cplusplus */
@@ -4075,58 +2918,6 @@ typedef SecHandle CredHandle;
 #define __WINCE_DEFINED_CTXTHANDLE
 typedef SecHandle CtxtHandle;
 #endif /* __WINCE_DEFINED_CTXTHANDLE */
-#ifndef __WINCE_DEFINED_HRESULT
-#define __WINCE_DEFINED_HRESULT
-typedef long HRESULT;
-#endif /* __WINCE_DEFINED_HRESULT */
-#ifndef __WINCE_DEFINED_IID
-#define __WINCE_DEFINED_IID
-typedef int IID;
-#endif /* __WINCE_DEFINED_IID */
-#ifndef __WINCE_DEFINED_LPCITEMIDLIST
-#define __WINCE_DEFINED_LPCITEMIDLIST
-typedef const ITEMIDLIST * LPCITEMIDLIST;
-#endif /* __WINCE_DEFINED_LPCITEMIDLIST */
-#ifndef __WINCE_DEFINED_LPCTBBUTTON
-#define __WINCE_DEFINED_LPCTBBUTTON
-typedef const TBBUTTON FAR* LPCTBBUTTON;
-#endif /* __WINCE_DEFINED_LPCTBBUTTON */
-#ifndef __WINCE_DEFINED_LPDDHAL_DDEXEBUFCALLBACKS
-#define __WINCE_DEFINED_LPDDHAL_DDEXEBUFCALLBACKS
-typedef DDHAL_DDEXEBUFCALLBACKS FAR *LPDDHAL_DDEXEBUFCALLBACKS;
-#endif /* __WINCE_DEFINED_LPDDHAL_DDEXEBUFCALLBACKS */
-#ifndef __WINCE_DEFINED_LPDIRECTMUSICBUFFER
-#define __WINCE_DEFINED_LPDIRECTMUSICBUFFER
-typedef IDirectMusicBuffer *LPDIRECTMUSICBUFFER;
-#endif /* __WINCE_DEFINED_LPDIRECTMUSICBUFFER */
-#ifndef __WINCE_DEFINED_LPDIRECTMUSICPORT
-#define __WINCE_DEFINED_LPDIRECTMUSICPORT
-typedef IDirectMusicPort *LPDIRECTMUSICPORT;
-#endif /* __WINCE_DEFINED_LPDIRECTMUSICPORT */
-#ifndef __WINCE_DEFINED_LPHEAPENTRY32
-#define __WINCE_DEFINED_LPHEAPENTRY32
-typedef HEAPENTRY32 *LPHEAPENTRY32;
-#endif /* __WINCE_DEFINED_LPHEAPENTRY32 */
-#ifndef __WINCE_DEFINED_LPHEAPLIST32
-#define __WINCE_DEFINED_LPHEAPLIST32
-typedef HEAPLIST32 *LPHEAPLIST32;
-#endif /* __WINCE_DEFINED_LPHEAPLIST32 */
-#ifndef __WINCE_DEFINED_LPNM_TREEVIEW
-#define __WINCE_DEFINED_LPNM_TREEVIEW
-typedef NM_TREEVIEW FAR *LPNM_TREEVIEW;
-#endif /* __WINCE_DEFINED_LPNM_TREEVIEW */
-#ifndef __WINCE_DEFINED_LPSCROLLINFO
-#define __WINCE_DEFINED_LPSCROLLINFO
-typedef SCROLLINFO FAR *LPSCROLLINFO;
-#endif /* __WINCE_DEFINED_LPSCROLLINFO */
-#ifndef __WINCE_DEFINED_LPVARIANT
-#define __WINCE_DEFINED_LPVARIANT
-typedef VARIANT __RPC_FAR *LPVARIANT;
-#endif /* __WINCE_DEFINED_LPVARIANT */
-#ifndef __WINCE_DEFINED_LPVARIANTARG
-#define __WINCE_DEFINED_LPVARIANTARG
-typedef VARIANT __RPC_FAR *LPVARIANTARG;
-#endif /* __WINCE_DEFINED_LPVARIANTARG */
 #ifndef __WINCE_DEFINED_LONGINT
 #define __WINCE_DEFINED_LONGINT
 typedef long int LongInt;
@@ -4147,18 +2938,6 @@ typedef PSecHandle PCredHandle;
 #define __WINCE_DEFINED_PCTXTHANDLE
 typedef PSecHandle PCtxtHandle;
 #endif /* __WINCE_DEFINED_PCTXTHANDLE */
-#ifndef __WINCE_DEFINED_PHEAPENTRY32
-#define __WINCE_DEFINED_PHEAPENTRY32
-typedef HEAPENTRY32 *PHEAPENTRY32;
-#endif /* __WINCE_DEFINED_PHEAPENTRY32 */
-#ifndef __WINCE_DEFINED_PHEAPLIST32
-#define __WINCE_DEFINED_PHEAPLIST32
-typedef HEAPLIST32 *PHEAPLIST32;
-#endif /* __WINCE_DEFINED_PHEAPLIST32 */
-#ifndef __WINCE_DEFINED_PMEMORY_BASIC_INFORMATION
-#define __WINCE_DEFINED_PMEMORY_BASIC_INFORMATION
-typedef MEMORY_BASIC_INFORMATION *PMEMORY_BASIC_INFORMATION;
-#endif /* __WINCE_DEFINED_PMEMORY_BASIC_INFORMATION */
 #ifndef __WINCE_DEFINED_REFINT
 #define __WINCE_DEFINED_REFINT
 typedef int;
@@ -4166,10 +2945,6 @@ typedef int;
 #ifdef __cplusplus
 typedef CArray SingleLine;
 #endif /* __cplusplus */
-#ifndef __WINCE_DEFINED_VARIANTARG
-#define __WINCE_DEFINED_VARIANTARG
-typedef VARIANT VARIANTARG;
-#endif /* __WINCE_DEFINED_VARIANTARG */
 #ifndef __WINCE_DEFINED_LPULSEWIDTH
 #define __WINCE_DEFINED_LPULSEWIDTH
 typedef redefinition A type was redefined to be the same type as in the first definition. The following example shows how this message might occur. typedef long lPulseWidth;
@@ -4202,25 +2977,13 @@ typedef types both define indirection Two typedef types declare an item, and bot
 #define __WINCE_DEFINED_P_SHORT
 typedef short *p_short;
 #endif /* __WINCE_DEFINED_P_SHORT */
-#ifndef __WINCE_DEFINED_WCHAR
-#define __WINCE_DEFINED_WCHAR
-typedef wchar_t wchar;
-#endif /* __WINCE_DEFINED_WCHAR */
 #ifndef __WINCE_DEFINED_WCHAR_T
 #define __WINCE_DEFINED_WCHAR_T
 typedef unsigned char wchar_t;
 #endif /* __WINCE_DEFINED_WCHAR_T */
-#ifndef __WINCE_DEFINED_PVARARGOUT
-#define __WINCE_DEFINED_PVARARGOUT
-typedef HRESULT (CALLBACK *SHOWHTMLDIALOGEXFN)(HWND hwndParent, IMoniker *pMk, DWORD dwDialogFlags, VARIANT *pvarArgIn, TCHAR *pchOptions, VARIANT *pvarArgOut);
-#endif /* __WINCE_DEFINED_PVARARGOUT */
 #ifdef __cplusplus
 typedef HRESULT STDAPICALLTYPE pfnCommandCallback(DWORD dwCmd, const CCommandPacket *pCmdIn, CCommandPacket *pCmdOut);
 #endif /* __cplusplus */
-#ifndef __WINCE_DEFINED_PSECURITY_DESCRIPTOR
-#define __WINCE_DEFINED_PSECURITY_DESCRIPTOR
-typedef PVOID PSECURITY_DESCRIPTOR;
-#endif /* __WINCE_DEFINED_PSECURITY_DESCRIPTOR */
 #ifdef __cplusplus
 typedef HRESULT STDAPICALLTYPE pfnCommandCallback(DWORD dwCmd,
  const CCommandPacket *pCmdIn,

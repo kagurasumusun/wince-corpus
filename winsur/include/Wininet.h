@@ -33,7 +33,7 @@
 #define CONNECTION 23
 #define COOKIE 44
 #define COOKIE_CACHE_ENTRY 0x100000
-#define DATE 9
+/* C-NAME COLLISION -- the page prints the constant DATE = 9; DATE is a type in this surface, so it is documented here, not #defined */
 #define ERROR_FTP_DROPPED (INTERNET_ERROR_BASE+111)
 #define ERROR_FTP_TRANSFER_IN_PROGRESS (INTERNET_ERROR_BASE+110)
 #define ERROR_GOPHER_ATTRIBUTE_NOT_FOUND (INTERNET_ERROR_BASE+137)

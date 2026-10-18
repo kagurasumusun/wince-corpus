@@ -50,11 +50,11 @@
 #define SHFS_SHOWSIPBUTTON 4
 #define SHFS_SHOWSTARTICON 16
 #define SHFS_SHOWTASKBAR 1
-#define SHIC_FEATURE_AUTOCORRECT 0x00000001
-#define SHIC_FEATURE_AUTOSUGGEST 0x00000002
-#define SHIC_FEATURE_CLASS 0x00000004
-#define SHIC_FEATURE_HAVETRAILER 0x00000003
-#define SHIC_FEATURE_RESTOREDEFAULT 0
+/* C-NAME COLLISION -- the page prints the constant SHIC_FEATURE_AUTOCORRECT = 0x00000001; SHIC_FEATURE_AUTOCORRECT is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant SHIC_FEATURE_AUTOSUGGEST = 0x00000002; SHIC_FEATURE_AUTOSUGGEST is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant SHIC_FEATURE_CLASS = 0x00000004; SHIC_FEATURE_CLASS is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant SHIC_FEATURE_HAVETRAILER = 0x00000003; SHIC_FEATURE_HAVETRAILER is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant SHIC_FEATURE_RESTOREDEFAULT = 0; SHIC_FEATURE_RESTOREDEFAULT is a type in this surface, so it is documented here, not #defined */
 #define SHIDIF_DONEBUTTON 0x0001
 #define SHIDIF_EMPTYMENU 0x0020
 #define SHIDIF_FULLSCREENNOMENUBAR 0x0010

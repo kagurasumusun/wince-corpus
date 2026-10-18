@@ -17,20 +17,20 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define AM_FILTER_MISC_FLAG_NO_CAPTURE_PAUSE 0x00000004
-#define AM_FILTER_MISC_FLAGS_IS_RENDERER 0x00000001
-#define AM_FILTER_MISC_FLAGS_IS_SOURCE 0x00000002
-#define AM_SAMPLE_DATADISCONTINUITY 0x04
-#define AM_SAMPLE_ENDOFSTREAM 0x200
-#define AM_SAMPLE_FLUSH_ON_PAUSE 0x80
-#define AM_SAMPLE_PREROLL 0x02
-#define AM_SAMPLE_SPLICEPOINT 0x01
-#define AM_SAMPLE_STOPVALID 0x100
-#define AM_SAMPLE_TIMEDISCONTINUITY 0x40
-#define AM_SAMPLE_TIMEVALID 0x10
-#define AM_SAMPLE_TYPECHANGED 0x08
-#define AM_STREAM_CONTROL 1
-#define AM_STREAM_MEDIA 0
+/* C-NAME COLLISION -- the page prints the constant AM_FILTER_MISC_FLAG_NO_CAPTURE_PAUSE = 0x00000004; AM_FILTER_MISC_FLAG_NO_CAPTURE_PAUSE is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant AM_FILTER_MISC_FLAGS_IS_RENDERER = 0x00000001; AM_FILTER_MISC_FLAGS_IS_RENDERER is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant AM_FILTER_MISC_FLAGS_IS_SOURCE = 0x00000002; AM_FILTER_MISC_FLAGS_IS_SOURCE is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant AM_SAMPLE_DATADISCONTINUITY = 0x04; AM_SAMPLE_DATADISCONTINUITY is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant AM_SAMPLE_ENDOFSTREAM = 0x200; AM_SAMPLE_ENDOFSTREAM is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant AM_SAMPLE_FLUSH_ON_PAUSE = 0x80; AM_SAMPLE_FLUSH_ON_PAUSE is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant AM_SAMPLE_PREROLL = 0x02; AM_SAMPLE_PREROLL is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant AM_SAMPLE_SPLICEPOINT = 0x01; AM_SAMPLE_SPLICEPOINT is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant AM_SAMPLE_STOPVALID = 0x100; AM_SAMPLE_STOPVALID is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant AM_SAMPLE_TIMEDISCONTINUITY = 0x40; AM_SAMPLE_TIMEDISCONTINUITY is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant AM_SAMPLE_TIMEVALID = 0x10; AM_SAMPLE_TIMEVALID is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant AM_SAMPLE_TYPECHANGED = 0x08; AM_SAMPLE_TYPECHANGED is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant AM_STREAM_CONTROL = 1; AM_STREAM_CONTROL is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant AM_STREAM_MEDIA = 0; AM_STREAM_MEDIA is a type in this surface, so it is documented here, not #defined */
 #define CK_INDEX 0x00000001
 #define CK_NOCOLORKEY 0x00000000
 #define CK_RGB 0x00000002
@@ -57,12 +57,12 @@
 #define KSAUDIO_SPEAKER_TOP 0x00000800
 #define MAX_FILTER_NAME 128
 #define MAX_PIN_NAME 128
-#define MERIT_DO_NOT_USE 0x200000
-#define MERIT_HW_COMPRESSOR 0x100050
-#define MERIT_NORMAL 0x600000
-#define MERIT_PREFERRED 0x800000
-#define MERIT_SW_COMPRESSOR 0x100000
-#define MERIT_UNLIKELY 0x400000
+/* C-NAME COLLISION -- the page prints the constant MERIT_DO_NOT_USE = 0x200000; MERIT_DO_NOT_USE is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MERIT_HW_COMPRESSOR = 0x100050; MERIT_HW_COMPRESSOR is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MERIT_NORMAL = 0x600000; MERIT_NORMAL is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MERIT_PREFERRED = 0x800000; MERIT_PREFERRED is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MERIT_SW_COMPRESSOR = 0x100000; MERIT_SW_COMPRESSOR is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MERIT_UNLIKELY = 0x400000; MERIT_UNLIKELY is a type in this surface, so it is documented here, not #defined */
 #define MPEG2_PROGRAM_DIRECTORY_PES_PACKET 0x00000002
 #define MPEG2_PROGRAM_ELEMENTARY_STREAM 0x00000001
 #define MPEG2_PROGRAM_PACK_HEADER 0x00000003

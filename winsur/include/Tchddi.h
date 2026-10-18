@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 10 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 0 constants, 10 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _TCHDDI_
 #define _TCHDDI_
@@ -51,15 +51,6 @@ struct TPDC_SAMPLE_RATE {
  INT CurrentSampleRateSetting;
 };
 #endif /* __WINCE_DEFINED_TPDC_SAMPLE_RATE */
-
-/* x40000000  [extra enum] */
-#ifndef __WINCE_DEFINED_ENUMTOUCHPANELSAMPLEFLAGS
-#define __WINCE_DEFINED_ENUMTOUCHPANELSAMPLEFLAGS
-#ifndef __WINCE_DEFINED_X40000000
-#define __WINCE_DEFINED_X40000000
-enum enumTouchPanelSampleFlags {TouchSampleValidFlag = 0x01,TouchSampleDownFlag = 0x02,TouchSampleIsCalibratedFlag = 0x04,TouchSamplePreviousDownFlag = 0x08,TouchSampleIgnore = 0x10,TouchSampleMouse = 0x40000000};
-#endif /* __WINCE_DEFINED_X40000000 */
-#endif /* __WINCE_DEFINED_ENUMTOUCHPANELSAMPLEFLAGS */
 
 /* ==================================================================
  * functions and callbacks

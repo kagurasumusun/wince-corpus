@@ -17,7 +17,7 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define CESVC_ROOT_COMMON 0
+/* C-NAME COLLISION -- the page prints the constant CESVC_ROOT_COMMON = 0; CESVC_ROOT_COMMON is a type in this surface, so it is documented here, not #defined */
 
 /* ==================================================================
  * functions and callbacks

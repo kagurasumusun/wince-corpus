@@ -260,6 +260,8 @@ def c_decl_text(text):
     text = _fix_enum_member_refs(text)
     # a page's list marker printed onto member lines (``..e_vctInvalid``)
     text = re.sub(r"(?m)^(\s*)\.\.+", r"\1", text)
+    # curated fused type+parameter names (a lost space on the page)
+    text = text.replace("ADDRESS_TYPEAddr", "ADDRESS_TYPE Addr")
     # bitfield members whose ';' the page lost (``DWORD fSuccess: 1``
     # followed by another member)
     text = re.sub(r"(?m)^(\s+[A-Za-z_][\w\s\*]*:\s*\d+)\s*$", r"\1;", text)
@@ -302,13 +304,48 @@ def c_decl_text(text):
 
         def _fix_missing_comma(m):
             g1, g2, g3 = m.group(1), m.group(2), m.group(3)
-            if g1 in _qual or g2 not in _ty or g3 in _ty:
+            if g1 in _qual or g2 not in _ty:
                 return m.group(0)
-            return f"{g1}, {g2} {g3}"
+            if g1 in _ty and g1[:1].isupper():
+                return m.group(0)
+            return f"{g1}, {g2} {g3}{m.group(4)}"
         text = re.sub(
             r"\b([A-Za-z_]\w*)[ \t]+([A-Za-z_]\w*)[ \t]+([A-Za-z_]\w+)[ \t]*"
             r"([,)])",
             _fix_missing_comma, text)
+        # star-parameter shape: ``CHAR * ServiceName CHAR * DeviceName``
+        def _fix_star_comma(m):
+            return f"{m.group(1)}, {m.group(2)}"
+        text = re.sub(
+            r"\b([A-Za-z_]\w+[ \t]+\*{1,2}[ \t]*[A-Za-z_]\w+)[ \t]+"
+            r"([A-Za-z_]\w+[ \t]+\*{1,2}[ \t]*[A-Za-z_]\w+[ \t]*[,)])",
+            _fix_star_comma, text)
+        # a lost space that fused type and parameter: ``ADDRESS_TYPEAddr``
+        # (env-gated experiment; the regex class over-splits real identifiers
+        # like ``TYPE_Suffix`` -- a curated fused-name list is safer)
+        if _ty and os.environ.get("GEN_FUSED_SPLIT"):
+            _fused_pos = globals().get("_FUSED_POS")
+            if _fused_pos is None or \
+                    globals().get("_FUSED_POS_N") != len(_ty):
+                _fused_pos = re.compile(
+                    r"\b(" + "|".join(
+                        re.escape(_t) for _t in
+                        sorted((t for t in _ty if len(t) >= 3),
+                               key=len, reverse=True)) + r")(?=[A-Z])" + r"([A-Z]\w*)")
+                globals()["_FUSED_POS"] = _fused_pos
+                globals()["_FUSED_POS_N"] = len(_ty)
+
+            def _split_fused(m):
+                whole = m.group(0)
+                if whole in _ty or whole.upper() in \
+                        {x.upper() for x in _ty}:
+                    return whole
+                return m.group(1) + " " + m.group(2)
+            text = _fused_pos.sub(_split_fused, text)
+    if os.environ.get("GEN_TRACE_COMMA") and "SetDWORD" in text:
+        import sys as _s
+        print("COMMA-REPAIR-TY", len(_ty), "DWORD-in-ty", "DWORD" in _ty,
+              "TEXT", repr(text[:120]), file=_s.stderr)
     # a printed TYPE name in the wrong case (``IEnumVariant`` for
     # ``IEnumVARIANT``): repair in type position only, so method/parameter
     # names are never touched (value-scoped discipline of the enum repair).
@@ -651,6 +688,8 @@ def load_extra_surface():
                 name = rec.get("name") or ""
                 if not name or name in seen:
                     continue
+                if re.match(r"^[Xx][0-9A-Fa-f]{3,}$", name):
+                    continue  # name derived from a hex value, not a name
                 if name in rejected:
                     continue
                 cleaned = quality_filters.sanitize_declaration(
@@ -3546,6 +3585,16 @@ def run_unified(args):
             if _tn:
                 _type_ish.add(_tn)
                 _spellings.setdefault(_tn.casefold(), set()).add(_tn)
+    for _tn, _td in _CORE_TYPEDEFS:
+        _type_ish.add(_tn)
+        _spellings.setdefault(_tn.casefold(), set()).add(_tn)
+    for _fr in load_derived_forwards():
+        _type_ish.add(_fr[0])
+        _spellings.setdefault(_fr[0].casefold(), set()).add(_fr[0])
+        if _fr[1] == "struct-pointer":
+            _b = _fr[0][2:] if _fr[0].startswith("LP") else \
+                (_fr[0][1:] if _fr[0].startswith("P") else _fr[0])
+            _type_ish.add(_b)
     # canonical spelling: prefer the one that has a real C definition
     _type_canon = {}
     for _cf, _forms in _spellings.items():
@@ -3553,10 +3602,23 @@ def run_unified(args):
         _type_canon[_cf] = _real[0] if _real else sorted(_forms)[0]
     # function/macro names must never be case-"repaired" into type names
     _non_type_names = _all_names - _type_ish
+    _name_collide = set(_type_ish)
+    _scan_items = list(by_header.items()) + \
+        list(extra_decls_by_header.items()) + \
+        [("<leftover>", leftover_decls), ("<leftover-kb>", leftover_kb_decls)]
+    for _key, _items in _scan_items:
+        for _info in _items:
+            _txt = (_info.get("declaration") or {}).get("text") \
+                if isinstance(_info.get("declaration"), dict) \
+                else (_info.get("declaration") or "")
+            if _txt and re.search(r"\benum\b", _txt):
+                _name_collide.update(
+                    re.findall(r"\b([A-Za-z_]\w*)\s*=", _txt))
     globals()["_TYPE_CANON"] = _type_canon
     globals()["_NON_TYPE_NAMES"] = _non_type_names
     globals()["_REAL_TYPE_NAMES"] = real_type_names
     globals()["_TYPE_COLLIDE"] = _type_ish
+    globals()["_NAME_COLLIDE"] = _name_collide
 
     for key in sorted(set(by_header) | set(const_entries) | extra_keys):
         display = safe_name(printed_forms.get(key) or key, ".h")
@@ -4438,6 +4500,7 @@ def run_unified(args):
         
         # Output by type
         _seen_unassigned = set()
+        _seen_members = set()
         for dtype in sorted(by_type.keys()):
             decls = by_type[dtype]
             if not args.minimal_comments:
@@ -4448,9 +4511,26 @@ def run_unified(args):
                 if decl.get("name") in _seen_unassigned:
                     continue
                 decl_text = c_decl_text(decl.get('declaration', '').strip())
+                _dn = (decl.get("name") or "")
+                _fn_names = {_dn}
+                _m2 = re.search(r"([A-Za-z_]\w*)\s*\([^;]*\)\s*;?\s*$",
+                                (decl_text or "").split("\n")[-1])
+                if _m2:
+                    _fn_names.add(_m2.group(1))
+                _upper_collide = {x.upper() for x in _name_collide}
+                if any(n and (n in _name_collide or n.upper() in
+                              _upper_collide or (n.isupper() and len(n) > 2))
+                       for n in _fn_names):
+                    continue
+                _mems = set(re.findall(
+                    r"\b([A-Za-z_]\w*)\s*=",
+                    decl_text if re.search(r"\benum\b", decl_text) else ""))
+                if _mems and _mems & _seen_members:
+                    continue
                 if decl_text and quality_filters.is_c_toolchain_declaration(
                         decl_text, decl.get("name") or "", dtype):
                     _seen_unassigned.add(decl.get("name"))
+                    _seen_members.update(_mems)
                     if dtype in ("typedef", "enum", "struct", "interface",
                                  "union") and not decl_text.lstrip() \
                             .startswith("/*"):
@@ -4623,7 +4703,7 @@ def _write_lines(path, lines):
     # surface (``#define USHORT 0x47`` vs ``typedef ... USHORT``): the type
     # wins so the surface compiles; the constant stays documented in a
     # comment.  Simple-identifier bodies (A/W alias macros) are kept.
-    _collide = globals().get("_TYPE_COLLIDE") or ()
+    _collide = globals().get("_NAME_COLLIDE") or ()
     if _collide:
         _fixed = []
         for line in lines:

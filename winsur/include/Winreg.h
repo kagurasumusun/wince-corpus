@@ -171,8 +171,8 @@ BOOL CeFindNextRegChange (HANDLE hChangeHandle);
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* CeRegTestSetValueW  [function; ce-only; CE 6.0..699; coredll.lib] */
-LONG CeRegTestSetValueW(__in, HKEY hKey
- __in, LPCWSTR lpValueName
+LONG CeRegTestSetValueW(__in, HKEY hKey,
+ __in, LPCWSTR lpValueName,
  DWORD dwType,
  __in_bcount(cbOldData) __opt CONST BYTE* lpOldData,
  DWORD cbOldData,

@@ -17,10 +17,10 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
-#define TLEF_ABSOLUTE 0x00000031
-#define TLEF_INCLUDE_UNINVOKEABLE 0x00000040
-#define TLEF_RELATIVE_BACK 0x00000010
-#define TLEF_RELATIVE_FORE 0x00000020
-#define TLEF_RELATIVE_INCLUDE_CURRENT 0x00000001
+/* C-NAME COLLISION -- the page prints the constant TLEF_ABSOLUTE = 0x00000031; TLEF_ABSOLUTE is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TLEF_INCLUDE_UNINVOKEABLE = 0x00000040; TLEF_INCLUDE_UNINVOKEABLE is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TLEF_RELATIVE_BACK = 0x00000010; TLEF_RELATIVE_BACK is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TLEF_RELATIVE_FORE = 0x00000020; TLEF_RELATIVE_FORE is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TLEF_RELATIVE_INCLUDE_CURRENT = 0x00000001; TLEF_RELATIVE_INCLUDE_CURRENT is a type in this surface, so it is documented here, not #defined */
 
 #endif /* _TLOGSTG_ */

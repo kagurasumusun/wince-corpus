@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 5 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 5 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _FLASHCOMMON_
 #define _FLASHCOMMON_
@@ -100,21 +100,5 @@ typedef struct __SECTOR_RUN {
 #define __WINCE_DEFINED_PSECTOR_RUN
 typedef SECTOR_RUN *PSECTOR_RUN, *LPSECTOR_RUN;
 #endif /* __WINCE_DEFINED_PSECTOR_RUN */
-
-/* x00000020  [extra enum] */
-#ifndef __WINCE_DEFINED_FLASH_REGION_INFO_FLAGS
-#define __WINCE_DEFINED_FLASH_REGION_INFO_FLAGS
-#ifndef __WINCE_DEFINED_X00000020
-#define __WINCE_DEFINED_X00000020
-enum FLASH_REGION_INFO_FLAGS {
- FLASH_FLAG_NAND = 0x00000001,
- FLASH_FLAG_NOR = 0x00000002,
- FLASH_FLAG_REQUIRE_SEQ_PAGE_PROGRAM = 0x00000004,
- FLASH_FLAG_SUPPORTS_COPY = 0x00000008,
- FLASH_FLAG_SUPPORTS_XIP = 0x00000010,
- FLASH_FLAG_SUPPORTS_LOCKING = 0x00000020,
-};
-#endif /* __WINCE_DEFINED_X00000020 */
-#endif /* __WINCE_DEFINED_FLASH_REGION_INFO_FLAGS */
 
 #endif /* _FLASHCOMMON_ */

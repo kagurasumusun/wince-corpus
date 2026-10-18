@@ -24,12 +24,12 @@
 #define CEDB_VALIDNAME 0x0001
 #define CEDB_VALIDSORTSPEC 0x0004
 #define CEDB_VALIDTYPE 0x0002
-#define RAPI_CONNECTION_IR 1
-#define RAPI_CONNECTION_NETWORK 3
-#define RAPI_CONNECTION_SERIAL 2
-#define RAPI_CONNECTION_USB 0
-#define RAPI_DEVICE_CONNECTED 1
-#define RAPI_DEVICE_DISCONNECTED 0
+/* C-NAME COLLISION -- the page prints the constant RAPI_CONNECTION_IR = 1; RAPI_CONNECTION_IR is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant RAPI_CONNECTION_NETWORK = 3; RAPI_CONNECTION_NETWORK is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant RAPI_CONNECTION_SERIAL = 2; RAPI_CONNECTION_SERIAL is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant RAPI_CONNECTION_USB = 0; RAPI_CONNECTION_USB is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant RAPI_DEVICE_CONNECTED = 1; RAPI_DEVICE_CONNECTED is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant RAPI_DEVICE_DISCONNECTED = 0; RAPI_DEVICE_DISCONNECTED is a type in this surface, so it is documented here, not #defined */
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

@@ -148,7 +148,7 @@ BOOL fGetName);
 BOOL MailGetFolderId (HANDLE hMail, BYTE* pbId, LPWSTR szName);
 
 /* MailGetFolderName  [function; ce-only; CE 1.0..199, 2.11..2.12] */
-BOOL MailGetFolderName (HANDLE hMail, int* piId, int* piLen, LPWSTR szName;
+BOOL MailGetFolderName (HANDLE hMail, int* piId, int* piLen, LPWSTR szName);
 
 /* MailGetSort  [function; ce-only; CE 1.0..199, 2.11..2.12] */
 BOOL MailSetSort (HANDLE hMail, PMAILSORTINFO pInfo);

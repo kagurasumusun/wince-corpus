@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 4 constants, 11 declarations, 3 outlines, 0 base types, 0 extra macros, 46 extra decls
+ * 4 constants, 11 declarations, 3 outlines, 0 base types, 0 extra macros, 44 extra decls
  */
 #ifndef _IMAGING_
 #define _IMAGING_
@@ -202,19 +202,6 @@ enum BufferDisposalFlag {
 #endif /* __WINCE_DEFINED_BUFFERDISPOSALFLAGUNMAPVIEW */
 #endif /* __WINCE_DEFINED_BUFFERDISPOSALFLAG */
 
-/* x0002  [extra enum] */
-#ifndef __WINCE_DEFINED_DECODERINITFLAG
-#define __WINCE_DEFINED_DECODERINITFLAG
-#ifndef __WINCE_DEFINED_X0002
-#define __WINCE_DEFINED_X0002
-enum DecoderInitFlag {
- DecoderInitFlagNone = 0,
- DecoderInitFlagNoBlock = 0x0001,
- DecoderInitFlagBuiltIn1st = 0x0002
-};
-#endif /* __WINCE_DEFINED_X0002 */
-#endif /* __WINCE_DEFINED_DECODERINITFLAG */
-
 /* EncoderParameterValueTypeRationalRange  [extra enum] */
 #ifndef __WINCE_DEFINED_ENCODERPARAMETERVALUETYPE
 #define __WINCE_DEFINED_ENCODERPARAMETERVALUETYPE
@@ -266,25 +253,6 @@ enum EncoderValue {
 };
 #endif /* __WINCE_DEFINED_ENCODERVALUEFRAMEDIMENSIONPAGE */
 #endif /* __WINCE_DEFINED_ENCODERVALUE */
-
-/* x00200000  [extra enum] */
-#ifndef __WINCE_DEFINED_SINKFLAGS
-#define __WINCE_DEFINED_SINKFLAGS
-#ifndef __WINCE_DEFINED_X00200000
-#define __WINCE_DEFINED_X00200000
-enum SinkFlags {
- SinkFlagsScalable = ImageFlagsScalable,
- SinkFlagsHasAlpha = ImageFlagsHasAlpha,
- SinkFlagsPartiallyScalable = ImageFlagsPartiallyScalable,
- SinkFlagsTopDown = 0x00010000,
- SinkFlagsBottomUp = 0x00020000,
- SinkFlagsFullWidth = 0x00040000,
- SinkFlagsMultipass = 0x00080000,
- SinkFlagsComposite = 0x00100000,
- SinkFlagsWantProps = 0x00200000
-};
-#endif /* __WINCE_DEFINED_X00200000 */
-#endif /* __WINCE_DEFINED_SINKFLAGS */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

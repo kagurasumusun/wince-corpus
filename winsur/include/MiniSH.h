@@ -17,8 +17,8 @@
  * ================================================================ */
 
 /* function */
-HRESULT GetNearestLineFromAddress(ADDRESS_TYPEAddress, LPWSTR*ppszModule, LPWSTR*ppszSource, DWORD*dwLine);
-HRESULT GetNearestSymbolFromAddress(ADDRESS_TYPEAddress,DWORD*pdwPid,LPWSTR*ppszModule,LPWSTR*ppszSource,LPWSTR* ppszRoutine,LPWSTR*ppszSymbol,DWORD*pdwDistance);
+HRESULT GetNearestLineFromAddress(ADDRESS_TYPE Address, LPWSTR*ppszModule, LPWSTR*ppszSource, DWORD*dwLine);
+HRESULT GetNearestSymbolFromAddress(ADDRESS_TYPE Address,DWORD*pdwPid,LPWSTR*ppszModule,LPWSTR*ppszSource,LPWSTR* ppszRoutine,LPWSTR*ppszSymbol,DWORD*pdwDistance);
 HRESULT GetSymbolPath(LPWSTR* ppszPath);
 HRESULT SetSymbolPath(LPCWSTR pszPath);
 

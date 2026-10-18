@@ -912,7 +912,7 @@ HRESULT SetAdaptationData(const WCHAR* pAdaptationData, const ULONG cch);
 HRESULT SetBufferInfo(const SPAUDIOBUFFERINFO* pBuffInfo);
 HRESULT SetBufferNotifySize(ULONG cbSize);
 HRESULT SetContextState(SPCONTEXTSTATE eContextState);
-HRESULT SetDWORD(const WCHAR* pszKeyName DWORD dwValue);
+HRESULT SetDWORD(const WCHAR* pszKeyName, DWORD dwValue);
 HRESULT SetDefaultTokenId(const WCHAR* pszTokenId);
 HRESULT SetDeviceId(UINT uDeviceId);
 HRESULT SetDictationState(SPRULESTATE NewState);

@@ -2368,6 +2368,46 @@ typedef struct CY CY;
 #define __WINCE_DEFINED_PIVCMDENUM
 typedef struct _IVCMDENUM *PIVCMDENUM;
 #endif /* __WINCE_DEFINED_PIVCMDENUM */
+/* DERIVED forward -- derived placeholder: media reference time; the page prints only its maximum constant */
+#ifndef __WINCE_DEFINED_REFERENCE_TIME
+#define __WINCE_DEFINED_REFERENCE_TIME
+typedef long long REFERENCE_TIME;
+#endif /* __WINCE_DEFINED_REFERENCE_TIME */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_AAM_SRCCAP
+#define __WINCE_DEFINED_AAM_SRCCAP
+typedef struct AAM_SRCCAP AAM_SRCCAP;
+#endif /* __WINCE_DEFINED_AAM_SRCCAP */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IIMAGEENCODER
+#define __WINCE_DEFINED_IIMAGEENCODER
+typedef struct IImageEncoder IImageEncoder;
+#endif /* __WINCE_DEFINED_IIMAGEENCODER */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_MANAGED_DATATYPE
+#define __WINCE_DEFINED_MANAGED_DATATYPE
+typedef struct MANAGED_DATATYPE MANAGED_DATATYPE;
+#endif /* __WINCE_DEFINED_MANAGED_DATATYPE */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_STRMBUF_CAPTURE_MODE
+#define __WINCE_DEFINED_STRMBUF_CAPTURE_MODE
+typedef struct STRMBUF_CAPTURE_MODE STRMBUF_CAPTURE_MODE;
+#endif /* __WINCE_DEFINED_STRMBUF_CAPTURE_MODE */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_STRMBUF_PLAYBACK_TUNE_POLICY
+#define __WINCE_DEFINED_STRMBUF_PLAYBACK_TUNE_POLICY
+typedef struct STRMBUF_PLAYBACK_TUNE_POLICY STRMBUF_PLAYBACK_TUNE_POLICY;
+#endif /* __WINCE_DEFINED_STRMBUF_PLAYBACK_TUNE_POLICY */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IOSAXSMODULE
+#define __WINCE_DEFINED_IOSAXSMODULE
+typedef struct IOsAxsModule IOsAxsModule;
+#endif /* __WINCE_DEFINED_IOSAXSMODULE */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_ROUTINE_DATA
+#define __WINCE_DEFINED_ROUTINE_DATA
+typedef struct ROUTINE_DATA ROUTINE_DATA;
+#endif /* __WINCE_DEFINED_ROUTINE_DATA */
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

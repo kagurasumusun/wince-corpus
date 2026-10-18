@@ -110,7 +110,7 @@
 #define AdFldRowID 256
 #define AdFldUnknownUpdatable 8
 #define AdFldUpdatable 4
-#define AM_FILE_OVERWRITE 0x00000001
+/* C-NAME COLLISION -- the page prints the constant AM_FILE_OVERWRITE = 0x00000001; AM_FILE_OVERWRITE is a type in this surface, so it is documented here, not #defined */
 #define AMDDS_ALL 0xFF
 #define APC_FLAG_MEDIAHASAUDIO 0x0010
 #define APC_FLAG_MEDIAHASDATA 0x0020
@@ -150,12 +150,12 @@
 #define BUTTON_MASK 0x20000000
 #define BUTTONOFFSETLEFT 1
 #define CACHE_LINE 32
-#define CALL_TYPE_ANSWER 0x01
-#define CALL_TYPE_DIAL 0x03
-#define CALL_TYPE_DROP 0x02
-#define CALL_TYPE_HOLD 0x04
-#define CALL_TYPE_SWAP 0x05
-#define CALL_TYPE_UNHOLD 0x06
+/* C-NAME COLLISION -- the page prints the constant CALL_TYPE_ANSWER = 0x01; CALL_TYPE_ANSWER is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant CALL_TYPE_DIAL = 0x03; CALL_TYPE_DIAL is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant CALL_TYPE_DROP = 0x02; CALL_TYPE_DROP is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant CALL_TYPE_HOLD = 0x04; CALL_TYPE_HOLD is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant CALL_TYPE_SWAP = 0x05; CALL_TYPE_SWAP is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant CALL_TYPE_UNHOLD = 0x06; CALL_TYPE_UNHOLD is a type in this surface, so it is documented here, not #defined */
 #define CARETHEIGHT 15
 #define CARETWIDTH 2
 #define CASCADE_REQUEST_MODE 0x03
@@ -744,13 +744,13 @@
 #define m_f123Prefix 0x3
 #define m_fLocked 0x1
 #define m_Hidden 0x2
-#define MANAGED_COMMANDHANDLER_ASYNC 2
-#define MANAGED_COMMANDHANDLER_SYNC 1
-#define MANAGED_DATATYPE_BYTES 0
-#define MANAGED_DATATYPE_DWORD 3
-#define MANAGED_DATATYPE_END 6
-#define MANAGED_DATATYPE_WORD 2
-#define MANAGED_DATATYPE_WSTR 5
+/* C-NAME COLLISION -- the page prints the constant MANAGED_COMMANDHANDLER_ASYNC = 2; MANAGED_COMMANDHANDLER_ASYNC is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MANAGED_COMMANDHANDLER_SYNC = 1; MANAGED_COMMANDHANDLER_SYNC is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MANAGED_DATATYPE_BYTES = 0; MANAGED_DATATYPE_BYTES is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MANAGED_DATATYPE_DWORD = 3; MANAGED_DATATYPE_DWORD is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MANAGED_DATATYPE_END = 6; MANAGED_DATATYPE_END is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MANAGED_DATATYPE_WORD = 2; MANAGED_DATATYPE_WORD is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MANAGED_DATATYPE_WSTR = 5; MANAGED_DATATYPE_WSTR is a type in this surface, so it is documented here, not #defined */
 #define MASK 0xaa
 #define MAX_DATA_LEN_CB 4096
 #define MAX_HWXRESULT 10
@@ -782,26 +782,26 @@
 #define MIB_TOASTER_UP 1
 #define MIB_TOASTER_WHITEBREAD 1
 #define MINIPORT_DMA_HANDLE 0x45454545
-#define MOVEUNIT_NEXTBLOCK 19
-#define MOVEUNIT_NEXTCHAR 1
-#define MOVEUNIT_NEXTCLUSTERBEG 3
-#define MOVEUNIT_NEXTCLUSTEREND 5
-#define MOVEUNIT_NEXTPROOFWORD 11
-#define MOVEUNIT_NEXTSENTENCE 17
-#define MOVEUNIT_NEXTURLBEG 12
-#define MOVEUNIT_NEXTURLEND 14
-#define MOVEUNIT_NEXTWORDBEG 7
-#define MOVEUNIT_NEXTWORDEND 9
-#define MOVEUNIT_PREVBLOCK 18
-#define MOVEUNIT_PREVCHAR 0
-#define MOVEUNIT_PREVCLUSTERBEG 2
-#define MOVEUNIT_PREVCLUSTEREND 4
-#define MOVEUNIT_PREVPROOFWORD 10
-#define MOVEUNIT_PREVSENTENCE 16
-#define MOVEUNIT_PREVURLBEG 13
-#define MOVEUNIT_PREVURLEND 15
-#define MOVEUNIT_PREVWORDBEG 6
-#define MOVEUNIT_PREVWORDEND 8
+/* C-NAME COLLISION -- the page prints the constant MOVEUNIT_NEXTBLOCK = 19; MOVEUNIT_NEXTBLOCK is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MOVEUNIT_NEXTCHAR = 1; MOVEUNIT_NEXTCHAR is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MOVEUNIT_NEXTCLUSTERBEG = 3; MOVEUNIT_NEXTCLUSTERBEG is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MOVEUNIT_NEXTCLUSTEREND = 5; MOVEUNIT_NEXTCLUSTEREND is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MOVEUNIT_NEXTPROOFWORD = 11; MOVEUNIT_NEXTPROOFWORD is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MOVEUNIT_NEXTSENTENCE = 17; MOVEUNIT_NEXTSENTENCE is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MOVEUNIT_NEXTURLBEG = 12; MOVEUNIT_NEXTURLBEG is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MOVEUNIT_NEXTURLEND = 14; MOVEUNIT_NEXTURLEND is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MOVEUNIT_NEXTWORDBEG = 7; MOVEUNIT_NEXTWORDBEG is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MOVEUNIT_NEXTWORDEND = 9; MOVEUNIT_NEXTWORDEND is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MOVEUNIT_PREVBLOCK = 18; MOVEUNIT_PREVBLOCK is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MOVEUNIT_PREVCHAR = 0; MOVEUNIT_PREVCHAR is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MOVEUNIT_PREVCLUSTERBEG = 2; MOVEUNIT_PREVCLUSTERBEG is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MOVEUNIT_PREVCLUSTEREND = 4; MOVEUNIT_PREVCLUSTEREND is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MOVEUNIT_PREVPROOFWORD = 10; MOVEUNIT_PREVPROOFWORD is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MOVEUNIT_PREVSENTENCE = 16; MOVEUNIT_PREVSENTENCE is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MOVEUNIT_PREVURLBEG = 13; MOVEUNIT_PREVURLBEG is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MOVEUNIT_PREVURLEND = 15; MOVEUNIT_PREVURLEND is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MOVEUNIT_PREVWORDBEG = 6; MOVEUNIT_PREVWORDBEG is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant MOVEUNIT_PREVWORDEND = 8; MOVEUNIT_PREVWORDEND is a type in this surface, so it is documented here, not #defined */
 #define mpClipAuthor 9
 #define mpClipCopyright 10
 #define mpClipDescription 12
@@ -995,46 +995,46 @@
 #define OEM_CUSTOM_VIRTUAL_TYPE 0x1
 #define OEM_FLASH_PARAMETER_GUID 0
 #define OID_GEN_RNDIS_CONFIG_PARAMETER 0x0001021B
-#define olAppointmentItem 1
-#define olBusy 2
-#define olCityItem 101
-#define olContactItem 2
-#define olDialog 4
-#define olFolderCalendar 9
-#define olFolderCities 101
-#define olFolderContacts 10
-#define olFolderInfrared 102
-#define olFolderTasks 13
-#define olFree 0
-#define olFriday 32
-#define olHomeCity 0
-#define olImportanceHigh 2
-#define olImportanceLow 0
-#define olImportanceNormal 1
-#define olLED 1
-#define olMeeting 1
-#define olMonday 2
-#define olNonMeeting 0
-#define olNormal 0
-#define olOutOfOffice 3
-#define olPrivate 2
-#define olRecursDaily 0
-#define olRecursMonthly 2
-#define olRecursMonthNth 3
-#define olRecursWeekly 1
-#define olRecursYearly 5
-#define olRecursYearNth 6
-#define olRepeat 16
-#define olSaturday 64
-#define olSound 8
-#define olSunday 1
-#define olTaskItem 3
-#define olTentative 1
-#define olThursday 16
-#define olTuesday 4
-#define olVibrate 2
-#define olVisitingCity 1
-#define olWednesday 8
+/* C-NAME COLLISION -- the page prints the constant olAppointmentItem = 1; olAppointmentItem is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olBusy = 2; olBusy is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olCityItem = 101; olCityItem is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olContactItem = 2; olContactItem is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olDialog = 4; olDialog is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olFolderCalendar = 9; olFolderCalendar is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olFolderCities = 101; olFolderCities is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olFolderContacts = 10; olFolderContacts is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olFolderInfrared = 102; olFolderInfrared is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olFolderTasks = 13; olFolderTasks is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olFree = 0; olFree is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olFriday = 32; olFriday is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olHomeCity = 0; olHomeCity is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olImportanceHigh = 2; olImportanceHigh is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olImportanceLow = 0; olImportanceLow is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olImportanceNormal = 1; olImportanceNormal is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olLED = 1; olLED is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olMeeting = 1; olMeeting is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olMonday = 2; olMonday is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olNonMeeting = 0; olNonMeeting is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olNormal = 0; olNormal is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olOutOfOffice = 3; olOutOfOffice is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olPrivate = 2; olPrivate is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olRecursDaily = 0; olRecursDaily is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olRecursMonthly = 2; olRecursMonthly is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olRecursMonthNth = 3; olRecursMonthNth is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olRecursWeekly = 1; olRecursWeekly is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olRecursYearly = 5; olRecursYearly is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olRecursYearNth = 6; olRecursYearNth is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olRepeat = 16; olRepeat is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olSaturday = 64; olSaturday is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olSound = 8; olSound is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olSunday = 1; olSunday is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olTaskItem = 3; olTaskItem is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olTentative = 1; olTentative is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olThursday = 16; olThursday is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olTuesday = 4; olTuesday is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olVibrate = 2; olVibrate is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olVisitingCity = 1; olVisitingCity is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant olWednesday = 8; olWednesday is a type in this surface, so it is documented here, not #defined */
 #define OT_FOLDER 2
 #define OT_ITEM 1
 #define OUTPUT_MODE_CONSOLE 0x1
@@ -1068,7 +1068,7 @@
 #define PHSETTINGS_VOLUMESETTINGS_SCREEN_ID 2005
 #define PHYS_MEM_ADDR 0x40000000
 #define PHYS_MEM_SIZE 0x00080000
-#define PN_3S_TRUE 1
+/* C-NAME COLLISION -- the page prints the constant PN_3S_TRUE = 1; PN_3S_TRUE is a type in this surface, so it is documented here, not #defined */
 #define PN_CS_IDLE 1
 #define PN_CS_SEARCHING 2
 #define PN_DS_ERROR 1
@@ -1179,11 +1179,11 @@
 #define PPTP_PAP_REQUIRE_NO_FLAGS 0x12
 /* C-NAME COLLISION -- the page prints the constant PROFILE = 1; PROFILE is a type in this surface, so it is documented here, not #defined */
 #define PSEARCH PTWODWORDS
-#define PT_CALENDAR 0
+/* C-NAME COLLISION -- the page prints the constant PT_CALENDAR = 0; PT_CALENDAR is a type in this surface, so it is documented here, not #defined */
 #define RAS_SIZE 128
 #define RASPPPIP RASPPPIPW
 #define READ 10
-#define REFERENCE_TIME 0x7FFFFFFFFFFFFFFF
+/* C-NAME COLLISION -- the page prints the constant REFERENCE_TIME = 0x7FFFFFFFFFFFFFFF; REFERENCE_TIME is a type in this surface, so it is documented here, not #defined */
 #define RESSTRING_LEN 16
 #define RFCOMM_CHANNEL_MULTIPLE 0xfe
 #define RNDIS_MAJOR_VERSION 1
@@ -1401,127 +1401,127 @@
 #define SPEI_VISEME 8
 #define SPEI_VOICE_CHANGE 3
 #define SPEI_WORD_BOUNDARY 5
-#define STREAMBUFFER_EC_TIMEHOLE 0x326
+/* C-NAME COLLISION -- the page prints the constant STREAMBUFFER_EC_TIMEHOLE = 0x326; STREAMBUFFER_EC_TIMEHOLE is a type in this surface, so it is documented here, not #defined */
 #define STRING 0x2
-#define STRMBUF_TEMPORARY_RECORDING 0
+/* C-NAME COLLISION -- the page prints the constant STRMBUF_TEMPORARY_RECORDING = 0; STRMBUF_TEMPORARY_RECORDING is a type in this surface, so it is documented here, not #defined */
 #define SYSGEN_VOIP_VIDEO 1
 #define tabButtons 1
 #define tabFixed 2
 #define tabJustified 0
 #define tabNonJustified 1
 #define tabTabs 0
-#define TAGID_A 2
-#define TAGID_ACRONYM 3
-#define TAGID_ADDRESS 4
-#define TAGID_APPLET 5
-#define TAGID_AREA 6
-#define TAGID_B 7
-#define TAGID_BASE 8
-#define TAGID_BASEFONT 9
-#define TAGID_BDO 10
-#define TAGID_BGSOUND 11
-#define TAGID_BIG 12
-#define TAGID_BLINK 13
-#define TAGID_BLOCKQUOTE 14
-#define TAGID_BODY 15
-#define TAGID_BR 16
-#define TAGID_BUTTON 17
-#define TAGID_CAPTION 18
-#define TAGID_CENTER 19
-#define TAGID_CITE 20
-#define TAGID_CODE 21
-#define TAGID_COL 22
-#define TAGID_COLGROUP 23
-#define TAGID_COMMENT 24
-#define TAGID_COMMENT_RAW 25
-#define TAGID_COUNT 110
-#define TAGID_DD 26
-#define TAGID_DEL 27
-#define TAGID_DFN 28
-#define TAGID_DIR 29
-#define TAGID_DIV 30
-#define TAGID_DL 31
-#define TAGID_DT 32
-#define TAGID_EM 33
-#define TAGID_EMBED 34
-#define TAGID_EVENT 35
-#define TAGID_FIELDSET 36
-#define TAGID_FONT 37
-#define TAGID_FORM 38
-#define TAGID_FRAME 39
-#define TAGID_FRAMESET 40
-#define TAGID_GENERIC 41
-#define TAGID_H1 42
-#define TAGID_H2 43
-#define TAGID_H3 44
-#define TAGID_H4 45
-#define TAGID_H5 46
-#define TAGID_H6 47
-#define TAGID_HEAD 48
-#define TAGID_HR 49
-#define TAGID_HTML 50
-#define TAGID_HTMLAREA 79
-#define TAGID_I 51
-#define TAGID_IFRAME 52
-#define TAGID_IMG 53
-#define TAGID_INPUT 54
-#define TAGID_INS 55
-#define TAGID_KBD 56
-#define TAGID_LABEL 57
-#define TAGID_LAST_PREDEFINED 10000
-#define TAGID_LEGEND 58
-#define TAGID_LI 59
-#define TAGID_LINK 60
-#define TAGID_LISTING 61
-#define TAGID_MAP 62
-#define TAGID_MARQUEE 63
-#define TAGID_MENU 64
-#define TAGID_META 65
-#define TAGID_NEXTID 66
-#define TAGID_NOBR 67
-#define TAGID_NOEMBED 68
-#define TAGID_NOFRAMES 69
-#define TAGID_NOSCRIPT 70
-#define TAGID_NULL 0
-#define TAGID_OBJECT 71
-#define TAGID_OL 72
-#define TAGID_OPTION 73
-#define TAGID_P 74
-#define TAGID_PARAM 75
-#define TAGID_PLAINTEXT 76
-#define TAGID_PRE 77
-#define TAGID_Q 78
-#define TAGID_RP 80
-#define TAGID_RT 81
-#define TAGID_RUBY 82
-#define TAGID_S 83
-#define TAGID_SAMP 84
-#define TAGID_SCRIPT 85
-#define TAGID_SELECT 86
-#define TAGID_SMALL 87
-#define TAGID_SPAN 88
-#define TAGID_STRIKE 89
-#define TAGID_STRONG 90
-#define TAGID_STYLE 91
-#define TAGID_SUB 92
-#define TAGID_SUP 93
-#define TAGID_TABLE 94
-#define TAGID_TBODY 95
-#define TAGID_TC 96
-#define TAGID_TD 97
-#define TAGID_TEXTAREA 98
-#define TAGID_TFOOT 99
-#define TAGID_TH 100
-#define TAGID_THEAD 101
-#define TAGID_TITLE 102
-#define TAGID_TR 103
-#define TAGID_TT 104
-#define TAGID_U 105
-#define TAGID_UL 106
-#define TAGID_UNKNOWN 1
-#define TAGID_VAR 107
-#define TAGID_WBR 108
-#define TAGID_XMP 109
+/* C-NAME COLLISION -- the page prints the constant TAGID_A = 2; TAGID_A is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_ACRONYM = 3; TAGID_ACRONYM is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_ADDRESS = 4; TAGID_ADDRESS is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_APPLET = 5; TAGID_APPLET is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_AREA = 6; TAGID_AREA is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_B = 7; TAGID_B is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_BASE = 8; TAGID_BASE is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_BASEFONT = 9; TAGID_BASEFONT is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_BDO = 10; TAGID_BDO is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_BGSOUND = 11; TAGID_BGSOUND is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_BIG = 12; TAGID_BIG is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_BLINK = 13; TAGID_BLINK is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_BLOCKQUOTE = 14; TAGID_BLOCKQUOTE is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_BODY = 15; TAGID_BODY is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_BR = 16; TAGID_BR is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_BUTTON = 17; TAGID_BUTTON is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_CAPTION = 18; TAGID_CAPTION is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_CENTER = 19; TAGID_CENTER is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_CITE = 20; TAGID_CITE is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_CODE = 21; TAGID_CODE is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_COL = 22; TAGID_COL is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_COLGROUP = 23; TAGID_COLGROUP is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_COMMENT = 24; TAGID_COMMENT is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_COMMENT_RAW = 25; TAGID_COMMENT_RAW is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_COUNT = 110; TAGID_COUNT is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_DD = 26; TAGID_DD is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_DEL = 27; TAGID_DEL is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_DFN = 28; TAGID_DFN is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_DIR = 29; TAGID_DIR is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_DIV = 30; TAGID_DIV is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_DL = 31; TAGID_DL is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_DT = 32; TAGID_DT is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_EM = 33; TAGID_EM is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_EMBED = 34; TAGID_EMBED is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_EVENT = 35; TAGID_EVENT is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_FIELDSET = 36; TAGID_FIELDSET is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_FONT = 37; TAGID_FONT is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_FORM = 38; TAGID_FORM is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_FRAME = 39; TAGID_FRAME is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_FRAMESET = 40; TAGID_FRAMESET is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_GENERIC = 41; TAGID_GENERIC is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_H1 = 42; TAGID_H1 is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_H2 = 43; TAGID_H2 is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_H3 = 44; TAGID_H3 is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_H4 = 45; TAGID_H4 is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_H5 = 46; TAGID_H5 is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_H6 = 47; TAGID_H6 is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_HEAD = 48; TAGID_HEAD is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_HR = 49; TAGID_HR is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_HTML = 50; TAGID_HTML is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_HTMLAREA = 79; TAGID_HTMLAREA is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_I = 51; TAGID_I is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_IFRAME = 52; TAGID_IFRAME is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_IMG = 53; TAGID_IMG is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_INPUT = 54; TAGID_INPUT is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_INS = 55; TAGID_INS is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_KBD = 56; TAGID_KBD is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_LABEL = 57; TAGID_LABEL is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_LAST_PREDEFINED = 10000; TAGID_LAST_PREDEFINED is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_LEGEND = 58; TAGID_LEGEND is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_LI = 59; TAGID_LI is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_LINK = 60; TAGID_LINK is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_LISTING = 61; TAGID_LISTING is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_MAP = 62; TAGID_MAP is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_MARQUEE = 63; TAGID_MARQUEE is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_MENU = 64; TAGID_MENU is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_META = 65; TAGID_META is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_NEXTID = 66; TAGID_NEXTID is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_NOBR = 67; TAGID_NOBR is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_NOEMBED = 68; TAGID_NOEMBED is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_NOFRAMES = 69; TAGID_NOFRAMES is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_NOSCRIPT = 70; TAGID_NOSCRIPT is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_NULL = 0; TAGID_NULL is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_OBJECT = 71; TAGID_OBJECT is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_OL = 72; TAGID_OL is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_OPTION = 73; TAGID_OPTION is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_P = 74; TAGID_P is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_PARAM = 75; TAGID_PARAM is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_PLAINTEXT = 76; TAGID_PLAINTEXT is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_PRE = 77; TAGID_PRE is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_Q = 78; TAGID_Q is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_RP = 80; TAGID_RP is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_RT = 81; TAGID_RT is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_RUBY = 82; TAGID_RUBY is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_S = 83; TAGID_S is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_SAMP = 84; TAGID_SAMP is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_SCRIPT = 85; TAGID_SCRIPT is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_SELECT = 86; TAGID_SELECT is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_SMALL = 87; TAGID_SMALL is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_SPAN = 88; TAGID_SPAN is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_STRIKE = 89; TAGID_STRIKE is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_STRONG = 90; TAGID_STRONG is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_STYLE = 91; TAGID_STYLE is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_SUB = 92; TAGID_SUB is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_SUP = 93; TAGID_SUP is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_TABLE = 94; TAGID_TABLE is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_TBODY = 95; TAGID_TBODY is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_TC = 96; TAGID_TC is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_TD = 97; TAGID_TD is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_TEXTAREA = 98; TAGID_TEXTAREA is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_TFOOT = 99; TAGID_TFOOT is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_TH = 100; TAGID_TH is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_THEAD = 101; TAGID_THEAD is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_TITLE = 102; TAGID_TITLE is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_TR = 103; TAGID_TR is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_TT = 104; TAGID_TT is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_U = 105; TAGID_U is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_UL = 106; TAGID_UL is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_UNKNOWN = 1; TAGID_UNKNOWN is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_VAR = 107; TAGID_VAR is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_WBR = 108; TAGID_WBR is a type in this surface, so it is documented here, not #defined */
+/* C-NAME COLLISION -- the page prints the constant TAGID_XMP = 109; TAGID_XMP is a type in this surface, so it is documented here, not #defined */
 #define TAPI_CURRENT_VERSION TAPI_VERSION_2_0
 #define TAPI_VERSION_1_0 0x00010003
 #define TAPI_VERSION_1_4 0x00010004
