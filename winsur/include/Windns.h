@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 27 constants, 30 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 27 constants, 31 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _WINDNS_
 #define _WINDNS_
@@ -62,16 +62,16 @@ typedef struct _DnsRecord {
  DWORD dwTtl;
  DWORD dwReserved;
  union {
- DNS_A_DATA A;
+ /* DERIVED member omitted -- type body unprinted: DNS_A_DATA A; */
  DNS_SOA_DATA SOA, Soa;
  DNS_PTR_DATA PTR, Ptr, NS, Ns, CNAME, Cname,
  MB, Mb, MD, Md, MF, Mf, MG, Mg, MR, Mr;
  DNS_MINFO_DATA MINFO, Minfo, RP, Rp;
  DNS_MX_DATA MX, Mx, AFSDB, Afsdb, RT, Rt;
  DNS_TXT_DATA HINFO, Hinfo, ISDN, Isdn, TXT, Txt, X25;
- DNS_NULL_DATA Null;
+ /* DERIVED member omitted -- type body unprinted: DNS_NULL_DATA Null; */
  DNS_WKS_DATA WKS, Wks;
- DNS_AAAA_DATA AAAA;
+ /* DERIVED member omitted -- type body unprinted: DNS_AAAA_DATA AAAA; */
  DNS_KEY_DATA KEY, Key;
  DNS_SIG_DATA SIG, Sig;
  DNS_ATMA_DATA ATMA, Atma;

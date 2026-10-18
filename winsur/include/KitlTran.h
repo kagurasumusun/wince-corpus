@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 13 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 11 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _KITLTRAN_
 #define _KITLTRAN_
@@ -41,14 +41,8 @@ typedef struct _TRANPORTINFOSTRUCT {
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
-/* TranDeInitLibrary  [function; ce-only; CE 4.0..699] */
-BOOL TranDeInit Library (void);
-
 /* TranGetInfo  [function; ce-only; CE 4.0..699] */
 BOOL TranGetInfo(PTRANPORTINFOSTRUCT pInfo);
-
-/* TranInitLibrary  [function; ce-only; CE 4.0..699] */
-BOOL TranInit Library(LPCWSTR pszRegKeyRoot);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x420 && _WIN32_WCE < 0x700)) /* CE 4.2..699 */
@@ -69,6 +63,7 @@ BOOL TranSetParam(LPCWSTR strName,
  * ================================================================ */
 
 /* function */
-BOOL TranDeInit Library (void);
+BOOL TranDeInitLibrary (void);
+BOOL TranInitLibrary(LPCWSTR pszRegKeyRoot);
 
 #endif /* _KITLTRAN_ */

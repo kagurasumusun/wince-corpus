@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 11 constants, 2 declarations, 59 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 11 constants, 4 declarations, 59 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _XAMLRUNTIME_
 #define _XAMLRUNTIME_
@@ -186,6 +186,12 @@ enum VALUE_TYPE
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
+/* XamlRuntimeInitialize  [function; ce-only; CE 6.0..699] */
+BOOL WINAPI XamlRuntimeInitialize();
+
+/* XamlRuntimeUninitialize  [function; ce-only; CE 6.0..699] */
+BOOL WINAPI XamlRuntimeUninitialize();
+
 /* XR_HOOKPROC  [function; ce-only; CE 6.0..699] */
 BOOL CALLBACK HostHookProc(VOID* pv,
  HWND hwnd,
@@ -201,6 +207,6 @@ BOOL CALLBACK HostHookProc(VOID* pv,
  * ================================================================ */
 
 /* function */
-BOOL CALLBACK HostHookProc(VOID* pv, HWND hwnd, UINT Msg, WPARAM wParam, LPARAM lParam, LRESULT* pRetVal);
+/* CONFLICTING PROTOTYPE -- kept the first HostHookProc() form; another page prints: BOOL CALLBACK HostHookProc(VOID* pv, HWND hwnd, UINT Msg, WPARAM wParam, LPARAM lParam, LRESULT* pRetVal); */
 
 #endif /* _XAMLRUNTIME_ */

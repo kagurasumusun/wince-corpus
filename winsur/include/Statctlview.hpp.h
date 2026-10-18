@@ -66,7 +66,7 @@ static bool ResizeRectToImage(HWND hwnd, unsigned int Style, enum StaticControlT
  * ================================================================ */
 
 /* function */
-void DrawStaticImage(HWND hwnd, enum StaticControlType sct, HDC hdc, HBRUSH hbrBk, HANDLE hImage);
-void DrawStaticText(HWND hwnd, unsigned int Style, enum StaticControlType sct, HDC hdc, HBRUSH hbrBk);
+/* CONFLICTING PROTOTYPE -- kept the first DrawStaticImage() form; another page prints: void DrawStaticImage(HWND hwnd, enum StaticControlType sct, HDC hdc, HBRUSH hbrBk, HANDLE hImage); */
+/* CONFLICTING PROTOTYPE -- kept the first DrawStaticText() form; another page prints: void DrawStaticText(HWND hwnd, unsigned int Style, enum StaticControlType sct, HDC hdc, HBRUSH hbrBk); */
 
 #endif /* _STATCTLVIEW_HPP_ */

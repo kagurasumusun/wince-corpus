@@ -107,7 +107,7 @@ typedef enum _NDIS_802_11_LSM_MODE {
 #define __WINCE_DEFINED_NDIS_802_11_LSM_PARAMETERS
 #ifndef __WINCE_DEFINED_PNDIS_802_11_LSM_PARAMETERS
 #define __WINCE_DEFINED_PNDIS_802_11_LSM_PARAMETERS
-typedef enum _NDIS_802_11_LSM_PARAMETERS {
+typedef struct _NDIS_802_11_LSM_PARAMETERS {
  NDIS_802_11_LSM_MODE Mode;
  ULONG PacketLatency;
 } NDIS_802_11_LSM_PARAMETERS, * PNDIS_802_11_LSM_PARAMETERS;
@@ -303,18 +303,18 @@ typedef struct _NDIS_802_11_WEP {
 #ifndef __WINCE_DEFINED_PNDIS_802_11_ENCRYPTION_STATUS
 #define __WINCE_DEFINED_PNDIS_802_11_ENCRYPTION_STATUS
 typedef enum _NDIS_802_11_WEP_STATUS {
- Ndis802_11WEPEnabled,
- Ndis802_11Encryption1Enabled = Ndis802_11WEPEnabled,
- Ndis802_11WEPDisabled,
- Ndis802_11EncryptionDisabled = Ndis802_11WEPDisabled,
- Ndis802_11WEPKeyAbsent,
- Ndis802_11Encryption1KeyAbsent = Ndis802_11WEPNotSupported,
- Ndis802_11WEPNotSupported,
- Ndis802_11EncryptionNotSupported = Ndis802_11WEPNotSupported,
- Ndis802_11Encryption2Enabled,
- Ndis802_11Encryption2KeyAbsent,
- Ndis802_11Encryption3Enabled,
- Ndis802_11Encryption3KeyAbsent
+    Ndis802_11WEPEnabled,
+    Ndis802_11Encryption1Enabled = Ndis802_11WEPEnabled,
+    Ndis802_11WEPDisabled,
+    Ndis802_11EncryptionDisabled = Ndis802_11WEPDisabled,
+    Ndis802_11WEPKeyAbsent,
+    Ndis802_11WEPNotSupported,
+    Ndis802_11Encryption1KeyAbsent = Ndis802_11WEPNotSupported,
+    Ndis802_11EncryptionNotSupported = Ndis802_11WEPNotSupported,
+    Ndis802_11Encryption2Enabled,
+    Ndis802_11Encryption2KeyAbsent,
+    Ndis802_11Encryption3Enabled,
+    Ndis802_11Encryption3KeyAbsent,
 } NDIS_802_11_WEP_STATUS, *PNDIS_802_11_WEP_STATUS, NDIS_802_11_ENCRYPTION_STATUS, *PNDIS_802_11_ENCRYPTION_STATUS;
 #endif /* __WINCE_DEFINED_PNDIS_802_11_ENCRYPTION_STATUS */
 #endif /* __WINCE_DEFINED_NDIS_802_11_ENCRYPTION_STATUS */

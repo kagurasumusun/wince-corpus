@@ -52,6 +52,23 @@ typedef struct _RawWriteBlocksReq {
 #endif /* __WINCE_DEFINED_RAWWRITEBLOCKSREQ */
 #endif /* __WINCE_DEFINED__RAWWRITEBLOCKSREQ */
 
+/* SECTORINFO  [extra struct] */
+#ifndef __WINCE_DEFINED__SECTORINFO
+#define __WINCE_DEFINED__SECTORINFO
+#ifndef __WINCE_DEFINED_SECTORINFO
+#define __WINCE_DEFINED_SECTORINFO
+#ifndef __WINCE_DEFINED_PSECTORINFO
+#define __WINCE_DEFINED_PSECTORINFO
+typedef struct _SECTORINFO {
+ DWORD dwReserved1;
+ BYTE bOEMReserved;
+ BYTE bBadBlock;
+ BYTE wReserved2;
+} SECTORINFO, *PSECTORINFO;
+#endif /* __WINCE_DEFINED_PSECTORINFO */
+#endif /* __WINCE_DEFINED_SECTORINFO */
+#endif /* __WINCE_DEFINED__SECTORINFO */
+
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */

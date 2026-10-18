@@ -36,7 +36,7 @@ BOOL TransportCount(HANDLE hService, LPWORD lpNumMsgs);
 BOOL TransportDelete(HANDLE hService, MailMsg *MsgPtr);
 
 /* TransportDisconnect  [function; ce-only; CE 1.0..199, 2.11..2.12] */
-BOOL TransportConnect(HANDLE hService);
+/* CONFLICTING PROTOTYPE -- kept the first TransportConnect() form; another page prints: BOOL TransportConnect(HANDLE hService); */
 
 /* TransportError  [function; ce-only; CE 1.0..199, 2.11..2.12] */
 int TransportError(HANDLE hService);

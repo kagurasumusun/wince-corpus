@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 18 constants, 12 declarations, 1 outlines, 0 base types, 0 extra macros, 4 extra decls
+ * 18 constants, 18 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _CESYNC_
 #define _CESYNC_
@@ -117,12 +117,24 @@ enum ReplDialogs {OPTIONS_DIALOG };
 #endif /* __WINCE_DEFINED_REPLDIALOGS */
 
 /* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
+ * functions and callbacks
  * ================================================================ */
 
-/* function */
-BOOL GetObjTypeInfo (POBJTYPEINFO pObjTypeInfo);
-BOOL ObjectNotify(POBJNOTIFY pNotify);
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
+
+/* OnSSPDisable  [function; ce-only; CE 6.0..699] */
+HRESULT
+ WINAPI
+ OnSSPDisable
+ (HWND
+ hwndParent);
+
+/* OnSSPEnable  [function; ce-only; CE 6.0..699] */
+HRESULT
+ WINAPI
+ OnSSPEnable
+ (HWND
+ hwndParent);
+#endif /* _WIN32_WCE */
 
 #endif /* _CESYNC_ */

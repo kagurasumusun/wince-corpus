@@ -87,6 +87,6 @@ HRESULT Count(long *pCount);
  * ================================================================ */
 
 /* function */
-HRESULT Event(int index, DWORD *pdispidEvt);
+/* CONFLICTING PROTOTYPE -- kept the first Event() form; another page prints: HRESULT Event(int index, DWORD *pdispidEvt); */
 
 #endif /* _INTERNED_ */

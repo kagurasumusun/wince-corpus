@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 13 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 16 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _RASEAPIF_
 #define _RASEAPIF_
@@ -250,6 +250,13 @@ typedef struct _PPP_EAP_INFO {
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
+/* RasEapBegin  [function; ce-only; CE 4.0..699] */
+DWORD(*RasEapBegin)(VOID** ppWorkBuffer,
+ PPP_EAP_INPUT* pPppEapInput);
+
+/* RasEapEnd  [function; ce-only; CE 4.0..699] */
+DWORD (*RasEapEnd) (VOID* pWorkBuffer);
+
 /* RasEapFreeMemory  [function; shared; CE 4.0..699] */
 DWORD RasEapFreeMemory(BYTE* pMemory);
 
@@ -292,6 +299,14 @@ DWORD RasEapInvokeInteractiveUI(DWORD dwEapTypeId,
  DWORD dwSizeofUIContextData,
  BYTE** ppDataFromInteractiveUI,
  DWORD* pdwSizeOfDataFromInteractiveUI);
+
+/* RasEapMakeMessage  [function; ce-only; CE 4.0..699] */
+DWORD (*RasEapMakeMessage) (VOID* pWorkBuf,
+ PPP_EAP_PACKET* pReceivePacket,
+ PPP_EAP_PACKET* pSendPacket,
+ DWORD cbSendPacket,
+ PPP_EAP_OUTPUT* pEapOutput,
+ PPP_EAP_INPUT* pEapInput);
 #endif /* _WIN32_WCE */
 
 #endif /* _RASEAPIF_ */

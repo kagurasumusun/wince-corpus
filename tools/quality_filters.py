@@ -501,7 +501,7 @@ def is_broken_c(text: str) -> bool:
     # the documentation's own example type names (`typedef Sample
     # MyBadSample;`, `VeryLongClassNameA`): book-lesson junk, not API.
     if re.match(r"^(typedef\s+)?(VeryLongClassName[A-D]|MyBadSample|"
-                r"MyGoodSample|Sample|Object|string)\b", body):
+                r"MyGoodSample|Sample|Object|string|Float|Interface)\b", body):
         return True
     # a prototype whose function name is missing (`void WINAPI (IfilterGraph*
     # pGraph`): the page lost the name; not a declaration.

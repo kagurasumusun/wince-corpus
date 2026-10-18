@@ -18,6 +18,39 @@
 /* OEMProfilerData  [struct; ce-only] */
 
 /* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* ProfilerControl  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_PROFILERCONTROL
+#define __WINCE_DEFINED_PROFILERCONTROL
+#ifndef __WINCE_DEFINED_OEM
+#define __WINCE_DEFINED_OEM
+typedef struct ProfilerControl {
+ DWORD dwVersion;
+ DWORD dwOptions;
+ DWORD dwReserved;
+ union {
+ struct {
+ DWORD dwUSecInterval;
+ } Kernel;
+ struct {
+ DWORD dwProcessorType;
+ DWORD dwControlSize;
+ BYTE bHardwareSpecificSettings[0];
+ } OEM;
+ };
+} ProfilerControl;
+#endif /* __WINCE_DEFINED_OEM */
+#endif /* __WINCE_DEFINED_PROFILERCONTROL */
+#ifndef __WINCE_DEFINED_PPROFILERCONTROL
+#define __WINCE_DEFINED_PPROFILERCONTROL
+typedef ProfilerControl *PProfilerControl, *LPProfilerControl;
+#endif /* __WINCE_DEFINED_PPROFILERCONTROL */
+
+/* ==================================================================
  * functions and callbacks
  * ================================================================ */
 

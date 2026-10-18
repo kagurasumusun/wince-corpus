@@ -180,7 +180,7 @@ HRESULT OnPosRectChange(LPCRECT lprcPosRect);
 HRESULT OnShowWindow(BOOL fShow);
 HRESULT OnUIDeactivate(BOOL fUndoable);
 HRESULT RequestNewObjectLayout();
-HRESULT RequestNewObjectlayout();
+/* CONFLICTING PROTOTYPE -- kept the first RequestNewObjectlayout() form; another page prints: HRESULT RequestNewObjectlayout(); */
 HRESULT SaveObject(void);
 HRESULT SendOnClose();
 HRESULT SendOnSave();

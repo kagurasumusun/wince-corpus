@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 12 constants, 40 declarations, 1 outlines, 0 base types, 1 extra macros, 6 extra decls
+ * 12 constants, 41 declarations, 1 outlines, 0 base types, 1 extra macros, 6 extra decls
  */
 #ifndef _IPHLPAPI_
 #define _IPHLPAPI_
@@ -78,7 +78,7 @@ typedef struct mib_entry { AsnObjectIdentifier Oid; void * Storage; BYTE Type; U
 /* pdwBestIfIndex  [extra struct] */
 #ifndef __WINCE_DEFINED_PDWBESTIFINDEX
 #define __WINCE_DEFINED_PDWBESTIFINDEX
-DWORD GetBestInterfaceEX(struct sockaddr* pDestAddr, PDWORD pdwBestIfIndex);
+/* CONFLICTING PROTOTYPE -- kept the first GetBestInterfaceEX() form; another page prints: DWORD GetBestInterfaceEX(struct sockaddr* pDestAddr, PDWORD pdwBestIfIndex); */
 #endif /* __WINCE_DEFINED_PDWBESTIFINDEX */
 
 /* ==================================================================
@@ -117,7 +117,7 @@ DWORD SetIpTTL(UINT nTTL);
  * ================================================================ */
 
 /* function */
-DWORD GetBestInterfaceEX(struct sockaddr* pDestAddr, PDWORD pdwBestIfIndex);
+/* CONFLICTING PROTOTYPE -- kept the first GetBestInterfaceEX() form; another page prints: DWORD GetBestInterfaceEX(struct sockaddr* pDestAddr, PDWORD pdwBestIfIndex); */
 UINT MIB_control_func (IN UINT Action, IN MIB_ENTRY *MibPtr, IN RFC1157VarBind *VarBind);
 UINT MIB_doneness_func (IN UINT Action, IN MIB_ENTRY *MibPtr, IN RFC1157VarBind *VarBind);
 UINT MIB_leaf_func (IN UINT Action, IN MIB_ENTRY *MibPtr, IN RFC1157VarBind *VarBind);

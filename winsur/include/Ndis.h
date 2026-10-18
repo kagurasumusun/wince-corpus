@@ -625,8 +625,7 @@ ULONG NdisReadPciSlotInformation(NDIS_HANDLE NdisAdapterHandle,
  ULONG Length);
 
 /* NdisReset  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
-VOID NdisReset(PNDIS_STATUS Status,
- NDIS_HANDLE NdisBindingHandle);
+/* CONFLICTING PROTOTYPE -- kept the first NdisReset() form; another page prints: VOID NdisReset(PNDIS_STATUS Status, NDIS_HANDLE NdisBindingHandle); */
 
 /* NdisSetPhysicalAddressHigh  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..399, 5.0..699; Ndislib.lib] */
 VOID NdisSetPhysicalAddressHigh(NDIS_PHYSICAL_ADDRESS PhysicalAddress,
@@ -774,10 +773,7 @@ OUT PNDIS_HANDLE SwitchHandle);
 VOID NdisMFreeMapRegisters(NDIS_HANDLE MiniportAdapterHandle);
 
 /* NdisMInitializeWrapper  [function; ce-only; CE 2.11..2.12, 3.0..699; Ndis.dll, ndis.dll, Ndislib.lib] */
-VOID NdisMInitializeWrapper(PNDIS_HANDLE NdisWrapperHandle,
- PVOID SystemSpecific1,
- PVOID SystemSpecific2,
- PVOID SystemSpecific3);
+/* CONFLICTING PROTOTYPE -- kept the first NdisMInitializeWrapper() form; another page prints: VOID NdisMInitializeWrapper(PNDIS_HANDLE NdisWrapperHandle, PVOID SystemSpecific1, PVOID SystemSpecific2, PVOID SystemSpecific3); */
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */

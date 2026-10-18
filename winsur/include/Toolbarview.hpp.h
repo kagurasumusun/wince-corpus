@@ -61,7 +61,7 @@ static HBITMAP LoadSystemBitmap(enum BitmapType bt);
 /* BitmapTypebt  [extra enum] */
 #ifndef __WINCE_DEFINED_BITMAPTYPEBT
 #define __WINCE_DEFINED_BITMAPTYPEBT
-static HBITMAP LoadSystemBitmap(enum BitmapTypebt);
+/* CONFLICTING PROTOTYPE -- kept the first LoadSystemBitmap() form; another page prints: static HBITMAP LoadSystemBitmap(enum BitmapTypebt); */
 #endif /* __WINCE_DEFINED_BITMAPTYPEBT */
 
 /* ==================================================================

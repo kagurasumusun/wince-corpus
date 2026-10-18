@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 1 outlines, 0 base types, 0 extra macros, 123 extra decls
+ * 0 constants, 0 declarations, 1 outlines, 0 base types, 0 extra macros, 94 extra decls
  */
 #ifndef _AFXWIN_
 #define _AFXWIN_
@@ -42,6 +42,8 @@ void CCmdTarget();
 #ifdef __cplusplus
 void CCmdUI();
 #endif /* __cplusplus */
+BOOL CheckMenuRadioItem(UINT nIDFirst, UINT nIDLast, UINT nIDItem, UINT nFlags);
+void CloseAllDocuments(BOOL bEndSession);
 BOOL ContinueModal();
 void ContinueRouting();
 #ifdef __cplusplus
@@ -74,6 +76,9 @@ UINT GetProfileInt(LPCTSTR lpszSection, LPCTSTR lpszEntry, int nDefault);
 int GetScrollLimit();
 void HideApplication();
 int InitStorage(int nItems, UINT nBytes);
+#ifdef __cplusplus
+void InitialUpdateFrame(CDocument* pDoc, BOOL bMakeVisible);
+#endif /* __cplusplus */
 HWND InsertComboBox (int nWidth);
 int InsertString(int nIndex, LPCTSTR lpszString);
 BOOL IsModified();
@@ -88,44 +93,6 @@ void LoadStdProfileSettings(UINT nMaxMRU = _AFX_MRU_COUNT);
 #endif /* __cplusplus */
 void NormalizeRect();
 void Offset(int xOffset, int yOffset);
-afx_msg void OnCancelMode();
-afx_msg void OnChar(UINT nChar, UINT nRepCnt, UINT nFlags);
-#ifdef __cplusplus
-afx_msg int OnCharToItem(UINT nChar, CListBox* pListBox, UINT nIndex);
-#endif /* __cplusplus */
-afx_msg void OnDeadChar(UINT nChar, UINT nRepCnt, UINT nFlags);
-afx_msg void OnDestroy();
-afx_msg void OnDestroyClipboard();
-afx_msg void OnEnable(BOOL bEnable);
-afx_msg void OnFileNew();
-afx_msg void OnFileOpen();
-afx_msg void OnFontChange();
-#ifdef __cplusplus
-afx_msg void OnHScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
-#endif /* __cplusplus */
-#ifdef __cplusplus
-afx_msg void OnInitMenuPopup (CMenu* pPopupMenu, UINT nIndex, BOOL bSysMenu);
-#endif /* __cplusplus */
-afx_msg void OnKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
-afx_msg void OnKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags);
-#ifdef __cplusplus
-afx_msg LRESULT OnMenuChar (UINT nChar, UINT nFlags, CMenu* pMenu);
-#endif /* __cplusplus */
-afx_msg void OnNcDestroy();
-afx_msg void OnRenderAllFormats();
-afx_msg void OnRenderFormat(UINT nFormat);
-afx_msg void OnSysChar(UINT nChar, UINT nRepCnt, UINT nFlags);
-afx_msg void OnSysCommand(UINT nID, LPARAM lParam);
-afx_msg void OnSysDeadChar(UINT nChar, UINT nRepCnt, UINT nFlags);
-afx_msg void OnSysKeyDown(UINT nChar, UINT nRepCnt, UINT nFlags);
-afx_msg void OnSysKeyUp(UINT nChar, UINT nRepCnt, UINT nFlags);
-#ifdef __cplusplus
-protafx_msg int OnVKeyToItem(UINT nKey, CListBox* pListBox, UINT nIndex);
-#endif /* __cplusplus */
-#ifdef __cplusplus
-afx_msg void OnVScroll(UINT nSBCode, UINT nPos, CScrollBar* pScrollBar);
-#endif /* __cplusplus */
-afx_msg void OnWinIniChange (LPCTSTR lpszSection);
 #ifdef __cplusplus
 void ParseCommandLine(CCommandLineInfo& rCmdInfo);
 #endif /* __cplusplus */
@@ -153,12 +120,14 @@ int SetCurSel(int nSelect);
 void SetDefID(UINT nID);
 int SetDroppedWidth(UINT nWidth);
 BOOL SetEditSel(int nStartChar, int nEndChar);
+void SetHandle(HLOCAL hBuffer);
 void SetHelpID(UINT nIDR);
 void SetHorizontalExtent(UINT nExtent);
 int SetItemDataPtr(int nIndex, void* pData);
 int SetItemHeight(int nIndex, UINT cyItemHeight);
 void SetLimitText(UINT nMax);
 void SetMargins(UINT nLeft, UINT nRight);
+void SetPasswordChar(TCHAR ch);
 void SetRegistryKey(LPCTSTR lpszRegistryKey);
 void SetScaleToFitSize(SIZE sizeTotal);
 void SetTabStops();

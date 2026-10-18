@@ -146,3 +146,29 @@ VB/Java/MIDL 属性残骸の抽出拒否）により、whole-TU 実測は
 残る 1 件は Oaidl.h の CLIPDATA 一行本体。ページ印刷の `//` コメントが同行のメンバ・閉じ括弧を
 飲み込む類で、コメント/コード混在一行の復元は誤爆が大きいため保留。これが樹上で唯一、
 コンパイラが文句を言う箇所。
+
+---
+
+## FIX-ALL 追記（2026-10-18 第2セッション）
+
+再基準（`gcc -fsyntax-only -std=gnu99 -fshort-wchar` 全TU）: **residual 121 / never-defined 4 / .def 297/297**。
+前回の「13 residual」は前方ブロックの欠落型が早期エラーで後続を隠していた状態で、本測定は素の全体像。
+
+### 対応済み（本セッション）
+1. **`//`コメント行結合の連鎖（GetPages クラス）**: `strip_midl_attributes` が行結合してから `//` 剥がしが `);` ごと食っていた。c_decl_text 冒頭へ移動＋開括弧時の末尾コード保存。
+2. **`BOOL WINAPI *Name(` → `BOOL (WINAPI *Name)(`** 関数ポインタ修復。
+3. **enumメンバ位相ソート**（`X = Y` 前方参照、bare メンバ・詰め込み本文対応）。
+4. **派生定数** (`data/derived-constants.tsv`): PWLEN/UNLEN/DNLEN/CNLEN/NNLEN/UNCLEN/RMLEN/RAS_Max* をピン留め参照 w32api-cegcc（sources/）から出所付きで Netui.h/Ras.h へ。
+5. **定数ギャップ** (`data/constant-gaps.tsv`): NETUI_LCD_DIAL_MOD_LEN / VIODEVICENAMESIZE はコーパスどこにも値の記載なし → メンバを DERIVED 注記付き省略（捏造せず）。
+6. **quality_filters**: 余分語プロトタイプ（`BOOL TranDeInit Library`）、教科書サンプル型（VeryLongClassNameA/Sample/Float/Interface）、名前欠落プロトタイプ（`void WINAPI (`）、STDAPI二重戻り型修正。
+7. **type_mentions_unknown の typedef 尾名誤判定修正**（`*PDNS_A_DATA` が自分の本文を unknown と判定して本文を全て落としていた）。
+8. **IP4_ADDRESS** を base-types（WinDef）へ（w32api-cegcc windns.h `typedef DWORD IP4_ADDRESS;`）。
+9. worklist 一括処理で never-defined 54→4（u_char/u_short/u_long の実 typedef、IeXdi*/DNS_*/BINDINFO 等の前方行、junk 行削除）。
+
+### 残課題（次ターン継続）
+- **Windns.h 58**: DNS_RECORD 共用体が DNS_*_DATA 本文より先にemitされる（extra_type_ds が主バケットの位相ソート後に追加される経路問題。マージ実装は Key 形状差で崩れたため保留）。本文の前に並べ直しが必要。
+- extapi.h 13（`dwParam1` 再定義・空宣言）、sms.h 8、wap.h 7（ビットフィールド）、af_irda.h（AttribUsrStr 前欠落）、Sdcardddk/pwinuser（`typedef` 前の `;` 欠落）。
+- 競合プロトタイプ×4（OnRequestProgress/RequestContacts/GetBestInterfaceEX×2）は複数行のため単一行専用の競合抑止が効かない。複数行対応が必要。
+- A/Interface/Z の junk 使用がまだ1件ずつ（使用側 decl の reject）。
+- Replfilt `_MAX_PATH`/`_MAX_FNAME`/`_MAX_EXT`（CE定数の値確認→定数行）。
+- Msgstor2 `FolderArray` 不完全型フィールド。

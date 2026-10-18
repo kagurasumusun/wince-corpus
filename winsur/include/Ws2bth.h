@@ -72,7 +72,7 @@ typedef struct _BTH_REMOTE_VERSION {
 #define __WINCE_DEFINED_PBTH_SOCKOPT_SECURITY
 typedef struct _BTH_SOCKOPT_SECURITY {
  int iLength;
- bt_addr btAddr;
+ /* DERIVED member omitted -- type body unprinted: bt_addr btAddr; */
  unsigned char caData[16];
 } BTH_SOCKOPT_SECURITY, *PBTH_SOCKOPT_SECURITY;
 #endif /* __WINCE_DEFINED_PBTH_SOCKOPT_SECURITY */

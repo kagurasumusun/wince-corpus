@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 5 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
+ * 0 constants, 20 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _P2P_
 #define _P2P_
@@ -66,5 +66,15 @@ typedef enum peer_record_change_type_tag
 #endif /* __WINCE_DEFINED_PEER_RECORD_CHANGE_TYPE */
 #endif /* __WINCE_DEFINED_PEER_RECORD_CHANGE_TYPE_TAG */
 #endif /* __WINCE_DEFINED_PEER_RECORD_CHANGE_TYPE_TAG */
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 5.0..599 */
+
+/* PeerFreeData  [function; shared; CE 5.0..599; p2p.lib] */
+VOID WINAPI PeerFreeData(PVOID pvData);
+#endif /* _WIN32_WCE */
 
 #endif /* _P2P_ */

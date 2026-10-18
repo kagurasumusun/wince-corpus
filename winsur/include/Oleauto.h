@@ -184,8 +184,7 @@ HRESULT VarI4FromR8(double dblIn,
  long* plOut);
 
 /* VarI4FromUI1  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarI4FromUI1(BYTE bIn,
- long* plOut);
+/* CONFLICTING PROTOTYPE -- kept the first VarI4FromUI1() form; another page prints: HRESULT VarI4FromUI1(BYTE bIn, long* plOut); */
 
 /* VarR4FromBool  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
 HRESULT VarR4FromBool(BOOL boolIn,

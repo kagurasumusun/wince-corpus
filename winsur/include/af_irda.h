@@ -32,22 +32,22 @@
 #ifndef __WINCE_DEFINED_PIAS_QUERY
 #define __WINCE_DEFINED_PIAS_QUERY
 typedef struct IAS_QUERY {
- u_char irdaDeviceID[4];
+ /* DERIVED member omitted -- type body unprinted: u_char irdaDeviceID[4]; */
  char irdaClassName[61];
  char irdaAttribName[61];
- u_short irdaAttribType;
+ /* DERIVED member omitted -- type body unprinted: u_short irdaAttribType; */
  union {
  int irdaAttribInt;
  struct {
  int Len;
- u_char OctetSeq[1];
- u_char Reserved[3];
+ /* DERIVED member omitted -- type body unprinted: u_char OctetSeq[1]; */
+ /* DERIVED member omitted -- type body unprinted: u_char Reserved[3]; */
  } irdaAttribOctetSeq;
  struct {
  int Len;
- u_char CharSet;
- u_char UsrStr[1];
- u_char Reserved[2];
+ /* DERIVED member omitted -- type body unprinted: u_char CharSet; */
+ /* DERIVED member omitted -- type body unprinted: u_char UsrStr[1]; */
+ /* DERIVED member omitted -- type body unprinted: u_char Reserved[2]; */
  } irda AttribUsrStr;
  } irdaAttribute;
 } _IAS_QUERY, *PIAS_QUERY;
@@ -64,19 +64,19 @@ typedef struct IAS_QUERY {
 typedef struct _IAS_SET {
  char irdaClassName[61];
  char irdaAttribName[61];
- u_short irdaAttribType;
+ /* DERIVED member omitted -- type body unprinted: u_short irdaAttribType; */
  union {
  int irdaAttribInt;
  struct {
  int Len;
- u_char OctetSeq[1];
- u_char Reserved[3];
+ /* DERIVED member omitted -- type body unprinted: u_char OctetSeq[1]; */
+ /* DERIVED member omitted -- type body unprinted: u_char Reserved[3]; */
  } irdaAttribOctetSeq;
  struct {
  int Len;
- u_char CharSet;
- u_char UsrStr[1];
- u_char Reserved[2];
+ /* DERIVED member omitted -- type body unprinted: u_char CharSet; */
+ /* DERIVED member omitted -- type body unprinted: u_char UsrStr[1]; */
+ /* DERIVED member omitted -- type body unprinted: u_char Reserved[2]; */
  } irda AttribUsrStr;
  } irdaAttribute;
 } _IAS_SET, *PIAS_SET;
@@ -88,18 +88,30 @@ typedef struct _IAS_SET {
 #ifndef __WINCE_DEFINED_IRDA_DEVICE_INFO
 #define __WINCE_DEFINED_IRDA_DEVICE_INFO
 typedef struct IRDA_DEVICE_INFO {
- u_char irdaDeviceID[4];
+ /* DERIVED member omitted -- type body unprinted: u_char irdaDeviceID[4]; */
  char irdaDeviceName[22];
- u_char Reserved[2];
+ /* DERIVED member omitted -- type body unprinted: u_char Reserved[2]; */
 } _IRDA_DEVICE_INFO;
 #endif /* __WINCE_DEFINED_IRDA_DEVICE_INFO */
+
+/* DEVICELIST  [struct, typedef; ce-only] */
+#ifndef __WINCE_DEFINED_DEVICELIST
+#define __WINCE_DEFINED_DEVICELIST
+#ifndef __WINCE_DEFINED_PWCE_DEVICELIST
+#define __WINCE_DEFINED_PWCE_DEVICELIST
+typedef struct DEVICELIST{
+ ULONG numDevice;
+ IRDA_DEVICE_INFO Device [1];
+}_DEVICELIST, *PWCE_DEVICELIST;
+#endif /* __WINCE_DEFINED_PWCE_DEVICELIST */
+#endif /* __WINCE_DEFINED_DEVICELIST */
 
 /* irdaServiceName  [extra struct] */
 #ifndef __WINCE_DEFINED_SOCKADDR_IRDA
 #define __WINCE_DEFINED_SOCKADDR_IRDA
 #ifndef __WINCE_DEFINED_IRDASERVICENAME
 #define __WINCE_DEFINED_IRDASERVICENAME
-struct sockaddr_irda { u_short irdaAddressFamily; u_char irdaDeviceID[4]; char irdaServiceName[25];};
+struct sockaddr_irda { /* DERIVED member omitted -- type body unprinted: u_short irdaAddressFamily; */ /* DERIVED member omitted -- type body unprinted: u_char irdaDeviceID[4]; */ char irdaServiceName[25];};
 #endif /* __WINCE_DEFINED_IRDASERVICENAME */
 #endif /* __WINCE_DEFINED_SOCKADDR_IRDA */
 

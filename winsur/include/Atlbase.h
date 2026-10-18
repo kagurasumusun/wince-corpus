@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 3 declarations, 10 outlines, 0 base types, 0 extra macros, 21 extra decls
+ * 0 constants, 2 declarations, 10 outlines, 0 base types, 0 extra macros, 22 extra decls
  */
 #ifndef _ATLBASE_
 #define _ATLBASE_
@@ -34,16 +34,6 @@
 /* CComSingleThreadModel::AutoCriticalSection  [typedef; ce-only] */
 
 /* CComSingleThreadModel::CriticalSection  [typedef; ce-only] */
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x212 && _WIN32_WCE < 0x400)) /* CE 2.12..399 */
-
-/* AtlTrace  [function; ce-only; CE 2.12..399] */
-void _cdecl AtlTrace(LPCTSTR lpszFormat, ...);
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main
@@ -76,6 +66,7 @@ LONG QueryValue(DWORD& dwValue, LPCTSTR lpszValueName);
 #endif /* __cplusplus */
 LONG RecurseDeleteKey(LPCTSTR lpszKey);
 HRESULT RevokeClassObjects();
+LONG SetValue(DWORD dwValue, LPCTSTR lpszValueName);
 void Term();
 
 #endif /* _ATLBASE_ */

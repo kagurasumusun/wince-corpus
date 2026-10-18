@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 539 constants, 75 declarations, 1 outlines, 0 base types, 1 extra macros, 2 extra decls
+ * 539 constants, 100 declarations, 1 outlines, 0 base types, 1 extra macros, 2 extra decls
  */
 #ifndef _WININET_
 #define _WININET_
@@ -851,16 +851,40 @@ BOOL GetUrlCacheEntryInfoEx(LPCSTR lpszUrl,
  LPVOID lpReserved,
  DWORD dwFlags);
 
+/* InternetCanonicalizeUrl  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Schannel.lib, schannel.lib, Secur32.lib, secur32.lib, wininet.lib; A/W InternetCanonicalizeUrlA,InternetCanonicalizeUrlW (CE is W-side)] */
+BOOL WINAPI InternetCanonicalizeUrl(LPCTSTR lpszUrl,
+ LPWSTR lpszBuffer,
+ LPDWORD lpdwBufferLength,
+ DWORD dwFlags);
+
+/* InternetCombineUrl  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetCombineUrlA,InternetCombineUrlW (CE is W-side)] */
+BOOL WINAPI InternetCombineUrl(LPCTSTR lpszBaseUrl,
+ LPCTSTR lpszRelativeUrl,
+ LPTSTR lpszBuffer,
+ LPDWORD lpdwBufferLength,
+ DWORD dwFlags);
+
 /* InternetGetCookie  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetGetCookieA,InternetGetCookieW (CE is W-side)] */
 BOOL InternetGetCookie(LPCTSTR lpszUrl,
  LPCTSTR lpszCookieName,
  LPSTR lpCookieData,
  LPDWORD lpdwSize);
 
+/* InternetGetLastResponseInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetGetLastResponseInfoA,InternetGetLastResponseInfoW (CE is W-side)] */
+BOOL WINAPI InternetGetLastResponseInfo(LPDWORD lpdwError,
+ LPTSTR lpszBuffer,
+ LPDWORD lpdwBufferLength);
+
 /* InternetSetCookie  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetSetCookieA,InternetSetCookieW (CE is W-side)] */
 BOOL InternetSetCookie(LPCTSTR lpszUrl,
  LPCTSTR lpszCookieName,
  LPCTSTR lpszCookieData);
+
+/* InternetTimeFromSystemTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetTimeFromSystemTimeA,InternetTimeFromSystemTimeW (CE is W-side)] */
+BOOL WINAPI InternetTimeFromSystemTime(CONST SYSTEMTIME* pst,
+ DWORD dwRFC,
+ LPTSTR lpszTime,
+ DWORD cbTime);
 
 /* InternetTimeToSystemTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetTimeToSystemTimeA,InternetTimeToSystemTimeW (CE is W-side)] */
 BOOL InternetTimeToSystemTime(LPCTSTR lpszTime,
@@ -983,10 +1007,7 @@ DWORD PrivacyGetZonePreferenceW (DWORD dwZone,
  LPDWORD pdwBufferLength);
 
 /* PrivacySetZonePreferenceW  [function; shared; CE 6.0..699; wininet.lib] */
-DWORD PrivacyGetZonePreferenceW(DWORD dwZone,
- DWORD dwType,
- DWORD dwTemplate,
- LPCWSTR pszPreference);
+/* CONFLICTING PROTOTYPE -- kept the first PrivacyGetZonePreferenceW() form; another page prints: DWORD PrivacyGetZonePreferenceW(DWORD dwZone, DWORD dwType, DWORD dwTemplate, LPCWSTR pszPreference); */
 #endif /* _WIN32_WCE */
 
 #endif /* _WININET_ */

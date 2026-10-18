@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 20 constants, 43 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 20 constants, 43 declarations, 1 outlines, 0 base types, 14 extra macros, 2 extra decls
  */
 #ifndef _RAS_
 #define _RAS_
@@ -37,6 +37,52 @@
 #define RASLCPO_PFC 0x00000001
 #define RASLCPO_SSHF 0x00000004
 #define WM_RASDIALEVENT 0xCCCD
+
+/* ==================================================================
+ * macros -- supplementary #define from CE pages
+ * ================================================================ */
+#ifndef CNLEN
+#define CNLEN 15 /* DERIVED value -- w32api-cegcc reference lmcons.h (sources/w32api-cegcc); CE pages state the name only */
+#endif
+#ifndef DNLEN
+#define DNLEN 15 /* DERIVED value -- w32api-cegcc reference lmcons.h (sources/w32api-cegcc); CE pages state the name only */
+#endif
+#ifndef NNLEN
+#define NNLEN 80 /* DERIVED value -- w32api-cegcc reference lmcons.h (sources/w32api-cegcc); CE pages state the name only */
+#endif
+#ifndef PWLEN
+#define PWLEN 256 /* DERIVED value -- w32api-cegcc reference lmcons.h (sources/w32api-cegcc); CE pages state the name only */
+#endif
+#ifndef RAS_MaxCallbackNumber
+#define RAS_MaxCallbackNumber RAS_MaxPhoneNumber /* DERIVED value -- w32api-cegcc reference ras.h (sources/w32api-cegcc) */
+#endif
+#ifndef RAS_MaxDeviceName
+#define RAS_MaxDeviceName 128 /* DERIVED value -- w32api-cegcc reference ras.h (sources/w32api-cegcc) */
+#endif
+#ifndef RAS_MaxDeviceType
+#define RAS_MaxDeviceType 16 /* DERIVED value -- w32api-cegcc reference ras.h (sources/w32api-cegcc) */
+#endif
+#ifndef RAS_MaxEntryName
+#define RAS_MaxEntryName 256 /* DERIVED value -- w32api-cegcc reference ras.h (sources/w32api-cegcc) */
+#endif
+#ifndef RAS_MaxIpAddress
+#define RAS_MaxIpAddress 15 /* DERIVED value -- w32api-cegcc reference ras.h (sources/w32api-cegcc) */
+#endif
+#ifndef RAS_MaxIpxAddress
+#define RAS_MaxIpxAddress 21 /* DERIVED value -- w32api-cegcc reference ras.h (sources/w32api-cegcc) */
+#endif
+#ifndef RAS_MaxPhoneNumber
+#define RAS_MaxPhoneNumber 128 /* DERIVED value -- w32api-cegcc reference ras.h (sources/w32api-cegcc) */
+#endif
+#ifndef RMLEN
+#define RMLEN (UNCLEN+1+NNLEN) /* DERIVED value -- w32api-cegcc reference lmcons.h (sources/w32api-cegcc) */
+#endif
+#ifndef UNCLEN
+#define UNCLEN (CNLEN + 2) /* DERIVED value -- w32api-cegcc reference lmcons.h (sources/w32api-cegcc) */
+#endif
+#ifndef UNLEN
+#define UNLEN 256 /* DERIVED value -- w32api-cegcc reference lmcons.h (sources/w32api-cegcc); CE pages state the name only */
+#endif
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)

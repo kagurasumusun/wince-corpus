@@ -67,7 +67,7 @@ LPBYTE TransportDecode(LPBYTE pbFrame,
  PUSHORT pcbData);
 
 /* PFN_ENABLEINT  [function; ce-only; CE 6.0..699; Kitl.lib] */
-void TransportEnableInt(BOOL Enable);
+/* CONFLICTING PROTOTYPE -- kept the first TransportEnableInt() form; another page prints: void TransportEnableInt(BOOL Enable); */
 
 /* PFN_ENCODE  [function; ce-only; CE 6.0..699; Kitl.lib] */
 BOOL TransportEncode(LPBYTE pbFrame,
@@ -82,8 +82,7 @@ BOOL TransportRecv(LPBYTE pbBuffer,
  PUSHORT pcbBuffer);
 
 /* PFN_SENDFRAME  [function; ce-only; CE 6.0..699; Kitl.lib] */
-BOOL TransportSend(LPBYTE pbFrame,
- USHORT cbFrame);
+/* CONFLICTING PROTOTYPE -- kept the first TransportSend() form; another page prints: BOOL TransportSend(LPBYTE pbFrame, USHORT cbFrame); */
 
 /* PFN_SETHOSTCFG  [function; ce-only; CE 6.0..699; Kitl.lib] */
 BOOL TransportSetHostCfg(LPBYTE pbBuffer,

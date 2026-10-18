@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 21 constants, 3 declarations, 2 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 21 constants, 10 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _HTTPEXT_
 #define _HTTPEXT_
@@ -45,8 +45,6 @@
 
 /* EXTENSION_CONTROL_BLOCK  [struct; ce-only] */
 
-/* ServerSupportFunction  [enum, function; ce-only; httpextn.lib, Httpfilt.lib, httpfilt.lib] */
-
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
@@ -85,5 +83,18 @@ typedef struct _HSE_VERSION_INFO{
 #endif /* __WINCE_DEFINED_LPHSE_VERSION_INFO */
 #endif /* __WINCE_DEFINED_HSE_VERSION_INFO */
 #endif /* __WINCE_DEFINED__HSE_VERSION_INFO */
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
+
+/* GetExtensionVersion  [function; ce-only; CE 3.0..399, 5.0..699] */
+BOOL WINAPI GetExtensionVersion(HSE_VERSION_INFO* pVer);
+
+/* TerminateExtension  [function; ce-only; CE 3.0..399, 5.0..699] */
+BOOL WINAPI TerminateExtension(DWORD dwFlags);
+#endif /* _WIN32_WCE */
 
 #endif /* _HTTPEXT_ */

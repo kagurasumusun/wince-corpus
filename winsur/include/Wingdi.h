@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1264 constants, 139 declarations, 5 outlines, 0 base types, 0 extra macros, 11 extra decls
+ * 1264 constants, 139 declarations, 5 outlines, 0 base types, 0 extra macros, 17 extra decls
  */
 #ifndef _WINGDI_
 #define _WINGDI_
@@ -1481,6 +1481,52 @@ typedef struct _BLENDFUNCTION {
 #endif /* __WINCE_DEFINED_BLENDFUNCTION */
 #endif /* __WINCE_DEFINED__BLENDFUNCTION */
 
+/* DEVMODEW  [struct; shared] */
+#ifndef __WINCE_DEFINED__DEVICEMODEW
+#define __WINCE_DEFINED__DEVICEMODEW
+#ifndef __WINCE_DEFINED_DEVMODEW
+#define __WINCE_DEFINED_DEVMODEW
+#ifndef __WINCE_DEFINED_PDEVMODEW
+#define __WINCE_DEFINED_PDEVMODEW
+#ifndef __WINCE_DEFINED_NPDEVMODEW
+#define __WINCE_DEFINED_NPDEVMODEW
+#ifndef __WINCE_DEFINED_LPDEVMODEW
+#define __WINCE_DEFINED_LPDEVMODEW
+typedef struct _devicemodew {
+ WCHAR dmDeviceName[CCHDEVICENAME];
+ WORD dmSpecVersion;
+ WORD dmDriverVersion;
+ WORD dmSize;
+ WORD dmDriverExtra;
+ DWORD dmFields;
+ short dmOrientation;
+ short dmPaperSize;
+ short dmPaperLength;
+ short dmPaperWidth;
+ short dmScale;
+ short dmCopies;
+ short dmDefaultSource;
+ short dmPrintQuality;
+ short dmColor;
+ short dmDuplex;
+ short dmYResolution;
+ short dmTTOption;
+ short dmCollate;
+ WCHAR dmFormName[CCHFORMNAME];
+ WORD dmLogPixels;
+ DWORD dmBitsPerPel;
+ DWORD dmPelsWidth;
+ DWORD dmPelsHeight;
+ DWORD dmDisplayFlags;
+ DWORD dmDisplayFrequency;
+ DWORD dmDisplayOrientation;
+} DEVMODEW,* PDEVMODEW,* NPDEVMODEW,* LPDEVMODEW;
+#endif /* __WINCE_DEFINED_LPDEVMODEW */
+#endif /* __WINCE_DEFINED_NPDEVMODEW */
+#endif /* __WINCE_DEFINED_PDEVMODEW */
+#endif /* __WINCE_DEFINED_DEVMODEW */
+#endif /* __WINCE_DEFINED__DEVICEMODEW */
+
 /* DISPLAY_DEVICE  [struct; shared; +not-umbrella; A/W DISPLAY_DEVICEA,DISPLAY_DEVICEW (CE is W-side)] */
 #ifndef __WINCE_DEFINED__DISPLAY_DEVICE
 #define __WINCE_DEFINED__DISPLAY_DEVICE
@@ -2187,8 +2233,8 @@ BOOL GetCharABCWidths(HDC hdc,
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* AbortProc  [function, callback; shared; CE 5.0..699; Mgprint.lib] */
-BOOL CALLBACK AbortProc(HDC hdc, 
- int iError 
+BOOL CALLBACK AbortProc(HDC hdc,
+ int iError);
 
 /* AlphaBlend  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
 BOOL AlphaBlend(HDC hdcDest,
@@ -2243,8 +2289,8 @@ int SetStretchBltMode(HDC hdc,
  int iStretchMode);
 
 /* SetTextCharacterExtra  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-int SetTextCharacterExtra(HDC hdc, 
- int nCharExtra 
+int SetTextCharacterExtra(HDC hdc,
+ int nCharExtra);
 
 /* TransparentBlt  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
 BOOL TransparentBlt(HDC hdcDest,
@@ -2269,11 +2315,17 @@ BOOL TransparentBlt(HDC hdcDest,
 HRESULT Architecture(int* pwArchitecture);
 BOOL CreateFont(int nHeight, int nWidth, int nEscapement, int nOrientation, int nWeight, BYTE bItalic, BYTE bUnderline, BYTE cStrikeOut, BYTE nCharSet, BYTE nOutPrecision, BYTE nClipPrecision, BYTE nQuality, BYTE nPitchAndFamily, LPCTSTR lpszFacename);
 int EnumFontFamiliesEx(HDC hdc, LPLOGFONT lpLogfont, FONTENUMPROC lpEnumFontFamExProc, LPARAM lParam, DWORD dwFlags);
+VOID WINAPI GetCharWidth32(HDC hdc, UINT iFirstChar, UINT iLastChar, LPINT lpBuffer);
 static LPCTSTR WINAPI GetObjectDescription();
 UINT GetObjectSchema();
 HRESULT GetPath(LPCWSTR* ppszPath);
+VOID WINAPI GetTextAlign(HDC hdc);
+VOID WINAPI LineTo(HDC hdc, int nXEnd, int nYEnd);
+VOID WINAPI MoveToEx(HDC hdc, int X, int Y, LPPOINT lpPoint);
 BOOL PolyPolygon (LPPOINT lpPoints, LPINT lpPolyCounts, int nCount);
 BOOL PolyPolyline(const POINT* lpPoints, const DWORD* lpPolyPoints, int nCount);
 BOOL PolylineTo(const POINT* lpPoints, int nCount);
+VOID WINAPI SetTextAlign(HDC hdc, UINT fmode);
+VOID WINAPI StretchDIBits(HDC hdc, int XDest, int YDest, int nDestWidth, int nDestHeight, int XSrc, int YSrc, int nSrcWidth, int nSrcHeight, CONST VOID* lpBits, CONST BITMAPINFO* lpBitsInfo, UINT iUsage, DWORD dwRop);
 
 #endif /* _WINGDI_ */

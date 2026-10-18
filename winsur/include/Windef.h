@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 23 constants, 6 declarations, 6 outlines, 122 base types, 0 extra macros, 0 extra decls
+ * 23 constants, 6 declarations, 6 outlines, 123 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDEF_
 #define _WINDEF_
@@ -256,6 +256,12 @@ typedef unsigned __int64 UINT64;
  * Always 16-bit
  * source: win32/common/windows-data-types.md */
 typedef unsigned short WORD;
+
+/* IP4_ADDRESS [CE-SPECIFIC]
+ * IPv4 address in host byte order (winsock CE surface)
+ * DWORD-backed on CE
+ * source: w32api-cegcc reference windns.h (sources/w32api-cegcc); CE DNS pages print the name in members */
+typedef DWORD IP4_ADDRESS;
 
 /* LONG [CE-SPECIFIC]
  * 32-bit signed integer
@@ -905,11 +911,6 @@ typedef SIZE *PSIZE, *LPSIZE;
  * types.tsv)
  * ================================================================ */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
-#ifndef __WINCE_DEFINED_A
-#define __WINCE_DEFINED_A
-typedef struct A A;
-#endif /* __WINCE_DEFINED_A */
-/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_AAM_SRCCAP
 #define __WINCE_DEFINED_AAM_SRCCAP
 typedef struct AAM_SRCCAP AAM_SRCCAP;
@@ -994,6 +995,11 @@ typedef struct AsnUnsigned32 AsnUnsigned32;
 #define __WINCE_DEFINED_BD_BUFFER
 typedef struct BD_BUFFER BD_BUFFER;
 #endif /* __WINCE_DEFINED_BD_BUFFER */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_BINDINFO
+#define __WINCE_DEFINED_BINDINFO
+typedef struct BINDINFO BINDINFO;
+#endif /* __WINCE_DEFINED_BINDINFO */
 /* DERIVED forward -- derived typedef: OLE character; the pages print BSTR/LPOLESTR in terms of it */
 #ifndef __WINCE_DEFINED_OLECHAR
 #define __WINCE_DEFINED_OLECHAR
@@ -1054,6 +1060,11 @@ typedef struct _GUID GUID;
 #define __WINCE_DEFINED_CLSID
 typedef GUID CLSID;
 #endif /* __WINCE_DEFINED_CLSID */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_CRYPT_DATA_BLOB
+#define __WINCE_DEFINED_CRYPT_DATA_BLOB
+typedef struct CRYPT_DATA_BLOB CRYPT_DATA_BLOB;
+#endif /* __WINCE_DEFINED_CRYPT_DATA_BLOB */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_CRYPT_HASH_BLOB
 #define __WINCE_DEFINED_CRYPT_HASH_BLOB
@@ -1104,6 +1115,96 @@ typedef struct DMUS_NOTIFICATION_PMSG DMUS_NOTIFICATION_PMSG;
 #define __WINCE_DEFINED_DMUS_PMSG
 typedef struct DMUS_PMSG DMUS_PMSG;
 #endif /* __WINCE_DEFINED_DMUS_PMSG */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_DNS_AAAA_DATA
+#define __WINCE_DEFINED_DNS_AAAA_DATA
+typedef struct DNS_AAAA_DATA DNS_AAAA_DATA;
+#endif /* __WINCE_DEFINED_DNS_AAAA_DATA */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_DNS_ATMA_DATA
+#define __WINCE_DEFINED_DNS_ATMA_DATA
+typedef struct DNS_ATMA_DATA DNS_ATMA_DATA;
+#endif /* __WINCE_DEFINED_DNS_ATMA_DATA */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_DNS_A_DATA
+#define __WINCE_DEFINED_DNS_A_DATA
+typedef struct DNS_A_DATA DNS_A_DATA;
+#endif /* __WINCE_DEFINED_DNS_A_DATA */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_DNS_KEY_DATA
+#define __WINCE_DEFINED_DNS_KEY_DATA
+typedef struct DNS_KEY_DATA DNS_KEY_DATA;
+#endif /* __WINCE_DEFINED_DNS_KEY_DATA */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_DNS_MINFO_DATA
+#define __WINCE_DEFINED_DNS_MINFO_DATA
+typedef struct DNS_MINFO_DATA DNS_MINFO_DATA;
+#endif /* __WINCE_DEFINED_DNS_MINFO_DATA */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_DNS_MX_DATA
+#define __WINCE_DEFINED_DNS_MX_DATA
+typedef struct DNS_MX_DATA DNS_MX_DATA;
+#endif /* __WINCE_DEFINED_DNS_MX_DATA */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_DNS_NULL_DATA
+#define __WINCE_DEFINED_DNS_NULL_DATA
+typedef struct DNS_NULL_DATA DNS_NULL_DATA;
+#endif /* __WINCE_DEFINED_DNS_NULL_DATA */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_DNS_NXT_DATA
+#define __WINCE_DEFINED_DNS_NXT_DATA
+typedef struct DNS_NXT_DATA DNS_NXT_DATA;
+#endif /* __WINCE_DEFINED_DNS_NXT_DATA */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_DNS_PTR_DATA
+#define __WINCE_DEFINED_DNS_PTR_DATA
+typedef struct DNS_PTR_DATA DNS_PTR_DATA;
+#endif /* __WINCE_DEFINED_DNS_PTR_DATA */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_DNS_SIG_DATA
+#define __WINCE_DEFINED_DNS_SIG_DATA
+typedef struct DNS_SIG_DATA DNS_SIG_DATA;
+#endif /* __WINCE_DEFINED_DNS_SIG_DATA */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_DNS_SOA_DATA
+#define __WINCE_DEFINED_DNS_SOA_DATA
+typedef struct DNS_SOA_DATA DNS_SOA_DATA;
+#endif /* __WINCE_DEFINED_DNS_SOA_DATA */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_DNS_SRV_DATA
+#define __WINCE_DEFINED_DNS_SRV_DATA
+typedef struct DNS_SRV_DATA DNS_SRV_DATA;
+#endif /* __WINCE_DEFINED_DNS_SRV_DATA */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_DNS_TKEY_DATA
+#define __WINCE_DEFINED_DNS_TKEY_DATA
+typedef struct DNS_TKEY_DATA DNS_TKEY_DATA;
+#endif /* __WINCE_DEFINED_DNS_TKEY_DATA */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_DNS_TSIG_DATA
+#define __WINCE_DEFINED_DNS_TSIG_DATA
+typedef struct DNS_TSIG_DATA DNS_TSIG_DATA;
+#endif /* __WINCE_DEFINED_DNS_TSIG_DATA */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_DNS_TXT_DATA
+#define __WINCE_DEFINED_DNS_TXT_DATA
+typedef struct DNS_TXT_DATA DNS_TXT_DATA;
+#endif /* __WINCE_DEFINED_DNS_TXT_DATA */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_DNS_WINSR_DATA
+#define __WINCE_DEFINED_DNS_WINSR_DATA
+typedef struct DNS_WINSR_DATA DNS_WINSR_DATA;
+#endif /* __WINCE_DEFINED_DNS_WINSR_DATA */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_DNS_WINS_DATA
+#define __WINCE_DEFINED_DNS_WINS_DATA
+typedef struct DNS_WINS_DATA DNS_WINS_DATA;
+#endif /* __WINCE_DEFINED_DNS_WINS_DATA */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_DNS_WKS_DATA
+#define __WINCE_DEFINED_DNS_WKS_DATA
+typedef struct DNS_WKS_DATA DNS_WKS_DATA;
+#endif /* __WINCE_DEFINED_DNS_WKS_DATA */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_DOCHOSTUIINFO
 #define __WINCE_DEFINED_DOCHOSTUIINFO
@@ -1154,6 +1255,11 @@ typedef struct DecoderInitFlag DecoderInitFlag;
 #define __WINCE_DEFINED_DEVICESTATUS_E
 typedef struct DeviceStatus_e DeviceStatus_e;
 #endif /* __WINCE_DEFINED_DEVICESTATUS_E */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_DIRECTORYCLIENTREGPARAMS
+#define __WINCE_DEFINED_DIRECTORYCLIENTREGPARAMS
+typedef struct DirectoryClientRegParams DirectoryClientRegParams;
+#endif /* __WINCE_DEFINED_DIRECTORYCLIENTREGPARAMS */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_ELEMENT_TAG_ID
 #define __WINCE_DEFINED_ELEMENT_TAG_ID
@@ -2104,6 +2210,11 @@ typedef struct IReferenceClock IReferenceClock;
 #define __WINCE_DEFINED_IREMOTEDEVICE
 typedef struct IRemoteDevice IRemoteDevice;
 #endif /* __WINCE_DEFINED_IREMOTEDEVICE */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_IREMOTEUI_ARRAY
+#define __WINCE_DEFINED_IREMOTEUI_ARRAY
+typedef struct IRemoteUI_Array IRemoteUI_Array;
+#endif /* __WINCE_DEFINED_IREMOTEUI_ARRAY */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_IREPLNOTIFY
 #define __WINCE_DEFINED_IREPLNOTIFY
@@ -2424,11 +2535,81 @@ typedef struct IXMLDOMNode IXMLDOMNode;
 #define __WINCE_DEFINED_IDISPATCH_SPELLING
 typedef IDispatch Idispatch;
 #endif /* __WINCE_DEFINED_IDISPATCH_SPELLING */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_IEXDI2CLIENTAUTHORIZECONTINUATION
+#define __WINCE_DEFINED_IEXDI2CLIENTAUTHORIZECONTINUATION
+typedef struct IeXdi2ClientAuthorizeContinuation IeXdi2ClientAuthorizeContinuation;
+#endif /* __WINCE_DEFINED_IEXDI2CLIENTAUTHORIZECONTINUATION */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_IEXDI2CLIENTNOTIFYMEMCHG
+#define __WINCE_DEFINED_IEXDI2CLIENTNOTIFYMEMCHG
+typedef struct IeXdi2ClientNotifyMemChg IeXdi2ClientNotifyMemChg;
+#endif /* __WINCE_DEFINED_IEXDI2CLIENTNOTIFYMEMCHG */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_IEXDI2CLIENTNOTIFYRUNCHG
+#define __WINCE_DEFINED_IEXDI2CLIENTNOTIFYRUNCHG
+typedef struct IeXdi2ClientNotifyRunChg IeXdi2ClientNotifyRunChg;
+#endif /* __WINCE_DEFINED_IEXDI2CLIENTNOTIFYRUNCHG */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_IEXDI2CODEBP
+#define __WINCE_DEFINED_IEXDI2CODEBP
+typedef struct IeXdi2CodeBp IeXdi2CodeBp;
+#endif /* __WINCE_DEFINED_IEXDI2CODEBP */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_IEXDI2DATABP
+#define __WINCE_DEFINED_IEXDI2DATABP
+typedef struct IeXdi2DataBp IeXdi2DataBp;
+#endif /* __WINCE_DEFINED_IEXDI2DATABP */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_IEXDI2ENUMCODEBP
+#define __WINCE_DEFINED_IEXDI2ENUMCODEBP
+typedef struct IeXdi2EnumCodeBp IeXdi2EnumCodeBp;
+#endif /* __WINCE_DEFINED_IEXDI2ENUMCODEBP */
 /* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
 #ifndef __WINCE_DEFINED_IEXDI2ENUMCPUREGS
 #define __WINCE_DEFINED_IEXDI2ENUMCPUREGS
 typedef struct IeXdi2EnumCpuRegs IeXdi2EnumCpuRegs;
 #endif /* __WINCE_DEFINED_IEXDI2ENUMCPUREGS */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_IEXDI2EXEC
+#define __WINCE_DEFINED_IEXDI2EXEC
+typedef struct IeXdi2Exec IeXdi2Exec;
+#endif /* __WINCE_DEFINED_IEXDI2EXEC */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_IEXDI2MEM
+#define __WINCE_DEFINED_IEXDI2MEM
+typedef struct IeXdi2Mem IeXdi2Mem;
+#endif /* __WINCE_DEFINED_IEXDI2MEM */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_IEXDICLIENTNOTIFYMEMCHG
+#define __WINCE_DEFINED_IEXDICLIENTNOTIFYMEMCHG
+typedef struct IeXdiClientNotifyMemChg IeXdiClientNotifyMemChg;
+#endif /* __WINCE_DEFINED_IEXDICLIENTNOTIFYMEMCHG */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_IEXDICLIENTNOTIFYRUNCHG
+#define __WINCE_DEFINED_IEXDICLIENTNOTIFYRUNCHG
+typedef struct IeXdiClientNotifyRunChg IeXdiClientNotifyRunChg;
+#endif /* __WINCE_DEFINED_IEXDICLIENTNOTIFYRUNCHG */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_IEXDICODEBREAKPOINT
+#define __WINCE_DEFINED_IEXDICODEBREAKPOINT
+typedef struct IeXdiCodeBreakpoint IeXdiCodeBreakpoint;
+#endif /* __WINCE_DEFINED_IEXDICODEBREAKPOINT */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_IEXDIDATABREAKPOINT
+#define __WINCE_DEFINED_IEXDIDATABREAKPOINT
+typedef struct IeXdiDataBreakpoint IeXdiDataBreakpoint;
+#endif /* __WINCE_DEFINED_IEXDIDATABREAKPOINT */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_IEXDIENUMCODEBREAKPOINT
+#define __WINCE_DEFINED_IEXDIENUMCODEBREAKPOINT
+typedef struct IeXdiEnumCodeBreakpoint IeXdiEnumCodeBreakpoint;
+#endif /* __WINCE_DEFINED_IEXDIENUMCODEBREAKPOINT */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_IEXDIENUMDATABREAKPOINT
+#define __WINCE_DEFINED_IEXDIENUMDATABREAKPOINT
+typedef struct IeXdiEnumDataBreakpoint IeXdiEnumDataBreakpoint;
+#endif /* __WINCE_DEFINED_IEXDIENUMDATABREAKPOINT */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_IENUMSOAPMAPPERS
 #define __WINCE_DEFINED_IENUMSOAPMAPPERS
@@ -2494,6 +2675,11 @@ typedef struct LAYER_EVENT_INDICATION LAYER_EVENT_INDICATION;
 #define __WINCE_DEFINED_LAYER_INTERFACE
 typedef struct LAYER_INTERFACE LAYER_INTERFACE;
 #endif /* __WINCE_DEFINED_LAYER_INTERFACE */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_LDAP
+#define __WINCE_DEFINED_LDAP
+typedef struct LDAP LDAP;
+#endif /* __WINCE_DEFINED_LDAP */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_LOGFONTW
 #define __WINCE_DEFINED_LOGFONTW
@@ -2609,6 +2795,11 @@ typedef struct LPFNADDPROPSHEETPAGE LPFNADDPROPSHEETPAGE;
 #define __WINCE_DEFINED_LPMARSHAL
 typedef struct _MARSHAL *LPMARSHAL;
 #endif /* __WINCE_DEFINED_LPMARSHAL */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_LPMODULEENTRY32W
+#define __WINCE_DEFINED_LPMODULEENTRY32W
+typedef struct _MODULEENTRY32W *LPMODULEENTRY32W;
+#endif /* __WINCE_DEFINED_LPMODULEENTRY32W */
 /* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
 #ifndef __WINCE_DEFINED_LPOLEINPLACEFRAMEINFO
 #define __WINCE_DEFINED_LPOLEINPLACEFRAMEINFO
@@ -2629,11 +2820,21 @@ typedef struct _PAGESETUPDLG *LPPAGESETUPDLG;
 #define __WINCE_DEFINED_LPPRINTDLG
 typedef struct _PRINTDLG *LPPRINTDLG;
 #endif /* __WINCE_DEFINED_LPPRINTDLG */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_LPPROCESSENTRY32W
+#define __WINCE_DEFINED_LPPROCESSENTRY32W
+typedef struct _PROCESSENTRY32W *LPPROCESSENTRY32W;
+#endif /* __WINCE_DEFINED_LPPROCESSENTRY32W */
 /* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
 #ifndef __WINCE_DEFINED_LPPROPPAGEINFO
 #define __WINCE_DEFINED_LPPROPPAGEINFO
 typedef struct _PROPPAGEINFO *LPPROPPAGEINFO;
 #endif /* __WINCE_DEFINED_LPPROPPAGEINFO */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_LPSOCKADDR
+#define __WINCE_DEFINED_LPSOCKADDR
+typedef struct _SOCKADDR *LPSOCKADDR;
+#endif /* __WINCE_DEFINED_LPSOCKADDR */
 /* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
 #ifndef __WINCE_DEFINED_LPTRANSFER_NOTIFY_ROUTINE
 #define __WINCE_DEFINED_LPTRANSFER_NOTIFY_ROUTINE
@@ -2674,6 +2875,11 @@ typedef struct MEMID MEMID;
 #define __WINCE_DEFINED_MIB_ENTRY
 typedef struct MIB_ENTRY MIB_ENTRY;
 #endif /* __WINCE_DEFINED_MIB_ENTRY */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_MISC_EXDIACCESS_SERVICE_INFO
+#define __WINCE_DEFINED_MISC_EXDIACCESS_SERVICE_INFO
+typedef struct MISC_EXDIACCESS_SERVICE_INFO MISC_EXDIACCESS_SERVICE_INFO;
+#endif /* __WINCE_DEFINED_MISC_EXDIACCESS_SERVICE_INFO */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_MOVEUNIT_ACTION
 #define __WINCE_DEFINED_MOVEUNIT_ACTION
@@ -2759,6 +2965,11 @@ typedef struct ObexVariant ObexVariant;
 #define __WINCE_DEFINED_PCONFINFO
 typedef struct PCONFINFO PCONFINFO;
 #endif /* __WINCE_DEFINED_PCONFINFO */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_PDATA_WRAPPER
+#define __WINCE_DEFINED_PDATA_WRAPPER
+typedef struct _DATA_WRAPPER *PDATA_WRAPPER;
+#endif /* __WINCE_DEFINED_PDATA_WRAPPER */
 /* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
 #ifndef __WINCE_DEFINED_PDISK_INFO
 #define __WINCE_DEFINED_PDISK_INFO
@@ -2994,6 +3205,11 @@ typedef struct _SIGNALINFO *PSIGNALINFO;
 #define __WINCE_DEFINED_PSS_WINDOW_STATE
 typedef struct _SS_WINDOW_STATE *PSS_WINDOW_STATE;
 #endif /* __WINCE_DEFINED_PSS_WINDOW_STATE */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_PSECURITYFUNCTIONTABLE
+#define __WINCE_DEFINED_PSECURITYFUNCTIONTABLE
+typedef struct _SecurityFunctionTable *PSecurityFunctionTable;
+#endif /* __WINCE_DEFINED_PSECURITYFUNCTIONTABLE */
 /* DERIVED forward -- derived forward: no corpus page prints the struct body */
 #ifndef __WINCE_DEFINED_PTM_FIELD_DESC
 #define __WINCE_DEFINED_PTM_FIELD_DESC
@@ -3190,11 +3406,6 @@ typedef struct STRMBUF_CAPTURE_MODE STRMBUF_CAPTURE_MODE;
 typedef struct STRMBUF_PLAYBACK_TUNE_POLICY STRMBUF_PLAYBACK_TUNE_POLICY;
 #endif /* __WINCE_DEFINED_STRMBUF_PLAYBACK_TUNE_POLICY */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
-#ifndef __WINCE_DEFINED_SAMPLE
-#define __WINCE_DEFINED_SAMPLE
-typedef struct Sample Sample;
-#endif /* __WINCE_DEFINED_SAMPLE */
-/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_SCROLLBARINFOINTERNAL
 #define __WINCE_DEFINED_SCROLLBARINFOINTERNAL
 typedef struct ScrollBarInfoInternal ScrollBarInfoInternal;
@@ -3310,26 +3521,6 @@ typedef struct VIODIAGNOSTICINFO VIODIAGNOSTICINFO;
 typedef void VOID;
 #endif /* __WINCE_DEFINED_VOID */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
-#ifndef __WINCE_DEFINED_VERYLONGCLASSNAMEA
-#define __WINCE_DEFINED_VERYLONGCLASSNAMEA
-typedef struct VeryLongClassNameA VeryLongClassNameA;
-#endif /* __WINCE_DEFINED_VERYLONGCLASSNAMEA */
-/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
-#ifndef __WINCE_DEFINED_VERYLONGCLASSNAMEB
-#define __WINCE_DEFINED_VERYLONGCLASSNAMEB
-typedef struct VeryLongClassNameB VeryLongClassNameB;
-#endif /* __WINCE_DEFINED_VERYLONGCLASSNAMEB */
-/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
-#ifndef __WINCE_DEFINED_VERYLONGCLASSNAMEC
-#define __WINCE_DEFINED_VERYLONGCLASSNAMEC
-typedef struct VeryLongClassNameC VeryLongClassNameC;
-#endif /* __WINCE_DEFINED_VERYLONGCLASSNAMEC */
-/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
-#ifndef __WINCE_DEFINED_VERYLONGCLASSNAMED
-#define __WINCE_DEFINED_VERYLONGCLASSNAMED
-typedef struct VeryLongClassNameD VeryLongClassNameD;
-#endif /* __WINCE_DEFINED_VERYLONGCLASSNAMED */
-/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_VOIPMGRPARAMETERS
 #define __WINCE_DEFINED_VOIPMGRPARAMETERS
 typedef struct VoIPMgrParameters VoIPMgrParameters;
@@ -3414,11 +3605,11 @@ typedef struct WSD_URI_LIST WSD_URI_LIST;
 #define __WINCE_DEFINED_WAVEFORMATEX_SPELLING
 typedef WAVEFORMATEX WaveFormatEx;
 #endif /* __WINCE_DEFINED_WAVEFORMATEX_SPELLING */
-/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
-#ifndef __WINCE_DEFINED_Z
-#define __WINCE_DEFINED_Z
-typedef struct Z Z;
-#endif /* __WINCE_DEFINED_Z */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED_ZONEATTRIBUTES
+#define __WINCE_DEFINED_ZONEATTRIBUTES
+typedef struct ZONEATTRIBUTES ZONEATTRIBUTES;
+#endif /* __WINCE_DEFINED_ZONEATTRIBUTES */
 /* DERIVED forward -- derived forward: ATL map entry; body no corpus page prints */
 #ifndef __WINCE_DEFINED__ATL_INTMAP_ENTRY
 #define __WINCE_DEFINED__ATL_INTMAP_ENTRY
@@ -3429,11 +3620,21 @@ typedef struct _ATL_INTMAP_ENTRY _ATL_INTMAP_ENTRY;
 #define __WINCE_DEFINED__FRAGNODE
 typedef struct _FRAGNODE _FRAGNODE;
 #endif /* __WINCE_DEFINED__FRAGNODE */
+/* DERIVED forward -- worklist auto */
+#ifndef __WINCE_DEFINED__INTERNET_BUFFERS
+#define __WINCE_DEFINED__INTERNET_BUFFERS
+typedef struct _INTERNET_BUFFERS _INTERNET_BUFFERS;
+#endif /* __WINCE_DEFINED__INTERNET_BUFFERS */
 /* DERIVED forward -- derived forward: no corpus page prints the type body */
 #ifndef __WINCE_DEFINED___POSITION
 #define __WINCE_DEFINED___POSITION
 typedef struct __POSITION __POSITION;
 #endif /* __WINCE_DEFINED___POSITION */
+/* DERIVED forward -- real typedef in the winsock/win32 shared surface */
+#ifndef __WINCE_DEFINED_BT_ADDR
+#define __WINCE_DEFINED_BT_ADDR
+typedef ULONGLONG bt_addr;
+#endif /* __WINCE_DEFINED_BT_ADDR */
 /* DERIVED forward -- derived placeholder: body no corpus page prints as one block */
 #ifndef __WINCE_DEFINED_BYTE
 #define __WINCE_DEFINED_BYTE
@@ -3454,6 +3655,11 @@ typedef void *hHREPLFLD;
 #define __WINCE_DEFINED_HPNDEVICE
 typedef struct hPNDevice hPNDevice;
 #endif /* __WINCE_DEFINED_HPNDEVICE */
+/* DERIVED forward -- misspelled lowercase variant of LDAP */
+#ifndef __WINCE_DEFINED_LDAP_SPELLING
+#define __WINCE_DEFINED_LDAP_SPELLING
+LDAP
+#endif /* __WINCE_DEFINED_LDAP_SPELLING */
 /* DERIVED forward -- derived placeholder: body no corpus page prints as one block */
 #ifndef __WINCE_DEFINED_LPTRANSPORTFOLDERINFO
 #define __WINCE_DEFINED_LPTRANSPORTFOLDERINFO
@@ -3504,5 +3710,20 @@ typedef struct ppPNDEVICE ppPNDEVICE;
 #define __WINCE_DEFINED_SMISINPUTENUM
 typedef struct smIsInputEnum smIsInputEnum;
 #endif /* __WINCE_DEFINED_SMISINPUTENUM */
+/* DERIVED forward -- real typedef in the winsock/win32 shared surface */
+#ifndef __WINCE_DEFINED_U_CHAR
+#define __WINCE_DEFINED_U_CHAR
+typedef unsigned char u_char;
+#endif /* __WINCE_DEFINED_U_CHAR */
+/* DERIVED forward -- real typedef in the winsock/win32 shared surface */
+#ifndef __WINCE_DEFINED_U_LONG
+#define __WINCE_DEFINED_U_LONG
+typedef unsigned long u_long;
+#endif /* __WINCE_DEFINED_U_LONG */
+/* DERIVED forward -- real typedef in the winsock/win32 shared surface */
+#ifndef __WINCE_DEFINED_U_SHORT
+#define __WINCE_DEFINED_U_SHORT
+typedef unsigned short u_short;
+#endif /* __WINCE_DEFINED_U_SHORT */
 
 #endif /* _WINDEF_ */

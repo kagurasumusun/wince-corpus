@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 171 constants, 12 declarations, 0 outlines, 1 base types, 0 extra macros, 0 extra decls
+ * 171 constants, 12 declarations, 0 outlines, 1 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _SHELLAPI_
 #define _SHELLAPI_
@@ -270,7 +270,7 @@ typedef struct _SHELLEXECUTEINFO {
  LPCSTR lpDirectory;
  int nShow;
  HINSTANCE hInstApp;
- 
+
  LPVOID lpIDList;
  LPCSTR lpClass;
  HKEY hkeyClass;
@@ -294,5 +294,14 @@ HICON ExtractIconEx(LPCTSTR lpszFile,
  HICON FAR* phiconSmall,
  UINT nIcons);
 #endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* function */
+VOID WINAPI ShellExecuteEx(LPSHELLEXECUTEINFO lpExecInfo);
+VOID WINAPI Shell_NotifyIcon(DWORD dwMessage, PNOTIFYICONDATA pnid);
 
 #endif /* _SHELLAPI_ */

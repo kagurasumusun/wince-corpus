@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 596 constants, 109 declarations, 5 outlines, 0 base types, 0 extra macros, 11 extra decls
+ * 596 constants, 174 declarations, 5 outlines, 0 base types, 0 extra macros, 10 extra decls
  */
 #ifndef _WINCRYPT_
 #define _WINCRYPT_
@@ -623,7 +623,7 @@ typedef struct _CRYPT_OID_INFO {
  ALG_ID Algid;
  DWORD dwLength;
  };
- CRYPT_DATA_BLOB ExtraInfo;
+ /* DERIVED member omitted -- type body unprinted: CRYPT_DATA_BLOB ExtraInfo; */
 } CRYPT_OID_INFO, *PCRYPT_OID_INFO;
 typedef const CRYPT_OID_INFO CCRYPT_OID_INFO, *PCCRYPT_OID_INFO;
 
@@ -802,6 +802,27 @@ typedef struct _CRYPT_OID_FUNC_ENTRY {
 #endif /* __WINCE_DEFINED_CRYPT_OID_FUNC_ENTRY */
 #endif /* __WINCE_DEFINED__CRYPT_OID_FUNC_ENTRY */
 
+/* CTL_USAGE  [struct; shared] */
+#ifndef __WINCE_DEFINED__CTL_USAGE
+#define __WINCE_DEFINED__CTL_USAGE
+#ifndef __WINCE_DEFINED_CTL_USAGE
+#define __WINCE_DEFINED_CTL_USAGE
+#ifndef __WINCE_DEFINED_PCTL_USAGE
+#define __WINCE_DEFINED_PCTL_USAGE
+#ifndef __WINCE_DEFINED_CERT_ENHKEY_USAGE
+#define __WINCE_DEFINED_CERT_ENHKEY_USAGE
+#ifndef __WINCE_DEFINED_PCERT_ENHKEY_USAGE
+#define __WINCE_DEFINED_PCERT_ENHKEY_USAGE
+typedef struct _CTL_USAGE {
+ DWORD cUsageIdentifier;
+ LPSTR* rgpszUsageIdentifier;
+} CTL_USAGE, *PCTL_USAGE, CERT_ENHKEY_USAGE, *PCERT_ENHKEY_USAGE;
+#endif /* __WINCE_DEFINED_PCERT_ENHKEY_USAGE */
+#endif /* __WINCE_DEFINED_CERT_ENHKEY_USAGE */
+#endif /* __WINCE_DEFINED_PCTL_USAGE */
+#endif /* __WINCE_DEFINED_CTL_USAGE */
+#endif /* __WINCE_DEFINED__CTL_USAGE */
+
 /* HCRYPTHASH  [typedef; ce-only] */
 #ifndef __WINCE_DEFINED_HCRYPTHASH
 #define __WINCE_DEFINED_HCRYPTHASH
@@ -878,6 +899,27 @@ typedef struct _PROV_ENUMALGS_EX {
 #define __WINCE_DEFINED_PPROV_ENUMALGS_EX
 typedef PROV_ENUMALGS_EX *PPROV_ENUMALGS_EX, *LPPROV_ENUMALGS_EX;
 #endif /* __WINCE_DEFINED_PPROV_ENUMALGS_EX */
+
+/* PUBLICKEYSTRUC  [struct; shared] */
+#ifndef __WINCE_DEFINED__PUBLICKEYSTRUC
+#define __WINCE_DEFINED__PUBLICKEYSTRUC
+#ifndef __WINCE_DEFINED_PUBLICKEYSTRUC
+#define __WINCE_DEFINED_PUBLICKEYSTRUC
+#ifndef __WINCE_DEFINED_BLOBHEADER
+#define __WINCE_DEFINED_BLOBHEADER
+typedef struct _PUBLICKEYSTRUC {
+ BYTE bType;
+ BYTE bVersion;
+ WORD reserved;
+ ALG_ID aiKeyAlg;
+} BLOBHEADER, PUBLICKEYSTRUC;
+#endif /* __WINCE_DEFINED_BLOBHEADER */
+#endif /* __WINCE_DEFINED_PUBLICKEYSTRUC */
+#endif /* __WINCE_DEFINED__PUBLICKEYSTRUC */
+#ifndef __WINCE_DEFINED_PPUBLICKEYSTRUC
+#define __WINCE_DEFINED_PPUBLICKEYSTRUC
+typedef PUBLICKEYSTRUC *PPUBLICKEYSTRUC, *LPPUBLICKEYSTRUC;
+#endif /* __WINCE_DEFINED_PPUBLICKEYSTRUC */
 
 /* RSAPUBKEY  [struct; shared] */
 #ifndef __WINCE_DEFINED__RSAPUBKEY
@@ -1012,14 +1054,226 @@ typedef struct _CRYPT_KEY_PROV_INFO {
 typedef DWORD SECURITY_INFORMATION;
 #endif /* __WINCE_DEFINED_SECURITY_INFORMATION */
 
+/* CRYPT_INTEGER_BLOB  [extra struct] */
+#ifndef __WINCE_DEFINED__CRYPTOAPI_BLOB
+#define __WINCE_DEFINED__CRYPTOAPI_BLOB
+#ifndef __WINCE_DEFINED_CRYPT_INTEGER_BLOB
+#define __WINCE_DEFINED_CRYPT_INTEGER_BLOB
+#ifndef __WINCE_DEFINED_PCRYPT_INTEGER_BLOB
+#define __WINCE_DEFINED_PCRYPT_INTEGER_BLOB
+#ifndef __WINCE_DEFINED_CRYPT_UINT_BLOB
+#define __WINCE_DEFINED_CRYPT_UINT_BLOB
+#ifndef __WINCE_DEFINED_PCRYPT_UINT_BLOB
+#define __WINCE_DEFINED_PCRYPT_UINT_BLOB
+#ifndef __WINCE_DEFINED_CRYPT_OBJID_BLOB
+#define __WINCE_DEFINED_CRYPT_OBJID_BLOB
+#ifndef __WINCE_DEFINED_PCRYPT_OBJID_BLOB
+#define __WINCE_DEFINED_PCRYPT_OBJID_BLOB
+#ifndef __WINCE_DEFINED_CERT_NAME_BLOB
+#define __WINCE_DEFINED_CERT_NAME_BLOB
+#ifndef __WINCE_DEFINED_PCERT_NAME_BLOB
+#define __WINCE_DEFINED_PCERT_NAME_BLOB
+#ifndef __WINCE_DEFINED_CERT_RDN_VALUE_BLOB
+#define __WINCE_DEFINED_CERT_RDN_VALUE_BLOB
+#ifndef __WINCE_DEFINED_PCERT_RDN_VALUE_BLOB
+#define __WINCE_DEFINED_PCERT_RDN_VALUE_BLOB
+#ifndef __WINCE_DEFINED_CERT_BLOB
+#define __WINCE_DEFINED_CERT_BLOB
+#ifndef __WINCE_DEFINED_PCERT_BLOB
+#define __WINCE_DEFINED_PCERT_BLOB
+#ifndef __WINCE_DEFINED_CRL_BLOB
+#define __WINCE_DEFINED_CRL_BLOB
+#ifndef __WINCE_DEFINED_PCRL_BLOB
+#define __WINCE_DEFINED_PCRL_BLOB
+#ifndef __WINCE_DEFINED_DATA_BLOB
+#define __WINCE_DEFINED_DATA_BLOB
+#ifndef __WINCE_DEFINED_PDATA_BLOB
+#define __WINCE_DEFINED_PDATA_BLOB
+#ifndef __WINCE_DEFINED_CRYPT_DATA_BLOB
+#define __WINCE_DEFINED_CRYPT_DATA_BLOB
+#ifndef __WINCE_DEFINED_PCRYPT_DATA_BLOB
+#define __WINCE_DEFINED_PCRYPT_DATA_BLOB
+#ifndef __WINCE_DEFINED_CRYPT_HASH_BLOB
+#define __WINCE_DEFINED_CRYPT_HASH_BLOB
+#ifndef __WINCE_DEFINED_PCRYPT_HASH_BLOB
+#define __WINCE_DEFINED_PCRYPT_HASH_BLOB
+#ifndef __WINCE_DEFINED_CRYPT_DIGEST_BLOB
+#define __WINCE_DEFINED_CRYPT_DIGEST_BLOB
+#ifndef __WINCE_DEFINED_PCRYPT_DIGEST_BLOB
+#define __WINCE_DEFINED_PCRYPT_DIGEST_BLOB
+#ifndef __WINCE_DEFINED_CRYPT_DER_BLOB
+#define __WINCE_DEFINED_CRYPT_DER_BLOB
+#ifndef __WINCE_DEFINED_PCRYPT_DER_BLOB
+#define __WINCE_DEFINED_PCRYPT_DER_BLOB
+#ifndef __WINCE_DEFINED_CRYPT_ATTR_BLOB
+#define __WINCE_DEFINED_CRYPT_ATTR_BLOB
+#ifndef __WINCE_DEFINED_PCRYPT_ATTR_BLOB
+#define __WINCE_DEFINED_PCRYPT_ATTR_BLOB
+typedef struct _CRYPTOAPI_BLOB {
+ DWORD cbData;
+ BYTE* pbData;
+} CRYPT_INTEGER_BLOB, *PCRYPT_INTEGER_BLOB,
+CRYPT_UINT_BLOB, *PCRYPT_UINT_BLOB,
+CRYPT_OBJID_BLOB, *PCRYPT_OBJID_BLOB,
+CERT_NAME_BLOB,*PCERT_NAME_BLOB,
+CERT_RDN_VALUE_BLOB, *PCERT_RDN_VALUE_BLOB,
+CERT_BLOB, *PCERT_BLOB,
+CRL_BLOB,*PCRL_BLOB,
+DATA_BLOB, *PDATA_BLOB,
+CRYPT_DATA_BLOB, *PCRYPT_DATA_BLOB,
+CRYPT_HASH_BLOB, *PCRYPT_HASH_BLOB,
+CRYPT_DIGEST_BLOB,*PCRYPT_DIGEST_BLOB,
+CRYPT_DER_BLOB,*PCRYPT_DER_BLOB,
+CRYPT_ATTR_BLOB, *PCRYPT_ATTR_BLOB;
+#endif /* __WINCE_DEFINED_PCRYPT_ATTR_BLOB */
+#endif /* __WINCE_DEFINED_CRYPT_ATTR_BLOB */
+#endif /* __WINCE_DEFINED_PCRYPT_DER_BLOB */
+#endif /* __WINCE_DEFINED_CRYPT_DER_BLOB */
+#endif /* __WINCE_DEFINED_PCRYPT_DIGEST_BLOB */
+#endif /* __WINCE_DEFINED_CRYPT_DIGEST_BLOB */
+#endif /* __WINCE_DEFINED_PCRYPT_HASH_BLOB */
+#endif /* __WINCE_DEFINED_CRYPT_HASH_BLOB */
+#endif /* __WINCE_DEFINED_PCRYPT_DATA_BLOB */
+#endif /* __WINCE_DEFINED_CRYPT_DATA_BLOB */
+#endif /* __WINCE_DEFINED_PDATA_BLOB */
+#endif /* __WINCE_DEFINED_DATA_BLOB */
+#endif /* __WINCE_DEFINED_PCRL_BLOB */
+#endif /* __WINCE_DEFINED_CRL_BLOB */
+#endif /* __WINCE_DEFINED_PCERT_BLOB */
+#endif /* __WINCE_DEFINED_CERT_BLOB */
+#endif /* __WINCE_DEFINED_PCERT_RDN_VALUE_BLOB */
+#endif /* __WINCE_DEFINED_CERT_RDN_VALUE_BLOB */
+#endif /* __WINCE_DEFINED_PCERT_NAME_BLOB */
+#endif /* __WINCE_DEFINED_CERT_NAME_BLOB */
+#endif /* __WINCE_DEFINED_PCRYPT_OBJID_BLOB */
+#endif /* __WINCE_DEFINED_CRYPT_OBJID_BLOB */
+#endif /* __WINCE_DEFINED_PCRYPT_UINT_BLOB */
+#endif /* __WINCE_DEFINED_CRYPT_UINT_BLOB */
+#endif /* __WINCE_DEFINED_PCRYPT_INTEGER_BLOB */
+#endif /* __WINCE_DEFINED_CRYPT_INTEGER_BLOB */
+#endif /* __WINCE_DEFINED__CRYPTOAPI_BLOB */
+
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
+
+/* CryptContextAddRef  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
+BOOL WINAPI CryptContextAddRef(HCRYPTPROV hProv,
+ DWORD* pdwReserved,
+ DWORD dwFlags);
+
+/* CryptDuplicateHash  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
+BOOL WINAPI CryptDuplicateHash(HCRYPTHASH hHash,
+ DWORD* pdwReserved,
+ DWORD dwFlags,
+ HCRYPTHASH* phHash);
+
+/* CryptDuplicateKey  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
+/* CONFLICTING PROTOTYPE -- kept the first CryptDuplicateHash() form; another page prints: BOOL WINAPI CryptDuplicateHash(HCRYPTKEY hKey, DWORD* pdwReserved, DWORD dwFlags, HCRYPTKEY* phKey); */
+
+/* CryptEnumProviders  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib; A/W CryptEnumProvidersA,CryptEnumProvidersW (CE is W-side)] */
+BOOL WINAPI CryptEnumProviders(DWORD dwIndex,
+ DWORD* pdwReserved,
+ DWORD dwFlags,
+ DWORD* pdwProvType,
+ LPTSTR pszProvName,
+ DWORD* pcbProvName);
+
+/* CryptEnumProviderTypes  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib; A/W CryptEnumProviderTypesA,CryptEnumProviderTypesW (CE is W-side)] */
+BOOL WINAPI CryptEnumProviderTypes(DWORD dwIndex,
+ DWORD* pdwReserved,
+ DWORD dwFlags,
+ DWORD* pdwProvType,
+ LPTSTR pszTypeName,
+ DWORD* pcbTypeName);
+
+/* CryptGetDefaultProvider  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib; A/W CryptGetDefaultProviderA,CryptGetDefaultProviderW (CE is W-side)] */
+BOOL WINAPI CryptGetDefaultProvider(DWORD dwProvType,
+ DWORD* pdwReserved,
+ DWORD dwFlags,
+ LPTSTR pszProvName,
+ DWORD* pcbProvName);
+
+/* CryptGetProvParam  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
+BOOL WINAPI CryptGetProvParam(HCRYPTPROV hProv,
+ DWORD dwParam,
+ BYTE* pbData,
+ DWORD* pdwDataLen,
+ DWORD dwFlags);
+
+/* CryptGetUserKey  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
+BOOL WINAPI CryptGetUserKey(HCRYPTPROV hProv,
+ DWORD dwKeySpec,
+ HCRYPTKEY* phUserKey);
+
+/* CryptHashData  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
+BOOL WINAPI CryptHashData(HCRYPTHASH hHash,
+ BYTE* pbData,
+ DWORD dwDataLen,
+ DWORD dwFlags);
+
+/* CryptHashSessionKey  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
+BOOL WINAPI CryptHashSessionKey(HCRYPTHASH hHash,
+ HCRYPTKEY hKey,
+ DWORD dwFlags);
+
+/* CryptImportKey  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
+BOOL WINAPI CryptImportKey(HCRYPTPROV hProv,
+ BYTE* pbData,
+ DWORD dwDataLen,
+ HCRYPTKEY hPubKey,
+ DWORD dwFlags,
+ HCRYPTKEY* phKey);
+
+/* CryptReleaseContext  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
+BOOL WINAPI CryptReleaseContext(HCRYPTPROV hProv,
+ DWORD dwFlags);
+
+/* CryptSetHashParam  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
+BOOL WINAPI CryptSetHashParam(HCRYPTHASH hHash,
+ DWORD dwParam,
+ BYTE* pbData,
+ DWORD dwFlags);
+
+/* CryptSetKeyParam  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib] */
+BOOL WINAPI CryptSetKeyParam(HCRYPTKEY hKey,
+ DWORD dwParam,
+ BYTE* pbData,
+ DWORD dwFlags);
+
+/* CryptSetProviderEx  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib; A/W CryptSetProviderExA,CryptSetProviderExW (CE is W-side)] */
+BOOL WINAPI CryptSetProviderEx(LPCTSTR pszProvName,
+ DWORD dwProvType,
+ DWORD* pdwReserved,
+ DWORD dwFlags);
+
+/* CryptSignHash  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib; A/W CryptSignHashA,CryptSignHashW (CE is W-side)] */
+BOOL WINAPI CryptSignHash(HCRYPTHASH hHash,
+ DWORD dwKeySpec,
+ LPCTSTR sDescription,
+ DWORD dwFlags,
+ BYTE* pbSignature,
+ DWORD* pdwSigLen);
+
+/* CryptVerifySignature  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Cryptapi.lib, cryptapi.lib; A/W CryptVerifySignatureA,CryptVerifySignatureW (CE is W-side)] */
+BOOL WINAPI CryptVerifySignature(HCRYPTHASH hHash,
+ BYTE* pbSignature,
+ DWORD dwSigLen,
+ HCRYPTKEY hPubKey,
+ LPCTSTR sDescription,
+ DWORD dwFlags);
+#endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
 
 /* CertAlgIdToOID  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
 LPCSTR WINAPI CertAlgIdToOID(DWORD dwAlgId);
+
+/* CertCompareIntegerBlob  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
+BOOL WINAPI CertCompareIntegerBlob(PCRYPT_INTEGER_BLOB pInt1,
+ PCRYPT_INTEGER_BLOB pInt2);
 
 /* CertifyModule  [function; ce-only; CE 3.0..699; Loadauth.lib, loadauth.lib; heuristic-prefix] */
 BOOL CertifyModule(PBYTE pbBlock,
@@ -1031,12 +1285,76 @@ BOOL CertifyModuleFinal(PBYTE* ppbSignData,
 
 /* CertifyModuleInit  [function; ce-only; CE 3.0..699; Loadauth.lib, loadauth.lib; heuristic-prefix] */
 BOOL CertifyModuleInit (void);
+
+/* CertOIDToAlgId  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
+DWORD WINAPI CertOIDToAlgId(LPCSTR pszObjId);
+
+/* CertStrToName  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib; A/W CertStrToNameA,CertStrToNameW (CE is W-side)] */
+BOOL WINAPI CertStrToName(DWORD dwCertEncodingType,
+ LPCTSTR pszX500,
+ DWORD dwStrType,
+ void* pvReserved,
+ BYTE* pbEncoded,
+ DWORD* pcbEncoded,
+ LPCTSTR* ppszError);
+
+/* CryptCreateKeyIdentifierFromCSP  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
+BOOL WINAPI CryptCreateKeyIdentifierFromCSP(DWORD dwCertEncodingType,
+ LPCSTR pszPubKeyOID,
+ const PUBLICKEYSTRUC* pPubKeyStruc,
+ DWORD cbPubKeyStruc,
+ DWORD dwFlags,
+ void* pvReserved,
+ BYTE* pbHash,
+ DWORD* pcbHash);
+
+/* CryptEncodeObjectEx  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
+BOOL WINAPI CryptEncodeObjectEx(DWORD dwCertEncodingType,
+ LPCSTR lpszStructType,
+ const void* pvStructInfo,
+ DWORD dwFlags,
+ PCRYPT_ENCODE_PARA pEncodePara,
+ void* pvEncoded,
+ DWORD* pcbEncoded);
+
+/* CryptHashCertificate  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
+BOOL WINAPI CryptHashCertificate(HCRYPTPROV hCryptProv,
+ ALG_ID Algid,
+ DWORD dwFlags,
+ const BYTE* pbEncoded,
+ DWORD cbEncoded,
+ BYTE* pbComputedHash,
+ DWORD* pcbComputedHash);
+
+/* CryptHashToBeSigned  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
+BOOL WINAPI CryptHashToBeSigned(HCRYPTPROV hCryptProv,
+ DWORD dwCertEncodingType,
+ const BYTE* pbEncoded,
+ DWORD cbEncoded,
+ BYTE* pbComputedHash,
+ DWORD* pcbComputedHash);
+
+/* CryptInstallOIDFunctionAddress  [function; shared; CE 3.0..699; Crypt32.lib, crypt32.lib] */
+BOOL WINAPI CryptInstallOIDFunctionAddress(HMODULE hModule,
+ DWORD dwEncodingType,
+ LPCSTR pszFuncName,
+ DWORD cFuncEntry,
+ CRYPT_OID_FUNC_ENTRY rgFuncEntry,
+ DWORD dwFlags);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* CryptFindLocalizedName  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 LPCWSTR WINAPI CryptFindLocalizedName(LPCWSTR pwszCryptName);
+
+/* CryptMsgCalculateEncodedLength  [function; shared; CE 5.0..699; Coredll.lib, crypt32.lib] */
+DWORD WINAPI CryptMsgCalculateEncodedLength(DWORD dwMsgEncodingType,
+ DWORD dwFlags,
+ DWORD dwMsgType,
+ const void* pvMsgEncodeInfo,
+ LPSTR pszInnerContentObjID,
+ DWORD cbData);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================
@@ -1045,6 +1363,9 @@ LPCWSTR WINAPI CryptFindLocalizedName(LPCWSTR pwszCryptName);
  * ================================================================ */
 
 /* function */
+VOID WINAPI CertEnumStoreLocationCallback(LPCWSTR pvszStoreLoocations, DWORD dwFlags, void *pvReserved, void *pvArg);
+VOID WINAPI CertEnumSystemStoreCallback(const void *pvSystemStore, DWORD dwFlags, PCERT_SYSTEM_STORE_INFO pStoreInfo, void *pvReserved, void *pvArg);
+VOID WINAPI CmsgStreamOutputCallback(const void *pvArg);
 BOOL FuncReturnhWnd(DWORD *phWnd);
 BOOL FuncVerifyImage(LPCSTR lpszImage, BYTE *pSigData);
 

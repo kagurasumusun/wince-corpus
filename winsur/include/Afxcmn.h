@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 40 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 42 extra decls
  */
 #ifndef _AFXCMN_
 #define _AFXCMN_
@@ -21,6 +21,7 @@ BOOL Arrange(UINT nCode);
 BOOL DeleteAllItems();
 BOOL DeleteColumn(int nCol);
 BOOL DeleteImageList();
+BOOL DeleteItem(int nPos);
 static BOOL DragShowNolock(BOOL bShow);
 #ifdef __cplusplus
 CEdit* EditLabel(int nItem);

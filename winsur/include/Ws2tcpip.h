@@ -56,8 +56,8 @@ struct addrinfo {
 #define __WINCE_DEFINED_IN6_ADDR
 struct in6_addr {
  union {
- u_char Byte[16];
- u_short Word[8];
+ /* DERIVED member omitted -- type body unprinted: u_char Byte[16]; */
+ /* DERIVED member omitted -- type body unprinted: u_short Word[8]; */
  } u;
 };
 #endif /* __WINCE_DEFINED_IN6_ADDR */
@@ -67,10 +67,10 @@ struct in6_addr {
 #define __WINCE_DEFINED_SOCKADDR_IN6
 struct sockaddr_in6 {
  short sin6_family;
- u_short sin6_port;
- u_long sin6_flowinfo;
+ /* DERIVED member omitted -- type body unprinted: u_short sin6_port; */
+ /* DERIVED member omitted -- type body unprinted: u_long sin6_flowinfo; */
  struct in6_addr sin6_addr;
- u_long sin6_scope_id;
+ /* DERIVED member omitted -- type body unprinted: u_long sin6_scope_id; */
 };
 #endif /* __WINCE_DEFINED_SOCKADDR_IN6 */
 
@@ -79,7 +79,7 @@ struct sockaddr_in6 {
 #define __WINCE_DEFINED_SOCKADDR_IN6
 #ifndef __WINCE_DEFINED_SIN6_SCOPE_ID
 #define __WINCE_DEFINED_SIN6_SCOPE_ID
-struct sockaddr_in6 {short sin6_family;u_short sin6_port;u_longsin6_flowinfo;struct in6_addrsin6_addr;u_long sin6_scope_id;};
+struct sockaddr_in6 {short sin6_family;/* DERIVED member omitted -- type body unprinted: u_short sin6_port; */u_longsin6_flowinfo;struct in6_addrsin6_addr;/* DERIVED member omitted -- type body unprinted: u_long sin6_scope_id; */};
 #endif /* __WINCE_DEFINED_SIN6_SCOPE_ID */
 #endif /* __WINCE_DEFINED_SOCKADDR_IN6 */
 

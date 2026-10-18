@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 686 constants, 328 declarations, 9 outlines, 0 base types, 0 extra macros, 14 extra decls
+ * 686 constants, 332 declarations, 9 outlines, 0 base types, 0 extra macros, 14 extra decls
  */
 #ifndef _WINBASE_
 #define _WINBASE_
@@ -1448,6 +1448,11 @@ BOOL DeviceIoControl(HANDLE hDevice,
  LPDWORD lpBytesReturned,
  LPOVERLAPPED lpOverlapped);
 
+/* DllMain  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib] */
+BOOL WINAPI DllMain(HANDLE hinstDLL,
+ DWORD dwReason,
+ LPVOID lpvReserved);
+
 /* EnterCriticalSection  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coremain.lib, coremain.lib] */
 void EnterCriticalSection(LPCRITICAL_SECTION lpCriticalSection);
 
@@ -2037,6 +2042,9 @@ HANDLE FindFirstFile(LPCTSTR lpFileName,
 BOOL FindNextFile(HANDLE hFindFile,
  LPWIN32_FIND_DATA lpFindFileData);
 
+/* FlushFileBuffers  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsmain.lib, fsmain.lib] */
+BOOL WINAPI FlushFileBuffers(HANDLE hFile);
+
 /* FlushViewOfFile  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
 BOOL FlushViewOfFile(LPCVOID lpBaseAddress,
  DWORD dwNumberOfBytesToFlush);
@@ -2228,6 +2236,9 @@ LPVOID CeZeroPointer(LPVOID ptr);
 /* ConvertThreadToFiber  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 LPVOID WINAPI ConvertThreadToFiber(LPVOID lpParameter);
 
+/* DeleteFiber  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
+VOID WINAPI DeleteFiber(LPVOID lpFiber);
+
 /* DuplicateHandle  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
 BOOL DuplicateHandle(HANDLE hSourceProcessHandle,
  HANDLE hSourceHandle,
@@ -2338,6 +2349,9 @@ BOOL ResourceRequestEx (DWORD dwResId,
 
 /* StopDeviceNotifications  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL StopDeviceNotifications(HANDLE h);
+
+/* SwitchToFiber  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
+VOID WINAPI SwitchToFiber(LPVOID lpFiber);
 
 /* UnlockFileEx  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL UnlockFileEx(HANDLE hFile,

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WEBPROXY_
 #define _WEBPROXY_
@@ -38,8 +38,17 @@ typedef struct _PROXY_HTTP_INFORMATION {
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
+/* ProxyInitializeFilter  [function; ce-only; CE 5.0..699] */
+DWORD WINAPI ProxyInitializeFilter(PPROXY_HTTP_INFORMATION pInfo);
+
+/* ProxyNotifyAddrChange  [function; ce-only; CE 5.0..699] */
+DWORD WINAPI ProxyNotifyAddrChange(void);
+
 /* ProxySignalFilter  [function; ce-only; CE 5.0..699] */
 DWORD ProxySignalFilter(DWORD dwSignal);
+
+/* ProxyUninitializeFilter  [function; ce-only; CE 5.0..699] */
+DWORD WINAPI ProxyUninitializeFilter (void);
 #endif /* _WIN32_WCE */
 
 #endif /* _WEBPROXY_ */

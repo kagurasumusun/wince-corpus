@@ -51,7 +51,7 @@ float _CopyFloatFromInt32(___int32 arg1);
 __int32 _CopyInt32FromFloat(float arg1);
 
 /* _CopyInt64FromDouble  [function; ce-only; CE 4.0..699] */
-__int64 _CopyInt64FromDouble(double arg1);
+/* CONFLICTING PROTOTYPE -- kept the first _CopyInt64FromDouble() form; another page prints: __int64 _CopyInt64FromDouble(double arg1); */
 
 /* _ICacheRefresh  [function; ce-only; CE 4.0..699] */
 void __cdecl __ICacheRefresh(void *);

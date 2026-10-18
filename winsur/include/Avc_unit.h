@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 12 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 16 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _AVC_UNIT_
 #define _AVC_UNIT_
@@ -106,5 +106,24 @@ typedef struct {PVOID urs_RegistrationToken;} UNIT_RegisterSubunit_Response;
 #define __WINCE_DEFINED_PUNIT_REGISTERSUBUNIT_RESPONSE
 typedef UNIT_RegisterSubunit_Response *PUNIT_RegisterSubunit_Response, *LPUNIT_RegisterSubunit_Response;
 #endif /* __WINCE_DEFINED_PUNIT_REGISTERSUBUNIT_RESPONSE */
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 5.0..599 */
+
+/* UNIT_AllocateLocalPlugCB  [function; ce-only; CE 5.0..599; Avc_unit.lib] */
+NTSTATUS (*UNIT_AllocateLocalPlugCB)(PVOID Context, ULONG SubunitPlugID,ULONG Direction,UNIT_MediaType MediaType,ULONG MaximumThroughput,ULONG* PlugNumber,HANDLE* Plug);
+
+/* UNIT_ConnectToRemotePlugCB  [function; ce-only; CE 5.0..599; Avc_unit.lib] */
+NTSTATUS (*UNIT_ConnectToRemotePlugCB)(PVOID Context, HANDLE Plug,ULONG Direction,UNIT_MediaType MediaType,PVOID Request);
+
+/* UNIT_DisconnectFromRemotePlugCB  [function; ce-only; CE 5.0..599; Avc_unit.lib] */
+NTSTATUS (*UNIT_DisconnectFromRemotePlugCB)(PVOID Context, HANDLE Plug,PVOID Request);
+
+/* UNIT_FreeLocalPlugCB  [function; ce-only; CE 5.0..599; Avc_unit.lib] */
+NTSTATUS (*UNIT_FreeLocalPlugCB)(PVOID Context, HANDLE Plug);
+#endif /* _WIN32_WCE */
 
 #endif /* _AVC_UNIT_ */

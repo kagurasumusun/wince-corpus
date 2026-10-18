@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 3 constants, 229 declarations, 14 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 3 constants, 228 declarations, 14 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _RIL_
 #define _RIL_

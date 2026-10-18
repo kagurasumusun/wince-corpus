@@ -169,7 +169,7 @@ struct in_addr {
  union {
  struct { u_char s_b1,s_b2,s_b3,s_b4; } S_un_b;
  struct { u_short s_w1,s_w2; } S_un_w;
- u_long S_addr;
+ /* DERIVED member omitted -- type body unprinted: u_long S_addr; */
  } S_un;
 };
 #endif /* __WINCE_DEFINED_IN_ADDR */
@@ -187,8 +187,8 @@ char FAR* inet_ntoa(struct in_addr in);
 #ifndef __WINCE_DEFINED_LINGER
 #define __WINCE_DEFINED_LINGER
 struct linger {
- u_short l_onoff;
- u_short l_linger;
+ /* DERIVED member omitted -- type body unprinted: u_short l_onoff; */
+ /* DERIVED member omitted -- type body unprinted: u_short l_linger; */
 };
 #endif /* __WINCE_DEFINED_LINGER */
 #endif /* __WINCE_DEFINED_LINGER */
@@ -297,7 +297,7 @@ typedef SERVICE_TYPE_VALUE_ABS *PSERVICE_TYPE_VALUE_ABS, *LPSERVICE_TYPE_VALUE_A
 #ifndef __WINCE_DEFINED_SOCKADDR
 #define __WINCE_DEFINED_SOCKADDR
 struct sockaddr {
- u_short sa_family;
+ /* DERIVED member omitted -- type body unprinted: u_short sa_family; */
  char sa_data[14];
 };
 #endif /* __WINCE_DEFINED_SOCKADDR */
@@ -323,8 +323,8 @@ struct sockaddr_in{
 #ifndef __WINCE_DEFINED_SOCKADDR_IRDA
 #define __WINCE_DEFINED_SOCKADDR_IRDA
 struct sockaddr_irda {
- u_short irdaAddressFamily;
- u_char irdaDeviceID[4];
+ /* DERIVED member omitted -- type body unprinted: u_short irdaAddressFamily; */
+ /* DERIVED member omitted -- type body unprinted: u_char irdaDeviceID[4]; */
  char irdaServiceName[25];};
 #endif /* __WINCE_DEFINED_SOCKADDR_IRDA */
 #endif /* __WINCE_DEFINED_SOCKADDR_IRDA */
@@ -394,7 +394,7 @@ typedef TRANSMIT_FILE_BUFFERS *PTRANSMIT_FILE_BUFFERS, *LPTRANSMIT_FILE_BUFFERS;
 #ifndef __WINCE_DEFINED_WSABUF
 #define __WINCE_DEFINED_WSABUF
 typedef struct __WSABUF {
- u_long len;
+ /* DERIVED member omitted -- type body unprinted: u_long len; */
  char FAR* buf;
 } WSABUF, FAR* LPWSABUF;
 #endif /* __WINCE_DEFINED_WSABUF */

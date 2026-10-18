@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 146 constants, 42 declarations, 15 outlines, 0 base types, 0 extra macros, 7 extra decls
+ * 146 constants, 39 declarations, 15 outlines, 0 base types, 0 extra macros, 7 extra decls
  */
 #ifndef _WINLDAP_
 #define _WINLDAP_
@@ -209,7 +209,7 @@ typedef ULONG (_cdecl DEREFERENCECONNECTION)(PLDAP PrimaryConnection,
 /* LDAP  [typedef, struct; shared] */
 #ifndef __WINCE_DEFINED_LDAP
 #define __WINCE_DEFINED_LDAP
-typedef ldap LDAP, *PLDAP;
+typedef, ldap LDAP, *PLDAP;
 #endif /* __WINCE_DEFINED_LDAP */
 
 /* ldap_count_values_len  [struct, function; shared; Wldap32.lib, wldap32.lib] */

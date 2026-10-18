@@ -53,7 +53,7 @@ struct hostent {
 #define __WINCE_DEFINED_LINGER
 #ifndef __WINCE_DEFINED_L_LINGER
 #define __WINCE_DEFINED_L_LINGER
-struct linger { u_short l_onoff; u_short l_linger; };
+struct linger { /* DERIVED member omitted -- type body unprinted: u_short l_onoff; */ /* DERIVED member omitted -- type body unprinted: u_short l_linger; */ };
 #endif /* __WINCE_DEFINED_L_LINGER */
 #endif /* __WINCE_DEFINED_LINGER */
 

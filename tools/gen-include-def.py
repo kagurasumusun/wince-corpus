@@ -2976,6 +2976,16 @@ def type_mentions_unknown(text, local_names, self_name=None, macros=None):
             "CDECL", "STDCALL", "WINAPIV", "WINAPI_INLINE"}
     if self_name:
         skip.add(self_name)
+    # the typedef tail names (`} DNS_A_DATA, *PDNS_A_DATA;`) are the names
+    # BEING DEFINED here, not type mentions (the pointer alias matched the
+    # unknown-type pattern and dropped every `TYPE X, *PX;` body).
+    for tail in re.findall(
+            r"\}\s*([A-Za-z_]\w*(?:\s*,\s*\*?\s*[A-Za-z_]\w*)*)\s*[;]",
+            body):
+        skip.update(re.findall(r"[A-Za-z_]\w*", tail))
+    for tail in re.findall(
+            r"typedef\s+[\w\s\*]+?\s+([A-Za-z_]\w*)\s*;\s*$", body):
+        skip.add(tail)
     skip.update(re.findall(r"\b([A-Z][A-Z0-9_]*)\s*\(", body))
     # Incomplete structs cannot be non-pointer fields.
     if "{" in body:
@@ -3123,6 +3133,54 @@ def run_unified(args):
             reqs_of[record["entity"]].append(record)
     constants = list(load(CONSTANTS)) if os.path.exists(CONSTANTS) else []
     all_entities = list(load(ENTITIES))
+    # the whole-surface type universe: a declaration may reference a type
+    # ANY fragment defines -- fragment-local knowledge alone wrongly drops
+    # bodies whose members use another fragment's types (the DNS_*_DATA
+    # bodies reference IP4_ADDRESS from winsock).  Only names whose own
+    # declaration survives the quality filters count: a junk entity's name
+    # must not make a junk-referencing declaration "known".
+    # fixpoint: a name survives iff its OWN declaration is quality-clean
+    # and every type it mentions already survived (or is a constant/macro).
+    # The fixpoint -- not a flat quality pass -- is what the emission
+    # actually keeps, so junk-referencing decls stay out.
+    _uni_rows = list(load(DECLARATIONS))
+    try:
+        _uni_rows += [json.loads(ln) for ln in open(
+            os.path.join(KB, "harvest-declarations.jsonl"), encoding="utf-8")]
+    except OSError:
+        pass
+    try:
+        _uni_rows += [json.loads(ln) for ln in open(
+            os.path.join(KB, "extra-declarations.jsonl"), encoding="utf-8")]
+    except OSError:
+        pass
+    _uni_macros = {c.get("name") for c in constants if c.get("name")}
+    _uni_cands = []
+    for d in _uni_rows:
+        _nm = d.get("entity") if isinstance(d.get("entity"), str) else \
+            (d.get("name") or "")
+        _dc = d.get("declaration")
+        _tx = (_dc.get("text") if isinstance(_dc, dict) else _dc) \
+            or d.get("text") or ""
+        if not _nm or not _tx:
+            continue
+        if quality_filters.is_broken_c(_tx) \
+                or quality_filters.decl_unusable_for_c(_tx, _nm) \
+                or not quality_filters.is_c_toolchain_declaration(
+                    _tx, _nm, d.get("kind") or d.get("type") or ""):
+            continue
+        _uni_cands.append((_nm, _tx))
+    _GLOBAL_TYPE_UNIVERSE = set(_C_KNOWN_TYPES) | _uni_macros
+    _changed = True
+    while _changed:
+        _changed = False
+        for _nm, _tx in _uni_cands:
+            if _nm in _GLOBAL_TYPE_UNIVERSE:
+                continue
+            if not type_mentions_unknown(
+                    _tx, _GLOBAL_TYPE_UNIVERSE, _nm, _uni_macros):
+                _GLOBAL_TYPE_UNIVERSE.add(_nm)
+                _changed = True
     UNSUPPORTED.update(load_unsupported())
     links = load_constant_links()
     conflict_rows = load_constant_conflicts()

@@ -159,7 +159,7 @@ void __emit(const unsigned __int32 opcode);
  * ================================================================ */
 
 /* function */
-unsigned cdecl _CountLeadingZeros(longArg1);
+/* CONFLICTING PROTOTYPE -- kept the first _CountLeadingZeros() form; another page prints: unsigned cdecl _CountLeadingZeros(longArg1); */
 int _MoveFromCoprocessor(unsigned int coproc, unsigned int opcode1,unsigned int crn,unsigned int crm,unsigned int opcode2);
 int _MoveFromCoprocessor2(unsigned int coproc, unsigned int opcode1,unsigned int crn,unsigned int crm,unsigned int opcode2);
 

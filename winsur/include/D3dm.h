@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 26 constants, 0 declarations, 0 outlines, 0 base types, 13 extra macros, 51 extra decls
+ * 26 constants, 0 declarations, 0 outlines, 0 base types, 13 extra macros, 55 extra decls
  */
 #ifndef _D3DM_
 #define _D3DM_

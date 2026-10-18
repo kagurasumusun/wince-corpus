@@ -298,9 +298,7 @@ VOID SnmpUtilOctetsFree(AsnOctetString* pOctetsDst);
 VOID SnmpUtilOidFree(AsnObjectIdentifier* pOid);
 
 /* SnmpUtilOidNCmp  [function; shared; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
-VOID SnmpUtilOidFree(AsnObjectIdentifier* pOid1,
- AsnObjectIdentifier* pOid2,
- UINT nSubIds);
+/* CONFLICTING PROTOTYPE -- kept the first SnmpUtilOidFree() form; another page prints: VOID SnmpUtilOidFree(AsnObjectIdentifier* pOid1, AsnObjectIdentifier* pOid2, UINT nSubIds); */
 
 /* SnmpUtilOidToA  [function; shared; CE 3.0..699; Snmpapi.lib, snmpapi.lib] */
 LPSTR SnmpUtilOidToA(AsnObjectIdentifier Oid);

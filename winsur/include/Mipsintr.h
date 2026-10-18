@@ -43,9 +43,7 @@ void __cdecl _c_eq_sl(int,
  double2);
 
 /* _c_eq_sl  [function; ce-only; CE 4.0..499] */
-void __cdecl _c_eq_sl(int,
- double,
- float);
+/* CONFLICTING PROTOTYPE -- kept the first _c_eq_sl() form; another page prints: void __cdecl _c_eq_sl(int, double, float); */
 
 /* _c_eq_su  [function; ce-only; CE 4.0..499] */
 void __cdecl _c_eq_su(int,
@@ -68,9 +66,7 @@ void __cdecl _c_f_sl(int,
  double2);
 
 /* _c_f_sl  [function; ce-only; CE 4.0..499] */
-void __cdecl _c_f_sl(int,
- double,
- float);
+/* CONFLICTING PROTOTYPE -- kept the first _c_f_sl() form; another page prints: void __cdecl _c_f_sl(int, double, float); */
 
 /* _c_f_su  [function; ce-only; CE 4.0..499] */
 void __cdecl _c_f_su(int,

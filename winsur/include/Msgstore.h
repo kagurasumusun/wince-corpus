@@ -187,8 +187,7 @@ MailAtt * pma, BOOL bRetrieve);
 BOOL MailSetField (MailMsg*pmm, LPWSTR szName, LPCWSTR szVal);
 
 /* MailSetSort  [function; ce-only; CE 1.0..199, 2.11..2.12] */
-BOOL MailSetSort (HANDLE hMail, MAILSORTFIELD iSort,
-BOOL fAscending);
+/* CONFLICTING PROTOTYPE -- kept the first MailSetSort() form; another page prints: BOOL MailSetSort (HANDLE hMail, MAILSORTFIELD iSort, BOOL fAscending); */
 
 /* MailUpdate  [function; ce-only; CE 1.0..199, 2.11..2.12] */
 BOOL MailUpdate (HANDLE hMail, MailMsg* pmm, BOOL fDoAll);

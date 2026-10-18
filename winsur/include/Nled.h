@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
+ * 0 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _NLED_
 #define _NLED_
@@ -64,5 +64,13 @@ BOOL NLedDriverDllEntry(HANDLE hinstDll,
 DWORD fdwReason,
 LPVOID lpvReserved);
 #endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* function */
+VOID WINAPI NLedDriverDeInitialize(VOID);
 
 #endif /* _NLED_ */

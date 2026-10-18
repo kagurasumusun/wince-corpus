@@ -5,11 +5,36 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 20 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 22 declarations, 1 outlines, 0 base types, 7 extra macros, 1 extra decls
  */
 #ifndef _NETUI_
 #define _NETUI_
 
+
+/* ==================================================================
+ * macros -- supplementary #define from CE pages
+ * ================================================================ */
+#ifndef CNLEN
+#define CNLEN 15 /* DERIVED value -- w32api-cegcc reference lmcons.h (sources/w32api-cegcc); CE pages state the name only */
+#endif
+#ifndef DNLEN
+#define DNLEN 15 /* DERIVED value -- w32api-cegcc reference lmcons.h (sources/w32api-cegcc); CE pages state the name only */
+#endif
+#ifndef NNLEN
+#define NNLEN 80 /* DERIVED value -- w32api-cegcc reference lmcons.h (sources/w32api-cegcc); CE pages state the name only */
+#endif
+#ifndef PWLEN
+#define PWLEN 256 /* DERIVED value -- w32api-cegcc reference lmcons.h (sources/w32api-cegcc); CE pages state the name only */
+#endif
+#ifndef RMLEN
+#define RMLEN (UNCLEN+1+NNLEN) /* DERIVED value -- w32api-cegcc reference lmcons.h (sources/w32api-cegcc) */
+#endif
+#ifndef UNCLEN
+#define UNCLEN (CNLEN + 2) /* DERIVED value -- w32api-cegcc reference lmcons.h (sources/w32api-cegcc) */
+#endif
+#ifndef UNLEN
+#define UNLEN 256 /* DERIVED value -- w32api-cegcc reference lmcons.h (sources/w32api-cegcc); CE pages state the name only */
+#endif
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
@@ -44,8 +69,7 @@ typedef struct _LINECONFIGDATA {
  DWORD dwModemOptions;
  DWORD dwTermOptions;
  DWORD dwDdevCapFlags;
- DWORD dwModMaxLen;
- TCHAR szDialModifier[NETUI_LCD_DIAL_MOD_LEN + 1];
+ DWORD dwModMaxLen;/* DERIVED member omitted -- size constant value not stated in the corpus: TCHAR szDialModifier[NETUI_LCD_DIAL_MOD_LEN + 1]; */
  WORD wSettableStopParity;
 } LINECONFIGDATA, *PLINECONFIGDATA;
 #endif /* __WINCE_DEFINED_PLINECONFIGDATA */
@@ -109,6 +133,15 @@ int CreateScanDevice(HINSTANCE hInstance,
 
 /* CloseUsernamePasswordDialog  [function; ce-only; CE 5.0..699; Netui.lib] */
 BOOL CloseUsernamePasswordDialog(HWND hDlg);
+
+/* GetNewPassword  [function; ce-only; CE 5.0..699; Netui.lib] */
+BOOL WINAPI GetNewPassword (HWND hParent,
+ OUT PNETUI_NEWPWD pNewPwd);
+
+/* GetNewPasswordEx  [function; ce-only; CE 5.0..699; Netui.lib] */
+BOOL WINAPI GetNewPasswordEx (HWND hParent,
+ OUT PNETUI_NEWPWD pNewPwd,
+ OUT OPTIONAL HWND* phDlg);
 
 /* RegisterIPClass  [function; ce-only; CE 5.0..699; Netui.lib] */
 void RegisterIPClass(HINSTANCE hInst);

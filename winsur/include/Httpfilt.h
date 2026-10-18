@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 9 declarations, 10 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 16 declarations, 10 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _HTTPFILT_
 #define _HTTPFILT_
@@ -190,5 +190,15 @@ enum SF_REQ_TYPE{
 };
 #endif /* __WINCE_DEFINED_SF_REQ_DISABLE_NOTIFICATIONS */
 #endif /* __WINCE_DEFINED_SF_REQ_TYPE */
+
+/* ==================================================================
+ * functions and callbacks
+ * ================================================================ */
+
+#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
+
+/* TerminateFilter  [function; ce-only; CE 3.0..399, 5.0..699; httpfilt.lib] */
+BOOL WINAPI TerminateFilter(DWORD dwFlags);
+#endif /* _WIN32_WCE */
 
 #endif /* _HTTPFILT_ */

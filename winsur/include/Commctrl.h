@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1815 constants, 293 declarations, 23 outlines, 0 base types, 0 extra macros, 6 extra decls
+ * 1815 constants, 318 declarations, 23 outlines, 0 base types, 0 extra macros, 6 extra decls
  */
 #ifndef _COMMCTRL_
 #define _COMMCTRL_
@@ -2248,6 +2248,46 @@ typedef struct tagREBARBANDINFO {
 #endif /* __WINCE_DEFINED_REBARBANDINFO */
 #endif /* __WINCE_DEFINED_TAGREBARBANDINFO */
 
+/* TBBUTTON  [struct; shared] */
+#ifndef __WINCE_DEFINED__TBBUTTON
+#define __WINCE_DEFINED__TBBUTTON
+#ifndef __WINCE_DEFINED_TBBUTTON
+#define __WINCE_DEFINED_TBBUTTON
+typedef struct _TBBUTTON {
+ int iBitmap;
+ int idCommand;
+ BYTE fsState;
+ BYTE fsStyle;
+ DWORD dwData;
+ int iString;
+} TBBUTTON, NEAR* PTBBUTTON, FAR* LPTBBUTTON;
+typedef const TBBUTTON FAR* LPCTBBUTTON;
+#endif /* __WINCE_DEFINED_TBBUTTON */
+#endif /* __WINCE_DEFINED__TBBUTTON */
+
+/* TBBUTTONINFO  [struct; shared; A/W TBBUTTONINFOA,TBBUTTONINFOW (CE is W-side)] */
+#ifndef __WINCE_DEFINED_TBBUTTONINFOW
+#define __WINCE_DEFINED_TBBUTTONINFOW
+#ifndef __WINCE_DEFINED_TBBUTTONINFOA
+#define __WINCE_DEFINED_TBBUTTONINFOA
+#ifndef __WINCE_DEFINED_LPTBBUTTONINFOA
+#define __WINCE_DEFINED_LPTBBUTTONINFOA
+typedef struct {
+ UINT cbSize;
+ DWORD dwMask;
+ int idCommand;
+ int iImage;
+ BYTE fsState;
+ BYTE fsStyle;
+ WORD cx;
+ DWORD lParam;
+ LPTSTR pszText;
+ int cchText;
+} TBBUTTONINFOA, *LPTBBUTTONINFOA;
+#endif /* __WINCE_DEFINED_LPTBBUTTONINFOA */
+#endif /* __WINCE_DEFINED_TBBUTTONINFOA */
+#endif /* __WINCE_DEFINED_TBBUTTONINFOW */
+
 /* TBREPLACEBITMAP  [struct; shared] */
 #ifndef __WINCE_DEFINED_TBREPLACEBITMAP
 #define __WINCE_DEFINED_TBREPLACEBITMAP
@@ -2384,6 +2424,18 @@ typedef UDACCEL *PUDACCEL, *LPUDACCEL;
 /*   lpfnCompare */
 /*   lParam */
 
+/* INITCOMMONCONTROLSEX  [extra struct] */
+#ifndef __WINCE_DEFINED_TAGINITCOMMONCONTROLSEX
+#define __WINCE_DEFINED_TAGINITCOMMONCONTROLSEX
+#ifndef __WINCE_DEFINED_INITCOMMONCONTROLSEX
+#define __WINCE_DEFINED_INITCOMMONCONTROLSEX
+#ifndef __WINCE_DEFINED_LPINITCOMMONCONTROLSEX
+#define __WINCE_DEFINED_LPINITCOMMONCONTROLSEX
+typedef struct tagINITCOMMONCONTROLSEX { DWORD dwSize; DWORD dwICC;} INITCOMMONCONTROLSEX, *LPINITCOMMONCONTROLSEX;
+#endif /* __WINCE_DEFINED_LPINITCOMMONCONTROLSEX */
+#endif /* __WINCE_DEFINED_INITCOMMONCONTROLSEX */
+#endif /* __WINCE_DEFINED_TAGINITCOMMONCONTROLSEX */
+
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
@@ -2412,8 +2464,17 @@ BOOL CommandBands_AddBands(HWND hwndCmdBands,
 HWND CommandBands_GetCommandBar(HWND hwndCmdBands,
  UINT uBand);
 
+/* CommandBands_GetRestoreInformation  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
+BOOL WINAPI CommandBands_GetRestoreInformation(HWND hwndCmdBands,
+ UINT uBand,
+ LPCOMMANDBANDSRESTOREINFO pcbri);
+
 /* CommandBands_Height  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib] */
 UINT CommandBands_Height(HWND hwndCmdBands);
+
+/* CommandBands_Show  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
+BOOL WINAPI CommandBands_Show(HWND hwndCmdBands,
+ BOOL fShow);
 
 /* CommandBar_AddAdornments  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
 BOOL CommandBar_AddAdornments(HWND hwndCB,
@@ -2427,6 +2488,11 @@ int CommandBar_AddBitmap(HWND hwndCB,
  int iNumImages,
  int iImageWidth,
  int iImageHeight);
+
+/* CommandBar_AddButtons  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib] */
+BOOL CommandBar_AddButtons(HWND hwndCB,
+ UINT uNumButtons,
+ LPTBBUTTON lpButtons);
 
 /* CommandBar_AddToolTips  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib] */
 BOOL CommandBar_AddToolTips(HWND hwndCB,
@@ -2451,6 +2517,11 @@ HMENU CommandBar_GetMenu(HWND hwndCB,
 
 /* CommandBar_Height  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
 int CommandBar_Height(HWND hwndCB);
+
+/* CommandBar_InsertButton  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib] */
+BOOL CommandBar_InsertButton(HWND hwndCB,
+ int iButton,
+ LPTBBUTTON lpButton);
 
 /* CommandBar_InsertComboBox  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
 HWND CommandBar_InsertComboBox(HWND hwndCB,
@@ -2501,6 +2572,21 @@ HWND CreateStatusWindow(LONG style,
  LPSTR lpszText,
  HWND hwndParent,
  WORD wID);
+
+/* CreateToolbarEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Comctl32.dll, Comctl32.lib; lib:win32-reference] */
+HWND CreateToolbarEx(HWND hwnd,
+ DWORD ws,
+ UINT wID,
+ int nBitmaps,
+ HINSTANCE hBMInst,
+ UINT wBMID,
+ LPCTBBUTTON lpButtons,
+ int iNumButtons,
+ int dxButton,
+ int dyButton,
+ int dxBitmap,
+ int dyBitmap,
+ UINT uStructSize);
 
 /* CreateUpDownControl  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Comctl32.dll, Comctl32.lib; lib:win32-reference] */
 HWND CreateUpDownControl(DWORD dwStyle,
@@ -2558,6 +2644,24 @@ void DrawStatusText(HDC hdc,
  LPRECT lprc,
  LPCWSTR pszText,
  UINT uFlags);
+
+/* ImageList_DragEnter  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib, Imgctl.lib, imgctl.lib] */
+BOOL WINAPI ImageList_DragEnter(HWND hwndLock,
+ int x,
+ int y);
+
+/* ImageList_DragLeave  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib, Imgctl.lib, imgctl.lib] */
+BOOL WINAPI ImageList_DragLeave(HWND hwndLock);
+
+/* ImageList_DragMove  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib, Imgctl.lib, imgctl.lib] */
+BOOL WINAPI ImageList_DragMove(int x,
+ int y);
+
+/* ImageList_DragShowNolock  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib, Imgctl.lib, imgctl.lib] */
+BOOL WINAPI ImageList_DragShowNolock(BOOL fShow);
+
+/* ImageList_EndDrag  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib, Imgctl.lib, imgctl.lib] */
+BOOL WINAPI ImageList_EndDrag(void);
 
 /* InitCommonControls  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib] */
 void InitCommonControls(void);
@@ -2653,6 +2757,18 @@ BOOL ListView_GetItemRect(HWND hwnd,
 /* ListView_GetItemSpacing  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
 DWORD ListView_GetItemSpacing(HWND hwnd,
  BOOL fSmall);
+
+/* ListView_GetItemState  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+UINT WINAPI ListView_GetItemState(HWND hwnd,
+ int i,
+ UINT mask);
+
+/* ListView_GetItemText  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+void WINAPI ListView_GetItemText(HWND hwnd,
+ int iItem,
+ int iSubItem,
+ LPSTR pszText,
+ int cchTextMax);
 
 /* ListView_GetNextItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
 int ListView_GetNextItem(HWND hwnd,
@@ -2762,6 +2878,18 @@ void ListView_SetItemPosition32(HWND hwnd,
  int iItem,
  int x,
  int y);
+
+/* ListView_SetItemState  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+void WINAPI ListView_SetItemState(HWND hwnd,
+ int i,
+ UINT state,
+ UINT mask);
+
+/* ListView_SetItemText  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
+void WINAPI ListView_SetItemText(HWND hwnd,
+ int i,
+ int iSubItem,
+ LPCSTR pszText);
 
 /* ListView_SetSelectionMark  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
 INT ListView_SetSelectionMark(HWND hwndLV,

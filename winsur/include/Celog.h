@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 27 constants, 79 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 27 constants, 82 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _CELOG_
 #define _CELOG_
@@ -144,6 +144,25 @@ typedef struct __CEL_DATA_LOSS {
 #endif /* __WINCE_DEFINED_CEL_DATA_LOSS */
 #endif /* __WINCE_DEFINED___CEL_DATA_LOSS */
 
+/* CEL_DEBUG_MSG  [struct; ce-only] */
+#ifndef __WINCE_DEFINED___CEL_DEBUG_MSG
+#define __WINCE_DEFINED___CEL_DEBUG_MSG
+#ifndef __WINCE_DEFINED_CEL_DEBUG_MSG
+#define __WINCE_DEFINED_CEL_DEBUG_MSG
+#ifndef __WINCE_DEFINED_CEL_CEL_DEBUG_MSG
+#define __WINCE_DEFINED_CEL_CEL_DEBUG_MSG
+#ifndef __WINCE_DEFINED_PCEL_CEL_DEBUG_MSG
+#define __WINCE_DEFINED_PCEL_CEL_DEBUG_MSG
+typedef struct __CEL_DEBUG_MSG {
+ DWORD pid;
+ DWORD tid;
+ WCHAR szMessage[0];
+} CEL_CEL_DEBUG_MSG, *PCEL_CEL_DEBUG_MSG;
+#endif /* __WINCE_DEFINED_PCEL_CEL_DEBUG_MSG */
+#endif /* __WINCE_DEFINED_CEL_CEL_DEBUG_MSG */
+#endif /* __WINCE_DEFINED_CEL_DEBUG_MSG */
+#endif /* __WINCE_DEFINED___CEL_DEBUG_MSG */
+
 /* CEL_EVENT_CLOSE  [struct; ce-only] */
 #ifndef __WINCE_DEFINED___CEL_EVENT_CLOSE
 #define __WINCE_DEFINED___CEL_EVENT_CLOSE
@@ -157,6 +176,28 @@ typedef struct __CEL_EVENT_CLOSE {
 #endif /* __WINCE_DEFINED_PCEL_EVENT_CLOSE */
 #endif /* __WINCE_DEFINED_CEL_EVENT_CLOSE */
 #endif /* __WINCE_DEFINED___CEL_EVENT_CLOSE */
+
+/* CEL_EVENT_CREATE  [struct; ce-only] */
+#ifndef __WINCE_DEFINED___CEL_EVENT_CREATE
+#define __WINCE_DEFINED___CEL_EVENT_CREATE
+#ifndef __WINCE_DEFINED_CEL_EVENT_CREATE
+#define __WINCE_DEFINED_CEL_EVENT_CREATE
+#ifndef __WINCE_DEFINED_CEL_EVENT1
+#define __WINCE_DEFINED_CEL_EVENT1
+#ifndef __WINCE_DEFINED_PCEL_EVENT1
+#define __WINCE_DEFINED_PCEL_EVENT1
+typedef struct __CEL_EVENT_CREATE {
+ HANDLE hEvent;
+ DWORD fManual:1;
+ DWORD fInitialState:1;
+ DWORD fCreate:1;
+ DWORD dwReserved:29;
+ WCHAR szName[0];
+} CEL_EVENT1, *PCEL_EVENT1;
+#endif /* __WINCE_DEFINED_PCEL_EVENT1 */
+#endif /* __WINCE_DEFINED_CEL_EVENT1 */
+#endif /* __WINCE_DEFINED_CEL_EVENT_CREATE */
+#endif /* __WINCE_DEFINED___CEL_EVENT_CREATE */
 
 /* CEL_EVENT_DELETE  [struct; ce-only] */
 #ifndef __WINCE_DEFINED___CEL_EVENT_DELETE
@@ -1092,6 +1133,10 @@ void pNotifyForceCleanboot(DWORD dwReserved1,
  DWORD dwReserved3,
  DWORD dwReserved4);
 
+/* pOEMCalcFSPages  [function; ce-only; CE 4.0..699; Nk.lib, OEMMain.lib, OEMMain_StaticKITL.lib; heuristic-prefix] */
+DWORD (*pOEMCalcFSPages)(DWORD dwMemPages,
+ DWORD dwDefaultFSPages);
+
 /* StartUp  [function; ce-only; CE 4.0..699; Nk.lib; heuristic-prefix] */
 void StartUp(void);
 #endif /* _WIN32_WCE */
@@ -1106,6 +1151,15 @@ BOOL CeLogGetZones(LPDWORD lpdwZoneUser,
 
 /* CeLogMsg  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 void CeLogMsg(WCHAR* format);
+
+/* pfnOEMIntrOccurs  [function; ce-only; CE 5.0..699; Nk.lib; heuristic-prefix] */
+DWORD (*pfnOEMIntrOccurs)(DWORD dwSysIntr);
+
+/* pfnOEMReschedule  [function; ce-only; CE 5.0..699; Nk.lib; heuristic-prefix] */
+void (*pfnOEMReschedule)(DWORD dwThrdId,
+ DWORD dwPrio,
+ DWORD dwQuantum,
+ DWORD dwFlags);
 #endif /* _WIN32_WCE */
 
 #endif /* _CELOG_ */
