@@ -410,7 +410,7 @@ VT_ARRAY = 0x2000
 #define __WINCE_DEFINED_TAGCLIPDATA
 #ifndef __WINCE_DEFINED_CLIPDATA
 #define __WINCE_DEFINED_CLIPDATA
-typedef struct tagCLIPDATA { // cbSize is the size of the buffer pointed to // by pClipData, plus sizeof(ulClipFmt) ULONG cbSize; long ulClipFmt; BYTE* pClipData; } CLIPDATA;
+typedef struct tagCLIPDATA { /* cbSize is the size of the buffer pointed to */ /* by pClipData, plus sizeof(ulClipFmt) */ ULONG cbSize; long ulClipFmt; BYTE* pClipData; } CLIPDATA;
 #endif /* __WINCE_DEFINED_CLIPDATA */
 #endif /* __WINCE_DEFINED_TAGCLIPDATA */
 

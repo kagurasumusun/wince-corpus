@@ -1177,7 +1177,7 @@
 #define PPTP_PAP_REQUIRE_MS_DATA_ENC_PW 0x11
 #define PPTP_PAP_REQUIRE_MS_ENC_PW 0x7
 #define PPTP_PAP_REQUIRE_NO_FLAGS 0x12
-#define PROFILE 1
+/* C-NAME COLLISION -- the page prints the constant PROFILE = 1; PROFILE is a type in this surface, so it is documented here, not #defined */
 #define PSEARCH PTWODWORDS
 #define PT_CALENDAR 0
 #define RAS_SIZE 128
@@ -1552,7 +1552,7 @@
 #define USER_NAV_RIGHT 0x0004
 #define USER_NAV_SMALL 0x4000
 #define USER_NAV_UP 0x0002
-#define USHORT 0x47
+/* C-NAME COLLISION -- the page prints the constant USHORT = 0x47; USHORT is a type in this surface, so it is documented here, not #defined */
 #define VbAltMask 4
 #define VbArchive 32
 #define VbCentimeters 7

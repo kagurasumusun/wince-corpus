@@ -85,7 +85,7 @@ typedef SPAUDIOSTATE *PSPAUDIOSTATE, *LPSPAUDIOSTATE;
 /* SPAUDIOSTATUS  [struct; ce-only] */
 #ifndef __WINCE_DEFINED_SPAUDIOSTATUS
 #define __WINCE_DEFINED_SPAUDIOSTATUS
-typedef [restricted] struct SPAUDIOSTATUS{
+typedef struct SPAUDIOSTATUS{
  long cbFreeBuffSpace;
  ULONG cbNonBlockingIO;
  SPAUDIOSTATE State;
@@ -209,7 +209,7 @@ typedef SPENDSRSTREAMFLAGS *PSPENDSRSTREAMFLAGS, *LPSPENDSRSTREAMFLAGS;
 /* SPEVENT  [struct; ce-only] */
 #ifndef __WINCE_DEFINED_SPEVENT
 #define __WINCE_DEFINED_SPEVENT
-typedef [restricted] struct SPEVENT{
+typedef struct SPEVENT{
  WORD eEventId;
  WORD elParamType;
  ULONG ulStreamNum;
@@ -419,7 +419,7 @@ typedef SPPHRASERNG *PSPPHRASERNG, *LPSPPHRASERNG;
 /* SPRECOCONTEXTSTATUS  [struct; ce-only] */
 #ifndef __WINCE_DEFINED_SPRECOCONTEXTSTATUS
 #define __WINCE_DEFINED_SPRECOCONTEXTSTATUS
-typedef [restricted] struct SPRECOCONTEXTSTATUS{
+typedef struct SPRECOCONTEXTSTATUS{
  SPINTERFERENCE eInterference;
  WCHAR szRequestTypeOfUI[255];
  DWORD dwReserved1;
@@ -433,7 +433,7 @@ typedef [restricted] struct SPRECOCONTEXTSTATUS{
 #ifndef __WINCE_DEFINED_SPRECOECOEVENTFLAGS
 #define __WINCE_DEFINED_SPRECOECOEVENTFLAGS
 typedef enum SPRECOEVENTFLAGS{
- SPREF_AutoPause = (1 << 0);
+ SPREF_AutoPause = (1 << 0),
  SPREF_Emulated = (1 << 1)
 } SPRECOECOEVENTFLAGS;
 #endif /* __WINCE_DEFINED_SPRECOECOEVENTFLAGS */
@@ -500,7 +500,7 @@ typedef SPRUNSTATE *PSPRUNSTATE, *LPSPRUNSTATE;
 /* SPSERIALIZEDEVENT  [struct; ce-only] */
 #ifndef __WINCE_DEFINED_SPSERIALIZEDEVENT
 #define __WINCE_DEFINED_SPSERIALIZEDEVENT
-typedef [restricted] struct SPSERIALIZEDEVENT{
+typedef struct SPSERIALIZEDEVENT{
  WORD eEventId;
  WORD elParamType;
  ULONG ulStreamNum;
@@ -513,7 +513,7 @@ typedef [restricted] struct SPSERIALIZEDEVENT{
 /* SPSERIALIZEDEVENT64  [struct; ce-only] */
 #ifndef __WINCE_DEFINED_SPSERIALIZEDEVENT64
 #define __WINCE_DEFINED_SPSERIALIZEDEVENT64
-typedef [restricted] struct SPSERIALIZEDEVENT64{
+typedef struct SPSERIALIZEDEVENT64{
  WORD eEventId;
  WORD elParamType;
  ULONG ulStreamNum;
@@ -712,7 +712,7 @@ typedef SPVALUETYPE *PSPVALUETYPE, *LPSPVALUETYPE;
 /* SPVCONTEXT  [struct; ce-only] */
 #ifndef __WINCE_DEFINED_SPVCONTEXT
 #define __WINCE_DEFINED_SPVCONTEXT
-typedef [restricted] struct SPVCONTEXT{
+typedef struct SPVCONTEXT{
  LPCWSTR pCategory;
  LPCWSTR pBefore;
  LPCWSTR pAfter;

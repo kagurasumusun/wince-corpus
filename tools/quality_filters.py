@@ -177,7 +177,10 @@ _MIDL_ATTR_WORDS = frozenset(
     "require_endpoint case context_handle encode decode error_status_t "
     "handle_t implicit_handle explicit_handle param_sourcecode "
     "software_aggregate asynchronous broadcast represent_as type_handle "
-    "user_marshal usage_aggregate".split())
+    "user_marshal usage_aggregate restricted readonly source bindable "
+    "displaybind requestedit immediatebind nonbrowsable uidefault "
+    "oleautomation uuid version lcid custom ms_union ms_struct "
+    "defaultbind defaultcollelem hidden bindable".split())
 _MIDL_ATTR = re.compile(r"\[\s*([^\[\]]*?)\s*\]")
 _MIDDL_OK_IDENT = re.compile(r"^[A-Za-z_]\w*(\s*\+\s*[A-Za-z0-9_]+)?$")
 

@@ -1211,9 +1211,9 @@ DWORD WINAPI CryptMsgCalculateEncodedLength(DWORD dwMsgEncodingType,
  * ================================================================ */
 
 /* function */
-VOID WINAPI CertEnumStoreLocationCallback(LPCWSTR pvszStoreLoocations DWORD dwFlags, void *pvReserved, void *pvArg);
+VOID WINAPI CertEnumStoreLocationCallback(LPCWSTR pvszStoreLoocations, DWORD dwFlags void *pvReserved, void *pvArg);
 VOID WINAPI CertEnumSystemStoreCallback(const void *pvSystemStore, DWORD dwFlags, PCERT_SYSTEM_STORE_INFO pStoreInfo, void *pvReserved, void *pvArg);
-VOID WINAPI CmsgStreamOutputCallback(const void *pvArg, //in BYTE *pbData, //in DWORD cbData, //in BOOL fFinal //in);
+VOID WINAPI CmsgStreamOutputCallback(const void *pvArg, //in BYTE *pbData, //in, DWORD cbData //in BOOL fFinal //in);
 BOOL FuncReturnhWnd(DWORD *phWnd);
 BOOL FuncVerifyImage(LPCSTR lpszImage, BYTE *pSigData);
 

@@ -2395,7 +2395,7 @@
 #define WM_COMPAREITEM 57
 #define WM_CONTEXTMENU 123
 #define WM_COPY 0x0301
-#define WM_COPYDATA 0x004A
+/* C-NAME COLLISION -- the page prints the constant WM_COPYDATA = 0x004A; WM_COPYDATA is a type in this surface, so it is documented here, not #defined */
 #define WM_CREATE 0x0001
 #define WM_CTLCOLORBTN 309
 #define WM_CTLCOLORDLG 310

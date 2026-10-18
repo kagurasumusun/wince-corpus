@@ -53,7 +53,7 @@
 #define ECOOP_SET 1
 #define ECOOP_XOR 4
 #define EM_AUTOURLDETECT (WM_USER+91)
-#define EM_CANPASTE (WM_USER+50)
+/* C-NAME COLLISION -- the page prints the constant EM_CANPASTE = (WM_USER+50); EM_CANPASTE is a type in this surface, so it is documented here, not #defined */
 #define EM_CANREDO (WM_USER+85)
 #define EM_DISPLAYBAND (WM_USER+51)
 #define EM_EXGETSEL (WM_USER+52)

@@ -258,6 +258,8 @@ def c_decl_text(text):
     text = _finish_decl_semicolons(text)
     text = _finish_enum_commas(text)
     text = _fix_enum_member_refs(text)
+    # a page's list marker printed onto member lines (``..e_vctInvalid``)
+    text = re.sub(r"(?m)^(\s*)\.\.+", r"\1", text)
     # bitfield members whose ';' the page lost (``DWORD fSuccess: 1``
     # followed by another member)
     text = re.sub(r"(?m)^(\s+[A-Za-z_][\w\s\*]*:\s*\d+)\s*$", r"\1;", text)
@@ -289,6 +291,41 @@ def c_decl_text(text):
                 + "\n".join(" * " + ln for ln in text.splitlines())
                 + "\n */")
     text = _comment_incomplete_members(text)
+    # a missing comma between parameters (``pszKeyName DWORD dwValue``):
+    # insert it when the middle word is a known type and the first is not
+    # a qualifier
+    _ty = globals().get("_TYPE_COLLIDE") or ()
+    if _ty:
+        _qual = {"const", "unsigned", "signed", "long", "short", "struct",
+                 "union", "enum", "volatile", "restrict", "void", "IN",
+                 "OUT", "OPTIONAL", "FAR", "NEAR"}
+
+        def _fix_missing_comma(m):
+            g1, g2, g3 = m.group(1), m.group(2), m.group(3)
+            if g1 in _qual or g2 not in _ty or g3 in _ty:
+                return m.group(0)
+            return f"{g1}, {g2} {g3}"
+        text = re.sub(
+            r"\b([A-Za-z_]\w*)[ \t]+([A-Za-z_]\w*)[ \t]+([A-Za-z_]\w+)[ \t]*"
+            r"([,)])",
+            _fix_missing_comma, text)
+    # a printed TYPE name in the wrong case (``IEnumVariant`` for
+    # ``IEnumVARIANT``): repair in type position only, so method/parameter
+    # names are never touched (value-scoped discipline of the enum repair).
+    _canon = globals().get("_TYPE_CANON") or {}
+    if _canon and os.environ.get("GEN_TYPE_CASE_REPAIR"):
+        _non_types = globals().get("_NON_TYPE_NAMES") or set()
+        _type_pos = re.compile(
+            r"(?<=[(,{]|\n)(\s*)([A-Za-z_]\w*)"
+            r"(?=\s*\)|\s+\*{0,2}[A-Za-z_]|\s+\*{1,2})")
+
+        def _fix_type_case(m):
+            tok = m.group(2)
+            if tok in _non_types:
+                return m.group(0)
+            fix = _canon.get(tok.casefold())
+            return m.group(1) + (fix if fix else tok)
+        text = _type_pos.sub(_fix_type_case, text)
     if quality_filters.is_cpp_declaration(text):
         return "#ifdef __cplusplus\n" + text + "\n#endif /* __cplusplus */"
     return text
@@ -381,26 +418,36 @@ def _finish_decl_semicolons(text):
 
 
 _ENUM_MEMBER = re.compile(
-    r"^\s*[A-Za-z_]\w*(?:\s*=\s*(?:0[xX][0-9A-Fa-f]+|\d+|1\s*<<\s*\d+"
-    r"|MAKEFOURCC\s*\(.*\)))?\s*$")
+    r"^\s*[A-Za-z_]\w*(?:\s*=\s*(?:\([^)]*\)|0[xX][0-9A-Fa-f]+|\d+"
+    r"|1\s*<<\s*\d+|MAKEFOURCC\s*\(.*\)))?\s*$")
 
 
 def _finish_enum_commas(text):
     """A lost ',' between two enumerator members (the pages drop them):
-    a member line with no trailing comma followed by another member."""
+    a member line with no trailing comma followed by another member.
+    Also a member the page closed with ';' instead of ','."""
     if not text or not re.search(r"\benum\b", text):
         return text
     lines = text.split("\n")
     for i, line in enumerate(lines):
-        if not _ENUM_MEMBER.match(line):
+        member = _ENUM_MEMBER.match(line)
+        semimember = re.match(
+            r"^(\s*[A-Za-z_]\w*\s*=\s*(?:\([^)]*\)|[^;,]+));\s*$", line)
+        if not member and not semimember:
             continue
         nxt = ""
         for later in lines[i + 1:]:
             if later.strip():
                 nxt = later
                 break
-        if nxt and _ENUM_MEMBER.match(nxt.rstrip().rstrip(",")):
-            lines[i] = line.rstrip() + ","
+        nxt_member = nxt and (
+            _ENUM_MEMBER.match(nxt.rstrip().rstrip(","))
+            or re.match(r"^\s*[A-Za-z_]\w*\s*=", nxt))
+        if nxt_member:
+            if semimember:
+                lines[i] = semimember.group(1) + ","
+            else:
+                lines[i] = line.rstrip() + ","
     return "\n".join(lines)
 
 
@@ -3078,6 +3125,11 @@ def run_unified(args):
             elif "struct" in kinds or "enum" in kinds or "typedef" in kinds \
                     or "interface" in kinds:
                 name_only = True
+        if os.environ.get("GEN_TRACE_PICKS"):
+            import sys as _sys
+            print("PICK", entity.get("id"), entity.get("name"),
+                  bool(chosen), len(outline or ()), name_only, primary,
+                  file=_sys.stderr)
         if primary and (chosen or outline or name_only):
             printed_forms[primary.lower()] = primary
             by_header[primary.lower()].append(
@@ -3446,6 +3498,66 @@ def run_unified(args):
 
     global_fn_names = set()
     global_fn_from = {}
+    # Names with a real C definition anywhere in the tree: a derived
+    # forward must never shadow them (stale forwards conflict).  Also the
+    # case-repair inventory: a printed type name in the wrong case
+    # (``IEnumVariant`` for ``IEnumVARIANT``) is repaired in type position.
+    real_type_names = set()
+    _spellings = collections.defaultdict(set)   # casefold -> spellings
+    _type_ish = set()                           # type-kind names (any state)
+    _all_names = set()
+    for _key, _items in list(by_header.items()) + \
+            list(extra_decls_by_header.items()):
+        for _info in _items:
+            _ent = _info.get("entity") or {}
+            _txt = (_info.get("declaration") or {}).get("text") \
+                if isinstance(_info.get("declaration"), dict) \
+                else (_info.get("declaration") or "")
+            _nm = _ent.get("name") or _info.get("name")
+            _kinds = set(_ent.get("kinds") or ())
+            if not _kinds and (_info.get("type") or "").find("struct") >= 0:
+                _kinds = {"struct"}
+            if _nm:
+                _all_names.add(_nm)
+                if _kinds & {"struct", "enum", "typedef", "union", "interface"}:
+                    _type_ish.add(_nm)
+                    _spellings[_nm.casefold()].add(_nm)
+            if not _txt or quality_filters.is_cpp_declaration(_txt):
+                continue
+            if _nm:
+                real_type_names.add(_nm)
+                _spellings[_nm.casefold()].add(_nm)
+            for _tm in re.finditer(
+                    r"\}\s*([A-Za-z_]\w*(?:\s*,\s*\*?\s*[A-Za-z_]\w*)*)\s*[,;]",
+                    _txt):
+                for _tok in re.findall(r"[A-Za-z_]\w+", _tm.group(1)):
+                    real_type_names.add(_tok)
+                    _type_ish.add(_tok)
+                    _spellings[_tok.casefold()].add(_tok)
+            _tg = re.search(r"\b(?:struct|union|enum)\s+([A-Za-z_]\w*)\s*\{",
+                            _txt)
+            if _tg:
+                real_type_names.add(_tg.group(1))
+                _type_ish.add(_tg.group(1))
+                _spellings[_tg.group(1).casefold()].add(_tg.group(1))
+    for _bts in base_types_by_header.values():
+        for _bt in _bts:
+            _tn = _bt.get("type")
+            if _tn:
+                _type_ish.add(_tn)
+                _spellings.setdefault(_tn.casefold(), set()).add(_tn)
+    # canonical spelling: prefer the one that has a real C definition
+    _type_canon = {}
+    for _cf, _forms in _spellings.items():
+        _real = sorted(s for s in _forms if s in real_type_names)
+        _type_canon[_cf] = _real[0] if _real else sorted(_forms)[0]
+    # function/macro names must never be case-"repaired" into type names
+    _non_type_names = _all_names - _type_ish
+    globals()["_TYPE_CANON"] = _type_canon
+    globals()["_NON_TYPE_NAMES"] = _non_type_names
+    globals()["_REAL_TYPE_NAMES"] = real_type_names
+    globals()["_TYPE_COLLIDE"] = _type_ish
+
     for key in sorted(set(by_header) | set(const_entries) | extra_keys):
         display = safe_name(printed_forms.get(key) or key, ".h")
         def entry_sort(e):
@@ -3832,7 +3944,9 @@ def run_unified(args):
             lines.append(" * types.tsv)")
             lines.append(" * " + "=" * 64 + " */")
             for fname, form, fnote, fdefn in fwd_rows:
-                if fname in emitted_type_names:
+                if fname in emitted_type_names or (
+                        os.environ.get("GEN_FWD_SUPPRESS")
+                        and fname in globals().get("_REAL_TYPE_NAMES", ())):
                     continue
                 emitted_type_names.add(fname)
                 if fname.startswith("LP") and len(fname) > 4:
@@ -3854,7 +3968,7 @@ def run_unified(args):
                 else:
                     decl = f"typedef struct {fname} {fname};"
                 lines.append(f"/* DERIVED forward -- {fnote} */")
-                lines.append(decl)
+                lines.extend(type_guard_lines(fname, decl, lines))
         # Extra macros filed into this header (quality-filtered, not
         # already numbered as constants above).  Object-like first, then
         # function-like, so the two kinds are not mixed.
@@ -4323,6 +4437,7 @@ def run_unified(args):
             by_type[dtype].append(decl)
         
         # Output by type
+        _seen_unassigned = set()
         for dtype in sorted(by_type.keys()):
             decls = by_type[dtype]
             if not args.minimal_comments:
@@ -4330,10 +4445,20 @@ def run_unified(args):
                 extra_decl_lines.append("")
             
             for decl in decls:
+                if decl.get("name") in _seen_unassigned:
+                    continue
                 decl_text = c_decl_text(decl.get('declaration', '').strip())
                 if decl_text and quality_filters.is_c_toolchain_declaration(
                         decl_text, decl.get("name") or "", dtype):
-                    extra_decl_lines.append(decl_text)
+                    _seen_unassigned.add(decl.get("name"))
+                    if dtype in ("typedef", "enum", "struct", "interface",
+                                 "union") and not decl_text.lstrip() \
+                            .startswith("/*"):
+                        extra_decl_lines.extend(type_guard_lines(
+                            decl.get("name") or "", decl_text,
+                            extra_decl_lines))
+                    else:
+                        extra_decl_lines.append(decl_text)
                     if not args.minimal_comments:
                         extra_decl_lines.append("")
         
@@ -4474,6 +4599,45 @@ def _write_lines(path, lines):
     # joins leave "\ " behind (the page's own trailing space) and the C
     # compiler stops continuing -- derived repair at emission only
     lines = [re.sub(r"\\[ \t]+$", r"\\", line) for line in lines]
+    # a one-line body whose page-printed ``//`` prose sits between ``{``
+    # and the members would swallow the code to end-of-line: re-wrap the
+    # prose as ``/* */``.  Only when the zone is pure prose (no code).
+    def _wrap_oneline_prose(line):
+        m = re.search(r"\{\s*//", line)
+        if not m or "}" not in line:
+            return line
+        first = line.index("//", m.start())
+        mm = re.search(r"([A-Za-z_]\w+\s+[A-Za-z_]\w+\s*[;*])", line[first:])
+        if not mm:
+            return line
+        zone = line[first: first + mm.start()]
+        if any(ch in zone for ch in ";{}*"):
+            return line
+        pieces = zone.split("//")
+        wrapped = "".join(
+            ("/* " + p.strip() + " */ ") if p.strip() else " "
+            for p in pieces[1:])
+        return line[:first] + wrapped + line[first + mm.start():]
+    lines = [_wrap_oneline_prose(line) for line in lines]
+    # a page-printed CONSTANT whose name collides with a TYPE in this
+    # surface (``#define USHORT 0x47`` vs ``typedef ... USHORT``): the type
+    # wins so the surface compiles; the constant stays documented in a
+    # comment.  Simple-identifier bodies (A/W alias macros) are kept.
+    _collide = globals().get("_TYPE_COLLIDE") or ()
+    if _collide:
+        _fixed = []
+        for line in lines:
+            m = re.match(r"#define\s+([A-Za-z_]\w*)\s+(\S.*)$", line)
+            if m and m.group(1) in _collide and \
+                    not re.match(r"^[A-Za-z_]\w*$", m.group(2).strip()):
+                _fixed.append(
+                    "/* C-NAME COLLISION -- the page prints the constant "
+                    "%s = %s; %s is a type in this surface, so it is "
+                    "documented here, not #defined */"
+                    % (m.group(1), m.group(2), m.group(1)))
+            else:
+                _fixed.append(line)
+        lines = _fixed
     with open(path, "w", encoding="utf-8") as fh:
         fh.write("\n".join(lines) + "\n")
 
@@ -5027,4 +5191,9 @@ def main():
 
 
 if __name__ == "__main__":
+    # deterministic output: set-iteration order must not depend on the
+    # per-process hash seed (the entity/decl picking uses sets)
+    if os.environ.get("PYTHONHASHSEED") != "0":
+        env = dict(os.environ, PYTHONHASHSEED="0")
+        os.execve(sys.executable, [sys.executable] + sys.argv, env)
     sys.exit(main())

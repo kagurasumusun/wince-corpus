@@ -1957,8 +1957,7 @@ BOOL WriteProcessMemory(HANDLE hProcess,
 /* Windows CE supports only the Unicode version of wsprintf. */
 /* Windows CE Notes Supports only the Unicode version of this function. */
 int wsprintf(LPTSTR lpOut,
- LPCTSTR lpFmt,
- ...);
+ LPCTSTR lpFmt);
 
 /* wvsprintf  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coreloc.lib; A/W wvsprintfA,wvsprintfW (CE is W-side)] */
 /* Windows CE supports only the Unicode version of wvsprintf. */

@@ -104,8 +104,7 @@ HRESULT StringCbLength(LPCTSTR psz,
 /* StringCbPrintf  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCbPrintfA,StringCbPrintfW (CE is W-side)] */
 HRESULT StringCbPrintf(LPTSTR pszDest,
  size_t cbDest,
- LPCTSTR pszFormat,
- ...);
+ LPCTSTR pszFormat);
 
 /* StringCbPrintfEx  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCbPrintfExA,StringCbPrintfExW (CE is W-side)] */
 HRESULT StringCbPrintfEx(LPTSTR pszDest,
@@ -113,8 +112,7 @@ HRESULT StringCbPrintfEx(LPTSTR pszDest,
  LPTSTR *ppszDestEnd,
  size_t *pcbRemaining,
  DWORD dwFlags,
- LPCTSTR pszFormat,
- ...);
+ LPCTSTR pszFormat);
 
 /* StringCbVPrintf  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCbVPrintfA,StringCbVPrintfW (CE is W-side)] */
 HRESULT StringCbVPrintf(LPTSTR pszDest,
@@ -206,8 +204,7 @@ HRESULT StringCchLength(LPCTSTR psz,
 /* StringCchPrintf  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCchPrintfA,StringCchPrintfW (CE is W-side)] */
 HRESULT StringCchPrintf(LPTSTR pszDest,
  size_t cchDest,
- LPCTSTR pszFormat,
- ...);
+ LPCTSTR pszFormat);
 
 /* StringCchPrintfEx  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCchPrintfExA,StringCchPrintfExW (CE is W-side)] */
 HRESULT StringCchPrintfEx(LPTSTR pszDest,
@@ -215,8 +212,7 @@ HRESULT StringCchPrintfEx(LPTSTR pszDest,
  LPTSTR *ppszDestEnd,
  size_t *pcchRemaining,
  DWORD dwFlags,
- LPCTSTR pszFormat,
- ...);
+ LPCTSTR pszFormat);
 
 /* StringCchVPrintf  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCchVPrintfA,StringCchVPrintfW (CE is W-side)] */
 HRESULT StringCchVPrintf(LPTSTR pszDest,

@@ -142,8 +142,7 @@ struct MediaInfo
 #ifdef __cplusplus
 struct object
 {
- // constructor not shown
- bool bContainer;
+ /* constructor not shown */ bool bContainer;
  wstring strID;
  wstring strParentID;
  wstring strTitle;
