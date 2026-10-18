@@ -214,7 +214,7 @@ typedef VIEWSTATUS *PVIEWSTATUS, *LPVIEWSTATUS;
  * ================================================================ */
 
 /* function */
-HRESULT GetPages(CAUUID *pPages //Pointer to structure);
+HRESULT GetPages(CAUUID *pPages 
 HRESULT GetViewStatus(DWORD* pdwStatus);
 HRESULT LockInPlaceActive(BOOL fLock);
 HRESULT OnControlInfoChanged(void);

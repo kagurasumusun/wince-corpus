@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 71 constants, 60 declarations, 8 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 71 constants, 58 declarations, 10 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINSOCK2_
 #define _WINSOCK2_
@@ -94,6 +94,10 @@
  * ================================================================ */
 
 /* _DSCP_TRAFFIC_TYPE  [enum; ce-only] */
+
+/* recvfrom  [struct, function; shared; winsock.lib, Ws2.lib] */
+
+/* select  [struct, function; shared; winsock.lib, Ws2.lib] */
 
 /* WSAAccept  [struct, function; shared; Ws2.lib] */
 
@@ -442,16 +446,6 @@ struct hostent FAR* gethostbyaddr(const char FAR* addr,
 #define __WINCE_DEFINED_GETHOSTBYNAME
 struct hostent FAR* gethostbyname(const char FAR* name);
 #endif /* __WINCE_DEFINED_GETHOSTBYNAME */
-
-/* select  [struct, function; shared; winsock.lib, Ws2.lib] */
-#ifndef __WINCE_DEFINED_SELECT
-#define __WINCE_DEFINED_SELECT
-int select(int nfds,
- fd_set FAR* readfds,
- fd_set FAR* writefds,
- fd_set FAR* exceptfds,
- const struct timeval FAR* timeout);
-#endif /* __WINCE_DEFINED_SELECT */
 
 /* SERVICE_TYPE_INFO_ABS  [struct; shared; A/W SERVICE_TYPE_INFO_ABSA,SERVICE_TYPE_INFO_ABSW (CE is W-side)] */
 #ifndef __WINCE_DEFINED__SERVICE_TYPE_INFO_ABS

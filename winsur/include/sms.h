@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 80 constants, 34 declarations, 2 outlines, 0 base types, 0 extra macros, 7 extra decls
+ * 80 constants, 33 declarations, 2 outlines, 0 base types, 0 extra macros, 7 extra decls
  */
 #ifndef _SMS_
 #define _SMS_

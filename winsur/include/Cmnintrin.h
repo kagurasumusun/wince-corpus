@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 32 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 0 constants, 20 declarations, 0 outlines, 0 base types, 0 extra macros, 13 extra decls
  */
 #ifndef _CMNINTRIN_
 #define _CMNINTRIN_
@@ -53,64 +53,8 @@ __int32 _CopyInt32FromFloat(float arg1);
 /* _CopyInt64FromDouble  [function; ce-only; CE 4.0..699] */
 __int64 _CopyInt64FromDouble(double arg1);
 
-/* _CountLeadingOnes  [function; ce-only; CE 4.0..699] */
-unsigned __cdecl _CountLeadingOnes(long arg1);
-unsigned __cdecl _CountLeadingOnes64(__int64 arg1);
-
-/* _CountLeadingOnes64  [function; ce-only; CE 4.0..699] */
-unsigned __cdecl _CountLeadingOnes(long arg1);
-unsigned __cdecl _CountLeadingOnes64(__int64 arg1);
-
-/* _CountLeadingSigns  [function; ce-only; CE 4.0..699] */
-unsigned __cdecl _CountLeadingSigns(long arg1);
-unsigned __cdecl _CountLeadingSigns64(__int64 arg1);
-
-/* _CountLeadingSigns64  [function; ce-only; CE 4.0..699] */
-unsigned __cdecl _CountLeadingSigns(long arg1);
-unsigned __cdecl _CountLeadingSigns64(__int64 arg1);
-
-/* _CountLeadingZeros  [function; ce-only; CE 4.0..699] */
-unsigned __cdecl _CountLeadingZeros(long arg1);
-unsigned __cdecl _CountLeadingZeros64(__int64 arg1);
-
-/* _CountLeadingZeros64  [function; ce-only; CE 4.0..699] */
-unsigned __cdecl _CountLeadingZeros(long arg1);
-unsigned __cdecl _CountLeadingZeros64(__int64 arg1);
-
-/* _CountOneBits  [function; ce-only; CE 4.0..699] */
-unsigned __cdecl _CountOneBits(long arg1);
-unsigned __cdecl _CountOneBits64(__int64 arg1);
-
-/* _CountOneBits64  [function; ce-only; CE 4.0..699] */
-unsigned __cdecl _CountOneBits(long arg1);
-unsigned __cdecl _CountOneBits64(__int64 arg1);
-
 /* _ICacheRefresh  [function; ce-only; CE 4.0..699] */
 void __cdecl __ICacheRefresh(void *);
-
-/* _isunordered  [function; ce-only; CE 4.0..699] */
-int __cdecl _isunordered(double arg1,
- double arg2);
-int __cdecl _isunorderedf(float arg1,
- float arg2);
-
-/* _isunorderedf  [function; ce-only; CE 4.0..699] */
-int __cdecl _isunordered(double arg1,
- double arg2);
-int __cdecl _isunorderedf(float arg1,
- float arg2);
-
-/* _MulHigh  [function; ce-only; CE 4.0..699] */
-long __cdecl _MulHigh(long arg1,
- long arg2);
-unsigned long __cdecl _MulUnsignedHigh(unsigned long arg1,
- unsigned long arg2);
-
-/* _MulUnsignedHigh  [function; ce-only; CE 4.0..699] */
-long __cdecl _MulHigh(long arg1,
- long arg2);
-unsigned long __cdecl _MulUnsignedHigh(unsigned long arg1,
- unsigned long arg2);
 
 /* _prefetch  [function; ce-only; CE 4.0..699] */
 void __cdecl __prefetch(void *);
@@ -146,7 +90,18 @@ void __cdecl _ReadBarrier(void);
  * ================================================================ */
 
 /* function */
+unsigned __cdecl _CountLeadingOnes(long arg1);
+unsigned __cdecl _CountLeadingOnes64(__int64 arg1);
+unsigned __cdecl _CountLeadingSigns(long arg1);
+unsigned __cdecl _CountLeadingSigns64(__int64 arg1);
+unsigned __cdecl _CountLeadingZeros64(__int64 arg1);
+unsigned __cdecl _CountOneBits(long arg1);
+unsigned __cdecl _CountOneBits64(__int64 arg1);
+long __cdecl _MulHigh(long arg1,long arg2);
+unsigned long __cdecl _MulUnsignedHigh(unsigned long arg1,unsigned long arg2);
 void __cdecl __CacheWriteback(void *);
 void __cdecl __ICacheRefresh(void *);
+int __cdecl _isunordered(double arg1,double arg2);
+int __cdecl _isunorderedf(float arg1, float arg2);
 
 #endif /* _CMNINTRIN_ */

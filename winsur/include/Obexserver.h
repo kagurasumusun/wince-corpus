@@ -26,7 +26,7 @@ typedef struct _obex_command {
  unsigned int uiOp;
  unsigned int uiResp;
  unsigned int fFinal;
- ObexPacketData sPktData;
+ /* DERIVED member omitted -- type body unprinted: ObexPacketData sPktData; */
  unsigned int cProp;
  unsigned int * aPropID;
  ObexVariant * aPropVar;
@@ -52,8 +52,8 @@ typedef struct _obex_transaction {
  unsigned int uiTransactionId;
  unsigned int uiOp;
  ObexCommand * pObex;
- MemAlloc ObexAlloc;
- MemFree ObexFree;
+ /* DERIVED member omitted -- type body unprinted: MemAlloc ObexAlloc; */
+ /* DERIVED member omitted -- type body unprinted: MemFree ObexFree; */
  ServerCallback ObexExecute;
 } ObexTransaction;
 #endif /* __WINCE_DEFINED_OBEXTRANSACTION */

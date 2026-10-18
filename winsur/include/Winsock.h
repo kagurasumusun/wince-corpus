@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 1 declarations, 0 outlines, 0 base types, 0 extra macros, 16 extra decls
+ * 0 constants, 1 declarations, 0 outlines, 0 base types, 0 extra macros, 14 extra decls
  */
 #ifndef _WINSOCK_
 #define _WINSOCK_
@@ -83,12 +83,6 @@ struct hostent *gethostbyname(const char *name);
 #define __WINCE_DEFINED_IN
 char *inet_ntoa (struct in_addr in);
 #endif /* __WINCE_DEFINED_IN */
-
-/* timeout  [extra struct] */
-#ifndef __WINCE_DEFINED_TIMEOUT
-#define __WINCE_DEFINED_TIMEOUT
-int select (int nfds, fd_set *readfds, fd_set *writefds, fd_set *exceptfds, const struct timeval *timeout);
-#endif /* __WINCE_DEFINED_TIMEOUT */
 
 /* s_proto  [extra struct] */
 #ifndef __WINCE_DEFINED_SERVENT

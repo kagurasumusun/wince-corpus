@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 36 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 32 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _ARMINTR_
 #define _ARMINTR_
@@ -147,59 +147,20 @@ int __trap(int Arg1);
 unsigned cdecl _CountLeadingZeros(long Arg1);
 #endif /* _WIN32_WCE */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 5.0..599 */
-
-/* _MoveToCoprocessor2  [function; ce-only; CE 5.0..599; entity-headers] */
-Void _MoveToCoprocessor(unsigned int value,
- unsigned int coproc,
- unsigned int opcode1,unsigned int crn,unsigned int crm,unsigned int opcode2);
-Void _MoveToCoprocessor2(unsigned int value,
- unsigned int coproc,
- unsigned int opcode1,unsigned int crn,unsigned int crm,unsigned int opcode2);
-#endif /* _WIN32_WCE */
-
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* __emit  [function; ce-only; CE 5.0..699] */
 void __emit(const unsigned __int32 opcode);
-
-/* _MoveFromCoprocessor  [function; ce-only; CE 5.0..699] */
-int _MoveFromCoprocessor(unsigned int coproc,
- unsigned int opcode1,
- unsigned int crn,
- unsigned int crm,
- unsigned int opcode2);
-int _MoveFromCoprocessor2(unsigned int coproc,
- unsigned int opcode1,
- unsigned int crn,
- unsigned int crm,
- unsigned int opcode2);
-
-/* _MoveFromCoprocessor2  [function; ce-only; CE 5.0..699; entity-headers] */
-int _MoveFromCoprocessor(unsigned int coproc,
- unsigned int opcode1,
- unsigned int crn,
- unsigned int crm,
- unsigned int opcode2);
-int _MoveFromCoprocessor2(unsigned int coproc,
- unsigned int opcode1,
- unsigned int crn,
- unsigned int crm,
- unsigned int opcode2);
-
-/* _MoveToCoprocessor  [function; ce-only; CE 5.0..699] */
-Void _MoveToCoprocessor(unsigned int value,
- unsigned int coproc,
- unsigned int opcode1,
- unsigned int crn,
- unsigned int crm,
- unsigned int opcode2);
-Void _MoveToCoprocessor2(unsigned int value,
- unsigned int coproc,
- unsigned int opcode1,
- unsigned int crn,
- unsigned int crm,
- unsigned int opcode2);
 #endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* function */
+unsigned cdecl _CountLeadingZeros(longArg1);
+int _MoveFromCoprocessor(unsigned int coproc, unsigned int opcode1,unsigned int crn,unsigned int crm,unsigned int opcode2);
+int _MoveFromCoprocessor2(unsigned int coproc, unsigned int opcode1,unsigned int crn,unsigned int crm,unsigned int opcode2);
 
 #endif /* _ARMINTR_ */

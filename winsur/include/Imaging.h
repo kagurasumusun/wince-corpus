@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 4 constants, 11 declarations, 3 outlines, 0 base types, 0 extra macros, 44 extra decls
+ * 4 constants, 10 declarations, 4 outlines, 0 base types, 0 extra macros, 44 extra decls
  */
 #ifndef _IMAGING_
 #define _IMAGING_
@@ -17,12 +17,18 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
+#define ALPHA_SHIFT 24
+#define BLUE_SHIFT 0
+#define GREEN_SHIFT 8
+#define RED_SHIFT 16
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
 /* InterpolationHint  [enum; ce-only] */
+
+/* MAKEARGB  [macro; ce-only] */
 
 /* PixelFormat  [typedef, function; ce-only] */
 

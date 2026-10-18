@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 22 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 20 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _NETUI_
 #define _NETUI_
@@ -109,15 +109,6 @@ int CreateScanDevice(HINSTANCE hInstance,
 
 /* CloseUsernamePasswordDialog  [function; ce-only; CE 5.0..699; Netui.lib] */
 BOOL CloseUsernamePasswordDialog(HWND hDlg);
-
-/* GetNewPassword  [function; ce-only; CE 5.0..699; Netui.lib] */
-BOOL WINAPI GetNewPassword (HWND hParent,
- OUT PNETUI_NEWPWD pNewPwd);
-
-/* GetNewPasswordEx  [function; ce-only; CE 5.0..699; Netui.lib] */
-BOOL WINAPI GetNewPasswordEx (HWND hParent,
- OUT PNETUI_NEWPWD pNewPwd,
- OUT OPTIONAL HWND* phDlg);
 
 /* RegisterIPClass  [function; ce-only; CE 5.0..699; Netui.lib] */
 void RegisterIPClass(HINSTANCE hInst);

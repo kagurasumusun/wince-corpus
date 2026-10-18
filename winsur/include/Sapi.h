@@ -171,7 +171,7 @@ typedef SPDISPLAYATTRIBUTES *PSPDISPLAYATTRIBUTES, *LPSPDISPLAYATTRIBUTES;
 #ifndef __WINCE_DEFINED_SPEAKFLAGS
 #define __WINCE_DEFINED_SPEAKFLAGS
 typedef enum SPEAKFLAGS{
- // SpVoice flags
+ 
  SPF_DEFAULT = 0,
  SPF_ASYNC = (1L << 0),
  SPF_PURGEBEFORESPEAK = (1L << 1),
@@ -179,9 +179,9 @@ typedef enum SPEAKFLAGS{
  SPF_IS_XML = (1L << 3),
  SPF_IS_NOT_XML = (1L << 4),
  SPF_PERSIST_XML = (1L << 5),
- // Normalizer flags
+ 
  SPF_NLP_SPEAK_PUNC = (1L << 6),
- // Masks
+ 
  SPF_NLP_MASK = (SPF_NLP_SPEAK_PUNC),
  SPF_VOICE_MASK = (SPF_ASYNC|SPF_PURGEBEFORESPEAK|SPF_IS_FILENAME|
  SPF_IS_XML|SPF_IS_NOT_XML|SPF_NLP_MASK|SPF_PERSIST_XML),
@@ -371,7 +371,7 @@ typedef SPLOADOPTIONS *PSPLOADOPTIONS, *LPSPLOADOPTIONS;
 #ifndef __WINCE_DEFINED_SPPARTOFSPEECH
 #define __WINCE_DEFINED_SPPARTOFSPEECH
 typedef enum SPPARTOFSPEECH{
- //--- SAPI5 public POS category values (bits 28-31);
+ 
  SPPS_NotOverriden = -1,
  SPPS_Unknown = 0,
  SPPS_Noun = 0x1000,
@@ -559,7 +559,7 @@ typedef enum SPSTREAMFORMAT{
  SPSF_Text,
  SPSF_NonStandardFormat,
  SPSF_ExtendedAudioFormat,
- // Standard PCM wave formats
+ 
  SPSF_8kHz8BitMono,
  SPSF_8kHz8BitStereo,
  SPSF_8kHz16BitMono,
@@ -596,9 +596,9 @@ typedef enum SPSTREAMFORMAT{
  SPSF_48kHz8BitStereo,
  SPSF_48kHz16BitMono,
  SPSF_48kHz16BitStereo,
- // TrueSpeech format
+ 
  SPSF_TrueSpeech_8kHz1BitMono,
- // A-Law formats
+ 
  SPSF_CCITT_ALaw_8kHzMono,
  SPSF_CCITT_ALaw_8kHzStereo,
  SPSF_CCITT_ALaw_11kHzMono,
@@ -607,7 +607,7 @@ typedef enum SPSTREAMFORMAT{
  SPSF_CCITT_ALaw_22kHzStereo,
  SPSF_CCITT_ALaw_44kHzMono,
  SPSF_CCITT_ALaw_44kHzStereo,
- // u-Law formats
+ 
  SPSF_CCITT_uLaw_8kHzMono,
  SPSF_CCITT_uLaw_8kHzStereo,
  SPSF_CCITT_uLaw_11kHzMono,
@@ -616,7 +616,7 @@ typedef enum SPSTREAMFORMAT{
  SPSF_CCITT_uLaw_22kHzStereo,
  SPSF_CCITT_uLaw_44kHzMono,
  SPSF_CCITT_uLaw_44kHzStereo,
- // ADPCM formats
+ 
  SPSF_ADPCM_8kHzMono,
  SPSF_ADPCM_8kHzStereo,
  SPSF_ADPCM_11kHzMono,
@@ -625,7 +625,7 @@ typedef enum SPSTREAMFORMAT{
  SPSF_ADPCM_22kHzStereo,
  SPSF_ADPCM_44kHzMono,
  SPSF_ADPCM_44kHzStereo,
- // GSM 6.10 formats
+ 
  SPSF_GSM610_8kHzMono,
  SPSF_GSM610_11kHzMono,
  SPSF_GSM610_22kHzMono,
@@ -736,8 +736,8 @@ typedef SPVFEATURE *PSPVFEATURE, *LPSPVFEATURE;
 #ifndef __WINCE_DEFINED_SPVISEMES
 #define __WINCE_DEFINED_SPVISEMES
 typedef enum SPVISEMES{
- // English examples
- //------------------
+ 
+ 
  SP_VISEME_0 = 0,
  SP_VISEME_1,
  SP_VISEME_2,

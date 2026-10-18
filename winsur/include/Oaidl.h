@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 61 constants, 30 declarations, 19 outlines, 0 base types, 0 extra macros, 100 extra decls
+ * 61 constants, 30 declarations, 19 outlines, 0 base types, 0 extra macros, 99 extra decls
  */
 #ifndef _OAIDL_
 #define _OAIDL_
@@ -404,15 +404,6 @@ VT_ARRAY = 0x2000
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   tag_inner_PROPVARIANT */
 /*   decVal */
-
-/* CLIPDATA  [extra struct] */
-#ifndef __WINCE_DEFINED_TAGCLIPDATA
-#define __WINCE_DEFINED_TAGCLIPDATA
-#ifndef __WINCE_DEFINED_CLIPDATA
-#define __WINCE_DEFINED_CLIPDATA
-typedef struct tagCLIPDATA { /* cbSize is the size of the buffer pointed to */ /* by pClipData, plus sizeof(ulClipFmt) */ ULONG cbSize; long ulClipFmt; BYTE* pClipData; } CLIPDATA;
-#endif /* __WINCE_DEFINED_CLIPDATA */
-#endif /* __WINCE_DEFINED_TAGCLIPDATA */
 
 /* CY  [extra struct] */
 #ifndef __WINCE_DEFINED_TAGCY

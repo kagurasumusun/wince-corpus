@@ -39,7 +39,7 @@ struct ScrollBarInfoInternal {
  SCROLLINFO si;
  BOOL bInSetSBInfo;
  int nThumbPos;
- SCROLL_STATE dwState;
+ /* DERIVED member omitted -- type body unprinted: SCROLL_STATE dwState; */
  UINT nTrackStart;
  UINT fnBar;
  UINT idTimer;

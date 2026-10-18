@@ -258,10 +258,27 @@ def c_decl_text(text):
     text = _finish_decl_semicolons(text)
     text = _finish_enum_commas(text)
     text = _fix_enum_member_refs(text)
+    # a '//'-comment hiding inside a prototype eats the closing ')' and
+    # every following param on the line -- strip it (defines may hold URLs)
+    if text and not text.lstrip().startswith("#"):
+        text = re.sub(r"//[^\n]*", "", text)
     # a page's list marker printed onto member lines (``..e_vctInvalid``)
     text = re.sub(r"(?m)^(\s*)\.\.+", r"\1", text)
+    # SAL/MIDL qualifiers printed in the prototype (``__out_opt unsigned``)
+    text = re.sub(
+        r"\b__(?:in|out|inout)(?:_opt|_opt_|_\w+)?\b\s*", "", text)
+    text = re.sub(
+        r"\b_(?:In|Out|Inout|In_opt|Out_opt|Inout_opt|Deref_out|Deref_opt"
+        r"|Outptr|COM|Maybenull|Notnull|Null_terminated|Reserved|Ret_)"
+        r"(?:_\w+)?_\b\s*", "", text)
     # curated fused type+parameter names (a lost space on the page)
     text = text.replace("ADDRESS_TYPEAddr", "ADDRESS_TYPE Addr")
+    text = text.replace("dwFlagsIPMPackageFile", "dwFlags IPMPackageFile")
+    text = text.replace("constwchar_t", "const wchar_t")
+    text = text.replace("unsigned__int64", "unsigned __int64")
+    text = text.replace("signed__int64", "signed __int64")
+    text = text.replace("(int64,", "(__int64,")
+    text = text.replace("(int64)", "(__int64)")
     # bitfield members whose ';' the page lost (``DWORD fSuccess: 1``
     # followed by another member)
     text = re.sub(r"(?m)^(\s+[A-Za-z_][\w\s\*]*:\s*\d+)\s*$", r"\1;", text)
@@ -324,6 +341,11 @@ def c_decl_text(text):
             if g1w in _star_qual or g2w in _star_qual:
                 return m.group(0)
             return f"{m.group(1)}, {m.group(2)}"
+        # two adjacent star-params lost their comma entirely
+        text = re.sub(
+            r"\b([A-Za-z_]\w+[ \t]+\*{1,2}[ \t]*[A-Za-z_]\w+)[ \t]+"
+            r"([A-Za-z_]\w+[ \t]+\*{1,2}[ \t]*[A-Za-z_]\w+)",
+            _fix_star_comma, text)
         text = re.sub(
             r"\b([A-Za-z_]\w+[ \t]+\*{1,2}[ \t]*[A-Za-z_]\w+)[ \t]+"
             r"([A-Za-z_]\w+[ \t]+\*{1,2}[ \t]*[A-Za-z_]\w+[ \t]*[,)])",
@@ -333,6 +355,29 @@ def c_decl_text(text):
             r"\b([A-Za-z_]\w*)[ \t]+([A-Za-z_]\w+[ \t]+\*{1,2}[ \t]*"
             r"[A-Za-z_]\w+[ \t]*[,)])",
             _fix_star_comma, text)
+        # ``name TYPEWORD ...``-shape: ``index unsigned char *pbID`` --
+        # only inside a parameter list
+        _skip = _star_qual | {"typedef", "extern", "static", "inline",
+                              "return", "FAR", "NEAR", "WINAPI", "CALLBACK",
+                              "STDAPI", "TSPIAPI"}
+
+        def _fix_typeword_comma(m):
+            if m.group(1) in _skip:
+                return m.group(0)
+            return f"{m.group(1)}, {m.group(2)}"
+
+        def _fix_plist(mm):
+            inner = re.sub(
+                r"\b([A-Za-z_]\w*)[ \t]+"
+                r"((?:unsigned|signed|long|short|const|struct|union|enum)\b)",
+                _fix_typeword_comma, mm.group(0))
+            # name before a ``TYPE FAR*`` unit: ``dwCookie VARIANT_BOOL FAR*``
+            inner = re.sub(
+                r"\b([A-Za-z_]\w*)[ \t]+"
+                r"([A-Za-z_]\w+[ \t]+(?:FAR|NEAR)[ \t]*\*{1,2})",
+                _fix_typeword_comma, inner)
+            return inner
+        text = re.sub(r"\([^()]*\)", _fix_plist, text)
         # a lost space that fused type and parameter: ``ADDRESS_TYPEAddr``
         # (env-gated experiment; the regex class over-splits real identifiers
         # like ``TYPE_Suffix`` -- a curated fused-name list is safer)
@@ -3845,6 +3890,28 @@ def run_unified(args):
                 "#ifndef afx_msg",
                 "#define afx_msg",
                 "#endif",
+                "#ifndef cdecl",
+                "#define cdecl",
+                "#endif",
+                "#ifndef pascal",
+                "#define pascal",
+                "#endif",
+                "#ifndef TSPIAPI",
+                "#define TSPIAPI",
+                "#endif",
+                "#ifndef TAPIAPI",
+                "#define TAPIAPI",
+                "#endif",
+                "#ifndef SAFEARRAY",
+                "#define SAFEARRAY(T) struct tagSAFEARRAY",
+                "#endif",
+                "#ifndef EXTERN_C",
+                "#ifdef __cplusplus",
+                "#define EXTERN_C extern \"C\"",
+                "#else",
+                "#define EXTERN_C extern",
+                "#endif",
+                "#endif",
                 "/* OLE calling conventions some pages print bare. */",
                 "#ifndef WINOLEAPI",
                 "#define WINOLEAPI HRESULT STDMETHODCALLTYPE",
@@ -4164,8 +4231,18 @@ def run_unified(args):
                 else:
                     decl = f"typedef struct {fname} {fname};"
                 windef_fwd_lines.append(f"/* DERIVED forward -- {fnote} */")
-                windef_fwd_lines.extend(
-                    type_guard_lines(fname, decl, windef_fwd_lines))
+                if form == "spelling-alias":
+                    # a spelling variant needs its own guard: the
+                    # canonical's __WINCE_DEFINED_ key casefolds identically
+                    _g = ("__WINCE_DEFINED_" + fname.upper()
+                          .replace(".", "_") + "_SPELLING")
+                    windef_fwd_lines.append(f"#ifndef {_g}")
+                    windef_fwd_lines.append(f"#define {_g}")
+                    windef_fwd_lines.append(decl)
+                    windef_fwd_lines.append(f"#endif /* {_g} */")
+                else:
+                    windef_fwd_lines.extend(
+                        type_guard_lines(fname, decl, windef_fwd_lines))
         # Extra macros filed into this header (quality-filtered, not
         # already numbered as constants above).  Object-like first, then
         # function-like, so the two kinds are not mixed.
@@ -4649,6 +4726,15 @@ def run_unified(args):
                 if decl.get("name") in _seen_unassigned:
                     continue
                 decl_text = c_decl_text(decl.get('declaration', '').strip())
+                # unbalanced decls poison every following line
+                if decl_text and (decl_text.count("(") != decl_text.count(")")
+                                  or decl_text.count("{") != decl_text.count("}")):
+                    continue
+                if decl_text and re.match(r'\s*extern\s+"C"', decl_text):
+                    decl_text = (
+                        "#ifdef __cplusplus\nextern \"C\" {\n#endif\n"
+                        + re.sub(r'^\s*extern\s+"C"\s*', "", decl_text)
+                        + "\n#ifdef __cplusplus\n}\n#endif")
                 _dn = (decl.get("name") or "")
                 _fn_names = {_dn}
                 _m2 = re.search(r"([A-Za-z_]\w*)\s*\([^;]*\)\s*;?\s*$",

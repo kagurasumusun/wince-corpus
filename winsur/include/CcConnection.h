@@ -19,6 +19,5 @@
 /* function */
 HRESULT CloseProcessHandle (DWORD in_ProcessHandle);
 HRESULT DisconnectDevice ();
-HRESULT VerifyFilesInstalled(DWORD in_ArraySize, FileVerifyReference in_InfoArray, FileVerifyResult out_ExistenceArray);
 
 #endif /* _CCCONNECTION_ */

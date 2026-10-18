@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 50 constants, 26 declarations, 11 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 50 constants, 25 declarations, 11 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _SIMMGR_
 #define _SIMMGR_

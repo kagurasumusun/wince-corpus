@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 33 constants, 16 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 33 constants, 15 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINREG_
 #define _WINREG_
@@ -166,19 +166,6 @@ HANDLE CeFindFirstRegChange (HKEY hKey,
 
 /* CeFindNextRegChange  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL CeFindNextRegChange (HANDLE hChangeHandle);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
-
-/* CeRegTestSetValueW  [function; ce-only; CE 6.0..699; coredll.lib] */
-LONG CeRegTestSetValueW(__in, HKEY hKey,
- __in, LPCWSTR lpValueName,
- DWORD dwType,
- __in_bcount(cbOldData) __opt CONST BYTE* lpOldData,
- DWORD cbOldData,
- __in_bcount(cbNewData) __opt CONST BYTE* lpNewData,
- DWORD cbNewData,
- DWORD dwFlags);
 #endif /* _WIN32_WCE */
 
 #endif /* _WINREG_ */

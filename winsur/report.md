@@ -11,13 +11,13 @@ the SAME tree, marked 'Win32 reference' -- never a second tree.
 ## What was generated
 
 * entities in scope: **29,161** (by surface: `ce-only` 24,666, `shared` 4,495)
-* header fragments: **636** under `include/`, each
+* header fragments: **633** under `include/`, each
   with its documented constants first, then the macros, the types
   and the functions; quoted text is verbatim, the `#define`
   keyword and the header/constant filing are derived and say so
-* derived `#define` lines written: **27,769**
+* derived `#define` lines written: **27,773**
 * derived member outlines (structures whose body no page prints):
-  **834** -- marked DERIVED in the fragment
+  **871** -- marked DERIVED in the fragment
 * constants whose pages disagree / overlap: **15** name(s) examined in `kb/constant-conflicts.tsv`
   (0 of them reach a header fragment in this build;
   **0** resolved by the review in
@@ -32,7 +32,7 @@ the SAME tree, marked 'Win32 reference' -- never a second tree.
 * printed export ordinals: 1 file(s),
   94 name(s)
 * declarations taken from the Win32 reference because no CE page
-  prints one: **111** -- every
+  prints one: **110** -- every
   one marked in the fragment and the manifest; CE and desktop
   values are never assumed equal
 * constants numbered only by the Win32 shared reference (and only
@@ -40,7 +40,7 @@ the SAME tree, marked 'Win32 reference' -- never a second tree.
   tree, every one marked 'verify against the CE SDK'; a number a
   CE page prints always wins
 * spacing-only repairs across CE generations: **0**
-* pages behind this output: 7,225
+* pages behind this output: 6,741
 
 ## Constant/header linkage (kb/constant-headers.tsv)
 
@@ -98,8 +98,8 @@ every `#define` number above is a CE documentation quotation.
 
 | reason | entities |
 |--------|----------|
-| no declaration in the corpus | 21,645 |
-| declaration is not a C declaration | 18,100 |
+| no declaration in the corpus | 22,186 |
+| declaration is not a C declaration | 18,642 |
 | no header stated | 5,510 |
 | no CE version evidence | 1,531 |
 | constant review-rejected (data/constant-header-review.tsv) | 13 |

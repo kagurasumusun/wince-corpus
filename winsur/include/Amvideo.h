@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 17 constants, 0 declarations, 1 outlines, 0 base types, 0 extra macros, 12 extra decls
+ * 17 constants, 0 declarations, 1 outlines, 0 base types, 0 extra macros, 9 extra decls
  */
 #ifndef _AMVIDEO_
 #define _AMVIDEO_
@@ -53,9 +53,6 @@ HRESULT GetSurfaceType(DWORD *pSurfaceType);
 HRESULT GetSwitches(DWORD *pSwitches);
 HRESULT SetDefault();
 HRESULT SetSwitches(DWORD pSwitches);
-HRESULT UseOverlayStretch(long UseOverlayStretch);
-HRESULT UseScanLine(long UseScanLine);
-HRESULT UseWhenFullScreen(long UseWhenFullScreen);
 HRESULT WillUseFullScreen(long *UseWhenFullScreen);
 
 #endif /* _AMVIDEO_ */

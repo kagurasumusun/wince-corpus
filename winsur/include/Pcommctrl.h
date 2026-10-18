@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 3 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 1 declarations, 3 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _PCOMMCTRL_
 #define _PCOMMCTRL_
@@ -16,6 +16,10 @@
  * ================================================================ */
 
 /* ListView_GetNumberOfWorkAreas  [macro, function; shared] */
+
+/* ListView_GetWorkAreas  [macro, function; shared] */
+
+/* ListView_SetWorkAreas  [macro, function; shared] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

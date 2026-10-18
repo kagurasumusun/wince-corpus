@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2 constants, 6 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 2 constants, 3 declarations, 3 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _WS2TCPIP_
 #define _WS2TCPIP_
@@ -24,14 +24,11 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
+/* freeaddrinfo  [struct, function; shared; Ws2.lib; A/W FreeAddrInfoW (CE is W-side)] */
+
+/* getaddrinfo  [struct, function; shared; Ws2.lib; A/W GetAddrInfoW (CE is W-side)] */
+
 /* getnameinfo  [struct, macro, function; shared; Ws2.lib; A/W GetNameInfoW (CE is W-side)] */
-int getnameinfo(const struct sockaddr FAR* sa,
- socklen_t salen,
- char FAR* host,
- DWORD hostlen,
- char FAR* serv,
- DWORD servlen,
- int flags);
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -53,21 +50,6 @@ struct addrinfo {
  struct addrinfo* ai_next;
 };
 #endif /* __WINCE_DEFINED_ADDRINFO */
-
-/* freeaddrinfo  [struct, function; shared; Ws2.lib; A/W FreeAddrInfoW (CE is W-side)] */
-#ifndef __WINCE_DEFINED_FREEADDRINFO
-#define __WINCE_DEFINED_FREEADDRINFO
-void freeaddrinfo(struct addrinfo FAR* ai);
-#endif /* __WINCE_DEFINED_FREEADDRINFO */
-
-/* getaddrinfo  [struct, function; shared; Ws2.lib; A/W GetAddrInfoW (CE is W-side)] */
-#ifndef __WINCE_DEFINED_GETADDRINFO
-#define __WINCE_DEFINED_GETADDRINFO
-int getaddrinfo(const char FAR* nodename,
- const char FAR* servname,
- const struct addrinfo FAR* hints,
- struct addrinfo FAR* FAR* res);
-#endif /* __WINCE_DEFINED_GETADDRINFO */
 
 /* in6_addr  [struct; shared] */
 #ifndef __WINCE_DEFINED_IN6_ADDR
@@ -91,12 +73,6 @@ struct sockaddr_in6 {
  u_long sin6_scope_id;
 };
 #endif /* __WINCE_DEFINED_SOCKADDR_IN6 */
-
-/* ai  [extra struct] */
-#ifndef __WINCE_DEFINED_AI
-#define __WINCE_DEFINED_AI
-void freeaddrinfo(struct addrinfo FAR* ai);
-#endif /* __WINCE_DEFINED_AI */
 
 /* sin6_scope_id  [extra struct] */
 #ifndef __WINCE_DEFINED_SOCKADDR_IN6
@@ -124,17 +100,5 @@ struct addrinfo {
 };
 #endif /* __WINCE_DEFINED_AI_NEXT */
 #endif /* __WINCE_DEFINED_ADDRINFO */
-
-/* res  [extra struct] */
-#ifndef __WINCE_DEFINED_RES
-#define __WINCE_DEFINED_RES
-int getaddrinfo(const char FAR* nodename, const char FAR* servname, const struct addrinfo FAR* hints, struct addrinfo FAR* FAR* res);
-#endif /* __WINCE_DEFINED_RES */
-
-/* flags  [extra struct] */
-#ifndef __WINCE_DEFINED_FLAGS
-#define __WINCE_DEFINED_FLAGS
-int getnameinfo(const struct sockaddr FAR* sa, socklen_t salen, char FAR* host, DWORD hostlen, char FAR* serv, DWORD servlen, int flags);
-#endif /* __WINCE_DEFINED_FLAGS */
 
 #endif /* _WS2TCPIP_ */

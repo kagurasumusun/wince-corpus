@@ -39,7 +39,7 @@ DWORD dwFlags;
 DWORD idsEvent;
 DWORD idsEventCaption;
 DWORD cuiParams;
-UIPARAM auiParams[4]; };
+/* DERIVED member omitted -- type body unprinted: UIPARAM auiParams[4]; */ };
 typedef struct _FATUIDATA FATUIDATA, *PFATUIDATA;
 #endif /* __WINCE_DEFINED_FATUIDATA */
 #endif /* __WINCE_DEFINED__FATUIDATA */

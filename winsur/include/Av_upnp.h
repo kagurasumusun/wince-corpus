@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 59 constants, 8 declarations, 2 outlines, 0 base types, 0 extra macros, 14 extra decls
+ * 59 constants, 7 declarations, 3 outlines, 0 base types, 0 extra macros, 10 extra decls
  */
 #ifndef _AV_UPNP_
 #define _AV_UPNP_
@@ -83,6 +83,8 @@
 
 /* ConnectionInfo  [struct, typedef; ce-only; Av_upnp.lib] */
 
+/* object  [struct, typedef; ce-only; Av_upnp.lib] */
+
 /* UPnPAVError  [enum; ce-only; Av_upnp.lib] */
 
 /* ==================================================================
@@ -136,21 +138,6 @@ struct MediaInfo
  wstring
  strWriteStatus;
  };
-#endif /* __cplusplus */
-
-/* object  [struct, typedef; ce-only; Av_upnp.lib] */
-#ifdef __cplusplus
-struct object
-{
- /* constructor not shown */ bool bContainer;
- wstring strID;
- wstring strParentID;
- wstring strTitle;
- wstring strClass;
- bool bRestricted;
- // GetProperty declarations not shown
- // private members not shown
-};
 #endif /* __cplusplus */
 
 /* PositionInfo  [struct, typedef; ce-only; Av_upnp.lib] */
@@ -248,19 +235,6 @@ struct MediaInfo
 };
 #endif /* __cplusplus */
 
-/* shown  [extra struct] */
-#ifdef __cplusplus
-struct object
-{
- bool bContainer;
- wstring strID;
- wstring strParentID;
- wstring strTitle;
- wstring strClass;
- bool bRestricted;
-};
-#endif /* __cplusplus */
-
 /* nAbsCount  [extra struct] */
 #ifdef __cplusplus
 struct PositionInfo
@@ -319,11 +293,8 @@ struct TransportSettings
  * ================================================================ */
 
 /* function */
-bool AddNamespaceMapping(LPCWSTR pszNamespace, LPCWSTR pszPrefix);
 DWORD AddSinkProtocol(LPCWSTR pszProtocolInfo);
 DWORD AddSourceProtocol(LPCWSTR pszProtocolInfo);
-bool GetFirstObject(LPCWSTR pszXml, object* pObj);
-bool GetNextObject(object* pObj);
 DWORD RemoveSinkProtocol(LPCWSTR pszProtocolInfo);
 DWORD RemoveSourceProtocol(LPCWSTR pszProtocolInfo);
 

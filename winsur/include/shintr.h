@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 8 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _SHINTR_
 #define _SHINTR_
@@ -16,11 +16,6 @@
  * ================================================================ */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
-
-/* __fmac  [function; ce-only; CE 4.0..699] */
-Float __fmac(float Arg1,
- float Arg1,
- float Arg1);
 
 /* __movca  [function; ce-only; CE 4.0..699] */
 void __movca(unsigned long value,
@@ -48,5 +43,13 @@ float _Dot4dV(float* vector1,
 /* _XDMultMatrix  [function; ce-only; CE 4.0..699] */
 void _XDMultMatrix(float* matrix);
 #endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* function */
+Float __fmac(float i, float j, float k);
 
 #endif /* _SHINTR_ */

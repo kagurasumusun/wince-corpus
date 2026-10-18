@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 860 constants, 101 declarations, 3 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 860 constants, 95 declarations, 3 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _MMSYSTEM_
 #define _MMSYSTEM_
@@ -1062,11 +1062,6 @@ typedef struct tagSTREAMPROPS {
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
-
-/* PlaySound  [function; ce-only; unified-kb; unified-kb] */
-BOOL WINAPI PlaySound(LPCSTR pszSound,
- HMODULE hmod,
- DWORD fdwSound);
 
 /* sndPlaySound  [function; ce-only; unified-kb; unified-kb] */
 BOOL sndPlaySound(LPCTSTR lpszSoundName,

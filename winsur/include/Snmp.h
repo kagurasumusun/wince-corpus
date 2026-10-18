@@ -182,8 +182,8 @@ typedef AsnOctetString *PAsnOctetString, *LPAsnOctetString;
 #ifndef __WINCE_DEFINED_SNMPVARBIND
 #define __WINCE_DEFINED_SNMPVARBIND
 typedef struct {
- AsnObjectName name;
- AsnObjectSyntax value;
+ /* DERIVED member omitted -- type body unprinted: AsnObjectName name; */
+ /* DERIVED member omitted -- type body unprinted: AsnObjectSyntax value; */
 }SnmpVarBind;
 #endif /* __WINCE_DEFINED_SNMPVARBIND */
 #ifndef __WINCE_DEFINED_PSNMPVARBIND
@@ -210,18 +210,18 @@ typedef SnmpVarBindList *PSnmpVarBindList, *LPSnmpVarBindList;
 typedef struct {
  BYTE asnType;
  union {
- AsnInteger32 number;
- AsnUnsigned32 unsigned32;
+ /* DERIVED member omitted -- type body unprinted: AsnInteger32 number; */
+ /* DERIVED member omitted -- type body unprinted: AsnUnsigned32 unsigned32; */
  AsnCounter64 counter64;
  AsnOctetString string;
- AsnBits bits;
+ /* DERIVED member omitted -- type body unprinted: AsnBits bits; */
  AsnObjectIdentifier object;
- AsnSequence sequence;
- AsnIPAdress address;
- AsnCounter32 counter32;
- AsnGauge32 gauge;
- AsnTimeTicks ticks;
- AsnOpaque arbitrary;
+ /* DERIVED member omitted -- type body unprinted: AsnSequence sequence; */
+ /* DERIVED member omitted -- type body unprinted: AsnIPAdress address; */
+ /* DERIVED member omitted -- type body unprinted: AsnCounter32 counter32; */
+ /* DERIVED member omitted -- type body unprinted: AsnGauge32 gauge; */
+ /* DERIVED member omitted -- type body unprinted: AsnTimeTicks ticks; */
+ /* DERIVED member omitted -- type body unprinted: AsnOpaque arbitrary; */
  } asnValue;
 } AsnAny;
 #endif /* __WINCE_DEFINED_ASNANY */

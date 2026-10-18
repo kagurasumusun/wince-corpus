@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2175 constants, 311 declarations, 5 outlines, 1 base types, 0 extra macros, 19 extra decls
+ * 2175 constants, 297 declarations, 5 outlines, 1 base types, 0 extra macros, 18 extra decls
  */
 #ifndef _WINUSER_
 #define _WINUSER_
@@ -3256,6 +3256,9 @@ typedef struct tagMyData { };
 /* CheckDlgButton  [function; ce-only; harvest-kb; harvest-kb] */
 BOOL CheckDlgButton(int nIDButton, UINT nCheck);
 
+/* SystemIdleTimerReset  [function; ce-only; harvest-kb; harvest-kb] */
+void SystemIdleTimerReset();
+
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* EnableHardwareKeyboard  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Kbdui.lib, kbdui.lib] */
@@ -3266,14 +3269,6 @@ HANDLE GetClipboardDataAlloc(UINT uFormat);
 
 /* GetMessageSource  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib] */
 UINT GetMessageSource();
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
-
-/* GetMouseMovePoints  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Uibase.lib, uibase.lib, Wmgr_c.lib, wmgr_c.lib] */
-BOOL WINAPI GetMouseMovePoints(PPOINT pptBuf,
- UINT nBufPoints,
- UINT* pnPointsRetrieved);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
@@ -3990,9 +3985,6 @@ BOOL SubtractRect(LPRECT lprcDst,
  const RECT* lprcSrc1,
  const RECT* lprcSrc2);
 
-/* SystemIdleTimerReset  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; idle.lib] */
-void WINAPI SystemIdleTimerReset(void);
-
 /* SystemParametersInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib; A/W SystemParametersInfoA,SystemParametersInfoW (CE is W-side)] */
 /* Windows CE supports only the Unicode version of this function. */
 /* Windows CE supports only the Unicode version of this function. */
@@ -4060,12 +4052,6 @@ LRESULT CALLBACK WindowProc(HWND hwnd,
  UINT uMsg,
  WPARAM wParam,
  LPARAM lParam);
-
-/* WinMain  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-int WINAPI WinMain(HINSTANCE hInstance,
- HINSTANCE hPrevInstance,
- LPWSTR lpCmdLine,
- int nShowCmd);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
@@ -4158,12 +4144,6 @@ BOOL ImmIsUIMessage(HWND hWndIME,
  UINT msg,
  WPARAM wParam,
  LPARAM lParam);
-
-/* ImmSetHotKey  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL WINAPI ImmSetHotKey(DWORD dwHotKeyID,
- UINT uModifiers,
- UINT uVKey,
- HKL hKL);
 
 /* ImmSimulateHotKey  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
 BOOL ImmSimulateHotKey(HWND hWnd,
@@ -4278,9 +4258,6 @@ HICON ExtractIcon(HINSTANCE hInst,
 /* GetDesktopWindow  [function; shared; CE 5.0..699; ext-ms-win-ntuser-window-l1-1-5.dll, ext-ms-win-ntuser-window-l1-1-6.dll, Ext-MS-Win-NTUser-Window-L1-1-4.dll, User32.dll, User32.lib, Ext-MS-Win-NTUser-Window-l1-1-0.dll, Ext-MS-Win-NTUser-Window-l1-1-2.dll, minuser.dll, API-MS-Win-RTCore-NTUser-Window-l1-1-0.dll, Ext-MS-Win-RTCore-NTUser-Window-Ext-l1-1-0.dll, Ext-MS-Win-NTUser-Window-l1-1-1.dll, ext-ms-win-rtcore-ntuser-window-ext-l1-1-1.dll, ie_shims.dll, API-MS-Win-NTUser-IE-Window-l1-1-0.dll, ext-ms-win-ntuser-window-l1-1-3.dll; lib:win32-reference] */
 HWND GetDesktopWindow(void);
 
-/* GetMessageQueueReadyTimeStamp  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
-DWORD WINAPI GetMessageQueueReadyTimeStamp(HWND hWnd);
-
 /* GetQueueStatus  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 DWORD GetQueueStatus(UINT flags);
 
@@ -4291,12 +4268,6 @@ BOOL InvertRect(HDC hDC,
 /* LoadKeyboardLayout  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W LoadKeyboardLayoutA,LoadKeyboardLayoutW (CE is W-side)] */
 HKL LoadKeyboardLayout(LPCSTR pwszKLID,
  UINT Flags);
-
-/* RedrawWindow  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
-BOOL WINAPI RedrawWindow(HWND hwnd,
- CONST RECT* lprcUpdate,
- HRGN hrgnUpdate,
- UINT flags);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
@@ -4313,7 +4284,6 @@ BOOL AllKeys(BOOL bAllKeys);
 /* function */
 HRESULT GetFocusRect(RECT *pRect);
 HRESULT GetWindowHandle(HWND *pHwnd);
-VOID WINAPI IsDlgButtonChecked(HWND hDlg, int nIDButton);
 HRESULT PostMessageToApp(long uMsg, long wParam, long lParam);
 HRESULT RegisterClassObjects(DWORD dwClsContext, DWORD* dwFlags);
 void SetCursorPosition(UINT XScreenSpace, UINT YScreenSpace, DWORD Flags);

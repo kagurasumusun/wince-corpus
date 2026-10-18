@@ -1196,7 +1196,7 @@ VOID FAR PASCAL lineCallbackFunc(DWORD hDevice,
 LONG lineConfigDialogEdit(DWORD dwDeviceID,
  HWND hwndOwner,
  LPCWSTR lpszDeviceClass,
- LPVOID const lpDeviceConfigIn,
+ LPVOID, const lpDeviceConfigIn,
  DWORD dwSize,
  LPVARSTRING lpDeviceConfigOut);
 
@@ -1207,7 +1207,7 @@ LONG WINAPI lineGetDevConfig(DWORD dwDeviceID,
 
 /* lineSetDevConfig  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib; A/W lineSetDevConfigA,lineSetDevConfigW (CE is W-side)] */
 LONG lineSetDevConfig(DWORD dwDeviceID,
- LPVOID const lpDeviceConfig,
+ LPVOID, const lpDeviceConfig,
  DWORD dwSize,
  LPCTSTR lpszDeviceClass);
 

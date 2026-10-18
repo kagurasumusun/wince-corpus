@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 38 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 34 declarations, 4 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _HIDPI_
 #define _HIDPI_
@@ -14,6 +14,14 @@
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
+
+/* HidP_GetButtons  [macro; ce-only] */
+
+/* HidP_GetButtonsEx  [macro; ce-only] */
+
+/* HidP_SetButtons  [macro; ce-only] */
+
+/* HidP_UnsetButtons  [macro; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

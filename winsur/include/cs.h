@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 32 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 31 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _CS_
 #define _CS_
@@ -14,6 +14,8 @@
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
+
+/* CS_FRAMING_ITEM  [struct; ce-only] */
 
 /* DEFINE_CSPROPERTY_ITEM  [macro; ce-only] */
 #define DEFINE_CSPROPERTY_ITEM(PropertyId, GetHandler,\

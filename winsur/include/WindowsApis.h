@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 350 constants, 39 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 350 constants, 33 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDOWSAPIS_
 #define _WINDOWSAPIS_
@@ -377,10 +377,6 @@
 LPTSTR MAKEINTATOM(WORD wInteger);
 
 /* PALETTEINDEX2BPP  [macro; ce-only] */
-#define PALETTEINDEX2BPP (i) \
- (((i)==0)?0x00000000: \
- (((i)==1)?0x00808080: \
- (((i)==2)?0x00C0C0C0:0x00FFFFFF)));
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -553,10 +549,6 @@ BOOL CALLBACK EnumUILanguagesProc(LPTSTR lpUILanguageString);
 /* FiberProc  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 VOID CALLBACK FiberProc(PVOID lpParameter);
 
-/* GetCurrentPositionEx  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-WINGDIAPI BOOL WINAPI GetCurrentPositionEx(HDC hdc,
- LPPOINT lpPoint);
-
 /* GetFontData  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 DWORD GetFontData(HDC hdc,
  DWORD dwTable,
@@ -576,11 +568,6 @@ ATOM GlobalAddAtom(LPCTSTR lpString);
 
 /* GlobalFindAtom  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W GlobalFindAtomA,GlobalFindAtomW (CE is W-side)] */
 ATOM GlobalFindAtom(LPCTSTR lpString);
-
-/* InvalidateRgn  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL WINAPI InvalidateRgn(HWND hWnd,
- HRGN hRgn,
- BOOL fErase);
 
 /* PropEnumProcEx  [function; shared; CE 5.0..699; A/W PROPENUMPROCEXA,PROPENUMPROCEXW (CE is W-side)] */
 BOOL CALLBACK PropEnumProcEx(HWND hwnd,
@@ -603,10 +590,6 @@ BOOL SetProp(HWND hWnd,
 
 /* SetUserDefaultLCID  [function; ce-only; CE 5.0..699; Coreloc.lib] */
 BOOL SetUserDefaultLCID(LCID Locale);
-
-/* ValidateRgn  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL WINAPI ValidateRgn(HWND hWnd,
- HRGN hRgn);
 #endif /* _WIN32_WCE */
 
 #endif /* _WINDOWSAPIS_ */

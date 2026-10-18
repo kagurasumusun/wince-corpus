@@ -327,7 +327,7 @@ HRESULT RevokeInterfaceFromGlobal(DWORD dwCookie);
 HRESULT Seek(ULARGE_INTEGER dlibMove, DWORD dwOrigin, ULARGE_INTEGER plibNewPosition);
 HRESULT SetBindOptions(BIND_OPTS* pbindopts);
 HRESULT SetData(FORMATETC* pFormatetc, STGMEDIUM* pmedium, BOOL fRelease);
-HRESULT SetElementTimes(const WCHAR *pwcsName, FILETIME const *pctime, FILETIME const *patime, FILETIME const *pmtime);
+HRESULT SetElementTimes(const WCHAR *pwcsName, FILETIME, const *pctime, FILETIME, const *patime, FILETIME, const *pmtime);
 HRESULT SetStateBits(DWORD grfStateBits, DWORD grfMask);
 
 #endif /* _OBJIDL_ */

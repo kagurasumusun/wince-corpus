@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 1 outlines, 0 base types, 0 extra macros, 124 extra decls
+ * 0 constants, 0 declarations, 1 outlines, 0 base types, 0 extra macros, 123 extra decls
  */
 #ifndef _AFXWIN_
 #define _AFXWIN_
@@ -161,9 +161,6 @@ void SetLimitText(UINT nMax);
 void SetMargins(UINT nLeft, UINT nRight);
 void SetRegistryKey(LPCTSTR lpszRegistryKey);
 void SetScaleToFitSize(SIZE sizeTotal);
-#ifdef __cplusplus
-void SetScrollSizes(int nMapMode, SIZE sizeTotal, const SIZE& sizePage = sizeDefault, const SIZE& sizeLine = sizeDefault);
-#endif /* __cplusplus */
 void SetTabStops();
 int SetTopIndex(int nIndex);
 void ShowOwnedWindows(BOOL bShow);

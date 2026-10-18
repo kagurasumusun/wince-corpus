@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1447 constants, 20 declarations, 22 outlines, 21 base types, 0 extra macros, 2 extra decls
+ * 1447 constants, 19 declarations, 23 outlines, 21 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _WINNT_
 #define _WINNT_
@@ -1586,9 +1586,6 @@ WORD MAKELANGID(USHORT usPrimaryLanguage,
  USHORT usSubLanguage);
 
 /* MAKELCID  [macro, function; shared] */
-#define MAKELCID(lgid, srtid) \
- ((DWORD)((((DWORD)((WORD)(srtid))) << 16) | \
- ((DWORD)((WORD)(lgid)))));
 
 /* namespaceURI  [typedef; ce-only; heuristic-prefix] */
 

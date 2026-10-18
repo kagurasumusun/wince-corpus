@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 686 constants, 334 declarations, 9 outlines, 0 base types, 0 extra macros, 13 extra decls
+ * 686 constants, 328 declarations, 9 outlines, 0 base types, 0 extra macros, 14 extra decls
  */
 #ifndef _WINBASE_
 #define _WINBASE_
@@ -709,14 +709,6 @@
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
-
-/* CHECK_INVALIDGUID  [macro, function; ce-only] */
-#define CHECK_INVALIDGUID(pguid) \
-!~((pguid)->Data1&(pguid)->Data2&(pguid)->Data3&(pguid)->Data4);
-
-/* CHECK_SYSTEMGUID  [macro, function; ce-only; Fsdbase.lib] */
-#define CHECK_SYSTEMGUID(pguid) \
-!((pguid)->Data1|(pguid)->Data2|(pguid)->Data3|(pguid)->Data4);
 
 /* CONTEXT  [struct; shared] */
 
@@ -1456,11 +1448,6 @@ BOOL DeviceIoControl(HANDLE hDevice,
  LPDWORD lpBytesReturned,
  LPOVERLAPPED lpOverlapped);
 
-/* DllMain  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib] */
-BOOL WINAPI DllMain(HANDLE hinstDLL,
- DWORD dwReason,
- LPVOID lpvReserved);
-
 /* EnterCriticalSection  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coremain.lib, coremain.lib] */
 void EnterCriticalSection(LPCRITICAL_SECTION lpCriticalSection);
 
@@ -2050,9 +2037,6 @@ HANDLE FindFirstFile(LPCTSTR lpFileName,
 BOOL FindNextFile(HANDLE hFindFile,
  LPWIN32_FIND_DATA lpFindFileData);
 
-/* FlushFileBuffers  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsmain.lib, fsmain.lib] */
-BOOL WINAPI FlushFileBuffers(HANDLE hFile);
-
 /* FlushViewOfFile  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
 BOOL FlushViewOfFile(LPCVOID lpBaseAddress,
  DWORD dwNumberOfBytesToFlush);
@@ -2244,9 +2228,6 @@ LPVOID CeZeroPointer(LPVOID ptr);
 /* ConvertThreadToFiber  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 LPVOID WINAPI ConvertThreadToFiber(LPVOID lpParameter);
 
-/* DeleteFiber  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-VOID WINAPI DeleteFiber(LPVOID lpFiber);
-
 /* DuplicateHandle  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
 BOOL DuplicateHandle(HANDLE hSourceProcessHandle,
  HANDLE hSourceHandle,
@@ -2358,9 +2339,6 @@ BOOL ResourceRequestEx (DWORD dwResId,
 /* StopDeviceNotifications  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL StopDeviceNotifications(HANDLE h);
 
-/* SwitchToFiber  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-VOID WINAPI SwitchToFiber(LPVOID lpFiber);
-
 /* UnlockFileEx  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL UnlockFileEx(HANDLE hFile,
  DWORD dwReserved,
@@ -2422,7 +2400,6 @@ DWORD VirtualQueryEx(HANDLE hProcess,
 
 /* function */
 HANDLE ExitThreadEvent(void);
-bool WaitForActiveServer (DWORD WaitTimeInMSec);
 HRESULT WaitForCompletion(long msTimeout, long *pEvCode);
 HRESULT WaitForNotifyEvent(DWORD dwMilliseconds);
 HRESULT WaitForSync(DWORD dwFlags, DWORD dwLine, DWORD dwTimeout);

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 30 constants, 7 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 30 constants, 3 declarations, 2 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _ICMPAPI_
 #define _ICMPAPI_
@@ -49,6 +49,12 @@
 #define IP_TTL_EXPIRED_TRANSIT 11013
 
 /* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* Icmp6SendEcho2  [struct, function; shared; Icmplib.lib, Iphlpapi.dll, Iphlpapi.lib] */
+
+/* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
@@ -83,21 +89,6 @@ typedef IP_OPTION_INFORMATION *PIP_OPTION_INFORMATION, *LPIP_OPTION_INFORMATION;
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
-
-/* IcmpCloseHandle  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Icmplib.lib, Iphlpapi.dll, Iphlpapi.lib] */
-BOOL WINAPI IcmpCloseHandle(HANDLE IcmpHandle);
-
-/* IcmpCreateFile  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Icmplib.lib, Iphlpapi.dll, Iphlpapi.lib] */
-HANDLE WINAPI IcmpCreateFile(VOID);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
-
-/* Icmp6CreateFile  [function; shared; CE 4.0..699; Icmplib.lib, Iphlpapi.dll, Iphlpapi.lib] */
-HANDLE WINAPI Icmp6CreateFile(VOID);
-#endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 

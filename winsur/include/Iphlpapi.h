@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 12 constants, 41 declarations, 1 outlines, 0 base types, 1 extra macros, 6 extra decls
+ * 12 constants, 40 declarations, 1 outlines, 0 base types, 1 extra macros, 6 extra decls
  */
 #ifndef _IPHLPAPI_
 #define _IPHLPAPI_

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 171 constants, 19 declarations, 0 outlines, 1 base types, 0 extra macros, 0 extra decls
+ * 171 constants, 12 declarations, 0 outlines, 1 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _SHELLAPI_
 #define _SHELLAPI_
@@ -270,7 +270,7 @@ typedef struct _SHELLEXECUTEINFO {
  LPCSTR lpDirectory;
  int nShow;
  HINSTANCE hInstApp;
- // Optional members
+ 
  LPVOID lpIDList;
  LPCSTR lpClass;
  HKEY hkeyClass;

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 22 declarations, 4 outlines, 0 base types, 0 extra macros, 51 extra decls
+ * 0 constants, 15 declarations, 4 outlines, 0 base types, 0 extra macros, 51 extra decls
  */
 #ifndef _DDRAW_
 #define _DDRAW_
@@ -255,24 +255,6 @@ typedef struct _DDBLTFX{
 /*   ddckCKSrcBlt */
 /*   ddsCaps */
 /*   dwTextureStage */
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x600)) /* CE 3.0..599 */
-
-/* EnumModesCallback2  [function; ce-only; CE 3.0..599] */
-HRESULT WINAPI EnumModesCallback(LPDDSURFACEDESC2 lpDDSurfaceDesc,
- LPVOID lpContext);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
-
-/* EnumModesCallback  [function; ce-only; CE 3.0..699] */
-HRESULT WINAPI EnumModesCallback(LPDDSURFACEDESC lpDDSurfaceDesc,
- LPVOID lpContext);
-#endif /* _WIN32_WCE */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

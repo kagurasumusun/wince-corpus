@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 3 constants, 47 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 3 constants, 45 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _D3DMTYPES_
 #define _D3DMTYPES_
@@ -24,11 +24,6 @@
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
-
-/* D3DMCOLOR_ARGB  [macro; ce-only] */
-#define D3DMCOLOR_ARGB(a,r,g,b) \
- ((D3DMCOLOR)((((a)&0xff)<<24)|(((r)&0xff)<<16)| \
- (((g)&0xff)<<8)|((b)&0xff)));
 
 /* D3DMFVF_TEXCOORDFIXED  [macro; ce-only] */
 #define D3DMFVF_TEXCOORDFIXED(CoordIndex) \
@@ -949,18 +944,5 @@ typedef struct _D3DMPRESENT_PARAMETERS_ {
 #define __WINCE_DEFINED_PD3DMPRESENT_PARAMETERS
 typedef D3DMPRESENT_PARAMETERS *PD3DMPRESENT_PARAMETERS, *LPD3DMPRESENT_PARAMETERS;
 #endif /* __WINCE_DEFINED_PD3DMPRESENT_PARAMETERS */
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
-
-/* D3DM_MAKE_D3DMVALUE  [function; ce-only; CE 5.0..699] */
-inline D3DMVALUE D3DM_MAKE_D3DMVALUE(D3DMVALUE Value);
-inline D3DMVALUE D3DM_MAKE_D3DMVALUE(float Value);
-inline D3DMVALUE D3DM_MAKE_D3DMVALUE(unsigned int Value);
-inline D3DMVALUE D3DM_MAKE_D3DMVALUE(double Value);
-#endif /* _WIN32_WCE */
 
 #endif /* _D3DMTYPES_ */

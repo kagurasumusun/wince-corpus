@@ -221,6 +221,7 @@ _CPP_MARKERS = (
     r"\bnew\s*\(",
     r"\bdelete\s*[\(\[]",
     r"[A-Za-z_]\w*\s*&\s*[A-Za-z_]\w*\s*[,)]",      # reference parameter
+    r"\*\s*&",                                          # pointer-reference param
     r"\([^()]*\b[A-Za-z_]\w*\s*=\s*[^=]",           # default argument
     r"\bC[A-Z][A-Za-z0-9_]*[a-z][A-Za-z0-9_]*\b",   # MFC/ATL CName types
     r"\b[A-Za-z_]\w*\s*<\s*[A-Za-z_]",              # template instantiation
@@ -332,11 +333,76 @@ def is_broken_c(text: str) -> bool:
     # prose leaking into the parameter list (``..., filters for the
     # incomming connection, ...``)
     paren = body[body.find("("):] if "(" in body else ""
-    if re.search(r"\b(for|the|and|with|which)\s+\w+", paren):
+    if re.search(r"\b(for|the|and|with|which|could|should|would|might|"
+                 r"may|not|from|into|when|then|this|that|been|was|were|"
+                 r"are|shutting|down|earlier)\b", paren):
+        return True
+    # C++ overloads in a C slot (``HRESULT fst(BSTR b); HRESULT fst(long l)``)
+    if re.search(r"\b([A-Za-z_]\w*)\s*\([^;{)]*\)\s*;\s*[\w\s]*?\b"
+                 r"\1\s*\(", body):
+        return True
+    # managed/IDL property syntax (``function get X () : boolean function set``)
+    if re.search(r"\bfunction\s+(get|set)\b", body):
+        return True
+    if re.search(r"\(\s*[A-Za-z_]\w*\s*:\s*", body):
+        return True
+    # managed return types in a C slot (``IList OnGetCurrentlyOpenFilenames``)
+    if re.search(r"^\s*(IList|Object|String|Integer|Boolean|function|"
+                 r"IDictionary|ICollection|IEnumerable|ArrayList)\s+\w", body):
+        return True
+    # C# ``bool CanExportFile ()`` (lowercase bool + PascalCase method)
+    if re.search(r"^\s*bool\s+[A-Z]", body):
+        return True
+    # managed empty-parameter getter (``DeviceConnection get_DeviceConnection ()``)
+    if re.search(r"^\s*[A-Za-z_]\w*\s+get_[A-Za-z_]\w*\s*\(\s*\)", body):
+        return True
+    # C# / managed class members in a C slot (``public override string ToString``)
+    if re.search(r"^\s*(public|private|protected|internal|override)\s+",
+                 body):
+        return True
+    # two-type parameter junk (``VARIANT BOOL bFirstTime``)
+    if re.search(r"\b(VARIANT)\s+(BOOL|BSTR|int|Long|short|long)\b", body):
+        return True
+    # a parameter named like the function (``OnConnection(... VARIANT_BOOL* OnConnection)``)
+    mfn = re.match(r"[\w\s\*]*?([A-Za-z_]\w*)\s*\(", body)
+    if mfn and re.search(
+            r"[,(]\s*[A-Za-z_]\w*\s+\**\s*" + re.escape(mfn.group(1))
+            + r"\s*[,)]", body):
+        return True
+    # a VARIANT enum value used as a return type (``VT_DISPATCH _CreateLogObject``)
+    if re.search(r"\bVT_[A-Z0-9_]+\s+[A-Za-z_]\w*\s*\(", body):
+        return True
+    # VB/managed parameter types (``Integer convertFlag``)
+    if re.search(r"[,(]\s*(?:Integer|String|Boolean|Double|Single|Object|"
+                 r"Variant|Long)\s+[A-Za-z_]\w*\s*[,)]", body):
+        return True
+    # a prose sentence in a prototype slot (``Unable to Start Up ConPMon``)
+    if re.search(r"\b[a-z]+(?:\s+[a-z]+){3,}", re.sub(r"[()]", " ", body)):
         return True
     # bare MIDL attribute left as a parameter (``MyInt ia,out, MyInt``)
     if re.search(r"[,(]\s*(?:in|out|optional|retval|string|unique|ptr|ref"
                  r"|const|in|out)\s*[,)]", body):
+        return True
+    # duplicate parameter name (``DWORD dwUptimeReference, Handle
+    # dwUptimeReference`` -- the page merged two forms); function
+    # prototypes only -- a struct body repeats ``sizeof(PVOID)`` freely
+    params = (body[body.find("("):body.rfind(")") + 1]
+              if "(" in body and "{" not in body else "")
+    if params:
+        names = re.findall(r"\b([A-Za-z_]\w*)\s*(?:[,)])", params)
+        seen = set()
+        for pn in names:
+            if pn in seen and pn not in {"void", "long", "int"}:
+                return True
+            seen.add(pn)
+    # double return type (``VOID STDAPI WriteBSTR`` -- macro + type)
+    if re.search(r"\b(VOID|BOOL|HRESULT|DWORD|UINT|int|void|long|WORD|BYTE|"
+                 r"HANDLE|SHORT|CHAR|WCHAR|BYTE|ULONG)\s+"
+                 r"(STDAPI|WINAPI|STDMETHODIMP|WINAPI|NTAPI|STDAPIV|STDAPIW)\b",
+                 body):
+        return True
+    # ``_asm`` sample slot
+    if re.search(r"\b_asm\b", body):
         return True
     # IDL tutorial sample interfaces (``interface I2 { }; interface I3 : I1``)
     if re.search(r"\binterface\s+I[0-9]+\b", body):
@@ -367,7 +433,7 @@ def is_broken_c(text: str) -> bool:
     # Visual Basic / Java source leaking into a C slot
     if re.search(r"\b(Private|Public|Protected)\s+\w", body):
         return True
-    if re.search(r"\b(boolean|string|Object)\s+\w+\s*[,;)]", body):
+    if re.search(r"\b(boolean|string|Object)\s+\w+\s*[,;)\(]", body):
         return True
     if re.search(r"\b__asm\b", body):
         return True

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1264 constants, 147 declarations, 4 outlines, 0 base types, 0 extra macros, 10 extra decls
+ * 1264 constants, 139 declarations, 5 outlines, 0 base types, 0 extra macros, 11 extra decls
  */
 #ifndef _WINGDI_
 #define _WINGDI_
@@ -1379,9 +1379,6 @@ typedef struct tagLOGFONT {
 /* PALETTERGB  [macro, function; shared] */
 
 /* RGB  [macro, function; shared] */
-#define RGB(r, g,b) ((DWORD) (((BYTE) (r) | \
- ((WORD) (g) << 8)) | \
- (((DWORD) (BYTE) (b)) << 16)));
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -2185,26 +2182,13 @@ BOOL GetCharABCWidths(HDC hdc,
  UINT uFirstChar,
  UINT uLastChar,
  LPABC lpabc);
-
-/* GetCharWidth32  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib; +not-umbrella; A/W GetCharWidth32A,GetCharWidth32W (CE is W-side)] */
-WINGDIAPI BOOL WINAPI GetCharWidth32(HDC hdc,
- UINT iFirstChar,
- UINT iLastChar,
- LPINT lpBuffer);
-
-/* GetTextAlign  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
-WINGDIAPI UINT WINAPI GetTextAlign(HDC hdc);
-
-/* SetTextAlign  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
-WINGDIAPI UINT WINAPI SetTextAlign(HDC hdc,
- UINT fmode);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* AbortProc  [function, callback; shared; CE 5.0..699; Mgprint.lib] */
-BOOL CALLBACK AbortProc(HDC hdc, // handle to DC
- int iError // error value);
+BOOL CALLBACK AbortProc(HDC hdc, 
+ int iError 
 
 /* AlphaBlend  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
 BOOL AlphaBlend(HDC hdcDest,
@@ -2218,13 +2202,6 @@ BOOL AlphaBlend(HDC hdcDest,
  int nWidthSrc,
  int nHeightSrc,
  BLENDFUNCTION blendFunction);
-
-/* EnumFontFamiliesEx  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W EnumFontFamiliesExA,EnumFontFamiliesExW (CE is W-side)] */
-int EnumFontFamiliesEx(HDC hdc, // handle to DC
- LPLOGFONT lpLogfont, // font information
- FONTENUMPROC lpEnumFontFamExProc, // callback function
- LPARAM lParam, // additional data
- DWORD dwFlags // not used; must be 0);
 
 /* GetCharABCWidthsI  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
 BOOL GetCharABCWidthsI(HDC hdc,
@@ -2241,17 +2218,6 @@ int GetStretchBltMode(HDC hdc);
 
 /* GetTextCharacterExtra  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 int GetTextCharacterExtra(HDC hdc);
-
-/* LineTo  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
-WINGDIAPI BOOL WINAPI LineTo(HDC hdc,
- int nXEnd,
- int nYEnd);
-
-/* MoveToEx  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
-WINGDIAPI BOOL WINAPI MoveToEx(HDC hdc,
- int X,
- int Y,
- LPPOINT lpPoint);
 
 /* SetBitmapBits  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
 LONG SetBitmapBits(HBITMAP hbmp,
@@ -2277,23 +2243,8 @@ int SetStretchBltMode(HDC hdc,
  int iStretchMode);
 
 /* SetTextCharacterExtra  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-int SetTextCharacterExtra(HDC hdc, // handle to DC
- int nCharExtra // extra-space value);
-
-/* StretchDIBits  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
-WINGDIAPI BOOL WINAPI StretchDIBits(HDC hdc,
- int XDest,
- int YDest,
- int nDestWidth,
- int nDestHeight,
- int XSrc,
- int YSrc,
- int nSrcWidth,
- int nSrcHeight,
- CONST VOID* lpBits,
- CONST BITMAPINFO* lpBitsInfo,
- UINT iUsage,
- DWORD dwRop);
+int SetTextCharacterExtra(HDC hdc, 
+ int nCharExtra 
 
 /* TransparentBlt  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
 BOOL TransparentBlt(HDC hdcDest,
@@ -2317,6 +2268,7 @@ BOOL TransparentBlt(HDC hdcDest,
 /* function */
 HRESULT Architecture(int* pwArchitecture);
 BOOL CreateFont(int nHeight, int nWidth, int nEscapement, int nOrientation, int nWeight, BYTE bItalic, BYTE bUnderline, BYTE cStrikeOut, BYTE nCharSet, BYTE nOutPrecision, BYTE nClipPrecision, BYTE nQuality, BYTE nPitchAndFamily, LPCTSTR lpszFacename);
+int EnumFontFamiliesEx(HDC hdc, LPLOGFONT lpLogfont, FONTENUMPROC lpEnumFontFamExProc, LPARAM lParam, DWORD dwFlags);
 static LPCTSTR WINAPI GetObjectDescription();
 UINT GetObjectSchema();
 HRESULT GetPath(LPCWSTR* ppszPath);

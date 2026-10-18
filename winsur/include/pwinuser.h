@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 18 constants, 38 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 18 constants, 31 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _PWINUSER_
 #define _PWINUSER_
@@ -174,13 +174,6 @@ typedef struct tagWAGI {
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 4.0..699 */
-
-/* BatteryNotifyOfTimeChange  [function; ce-only; CE 1.0..199, 4.0..699; Coredll.lib, coredll.lib] */
-void WINAPI BatteryNotifyOfTimeChange(BOOL fForward,
- FILETIME *pftDelta);
-#endif /* _WIN32_WCE */
-
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* NotifyWinUserSystem  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
@@ -202,30 +195,15 @@ BOOL RegisterTaskBar(HWND hwndTaskbar);
 
 /* GwesPowerOffSystem  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
 void GwesPowerOffSystem(void);
-
-/* NLedGetDeviceInfo  [function; ce-only; CE 4.0..699; Coredll.dll, coredll.dll] */
-BOOL WINAPI NLedGetDeviceInfo(UINT nInfoId,
- void* pOutput);
-
-/* NLedSetDevice  [function; ce-only; CE 4.0..699; Coredll.dll, coredll.dll] */
-BOOL WINAPI NLedSetDevice(UINT nDeviceId,
- void* pInput);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
-
-/* GetForegroundInfo  [function; ce-only; CE 5.0..699] */
-BOOL WINAPI GetForegroundInfo(GET_FOREGROUND_INFO* pgfi);
 
 /* GetForegroundKeyboardLayoutHandle  [function; ce-only; CE 5.0..699] */
 HKL GetForegroundKeyboardLayoutHandle(void);
 
 /* GetForegroundKeyboardTarget  [function; ce-only; CE 5.0..699] */
 HWND GetForegroundKeyboardTarget(void);
-
-/* ImmGetConversionStatusForeground  [function; ce-only; CE 5.0..699] */
-BOOL WINAPI ImmGetConversionStatusForeground(DWORD* pfdwConversion,
- DWORD* pfdwSentence);
 
 /* KeybdGetDeviceInfo  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL KeybdGetDeviceInfo(INT iIndex,
@@ -237,9 +215,6 @@ BOOL RegisterDesktop(HWND hwndDesktop);
 /* RegisterTaskBarEx  [function; ce-only; CE 5.0..699] */
 BOOL RegisterTaskBarEx(HWND hwndTaskbar,
  BOOL bTaskBarOnTop);
-
-/* TouchCalibrate  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL WINAPI TouchCalibrate(void);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
@@ -268,13 +243,5 @@ BOOL GetWindowAutoGesture(HWND hWnd,
 BOOL SetWindowAutoGesture(HWND hWnd,
  LPWAGINFO lpAutoGestureInfo);
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-void WINAPI BattyerNotifyOfTimeChange(BOOL fForward, FILETIME * pftDelta);
 
 #endif /* _PWINUSER_ */

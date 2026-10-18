@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1815 constants, 322 declarations, 20 outlines, 0 base types, 0 extra macros, 6 extra decls
+ * 1815 constants, 293 declarations, 23 outlines, 0 base types, 0 extra macros, 6 extra decls
  */
 #ifndef _COMMCTRL_
 #define _COMMCTRL_
@@ -1844,18 +1844,18 @@ VOID FORWARD_WM_NOTIFY(hwnd,
  pnmhdr,
  fn);
 
-/* HANDLE_WM_NOTIFY  [macro, function; shared] */
-#define HANDLE_WM_NOTIFY(hwnd, wParam, lParam, fn) \
- (fn)((hwnd), (int)(wParam), (NMHDR FAR*)(lParam));
-
 /* HD_ITEM  [struct; ce-only] */
 
 /* Header_CreateDragImage  [function, macro; shared; Commctrl.lib] */
 HIMAGELIST Header_CreateDragImage(HWND hwndHD,
 int iIndex);
 
+/* Header_DeleteItem  [macro, function; shared; Commctrl.lib] */
+
 /* Header_GetImageList  [function, macro; shared; Commctrl.lib] */
 HIMAGELIST Header_GetImageList(HWND hwndHD);
+
+/* Header_GetItem  [macro, function; shared; Commctrl.lib] */
 
 /* Header_GetItemCount  [macro, function; shared; Commctrl.lib] */
 
@@ -1868,6 +1868,8 @@ LPRECT lpItemRect);
 BOOL Header_GetOrderArray(HWND hwndHD,
 int iSize,
 int *lpiArray);
+
+/* Header_InsertItem  [macro, function; shared; Commctrl.lib] */
 
 /* Header_Layout  [macro, function; shared; Commctrl.lib] */
 
@@ -2410,17 +2412,8 @@ BOOL CommandBands_AddBands(HWND hwndCmdBands,
 HWND CommandBands_GetCommandBar(HWND hwndCmdBands,
  UINT uBand);
 
-/* CommandBands_GetRestoreInformation  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
-BOOL WINAPI CommandBands_GetRestoreInformation(HWND hwndCmdBands,
- UINT uBand,
- LPCOMMANDBANDSRESTOREINFO pcbri);
-
 /* CommandBands_Height  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib] */
 UINT CommandBands_Height(HWND hwndCmdBands);
-
-/* CommandBands_Show  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
-BOOL WINAPI CommandBands_Show(HWND hwndCmdBands,
- BOOL fShow);
 
 /* CommandBar_AddAdornments  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
 BOOL CommandBar_AddAdornments(HWND hwndCB,
@@ -2566,24 +2559,6 @@ void DrawStatusText(HDC hdc,
  LPCWSTR pszText,
  UINT uFlags);
 
-/* ImageList_DragEnter  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib, Imgctl.lib, imgctl.lib] */
-BOOL WINAPI ImageList_DragEnter(HWND hwndLock,
- int x,
- int y);
-
-/* ImageList_DragLeave  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib, Imgctl.lib, imgctl.lib] */
-BOOL WINAPI ImageList_DragLeave(HWND hwndLock);
-
-/* ImageList_DragMove  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib, Imgctl.lib, imgctl.lib] */
-BOOL WINAPI ImageList_DragMove(int x,
- int y);
-
-/* ImageList_DragShowNolock  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib, Imgctl.lib, imgctl.lib] */
-BOOL WINAPI ImageList_DragShowNolock(BOOL fShow);
-
-/* ImageList_EndDrag  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib, Imgctl.lib, imgctl.lib] */
-BOOL WINAPI ImageList_EndDrag(void);
-
 /* InitCommonControls  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib] */
 void InitCommonControls(void);
 
@@ -2678,18 +2653,6 @@ BOOL ListView_GetItemRect(HWND hwnd,
 /* ListView_GetItemSpacing  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
 DWORD ListView_GetItemSpacing(HWND hwnd,
  BOOL fSmall);
-
-/* ListView_GetItemState  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-UINT WINAPI ListView_GetItemState(HWND hwnd,
- int i,
- UINT mask);
-
-/* ListView_GetItemText  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-void WINAPI ListView_GetItemText(HWND hwnd,
- int iItem,
- int iSubItem,
- LPSTR pszText,
- int cchTextMax);
 
 /* ListView_GetNextItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
 int ListView_GetNextItem(HWND hwnd,
@@ -2799,18 +2762,6 @@ void ListView_SetItemPosition32(HWND hwnd,
  int iItem,
  int x,
  int y);
-
-/* ListView_SetItemState  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-void WINAPI ListView_SetItemState(HWND hwnd,
- int i,
- UINT state,
- UINT mask);
-
-/* ListView_SetItemText  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-void WINAPI ListView_SetItemText(HWND hwnd,
- int i,
- int iSubItem,
- LPCSTR pszText);
 
 /* ListView_SetSelectionMark  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
 INT ListView_SetSelectionMark(HWND hwndLV,

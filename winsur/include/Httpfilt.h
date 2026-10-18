@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 16 declarations, 8 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 0 constants, 9 declarations, 10 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _HTTPFILT_
 #define _HTTPFILT_
@@ -14,6 +14,10 @@
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
+
+/* HTTP_FILTER_CONTEXT  [struct; ce-only] */
+
+/* HTTP_FILTER_SEND_RESPONSE  [struct; ce-only; Httpfilt.lib] */
 
 /* SF_NOTIFY_ACCESS_DENIED  [function, typedef; ce-only; entity-headers] */
 
@@ -69,30 +73,6 @@ typedef struct _HTTP_FILTER_AUTHENT{
 #endif /* __WINCE_DEFINED_PHTTP_FILTER_AUTHENT */
 #endif /* __WINCE_DEFINED_HTTP_FILTER_AUTHENT */
 #endif /* __WINCE_DEFINED__HTTP_FILTER_AUTHENT */
-
-/* HTTP_FILTER_CONTEXT  [struct; ce-only] */
-#ifndef __WINCE_DEFINED__HTTP_FILTER_CONTEXT
-#define __WINCE_DEFINED__HTTP_FILTER_CONTEXT
-#ifndef __WINCE_DEFINED_HTTP_FILTER_CONTEXT
-#define __WINCE_DEFINED_HTTP_FILTER_CONTEXT
-#ifndef __WINCE_DEFINED_PHTTP_FILTER_CONTEXT
-#define __WINCE_DEFINED_PHTTP_FILTER_CONTEXT
-typedef struct _HTTP_FILTER_CONTEXT {
- DWORD cbSize;
- DWORD Revision;
- PVOID ServerContext;
- DWORD ulReserved;
- BOOL fIsSecurePort;
- PVOID pFilterContext;
- BOOL (WINAPI* GetServerVariable);
- BOOL (WINAPI* AddResponseHeaders);
- BOOL (WINAPI* WriteClient);
- VOID* (WINAPI* AllocMem);
- BOOL (WINAPI* ServerSupportFunction);
-} HTTP_FILTER_CONTEXT, *PHTTP_FILTER_CONTEXT;
-#endif /* __WINCE_DEFINED_PHTTP_FILTER_CONTEXT */
-#endif /* __WINCE_DEFINED_HTTP_FILTER_CONTEXT */
-#endif /* __WINCE_DEFINED__HTTP_FILTER_CONTEXT */
 
 /* HTTP_FILTER_LOG  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__HTTP_FILTER_LOG
@@ -160,21 +140,6 @@ typedef struct _HTTP_FILTER_RAW_DATA{
 #endif /* __WINCE_DEFINED_HTTP_FILTER_RAW_DATA */
 #endif /* __WINCE_DEFINED__HTTP_FILTER_RAW_DATA */
 
-/* HTTP_FILTER_SEND_RESPONSE  [struct; ce-only; Httpfilt.lib] */
-#ifndef __WINCE_DEFINED_HTTP_FILTER_SEND_RESPONSE
-#define __WINCE_DEFINED_HTTP_FILTER_SEND_RESPONSE
-#ifndef __WINCE_DEFINED_PHTTP_FILTER_SEND_RESPONSE
-#define __WINCE_DEFINED_PHTTP_FILTER_SEND_RESPONSE
-typedef struct HTTP_FILTER_SEND_RESPONSE{
- BOOL (WINAPI* GetHeader);
- BOOL (WINAPI* SetHeader);
- BOOL (WINAPI* AddHeader);
- DWORD HttpStatus;
- DWORD dwReserved;
-} HTTP_FILTER_SEND_RESPONSE, *PHTTP_FILTER_SEND_RESPONSE;
-#endif /* __WINCE_DEFINED_PHTTP_FILTER_SEND_RESPONSE */
-#endif /* __WINCE_DEFINED_HTTP_FILTER_SEND_RESPONSE */
-
 /* HTTP_FILTER_URL_MAP  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__HTTP_FILTER_URL_MAP
 #define __WINCE_DEFINED__HTTP_FILTER_URL_MAP
@@ -225,43 +190,5 @@ enum SF_REQ_TYPE{
 };
 #endif /* __WINCE_DEFINED_SF_REQ_DISABLE_NOTIFICATIONS */
 #endif /* __WINCE_DEFINED_SF_REQ_TYPE */
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
-
-/* AddHeader  [function; ce-only; CE 3.0..399, 5.0..699; Httpfilt.lib, httpfilt.lib] */
-BOOL WINAPI* AddHeader(PHTTP_FILTER_CONTEXT pfc,
- LPSTR lpszName,
- LPSTR lpszValue);
-
-/* AddResponseHeaders  [function; ce-only; CE 3.0..399, 5.0..699] */
-BOOL WINAPI* AddResponseHeaders(PHTTP_FILTER_CONTEXT pfc,
- LPSTR lpszHeaders,
- LPSTR dwReserved);
-
-/* AllocMem  [function; ce-only; CE 3.0..399, 5.0..699; Httpfilt.lib, httpfilt.lib] */
-VOID* WINAPI* AllocMem(PHTTP_FILTER_CONTEXT pfc,
- DWORD cbSize,
- DWORD dwReserved);
-
-/* HttpFilterProc  [function; ce-only; CE 3.0..399, 5.0..699; httpfilt.lib] */
-DWORD WINAPI HttpFilterProc(PHTTP_FILTER_CONTEXT pfc,
- DWORD NotificationType,
- VOID* pvNotification);
-
-/* TerminateFilter  [function; ce-only; CE 3.0..399, 5.0..699; httpfilt.lib] */
-BOOL WINAPI TerminateFilter(DWORD dwFlags);
-#endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-BOOL WINAPI *SetHeader(PHTTP_FILTER_CONTEXT pfc, LPSTR lpszName, LPSTR lpszValue);
 
 #endif /* _HTTPFILT_ */

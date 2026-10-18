@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 33 extra decls
+ * 0 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 21 extra decls
  */
 #ifndef _MEDIAQUERYENGINE_HPP_
 #define _MEDIAQUERYENGINE_HPP_
@@ -261,34 +261,20 @@ enum SortBy_e {
 /* function */
 Bool ActiveServerName(WCHAR*pBuffer, int*pBufferLen);
 Bool ActiveServerUDN(WCHAR* pBuffer, int* pBufferLen);
-bool AddSink (const QueryEngineSink_t*pNewSinkObj);
 int BatchSize (none);
 #ifdef __cplusplus
 MediaQuery_t CreateNewQuery(constQueryParams_t &QueryParams);
 #endif /* __cplusplus */
 int CurrentItemOffset (void);
 DeviceStatus_e DeviceStatus (void);
-bool FriendlyDeviceName(WCHAR* pBuffer, int* pBufferLength);
-bool GetItemAttribute (ItemAttribute_e AttributeName, WCHAR* pBuffer, int* pBufferLength);
 MediaItem_t GetMediaItem(int Index);
 MediaItemBatch_t GetNextBatch (none);
 ServerInfo_t GetServerInfo (int Index);
-bool IsContainer (none);
-bool IsRestricted(none);
 ServerInfoCollection_t KnownMediaServers(void);
-bool ModelNumber (WCHAR* pBuffer, int* pBufferLength);
 MediaQuery_t OemExtensionUpnpBrowseChildren(const WCHAR* pObjectIdStr, const WCHAR* pSortString, int BatchSize);
-#ifdef __cplusplus
-bool OemExtensionUpnpItemAttribute (const WCHAR* pAttributeName, WCHAR* pBuffer, int* pBufferLength, unsigned long nIndex = 0);
-#endif /* __cplusplus */
 MediaQuery_t OemExtensionUpnpQuery (const WCHAR* pContainerIdStr, const WCHAR* pSearchString, const WCHAR* pSortString, int BatchSize);
-bool RegisterContentUpdateCallback(constContentUpdateCallback_t* pCallbackObj);
-bool RemoveSink(const QueryEngineSink_t*pRemoveThis);
 QueryEngineState_e State (void);
 int TotalItems(none);
 int TotalServers (void);
-bool UnInitialize (void);
-bool UnRegisterContentUpdateCallback(const ContentUpdateCallback_t* pCallbackObj);
-bool UniqueDeviceName(WCHAR* pBuffer, int* pBufferLength);
 
 #endif /* _MEDIAQUERYENGINE_HPP_ */

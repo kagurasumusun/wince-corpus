@@ -5,11 +5,23 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 52 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 51 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDDI_
 #define _WINDDI_
 
+
+/* ==================================================================
+ * types -- structures, enumerations and typedefs; the member
+ * outlines marked DERIVED below document a structure whose
+ * declaration body no page prints
+ * ================================================================ */
+
+/* DRVENABLEDATA  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   iDriverVersion */
+/*   c */
+/*   pdrvfn */
 
 /* ==================================================================
  * functions and callbacks

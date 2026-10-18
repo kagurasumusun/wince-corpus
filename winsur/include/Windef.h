@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 23 constants, 8 declarations, 4 outlines, 122 base types, 0 extra macros, 0 extra decls
+ * 23 constants, 6 declarations, 6 outlines, 122 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDEF_
 #define _WINDEF_
@@ -30,6 +30,28 @@
 /* MFC/ATL message-map keywords some pages print bare. */
 #ifndef afx_msg
 #define afx_msg
+#endif
+#ifndef cdecl
+#define cdecl
+#endif
+#ifndef pascal
+#define pascal
+#endif
+#ifndef TSPIAPI
+#define TSPIAPI
+#endif
+#ifndef TAPIAPI
+#define TAPIAPI
+#endif
+#ifndef SAFEARRAY
+#define SAFEARRAY(T) struct tagSAFEARRAY
+#endif
+#ifndef EXTERN_C
+#ifdef __cplusplus
+#define EXTERN_C extern "C"
+#else
+#define EXTERN_C extern
+#endif
 #endif
 /* OLE calling conventions some pages print bare. */
 #ifndef WINOLEAPI
@@ -780,12 +802,8 @@ typedef HICON HCURSOR;
 /* LOWORD  [macro; shared] */
 
 /* MAKELONG  [macro; shared] */
-#define MAKELONG(a, b) \
- ((LONG) (((WORD) (a)) | ((DWORD) ((WORD) (b))) << 16));
 
 /* MAKEWORD  [macro; shared] */
-#define MAKEWORD(a, b) \
- ((WORD) (((BYTE) (a)) | ((WORD) ((BYTE) (b))) << 8));
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -887,10 +905,20 @@ typedef SIZE *PSIZE, *LPSIZE;
  * types.tsv)
  * ================================================================ */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_A
+#define __WINCE_DEFINED_A
+typedef struct A A;
+#endif /* __WINCE_DEFINED_A */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_AAM_SRCCAP
 #define __WINCE_DEFINED_AAM_SRCCAP
 typedef struct AAM_SRCCAP AAM_SRCCAP;
 #endif /* __WINCE_DEFINED_AAM_SRCCAP */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_ADDRESS
+#define __WINCE_DEFINED_ADDRESS
+typedef struct ADDRESS ADDRESS;
+#endif /* __WINCE_DEFINED_ADDRESS */
 /* DERIVED forward -- derived placeholder: enumeration body no corpus page prints */
 #ifndef __WINCE_DEFINED_ADDRESS_TYPE
 #define __WINCE_DEFINED_ADDRESS_TYPE
@@ -906,6 +934,61 @@ typedef int AMTunerModeType;
 #define __WINCE_DEFINED_AM_MEDIA_TYPE
 typedef struct AM_MEDIA_TYPE AM_MEDIA_TYPE;
 #endif /* __WINCE_DEFINED_AM_MEDIA_TYPE */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_ASNBITS
+#define __WINCE_DEFINED_ASNBITS
+typedef struct AsnBits AsnBits;
+#endif /* __WINCE_DEFINED_ASNBITS */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_ASNCOUNTER32
+#define __WINCE_DEFINED_ASNCOUNTER32
+typedef struct AsnCounter32 AsnCounter32;
+#endif /* __WINCE_DEFINED_ASNCOUNTER32 */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_ASNGAUGE32
+#define __WINCE_DEFINED_ASNGAUGE32
+typedef struct AsnGauge32 AsnGauge32;
+#endif /* __WINCE_DEFINED_ASNGAUGE32 */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_ASNIPADRESS
+#define __WINCE_DEFINED_ASNIPADRESS
+typedef struct AsnIPAdress AsnIPAdress;
+#endif /* __WINCE_DEFINED_ASNIPADRESS */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_ASNINTEGER32
+#define __WINCE_DEFINED_ASNINTEGER32
+typedef struct AsnInteger32 AsnInteger32;
+#endif /* __WINCE_DEFINED_ASNINTEGER32 */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_ASNOBJECTNAME
+#define __WINCE_DEFINED_ASNOBJECTNAME
+typedef struct AsnObjectName AsnObjectName;
+#endif /* __WINCE_DEFINED_ASNOBJECTNAME */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_ASNOBJECTSYNTAX
+#define __WINCE_DEFINED_ASNOBJECTSYNTAX
+typedef struct AsnObjectSyntax AsnObjectSyntax;
+#endif /* __WINCE_DEFINED_ASNOBJECTSYNTAX */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_ASNOPAQUE
+#define __WINCE_DEFINED_ASNOPAQUE
+typedef struct AsnOpaque AsnOpaque;
+#endif /* __WINCE_DEFINED_ASNOPAQUE */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_ASNSEQUENCE
+#define __WINCE_DEFINED_ASNSEQUENCE
+typedef struct AsnSequence AsnSequence;
+#endif /* __WINCE_DEFINED_ASNSEQUENCE */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_ASNTIMETICKS
+#define __WINCE_DEFINED_ASNTIMETICKS
+typedef struct AsnTimeTicks AsnTimeTicks;
+#endif /* __WINCE_DEFINED_ASNTIMETICKS */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_ASNUNSIGNED32
+#define __WINCE_DEFINED_ASNUNSIGNED32
+typedef struct AsnUnsigned32 AsnUnsigned32;
+#endif /* __WINCE_DEFINED_ASNUNSIGNED32 */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_BD_BUFFER
 #define __WINCE_DEFINED_BD_BUFFER
@@ -926,11 +1009,36 @@ typedef OLECHAR *BSTR;
 #define __WINCE_DEFINED_BITMAPDATA
 typedef struct BitmapData BitmapData;
 #endif /* __WINCE_DEFINED_BITMAPDATA */
+/* DERIVED forward -- derived placeholder: body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_BOOL
+#define __WINCE_DEFINED_BOOL
+typedef int Bool;
+#endif /* __WINCE_DEFINED_BOOL */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_BOOLEAN
+#define __WINCE_DEFINED_BOOLEAN
+typedef struct boolean boolean;
+#endif /* __WINCE_DEFINED_BOOLEAN */
+/* DERIVED forward -- printed spelling variant of boolean */
+#ifndef __WINCE_DEFINED_BOOLEAN_SPELLING
+#define __WINCE_DEFINED_BOOLEAN_SPELLING
+typedef boolean Boolean;
+#endif /* __WINCE_DEFINED_BOOLEAN_SPELLING */
+/* DERIVED forward -- enumeration body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_BUFFERDISPOSALFLAG
+#define __WINCE_DEFINED_BUFFERDISPOSALFLAG
+typedef struct BufferDisposalFlag BufferDisposalFlag;
+#endif /* __WINCE_DEFINED_BUFFERDISPOSALFLAG */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_CATID
 #define __WINCE_DEFINED_CATID
 typedef struct CATID CATID;
 #endif /* __WINCE_DEFINED_CATID */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_CAUUID
+#define __WINCE_DEFINED_CAUUID
+typedef struct CAUUID CAUUID;
+#endif /* __WINCE_DEFINED_CAUUID */
 /* DERIVED forward -- derived placeholder: enumeration body no corpus page prints */
 #ifndef __WINCE_DEFINED_CEL_MAPFLUSH_TYPE
 #define __WINCE_DEFINED_CEL_MAPFLUSH_TYPE
@@ -971,6 +1079,11 @@ typedef int ControlCloseStatus;
 #define __WINCE_DEFINED_DATE
 typedef double DATE;
 #endif /* __WINCE_DEFINED_DATE */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_DISPID
+#define __WINCE_DEFINED_DISPID
+typedef struct DISPID DISPID;
+#endif /* __WINCE_DEFINED_DISPID */
 /* DERIVED forward -- derived forward: no corpus page prints the struct body */
 #ifndef __WINCE_DEFINED_DMO_MEDIA_TYPE
 #define __WINCE_DEFINED_DMO_MEDIA_TYPE
@@ -991,6 +1104,11 @@ typedef struct DMUS_NOTIFICATION_PMSG DMUS_NOTIFICATION_PMSG;
 #define __WINCE_DEFINED_DMUS_PMSG
 typedef struct DMUS_PMSG DMUS_PMSG;
 #endif /* __WINCE_DEFINED_DMUS_PMSG */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_DOCHOSTUIINFO
+#define __WINCE_DEFINED_DOCHOSTUIINFO
+typedef struct DOCHOSTUIINFO DOCHOSTUIINFO;
+#endif /* __WINCE_DEFINED_DOCHOSTUIINFO */
 /* DERIVED forward -- derived forward: no corpus page prints the struct body */
 #ifndef __WINCE_DEFINED_DVDUSERGOPDATA
 #define __WINCE_DEFINED_DVDUSERGOPDATA
@@ -1026,6 +1144,21 @@ typedef int DVD_PROVIDER_ID;
 #define __WINCE_DEFINED_DVD_UOP_PROHIBITED
 typedef struct DVD_UOP_PROHIBITED DVD_UOP_PROHIBITED;
 #endif /* __WINCE_DEFINED_DVD_UOP_PROHIBITED */
+/* DERIVED forward -- enumeration body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_DECODERINITFLAG
+#define __WINCE_DEFINED_DECODERINITFLAG
+typedef struct DecoderInitFlag DecoderInitFlag;
+#endif /* __WINCE_DEFINED_DECODERINITFLAG */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_DEVICESTATUS_E
+#define __WINCE_DEFINED_DEVICESTATUS_E
+typedef struct DeviceStatus_e DeviceStatus_e;
+#endif /* __WINCE_DEFINED_DEVICESTATUS_E */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_ELEMENT_TAG_ID
+#define __WINCE_DEFINED_ELEMENT_TAG_ID
+typedef struct ELEMENT_TAG_ID ELEMENT_TAG_ID;
+#endif /* __WINCE_DEFINED_ELEMENT_TAG_ID */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_ENCODERPARAMETERS
 #define __WINCE_DEFINED_ENCODERPARAMETERS
@@ -1066,16 +1199,46 @@ typedef struct HEVENT HEVENT;
 #define __WINCE_DEFINED_HIMAGELIST
 typedef struct _HIMAGELIST *HIMAGELIST;
 #endif /* __WINCE_DEFINED_HIMAGELIST */
+/* DERIVED forward -- derived opaque handle: body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_HIMC
+#define __WINCE_DEFINED_HIMC
+typedef void *HIMC;
+#endif /* __WINCE_DEFINED_HIMC */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_HMETAFILEPICT
+#define __WINCE_DEFINED_HMETAFILEPICT
+typedef struct HMETAFILEPICT HMETAFILEPICT;
+#endif /* __WINCE_DEFINED_HMETAFILEPICT */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_HPACKET
 #define __WINCE_DEFINED_HPACKET
 typedef struct HPACKET HPACKET;
 #endif /* __WINCE_DEFINED_HPACKET */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_HPROPSHEETPAGE
+#define __WINCE_DEFINED_HPROPSHEETPAGE
+typedef struct HPROPSHEETPAGE HPROPSHEETPAGE;
+#endif /* __WINCE_DEFINED_HPROPSHEETPAGE */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_HRESUTL
+#define __WINCE_DEFINED_HRESUTL
+typedef struct HRESUTL HRESUTL;
+#endif /* __WINCE_DEFINED_HRESUTL */
+/* DERIVED forward -- printed typo of HRESULT */
+#ifndef __WINCE_DEFINED_HREULT_SPELLING
+#define __WINCE_DEFINED_HREULT_SPELLING
+typedef HRESULT HREULT;
+#endif /* __WINCE_DEFINED_HREULT_SPELLING */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_HSEMAPHORE
 #define __WINCE_DEFINED_HSEMAPHORE
 typedef struct HSEMAPHORE HSEMAPHORE;
 #endif /* __WINCE_DEFINED_HSEMAPHORE */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_HTML_PAINTER_INFO
+#define __WINCE_DEFINED_HTML_PAINTER_INFO
+typedef struct HTML_PAINTER_INFO HTML_PAINTER_INFO;
+#endif /* __WINCE_DEFINED_HTML_PAINTER_INFO */
 /* DERIVED forward -- derived forward: tree-view handle; no corpus page prints the node struct */
 #ifndef __WINCE_DEFINED_HTREEITEM
 #define __WINCE_DEFINED_HTREEITEM
@@ -1087,10 +1250,20 @@ typedef void *HTREEITEM;
 typedef void *Handle;
 #endif /* __WINCE_DEFINED_HANDLE */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IACTIVEIMMAPP
+#define __WINCE_DEFINED_IACTIVEIMMAPP
+typedef struct IActiveIMMApp IActiveIMMApp;
+#endif /* __WINCE_DEFINED_IACTIVEIMMAPP */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_IADVISESINK
 #define __WINCE_DEFINED_IADVISESINK
 typedef struct IAdviseSink IAdviseSink;
 #endif /* __WINCE_DEFINED_IADVISESINK */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IAPPLICATION
+#define __WINCE_DEFINED_IAPPLICATION
+typedef struct IApplication IApplication;
+#endif /* __WINCE_DEFINED_IAPPLICATION */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_IAPPOINTMENTITEM
 #define __WINCE_DEFINED_IAPPOINTMENTITEM
@@ -1102,10 +1275,10 @@ typedef struct IAppointmentItem IAppointmentItem;
 typedef struct IbaseFilter IbaseFilter;
 #endif /* __WINCE_DEFINED_IBASEFILTER */
 /* DERIVED forward -- printed spelling variant of IbaseFilter */
-#ifndef __WINCE_DEFINED_IBASEFILTER
-#define __WINCE_DEFINED_IBASEFILTER
+#ifndef __WINCE_DEFINED_IBASEFILTER_SPELLING
+#define __WINCE_DEFINED_IBASEFILTER_SPELLING
 typedef IbaseFilter IBaseFilter;
-#endif /* __WINCE_DEFINED_IBASEFILTER */
+#endif /* __WINCE_DEFINED_IBASEFILTER_SPELLING */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_IBINDCTX
 #define __WINCE_DEFINED_IBINDCTX
@@ -1142,15 +1315,75 @@ typedef struct ICcConnection ICcConnection;
 typedef struct ICcDatastore ICcDatastore;
 #endif /* __WINCE_DEFINED_ICCDATASTORE */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_ICCDEVICE
+#define __WINCE_DEFINED_ICCDEVICE
+typedef struct ICcDevice ICcDevice;
+#endif /* __WINCE_DEFINED_ICCDEVICE */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_ICCDEVICECONTAINER
+#define __WINCE_DEFINED_ICCDEVICECONTAINER
+typedef struct ICcDeviceContainer ICcDeviceContainer;
+#endif /* __WINCE_DEFINED_ICCDEVICECONTAINER */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_ICCFILECONTAINER
+#define __WINCE_DEFINED_ICCFILECONTAINER
+typedef struct ICcFileContainer ICcFileContainer;
+#endif /* __WINCE_DEFINED_ICCFILECONTAINER */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_ICCFORMFACTORCONTAINER
+#define __WINCE_DEFINED_ICCFORMFACTORCONTAINER
+typedef struct ICcFormFactorContainer ICcFormFactorContainer;
+#endif /* __WINCE_DEFINED_ICCFORMFACTORCONTAINER */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_ICCOSIMAGECONTAINER
+#define __WINCE_DEFINED_ICCOSIMAGECONTAINER
+typedef struct ICcOSImageContainer ICcOSImageContainer;
+#endif /* __WINCE_DEFINED_ICCOSIMAGECONTAINER */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_ICCOBJECT
 #define __WINCE_DEFINED_ICCOBJECT
 typedef struct ICcObject ICcObject;
 #endif /* __WINCE_DEFINED_ICCOBJECT */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_ICCPACKAGECONTAINER
+#define __WINCE_DEFINED_ICCPACKAGECONTAINER
+typedef struct ICcPackageContainer ICcPackageContainer;
+#endif /* __WINCE_DEFINED_ICCPACKAGECONTAINER */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_ICCPACKAGETYPECONTAINER
+#define __WINCE_DEFINED_ICCPACKAGETYPECONTAINER
+typedef struct ICcPackageTypeContainer ICcPackageTypeContainer;
+#endif /* __WINCE_DEFINED_ICCPACKAGETYPECONTAINER */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_ICCPLATFORMCONTAINER
+#define __WINCE_DEFINED_ICCPLATFORMCONTAINER
+typedef struct ICcPlatformContainer ICcPlatformContainer;
+#endif /* __WINCE_DEFINED_ICCPLATFORMCONTAINER */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_ICCPROJECTCONTAINER
+#define __WINCE_DEFINED_ICCPROJECTCONTAINER
+typedef struct ICcProjectContainer ICcProjectContainer;
+#endif /* __WINCE_DEFINED_ICCPROJECTCONTAINER */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_ICCPROPERTYCONTAINER
+#define __WINCE_DEFINED_ICCPROPERTYCONTAINER
+typedef struct ICcPropertyContainer ICcPropertyContainer;
+#endif /* __WINCE_DEFINED_ICCPROPERTYCONTAINER */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_ICCSERVICE
 #define __WINCE_DEFINED_ICCSERVICE
 typedef struct ICcService ICcService;
 #endif /* __WINCE_DEFINED_ICCSERVICE */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_ICCSERVICECB
+#define __WINCE_DEFINED_ICCSERVICECB
+typedef struct ICcServiceCB ICcServiceCB;
+#endif /* __WINCE_DEFINED_ICCSERVICECB */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_ICCSERVICECATEGORYCONTAINER
+#define __WINCE_DEFINED_ICCSERVICECATEGORYCONTAINER
+typedef struct ICcServiceCategoryContainer ICcServiceCategoryContainer;
+#endif /* __WINCE_DEFINED_ICCSERVICECATEGORYCONTAINER */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_ICCSERVICEINFO
 #define __WINCE_DEFINED_ICCSERVICEINFO
@@ -1161,6 +1394,11 @@ typedef struct ICcServiceInfo ICcServiceInfo;
 #define __WINCE_DEFINED_ICITY
 typedef struct ICity ICity;
 #endif /* __WINCE_DEFINED_ICITY */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_ICLASSFACTORY
+#define __WINCE_DEFINED_ICLASSFACTORY
+typedef struct IClassFactory IClassFactory;
+#endif /* __WINCE_DEFINED_ICLASSFACTORY */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_ICONNECTIONPOINT
 #define __WINCE_DEFINED_ICONNECTIONPOINT
@@ -1187,15 +1425,20 @@ typedef struct ICreateErrorInfo ICreateErrorInfo;
 typedef struct ICreateTypeLib2 ICreateTypeLib2;
 #endif /* __WINCE_DEFINED_ICREATETYPELIB2 */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_ICUSTOMSURFACE
+#define __WINCE_DEFINED_ICUSTOMSURFACE
+typedef struct ICustomSurface ICustomSurface;
+#endif /* __WINCE_DEFINED_ICUSTOMSURFACE */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_IDIRECTMUSICBUFFER
 #define __WINCE_DEFINED_IDIRECTMUSICBUFFER
 typedef struct IDirectMusicBuffer IDirectMusicBuffer;
 #endif /* __WINCE_DEFINED_IDIRECTMUSICBUFFER */
 /* DERIVED forward -- printed spelling variant of IDirectMusicBuffer */
-#ifndef __WINCE_DEFINED_IDIRECTMUSICBUFFER
-#define __WINCE_DEFINED_IDIRECTMUSICBUFFER
+#ifndef __WINCE_DEFINED_IDIRECTMUSICBUFFER_SPELLING
+#define __WINCE_DEFINED_IDIRECTMUSICBUFFER_SPELLING
 typedef IDirectMusicBuffer IDIRECTMUSICBUFFER;
-#endif /* __WINCE_DEFINED_IDIRECTMUSICBUFFER */
+#endif /* __WINCE_DEFINED_IDIRECTMUSICBUFFER_SPELLING */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_IDSDRIVERBUFFER
 #define __WINCE_DEFINED_IDSDRIVERBUFFER
@@ -1251,6 +1494,11 @@ typedef struct IDirect3DMobileTexture IDirect3DMobileTexture;
 #define __WINCE_DEFINED_IDIRECT3DMOBILEVERTEXBUFFER
 typedef struct IDirect3DMobileVertexBuffer IDirect3DMobileVertexBuffer;
 #endif /* __WINCE_DEFINED_IDIRECT3DMOBILEVERTEXBUFFER */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IDIRECT3DSURFACE8
+#define __WINCE_DEFINED_IDIRECT3DSURFACE8
+typedef struct IDirect3DSurface8 IDirect3DSurface8;
+#endif /* __WINCE_DEFINED_IDIRECT3DSURFACE8 */
 /* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
 #ifndef __WINCE_DEFINED_IDIRECTMUSICBAND
 #define __WINCE_DEFINED_IDIRECTMUSICBAND
@@ -1332,10 +1580,40 @@ typedef struct IDispatch IDispatch;
 typedef struct IDisplayPointer IDisplayPointer;
 #endif /* __WINCE_DEFINED_IDISPLAYPOINTER */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IDOCHOSTUIHANDLER
+#define __WINCE_DEFINED_IDOCHOSTUIHANDLER
+typedef struct IDocHostUIHandler IDocHostUIHandler;
+#endif /* __WINCE_DEFINED_IDOCHOSTUIHANDLER */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IDOCHOSTUIHANDLERDISPATCH
+#define __WINCE_DEFINED_IDOCHOSTUIHANDLERDISPATCH
+typedef struct IDocHostUIHandlerDispatch IDocHostUIHandlerDispatch;
+#endif /* __WINCE_DEFINED_IDOCHOSTUIHANDLERDISPATCH */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IDROPTARGET
+#define __WINCE_DEFINED_IDROPTARGET
+typedef struct IDropTarget IDropTarget;
+#endif /* __WINCE_DEFINED_IDROPTARGET */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_IENUMIDLIST
 #define __WINCE_DEFINED_IENUMIDLIST
 typedef struct IENUMIDLIST IENUMIDLIST;
 #endif /* __WINCE_DEFINED_IENUMIDLIST */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IELEMENTBEHAVIOR
+#define __WINCE_DEFINED_IELEMENTBEHAVIOR
+typedef struct IElementBehavior IElementBehavior;
+#endif /* __WINCE_DEFINED_IELEMENTBEHAVIOR */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IELEMENTBEHAVIORSITE
+#define __WINCE_DEFINED_IELEMENTBEHAVIORSITE
+typedef struct IElementBehaviorSite IElementBehaviorSite;
+#endif /* __WINCE_DEFINED_IELEMENTBEHAVIORSITE */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IELEMENTNAMESPACE
+#define __WINCE_DEFINED_IELEMENTNAMESPACE
+typedef struct IElementNamespace IElementNamespace;
+#endif /* __WINCE_DEFINED_IELEMENTNAMESPACE */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_IENUMCATEGORYINFO
 #define __WINCE_DEFINED_IENUMCATEGORYINFO
@@ -1436,16 +1714,26 @@ typedef struct IEnumSpObjectTokens IEnumSpObjectTokens;
 #define __WINCE_DEFINED_IENUMSTRING
 typedef struct IEnumString IEnumString;
 #endif /* __WINCE_DEFINED_IENUMSTRING */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IENUMTRAVELLOGENTRY
+#define __WINCE_DEFINED_IENUMTRAVELLOGENTRY
+typedef struct IEnumTravelLogEntry IEnumTravelLogEntry;
+#endif /* __WINCE_DEFINED_IENUMTRAVELLOGENTRY */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IENUMUNKNOWN
+#define __WINCE_DEFINED_IENUMUNKNOWN
+typedef struct IEnumUnknown IEnumUnknown;
+#endif /* __WINCE_DEFINED_IENUMUNKNOWN */
 /* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
 #ifndef __WINCE_DEFINED_IENUMVARIANT
 #define __WINCE_DEFINED_IENUMVARIANT
 typedef struct IEnumVARIANT IEnumVARIANT;
 #endif /* __WINCE_DEFINED_IENUMVARIANT */
 /* DERIVED forward -- printed spelling variant of IEnumVARIANT */
-#ifndef __WINCE_DEFINED_IENUMVARIANT
-#define __WINCE_DEFINED_IENUMVARIANT
+#ifndef __WINCE_DEFINED_IENUMVARIANT_SPELLING
+#define __WINCE_DEFINED_IENUMVARIANT_SPELLING
 typedef IEnumVARIANT IEnumVariant;
-#endif /* __WINCE_DEFINED_IENUMVARIANT */
+#endif /* __WINCE_DEFINED_IENUMVARIANT_SPELLING */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_IENUMWSDLOPERATIONS
 #define __WINCE_DEFINED_IENUMWSDLOPERATIONS
@@ -1462,6 +1750,11 @@ typedef struct IEnumWSDLPorts IEnumWSDLPorts;
 typedef struct IEnumWSDLService IEnumWSDLService;
 #endif /* __WINCE_DEFINED_IENUMWSDLSERVICE */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IERRORINFO
+#define __WINCE_DEFINED_IERRORINFO
+typedef struct IErrorInfo IErrorInfo;
+#endif /* __WINCE_DEFINED_IERRORINFO */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_IEXCEPTION
 #define __WINCE_DEFINED_IEXCEPTION
 typedef struct IException IException;
@@ -1476,6 +1769,11 @@ typedef struct IExchangeClientDataItemArray IExchangeClientDataItemArray;
 #define __WINCE_DEFINED_IEXCHANGECLIENTREQUEST
 typedef struct IExchangeClientRequest IExchangeClientRequest;
 #endif /* __WINCE_DEFINED_IEXCHANGECLIENTREQUEST */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IFILESINKFILTER
+#define __WINCE_DEFINED_IFILESINKFILTER
+typedef struct IFileSinkFilter IFileSinkFilter;
+#endif /* __WINCE_DEFINED_IFILESINKFILTER */
 /* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
 #ifndef __WINCE_DEFINED_IFILTERGRAPH
 #define __WINCE_DEFINED_IFILTERGRAPH
@@ -1486,6 +1784,11 @@ typedef struct IFilterGraph IFilterGraph;
 #define __WINCE_DEFINED_IFOLDER
 typedef struct IFolder IFolder;
 #endif /* __WINCE_DEFINED_IFOLDER */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IFONT
+#define __WINCE_DEFINED_IFONT
+typedef struct IFont IFont;
+#endif /* __WINCE_DEFINED_IFONT */
 /* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
 #ifndef __WINCE_DEFINED_IFONTDISP
 #define __WINCE_DEFINED_IFONTDISP
@@ -1516,6 +1819,11 @@ typedef struct IHeaderCollection IHeaderCollection;
 #define __WINCE_DEFINED_IHEADERENUM
 typedef struct IHeaderEnum IHeaderEnum;
 #endif /* __WINCE_DEFINED_IHEADERENUM */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IHIGHLIGHTSEGMENT
+#define __WINCE_DEFINED_IHIGHLIGHTSEGMENT
+typedef struct IHighlightSegment IHighlightSegment;
+#endif /* __WINCE_DEFINED_IHIGHLIGHTSEGMENT */
 /* DERIVED forward -- derived typedef: interface id */
 #ifndef __WINCE_DEFINED_IID
 #define __WINCE_DEFINED_IID
@@ -1542,6 +1850,11 @@ typedef struct IImageEncoder IImageEncoder;
 typedef struct IImageSink IImageSink;
 #endif /* __WINCE_DEFINED_IIMAGESINK */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IINTERNETPROTOCOLSINK
+#define __WINCE_DEFINED_IINTERNETPROTOCOLSINK
+typedef struct IInternetProtocolSink IInternetProtocolSink;
+#endif /* __WINCE_DEFINED_IINTERNETPROTOCOLSINK */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_IINTERNETSECURITYMANAGER
 #define __WINCE_DEFINED_IINTERNETSECURITYMANAGER
 typedef struct IInternetSecurityManager IInternetSecurityManager;
@@ -1556,6 +1869,11 @@ typedef struct IInternetSecurityMgrSite IInternetSecurityMgrSite;
 #define __WINCE_DEFINED_IINTERNETSESSION
 typedef struct IInternetSession IInternetSession;
 #endif /* __WINCE_DEFINED_IINTERNETSESSION */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_ILINEINFO
+#define __WINCE_DEFINED_ILINEINFO
+typedef struct ILineInfo ILineInfo;
+#endif /* __WINCE_DEFINED_ILINEINFO */
 /* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
 #ifndef __WINCE_DEFINED_ILOCKBYTES
 #define __WINCE_DEFINED_ILOCKBYTES
@@ -1566,6 +1884,11 @@ typedef struct ILockBytes ILockBytes;
 #define __WINCE_DEFINED_IMAGELISTDRAWPARAMS
 typedef struct IMAGELISTDRAWPARAMS IMAGELISTDRAWPARAMS;
 #endif /* __WINCE_DEFINED_IMAGELISTDRAWPARAMS */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IMENUMINFO
+#define __WINCE_DEFINED_IMENUMINFO
+typedef struct IMENUMINFO IMENUMINFO;
+#endif /* __WINCE_DEFINED_IMENUMINFO */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_IMINFO
 #define __WINCE_DEFINED_IMINFO
@@ -1612,6 +1935,21 @@ typedef struct IMemInputPin IMemInputPin;
 typedef struct IMoniker IMoniker;
 #endif /* __WINCE_DEFINED_IMONIKER */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IMSRDPCLIENTADVANCEDSETTINGS
+#define __WINCE_DEFINED_IMSRDPCLIENTADVANCEDSETTINGS
+typedef struct IMsRdpClientAdvancedSettings IMsRdpClientAdvancedSettings;
+#endif /* __WINCE_DEFINED_IMSRDPCLIENTADVANCEDSETTINGS */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IMSTSCADVANCEDSETTINGS
+#define __WINCE_DEFINED_IMSTSCADVANCEDSETTINGS
+typedef struct IMsTscAdvancedSettings IMsTscAdvancedSettings;
+#endif /* __WINCE_DEFINED_IMSTSCADVANCEDSETTINGS */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IMSTSCSECUREDSETTINGS
+#define __WINCE_DEFINED_IMSTSCSECUREDSETTINGS
+typedef struct IMsTscSecuredSettings IMsTscSecuredSettings;
+#endif /* __WINCE_DEFINED_IMSTSCSECUREDSETTINGS */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_IMULTIMEDIASTREAM
 #define __WINCE_DEFINED_IMULTIMEDIASTREAM
 typedef struct IMultiMediaStream IMultiMediaStream;
@@ -1641,6 +1979,21 @@ typedef struct IOleAdviseHolder IOleAdviseHolder;
 #define __WINCE_DEFINED_IOLECLIENTSITE
 typedef struct IOleClientSite IOleClientSite;
 #endif /* __WINCE_DEFINED_IOLECLIENTSITE */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IOLECOMMANDTARGET
+#define __WINCE_DEFINED_IOLECOMMANDTARGET
+typedef struct IOleCommandTarget IOleCommandTarget;
+#endif /* __WINCE_DEFINED_IOLECOMMANDTARGET */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IOLECONTAINER
+#define __WINCE_DEFINED_IOLECONTAINER
+typedef struct IOleContainer IOleContainer;
+#endif /* __WINCE_DEFINED_IOLECONTAINER */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IOLEINPLACEACTIVEOBJECT
+#define __WINCE_DEFINED_IOLEINPLACEACTIVEOBJECT
+typedef struct IOleInPlaceActiveObject IOleInPlaceActiveObject;
+#endif /* __WINCE_DEFINED_IOLEINPLACEACTIVEOBJECT */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_IOLEINPLACEFRAME
 #define __WINCE_DEFINED_IOLEINPLACEFRAME
@@ -1697,6 +2050,11 @@ typedef struct IPMOS IPMOS;
 typedef struct IPersistStorage IPersistStorage;
 #endif /* __WINCE_DEFINED_IPERSISTSTORAGE */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IPERSISTSTREAM
+#define __WINCE_DEFINED_IPERSISTSTREAM
+typedef struct IPersistStream IPersistStream;
+#endif /* __WINCE_DEFINED_IPERSISTSTREAM */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_IPIN
 #define __WINCE_DEFINED_IPIN
 typedef struct IPin IPin;
@@ -1707,10 +2065,25 @@ typedef struct IPin IPin;
 typedef struct IPropertyBag IPropertyBag;
 #endif /* __WINCE_DEFINED_IPROPERTYBAG */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IPROPERTYPAGE
+#define __WINCE_DEFINED_IPROPERTYPAGE
+typedef struct IPropertyPage IPropertyPage;
+#endif /* __WINCE_DEFINED_IPROPERTYPAGE */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IPROPERTYPAGESITE
+#define __WINCE_DEFINED_IPROPERTYPAGESITE
+typedef struct IPropertyPageSite IPropertyPageSite;
+#endif /* __WINCE_DEFINED_IPROPERTYPAGESITE */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_IPROPERTYSETSTORAGE
 #define __WINCE_DEFINED_IPROPERTYSETSTORAGE
 typedef struct IPropertySetStorage IPropertySetStorage;
 #endif /* __WINCE_DEFINED_IPROPERTYSETSTORAGE */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IPUBLISHER
+#define __WINCE_DEFINED_IPUBLISHER
+typedef struct IPublisher IPublisher;
+#endif /* __WINCE_DEFINED_IPUBLISHER */
 /* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
 #ifndef __WINCE_DEFINED_IRTCCOLLECTION
 #define __WINCE_DEFINED_IRTCCOLLECTION
@@ -1741,6 +2114,41 @@ typedef struct IReplNotify IReplNotify;
 #define __WINCE_DEFINED_IREPLOBJHANDLER
 typedef void *IReplObjHandler;
 #endif /* __WINCE_DEFINED_IREPLOBJHANDLER */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_ISDPRECORD
+#define __WINCE_DEFINED_ISDPRECORD
+typedef struct ISdpRecord ISdpRecord;
+#endif /* __WINCE_DEFINED_ISDPRECORD */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_ISDPWALK
+#define __WINCE_DEFINED_ISDPWALK
+typedef struct ISdpWalk ISdpWalk;
+#endif /* __WINCE_DEFINED_ISDPWALK */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_ISEGMENT
+#define __WINCE_DEFINED_ISEGMENT
+typedef struct ISegment ISegment;
+#endif /* __WINCE_DEFINED_ISEGMENT */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_ISEGMENTLIST
+#define __WINCE_DEFINED_ISEGMENTLIST
+typedef struct ISegmentList ISegmentList;
+#endif /* __WINCE_DEFINED_ISEGMENTLIST */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_ISEGMENTLISTITERATOR
+#define __WINCE_DEFINED_ISEGMENTLISTITERATOR
+typedef struct ISegmentListIterator ISegmentListIterator;
+#endif /* __WINCE_DEFINED_ISEGMENTLISTITERATOR */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_ISELECTIONSERVICES
+#define __WINCE_DEFINED_ISELECTIONSERVICES
+typedef struct ISelectionServices ISelectionServices;
+#endif /* __WINCE_DEFINED_ISELECTIONSERVICES */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_ISELECTIONSERVICESLISTENER
+#define __WINCE_DEFINED_ISELECTIONSERVICESLISTENER
+typedef struct ISelectionServicesListener ISelectionServicesListener;
+#endif /* __WINCE_DEFINED_ISELECTIONSERVICESLISTENER */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_ISERVICEPROVIDER
 #define __WINCE_DEFINED_ISERVICEPROVIDER
@@ -1802,6 +2210,11 @@ typedef struct ISpNotifySink ISpNotifySink;
 typedef struct ISpObjectToken ISpObjectToken;
 #endif /* __WINCE_DEFINED_ISPOBJECTTOKEN */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_ISPPHONECONVERTER
+#define __WINCE_DEFINED_ISPPHONECONVERTER
+typedef struct ISpPhoneConverter ISpPhoneConverter;
+#endif /* __WINCE_DEFINED_ISPPHONECONVERTER */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_ISPPHRASE
 #define __WINCE_DEFINED_ISPPHRASE
 typedef struct ISpPhrase ISpPhrase;
@@ -1837,10 +2250,20 @@ typedef struct ISpRecoResult ISpRecoResult;
 typedef struct ISpRecognizer ISpRecognizer;
 #endif /* __WINCE_DEFINED_ISPRECOGNIZER */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_ISPSRENGINESITE
+#define __WINCE_DEFINED_ISPSRENGINESITE
+typedef struct ISpSREngineSite ISpSREngineSite;
+#endif /* __WINCE_DEFINED_ISPSRENGINESITE */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_ISPSTREAMFORMAT
 #define __WINCE_DEFINED_ISPSTREAMFORMAT
 typedef struct ISpStreamFormat ISpStreamFormat;
 #endif /* __WINCE_DEFINED_ISPSTREAMFORMAT */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_ISPTTSENGINESITE
+#define __WINCE_DEFINED_ISPTTSENGINESITE
+typedef struct ISpTTSEngineSite ISpTTSEngineSite;
+#endif /* __WINCE_DEFINED_ISPTTSENGINESITE */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_ISPTASK
 #define __WINCE_DEFINED_ISPTASK
@@ -1877,6 +2300,11 @@ typedef struct IStream IStream;
 typedef struct IStreamSample IStreamSample;
 #endif /* __WINCE_DEFINED_ISTREAMSAMPLE */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_ISUBSCRIBER
+#define __WINCE_DEFINED_ISUBSCRIBER
+typedef struct ISubscriber ISubscriber;
+#endif /* __WINCE_DEFINED_ISUBSCRIBER */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_ISURROGATE
 #define __WINCE_DEFINED_ISURROGATE
 typedef struct ISurrogate ISurrogate;
@@ -1891,6 +2319,11 @@ typedef struct ITEMTYPE ITEMTYPE;
 #define __WINCE_DEFINED_ITIMEZONE
 typedef struct ITimeZone ITimeZone;
 #endif /* __WINCE_DEFINED_ITIMEZONE */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_ITIMER
+#define __WINCE_DEFINED_ITIMER
+typedef struct ITimer ITimer;
+#endif /* __WINCE_DEFINED_ITIMER */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_ITRANSPORTCONNECTION
 #define __WINCE_DEFINED_ITRANSPORTCONNECTION
@@ -1922,10 +2355,35 @@ typedef struct ITypeLib ITypeLib;
 typedef struct IUnknown IUnknown;
 #endif /* __WINCE_DEFINED_IUNKNOWN */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IVIDEOWINDOW
+#define __WINCE_DEFINED_IVIDEOWINDOW
+typedef struct IVideoWindow IVideoWindow;
+#endif /* __WINCE_DEFINED_IVIDEOWINDOW */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IVOIPCALLLOGDB
+#define __WINCE_DEFINED_IVOIPCALLLOGDB
+typedef struct IVoIPCallLogDB IVoIPCallLogDB;
+#endif /* __WINCE_DEFINED_IVOIPCALLLOGDB */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IVOIPCALLLOGDBENUM
+#define __WINCE_DEFINED_IVOIPCALLLOGDBENUM
+typedef struct IVoIPCallLogDBEnum IVoIPCallLogDBEnum;
+#endif /* __WINCE_DEFINED_IVOIPCALLLOGDBENUM */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_IVOIPCALLRECORD
 #define __WINCE_DEFINED_IVOIPCALLRECORD
 typedef struct IVoIPCallRecord IVoIPCallRecord;
 #endif /* __WINCE_DEFINED_IVOIPCALLRECORD */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IVOIPCALLERINFODB
+#define __WINCE_DEFINED_IVOIPCALLERINFODB
+typedef struct IVoIPCallerInfoDB IVoIPCallerInfoDB;
+#endif /* __WINCE_DEFINED_IVOIPCALLERINFODB */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IVOIPCALLERINFODBENUM
+#define __WINCE_DEFINED_IVOIPCALLERINFODBENUM
+typedef struct IVoIPCallerInfoDBEnum IVoIPCallerInfoDBEnum;
+#endif /* __WINCE_DEFINED_IVOIPCALLERINFODBENUM */
 /* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
 #ifndef __WINCE_DEFINED_IVOIPCALLERINFORECORD
 #define __WINCE_DEFINED_IVOIPCALLERINFORECORD
@@ -1936,6 +2394,11 @@ typedef struct IVoIPCallerInfoRecord IVoIPCallerInfoRecord;
 #define __WINCE_DEFINED_IVOIPCURRENTCALL
 typedef struct IVoIPCurrentCall IVoIPCurrentCall;
 #endif /* __WINCE_DEFINED_IVOIPCURRENTCALL */
+/* DERIVED forward -- interface; body prints only as a C++ interface (or not at all) -- opaque C forward */
+#ifndef __WINCE_DEFINED_IVOIPCURRENTCALLENUMERATOR
+#define __WINCE_DEFINED_IVOIPCURRENTCALLENUMERATOR
+typedef struct IVoIPCurrentCallEnumerator IVoIPCurrentCallEnumerator;
+#endif /* __WINCE_DEFINED_IVOIPCURRENTCALLENUMERATOR */
 /* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
 #ifndef __WINCE_DEFINED_IWMPMEDIA
 #define __WINCE_DEFINED_IWMPMEDIA
@@ -1956,6 +2419,11 @@ typedef struct IXMLDOMElement IXMLDOMElement;
 #define __WINCE_DEFINED_IXMLDOMNODE
 typedef struct IXMLDOMNode IXMLDOMNode;
 #endif /* __WINCE_DEFINED_IXMLDOMNODE */
+/* DERIVED forward -- printed spelling variant of IDispatch */
+#ifndef __WINCE_DEFINED_IDISPATCH_SPELLING
+#define __WINCE_DEFINED_IDISPATCH_SPELLING
+typedef IDispatch Idispatch;
+#endif /* __WINCE_DEFINED_IDISPATCH_SPELLING */
 /* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
 #ifndef __WINCE_DEFINED_IEXDI2ENUMCPUREGS
 #define __WINCE_DEFINED_IEXDI2ENUMCPUREGS
@@ -1966,6 +2434,11 @@ typedef struct IeXdi2EnumCpuRegs IeXdi2EnumCpuRegs;
 #define __WINCE_DEFINED_IENUMSOAPMAPPERS
 typedef struct IenumSoapMappers IenumSoapMappers;
 #endif /* __WINCE_DEFINED_IENUMSOAPMAPPERS */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_IFMMANAGE
+#define __WINCE_DEFINED_IFMMANAGE
+typedef struct IfmManage IfmManage;
+#endif /* __WINCE_DEFINED_IFMMANAGE */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_IMAGECODECINFO
 #define __WINCE_DEFINED_IMAGECODECINFO
@@ -1981,6 +2454,11 @@ typedef struct ImageInfo ImageInfo;
 #define __WINCE_DEFINED_INT
 typedef struct Int Int;
 #endif /* __WINCE_DEFINED_INT */
+/* DERIVED forward -- enumeration body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_INTERPOLATIONHINT
+#define __WINCE_DEFINED_INTERPOLATIONHINT
+typedef struct InterpolationHint InterpolationHint;
+#endif /* __WINCE_DEFINED_INTERPOLATIONHINT */
 /* DERIVED forward -- derived placeholder: flags typedef (keybd); body no corpus page prints */
 #ifndef __WINCE_DEFINED_KEY_STATE_FLAGS
 #define __WINCE_DEFINED_KEY_STATE_FLAGS
@@ -2016,6 +2494,21 @@ typedef struct LAYER_EVENT_INDICATION LAYER_EVENT_INDICATION;
 #define __WINCE_DEFINED_LAYER_INTERFACE
 typedef struct LAYER_INTERFACE LAYER_INTERFACE;
 #endif /* __WINCE_DEFINED_LAYER_INTERFACE */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_LOGFONTW
+#define __WINCE_DEFINED_LOGFONTW
+typedef struct LOGFONTW LOGFONTW;
+#endif /* __WINCE_DEFINED_LOGFONTW */
+/* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_LPACMDRVSTREAMHEADER
+#define __WINCE_DEFINED_LPACMDRVSTREAMHEADER
+typedef struct _ACMDRVSTREAMHEADER *LPACMDRVSTREAMHEADER;
+#endif /* __WINCE_DEFINED_LPACMDRVSTREAMHEADER */
+/* DERIVED forward -- derived pointer forward: bind-context pointer; pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_LPBC
+#define __WINCE_DEFINED_LPBC
+typedef struct _LPBC *LPBC;
+#endif /* __WINCE_DEFINED_LPBC */
 /* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
 #ifndef __WINCE_DEFINED_LPCFOLDERSETTINGS
 #define __WINCE_DEFINED_LPCFOLDERSETTINGS
@@ -2026,11 +2519,46 @@ typedef struct _CFOLDERSETTINGS *LPCFOLDERSETTINGS;
 #define __WINCE_DEFINED_LPCOLESTR
 typedef const OLECHAR *LPCOLESTR;
 #endif /* __WINCE_DEFINED_LPCOLESTR */
+/* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_LPCUSB_DRIVER_SETTINGS
+#define __WINCE_DEFINED_LPCUSB_DRIVER_SETTINGS
+typedef struct _CUSB_DRIVER_SETTINGS *LPCUSB_DRIVER_SETTINGS;
+#endif /* __WINCE_DEFINED_LPCUSB_DRIVER_SETTINGS */
+/* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_LPCUSB_STRING_DESCRIPTOR
+#define __WINCE_DEFINED_LPCUSB_STRING_DESCRIPTOR
+typedef struct _CUSB_STRING_DESCRIPTOR *LPCUSB_STRING_DESCRIPTOR;
+#endif /* __WINCE_DEFINED_LPCUSB_STRING_DESCRIPTOR */
 /* DERIVED forward -- derived forward: LP- pointer typedef; no corpus page prints the struct body */
 #ifndef __WINCE_DEFINED_LPDDDEVICEIDENTIFIER
 #define __WINCE_DEFINED_LPDDDEVICEIDENTIFIER
 typedef struct _DDDEVICEIDENTIFIER *LPDDDEVICEIDENTIFIER;
 #endif /* __WINCE_DEFINED_LPDDDEVICEIDENTIFIER */
+/* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_LPDDHALINFO
+#define __WINCE_DEFINED_LPDDHALINFO
+typedef struct _DDHALINFO *LPDDHALINFO;
+#endif /* __WINCE_DEFINED_LPDDHALINFO */
+/* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_LPDDHAL_COLORCONTROLDATA
+#define __WINCE_DEFINED_LPDDHAL_COLORCONTROLDATA
+typedef struct _DDHAL_COLORCONTROLDATA *LPDDHAL_COLORCONTROLDATA;
+#endif /* __WINCE_DEFINED_LPDDHAL_COLORCONTROLDATA */
+/* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_LPDDHAL_DESTROYDRIVERDATA
+#define __WINCE_DEFINED_LPDDHAL_DESTROYDRIVERDATA
+typedef struct _DDHAL_DESTROYDRIVERDATA *LPDDHAL_DESTROYDRIVERDATA;
+#endif /* __WINCE_DEFINED_LPDDHAL_DESTROYDRIVERDATA */
+/* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_LPDDHAL_SETEXCLUSIVEMODEDATA
+#define __WINCE_DEFINED_LPDDHAL_SETEXCLUSIVEMODEDATA
+typedef struct _DDHAL_SETEXCLUSIVEMODEDATA *LPDDHAL_SETEXCLUSIVEMODEDATA;
+#endif /* __WINCE_DEFINED_LPDDHAL_SETEXCLUSIVEMODEDATA */
+/* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_LPDDRAWI_DDRAWSURFACE_GBL
+#define __WINCE_DEFINED_LPDDRAWI_DDRAWSURFACE_GBL
+typedef struct _DDRAWI_DDRAWSURFACE_GBL *LPDDRAWI_DDRAWSURFACE_GBL;
+#endif /* __WINCE_DEFINED_LPDDRAWI_DDRAWSURFACE_GBL */
 /* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
 #ifndef __WINCE_DEFINED_LPDDRAWI_DDRAWSURFACE_LCL
 #define __WINCE_DEFINED_LPDDRAWI_DDRAWSURFACE_LCL
@@ -2052,6 +2580,11 @@ typedef struct _DDVIDEOPORTINFO *LPDDVIDEOPORTINFO;
 typedef struct _DDVIDEOPORTSTATUS *LPDDVIDEOPORTSTATUS;
 #endif /* __WINCE_DEFINED_LPDDVIDEOPORTSTATUS */
 /* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_LPDEVICE_NOTIFY_ROUTINE
+#define __WINCE_DEFINED_LPDEVICE_NOTIFY_ROUTINE
+typedef struct _DEVICE_NOTIFY_ROUTINE *LPDEVICE_NOTIFY_ROUTINE;
+#endif /* __WINCE_DEFINED_LPDEVICE_NOTIFY_ROUTINE */
+/* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
 #ifndef __WINCE_DEFINED_LPDIRECTDRAW
 #define __WINCE_DEFINED_LPDIRECTDRAW
 typedef struct _DIRECTDRAW *LPDIRECTDRAW;
@@ -2066,6 +2599,11 @@ typedef struct _DIRECTDRAWCLIPPER *LPDIRECTDRAWCLIPPER;
 #define __WINCE_DEFINED_LPDMUS_OBJECTDESC
 typedef struct _DMUS_OBJECTDESC *LPDMUS_OBJECTDESC;
 #endif /* __WINCE_DEFINED_LPDMUS_OBJECTDESC */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_LPFNADDPROPSHEETPAGE
+#define __WINCE_DEFINED_LPFNADDPROPSHEETPAGE
+typedef struct LPFNADDPROPSHEETPAGE LPFNADDPROPSHEETPAGE;
+#endif /* __WINCE_DEFINED_LPFNADDPROPSHEETPAGE */
 /* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
 #ifndef __WINCE_DEFINED_LPMARSHAL
 #define __WINCE_DEFINED_LPMARSHAL
@@ -2097,10 +2635,25 @@ typedef struct _PRINTDLG *LPPRINTDLG;
 typedef struct _PROPPAGEINFO *LPPROPPAGEINFO;
 #endif /* __WINCE_DEFINED_LPPROPPAGEINFO */
 /* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_LPTRANSFER_NOTIFY_ROUTINE
+#define __WINCE_DEFINED_LPTRANSFER_NOTIFY_ROUTINE
+typedef struct _TRANSFER_NOTIFY_ROUTINE *LPTRANSFER_NOTIFY_ROUTINE;
+#endif /* __WINCE_DEFINED_LPTRANSFER_NOTIFY_ROUTINE */
+/* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_LPTSPI_PROCS
+#define __WINCE_DEFINED_LPTSPI_PROCS
+typedef struct _TSPI_PROCS *LPTSPI_PROCS;
+#endif /* __WINCE_DEFINED_LPTSPI_PROCS */
+/* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
 #ifndef __WINCE_DEFINED_LPUNKNOWN
 #define __WINCE_DEFINED_LPUNKNOWN
 typedef struct _UNKNOWN *LPUNKNOWN;
 #endif /* __WINCE_DEFINED_LPUNKNOWN */
+/* DERIVED forward -- derived opaque pointer: body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_MANAGED_COMMANDHANDLER_TYPE
+#define __WINCE_DEFINED_MANAGED_COMMANDHANDLER_TYPE
+typedef void *MANAGED_COMMANDHANDLER_TYPE;
+#endif /* __WINCE_DEFINED_MANAGED_COMMANDHANDLER_TYPE */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_MANAGED_DATATYPE
 #define __WINCE_DEFINED_MANAGED_DATATYPE
@@ -2117,6 +2670,16 @@ typedef struct MEMBERID MEMBERID;
 typedef struct MEMID MEMID;
 #endif /* __WINCE_DEFINED_MEMID */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_MIB_ENTRY
+#define __WINCE_DEFINED_MIB_ENTRY
+typedef struct MIB_ENTRY MIB_ENTRY;
+#endif /* __WINCE_DEFINED_MIB_ENTRY */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_MOVEUNIT_ACTION
+#define __WINCE_DEFINED_MOVEUNIT_ACTION
+typedef struct MOVEUNIT_ACTION MOVEUNIT_ACTION;
+#endif /* __WINCE_DEFINED_MOVEUNIT_ACTION */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_MULTI_QI
 #define __WINCE_DEFINED_MULTI_QI
 typedef struct MULTI_QI MULTI_QI;
@@ -2127,6 +2690,31 @@ typedef struct MULTI_QI MULTI_QI;
 typedef struct MUSIC_TIME MUSIC_TIME;
 #endif /* __WINCE_DEFINED_MUSIC_TIME */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_MEDIAITEMBATCH_T
+#define __WINCE_DEFINED_MEDIAITEMBATCH_T
+typedef struct MediaItemBatch_t MediaItemBatch_t;
+#endif /* __WINCE_DEFINED_MEDIAITEMBATCH_T */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_MEDIAITEM_T
+#define __WINCE_DEFINED_MEDIAITEM_T
+typedef struct MediaItem_t MediaItem_t;
+#endif /* __WINCE_DEFINED_MEDIAITEM_T */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_MEDIAQUERY_T
+#define __WINCE_DEFINED_MEDIAQUERY_T
+typedef struct MediaQuery_t MediaQuery_t;
+#endif /* __WINCE_DEFINED_MEDIAQUERY_T */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_MEMALLOC
+#define __WINCE_DEFINED_MEMALLOC
+typedef struct MemAlloc MemAlloc;
+#endif /* __WINCE_DEFINED_MEMALLOC */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_MEMFREE
+#define __WINCE_DEFINED_MEMFREE
+typedef struct MemFree MemFree;
+#endif /* __WINCE_DEFINED_MEMFREE */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_MYINT
 #define __WINCE_DEFINED_MYINT
 typedef struct MyInt MyInt;
@@ -2136,6 +2724,11 @@ typedef struct MyInt MyInt;
 #define __WINCE_DEFINED_NODEDATAUNION
 typedef struct NodeDataUnion NodeDataUnion;
 #endif /* __WINCE_DEFINED_NODEDATAUNION */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_NOTIFYPACKET
+#define __WINCE_DEFINED_NOTIFYPACKET
+typedef struct NotifyPacket NotifyPacket;
+#endif /* __WINCE_DEFINED_NOTIFYPACKET */
 /* DERIVED forward -- derived forward: OLE window handle */
 #ifndef __WINCE_DEFINED_OAHWND
 #define __WINCE_DEFINED_OAHWND
@@ -2151,11 +2744,26 @@ typedef DWORD OLE_COLOR;
 #define __WINCE_DEFINED_OLE_HANDLE
 typedef DWORD_PTR OLE_HANDLE;
 #endif /* __WINCE_DEFINED_OLE_HANDLE */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_OBEXPACKETDATA
+#define __WINCE_DEFINED_OBEXPACKETDATA
+typedef struct ObexPacketData ObexPacketData;
+#endif /* __WINCE_DEFINED_OBEXPACKETDATA */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_OBEXVARIANT
+#define __WINCE_DEFINED_OBEXVARIANT
+typedef struct ObexVariant ObexVariant;
+#endif /* __WINCE_DEFINED_OBEXVARIANT */
 /* DERIVED forward -- derived forward: no corpus page prints the type body */
 #ifndef __WINCE_DEFINED_PCONFINFO
 #define __WINCE_DEFINED_PCONFINFO
 typedef struct PCONFINFO PCONFINFO;
 #endif /* __WINCE_DEFINED_PCONFINFO */
+/* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_PDISK_INFO
+#define __WINCE_DEFINED_PDISK_INFO
+typedef struct _DISK_INFO *PDISK_INFO;
+#endif /* __WINCE_DEFINED_PDISK_INFO */
 /* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
 #ifndef __WINCE_DEFINED_PDSDRIVERCAPS
 #define __WINCE_DEFINED_PDSDRIVERCAPS
@@ -2166,6 +2774,11 @@ typedef struct _DSDRIVERCAPS *PDSDRIVERCAPS;
 #define __WINCE_DEFINED_PDSDRIVERDESC
 typedef struct _DSDRIVERDESC *PDSDRIVERDESC;
 #endif /* __WINCE_DEFINED_PDSDRIVERDESC */
+/* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_PDSVOLUMEPAN
+#define __WINCE_DEFINED_PDSVOLUMEPAN
+typedef struct _DSVOLUMEPAN *PDSVOLUMEPAN;
+#endif /* __WINCE_DEFINED_PDSVOLUMEPAN */
 /* DERIVED forward -- derived opaque pointer: body no corpus page prints as one block */
 #ifndef __WINCE_DEFINED_PFN_ALLOCHEAPMEM
 #define __WINCE_DEFINED_PFN_ALLOCHEAPMEM
@@ -2197,6 +2810,11 @@ typedef void *PFN_CRYPT_ENUM_KEYID_PROP;
 typedef void *PFN_CRYPT_ENUM_OID_INFO;
 #endif /* __WINCE_DEFINED_PFN_CRYPT_ENUM_OID_INFO */
 /* DERIVED forward -- derived opaque pointer: body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_PFN_ENUMPROC
+#define __WINCE_DEFINED_PFN_ENUMPROC
+typedef void *PFN_EnumProc;
+#endif /* __WINCE_DEFINED_PFN_ENUMPROC */
+/* DERIVED forward -- derived opaque pointer: body no corpus page prints as one block */
 #ifndef __WINCE_DEFINED_PFN_FMTPUTS
 #define __WINCE_DEFINED_PFN_FMTPUTS
 typedef void *PFN_FmtPuts;
@@ -2212,10 +2830,35 @@ typedef void *PFN_FreeHeapMem;
 typedef void *PFN_Gets;
 #endif /* __WINCE_DEFINED_PFN_GETS */
 /* DERIVED forward -- derived opaque pointer: body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_PFN_KEYBD_EVENT
+#define __WINCE_DEFINED_PFN_KEYBD_EVENT
+typedef void *PFN_KEYBD_EVENT;
+#endif /* __WINCE_DEFINED_PFN_KEYBD_EVENT */
+/* DERIVED forward -- derived opaque pointer: body no corpus page prints as one block */
 #ifndef __WINCE_DEFINED_PFN_KEYBD_EVENT_CALLBACK
 #define __WINCE_DEFINED_PFN_KEYBD_EVENT_CALLBACK
 typedef void *PFN_KEYBD_EVENT_CALLBACK;
 #endif /* __WINCE_DEFINED_PFN_KEYBD_EVENT_CALLBACK */
+/* DERIVED forward -- derived opaque pointer: body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_PFN_KITLTIMERCB
+#define __WINCE_DEFINED_PFN_KITLTIMERCB
+typedef void *PFN_KITLTIMERCB;
+#endif /* __WINCE_DEFINED_PFN_KITLTIMERCB */
+/* DERIVED forward -- derived opaque pointer: body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_PFN_MESSAGE
+#define __WINCE_DEFINED_PFN_MESSAGE
+typedef void *PFN_MESSAGE;
+#endif /* __WINCE_DEFINED_PFN_MESSAGE */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_PFN_OUTPUTDEBUGSTRING
+#define __WINCE_DEFINED_PFN_OUTPUTDEBUGSTRING
+typedef struct PFN_OutputDebugString PFN_OutputDebugString;
+#endif /* __WINCE_DEFINED_PFN_OUTPUTDEBUGSTRING */
+/* DERIVED forward -- derived opaque pointer: body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_PFN_PROGRESS
+#define __WINCE_DEFINED_PFN_PROGRESS
+typedef void *PFN_PROGRESS;
+#endif /* __WINCE_DEFINED_PFN_PROGRESS */
 /* DERIVED forward -- derived opaque pointer: body no corpus page prints as one block */
 #ifndef __WINCE_DEFINED_PFN_PHONEEXTSERVICECALLBACK
 #define __WINCE_DEFINED_PFN_PHONEEXTSERVICECALLBACK
@@ -2226,6 +2869,16 @@ typedef void *PFN_PhoneExtServiceCallback;
 #define __WINCE_DEFINED_PFN_SENDATCOMMAND
 typedef void *PFN_SendATCommand;
 #endif /* __WINCE_DEFINED_PFN_SENDATCOMMAND */
+/* DERIVED forward -- derived opaque pointer: body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_PFN_TOUCH_PANEL_CALLBACK
+#define __WINCE_DEFINED_PFN_TOUCH_PANEL_CALLBACK
+typedef void *PFN_TOUCH_PANEL_CALLBACK;
+#endif /* __WINCE_DEFINED_PFN_TOUCH_PANEL_CALLBACK */
+/* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_PFORMAT_OPTIONS
+#define __WINCE_DEFINED_PFORMAT_OPTIONS
+typedef struct _FORMAT_OPTIONS *PFORMAT_OPTIONS;
+#endif /* __WINCE_DEFINED_PFORMAT_OPTIONS */
 /* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
 #ifndef __WINCE_DEFINED_PIVCMDENUM
 #define __WINCE_DEFINED_PIVCMDENUM
@@ -2242,10 +2895,45 @@ typedef struct _IVCMDMENU *PIVCMDMENU;
 typedef struct _KEYBD_IST *PKEYBD_IST;
 #endif /* __WINCE_DEFINED_PKEYBD_IST */
 /* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_PKEYBD_PDD
+#define __WINCE_DEFINED_PKEYBD_PDD
+typedef struct _KEYBD_PDD *PKEYBD_PDD;
+#endif /* __WINCE_DEFINED_PKEYBD_PDD */
+/* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
 #ifndef __WINCE_DEFINED_PLANGUAGE
 #define __WINCE_DEFINED_PLANGUAGE
 typedef struct _LANGUAGE *PLANGUAGE;
 #endif /* __WINCE_DEFINED_PLANGUAGE */
+/* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_PNDIS_BUFFER
+#define __WINCE_DEFINED_PNDIS_BUFFER
+typedef struct _NDIS_BUFFER *PNDIS_BUFFER;
+#endif /* __WINCE_DEFINED_PNDIS_BUFFER */
+/* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_PNDIS_PACKET
+#define __WINCE_DEFINED_PNDIS_PACKET
+typedef struct _NDIS_PACKET *PNDIS_PACKET;
+#endif /* __WINCE_DEFINED_PNDIS_PACKET */
+/* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_PNDIS_PACKET_EXTENSION
+#define __WINCE_DEFINED_PNDIS_PACKET_EXTENSION
+typedef struct _NDIS_PACKET_EXTENSION *PNDIS_PACKET_EXTENSION;
+#endif /* __WINCE_DEFINED_PNDIS_PACKET_EXTENSION */
+/* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_PNDIS_PACKET_OOB_DATA
+#define __WINCE_DEFINED_PNDIS_PACKET_OOB_DATA
+typedef struct _NDIS_PACKET_OOB_DATA *PNDIS_PACKET_OOB_DATA;
+#endif /* __WINCE_DEFINED_PNDIS_PACKET_OOB_DATA */
+/* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_PNDIS_REQUEST
+#define __WINCE_DEFINED_PNDIS_REQUEST
+typedef struct _NDIS_REQUEST *PNDIS_REQUEST;
+#endif /* __WINCE_DEFINED_PNDIS_REQUEST */
+/* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_PNTM
+#define __WINCE_DEFINED_PNTM
+typedef struct _NTM *PNTM;
+#endif /* __WINCE_DEFINED_PNTM */
 /* DERIVED forward -- derived forward: no corpus page prints the type body */
 #ifndef __WINCE_DEFINED_POBJNOTIFY
 #define __WINCE_DEFINED_POBJNOTIFY
@@ -2261,6 +2949,11 @@ typedef struct POBJTYPEINFO POBJTYPEINFO;
 #define __WINCE_DEFINED_POBJUIDATA
 typedef struct POBJUIDATA POBJUIDATA;
 #endif /* __WINCE_DEFINED_POBJUIDATA */
+/* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_POINTER_GRAVITY
+#define __WINCE_DEFINED_POINTER_GRAVITY
+typedef struct _OINTER_GRAVITY *POINTER_GRAVITY;
+#endif /* __WINCE_DEFINED_POINTER_GRAVITY */
 /* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
 #ifndef __WINCE_DEFINED_POINTL
 #define __WINCE_DEFINED_POINTL
@@ -2292,6 +2985,11 @@ typedef struct _ROPID *PROPID;
 typedef struct _SDATA *PSDATA;
 #endif /* __WINCE_DEFINED_PSDATA */
 /* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_PSIGNALINFO
+#define __WINCE_DEFINED_PSIGNALINFO
+typedef struct _SIGNALINFO *PSIGNALINFO;
+#endif /* __WINCE_DEFINED_PSIGNALINFO */
+/* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
 #ifndef __WINCE_DEFINED_PSS_WINDOW_STATE
 #define __WINCE_DEFINED_PSS_WINDOW_STATE
 typedef struct _SS_WINDOW_STATE *PSS_WINDOW_STATE;
@@ -2302,10 +3000,35 @@ typedef struct _SS_WINDOW_STATE *PSS_WINDOW_STATE;
 typedef struct PTM_FIELD_DESC PTM_FIELD_DESC;
 #endif /* __WINCE_DEFINED_PTM_FIELD_DESC */
 /* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_PTUNERBANDINFO
+#define __WINCE_DEFINED_PTUNERBANDINFO
+typedef struct _TUNERBANDINFO *PTUNERBANDINFO;
+#endif /* __WINCE_DEFINED_PTUNERBANDINFO */
+/* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_PTUNERCONFIG
+#define __WINCE_DEFINED_PTUNERCONFIG
+typedef struct _TUNERCONFIG *PTUNERCONFIG;
+#endif /* __WINCE_DEFINED_PTUNERCONFIG */
+/* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_PTUNERDEVCAPS
+#define __WINCE_DEFINED_PTUNERDEVCAPS
+typedef struct _TUNERDEVCAPS *PTUNERDEVCAPS;
+#endif /* __WINCE_DEFINED_PTUNERDEVCAPS */
+/* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_PTUNERSEEKINFO
+#define __WINCE_DEFINED_PTUNERSEEKINFO
+typedef struct _TUNERSEEKINFO *PTUNERSEEKINFO;
+#endif /* __WINCE_DEFINED_PTUNERSEEKINFO */
+/* DERIVED forward -- derived pointer forward: pointee body no corpus page prints as one block */
 #ifndef __WINCE_DEFINED_PVCMDNAME
 #define __WINCE_DEFINED_PVCMDNAME
 typedef struct _VCMDNAME *PVCMDNAME;
 #endif /* __WINCE_DEFINED_PVCMDNAME */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_PERSISTENTPACKET
+#define __WINCE_DEFINED_PERSISTENTPACKET
+typedef struct PersistentPacket PersistentPacket;
+#endif /* __WINCE_DEFINED_PERSISTENTPACKET */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_PIXELFORMATID
 #define __WINCE_DEFINED_PIXELFORMATID
@@ -2326,6 +3049,11 @@ typedef struct PropertyItem PropertyItem;
 #define __WINCE_DEFINED_QUALITY
 typedef struct Quality Quality;
 #endif /* __WINCE_DEFINED_QUALITY */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_QUERYENGINESTATE_E
+#define __WINCE_DEFINED_QUERYENGINESTATE_E
+typedef struct QueryEngineState_e QueryEngineState_e;
+#endif /* __WINCE_DEFINED_QUERYENGINESTATE_E */
 /* DERIVED forward -- derived placeholder: media reference time; the page prints only its maximum constant */
 #ifndef __WINCE_DEFINED_REFERENCE_TIME
 #define __WINCE_DEFINED_REFERENCE_TIME
@@ -2347,10 +3075,25 @@ typedef struct REFMSPID REFMSPID;
 typedef double REFTIME;
 #endif /* __WINCE_DEFINED_REFTIME */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_REGFILTER2
+#define __WINCE_DEFINED_REGFILTER2
+typedef struct REGFILTER2 REGFILTER2;
+#endif /* __WINCE_DEFINED_REGFILTER2 */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_REGPINMEDIUM
 #define __WINCE_DEFINED_REGPINMEDIUM
 typedef struct REGPINMEDIUM REGPINMEDIUM;
 #endif /* __WINCE_DEFINED_REGPINMEDIUM */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_RESULT
+#define __WINCE_DEFINED_RESULT
+typedef struct RESULT RESULT;
+#endif /* __WINCE_DEFINED_RESULT */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_RFC1157VARBIND
+#define __WINCE_DEFINED_RFC1157VARBIND
+typedef struct RFC1157VarBind RFC1157VarBind;
+#endif /* __WINCE_DEFINED_RFC1157VARBIND */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_RFCOMM_CALLBACKS
 #define __WINCE_DEFINED_RFCOMM_CALLBACKS
@@ -2387,6 +3130,11 @@ typedef struct tagSAFEARRAYBOUND SAFEARRAYBOUND;
 typedef LONG SCODE;
 #endif /* __WINCE_DEFINED_SCODE */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_SCROLL_STATE
+#define __WINCE_DEFINED_SCROLL_STATE
+typedef struct SCROLL_STATE SCROLL_STATE;
+#endif /* __WINCE_DEFINED_SCROLL_STATE */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_SDATA
 #define __WINCE_DEFINED_SDATA
 typedef struct SDATA SDATA;
@@ -2417,10 +3165,20 @@ typedef struct SPPHRASE SPPHRASE;
 typedef struct SPPHRASEELEMENT SPPHRASEELEMENT;
 #endif /* __WINCE_DEFINED_SPPHRASEELEMENT */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_SPVTEXTFRAG
+#define __WINCE_DEFINED_SPVTEXTFRAG
+typedef struct SPVTEXTFRAG SPVTEXTFRAG;
+#endif /* __WINCE_DEFINED_SPVTEXTFRAG */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_SPWORDLIST
 #define __WINCE_DEFINED_SPWORDLIST
 typedef struct SPWORDLIST SPWORDLIST;
 #endif /* __WINCE_DEFINED_SPWORDLIST */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_STGMEDIUM
+#define __WINCE_DEFINED_STGMEDIUM
+typedef struct STGMEDIUM STGMEDIUM;
+#endif /* __WINCE_DEFINED_STGMEDIUM */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_STRMBUF_CAPTURE_MODE
 #define __WINCE_DEFINED_STRMBUF_CAPTURE_MODE
@@ -2431,11 +3189,41 @@ typedef struct STRMBUF_CAPTURE_MODE STRMBUF_CAPTURE_MODE;
 #define __WINCE_DEFINED_STRMBUF_PLAYBACK_TUNE_POLICY
 typedef struct STRMBUF_PLAYBACK_TUNE_POLICY STRMBUF_PLAYBACK_TUNE_POLICY;
 #endif /* __WINCE_DEFINED_STRMBUF_PLAYBACK_TUNE_POLICY */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_SAMPLE
+#define __WINCE_DEFINED_SAMPLE
+typedef struct Sample Sample;
+#endif /* __WINCE_DEFINED_SAMPLE */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_SCROLLBARINFOINTERNAL
+#define __WINCE_DEFINED_SCROLLBARINFOINTERNAL
+typedef struct ScrollBarInfoInternal ScrollBarInfoInternal;
+#endif /* __WINCE_DEFINED_SCROLLBARINFOINTERNAL */
 /* DERIVED forward -- derived forward: no corpus page prints the union body */
 #ifndef __WINCE_DEFINED_SDPQUERYUUIDUNION
 #define __WINCE_DEFINED_SDPQUERYUUIDUNION
 typedef struct SdpQueryUuidUnion SdpQueryUuidUnion;
 #endif /* __WINCE_DEFINED_SDPQUERYUUIDUNION */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_SERVERINFOCOLLECTION_T
+#define __WINCE_DEFINED_SERVERINFOCOLLECTION_T
+typedef struct ServerInfoCollection_t ServerInfoCollection_t;
+#endif /* __WINCE_DEFINED_SERVERINFOCOLLECTION_T */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_SERVERINFO_T
+#define __WINCE_DEFINED_SERVERINFO_T
+typedef struct ServerInfo_t ServerInfo_t;
+#endif /* __WINCE_DEFINED_SERVERINFO_T */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_STRINGTABLE
+#define __WINCE_DEFINED_STRINGTABLE
+typedef struct StringTable StringTable;
+#endif /* __WINCE_DEFINED_STRINGTABLE */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_TLENUMF
+#define __WINCE_DEFINED_TLENUMF
+typedef struct TLENUMF TLENUMF;
+#endif /* __WINCE_DEFINED_TLENUMF */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_TLIBATTR
 #define __WINCE_DEFINED_TLIBATTR
@@ -2456,6 +3244,11 @@ typedef struct TYPEDESC TYPEDESC;
 #define __WINCE_DEFINED_TUNERINPUTTYPE
 typedef int TunerInputType;
 #endif /* __WINCE_DEFINED_TUNERINPUTTYPE */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_UIPARAM
+#define __WINCE_DEFINED_UIPARAM
+typedef struct UIPARAM UIPARAM;
+#endif /* __WINCE_DEFINED_UIPARAM */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_UNIT
 #define __WINCE_DEFINED_UNIT
@@ -2501,11 +3294,41 @@ typedef short VARIANT_BOOL;
 #define __WINCE_DEFINED_VIDEOINFOHEADER
 typedef struct VIDEOINFOHEADER VIDEOINFOHEADER;
 #endif /* __WINCE_DEFINED_VIDEOINFOHEADER */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_VIODIAGNOSTICFIELD
+#define __WINCE_DEFINED_VIODIAGNOSTICFIELD
+typedef struct VIODIAGNOSTICFIELD VIODIAGNOSTICFIELD;
+#endif /* __WINCE_DEFINED_VIODIAGNOSTICFIELD */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_VIODIAGNOSTICINFO
+#define __WINCE_DEFINED_VIODIAGNOSTICINFO
+typedef struct VIODIAGNOSTICINFO VIODIAGNOSTICINFO;
+#endif /* __WINCE_DEFINED_VIODIAGNOSTICINFO */
 /* DERIVED forward -- derived typedef: fundamental name no corpus page prints in a filed block */
 #ifndef __WINCE_DEFINED_VOID
 #define __WINCE_DEFINED_VOID
 typedef void VOID;
 #endif /* __WINCE_DEFINED_VOID */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_VERYLONGCLASSNAMEA
+#define __WINCE_DEFINED_VERYLONGCLASSNAMEA
+typedef struct VeryLongClassNameA VeryLongClassNameA;
+#endif /* __WINCE_DEFINED_VERYLONGCLASSNAMEA */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_VERYLONGCLASSNAMEB
+#define __WINCE_DEFINED_VERYLONGCLASSNAMEB
+typedef struct VeryLongClassNameB VeryLongClassNameB;
+#endif /* __WINCE_DEFINED_VERYLONGCLASSNAMEB */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_VERYLONGCLASSNAMEC
+#define __WINCE_DEFINED_VERYLONGCLASSNAMEC
+typedef struct VeryLongClassNameC VeryLongClassNameC;
+#endif /* __WINCE_DEFINED_VERYLONGCLASSNAMEC */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_VERYLONGCLASSNAMED
+#define __WINCE_DEFINED_VERYLONGCLASSNAMED
+typedef struct VeryLongClassNameD VeryLongClassNameD;
+#endif /* __WINCE_DEFINED_VERYLONGCLASSNAMED */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_VOIPMGRPARAMETERS
 #define __WINCE_DEFINED_VOIPMGRPARAMETERS
@@ -2527,10 +3350,75 @@ typedef struct WSDXML_NAME WSDXML_NAME;
 typedef struct WSDXML_NAMESPACE WSDXML_NAMESPACE;
 #endif /* __WINCE_DEFINED_WSDXML_NAMESPACE */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_WSD_ENDPOINT_REFERENCE
+#define __WINCE_DEFINED_WSD_ENDPOINT_REFERENCE
+typedef struct WSD_ENDPOINT_REFERENCE WSD_ENDPOINT_REFERENCE;
+#endif /* __WINCE_DEFINED_WSD_ENDPOINT_REFERENCE */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_WSD_HOST_METADATA
+#define __WINCE_DEFINED_WSD_HOST_METADATA
+typedef struct WSD_HOST_METADATA WSD_HOST_METADATA;
+#endif /* __WINCE_DEFINED_WSD_HOST_METADATA */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_WSD_METADATA_SECTION_LIST
+#define __WINCE_DEFINED_WSD_METADATA_SECTION_LIST
+typedef struct WSD_METADATA_SECTION_LIST WSD_METADATA_SECTION_LIST;
+#endif /* __WINCE_DEFINED_WSD_METADATA_SECTION_LIST */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_WSD_NAME_LIST
+#define __WINCE_DEFINED_WSD_NAME_LIST
+typedef struct WSD_NAME_LIST WSD_NAME_LIST;
+#endif /* __WINCE_DEFINED_WSD_NAME_LIST */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_WSD_OPERATION
+#define __WINCE_DEFINED_WSD_OPERATION
+typedef struct WSD_OPERATION WSD_OPERATION;
+#endif /* __WINCE_DEFINED_WSD_OPERATION */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_WSD_PORT_TYPE
 #define __WINCE_DEFINED_WSD_PORT_TYPE
 typedef struct WSD_PORT_TYPE WSD_PORT_TYPE;
 #endif /* __WINCE_DEFINED_WSD_PORT_TYPE */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_WSD_SERVICE_METADATA
+#define __WINCE_DEFINED_WSD_SERVICE_METADATA
+typedef struct WSD_SERVICE_METADATA WSD_SERVICE_METADATA;
+#endif /* __WINCE_DEFINED_WSD_SERVICE_METADATA */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_WSD_SOAP_FAULT
+#define __WINCE_DEFINED_WSD_SOAP_FAULT
+typedef struct WSD_SOAP_FAULT WSD_SOAP_FAULT;
+#endif /* __WINCE_DEFINED_WSD_SOAP_FAULT */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_WSD_SYNCHRONOUS_RESPONSE_CONTEXT
+#define __WINCE_DEFINED_WSD_SYNCHRONOUS_RESPONSE_CONTEXT
+typedef struct WSD_SYNCHRONOUS_RESPONSE_CONTEXT WSD_SYNCHRONOUS_RESPONSE_CONTEXT;
+#endif /* __WINCE_DEFINED_WSD_SYNCHRONOUS_RESPONSE_CONTEXT */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_WSD_THIS_DEVICE_METADATA
+#define __WINCE_DEFINED_WSD_THIS_DEVICE_METADATA
+typedef struct WSD_THIS_DEVICE_METADATA WSD_THIS_DEVICE_METADATA;
+#endif /* __WINCE_DEFINED_WSD_THIS_DEVICE_METADATA */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_WSD_THIS_MODEL_METADATA
+#define __WINCE_DEFINED_WSD_THIS_MODEL_METADATA
+typedef struct WSD_THIS_MODEL_METADATA WSD_THIS_MODEL_METADATA;
+#endif /* __WINCE_DEFINED_WSD_THIS_MODEL_METADATA */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_WSD_URI_LIST
+#define __WINCE_DEFINED_WSD_URI_LIST
+typedef struct WSD_URI_LIST WSD_URI_LIST;
+#endif /* __WINCE_DEFINED_WSD_URI_LIST */
+/* DERIVED forward -- printed spelling variant of WAVEFORMATEX */
+#ifndef __WINCE_DEFINED_WAVEFORMATEX_SPELLING
+#define __WINCE_DEFINED_WAVEFORMATEX_SPELLING
+typedef WAVEFORMATEX WaveFormatEx;
+#endif /* __WINCE_DEFINED_WAVEFORMATEX_SPELLING */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_Z
+#define __WINCE_DEFINED_Z
+typedef struct Z Z;
+#endif /* __WINCE_DEFINED_Z */
 /* DERIVED forward -- derived forward: ATL map entry; body no corpus page prints */
 #ifndef __WINCE_DEFINED__ATL_INTMAP_ENTRY
 #define __WINCE_DEFINED__ATL_INTMAP_ENTRY
@@ -2546,11 +3434,11 @@ typedef struct _FRAGNODE _FRAGNODE;
 #define __WINCE_DEFINED___POSITION
 typedef struct __POSITION __POSITION;
 #endif /* __WINCE_DEFINED___POSITION */
-/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
-#ifndef __WINCE_DEFINED_BOOLEAN
-#define __WINCE_DEFINED_BOOLEAN
-typedef struct boolean boolean;
-#endif /* __WINCE_DEFINED_BOOLEAN */
+/* DERIVED forward -- derived placeholder: body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_BYTE
+#define __WINCE_DEFINED_BYTE
+typedef unsigned char byte;
+#endif /* __WINCE_DEFINED_BYTE */
 /* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
 #ifndef __WINCE_DEFINED_FILTERS
 #define __WINCE_DEFINED_FILTERS
@@ -2566,6 +3454,11 @@ typedef void *hHREPLFLD;
 #define __WINCE_DEFINED_HPNDEVICE
 typedef struct hPNDevice hPNDevice;
 #endif /* __WINCE_DEFINED_HPNDEVICE */
+/* DERIVED forward -- derived placeholder: body no corpus page prints as one block */
+#ifndef __WINCE_DEFINED_LPTRANSPORTFOLDERINFO
+#define __WINCE_DEFINED_LPTRANSPORTFOLDERINFO
+typedef int lpTransportFolderInfo;
+#endif /* __WINCE_DEFINED_LPTRANSPORTFOLDERINFO */
 /* DERIVED forward -- derived forward: MIDL [object] name leaked as a type; body no corpus page prints */
 #ifndef __WINCE_DEFINED_OBJECT
 #define __WINCE_DEFINED_OBJECT
@@ -2601,5 +3494,15 @@ typedef struct pPNVELENU pPNVELENU;
 #define __WINCE_DEFINED_PHPNDEVICE
 typedef void *phPNDevice;
 #endif /* __WINCE_DEFINED_PHPNDEVICE */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_PPPNDEVICE
+#define __WINCE_DEFINED_PPPNDEVICE
+typedef struct ppPNDEVICE ppPNDEVICE;
+#endif /* __WINCE_DEFINED_PPPNDEVICE */
+/* DERIVED forward -- struct body no corpus page prints as one block -- opaque C forward */
+#ifndef __WINCE_DEFINED_SMISINPUTENUM
+#define __WINCE_DEFINED_SMISINPUTENUM
+typedef struct smIsInputEnum smIsInputEnum;
+#endif /* __WINCE_DEFINED_SMISINPUTENUM */
 
 #endif /* _WINDEF_ */
