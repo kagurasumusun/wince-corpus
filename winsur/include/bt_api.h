@@ -54,11 +54,14 @@ typedef struct {
 /* BTEVENT  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__BTEVENT
 #define __WINCE_DEFINED__BTEVENT
+#ifndef __WINCE_DEFINED_BTEVENT
+#define __WINCE_DEFINED_BTEVENT
 typedef struct _BTEVENT {
  DWORD dwEventId;
  DWORD dwReserved;
  BYTE baEventData[64];
 } BTEVENT, *PBTEVENT;
+#endif /* __WINCE_DEFINED_BTEVENT */
 #endif /* __WINCE_DEFINED__BTEVENT */
 
 /* ==================================================================

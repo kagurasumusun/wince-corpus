@@ -20,6 +20,8 @@
 /* PH_APPLICATION  [enum; ce-only; PhCommon.dll] */
 #ifndef __WINCE_DEFINED__PH_APPLICATION
 #define __WINCE_DEFINED__PH_APPLICATION
+#ifndef __WINCE_DEFINED_PH_APPLICATION
+#define __WINCE_DEFINED_PH_APPLICATION
 typedef enum _PH_APPLICATION
 {
  phaPhoneApp = 0,
@@ -28,6 +30,7 @@ typedef enum _PH_APPLICATION
  phaContactsApp,
  phaLast,
 } PH_APPLICATION;
+#endif /* __WINCE_DEFINED_PH_APPLICATION */
 #endif /* __WINCE_DEFINED__PH_APPLICATION */
 #ifndef __WINCE_DEFINED_PPH_APPLICATION
 #define __WINCE_DEFINED_PPH_APPLICATION

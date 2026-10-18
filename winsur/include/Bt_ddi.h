@@ -66,10 +66,13 @@
 /* ControllerEvent  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__CONTROLLER_EVENT_PACKET
 #define __WINCE_DEFINED__CONTROLLER_EVENT_PACKET
+#ifndef __WINCE_DEFINED_CONTROLLEREVENT
+#define __WINCE_DEFINED_CONTROLLEREVENT
 typedef struct _controller_event_packet {
  int cSize;
  unsigned char* pData;
 } ControllerEvent;
+#endif /* __WINCE_DEFINED_CONTROLLEREVENT */
 #endif /* __WINCE_DEFINED__CONTROLLER_EVENT_PACKET */
 #ifndef __WINCE_DEFINED_PCONTROLLEREVENT
 #define __WINCE_DEFINED_PCONTROLLEREVENT
@@ -79,12 +82,15 @@ typedef ControllerEvent *PControllerEvent, *LPControllerEvent;
 /* HCI_Buffer_Size  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__HOST_BUFFER_SIZE
 #define __WINCE_DEFINED__HOST_BUFFER_SIZE
+#ifndef __WINCE_DEFINED_HCI_BUFFER_SIZE
+#define __WINCE_DEFINED_HCI_BUFFER_SIZE
 typedef struct _host_buffer_size {
  unsigned short ACL_Data_Packet_Length;
  unsigned char SCO_Data_Packet_Length;
  unsigned short Total_Num_ACL_Data_Packets;
  unsigned short Total_Num_SCO_Data_Packets;
 } HCI_Buffer_Size;
+#endif /* __WINCE_DEFINED_HCI_BUFFER_SIZE */
 #endif /* __WINCE_DEFINED__HOST_BUFFER_SIZE */
 #ifndef __WINCE_DEFINED_PHCI_BUFFER_SIZE
 #define __WINCE_DEFINED_PHCI_BUFFER_SIZE

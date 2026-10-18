@@ -101,12 +101,17 @@ struct FreeBusyCriteria {
 /* wszLastName  [extra struct] */
 #ifndef __WINCE_DEFINED_CONTACTSSEARCHCRITERIA
 #define __WINCE_DEFINED_CONTACTSSEARCHCRITERIA
+#ifndef __WINCE_DEFINED_WSZLASTNAME
+#define __WINCE_DEFINED_WSZLASTNAME
 struct ContactsSearchCriteria { WCHAR* wszFirstName; WCHAR* wszLastName; };
+#endif /* __WINCE_DEFINED_WSZLASTNAME */
 #endif /* __WINCE_DEFINED_CONTACTSSEARCHCRITERIA */
 
 /* e_ecrsNoCredentials  [extra enum] */
 #ifndef __WINCE_DEFINED_EXCHANGECLIENTREQUESTSTATUS
 #define __WINCE_DEFINED_EXCHANGECLIENTREQUESTSTATUS
+#ifndef __WINCE_DEFINED_E_ECRSNOCREDENTIALS
+#define __WINCE_DEFINED_E_ECRSNOCREDENTIALS
 enum ExchangeClientRequestStatus
 {
  e_ecrsPending = 0,
@@ -122,11 +127,14 @@ enum ExchangeClientRequestStatus
  e_ecrsCancelled,
  e_ecrsNoCredentials,
 };
+#endif /* __WINCE_DEFINED_E_ECRSNOCREDENTIALS */
 #endif /* __WINCE_DEFINED_EXCHANGECLIENTREQUESTSTATUS */
 
 /* e_ecrtFreeBusy  [extra enum] */
 #ifndef __WINCE_DEFINED_EXCHANGECLIENTREQUESTTYPE
 #define __WINCE_DEFINED_EXCHANGECLIENTREQUESTTYPE
+#ifndef __WINCE_DEFINED_E_ECRTFREEBUSY
+#define __WINCE_DEFINED_E_ECRTFREEBUSY
 enum ExchangeClientRequestType
 {
  e_ecrtInvalid = 0,
@@ -134,12 +142,16 @@ enum ExchangeClientRequestType
  e_ecrtGALSearch,
  e_ecrtFreeBusy,
 };
+#endif /* __WINCE_DEFINED_E_ECRTFREEBUSY */
 #endif /* __WINCE_DEFINED_EXCHANGECLIENTREQUESTTYPE */
 
 /* pstStart  [extra struct] */
 #ifndef __WINCE_DEFINED_FREEBUSYCRITERIA
 #define __WINCE_DEFINED_FREEBUSYCRITERIA
+#ifndef __WINCE_DEFINED_PSTSTART
+#define __WINCE_DEFINED_PSTSTART
 struct FreeBusyCriteria { WCHAR* wszAlias; SYSTEMTIME* pstStart; };
+#endif /* __WINCE_DEFINED_PSTSTART */
 #endif /* __WINCE_DEFINED_FREEBUSYCRITERIA */
 
 /* pStatus  [extra enum] */

@@ -35,11 +35,14 @@
 /* BATTERYLIFETIMEINFO  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__BATTERYLIFETIMEINFO_TAG
 #define __WINCE_DEFINED__BATTERYLIFETIMEINFO_TAG
+#ifndef __WINCE_DEFINED_BATTERYLIFETIMEINFO
+#define __WINCE_DEFINED_BATTERYLIFETIMEINFO
 typedef struct _BatteryLifetimeInfo_tag {
  SYSTEMTIME stLastChange;
  DWORD cmsCpuUsage;
  DWORD cmsPreviousCpuUsage;
 } BATTERYLIFETIMEINFO, *PBATTERYLIFETIMEINFO;
+#endif /* __WINCE_DEFINED_BATTERYLIFETIMEINFO */
 #endif /* __WINCE_DEFINED__BATTERYLIFETIMEINFO_TAG */
 
 /* ==================================================================

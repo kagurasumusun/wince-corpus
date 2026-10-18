@@ -26,6 +26,8 @@
 /* _MINIDUMP_STREAM_TYPE  [enum; ce-only] */
 #ifndef __WINCE_DEFINED__MINIDUMP_STREAM_TYPE
 #define __WINCE_DEFINED__MINIDUMP_STREAM_TYPE
+#ifndef __WINCE_DEFINED_MINIDUMP_STREAM_TYPE
+#define __WINCE_DEFINED_MINIDUMP_STREAM_TYPE
 typedef enum _MINIDUMP_STREAM_TYPE {
  UnusedStream = 0,
  ceStreamNull = 0x8000,
@@ -41,6 +43,7 @@ typedef enum _MINIDUMP_STREAM_TYPE {
  ceStreamBucketParameters = 0x800A,
  LastReservedStream = 0xffff
 } MINIDUMP_STREAM_TYPE;
+#endif /* __WINCE_DEFINED_MINIDUMP_STREAM_TYPE */
 #endif /* __WINCE_DEFINED__MINIDUMP_STREAM_TYPE */
 
 #endif /* _DWCEDUMP_ */

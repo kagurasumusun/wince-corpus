@@ -20,15 +20,20 @@
 /* DEFRAG_OPTIONS  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__DEFRAG_OPTIONS
 #define __WINCE_DEFINED__DEFRAG_OPTIONS
+#ifndef __WINCE_DEFINED_DEFRAG_OPTIONS
+#define __WINCE_DEFINED_DEFRAG_OPTIONS
 typedef struct _DEFRAG_OPTIONS {
  DWORD dwFatToUse;
  DWORD dwFlags;
 } DEFRAG_OPTIONS, *PDEFRAG_OPTIONS;
+#endif /* __WINCE_DEFINED_DEFRAG_OPTIONS */
 #endif /* __WINCE_DEFINED__DEFRAG_OPTIONS */
 
 /* FRAGNODE  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__FRAGNODE
 #define __WINCE_DEFINED__FRAGNODE
+#ifndef __WINCE_DEFINED_FRAGNODE
+#define __WINCE_DEFINED_FRAGNODE
 typedef struct _FRAGNODE {
  DWORD dwStartCluster;
  DWORD dwLength;
@@ -37,6 +42,7 @@ typedef struct _FRAGNODE {
  DWORD dwDirEntryOffset;
  _FRAGNODE* pNext;
 } FRAGNODE, *PFRAGNODE;
+#endif /* __WINCE_DEFINED_FRAGNODE */
 #endif /* __WINCE_DEFINED__FRAGNODE */
 
 /* ==================================================================

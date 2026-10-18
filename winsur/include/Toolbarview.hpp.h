@@ -39,6 +39,8 @@ enum BitmapType {
 /* btOk  [extra enum] */
 #ifndef __WINCE_DEFINED_BITMAPTYPE
 #define __WINCE_DEFINED_BITMAPTYPE
+#ifndef __WINCE_DEFINED_BTOK
+#define __WINCE_DEFINED_BTOK
 enum BitmapType {
  btStdSmallColor,
  btStdSmallMono,
@@ -47,6 +49,7 @@ enum BitmapType {
  btClose,
  btOk
 };
+#endif /* __WINCE_DEFINED_BTOK */
 #endif /* __WINCE_DEFINED_BITMAPTYPE */
 
 /* bt  [extra enum] */

@@ -26,11 +26,14 @@
 /* EDBG_ADDR  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__EDBG_ADDR
 #define __WINCE_DEFINED__EDBG_ADDR
+#ifndef __WINCE_DEFINED_EDBG_ADDR
+#define __WINCE_DEFINED_EDBG_ADDR
 typedef struct _EDBG_ADDR{
  DWORD dwIP;
  USHORT wMAC[3];
  USHORT wPort;
 } EDBG_ADDR;
+#endif /* __WINCE_DEFINED_EDBG_ADDR */
 #endif /* __WINCE_DEFINED__EDBG_ADDR */
 #ifndef __WINCE_DEFINED_PEDBG_ADDR
 #define __WINCE_DEFINED_PEDBG_ADDR

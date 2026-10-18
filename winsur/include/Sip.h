@@ -20,6 +20,8 @@
 /* LMDATA  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__TAGLMDATA
 #define __WINCE_DEFINED__TAGLMDATA
+#ifndef __WINCE_DEFINED_LMDATA
+#define __WINCE_DEFINED_LMDATA
 typedef struct _tagLMDATA{
  DWORD dwVersion;
  DWORD flags;
@@ -28,6 +30,7 @@ typedef struct _tagLMDATA{
  DWORD dwOffsetSkip;
  DWORD dwOffsetScore;
 }LMDATA;
+#endif /* __WINCE_DEFINED_LMDATA */
 #endif /* __WINCE_DEFINED__TAGLMDATA */
 #ifndef __WINCE_DEFINED_PLMDATA
 #define __WINCE_DEFINED_PLMDATA

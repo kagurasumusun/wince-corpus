@@ -37,10 +37,13 @@ typedef DSDM_UNLOCK *PDSDM_UNLOCK, *LPDSDM_UNLOCK;
 /* DSDMP_MSG  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__DSDMP_MSG
 #define __WINCE_DEFINED__DSDMP_MSG
+#ifndef __WINCE_DEFINED_DSDMP_MSG
+#define __WINCE_DEFINED_DSDMP_MSG
 typedef struct _DSDMP_MSG {
  DWORD dwMsg;
  DWORD dwInstance;
 } DSDMP_MSG;
+#endif /* __WINCE_DEFINED_DSDMP_MSG */
 #endif /* __WINCE_DEFINED__DSDMP_MSG */
 #ifndef __WINCE_DEFINED_PDSDMP_MSG
 #define __WINCE_DEFINED_PDSDMP_MSG

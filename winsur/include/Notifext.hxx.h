@@ -79,6 +79,8 @@ union PersistentPacket {
 /* sPacket  [extra struct] */
 #ifndef __WINCE_DEFINED_NOTIFYPACKET
 #define __WINCE_DEFINED_NOTIFYPACKET
+#ifndef __WINCE_DEFINED_SPACKET
+#define __WINCE_DEFINED_SPACKET
 struct NotifyPacket {
  NotifyPacket *pNext;
  NotifyPacket *pPrev;
@@ -90,6 +92,7 @@ struct NotifyPacket {
  HWND hDlg;
  void *pExtraUIData;
  PersistentPacket *sPacket; };
+#endif /* __WINCE_DEFINED_SPACKET */
 #endif /* __WINCE_DEFINED_NOTIFYPACKET */
 
 /* ==================================================================

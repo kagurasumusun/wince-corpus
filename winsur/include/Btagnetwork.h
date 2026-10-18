@@ -20,10 +20,13 @@
 /* NetworkCallFailedInfo  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__NETWORKCALLFAILEDINFO
 #define __WINCE_DEFINED__NETWORKCALLFAILEDINFO
+#ifndef __WINCE_DEFINED_NETWORKCALLFAILEDINFO
+#define __WINCE_DEFINED_NETWORKCALLFAILEDINFO
 typedef struct _NetworkCallFailedInfo {
  USHORT usCallType;
  DWORD dwStatus;
 } NetworkCallFailedInfo;
+#endif /* __WINCE_DEFINED_NETWORKCALLFAILEDINFO */
 #endif /* __WINCE_DEFINED__NETWORKCALLFAILEDINFO */
 #ifndef __WINCE_DEFINED_PNETWORKCALLFAILEDINFO
 #define __WINCE_DEFINED_PNETWORKCALLFAILEDINFO
@@ -33,7 +36,10 @@ typedef NetworkCallFailedInfo *PNetworkCallFailedInfo, *LPNetworkCallFailedInfo;
 /* NETWORK_CALL_TYPE  [extra enum] */
 #ifndef __WINCE_DEFINED__NETWORK_CALL_TYPE
 #define __WINCE_DEFINED__NETWORK_CALL_TYPE
+#ifndef __WINCE_DEFINED_NETWORK_CALL_TYPE
+#define __WINCE_DEFINED_NETWORK_CALL_TYPE
 typedef enum _NETWORK_CALL_TYPE { CALL_TYPE_ANSWER = 0x01, CALL_TYPE_DROP = 0x02, CALL_TYPE_DIAL = 0x03, CALL_TYPE_HOLD = 0x04, CALL_TYPE_SWAP = 0x05, CALL_TYPE_UNHOLD = 0x06, } NETWORK_CALL_TYPE;
+#endif /* __WINCE_DEFINED_NETWORK_CALL_TYPE */
 #endif /* __WINCE_DEFINED__NETWORK_CALL_TYPE */
 
 /* ==================================================================

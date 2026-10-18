@@ -114,19 +114,25 @@
 /* AFPROTOCOLS  [struct; shared] */
 #ifndef __WINCE_DEFINED__AFPROTOCOLS
 #define __WINCE_DEFINED__AFPROTOCOLS
+#ifndef __WINCE_DEFINED_AFPROTOCOLS
+#define __WINCE_DEFINED_AFPROTOCOLS
 typedef struct _AFPROTOCOLS {
  INT iAddressFamily;
  INT iProtocol;
 } AFPROTOCOLS, *PAFPROTOCOLS, *LPAFPROTOCOLS;
+#endif /* __WINCE_DEFINED_AFPROTOCOLS */
 #endif /* __WINCE_DEFINED__AFPROTOCOLS */
 
 /* BLOB  [struct; shared] */
 #ifndef __WINCE_DEFINED__BLOB
 #define __WINCE_DEFINED__BLOB
+#ifndef __WINCE_DEFINED_BLOB
+#define __WINCE_DEFINED_BLOB
 typedef struct _BLOB {
  ULONG cbSize;
  BYTE* pBlobData;
 } BLOB, LPBLOB;
+#endif /* __WINCE_DEFINED_BLOB */
 #endif /* __WINCE_DEFINED__BLOB */
 
 /* gethostbyaddr  [struct, function; shared; winsock.lib, Ws2.lib] */
@@ -158,6 +164,10 @@ struct hostent {
 /* IN_ADDR  [struct, typedef; shared] */
 #ifndef __WINCE_DEFINED_IN_ADDR
 #define __WINCE_DEFINED_IN_ADDR
+#ifndef __WINCE_DEFINED_IN_ADDR
+#define __WINCE_DEFINED_IN_ADDR
+#ifndef __WINCE_DEFINED_S_UN_B
+#define __WINCE_DEFINED_S_UN_B
 struct in_addr {
  union {
  struct { u_char s_b1,s_b2,s_b3,s_b4; } S_un_b;
@@ -165,6 +175,8 @@ struct in_addr {
  u_long S_addr;
  } S_un;
 };
+#endif /* __WINCE_DEFINED_S_UN_B */
+#endif /* __WINCE_DEFINED_IN_ADDR */
 #endif /* __WINCE_DEFINED_IN_ADDR */
 
 /* inet_ntoa  [struct, function; shared; winsock.lib, Ws2.lib] */
@@ -176,15 +188,20 @@ char FAR* inet_ntoa(struct in_addr in);
 /* LINGER  [struct, typedef; shared] */
 #ifndef __WINCE_DEFINED_LINGER
 #define __WINCE_DEFINED_LINGER
+#ifndef __WINCE_DEFINED_LINGER
+#define __WINCE_DEFINED_LINGER
 struct linger {
  u_short l_onoff;
  u_short l_linger;
 };
 #endif /* __WINCE_DEFINED_LINGER */
+#endif /* __WINCE_DEFINED_LINGER */
 
 /* PROTOCOL_INFO  [struct; shared; A/W PROTOCOL_INFOA,PROTOCOL_INFOW (CE is W-side)] */
 #ifndef __WINCE_DEFINED__PROTOCOL_INFO
 #define __WINCE_DEFINED__PROTOCOL_INFO
+#ifndef __WINCE_DEFINED_PROTOCOL_INFO
+#define __WINCE_DEFINED_PROTOCOL_INFO
 typedef struct _PROTOCOL_INFO {
  DWORD dwServiceFlags;
  INT iAddressFamily;
@@ -195,6 +212,7 @@ typedef struct _PROTOCOL_INFO {
  DWORD dwMessageSize;
  LPTSTR lpProtocol;
 } PROTOCOL_INFO;
+#endif /* __WINCE_DEFINED_PROTOCOL_INFO */
 #endif /* __WINCE_DEFINED__PROTOCOL_INFO */
 #ifndef __WINCE_DEFINED_PPROTOCOL_INFO
 #define __WINCE_DEFINED_PPROTOCOL_INFO
@@ -235,6 +253,8 @@ struct servent {
 /* SERVICE_ADDRESS  [struct; shared] */
 #ifndef __WINCE_DEFINED__SERVICE_ADDRESS
 #define __WINCE_DEFINED__SERVICE_ADDRESS
+#ifndef __WINCE_DEFINED_SERVICE_ADDRESS
+#define __WINCE_DEFINED_SERVICE_ADDRESS
 typedef struct _SERVICE_ADDRESS {
  DWORD dwAddressType;
  DWORD dwAddressFlags;
@@ -243,6 +263,7 @@ typedef struct _SERVICE_ADDRESS {
  BYTE* lpAddress;
  BYTE* lpPrincipal;
 } SERVICE_ADDRESS;
+#endif /* __WINCE_DEFINED_SERVICE_ADDRESS */
 #endif /* __WINCE_DEFINED__SERVICE_ADDRESS */
 #ifndef __WINCE_DEFINED_PSERVICE_ADDRESS
 #define __WINCE_DEFINED_PSERVICE_ADDRESS
@@ -252,10 +273,13 @@ typedef SERVICE_ADDRESS *PSERVICE_ADDRESS, *LPSERVICE_ADDRESS;
 /* SERVICE_ADDRESSES  [struct; shared] */
 #ifndef __WINCE_DEFINED__SERVICE_ADDRESSES
 #define __WINCE_DEFINED__SERVICE_ADDRESSES
+#ifndef __WINCE_DEFINED_SERVICE_ADDRESSES
+#define __WINCE_DEFINED_SERVICE_ADDRESSES
 typedef struct _SERVICE_ADDRESSES {
  DWORD dwAddressCount;
  SERVICE_ADDRESS Addresses[1];
 } SERVICE_ADDRESSES;
+#endif /* __WINCE_DEFINED_SERVICE_ADDRESSES */
 #endif /* __WINCE_DEFINED__SERVICE_ADDRESSES */
 #ifndef __WINCE_DEFINED_PSERVICE_ADDRESSES
 #define __WINCE_DEFINED_PSERVICE_ADDRESSES
@@ -265,6 +289,8 @@ typedef SERVICE_ADDRESSES *PSERVICE_ADDRESSES, *LPSERVICE_ADDRESSES;
 /* SERVICE_TYPE_VALUE_ABS  [struct; shared; A/W SERVICE_TYPE_VALUE_ABSA,SERVICE_TYPE_VALUE_ABSW (CE is W-side)] */
 #ifndef __WINCE_DEFINED__SERVICE_TYPE_VALUE_ABS
 #define __WINCE_DEFINED__SERVICE_TYPE_VALUE_ABS
+#ifndef __WINCE_DEFINED_SERVICE_TYPE_VALUE_ABS
+#define __WINCE_DEFINED_SERVICE_TYPE_VALUE_ABS
 typedef struct _SERVICE_TYPE_VALUE_ABS {
  DWORD dwNameSpace;
  DWORD dwValueType;
@@ -272,6 +298,7 @@ typedef struct _SERVICE_TYPE_VALUE_ABS {
  LPTSTR lpValueName;
  PVOID lpValue;
 } SERVICE_TYPE_VALUE_ABS;
+#endif /* __WINCE_DEFINED_SERVICE_TYPE_VALUE_ABS */
 #endif /* __WINCE_DEFINED__SERVICE_TYPE_VALUE_ABS */
 #ifndef __WINCE_DEFINED_PSERVICE_TYPE_VALUE_ABS
 #define __WINCE_DEFINED_PSERVICE_TYPE_VALUE_ABS
@@ -281,13 +308,18 @@ typedef SERVICE_TYPE_VALUE_ABS *PSERVICE_TYPE_VALUE_ABS, *LPSERVICE_TYPE_VALUE_A
 /* SOCKADDR  [struct, typedef; shared] */
 #ifndef __WINCE_DEFINED_SOCKADDR
 #define __WINCE_DEFINED_SOCKADDR
+#ifndef __WINCE_DEFINED_SOCKADDR
+#define __WINCE_DEFINED_SOCKADDR
 struct sockaddr {
  u_short sa_family;
  char sa_data[14];
 };
 #endif /* __WINCE_DEFINED_SOCKADDR */
+#endif /* __WINCE_DEFINED_SOCKADDR */
 
 /* SOCKADDR_IN  [struct, typedef; shared] */
+#ifndef __WINCE_DEFINED_SOCKADDR_IN
+#define __WINCE_DEFINED_SOCKADDR_IN
 #ifndef __WINCE_DEFINED_SOCKADDR_IN
 #define __WINCE_DEFINED_SOCKADDR_IN
 struct sockaddr_in{
@@ -297,8 +329,11 @@ struct sockaddr_in{
  char sin_zero[8];
 };
 #endif /* __WINCE_DEFINED_SOCKADDR_IN */
+#endif /* __WINCE_DEFINED_SOCKADDR_IN */
 
 /* SOCKADDR_IRDA  [struct, typedef; shared] */
+#ifndef __WINCE_DEFINED_SOCKADDR_IRDA
+#define __WINCE_DEFINED_SOCKADDR_IRDA
 #ifndef __WINCE_DEFINED_SOCKADDR_IRDA
 #define __WINCE_DEFINED_SOCKADDR_IRDA
 struct sockaddr_irda {
@@ -306,8 +341,11 @@ struct sockaddr_irda {
  u_char irdaDeviceID[4];
  char irdaServiceName[25];};
 #endif /* __WINCE_DEFINED_SOCKADDR_IRDA */
+#endif /* __WINCE_DEFINED_SOCKADDR_IRDA */
 
 /* SOCKADDR_STORAGE  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_SOCKADDR_STORAGE
+#define __WINCE_DEFINED_SOCKADDR_STORAGE
 #ifndef __WINCE_DEFINED_SOCKADDR_STORAGE
 #define __WINCE_DEFINED_SOCKADDR_STORAGE
 typedef struct sockaddr_storage {
@@ -317,14 +355,18 @@ typedef struct sockaddr_storage {
  char __ss_pad2[_SS_PAD2SIZE];
 } SOCKADDR_STORAGE, *PSOCKADDR_STORAGE;
 #endif /* __WINCE_DEFINED_SOCKADDR_STORAGE */
+#endif /* __WINCE_DEFINED_SOCKADDR_STORAGE */
 
 /* SOCKET_ADDRESS  [struct; shared] */
 #ifndef __WINCE_DEFINED__SOCKET_ADDRESS
 #define __WINCE_DEFINED__SOCKET_ADDRESS
+#ifndef __WINCE_DEFINED_SOCKET_ADDRESS
+#define __WINCE_DEFINED_SOCKET_ADDRESS
 typedef struct _SOCKET_ADDRESS {
  LPSOCKADDR lpSockaddr;
  INT iSockaddrLength;
 } SOCKET_ADDRESS, *PSOCKET_ADDRESS;
+#endif /* __WINCE_DEFINED_SOCKET_ADDRESS */
 #endif /* __WINCE_DEFINED__SOCKET_ADDRESS */
 
 /* timeval  [struct; shared] */
@@ -339,12 +381,15 @@ struct timeval {
 /* TRANSMIT_FILE_BUFFERS  [struct; shared] */
 #ifndef __WINCE_DEFINED__TRANSMIT_FILE_BUFFERS
 #define __WINCE_DEFINED__TRANSMIT_FILE_BUFFERS
+#ifndef __WINCE_DEFINED_TRANSMIT_FILE_BUFFERS
+#define __WINCE_DEFINED_TRANSMIT_FILE_BUFFERS
 typedef struct _TRANSMIT_FILE_BUFFERS {
  PVOID Head;
  DWORD HeadLength;
  PVOID Tail;
  DWORD TailLength;
 } TRANSMIT_FILE_BUFFERS;
+#endif /* __WINCE_DEFINED_TRANSMIT_FILE_BUFFERS */
 #endif /* __WINCE_DEFINED__TRANSMIT_FILE_BUFFERS */
 #ifndef __WINCE_DEFINED_PTRANSMIT_FILE_BUFFERS
 #define __WINCE_DEFINED_PTRANSMIT_FILE_BUFFERS
@@ -354,30 +399,39 @@ typedef TRANSMIT_FILE_BUFFERS *PTRANSMIT_FILE_BUFFERS, *LPTRANSMIT_FILE_BUFFERS;
 /* WSABUF  [struct; shared] */
 #ifndef __WINCE_DEFINED___WSABUF
 #define __WINCE_DEFINED___WSABUF
+#ifndef __WINCE_DEFINED_WSABUF
+#define __WINCE_DEFINED_WSABUF
 typedef struct __WSABUF {
  u_long len;
  char FAR* buf;
 } WSABUF, FAR* LPWSABUF;
+#endif /* __WINCE_DEFINED_WSABUF */
 #endif /* __WINCE_DEFINED___WSABUF */
 
 /* WSAECOMPARATOR  [enum; shared] */
 #ifndef __WINCE_DEFINED__WSAECOMPARATOR
 #define __WINCE_DEFINED__WSAECOMPARATOR
+#ifndef __WINCE_DEFINED_WSAECOMPARATOR
+#define __WINCE_DEFINED_WSAECOMPARATOR
 typedef enum _WSAEcomparator {
  COMP_EQUAL = 0,
  COMP_NOTLESS
 } WSAECOMPARATOR, *PWSAECOMPARATOR;
+#endif /* __WINCE_DEFINED_WSAECOMPARATOR */
 #endif /* __WINCE_DEFINED__WSAECOMPARATOR */
 
 /* CSADDR_INFO  [struct; shared] */
 #ifndef __WINCE_DEFINED__CSADDR_INFO
 #define __WINCE_DEFINED__CSADDR_INFO
+#ifndef __WINCE_DEFINED_CSADDR_INFO
+#define __WINCE_DEFINED_CSADDR_INFO
 typedef struct _CSADDR_INFO {
  SOCKET_ADDRESS LocalAddr;
  SOCKET_ADDRESS RemoteAddr;
  INT iSocketType;
  INT iProtocol;
 } CSADDR_INFO;
+#endif /* __WINCE_DEFINED_CSADDR_INFO */
 #endif /* __WINCE_DEFINED__CSADDR_INFO */
 #ifndef __WINCE_DEFINED_PCSADDR_INFO
 #define __WINCE_DEFINED_PCSADDR_INFO
@@ -387,11 +441,14 @@ typedef CSADDR_INFO *PCSADDR_INFO, *LPCSADDR_INFO;
 /* SERVICE_TYPE_INFO_ABS  [struct; shared; A/W SERVICE_TYPE_INFO_ABSA,SERVICE_TYPE_INFO_ABSW (CE is W-side)] */
 #ifndef __WINCE_DEFINED__SERVICE_TYPE_INFO_ABS
 #define __WINCE_DEFINED__SERVICE_TYPE_INFO_ABS
+#ifndef __WINCE_DEFINED_SERVICE_TYPE_INFO_ABS
+#define __WINCE_DEFINED_SERVICE_TYPE_INFO_ABS
 typedef struct _SERVICE_TYPE_INFO_ABS {
  LPTSTR lpTypeName;
  DWORD dwValueCount;
  SERVICE_TYPE_VALUE_ABS Values[1];
 } SERVICE_TYPE_INFO_ABS;
+#endif /* __WINCE_DEFINED_SERVICE_TYPE_INFO_ABS */
 #endif /* __WINCE_DEFINED__SERVICE_TYPE_INFO_ABS */
 #ifndef __WINCE_DEFINED_PSERVICE_TYPE_INFO_ABS
 #define __WINCE_DEFINED_PSERVICE_TYPE_INFO_ABS

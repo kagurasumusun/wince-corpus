@@ -134,6 +134,8 @@ enum SortBy_e {
 /* Attr_ProtocolInfo  [extra enum] */
 #ifndef __WINCE_DEFINED_ITEM_ATTRIBUTE_E
 #define __WINCE_DEFINED_ITEM_ATTRIBUTE_E
+#ifndef __WINCE_DEFINED_ATTR_PROTOCOLINFO
+#define __WINCE_DEFINED_ATTR_PROTOCOLINFO
 enum Item_Attribute_e {
  Attr_Title = 0,
  Attr_Class,
@@ -156,11 +158,14 @@ enum Item_Attribute_e {
  Attr_Description,
  Attr_ProtocolInfo
 };
+#endif /* __WINCE_DEFINED_ATTR_PROTOCOLINFO */
 #endif /* __WINCE_DEFINED_ITEM_ATTRIBUTE_E */
 
 /* VideoGenre  [extra enum] */
 #ifndef __WINCE_DEFINED_MEDIATYPE_E
 #define __WINCE_DEFINED_MEDIATYPE_E
+#ifndef __WINCE_DEFINED_VIDEOGENRE
+#define __WINCE_DEFINED_VIDEOGENRE
 enum MediaType_e {
  Music = 0,
  Video,
@@ -175,22 +180,28 @@ enum MediaType_e {
  MusicGenre,
  VideoGenre
 };
+#endif /* __WINCE_DEFINED_VIDEOGENRE */
 #endif /* __WINCE_DEFINED_MEDIATYPE_E */
 
 /* Running  [extra enum] */
 #ifndef __WINCE_DEFINED_QUERYENGINESTATE_E
 #define __WINCE_DEFINED_QUERYENGINESTATE_E
+#ifndef __WINCE_DEFINED_RUNNING
+#define __WINCE_DEFINED_RUNNING
 enum QueryEngineState_e {
  UnInitialized = 0,
  Error,
  Stopped,
  Running
 };
+#endif /* __WINCE_DEFINED_RUNNING */
 #endif /* __WINCE_DEFINED_QUERYENGINESTATE_E */
 
 /* MQE_EVENT_CRITICALERROR  [extra enum] */
 #ifndef __WINCE_DEFINED_QUERYSINKEVENT_E
 #define __WINCE_DEFINED_QUERYSINKEVENT_E
+#ifndef __WINCE_DEFINED_MQE_EVENT_CRITICALERROR
+#define __WINCE_DEFINED_MQE_EVENT_CRITICALERROR
 enum QuerySinkEvent_e {
  MQE_EVENT_NETWORKAVAILABLE = 0,
  MQE_EVENT_NETWORKNOTAVAILABLE,
@@ -207,11 +218,14 @@ enum QuerySinkEvent_e {
  MQE_EVENT_CONTENTUPDATE_PICTURE,
  MQE_EVENT_CRITICALERROR
 };
+#endif /* __WINCE_DEFINED_MQE_EVENT_CRITICALERROR */
 #endif /* __WINCE_DEFINED_QUERYSINKEVENT_E */
 
 /* SearchBy_Date  [extra enum] */
 #ifndef __WINCE_DEFINED_SEARCHBY_E
 #define __WINCE_DEFINED_SEARCHBY_E
+#ifndef __WINCE_DEFINED_SEARCHBY_DATE
+#define __WINCE_DEFINED_SEARCHBY_DATE
 enum SearchBy_e {
  SearchBy_None = 0,
  SearchBy_Title,
@@ -221,11 +235,14 @@ enum SearchBy_e {
  SearchBy_Genre,
  SearchBy_Date
 };
+#endif /* __WINCE_DEFINED_SEARCHBY_DATE */
 #endif /* __WINCE_DEFINED_SEARCHBY_E */
 
 /* SortBy_Date_Descending  [extra enum] */
 #ifndef __WINCE_DEFINED_SORTBY_E
 #define __WINCE_DEFINED_SORTBY_E
+#ifndef __WINCE_DEFINED_SORTBY_DATE_DESCENDING
+#define __WINCE_DEFINED_SORTBY_DATE_DESCENDING
 enum SortBy_e {
  SortBy_None = 0,
  SortBy_Name_Ascending,
@@ -233,6 +250,7 @@ enum SortBy_e {
  SortBy_Date_Ascending,
  SortBy_Date_Descending
 };
+#endif /* __WINCE_DEFINED_SORTBY_DATE_DESCENDING */
 #endif /* __WINCE_DEFINED_SORTBY_E */
 
 /* ==================================================================

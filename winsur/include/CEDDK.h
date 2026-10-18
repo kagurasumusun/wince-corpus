@@ -30,11 +30,14 @@
 /* DMA_ADAPTER_OBJECT  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__DMA_ADAPTER_OBJECT_
 #define __WINCE_DEFINED__DMA_ADAPTER_OBJECT_
+#ifndef __WINCE_DEFINED_DMA_ADAPTER_OBJECT
+#define __WINCE_DEFINED_DMA_ADAPTER_OBJECT
 typedef struct _DMA_ADAPTER_OBJECT_ {
  USHORT ObjectSize;
  INTERFACE_TYPE InterfaceType;
  ULONG BusNumber;
 } DMA_ADAPTER_OBJECT, *PDMA_ADAPTER_OBJECT;
+#endif /* __WINCE_DEFINED_DMA_ADAPTER_OBJECT */
 #endif /* __WINCE_DEFINED__DMA_ADAPTER_OBJECT_ */
 
 /* ==================================================================

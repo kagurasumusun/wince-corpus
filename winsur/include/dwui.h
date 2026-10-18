@@ -20,6 +20,8 @@
 /* _BucketResponse  [struct; ce-only; DwUI.dll] */
 #ifndef __WINCE_DEFINED__BUCKETRESPONSE
 #define __WINCE_DEFINED__BUCKETRESPONSE
+#ifndef __WINCE_DEFINED_BUCKETRESPONSE
+#define __WINCE_DEFINED_BUCKETRESPONSE
 typedef struct _BucketResponse {
  BOOL fUploadSucceeded;
  DWORD dwUploadError;
@@ -29,6 +31,7 @@ typedef struct _BucketResponse {
  char* pchResponse;
  int iResponseType;
 } BucketResponse;
+#endif /* __WINCE_DEFINED_BUCKETRESPONSE */
 #endif /* __WINCE_DEFINED__BUCKETRESPONSE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */

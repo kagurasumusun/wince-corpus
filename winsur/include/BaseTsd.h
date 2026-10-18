@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 14 constants, 111 declarations, 18 outlines, 21 base types, 0 extra macros, 0 extra decls
+ * 14 constants, 111 declarations, 28 outlines, 21 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _BASETSD_
 #define _BASETSD_
@@ -139,15 +139,33 @@ typedef ULONG_PTR SIZE_T;
 /* DWORD  [typedef, macro; shared; entity-headers; win32-reference] */
 typedef unsigned long DWORD;
 
+/* HIMAGELIST  [typedef; ce-only; heuristic-prefix] */
+
+/* HIMC  [typedef; ce-only; heuristic-prefix] */
+
 /* HWINSTA  [typedef; shared; entity-headers] */
 
 /* INT  [typedef, function; shared; entity-headers] */
+
+/* LPCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
+
+/* LUID  [typedef; ce-only; heuristic-prefix] */
+
+/* PCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
+
+/* PCWCH  [typedef; ce-only; heuristic-prefix] */
+
+/* PLUID  [typedef; ce-only; heuristic-prefix] */
 
 /* POINTER_32  [typedef, macro; shared; entity-headers] */
 
 /* POINTER_64  [typedef, macro; shared; entity-headers] */
 
+/* REGSAM  [typedef; ce-only; heuristic-prefix] */
+
 /* TBYTE  [typedef; shared; entity-headers] */
+
+/* UNSIGNED  [typedef; ce-only; heuristic-prefix] */
 
 /* VOID  [typedef, macro; shared; entity-headers] */
 

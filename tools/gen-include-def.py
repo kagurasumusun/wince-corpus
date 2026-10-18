@@ -241,7 +241,12 @@ def c_decl_text(text):
         pre = (match.group("pre") or "").lower()
         kw = match.group("kw").lower()
         text = leading + pre + kw + body[match.end():]
+    # ``typedef __CEL_INT_DATA {`` -- the page dropped the 'struct'/'union'
+    text = re.sub(r"^(typedef\s+)(?!struct\b|union\b|enum\b)"
+                  r"([A-Za-z_]\w*\s*\{)",
+                  r"\1struct \2", text, count=1, flags=re.M)
     text = _finish_decl_semicolons(text)
+    text = _finish_enum_commas(text)
     if quality_filters.is_cpp_declaration(text):
         return "#ifdef __cplusplus\n" + text + "\n#endif /* __cplusplus */"
     return text
@@ -274,27 +279,64 @@ def _finish_decl_semicolons(text):
     return "\n".join(lines)
 
 
+_ENUM_MEMBER = re.compile(
+    r"^\s+[A-Za-z_]\w*(?:\s*=\s*(?:0[xX][0-9A-Fa-f]+|\d+|1\s*<<\s*\d+"
+    r"|MAKEFOURCC\s*\(.*\)))?\s*$")
+
+
+def _finish_enum_commas(text):
+    """A lost ',' between two enumerator members (the pages drop them):
+    a member line with no trailing comma followed by another member."""
+    if not text or not re.search(r"\benum\b", text):
+        return text
+    lines = text.split("\n")
+    for i, line in enumerate(lines):
+        if not _ENUM_MEMBER.match(line):
+            continue
+        nxt = ""
+        for later in lines[i + 1:]:
+            if later.strip():
+                nxt = later
+                break
+        if nxt and _ENUM_MEMBER.match(nxt.rstrip().rstrip(",")):
+            lines[i] = line.rstrip() + ","
+    return "\n".join(lines)
+
+
 def type_guard_lines(name, text):
-    """Wrap a type definition in a per-type guard so the same documented
+    """Wrap a type definition in per-type guards so the same documented
     type can appear in several fragments without a redefinition when the
     whole tree is compiled as one translation unit -- and each fragment
-    stays self-contained.  The guard keys on the struct/enum TAG when
-    the text declares one (tags collide before typedef names do).
-    DERIVED emission policy."""
+    stays self-contained.  Guards key on BOTH the struct/enum TAG and
+    the typedef name: pages spell tags differently (`tagX` vs `_X`) for
+    one type.  DERIVED emission policy."""
     if not text:
         return []
     if text.lstrip().startswith("#ifdef __cplusplus"):
         return [text]  # C++-only: guarded separately; no C type to protect
+    keys = []
     tag_match = re.search(r"\b(?:struct|union|enum)\s+([A-Za-z_]\w*)\s*\{",
                           text)
-    guard = re.sub(r"\W", "_",
-                   tag_match.group(1) if tag_match else (name or "")).upper()
-    if not guard or guard == "_":
+    if tag_match:
+        keys.append(tag_match.group(1))
+    if name:
+        keys.append(name)
+    tail = re.search(r"\}\s*([A-Za-z_]\w*)\s*[,;]", text)
+    if tail and tail.group(1) not in keys:
+        keys.append(tail.group(1))
+    keys = [k for k in dict.fromkeys(keys) if re.sub(r"\W", "_", k).upper()
+            not in ("_", "")]
+    if not keys:
         return [text]
-    return [f"#ifndef __WINCE_DEFINED_{guard}",
-            f"#define __WINCE_DEFINED_{guard}",
-            text,
-            f"#endif /* __WINCE_DEFINED_{guard} */"]
+    guards = [re.sub(r"\W", "_", k).upper() for k in keys]
+    out = []
+    for g in guards:
+        out.append(f"#ifndef __WINCE_DEFINED_{g}")
+        out.append(f"#define __WINCE_DEFINED_{g}")
+    out.append(text)
+    for g in reversed(guards):
+        out.append(f"#endif /* __WINCE_DEFINED_{g} */")
+    return out
 
 
 def load_heuristic_headers():
@@ -3336,6 +3378,23 @@ def run_unified(args):
                 "#ifndef interface",
                 "#define interface struct",
                 "#endif",
+                "#ifndef FARSTRUCT",
+                "#define FARSTRUCT",
+                "#endif",
+                "#ifndef HUGEP",
+                "#define HUGEP",
+                "#endif",
+                "#ifndef __RPC_FAR",
+                "#define __RPC_FAR",
+                "#endif",
+                "#ifndef __RPC",
+                "#define __RPC",
+                "#endif",
+                "#ifndef MAKEFOURCC",
+                "#define MAKEFOURCC(ch0, ch1, ch2, ch3) \\",
+                "    ((DWORD)(ch0) | ((DWORD)(ch1) << 8) | \\",
+                "     ((DWORD)(ch2) << 16) | ((DWORD)(ch3) << 24))",
+                "#endif",
                 "#ifndef CONST",
                 "#define CONST const",
                 "#endif",
@@ -3837,9 +3896,19 @@ def run_unified(args):
                         if re.search(r"\)\s*$", txt.rstrip()):
                             txt = txt.rstrip() + ";"
                     txt = c_decl_text(txt)
-                    if bucket_key == "types":
+                    # ``#define LV_HITTESTINFO LVHITTESTINFO`` -- the page
+                    # documents the name as an alias; the alias macro IS
+                    # the surface, and a second type definition under the
+                    # alias spelling conflicts with the target's.
+                    if bucket_key == "types" and ename and re.search(
+                            rf"(?m)^#define\s+{re.escape(ename)}\s+"
+                            r"[A-Za-z_]\w*\s*$", "\n".join(lines)):
+                        head.append(f"/* {ename} is documented as an alias "
+                                    "-- see the #define above */")
+                        txt = ""
+                    if txt and bucket_key == "types":
                         head.extend(type_guard_lines(ename or "", txt))
-                    else:
+                    elif txt:
                         head.append(txt)
                     if bucket_key == "types" and ename:
                         body = declaration.get("text") or ""

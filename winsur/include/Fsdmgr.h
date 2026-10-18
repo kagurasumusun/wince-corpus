@@ -38,6 +38,8 @@
 /* FILELOCKSTATE  [struct; ce-only; Fsdmgr.lib] */
 #ifndef __WINCE_DEFINED__FILELOCKSTATE
 #define __WINCE_DEFINED__FILELOCKSTATE
+#ifndef __WINCE_DEFINED_FILELOCKSTATE
+#define __WINCE_DEFINED_FILELOCKSTATE
 typedef struct _FILELOCKSTATE {
  DWORD dwPosLow;
  DWORD dwPosHigh;
@@ -48,6 +50,7 @@ typedef struct _FILELOCKSTATE {
  DWORD cQueue;
  PVOID pvLockContainer;
 } FILELOCKSTATE, * PFILELOCKSTATE;
+#endif /* __WINCE_DEFINED_FILELOCKSTATE */
 #endif /* __WINCE_DEFINED__FILELOCKSTATE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */

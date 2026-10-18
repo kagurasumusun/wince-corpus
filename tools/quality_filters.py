@@ -146,6 +146,9 @@ def sanitize_define_line(definition: str, name: str = "", args: str = "",
     # Two #define tokens glued together (parser ate a line break).
     if definition.count("#define") > 1:
         return None
+    # ``#define NAME((FLOAT) 0.318f)`` -- the page lost the space after
+    # the name: an object-like macro reads as function-like.  Repair.
+    definition = re.sub(r"(#define\s+[A-Za-z_]\w*)\(\(", r"\1 ((", definition)
     # ``#define ASSERTMSG(\n message,\n Condition\n);`` -- the page
     # dropped the replacement and the backslash continuations.
     if re.search(r"#define\s+\w+\s*\(\s*$", definition, re.M):

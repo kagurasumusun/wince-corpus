@@ -26,11 +26,14 @@
 /* DBGPARAM  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__DBGPARAM
 #define __WINCE_DEFINED__DBGPARAM
+#ifndef __WINCE_DEFINED_DBGPARAM
+#define __WINCE_DEFINED_DBGPARAM
 typedef struct _DBGPARAM {
  WCHAR lpszName[32];
  WCHAR rglpszZones[16][32];
  ULONG ulZoneMask;
 } DBGPARAM, *LPDBGPARAM;
+#endif /* __WINCE_DEFINED_DBGPARAM */
 #endif /* __WINCE_DEFINED__DBGPARAM */
 
 /* ==================================================================

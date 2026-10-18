@@ -20,6 +20,8 @@
 /* CM_VOICE_RECORDER  [struct; ce-only] */
 #ifndef __WINCE_DEFINED_TAGCM_VOICE_RECORDER
 #define __WINCE_DEFINED_TAGCM_VOICE_RECORDER
+#ifndef __WINCE_DEFINED_CM_VOICE_RECORDER
+#define __WINCE_DEFINED_CM_VOICE_RECORDER
 typedef struct tagCM_VOICE_RECORDER {
  WORD cb;
  DWORD dwStyle;
@@ -29,6 +31,7 @@ typedef struct tagCM_VOICE_RECORDER {
  int id;
  LPSTR lpszRecordFileName;
 } CM_VOICE_RECORDER, *LPCM_VOICE_RECORDER;
+#endif /* __WINCE_DEFINED_CM_VOICE_RECORDER */
 #endif /* __WINCE_DEFINED_TAGCM_VOICE_RECORDER */
 
 /* ==================================================================

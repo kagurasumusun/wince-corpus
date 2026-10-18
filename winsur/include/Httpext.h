@@ -54,6 +54,8 @@
 /* HSE_SEND_HEADER_EX_INFO  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__HSE_SEND_HEADER_EX_INFO
 #define __WINCE_DEFINED__HSE_SEND_HEADER_EX_INFO
+#ifndef __WINCE_DEFINED_HSE_SEND_HEADER_EX_INFO
+#define __WINCE_DEFINED_HSE_SEND_HEADER_EX_INFO
 typedef struct _HSE_SEND_HEADER_EX_INFO{
  LPCSTR pszStatus;
  LPCSTR pszHeader;
@@ -61,15 +63,19 @@ typedef struct _HSE_SEND_HEADER_EX_INFO{
  DWORD cchHeader;
  BOOL fKeepConn;
 } HSE_SEND_HEADER_EX_INFO, *LPHSE_SEND_HEADER_EX_INFO;
+#endif /* __WINCE_DEFINED_HSE_SEND_HEADER_EX_INFO */
 #endif /* __WINCE_DEFINED__HSE_SEND_HEADER_EX_INFO */
 
 /* HSE_VERSION_INFO  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__HSE_VERSION_INFO
 #define __WINCE_DEFINED__HSE_VERSION_INFO
+#ifndef __WINCE_DEFINED_HSE_VERSION_INFO
+#define __WINCE_DEFINED_HSE_VERSION_INFO
 typedef struct _HSE_VERSION_INFO{
  DWORD dwExtensionVersion;
  CHAR lpszExtensionDesc[HSE_MAX_EXT_DLL_NAME_LEN];
 } HSE_VERSION_INFO, *LPHSE_VERSION_INFO;
+#endif /* __WINCE_DEFINED_HSE_VERSION_INFO */
 #endif /* __WINCE_DEFINED__HSE_VERSION_INFO */
 
 /* ==================================================================

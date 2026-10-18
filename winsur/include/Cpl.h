@@ -42,12 +42,15 @@
 /* CPLINFO  [struct; shared] */
 #ifndef __WINCE_DEFINED_TAGCPLINFO
 #define __WINCE_DEFINED_TAGCPLINFO
+#ifndef __WINCE_DEFINED_CPLINFO
+#define __WINCE_DEFINED_CPLINFO
 typedef struct tagCPLINFO {
  int idIcon;
  int idName;
  int idInfo;
  LONG lData;
 } CPLINFO;
+#endif /* __WINCE_DEFINED_CPLINFO */
 #endif /* __WINCE_DEFINED_TAGCPLINFO */
 #ifndef __WINCE_DEFINED_PCPLINFO
 #define __WINCE_DEFINED_PCPLINFO
@@ -57,6 +60,8 @@ typedef CPLINFO *PCPLINFO, *LPCPLINFO;
 /* NEWCPLINFO  [struct; shared; A/W NEWCPLINFOA,NEWCPLINFOW (CE is W-side)] */
 #ifndef __WINCE_DEFINED_TAGNEWCPLINFO
 #define __WINCE_DEFINED_TAGNEWCPLINFO
+#ifndef __WINCE_DEFINED_NEWCPLINFO
+#define __WINCE_DEFINED_NEWCPLINFO
 typedef struct tagNEWCPLINFO {
  DWORD dwSize;
  DWORD dwFlags;
@@ -67,6 +72,7 @@ typedef struct tagNEWCPLINFO {
  TCHAR szInfo[64];
  TCHAR szHelpFile[128];
 } NEWCPLINFO;
+#endif /* __WINCE_DEFINED_NEWCPLINFO */
 #endif /* __WINCE_DEFINED_TAGNEWCPLINFO */
 #ifndef __WINCE_DEFINED_PNEWCPLINFO
 #define __WINCE_DEFINED_PNEWCPLINFO

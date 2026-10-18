@@ -66,12 +66,15 @@
 /* REG_NOTIFY_INFORMATION  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__REG_NOTIFY_INFORMATION
 #define __WINCE_DEFINED__REG_NOTIFY_INFORMATION
+#ifndef __WINCE_DEFINED_REG_NOTIFY_INFORMATION
+#define __WINCE_DEFINED_REG_NOTIFY_INFORMATION
 typedef struct _REG_NOTIFY_INFORMATION {
  DWORD NextEntryOffset;
  DWORD Action;
  DWORD RegNameLength;
  WCHAR RegName[1];
 } REG_NOTIFY_INFORMATION, *PREG_NOTIFY_INFORMATION;
+#endif /* __WINCE_DEFINED_REG_NOTIFY_INFORMATION */
 #endif /* __WINCE_DEFINED__REG_NOTIFY_INFORMATION */
 
 /* ==================================================================

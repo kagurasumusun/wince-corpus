@@ -141,6 +141,8 @@
 /* AsnAny  [struct, typedef; shared; snmp.lib] */
 #ifndef __WINCE_DEFINED_ASNANY
 #define __WINCE_DEFINED_ASNANY
+#ifndef __WINCE_DEFINED_ASNVALUE
+#define __WINCE_DEFINED_ASNVALUE
 typedef struct {
  BYTE asnType;
  union {
@@ -158,6 +160,7 @@ typedef struct {
  AsnOpaque arbitrary;
  } asnValue;
 } AsnAny;
+#endif /* __WINCE_DEFINED_ASNVALUE */
 #endif /* __WINCE_DEFINED_ASNANY */
 #ifndef __WINCE_DEFINED_PASNANY
 #define __WINCE_DEFINED_PASNANY

@@ -29,7 +29,7 @@
 /* MSGQUEUEINFO  [typedef; ce-only] */
 #ifndef __WINCE_DEFINED_MSGQUEUEINFO
 #define __WINCE_DEFINED_MSGQUEUEINFO
-typedef MSGQUEUEINFO{
+typedef struct MSGQUEUEINFO{
  DWORD dwSize;
  DWORD dwFlags;
  DWORD dwMaxMessages;

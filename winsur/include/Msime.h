@@ -36,6 +36,8 @@ typedef IMESHF *PIMESHF, *LPIMESHF;
 /* IPCANDIDATE  [struct; ce-only] */
 #ifndef __WINCE_DEFINED_TAGIPCANDIDATE
 #define __WINCE_DEFINED_TAGIPCANDIDATE
+#ifndef __WINCE_DEFINED_IPCANDIDATE
+#define __WINCE_DEFINED_IPCANDIDATE
 typedef struct tagIPCANDIDATE {
  DWORD dwSize;
  DWORD dwFlags;
@@ -45,15 +47,19 @@ typedef struct tagIPCANDIDATE {
  DWORD dwPrivateDataSize;
  DWORD dwOffset[1];
 } IPCANDIDATE, *PIPCANDIDATE;
+#endif /* __WINCE_DEFINED_IPCANDIDATE */
 #endif /* __WINCE_DEFINED_TAGIPCANDIDATE */
 
 /* POSTBL  [struct; shared] */
 #ifndef __WINCE_DEFINED__POSTBL
 #define __WINCE_DEFINED__POSTBL
+#ifndef __WINCE_DEFINED_POSTBL
+#define __WINCE_DEFINED_POSTBL
 typedef struct _POSTBL {
  WORD nPos;
  BYTE* szName;
 } POSTBL;
+#endif /* __WINCE_DEFINED_POSTBL */
 #endif /* __WINCE_DEFINED__POSTBL */
 #ifndef __WINCE_DEFINED_PPOSTBL
 #define __WINCE_DEFINED_PPOSTBL

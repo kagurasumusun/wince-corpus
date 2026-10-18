@@ -102,6 +102,8 @@ typedef struct {
 /* DNS_HEADER  [struct; shared] */
 #ifndef __WINCE_DEFINED__DNS_HEADER
 #define __WINCE_DEFINED__DNS_HEADER
+#ifndef __WINCE_DEFINED_DNS_HEADER
+#define __WINCE_DEFINED_DNS_HEADER
 typedef struct _DNS_HEADER {
  WORD Xid;
  BYTE RecursionDesired;
@@ -117,6 +119,7 @@ typedef struct _DNS_HEADER {
  WORD NameServerCount;
  WORD AdditionalCount;
 } DNS_HEADER, *PDNS_HEADER;
+#endif /* __WINCE_DEFINED_DNS_HEADER */
 #endif /* __WINCE_DEFINED__DNS_HEADER */
 
 /* DNS_KEY_DATA  [struct; shared] */
@@ -147,10 +150,13 @@ typedef struct {
 /* DNS_MESSAGE_BUFFER  [struct; shared] */
 #ifndef __WINCE_DEFINED__DNS_MESSAGE_BUFFER
 #define __WINCE_DEFINED__DNS_MESSAGE_BUFFER
+#ifndef __WINCE_DEFINED_DNS_MESSAGE_BUFFER
+#define __WINCE_DEFINED_DNS_MESSAGE_BUFFER
 typedef struct _DNS_MESSAGE_BUFFER {
  DNS_HEADER MessageHead;
  CHAR MessageBody[1];
 } DNS_MESSAGE_BUFFER, *PDNS_MESSAGE_BUFFER;
+#endif /* __WINCE_DEFINED_DNS_MESSAGE_BUFFER */
 #endif /* __WINCE_DEFINED__DNS_MESSAGE_BUFFER */
 
 /* DNS_MINFO_DATA  [struct; shared; A/W DNS_MINFO_DATAA,DNS_MINFO_DATAW (CE is W-side)] */
@@ -202,6 +208,8 @@ typedef struct {
 /* DNS_RECORD_FLAGS  [struct; shared] */
 #ifndef __WINCE_DEFINED__DNSRECORDFLAGS
 #define __WINCE_DEFINED__DNSRECORDFLAGS
+#ifndef __WINCE_DEFINED_DNS_RECORD_FLAGS
+#define __WINCE_DEFINED_DNS_RECORD_FLAGS
 typedef struct _DnsRecordFlags {
  DWORD Section :2;
  DWORD Delete :1;
@@ -209,6 +217,7 @@ typedef struct _DnsRecordFlags {
  DWORD Unused :3;
  DWORD Reserved :24;
 } DNS_RECORD_FLAGS;
+#endif /* __WINCE_DEFINED_DNS_RECORD_FLAGS */
 #endif /* __WINCE_DEFINED__DNSRECORDFLAGS */
 #ifndef __WINCE_DEFINED_PDNS_RECORD_FLAGS
 #define __WINCE_DEFINED_PDNS_RECORD_FLAGS
@@ -319,21 +328,27 @@ typedef struct {
 /* DNS_WIRE_QUESTION  [struct; shared] */
 #ifndef __WINCE_DEFINED__DNS_WIRE_QUESTION
 #define __WINCE_DEFINED__DNS_WIRE_QUESTION
+#ifndef __WINCE_DEFINED_DNS_WIRE_QUESTION
+#define __WINCE_DEFINED_DNS_WIRE_QUESTION
 typedef struct _DNS_WIRE_QUESTION {
  WORD QuestionType;
  WORD QuestionClass;
 } DNS_WIRE_QUESTION, *PDNS_WIRE_QUESTION;
+#endif /* __WINCE_DEFINED_DNS_WIRE_QUESTION */
 #endif /* __WINCE_DEFINED__DNS_WIRE_QUESTION */
 
 /* DNS_WIRE_RECORD  [struct; shared] */
 #ifndef __WINCE_DEFINED__DNS_WIRE_RECORD
 #define __WINCE_DEFINED__DNS_WIRE_RECORD
+#ifndef __WINCE_DEFINED_DNS_WIRE_RECORD
+#define __WINCE_DEFINED_DNS_WIRE_RECORD
 typedef struct _DNS_WIRE_RECORD {
  WORD RecordType;
  WORD RecordClass;
  DWORD TimeToLive;
  WORD DataLength;
 } DNS_WIRE_RECORD, *PDNS_WIRE_RECORD;
+#endif /* __WINCE_DEFINED_DNS_WIRE_RECORD */
 #endif /* __WINCE_DEFINED__DNS_WIRE_RECORD */
 
 /* IP6_ADDRESS  [struct; shared] */

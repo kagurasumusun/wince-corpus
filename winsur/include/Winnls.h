@@ -455,11 +455,14 @@ typedef DWORD LCTYPE;
 /* CPINFO  [struct; shared] */
 #ifndef __WINCE_DEFINED__CPINFO
 #define __WINCE_DEFINED__CPINFO
+#ifndef __WINCE_DEFINED_CPINFO
+#define __WINCE_DEFINED_CPINFO
 typedef struct _cpinfo {
  UINT MaxCharSize;
  BYTE DefaultChar[MAX_DEFAULTCHAR];
  BYTE LeadByte[MAX_LEADBYTES];
 } CPINFO;
+#endif /* __WINCE_DEFINED_CPINFO */
 #endif /* __WINCE_DEFINED__CPINFO */
 #ifndef __WINCE_DEFINED_PCPINFO
 #define __WINCE_DEFINED_PCPINFO
@@ -469,6 +472,8 @@ typedef CPINFO *PCPINFO, *LPCPINFO;
 /* CURRENCYFMT  [struct; shared; A/W CURRENCYFMTA,CURRENCYFMTW (CE is W-side)] */
 #ifndef __WINCE_DEFINED__CURRENCYFMT
 #define __WINCE_DEFINED__CURRENCYFMT
+#ifndef __WINCE_DEFINED_CURRENCYFMT
+#define __WINCE_DEFINED_CURRENCYFMT
 typedef struct _currencyfmt {
  UINT NumDigits;
  UINT LeadingZero;
@@ -479,6 +484,7 @@ typedef struct _currencyfmt {
  UINT PositiveOrder;
  LPTSTR lpCurrencySymbol;
 } CURRENCYFMT;
+#endif /* __WINCE_DEFINED_CURRENCYFMT */
 #endif /* __WINCE_DEFINED__CURRENCYFMT */
 #ifndef __WINCE_DEFINED_PCURRENCYFMT
 #define __WINCE_DEFINED_PCURRENCYFMT
@@ -488,6 +494,8 @@ typedef CURRENCYFMT *PCURRENCYFMT, *LPCURRENCYFMT;
 /* NUMBERFMT  [struct; shared; A/W NUMBERFMTA,NUMBERFMTW (CE is W-side)] */
 #ifndef __WINCE_DEFINED__NUMBERFMT
 #define __WINCE_DEFINED__NUMBERFMT
+#ifndef __WINCE_DEFINED_NUMBERFMT
+#define __WINCE_DEFINED_NUMBERFMT
 typedef struct _numberfmt {
  UINT NumDigits;
  UINT LeadingZero;
@@ -496,6 +504,7 @@ typedef struct _numberfmt {
  LPTSTR lpThousandSep;
  UINT NegativeOrder;
 } NUMBERFMT;
+#endif /* __WINCE_DEFINED_NUMBERFMT */
 #endif /* __WINCE_DEFINED__NUMBERFMT */
 #ifndef __WINCE_DEFINED_PNUMBERFMT
 #define __WINCE_DEFINED_PNUMBERFMT

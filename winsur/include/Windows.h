@@ -17,7 +17,7 @@
 #include "Commdlg.h"
 #include "Winnls.h"
 #include "Tlhelp32.h"
-#include "ShellApi.h"
+#include "shellapi.h"
 #include "Mmsystem.h"
 #include "Aygshell.h"
 #include "Storemgr.h"

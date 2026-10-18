@@ -87,6 +87,8 @@
 /* MIB_IFROW  [struct; shared] */
 #ifndef __WINCE_DEFINED__MIB_IFROW
 #define __WINCE_DEFINED__MIB_IFROW
+#ifndef __WINCE_DEFINED_MIB_IFROW
+#define __WINCE_DEFINED_MIB_IFROW
 typedef struct _MIB_IFROW {
  WCHAR wszName[MAX_INTERFACE_NAME_LEN];
  DWORD dwIndex;
@@ -113,11 +115,14 @@ typedef struct _MIB_IFROW {
  DWORD dwDescrLen;
  BYTE bDescr[MAXLEN_IFDESCR];
 } MIB_IFROW, *PMIB_IFROW;
+#endif /* __WINCE_DEFINED_MIB_IFROW */
 #endif /* __WINCE_DEFINED__MIB_IFROW */
 
 /* MIB_IPADDRROW  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__MIB_IPADDRROW
 #define __WINCE_DEFINED__MIB_IPADDRROW
+#ifndef __WINCE_DEFINED_MIB_IPADDRROW
+#define __WINCE_DEFINED_MIB_IPADDRROW
 typedef struct _MIB_IPADDRROW {
  DWORD dwAddr;
  DWORD dwIndex;
@@ -127,11 +132,14 @@ typedef struct _MIB_IPADDRROW {
  unsigned short unused1;
  unsigned short unused2;
 } MIB_IPADDRROW, *PMIB_IPADDRROW;
+#endif /* __WINCE_DEFINED_MIB_IPADDRROW */
 #endif /* __WINCE_DEFINED__MIB_IPADDRROW */
 
 /* MIB_IPFORWARDROW  [struct; shared] */
 #ifndef __WINCE_DEFINED__MIB_IPFORWARDROW
 #define __WINCE_DEFINED__MIB_IPFORWARDROW
+#ifndef __WINCE_DEFINED_MIB_IPFORWARDROW
+#define __WINCE_DEFINED_MIB_IPFORWARDROW
 typedef struct _MIB_IPFORWARDROW {
  DWORD dwForwardDest;
  DWORD dwForwardMask;
@@ -148,11 +156,14 @@ typedef struct _MIB_IPFORWARDROW {
  DWORD dwForwardMetric4;
  DWORD dwForwardMetric5;
 } MIB_IPFORWARDROW, *PMIB_IPFORWARDROW;
+#endif /* __WINCE_DEFINED_MIB_IPFORWARDROW */
 #endif /* __WINCE_DEFINED__MIB_IPFORWARDROW */
 
 /* MIB_IPNETROW  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__MIB_IPNETROW
 #define __WINCE_DEFINED__MIB_IPNETROW
+#ifndef __WINCE_DEFINED_MIB_IPNETROW
+#define __WINCE_DEFINED_MIB_IPNETROW
 typedef struct _MIB_IPNETROW {
  DWORD dwIndex;
  DWORD dwPhysAddrLen;
@@ -160,11 +171,14 @@ typedef struct _MIB_IPNETROW {
  DWORD dwAddr;
  DWORD dwType;
 } MIB_IPNETROW, *PMIB_IPNETROW;
+#endif /* __WINCE_DEFINED_MIB_IPNETROW */
 #endif /* __WINCE_DEFINED__MIB_IPNETROW */
 
 /* MIB_IPSTATS  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__MIB_IPSTATS
 #define __WINCE_DEFINED__MIB_IPSTATS
+#ifndef __WINCE_DEFINED_MIB_IPSTATS
+#define __WINCE_DEFINED_MIB_IPSTATS
 typedef struct _MIB_IPSTATS {
  DWORD dwForwarding;
  DWORD dwDefaultTTL;
@@ -190,21 +204,27 @@ typedef struct _MIB_IPSTATS {
  DWORD dwNumAddr;
  DWORD dwNumRoutes;
 } MIB_IPSTATS, *PMIB_IPSTATS;
+#endif /* __WINCE_DEFINED_MIB_IPSTATS */
 #endif /* __WINCE_DEFINED__MIB_IPSTATS */
 
 /* MIB_PROXYARP  [struct; shared] */
 #ifndef __WINCE_DEFINED__MIB_PROXYARP
 #define __WINCE_DEFINED__MIB_PROXYARP
+#ifndef __WINCE_DEFINED_MIB_PROXYARP
+#define __WINCE_DEFINED_MIB_PROXYARP
 typedef struct _MIB_PROXYARP {
  DWORD dwAddress;
  DWORD dwMask;
  DWORD dwIfIndex;
 } MIB_PROXYARP, *PMIB_PROXYARP;
+#endif /* __WINCE_DEFINED_MIB_PROXYARP */
 #endif /* __WINCE_DEFINED__MIB_PROXYARP */
 
 /* MIB_TCPROW  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__MIB_TCPROW
 #define __WINCE_DEFINED__MIB_TCPROW
+#ifndef __WINCE_DEFINED_MIB_TCPROW
+#define __WINCE_DEFINED_MIB_TCPROW
 typedef struct _MIB_TCPROW {
  DWORD dwState;
  DWORD dwLocalAddr;
@@ -212,11 +232,14 @@ typedef struct _MIB_TCPROW {
  DWORD dwRemoteAddr;
  DWORD dwRemotePort;
 } MIB_TCPROW, *PMIB_TCPROW;
+#endif /* __WINCE_DEFINED_MIB_TCPROW */
 #endif /* __WINCE_DEFINED__MIB_TCPROW */
 
 /* MIB_TCPSTATS  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__MIB_TCPSTATS
 #define __WINCE_DEFINED__MIB_TCPSTATS
+#ifndef __WINCE_DEFINED_MIB_TCPSTATS
+#define __WINCE_DEFINED_MIB_TCPSTATS
 typedef struct _MIB_TCPSTATS {
  DWORD dwRtoAlgorithm;
  DWORD dwRtoMin;
@@ -234,20 +257,26 @@ typedef struct _MIB_TCPSTATS {
  DWORD dwOutRsts;
  DWORD dwNumConns;
 } MIB_TCPSTATS, *PMIB_TCPSTATS;
+#endif /* __WINCE_DEFINED_MIB_TCPSTATS */
 #endif /* __WINCE_DEFINED__MIB_TCPSTATS */
 
 /* MIB_UDPROW  [struct; shared] */
 #ifndef __WINCE_DEFINED__MIB_UDPROW
 #define __WINCE_DEFINED__MIB_UDPROW
+#ifndef __WINCE_DEFINED_MIB_UDPROW
+#define __WINCE_DEFINED_MIB_UDPROW
 typedef struct _MIB_UDPROW {
  DWORD dwLocalAddr;
  DWORD dwLocalPort;
 } MIB_UDPROW, *PMIB_UDPROW;
+#endif /* __WINCE_DEFINED_MIB_UDPROW */
 #endif /* __WINCE_DEFINED__MIB_UDPROW */
 
 /* MIB_UDPSTATS  [struct; shared] */
 #ifndef __WINCE_DEFINED__MIB_UDPSTATS
 #define __WINCE_DEFINED__MIB_UDPSTATS
+#ifndef __WINCE_DEFINED_MIB_UDPSTATS
+#define __WINCE_DEFINED_MIB_UDPSTATS
 typedef struct _MIB_UDPSTATS {
  DWORD dwInDatagrams;
  DWORD dwNoPorts;
@@ -255,11 +284,14 @@ typedef struct _MIB_UDPSTATS {
  DWORD dwOutDatagrams;
  DWORD dwNumAddrs;
 } MIB_UDPSTATS, *PMIB_UDPSTATS;
+#endif /* __WINCE_DEFINED_MIB_UDPSTATS */
 #endif /* __WINCE_DEFINED__MIB_UDPSTATS */
 
 /* MIBICMPSTATS  [struct; shared] */
 #ifndef __WINCE_DEFINED__MIBICMPSTATS
 #define __WINCE_DEFINED__MIBICMPSTATS
+#ifndef __WINCE_DEFINED_MIBICMPSTATS
+#define __WINCE_DEFINED_MIBICMPSTATS
 typedef struct _MIBICMPSTATS {
  DWORD dwMsgs;
  DWORD dwErrors;
@@ -275,6 +307,7 @@ typedef struct _MIBICMPSTATS {
  DWORD dwAddrMasks;
  DWORD dwAddrMaskReps;
 } MIBICMPSTATS;
+#endif /* __WINCE_DEFINED_MIBICMPSTATS */
 #endif /* __WINCE_DEFINED__MIBICMPSTATS */
 #ifndef __WINCE_DEFINED_PMIBICMPSTATS
 #define __WINCE_DEFINED_PMIBICMPSTATS
@@ -284,10 +317,13 @@ typedef MIBICMPSTATS *PMIBICMPSTATS, *LPMIBICMPSTATS;
 /* MIBICMPINFO  [struct; shared] */
 #ifndef __WINCE_DEFINED__MIBICMPINFO
 #define __WINCE_DEFINED__MIBICMPINFO
+#ifndef __WINCE_DEFINED_MIBICMPINFO
+#define __WINCE_DEFINED_MIBICMPINFO
 typedef struct _MIBICMPINFO {
  MIBICMPSTATS icmpInStats;
  MIBICMPSTATS icmpOutStats;
 } MIBICMPINFO;
+#endif /* __WINCE_DEFINED_MIBICMPINFO */
 #endif /* __WINCE_DEFINED__MIBICMPINFO */
 #ifndef __WINCE_DEFINED_PMIBICMPINFO
 #define __WINCE_DEFINED_PMIBICMPINFO
@@ -297,9 +333,12 @@ typedef MIBICMPINFO *PMIBICMPINFO, *LPMIBICMPINFO;
 /* MIB_ICMP  [struct, typedef; shared] */
 #ifndef __WINCE_DEFINED__MIB_ICMP
 #define __WINCE_DEFINED__MIB_ICMP
+#ifndef __WINCE_DEFINED_MIB_ICMP
+#define __WINCE_DEFINED_MIB_ICMP
 typedef struct _MIB_ICMP {
  MIBICMPINFO stats;
 } MIB_ICMP, *PMIB_ICMP;
+#endif /* __WINCE_DEFINED_MIB_ICMP */
 #endif /* __WINCE_DEFINED__MIB_ICMP */
 
 #endif /* _IPRTRMIB_ */

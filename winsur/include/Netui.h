@@ -26,6 +26,8 @@
 /* LINECONFIGDATA  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__LINECONFIGDATA
 #define __WINCE_DEFINED__LINECONFIGDATA
+#ifndef __WINCE_DEFINED_LINECONFIGDATA
+#define __WINCE_DEFINED_LINECONFIGDATA
 typedef struct _LINECONFIGDATA {
  DWORD dwVersion;
  DWORD dwBaudRate;
@@ -44,14 +46,18 @@ typedef struct _LINECONFIGDATA {
  TCHAR szDialModifier[NETUI_LCD_DIAL_MOD_LEN + 1];
  WORD wSettableStopParity;
 } LINECONFIGDATA, *PLINECONFIGDATA;
+#endif /* __WINCE_DEFINED_LINECONFIGDATA */
 #endif /* __WINCE_DEFINED__LINECONFIGDATA */
 
 /* NETUI_NEWPWD  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__NETUI_NEWPWD
 #define __WINCE_DEFINED__NETUI_NEWPWD
+#ifndef __WINCE_DEFINED_NETUI_NEWPWD
+#define __WINCE_DEFINED_NETUI_NEWPWD
 typedef struct _NETUI_NEWPWD{
  TCHAR szNewPassword[PWLEN+1];
 } NETUI_NEWPWD, *PNETUI_NEWPWD;
+#endif /* __WINCE_DEFINED_NETUI_NEWPWD */
 #endif /* __WINCE_DEFINED__NETUI_NEWPWD */
 
 /* ==================================================================

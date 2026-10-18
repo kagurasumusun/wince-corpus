@@ -20,6 +20,8 @@
 /* CS_BITMAPINFOHEADER  [struct; ce-only] */
 #ifndef __WINCE_DEFINED_TAGCS_BITMAPINFOHEADER
 #define __WINCE_DEFINED_TAGCS_BITMAPINFOHEADER
+#ifndef __WINCE_DEFINED_CS_BITMAPINFOHEADER
+#define __WINCE_DEFINED_CS_BITMAPINFOHEADER
 typedef struct tagCS_BITMAPINFOHEADER{
  DWORD biSize;
  LONG biWidth;
@@ -33,6 +35,7 @@ typedef struct tagCS_BITMAPINFOHEADER{
  DWORD biClrUsed;
  DWORD biClrImportant;
 } CS_BITMAPINFOHEADER, *PCS_BITMAPINFOHEADER;
+#endif /* __WINCE_DEFINED_CS_BITMAPINFOHEADER */
 #endif /* __WINCE_DEFINED_TAGCS_BITMAPINFOHEADER */
 
 /* CS_CompressionCaps  [enum; ce-only] */
@@ -53,6 +56,8 @@ typedef CS_CompressionCaps *PCS_CompressionCaps, *LPCS_CompressionCaps;
 /* CS_FRAME_INFO  [struct; ce-only] */
 #ifndef __WINCE_DEFINED_TAGCS_FRAME_INFO
 #define __WINCE_DEFINED_TAGCS_FRAME_INFO
+#ifndef __WINCE_DEFINED_CS_FRAME_INFO
+#define __WINCE_DEFINED_CS_FRAME_INFO
 typedef struct tagCS_FRAME_INFO {
  ULONG ExtendedHeaderSize;
  DWORD dwFrameFlags;
@@ -66,17 +71,21 @@ typedef struct tagCS_FRAME_INFO {
  DWORD Reserved3;
  DWORD Reserved4;
 } CS_FRAME_INFO, *PCS_FRAME_INFO;
+#endif /* __WINCE_DEFINED_CS_FRAME_INFO */
 #endif /* __WINCE_DEFINED_TAGCS_FRAME_INFO */
 
 /* CS_RGBQUAD  [struct; ce-only] */
 #ifndef __WINCE_DEFINED_TAGCS_RGBQUAD
 #define __WINCE_DEFINED_TAGCS_RGBQUAD
+#ifndef __WINCE_DEFINED_CS_RGBQUAD
+#define __WINCE_DEFINED_CS_RGBQUAD
 typedef struct tagCS_RGBQUAD {
  BYTE rgbBlue;
  BYTE rgbGreen;
  BYTE rgbRed;
  BYTE rgbReserved;
 } CS_RGBQUAD, *PCS_RGBQUAD;
+#endif /* __WINCE_DEFINED_CS_RGBQUAD */
 #endif /* __WINCE_DEFINED_TAGCS_RGBQUAD */
 
 /* CS_TRUECOLORINFO  [struct; ce-only] */

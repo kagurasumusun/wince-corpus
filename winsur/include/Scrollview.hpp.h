@@ -49,6 +49,8 @@ struct ScrollBarInfoInternal {
 /* SCROLL_NEXT_FREE  [extra enum] */
 #ifndef __WINCE_DEFINED_SCROLL_STATE
 #define __WINCE_DEFINED_SCROLL_STATE
+#ifndef __WINCE_DEFINED_SCROLL_NEXT_FREE
+#define __WINCE_DEFINED_SCROLL_NEXT_FREE
 enum SCROLL_STATE {
  SCROLL_NO_PRESS,
  SCROLL_UP_PRESS,
@@ -59,6 +61,7 @@ enum SCROLL_STATE {
  SCROLL_UNAVAIL,
  SCROLL_NEXT_FREE
 };
+#endif /* __WINCE_DEFINED_SCROLL_NEXT_FREE */
 #endif /* __WINCE_DEFINED_SCROLL_STATE */
 
 /* ==================================================================

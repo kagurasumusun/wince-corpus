@@ -20,6 +20,8 @@
 /* INLINEIMAGEINFO  [struct, typedef; ce-only] */
 #ifndef __WINCE_DEFINED_TAGINLINEIMAGEINFO
 #define __WINCE_DEFINED_TAGINLINEIMAGEINFO
+#ifndef __WINCE_DEFINED_INLINEIMAGEINFO
+#define __WINCE_DEFINED_INLINEIMAGEINFO
 typedef struct tagINLINEIMAGEINFO {
 DWORD dwCookie;
 int iOrigHeight;
@@ -27,6 +29,7 @@ int iOrigWidth;
 HBITMAP hbm;
 BOOL bOwnBitmap;
 } INLINEIMAGEINFO, *LPINLINEIMAGEINFO;
+#endif /* __WINCE_DEFINED_INLINEIMAGEINFO */
 #endif /* __WINCE_DEFINED_TAGINLINEIMAGEINFO */
 
 /* ==================================================================

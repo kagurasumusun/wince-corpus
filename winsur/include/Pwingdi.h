@@ -35,7 +35,10 @@ struct ContrastCmdInputParm {
 /* parm  [extra struct] */
 #ifndef __WINCE_DEFINED_CONTRASTCMDINPUTPARM
 #define __WINCE_DEFINED_CONTRASTCMDINPUTPARM
+#ifndef __WINCE_DEFINED_PARM
+#define __WINCE_DEFINED_PARM
 struct ContrastCmdInputParm { int command; int parm; };
+#endif /* __WINCE_DEFINED_PARM */
 #endif /* __WINCE_DEFINED_CONTRASTCMDINPUTPARM */
 
 #endif /* _PWINGDI_ */

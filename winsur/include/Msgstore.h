@@ -26,6 +26,8 @@
 /* MailAtt  [struct; ce-only] */
 #ifndef __WINCE_DEFINED_MAILATT_S
 #define __WINCE_DEFINED_MAILATT_S
+#ifndef __WINCE_DEFINED_MAILATT
+#define __WINCE_DEFINED_MAILATT
 typedef struct MailAtt_s {
  UINT uiAttachmentNumber;
  DWORD dwFlags;
@@ -34,16 +36,20 @@ typedef struct MailAtt_s {
  LPWSTR szOriginalName;
  LPWSTR szLocalName;
 } MailAtt, *lpMailAtt;
+#endif /* __WINCE_DEFINED_MAILATT */
 #endif /* __WINCE_DEFINED_MAILATT_S */
 
 /* MailAttArray  [struct; ce-only] */
 #ifndef __WINCE_DEFINED_MAILATTARRAY_S
 #define __WINCE_DEFINED_MAILATTARRAY_S
+#ifndef __WINCE_DEFINED_MAILATTARRAY
+#define __WINCE_DEFINED_MAILATTARRAY
 typedef struct MailAttArray_s {
  DWORD dwFlags;
  UINT uiAttCount;
  lpMailAtt AttArray;
 } MailAttArray, *lpMailAttArray;
+#endif /* __WINCE_DEFINED_MAILATTARRAY */
 #endif /* __WINCE_DEFINED_MAILATTARRAY_S */
 
 /* MailMsg  [struct, typedef; ce-only] */
@@ -86,11 +92,14 @@ typedef MAILSORTFIELD *PMAILSORTFIELD, *LPMAILSORTFIELD;
 /* MAILSORTINFO  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__MAILSORTINFO
 #define __WINCE_DEFINED__MAILSORTINFO
+#ifndef __WINCE_DEFINED_MAILSORTINFO
+#define __WINCE_DEFINED_MAILSORTINFO
 typedef struct _MAILSORTINFO {
  MAILSORTFIELD iSort;
  BOOL fAscending;
  int cMsgs;
 } MAILSORTINFO, *PMAILSORTINFO;
+#endif /* __WINCE_DEFINED_MAILSORTINFO */
 #endif /* __WINCE_DEFINED__MAILSORTINFO */
 
 /* ==================================================================

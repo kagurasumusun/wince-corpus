@@ -20,14 +20,19 @@
 /* UIPARAM  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__UIPARAM
 #define __WINCE_DEFINED__UIPARAM
+#ifndef __WINCE_DEFINED_UIPARAM
+#define __WINCE_DEFINED_UIPARAM
 struct _UIPARAM {
 DWORD dwType,
 DWORD dwValue };
+#endif /* __WINCE_DEFINED_UIPARAM */
 #endif /* __WINCE_DEFINED__UIPARAM */
 
 /* FATUIDATA  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__FATUIDATA
 #define __WINCE_DEFINED__FATUIDATA
+#ifndef __WINCE_DEFINED_FATUIDATA
+#define __WINCE_DEFINED_FATUIDATA
 struct _FATUIDATA {
 DWORD dwSize;
 DWORD dwFlags;
@@ -36,12 +41,16 @@ DWORD idsEventCaption;
 DWORD cuiParams;
 UIPARAM auiParams[4]; };
 typedef struct _FATUIDATA FATUIDATA, *PFATUIDATA;
+#endif /* __WINCE_DEFINED_FATUIDATA */
 #endif /* __WINCE_DEFINED__FATUIDATA */
 
 /* dwValue  [extra struct] */
 #ifndef __WINCE_DEFINED__UIPARAM
 #define __WINCE_DEFINED__UIPARAM
+#ifndef __WINCE_DEFINED_DWVALUE
+#define __WINCE_DEFINED_DWVALUE
 struct _UIPARAM { DWORD dwType, DWORD dwValue };
+#endif /* __WINCE_DEFINED_DWVALUE */
 #endif /* __WINCE_DEFINED__UIPARAM */
 
 #endif /* _FATUI_ */

@@ -124,6 +124,8 @@ typedef struct {
 /* CSPROPERTY_BOUNDS_LONG  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__SIGNED
 #define __WINCE_DEFINED__SIGNED
+#ifndef __WINCE_DEFINED_CSPROPERTY_BOUNDS_LONG
+#define __WINCE_DEFINED_CSPROPERTY_BOUNDS_LONG
 typedef union {
  struct _SIGNED {
  LONG SignedMinimum;
@@ -134,6 +136,7 @@ typedef union {
  ULONG UnsignedMaximum;
  };
 } CSPROPERTY_BOUNDS_LONG, *PCSPROPERTY_BOUNDS_LONG;
+#endif /* __WINCE_DEFINED_CSPROPERTY_BOUNDS_LONG */
 #endif /* __WINCE_DEFINED__SIGNED */
 
 /* CSPROPERTY_CONNECTION  [enum; ce-only] */

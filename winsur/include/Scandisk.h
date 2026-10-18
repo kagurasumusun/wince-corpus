@@ -20,10 +20,13 @@
 /* SCAN_OPTIONS  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__SCAN_OPTIONS
 #define __WINCE_DEFINED__SCAN_OPTIONS
+#ifndef __WINCE_DEFINED_SCAN_OPTIONS
+#define __WINCE_DEFINED_SCAN_OPTIONS
 typedef struct _SCAN_OPTIONS {
  DWORD dwFlags;
  DWORD dwFatToUse;
 } SCAN_OPTIONS, *PSCAN_OPTIONS;
+#endif /* __WINCE_DEFINED_SCAN_OPTIONS */
 #endif /* __WINCE_DEFINED__SCAN_OPTIONS */
 
 /* ==================================================================

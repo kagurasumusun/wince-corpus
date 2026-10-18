@@ -67,6 +67,8 @@
 /* SecPkgContext_MasterKeyInfo  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__SECPKGCONTEXT_MASTERKEYINFO
 #define __WINCE_DEFINED__SECPKGCONTEXT_MASTERKEYINFO
+#ifndef __WINCE_DEFINED_SECPKGCONTEXT_MASTERKEYINFO
+#define __WINCE_DEFINED_SECPKGCONTEXT_MASTERKEYINFO
 typedef struct _SecPkgContext_MasterKeyInfo {
  DWORD dwVersion;
  DWORD cbMasterKey;
@@ -76,23 +78,30 @@ typedef struct _SecPkgContext_MasterKeyInfo {
  DWORD cbServerRandom;
  BYTE rgbServerRandom[512];
 }SecPkgContext_MasterKeyInfo, *PSecPkgContext_MasterKeyInfo;
+#endif /* __WINCE_DEFINED_SECPKGCONTEXT_MASTERKEYINFO */
 #endif /* __WINCE_DEFINED__SECPKGCONTEXT_MASTERKEYINFO */
 
 /* SecPkgCred_CipherStrengths  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__SECPKGCRED_CIPHERSTRENGTHS
 #define __WINCE_DEFINED__SECPKGCRED_CIPHERSTRENGTHS
+#ifndef __WINCE_DEFINED_SECPKGCRED_CIPHERSTRENGTHS
+#define __WINCE_DEFINED_SECPKGCRED_CIPHERSTRENGTHS
 typedef struct _SecPkgCred_CipherStrengths {
  DWORD dwMinimumCipherStrength;
  DWORD dwMaximumCipherStrength;
 } SecPkgCred_CipherStrengths, *PSecPkgCred_CipherStrengths;
+#endif /* __WINCE_DEFINED_SECPKGCRED_CIPHERSTRENGTHS */
 #endif /* __WINCE_DEFINED__SECPKGCRED_CIPHERSTRENGTHS */
 
 /* SecPkgCred_SupportedProtocols  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__SECPKGCRED_SUPPORTEDPROTOCOLS
 #define __WINCE_DEFINED__SECPKGCRED_SUPPORTEDPROTOCOLS
+#ifndef __WINCE_DEFINED_SECPKGCRED_SUPPORTEDPROTOCOLS
+#define __WINCE_DEFINED_SECPKGCRED_SUPPORTEDPROTOCOLS
 typedef struct _SecPkgCred_SupportedProtocols {
  DWORD grbitProtocol;
 } SecPkgCred_SupportedProtocols, *PSecPkgCred_SupportedProtocols;
+#endif /* __WINCE_DEFINED_SECPKGCRED_SUPPORTEDPROTOCOLS */
 #endif /* __WINCE_DEFINED__SECPKGCRED_SUPPORTEDPROTOCOLS */
 
 #endif /* _SCHNLSP_ */

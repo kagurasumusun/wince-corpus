@@ -20,6 +20,8 @@
 /* INQUIRY_DATA  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__INQUIRY_DATA
 #define __WINCE_DEFINED__INQUIRY_DATA
+#ifndef __WINCE_DEFINED_INQUIRY_DATA
+#define __WINCE_DEFINED_INQUIRY_DATA
 typedef struct _INQUIRY_DATA {
  UCHAR inqDevType;
  UCHAR inqRMB;
@@ -32,6 +34,7 @@ typedef struct _INQUIRY_DATA {
  UCHAR inqRev[4];
  UCHAR inqReserved2[60];
 } INQUIRY_DATA, *PINQUIRY_DATA;
+#endif /* __WINCE_DEFINED_INQUIRY_DATA */
 #endif /* __WINCE_DEFINED__INQUIRY_DATA */
 
 #endif /* _ATAPI2_ */

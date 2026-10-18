@@ -20,6 +20,8 @@
 /* CD_SENSE_DATA  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__CD_SENSE_DATA
 #define __WINCE_DEFINED__CD_SENSE_DATA
+#ifndef __WINCE_DEFINED_CD_SENSE_DATA
+#define __WINCE_DEFINED_CD_SENSE_DATA
 typedef struct _CD_SENSE_DATA {
  BYTE sd_ErrCode;
  BYTE sd_SegNum;
@@ -34,11 +36,14 @@ typedef struct _CD_SENSE_DATA {
  BYTE sd_Key2;
  BYTE sd_Key3;
 } CD_SENSE_DATA, *PCD_SENSE_DATA;
+#endif /* __WINCE_DEFINED_CD_SENSE_DATA */
 #endif /* __WINCE_DEFINED__CD_SENSE_DATA */
 
 /* CDROM_PLAY_AUDIO_MSF  [struct, typedef; ce-only] */
 #ifndef __WINCE_DEFINED__CDROM_PLAY_AUDIO_MSF
 #define __WINCE_DEFINED__CDROM_PLAY_AUDIO_MSF
+#ifndef __WINCE_DEFINED_CDROM_PLAY_AUDIO_MSF
+#define __WINCE_DEFINED_CDROM_PLAY_AUDIO_MSF
 typedef struct _CDROM_PLAY_AUDIO_MSF {
  UCHAR StartingM;
  UCHAR StartingS;
@@ -47,6 +52,7 @@ typedef struct _CDROM_PLAY_AUDIO_MSF {
  UCHAR EndingS;
  UCHAR EndingF;
 } CDROM_PLAY_AUDIO_MSF, *PCDROM_PLAY_AUDIO_MSF;
+#endif /* __WINCE_DEFINED_CDROM_PLAY_AUDIO_MSF */
 #endif /* __WINCE_DEFINED__CDROM_PLAY_AUDIO_MSF */
 
 /* CDROM_TESTUNITREADY  [struct; ce-only] */
@@ -61,10 +67,13 @@ typedef struct CDROM_TESTUNITREADY {
 /* SGX_BUF  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__SGX_BUF
 #define __WINCE_DEFINED__SGX_BUF
+#ifndef __WINCE_DEFINED_SGX_BUF
+#define __WINCE_DEFINED_SGX_BUF
 typedef struct _SGX_BUF {
  PUCHAR sb_buf;
  DWORD sb_len;
 } SGX_BUF, *PSGX_BUF;
+#endif /* __WINCE_DEFINED_SGX_BUF */
 #endif /* __WINCE_DEFINED__SGX_BUF */
 
 #endif /* _CDIOCTL_ */

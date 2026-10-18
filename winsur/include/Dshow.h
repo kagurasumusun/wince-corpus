@@ -49,12 +49,15 @@ typedef enum _AM_FILTER_MISC_FLAGS {
 /* ALLOCATOR_PROPERTIES  [struct, typedef; shared] */
 #ifndef __WINCE_DEFINED__ALLOCATORPROPERTIES
 #define __WINCE_DEFINED__ALLOCATORPROPERTIES
+#ifndef __WINCE_DEFINED_ALLOCATOR_PROPERTIES
+#define __WINCE_DEFINED_ALLOCATOR_PROPERTIES
 typedef struct _AllocatorProperties {
  long cBuffers;
  long cbBuffer;
  long cbAlign;
  long cbPrefix;
 } ALLOCATOR_PROPERTIES;
+#endif /* __WINCE_DEFINED_ALLOCATOR_PROPERTIES */
 #endif /* __WINCE_DEFINED__ALLOCATORPROPERTIES */
 #ifndef __WINCE_DEFINED_PALLOCATOR_PROPERTIES
 #define __WINCE_DEFINED_PALLOCATOR_PROPERTIES
@@ -104,10 +107,13 @@ typedef AM_VIDEO_RENDERER_MODE *PAM_VIDEO_RENDERER_MODE, *LPAM_VIDEO_RENDERER_MO
 /* AMVPSIZE  [struct, typedef; shared] */
 #ifndef __WINCE_DEFINED__AMVPSIZE
 #define __WINCE_DEFINED__AMVPSIZE
+#ifndef __WINCE_DEFINED_AMVPSIZE
+#define __WINCE_DEFINED_AMVPSIZE
 typedef struct _AMVPSIZE{
  DWORD dwWidth;
  DWORD dwHeight;
 } AMVPSIZE, *LPAMVPSIZE;
+#endif /* __WINCE_DEFINED_AMVPSIZE */
 #endif /* __WINCE_DEFINED__AMVPSIZE */
 
 /* AnalogVideoStandard  [enum, typedef; shared; entity-headers] */
@@ -163,7 +169,7 @@ typedef enum {
  CameraControl_Zoom,
  CameraControl_Exposure,
  CameraControl_Iris,
- CameraControl_Focus
+ CameraControl_Focus,
  CameraControl_Flash
 } CameraControlProperty;
 #endif /* __WINCE_DEFINED_CAMERACONTROLPROPERTY */
@@ -175,12 +181,15 @@ typedef CameraControlProperty *PCameraControlProperty, *LPCameraControlProperty;
 /* COLORKEY  [struct, typedef, function; shared] */
 #ifndef __WINCE_DEFINED_TAGCOLORKEY
 #define __WINCE_DEFINED_TAGCOLORKEY
+#ifndef __WINCE_DEFINED_COLORKEY
+#define __WINCE_DEFINED_COLORKEY
 typedef struct tagCOLORKEY{
  DWORD KeyType;
  DWORD PaletteIndex;
  COLORREF LowColorValue;
  COLORREF HighColorValue;
 } COLORKEY;
+#endif /* __WINCE_DEFINED_COLORKEY */
 #endif /* __WINCE_DEFINED_TAGCOLORKEY */
 #ifndef __WINCE_DEFINED_PCOLORKEY
 #define __WINCE_DEFINED_PCOLORKEY
@@ -206,10 +215,13 @@ typedef CompressionCaps *PCompressionCaps, *LPCompressionCaps;
 /* FILTER_INFO  [struct, typedef; shared] */
 #ifndef __WINCE_DEFINED__FILTERINFO
 #define __WINCE_DEFINED__FILTERINFO
+#ifndef __WINCE_DEFINED_FILTER_INFO
+#define __WINCE_DEFINED_FILTER_INFO
 typedef struct _FilterInfo{
  WCHAR achName[128];
  IFilterGraph __RPC_FAR* pGraph;
 } FILTER_INFO;
+#endif /* __WINCE_DEFINED_FILTER_INFO */
 #endif /* __WINCE_DEFINED__FILTERINFO */
 #ifndef __WINCE_DEFINED_PFILTER_INFO
 #define __WINCE_DEFINED_PFILTER_INFO
@@ -219,11 +231,14 @@ typedef FILTER_INFO *PFILTER_INFO, *LPFILTER_INFO;
 /* FILTER_STATE  [enum, typedef; shared; entity-headers] */
 #ifndef __WINCE_DEFINED__FILTERSTATE
 #define __WINCE_DEFINED__FILTERSTATE
+#ifndef __WINCE_DEFINED_FILTER_STATE
+#define __WINCE_DEFINED_FILTER_STATE
 typedef enum _FilterState {
  State_Stopped = 0,
  State_Paused = State_Stopped + 1,
  State_Running = State_Paused + 1
 } FILTER_STATE;
+#endif /* __WINCE_DEFINED_FILTER_STATE */
 #endif /* __WINCE_DEFINED__FILTERSTATE */
 #ifndef __WINCE_DEFINED_PFILTER_STATE
 #define __WINCE_DEFINED_PFILTER_STATE
@@ -233,10 +248,13 @@ typedef FILTER_STATE *PFILTER_STATE, *LPFILTER_STATE;
 /* PIN_DIRECTION  [enum, typedef; shared; entity-headers] */
 #ifndef __WINCE_DEFINED__PINDIRECTION
 #define __WINCE_DEFINED__PINDIRECTION
+#ifndef __WINCE_DEFINED_PIN_DIRECTION
+#define __WINCE_DEFINED_PIN_DIRECTION
 typedef enum _PinDirection {
  PINDIR_INPUT,
  PINDIR_OUTPUT
 } PIN_DIRECTION;
+#endif /* __WINCE_DEFINED_PIN_DIRECTION */
 #endif /* __WINCE_DEFINED__PINDIRECTION */
 #ifndef __WINCE_DEFINED_PPIN_DIRECTION
 #define __WINCE_DEFINED_PPIN_DIRECTION
@@ -246,8 +264,11 @@ typedef PIN_DIRECTION *PPIN_DIRECTION, *LPPIN_DIRECTION;
 /* POSITION  [struct, typedef; ce-only] */
 #ifndef __WINCE_DEFINED___POSITION
 #define __WINCE_DEFINED___POSITION
+#ifndef __WINCE_DEFINED_POSITION
+#define __WINCE_DEFINED_POSITION
 struct __POSITION { int unused; };
 typedef __POSITION* POSITION;
+#endif /* __WINCE_DEFINED_POSITION */
 #endif /* __WINCE_DEFINED___POSITION */
 
 /* QualityMessageType  [enum, typedef; shared; entity-headers] */
@@ -266,11 +287,14 @@ typedef QualityMessageType *PQualityMessageType, *LPQualityMessageType;
 /* TIMECODE  [struct, typedef; shared] */
 #ifndef __WINCE_DEFINED_TAGTIMECODE
 #define __WINCE_DEFINED_TAGTIMECODE
+#ifndef __WINCE_DEFINED_TIMECODE
+#define __WINCE_DEFINED_TIMECODE
 typedef struct tagTIMECODE {
  WORD wFrameRate;
  WORD wFrameFract;
  WORD dwFrames;
 }TIMECODE;
+#endif /* __WINCE_DEFINED_TIMECODE */
 #endif /* __WINCE_DEFINED_TAGTIMECODE */
 #ifndef __WINCE_DEFINED_PTIMECODE
 #define __WINCE_DEFINED_PTIMECODE
@@ -280,12 +304,15 @@ typedef TIMECODE *PTIMECODE, *LPTIMECODE;
 /* TIMECODE_SAMPLE  [struct, typedef; shared] */
 #ifndef __WINCE_DEFINED_TAGTIMECODE_SAMPLE
 #define __WINCE_DEFINED_TAGTIMECODE_SAMPLE
+#ifndef __WINCE_DEFINED_TIMECODE_SAMPLE
+#define __WINCE_DEFINED_TIMECODE_SAMPLE
 typedef struct tagTIMECODE_SAMPLE {
  LONGLONG qwTick;
  TIMECODE timecode;
  DWORD dwUser;
  DWORD dwFlags;
 } TIMECODE_SAMPLE;
+#endif /* __WINCE_DEFINED_TIMECODE_SAMPLE */
 #endif /* __WINCE_DEFINED_TAGTIMECODE_SAMPLE */
 #ifndef __WINCE_DEFINED_PTIMECODE_SAMPLE
 #define __WINCE_DEFINED_PTIMECODE_SAMPLE
@@ -295,12 +322,15 @@ typedef TIMECODE_SAMPLE *PTIMECODE_SAMPLE, *LPTIMECODE_SAMPLE;
 /* VideoControlFlags  [enum; shared; entity-headers] */
 #ifndef __WINCE_DEFINED_TAGVIDEOCONTROLFLAGS
 #define __WINCE_DEFINED_TAGVIDEOCONTROLFLAGS
+#ifndef __WINCE_DEFINED_VIDEOCONTROLFLAGS
+#define __WINCE_DEFINED_VIDEOCONTROLFLAGS
 typedef enum tagVideoControlFlags {
  VideoControlFlag_FlipHorizontal = 0x0001,
  VideoControlFlag_FlipVertical = 0x0002,
  VideoControlFlag_ExternalTriggerEnable = 0x0004,
  VideoControlFlag_Trigger = 0x0008
 } VideoControlFlags;
+#endif /* __WINCE_DEFINED_VIDEOCONTROLFLAGS */
 #endif /* __WINCE_DEFINED_TAGVIDEOCONTROLFLAGS */
 #ifndef __WINCE_DEFINED_PVIDEOCONTROLFLAGS
 #define __WINCE_DEFINED_PVIDEOCONTROLFLAGS
@@ -310,10 +340,13 @@ typedef VideoControlFlags *PVideoControlFlags, *LPVideoControlFlags;
 /* VideoProcAmpFlags  [enum; shared; entity-headers] */
 #ifndef __WINCE_DEFINED_TAGVIDEOPROCAMPFLAGS
 #define __WINCE_DEFINED_TAGVIDEOPROCAMPFLAGS
+#ifndef __WINCE_DEFINED_VIDEOPROCAMPFLAGS
+#define __WINCE_DEFINED_VIDEOPROCAMPFLAGS
 typedef enum tagVideoProcAmpFlags {
  VideoProcAmp_Flags_Auto = 0x0001,
  VideoProcAmp_Flags_Manual = 0x0002,
 } VideoProcAmpFlags;
+#endif /* __WINCE_DEFINED_VIDEOPROCAMPFLAGS */
 #endif /* __WINCE_DEFINED_TAGVIDEOPROCAMPFLAGS */
 #ifndef __WINCE_DEFINED_PVIDEOPROCAMPFLAGS
 #define __WINCE_DEFINED_PVIDEOPROCAMPFLAGS
@@ -323,6 +356,8 @@ typedef VideoProcAmpFlags *PVideoProcAmpFlags, *LPVideoProcAmpFlags;
 /* VideoProcAmpProperty  [enum; shared; entity-headers] */
 #ifndef __WINCE_DEFINED_TAGVIDEOPROCAMPPROPERTY
 #define __WINCE_DEFINED_TAGVIDEOPROCAMPPROPERTY
+#ifndef __WINCE_DEFINED_VIDEOPROCAMPPROPERTY
+#define __WINCE_DEFINED_VIDEOPROCAMPPROPERTY
 typedef enum tagVideoProcAmpProperty {
  VideoProcAmp_Brightness,
  VideoProcAmp_Contrast,
@@ -335,6 +370,7 @@ typedef enum tagVideoProcAmpProperty {
  VideoProcAmp_BacklightCompensation,
  VideoProcAmp_Gain
 } VideoProcAmpProperty;
+#endif /* __WINCE_DEFINED_VIDEOPROCAMPPROPERTY */
 #endif /* __WINCE_DEFINED_TAGVIDEOPROCAMPPROPERTY */
 #ifndef __WINCE_DEFINED_PVIDEOPROCAMPPROPERTY
 #define __WINCE_DEFINED_PVIDEOPROCAMPPROPERTY

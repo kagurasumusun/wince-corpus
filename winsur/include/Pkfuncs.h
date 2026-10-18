@@ -56,6 +56,8 @@
 /* CacheInfo  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__CACHEINFO
 #define __WINCE_DEFINED__CACHEINFO
+#ifndef __WINCE_DEFINED_CACHEINFO
+#define __WINCE_DEFINED_CACHEINFO
 typedef struct _CacheInfo {
  DWORD dwL1Flags;
  DWORD dwL1ICacheSize;
@@ -72,14 +74,18 @@ typedef struct _CacheInfo {
  DWORD dwL2DCacheLineSize;
  DWORD dwL2DCacheNumWays;
 } CacheInfo, *PCacheInfo;
+#endif /* __WINCE_DEFINED_CACHEINFO */
 #endif /* __WINCE_DEFINED__CACHEINFO */
 
 /* CallSnapshot  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__CALLSNAPSHOT
 #define __WINCE_DEFINED__CALLSNAPSHOT
+#ifndef __WINCE_DEFINED_CALLSNAPSHOT
+#define __WINCE_DEFINED_CALLSNAPSHOT
 typedef struct _CallSnapshot {
  DWORD dwReturnAddr;
 } CallSnapshot;
+#endif /* __WINCE_DEFINED_CALLSNAPSHOT */
 #endif /* __WINCE_DEFINED__CALLSNAPSHOT */
 #ifndef __WINCE_DEFINED_PCALLSNAPSHOT
 #define __WINCE_DEFINED_PCALLSNAPSHOT
@@ -89,6 +95,8 @@ typedef CallSnapshot *PCallSnapshot, *LPCallSnapshot;
 /* CallSnapshot3  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__CALLSNAPSHOT3
 #define __WINCE_DEFINED__CALLSNAPSHOT3
+#ifndef __WINCE_DEFINED_CALLSNAPSHOT3
+#define __WINCE_DEFINED_CALLSNAPSHOT3
 typedef struct _CallSnapshot3 {
  DWORD dwReturnAddr;
  DWORD dwFramePtr;
@@ -96,6 +104,7 @@ typedef struct _CallSnapshot3 {
  DWORD dwVMProc;
  DWORD dwParams[4];
 } CallSnapshot3;
+#endif /* __WINCE_DEFINED_CALLSNAPSHOT3 */
 #endif /* __WINCE_DEFINED__CALLSNAPSHOT3 */
 #ifndef __WINCE_DEFINED_PCALLSNAPSHOT3
 #define __WINCE_DEFINED_PCALLSNAPSHOT3
@@ -105,12 +114,15 @@ typedef CallSnapshot3 *PCallSnapshot3, *LPCallSnapshot3;
 /* CallSnapshotEx  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__CALLSNAPSHOTEX
 #define __WINCE_DEFINED__CALLSNAPSHOTEX
+#ifndef __WINCE_DEFINED_CALLSNAPSHOTEX
+#define __WINCE_DEFINED_CALLSNAPSHOTEX
 typedef struct _CallSnapshotEx {
  DWORD dwReturnAddr;
  DWORD dwFramePtr;
  DWORD dwCurProc;
  DWORD dwParams[4];
 } CallSnapshotEx;
+#endif /* __WINCE_DEFINED_CALLSNAPSHOTEX */
 #endif /* __WINCE_DEFINED__CALLSNAPSHOTEX */
 #ifndef __WINCE_DEFINED_PCALLSNAPSHOTEX
 #define __WINCE_DEFINED_PCALLSNAPSHOTEX
@@ -120,6 +132,8 @@ typedef CallSnapshotEx *PCallSnapshotEx, *LPCallSnapshotEx;
 /* CeLogImportTable  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__CELOGIMPORTTABLE
 #define __WINCE_DEFINED__CELOGIMPORTTABLE
+#ifndef __WINCE_DEFINED_CELOGIMPORTTABLE
+#define __WINCE_DEFINED_CELOGIMPORTTABLE
 typedef struct _CeLogImportTable {
  DWORD dwVersion;
  FARPROC pCreateEventW;
@@ -146,6 +160,7 @@ typedef struct _CeLogImportTable {
  DWORD dwCeLogSmallBuf;
  DWORD dwDefaultThreadQuantum;
 } CeLogImportTable;
+#endif /* __WINCE_DEFINED_CELOGIMPORTTABLE */
 #endif /* __WINCE_DEFINED__CELOGIMPORTTABLE */
 #ifndef __WINCE_DEFINED_PCELOGIMPORTTABLE
 #define __WINCE_DEFINED_PCELOGIMPORTTABLE
@@ -155,6 +170,8 @@ typedef CeLogImportTable *PCeLogImportTable, *LPCeLogImportTable;
 /* DEVICE_ID  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__DEVICE_ID
 #define __WINCE_DEFINED__DEVICE_ID
+#ifndef __WINCE_DEFINED_DEVICE_ID
+#define __WINCE_DEFINED_DEVICE_ID
 typedef struct _DEVICE_ID {
  DWORD dwSize;
  DWORD dwPresetIDOffset;
@@ -162,11 +179,14 @@ typedef struct _DEVICE_ID {
  DWORD dwPlatformIDOffset;
  DWORD dwPlatformIDBytes;
 } DEVICE_ID, *PDEVICE_ID;
+#endif /* __WINCE_DEFINED_DEVICE_ID */
 #endif /* __WINCE_DEFINED__DEVICE_ID */
 
 /* DEVICE_LOCATION  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__DEVICE_LOCATION
 #define __WINCE_DEFINED__DEVICE_LOCATION
+#ifndef __WINCE_DEFINED_DEVICE_LOCATION
+#define __WINCE_DEFINED_DEVICE_LOCATION
 typedef struct _DEVICE_LOCATION {
  DWORD IfcType;
  DWORD BusNumber;
@@ -174,22 +194,28 @@ typedef struct _DEVICE_LOCATION {
  PVOID PhysicalLoc;
  DWORD Pin;
 } DEVICE_LOCATION, *PDEVICE_LOCATION;
+#endif /* __WINCE_DEFINED_DEVICE_LOCATION */
 #endif /* __WINCE_DEFINED__DEVICE_LOCATION */
 
 /* DEVICE_PSL_NOTIFY  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__DEVICE_PSL_NOTIFY
 #define __WINCE_DEFINED__DEVICE_PSL_NOTIFY
+#ifndef __WINCE_DEFINED_DEVICE_PSL_NOTIFY
+#define __WINCE_DEFINED_DEVICE_PSL_NOTIFY
 typedef struct _DEVICE_PSL_NOTIFY {
  DWORD dwSize;
  DWORD dwFlags;
  HANDLE hProc;
  HANDLE hThread;
 } DEVICE_PSL_NOTIFY, *PDEVICE_PSL_NOTIFY;
+#endif /* __WINCE_DEFINED_DEVICE_PSL_NOTIFY */
 #endif /* __WINCE_DEFINED__DEVICE_PSL_NOTIFY */
 
 /* KD_BPINFO  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__KD_BPINFO
 #define __WINCE_DEFINED__KD_BPINFO
+#ifndef __WINCE_DEFINED_KD_BPINFO
+#define __WINCE_DEFINED_KD_BPINFO
 typedef struct _KD_BPINFO {
  int nVersion;
  ULONG ulFlags;
@@ -197,17 +223,21 @@ typedef struct _KD_BPINFO {
  ULONG ulHandle;
  ULONG ulCount;
 } KD_BPINFO, *PKD_BPINFO;
+#endif /* __WINCE_DEFINED_KD_BPINFO */
 #endif /* __WINCE_DEFINED__KD_BPINFO */
 
 /* KD_EXCEPTION_INFO  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__KD_EXCEPTION_INFO
 #define __WINCE_DEFINED__KD_EXCEPTION_INFO
+#ifndef __WINCE_DEFINED_KD_EXCEPTION_INFO
+#define __WINCE_DEFINED_KD_EXCEPTION_INFO
 typedef struct _KD_EXCEPTION_INFO {
  int nVersion;
  ULONG ulFlags;
  ULONG ulAddress;
  ULONG ulExceptionCode;
 } KD_EXCEPTION_INFO, *PKD_EXCEPTION_INFO;
+#endif /* __WINCE_DEFINED_KD_EXCEPTION_INFO */
 #endif /* __WINCE_DEFINED__KD_EXCEPTION_INFO */
 
 /* PagePoolParameters  [struct; ce-only] */
@@ -247,12 +277,15 @@ typedef PagePoolState *PPagePoolState, *LPPagePoolState;
 /* PHYSICAL_BASIC_INFORMATION  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__PHYSICAL_BASIC_INFORMATION
 #define __WINCE_DEFINED__PHYSICAL_BASIC_INFORMATION
+#ifndef __WINCE_DEFINED_PHYSICAL_BASIC_INFORMATION
+#define __WINCE_DEFINED_PHYSICAL_BASIC_INFORMATION
 typedef struct _PHYSICAL_BASIC_INFORMATION {
  PVOID lpBaseAddress;
  DWORD dwRegionSize;
  DWORD dwType;
 } PHYSICAL_BASIC_INFORMATION;
 typedef PHYSICAL_BASIC_INFORMATION* PPHYSICAL_BASIC_INFORMATION;
+#endif /* __WINCE_DEFINED_PHYSICAL_BASIC_INFORMATION */
 #endif /* __WINCE_DEFINED__PHYSICAL_BASIC_INFORMATION */
 #ifndef __WINCE_DEFINED_PPHYSICAL_BASIC_INFORMATION
 #define __WINCE_DEFINED_PPHYSICAL_BASIC_INFORMATION

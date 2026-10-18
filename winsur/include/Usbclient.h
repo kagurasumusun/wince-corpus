@@ -20,22 +20,28 @@
 /* REG_VALUE_DESCR  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__REG_VALUE_DESCR
 #define __WINCE_DEFINED__REG_VALUE_DESCR
+#ifndef __WINCE_DEFINED_REG_VALUE_DESCR
+#define __WINCE_DEFINED_REG_VALUE_DESCR
 typedef struct _REG_VALUE_DESCR {
  LPWSTR Name;
  DWORD Type;
  DWORD Size;
  PBYTE Data;
 } REG_VALUE_DESCR, *PREG_VALUE_DESCR;
+#endif /* __WINCE_DEFINED_REG_VALUE_DESCR */
 #endif /* __WINCE_DEFINED__REG_VALUE_DESCR */
 
 /* REMOVE_LOCK  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__REMOVE_LOCK
 #define __WINCE_DEFINED__REMOVE_LOCK
+#ifndef __WINCE_DEFINED_REMOVE_LOCK
+#define __WINCE_DEFINED_REMOVE_LOCK
 typedef struct _REMOVE_LOCK {
  BOOL Removed;
  LONG IoCount;
  HANDLE RemoveEvent;
 } REMOVE_LOCK, *PREMOVE_LOCK;
+#endif /* __WINCE_DEFINED_REMOVE_LOCK */
 #endif /* __WINCE_DEFINED__REMOVE_LOCK */
 
 /* ==================================================================

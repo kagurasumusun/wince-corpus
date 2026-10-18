@@ -55,12 +55,12 @@
 #define D3DMCOLOR_XRGB(r,g,b) D3DMCOLOR_ARGB(0xff,r,g,b)
 #define D3DMFVF_TEXCOORDFLOAT(CoordIndex) (D3DMFVF_TEXCOORDFORMAT_FLOAT)
 #define D3DMFVF_TEXCOORDSIZE2(CoordIndex) (D3DMFVF_TEXCOORDCOUNT2)
-#define D3DMX_1BYPI((FLOAT) 0.318309886f)
-#define D3DMX_1BYPI_FXD((FIXED) (0.318309886f * 65536.0f))
-#define D3DMX_PI((FLOAT) 3.141592654f)
-#define D3DMX_PI_FXD((FIXED) (3.141592654f * 65536.0f))
+#define D3DMX_1BYPI ((FLOAT) 0.318309886f)
+#define D3DMX_1BYPI_FXD ((FIXED) (0.318309886f * 65536.0f))
+#define D3DMX_PI ((FLOAT) 3.141592654f)
+#define D3DMX_PI_FXD ((FIXED) (3.141592654f * 65536.0f))
 #define D3DM_MAKE_RSVALUE(Value) (*(ULONG *)(&(Value)))
-#define D3DX_PI((FLOAT) 3.141592654f)
+#define D3DX_PI ((FLOAT) 3.141592654f)
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

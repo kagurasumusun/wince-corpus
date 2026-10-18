@@ -54,11 +54,14 @@ enum BufferDisposalFlag {
 /* ColorPalette  [struct, typedef; shared] */
 #ifndef __WINCE_DEFINED_TAGCOLORPALETTE
 #define __WINCE_DEFINED_TAGCOLORPALETTE
+#ifndef __WINCE_DEFINED_COLORPALETTE
+#define __WINCE_DEFINED_COLORPALETTE
 typedef struct tagColorPalette {
  UINT Flags;
  UINT Count;
  ARGB Entries[1];
 } ColorPalette;
+#endif /* __WINCE_DEFINED_COLORPALETTE */
 #endif /* __WINCE_DEFINED_TAGCOLORPALETTE */
 #ifndef __WINCE_DEFINED_PCOLORPALETTE
 #define __WINCE_DEFINED_PCOLORPALETTE
@@ -188,27 +191,35 @@ enum SinkFlags {
 /* BufferDisposalFlagUnmapView  [extra enum] */
 #ifndef __WINCE_DEFINED_BUFFERDISPOSALFLAG
 #define __WINCE_DEFINED_BUFFERDISPOSALFLAG
+#ifndef __WINCE_DEFINED_BUFFERDISPOSALFLAGUNMAPVIEW
+#define __WINCE_DEFINED_BUFFERDISPOSALFLAGUNMAPVIEW
 enum BufferDisposalFlag {
  BufferDisposalFlagNone,
  BufferDisposalFlagGlobalFree,
  BufferDisposalFlagCoTaskMemFree,
  BufferDisposalFlagUnmapView
 };
+#endif /* __WINCE_DEFINED_BUFFERDISPOSALFLAGUNMAPVIEW */
 #endif /* __WINCE_DEFINED_BUFFERDISPOSALFLAG */
 
 /* x0002  [extra enum] */
 #ifndef __WINCE_DEFINED_DECODERINITFLAG
 #define __WINCE_DEFINED_DECODERINITFLAG
+#ifndef __WINCE_DEFINED_X0002
+#define __WINCE_DEFINED_X0002
 enum DecoderInitFlag {
  DecoderInitFlagNone = 0,
  DecoderInitFlagNoBlock = 0x0001,
  DecoderInitFlagBuiltIn1st = 0x0002
 };
+#endif /* __WINCE_DEFINED_X0002 */
 #endif /* __WINCE_DEFINED_DECODERINITFLAG */
 
 /* EncoderParameterValueTypeRationalRange  [extra enum] */
 #ifndef __WINCE_DEFINED_ENCODERPARAMETERVALUETYPE
 #define __WINCE_DEFINED_ENCODERPARAMETERVALUETYPE
+#ifndef __WINCE_DEFINED_ENCODERPARAMETERVALUETYPERATIONALRANGE
+#define __WINCE_DEFINED_ENCODERPARAMETERVALUETYPERATIONALRANGE
 enum EncoderParameterValueType {
  EncoderParameterValueTypeByte = 1,
  EncoderParameterValueTypeASCII = 2,
@@ -219,11 +230,14 @@ enum EncoderParameterValueType {
  EncoderParameterValueTypeUndefined = 7,
  EncoderParameterValueTypeRationalRange = 8
 };
+#endif /* __WINCE_DEFINED_ENCODERPARAMETERVALUETYPERATIONALRANGE */
 #endif /* __WINCE_DEFINED_ENCODERPARAMETERVALUETYPE */
 
 /* EncoderValueFrameDimensionPage  [extra enum] */
 #ifndef __WINCE_DEFINED_ENCODERVALUE
 #define __WINCE_DEFINED_ENCODERVALUE
+#ifndef __WINCE_DEFINED_ENCODERVALUEFRAMEDIMENSIONPAGE
+#define __WINCE_DEFINED_ENCODERVALUEFRAMEDIMENSIONPAGE
 enum EncoderValue {
  EncoderValueColorTypeCMYK,
  EncoderValueColorTypeYCCK,
@@ -250,11 +264,14 @@ enum EncoderValue {
  EncoderValueFrameDimensionResolution,
  EncoderValueFrameDimensionPage
 };
+#endif /* __WINCE_DEFINED_ENCODERVALUEFRAMEDIMENSIONPAGE */
 #endif /* __WINCE_DEFINED_ENCODERVALUE */
 
 /* x00200000  [extra enum] */
 #ifndef __WINCE_DEFINED_SINKFLAGS
 #define __WINCE_DEFINED_SINKFLAGS
+#ifndef __WINCE_DEFINED_X00200000
+#define __WINCE_DEFINED_X00200000
 enum SinkFlags {
  SinkFlagsScalable = ImageFlagsScalable,
  SinkFlagsHasAlpha = ImageFlagsHasAlpha,
@@ -266,6 +283,7 @@ enum SinkFlags {
  SinkFlagsComposite = 0x00100000,
  SinkFlagsWantProps = 0x00200000
 };
+#endif /* __WINCE_DEFINED_X00200000 */
 #endif /* __WINCE_DEFINED_SINKFLAGS */
 
 /* ==================================================================

@@ -80,20 +80,35 @@
 
 ## 5. コンパイラ・リンカの面
 
+到達目標の置き方（2026-10-18 指示）: **経過地点＝CeGCC と同等**、最終＝
+wince 版 mingw-header/mingw-library 級（目安であり完全同等は求めない）。
+
 * 生成物はフラグメント（SDK 全体の置換ではない）だが、ビルドの面は
-  整えてある: include guard、`WinDef.h` に 122 基底型・`__stdcall` 等の
-  キーワード shim・SAL 空マクロ・UNICODE 既定・`<stddef.h>/<stdarg.h>`。
+  整えてある: include guard、`WinDef.h` に基底型・`__stdcall` 等の
+  キーワード shim・SAL 空マクロ・UNICODE 既定・ISO C ヘッダ
+  （stddef/stdarg/stdbool/stdio）・MIDL 系マクロ shim
+  （`WINOLEAPI`/`WINOLEAUTAPI`/`ATLAPI`/`interface`/`FARSTRUCT`/
+  `HUGEP`/`__RPC_FAR`/`afx_msg`/`MAKEFOURCC`）。
 * `tools/check-compile-surface.py`（gcc プローブ、依存順をコンパイラ
-  自身に修復させてから計測）: **650 フラグメント → 残エラー 2,053
-  （unknown-type 180 / not-C 1,873、84 フラグメントに集中、未定義型
-  65 種）**。証拠:
+  自身に修復させてから計測）: **638 フラグメント → 残エラー 29**
+  （unknown-type 9 / not-C 20、11 フラグメントに集中）。証拠:
   `knowledge/reports/compile-surface.{tsv,md}`。
-  → 現状は「参照用フラグメント＋作業リスト」まで。上の 84+64 を潰せば
-  一括ビルドは通る。個別 include（WinDef.h + 必要ヘッダ）なら主要 API
-  面は使える。
-* `link/*.def`: 今回 `LIBRARY` + `EXPORTS` を全 297 .def に追加
-  （lib.exe / dlltool が import library を作る書式）。ordinal がある行
-  だけ `@ordinal`（Fpcrt 94 行）。
+  この日潰した主因: セミコロン欠落の継続泄漏（`storage class specified
+  for parameter` 連鎖＝フラグメント横断の最大誤認源）、MIDL 属性
+  `[in, size_is(n)]`、C++ 宣言の `#ifdef __cplusplus` 隔離、enum
+  メンバのカンマ欠落、`typedef X {` の struct 欠落、alias 宏
+  （`#define LV_HITTESTINFO LVHITTESTINFO`）と二重定義の衝突、
+  typedef 名・タグ名の両キーによる type guard。
+* 残作業リスト（`compile-surface.md`）: 未定義名 6（`FileVerify*`
+  はページの空白欠落ゴミ、`LVITEMW` 等の A/W 変種の整理）、
+  `DISPATCH_*` 列挙子（corpus が数値を印字しないため定義不可＝
+  INVOKEKIND がそれを参照）、`field has incomplete type`（outline
+  のみの struct を値で持つメンバ）、enum 参照の列挙子順など 20 件。
+* `link/*.def`: `LIBRARY` + `EXPORTS` を全 297 .def に整備
+  （lib.exe / dlltool が import library を作る書式）。ordinal は
+  Fpcrt の 94 行のみ（corpus が印字した表は 1 ページ）。
+  import library の実ビルドは dlltool 必須のため `tools/` に
+  ビルド手順として残す（次フェーズ: mingw-library 級）。
 
 ## 6. IDL について
 

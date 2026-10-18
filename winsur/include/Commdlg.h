@@ -233,12 +233,15 @@
 /* DEVNAMES  [struct; shared] */
 #ifndef __WINCE_DEFINED_TAGDEVNAMES
 #define __WINCE_DEFINED_TAGDEVNAMES
+#ifndef __WINCE_DEFINED_DEVNAMES
+#define __WINCE_DEFINED_DEVNAMES
 typedef struct tagDEVNAMES {
  WORD wDriverOffset;
  WORD wDeviceOffset;
  WORD wOutputOffset;
  WORD wDefault;
 } DEVNAMES;
+#endif /* __WINCE_DEFINED_DEVNAMES */
 #endif /* __WINCE_DEFINED_TAGDEVNAMES */
 #ifndef __WINCE_DEFINED_PDEVNAMES
 #define __WINCE_DEFINED_PDEVNAMES

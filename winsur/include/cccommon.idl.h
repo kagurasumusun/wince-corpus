@@ -28,15 +28,23 @@
 /* FileCustomAction  [enum; ce-only] */
 #ifndef __WINCE_DEFINED_TAGFILECUSTOMACTION
 #define __WINCE_DEFINED_TAGFILECUSTOMACTION
+#ifndef __WINCE_DEFINED_FILECUSTOMACTION
+#define __WINCE_DEFINED_FILECUSTOMACTION
+#ifndef __WINCE_DEFINED_FILEACTION
+#define __WINCE_DEFINED_FILEACTION
 typedef enum tagFileCustomAction{
  FileCustomAction_None = 0x0000,
  FileCustomAction_COM = 0x0001,
 } FileAction;
+#endif /* __WINCE_DEFINED_FILEACTION */
+#endif /* __WINCE_DEFINED_FILECUSTOMACTION */
 #endif /* __WINCE_DEFINED_TAGFILECUSTOMACTION */
 
 /* FileInfo  [struct; ce-only; coredll.lib] */
 #ifndef __WINCE_DEFINED_TAGFILEINFO
 #define __WINCE_DEFINED_TAGFILEINFO
+#ifndef __WINCE_DEFINED_FILEINFO
+#define __WINCE_DEFINED_FILEINFO
 typedef struct tagFileInfo{
  LONG m_FileAttribues;
  LONGLONG m_FileSize;
@@ -44,6 +52,7 @@ typedef struct tagFileInfo{
  FILETIME m_LastAccessTime;
  FILETIME m_LastWriteTime;
 } FileInfo;
+#endif /* __WINCE_DEFINED_FILEINFO */
 #endif /* __WINCE_DEFINED_TAGFILEINFO */
 #ifndef __WINCE_DEFINED_PFILEINFO
 #define __WINCE_DEFINED_PFILEINFO
@@ -53,10 +62,13 @@ typedef FileInfo *PFileInfo, *LPFileInfo;
 /* FileVerifyResult  [struct; ce-only] */
 #ifndef __WINCE_DEFINED_TAGFILEVERIFYRESULT
 #define __WINCE_DEFINED_TAGFILEVERIFYRESULT
+#ifndef __WINCE_DEFINED_FILEVERIFYRESULT
+#define __WINCE_DEFINED_FILEVERIFYRESULT
 typedef struct tagFileVerifyResult{
  DWORD m_Version;
  FileVerifyInfo _Info;
 } FileVerifyResult;
+#endif /* __WINCE_DEFINED_FILEVERIFYRESULT */
 #endif /* __WINCE_DEFINED_TAGFILEVERIFYRESULT */
 #ifndef __WINCE_DEFINED_PFILEVERIFYRESULT
 #define __WINCE_DEFINED_PFILEVERIFYRESULT
@@ -66,12 +78,15 @@ typedef FileVerifyResult *PFileVerifyResult, *LPFileVerifyResult;
 /* FileVerifyVersion  [struct; ce-only] */
 #ifndef __WINCE_DEFINED_TAGFILEVERIFYVERSION
 #define __WINCE_DEFINED_TAGFILEVERIFYVERSION
+#ifndef __WINCE_DEFINED_FILEVERIFYVERSION
+#define __WINCE_DEFINED_FILEVERIFYVERSION
 typedef struct tagFileVerifyVersion{
  DWORD m_Major;
  DWORD m_Minor;
  DWORD m_Build;
  DWORD m_Revision;
 } FileVerifyVersion;
+#endif /* __WINCE_DEFINED_FILEVERIFYVERSION */
 #endif /* __WINCE_DEFINED_TAGFILEVERIFYVERSION */
 #ifndef __WINCE_DEFINED_PFILEVERIFYVERSION
 #define __WINCE_DEFINED_PFILEVERIFYVERSION
@@ -81,6 +96,8 @@ typedef FileVerifyVersion *PFileVerifyVersion, *LPFileVerifyVersion;
 /* SystemInfo  [struct; ce-only] */
 #ifndef __WINCE_DEFINED_TAGPLATFORMINFO
 #define __WINCE_DEFINED_TAGPLATFORMINFO
+#ifndef __WINCE_DEFINED_SYSTEMINFO
+#define __WINCE_DEFINED_SYSTEMINFO
 typedef struct tagPlatformInfo{
  DWORD m_OSMajor;
  DWORD m_OSMinor;
@@ -88,6 +105,7 @@ typedef struct tagPlatformInfo{
  DWORD m_ProcessorArchitecture;
  DWORD m_InstructionSet;
 } SystemInfo;
+#endif /* __WINCE_DEFINED_SYSTEMINFO */
 #endif /* __WINCE_DEFINED_TAGPLATFORMINFO */
 #ifndef __WINCE_DEFINED_PSYSTEMINFO
 #define __WINCE_DEFINED_PSYSTEMINFO

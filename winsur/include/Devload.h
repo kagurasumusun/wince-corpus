@@ -39,21 +39,27 @@
 /* POST_INIT_BUF  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__POST_INIT_BUF
 #define __WINCE_DEFINED__POST_INIT_BUF
+#ifndef __WINCE_DEFINED_POST_INIT_BUF
+#define __WINCE_DEFINED_POST_INIT_BUF
 struct _POST_INIT_BUF {
  HANDLE p_hDevice;
  HKEY p_hDeviceKey;
 } POST_INIT_BUF, *PPOST_INIT_BUF;
+#endif /* __WINCE_DEFINED_POST_INIT_BUF */
 #endif /* __WINCE_DEFINED__POST_INIT_BUF */
 
 /* REGINI  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__REGINI
 #define __WINCE_DEFINED__REGINI
+#ifndef __WINCE_DEFINED_REGINI
+#define __WINCE_DEFINED_REGINI
 typedef struct _REGINI {
  LPCWSTR lpszVal;
  LPBYTE pData;
  DWORD dwLen;
  DWORD dwType;
 } REGINI;
+#endif /* __WINCE_DEFINED_REGINI */
 #endif /* __WINCE_DEFINED__REGINI */
 #ifndef __WINCE_DEFINED_PREGINI
 #define __WINCE_DEFINED_PREGINI

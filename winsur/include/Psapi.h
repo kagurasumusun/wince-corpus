@@ -20,11 +20,14 @@
 /* MODULEINFO  [struct; shared] */
 #ifndef __WINCE_DEFINED__MODULEINFO
 #define __WINCE_DEFINED__MODULEINFO
+#ifndef __WINCE_DEFINED_MODULEINFO
+#define __WINCE_DEFINED_MODULEINFO
 typedef struct _MODULEINFO {
  LPVOID lpBaseOfDll;
  DWORD SizeOfImage;
  LPVOID EntryPoint;
 } MODULEINFO, *LPMODULEINFO;
+#endif /* __WINCE_DEFINED_MODULEINFO */
 #endif /* __WINCE_DEFINED__MODULEINFO */
 
 /* ==================================================================

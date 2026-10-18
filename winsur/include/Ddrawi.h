@@ -116,6 +116,8 @@
 /* ATTACHLIST  [struct, typedef; ce-only] */
 #ifndef __WINCE_DEFINED__ATTACHLIST
 #define __WINCE_DEFINED__ATTACHLIST
+#ifndef __WINCE_DEFINED_ATTACHLIST
+#define __WINCE_DEFINED_ATTACHLIST
 typedef struct _ATTACHLIST {
  DWORD dwFlags;
  struct _ATTACHLIST FAR* lpLink;
@@ -123,11 +125,14 @@ typedef struct _ATTACHLIST {
  struct _DDRAWI_DDRAWSURFACE_INT FAR* lpIAttached;
 } ATTACHLIST;
 typedef ATTACHLIST FAR *LPATTACHLIST;
+#endif /* __WINCE_DEFINED_ATTACHLIST */
 #endif /* __WINCE_DEFINED__ATTACHLIST */
 
 /* DDHALMODEINFO  [struct, typedef; ce-only] */
 #ifndef __WINCE_DEFINED__DDHALMODEINFO
 #define __WINCE_DEFINED__DDHALMODEINFO
+#ifndef __WINCE_DEFINED_DDHALMODEINFO
+#define __WINCE_DEFINED_DDHALMODEINFO
 typedef struct _DDHALMODEINFO {
  DWORD dwWidth;
  DWORD dwHeight;
@@ -141,11 +146,14 @@ typedef struct _DDHALMODEINFO {
  DWORD dwAlphaBitMask;
 } DDHALMODEINFO;
 typedef DDHALMODEINFO FAR* LPDDHALMODEINFO;
+#endif /* __WINCE_DEFINED_DDHALMODEINFO */
 #endif /* __WINCE_DEFINED__DDHALMODEINFO */
 
 /* DDMORECAPS  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__DDMORECAPS
 #define __WINCE_DEFINED__DDMORECAPS
+#ifndef __WINCE_DEFINED_DDMORECAPS
+#define __WINCE_DEFINED_DDMORECAPS
 typedef struct _DDMORECAPS
 {
 DWORD dwSize;
@@ -165,6 +173,7 @@ DWORD dwBltAffineMinifyLimit;
 DWORD dwOverlayAffineMinifyLimit;
 } DDMORECAPS, FAR *LPDDMORECAPS;
 typedef struct _DDMORECAPS FAR *LPDDMORECAPS;
+#endif /* __WINCE_DEFINED_DDMORECAPS */
 #endif /* __WINCE_DEFINED__DDMORECAPS */
 
 #endif /* _DDRAWI_ */

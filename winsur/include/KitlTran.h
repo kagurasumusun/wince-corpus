@@ -20,6 +20,8 @@
 /* TRANPORTINFOSTRUCT  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__TRANPORTINFOSTRUCT
 #define __WINCE_DEFINED__TRANPORTINFOSTRUCT
+#ifndef __WINCE_DEFINED_TRANPORTINFOSTRUCT
+#define __WINCE_DEFINED_TRANPORTINFOSTRUCT
 typedef struct _TRANPORTINFOSTRUCT {
  WORD cbData;
  WORD wVersion;
@@ -27,6 +29,7 @@ typedef struct _TRANPORTINFOSTRUCT {
  WORD wFlags;
  DWORD dwBandWidth;
 } TRANPORTINFOSTRUCT, *PTRANPORTINFOSTRUCT;
+#endif /* __WINCE_DEFINED_TRANPORTINFOSTRUCT */
 #endif /* __WINCE_DEFINED__TRANPORTINFOSTRUCT */
 
 /* ==================================================================

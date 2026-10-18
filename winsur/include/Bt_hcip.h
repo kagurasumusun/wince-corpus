@@ -50,6 +50,8 @@ enum HCI_EVENT {
 /* HCI_PARAMETERS  [struct; ce-only] */
 #ifndef __WINCE_DEFINED___HCI_PARAMETERS
 #define __WINCE_DEFINED___HCI_PARAMETERS
+#ifndef __WINCE_DEFINED_HCI_PARAMETERS
+#define __WINCE_DEFINED_HCI_PARAMETERS
 typedef struct __hci_parameters {
  unsigned int uiSize;
  unsigned int fInterfaceVersion;
@@ -69,6 +71,7 @@ typedef struct __hci_parameters {
  int iScoWritePacketSize;
  int iScoSampleSize;
 } HCI_PARAMETERS;
+#endif /* __WINCE_DEFINED_HCI_PARAMETERS */
 #endif /* __WINCE_DEFINED___HCI_PARAMETERS */
 #ifndef __WINCE_DEFINED_PHCI_PARAMETERS
 #define __WINCE_DEFINED_PHCI_PARAMETERS

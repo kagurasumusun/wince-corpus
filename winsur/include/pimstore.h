@@ -265,29 +265,38 @@ enum OlSensitivity {
 /* PIMTYPE  [extra enum] */
 #ifndef __WINCE_DEFINED_TAGPIMTYPE
 #define __WINCE_DEFINED_TAGPIMTYPE
+#ifndef __WINCE_DEFINED_PIMTYPE
+#define __WINCE_DEFINED_PIMTYPE
 typedef enum tagPIMTYPE { PT_CALENDAR = 0, PT_TASKS, PT_CONTACT } PIMTYPE;
+#endif /* __WINCE_DEFINED_PIMTYPE */
 #endif /* __WINCE_DEFINED_TAGPIMTYPE */
 
 /* olConfidential  [extra enum] */
 #ifndef __WINCE_DEFINED_OLSENSITIVITY
 #define __WINCE_DEFINED_OLSENSITIVITY
+#ifndef __WINCE_DEFINED_OLCONFIDENTIAL
+#define __WINCE_DEFINED_OLCONFIDENTIAL
 enum OlSensitivity {
  olNormal = 0,
  olPersonal = 1,
  olPrivate = 2,
  olConfidential = 3
 };
+#endif /* __WINCE_DEFINED_OLCONFIDENTIAL */
 #endif /* __WINCE_DEFINED_OLSENSITIVITY */
 
 /* olMeetingCanceled  [extra enum] */
 #ifndef __WINCE_DEFINED_OLMEETINGSTATUS
 #define __WINCE_DEFINED_OLMEETINGSTATUS
+#ifndef __WINCE_DEFINED_OLMEETINGCANCELED
+#define __WINCE_DEFINED_OLMEETINGCANCELED
 enum OlMeetingStatus {
  olNonMeeting = 0,
  olMeeting = 1,
  olMeetingAccepted = 3,
  olMeetingCanceled = 7
 };
+#endif /* __WINCE_DEFINED_OLMEETINGCANCELED */
 #endif /* __WINCE_DEFINED_OLMEETINGSTATUS */
 
 /* ==================================================================

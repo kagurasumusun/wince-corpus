@@ -26,6 +26,8 @@
 /* DPA  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__DPA
 #define __WINCE_DEFINED__DPA
+#ifndef __WINCE_DEFINED_DPA
+#define __WINCE_DEFINED_DPA
 typedef struct _DPA {
  int cp;
  void FAR* FAR* pp;
@@ -33,6 +35,7 @@ typedef struct _DPA {
  int cpAlloc;
  int cpGrow;
 } DPA;
+#endif /* __WINCE_DEFINED_DPA */
 #endif /* __WINCE_DEFINED__DPA */
 #ifndef __WINCE_DEFINED_PDPA
 #define __WINCE_DEFINED_PDPA

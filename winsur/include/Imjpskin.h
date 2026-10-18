@@ -20,12 +20,15 @@
 /* MARGINS  [struct; shared] */
 #ifndef __WINCE_DEFINED__MARGINS
 #define __WINCE_DEFINED__MARGINS
+#ifndef __WINCE_DEFINED_MARGINS
+#define __WINCE_DEFINED_MARGINS
 typedef struct _MARGINS {
  int cxLeftWidth;
  int cxRightWidth;
  int cyTopHeight;
  int cyBottomHeight;
 } MARGINS,* PMARGINS;
+#endif /* __WINCE_DEFINED_MARGINS */
 #endif /* __WINCE_DEFINED__MARGINS */
 
 /* ==================================================================

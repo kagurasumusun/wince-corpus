@@ -280,6 +280,8 @@ struct PositionInfo
 /* bRecord  [extra struct] */
 #ifndef __WINCE_DEFINED_TRANSPORTACTIONS
 #define __WINCE_DEFINED_TRANSPORTACTIONS
+#ifndef __WINCE_DEFINED_BRECORD
+#define __WINCE_DEFINED_BRECORD
 struct TransportActions
 {
  bool bPlay;
@@ -290,6 +292,7 @@ struct TransportActions
  bool bPrevious;
  bool bRecord;
 };
+#endif /* __WINCE_DEFINED_BRECORD */
 #endif /* __WINCE_DEFINED_TRANSPORTACTIONS */
 
 /* strCurrentSpeed  [extra struct] */

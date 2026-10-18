@@ -91,26 +91,34 @@
 /* SecBuffer  [struct, typedef; shared] */
 #ifndef __WINCE_DEFINED__SECBUFFER
 #define __WINCE_DEFINED__SECBUFFER
+#ifndef __WINCE_DEFINED_SECBUFFER
+#define __WINCE_DEFINED_SECBUFFER
 typedef struct _SecBuffer {
  ULONG cbBuffer;
  ULONG BufferType;
  PVOID pvBuffer;
 } SecBuffer, *PSecBuffer;
+#endif /* __WINCE_DEFINED_SECBUFFER */
 #endif /* __WINCE_DEFINED__SECBUFFER */
 
 /* SecBufferDesc  [struct, typedef; shared] */
 #ifndef __WINCE_DEFINED__SECBUFFERDESC
 #define __WINCE_DEFINED__SECBUFFERDESC
+#ifndef __WINCE_DEFINED_SECBUFFERDESC
+#define __WINCE_DEFINED_SECBUFFERDESC
 typedef struct _SecBufferDesc {
  ULONG ulVersion;
  ULONG cBuffers;
  PSecBuffer pBuffers;
 } SecBufferDesc, *PSecBufferDesc;
+#endif /* __WINCE_DEFINED_SECBUFFERDESC */
 #endif /* __WINCE_DEFINED__SECBUFFERDESC */
 
 /* SecPkgContext_StreamSizes  [struct, typedef; shared] */
 #ifndef __WINCE_DEFINED__SECPKGCONTEXT_STREAMSIZES
 #define __WINCE_DEFINED__SECPKGCONTEXT_STREAMSIZES
+#ifndef __WINCE_DEFINED_SECPKGCONTEXT_STREAMSIZES
+#define __WINCE_DEFINED_SECPKGCONTEXT_STREAMSIZES
 typedef struct _SecPkgContext_StreamSizes {
  unsigned long cbHeader;
  unsigned long cbTrailer;
@@ -118,6 +126,7 @@ typedef struct _SecPkgContext_StreamSizes {
  unsigned long cBuffers;
  unsigned long cbBlockSize;
 }SecPkgContext_StreamSizes, *PSecPkgContext_StreamSizes;
+#endif /* __WINCE_DEFINED_SECPKGCONTEXT_STREAMSIZES */
 #endif /* __WINCE_DEFINED__SECPKGCONTEXT_STREAMSIZES */
 
 #endif /* _SSPI_ */

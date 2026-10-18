@@ -55,7 +55,10 @@ struct TPDC_SAMPLE_RATE {
 /* x40000000  [extra enum] */
 #ifndef __WINCE_DEFINED_ENUMTOUCHPANELSAMPLEFLAGS
 #define __WINCE_DEFINED_ENUMTOUCHPANELSAMPLEFLAGS
+#ifndef __WINCE_DEFINED_X40000000
+#define __WINCE_DEFINED_X40000000
 enum enumTouchPanelSampleFlags {TouchSampleValidFlag = 0x01,TouchSampleDownFlag = 0x02,TouchSampleIsCalibratedFlag = 0x04,TouchSamplePreviousDownFlag = 0x08,TouchSampleIgnore = 0x10,TouchSampleMouse = 0x40000000};
+#endif /* __WINCE_DEFINED_X40000000 */
 #endif /* __WINCE_DEFINED_ENUMTOUCHPANELSAMPLEFLAGS */
 
 /* ==================================================================

@@ -20,6 +20,8 @@
 /* PARTENTRY  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__PARTENTRY
 #define __WINCE_DEFINED__PARTENTRY
+#ifndef __WINCE_DEFINED_PARTENTRY
+#define __WINCE_DEFINED_PARTENTRY
 typedef struct _PARTENTRY {
  BYTE Part_BootInd;
  BYTE Part_FirstHead;
@@ -32,6 +34,7 @@ typedef struct _PARTENTRY {
  DWORD Part_StartSector;
  DWORD Part_TotalSectors;
 } PARTENTRY;
+#endif /* __WINCE_DEFINED_PARTENTRY */
 #endif /* __WINCE_DEFINED__PARTENTRY */
 #ifndef __WINCE_DEFINED_PPARTENTRY
 #define __WINCE_DEFINED_PPARTENTRY

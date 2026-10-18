@@ -41,12 +41,15 @@
 /* RawWriteBlocksReq  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__RAWWRITEBLOCKSREQ
 #define __WINCE_DEFINED__RAWWRITEBLOCKSREQ
+#ifndef __WINCE_DEFINED_RAWWRITEBLOCKSREQ
+#define __WINCE_DEFINED_RAWWRITEBLOCKSREQ
 typedef struct _RawWriteBlocksReq {
  DWORD dwStartBlock;
  DWORD dwNumBlocks;
  LPBYTE pBuffer;
  DWORD cbBuffer;
 } RawWriteBlocksReq, *PRawWriteBlocksReq;
+#endif /* __WINCE_DEFINED_RAWWRITEBLOCKSREQ */
 #endif /* __WINCE_DEFINED__RAWWRITEBLOCKSREQ */
 
 /* ==================================================================

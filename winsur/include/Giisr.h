@@ -20,6 +20,8 @@
 /* GIISR_INFO  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__GIISR_INFO
 #define __WINCE_DEFINED__GIISR_INFO
+#ifndef __WINCE_DEFINED_GIISR_INFO
+#define __WINCE_DEFINED_GIISR_INFO
 typedef struct _GIISR_INFO {
  DWORD SysIntr;
  BOOL CheckPort;
@@ -30,6 +32,7 @@ typedef struct _GIISR_INFO {
  DWORD Mask;
  DWORD MaskAddr;
 } GIISR_INFO, *PGIISR_INFO;
+#endif /* __WINCE_DEFINED_GIISR_INFO */
 #endif /* __WINCE_DEFINED__GIISR_INFO */
 
 #endif /* _GIISR_ */

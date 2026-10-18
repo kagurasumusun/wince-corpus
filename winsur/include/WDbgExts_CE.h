@@ -20,12 +20,15 @@
 /* EXTSTACKTRACE  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__EXTSTACKTRACE
 #define __WINCE_DEFINED__EXTSTACKTRACE
+#ifndef __WINCE_DEFINED_EXTSTACKTRACE
+#define __WINCE_DEFINED_EXTSTACKTRACE
 typedef struct _EXTSTACKTRACE {
  ULONG FramePointer;
  ULONG ProgramCounter;
  ULONG ReturnAddress;
  ULONG Args[4];
 } EXTSTACKTRACE, *PEXTSTACKTRACE;
+#endif /* __WINCE_DEFINED_EXTSTACKTRACE */
 #endif /* __WINCE_DEFINED__EXTSTACKTRACE */
 
 /* ==================================================================

@@ -72,12 +72,15 @@ int getaddrinfo(const char FAR* nodename,
 /* in6_addr  [struct; shared] */
 #ifndef __WINCE_DEFINED_IN6_ADDR
 #define __WINCE_DEFINED_IN6_ADDR
+#ifndef __WINCE_DEFINED_U
+#define __WINCE_DEFINED_U
 struct in6_addr {
  union {
  u_char Byte[16];
  u_short Word[8];
  } u;
 };
+#endif /* __WINCE_DEFINED_U */
 #endif /* __WINCE_DEFINED_IN6_ADDR */
 
 /* sockaddr_in6  [struct; ce-only] */
@@ -101,12 +104,17 @@ void freeaddrinfo(struct addrinfo FAR* ai);
 /* sin6_scope_id  [extra struct] */
 #ifndef __WINCE_DEFINED_SOCKADDR_IN6
 #define __WINCE_DEFINED_SOCKADDR_IN6
+#ifndef __WINCE_DEFINED_SIN6_SCOPE_ID
+#define __WINCE_DEFINED_SIN6_SCOPE_ID
 struct sockaddr_in6 {short sin6_family;u_short sin6_port;u_longsin6_flowinfo;struct in6_addrsin6_addr;u_long sin6_scope_id;};
+#endif /* __WINCE_DEFINED_SIN6_SCOPE_ID */
 #endif /* __WINCE_DEFINED_SOCKADDR_IN6 */
 
 /* ai_next  [extra struct] */
 #ifndef __WINCE_DEFINED_ADDRINFO
 #define __WINCE_DEFINED_ADDRINFO
+#ifndef __WINCE_DEFINED_AI_NEXT
+#define __WINCE_DEFINED_AI_NEXT
 struct addrinfo {
  int ai_flags;
  int ai_family;
@@ -117,6 +125,7 @@ struct addrinfo {
  struct sockaddr* ai_addr;
  struct addrinfo* ai_next;
 };
+#endif /* __WINCE_DEFINED_AI_NEXT */
 #endif /* __WINCE_DEFINED_ADDRINFO */
 
 /* res  [extra struct] */

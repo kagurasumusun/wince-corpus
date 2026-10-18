@@ -51,6 +51,8 @@ static RECT WidgetRect(HWND hwnd, enum WidgetId wid, bool bTopLevelWindow);
 /* widHelp  [extra enum] */
 #ifndef __WINCE_DEFINED_WIDGETID
 #define __WINCE_DEFINED_WIDGETID
+#ifndef __WINCE_DEFINED_WIDHELP
+#define __WINCE_DEFINED_WIDHELP
 enum WidgetId{
  widInvalid = -1,
  widClose,
@@ -59,6 +61,7 @@ enum WidgetId{
  widOk,
  widHelp
 };
+#endif /* __WINCE_DEFINED_WIDHELP */
 #endif /* __WINCE_DEFINED_WIDGETID */
 
 /* ==================================================================

@@ -67,6 +67,8 @@ HRESULT CoInitialize(LPVOID pvReserved);
 /* AUTH_IDENTITY  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__AUTH_IDENTITY
 #define __WINCE_DEFINED__AUTH_IDENTITY
+#ifndef __WINCE_DEFINED_AUTH_IDENTITY
+#define __WINCE_DEFINED_AUTH_IDENTITY
 typedef struct _AUTH_IDENTITY {
  USHORT *User;
  ULONG UserLength;
@@ -75,6 +77,7 @@ typedef struct _AUTH_IDENTITY {
  USHORT *Password;
  ULONG Flags;
 } AUTH_IDENTITY;
+#endif /* __WINCE_DEFINED_AUTH_IDENTITY */
 #endif /* __WINCE_DEFINED__AUTH_IDENTITY */
 #ifndef __WINCE_DEFINED_PAUTH_IDENTITY
 #define __WINCE_DEFINED_PAUTH_IDENTITY

@@ -69,7 +69,10 @@ DWORD GetFriendlyIfIndex(DWORD IfIndex);
 /* MIB_ENTRY  [extra struct] */
 #ifndef __WINCE_DEFINED_MIB_ENTRY
 #define __WINCE_DEFINED_MIB_ENTRY
+#ifndef __WINCE_DEFINED_MIB_ENTRY
+#define __WINCE_DEFINED_MIB_ENTRY
 typedef struct mib_entry { AsnObjectIdentifier Oid; void * Storage; BYTE Type; UINT Access; UINT (*MibFunc) (UINT, struct mib_entry *, RFC1157VarBind *); struct mib_entry * MibNext; } MIB_ENTRY;
+#endif /* __WINCE_DEFINED_MIB_ENTRY */
 #endif /* __WINCE_DEFINED_MIB_ENTRY */
 
 /* pdwBestIfIndex  [extra struct] */

@@ -20,11 +20,14 @@
 /* MEMORY_SECTION  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__MEMORY_SECTION
 #define __WINCE_DEFINED__MEMORY_SECTION
+#ifndef __WINCE_DEFINED_MEMORY_SECTION
+#define __WINCE_DEFINED_MEMORY_SECTION
 typedef struct _MEMORY_SECTION {
  DWORD dwFlags;
  DWORD dwStart;
  DWORD dwLen;
 } MEMORY_SECTION, *PMEMORY_SECTION;
+#endif /* __WINCE_DEFINED_MEMORY_SECTION */
 #endif /* __WINCE_DEFINED__MEMORY_SECTION */
 
 /* ==================================================================

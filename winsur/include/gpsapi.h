@@ -91,6 +91,8 @@ typedef GPS_FIX_TYPE *PGPS_FIX_TYPE, *LPGPS_FIX_TYPE;
 /* GPS_POSITION  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__GPS_POSITION
 #define __WINCE_DEFINED__GPS_POSITION
+#ifndef __WINCE_DEFINED_GPS_POSITION
+#define __WINCE_DEFINED_GPS_POSITION
 typedef struct _GPS_POSITION {
  DWORD dwVersion;
  DWORD dwSize;
@@ -118,6 +120,7 @@ typedef struct _GPS_POSITION {
  DWORD rgdwSatellitesInViewAzimuth[GPS_MAX_SATELLITES];
  DWORD rgdwSatellitesInViewSignalToNoiseRatio[GPS_MAX_SATELLITES];
 } GPS_POSITION, *PGPS_POSITION;
+#endif /* __WINCE_DEFINED_GPS_POSITION */
 #endif /* __WINCE_DEFINED__GPS_POSITION */
 
 /* ==================================================================

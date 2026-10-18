@@ -51,10 +51,13 @@
 /* WSATHREADID  [struct; shared] */
 #ifndef __WINCE_DEFINED__WSATHREADID
 #define __WINCE_DEFINED__WSATHREADID
+#ifndef __WINCE_DEFINED_WSATHREADID
+#define __WINCE_DEFINED_WSATHREADID
 typedef struct _WSATHREADID {
  HANDLE ThreadHandle;
  DWORD Reserved;
 } WSATHREADID, *LPWSATHREADID;
+#endif /* __WINCE_DEFINED_WSATHREADID */
 #endif /* __WINCE_DEFINED__WSATHREADID */
 
 /* NSP_Routine  [struct; shared] */

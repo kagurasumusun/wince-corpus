@@ -35,7 +35,10 @@ enum IP_NAT_DIRECTION {
 /* NatOutboundDirection  [extra enum] */
 #ifndef __WINCE_DEFINED_IP_NAT_DIRECTION
 #define __WINCE_DEFINED_IP_NAT_DIRECTION
+#ifndef __WINCE_DEFINED_NATOUTBOUNDDIRECTION
+#define __WINCE_DEFINED_NATOUTBOUNDDIRECTION
 enum IP_NAT_DIRECTION { NatInboundDirection, NatOutboundDirection};
+#endif /* __WINCE_DEFINED_NATOUTBOUNDDIRECTION */
 #endif /* __WINCE_DEFINED_IP_NAT_DIRECTION */
 
 /* ==================================================================

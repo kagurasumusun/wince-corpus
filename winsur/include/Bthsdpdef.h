@@ -20,6 +20,8 @@
 /* BTHNS_SETBLOB  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__BTHNS_SETBLOB
 #define __WINCE_DEFINED__BTHNS_SETBLOB
+#ifndef __WINCE_DEFINED_BTHNS_SETBLOB
+#define __WINCE_DEFINED_BTHNS_SETBLOB
 typedef struct _BTHNS_SETBLOB {
  ULONG* pRecordHandle;
  ULONG fSecurity;
@@ -27,6 +29,7 @@ typedef struct _BTHNS_SETBLOB {
  ULONG ulRecordLength;
  UCHAR pRecord[1];
 } BTHNS_SETBLOB, *PBTHNS_SETBLOB;
+#endif /* __WINCE_DEFINED_BTHNS_SETBLOB */
 #endif /* __WINCE_DEFINED__BTHNS_SETBLOB */
 
 /* NODECONTAINERTYPE  [enum; ce-only] */
@@ -91,19 +94,25 @@ typedef SDP_TYPE *PSDP_TYPE, *LPSDP_TYPE;
 /* SdpAttributeRange  [struct; shared] */
 #ifndef __WINCE_DEFINED__SDPATTRIBUTERANGE
 #define __WINCE_DEFINED__SDPATTRIBUTERANGE
+#ifndef __WINCE_DEFINED_SDPATTRIBUTERANGE
+#define __WINCE_DEFINED_SDPATTRIBUTERANGE
 struct _SdpAttributeRange {
  USHORT minAttribute;
  USHORT maxAttribute;
 } SdpAttributeRange;
+#endif /* __WINCE_DEFINED_SDPATTRIBUTERANGE */
 #endif /* __WINCE_DEFINED__SDPATTRIBUTERANGE */
 
 /* SdpQueryUuid  [struct; shared] */
 #ifndef __WINCE_DEFINED__SDPQUERYUUID
 #define __WINCE_DEFINED__SDPQUERYUUID
+#ifndef __WINCE_DEFINED_SDPQUERYUUID
+#define __WINCE_DEFINED_SDPQUERYUUID
 typedef struct _SdpQueryUuid {
  SdpQueryUuidUnion u;
  USHORT uuidType;
 } SdpQueryUuid;
+#endif /* __WINCE_DEFINED_SDPQUERYUUID */
 #endif /* __WINCE_DEFINED__SDPQUERYUUID */
 #ifndef __WINCE_DEFINED_PSDPQUERYUUID
 #define __WINCE_DEFINED_PSDPQUERYUUID

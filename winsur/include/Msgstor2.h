@@ -31,10 +31,13 @@ typedef struct TransportCheckForNewMailInfo{
 /* TransportFolderList  [struct; ce-only] */
 #ifndef __WINCE_DEFINED_TRANSPORTFOLDERLIST_S
 #define __WINCE_DEFINED_TRANSPORTFOLDERLIST_S
+#ifndef __WINCE_DEFINED_TRANSPORTFOLDERLIST
+#define __WINCE_DEFINED_TRANSPORTFOLDERLIST
 typedef struct TransportFolderList_s {
  UINT uiCount;
  lpTransportFolderInfo FolderArray;
 } TransportFolderList, *lpTransportFolderList;
+#endif /* __WINCE_DEFINED_TRANSPORTFOLDERLIST */
 #endif /* __WINCE_DEFINED_TRANSPORTFOLDERLIST_S */
 
 /* ==================================================================

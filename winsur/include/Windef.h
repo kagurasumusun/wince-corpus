@@ -44,6 +44,23 @@
 #ifndef interface
 #define interface struct
 #endif
+#ifndef FARSTRUCT
+#define FARSTRUCT
+#endif
+#ifndef HUGEP
+#define HUGEP
+#endif
+#ifndef __RPC_FAR
+#define __RPC_FAR
+#endif
+#ifndef __RPC
+#define __RPC
+#endif
+#ifndef MAKEFOURCC
+#define MAKEFOURCC(ch0, ch1, ch2, ch3) \
+    ((DWORD)(ch0) | ((DWORD)(ch1) << 8) | \
+     ((DWORD)(ch2) << 16) | ((DWORD)(ch3) << 24))
+#endif
 #ifndef CONST
 #define CONST const
 #endif
@@ -922,6 +939,26 @@ typedef void *OAHWND;
 typedef void *USB_HANDLE;
 /* DERIVED forward -- derived forward: USB transfer handle */
 typedef void *USB_TRANSFER;
+/* DERIVED forward -- derived forward: LP- pointer typedef; no corpus page prints the struct body */
+typedef struct _DDSURFACEDESC2 *LPDDSURFACEDESC2;
+/* DERIVED forward -- derived placeholder: enumeration body no corpus page prints */
+typedef int INTERFACE_TYPE;
+/* DERIVED forward -- derived forward: no corpus page prints the struct body */
+typedef struct AM_MEDIA_TYPE AM_MEDIA_TYPE;
+/* DERIVED forward -- derived forward: outline only; no corpus page prints the union body */
+typedef struct CY CY;
+/* DERIVED forward -- derived forward: no corpus page prints the union body */
+typedef struct STREAM_MediaType STREAM_MediaType;
+/* DERIVED forward -- derived placeholder: enumeration body no corpus page prints */
+typedef int VVCR_EVENT_Type;
+/* DERIVED forward -- derived placeholder: enumeration body no corpus page prints */
+typedef int CEL_MAPFLUSH_TYPE;
+/* DERIVED forward -- derived forward: no corpus page prints the struct body */
+typedef struct _FRAGNODE _FRAGNODE;
+/* DERIVED forward -- derived forward: no corpus page prints the type body */
+typedef struct __POSITION __POSITION;
+/* DERIVED forward -- derived forward: MIDL [object] name leaked as a type; body no corpus page prints */
+typedef struct object object;
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
@@ -952,10 +989,13 @@ typedef void *USB_TRANSFER;
 /* POINT  [struct, function, library; shared] */
 #ifndef __WINCE_DEFINED_TAGPOINT
 #define __WINCE_DEFINED_TAGPOINT
+#ifndef __WINCE_DEFINED_POINT
+#define __WINCE_DEFINED_POINT
 typedef struct tagPOINT {
  LONG x;
  LONG y;
 } POINT;
+#endif /* __WINCE_DEFINED_POINT */
 #endif /* __WINCE_DEFINED_TAGPOINT */
 #ifndef __WINCE_DEFINED_PPOINT
 #define __WINCE_DEFINED_PPOINT
@@ -965,10 +1005,13 @@ typedef POINT *PPOINT, *LPPOINT;
 /* POINTS  [struct; shared] */
 #ifndef __WINCE_DEFINED_TAGPOINTS
 #define __WINCE_DEFINED_TAGPOINTS
+#ifndef __WINCE_DEFINED_POINTS
+#define __WINCE_DEFINED_POINTS
 typedef struct tagPOINTS {
  SHORT x;
  SHORT y;
 } POINTS;
+#endif /* __WINCE_DEFINED_POINTS */
 #endif /* __WINCE_DEFINED_TAGPOINTS */
 #ifndef __WINCE_DEFINED_PPOINTS
 #define __WINCE_DEFINED_PPOINTS
@@ -978,12 +1021,15 @@ typedef POINTS *PPOINTS, *LPPOINTS;
 /* RECT  [struct, library; shared] */
 #ifndef __WINCE_DEFINED__RECT
 #define __WINCE_DEFINED__RECT
+#ifndef __WINCE_DEFINED_RECT
+#define __WINCE_DEFINED_RECT
 typedef struct _RECT {
  LONG left;
  LONG top;
  LONG right;
  LONG bottom;
 } RECT;
+#endif /* __WINCE_DEFINED_RECT */
 #endif /* __WINCE_DEFINED__RECT */
 #ifndef __WINCE_DEFINED_PRECT
 #define __WINCE_DEFINED_PRECT
@@ -993,21 +1039,27 @@ typedef RECT *PRECT, *LPRECT;
 /* RECTL  [struct; shared] */
 #ifndef __WINCE_DEFINED__RECTL
 #define __WINCE_DEFINED__RECTL
+#ifndef __WINCE_DEFINED_RECTL
+#define __WINCE_DEFINED_RECTL
 typedef struct _RECTL {
  LONG left;
  LONG top;
  LONG right;
  LONG bottom;
 } RECTL, *PRECTL;
+#endif /* __WINCE_DEFINED_RECTL */
 #endif /* __WINCE_DEFINED__RECTL */
 
 /* SIZE  [struct, function, library; shared] */
 #ifndef __WINCE_DEFINED_TAGSIZE
 #define __WINCE_DEFINED_TAGSIZE
+#ifndef __WINCE_DEFINED_SIZE
+#define __WINCE_DEFINED_SIZE
 typedef struct tagSIZE {
  LONG cx;
  LONG cy;
 } SIZE;
+#endif /* __WINCE_DEFINED_SIZE */
 #endif /* __WINCE_DEFINED_TAGSIZE */
 #ifndef __WINCE_DEFINED_PSIZE
 #define __WINCE_DEFINED_PSIZE

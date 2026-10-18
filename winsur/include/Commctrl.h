@@ -1928,6 +1928,8 @@ UINT INDEXTOSTATEIMAGEMASK(UINT i);
 /* COMMANDBANDSRESTOREINFO  [struct; ce-only] */
 #ifndef __WINCE_DEFINED_TAGCOMMANDBANDSRESTOREINFO
 #define __WINCE_DEFINED_TAGCOMMANDBANDSRESTOREINFO
+#ifndef __WINCE_DEFINED_COMMANDBANDSRESTOREINFO
+#define __WINCE_DEFINED_COMMANDBANDSRESTOREINFO
 typedef struct tagCOMMANDBANDSRESTOREINFO {
  UINT cbSize;
  UINT wID;
@@ -1935,16 +1937,20 @@ typedef struct tagCOMMANDBANDSRESTOREINFO {
  UINT cxRestored;
  BOOL fMaximized;
 } COMMANDBANDSRESTOREINFO, *LPCOMMANDBANDSRESTOREINFO;
+#endif /* __WINCE_DEFINED_COMMANDBANDSRESTOREINFO */
 #endif /* __WINCE_DEFINED_TAGCOMMANDBANDSRESTOREINFO */
 
 /* HD_HITTESTINFO  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__HD_HITTESTINFO
 #define __WINCE_DEFINED__HD_HITTESTINFO
+#ifndef __WINCE_DEFINED_HD_HITTESTINFO
+#define __WINCE_DEFINED_HD_HITTESTINFO
 typedef struct _HD_HITTESTINFO {
  POINT pt;
  UINT flags;
  int iItem;
 } HD_HITTESTINFO;
+#endif /* __WINCE_DEFINED_HD_HITTESTINFO */
 #endif /* __WINCE_DEFINED__HD_HITTESTINFO */
 #ifndef __WINCE_DEFINED_PHD_HITTESTINFO
 #define __WINCE_DEFINED_PHD_HITTESTINFO
@@ -1954,6 +1960,8 @@ typedef HD_HITTESTINFO *PHD_HITTESTINFO, *LPHD_HITTESTINFO;
 /* HDITEM  [struct; shared; A/W HDITEMA,HDITEMW (CE is W-side)] */
 #ifndef __WINCE_DEFINED__HDITEM
 #define __WINCE_DEFINED__HDITEM
+#ifndef __WINCE_DEFINED_HDITEM
+#define __WINCE_DEFINED_HDITEM
 typedef struct _HDITEM {
  UINT mask;
  int cxy;
@@ -1965,6 +1973,7 @@ typedef struct _HDITEM {
  int iImage;
  int iOrder;
 } HDITEM;
+#endif /* __WINCE_DEFINED_HDITEM */
 #endif /* __WINCE_DEFINED__HDITEM */
 #ifndef __WINCE_DEFINED_PHDITEM
 #define __WINCE_DEFINED_PHDITEM
@@ -1974,6 +1983,8 @@ typedef HDITEM *PHDITEM, *LPHDITEM;
 /* ICONINFO  [struct; shared] */
 #ifndef __WINCE_DEFINED__ICONINFO
 #define __WINCE_DEFINED__ICONINFO
+#ifndef __WINCE_DEFINED_ICONINFO
+#define __WINCE_DEFINED_ICONINFO
 typedef struct _ICONINFO {
  BOOL fIcon;
  DWORD xHotspot;
@@ -1981,6 +1992,7 @@ typedef struct _ICONINFO {
  HBITMAP hbmMask;
  HBITMAP hbmColor;
 } ICONINFO;
+#endif /* __WINCE_DEFINED_ICONINFO */
 #endif /* __WINCE_DEFINED__ICONINFO */
 #ifndef __WINCE_DEFINED_PICONINFO
 #define __WINCE_DEFINED_PICONINFO
@@ -1988,62 +2000,24 @@ typedef ICONINFO *PICONINFO, *LPICONINFO;
 #endif /* __WINCE_DEFINED_PICONINFO */
 
 /* LV_FINDINFO  [struct; ce-only] */
-#ifndef __WINCE_DEFINED__LV_FINDINFO
-#define __WINCE_DEFINED__LV_FINDINFO
-typedef struct _LV_FINDINFO {
- UINT flags;
- LPCSTR psz;
- LPARAM lParam;
- POINT pt;
- UINT vkDirection;
-} LV_FINDINFO;
-#endif /* __WINCE_DEFINED__LV_FINDINFO */
+/* LV_FINDINFO is documented as an alias -- see the #define above */
 #ifndef __WINCE_DEFINED_PLV_FINDINFO
 #define __WINCE_DEFINED_PLV_FINDINFO
 typedef LV_FINDINFO *PLV_FINDINFO, *LPLV_FINDINFO;
 #endif /* __WINCE_DEFINED_PLV_FINDINFO */
 
 /* LV_HITTESTINFO  [struct; ce-only] */
-#ifndef __WINCE_DEFINED__LV_HITTESTINFO
-#define __WINCE_DEFINED__LV_HITTESTINFO
-typedef struct _LV_HITTESTINFO {
- POINT pt;
- UINT flags;
- int iItem;
-} LV_HITTESTINFO;
-#endif /* __WINCE_DEFINED__LV_HITTESTINFO */
+/* LV_HITTESTINFO is documented as an alias -- see the #define above */
 #ifndef __WINCE_DEFINED_PLV_HITTESTINFO
 #define __WINCE_DEFINED_PLV_HITTESTINFO
 typedef LV_HITTESTINFO *PLV_HITTESTINFO, *LPLV_HITTESTINFO;
 #endif /* __WINCE_DEFINED_PLV_HITTESTINFO */
 
 /* LVBKIMAGE  [struct; shared; A/W LVBKIMAGEA,LVBKIMAGEW (CE is W-side)] */
-#ifndef __WINCE_DEFINED_TAGLVBKIMAGE
-#define __WINCE_DEFINED_TAGLVBKIMAGE
-typedef struct tagLVBKIMAGE {
- ULONG ulFlags;
- HBITMAP hbm;
- LPTSTR pszImage;
- UINT cchImageMax;
- int xOffsetPercent;
- int yOffsetPercent;
-} LVBKIMAGE, *LPLVBKIMAGE;
-#endif /* __WINCE_DEFINED_TAGLVBKIMAGE */
+/* LVBKIMAGE is documented as an alias -- see the #define above */
 
 /* LVCOLUMN  [struct; shared; A/W LVCOLUMNA,LVCOLUMNW (CE is W-side)] */
-#ifndef __WINCE_DEFINED__LVCOLUMN
-#define __WINCE_DEFINED__LVCOLUMN
-typedef struct _LVCOLUMN {
- UINT mask;
- int fmt;
- int cx;
- LPTSTR pszText;
- int cchTextMax;
- int iSubItem;
- int iOrder;
- int iImage;
-} LVCOLUMN;
-#endif /* __WINCE_DEFINED__LVCOLUMN */
+/* LVCOLUMN is documented as an alias -- see the #define above */
 #ifndef __WINCE_DEFINED_PLVCOLUMN
 #define __WINCE_DEFINED_PLVCOLUMN
 typedef LVCOLUMN *PLVCOLUMN, *LPLVCOLUMN;
@@ -2088,12 +2062,15 @@ typedef struct LVGROUPMETRICS {
 /* LVHITTESTINFO  [struct; shared] */
 #ifndef __WINCE_DEFINED__LVHITTESTINFO
 #define __WINCE_DEFINED__LVHITTESTINFO
+#ifndef __WINCE_DEFINED_LVHITTESTINFO
+#define __WINCE_DEFINED_LVHITTESTINFO
 typedef struct _LVHITTESTINFO {
  POINT pt;
  UINT flags;
  int iItem;
  int iSubItem;
 } LVHITTESTINFO;
+#endif /* __WINCE_DEFINED_LVHITTESTINFO */
 #endif /* __WINCE_DEFINED__LVHITTESTINFO */
 #ifndef __WINCE_DEFINED_PLVHITTESTINFO
 #define __WINCE_DEFINED_PLVHITTESTINFO
@@ -2101,21 +2078,7 @@ typedef LVHITTESTINFO *PLVHITTESTINFO, *LPLVHITTESTINFO;
 #endif /* __WINCE_DEFINED_PLVHITTESTINFO */
 
 /* LVITEM  [struct; shared; A/W LVITEMA,LVITEMW (CE is W-side)] */
-#ifndef __WINCE_DEFINED__LVITEM
-#define __WINCE_DEFINED__LVITEM
-typedef struct _LVITEM {
-UINT mask;
-int iItem;
-int iSubItem;
-UINT state;
-UINT stateMask;
-LPTSTR pszText;
-int cchTextMax;
-int iImage;
-LPARAM lParam;
-int iIndent; }
-LVITEM;
-#endif /* __WINCE_DEFINED__LVITEM */
+/* LVITEM is documented as an alias -- see the #define above */
 #ifndef __WINCE_DEFINED_PLVITEM
 #define __WINCE_DEFINED_PLVITEM
 typedef LVITEM *PLVITEM, *LPLVITEM;
@@ -2156,16 +2119,21 @@ typedef struct {
 /* RBHITTESTINFO  [struct; shared] */
 #ifndef __WINCE_DEFINED__RB_HITTESTINFO
 #define __WINCE_DEFINED__RB_HITTESTINFO
+#ifndef __WINCE_DEFINED_RBHITTESTINFO
+#define __WINCE_DEFINED_RBHITTESTINFO
 typedef struct _RB_HITTESTINFO {
  POINT pt;
  UINT flags;
  int iBand;
 } RBHITTESTINFO, FAR* LPRBHITTESTINFO;
+#endif /* __WINCE_DEFINED_RBHITTESTINFO */
 #endif /* __WINCE_DEFINED__RB_HITTESTINFO */
 
 /* REBARBANDINFO  [struct; shared; A/W REBARBANDINFOA,REBARBANDINFOW (CE is W-side)] */
 #ifndef __WINCE_DEFINED_TAGREBARBANDINFO
 #define __WINCE_DEFINED_TAGREBARBANDINFO
+#ifndef __WINCE_DEFINED_REBARBANDINFO
+#define __WINCE_DEFINED_REBARBANDINFO
 typedef struct tagREBARBANDINFO {
  UINT cbSize;
  UINT fMask;
@@ -2187,6 +2155,7 @@ typedef struct tagREBARBANDINFO {
  UINT cxIdeal;
  LPARAM lParam;
 } REBARBANDINFO, FAR* LPREBARBANDINFO;
+#endif /* __WINCE_DEFINED_REBARBANDINFO */
 #endif /* __WINCE_DEFINED_TAGREBARBANDINFO */
 
 /* TBREPLACEBITMAP  [struct; shared] */
@@ -2202,13 +2171,7 @@ typedef struct {
 #endif /* __WINCE_DEFINED_TBREPLACEBITMAP */
 
 /* TC_HITTESTINFO  [struct; ce-only] */
-#ifndef __WINCE_DEFINED__TC_HITTESTINFO
-#define __WINCE_DEFINED__TC_HITTESTINFO
-typedef struct _TC_HITTESTINFO {
- POINT pt;
- UINT flags;
-} TC_HITTESTINFO;
-#endif /* __WINCE_DEFINED__TC_HITTESTINFO */
+/* TC_HITTESTINFO is documented as an alias -- see the #define above */
 #ifndef __WINCE_DEFINED_PTC_HITTESTINFO
 #define __WINCE_DEFINED_PTC_HITTESTINFO
 typedef TC_HITTESTINFO *PTC_HITTESTINFO, *LPTC_HITTESTINFO;
@@ -2217,10 +2180,13 @@ typedef TC_HITTESTINFO *PTC_HITTESTINFO, *LPTC_HITTESTINFO;
 /* TCHITTESTINFO  [struct; shared] */
 #ifndef __WINCE_DEFINED__TCHITTESTINFO
 #define __WINCE_DEFINED__TCHITTESTINFO
+#ifndef __WINCE_DEFINED_TCHITTESTINFO
+#define __WINCE_DEFINED_TCHITTESTINFO
 typedef struct _TCHITTESTINFO {
  POINT pt;
  UINT flags;
 } TCHITTESTINFO;
+#endif /* __WINCE_DEFINED_TCHITTESTINFO */
 #endif /* __WINCE_DEFINED__TCHITTESTINFO */
 #ifndef __WINCE_DEFINED_PTCHITTESTINFO
 #define __WINCE_DEFINED_PTCHITTESTINFO
@@ -2228,35 +2194,14 @@ typedef TCHITTESTINFO *PTCHITTESTINFO, *LPTCHITTESTINFO;
 #endif /* __WINCE_DEFINED_PTCHITTESTINFO */
 
 /* TCITEM  [struct; shared; A/W TCITEMA,TCITEMW (CE is W-side)] */
-#ifndef __WINCE_DEFINED_TAGTCITEM
-#define __WINCE_DEFINED_TAGTCITEM
-typedef struct tagTCITEM {
- UINT mask;
- DWORD dwState;
- DWORD dwStateMask;
- LPTSTR pszText;
- int cchTextMax;
- int iImage;
- LPARAM lParam;
-} TCITEM;
-#endif /* __WINCE_DEFINED_TAGTCITEM */
+/* TCITEM is documented as an alias -- see the #define above */
 #ifndef __WINCE_DEFINED_PTCITEM
 #define __WINCE_DEFINED_PTCITEM
 typedef TCITEM *PTCITEM, *LPTCITEM;
 #endif /* __WINCE_DEFINED_PTCITEM */
 
 /* TCITEMHEADER  [struct; shared; A/W TCITEMHEADERA,TCITEMHEADERW (CE is W-side)] */
-#ifndef __WINCE_DEFINED_TAGTCITEMHEADER
-#define __WINCE_DEFINED_TAGTCITEMHEADER
-typedef struct tagTCITEMHEADER{
- UINT mask;
- UINT lpReserved1;
- UINT lpReserved2;
- LPTSTR pszText;
- int cchTextMax;
- int iImage;
-} TCITEMHEADER, FAR* LPTCITEMHEADER;
-#endif /* __WINCE_DEFINED_TAGTCITEMHEADER */
+/* TCITEMHEADER is documented as an alias -- see the #define above */
 
 /* UDACCEL  [struct; shared] */
 #ifndef __WINCE_DEFINED_UDACCEL

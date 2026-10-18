@@ -29,6 +29,8 @@
 /* L2TP_CONFIG_DATA  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__L2TP_CONFIG_DATA
 #define __WINCE_DEFINED__L2TP_CONFIG_DATA
+#ifndef __WINCE_DEFINED_L2TP_CONFIG_DATA
+#define __WINCE_DEFINED_L2TP_CONFIG_DATA
 typedef struct _L2TP_CONFIG_DATA{
  DWORD dwVersion;
  DWORD dwAuthType;
@@ -39,6 +41,7 @@ typedef struct _L2TP_CONFIG_DATA{
  DWORD cRootCerts;
  DWORD dwOffsetCertHashes;
 } L2TP_CONFIG_DATA, *PL2TP_CONFIG_DATA;
+#endif /* __WINCE_DEFINED_L2TP_CONFIG_DATA */
 #endif /* __WINCE_DEFINED__L2TP_CONFIG_DATA */
 
 #endif /* _LT2PCFG_ */
