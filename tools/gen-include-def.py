@@ -245,11 +245,112 @@ def c_decl_text(text):
     text = re.sub(r"^(typedef\s+)(?!struct\b|union\b|enum\b)"
                   r"([A-Za-z_]\w*\s*\{)",
                   r"\1struct \2", text, count=1, flags=re.M)
+    # an enum's closing ``};`` printed too early (page block split) with
+    # more enumerators loose after it -- move the close to the end.  Only
+    # for a tag-shaped enum with no proper ``} name;`` anywhere.
+    _m = re.search(r"\};[ \t]*\n(?=[ \t]*[A-Za-z_]\w*\s*=)", text)
+    if (_m
+            and re.search(r"\benum\s+[A-Za-z_]\w*\s*\{", text)
+            and not re.search(r"\}\s*[A-Za-z_]\w*", text)):
+        text = (text[:_m.start()] + "\n" + text[_m.end():]).rstrip()
+        if text.count("{") > text.count("}"):
+            text += "\n};"
     text = _finish_decl_semicolons(text)
     text = _finish_enum_commas(text)
+    text = _fix_enum_member_refs(text)
+    # bitfield members whose ';' the page lost (``DWORD fSuccess: 1``
+    # followed by another member)
+    text = re.sub(r"(?m)^(\s+[A-Za-z_][\w\s\*]*:\s*\d+)\s*$", r"\1;", text)
+    # a trailing comma before ')' the page printed (``(LPDWORD lpValue,)``)
+    text = re.sub(r",\s*\)", ")", text)
+    # ``20 /* note /*`` -- comment closer printed as opener
+    fixed_lines = []
+    for line in text.split("\n"):
+        stripped = line.rstrip()
+        if (stripped.count("/*") >= 2 and "*/" not in stripped
+                and stripped.endswith("/*")):
+            fixed_lines.append(stripped[:-2] + "*/")
+        else:
+            fixed_lines.append(line)
+    text = "\n".join(fixed_lines)
+    # ``} CEL_MAPFILE_VIEW_CLOSE, *CEL_MAPFILE_VIEW_CLOSE;`` -- the page
+    # repeated the struct name where the pointer alias goes (a typo):
+    # keep the struct name, drop the duplicate pointer alias.
+    text = re.sub(
+        r"(\}\s*)([A-Za-z_]\w*)(\s*,\s*\*\s*)([A-Za-z_]\w*)",
+        lambda m: (m.group(1) + m.group(2)
+                   if m.group(2) == m.group(4) else m.group(0)),
+        text)
+    if _unresolved_ref(text):
+        return ("/* UNRESOLVED ENUM VALUE REFERENCE -- the referenced\n"
+                " * constant's value no corpus page prints (see\n"
+                " * data/unresolved-enum-constants.tsv); this stays a\n"
+                " * quotation, not C:\n"
+                + "\n".join(" * " + ln for ln in text.splitlines())
+                + "\n */")
+    text = _comment_incomplete_members(text)
     if quality_filters.is_cpp_declaration(text):
         return "#ifdef __cplusplus\n" + text + "\n#endif /* __cplusplus */"
     return text
+
+
+_INCOMPLETE_FIELD = re.compile(
+    r"(?P<type>[A-Za-z_]\w*)\s+(?P<name>[A-Za-z_]\w*)"
+    r"(?P<arr>\s*\[[^\]]*\])?\s*;")
+
+_UNRESOLVED_CONST_CACHE = None
+
+
+def load_unresolved_enum_constants():
+    """data/unresolved-enum-constants.tsv -> {name: note}: constants a
+    declaration references as an enumerator value whose own value no
+    corpus page prints (inventing the value is out of the question)."""
+    global _UNRESOLVED_CONST_CACHE
+    if _UNRESOLVED_CONST_CACHE is not None:
+        return _UNRESOLVED_CONST_CACHE
+    path = os.path.join(ROOT, "data", "unresolved-enum-constants.tsv")
+    out = {}
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as fh:
+            header = fh.readline().rstrip("\n").split("\t")
+            for line in fh:
+                cells = line.rstrip("\n").split("\t")
+                row = dict(zip(header, cells)) if header else {}
+                name = row.get("name") or (cells[0] if cells else "")
+                if name:
+                    out[name] = row.get("note") or ""
+    _UNRESOLVED_CONST_CACHE = out
+    return out
+
+
+def _unresolved_ref(text):
+    """True when an enumerator value references a constant from
+    load_unresolved_enum_constants()."""
+    unresolved = load_unresolved_enum_constants()
+    if not unresolved or "enum" not in text:
+        return False
+    return any(tok in unresolved for tok in re.findall(
+        r"=\s*([A-Za-z_]\w*)", text))
+
+
+def _comment_incomplete_members(text):
+    """A by-value member whose type body no corpus page prints (an
+    opaque derived forward) makes the whole struct fail to compile:
+    keep the member as a comment (the member-outline treatment)."""
+    if "{" not in text:
+        return text
+    incomplete = {name for name, form, _note, defn in load_derived_forwards()
+                  if form == "struct-forward"
+                  and ("{" not in (defn or ""))}
+    if not incomplete:
+        return text
+
+    def repl(match):
+        if match.group("type") in incomplete:
+            return (f"/* DERIVED member omitted -- type body unprinted: "
+                    f"{match.group(0).strip()} */")
+        return match.group(0)
+    return _INCOMPLETE_FIELD.sub(repl, text)
 
 
 def _finish_decl_semicolons(text):
@@ -280,7 +381,7 @@ def _finish_decl_semicolons(text):
 
 
 _ENUM_MEMBER = re.compile(
-    r"^\s+[A-Za-z_]\w*(?:\s*=\s*(?:0[xX][0-9A-Fa-f]+|\d+|1\s*<<\s*\d+"
+    r"^\s*[A-Za-z_]\w*(?:\s*=\s*(?:0[xX][0-9A-Fa-f]+|\d+|1\s*<<\s*\d+"
     r"|MAKEFOURCC\s*\(.*\)))?\s*$")
 
 
@@ -303,27 +404,94 @@ def _finish_enum_commas(text):
     return "\n".join(lines)
 
 
-def type_guard_lines(name, text):
+def _fix_enum_member_refs(text):
+    """A member value that references another member with the wrong case
+    (the page prints ``NodeContainerTypeSequence`` for the member
+    ``NODECONTAINERTYPESEQUENCE``): re-spell to the member's own form.
+    Only the VALUE expressions are touched -- member names and type
+    names keep their spelling."""
+    if not text or "enum" not in text:
+        return text
+    members = re.findall(r"(?m)^\s+([A-Za-z_]\w*)\s*=", text)
+    if not members:
+        return text
+    by_lower = {m.lower(): m for m in members}
+
+    def repl(match):
+        tok = match.group(0)
+        good = by_lower.get(tok.lower())
+        return good if good and good != tok else tok
+
+    return re.sub(
+        r"(?m)^(\s+[A-Za-z_]\w*\s*=\s*)([^,\n]*)(,?)\s*$",
+        lambda m: (m.group(1)
+                   + re.sub(r"\b[A-Za-z_]\w*\b", repl, m.group(2))
+                   + m.group(3)),
+        text)
+
+
+def _unresolved_enum_values(text):
+    """True when an enum member value references a constant whose value
+    no corpus page prints (``INVOKE_FUNC = DISPATCH_METHOD``): the
+    declaration cannot become C without inventing values."""
+    if not text or "enum" not in text:
+        return False
+    members = set(re.findall(r"(?m)^\s+([A-Za-z_]\w*)\s*=", text))
+    defined = members | set(re.findall(
+        r"#define\s+([A-Za-z_]\w*)", text))
+    for value_tok in re.findall(
+            r"=\s*([A-Za-z_]\w*)", re.sub(
+                r"=\s*(?:0[xX][0-9A-Fa-f]+|\d+|MAKEFOURCC\s*\(.*?\))", "=",
+                text)):
+        if value_tok.lower() not in {m.lower() for m in defined}:
+            return True
+    return False
+
+
+def _alias_map(lines):
+    """``#define X Y`` simple identifier aliases seen so far."""
+    return dict(re.findall(
+        r"(?m)^#define\s+([A-Za-z_]\w*)\s+([A-Za-z_]\w*)\s*$",
+        "\n".join(lines)))
+
+
+def type_guard_lines(name, text, lines=()):
     """Wrap a type definition in per-type guards so the same documented
     type can appear in several fragments without a redefinition when the
     whole tree is compiled as one translation unit -- and each fragment
-    stays self-contained.  Guards key on BOTH the struct/enum TAG and
-    the typedef name: pages spell tags differently (`tagX` vs `_X`) for
-    one type.  DERIVED emission policy."""
+    stays self-contained.  Guards key on the struct/enum TAG, the typedef
+    name and the closing name -- each resolved through the page's alias
+    macros (`#define LVITEM LVITEMW` means the typedef spelling and the
+    W-side name are ONE type).  DERIVED emission policy."""
     if not text:
         return []
     if text.lstrip().startswith("#ifdef __cplusplus"):
         return [text]  # C++-only: guarded separately; no C type to protect
+    aliases = _alias_map(lines)
+
+    def resolve(key):
+        seen = set()
+        while key in aliases and key not in seen:
+            seen.add(key)
+            key = aliases[key]
+        return key
+
     keys = []
     tag_match = re.search(r"\b(?:struct|union|enum)\s+([A-Za-z_]\w*)\s*\{",
                           text)
     if tag_match:
-        keys.append(tag_match.group(1))
+        keys.append(resolve(tag_match.group(1)))
     if name:
-        keys.append(name)
-    tail = re.search(r"\}\s*([A-Za-z_]\w*)\s*[,;]", text)
-    if tail and tail.group(1) not in keys:
-        keys.append(tail.group(1))
+        keys.append(resolve(name))
+    for tail_m in re.finditer(r"\}\s*([A-Za-z_]\w*(?:\s*,\s*\*?\s*"
+                              r"[A-Za-z_]\w*)*)\s*[,;]", text):
+        for tok in re.findall(r"[A-Za-z_]\w*", tail_m.group(1)):
+            # only TYPE-shaped (all-caps) tail names are guard-worthy;
+            # PascalCase inner struct member names (``} TimeCode;``) must
+            # never claim a real type's guard
+            if not re.match(r"[A-Z][A-Z0-9_]+$", tok):
+                continue
+            keys.append(resolve(tok))
     keys = [k for k in dict.fromkeys(keys) if re.sub(r"\W", "_", k).upper()
             not in ("_", "")]
     if not keys:
@@ -703,6 +871,9 @@ def write_includes(out, by_header, generated):
     return include_dir
 
 
+_DERIVED_FORWARDS_CACHE = None
+
+
 def load_derived_forwards():
     """data/derived-forward-types.tsv -> [(name, form, note, definition)].
 
@@ -711,22 +882,25 @@ def load_derived_forwards():
     structure -- the form, the note and any verbatim definition travel
     with every emission.  ``definition`` (optional column) is emitted
     verbatim in place of the form template."""
+    global _DERIVED_FORWARDS_CACHE
+    if _DERIVED_FORWARDS_CACHE is not None:
+        return _DERIVED_FORWARDS_CACHE
     path = os.path.join(ROOT, "data", "derived-forward-types.tsv")
     out = []
-    if not os.path.exists(path):
-        return out
-    with open(path, encoding="utf-8") as fh:
-        header = fh.readline().rstrip("\n").split("\t")
-        for line in fh:
-            cells = line.rstrip("\n").split("\t")
-            row = dict(zip(header, cells)) if header else {}
-            name = row.get("name") or (cells[0] if cells else "")
-            form = (row.get("form")
-                    or (cells[1] if len(cells) > 1 else "struct-forward"))
-            note = row.get("note") or ""
-            definition = row.get("definition") or ""
-            if name:
-                out.append((name, form, note, definition))
+    if os.path.exists(path):
+        with open(path, encoding="utf-8") as fh:
+            header = fh.readline().rstrip("\n").split("\t")
+            for line in fh:
+                cells = line.rstrip("\n").split("\t")
+                row = dict(zip(header, cells)) if header else {}
+                name = row.get("name") or (cells[0] if cells else "")
+                form = (row.get("form")
+                        or (cells[1] if len(cells) > 1 else "struct-forward"))
+                note = row.get("note") or ""
+                definition = row.get("definition") or ""
+                if name:
+                    out.append((name, form, note, definition))
+    _DERIVED_FORWARDS_CACHE = out
     return out
 
 
@@ -3733,6 +3907,51 @@ def run_unified(args):
         buckets = collections.defaultdict(list)
         for info in decls:
             buckets[decl_bucket(info)].append(info)
+
+        def _item_type_names(info):
+            text = (info.get("declaration") or {}).get("text") or ""
+            names = set()
+            tag_m = re.search(r"\b(?:struct|union|enum)\s+([A-Za-z_]\w*)\s*\{",
+                              text)
+            if tag_m:
+                names.add(tag_m.group(1))
+            ename = info.get("entity", {}).get("name")
+            if ename:
+                names.add(ename)
+            for tail_m in re.finditer(
+                    r"\}\s*([A-Za-z_]\w*(?:\s*,\s*\*?\s*[A-Za-z_]\w*)*)\s*[,;]",
+                    text):
+                names.update(re.findall(r"[A-Za-z_]\w*", tail_m.group(1)))
+            return names
+
+        def sort_types_topo(type_infos):
+            """A fragment's own type bodies in definition order: a member
+            whose type is defined later in the SAME fragment is a
+            use-before-definition (the pages' entity order is
+            alphabetical, not dependency order)."""
+            per_item = [_item_type_names(info) for info in type_infos]
+            known = set().union(*per_item) if per_item else set()
+
+            def item_uses(idx):
+                text = ((type_infos[idx].get("declaration") or {})
+                        .get("text") or "")
+                return {n for n in re.findall(r"[A-Za-z_]\w*", text)
+                        if n in known and n not in per_item[idx]}
+            result = []
+            done = set()
+            remaining = list(range(len(type_infos)))
+            while remaining:
+                progressed = False
+                for i in list(remaining):
+                    if item_uses(i) <= done:
+                        result.append(type_infos[i])
+                        done |= per_item[i]
+                        remaining.remove(i)
+                        progressed = True
+                if not progressed:
+                    result.extend(type_infos[i] for i in remaining)
+                    break
+            return result
         extra_type_ds = []
         already_decl_pre = {
             (info.get("entity") or {}).get("name") for info in decls
@@ -3760,6 +3979,8 @@ def run_unified(args):
         open_decl_guard = None
         for bucket_key, bucket_title in sections:
             items = buckets.get(bucket_key) or []
+            if bucket_key == "types":
+                items = sort_types_topo(items)
             if bucket_key == "functions":
                 local = set(emitted_type_names)
                 local.update(n for n, _d in _CORE_TYPEDEFS)
@@ -3896,28 +4117,24 @@ def run_unified(args):
                         if re.search(r"\)\s*$", txt.rstrip()):
                             txt = txt.rstrip() + ";"
                     txt = c_decl_text(txt)
-                    # ``#define LV_HITTESTINFO LVHITTESTINFO`` -- the page
-                    # documents the name as an alias; the alias macro IS
-                    # the surface, and a second type definition under the
-                    # alias spelling conflicts with the target's.
-                    if bucket_key == "types" and ename and re.search(
-                            rf"(?m)^#define\s+{re.escape(ename)}\s+"
-                            r"[A-Za-z_]\w*\s*$", "\n".join(lines)):
-                        head.append(f"/* {ename} is documented as an alias "
-                                    "-- see the #define above */")
-                        txt = ""
-                    if txt and bucket_key == "types":
-                        head.extend(type_guard_lines(ename or "", txt))
+                    is_quotation = txt.lstrip().startswith("/*")
+                    if txt and bucket_key == "types" and not is_quotation:
+                        head.extend(type_guard_lines(ename or "", txt, lines))
                     elif txt:
                         head.append(txt)
-                    if bucket_key == "types" and ename:
+                    if (bucket_key == "types" and ename
+                            and not is_quotation):
                         body = declaration.get("text") or ""
                         if re.search(r"\btypedef\s+(struct|union|enum)\b", body) \
                                 and re.search(r"\b" + re.escape(ename) + r"\s*;", body) \
-                                and ("LP" + ename) not in body:
+                                and ("LP" + ename) not in body \
+                                and not re.search(
+                                    r"\}\s*[^;]*\bP" + re.escape(ename)
+                                    + r"\b", body):
                             head.extend(type_guard_lines(
                                 "P" + ename,
-                                f"typedef {ename} *P{ename}, *LP{ename};"))
+                                f"typedef {ename} *P{ename}, *LP{ename};",
+                                lines))
                 elif info.get("name_only"):
                     pass  # comment above is the whole record
                 else:
@@ -3939,7 +4156,8 @@ def run_unified(args):
                     lines.append("")
                     lines.append(
                         f"/* {d.get('name')}  [extra {d.get('type')}] */")
-                    lines.extend(type_guard_lines(d.get("name") or "", text))
+                    lines.extend(type_guard_lines(
+                        d.get("name") or "", text, lines))
                     if d.get("name"):
                         emitted_type_names.add(d.get("name"))
         if open_decl_guard is not None:
@@ -3982,7 +4200,7 @@ def run_unified(args):
                     if text:
                         if decl_type in ("typedef", "enum", "struct"):
                             lines.extend(type_guard_lines(
-                                d.get("name") or "", text))
+                                d.get("name") or "", text, lines))
                         else:
                             lines.append(text)
         if key.lower() == "windef.h":

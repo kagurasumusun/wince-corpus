@@ -17,17 +17,6 @@
  * declaration body no page prints
  * ================================================================ */
 
-/* TransportCheckForNewMailInfo  [struct; ce-only] */
-#ifndef __WINCE_DEFINED_TRANSPORTCHECKFORNEWMAILINFO
-#define __WINCE_DEFINED_TRANSPORTCHECKFORNEWMAILINFO
-typedef struct TransportCheckForNewMailInfo{
- TransportFolderList* ptfl;
- BOOL fFree;
- HANDLE hTerminateEvent;
- DWORD dwReserverd;
-} TransportCheckForNewMailInfo, *lpTransportCheckForNewMailInfo;
-#endif /* __WINCE_DEFINED_TRANSPORTCHECKFORNEWMAILINFO */
-
 /* TransportFolderList  [struct; ce-only] */
 #ifndef __WINCE_DEFINED_TRANSPORTFOLDERLIST_S
 #define __WINCE_DEFINED_TRANSPORTFOLDERLIST_S
@@ -39,6 +28,17 @@ typedef struct TransportFolderList_s {
 } TransportFolderList, *lpTransportFolderList;
 #endif /* __WINCE_DEFINED_TRANSPORTFOLDERLIST */
 #endif /* __WINCE_DEFINED_TRANSPORTFOLDERLIST_S */
+
+/* TransportCheckForNewMailInfo  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_TRANSPORTCHECKFORNEWMAILINFO
+#define __WINCE_DEFINED_TRANSPORTCHECKFORNEWMAILINFO
+typedef struct TransportCheckForNewMailInfo{
+ TransportFolderList* ptfl;
+ BOOL fFree;
+ HANDLE hTerminateEvent;
+ DWORD dwReserverd;
+} TransportCheckForNewMailInfo, *lpTransportCheckForNewMailInfo;
+#endif /* __WINCE_DEFINED_TRANSPORTCHECKFORNEWMAILINFO */
 
 /* ==================================================================
  * functions and callbacks

@@ -22,10 +22,13 @@
 #define __WINCE_DEFINED__DMUS_NOTERANGE
 #ifndef __WINCE_DEFINED_DMUS_NOTERANGE
 #define __WINCE_DEFINED_DMUS_NOTERANGE
+#ifndef __WINCE_DEFINED_LPDMUS_NOTERANGE
+#define __WINCE_DEFINED_LPDMUS_NOTERANGE
 typedef struct _DMUS_NOTERANGE {
 DWORD dwLowNote;
 DWORD dwHighNote;
 } DMUS_NOTERANGE, *LPDMUS_NOTERANGE;
+#endif /* __WINCE_DEFINED_LPDMUS_NOTERANGE */
 #endif /* __WINCE_DEFINED_DMUS_NOTERANGE */
 #endif /* __WINCE_DEFINED__DMUS_NOTERANGE */
 
@@ -36,7 +39,7 @@ typedef struct {
  ULONG ulFirstExtCkIdx;
  ULONG ulCopyrightIdx;
  ULONG ulWaveDataIdx;
- WAVEFORMATEX WaveformatEx;
+ /* DERIVED member omitted -- type body unprinted: WAVEFORMATEX WaveformatEx; */
 } DMUS_WAVE;
 #endif /* __WINCE_DEFINED_DMUS_WAVE */
 #ifndef __WINCE_DEFINED_PDMUS_WAVE

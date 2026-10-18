@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 135 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 134 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _MIPSINTR_
 #define _MIPSINTR_
@@ -459,11 +459,6 @@ float __cdecl _cvt_s_pu(double);
 
 /* _max_ob  [function; ce-only; CE 4.0..499] */
 double _max_ob(double Arg1,
- double Arg2,
- int Arg3);
-
-/* _min_ob  [function; ce-only; CE 4.0..499] */
-double _min_ob(double Arg1,
  double Arg2,
  int Arg3);
 

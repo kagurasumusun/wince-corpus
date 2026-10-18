@@ -91,6 +91,8 @@ enum ReplDialogs {
 #define __WINCE_DEFINED_TAGSTOREINFO
 #ifndef __WINCE_DEFINED_STOREINFO
 #define __WINCE_DEFINED_STOREINFO
+#ifndef __WINCE_DEFINED_PSTOREINFO
+#define __WINCE_DEFINED_PSTOREINFO
 typedef struct tagStoreInfo {
  UINT cbStruct;
  UINT uFlags;
@@ -101,6 +103,7 @@ typedef struct tagStoreInfo {
  UINT cbStoreId;
  LPBYTE lpbStoreId;
 } STOREINFO, *PSTOREINFO;
+#endif /* __WINCE_DEFINED_PSTOREINFO */
 #endif /* __WINCE_DEFINED_STOREINFO */
 #endif /* __WINCE_DEFINED_TAGSTOREINFO */
 

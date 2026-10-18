@@ -1,5 +1,5 @@
 /* ExtraDeclarations.h -- declarations without header assignment
- * 4160 unassigned declarations
+ * 4017 unassigned declarations
  */
 #ifndef _EXTRADECLARATIONS_H_
 #define _EXTRADECLARATIONS_H_
@@ -385,7 +385,7 @@ HRESULT ClearPendingSample(void);
 HRESULT ClipAndCommit(OLE_HANDLE hrgnClip);
 HRESULT CloseAppByName(BSTR bstrAppName, BOOL fTerminate);
 void CloseBrowser();
-HRESULT CloseDevice(hPNDevice hPN,);
+HRESULT CloseDevice(hPNDevice hPN);
 VOID WINAPI ClosePerformanceData();
 HRESULT CmdMimic(PVCMDNAME pMenu, PTSTR pszCommand);
 HRESULT CoCopyProxy(IUnknown *pProxy, IUnknown **ppCopy);
@@ -1251,7 +1251,6 @@ void ResetEndOfStreamTimer(void);
 void ResetFormatBuffer();
 HRESULT ResetMediaTime(void);
 HRESULT ResetStreamingTimes(void);
-HRESULT ResetVirtualMachine(GUID* virtualMachineID, boolean hardReset);
 HRESULT Resize(UINT newWidth, UINT newHeight, PixelFormatID pixelFormat, InterpolationHint hints, IBitmapImage** outbmp);
 HRESULT RestoreAppZOrder(LONG ZOrder);
 HRESULT RestoreVirtualMachine(GUID* virtualMachineID);
@@ -1274,7 +1273,7 @@ HRESULT SendEndOfStream(void);
 HRESULT SendInfo(BSTR bstrInfoHeader, BSTR bstrInfo, LONG_PTR lCookie);
 HRESULT SendMessageStatus(RTC_MESSAGING_USER_STATUS enUserStatus, LONG_PTR lCookie);
 void SendNotifyWindow(IPin *pPin, HWND hwnd);
-HRESULT SendOnRename(IMoniker *pmk,);
+HRESULT SendOnRename(IMoniker *pmk);
 HRESULT SendOnVirtualChannel(BSTR ChanName, BSTR ChanData);
 HRESULT SendQuality(REFERENCE_TIME trLate, REFERENCE_TIME trRealStream);
 void SendRepaint(void);
@@ -1382,7 +1381,6 @@ DWORD SetupMemory (void);
 HRESULT ShouldDrawSampleNow(IMediaSample *pMediaSample, REFERENCE_TIME *pStartTime, REFERENCE_TIME *pEndTime);
 BOOL ShouldSkipFrame(IMediaSample *pIn);
 void Show();
-HRESULT ShutdownVirtualMachine(GUID* virtualMachineID, boolean saveMachine);
 BOOL SideShowMgr_GetAvailableUserNames(WCHAR* wcNames, DWORD dwAllocatedCharacters, INT* iCurrentUserIndex);
 void SignalTimerFired(void);
 int SipEnumIMProc(IMENUMINFO *pIMInfo);
@@ -1497,7 +1495,6 @@ HRESULT VScroll (WPARAM wp);
 HRESULT VarBoolFromDisp(IDispatch *pdispIn, LCID lcid, BOOL *pboolOut);
 HRESULT VarBstrFromBool(BOOL boolIn, LCID lcid, ULONG dwFlags, BSTR pbstrOut);
 HRESULT VarBstrFromCy(CURRENCY cyIn, LCID lcid, ULONG dwFlags, BSTR pbstrOut);
-HRESULT VarBstrFromDate(DATE dateIn, LCID lcid, in] ULONG dwFlags, out] BSTR pbstrOut);
 HRESULT VarBstrFromDec(DECIMAL *pdecIn, LCID lcid, ULONG dwFlags, BSTR pbstrOut);
 HRESULT VarBstrFromDisp(IDispatch *pdispln, LCID lcid, ULONG dwFlags, BSTR pbstrOut);
 HRESULT VarBstrFromI2(short iVal, LCID lcid, ULONG dwFlags, BSTR pbstrOut);
@@ -1529,7 +1526,7 @@ BOOL WaitMsg(DWORD dwTimeOut);
 HRESULT WaitOnCommandHandler();
 HRESULT Walk(ISdpWalk* pWalk);
 void WhereProhibited(void);
-HRESULT WintmPNTM (PNTM pNTM, const SYSTEMTIME pTime,);
+HRESULT WintmPNTM (PNTM pNTM, const SYSTEMTIME pTime);
 VOID STDAPI WriteBSTR(BSTR *pstrDest, LPCWSTR szSrc);
 VOID STDAPI WriteInt(IStream *pIStream, int n);
 HRESULT WriteRTPPayloadHeader(IUnknown *pEncoder, const CHAR *szFmtp, PBYTE pbEncodedFrame, DWORD dwEncodedSize, DWORD *pdwFrameStartBitOffset, DWORD *pdwFrameEndBitOffset, BOOL fKeyFrame, BYTE *pbPayloadHeader, DWORD *pdwPayloadHeaderLength, BOOL *pfLastPacket);
@@ -1541,7 +1538,6 @@ void _OutputDebugString(BSTR string);
 void _ReleaseThenLaunch(long msDelay, BSTR FileName, BSTR EntryFunction);
 void _Sleep(long msSleep);
 void _WriteLocalLog(BSTR string);
-void __asm(const char *, ...);
 void _asm (char*,...);
 int _controlfp_s (__out_opt unsigned int*_CurrentState, __in unsigned int _NewValue, __in unsigned int _Mask);
 int _isnanf (float);
@@ -2470,10 +2466,9 @@ const BOOL ReadOnly();
 IMemInputPin * ConnectedIMemInputPin();
 LPUNKNOWN GetOwner(void);
 HINSTANCE LoadOLEAut32();
-Private Sub object_OpenComplete();
-Private Sub object_StateChange(ByVal oldState As Long, ByVal newState As Long);
 Unable to Start Up ConPMon (earlier conpmon could be shutting down);
 HRESULT GetDevice(IDirect3DMobileDevice** ppDevice);
+HRESULT VarBstrFromDate(DATE dateIn, LCID lcid, ULONG dwFlags, BSTR pbstrOut);
 RESULT GetSourceURL(DWORD dwSourceIndex, BSTR* pbstrURL);
 HRESULT CreateBitmapFromBuffer(BitmapData* bitmapData, IBitmapImage** bitmap);
 HRESULT FindBehavior(BSTR bstrBehavior, BSTR bstrBehaviorUrl, IElementBehaviorSite *pSite, IElementBehavior **ppBehavior);
@@ -2666,8 +2661,7 @@ BSTR _GetOSVer(void);
 long _LangHost(void);
 BSTR _Name(void);
 BSTR _StrConv(BSTR string, Integer convertFlag);
-Private Subobject_StateChange(ByValoldStateAs Long,ByValnewStateAs Long);
-long DRM_ND_DeregisterFromService (BSTR sServerUDN,);
+long DRM_ND_DeregisterFromService (BSTR sServerUDN);
 HRESULT EnumerateProcesses(SAFEARRAY(BSTR)*out_Processes, SAFEARRAY(DWORD)*out_ProcessesId);
 HRESULT EnumerateConnections(DWORD dwSizeActual, DWORD* pdwSizeReturned, BSTR Connections, VARIANT_BOOL* pfMoreEntries);
 HRESULT GetConnection(ICcDevice* piDevice, DWORD dwTimeout, ICcServiceCB* piCallback, BSTR* pbstrConnectionId, ICcConnection** piTargetDevice);
@@ -2687,7 +2681,6 @@ HRESULT ReadRegsFromThdCtx(IeXdi2EnumCpuRegs* piOsAxsEnumCpuRegThreadCtx, DWORD*
 HRESULT AddFile(BSTR bstrFullPath,BSTR bstrKeyName,IPMCPU* piPMCPU,IPMOS* piPMOS,long dwLocaleId,long dwFlagsIPMPackageFile** ppiPMPackageFile);
 HRESULT GetData2(FLEXI_GETDATA_TYPE2 fgds2, PTM_RAW_DATA **ppdatProcess, DWORD *pcProcess, DWORD *pcProcessTotal, PTM_RAW_DATA **ppdatThread, DWORD *pcThread, DWORD *pcThreadTotal, PTM_RAW_DATA **ppdatModule, DWORD *pcModule, DWORD *pcModuleTotal, PTM_RAW_DATA **ppdatContext, DWORD *pcContext, DWORD *pcContextTotal);
 HRESULT GetDescriptionTables2(PTM_FIELD_DESC** ppfdProcDescTable, DWORD* pcProcField, PTM_FIELD_DESC** ppfdThreadDescTable, DWORD* pcThreadField, PTM_FIELD_DESC** ppfdModDescTable, DWORD* pcModField, PTM_FIELD_DESC **ppfdCtxDescTable, DWORD *pcCtxField);
-HRESULT SnapCurrentDeviceState(DWORD *pdwDumpType, DWORD64 *pdw64DumpTotalSize, DWORD *pdwSegmentBufferSize, BYTE **ppbSegmentBuffer, DWORD64 *pdw64SegmentIndex, BOOL *pfComplete);
 enum {
  CESVC_ROOT_COMMON = 0,
  CESVC_ROOT_MACHINE = CESVC_ROOT_COMMON,
@@ -2710,7 +2703,6 @@ FILE *_wfreopen(const wchar_t*path,constwchar_t*mode,FILE*stream);
 HRESULT GetDescriptionTables(PTM_FIELD_DESC**ppfdProcDescTable, DWORD*pcProcField, PTM_FIELD_DESC**ppfdThreadDescTable, DWORD*pcThreadField, PTM_FIELD_DESC**ppfdModDescTable, DWORD*pcModField);
 DWORD IsMessageBoxHandled(HWND hWnd, UINT uText, UINT uCaption, UINT uType);
 #pragma runtime_checks("",off) // ignore any RTC compiler options ... #pragma runtime_checks("",restore) // restore compiler option settings
-Private Subobject_OpenComplete();
 unsigned __int64 __cdecl __ull_rshift(unsigned__int64,int);
 __int64 __cdecl __ll_lshift(int64,int);
 __int64 __cdecl __ll_rshift(int64,int);
@@ -2726,24 +2718,12 @@ public override string ToString ();
 public PluginDataView (PluginData data);
 public CommandPacket ReceiveCommand (PluginData pluginData);
 protected void RunOnPrimaryThread (AnonymousDelegate handler);
-public PluginNode (string description, string guidNode, string guidParent, PluginData data, PluginDataView view, PluginComponent hostPlugin, BuiltInIcon iconType);
-public CommandUICommand (CommandRoot root, string text, string hint, Icon menuIcon, Icon toolBarIcon);
 public CommandPacket ();
 public void CopyToClipboard ();
-public CommandPacketParameter (CommandPacketParameterType type, Object parameter);
-protected PluginData (PluginComponent host, string guid);
-public bool SendFile (string desktopFile, string deviceFile, bool overwrite);
-public PluginComponent (string deviceGuid, string pluginGuid);
-public bool MakeDirectory (string deviceDirectory);
 public void RenderGeneric (GenericDataAcceptor acceptor);
-public DeviceDatbaseItem FindByGuid (string guid);
-public bool ConnectDevice (string deviceGuid);
 public GenericDataAcceptor (ListView listView);
 protected override void WndProc (ref Message m);
-public void AddItem (string category, string description, Object value);
-public PluginComponent FindPlugin (string guidDevice, string guidPlugin);
 public CommandPacketEventArgs (CommandPacket commandPacket);
-public bool ReceiveFile (string deviceFile, string desktopFile);
 public CommandPacketParameter GetNextParameter ();
 public delegate void AnonymousDelegate ();
 public void StopService ();
@@ -2754,12 +2734,7 @@ public void RefreshData ();
 public void StartCommandHandlerAsync ();
 public void AddData (PluginData data);
 public void SendCommand (CommandPacket commandIn, PluginData pluginData);
-public void RenderViews (Object hint);
-public RemoteToolFrameworkException (string message);
-public delegate void CommandTransportTerminatedEventHandler (Object sender, EventArgs e);
 public void AddNode (PluginNode node);
-public DeviceCommandTransport (string commandLine);
-public delegate void CommandPacketEventHandler (Object sender, CommandPacketEventArgs e);
 HRESULT SetOSImage(BSTR in_bstrOSImage);
 HRESULT CmdOut(BSTR bstrData);
 HRESULT ReadMemoryX(DWORD dwCpuNum, LINEAR_MEM_MAP_TYPElmt, ADDRESS_TYPE Address, DWORD dwNbElemToRead, BYTE bAccessWidthInBytes, BYTE* pbReadBuffer, DWORD* pdwNbElementEffectRead);
@@ -2804,14 +2779,12 @@ DeviceConnection get_DeviceConnection ();
 public boolean get_PluginClosing ();
 public void AddToMenu (Menu menu);
 boolean get_ContainedInToolWindow ();
-boolean get_AllowThisPluginToBeFound () void set_AllowThisPluginToBeFound (boolean value);
 function get AllowThisPluginToBeFound () : boolean function set AllowThisPluginToBeFound (value : boolean);
 public RtfxAboutBox ();
 boolean get_ShellShuttingDown ();
 public long GetHeartbeatRefCount ();
 public void ProcessCommandEx (ProcessCommandExData pcexdata);
 public void add_PendingRequest (EventHandler value) public void remove_PendingRequest (EventHandler value);
-public bool LaunchPlugin (string guidDevice, string guidPlugin, EventHandler doneEvent, Object tag);
 Object get_CustomAPI ();
 public ShellDisplayModes get_ShellDisplayMode () public void set_ShellDisplayMode (ShellDisplayModes value);
 public function get ShellDisplayMode () : ShellDisplayModes public function set ShellDisplayMode (value : ShellDisplayModes);
@@ -2819,89 +2792,36 @@ CommandTransport get_CommandTransport ();
 public boolean get_RequiresDevicePings ();
 DeviceDatabase get_DeviceDatabase ();
 public void IncrementHeartbeatRefCount ();
-boolean get_ShowPacketSniffer () void set_ShowPacketSniffer (boolean value);
 function get ShowPacketSniffer () : boolean function set ShowPacketSniffer (value : boolean);
 boolean get_UsingVirtualData ();
 public PluginLaunchedEventArgs ();
 public CommandUI ();
-public void SetStatusBarText (string text);
 bool CanExportFile ();
 public void add_ConnectionEvent (EventHandler value) public void remove_ConnectionEvent (EventHandler value);
 public static boolean get_InUse ();
 public void ClosePlugin ();
 public FrameworkInformation ();
 public bool GetSystemInfoEx (out SYSTEMINFOEX systemInfo);
-protected void SetCustomAPI (Object api);
 public CommandPacket get_CommandPacket ();
 public void DecrementHeartbeatRefCount ();
 public CommandTransportCommandEventArgs (CommandPacket commandPacket);
 bool CanImportFile ();
 boolean get_RunningInShell ();
-public static StandaloneDeviceConnection FromDeviceGuid (string deviceGuid, bool useDeviceProxy);
 boolean get_ContainedInForm ();
 public function get DeviceConnection () : DeviceConnection public function set DeviceConnection (value : DeviceConnection);
 CommandUI get_CommandUI ();
 boolean get_RunningUnderAutomation ();
-public boolean get_ParentedToDifferentPlugin () public void set_ParentedToDifferentPlugin (boolean value);
 public function get ParentedToDifferentPlugin () : boolean public function set ParentedToDifferentPlugin (value : boolean);
-public boolean get_SilentLoad () public void set_SilentLoad (boolean value);
 public function get SilentLoad () : boolean public function set SilentLoad (value : boolean);
-public CommandTransport DeployCoreConService (string guidService, bool deployToolHelp);
 boolean get_Standalone ();
-public CommandTransport DeployViaDeviceProxy (List> deployFiles, string deviceFolder, string guidPackage, bool deployToolHelp, bool deviceSideIsManaged);
 public PluginComponent get_OwningPluginComponent () public void set_OwningPluginComponent (PluginComponent value);
 public function get OwningPluginComponent () : PluginComponent public function set OwningPluginComponent (value : PluginComponent);
 public List GetGuidsOfAvailablePlugins (bool onlyThosePluginsWhichDependOnThisPlugin);
-boolean get_RequiresToolHelpDll () void set_RequiresToolHelpDll (boolean value);
 function get RequiresToolHelpDll () : boolean function set RequiresToolHelpDll (value : boolean);
 public static CommandPacket MakeCopy (CommandPacket source);
 public static void ConfigureDevices (IntPtr hWnd);
 public ProcessCommandExData (CommandPacket commandIn, PluginData pluginData);
-boolean get_DoesNotDeployDeviceComponent () void set_DoesNotDeployDeviceComponent (boolean value);
 function get DoesNotDeployDeviceComponent () : boolean function set DoesNotDeployDeviceComponent (value : boolean);
-Private Sub form_Activate();
-Private Sub commandbar_ComboBoxChange(combobox);
-Private Sub commandbar_ComboBoxClick(combobox);
-Private Sub grid_Compare(row1, row2, cmp);
-Private Sub winsock_ConnectionRequest();
-Private Sub winsock_DataArrival(bytesTotal);
-Private Sub object_DblClick();
-Private Sub form_Deactivate();
-Private Sub combo_DropDown();
-Private Sub grid_EnterCell();
-Private Sub winsock_Error(number, description);
-Private Sub control_AfterLabelEdit(cancel, newstring);
-Private Sub treeview_Expand(index);
-Private Sub commandbar_HelpClick();
-Private Sub object_GotFocus();
-Private Sub object_KeyDown(keycode, shift);
-Private Sub object_KeyPress(keyascii);
-Private Sub object_KeyUp(keycode, shift);
-Private Sub grid_LeaveCell();
-Private Sub object_MenuClick(menu);
-Private Sub control_BeforeLabelEdit(cancel);
-Private Sub object_MouseDown(button, shift, x, y);
-Private Sub object_MouseMove(button, shift, x, y);
-Private Sub object_MouseUp(button, shift, x, y);
-Private Sub treeview_NodeClick(index);
-Private Sub commandbar_OKClick();
-Private Sub comm_OnComm();
-Private Sub object_Paint();
-Private Sub Form_QueryUnload(cancel, unloadmode);
-Private Sub grid_RowColChange();
-Private Sub commandbar_ButtonClick(button);
-Private Sub grid_Scroll();
-Private Sub control_Scroll();
-Private Sub grid_SelChange();
-Private Sub winsock_SendComplete();
-Private Sub winsock_SendProgress(bytesSent, bytesRemaining);
-Private Sub form_Terminate();
-Private Sub timer_Timer();
-Private Sub form_Unload(cancel);
-Private Sub object_Click();
-Private Sub winsock_Close();
-Private Sub treeview_Collapse(index);
-Private Sub listview_ColumnClick(index);
 HRESUTL get_TimerEnabled(BOOL*pfEnabled);
 HRESULT get_VoiceMenu(IUnknown **ppUnknownVoiceMenu);
 HRESULT put_VoiceMenu(IUnknown *pUnknownVoiceMenu);
@@ -2921,34 +2841,6 @@ void WINAPI BattyerNotifyOfTimeChange(BOOL fForward, FILETIME * pftDelta);
 int CALLBACK LibMain(HINSTANCE hinst, WORD wDataSeg, WORD cbHeapSize, LPSTR lpszCmdLine);
 BOOL NotifyIME(HIMC hIMC, DWORD dwAction, DWORD dwIndex, DWORD dwValue);
 void CALLBACK LineCallbackFunc (DWORD hDevice, DWORD dwMsg, DWORD wCallbackInstance, DWORD dwParam1, DWORD dwParam2, DWORD dwParam3);
-Private Sub object_Activate();
-Private Sub object_DropDown();
-Private Sub object_EnterCell ();
-Private Sub object_Expand (node[index]);
-Private Sub Form_GotFocus();
-Private Sub object_ItemCheck();
-Private Sub object_AfterLabelEdit (newstring);
-Private Sub Form_KeyDown(keycode, shift);
-Private Sub Form_KeyPress(keyascii);
-Private Sub object_LeaveCell ();
-Private Sub object_LostFocus();
-Private Sub Form_MouseDown(button, shift, x, y);
-Private Sub Form_MouseMove(button, shift, x, y);
-Private Sub object_NodeClick (node[index]);
-Private Sub object_OnComm ();
-Private Sub Form_Paint();
-Private Sub object_BeforeLabelEdit(newstring);
-Private Sub Form_Resize();
-Private Sub object_RowColChange ();
-Private Sub object_Scroll();
-Private Sub object_SelChange ();
-Private Sub object_Terminate();
-Private Sub object_Timer();
-Private Sub Form_Unload(cancel);
-Private Sub Form_Click();
-Private Sub object_Collapse (node[index]);
-Private Sub object_ColumnClick(columnheader[index]);
-Private Sub object_Compare(row1, row2);
 HRESULT GetAmbientFont(IFont** ppFont);
 HRESULT RegisterClassObjects(DWORD dwClsContext, DWORD* dwFlags);
 HRESULT EnumAdvise(IEnumSTATDATA** ppenumAdvise);
@@ -2986,34 +2878,10 @@ enum {
  SHIC_FEATURE_CLASS = 0x00000004L
 } SHIC_FEATURE;
 void LogMemUse(void);
-Private Sub control_AfterLabelEdit(cancel, newstring);
-Private Sub control_BeforeLabelEdit(cancel);
-Private Sub commandbar_ButtonClick(button);
-Private Sub treeview_Collapse(index);
-Private Sub listview_ColumnClick(index);
-Private Sub commandbar_ComboBoxChange(combobox);
-Private Sub commandbar_ComboBoxClick(combobox);
-Private Sub winsock_ConnectionRequest();
-Private Sub winsock_DataArrival(bytesTotal);
-Private Sub combo_DropDown();
 void WINAPI (IfilterGraph* pGraph,
  DWORD dwLevel);
-Private Sub grid_EnterCell();
-Private Sub commandbar_HelpClick();
 EXTERN_C BOOL buildDDHALInfo (LPDDHALINFO lpddhi,
 DWORD modeidx);
-public DataSchemaErrorTask(string message,
- TaskCategory category,
- TaskErrorCategory errorCategory,
- TaskPriority priority);
-Private Sub object_ItemCheck();
-Private Sub grid_LeaveCell();
-Private Sub object_MenuClick(menu);
-Private Sub treeview_NodeClick(index);
-Private Sub commandbar_OKClick();
-Private Sub comm_OnComm();
-Private Sub object_OpenComplete();
-Private Sub object_Paint();
 BOOL PIN_Deinit(DWORD dwContext);
 BOOL PIN_IOControl(DWORD dwContext,
  DWORD Ioctl,
@@ -3024,14 +2892,6 @@ BOOL PIN_IOControl(DWORD dwContext,
  PDWORD pdwBytesTransferred);
 extern HRESULT (*pIoctl_Register_DataCollector)(LPVOID,DWORD,LPVOID,DWORD);
 extern HRESULT (*pIoctl_Send_DataCollector)(LPVOID,DWORD,LPVOID,DWORD);
-Private Sub Form_QueryUnload(cancel, unloadmode);
-Private Sub grid_RowColChange();
-Private Sub grid_SelChange();
-Private Sub winsock_SendComplete();
-Private Sub winsock_SendProgress(bytesSent, bytesRemaining);
-Private Sub object_StateChange(ByVal oldState As Long,
- ByVal newState As Long);
-Private Sub timer_Timer();
 interface IFst { HRESULT fst(BSTR b); HRESULT fst(long l); };
 #pragma keyword("interface", on)
 #pragma warning(disable:4199)
@@ -3049,8 +2909,8 @@ interface I3 : I1, I2 {
 typedef struct CVF { D3DMVECTOR position; D3DMVECTOR normal; D3DMCOLOR diffuse; float u, v; // 1st set, 2-D float t; // 2nd set, 1-D } CustomVertexFormat;
 typedef struct _DDHAL_DDEXEBUFCALLBACKS { DWORD dwSize; DWORD dwFlags; LPDDHALEXEBUFCB_CANCREATEEXEBUF CanCreateExecuteBuffer; LPDDHALEXEBUFCB_CREATEEXEBUF CreateExecuteBuffer; LPDDHALEXEBUFCB_DESTROYEXEBUF DestroyExecuteBuffer; LPDDHALEXEBUFCB_LOCKEXEBUF LockExecuteBuffer; LPDDHALEXEBUFCB_UNLOCKEXEBUF UnlockExecuteBuffer; } DDHAL_DDEXEBUFCALLBACKS;
 typedef struct _GUID { DWORD Data1; WORD Data2; WORD Data3; BYTE Data4[8]; } GUID;
-typedef struct tagImageInfo { GUID RawDataFormat; PixelFormatID PixelFormat; UINT Width; UINT Height; UINT TileWidth; UINT TileHeight; double Xdpi; double Ydpi; UINT Flags; } ImageInfo;
-typedef struct _MTPIPCONNECTIONINFO { DWORD dwNonce; GUID guidClient; WCHAR rgwchClientName[MTPIP_CONNAUTH_MAX_NAME_LENGTH]; DWORD cchClientName; SOCKADDR_STORAGE saClient; SOCKADDR_STORAGE saLocal; } MTPIPCONNECTIONINFO;
+typedef struct tagImageInfo { /* DERIVED member omitted -- type body unprinted: GUID RawDataFormat; */ PixelFormatID PixelFormat; UINT Width; UINT Height; UINT TileWidth; UINT TileHeight; double Xdpi; double Ydpi; UINT Flags; } ImageInfo;
+typedef struct _MTPIPCONNECTIONINFO { DWORD dwNonce; /* DERIVED member omitted -- type body unprinted: GUID guidClient; */ WCHAR rgwchClientName[MTPIP_CONNAUTH_MAX_NAME_LENGTH]; DWORD cchClientName; SOCKADDR_STORAGE saClient; SOCKADDR_STORAGE saLocal; } MTPIPCONNECTIONINFO;
 typedef struct tagMyData { };
 typedef struct _NM_UPDOWN { NMHDR hdr; int iPos; int iDelta; } NM_UPDOWNW;
 typedef struct _obex_command { unsigned int uiOp; unsigned int uiResp; unsigned int fFinal; ObexPacketData sPktData; unsigned int cProp; unsigned int *aPropID; ObexVariant *aPropVar; } ObexCommand;
@@ -3073,7 +2933,7 @@ typedef struct tagPNVELOCITY{ DWORD dwStructureSize; PNTIME tiTime; PNVELENU vlV
 typedef struct _ServicesExeCallbackFunctions { PFN_SERVICE_SHUTDOWN pfnServiceShutdown; } ServicesExeCallbackFunctions;
 typedef struct StringFileInfo { WORD wLength; WORD wValueLength; WORD wType; WCHAR szKey; WORD Padding; StringTable Children; } StringFileInfo;
 typedef struct tagTZREG { LONG Bias; LONG StandardBias; LONG DaylightBias; SYSTEMTIME StandardDate; SYSTEMTIME DaylightDate; } TZREG;
-typedef struct _WAVEFORMATEX_G711 { WAVEFORMATEX WaveFormatEx; WORD wSamplesPerBlock; } WAVEFORMATEX_G711;
+typedef struct _WAVEFORMATEX_G711 { /* DERIVED member omitted -- type body unprinted: WAVEFORMATEX WaveFormatEx; */ WORD wSamplesPerBlock; } WAVEFORMATEX_G711;
 typedef struct tagINITCOMMONCONTROLSEX { DWORD dwSize; DWORD dwICC;} INITCOMMONCONTROLSEX, *LPINITCOMMONCONTROLSEX;
 typedef struct {
  UINT cbSize;
@@ -3094,7 +2954,7 @@ typedef struct tagSTGMEDIUM {
  HMETAFILEPICT hMetaFilePict;
  HENHMETAFILE hEnhMetaFile;
  HGLOBAL hGlobal;
- LPOLESTR lpszFileName;
+ /* DERIVED member omitted -- type body unprinted: LPOLESTR lpszFileName; */
  IStream *pstm;
  IStorage *pstg;
  }u;
@@ -3264,12 +3124,12 @@ typedef struct {
  WORD wInitView;
  WORD wFieldOrd;
  WORD wCard;
- BSTR bstrHelpIndexFile;
- BSTR bstrHelpTopicFile;
- BSTR bstrMainFormCaption;
- BSTR bstrCardFormCaption;
- BSTR bstrParam1;
- BSTR bstrParam2;
+ /* DERIVED member omitted -- type body unprinted: BSTR bstrHelpIndexFile; */
+ /* DERIVED member omitted -- type body unprinted: BSTR bstrHelpTopicFile; */
+ /* DERIVED member omitted -- type body unprinted: BSTR bstrMainFormCaption; */
+ /* DERIVED member omitted -- type body unprinted: BSTR bstrCardFormCaption; */
+ /* DERIVED member omitted -- type body unprinted: BSTR bstrParam1; */
+ /* DERIVED member omitted -- type body unprinted: BSTR bstrParam2; */
  IVerifyContactSink *pVerifyListSink;
  IVerifyContactSink *pVerifySelectionSink;
 } ABDIALOGINFO, *LPDIALOGINFO;
@@ -3303,10 +3163,10 @@ typedef struct {
  DWORD m_dwReserve2;
 } AAM_SRCCAP;
 typedef struct { // srmi
-GUID gEngineID;
+/* DERIVED member omitted -- type body unprinted: GUID gEngineID; */
 TCHAR szMfgName[SRMI_NAMELEN];
 TCHAR szProductName[SRMI_NAMELEN];
-GUID gModeID;
+/* DERIVED member omitted -- type body unprinted: GUID gModeID; */
 TCHAR szModeName[SRMI_NAMELEN];
 LANGUAGE language;
 DWORD dwSequencing;
@@ -3355,10 +3215,10 @@ DWORD dwWordNum;
 TCHAR szWord;
 } SRWORD, *PSRWORD;
 typedef struct { // ttsmi
-GUID gEngineID;
+/* DERIVED member omitted -- type body unprinted: GUID gEngineID; */
 TCHAR szMfgName[TTSI_NAMELEN];
 TCHAR szProductName[TTSI_NAMELEN];
-GUID gModeID;
+/* DERIVED member omitted -- type body unprinted: GUID gModeID; */
 TCHAR szModeName[TTSI_NAMELEN];
 LANGUAGE language;
 TCHAR szSpeaker[TTSI_NAMELEN];
@@ -3439,14 +3299,14 @@ DWORD dwDevice;
 DWORD dwEnable;
 TCHAR szMicrophone[VCMD_MICLEN];
 TCHAR szSpeaker[VCMD_SPEAKERLEN];
-GUID gModeID;
+/* DERIVED member omitted -- type body unprinted: GUID gModeID; */
 } VCSITEINFO, *PVCSITEINFO;
 typedef struct {
- CLSID clsidDevice;
+ /* DERIVED member omitted -- type body unprinted: CLSID clsidDevice; */
  TCHAR szDeviceName[VIODEVICENAMESIZE];
  DWORD grfModes;
- VARIANT vRangeLow;
- VARIANT vRangeHigh;
+ /* DERIVED member omitted -- type body unprinted: VARIANT vRangeLow; */
+ /* DERIVED member omitted -- type body unprinted: VARIANT vRangeHigh; */
  DWORD dwValueType;
  DWORD dwValueUnits;
  LONG lExponent;
@@ -3474,7 +3334,7 @@ typedef struct { // vtsi
 DWORD dwDevice;
 DWORD dwEnable;
 DWORD dwSpeed;
-GUID gModeID;
+/* DERIVED member omitted -- type body unprinted: GUID gModeID; */
 } VTSITEINFO, *PVTSITEINFO;
 int sendto (SOCKET s, const char *buf, int len, int flags, const struct sockaddr *to, int token);
 struct COMMAND_MESSAGE_DATA {
@@ -3483,11 +3343,11 @@ struct COMMAND_MESSAGE_DATA {
  HPACKET hPacketOut;
 };
 typedef struct {
-CLSID clsidDevice;
+/* DERIVED member omitted -- type body unprinted: CLSID clsidDevice; */
 TCHAR szDeviceName[VIODEVICENAMESIZE];
 DWORD grfModes;
-VARIANT vRangeLow;
-VARIANT vRangeHigh;
+/* DERIVED member omitted -- type body unprinted: VARIANT vRangeLow; */
+/* DERIVED member omitted -- type body unprinted: VARIANT vRangeHigh; */
 DWORD dwValueType;
 DWORD dwValueUnits;
 LONG lExponent;

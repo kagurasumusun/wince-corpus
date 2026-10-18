@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1447 constants, 20 declarations, 25 outlines, 21 base types, 0 extra macros, 0 extra decls
+ * 1447 constants, 20 declarations, 5 outlines, 21 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINNT_
 #define _WINNT_
@@ -1575,16 +1575,6 @@ typedef WCHAR TBYTE;
 
 /* _IMAGE_ALPHA_RUNTIME_FUNCTION_ENTRY  [typedef; ce-only] */
 
-/* definition  [typedef; ce-only; heuristic-prefix] */
-
-/* EDITSTREAM  [macro, typedef; ce-only; heuristic-prefix] */
-
-/* EM_CANPASTE  [macro, typedef; ce-only; heuristic-prefix] */
-
-/* firstChild  [typedef; ce-only; heuristic-prefix] */
-
-/* lastChild  [typedef; ce-only; heuristic-prefix] */
-
 /* MAKELANGID  [macro, function; shared] */
 WORD MAKELANGID(USHORT usPrimaryLanguage,
  USHORT usSubLanguage);
@@ -1594,42 +1584,12 @@ WORD MAKELANGID(USHORT usPrimaryLanguage,
  ((DWORD)((((DWORD)((WORD)(srtid))) << 16) | \
  ((DWORD)((WORD)(lgid)))));
 
-/* namespaceURI  [typedef; ce-only; heuristic-prefix] */
-
-/* nextSibling  [typedef; ce-only; heuristic-prefix] */
-
-/* nodeName  [typedef; ce-only; heuristic-prefix] */
-
-/* nodeType  [typedef; ce-only; heuristic-prefix] */
-
-/* nodeTypedValue  [typedef; ce-only; heuristic-prefix] */
-
-/* nodeTypeString  [typedef; ce-only; heuristic-prefix] */
-
-/* nodeValue  [typedef; ce-only; heuristic-prefix] */
-
-/* ownerDocument  [typedef; ce-only; heuristic-prefix] */
-
-/* parentNode  [typedef; ce-only; heuristic-prefix] */
-
-/* parsed  [typedef; ce-only; heuristic-prefix] */
-
-/* prefix  [typedef; ce-only; heuristic-prefix] */
-
-/* previousSibling  [typedef; ce-only; heuristic-prefix] */
-
 /* PRIMARYLANGID  [macro, function; shared] */
 WORD PRIMARYLANGID(WORD lgid);
-
-/* specified  [typedef; ce-only; heuristic-prefix] */
 
 /* SUBLANGID  [macro, function; shared] */
 
 /* TEXT  [macro, typedef, function; shared] */
-
-/* VIEWATTRIBUTES  [macro, typedef; ce-only; heuristic-prefix] */
-
-/* xml  [typedef; ce-only; heuristic-prefix] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -1642,12 +1602,15 @@ WORD PRIMARYLANGID(WORD lgid);
 #define __WINCE_DEFINED__FILE_NOTIFY_INFORMATION
 #ifndef __WINCE_DEFINED_FILE_NOTIFY_INFORMATION
 #define __WINCE_DEFINED_FILE_NOTIFY_INFORMATION
+#ifndef __WINCE_DEFINED_PFILE_NOTIFY_INFORMATION
+#define __WINCE_DEFINED_PFILE_NOTIFY_INFORMATION
 typedef struct _FILE_NOTIFY_INFORMATION {
  DWORD NextEntryOffset;
  DWORD Action;
  DWORD FileNameLength;
  WCHAR FileName[1];
 } FILE_NOTIFY_INFORMATION, *PFILE_NOTIFY_INFORMATION;
+#endif /* __WINCE_DEFINED_PFILE_NOTIFY_INFORMATION */
 #endif /* __WINCE_DEFINED_FILE_NOTIFY_INFORMATION */
 #endif /* __WINCE_DEFINED__FILE_NOTIFY_INFORMATION */
 
@@ -1656,10 +1619,13 @@ typedef struct _FILE_NOTIFY_INFORMATION {
 #define __WINCE_DEFINED__IMAGE_DATA_DIRECTORY
 #ifndef __WINCE_DEFINED_IMAGE_DATA_DIRECTORY
 #define __WINCE_DEFINED_IMAGE_DATA_DIRECTORY
+#ifndef __WINCE_DEFINED_PIMAGE_DATA_DIRECTORY
+#define __WINCE_DEFINED_PIMAGE_DATA_DIRECTORY
 typedef struct _IMAGE_DATA_DIRECTORY {
  DWORD VirtualAddress;
  DWORD Size;
 } IMAGE_DATA_DIRECTORY, *PIMAGE_DATA_DIRECTORY;
+#endif /* __WINCE_DEFINED_PIMAGE_DATA_DIRECTORY */
 #endif /* __WINCE_DEFINED_IMAGE_DATA_DIRECTORY */
 #endif /* __WINCE_DEFINED__IMAGE_DATA_DIRECTORY */
 

@@ -22,13 +22,10 @@
 #define __WINCE_DEFINED__INITLAP
 #ifndef __WINCE_DEFINED_INITLAP
 #define __WINCE_DEFINED_INITLAP
-#ifndef __WINCE_DEFINED_INITLAP
-#define __WINCE_DEFINED_INITLAP
 typedef struct _InitLap {
  DWORD size;
  DWORD capabilities;
 } InitLap;
-#endif /* __WINCE_DEFINED_INITLAP */
 #endif /* __WINCE_DEFINED_INITLAP */
 #endif /* __WINCE_DEFINED__INITLAP */
 

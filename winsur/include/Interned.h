@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 4 declarations, 24 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 2 declarations, 26 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _INTERNED_
 #define _INTERNED_
@@ -20,6 +20,8 @@
 /* blur  [typedef; ce-only; heuristic-prefix] */
 
 /* clearTimeout  [typedef; ce-only; heuristic-prefix] */
+
+/* Close  [function, typedef; ce-only; heuristic-prefix] */
 
 /* confirm  [typedef; ce-only; heuristic-prefix] */
 
@@ -53,6 +55,8 @@
 
 /* screen  [typedef; ce-only; heuristic-prefix] */
 
+/* Scroll  [function, typedef; ce-only; heuristic-prefix] */
+
 /* scrollTo  [typedef; ce-only; heuristic-prefix] */
 
 /* self  [typedef; ce-only; heuristic-prefix] */
@@ -67,15 +71,9 @@
  * functions and callbacks
  * ================================================================ */
 
-/* Close  [function, typedef; ce-only; heuristic-prefix] */
-Private Sub winsock_Close();
-
 /* EVENT  [function, typedef; ce-only] */
 HRESULT Event(int index,
  DWORD *pdispidEvt);
-
-/* Scroll  [function, typedef; ce-only; heuristic-prefix] */
-Private Sub grid_Scroll();
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 

@@ -149,6 +149,13 @@ def sanitize_define_line(definition: str, name: str = "", args: str = "",
     # ``#define NAME((FLOAT) 0.318f)`` -- the page lost the space after
     # the name: an object-like macro reads as function-like.  Repair.
     definition = re.sub(r"(#define\s+[A-Za-z_]\w*)\(\(", r"\1 ((", definition)
+    # ``20 /* default level /*`` -- the comment closer was printed as an
+    # opener and swallows the rest of the file.  Repair the last one.
+    _d = definition.rstrip()
+    if (_d.count("/*") >= 2 and "*/" not in _d and _d.endswith("/*")):
+        definition = _d[:-2] + "*/"
+    else:
+        definition = _d
     # ``#define ASSERTMSG(\n message,\n Condition\n);`` -- the page
     # dropped the replacement and the backslash continuations.
     if re.search(r"#define\s+\w+\s*\(\s*$", definition, re.M):
@@ -327,6 +334,20 @@ def is_broken_c(text: str) -> bool:
     if re.search(r"\b[A-Z]{3,}[a-z]", body):
         return True
     if re.search(r"\b[A-Za-z]+_t[a-z]", body):
+        return True
+    # ``FileVerifyReferencein_InfoArray`` -- type and parameter name
+    # glued across an in_/out_ marker (the page lost the spaces).
+    if re.search(r"\b[A-Za-z_]\w*[a-z](?:in|out)_\w+", body):
+        return True
+    # MIDL attribute opener lost: ``in] ULONG dwFlags`` (from ``[in]``)
+    if re.search(r"(?<!\[)\b(in|out|optional)\]", body):
+        return True
+    # Visual Basic / Java source leaking into a C slot
+    if re.search(r"\b(Private|Public|Protected)\s+\w", body):
+        return True
+    if re.search(r"\b(boolean|string|Object)\s+\w+\s*[,;)]", body):
+        return True
+    if re.search(r"\b__asm\b", body):
         return True
     # stray apostrophe breaks the C tokeniser ('missing terminating ' ')
     if body.count("'") % 2 == 1:

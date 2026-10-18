@@ -22,6 +22,8 @@
 #define __WINCE_DEFINED__BTHNS_SETBLOB
 #ifndef __WINCE_DEFINED_BTHNS_SETBLOB
 #define __WINCE_DEFINED_BTHNS_SETBLOB
+#ifndef __WINCE_DEFINED_PBTHNS_SETBLOB
+#define __WINCE_DEFINED_PBTHNS_SETBLOB
 typedef struct _BTHNS_SETBLOB {
  ULONG* pRecordHandle;
  ULONG fSecurity;
@@ -29,6 +31,7 @@ typedef struct _BTHNS_SETBLOB {
  ULONG ulRecordLength;
  UCHAR pRecord[1];
 } BTHNS_SETBLOB, *PBTHNS_SETBLOB;
+#endif /* __WINCE_DEFINED_PBTHNS_SETBLOB */
 #endif /* __WINCE_DEFINED_BTHNS_SETBLOB */
 #endif /* __WINCE_DEFINED__BTHNS_SETBLOB */
 
@@ -37,7 +40,7 @@ typedef struct _BTHNS_SETBLOB {
 #define __WINCE_DEFINED_NODECONTAINERTYPE
 typedef enum {
  NODECONTAINERTYPESEQUENCE = 0,
- NODECONTAINERTYPEALTERNATIVE = NodeContainerTypeSequence + 1
+ NODECONTAINERTYPEALTERNATIVE = NODECONTAINERTYPESEQUENCE + 1
 } NODECONTAINERTYPE;
 #endif /* __WINCE_DEFINED_NODECONTAINERTYPE */
 #ifndef __WINCE_DEFINED_PNODECONTAINERTYPE
@@ -109,7 +112,7 @@ struct _SdpAttributeRange {
 #ifndef __WINCE_DEFINED_SDPQUERYUUID
 #define __WINCE_DEFINED_SDPQUERYUUID
 typedef struct _SdpQueryUuid {
- SdpQueryUuidUnion u;
+ /* DERIVED member omitted -- type body unprinted: SdpQueryUuidUnion u; */
  USHORT uuidType;
 } SdpQueryUuid;
 #endif /* __WINCE_DEFINED_SDPQUERYUUID */

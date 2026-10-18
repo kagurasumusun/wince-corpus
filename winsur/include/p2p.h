@@ -38,11 +38,14 @@ typedef enum peer_connection_flags_tag
 #define __WINCE_DEFINED_PEER_DATA_TAG
 #ifndef __WINCE_DEFINED_PEER_DATA
 #define __WINCE_DEFINED_PEER_DATA
+#ifndef __WINCE_DEFINED_PPEER_DATA
+#define __WINCE_DEFINED_PPEER_DATA
 typedef struct peer_data_tag {
  ULONG cbData;
  PBYTE pbData;
 } PEER_DATA,
 *PPEER_DATA;
+#endif /* __WINCE_DEFINED_PPEER_DATA */
 #endif /* __WINCE_DEFINED_PEER_DATA */
 #endif /* __WINCE_DEFINED_PEER_DATA_TAG */
 

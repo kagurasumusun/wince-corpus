@@ -44,11 +44,14 @@
 /* BT_DISCONNECT_EVENT  [struct; ce-only] */
 #ifndef __WINCE_DEFINED_BT_DISCONNECT_EVENT
 #define __WINCE_DEFINED_BT_DISCONNECT_EVENT
+#ifndef __WINCE_DEFINED_PBT_DISCONNECT_EVENT
+#define __WINCE_DEFINED_PBT_DISCONNECT_EVENT
 typedef struct {
  DWORD dwSize;
  USHORT hConnection;
  UCHAR ucReason;
 } BT_DISCONNECT_EVENT, *PBT_DISCONNECT_EVENT;
+#endif /* __WINCE_DEFINED_PBT_DISCONNECT_EVENT */
 #endif /* __WINCE_DEFINED_BT_DISCONNECT_EVENT */
 
 /* BTEVENT  [struct; ce-only] */
@@ -56,11 +59,14 @@ typedef struct {
 #define __WINCE_DEFINED__BTEVENT
 #ifndef __WINCE_DEFINED_BTEVENT
 #define __WINCE_DEFINED_BTEVENT
+#ifndef __WINCE_DEFINED_PBTEVENT
+#define __WINCE_DEFINED_PBTEVENT
 typedef struct _BTEVENT {
  DWORD dwEventId;
  DWORD dwReserved;
  BYTE baEventData[64];
 } BTEVENT, *PBTEVENT;
+#endif /* __WINCE_DEFINED_PBTEVENT */
 #endif /* __WINCE_DEFINED_BTEVENT */
 #endif /* __WINCE_DEFINED__BTEVENT */
 

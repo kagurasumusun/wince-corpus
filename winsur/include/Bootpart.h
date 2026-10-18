@@ -48,7 +48,7 @@ typedef PARTENTRY *PPARTENTRY, *LPPARTENTRY;
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* BP_GetPartitionInfo  [function; ce-only; CE 5.0..699; Bootpart.lib] */
-PPARTENTRY BP_GetPartitionInfo(HANDLE hPartition,);
+PPARTENTRY BP_GetPartitionInfo(HANDLE hPartition);
 
 /* BP_LowLevelFormat  [function; ce-only; CE 5.0..699; Bootpart.lib] */
 BOOL BP_LowLevelFormat(DWORD dwStartBlock,

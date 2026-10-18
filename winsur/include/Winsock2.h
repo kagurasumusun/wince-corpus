@@ -116,10 +116,16 @@
 #define __WINCE_DEFINED__AFPROTOCOLS
 #ifndef __WINCE_DEFINED_AFPROTOCOLS
 #define __WINCE_DEFINED_AFPROTOCOLS
+#ifndef __WINCE_DEFINED_PAFPROTOCOLS
+#define __WINCE_DEFINED_PAFPROTOCOLS
+#ifndef __WINCE_DEFINED_LPAFPROTOCOLS
+#define __WINCE_DEFINED_LPAFPROTOCOLS
 typedef struct _AFPROTOCOLS {
  INT iAddressFamily;
  INT iProtocol;
 } AFPROTOCOLS, *PAFPROTOCOLS, *LPAFPROTOCOLS;
+#endif /* __WINCE_DEFINED_LPAFPROTOCOLS */
+#endif /* __WINCE_DEFINED_PAFPROTOCOLS */
 #endif /* __WINCE_DEFINED_AFPROTOCOLS */
 #endif /* __WINCE_DEFINED__AFPROTOCOLS */
 
@@ -128,26 +134,15 @@ typedef struct _AFPROTOCOLS {
 #define __WINCE_DEFINED__BLOB
 #ifndef __WINCE_DEFINED_BLOB
 #define __WINCE_DEFINED_BLOB
+#ifndef __WINCE_DEFINED_LPBLOB
+#define __WINCE_DEFINED_LPBLOB
 typedef struct _BLOB {
  ULONG cbSize;
  BYTE* pBlobData;
 } BLOB, LPBLOB;
+#endif /* __WINCE_DEFINED_LPBLOB */
 #endif /* __WINCE_DEFINED_BLOB */
 #endif /* __WINCE_DEFINED__BLOB */
-
-/* gethostbyaddr  [struct, function; shared; winsock.lib, Ws2.lib] */
-#ifndef __WINCE_DEFINED_GETHOSTBYADDR
-#define __WINCE_DEFINED_GETHOSTBYADDR
-struct hostent FAR* gethostbyaddr(const char FAR* addr,
- int len,
- int type);
-#endif /* __WINCE_DEFINED_GETHOSTBYADDR */
-
-/* gethostbyname  [struct, function; shared; winsock.lib, Ws2.lib] */
-#ifndef __WINCE_DEFINED_GETHOSTBYNAME
-#define __WINCE_DEFINED_GETHOSTBYNAME
-struct hostent FAR* gethostbyname(const char FAR* name);
-#endif /* __WINCE_DEFINED_GETHOSTBYNAME */
 
 /* hostent  [struct; shared] */
 #ifndef __WINCE_DEFINED_HOSTENT
@@ -166,8 +161,6 @@ struct hostent {
 #define __WINCE_DEFINED_IN_ADDR
 #ifndef __WINCE_DEFINED_IN_ADDR
 #define __WINCE_DEFINED_IN_ADDR
-#ifndef __WINCE_DEFINED_S_UN_B
-#define __WINCE_DEFINED_S_UN_B
 struct in_addr {
  union {
  struct { u_char s_b1,s_b2,s_b3,s_b4; } S_un_b;
@@ -175,7 +168,6 @@ struct in_addr {
  u_long S_addr;
  } S_un;
 };
-#endif /* __WINCE_DEFINED_S_UN_B */
 #endif /* __WINCE_DEFINED_IN_ADDR */
 #endif /* __WINCE_DEFINED_IN_ADDR */
 
@@ -228,16 +220,6 @@ struct protoent {
  short p_proto;
 };
 #endif /* __WINCE_DEFINED_PROTOENT */
-
-/* select  [struct, function; shared; winsock.lib, Ws2.lib] */
-#ifndef __WINCE_DEFINED_SELECT
-#define __WINCE_DEFINED_SELECT
-int select(int nfds,
- fd_set FAR* readfds,
- fd_set FAR* writefds,
- fd_set FAR* exceptfds,
- const struct timeval FAR* timeout);
-#endif /* __WINCE_DEFINED_SELECT */
 
 /* servent  [struct; shared] */
 #ifndef __WINCE_DEFINED_SERVENT
@@ -348,12 +330,15 @@ struct sockaddr_irda {
 #define __WINCE_DEFINED_SOCKADDR_STORAGE
 #ifndef __WINCE_DEFINED_SOCKADDR_STORAGE
 #define __WINCE_DEFINED_SOCKADDR_STORAGE
+#ifndef __WINCE_DEFINED_PSOCKADDR_STORAGE
+#define __WINCE_DEFINED_PSOCKADDR_STORAGE
 typedef struct sockaddr_storage {
  short ss_family;
  char __ss_pad1[_SS_PAD1SIZE];
  __int64 __ss_align;
  char __ss_pad2[_SS_PAD2SIZE];
 } SOCKADDR_STORAGE, *PSOCKADDR_STORAGE;
+#endif /* __WINCE_DEFINED_PSOCKADDR_STORAGE */
 #endif /* __WINCE_DEFINED_SOCKADDR_STORAGE */
 #endif /* __WINCE_DEFINED_SOCKADDR_STORAGE */
 
@@ -362,10 +347,13 @@ typedef struct sockaddr_storage {
 #define __WINCE_DEFINED__SOCKET_ADDRESS
 #ifndef __WINCE_DEFINED_SOCKET_ADDRESS
 #define __WINCE_DEFINED_SOCKET_ADDRESS
+#ifndef __WINCE_DEFINED_PSOCKET_ADDRESS
+#define __WINCE_DEFINED_PSOCKET_ADDRESS
 typedef struct _SOCKET_ADDRESS {
  LPSOCKADDR lpSockaddr;
  INT iSockaddrLength;
 } SOCKET_ADDRESS, *PSOCKET_ADDRESS;
+#endif /* __WINCE_DEFINED_PSOCKET_ADDRESS */
 #endif /* __WINCE_DEFINED_SOCKET_ADDRESS */
 #endif /* __WINCE_DEFINED__SOCKET_ADDRESS */
 
@@ -413,10 +401,13 @@ typedef struct __WSABUF {
 #define __WINCE_DEFINED__WSAECOMPARATOR
 #ifndef __WINCE_DEFINED_WSAECOMPARATOR
 #define __WINCE_DEFINED_WSAECOMPARATOR
+#ifndef __WINCE_DEFINED_PWSAECOMPARATOR
+#define __WINCE_DEFINED_PWSAECOMPARATOR
 typedef enum _WSAEcomparator {
  COMP_EQUAL = 0,
  COMP_NOTLESS
 } WSAECOMPARATOR, *PWSAECOMPARATOR;
+#endif /* __WINCE_DEFINED_PWSAECOMPARATOR */
 #endif /* __WINCE_DEFINED_WSAECOMPARATOR */
 #endif /* __WINCE_DEFINED__WSAECOMPARATOR */
 
@@ -437,6 +428,30 @@ typedef struct _CSADDR_INFO {
 #define __WINCE_DEFINED_PCSADDR_INFO
 typedef CSADDR_INFO *PCSADDR_INFO, *LPCSADDR_INFO;
 #endif /* __WINCE_DEFINED_PCSADDR_INFO */
+
+/* gethostbyaddr  [struct, function; shared; winsock.lib, Ws2.lib] */
+#ifndef __WINCE_DEFINED_GETHOSTBYADDR
+#define __WINCE_DEFINED_GETHOSTBYADDR
+struct hostent FAR* gethostbyaddr(const char FAR* addr,
+ int len,
+ int type);
+#endif /* __WINCE_DEFINED_GETHOSTBYADDR */
+
+/* gethostbyname  [struct, function; shared; winsock.lib, Ws2.lib] */
+#ifndef __WINCE_DEFINED_GETHOSTBYNAME
+#define __WINCE_DEFINED_GETHOSTBYNAME
+struct hostent FAR* gethostbyname(const char FAR* name);
+#endif /* __WINCE_DEFINED_GETHOSTBYNAME */
+
+/* select  [struct, function; shared; winsock.lib, Ws2.lib] */
+#ifndef __WINCE_DEFINED_SELECT
+#define __WINCE_DEFINED_SELECT
+int select(int nfds,
+ fd_set FAR* readfds,
+ fd_set FAR* writefds,
+ fd_set FAR* exceptfds,
+ const struct timeval FAR* timeout);
+#endif /* __WINCE_DEFINED_SELECT */
 
 /* SERVICE_TYPE_INFO_ABS  [struct; shared; A/W SERVICE_TYPE_INFO_ABSA,SERVICE_TYPE_INFO_ABSW (CE is W-side)] */
 #ifndef __WINCE_DEFINED__SERVICE_TYPE_INFO_ABS

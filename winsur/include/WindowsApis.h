@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 350 constants, 39 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 350 constants, 39 declarations, 27 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDOWSAPIS_
 #define _WINDOWSAPIS_
@@ -373,14 +373,66 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
+/* definition  [typedef; ce-only; heuristic-prefix] */
+
+/* firstChild  [typedef; ce-only; heuristic-prefix] */
+
+/* HIMAGELIST  [typedef; ce-only; heuristic-prefix] */
+
+/* HIMC  [typedef; ce-only; heuristic-prefix] */
+
+/* lastChild  [typedef; ce-only; heuristic-prefix] */
+
+/* LPCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
+
+/* LUID  [typedef; ce-only; heuristic-prefix] */
+
 /* MAKEINTATOM  [macro, function; shared] */
 LPTSTR MAKEINTATOM(WORD wInteger);
+
+/* namespaceURI  [typedef; ce-only; heuristic-prefix] */
+
+/* nextSibling  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeName  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeType  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeTypedValue  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeTypeString  [typedef; ce-only; heuristic-prefix] */
+
+/* nodeValue  [typedef; ce-only; heuristic-prefix] */
+
+/* ownerDocument  [typedef; ce-only; heuristic-prefix] */
 
 /* PALETTEINDEX2BPP  [macro; ce-only] */
 #define PALETTEINDEX2BPP (i) \
  (((i)==0)?0x00000000: \
  (((i)==1)?0x00808080: \
  (((i)==2)?0x00C0C0C0:0x00FFFFFF)));
+
+/* parentNode  [typedef; ce-only; heuristic-prefix] */
+
+/* parsed  [typedef; ce-only; heuristic-prefix] */
+
+/* PCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
+
+/* PCWCH  [typedef; ce-only; heuristic-prefix] */
+
+/* PLUID  [typedef; ce-only; heuristic-prefix] */
+
+/* prefix  [typedef; ce-only; heuristic-prefix] */
+
+/* previousSibling  [typedef; ce-only; heuristic-prefix] */
+
+/* REGSAM  [typedef; ce-only; heuristic-prefix] */
+
+/* specified  [typedef; ce-only; heuristic-prefix] */
+
+/* UNSIGNED  [typedef; ce-only; heuristic-prefix] */
+
+/* xml  [typedef; ce-only; heuristic-prefix] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -391,6 +443,8 @@ LPTSTR MAKEINTATOM(WORD wInteger);
 /* EXTENDED_NAME_FORMAT  [enum; shared] */
 #ifndef __WINCE_DEFINED_EXTENDED_NAME_FORMAT
 #define __WINCE_DEFINED_EXTENDED_NAME_FORMAT
+#ifndef __WINCE_DEFINED_PEXTENDED_NAME_FORMAT
+#define __WINCE_DEFINED_PEXTENDED_NAME_FORMAT
 typedef enum {
  NameUnknown = 0,
  NameFullyQualifiedDN = 1,
@@ -403,6 +457,7 @@ typedef enum {
  NameServicePrincipal = 10,
  NameWindowsCeLocal = 0x80000001
 } EXTENDED_NAME_FORMAT, *PEXTENDED_NAME_FORMAT;
+#endif /* __WINCE_DEFINED_PEXTENDED_NAME_FORMAT */
 #endif /* __WINCE_DEFINED_EXTENDED_NAME_FORMAT */
 
 /* GRADIENT_RECT  [struct; shared] */
@@ -410,10 +465,13 @@ typedef enum {
 #define __WINCE_DEFINED__GRADIENT_RECT
 #ifndef __WINCE_DEFINED_GRADIENT_RECT
 #define __WINCE_DEFINED_GRADIENT_RECT
+#ifndef __WINCE_DEFINED_PGRADIENT_RECT
+#define __WINCE_DEFINED_PGRADIENT_RECT
 typedef struct _GRADIENT_RECT {
  ULONG UpperLeft;
  ULONG LowerRight;
 }GRADIENT_RECT, *PGRADIENT_RECT;
+#endif /* __WINCE_DEFINED_PGRADIENT_RECT */
 #endif /* __WINCE_DEFINED_GRADIENT_RECT */
 #endif /* __WINCE_DEFINED__GRADIENT_RECT */
 
@@ -588,7 +646,7 @@ HANDLE RemoveProp(HWND hWnd,
 
 /* SetLayout  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 DWORD SetLayout(HDC hdc,
- DWORD dwLayout,);
+ DWORD dwLayout);
 
 /* SetProp  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W SetPropA,SetPropW (CE is W-side)] */
 BOOL SetProp(HWND hWnd,

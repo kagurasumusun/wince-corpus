@@ -372,7 +372,7 @@ HRESULT WINAPI ScriptGetFontProperties(HDC hdc,
 HRESULT WINAPI ScriptGetGlyphABCWidth(HDC hdc,
  SCRIPT_CACHE* psc,
  WORD wGlyph,
- ABC* pABC,);
+ ABC* pABC);
 
 /* ScriptGetLogicalWidths  [function; shared; CE 5.0..699; Uspce.lib] */
 HRESULT WINAPI ScriptGetLogicalWidths(const SCRIPT_ANALYSIS *psa,
@@ -381,7 +381,7 @@ HRESULT WINAPI ScriptGetLogicalWidths(const SCRIPT_ANALYSIS *psa,
  const int* piGlyphWidth,
  const WORD* pwLogClust,
  const SCRIPT_VISATTR* psva,
- int* piDx,);
+ int* piDx);
 
 /* ScriptGetProperties  [function; shared; CE 5.0..699; Uspce.lib] */
 HRESULT WINAPI ScriptGetProperties(const SCRIPT_PROPERTIES*** ppSp,

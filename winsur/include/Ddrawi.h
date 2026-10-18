@@ -113,21 +113,6 @@
  * declaration body no page prints
  * ================================================================ */
 
-/* ATTACHLIST  [struct, typedef; ce-only] */
-#ifndef __WINCE_DEFINED__ATTACHLIST
-#define __WINCE_DEFINED__ATTACHLIST
-#ifndef __WINCE_DEFINED_ATTACHLIST
-#define __WINCE_DEFINED_ATTACHLIST
-typedef struct _ATTACHLIST {
- DWORD dwFlags;
- struct _ATTACHLIST FAR* lpLink;
- struct _DDRAWI_DDRAWSURFACE_LCL FAR* lpAttached;
- struct _DDRAWI_DDRAWSURFACE_INT FAR* lpIAttached;
-} ATTACHLIST;
-typedef ATTACHLIST FAR *LPATTACHLIST;
-#endif /* __WINCE_DEFINED_ATTACHLIST */
-#endif /* __WINCE_DEFINED__ATTACHLIST */
-
 /* DDHALMODEINFO  [struct, typedef; ce-only] */
 #ifndef __WINCE_DEFINED__DDHALMODEINFO
 #define __WINCE_DEFINED__DDHALMODEINFO
@@ -175,5 +160,20 @@ DWORD dwOverlayAffineMinifyLimit;
 typedef struct _DDMORECAPS FAR *LPDDMORECAPS;
 #endif /* __WINCE_DEFINED_DDMORECAPS */
 #endif /* __WINCE_DEFINED__DDMORECAPS */
+
+/* ATTACHLIST  [struct, typedef; ce-only] */
+#ifndef __WINCE_DEFINED__ATTACHLIST
+#define __WINCE_DEFINED__ATTACHLIST
+#ifndef __WINCE_DEFINED_ATTACHLIST
+#define __WINCE_DEFINED_ATTACHLIST
+typedef struct _ATTACHLIST {
+ DWORD dwFlags;
+ struct _ATTACHLIST FAR* lpLink;
+ struct _DDRAWI_DDRAWSURFACE_LCL FAR* lpAttached;
+ struct _DDRAWI_DDRAWSURFACE_INT FAR* lpIAttached;
+} ATTACHLIST;
+typedef ATTACHLIST FAR *LPATTACHLIST;
+#endif /* __WINCE_DEFINED_ATTACHLIST */
+#endif /* __WINCE_DEFINED__ATTACHLIST */
 
 #endif /* _DDRAWI_ */

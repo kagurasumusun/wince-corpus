@@ -834,8 +834,6 @@ typedef struct DMUS_NOTIFICATION_PMSG DMUS_NOTIFICATION_PMSG;
 /* DERIVED forward -- derived forward: no corpus page prints the struct body */
 typedef struct DMO_OUTPUT_DATA_BUFFER DMO_OUTPUT_DATA_BUFFER;
 /* DERIVED forward -- derived forward: no corpus page prints the struct body */
-typedef struct CEL_INT_DATA CEL_INT_DATA;
-/* DERIVED forward -- derived forward: no corpus page prints the struct body */
 typedef struct DVDUserGOPData DVDUserGOPData;
 /* DERIVED forward -- derived forward: no corpus page prints the struct body */
 typedef struct DVD_AUDIO_STREAM_ATTR DVD_AUDIO_STREAM_ATTR;
@@ -947,10 +945,6 @@ typedef int INTERFACE_TYPE;
 typedef struct AM_MEDIA_TYPE AM_MEDIA_TYPE;
 /* DERIVED forward -- derived forward: outline only; no corpus page prints the union body */
 typedef struct CY CY;
-/* DERIVED forward -- derived forward: no corpus page prints the union body */
-typedef struct STREAM_MediaType STREAM_MediaType;
-/* DERIVED forward -- derived placeholder: enumeration body no corpus page prints */
-typedef int VVCR_EVENT_Type;
 /* DERIVED forward -- derived placeholder: enumeration body no corpus page prints */
 typedef int CEL_MAPFLUSH_TYPE;
 /* DERIVED forward -- derived forward: no corpus page prints the struct body */
@@ -959,6 +953,12 @@ typedef struct _FRAGNODE _FRAGNODE;
 typedef struct __POSITION __POSITION;
 /* DERIVED forward -- derived forward: MIDL [object] name leaked as a type; body no corpus page prints */
 typedef struct object object;
+/* DERIVED forward -- derived forward: no corpus page prints the struct body */
+typedef struct FileVerifyInfo FileVerifyInfo;
+/* DERIVED forward -- derived forward: no corpus page prints the struct body */
+typedef struct FileVerifyReference FileVerifyReference;
+/* DERIVED forward -- derived forward (matching the printed tag): placed before the printed body so the printed uses compile */
+typedef struct tagSAFEARRAYBOUND SAFEARRAYBOUND;
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
@@ -1041,12 +1041,15 @@ typedef RECT *PRECT, *LPRECT;
 #define __WINCE_DEFINED__RECTL
 #ifndef __WINCE_DEFINED_RECTL
 #define __WINCE_DEFINED_RECTL
+#ifndef __WINCE_DEFINED_PRECTL
+#define __WINCE_DEFINED_PRECTL
 typedef struct _RECTL {
  LONG left;
  LONG top;
  LONG right;
  LONG bottom;
 } RECTL, *PRECTL;
+#endif /* __WINCE_DEFINED_PRECTL */
 #endif /* __WINCE_DEFINED_RECTL */
 #endif /* __WINCE_DEFINED__RECTL */
 

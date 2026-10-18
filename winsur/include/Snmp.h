@@ -138,35 +138,6 @@
  * declaration body no page prints
  * ================================================================ */
 
-/* AsnAny  [struct, typedef; shared; snmp.lib] */
-#ifndef __WINCE_DEFINED_ASNANY
-#define __WINCE_DEFINED_ASNANY
-#ifndef __WINCE_DEFINED_ASNVALUE
-#define __WINCE_DEFINED_ASNVALUE
-typedef struct {
- BYTE asnType;
- union {
- AsnInteger32 number;
- AsnUnsigned32 unsigned32;
- AsnCounter64 counter64;
- AsnOctetString string;
- AsnBits bits;
- AsnObjectIdentifier object;
- AsnSequence sequence;
- AsnIPAdress address;
- AsnCounter32 counter32;
- AsnGauge32 gauge;
- AsnTimeTicks ticks;
- AsnOpaque arbitrary;
- } asnValue;
-} AsnAny;
-#endif /* __WINCE_DEFINED_ASNVALUE */
-#endif /* __WINCE_DEFINED_ASNANY */
-#ifndef __WINCE_DEFINED_PASNANY
-#define __WINCE_DEFINED_PASNANY
-typedef AsnAny *PAsnAny, *LPAsnAny;
-#endif /* __WINCE_DEFINED_PASNANY */
-
 /* AsnCounter64  [struct, typedef; ce-only; snmp.lib] */
 #ifndef __WINCE_DEFINED_ASNCOUNTER64
 #define __WINCE_DEFINED_ASNCOUNTER64
@@ -232,6 +203,32 @@ typedef struct {
 #define __WINCE_DEFINED_PSNMPVARBINDLIST
 typedef SnmpVarBindList *PSnmpVarBindList, *LPSnmpVarBindList;
 #endif /* __WINCE_DEFINED_PSNMPVARBINDLIST */
+
+/* AsnAny  [struct, typedef; shared; snmp.lib] */
+#ifndef __WINCE_DEFINED_ASNANY
+#define __WINCE_DEFINED_ASNANY
+typedef struct {
+ BYTE asnType;
+ union {
+ AsnInteger32 number;
+ AsnUnsigned32 unsigned32;
+ AsnCounter64 counter64;
+ AsnOctetString string;
+ AsnBits bits;
+ AsnObjectIdentifier object;
+ AsnSequence sequence;
+ AsnIPAdress address;
+ AsnCounter32 counter32;
+ AsnGauge32 gauge;
+ AsnTimeTicks ticks;
+ AsnOpaque arbitrary;
+ } asnValue;
+} AsnAny;
+#endif /* __WINCE_DEFINED_ASNANY */
+#ifndef __WINCE_DEFINED_PASNANY
+#define __WINCE_DEFINED_PASNANY
+typedef AsnAny *PAsnAny, *LPAsnAny;
+#endif /* __WINCE_DEFINED_PASNANY */
 
 /* ==================================================================
  * functions and callbacks

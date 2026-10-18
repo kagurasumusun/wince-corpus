@@ -22,8 +22,6 @@
 #define __WINCE_DEFINED__OBEX_COMMAND
 #ifndef __WINCE_DEFINED_OBEXCOMMAND
 #define __WINCE_DEFINED_OBEXCOMMAND
-#ifndef __WINCE_DEFINED_OBEXCOMMAND
-#define __WINCE_DEFINED_OBEXCOMMAND
 typedef struct _obex_command {
  unsigned int uiOp;
  unsigned int uiResp;
@@ -34,14 +32,19 @@ typedef struct _obex_command {
  ObexVariant * aPropVar;
 } ObexCommand;
 #endif /* __WINCE_DEFINED_OBEXCOMMAND */
-#endif /* __WINCE_DEFINED_OBEXCOMMAND */
 #endif /* __WINCE_DEFINED__OBEX_COMMAND */
+
+/* ServerCallback  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_SERVERCALLBACK
+#define __WINCE_DEFINED_SERVERCALLBACK
+typedef int (*ServerCallback)(unsigned int uiOp,
+ unsigned int uiId,
+ struct _obex_command * pCommand);
+#endif /* __WINCE_DEFINED_SERVERCALLBACK */
 
 /* OBEXTRANSACTION  [struct; ce-only] */
 #ifndef __WINCE_DEFINED__OBEX_TRANSACTION
 #define __WINCE_DEFINED__OBEX_TRANSACTION
-#ifndef __WINCE_DEFINED_OBEXTRANSACTION
-#define __WINCE_DEFINED_OBEXTRANSACTION
 #ifndef __WINCE_DEFINED_OBEXTRANSACTION
 #define __WINCE_DEFINED_OBEXTRANSACTION
 typedef struct _obex_transaction {
@@ -54,16 +57,7 @@ typedef struct _obex_transaction {
  ServerCallback ObexExecute;
 } ObexTransaction;
 #endif /* __WINCE_DEFINED_OBEXTRANSACTION */
-#endif /* __WINCE_DEFINED_OBEXTRANSACTION */
 #endif /* __WINCE_DEFINED__OBEX_TRANSACTION */
-
-/* ServerCallback  [struct; ce-only] */
-#ifndef __WINCE_DEFINED_SERVERCALLBACK
-#define __WINCE_DEFINED_SERVERCALLBACK
-typedef int (*ServerCallback)(unsigned int uiOp,
- unsigned int uiId,
- struct _obex_command * pCommand);
-#endif /* __WINCE_DEFINED_SERVERCALLBACK */
 
 /* ServiceCallback  [struct; ce-only] */
 #ifndef __WINCE_DEFINED_SERVICECALLBACK

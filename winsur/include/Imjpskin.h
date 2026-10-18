@@ -22,12 +22,15 @@
 #define __WINCE_DEFINED__MARGINS
 #ifndef __WINCE_DEFINED_MARGINS
 #define __WINCE_DEFINED_MARGINS
+#ifndef __WINCE_DEFINED_PMARGINS
+#define __WINCE_DEFINED_PMARGINS
 typedef struct _MARGINS {
  int cxLeftWidth;
  int cxRightWidth;
  int cyTopHeight;
  int cyBottomHeight;
 } MARGINS,* PMARGINS;
+#endif /* __WINCE_DEFINED_PMARGINS */
 #endif /* __WINCE_DEFINED_MARGINS */
 #endif /* __WINCE_DEFINED__MARGINS */
 

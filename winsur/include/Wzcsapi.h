@@ -46,20 +46,26 @@
 /* INTF_KEY_ENTRY  [struct; ce-only] */
 #ifndef __WINCE_DEFINED_INTF_KEY_ENTRY
 #define __WINCE_DEFINED_INTF_KEY_ENTRY
+#ifndef __WINCE_DEFINED_PINTF_KEY_ENTRY
+#define __WINCE_DEFINED_PINTF_KEY_ENTRY
 typedef struct
 {
  LPWSTR wszGuid;
 } INTF_KEY_ENTRY, *PINTF_KEY_ENTRY;
+#endif /* __WINCE_DEFINED_PINTF_KEY_ENTRY */
 #endif /* __WINCE_DEFINED_INTF_KEY_ENTRY */
 
 /* INTFS_KEY_TABLE  [struct; ce-only] */
 #ifndef __WINCE_DEFINED_INTFS_KEY_TABLE
 #define __WINCE_DEFINED_INTFS_KEY_TABLE
+#ifndef __WINCE_DEFINED_PINTFS_KEY_TABLE
+#define __WINCE_DEFINED_PINTFS_KEY_TABLE
 typedef struct
 {
  DWORD dwNumIntfs;
  PINTF_KEY_ENTRY pIntfs;
 } INTFS_KEY_TABLE, *PINTFS_KEY_TABLE;
+#endif /* __WINCE_DEFINED_PINTFS_KEY_TABLE */
 #endif /* __WINCE_DEFINED_INTFS_KEY_TABLE */
 
 /* WZC_CONTEXT  [struct; ce-only] */
@@ -67,6 +73,8 @@ typedef struct
 #define __WINCE_DEFINED__WZC_CONTEXT_T
 #ifndef __WINCE_DEFINED_WZC_CONTEXT
 #define __WINCE_DEFINED_WZC_CONTEXT
+#ifndef __WINCE_DEFINED_PWZC_CONTEXT
+#define __WINCE_DEFINED_PWZC_CONTEXT
 typedef struct _wzc_context_t
 {
  DWORD dwFlags;
@@ -76,6 +84,7 @@ typedef struct _wzc_context_t
  DWORD tmTf;
  DWORD tmTd;
 } WZC_CONTEXT, *PWZC_CONTEXT;
+#endif /* __WINCE_DEFINED_PWZC_CONTEXT */
 #endif /* __WINCE_DEFINED_WZC_CONTEXT */
 #endif /* __WINCE_DEFINED__WZC_CONTEXT_T */
 
@@ -84,6 +93,8 @@ typedef struct _wzc_context_t
 #define __WINCE_DEFINED__WZC_EAPOL_PARAMS
 #ifndef __WINCE_DEFINED_WZC_EAPOL_PARAMS
 #define __WINCE_DEFINED_WZC_EAPOL_PARAMS
+#ifndef __WINCE_DEFINED_PWZC_EAPOL_PARAMS
+#define __WINCE_DEFINED_PWZC_EAPOL_PARAMS
 typedef struct _WZC_EAPOL_PARAMS
 {
  BOOL bEnable8021x;
@@ -92,6 +103,7 @@ typedef struct _WZC_EAPOL_PARAMS
  DWORD dwAuthDataLen;
  BYTE *pbAuthData;
 }WZC_EAPOL_PARAMS, *PWZC_EAPOL_PARAMS;
+#endif /* __WINCE_DEFINED_PWZC_EAPOL_PARAMS */
 #endif /* __WINCE_DEFINED_WZC_EAPOL_PARAMS */
 #endif /* __WINCE_DEFINED__WZC_EAPOL_PARAMS */
 

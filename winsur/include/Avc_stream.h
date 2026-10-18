@@ -27,16 +27,6 @@ typedef enum { AUDIO_SampleFrequency_32Khz = 0, AUDIO_SampleFrequency_44_1Khz, A
 typedef AUDIO_SampleFrequency *PAUDIO_SampleFrequency, *LPAUDIO_SampleFrequency;
 #endif /* __WINCE_DEFINED_PAUDIO_SAMPLEFREQUENCY */
 
-/* STREAM_CreateLocalPlug_Request  [struct; ce-only] */
-#ifndef __WINCE_DEFINED_STREAM_CREATELOCALPLUG_REQUEST
-#define __WINCE_DEFINED_STREAM_CREATELOCALPLUG_REQUEST
-typedef struct { ULONG sclp_PlugDirection; STREAM_MediaType sclp_MediaType; ULONG sclp_Direction; union { ULONG sclp_MaximumThroughput; struct { ULONG sclp_ClusterDimension; ULONG sclp_SampleFrequency; }; };} STREAM_CreateLocalPlug_Request;
-#endif /* __WINCE_DEFINED_STREAM_CREATELOCALPLUG_REQUEST */
-#ifndef __WINCE_DEFINED_PSTREAM_CREATELOCALPLUG_REQUEST
-#define __WINCE_DEFINED_PSTREAM_CREATELOCALPLUG_REQUEST
-typedef STREAM_CreateLocalPlug_Request *PSTREAM_CreateLocalPlug_Request, *LPSTREAM_CreateLocalPlug_Request;
-#endif /* __WINCE_DEFINED_PSTREAM_CREATELOCALPLUG_REQUEST */
-
 /* STREAM_CreateLocalPlug_Response  [struct; ce-only] */
 #ifndef __WINCE_DEFINED_STREAM_CREATELOCALPLUG_RESPONSE
 #define __WINCE_DEFINED_STREAM_CREATELOCALPLUG_RESPONSE
@@ -66,16 +56,6 @@ typedef struct { ULONG sdrp_Direction; ULONG sdrp_SubunitPlugID; ULONG sdrp_Plug
 #define __WINCE_DEFINED_PSTREAM_DEREFERENCEREMOTEPLUG_REQUEST
 typedef STREAM_DereferenceRemotePlug_Request *PSTREAM_DereferenceRemotePlug_Request, *LPSTREAM_DereferenceRemotePlug_Request;
 #endif /* __WINCE_DEFINED_PSTREAM_DEREFERENCEREMOTEPLUG_REQUEST */
-
-/* STREAM_GetMediaSize_Request  [struct; ce-only] */
-#ifndef __WINCE_DEFINED_STREAM_GETMEDIASIZE_REQUEST
-#define __WINCE_DEFINED_STREAM_GETMEDIASIZE_REQUEST
-typedef struct { STREAM_MediaType sgms_MediaType;} STREAM_GetMediaSize_Request;
-#endif /* __WINCE_DEFINED_STREAM_GETMEDIASIZE_REQUEST */
-#ifndef __WINCE_DEFINED_PSTREAM_GETMEDIASIZE_REQUEST
-#define __WINCE_DEFINED_PSTREAM_GETMEDIASIZE_REQUEST
-typedef STREAM_GetMediaSize_Request *PSTREAM_GetMediaSize_Request, *LPSTREAM_GetMediaSize_Request;
-#endif /* __WINCE_DEFINED_PSTREAM_GETMEDIASIZE_REQUEST */
 
 /* STREAM_GetMediaSize_Response  [struct; ce-only] */
 #ifndef __WINCE_DEFINED_STREAM_GETMEDIASIZE_RESPONSE
@@ -166,5 +146,25 @@ typedef struct { HANDLE ssts_LocalPlug; HANDLE ssts_RemotePlug; STREAM_MediaType
 #define __WINCE_DEFINED_PSTREAM_STARTTRANSMITSESSION_REQUEST
 typedef STREAM_StartTransmitSession_Request *PSTREAM_StartTransmitSession_Request, *LPSTREAM_StartTransmitSession_Request;
 #endif /* __WINCE_DEFINED_PSTREAM_STARTTRANSMITSESSION_REQUEST */
+
+/* STREAM_CreateLocalPlug_Request  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_STREAM_CREATELOCALPLUG_REQUEST
+#define __WINCE_DEFINED_STREAM_CREATELOCALPLUG_REQUEST
+typedef struct { ULONG sclp_PlugDirection; STREAM_MediaType sclp_MediaType; ULONG sclp_Direction; union { ULONG sclp_MaximumThroughput; struct { ULONG sclp_ClusterDimension; ULONG sclp_SampleFrequency; }; };} STREAM_CreateLocalPlug_Request;
+#endif /* __WINCE_DEFINED_STREAM_CREATELOCALPLUG_REQUEST */
+#ifndef __WINCE_DEFINED_PSTREAM_CREATELOCALPLUG_REQUEST
+#define __WINCE_DEFINED_PSTREAM_CREATELOCALPLUG_REQUEST
+typedef STREAM_CreateLocalPlug_Request *PSTREAM_CreateLocalPlug_Request, *LPSTREAM_CreateLocalPlug_Request;
+#endif /* __WINCE_DEFINED_PSTREAM_CREATELOCALPLUG_REQUEST */
+
+/* STREAM_GetMediaSize_Request  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_STREAM_GETMEDIASIZE_REQUEST
+#define __WINCE_DEFINED_STREAM_GETMEDIASIZE_REQUEST
+typedef struct { STREAM_MediaType sgms_MediaType;} STREAM_GetMediaSize_Request;
+#endif /* __WINCE_DEFINED_STREAM_GETMEDIASIZE_REQUEST */
+#ifndef __WINCE_DEFINED_PSTREAM_GETMEDIASIZE_REQUEST
+#define __WINCE_DEFINED_PSTREAM_GETMEDIASIZE_REQUEST
+typedef STREAM_GetMediaSize_Request *PSTREAM_GetMediaSize_Request, *LPSTREAM_GetMediaSize_Request;
+#endif /* __WINCE_DEFINED_PSTREAM_GETMEDIASIZE_REQUEST */
 
 #endif /* _AVC_STREAM_ */

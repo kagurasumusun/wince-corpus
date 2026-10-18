@@ -29,7 +29,7 @@
 typedef struct NodeData {
  USHORT type;
  USHORT specificType;
- NodeDataUnion u;
+ /* DERIVED member omitted -- type body unprinted: NodeDataUnion u; */
 } NodeData;
 #endif /* __WINCE_DEFINED_NODEDATA */
 #ifndef __WINCE_DEFINED_PNODEDATA

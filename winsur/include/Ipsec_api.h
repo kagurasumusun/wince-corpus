@@ -20,6 +20,8 @@
 /* IPSEC_API_MODE_INFO  [struct, typedef; ce-only] */
 #ifndef __WINCE_DEFINED_IPSEC_API_MODE_INFO
 #define __WINCE_DEFINED_IPSEC_API_MODE_INFO
+#ifndef __WINCE_DEFINED_PIPSEC_API_MODE_INFO
+#define __WINCE_DEFINED_PIPSEC_API_MODE_INFO
 typedef struct {
  DWORD inAction;
  DWORD outAction;
@@ -34,16 +36,20 @@ typedef struct {
  DWORD protocol;
  DWORD scrIP;
 } IPSEC_API_MODE_INFO, *PIPSEC_API_MODE_INFO;
+#endif /* __WINCE_DEFINED_PIPSEC_API_MODE_INFO */
 #endif /* __WINCE_DEFINED_IPSEC_API_MODE_INFO */
 
 /* IPSEC_API_PARAM  [struct, typedef; ce-only] */
 #ifndef __WINCE_DEFINED_IPSEC_API_PARAM
 #define __WINCE_DEFINED_IPSEC_API_PARAM
+#ifndef __WINCE_DEFINED_PIPSEC_API_PARAM
+#define __WINCE_DEFINED_PIPSEC_API_PARAM
 typedef struct {
  DWORD id;
  PVOID val;
  DWORD valSize;
 } IPSEC_API_PARAM, *PIPSEC_API_PARAM;
+#endif /* __WINCE_DEFINED_PIPSEC_API_PARAM */
 #endif /* __WINCE_DEFINED_IPSEC_API_PARAM */
 
 /* ==================================================================

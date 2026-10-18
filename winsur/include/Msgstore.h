@@ -94,11 +94,14 @@ typedef MAILSORTFIELD *PMAILSORTFIELD, *LPMAILSORTFIELD;
 #define __WINCE_DEFINED__MAILSORTINFO
 #ifndef __WINCE_DEFINED_MAILSORTINFO
 #define __WINCE_DEFINED_MAILSORTINFO
+#ifndef __WINCE_DEFINED_PMAILSORTINFO
+#define __WINCE_DEFINED_PMAILSORTINFO
 typedef struct _MAILSORTINFO {
  MAILSORTFIELD iSort;
  BOOL fAscending;
  int cMsgs;
 } MAILSORTINFO, *PMAILSORTINFO;
+#endif /* __WINCE_DEFINED_PMAILSORTINFO */
 #endif /* __WINCE_DEFINED_MAILSORTINFO */
 #endif /* __WINCE_DEFINED__MAILSORTINFO */
 
@@ -160,7 +163,7 @@ DWORD MailHeaderLen (MailMsg* pmm);
 BOOL MailNext (HANDLE hMail, MailMsg* pmm);
 
 /* MailOpen  [function; ce-only; CE 1.0..199, 2.11..2.12] */
-BOOL MailOpen (HANDLE * phNewMail, BOOL fAllowCreate,);
+BOOL MailOpen (HANDLE * phNewMail, BOOL fAllowCreate);
 
 /* MailOpenNotify  [function; ce-only; CE 1.0..199, 2.11..2.12] */
 BOOL MailOpenNotify (HANDLE * phMail, BOOL fAllowCreate,

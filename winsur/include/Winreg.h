@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 33 constants, 17 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 33 constants, 16 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINREG_
 #define _WINREG_
@@ -68,12 +68,15 @@
 #define __WINCE_DEFINED__REG_NOTIFY_INFORMATION
 #ifndef __WINCE_DEFINED_REG_NOTIFY_INFORMATION
 #define __WINCE_DEFINED_REG_NOTIFY_INFORMATION
+#ifndef __WINCE_DEFINED_PREG_NOTIFY_INFORMATION
+#define __WINCE_DEFINED_PREG_NOTIFY_INFORMATION
 typedef struct _REG_NOTIFY_INFORMATION {
  DWORD NextEntryOffset;
  DWORD Action;
  DWORD RegNameLength;
  WCHAR RegName[1];
 } REG_NOTIFY_INFORMATION, *PREG_NOTIFY_INFORMATION;
+#endif /* __WINCE_DEFINED_PREG_NOTIFY_INFORMATION */
 #endif /* __WINCE_DEFINED_REG_NOTIFY_INFORMATION */
 #endif /* __WINCE_DEFINED__REG_NOTIFY_INFORMATION */
 
@@ -166,14 +169,6 @@ BOOL CeFindNextRegChange (HANDLE hChangeHandle);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
-
-/* CeRegGetNotificationInfo  [function; ce-only; CE 6.0..699; coredll.lib] */
-LONG CeRegGetNotificationInfo(__in HANDLE hChangeHandle,
- __in DWORD dwFlags,
- __inout_bcount(nBufferLength) __opt LPVOID lpBuffer,
- __in DWORD nBufferLength,
- __out LPDWORD lpBytesReturned,
- __out LPDWORD lpBytesAvailable);
 
 /* CeRegTestSetValueW  [function; ce-only; CE 6.0..699; coredll.lib] */
 LONG CeRegTestSetValueW(__in HKEY hKey,

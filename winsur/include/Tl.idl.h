@@ -20,6 +20,8 @@
 /* TLPUBINFO  [struct; ce-only] */
 #ifndef __WINCE_DEFINED_TLPUBINFO
 #define __WINCE_DEFINED_TLPUBINFO
+#ifndef __WINCE_DEFINED_PTLPUBINFO
+#define __WINCE_DEFINED_PTLPUBINFO
 typedef struct TLPUBINFO {
  DWORD cbSize;
  DWORD dwVersion;
@@ -29,6 +31,7 @@ typedef struct TLPUBINFO {
  DWORD cbDataSize;
  BYTE pData[1];
 } TLPUBINFO, *PTLPUBINFO;
+#endif /* __WINCE_DEFINED_PTLPUBINFO */
 #endif /* __WINCE_DEFINED_TLPUBINFO */
 
 #endif /* _TL_IDL_ */

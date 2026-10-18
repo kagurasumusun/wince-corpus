@@ -20,6 +20,8 @@
 /* DMTASKINFO  [struct, typedef; ce-only] */
 #ifndef __WINCE_DEFINED_DMTASKINFO
 #define __WINCE_DEFINED_DMTASKINFO
+#ifndef __WINCE_DEFINED_PDMTASKINFO
+#define __WINCE_DEFINED_PDMTASKINFO
 typedef struct {
  DWORD dwSize;
  SYSTEMTIME stStartTime;
@@ -35,6 +37,7 @@ typedef struct {
  LPTSTR pwzData;
  LPTSTR pwzXml;
 } DMTASKINFO, *PDMTASKINFO;
+#endif /* __WINCE_DEFINED_PDMTASKINFO */
 #endif /* __WINCE_DEFINED_DMTASKINFO */
 
 /* ==================================================================

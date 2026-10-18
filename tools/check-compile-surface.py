@@ -123,20 +123,24 @@ def main():
         moved = False
         for type_name in unknown:
             owners = definers.get(type_name) or set()
-            # move a definers' fragment ahead of the first error site
-            for fn, line, msg in errors:
+            users = []
+            for fn, _line, msg in errors:
                 match = UNKNOWN_TYPE_RE.search(msg)
-                if not match or match.group("name") != type_name:
+                if (match and match.group("name") == type_name
+                        and fn not in owners and fn in order):
+                    users.append(fn)
+            if not users:
+                continue
+            target = min(users, key=lambda f: order.index(f))
+            ti = order.index(target)
+            for owner in owners:
+                if owner not in order or owner == target:
                     continue
-                for owner in owners:
-                    if owner == fn:
-                        continue
-                    oi, fi = order.index(owner), order.index(fn)
-                    if oi > fi:
-                        order.remove(owner)
-                        order.insert(fi, owner)
-                        moved = True
-                    break
+                oi = order.index(owner)
+                if oi > ti:
+                    order.remove(owner)
+                    order.insert(ti, owner)
+                    moved = True
                 break
         print(f"[compile-surface] pass {step}: {len(errors)} error(s), "
               f"{len(unknown)} unknown type(s)", flush=True)

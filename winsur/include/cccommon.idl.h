@@ -30,13 +30,10 @@
 #define __WINCE_DEFINED_TAGFILECUSTOMACTION
 #ifndef __WINCE_DEFINED_FILECUSTOMACTION
 #define __WINCE_DEFINED_FILECUSTOMACTION
-#ifndef __WINCE_DEFINED_FILEACTION
-#define __WINCE_DEFINED_FILEACTION
 typedef enum tagFileCustomAction{
  FileCustomAction_None = 0x0000,
  FileCustomAction_COM = 0x0001,
 } FileAction;
-#endif /* __WINCE_DEFINED_FILEACTION */
 #endif /* __WINCE_DEFINED_FILECUSTOMACTION */
 #endif /* __WINCE_DEFINED_TAGFILECUSTOMACTION */
 
@@ -66,7 +63,7 @@ typedef FileInfo *PFileInfo, *LPFileInfo;
 #define __WINCE_DEFINED_FILEVERIFYRESULT
 typedef struct tagFileVerifyResult{
  DWORD m_Version;
- FileVerifyInfo _Info;
+ /* DERIVED member omitted -- type body unprinted: FileVerifyInfo _Info; */
 } FileVerifyResult;
 #endif /* __WINCE_DEFINED_FILEVERIFYRESULT */
 #endif /* __WINCE_DEFINED_TAGFILEVERIFYRESULT */

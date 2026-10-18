@@ -17,23 +17,6 @@
  * declaration body no page prints
  * ================================================================ */
 
-/* NotifyPacket  [struct; ce-only] */
-#ifndef __WINCE_DEFINED_NOTIFYPACKET
-#define __WINCE_DEFINED_NOTIFYPACKET
-struct NotifyPacket {
- NotifyPacket* pNext;
- NotifyPacket* pPrev;
- unsigned int uiPacketType;
- CEOID oidRecord;
- HICON hIcon;
- HICON hBigIcon;
- int fHasIcon;
- HWND hDlg;
- void* pExtraUIData;
- PersistentPacket* sPacket;
-};
-#endif /* __WINCE_DEFINED_NOTIFYPACKET */
-
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
 
 /* PersistentPacket  [?; ce-only; CE 3.0..699] */
@@ -75,6 +58,24 @@ union PersistentPacket {
 };
 #endif /* __WINCE_DEFINED_PERSISTENTPACKET */
 #endif /* _WIN32_WCE */
+
+
+/* NotifyPacket  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_NOTIFYPACKET
+#define __WINCE_DEFINED_NOTIFYPACKET
+struct NotifyPacket {
+ NotifyPacket* pNext;
+ NotifyPacket* pPrev;
+ unsigned int uiPacketType;
+ CEOID oidRecord;
+ HICON hIcon;
+ HICON hBigIcon;
+ int fHasIcon;
+ HWND hDlg;
+ void* pExtraUIData;
+ PersistentPacket* sPacket;
+};
+#endif /* __WINCE_DEFINED_NOTIFYPACKET */
 
 /* sPacket  [extra struct] */
 #ifndef __WINCE_DEFINED_NOTIFYPACKET

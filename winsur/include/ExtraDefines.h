@@ -33,9 +33,9 @@
 #define MONITOR_CENTER 0x0001 // Center rectangle on screen.
 #define MONITOR_CLIP 0x0000 // Clip rectangle to screen.
 #define MONITOR_WORKAREA 0x0002 // Use work area of screen.
-#define PROTECTION_LEVEL_DEFAULT 20 /* default level /*
-#define PROTECTION_LEVEL_RESTRICTED 10 /* for Intranet apps /*
-#define PROTECTION_LEVEL_UNRESTRICTED 30 /* for peer-to-peer apps /*
+#define PROTECTION_LEVEL_DEFAULT 20 /* default level */
+#define PROTECTION_LEVEL_RESTRICTED 10 /* for Intranet apps */
+#define PROTECTION_LEVEL_UNRESTRICTED 30 /* for peer-to-peer apps */
 #define READ_TRANSFER 0x01 // Read from the device.
 #define SH_COMM 83 // Communications not COM
 #define SH_CPROG 88 // Handle to the specified API set

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 39 constants, 12 declarations, 37 outlines, 0 base types, 0 extra macros, 71 extra decls
+ * 39 constants, 12 declarations, 37 outlines, 0 base types, 0 extra macros, 72 extra decls
  */
 #ifndef _OBJIDL_
 #define _OBJIDL_
@@ -174,12 +174,15 @@ typedef ADVF *PADVF, *LPADVF;
 #define __WINCE_DEFINED_TAGBIND_OPTS
 #ifndef __WINCE_DEFINED_BIND_OPTS
 #define __WINCE_DEFINED_BIND_OPTS
+#ifndef __WINCE_DEFINED_LPBIND_OPTS
+#define __WINCE_DEFINED_LPBIND_OPTS
 typedef struct tagBIND_OPTS {
  DWORD cbStruct;
  DWORD grfFlags;
  DWORD grfMode;
  DWORD dwTickCountDeadline;
 } BIND_OPTS, *LPBIND_OPTS;
+#endif /* __WINCE_DEFINED_LPBIND_OPTS */
 #endif /* __WINCE_DEFINED_BIND_OPTS */
 #endif /* __WINCE_DEFINED_TAGBIND_OPTS */
 

@@ -37,19 +37,6 @@ typedef struct {ULONG vve_Flags;} VVCR_Event_Request;
 typedef VVCR_Event_Request *PVVCR_Event_Request, *LPVVCR_Event_Request;
 #endif /* __WINCE_DEFINED_PVVCR_EVENT_REQUEST */
 
-/* VVCR_Event_Response  [struct; ce-only] */
-#ifndef __WINCE_DEFINED_VVCR_EVENT_RESPONSE
-#define __WINCE_DEFINED_VVCR_EVENT_RESPONSE
-#ifndef __WINCE_DEFINED_PLUGSTATECHANGE
-#define __WINCE_DEFINED_PLUGSTATECHANGE
-typedef struct {VVCR_EVENT_Type vve_Event;union { struct { ULONG psc_PlugNumber; ULONG psc_Direction; BOOL psc_PlugState; STREAM_MediaType psc_MediaType; HANDLE psc_Plug; } PlugStateChange; struct { PVOID pr_RequestIdentifier; ULONG pr_PlayMode; } PlayRequest; struct { PVOID rr_RequestIdentifier; ULONG rr_RecordMode; } RecordRequest; struct { PVOID wr_RequestIdentifier; ULONG wr_WindMode; } WindRequest; struct { PVOID rtc_RequestIdentifier; BYTE rtc_Hour; BYTE rtc_Minute; BYTE rtc_Second; BYTE rtc_Frame; BOOL rtc_Negative; } RelativeTimeCounter; struct { PVOID tc_RequestIdentifier; BYTE tc_Hour; BYTE tc_Minute; BYTE tc_Second; BYTE tc_Frame; } TimeCode; struct { PVOID atn_RequestIdentifier; ULONG atn_TrackNumber; } AbsoluteTrackNumber; } vve_Union;} VVCR_Event_Response;
-#endif /* __WINCE_DEFINED_PLUGSTATECHANGE */
-#endif /* __WINCE_DEFINED_VVCR_EVENT_RESPONSE */
-#ifndef __WINCE_DEFINED_PVVCR_EVENT_RESPONSE
-#define __WINCE_DEFINED_PVVCR_EVENT_RESPONSE
-typedef VVCR_Event_Response *PVVCR_Event_Response, *LPVVCR_Event_Response;
-#endif /* __WINCE_DEFINED_PVVCR_EVENT_RESPONSE */
-
 /* VVCR_EVENT_Type  [enum; ce-only] */
 #ifndef __WINCE_DEFINED_VVCR_EVENT_TYPE
 #define __WINCE_DEFINED_VVCR_EVENT_TYPE
@@ -99,5 +86,15 @@ typedef struct {ULONG vvsmtn_TrackNumber;} VVCR_SetMechanismTrackNumber_Request;
 #define __WINCE_DEFINED_PVVCR_SETMECHANISMTRACKNUMBER_REQUEST
 typedef VVCR_SetMechanismTrackNumber_Request *PVVCR_SetMechanismTrackNumber_Request, *LPVVCR_SetMechanismTrackNumber_Request;
 #endif /* __WINCE_DEFINED_PVVCR_SETMECHANISMTRACKNUMBER_REQUEST */
+
+/* VVCR_Event_Response  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_VVCR_EVENT_RESPONSE
+#define __WINCE_DEFINED_VVCR_EVENT_RESPONSE
+typedef struct {VVCR_EVENT_Type vve_Event;union { struct { ULONG psc_PlugNumber; ULONG psc_Direction; BOOL psc_PlugState; STREAM_MediaType psc_MediaType; HANDLE psc_Plug; } PlugStateChange; struct { PVOID pr_RequestIdentifier; ULONG pr_PlayMode; } PlayRequest; struct { PVOID rr_RequestIdentifier; ULONG rr_RecordMode; } RecordRequest; struct { PVOID wr_RequestIdentifier; ULONG wr_WindMode; } WindRequest; struct { PVOID rtc_RequestIdentifier; BYTE rtc_Hour; BYTE rtc_Minute; BYTE rtc_Second; BYTE rtc_Frame; BOOL rtc_Negative; } RelativeTimeCounter; struct { PVOID tc_RequestIdentifier; BYTE tc_Hour; BYTE tc_Minute; BYTE tc_Second; BYTE tc_Frame; } TimeCode; struct { PVOID atn_RequestIdentifier; ULONG atn_TrackNumber; } AbsoluteTrackNumber; } vve_Union;} VVCR_Event_Response;
+#endif /* __WINCE_DEFINED_VVCR_EVENT_RESPONSE */
+#ifndef __WINCE_DEFINED_PVVCR_EVENT_RESPONSE
+#define __WINCE_DEFINED_PVVCR_EVENT_RESPONSE
+typedef VVCR_Event_Response *PVVCR_Event_Response, *LPVVCR_Event_Response;
+#endif /* __WINCE_DEFINED_PVVCR_EVENT_RESPONSE */
 
 #endif /* _AVC_VVCR_ */

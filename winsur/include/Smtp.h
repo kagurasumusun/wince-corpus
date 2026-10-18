@@ -45,13 +45,13 @@ int TransportError(HANDLE hService);
 BOOL TransportFreeMessage(MailMsg * MsgPtr);
 
 /* TransportInit  [function; ce-only; CE 1.0..199, 2.11..2.12] */
-BOOL TransportInit (HANDLE *NewService, LPWSTR szCommonKey, LPWSTR szTransportKey,);
+BOOL TransportInit (HANDLE *NewService, LPWSTR szCommonKey, LPWSTR szTransportKey);
 
 /* TransportNonIpm  [function; ce-only; CE 1.0..199, 2.11..2.12] */
 BOOL TransportNonIpm (MailMsg * pmm);
 
 /* TransportProps  [function; ce-only; CE 1.0..199, 2.11..2.12] */
-BOOL TransportProps(HWND hwndParent, LPWSTR szCommonKey, LPWSTR szTransportKey,);
+BOOL TransportProps(HWND hwndParent, LPWSTR szCommonKey, LPWSTR szTransportKey);
 
 /* TransportRelease  [function; ce-only; CE 1.0..199, 2.11..2.12] */
 BOOL TransportRelease(HANDLE hService);
@@ -67,7 +67,7 @@ BOOL TransportView(HWND hwndParent, MailMsg *MsgPtr);
 
 /* TransportErrorMsg  [function; ce-only; CE 2.11..2.12] */
 int TransportErrorMsg(HANDLE hService, LPWSTR szBuf, int iBufLen,
-int *piSrcLine,);
+int *piSrcLine);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

@@ -17,20 +17,6 @@
  * declaration body no page prints
  * ================================================================ */
 
-/* HiveRAMInfo  [struct; ce-only] */
-#ifndef __WINCE_DEFINED_HIVERAMINFO
-#define __WINCE_DEFINED_HIVERAMINFO
-typedef struct HiveRAMInfo {
- WORD wVersion;
- WORD wFlags;
- HiveRAMRegion SystemRegion;
-} HiveRAMInfo;
-#endif /* __WINCE_DEFINED_HIVERAMINFO */
-#ifndef __WINCE_DEFINED_PHIVERAMINFO
-#define __WINCE_DEFINED_PHIVERAMINFO
-typedef HiveRAMInfo *PHiveRAMInfo, *LPHiveRAMInfo;
-#endif /* __WINCE_DEFINED_PHIVERAMINFO */
-
 /* HiveRAMRegion  [struct; ce-only] */
 #ifndef __WINCE_DEFINED_HIVERAMREGION
 #define __WINCE_DEFINED_HIVERAMREGION
@@ -71,6 +57,20 @@ typedef struct RegSecureKeyList {
 #define __WINCE_DEFINED_PREGSECUREKEYLIST
 typedef RegSecureKeyList *PRegSecureKeyList, *LPRegSecureKeyList;
 #endif /* __WINCE_DEFINED_PREGSECUREKEYLIST */
+
+/* HiveRAMInfo  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_HIVERAMINFO
+#define __WINCE_DEFINED_HIVERAMINFO
+typedef struct HiveRAMInfo {
+ WORD wVersion;
+ WORD wFlags;
+ HiveRAMRegion SystemRegion;
+} HiveRAMInfo;
+#endif /* __WINCE_DEFINED_HIVERAMINFO */
+#ifndef __WINCE_DEFINED_PHIVERAMINFO
+#define __WINCE_DEFINED_PHIVERAMINFO
+typedef HiveRAMInfo *PHiveRAMInfo, *LPHiveRAMInfo;
+#endif /* __WINCE_DEFINED_PHIVERAMINFO */
 
 /* ==================================================================
  * functions and callbacks
@@ -132,7 +132,7 @@ BOOL WriteGenericData(WORD dwId,
  DWORD dwIndex,
  DWORD dwFlags,
  LPBYTE pBuf,
- DWORD dwLength,);
+ DWORD dwLength);
 
 /* WriteRegData  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL WriteRegData(DWORD dwFlags,

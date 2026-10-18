@@ -22,7 +22,7 @@ int CascadeArrowWidth(void);
 void ColumnComputeWidth(long& xColumn, long cxMaxString, long cxMaxAccel, long* pcxTotal, long* pxAccel);
 #endif /* __cplusplus */
 void DrawCascadeArrow(HDC hdc, long x, long y, long cx, long cy, UINT menustate, BOOL bRightToLeft);
-void DrawCheckMark(HDC hdc, long x, long y, UINT menustate,);
+void DrawCheckMark(HDC hdc, long x, long y, UINT menustate);
 void DrawColumnBreak(HDC hdc, long x, long y, long cx, long cy, long cxMenu, long cyMenu, UINT menustate);
 void DrawScrollArrows(HDC hdc, long cxMenu, long cyMenu, BOOL bUpArrowEnabled, BOOL bDownArrowEnabled);
 void DrawSeparator(HDC hdc, long x, long y, long cx, long cy, long cxMenu);

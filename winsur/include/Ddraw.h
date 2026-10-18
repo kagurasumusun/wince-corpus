@@ -35,12 +35,15 @@
 #define __WINCE_DEFINED__DDARGB
 #ifndef __WINCE_DEFINED_DDARGB
 #define __WINCE_DEFINED_DDARGB
+#ifndef __WINCE_DEFINED_LPDDARGB
+#define __WINCE_DEFINED_LPDDARGB
 typedef struct _DDARGB{
  BYTE blue;
  BYTE green;
  BYTE red;
  BYTE alpha;
 } DDARGB, *LPDDARGB;
+#endif /* __WINCE_DEFINED_LPDDARGB */
 #endif /* __WINCE_DEFINED_DDARGB */
 #endif /* __WINCE_DEFINED__DDARGB */
 
@@ -80,12 +83,15 @@ typedef struct _DDCOLORKEY{
 #define __WINCE_DEFINED__DDGAMMARAMP
 #ifndef __WINCE_DEFINED_DDGAMMARAMP
 #define __WINCE_DEFINED_DDGAMMARAMP
+#ifndef __WINCE_DEFINED_LPDDGAMMARAMP
+#define __WINCE_DEFINED_LPDDGAMMARAMP
 typedef struct _DDGAMMARAMP
 {
  WORD red[256];
  WORD green[256];
  WORD blue[256];
 }DDGAMMARAMP, *LPDDGAMMARAMP;
+#endif /* __WINCE_DEFINED_LPDDGAMMARAMP */
 #endif /* __WINCE_DEFINED_DDGAMMARAMP */
 #endif /* __WINCE_DEFINED__DDGAMMARAMP */
 
@@ -291,7 +297,7 @@ HRESULT GetMonitorFrequency(LPDWORD lpdwFrequency);
 HRESULT GetOverlayPosition(LPLONG lplX, LPLONG lplY);
 HRESULT GetScanLine(LPDWORD lpdwScanLine);
 HRESULT GetSurfaceDesc(LPDDSURFACEDESC2 lpDDSurfaceDesc);
-HRESULT GetUniquenessValue(LPDWORD lpValue,);
+HRESULT GetUniquenessValue(LPDWORD lpValue);
 HRESULT GetVerticalBlankStatus(LPBOOL lpbIsInVB);
 HRESULT IsClipListChanged(BOOL FAR *lpbChanged);
 HRESULT IsLost();

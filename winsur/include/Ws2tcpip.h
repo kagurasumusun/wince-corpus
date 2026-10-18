@@ -72,15 +72,12 @@ int getaddrinfo(const char FAR* nodename,
 /* in6_addr  [struct; shared] */
 #ifndef __WINCE_DEFINED_IN6_ADDR
 #define __WINCE_DEFINED_IN6_ADDR
-#ifndef __WINCE_DEFINED_U
-#define __WINCE_DEFINED_U
 struct in6_addr {
  union {
  u_char Byte[16];
  u_short Word[8];
  } u;
 };
-#endif /* __WINCE_DEFINED_U */
 #endif /* __WINCE_DEFINED_IN6_ADDR */
 
 /* sockaddr_in6  [struct; ce-only] */

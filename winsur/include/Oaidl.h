@@ -95,7 +95,7 @@ typedef struct FARSTRUCT tagSAFEARRAY {
  unsigned short cLocks;
  unsigned long handle;
  void HUGEP* pvData;
- SAFEARRAYBOUND rgsabound[1];
+ /* DERIVED member omitted -- type body unprinted: SAFEARRAYBOUND rgsabound[1]; */
 } SAFEARRAY;
 
 /* union  [typedef; ce-only; entity-headers] */
@@ -245,22 +245,17 @@ typedef unsigned long HREFTYPE;
 #endif /* __WINCE_DEFINED_HREFTYPE */
 
 /* INVOKEKIND  [enum; shared] */
-#ifndef __WINCE_DEFINED_TAGINVOKEKIND
-#define __WINCE_DEFINED_TAGINVOKEKIND
-#ifndef __WINCE_DEFINED_INVOKEKIND
-#define __WINCE_DEFINED_INVOKEKIND
-typedef enum tagINVOKEKIND {
- INVOKE_FUNC = DISPATCH_METHOD,
- INVOKE_PROPERTYGET = DISPATCH_PROPERTYGET,
- INVOKE_PROPERTYPUT = DISPATCH_PROPERTYPUT,
- INVOKE_PROPERTYPUTREF = DISPATCH_PROPERTYPUTREF
-} INVOKEKIND;
-#endif /* __WINCE_DEFINED_INVOKEKIND */
-#endif /* __WINCE_DEFINED_TAGINVOKEKIND */
-#ifndef __WINCE_DEFINED_PINVOKEKIND
-#define __WINCE_DEFINED_PINVOKEKIND
-typedef INVOKEKIND *PINVOKEKIND, *LPINVOKEKIND;
-#endif /* __WINCE_DEFINED_PINVOKEKIND */
+/* UNRESOLVED ENUM VALUE REFERENCE -- the referenced
+ * constant's value no corpus page prints (see
+ * data/unresolved-enum-constants.tsv); this stays a
+ * quotation, not C:
+ * typedef enum tagINVOKEKIND {
+ *  INVOKE_FUNC = DISPATCH_METHOD,
+ *  INVOKE_PROPERTYGET = DISPATCH_PROPERTYGET,
+ *  INVOKE_PROPERTYPUT = DISPATCH_PROPERTYPUT,
+ *  INVOKE_PROPERTYPUTREF = DISPATCH_PROPERTYPUTREF
+ * } INVOKEKIND;
+ */
 
 /* SAFEARRAYBOUND  [struct; shared] */
 #ifndef __WINCE_DEFINED_TAGSAFEARRAYBOUND
@@ -386,10 +381,10 @@ enum VARENUM {
  VT_VARIANT = 12,
  VT_UNKNOWN = 13,
  VT_UI1 = 17,
-};
-VT_RESERVED = 0x8000
-VT_BYREF = 0x4000
+VT_RESERVED = 0x8000,
+VT_BYREF = 0x4000,
 VT_ARRAY = 0x2000
+};
 #endif /* __WINCE_DEFINED_VARTYPE */
 #endif /* __WINCE_DEFINED_VARENUM */
 

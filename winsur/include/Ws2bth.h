@@ -32,6 +32,8 @@
 #define __WINCE_DEFINED__BTH_LOCAL_VERSION
 #ifndef __WINCE_DEFINED_BTH_LOCAL_VERSION
 #define __WINCE_DEFINED_BTH_LOCAL_VERSION
+#ifndef __WINCE_DEFINED_PBTH_LOCAL_VERSION
+#define __WINCE_DEFINED_PBTH_LOCAL_VERSION
 typedef struct _BTH_LOCAL_VERSION {
  unsigned char hci_version;
  unsigned short hci_revision;
@@ -40,6 +42,7 @@ typedef struct _BTH_LOCAL_VERSION {
  unsigned short manufacturer;
  unsigned char lmp_features[8];
 } BTH_LOCAL_VERSION, *PBTH_LOCAL_VERSION;
+#endif /* __WINCE_DEFINED_PBTH_LOCAL_VERSION */
 #endif /* __WINCE_DEFINED_BTH_LOCAL_VERSION */
 #endif /* __WINCE_DEFINED__BTH_LOCAL_VERSION */
 
@@ -48,12 +51,15 @@ typedef struct _BTH_LOCAL_VERSION {
 #define __WINCE_DEFINED__BTH_REMOTE_VERSION
 #ifndef __WINCE_DEFINED_BTH_REMOTE_VERSION
 #define __WINCE_DEFINED_BTH_REMOTE_VERSION
+#ifndef __WINCE_DEFINED_PBTH_REMOTE_VERSION
+#define __WINCE_DEFINED_PBTH_REMOTE_VERSION
 typedef struct _BTH_REMOTE_VERSION {
  unsigned char lmp_version;
  unsigned short lmp_subversion;
  unsigned short manufacturer;
  unsigned char lmp_features[8];
 } BTH_REMOTE_VERSION, *PBTH_REMOTE_VERSION;
+#endif /* __WINCE_DEFINED_PBTH_REMOTE_VERSION */
 #endif /* __WINCE_DEFINED_BTH_REMOTE_VERSION */
 #endif /* __WINCE_DEFINED__BTH_REMOTE_VERSION */
 
@@ -62,11 +68,14 @@ typedef struct _BTH_REMOTE_VERSION {
 #define __WINCE_DEFINED__BTH_SOCKOPT_SECURITY
 #ifndef __WINCE_DEFINED_BTH_SOCKOPT_SECURITY
 #define __WINCE_DEFINED_BTH_SOCKOPT_SECURITY
+#ifndef __WINCE_DEFINED_PBTH_SOCKOPT_SECURITY
+#define __WINCE_DEFINED_PBTH_SOCKOPT_SECURITY
 typedef struct _BTH_SOCKOPT_SECURITY {
  int iLength;
  bt_addr btAddr;
  unsigned char caData[16];
 } BTH_SOCKOPT_SECURITY, *PBTH_SOCKOPT_SECURITY;
+#endif /* __WINCE_DEFINED_PBTH_SOCKOPT_SECURITY */
 #endif /* __WINCE_DEFINED_BTH_SOCKOPT_SECURITY */
 #endif /* __WINCE_DEFINED__BTH_SOCKOPT_SECURITY */
 

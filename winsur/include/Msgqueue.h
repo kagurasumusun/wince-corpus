@@ -29,6 +29,8 @@
 /* MSGQUEUEINFO  [typedef; ce-only] */
 #ifndef __WINCE_DEFINED_MSGQUEUEINFO
 #define __WINCE_DEFINED_MSGQUEUEINFO
+#ifndef __WINCE_DEFINED_PMSGQUEUEINFO
+#define __WINCE_DEFINED_PMSGQUEUEINFO
 typedef struct MSGQUEUEINFO{
  DWORD dwSize;
  DWORD dwFlags;
@@ -39,6 +41,7 @@ typedef struct MSGQUEUEINFO{
  WORD wNumReaders;
  WORD wNumWriters;
 } MSGQUEUEINFO, *PMSGQUEUEINFO, FAR* LPMSGQUEUEINFO;
+#endif /* __WINCE_DEFINED_PMSGQUEUEINFO */
 #endif /* __WINCE_DEFINED_MSGQUEUEINFO */
 
 /* ==================================================================
