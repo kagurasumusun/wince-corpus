@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 1 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _COMMANDAPI_HPP_
 #define _COMMANDAPI_HPP_
@@ -18,33 +18,20 @@
  * ================================================================ */
 
 /* PH_APPLICATION  [enum; ce-only; PhCommon.dll] */
+#ifndef __WINCE_DEFINED__PH_APPLICATION
+#define __WINCE_DEFINED__PH_APPLICATION
 typedef enum _PH_APPLICATION
 {
  phaPhoneApp = 0,
  phaHomeScreenApp,
  phaSettingsApp,
  phaContactsApp,
- phaLast, 
+ phaLast,
 } PH_APPLICATION;
+#endif /* __WINCE_DEFINED__PH_APPLICATION */
+#ifndef __WINCE_DEFINED_PPH_APPLICATION
+#define __WINCE_DEFINED_PPH_APPLICATION
 typedef PH_APPLICATION *PPH_APPLICATION, *LPPH_APPLICATION;
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
-
-/* PHGetAppWindow  [function; ce-only; CE 6.0..699; PhCommon.dll] */
-HWND PHGetAppWindow(
- PH_APPLICATION Id,
- BOOL SleepRetry
-);
-
-/* PHSendCommandLine  [function; ce-only; CE 6.0..699; PhCommon.dll] */
-HRESULT PHSendCommandLine(
- PH_APPLICATION Id,
- WCHAR* pArguments
-);
-#endif /* _WIN32_WCE */
+#endif /* __WINCE_DEFINED_PPH_APPLICATION */
 
 #endif /* _COMMANDAPI_HPP_ */

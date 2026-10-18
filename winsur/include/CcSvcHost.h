@@ -11,12 +11,4 @@
 #define _CCSVCHOST_
 
 
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-HRESULT DisplayServices(LPCOLESTRpwszDeviceId,LPCOLESTRpwszDefaultControl,LPCOLESTRpwszClientId);
-
 #endif /* _CCSVCHOST_ */

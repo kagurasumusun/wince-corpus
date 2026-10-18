@@ -18,9 +18,7 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* FileSystemPowerFunction  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-void FileSystemPowerFunction(
- DWORD dwflags
-);
+void FileSystemPowerFunction(DWORD dwflags);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
@@ -29,10 +27,8 @@ void FileSystemPowerFunction(
 DWORD GetPasswordStatus(void);
 
 /* SetPasswordStatus  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL SetPasswordStatus(
- DWORD dwStatus,
- LPWSTR lpszPassword
-);
+BOOL SetPasswordStatus(DWORD dwStatus,
+ LPWSTR lpszPassword);
 #endif /* _WIN32_WCE */
 
 #endif /* _PWINBASE_ */

@@ -2731,18 +2731,14 @@ typedef HANDLE HDROP;
 /* MAKEINTRESOURCE  [macro, function; shared; A/W MAKEINTRESOURCEA,MAKEINTRESOURCEW (CE is W-side)] */
 
 /* MAKELPARAM  [macro, function; shared] */
-LPARAM MAKELPARAM( 
- WORD wLow, 
- WORD wHigh 
-);
+LPARAM MAKELPARAM(WORD wLow,
+ WORD wHigh);
 
 /* MAKELRESULT  [macro, function; shared] */
 
 /* MAKEWPARAM  [macro, function; shared] */
-LPARAM MAKEWPARAM( 
- WORD wLow, 
- WORD wHigh 
-);
+LPARAM MAKEWPARAM(WORD wLow,
+ WORD wHigh);
 
 /* POINTSTOPOINT  [macro, function; shared] */
 
@@ -2755,22 +2751,33 @@ LPARAM MAKEWPARAM(
  * ================================================================ */
 
 /* ACCEL  [struct; shared] */
+#ifndef __WINCE_DEFINED_TAGACCEL
+#define __WINCE_DEFINED_TAGACCEL
 typedef struct tagACCEL {
  BYTE fVirt;
  WORD key;
  WORD cmd;
  WORD pad;
 } ACCEL;
+#endif /* __WINCE_DEFINED_TAGACCEL */
+#ifndef __WINCE_DEFINED_PACCEL
+#define __WINCE_DEFINED_PACCEL
 typedef ACCEL *PACCEL, *LPACCEL;
+#endif /* __WINCE_DEFINED_PACCEL */
 
 /* ACCESSTIMEOUT  [struct; shared] */
+#ifndef __WINCE_DEFINED_TAGACCESSTIMEOUT
+#define __WINCE_DEFINED_TAGACCESSTIMEOUT
 typedef struct tagACCESSTIMEOUT{
  UINT cbSize;
  DWORD dwFlags;
  DWORD iTimeOutMSec;
 } ACCESSTIMEOUT, *LPACCESSTIMEOUT;
+#endif /* __WINCE_DEFINED_TAGACCESSTIMEOUT */
 
 /* COMBOBOXINFO  [struct; shared] */
+#ifndef __WINCE_DEFINED_TAGCOMBOBOXINFO
+#define __WINCE_DEFINED_TAGCOMBOBOXINFO
 typedef struct tagCOMBOBOXINFO {
  DWORD cbSize;
  RECT rcItem;
@@ -2780,76 +2787,112 @@ typedef struct tagCOMBOBOXINFO {
  HWND hwndItem;
  HWND hwndList;
 } COMBOBOXINFO, *PCOMBOBOXINFO, *LPCOMBOBOXINFO;
+#endif /* __WINCE_DEFINED_TAGCOMBOBOXINFO */
 
 /* COPYDATASTRUCT  [struct; shared] */
+#ifndef __WINCE_DEFINED_TAGCOPYDATASTRUCT
+#define __WINCE_DEFINED_TAGCOPYDATASTRUCT
 typedef struct tagCOPYDATASTRUCT {
- DWORD dwData; 
- DWORD cbData; 
- PVOID lpData; 
+ DWORD dwData;
+ DWORD cbData;
+ PVOID lpData;
 } COPYDATASTRUCT;
+#endif /* __WINCE_DEFINED_TAGCOPYDATASTRUCT */
+#ifndef __WINCE_DEFINED_PCOPYDATASTRUCT
+#define __WINCE_DEFINED_PCOPYDATASTRUCT
 typedef COPYDATASTRUCT *PCOPYDATASTRUCT, *LPCOPYDATASTRUCT;
+#endif /* __WINCE_DEFINED_PCOPYDATASTRUCT */
 
 /* CREATESTRUCT  [struct; shared; A/W CREATESTRUCTA,CREATESTRUCTW (CE is W-side)] */
-typedef struct tagCREATESTRUCT { 
- LPVOID lpCreateParams; 
- HINSTANCE hInstance; 
- HMENU hMenu; 
- HWND hwndParent; 
- int cy; 
- int cx; 
- int y; 
- int x; 
- LONG style; 
- LPCTSTR lpszName; 
- LPCTSTR lpszClass; 
- DWORD dwExStyle; 
+#ifndef __WINCE_DEFINED_TAGCREATESTRUCT
+#define __WINCE_DEFINED_TAGCREATESTRUCT
+typedef struct tagCREATESTRUCT {
+ LPVOID lpCreateParams;
+ HINSTANCE hInstance;
+ HMENU hMenu;
+ HWND hwndParent;
+ int cy;
+ int cx;
+ int y;
+ int x;
+ LONG style;
+ LPCTSTR lpszName;
+ LPCTSTR lpszClass;
+ DWORD dwExStyle;
 } CREATESTRUCT;
+#endif /* __WINCE_DEFINED_TAGCREATESTRUCT */
+#ifndef __WINCE_DEFINED_PCREATESTRUCT
+#define __WINCE_DEFINED_PCREATESTRUCT
 typedef CREATESTRUCT *PCREATESTRUCT, *LPCREATESTRUCT;
+#endif /* __WINCE_DEFINED_PCREATESTRUCT */
 
 /* DELETEITEMSTRUCT  [struct; shared] */
-typedef struct tagDELETEITEMSTRUCT { 
- UINT CtlType; 
- UINT CtlID; 
- UINT itemID; 
- HWND hwndItem; 
- UINT itemData; 
+#ifndef __WINCE_DEFINED_TAGDELETEITEMSTRUCT
+#define __WINCE_DEFINED_TAGDELETEITEMSTRUCT
+typedef struct tagDELETEITEMSTRUCT {
+ UINT CtlType;
+ UINT CtlID;
+ UINT itemID;
+ HWND hwndItem;
+ UINT itemData;
 } DELETEITEMSTRUCT;
+#endif /* __WINCE_DEFINED_TAGDELETEITEMSTRUCT */
+#ifndef __WINCE_DEFINED_PDELETEITEMSTRUCT
+#define __WINCE_DEFINED_PDELETEITEMSTRUCT
 typedef DELETEITEMSTRUCT *PDELETEITEMSTRUCT, *LPDELETEITEMSTRUCT;
+#endif /* __WINCE_DEFINED_PDELETEITEMSTRUCT */
 
 /* DLGITEMTEMPLATE  [struct; shared] */
-typedef struct { 
- DWORD style; 
- DWORD dwExtendedStyle; 
- short x; 
- short y; 
- short cx; 
- short cy; 
- WORD id; 
+#ifndef __WINCE_DEFINED_DLGITEMTEMPLATE
+#define __WINCE_DEFINED_DLGITEMTEMPLATE
+typedef struct {
+ DWORD style;
+ DWORD dwExtendedStyle;
+ short x;
+ short y;
+ short cx;
+ short cy;
+ WORD id;
 } DLGITEMTEMPLATE;
+#endif /* __WINCE_DEFINED_DLGITEMTEMPLATE */
+#ifndef __WINCE_DEFINED_PDLGITEMTEMPLATE
+#define __WINCE_DEFINED_PDLGITEMTEMPLATE
 typedef DLGITEMTEMPLATE *PDLGITEMTEMPLATE, *LPDLGITEMTEMPLATE;
+#endif /* __WINCE_DEFINED_PDLGITEMTEMPLATE */
 
 /* DRAWITEMSTRUCT  [struct; shared] */
-typedef struct tagDRAWITEMSTRUCT { 
- UINT CtlType; 
- UINT CtlID; 
- UINT itemID; 
- UINT itemAction; 
- UINT itemState; 
- HWND hwndItem; 
- HDC hDC; 
- RECT rcItem; 
- ULONG_PTR itemData; 
+#ifndef __WINCE_DEFINED_TAGDRAWITEMSTRUCT
+#define __WINCE_DEFINED_TAGDRAWITEMSTRUCT
+typedef struct tagDRAWITEMSTRUCT {
+ UINT CtlType;
+ UINT CtlID;
+ UINT itemID;
+ UINT itemAction;
+ UINT itemState;
+ HWND hwndItem;
+ HDC hDC;
+ RECT rcItem;
+ ULONG_PTR itemData;
 } DRAWITEMSTRUCT;
+#endif /* __WINCE_DEFINED_TAGDRAWITEMSTRUCT */
+#ifndef __WINCE_DEFINED_PDRAWITEMSTRUCT
+#define __WINCE_DEFINED_PDRAWITEMSTRUCT
 typedef DRAWITEMSTRUCT *PDRAWITEMSTRUCT, *LPDRAWITEMSTRUCT;
+#endif /* __WINCE_DEFINED_PDRAWITEMSTRUCT */
 
 /* HIGHCONTRAST  [struct; shared; A/W HIGHCONTRASTA,HIGHCONTRASTW (CE is W-side)] */
+#ifndef __WINCE_DEFINED_TAGHIGHCONTRAST
+#define __WINCE_DEFINED_TAGHIGHCONTRAST
 typedef struct tagHIGHCONTRAST{
  UINT cbSize;
  DWORD dwFlags;
  LPTSTR lpszDefaultScheme;
 } HIGHCONTRAST, FAR* LPHIGHCONTRAST;
+#endif /* __WINCE_DEFINED_TAGHIGHCONTRAST */
 
 /* KEYBDINPUT  [struct; shared] */
+#ifndef __WINCE_DEFINED_TAGKEYBDINPUT
+#define __WINCE_DEFINED_TAGKEYBDINPUT
 typedef struct tagKEYBDINPUT {
  WORD wVk;
  WORD wScan;
@@ -2857,42 +2900,57 @@ typedef struct tagKEYBDINPUT {
  DWORD time;
  ULONG_PTR dwExtraInfo;
 } KEYBDINPUT, *PKEYBDINPUT;
+#endif /* __WINCE_DEFINED_TAGKEYBDINPUT */
 
 /* MEASUREITEMSTRUCT  [struct; shared] */
-typedef struct tagMEASUREITEMSTRUCT { 
- UINT CtlType; 
- UINT CtlID; 
- UINT itemID; 
- UINT itemWidth; 
- UINT itemHeight; 
- DWORD itemData; 
+#ifndef __WINCE_DEFINED_TAGMEASUREITEMSTRUCT
+#define __WINCE_DEFINED_TAGMEASUREITEMSTRUCT
+typedef struct tagMEASUREITEMSTRUCT {
+ UINT CtlType;
+ UINT CtlID;
+ UINT itemID;
+ UINT itemWidth;
+ UINT itemHeight;
+ DWORD itemData;
 } MEASUREITEMSTRUCT;
+#endif /* __WINCE_DEFINED_TAGMEASUREITEMSTRUCT */
+#ifndef __WINCE_DEFINED_PMEASUREITEMSTRUCT
+#define __WINCE_DEFINED_PMEASUREITEMSTRUCT
 typedef MEASUREITEMSTRUCT *PMEASUREITEMSTRUCT, *LPMEASUREITEMSTRUCT;
+#endif /* __WINCE_DEFINED_PMEASUREITEMSTRUCT */
 
 /* MENUITEMINFO  [struct; shared; A/W MENUITEMINFOA,MENUITEMINFOW (CE is W-side)] */
+#ifndef __WINCE_DEFINED_TAGMENUITEMINFO
+#define __WINCE_DEFINED_TAGMENUITEMINFO
 typedef struct tagMENUITEMINFO {
- UINT cbSize; 
- UINT fMask; 
- UINT fType; 
- UINT fState; 
- UINT wID; 
- HMENU hSubMenu; 
- HBITMAP hbmpChecked; 
- HBITMAP hbmpUnchecked; 
- DWORD dwItemData; 
- LPTSTR dwTypeData; 
- UINT cch; 
+ UINT cbSize;
+ UINT fMask;
+ UINT fType;
+ UINT fState;
+ UINT wID;
+ HMENU hSubMenu;
+ HBITMAP hbmpChecked;
+ HBITMAP hbmpUnchecked;
+ DWORD dwItemData;
+ LPTSTR dwTypeData;
+ UINT cch;
 } MENUITEMINFO, FAR* LPMENUITEMINFO;
+#endif /* __WINCE_DEFINED_TAGMENUITEMINFO */
 
 /* MONITORINFO  [struct; shared] */
+#ifndef __WINCE_DEFINED_TAGMONITORINFO
+#define __WINCE_DEFINED_TAGMONITORINFO
 typedef struct tagMONITORINFO {
  DWORD cbSize;
  RECT rcMonitor;
  RECT rcWork;
  DWORD dwFlags;
 } MONITORINFO, *LPMONITORINFO;
+#endif /* __WINCE_DEFINED_TAGMONITORINFO */
 
 /* MOUSEINPUT  [struct; shared] */
+#ifndef __WINCE_DEFINED_TAGMOUSEINPUT
+#define __WINCE_DEFINED_TAGMOUSEINPUT
 typedef struct tagMOUSEINPUT {
  LONG dx;
  LONG dy;
@@ -2901,8 +2959,11 @@ typedef struct tagMOUSEINPUT {
  DWORD time;
  ULONG_PTR dwExtraInfo;
 } MOUSEINPUT, *PMOUSEINPUT;
+#endif /* __WINCE_DEFINED_TAGMOUSEINPUT */
 
 /* MOUSEKEYS  [struct; shared] */
+#ifndef __WINCE_DEFINED_TAGMOUSEKEYS
+#define __WINCE_DEFINED_TAGMOUSEKEYS
 typedef struct tagMOUSEKEYS{
  UINT cbSize;
  DWORD dwFlags;
@@ -2912,50 +2973,74 @@ typedef struct tagMOUSEKEYS{
  DWORD dwReserved1;
  DWORD dwReserved2;
 } MOUSEKEYS, *LPMOUSEKEYS;
+#endif /* __WINCE_DEFINED_TAGMOUSEKEYS */
 
 /* MSG  [struct; shared] */
-typedef struct tagMSG { 
- HWND hwnd; 
- UINT message; 
- WPARAM wParam; 
- LPARAM lParam; 
- DWORD time; 
- POINT pt; 
+#ifndef __WINCE_DEFINED_TAGMSG
+#define __WINCE_DEFINED_TAGMSG
+typedef struct tagMSG {
+ HWND hwnd;
+ UINT message;
+ WPARAM wParam;
+ LPARAM lParam;
+ DWORD time;
+ POINT pt;
 } MSG;
+#endif /* __WINCE_DEFINED_TAGMSG */
+#ifndef __WINCE_DEFINED_PMSG
+#define __WINCE_DEFINED_PMSG
 typedef MSG *PMSG, *LPMSG;
+#endif /* __WINCE_DEFINED_PMSG */
 
 /* NMHDR  [struct; shared] */
-typedef struct tagNMHDR { 
- HWND hwndFrom; 
- UINT idFrom; 
- UINT code; 
+#ifndef __WINCE_DEFINED_TAGNMHDR
+#define __WINCE_DEFINED_TAGNMHDR
+typedef struct tagNMHDR {
+ HWND hwndFrom;
+ UINT idFrom;
+ UINT code;
 } NMHDR;
+#endif /* __WINCE_DEFINED_TAGNMHDR */
+#ifndef __WINCE_DEFINED_PNMHDR
+#define __WINCE_DEFINED_PNMHDR
 typedef NMHDR *PNMHDR, *LPNMHDR;
+#endif /* __WINCE_DEFINED_PNMHDR */
 
 /* PAINTSTRUCT  [struct; shared] */
-typedef struct tagPAINTSTRUCT { 
- HDC hdc; 
- BOOL fErase; 
- RECT rcPaint; 
- BOOL fRestore; 
- BOOL fIncUpdate; 
- BYTE rgbReserved[32]; 
+#ifndef __WINCE_DEFINED_TAGPAINTSTRUCT
+#define __WINCE_DEFINED_TAGPAINTSTRUCT
+typedef struct tagPAINTSTRUCT {
+ HDC hdc;
+ BOOL fErase;
+ RECT rcPaint;
+ BOOL fRestore;
+ BOOL fIncUpdate;
+ BYTE rgbReserved[32];
 } PAINTSTRUCT;
+#endif /* __WINCE_DEFINED_TAGPAINTSTRUCT */
+#ifndef __WINCE_DEFINED_PPAINTSTRUCT
+#define __WINCE_DEFINED_PPAINTSTRUCT
 typedef PAINTSTRUCT *PPAINTSTRUCT, *LPPAINTSTRUCT;
+#endif /* __WINCE_DEFINED_PPAINTSTRUCT */
 
 /* SCROLLINFO  [struct; shared] */
+#ifndef __WINCE_DEFINED_TAGSCROLLINFO
+#define __WINCE_DEFINED_TAGSCROLLINFO
 typedef struct tagSCROLLINFO {
- UINT cbSize; 
- UINT fMask; 
- int nMin; 
- int nMax; 
- UINT nPage; 
- int nPos; 
- int nTrackPos; 
-} SCROLLINFO; 
+ UINT cbSize;
+ UINT fMask;
+ int nMin;
+ int nMax;
+ UINT nPage;
+ int nPos;
+ int nTrackPos;
+} SCROLLINFO;
 typedef SCROLLINFO FAR* LPSCROLLINFO;
+#endif /* __WINCE_DEFINED_TAGSCROLLINFO */
 
 /* SOUNDSENTRY  [struct, function; shared; ext-ms-win-ntuser-window-l1-1-5.dll, Ext-MS-Win-NTUser-Window-L1-1-4.dll, Ext-MS-Win-NTUser-Window-l1-1-2.dll, ext-ms-win-ntuser-window-l1-1-6.dll, Ext-MS-Win-NTUser-Window-l1-1-1.dll, User32.dll, User32.lib, ext-ms-win-ntuser-window-l1-1-3.dll, Ext-MS-Win-NTUser-Window-l1-1-0.dll; lib:win32-reference; A/W SOUNDSENTRYA,SOUNDSENTRYW (CE is W-side)] */
+#ifndef __WINCE_DEFINED_TAGSOUNDSENTRY
+#define __WINCE_DEFINED_TAGSOUNDSENTRY
 typedef struct tagSOUNDSENTRY{
  UINT cbSize;
  DWORD dwFlags;
@@ -2970,220 +3055,205 @@ typedef struct tagSOUNDSENTRY{
  LPTSTR lpszWindowsEffectDLL;
  DWORD iWindowsEffectOrdinal;
 } SOUNDSENTRY, *LPSOUNDSENTRY;
+#endif /* __WINCE_DEFINED_TAGSOUNDSENTRY */
 
 /* STICKYKEYS  [struct; shared] */
+#ifndef __WINCE_DEFINED_TAGSTICKYKEYS
+#define __WINCE_DEFINED_TAGSTICKYKEYS
 typedef struct tagSTICKYKEYS{
  UINT cbSize;
  DWORD dwFlags;
 } STICKYKEYS, *LPSTICKYKEYS;
+#endif /* __WINCE_DEFINED_TAGSTICKYKEYS */
 
 /* STYLESTRUCT  [struct; shared] */
-typedef struct tagSTYLESTRUCT { 
- DWORD styleOld; 
- DWORD styleNew; 
+#ifndef __WINCE_DEFINED_TAGSTYLESTRUCT
+#define __WINCE_DEFINED_TAGSTYLESTRUCT
+typedef struct tagSTYLESTRUCT {
+ DWORD styleOld;
+ DWORD styleNew;
 } STYLESTRUCT, *LPSTYLESTRUCT;
+#endif /* __WINCE_DEFINED_TAGSTYLESTRUCT */
 
 /* TOGGLEKEYS  [struct; shared] */
+#ifndef __WINCE_DEFINED_TAGTOGGLEKEYS
+#define __WINCE_DEFINED_TAGTOGGLEKEYS
 typedef struct tagTOGGLEKEYS{
  UINT cbSize;
  DWORD dwFlags;
 } TOGGLEKEYS, *LPTOGGLEKEYS;
+#endif /* __WINCE_DEFINED_TAGTOGGLEKEYS */
 
 /* TPMPARAMS  [struct; shared] */
-typedef struct tagTPMPARAMS { 
- UINT cbSize; 
- RECT rcExclude; 
+#ifndef __WINCE_DEFINED_TAGTPMPARAMS
+#define __WINCE_DEFINED_TAGTPMPARAMS
+typedef struct tagTPMPARAMS {
+ UINT cbSize;
+ RECT rcExclude;
 } TPMPARAMS, FAR* LPTPMPARAMS;
+#endif /* __WINCE_DEFINED_TAGTPMPARAMS */
 
 /* WINDOWPOS  [struct; shared] */
-typedef struct _WINDOWPOS { 
- HWND hwnd; 
- HWND hwndInsertAfter; 
- int x; 
- int y; 
- int cx; 
- int cy; 
- UINT flags; 
+#ifndef __WINCE_DEFINED__WINDOWPOS
+#define __WINCE_DEFINED__WINDOWPOS
+typedef struct _WINDOWPOS {
+ HWND hwnd;
+ HWND hwndInsertAfter;
+ int x;
+ int y;
+ int cx;
+ int cy;
+ UINT flags;
 } WINDOWPOS;
+#endif /* __WINCE_DEFINED__WINDOWPOS */
+#ifndef __WINCE_DEFINED_PWINDOWPOS
+#define __WINCE_DEFINED_PWINDOWPOS
 typedef WINDOWPOS *PWINDOWPOS, *LPWINDOWPOS;
+#endif /* __WINCE_DEFINED_PWINDOWPOS */
 
 /* WNDCLASS  [struct; shared; A/W WNDCLASSA,WNDCLASSW (CE is W-side)] */
+#ifndef __WINCE_DEFINED__WNDCLASS
+#define __WINCE_DEFINED__WNDCLASS
 typedef struct _WNDCLASS {
- UINT style; 
- WNDPROC lpfnWndProc; 
- int cbClsExtra; 
- int cbWndExtra; 
- HANDLE hInstance; 
- HICON hIcon; 
- HCURSOR hCursor; 
- HBRUSH hbrBackground; 
- LPCTSTR lpszMenuName; 
- LPCTSTR lpszClassName; 
+ UINT style;
+ WNDPROC lpfnWndProc;
+ int cbClsExtra;
+ int cbWndExtra;
+ HANDLE hInstance;
+ HICON hIcon;
+ HCURSOR hCursor;
+ HBRUSH hbrBackground;
+ LPCTSTR lpszMenuName;
+ LPCTSTR lpszClassName;
 } WNDCLASS;
+#endif /* __WINCE_DEFINED__WNDCLASS */
+#ifndef __WINCE_DEFINED_PWNDCLASS
+#define __WINCE_DEFINED_PWNDCLASS
 typedef WNDCLASS *PWNDCLASS, *LPWNDCLASS;
+#endif /* __WINCE_DEFINED_PWNDCLASS */
 
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
 /* CheckDlgButton  [function; ce-only; harvest-kb; harvest-kb] */
-BOOL CheckDlgButton( int nIDButton, UINT nCheck );
+BOOL CheckDlgButton(int nIDButton, UINT nCheck);
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* EnableHardwareKeyboard  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Kbdui.lib, kbdui.lib] */
-BOOL EnableHardwareKeyboard( 
- BOOL bEnable
-);
+BOOL EnableHardwareKeyboard(BOOL bEnable);
 
 /* GetClipboardDataAlloc  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Clipbd.lib, clipbd.lib] */
-HANDLE GetClipboardDataAlloc(
- UINT uFormat
-);
+HANDLE GetClipboardDataAlloc(UINT uFormat);
 
 /* GetMessageSource  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib] */
-UINT GetMessageSource( );
+UINT GetMessageSource();
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
 
 /* GetMouseMovePoints  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Uibase.lib, uibase.lib, Wmgr_c.lib, wmgr_c.lib] */
-BOOL WINAPI GetMouseMovePoints(
- PPOINT pptBuf,
+BOOL WINAPI GetMouseMovePoints(PPOINT pptBuf,
  UINT nBufPoints,
- UINT* pnPointsRetrieved 
-);
+ UINT* pnPointsRetrieved);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* AdjustWindowRectEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib] */
-BOOL AdjustWindowRectEx( 
- LPRECT lpRect, 
- DWORD dwStyle, 
+BOOL AdjustWindowRectEx(LPRECT lpRect,
+ DWORD dwStyle,
  BOOL bMenu,
- DWORD dwExStyle 
-);
+ DWORD dwExStyle);
 
 /* AppendMenu  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; menu.lib; A/W AppendMenuA,AppendMenuW (CE is W-side)] */
-BOOL AppendMenu(
- HMENU hMenu, 
- UINT uFlags, 
- UINT uIDNewItem, 
- LPCTSTR lpNewItem 
-);
+BOOL AppendMenu(HMENU hMenu,
+ UINT uFlags,
+ UINT uIDNewItem,
+ LPCTSTR lpNewItem);
 
 /* BeginDeferWindowPos  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib] */
-HDWP BeginDeferWindowPos( 
- int nNumWindows 
-);
+HDWP BeginDeferWindowPos(int nNumWindows);
 
 /* BeginPaint  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Winmgr.lib, winmgr.lib] */
-HDC BeginPaint( 
- HWND hwnd,
- LPPAINTSTRUCT lpPaint
-);
+HDC BeginPaint(HWND hwnd,
+ LPPAINTSTRUCT lpPaint);
 
 /* BringWindowToTop  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib] */
-BOOL BringWindowToTop( 
- HWND hWnd
-);
+BOOL BringWindowToTop(HWND hWnd);
 
 /* CallWindowProc  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W CallWindowProcA,CallWindowProcW (CE is W-side)] */
-LRESULT CallWindowProc( 
- WNDPROC lpPrevWndFunc, 
- HWND hWnd, 
- UINT Msg, 
- WPARAM wParam, 
- LPARAM lParam 
-);
+LRESULT CallWindowProc(WNDPROC lpPrevWndFunc,
+ HWND hWnd,
+ UINT Msg,
+ WPARAM wParam,
+ LPARAM lParam);
 
 /* CheckMenuItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Menu.lib, menu.lib] */
-DWORD CheckMenuItem(
- HMENU hmenu, 
- UINT uIDCheckItem, 
- UINT uCheck 
-);
+DWORD CheckMenuItem(HMENU hmenu,
+ UINT uIDCheckItem,
+ UINT uCheck);
 
 /* CheckRadioButton  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Dlgmgr.lib, dlgmgr.lib] */
-BOOL CheckRadioButton( 
- HWND hDlg, 
- int nIDFirstButton, 
- int nIDLastButton, 
- int nIDCheckButton
-);
+BOOL CheckRadioButton(HWND hDlg,
+ int nIDFirstButton,
+ int nIDLastButton,
+ int nIDCheckButton);
 
 /* ChildWindowFromPoint  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib] */
-HWND ChildWindowFromPoint( 
- HWND hWndParent, 
- POINT Point 
-);
+HWND ChildWindowFromPoint(HWND hWndParent,
+ POINT Point);
 
 /* ClientToScreen  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Winmgr.lib, winmgr.lib] */
-BOOL ClientToScreen( 
- HWND hWnd, 
- LPPOINT lpPoint
-);
+BOOL ClientToScreen(HWND hWnd,
+ LPPOINT lpPoint);
 
 /* CloseClipboard  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Clipbd.lib, clipbd.lib] */
 BOOL CloseClipboard(void);
 
 /* CopyRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Rectapi.lib, rectapi.lib] */
-BOOL CopyRect(
- LPRECT lprcDst, 
- const RECT* lprcSrc
-);
+BOOL CopyRect(LPRECT lprcDst,
+ const RECT* lprcSrc);
 
 /* CountClipboardFormats  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Clipbd.lib, clipbd.lib] */
 int CountClipboardFormats(void);
 
 /* CreateAcceleratorTable  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Accel.lib, accel.lib; A/W CreateAcceleratorTableA,CreateAcceleratorTableW (CE is W-side)] */
-HACCEL CreateAcceleratorTable(
- LPACCEL lpaccl, 
- int cEntries
-);
+HACCEL CreateAcceleratorTable(LPACCEL lpaccl,
+ int cEntries);
 
 /* CreateCaret  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Caret.lib, caret.lib] */
-BOOL CreateCaret(
- HWND hWnd, 
- HBITMAP hBitmap, 
- int nWidth, 
- int nHeight
-);
+BOOL CreateCaret(HWND hWnd,
+ HBITMAP hBitmap,
+ int nWidth,
+ int nHeight);
 
 /* CreateDialog  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W CreateDialogA,CreateDialogW (CE is W-side)] */
-HWND CreateDialog( 
- HINSTANCE hInstance, 
- LPCTSTR lpTemplate, 
- HWND hWndParent, 
- DLGPROC lpDialogFunc
-);
+HWND CreateDialog(HINSTANCE hInstance,
+ LPCTSTR lpTemplate,
+ HWND hWndParent,
+ DLGPROC lpDialogFunc);
 
 /* CreateDialogIndirect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Dlgmgr.lib; A/W CreateDialogIndirectA,CreateDialogIndirectW (CE is W-side)] */
-HWND CreateDialogIndirect( 
- HINSTANCE hInstance, 
- LPCDLGTEMPLATE lpTemplate, 
- HWND hWndParent, 
- DLGPROC lpDialogFunc
-);
+HWND CreateDialogIndirect(HINSTANCE hInstance,
+ LPCDLGTEMPLATE lpTemplate,
+ HWND hWndParent,
+ DLGPROC lpDialogFunc);
 
 /* CreateDialogIndirectParam  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Dlgmgr.lib, dlgmgr.lib; A/W CreateDialogIndirectParamA,CreateDialogIndirectParamW (CE is W-side)] */
-HWND CreateDialogIndirectParam( 
- HINSTANCE hInstance, 
- LPCDLGTEMPLATE lpTemplate, 
- HWND hWndParent, 
- DLGPROC lpDialogFunc, 
- LPARAM lParamInit
-);
+HWND CreateDialogIndirectParam(HINSTANCE hInstance,
+ LPCDLGTEMPLATE lpTemplate,
+ HWND hWndParent,
+ DLGPROC lpDialogFunc,
+ LPARAM lParamInit);
 
 /* CreateDialogParam  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W CreateDialogParamA,CreateDialogParamW (CE is W-side)] */
-HWND CreateDialogParam( 
- HINSTANCE hInstance, 
- LPCTSTR lpTemplateName, 
- HWND hWndParent, 
- DLGPROC lpDialogFunc, 
- LPARAM dwInitParam
-);
+HWND CreateDialogParam(HINSTANCE hInstance,
+ LPCTSTR lpTemplateName,
+ HWND hWndParent,
+ DLGPROC lpDialogFunc,
+ LPARAM dwInitParam);
 
 /* CreateMenu  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Menu.lib, menu.lib] */
 HMENU CreateMenu();
@@ -3192,280 +3262,204 @@ HMENU CreateMenu();
 HMENU CreatePopupMenu();
 
 /* CreateWindow  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W CreateWindowA,CreateWindowW (CE is W-side)] */
-HWND CreateWindow( 
- LPCTSTR lpClassName, 
- LPCTSTR lpWindowName, 
- DWORD dwStyle, 
- int x, 
- int y, 
- int nWidth, 
- int nHeight, 
- HWND hWndParent, 
- HMENU hMenu, 
- HANDLE hInstance, 
- PVOID lpParam 
-);
+HWND CreateWindow(LPCTSTR lpClassName,
+ LPCTSTR lpWindowName,
+ DWORD dwStyle,
+ int x,
+ int y,
+ int nWidth,
+ int nHeight,
+ HWND hWndParent,
+ HMENU hMenu,
+ HANDLE hInstance,
+ PVOID lpParam);
 
 /* CreateWindowEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; wmbase.lib; A/W CreateWindowExA,CreateWindowExW (CE is W-side)] */
-HWND CreateWindowEx(
- DWORD dwExStyle, 
- LPCTSTR lpClassName, 
- LPCTSTR lpWindowName, 
- DWORD dwStyle, 
- int x, 
- int y, 
- int nWidth, 
- int nHeight, 
- HWND hWndParent, 
- HMENU hMenu, 
- HINSTANCE hInstance, 
- LPVOID lpParam 
-);
+HWND CreateWindowEx(DWORD dwExStyle,
+ LPCTSTR lpClassName,
+ LPCTSTR lpWindowName,
+ DWORD dwStyle,
+ int x,
+ int y,
+ int nWidth,
+ int nHeight,
+ HWND hWndParent,
+ HMENU hMenu,
+ HINSTANCE hInstance,
+ LPVOID lpParam);
 
 /* DefDlgProc  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Dlgmgr.lib, dlgmgr.lib; A/W DefDlgProcA,DefDlgProcW (CE is W-side)] */
-LRESULT DefDlgProc( 
- HWND hDlg, 
- UINT Msg, 
- WPARAM wParam, 
- LPARAM lParam
-);
+LRESULT DefDlgProc(HWND hDlg,
+ UINT Msg,
+ WPARAM wParam,
+ LPARAM lParam);
 
 /* DefWindowProc  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W DefWindowProcA,DefWindowProcW (CE is W-side)] */
-LRESULT DefWindowProc( 
- HWND hWnd, 
- UINT Msg, 
- WPARAM wParam, 
- LPARAM lParam 
-);
+LRESULT DefWindowProc(HWND hWnd,
+ UINT Msg,
+ WPARAM wParam,
+ LPARAM lParam);
 
 /* DeleteMenu  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Menu.lib, menu.lib] */
-BOOL DeleteMenu(
- HMENU hMenu, 
- UINT uPosition, 
- UINT uFlags 
-);
+BOOL DeleteMenu(HMENU hMenu,
+ UINT uPosition,
+ UINT uFlags);
 
 /* DestroyAcceleratorTable  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Accel.lib, accel.lib] */
-BOOL DestroyAcceleratorTable(
- HACCEL hAccel
-);
+BOOL DestroyAcceleratorTable(HACCEL hAccel);
 
 /* DestroyCaret  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Caret.lib, caret.lib] */
 BOOL DestroyCaret(void);
 
 /* DestroyMenu  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Menu.lib, menu.lib] */
-BOOL DestroyMenu(
- HMENU hMenu 
-);
+BOOL DestroyMenu(HMENU hMenu);
 
 /* DestroyWindow  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; wmbase.lib] */
-BOOL DestroyWindow( 
- HWND hWnd 
-);
+BOOL DestroyWindow(HWND hWnd);
 
 /* DialogBox  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W DialogBoxA,DialogBoxW (CE is W-side)] */
-int DialogBox( 
- HINSTANCE hInstance, 
- LPCTSTR lpTemplate, 
- HWND hWndParent, 
- DLGPROC lpDialogFunc
-);
+int DialogBox(HINSTANCE hInstance,
+ LPCTSTR lpTemplate,
+ HWND hWndParent,
+ DLGPROC lpDialogFunc);
 
 /* DialogBoxIndirect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W DialogBoxIndirectA,DialogBoxIndirectW (CE is W-side)] */
-int DialogBoxIndirect( 
- HINSTANCE hInstance, 
- LPDLGTEMPLATE lpTemplate, 
- HWND hWndParent, 
- DLGPROC lpDialogFunc
-);
+int DialogBoxIndirect(HINSTANCE hInstance,
+ LPDLGTEMPLATE lpTemplate,
+ HWND hWndParent,
+ DLGPROC lpDialogFunc);
 
 /* DialogBoxIndirectParam  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Dlgmgr.lib, dlgmgr.lib; A/W DialogBoxIndirectParamA,DialogBoxIndirectParamW (CE is W-side)] */
-int DialogBoxIndirectParam( 
- HINSTANCE hInstance, 
- LPCDLGTEMPLATE hDialogTemplate, 
- HWND hWndParent, 
- DLGPROC lpDialogFunc, 
- LPARAM dwInitParam
-);
+int DialogBoxIndirectParam(HINSTANCE hInstance,
+ LPCDLGTEMPLATE hDialogTemplate,
+ HWND hWndParent,
+ DLGPROC lpDialogFunc,
+ LPARAM dwInitParam);
 
 /* DispatchMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib; A/W DispatchMessageA,DispatchMessageW (CE is W-side)] */
-LONG DispatchMessage( 
- const MSG* lpmsg 
-);
+LONG DispatchMessage(const MSG* lpmsg);
 
 /* DrawFrameControl  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Nclient.lib, nclient.lib] */
-BOOL DrawFrameControl( 
- HDC hdc, 
- LPRECT lprc, 
- UINT uType, 
- UINT uState
-);
+BOOL DrawFrameControl(HDC hdc,
+ LPRECT lprc,
+ UINT uType,
+ UINT uState);
 
 /* DrawMenuBar  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Drawmbar.lib, drawmbar.lib, Menu.lib, menu.lib] */
-BOOL DrawMenuBar( 
- HWND hWnd 
-);
+BOOL DrawMenuBar(HWND hWnd);
 
 /* EmptyClipboard  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Clipbd.lib, clipbd.lib] */
 BOOL EmptyClipboard(void);
 
 /* EnableMenuItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Menu.lib, menu.lib] */
-BOOL EnableMenuItem(
- HMENU hMenu, 
- UINT uIDEnableItem, 
- UINT uEnable 
-);
+BOOL EnableMenuItem(HMENU hMenu,
+ UINT uIDEnableItem,
+ UINT uEnable);
 
 /* EnableWindow  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wmgr_c.lib, wmgr_c.lib] */
-BOOL EnableWindow( 
- HWND hWnd, 
- BOOL bEnable
-);
+BOOL EnableWindow(HWND hWnd,
+ BOOL bEnable);
 
 /* EndDeferWindowPos  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib] */
-BOOL EndDeferWindowPos( 
- HDWP hWinPosInfo 
-);
+BOOL EndDeferWindowPos(HDWP hWinPosInfo);
 
 /* EndDialog  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Dlgmgr.lib, dlgmgr.lib] */
-BOOL EndDialog( 
- HWND hDlg, 
- int nResult
-);
+BOOL EndDialog(HWND hDlg,
+ int nResult);
 
 /* EndPaint  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Winmgr.lib, winmgr.lib] */
-BOOL EndPaint( 
- HWND hWnd, 
- CONST PAINTSTRUCT* lpPaint 
-);
+BOOL EndPaint(HWND hWnd,
+ CONST PAINTSTRUCT* lpPaint);
 
 /* EnumClipboardFormats  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Clipbd.lib, clipbd.lib] */
-UINT EnumClipboardFormats(
- UINT format
-);
+UINT EnumClipboardFormats(UINT format);
 
 /* EnumWindows  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib] */
-BOOL EnumWindows( 
- WNDENUMPROC lpEnumFunc, 
- LPARAM lParam 
-);
+BOOL EnumWindows(WNDENUMPROC lpEnumFunc,
+ LPARAM lParam);
 
 /* EnumWindowsProc  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL CALLBACK EnumWindowsProc(
- HWND hwnd, 
- LPARAM lParam 
-);
+BOOL CALLBACK EnumWindowsProc(HWND hwnd,
+ LPARAM lParam);
 
 /* EqualRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Rectapi.lib, rectapi.lib] */
-BOOL EqualRect(
- const RECT* lprc1, 
- const RECT* lprc2
-);
+BOOL EqualRect(const RECT* lprc1,
+ const RECT* lprc2);
 
 /* FindWindow  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib; A/W FindWindowA,FindWindowW (CE is W-side)] */
-HWND FindWindow( 
- LPCTSTR lpClassName, 
- LPCTSTR lpWindowName 
-);
+HWND FindWindow(LPCTSTR lpClassName,
+ LPCTSTR lpWindowName);
 
 /* GetActiveWindow  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Caret.lib, caret.lib, Foregnd.lib, foregnd.lib] */
 HWND GetActiveWindow(void);
 
 /* GetAsyncKeyState  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Kbdui.lib, kbdui.lib] */
-SHORT GetAsyncKeyState( 
- int vKey 
-);
+SHORT GetAsyncKeyState(int vKey);
 
 /* GetCaretBlinkTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Caret.lib, caret.lib] */
 UINT GetCaretBlinkTime(void);
 
 /* GetCaretPos  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Caret.lib, caret.lib] */
-BOOL GetCaretPos(
- LPPOINT lpPoint
-);
+BOOL GetCaretPos(LPPOINT lpPoint);
 
 /* GetClassInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; wmgr_c.lib; A/W GetClassInfoA,GetClassInfoW (CE is W-side)] */
-BOOL GetClassInfo( 
- HINSTANCE hInstance, 
- LPCTSTR lpClassName, 
- LPWNDCLASS lpWndClass
-);
+BOOL GetClassInfo(HINSTANCE hInstance,
+ LPCTSTR lpClassName,
+ LPWNDCLASS lpWndClass);
 
 /* GetClassLong  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; wmbase.lib; A/W GetClassLongA,GetClassLongW (CE is W-side)] */
-DWORD GetClassLong( 
- HWND hWnd, 
- int nIndex
-);
+DWORD GetClassLong(HWND hWnd,
+ int nIndex);
 
 /* GetClassName  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib; A/W GetClassNameA,GetClassNameW (CE is W-side)] */
-int GetClassName( 
- HWND Wnd, 
- LPTSTR lpClassName, 
- int nMaxCount
-);
+int GetClassName(HWND Wnd,
+ LPTSTR lpClassName,
+ int nMaxCount);
 
 /* GetClientRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib] */
-BOOL GetClientRect( 
- HWND hWnd, 
- LPRECT lpRect 
-);
+BOOL GetClientRect(HWND hWnd,
+ LPRECT lpRect);
 
 /* GetClipboardData  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Clipbd.lib, clipbd.lib] */
-HANDLE GetClipboardData(
- UINT uFormat
-);
+HANDLE GetClipboardData(UINT uFormat);
 
 /* GetClipboardFormatName  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Clipbd.lib, clipbd.lib; A/W GetClipboardFormatNameA,GetClipboardFormatNameW (CE is W-side)] */
-int GetClipboardFormatName(
- UINT format, 
- LPTSTR lpszFormatName, 
- int cchMaxCount
-);
+int GetClipboardFormatName(UINT format,
+ LPTSTR lpszFormatName,
+ int cchMaxCount);
 
 /* GetClipboardOwner  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Clipbd.lib, clipbd.lib] */
 HWND GetClipboardOwner(void);
 
 /* GetDC  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Winmgr.lib, winmgr.lib] */
-HDC GetDC( 
- HWND hWnd
-);
+HDC GetDC(HWND hWnd);
 
 /* GetDCEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Winmgr.lib, winmgr.lib] */
-HDC GetDCEx( 
- HWND hWnd, 
- HRGN hrgnClip, 
- DWORD flags
-);
+HDC GetDCEx(HWND hWnd,
+ HRGN hrgnClip,
+ DWORD flags);
 
 /* GetDialogBaseUnits  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Dlgmgr.lib, dlgmgr.lib] */
 LONG GetDialogBaseUnits(void);
 
 /* GetDlgCtrlID  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Dlgmgr.lib, dlgmgr.lib] */
-int GetDlgCtrlID( 
- HWND hwndCtl
-);
+int GetDlgCtrlID(HWND hwndCtl);
 
 /* GetDlgItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Dlgmgr.lib, dlgmgr.lib] */
-HWND GetDlgItem( 
- HWND hDlg, 
- int nIDDlgItem
-);
+HWND GetDlgItem(HWND hDlg,
+ int nIDDlgItem);
 
 /* GetDlgItemInt  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Dlgmgr.lib, dlgmgr.lib] */
-UINT GetDlgItemInt( 
- HWND hDlg, 
- int nIDDlgItem, 
- BOOL* lpTranslated, 
- BOOL bSigned
-);
+UINT GetDlgItemInt(HWND hDlg,
+ int nIDDlgItem,
+ BOOL* lpTranslated,
+ BOOL bSigned);
 
 /* GetDlgItemText  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Dlgmgr.lib, dlgmgr.lib; A/W GetDlgItemTextA,GetDlgItemTextW (CE is W-side)] */
-UINT GetDlgItemText( 
- HWND hDlg, 
- int nIDDlgItem, 
- LPTSTR lpString, 
- int nMaxCount
-);
+UINT GetDlgItemText(HWND hDlg,
+ int nIDDlgItem,
+ LPTSTR lpString,
+ int nMaxCount);
 
 /* GetFocus  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Caret.lib, caret.lib, Foregnd.lib, foregnd.lib] */
 HWND GetFocus(void);
@@ -3474,347 +3468,243 @@ HWND GetFocus(void);
 HWND GetForegroundWindow(void);
 
 /* GetKeyboardLayout  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coreimm.lib, coreimm.lib] */
-HKL GetKeyboardLayout(
- DWORD idThread
-);
+HKL GetKeyboardLayout(DWORD idThread);
 
 /* GetKeyboardLayoutName  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Kbdui.lib, kbdui.lib; A/W GetKeyboardLayoutNameA,GetKeyboardLayoutNameW (CE is W-side)] */
-BOOL GetKeyboardLayoutName( 
- LPTSTR pwszKLID 
-);
+BOOL GetKeyboardLayoutName(LPTSTR pwszKLID);
 
 /* GetKeyboardStatus  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Kbdui.lib, kbdui.lib] */
 DWORD GetKeyboardStatus();
 
 /* GetKeyState  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Kbdui.lib, kbdui.lib] */
-SHORT GetKeyState( 
- int nVirtKey 
-);
+SHORT GetKeyState(int nVirtKey);
 
 /* GetMenuItemInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Menu.lib, menu.lib; A/W GetMenuItemInfoA,GetMenuItemInfoW (CE is W-side)] */
-BOOL GetMenuItemInfo(
- HMENU hMenu, 
- UINT uItem, 
- BOOL fByPosition, 
- LPMENUITEMINFO lpmii 
-);
+BOOL GetMenuItemInfo(HMENU hMenu,
+ UINT uItem,
+ BOOL fByPosition,
+ LPMENUITEMINFO lpmii);
 
 /* GetMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib; A/W GetMessageA,GetMessageW (CE is W-side)] */
-BOOL GetMessage(
- LPMSG lpMsg, 
- HWND hWnd, 
- UINT wMsgFilterMin, 
- UINT wMsgFilterMax 
- );
+BOOL GetMessage(LPMSG lpMsg,
+ HWND hWnd,
+ UINT wMsgFilterMin,
+ UINT wMsgFilterMax);
 
 /* GetMessagePos  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib] */
 DWORD GetMessagePos(void);
 
 /* GetNextDlgGroupItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Dlgmgr.lib, dlgmgr.lib] */
-HWND GetNextDlgGroupItem( 
- HWND hDlg, 
- HWND hCtl, 
- BOOL bPrevious
-);
+HWND GetNextDlgGroupItem(HWND hDlg,
+ HWND hCtl,
+ BOOL bPrevious);
 
 /* GetNextDlgTabItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Dlgmgr.lib, dlgmgr.lib] */
-HWND GetNextDlgTabItem( 
- HWND hDlg, 
- HWND hCtl, 
- BOOL bPrevious
-);
+HWND GetNextDlgTabItem(HWND hDlg,
+ HWND hCtl,
+ BOOL bPrevious);
 
 /* GetOpenClipboardWindow  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Clipbd.lib, clipbd.lib] */
 HWND GetOpenClipboardWindow(void);
 
 /* GetParent  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib] */
-HWND GetParent( 
- HWND hWnd 
-);
+HWND GetParent(HWND hWnd);
 
 /* GetPriorityClipboardFormat  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Clipbd.lib, clipbd.lib] */
-int GetPriorityClipboardFormat(
- UINT* paFormatPriorityList, 
- int cFormats
-);
+int GetPriorityClipboardFormat(UINT* paFormatPriorityList,
+ int cFormats);
 
 /* GetScrollInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Sbcmn.lib, sbcmn.lib] */
-BOOL GetScrollInfo( 
- HWND hwnd, 
- int fnBar, 
- LPSCROLLINFO lpsi 
-);
+BOOL GetScrollInfo(HWND hwnd,
+ int fnBar,
+ LPSCROLLINFO lpsi);
 
 /* GetSubMenu  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Menu.lib, menu.lib] */
-HMENU GetSubMenu(
- HMENU hMenu, 
- int nPos 
-);
+HMENU GetSubMenu(HMENU hMenu,
+ int nPos);
 
 /* GetSysColor  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wmgr_c.lib, wmgr_c.lib] */
 DWORD
- GetSysColor(
- int
- nIndex
- );
+ GetSysColor(int
+ nIndex);
 
 /* GetSystemMenu  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Menu.lib] */
-HMENU GetSystemMenu(
- HWND hWnd, 
- BOOL bRevert 
-);
+HMENU GetSystemMenu(HWND hWnd,
+ BOOL bRevert);
 
 /* GetSystemMetrics  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wmbase.lib, wmbase.lib] */
-int GetSystemMetrics(
- int nIndex
-);
+int GetSystemMetrics(int nIndex);
 
 /* GetUpdateRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Winmgr.lib, winmgr.lib] */
-BOOL GetUpdateRect( 
- HWND hWnd, 
- LPRECT lpRect, 
- BOOL bErase
-);
+BOOL GetUpdateRect(HWND hWnd,
+ LPRECT lpRect,
+ BOOL bErase);
 
 /* GetUpdateRgn  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Winmgr.lib, winmgr.lib] */
-int GetUpdateRgn( 
- HWND hWnd, 
- HRGN hRgn, 
- BOOL bErase
-);
+int GetUpdateRgn(HWND hWnd,
+ HRGN hRgn,
+ BOOL bErase);
 
 /* GetWindow  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib] */
-HWND GetWindow( 
- HWND hWnd, 
- UINT uCmd 
-);
+HWND GetWindow(HWND hWnd,
+ UINT uCmd);
 
 /* GetWindowDC  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Winmgr.lib, winmgr.lib] */
-HDC GetWindowDC( 
- HWND hWnd
-);
+HDC GetWindowDC(HWND hWnd);
 
 /* GetWindowLong  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W GetWindowLongA,GetWindowLongW (CE is W-side)] */
-LONG GetWindowLong( 
- HWND hWnd, 
- int nIndex
-);
+LONG GetWindowLong(HWND hWnd,
+ int nIndex);
 
 /* GetWindowRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib] */
-BOOL GetWindowRect( 
- HWND hWnd, 
- LPRECT lpRect 
-);
+BOOL GetWindowRect(HWND hWnd,
+ LPRECT lpRect);
 
 /* GetWindowText  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib; A/W GetWindowTextA,GetWindowTextW (CE is W-side)] */
-int GetWindowText( 
- HWND hWnd, 
- LPTSTR lpString, 
- int nMaxCount 
-);
+int GetWindowText(HWND hWnd,
+ LPTSTR lpString,
+ int nMaxCount);
 
 /* GetWindowTextLength  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib; A/W GetWindowTextLengthA,GetWindowTextLengthW (CE is W-side)] */
-int GetWindowTextLength( 
- HWND hWnd 
-);
+int GetWindowTextLength(HWND hWnd);
 
 /* GetWindowThreadProcessId  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; wmbase.lib] */
-DWORD GetWindowThreadProcessId(
- HWND hWnd, 
- LPDWORD lpdwProcessId 
-);
+DWORD GetWindowThreadProcessId(HWND hWnd,
+ LPDWORD lpdwProcessId);
 
 /* HideCaret  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Caret.lib, caret.lib] */
-BOOL HideCaret(
- HWND hWnd
-);
+BOOL HideCaret(HWND hWnd);
 
 /* InsertMenu  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Menu.lib, menu.lib; A/W InsertMenuA,InsertMenuW (CE is W-side)] */
-BOOL InsertMenu(
- HMENU hMenu, 
- UINT uPosition, 
- UINT uFlags, 
- UINT uIDNewItem, 
- LPCTSTR lpNewItem 
-);
+BOOL InsertMenu(HMENU hMenu,
+ UINT uPosition,
+ UINT uFlags,
+ UINT uIDNewItem,
+ LPCTSTR lpNewItem);
 
 /* IntersectRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Rectapi.lib, rectapi.lib] */
-BOOL IntersectRect(
- LPRECT lprcDst, 
- const RECT* lprcSrc1, 
- const RECT* lprcSrc2
-);
+BOOL IntersectRect(LPRECT lprcDst,
+ const RECT* lprcSrc1,
+ const RECT* lprcSrc2);
 
 /* InvalidateRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Winmgr.lib, winmgr.lib] */
-BOOL InvalidateRect( 
- HWND hWnd, 
- const RECT* lpRect, 
- BOOL bErase
-);
+BOOL InvalidateRect(HWND hWnd,
+ const RECT* lpRect,
+ BOOL bErase);
 
 /* IsChild  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib] */
-BOOL IsChild( 
- HWND hWndParent, 
- HWND hWnd 
-);
+BOOL IsChild(HWND hWndParent,
+ HWND hWnd);
 
 /* IsClipboardFormatAvailable  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Clipbd.lib, clipbd.lib] */
-BOOL IsClipboardFormatAvailable(
- UINT format
-);
+BOOL IsClipboardFormatAvailable(UINT format);
 
 /* IsDialogMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Dlgmgr.lib, dlgmgr.lib; A/W IsDialogMessageA,IsDialogMessageW (CE is W-side)] */
-BOOL IsDialogMessage( 
- HWND hDlg, 
- LPMSG lpMsg
-);
+BOOL IsDialogMessage(HWND hDlg,
+ LPMSG lpMsg);
 
 /* IsRectEmpty  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Rectapi.lib, rectapi.lib] */
-BOOL IsRectEmpty(
- const RECT* lprc
-);
+BOOL IsRectEmpty(const RECT* lprc);
 
 /* IsWindow  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; wmbase.lib] */
-BOOL IsWindow(
- HWND hWnd 
-);
+BOOL IsWindow(HWND hWnd);
 
 /* IsWindowEnabled  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wmgr_c.lib, wmgr_c.lib] */
-BOOL IsWindowEnabled(
- HWND hWnd 
-);
+BOOL IsWindowEnabled(HWND hWnd);
 
 /* IsWindowVisible  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; wmbase.lib] */
-BOOL IsWindowVisible(
- HWND hWnd 
-);
+BOOL IsWindowVisible(HWND hWnd);
 
 /* keybd_event  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; kbdui.lib, Uibase.lib, uibase.lib] */
-VOID keybd_event( 
- BYTE bVk, 
- BYTE bScan, 
- DWORD dwFlags, 
- DWORD dwExtraInfo 
-);
+VOID keybd_event(BYTE bVk,
+ BYTE bScan,
+ DWORD dwFlags,
+ DWORD dwExtraInfo);
 
 /* LoadAccelerators  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Accel.lib, accel.lib, accel_c.lib; A/W LoadAcceleratorsA,LoadAcceleratorsW (CE is W-side)] */
-HACCEL LoadAccelerators(
- HINSTANCE hInstance, 
- LPCTSTR lpTableName 
-);
+HACCEL LoadAccelerators(HINSTANCE hInstance,
+ LPCTSTR lpTableName);
 
 /* LoadBitmap  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Loadbmp.lib, loadbmp.lib; A/W LoadBitmapA,LoadBitmapW (CE is W-side)] */
-HBITMAP LoadBitmap(
- HINSTANCE hInstance, 
- LPCTSTR lpBitmapName
-);
+HBITMAP LoadBitmap(HINSTANCE hInstance,
+ LPCTSTR lpBitmapName);
 
 /* LoadImage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Loadimg.lib, loadimg.lib; A/W LoadImageA,LoadImageW (CE is W-side)] */
-HANDLE LoadImage(
- HINSTANCE hinst,
- LPCTSTR lpszName, 
- UINT uType, 
+HANDLE LoadImage(HINSTANCE hinst,
+ LPCTSTR lpszName,
+ UINT uType,
  int cxDesired,
  int cyDesired,
- UINT fuLoad 
-);
+ UINT fuLoad);
 
 /* LoadMenu  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Menu.lib, menu.lib; A/W LoadMenuA,LoadMenuW (CE is W-side)] */
-HMENU LoadMenu(
- HINSTANCE hInstance, 
- LPCTSTR lpMenuName 
-);
+HMENU LoadMenu(HINSTANCE hInstance,
+ LPCTSTR lpMenuName);
 
 /* MapDialogRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Dlgmgr.lib, dlgmgr.lib] */
-BOOL MapDialogRect( 
- HWND hDlg, 
- LPRECT lpRect
-);
+BOOL MapDialogRect(HWND hDlg,
+ LPRECT lpRect);
 
 /* MapVirtualKey  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Kbdui.lib, kbdui.lib; A/W MapVirtualKeyA,MapVirtualKeyW (CE is W-side)] */
-UINT MapVirtualKey( 
- UINT uCode, 
- UINT uMapType 
-);
+UINT MapVirtualKey(UINT uCode,
+ UINT uMapType);
 
 /* MapWindowPoints  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Winmgr.lib, winmgr.lib] */
-int MapWindowPoints( 
- HWND hWndFrom, 
- HWND hWndTo, 
- LPPOINT lpPoints, 
- UINT cPoints
-);
+int MapWindowPoints(HWND hWndFrom,
+ HWND hWndTo,
+ LPPOINT lpPoints,
+ UINT cPoints);
 
 /* MessageBox  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Msgbox.lib, msgbox.lib; A/W MessageBoxA,MessageBoxW (CE is W-side)] */
-int MessageBox(
- HWND hWnd, 
- LPCTSTR lpText, 
- LPCTSTR lpCaption, 
- UINT uType
-);
+int MessageBox(HWND hWnd,
+ LPCTSTR lpText,
+ LPCTSTR lpCaption,
+ UINT uType);
 
 /* MoveWindow  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib] */
-BOOL MoveWindow( 
- HWND hWnd, 
- int X, 
- int Y, 
- int nWidth, 
- int nHeight, 
- BOOL bRepaint 
-);
+BOOL MoveWindow(HWND hWnd,
+ int X,
+ int Y,
+ int nWidth,
+ int nHeight,
+ BOOL bRepaint);
 
 /* OffsetRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Rectapi.lib, rectapi.lib] */
-BOOL OffsetRect(
- LPRECT lprc, 
- int dx, 
- int dy
-);
+BOOL OffsetRect(LPRECT lprc,
+ int dx,
+ int dy);
 
 /* OpenClipboard  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Clipbd.lib, clipbd.lib] */
-BOOL OpenClipboard(
- HWND hWndNewOwner
-);
+BOOL OpenClipboard(HWND hWndNewOwner);
 
 /* PeekMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib; A/W PeekMessageA,PeekMessageW (CE is W-side)] */
-BOOL PeekMessage(
- LPMSG lpMsg, 
- HWND hWnd, 
- UINT wMsgFilterMin, 
- UINT wMsgFilterMax, 
- UINT wRemoveMsg 
-);
+BOOL PeekMessage(LPMSG lpMsg,
+ HWND hWnd,
+ UINT wMsgFilterMin,
+ UINT wMsgFilterMax,
+ UINT wRemoveMsg);
 
 /* PostMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib; A/W PostMessageA,PostMessageW (CE is W-side)] */
-BOOL PostMessage(
- HWND hWnd, 
- UINT Msg, 
- WPARAM wParam, 
- LPARAM lParam 
-);
+BOOL PostMessage(HWND hWnd,
+ UINT Msg,
+ WPARAM wParam,
+ LPARAM lParam);
 
 /* PostQuitMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib] */
-void PostQuitMessage(
- int nExitCode 
-);
+void PostQuitMessage(int nExitCode);
 
 /* PostThreadMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib; A/W PostThreadMessageA,PostThreadMessageW (CE is W-side)] */
-BOOL PostThreadMessage(
- DWORD idThread, 
- UINT Msg, 
- WPARAM wParam, 
- LPARAM lParam 
-);
+BOOL PostThreadMessage(DWORD idThread,
+ UINT Msg,
+ WPARAM wParam,
+ LPARAM lParam);
 
 /* PtInRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Rectapi.lib, rectapi.lib] */
-BOOL PtInRect(
- const RECT* lprc, 
- POINT pt
-);
+BOOL PtInRect(const RECT* lprc,
+ POINT pt);
 
 /* RegisterClass  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; wmgr_c.lib; A/W RegisterClassA,RegisterClassW (CE is W-side)] */
-ATOM RegisterClass(
- const WNDCLASS* lpWndClass
-);
+ATOM RegisterClass(const WNDCLASS* lpWndClass);
 
 /* RegisterClipboardFormat  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Clipbd.lib, clipbd.lib; A/W RegisterClipboardFormatA,RegisterClipboardFormatW (CE is W-side)] */
 /* Windows CE supports only the Unicode version of RegisterClipboardFormat. */
@@ -3823,229 +3713,165 @@ ATOM RegisterClass(
 /* Windows Embedded CE supports only the Unicode version of RegisterClipboardFormat. */
 /* Windows CE supports only the Unicode version of RegisterClipboardFormat. */
 /* Windows CE Notes Supports only the Unicode version of RegisterClipboardFormat. */
-UINT RegisterClipboardFormat(
- LPCWSTR lpszFormat
-);
+UINT RegisterClipboardFormat(LPCWSTR lpszFormat);
 
 /* RegisterHotKey  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Hotkey.lib, hotkey.lib] */
-BOOL RegisterHotKey( 
- HWND hWnd, 
- int id, 
- UINT fsModifiers, 
- UINT vk 
-);
+BOOL RegisterHotKey(HWND hWnd,
+ int id,
+ UINT fsModifiers,
+ UINT vk);
 
 /* RegisterWindowMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib; A/W RegisterWindowMessageA,RegisterWindowMessageW (CE is W-side)] */
-UINT RegisterWindowMessage( 
- LPCTSTR lpString 
-);
+UINT RegisterWindowMessage(LPCTSTR lpString);
 
 /* ReleaseDC  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Winmgr.lib, winmgr.lib] */
-int ReleaseDC( 
- HWND hWnd, 
- HDC hDC
-);
+int ReleaseDC(HWND hWnd,
+ HDC hDC);
 
 /* RemoveMenu  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Menu.lib, menu.lib] */
-BOOL RemoveMenu(
- HMENU hMenu, 
- UINT uPosition, 
- UINT uFlags 
-);
+BOOL RemoveMenu(HMENU hMenu,
+ UINT uPosition,
+ UINT uFlags);
 
 /* ScreenToClient  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Winmgr.lib, winmgr.lib] */
-BOOL ScreenToClient( 
- HWND hWnd, 
- LPPOINT lpPoint
-);
+BOOL ScreenToClient(HWND hWnd,
+ LPPOINT lpPoint);
 
 /* ScrollDC  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Mgwinmgr.lib, mgwinmgr.lib] */
-BOOL ScrollDC(
- HDC hDC, 
- int dx, 
- int dy, 
- const RECT* lprcScroll, 
- const RECT* lprcClip, 
- HRGN hrgnUpdate, 
- LPRECT lprcUpdate 
-);
+BOOL ScrollDC(HDC hDC,
+ int dx,
+ int dy,
+ const RECT* lprcScroll,
+ const RECT* lprcClip,
+ HRGN hrgnUpdate,
+ LPRECT lprcUpdate);
 
 /* ScrollWindowEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Winmgr.lib, winmgr.lib] */
-int ScrollWindowEx( 
- HWND hWnd, 
- int dx, 
- int dy, 
- const RECT* prcScroll, 
- const RECT* prcClip, 
- HRGN hrgnUpdate, 
- LPRECT prcUpdate, 
- UINT flags 
-);
+int ScrollWindowEx(HWND hWnd,
+ int dx,
+ int dy,
+ const RECT* prcScroll,
+ const RECT* prcClip,
+ HRGN hrgnUpdate,
+ LPRECT prcUpdate,
+ UINT flags);
 
 /* SendDlgItemMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Dlgmgr.lib, dlgmgr.lib; A/W SendDlgItemMessageA,SendDlgItemMessageW (CE is W-side)] */
-LONG SendDlgItemMessage( 
- HWND hDlg, 
- int nIDDlgItem, 
- UINT Msg, 
- WPARAM wParam, 
- LPARAM lParam
-);
+LONG SendDlgItemMessage(HWND hDlg,
+ int nIDDlgItem,
+ UINT Msg,
+ WPARAM wParam,
+ LPARAM lParam);
 
 /* SendMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib; A/W SendMessageA,SendMessageW (CE is W-side)] */
-LRESULT SendMessage(
- HWND hWnd, 
- UINT Msg, 
- WPARAM wParam, 
- LPARAM lParam 
-);
+LRESULT SendMessage(HWND hWnd,
+ UINT Msg,
+ WPARAM wParam,
+ LPARAM lParam);
 
 /* SendNotifyMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib; A/W SendNotifyMessageA,SendNotifyMessageW (CE is W-side)] */
-BOOL SendNotifyMessage(
- HWND hWnd, 
- UINT Msg, 
- WPARAM wParam, 
- LPARAM lParam 
-);
+BOOL SendNotifyMessage(HWND hWnd,
+ UINT Msg,
+ WPARAM wParam,
+ LPARAM lParam);
 
 /* SetActiveWindow  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Caret.lib, caret.lib, foregnd.lib] */
-HWND SetActiveWindow(
- HWND hWnd 
-);
+HWND SetActiveWindow(HWND hWnd);
 
 /* SetCaretBlinkTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Caret.lib, caret.lib] */
-BOOL SetCaretBlinkTime(
- UINT uMSeconds
-);
+BOOL SetCaretBlinkTime(UINT uMSeconds);
 
 /* SetCaretPos  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Caret.lib, caret.lib] */
-BOOL SetCaretPos(
- int X, 
- int Y
-);
+BOOL SetCaretPos(int X,
+ int Y);
 
 /* SetClassLong  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; wmbase.lib; A/W SetClassLongA,SetClassLongW (CE is W-side)] */
-DWORD SetClassLong( 
- HWND hWnd, 
- int nIndex, 
- LONG dwNewLong
-);
+DWORD SetClassLong(HWND hWnd,
+ int nIndex,
+ LONG dwNewLong);
 
 /* SetClipboardData  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Clipbd.lib, clipbd.lib] */
-HANDLE SetClipboardData(
- UINT uFormat, 
- HANDLE hMem
-);
+HANDLE SetClipboardData(UINT uFormat,
+ HANDLE hMem);
 
 /* SetDlgItemInt  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Dlgmgr.lib, dlgmgr.lib] */
-BOOL SetDlgItemInt( 
- HWND hDlg, 
- int nIDDlgItem, 
- UINT uValue, 
- BOOL bSigned
-);
+BOOL SetDlgItemInt(HWND hDlg,
+ int nIDDlgItem,
+ UINT uValue,
+ BOOL bSigned);
 
 /* SetDlgItemText  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Dlgmgr.lib, dlgmgr.lib; A/W SetDlgItemTextA,SetDlgItemTextW (CE is W-side)] */
-BOOL SetDlgItemText( 
- HWND hDlg, 
- int nIDDlgItem, 
- LPCTSTR lpString
-);
+BOOL SetDlgItemText(HWND hDlg,
+ int nIDDlgItem,
+ LPCTSTR lpString);
 
 /* SetFocus  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Caret.lib, caret.lib, Foregnd.lib, foregnd.lib] */
-HWND SetFocus(
- HWND hWnd 
-);
+HWND SetFocus(HWND hWnd);
 
 /* SetForegroundWindow  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; caret.lib, foregnd.lib] */
-BOOL SetForegroundWindow(
- HWND hWnd 
-);
+BOOL SetForegroundWindow(HWND hWnd);
 
 /* SetParent  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib] */
-HWND SetParent( 
- HWND hWndChild, 
- HWND hWndNewParent 
-);
+HWND SetParent(HWND hWndChild,
+ HWND hWndNewParent);
 
 /* SetRectEmpty  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Rectapi.lib, rectapi.lib] */
-BOOL SetRectEmpty(
- LPRECT lprc
-);
+BOOL SetRectEmpty(LPRECT lprc);
 
 /* SetScrollInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Sbcmn.lib, sbcmn.lib] */
-int SetScrollInfo( 
- HWND hwnd, 
- int fnBar, 
- LPSCROLLINFO lpsi, 
- BOOL fRedraw 
-);
+int SetScrollInfo(HWND hwnd,
+ int fnBar,
+ LPSCROLLINFO lpsi,
+ BOOL fRedraw);
 
 /* SetScrollPos  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Sbcmn.lib, sbcmn.lib] */
-int SetScrollPos( 
- HWND hWnd, 
- int nBar, 
- int nPos, 
- BOOL bRedraw 
-);
+int SetScrollPos(HWND hWnd,
+ int nBar,
+ int nPos,
+ BOOL bRedraw);
 
 /* SetScrollRange  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Sbcmn.lib, sbcmn.lib] */
-BOOL SetScrollRange( 
- HWND hWnd, 
- int nBar, 
- int nMinPos, 
- int nMaxPos, 
- BOOL bRedraw 
-);
+BOOL SetScrollRange(HWND hWnd,
+ int nBar,
+ int nMinPos,
+ int nMaxPos,
+ BOOL bRedraw);
 
 /* SetTimer  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; timer.lib] */
-UINT SetTimer(
- HWND hWnd, 
- UINT nIDEvent, 
- UINT uElapse, 
- TIMERPROC lpTimerFunc 
-);
+UINT SetTimer(HWND hWnd,
+ UINT nIDEvent,
+ UINT uElapse,
+ TIMERPROC lpTimerFunc);
 
 /* SetWindowLong  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; A/W SetWindowLongA,SetWindowLongW (CE is W-side)] */
-LONG SetWindowLong( 
- HWND hWnd, 
- int nIndex, 
- LONG dwNewLong
-);
+LONG SetWindowLong(HWND hWnd,
+ int nIndex,
+ LONG dwNewLong);
 
 /* SetWindowPos  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib] */
-BOOL SetWindowPos( 
- HWND hWnd, 
- HWND hWndInsertAfter, 
- int X, 
- int Y, 
- int cx, 
- int cy, 
- UINT uFlags 
-);
+BOOL SetWindowPos(HWND hWnd,
+ HWND hWndInsertAfter,
+ int X,
+ int Y,
+ int cx,
+ int cy,
+ UINT uFlags);
 
 /* SetWindowText  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib; A/W SetWindowTextA,SetWindowTextW (CE is W-side)] */
-BOOL SetWindowText( 
- HWND hWnd, 
- LPCTSTR lpString 
-);
+BOOL SetWindowText(HWND hWnd,
+ LPCTSTR lpString);
 
 /* ShowCaret  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Caret.lib, caret.lib] */
-BOOL ShowCaret(
- HWND hWnd
-);
+BOOL ShowCaret(HWND hWnd);
 
 /* ShowWindow  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib] */
-BOOL ShowWindow( 
- HWND hWnd, 
- int nCmdShow 
-);
+BOOL ShowWindow(HWND hWnd,
+ int nCmdShow);
 
 /* SubtractRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Rectapi.lib, rectapi.lib] */
-BOOL SubtractRect(
- LPRECT lprcDst, 
- const RECT* lprcSrc1, 
- const RECT* lprcSrc2
-);
+BOOL SubtractRect(LPRECT lprcDst,
+ const RECT* lprcSrc1,
+ const RECT* lprcSrc2);
 
 /* SystemIdleTimerReset  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; idle.lib] */
 void WINAPI SystemIdleTimerReset(void);
@@ -4056,382 +3882,278 @@ void WINAPI SystemIdleTimerReset(void);
 /* Windows CE supports only the Unicode version of this function. */
 /* Windows Embedded CE supports only the Unicode version of this function. */
 /* Windows CE supports only the Unicode version of this function. */
-BOOL SystemParametersInfo( 
- UINT uiAction, 
- UINT uiParam, 
- PVOID pvParam, 
- UINT fWinIni
-);
+BOOL SystemParametersInfo(UINT uiAction,
+ UINT uiParam,
+ PVOID pvParam,
+ UINT fWinIni);
 
 /* TlsAlloc  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Coremain.lib] */
 DWORD TlsAlloc(void);
 
 /* TrackPopupMenu  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Menu.lib, menu.lib] */
-BOOL TrackPopupMenu(
- HMENU hMenu, 
- UINT uFlags, 
- int x, 
- int y, 
- int nReserved, 
- HWND hWnd, 
- const RECT* prcRect 
-);
+BOOL TrackPopupMenu(HMENU hMenu,
+ UINT uFlags,
+ int x,
+ int y,
+ int nReserved,
+ HWND hWnd,
+ const RECT* prcRect);
 
 /* TrackPopupMenuEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Menu.lib, menu.lib] */
-BOOL TrackPopupMenuEx(
- HMENU hmenu, 
- UINT uFlags, 
- int x, 
- int y, 
- HWND hwnd, 
- LPTPMPARAMS lptpm 
-);
+BOOL TrackPopupMenuEx(HMENU hmenu,
+ UINT uFlags,
+ int x,
+ int y,
+ HWND hwnd,
+ LPTPMPARAMS lptpm);
 
 /* TranslateAccelerator  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Accel.lib, accel.lib; A/W TranslateAcceleratorA,TranslateAcceleratorW (CE is W-side)] */
-int TranslateAccelerator(
- HWND hWnd, 
- HACCEL hAccTable, 
- LPMSG lpMsg 
-);
+int TranslateAccelerator(HWND hWnd,
+ HACCEL hAccTable,
+ LPMSG lpMsg);
 
 /* TranslateMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Msgque.lib, msgque.lib] */
-BOOL TranslateMessage(
- const MSG* lpMsg 
-);
+BOOL TranslateMessage(const MSG* lpMsg);
 
 /* UnionRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Rectapi.lib, rectapi.lib] */
-BOOL UnionRect(
- LPRECT lprcDst, 
- const RECT* lprcSrc1, 
- const RECT* lprcSrc2
-);
+BOOL UnionRect(LPRECT lprcDst,
+ const RECT* lprcSrc1,
+ const RECT* lprcSrc2);
 
 /* UnregisterClass  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; wmgr_c.lib; A/W UnregisterClassA,UnregisterClassW (CE is W-side)] */
-BOOL UnregisterClass( 
- LPCTSTR lpClassName, 
- HINSTANCE hInstance
-);
+BOOL UnregisterClass(LPCTSTR lpClassName,
+ HINSTANCE hInstance);
 
 /* UnregisterHotKey  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; hotkey.lib] */
-BOOL UnregisterHotKey( 
- HWND hWnd, 
- int id
-);
+BOOL UnregisterHotKey(HWND hWnd,
+ int id);
 
 /* UpdateWindow  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Winmgr.lib, winmgr.lib] */
-BOOL UpdateWindow( 
- HWND hWnd
-);
+BOOL UpdateWindow(HWND hWnd);
 
 /* ValidateRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Winmgr.lib, winmgr.lib] */
-BOOL ValidateRect( 
- HWND hWnd, 
- const RECT* lpRect
-);
+BOOL ValidateRect(HWND hWnd,
+ const RECT* lpRect);
 
 /* WindowFromPoint  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; winmgr.lib] */
-HWND WindowFromPoint( 
- POINT Point 
-);
+HWND WindowFromPoint(POINT Point);
 
 /* WindowProc  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-LRESULT CALLBACK WindowProc(
- HWND hwnd, 
- UINT uMsg, 
- WPARAM wParam, 
- LPARAM lParam 
-);
+LRESULT CALLBACK WindowProc(HWND hwnd,
+ UINT uMsg,
+ WPARAM wParam,
+ LPARAM lParam);
 
 /* WinMain  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-int WINAPI WinMain(
- HINSTANCE hInstance, 
- HINSTANCE hPrevInstance, 
- LPWSTR lpCmdLine, 
- int nShowCmd 
-);
+int WINAPI WinMain(HINSTANCE hInstance,
+ HINSTANCE hPrevInstance,
+ LPWSTR lpCmdLine,
+ int nShowCmd);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
 
 /* ClipCursor  [function; shared; CE 2.11..2.12, 3.0..699; Cursor.lib, Mcursor.lib, mcursor.lib] */
-BOOL ClipCursor( 
- CONST RECT* 
- lpRect
- );
+BOOL ClipCursor(CONST RECT*
+ lpRect);
 
 /* CreateCursor  [function; shared; CE 2.11..2.12, 3.0..699; Iconcurs.lib, iconcurs.lib] */
-HCURSOR CreateCursor( 
- HINSTANCE hInst, 
- int xHotSpot, 
- int yHotSpot, 
- int nWidth, 
- int nHeight, 
- CONST VOID* pvANDPlane, 
- CONST VOID* pvXORPlane
-);
+HCURSOR CreateCursor(HINSTANCE hInst,
+ int xHotSpot,
+ int yHotSpot,
+ int nWidth,
+ int nHeight,
+ CONST VOID* pvANDPlane,
+ CONST VOID* pvXORPlane);
 
 /* DestroyCursor  [function; shared; CE 2.11..2.12, 3.0..699; Iconcurs.lib, iconcurs.lib] */
-BOOL DestroyCursor( 
- HCURSOR hCursor
-);
+BOOL DestroyCursor(HCURSOR hCursor);
 
 /* DestroyIcon  [function; shared; CE 2.11..2.12, 3.0..699; Icon.lib, icon.lib] */
-BOOL DestroyIcon(
- HICON hIcon
-);
+BOOL DestroyIcon(HICON hIcon);
 
 /* DrawIcon  [function; shared; CE 2.11..2.12, 3.0..699; Icon.lib] */
-BOOL DrawIcon(
- HDC hDC, 
- int X, 
- int Y, 
- HICON hIcon
-);
+BOOL DrawIcon(HDC hDC,
+ int X,
+ int Y,
+ HICON hIcon);
 
 /* DrawIconEx  [function; shared; CE 2.11..2.12, 3.0..699; Icon.lib, icon.lib] */
-BOOL DrawIconEx(
- HDC hdc, 
- int xLeft, 
- int yTop, 
- HICON hIcon, 
- int cxWidth, 
- int cyWidth, 
- UINT istepIfAniCur, 
- HBRUSH hbrFlickerFreeDraw, 
- UINT diFlags
-);
+BOOL DrawIconEx(HDC hdc,
+ int xLeft,
+ int yTop,
+ HICON hIcon,
+ int cxWidth,
+ int cyWidth,
+ UINT istepIfAniCur,
+ HBRUSH hbrFlickerFreeDraw,
+ UINT diFlags);
 
 /* GetCapture  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Foregnd.lib, foregnd.lib] */
 HWND GetCapture(void);
 
 /* GetClipCursor  [function; shared; CE 2.11..2.12, 3.0..699; Cursor.lib, cursor.lib, Mcursor.lib, mcursor.lib] */
-BOOL GetClipCursor( 
- LPRECT lpRect
-);
+BOOL GetClipCursor(LPRECT lpRect);
 
 /* GetCursor  [function; shared; CE 2.11..2.12, 3.0..699; Cursor.lib, cursor.lib, Mcursor.lib, mcursor.lib] */
 HCURSOR GetCursor(void);
 
 /* GetCursorPos  [function; shared; CE 2.11..2.12, 3.0..699; Cursor.lib, cursor.lib, Mcursor.lib, mcursor.lib] */
-BOOL GetCursorPos( 
- LPPOINT lpPoint
-);
+BOOL GetCursorPos(LPPOINT lpPoint);
 
 /* GetDoubleClickTime  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Wmbase.lib, wmbase.lib] */
 UINT GetDoubleClickTime(void);
 
 /* ImmConfigureIME  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmConfigureIMEA,ImmConfigureIMEW (CE is W-side)] */
-BOOL ImmConfigureIME( 
- HKL hKL, 
- HWND hWnd, 
- DWORD dwMode, 
- LPVOID lpData
-);
+BOOL ImmConfigureIME(HKL hKL,
+ HWND hWnd,
+ DWORD dwMode,
+ LPVOID lpData);
 
 /* ImmDisableIME  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL ImmDisableIME( 
- DWORD idThread
-);
+BOOL ImmDisableIME(DWORD idThread);
 
 /* ImmGetDefaultIMEWnd  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-HWND ImmGetDefaultIMEWnd(
- HWND hWnd
-);
+HWND ImmGetDefaultIMEWnd(HWND hWnd);
 
 /* ImmGetDescription  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetDescriptionA,ImmGetDescriptionW (CE is W-side)] */
-UINT ImmGetDescription( 
- HKL hKL, 
- LPTSTR lpszDescription, 
- UINT uBufLen
-);
+UINT ImmGetDescription(HKL hKL,
+ LPTSTR lpszDescription,
+ UINT uBufLen);
 
 /* ImmGetIMEFileName  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmGetIMEFileNameA,ImmGetIMEFileNameW (CE is W-side)] */
-BOOL ImmGetIMEFileName( 
- HKL hKL, 
- LPTSTR lpszFileName, 
- UINT uBufLen
-);
+BOOL ImmGetIMEFileName(HKL hKL,
+ LPTSTR lpszFileName,
+ UINT uBufLen);
 
 /* ImmGetProperty  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL ImmGetProperty(
- HKL hKL, 
- DWORD fdwIndex 
-);
+BOOL ImmGetProperty(HKL hKL,
+ DWORD fdwIndex);
 
 /* ImmGetVirtualKey  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-UINT ImmGetVirtualKey( 
- HWND hWnd
-);
+UINT ImmGetVirtualKey(HWND hWnd);
 
 /* ImmIsIME  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL ImmIsIME( 
- HKL hKL
-);
+BOOL ImmIsIME(HKL hKL);
 
 /* ImmIsUIMessage  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmIsUIMessageA,ImmIsUIMessageW (CE is W-side)] */
-BOOL ImmIsUIMessage(
- HWND hWndIME, 
- UINT msg, 
- WPARAM wParam, 
- LPARAM lParam
-);
+BOOL ImmIsUIMessage(HWND hWndIME,
+ UINT msg,
+ WPARAM wParam,
+ LPARAM lParam);
 
 /* ImmSetHotKey  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL WINAPI ImmSetHotKey( 
- DWORD dwHotKeyID,
+BOOL WINAPI ImmSetHotKey(DWORD dwHotKeyID,
  UINT uModifiers,
  UINT uVKey,
- HKL hKL
-);
+ HKL hKL);
 
 /* ImmSimulateHotKey  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL ImmSimulateHotKey(
- HWND hWnd,
- DWORD dwHotKeyID
-);
+BOOL ImmSimulateHotKey(HWND hWnd,
+ DWORD dwHotKeyID);
 
 /* ImmSIPanelState  [function; ce-only; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib] */
-BOOL ImmSIPanelState(
- UINT dwCmd, 
- LPVOID pValue
-);
+BOOL ImmSIPanelState(UINT dwCmd,
+ LPVOID pValue);
 
 /* ImmUnregisterWord  [function; shared; CE 2.11..2.12, 3.0..699; Coreimm.lib, coreimm.lib; A/W ImmUnregisterWordA,ImmUnregisterWordW (CE is W-side)] */
-BOOL ImmUnregisterWord( 
- HKL hKL,
+BOOL ImmUnregisterWord(HKL hKL,
  LPCTSTR lpszReading,
  DWORD dwStyle,
- LPCTSTR lpszUnregister
-);
+ LPCTSTR lpszUnregister);
 
 /* LoadCursor  [function; shared; CE 2.11..2.12, 3.0..699; Cursor.lib, cursor.lib, Mcursor.lib, mcursor.lib; A/W LoadCursorA,LoadCursorW (CE is W-side)] */
-HCURSOR LoadCursor( 
- HINSTANCE hInstance, 
- LPCTSTR lpCursorName
-);
+HCURSOR LoadCursor(HINSTANCE hInstance,
+ LPCTSTR lpCursorName);
 
 /* LoadIcon  [function; shared; CE 2.11..2.12, 3.0..699; Icon.lib, icon.lib; A/W LoadIconA,LoadIconW (CE is W-side)] */
-HICON LoadIcon(
- HINSTANCE hInstance, 
- LPCTSTR lpIconName
-);
+HICON LoadIcon(HINSTANCE hInstance,
+ LPCTSTR lpIconName);
 
 /* mouse_event  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Uibase.lib, uibase.lib, Wmgr_c.lib, wmgr_c.lib] */
-VOID mouse_event(
- DWORD dwFlags, 
- DWORD dx, 
- DWORD dy, 
- DWORD dwData, 
- DWORD dwExtraInfo 
-);
+VOID mouse_event(DWORD dwFlags,
+ DWORD dx,
+ DWORD dy,
+ DWORD dwData,
+ DWORD dwExtraInfo);
 
 /* ReleaseCapture  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Foregnd.lib, foregnd.lib] */
 BOOL ReleaseCapture(void);
 
 /* SetCapture  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Foregnd.lib, foregnd.lib] */
-HWND SetCapture(
- HWND hWnd 
-);
+HWND SetCapture(HWND hWnd);
 
 /* SetCursor  [function; shared; CE 2.11..2.12, 3.0..699; Cursor.lib, cursor.lib, Mcursor.lib, mcursor.lib] */
-HCURSOR SetCursor(
- HCURSOR hCursor
-);
+HCURSOR SetCursor(HCURSOR hCursor);
 
 /* SetCursorPos  [function; shared; CE 2.11..2.12, 3.0..699; Cursor.lib, cursor.lib, Mcursor.lib, mcursor.lib] */
-BOOL SetCursorPos( 
- int x, 
- int y
-);
+BOOL SetCursorPos(int x,
+ int y);
 
 /* ShowCursor  [function; shared; CE 2.11..2.12, 3.0..699; Cursor.lib, cursor.lib, Mcursor.lib, mcursor.lib] */
-int ShowCursor( 
- BOOL bShow
-);
+int ShowCursor(BOOL bShow);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* GetWindowRgn  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Winmgr.lib, winmgr.lib] */
-int GetWindowRgn(
- HWND hWnd, 
- HRGN hRgn
-);
+int GetWindowRgn(HWND hWnd,
+ HRGN hRgn);
 
 /* InSendMessage  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
 BOOL InSendMessage(VOID);
 
 /* SetWindowRgn  [function; shared; CE 3.0..399, 5.0..699; Winmgr.lib, winmgr.lib] */
-int SetWindowRgn(
- HWND hWnd, 
- HRGN hRgn, 
- BOOL bRedraw
-);
+int SetWindowRgn(HWND hWnd,
+ HRGN hRgn,
+ BOOL bRedraw);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
 
 /* GetMonitorInfo  [function; shared; CE 3.0..699; Coredll.lib, coredll.lib, User32.lib; A/W GetMonitorInfoA,GetMonitorInfoW (CE is W-side)] */
-BOOL GetMonitorInfo(
- HMONITOR hMonitor, 
- LPMONITORINFO lpmi 
-);
+BOOL GetMonitorInfo(HMONITOR hMonitor,
+ LPMONITORINFO lpmi);
 
 /* MonitorEnumProc  [function, callback; shared; CE 3.0..699; Coredll.lib, coredll.lib] */
-BOOL CALLBACK MonitorEnumProc(
- HMONITOR hMonitor,
+BOOL CALLBACK MonitorEnumProc(HMONITOR hMonitor,
  HDC hdcMonitor,
  LPRECT lprcMonitor,
- LPARAM dwData
-);
+ LPARAM dwData);
 
 /* MonitorFromPoint  [function; shared; CE 3.0..699; Coredll.lib, coredll.lib, User32.lib] */
-HMONITOR MonitorFromPoint(
- POINT pt,
- DWORD dwFlags
-);
+HMONITOR MonitorFromPoint(POINT pt,
+ DWORD dwFlags);
 
 /* MonitorFromRect  [function; shared; CE 3.0..699; Coredll.lib, coredll.lib, User32.lib] */
-HMONITOR MonitorFromRect(
- LPCRECT lprc,
- DWORD dwFlags
-);
+HMONITOR MonitorFromRect(LPCRECT lprc,
+ DWORD dwFlags);
 
 /* MonitorFromWindow  [function; shared; CE 3.0..699; Coredll.lib, coredll.lib, User32.lib] */
-HMONITOR MonitorFromWindow(
- HWND hwnd,
- DWORD dwFlags
-);
+HMONITOR MonitorFromWindow(HWND hwnd,
+ DWORD dwFlags);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* ActivateKeyboardLayout  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib] */
-HKL ActivateKeyboardLayout(
- HKL hkl,
- UINT Flags
-);
+HKL ActivateKeyboardLayout(HKL hkl,
+ UINT Flags);
 
 /* GetKeyboardLayoutList  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib] */
-UINT GetKeyboardLayoutList(
- int nBuff, 
- HKL* lpList
-);
+UINT GetKeyboardLayoutList(int nBuff,
+ HKL* lpList);
 
 /* GetKeyboardType  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib] */
-int GetKeyboardType(
- int nTypeFlag
-);
+int GetKeyboardType(int nTypeFlag);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 5.0..599 */
 
 /* ExtractIcon  [function; shared; CE 5.0..599; Icon.lib; A/W ExtractIconA,ExtractIconW (CE is W-side)] */
-HICON ExtractIcon( 
- HINSTANCE hInst, 
- LPCTSTR lpszExeFileName, 
- UINT nIconIndex 
-);
+HICON ExtractIcon(HINSTANCE hInst,
+ LPCTSTR lpszExeFileName,
+ UINT nIconIndex);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
@@ -4440,42 +4162,30 @@ HICON ExtractIcon(
 HWND GetDesktopWindow(void);
 
 /* GetMessageQueueReadyTimeStamp  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
-DWORD WINAPI GetMessageQueueReadyTimeStamp(
- HWND hWnd
-);
+DWORD WINAPI GetMessageQueueReadyTimeStamp(HWND hWnd);
 
 /* GetQueueStatus  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-DWORD GetQueueStatus(
- UINT flags
-);
+DWORD GetQueueStatus(UINT flags);
 
 /* InvertRect  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
-BOOL InvertRect(
- HDC hDC,
- CONST RECT* lprc
-);
+BOOL InvertRect(HDC hDC,
+ CONST RECT* lprc);
 
 /* LoadKeyboardLayout  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W LoadKeyboardLayoutA,LoadKeyboardLayoutW (CE is W-side)] */
-HKL LoadKeyboardLayout(
- LPCSTR pwszKLID,
- UINT Flags
-);
+HKL LoadKeyboardLayout(LPCSTR pwszKLID,
+ UINT Flags);
 
 /* RedrawWindow  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
-BOOL WINAPI RedrawWindow(
- HWND hwnd,
+BOOL WINAPI RedrawWindow(HWND hwnd,
  CONST RECT* lprcUpdate,
  HRGN hrgnUpdate,
- UINT flags
-);
+ UINT flags);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* AllKeys  [function; ce-only; CE 6.0..699] */
-BOOL AllKeys(
- BOOL bAllKeys
-);
+BOOL AllKeys(BOOL bAllKeys);
 #endif /* _WIN32_WCE */
 
 #endif /* _WINUSER_ */

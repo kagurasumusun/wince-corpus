@@ -28,6 +28,8 @@
  * ================================================================ */
 
 /* FORMAT_OPTIONS  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__FORMAT_OPTIONS
+#define __WINCE_DEFINED__FORMAT_OPTIONS
 typedef struct _FORMAT_OPTIONS {
  DWORD dwClusSize;
  DWORD dwRootEntries;
@@ -35,9 +37,15 @@ typedef struct _FORMAT_OPTIONS {
  DWORD dwNumFats;
  DWORD dwFlags;
 } FORMAT_OPTIONS;
+#endif /* __WINCE_DEFINED__FORMAT_OPTIONS */
+#ifndef __WINCE_DEFINED_PFORMAT_OPTIONS
+#define __WINCE_DEFINED_PFORMAT_OPTIONS
 typedef FORMAT_OPTIONS *PFORMAT_OPTIONS, *LPFORMAT_OPTIONS;
+#endif /* __WINCE_DEFINED_PFORMAT_OPTIONS */
 
 /* FORMAT_RESULTS  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__FORMAT_RESULTS
+#define __WINCE_DEFINED__FORMAT_RESULTS
 typedef struct _FORMAT_RESULTS{
  DWORD dwSectorsPerFat;
  DWORD dwReservedSectors;
@@ -47,8 +55,11 @@ typedef struct _FORMAT_RESULTS{
  DWORD dwNumFats;
  DWORD dwFatVersion;
 } FORMAT_RESULTS, *PFORMAT_RESULTS;
+#endif /* __WINCE_DEFINED__FORMAT_RESULTS */
 
 /* SCAN_RESULTS  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__SCAN_RESULTS
+#define __WINCE_DEFINED__SCAN_RESULTS
 typedef struct _SCAN_RESULTS {
  DWORD dwLostClusters;
  DWORD dwInvalidClusters;
@@ -60,10 +71,14 @@ typedef struct _SCAN_RESULTS {
  BOOL fConsistentFats;
  BOOL fErrorNotFixed;
 } SCAN_RESULTS, *PSCAN_RESULTS;
+#endif /* __WINCE_DEFINED__SCAN_RESULTS */
 
 /* DEFRAG_RESULTS  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__DEFRAG_RESULTS
+#define __WINCE_DEFINED__DEFRAG_RESULTS
 typedef struct _DEFRAG_RESULTS {
  SCAN_RESULTS sr;
 } DEFRAG_RESULTS, *PDEFRAG_RESULTS;
+#endif /* __WINCE_DEFINED__DEFRAG_RESULTS */
 
 #endif /* _FATUTIL_ */

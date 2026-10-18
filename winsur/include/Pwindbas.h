@@ -18,6 +18,8 @@
  * ================================================================ */
 
 /* REPLCHANGEINFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_REPLCHANGEINFO
+#define __WINCE_DEFINED_REPLCHANGEINFO
 struct REPLCHANGEINFO {
  WORD wVersion;
  WORD wStatus;
@@ -25,6 +27,7 @@ struct REPLCHANGEINFO {
  CEOID oidChanged;
  CEOID oidDbase;
 };
+#endif /* __WINCE_DEFINED_REPLCHANGEINFO */
 
 /* ==================================================================
  * functions and callbacks
@@ -33,16 +36,12 @@ struct REPLCHANGEINFO {
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* GetSystemMemoryDivision  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-BOOL GetSystemMemoryDivision(
- LPDWORD lpdwStorePages,
+BOOL GetSystemMemoryDivision(LPDWORD lpdwStorePages,
  LPDWORD lpdwRamPages,
- LPDWORD lpdwPageSize
-);
+ LPDWORD lpdwPageSize);
 
 /* SetSystemMemoryDivision  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-DWORD SetSystemMemoryDivision(
- DWORD dwStorePages
-);
+DWORD SetSystemMemoryDivision(DWORD dwStorePages);
 #endif /* _WIN32_WCE */
 
 #endif /* _PWINDBAS_ */

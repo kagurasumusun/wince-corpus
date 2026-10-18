@@ -18,14 +18,22 @@
  * ================================================================ */
 
 /* ITERATION_INFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_ITERATION_INFO
+#define __WINCE_DEFINED_ITERATION_INFO
 typedef struct {
  UINT cbSize;
  int index;
  int iteration;
 } ITERATION_INFO;
+#endif /* __WINCE_DEFINED_ITERATION_INFO */
+#ifndef __WINCE_DEFINED_PITERATION_INFO
+#define __WINCE_DEFINED_PITERATION_INFO
 typedef ITERATION_INFO *PITERATION_INFO, *LPITERATION_INFO;
+#endif /* __WINCE_DEFINED_PITERATION_INFO */
 
 /* MODULE_PARAMS  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_MODULE_PARAMS
+#define __WINCE_DEFINED_MODULE_PARAMS
 typedef struct {
  DWORD dwDuration;
  DWORD dwLoggingZones;
@@ -37,7 +45,11 @@ typedef struct {
  LPTSTR tszReserved;
  LPTSTR tszUser;
 } MODULE_PARAMS;
+#endif /* __WINCE_DEFINED_MODULE_PARAMS */
+#ifndef __WINCE_DEFINED_PMODULE_PARAMS
+#define __WINCE_DEFINED_PMODULE_PARAMS
 typedef MODULE_PARAMS *PMODULE_PARAMS, *LPMODULE_PARAMS;
+#endif /* __WINCE_DEFINED_PMODULE_PARAMS */
 
 /* ==================================================================
  * functions and callbacks
@@ -46,70 +58,50 @@ typedef MODULE_PARAMS *PMODULE_PARAMS, *LPMODULE_PARAMS;
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x200 && _WIN32_WCE < 0x210) || (_WIN32_WCE >= 0x212 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.0..209, 2.12..399, 5.0..699 */
 
 /* Log  [function; ce-only; CE 2.0..209, 2.12..399, 5.0..699; coredll.dll, StressUtils.lib, stressutils.lib] */
-void Log(
- DWORD dwVerbosity,
+void Log(DWORD dwVerbosity,
  const TCHAR* tszFormat,
- vargs ...
-);
+ vargs ...);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* GetRunningModuleCount  [function; ce-only; CE 5.0..699; StressUtils.lib, stressutils.lib] */
-LONG GetRunningModuleCount(
- HANDLE hInstance
-);
+LONG GetRunningModuleCount(HANDLE hInstance);
 
 /* InitializeStressUtils  [function; ce-only; CE 5.0..699; StressUtils.lib, stressutils.lib] */
-BOOL InitializeStressUtils(
- LPCTSTR tszModuleName,
+BOOL InitializeStressUtils(LPCTSTR tszModuleName,
  DWORD dwDefaultLoggingZones,
- MODULE_PARAMS* pmp
-);
+ MODULE_PARAMS* pmp);
 
 /* LogAll  [function; ce-only; CE 5.0..699; StressUtils.lib, stressutils.lib] */
-void LogAll(
- const TCHAR* tszFormat,
- vargs ...
-);
+void LogAll(const TCHAR* tszFormat,
+ vargs ...);
 
 /* LogComment  [function; ce-only; CE 5.0..699; StressUtils.lib, stressutils.lib] */
-void LogComment(
- const TCHAR* tszFormat,
- vargs ...
-);
+void LogComment(const TCHAR* tszFormat,
+ vargs ...);
 
 /* LogEx  [function; ce-only; CE 5.0..699; StressUtils.lib, stressutils.lib] */
-void LogEx(
- DWORD dwVerbosity,
+void LogEx(DWORD dwVerbosity,
  DWORD dwZone,
  const TCHAR* tszFormat,
- vargs ...
-);
+ vargs ...);
 
 /* LogFail  [function; ce-only; CE 5.0..699; StressUtils.lib, stressutils.lib] */
-void LogFail(
- const TCHAR* tszFormat,
- vargs ...
-);
+void LogFail(const TCHAR* tszFormat,
+ vargs ...);
 
 /* LogVerbose  [function; ce-only; CE 5.0..699; StressUtils.lib, stressutils.lib] */
-void LogVerbose(
- const TCHAR* tszFormat,
- vargs ...
-);
+void LogVerbose(const TCHAR* tszFormat,
+ vargs ...);
 
 /* LogWarn1  [function; ce-only; CE 5.0..699; StressUtils.lib, stressutils.lib] */
-void LogWarn1(
- const TCHAR* tszFormat,
- vargs ...
-);
+void LogWarn1(const TCHAR* tszFormat,
+ vargs ...);
 
 /* LogWarn2  [function; ce-only; CE 5.0..699; StressUtils.lib, stressutils.lib] */
-void LogWarn2(
- const TCHAR* tszFormat,
- vargs ...
-);
+void LogWarn2(const TCHAR* tszFormat,
+ vargs ...);
 #endif /* _WIN32_WCE */
 
 #endif /* _STRESSUTILS_ */

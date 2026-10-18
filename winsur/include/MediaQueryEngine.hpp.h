@@ -18,99 +18,18 @@
  * ================================================================ */
 
 /* DeviceStatus_e  [enum; ce-only; MQELib.lib] */
-enum DeviceStatus_e { 
- DETACHED = 0, 
- ATTACHED, 
- ACTIVE 
+#ifndef __WINCE_DEFINED_DEVICESTATUS_E
+#define __WINCE_DEFINED_DEVICESTATUS_E
+enum DeviceStatus_e {
+ DETACHED = 0,
+ ATTACHED,
+ ACTIVE
 };
+#endif /* __WINCE_DEFINED_DEVICESTATUS_E */
 
 /* Item_Attribute_e  [enum; ce-only; MQELib.lib] */
-enum Item_Attribute_e { 
- Attr_Title = 0, 
- Attr_Class, 
- Attr_UpnpItemId, 
- Attr_UpnpParentId, 
- Attr_URI, 
- Attr_Date, 
- Attr_Artist, 
- Attr_Actor, 
- Attr_Album, 
- Attr_AlbumArtURI, 
- Attr_Genre, 
- Attr_Rating, 
- Attr_ResSize, 
- Attr_ResDuration, 
- Attr_ResResolution, 
- Attr_ResColorDepth, 
- Attr_MusicSampleFrequency, 
- Attr_MusicAudioChannels, 
- Attr_Description, 
- Attr_ProtocolInfo 
-};
-
-/* MediaType_e  [enum; ce-only; MQELib.lib] */
-enum MediaType_e { 
- Music = 0, 
- Video, 
- Picture, 
- Playlist, 
- MusicAlbum, 
- VideoAlbum, 
- PictureAlbum, 
- MusicArtist, 
- MovieActor, 
- PictureDateFolder, 
- MusicGenre, 
- VideoGenre 
-};
-
-/* QueryEngineState_e  [enum; ce-only; MQELib.lib] */
-enum QueryEngineState_e { 
- UnInitialized = 0, 
- Error, 
- Stopped, 
- Running 
-};
-
-/* QuerySinkEvent_e  [enum; ce-only; MQELib.lib] */
-enum QuerySinkEvent_e { 
- MQE_EVENT_NETWORKAVAILABLE = 0, 
- MQE_EVENT_NETWORKNOTAVAILABLE, 
- MQE_EVENT_SERVERCONNECTED, 
- MQE_EVENT_SERVERDISCONNECTED, 
- MQE_EVENT_SERVERACTIVATED, 
- MQE_EVENT_SERVERDEACTIVATED, 
- MQE_EVENT_DEVICEAUTHORIZED, 
- MQE_EVENT_DEVICEAUTHORIZATIONREVOKED, 
- MQE_EVENT_DEVICEREGISTERED, 
- MQE_EVENT_DEVICEREGISTRATIONREVOKED, 
- MQE_EVENT_CONTENTUPDATE_MUSIC, 
- MQE_EVENT_CONTENTUPDATE_VIDEO, 
- MQE_EVENT_CONTENTUPDATE_PICTURE, 
- MQE_EVENT_CRITICALERROR 
-};
-
-/* SearchBy_e  [enum; ce-only; MQELib.lib] */
-enum SearchBy_e { 
- SearchBy_None = 0, 
- SearchBy_Title, 
- SearchBy_Artist, 
- SearchBy_Actor, 
- SearchBy_Album, 
- SearchBy_Genre, 
- SearchBy_Date 
-};
-
-/* SortBy_e  [enum; ce-only; MQELib.lib] */
-enum SortBy_e { 
- SortBy_None = 0, 
- SortBy_Name_Ascending, 
- SortBy_Name_Descending, 
- SortBy_Date_Ascending, 
- SortBy_Date_Descending 
-};
-
-/* Attr_ProtocolInfo  [extra enum] */
+#ifndef __WINCE_DEFINED_ITEM_ATTRIBUTE_E
+#define __WINCE_DEFINED_ITEM_ATTRIBUTE_E
 enum Item_Attribute_e {
  Attr_Title = 0,
  Attr_Class,
@@ -133,8 +52,11 @@ enum Item_Attribute_e {
  Attr_Description,
  Attr_ProtocolInfo
 };
+#endif /* __WINCE_DEFINED_ITEM_ATTRIBUTE_E */
 
-/* VideoGenre  [extra enum] */
+/* MediaType_e  [enum; ce-only; MQELib.lib] */
+#ifndef __WINCE_DEFINED_MEDIATYPE_E
+#define __WINCE_DEFINED_MEDIATYPE_E
 enum MediaType_e {
  Music = 0,
  Video,
@@ -149,16 +71,22 @@ enum MediaType_e {
  MusicGenre,
  VideoGenre
 };
+#endif /* __WINCE_DEFINED_MEDIATYPE_E */
 
-/* Running  [extra enum] */
+/* QueryEngineState_e  [enum; ce-only; MQELib.lib] */
+#ifndef __WINCE_DEFINED_QUERYENGINESTATE_E
+#define __WINCE_DEFINED_QUERYENGINESTATE_E
 enum QueryEngineState_e {
  UnInitialized = 0,
  Error,
  Stopped,
  Running
 };
+#endif /* __WINCE_DEFINED_QUERYENGINESTATE_E */
 
-/* MQE_EVENT_CRITICALERROR  [extra enum] */
+/* QuerySinkEvent_e  [enum; ce-only; MQELib.lib] */
+#ifndef __WINCE_DEFINED_QUERYSINKEVENT_E
+#define __WINCE_DEFINED_QUERYSINKEVENT_E
 enum QuerySinkEvent_e {
  MQE_EVENT_NETWORKAVAILABLE = 0,
  MQE_EVENT_NETWORKNOTAVAILABLE,
@@ -175,8 +103,11 @@ enum QuerySinkEvent_e {
  MQE_EVENT_CONTENTUPDATE_PICTURE,
  MQE_EVENT_CRITICALERROR
 };
+#endif /* __WINCE_DEFINED_QUERYSINKEVENT_E */
 
-/* SearchBy_Date  [extra enum] */
+/* SearchBy_e  [enum; ce-only; MQELib.lib] */
+#ifndef __WINCE_DEFINED_SEARCHBY_E
+#define __WINCE_DEFINED_SEARCHBY_E
 enum SearchBy_e {
  SearchBy_None = 0,
  SearchBy_Title,
@@ -186,8 +117,11 @@ enum SearchBy_e {
  SearchBy_Genre,
  SearchBy_Date
 };
+#endif /* __WINCE_DEFINED_SEARCHBY_E */
 
-/* SortBy_Date_Descending  [extra enum] */
+/* SortBy_e  [enum; ce-only; MQELib.lib] */
+#ifndef __WINCE_DEFINED_SORTBY_E
+#define __WINCE_DEFINED_SORTBY_E
 enum SortBy_e {
  SortBy_None = 0,
  SortBy_Name_Ascending,
@@ -195,6 +129,111 @@ enum SortBy_e {
  SortBy_Date_Ascending,
  SortBy_Date_Descending
 };
+#endif /* __WINCE_DEFINED_SORTBY_E */
+
+/* Attr_ProtocolInfo  [extra enum] */
+#ifndef __WINCE_DEFINED_ITEM_ATTRIBUTE_E
+#define __WINCE_DEFINED_ITEM_ATTRIBUTE_E
+enum Item_Attribute_e {
+ Attr_Title = 0,
+ Attr_Class,
+ Attr_UpnpItemId,
+ Attr_UpnpParentId,
+ Attr_URI,
+ Attr_Date,
+ Attr_Artist,
+ Attr_Actor,
+ Attr_Album,
+ Attr_AlbumArtURI,
+ Attr_Genre,
+ Attr_Rating,
+ Attr_ResSize,
+ Attr_ResDuration,
+ Attr_ResResolution,
+ Attr_ResColorDepth,
+ Attr_MusicSampleFrequency,
+ Attr_MusicAudioChannels,
+ Attr_Description,
+ Attr_ProtocolInfo
+};
+#endif /* __WINCE_DEFINED_ITEM_ATTRIBUTE_E */
+
+/* VideoGenre  [extra enum] */
+#ifndef __WINCE_DEFINED_MEDIATYPE_E
+#define __WINCE_DEFINED_MEDIATYPE_E
+enum MediaType_e {
+ Music = 0,
+ Video,
+ Picture,
+ Playlist,
+ MusicAlbum,
+ VideoAlbum,
+ PictureAlbum,
+ MusicArtist,
+ MovieActor,
+ PictureDateFolder,
+ MusicGenre,
+ VideoGenre
+};
+#endif /* __WINCE_DEFINED_MEDIATYPE_E */
+
+/* Running  [extra enum] */
+#ifndef __WINCE_DEFINED_QUERYENGINESTATE_E
+#define __WINCE_DEFINED_QUERYENGINESTATE_E
+enum QueryEngineState_e {
+ UnInitialized = 0,
+ Error,
+ Stopped,
+ Running
+};
+#endif /* __WINCE_DEFINED_QUERYENGINESTATE_E */
+
+/* MQE_EVENT_CRITICALERROR  [extra enum] */
+#ifndef __WINCE_DEFINED_QUERYSINKEVENT_E
+#define __WINCE_DEFINED_QUERYSINKEVENT_E
+enum QuerySinkEvent_e {
+ MQE_EVENT_NETWORKAVAILABLE = 0,
+ MQE_EVENT_NETWORKNOTAVAILABLE,
+ MQE_EVENT_SERVERCONNECTED,
+ MQE_EVENT_SERVERDISCONNECTED,
+ MQE_EVENT_SERVERACTIVATED,
+ MQE_EVENT_SERVERDEACTIVATED,
+ MQE_EVENT_DEVICEAUTHORIZED,
+ MQE_EVENT_DEVICEAUTHORIZATIONREVOKED,
+ MQE_EVENT_DEVICEREGISTERED,
+ MQE_EVENT_DEVICEREGISTRATIONREVOKED,
+ MQE_EVENT_CONTENTUPDATE_MUSIC,
+ MQE_EVENT_CONTENTUPDATE_VIDEO,
+ MQE_EVENT_CONTENTUPDATE_PICTURE,
+ MQE_EVENT_CRITICALERROR
+};
+#endif /* __WINCE_DEFINED_QUERYSINKEVENT_E */
+
+/* SearchBy_Date  [extra enum] */
+#ifndef __WINCE_DEFINED_SEARCHBY_E
+#define __WINCE_DEFINED_SEARCHBY_E
+enum SearchBy_e {
+ SearchBy_None = 0,
+ SearchBy_Title,
+ SearchBy_Artist,
+ SearchBy_Actor,
+ SearchBy_Album,
+ SearchBy_Genre,
+ SearchBy_Date
+};
+#endif /* __WINCE_DEFINED_SEARCHBY_E */
+
+/* SortBy_Date_Descending  [extra enum] */
+#ifndef __WINCE_DEFINED_SORTBY_E
+#define __WINCE_DEFINED_SORTBY_E
+enum SortBy_e {
+ SortBy_None = 0,
+ SortBy_Name_Ascending,
+ SortBy_Name_Descending,
+ SortBy_Date_Ascending,
+ SortBy_Date_Descending
+};
+#endif /* __WINCE_DEFINED_SORTBY_E */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

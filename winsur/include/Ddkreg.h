@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 7 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _DDKREG_
 #define _DDKREG_
@@ -18,9 +18,12 @@
  * ================================================================ */
 
 /* DEVICEWINDOW  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__DEVICEWINDOW_TAG
+#define __WINCE_DEFINED__DEVICEWINDOW_TAG
 typedef struct _DEVICEWINDOW_tag {
- DWORD dwBase; 
+ DWORD dwBase;
  DWORD dwLen;
 } DEVICEWINDOW, *PDEVICEWINDOW;
+#endif /* __WINCE_DEFINED__DEVICEWINDOW_TAG */
 
 #endif /* _DDKREG_ */

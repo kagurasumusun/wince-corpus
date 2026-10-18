@@ -24,6 +24,8 @@
  * ================================================================ */
 
 /* BitmapType  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_BITMAPTYPE
+#define __WINCE_DEFINED_BITMAPTYPE
 enum BitmapType {
  btStdSmallColor,
  btStdSmallMono,
@@ -32,8 +34,11 @@ enum BitmapType {
  btClose,
  btOk
 };
+#endif /* __WINCE_DEFINED_BITMAPTYPE */
 
 /* btOk  [extra enum] */
+#ifndef __WINCE_DEFINED_BITMAPTYPE
+#define __WINCE_DEFINED_BITMAPTYPE
 enum BitmapType {
  btStdSmallColor,
  btStdSmallMono,
@@ -42,12 +47,19 @@ enum BitmapType {
  btClose,
  btOk
 };
+#endif /* __WINCE_DEFINED_BITMAPTYPE */
 
 /* bt  [extra enum] */
+#ifndef __WINCE_DEFINED_BT
+#define __WINCE_DEFINED_BT
 static HBITMAP LoadSystemBitmap(enum BitmapType bt);
+#endif /* __WINCE_DEFINED_BT */
 
 /* BitmapTypebt  [extra enum] */
+#ifndef __WINCE_DEFINED_BITMAPTYPEBT
+#define __WINCE_DEFINED_BITMAPTYPEBT
 static HBITMAP LoadSystemBitmap(enum BitmapTypebt);
+#endif /* __WINCE_DEFINED_BITMAPTYPEBT */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

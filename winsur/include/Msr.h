@@ -18,18 +18,14 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* NKrdmsr  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL NKrdmsr(
- DWORD dwAddr,
+BOOL NKrdmsr(DWORD dwAddr,
  DWORD* lpdwValHigh,
- DWORD* lpdwValLow
-);
+ DWORD* lpdwValLow);
 
 /* NKwrmsr  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL NKwrmsr(
- DWORD dwAddr,
+BOOL NKwrmsr(DWORD dwAddr,
  DWORD dwValHigh,
- DWORD dwValLow
-);
+ DWORD dwValLow);
 #endif /* _WIN32_WCE */
 
 #endif /* _MSR_ */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 42 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 11 extra decls
+ * 42 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 10 extra decls
  */
 #ifndef _MSXML2_
 #define _MSXML2_
@@ -72,6 +72,5 @@ HRESULT get_length(long* dataLength);
 HRESULT get_readyState(long* value);
 HRESULT get_responseXML(Idispatch** ppBody);
 HRESULT get_status(long* plStatus);
-HRESULT put_data(BSTRdata);
 
 #endif /* _MSXML2_ */

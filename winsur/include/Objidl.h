@@ -149,33 +149,50 @@
  * ================================================================ */
 
 /* ADVF  [enum; shared] */
-typedef enum tagADVF { 
- ADVF_NODATA = 1, 
- ADVF_PRIMEFIRST = 2, 
- ADVF_ONLYONCE = 4, 
- ADVFCACHE_NOHANDLER = 8, 
- ADVFCACHE_FORCEBUILTIN = 16, 
- ADVFCACHE_ONSAVE = 32, 
- ADVF_DATAONSTOP = 64 
+#ifndef __WINCE_DEFINED_TAGADVF
+#define __WINCE_DEFINED_TAGADVF
+typedef enum tagADVF {
+ ADVF_NODATA = 1,
+ ADVF_PRIMEFIRST = 2,
+ ADVF_ONLYONCE = 4,
+ ADVFCACHE_NOHANDLER = 8,
+ ADVFCACHE_FORCEBUILTIN = 16,
+ ADVFCACHE_ONSAVE = 32,
+ ADVF_DATAONSTOP = 64
 } ADVF;
+#endif /* __WINCE_DEFINED_TAGADVF */
+#ifndef __WINCE_DEFINED_PADVF
+#define __WINCE_DEFINED_PADVF
 typedef ADVF *PADVF, *LPADVF;
+#endif /* __WINCE_DEFINED_PADVF */
 
 /* BIND_OPTS  [struct; shared] */
+#ifndef __WINCE_DEFINED_TAGBIND_OPTS
+#define __WINCE_DEFINED_TAGBIND_OPTS
 typedef struct tagBIND_OPTS {
- DWORD cbStruct; 
- DWORD grfFlags; 
- DWORD grfMode; 
- DWORD dwTickCountDeadline; 
+ DWORD cbStruct;
+ DWORD grfFlags;
+ DWORD grfMode;
+ DWORD dwTickCountDeadline;
 } BIND_OPTS, *LPBIND_OPTS;
+#endif /* __WINCE_DEFINED_TAGBIND_OPTS */
 
 /* DATADIR  [enum; shared] */
-typedef enum tagDATADIR { 
- DATADIR_GET = 1, 
- DATADIR_SET = 2 
+#ifndef __WINCE_DEFINED_TAGDATADIR
+#define __WINCE_DEFINED_TAGDATADIR
+typedef enum tagDATADIR {
+ DATADIR_GET = 1,
+ DATADIR_SET = 2
 } DATADIR;
+#endif /* __WINCE_DEFINED_TAGDATADIR */
+#ifndef __WINCE_DEFINED_PDATADIR
+#define __WINCE_DEFINED_PDATADIR
 typedef DATADIR *PDATADIR, *LPDATADIR;
+#endif /* __WINCE_DEFINED_PDATADIR */
 
 /* DVTARGETDEVICE  [struct; shared] */
+#ifndef __WINCE_DEFINED_TAGDVTARGETDEVICE
+#define __WINCE_DEFINED_TAGDVTARGETDEVICE
 typedef struct tagDVTARGETDEVICE{
  DWORD tdSize;
  WORD tdDriverNameOffset;
@@ -184,19 +201,31 @@ typedef struct tagDVTARGETDEVICE{
  WORD tdExtDevmodeOffset;
  BYTE tdData;
 } DVTARGETDEVICE;
+#endif /* __WINCE_DEFINED_TAGDVTARGETDEVICE */
+#ifndef __WINCE_DEFINED_PDVTARGETDEVICE
+#define __WINCE_DEFINED_PDVTARGETDEVICE
 typedef DVTARGETDEVICE *PDVTARGETDEVICE, *LPDVTARGETDEVICE;
+#endif /* __WINCE_DEFINED_PDVTARGETDEVICE */
 
 /* MKRREDUCE  [enum; shared] */
-typedef enum tagMKRREDUCE { 
- MKRREDUCE_ONE = 3<<16, 
- MKRREDUCE_TOUSER = 2<<16, 
- MKRREDUCE_THROUGHUSER = 1<<16, 
- MKRREDUCE_ALL = 0 
+#ifndef __WINCE_DEFINED_TAGMKRREDUCE
+#define __WINCE_DEFINED_TAGMKRREDUCE
+typedef enum tagMKRREDUCE {
+ MKRREDUCE_ONE = 3<<16,
+ MKRREDUCE_TOUSER = 2<<16,
+ MKRREDUCE_THROUGHUSER = 1<<16,
+ MKRREDUCE_ALL = 0
 } MKRREDUCE;
+#endif /* __WINCE_DEFINED_TAGMKRREDUCE */
+#ifndef __WINCE_DEFINED_PMKRREDUCE
+#define __WINCE_DEFINED_PMKRREDUCE
 typedef MKRREDUCE *PMKRREDUCE, *LPMKRREDUCE;
+#endif /* __WINCE_DEFINED_PMKRREDUCE */
 
 /* MKSYS  [enum; shared] */
-typedef enum tagMKSYS { 
+#ifndef __WINCE_DEFINED_TAGMKSYS
+#define __WINCE_DEFINED_TAGMKSYS
+typedef enum tagMKSYS {
  MKSYS_NONE = 0,
  MKSYS_GENERICCOMPOSITE = 1,
  MKSYS_FILEMONIKER = 2,
@@ -207,9 +236,15 @@ typedef enum tagMKSYS {
  MKSYS_OBJREFMONIKER = 8,
  MKSYS_SESSIONMONIKER = 9
 } MKSYS;
+#endif /* __WINCE_DEFINED_TAGMKSYS */
+#ifndef __WINCE_DEFINED_PMKSYS
+#define __WINCE_DEFINED_PMKSYS
 typedef MKSYS *PMKSYS, *LPMKSYS;
+#endif /* __WINCE_DEFINED_PMKSYS */
 
 /* TYMED  [enum; shared] */
+#ifndef __WINCE_DEFINED_TAGTYMED
+#define __WINCE_DEFINED_TAGTYMED
 typedef enum tagTYMED {
  TYMED_HGLOBAL = 1,
  TYMED_FILE = 2,
@@ -217,7 +252,11 @@ typedef enum tagTYMED {
  TYMED_ISTORAGE = 8,
  TYMED_NULL = 0,
 } TYMED;
+#endif /* __WINCE_DEFINED_TAGTYMED */
+#ifndef __WINCE_DEFINED_PTYMED
+#define __WINCE_DEFINED_PTYMED
 typedef TYMED *PTYMED, *LPTYMED;
+#endif /* __WINCE_DEFINED_PTYMED */
 
 /* MULTI_QI  [struct; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
@@ -247,9 +286,9 @@ HRESULT GetData(FORMATETC* pFormatetc, STGMEDIUM* pmedium);
 HRESULT GetDataHere(FORMATETC* pFormatetc, STGMEDIUM* pmedium);
 HRESULT HandsOfStorage(void);
 void HeapMinimize();
-HRESULT ImpersonateClient()
+HRESULT ImpersonateClient();
 HRESULT IsDirty(void);
-BOOL IsImpersonating()
+BOOL IsImpersonating();
 HRESULT LockRunning(BOOL fLock, BOOL fLastUnlockCloses);
 HRESULT NoteChangeTime(DWORD dwRegister, FILETIME *pfiletime);
 HRESULT OnProgress(DWORD dwProgressCurrent, DWORD dwProgressMaximum, BOOL fAccurate, BOOL fOwner);
@@ -272,7 +311,7 @@ void* Realloc(void* pv, ULONG cb);
 HRESULT ReleaseBoundObjects(void);
 HRESULT RenameElement(const WCHAR *pwcsOldName, const WCHAR *pwcsNewName);
 HRESULT Revert(void);
-HRESULT RevertToSelf()
+HRESULT RevertToSelf();
 HRESULT Revoke(DWORD dwRegister);
 HRESULT RevokeInterfaceFromGlobal(DWORD dwCookie);
 HRESULT Seek(ULARGE_INTEGER dlibMove, DWORD dwOrigin, ULARGE_INTEGER plibNewPosition);

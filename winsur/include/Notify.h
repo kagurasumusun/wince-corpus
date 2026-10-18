@@ -57,9 +57,14 @@
  * ================================================================ */
 
 /* CE_NOTIFICATION_TRIGGER  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_USERNOTIFICATIONTRIGGER
+#define __WINCE_DEFINED_USERNOTIFICATIONTRIGGER
 typedef struct UserNotificationTrigger { DWORD dwSize; DWORD dwType; DWORD dwEvent; WCHAR* lpszApplication; WCHAR* lpszArguments; SYSTEMTIME stStartTime; SYSTEMTIME stEndTime;} CE_NOTIFICATION_TRIGGER, *PCE_NOTIFICATION_TRIGGER;
+#endif /* __WINCE_DEFINED_USERNOTIFICATIONTRIGGER */
 
 /* CE_USER_NOTIFICATION  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_USERNOTIFICATIONTYPE
+#define __WINCE_DEFINED_USERNOTIFICATIONTYPE
 typedef struct UserNotificationType {
  DWORD ActionFlags;
  TCHAR* pwszDialogTitle;
@@ -68,90 +73,74 @@ typedef struct UserNotificationType {
  DWORD nMaxSound;
  DWORD dwReserved;
 } CE_USER_NOTIFICATION, *PCE_USER_NOTIFICATION;
+#endif /* __WINCE_DEFINED_USERNOTIFICATIONTYPE */
 
 /* CE_NOTIFICATION_INFO_HEADER  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_USERNOTIFICATIONINFOHEADER
+#define __WINCE_DEFINED_USERNOTIFICATIONINFOHEADER
 typedef struct UserNotificationInfoHeader {
  HANDLE hNotification;
  DWORD dwStatus;
  CE_NOTIFICATION_TRIGGER* pcent;
  CE_USER_NOTIFICATION* pceun;
 } CE_NOTIFICATION_INFO_HEADER, *PCE_NOTIFICATION_INFO_HEADER;
+#endif /* __WINCE_DEFINED_USERNOTIFICATIONINFOHEADER */
 
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
 /* CeClearUserNotification  [function; ce-only; unified-kb; unified-kb] */
-BOOL CeClearUserNotification( 
- HANDLE hNotification 
-);
+BOOL CeClearUserNotification(HANDLE hNotification);
 
 /* CeSetUserNotification  [function; ce-only; unified-kb; unified-kb] */
-HANDLE CeSetUserNotification( 
- HANDLE hNotification, 
- TCHAR* pwszAppName, 
- SYSTEMTIME* lpTime, 
- PCE_USER_NOTIFICATION lpUserNotification 
-);
+HANDLE CeSetUserNotification(HANDLE hNotification,
+ TCHAR* pwszAppName,
+ SYSTEMTIME* lpTime,
+ PCE_USER_NOTIFICATION lpUserNotification);
 
 /* CeSetUserNotificationEx  [function; ce-only; unified-kb; unified-kb] */
-HANDLE CeSetUserNotificationEx( 
- HANDLE hNotification, 
- CE_NOTIFICATION_TRIGGER* pcnt, 
- CE_USER_NOTIFICATION* pceun 
-);
+HANDLE CeSetUserNotificationEx(HANDLE hNotification,
+ CE_NOTIFICATION_TRIGGER* pcnt,
+ CE_USER_NOTIFICATION* pceun);
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* CeGetUserNotificationPreferences  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Notify.lib, notify.lib] */
-BOOL CeGetUserNotificationPreferences(
- HWND hWndParent, 
- PCE_USER_NOTIFICATION lpNotification 
-);
+BOOL CeGetUserNotificationPreferences(HWND hWndParent,
+ PCE_USER_NOTIFICATION lpNotification);
 
 /* CeHandleAppNotifications  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Notify.lib, notify.lib] */
-BOOL CeHandleAppNotifications(
- TCHAR* pwszAppName 
-);
+BOOL CeHandleAppNotifications(TCHAR* pwszAppName);
 
 /* CeRunAppAtEvent  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Notify.lib, notify.lib] */
-BOOL CeRunAppAtEvent(
- TCHAR* pwszAppName, 
- LONG lWhichEvent 
-);
+BOOL CeRunAppAtEvent(TCHAR* pwszAppName,
+ LONG lWhichEvent);
 
 /* CeRunAppAtTime  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Notify.lib, notify.lib] */
-BOOL CeRunAppAtTime(
- TCHAR* pwszAppName, 
- SYSTEMTIME* lpTime 
-);
+BOOL CeRunAppAtTime(TCHAR* pwszAppName,
+ SYSTEMTIME* lpTime);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* CeGetUserNotification  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Notify.lib, notify.lib] */
-BOOL CeGetUserNotification(
- HANDLE hNotification, 
- DWORD cBufferSize, 
- LPDWORD pcBytesNeeded, 
- LPBYTE pBuffer 
-);
+BOOL CeGetUserNotification(HANDLE hNotification,
+ DWORD cBufferSize,
+ LPDWORD pcBytesNeeded,
+ LPBYTE pBuffer);
 
 /* CeGetUserNotificationHandles  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Notify.lib, notify.lib] */
-BOOL CeGetUserNotificationHandles(
- HANDLE* rghNotifications, 
- DWORD cHandles, 
- LPDWORD pcHandlesNeeded 
-);
+BOOL CeGetUserNotificationHandles(HANDLE* rghNotifications,
+ DWORD cHandles,
+ LPDWORD pcHandlesNeeded);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* CeEventHasOccurred  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-BOOL CeEventHasOccurred(
- LONG lWhichEvent,
- TCHAR* pwszEndOfCommandLine
-);
+BOOL CeEventHasOccurred(LONG lWhichEvent,
+ TCHAR* pwszEndOfCommandLine);
 #endif /* _WIN32_WCE */
 
 #endif /* _NOTIFY_ */

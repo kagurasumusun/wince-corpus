@@ -18,6 +18,8 @@
  * ================================================================ */
 
 /* TRANPORTINFOSTRUCT  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__TRANPORTINFOSTRUCT
+#define __WINCE_DEFINED__TRANPORTINFOSTRUCT
 typedef struct _TRANPORTINFOSTRUCT {
  WORD cbData;
  WORD wVersion;
@@ -25,6 +27,7 @@ typedef struct _TRANPORTINFOSTRUCT {
  WORD wFlags;
  DWORD dwBandWidth;
 } TRANPORTINFOSTRUCT, *PTRANPORTINFOSTRUCT;
+#endif /* __WINCE_DEFINED__TRANPORTINFOSTRUCT */
 
 /* ==================================================================
  * functions and callbacks
@@ -36,30 +39,22 @@ typedef struct _TRANPORTINFOSTRUCT {
 BOOL TranDeInit Library (void);
 
 /* TranGetInfo  [function; ce-only; CE 4.0..699] */
-BOOL TranGetInfo(
- PTRANPORTINFOSTRUCT pInfo
-);
+BOOL TranGetInfo(PTRANPORTINFOSTRUCT pInfo);
 
 /* TranInitLibrary  [function; ce-only; CE 4.0..699] */
-BOOL TranInit Library(
- LPCWSTR pszRegKeyRoot
-);
+BOOL TranInit Library(LPCWSTR pszRegKeyRoot);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x420 && _WIN32_WCE < 0x700)) /* CE 4.2..699 */
 
 /* TranGetXMLParams  [function; ce-only; CE 4.2..699] */
-BOOL TranGetXMLParams(
- LPCWSTR* ppstrXML
-);
+BOOL TranGetXMLParams(LPCWSTR* ppstrXML);
 
 /* TranSetParam  [function; ce-only; CE 4.2..699] */
-BOOL TranSetParam(
- LPCWSTR strName,
+BOOL TranSetParam(LPCWSTR strName,
  LPCWSTR strValue,
  LPWSTR pstrError,
- long lErrorStringSize
-);
+ long lErrorStringSize);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

@@ -42,7 +42,7 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x212 && _WIN32_WCE < 0x400)) /* CE 2.12..399 */
 
 /* AtlTrace  [function; ce-only; CE 2.12..399] */
-void _cdecl AtlTrace( LPCTSTR lpszFormat, ... );
+void _cdecl AtlTrace(LPCTSTR lpszFormat, ...);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

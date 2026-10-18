@@ -38,6 +38,8 @@
  * ================================================================ */
 
 /* CEDEVICE_POWER_STATE  [enum; ce-only] */
+#ifndef __WINCE_DEFINED__CEDEVICE_POWER_STATE
+#define __WINCE_DEFINED__CEDEVICE_POWER_STATE
 typedef enum _CEDEVICE_POWER_STATE {
  PwrDeviceUnspecified = -1,
  D0 = 0,
@@ -47,16 +49,22 @@ typedef enum _CEDEVICE_POWER_STATE {
  D4,
  PwrDeviceMaximum
 } CEDEVICE_POWER_STATE, *PCEDEVICE_POWER_STATE;
+#endif /* __WINCE_DEFINED__CEDEVICE_POWER_STATE */
 
 /* POWER_BROADCAST  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_POWER_BROADCAST
+#define __WINCE_DEFINED_POWER_BROADCAST
 struct {
  DWORD Message;
  DWORD Flags;
  DWORD Length;
  WCHAR SystemPowerState[1];
 } POWER_BROADCAST, *PPOWER_BROADCAST;
+#endif /* __WINCE_DEFINED_POWER_BROADCAST */
 
 /* POWER_BROADCAST_POWER_INFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__POWER_BROADCAST_POWER_INFO
+#define __WINCE_DEFINED__POWER_BROADCAST_POWER_INFO
 typedef struct _POWER_BROADCAST_POWER_INFO {
  DWORD dwBatteryLifeTime;
  DWORD dwBatteryFullLifeTime;
@@ -68,8 +76,11 @@ typedef struct _POWER_BROADCAST_POWER_INFO {
  BYTE bBackupBatteryFlag;
  BYTE bBackupBatteryLifePercent;
 } POWER_BROADCAST_POWER_INFO, *PPOWER_BROADCAST_POWER_INFO;
+#endif /* __WINCE_DEFINED__POWER_BROADCAST_POWER_INFO */
 
 /* POWER_CAPABILITIES  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__POWER_CAPABILITIES
+#define __WINCE_DEFINED__POWER_CAPABILITIES
 typedef struct _POWER_CAPABILITIES {
  UCHAR DeviceDx;
  UCHAR WakeFromDx;
@@ -78,96 +89,78 @@ typedef struct _POWER_CAPABILITIES {
  DWORD Latency[5];
  DWORD Flags;
 } POWER_CAPABILITIES, *PPOWER_CAPABILITIES;
+#endif /* __WINCE_DEFINED__POWER_CAPABILITIES */
 
 /* POWER_RELATIONSHIP  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__POWER_RELATIONSHIP
+#define __WINCE_DEFINED__POWER_RELATIONSHIP
 typedef struct _POWER_RELATIONSHIP {
  HANDLE hParent;
  LPCWSTR pwsParent;
  HANDLE hChild;
  LPCWSTR pwsChild;
 } POWER_RELATIONSHIP, *PPOWER_RELATIONSHIP;
+#endif /* __WINCE_DEFINED__POWER_RELATIONSHIP */
 
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
 /* GetSystemPowerState  [function; ce-only; unified-kb; unified-kb] */
-DWORD GetSystemPowerState(
- LPWSTR pBuffer,
+DWORD GetSystemPowerState(LPWSTR pBuffer,
  DWORD Length,
- PDWORD pFlags
-);
+ PDWORD pFlags);
 
 /* SetSystemPowerState  [function; shared; unified-kb; unified-kb] */
-DWORD SetSystemPowerState(
- LPCWSTR psState,
+DWORD SetSystemPowerState(LPCWSTR psState,
  DWORD StateFlags,
- DWORD Options
-);
+ DWORD Options);
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* DevicePowerNotify  [function; ce-only; CE 4.0..699; Coredll.lib] */
-DWORD DevicePowerNotify(
- PVOID pvDevice,
+DWORD DevicePowerNotify(PVOID pvDevice,
  CEDEVICE_POWER_STATE DeviceState,
- DWORD Flags
-);
+ DWORD Flags);
 
 /* GetDevicePower  [function; ce-only; CE 4.0..699; Coredll.lib] */
-DWORD GetDevicePower(
- PVOID pvDevice,
+DWORD GetDevicePower(PVOID pvDevice,
  DWORD dwDeviceFlags,
- PCEDEVICE_POWER_STATE pDeviceState
-);
+ PCEDEVICE_POWER_STATE pDeviceState);
 
 /* RegisterPowerRelationship  [function; ce-only; CE 4.0..699; Coredll.lib] */
-HANDLE RegisterPowerRelationship(
- PVOID pvParent,
+HANDLE RegisterPowerRelationship(PVOID pvParent,
  PVOID pvChild,
  PPOWER_CAPABILITIES pCaps,
- DWORD Flags
-);
+ DWORD Flags);
 
 /* ReleasePowerRelationship  [function; ce-only; CE 4.0..699; Coredll.lib] */
-DWORD ReleasePowerRelationship(
- HANDLE h
-);
+DWORD ReleasePowerRelationship(HANDLE h);
 
 /* ReleasePowerRequirement  [function; ce-only; CE 4.0..699; Coredll.lib] */
-DWORD ReleasePowerRequirement(
- HANDLE hPowerReq
-);
+DWORD ReleasePowerRequirement(HANDLE hPowerReq);
 
 /* RequestPowerNotifications  [function; ce-only; CE 4.0..699; Coredll.lib] */
-HANDLE RequestPowerNotifications(
- HANDLE hMsgQ,
- DWORD Flags
-);
+HANDLE RequestPowerNotifications(HANDLE hMsgQ,
+ DWORD Flags);
 
 /* SetDevicePower  [function; ce-only; CE 4.0..699; Coredll.lib] */
-DWORD SetDevicePower(
- PVOID pvDevice,
+DWORD SetDevicePower(PVOID pvDevice,
  DWORD dwDeviceFlags,
- CEDEVICE_POWER_STATE DeviceState
-);
+ CEDEVICE_POWER_STATE DeviceState);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* SetPowerRequirement  [function; ce-only; CE 5.0..699; Coredll.lib] */
-HANDLE SetPowerRequirement(
- PVOID pvDevice,
+HANDLE SetPowerRequirement(PVOID pvDevice,
  CEDEVICE_POWER_STATE DeviceState,
  ULONG DeviceFlags,
  PVOID pvSystemState,
- ULONG StateFlags
-);
+ ULONG StateFlags);
 
 /* StopPowerNotifications  [function; ce-only; CE 5.0..699; Coredll.lib] */
-DWORD StopPowerNotifications(
- HANDLE h
-);
+DWORD StopPowerNotifications(HANDLE h);
 #endif /* _WIN32_WCE */
 
 #endif /* _PM_ */

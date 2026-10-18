@@ -5,48 +5,23 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 37 extra decls
+ * 0 constants, 0 declarations, 4 outlines, 0 base types, 0 extra macros, 33 extra decls
  */
 #ifndef _DVDNAV_
 #define _DVDNAV_
 
 
 /* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
+ * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
+/* DVDUserGOPData  [struct; ce-only] */
+
 /* EDDVDPlaybackState  [enum; ce-only] */
-typedef enum {
- DVD_STOPPED,
- DVD_PAUSED,
- DVD_STILLED,
- DVD_NORMAL_PLAY,
- DVD_FORWARD_SCAN,
- DVD_FORWARD_SLOW,
- DVD_FORWARD_SINGLE,
- DVD_BACKWARD_SCAN,
- DVD_BACKWARD_SLOW,
- DVD_BACKWARD_SINGLE
-} EDDVDPlaybackState;
-typedef EDDVDPlaybackState *PEDDVDPlaybackState, *LPEDDVDPlaybackState;
 
 /* EDVDNavException  [enum; ce-only] */
-typedef enum {
- InsufficientParentalLevel,
- FatalNavigationError
-} EDVDNavException;
-typedef EDVDNavException *PEDVDNavException, *LPEDVDNavException;
 
 /* EDVDSParamEvent  [enum; ce-only] */
-typedef enum {
- InitialAccess,
- TitlePartTimePlay,
- MenuCallToVmgmDom,
- MenuCallToVtsmDom
-} EDVDSParamEvent;
-typedef EDVDSParamEvent *PEDVDSParamEvent, *LPEDVDSParamEvent;
 
 /* ==================================================================
  * extra declarations -- corpus pages the main
@@ -63,13 +38,9 @@ HRESULT ChangeAngel(BYTE byteAngleNumber);
 HRESULT ChangeAudioStream(BYTE byteStreamNumber);
 HRESULT ChangeSubPictureStream(BYTE streamNumber, BOOL bDisplayFlag);
 HRESULT ForwardScan(double dblSpeed);
-HRESULT GetPlaybackState(EDDVDPlaybackState* peState);
-HRESULT InitializeSystemParameters(EDVDSParamEvent eventCode);
 HRESULT ManuLanguageSelect(USHORT uhLanguageCode);
 HRESULT MenuCall(BYTE byteMenu_ID);
 HRESULT OnDiskReadError(DWORD osCode);
-HRESULT OnGOPUserData(DVDUserGOPData* pData);
-HRESULT OnNavigationException(EDVDNavException excCode);
 HRESULT ParentalCountrySelect(USHORT uhCountryCode);
 HRESULT ParentalLevelSelect(BYTE byteLevel);
 HRESULT PartPlay(BYTE byteTitleNumber, USHORT uhPartOfTheTitle);

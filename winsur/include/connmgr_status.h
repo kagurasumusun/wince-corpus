@@ -5,11 +5,17 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 3 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _CONNMGR_STATUS_
 #define _CONNMGR_STATUS_
 
+
+/* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* CONNMGR_CONNECTION_IPADDR  [struct; ce-only] */
 
 /* ==================================================================
  * functions and callbacks
@@ -18,10 +24,8 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* ConnMgrRegisterForStatusChangeNotification  [function; ce-only; CE 6.0..699; cellcore.lib] */
-HRESULT WINAPI ConnMgrRegisterForStatusChangeNotification(
- BOOL fEnable,
- HWND hWnd
-);
+HRESULT WINAPI ConnMgrRegisterForStatusChangeNotification(BOOL fEnable,
+ HWND hWnd);
 #endif /* _WIN32_WCE */
 
 #endif /* _CONNMGR_STATUS_ */

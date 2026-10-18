@@ -31,7 +31,7 @@
 
 /* function */
 HRESULT GetCurrentState (DWORD*pdwCurrentState);
-HRESULT LockService()
-HRESULT UnlockService()
+HRESULT LockService();
+HRESULT UnlockService();
 
 #endif /* _CCSERVICE_ */

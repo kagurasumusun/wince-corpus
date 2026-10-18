@@ -34,6 +34,8 @@
  * ================================================================ */
 
 /* CREDENTIAL  [struct; shared; A/W CREDENTIALA,CREDENTIALW (CE is W-side)] */
+#ifndef __WINCE_DEFINED__CREDENTIAL
+#define __WINCE_DEFINED__CREDENTIAL
 typedef struct _CREDENTIAL {
  DWORD Flags;
  DWORD Type;
@@ -43,5 +45,6 @@ typedef struct _CREDENTIAL {
  DWORD Persist;
  LPTSTR UserName;
 } CREDENTIAL, *PCREDENTIAL;
+#endif /* __WINCE_DEFINED__CREDENTIAL */
 
 #endif /* _CREDMGR_ */

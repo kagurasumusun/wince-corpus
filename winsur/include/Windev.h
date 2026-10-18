@@ -16,8 +16,7 @@
  * ================================================================ */
 
 /* CTL_CODE  [macro, function; ce-only] */
-#define CTL_CODE( DeviceType, Function, Method, Access) (
- ((DeviceType) << 16) | ((Access) << 14) | ((Function) << 2) | (Method));
+#define CTL_CODE(DeviceType, Function, Method, Access) (((DeviceType) << 16) | ((Access) << 14) | ((Function) << 2) | (Method));
 
 /* ==================================================================
  * functions and callbacks
@@ -26,9 +25,7 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* IsAPIReady  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.dll, coredll.dll] */
-BOOL IsAPIReady(
- DWORD hAPI
-);
+BOOL IsAPIReady(DWORD hAPI);
 #endif /* _WIN32_WCE */
 
 #endif /* _WINDEV_ */

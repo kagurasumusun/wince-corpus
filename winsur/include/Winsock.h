@@ -18,10 +18,16 @@
  * ================================================================ */
 
 /* CEBLOB  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__CEBLOB
+#define __WINCE_DEFINED__CEBLOB
 typedef struct _CEBLOB {
  DWORD dwCount;
  LPBYTE lpb;
 } CEBLOB;
+#endif /* __WINCE_DEFINED__CEBLOB */
+#ifndef __WINCE_DEFINED_PCEBLOB
+#define __WINCE_DEFINED_PCEBLOB
 typedef CEBLOB *PCEBLOB, *LPCEBLOB;
+#endif /* __WINCE_DEFINED_PCEBLOB */
 
 #endif /* _WINSOCK_ */

@@ -18,6 +18,8 @@
  * ================================================================ */
 
 /* SPCFGNOTIFY  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_SPCFGNOTIFY
+#define __WINCE_DEFINED_SPCFGNOTIFY
 typedef enum SPCFGNOTIFY{
  SPCFGN_ADD,
  SPCFGN_REMOVE,
@@ -25,6 +27,10 @@ typedef enum SPCFGNOTIFY{
  SPCFGN_ACTIVATE,
  SPCFGN_DEACTIVATE
 } SPCFGNOTIFY;
+#endif /* __WINCE_DEFINED_SPCFGNOTIFY */
+#ifndef __WINCE_DEFINED_PSPCFGNOTIFY
+#define __WINCE_DEFINED_PSPCFGNOTIFY
 typedef SPCFGNOTIFY *PSPCFGNOTIFY, *LPSPCFGNOTIFY;
+#endif /* __WINCE_DEFINED_PSPCFGNOTIFY */
 
 #endif /* _SAPIDDK_IDL_ */

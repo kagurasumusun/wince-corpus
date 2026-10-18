@@ -29,9 +29,7 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 5.0..599 */
 
 /* DsRoleFreeMemory  [function; shared; CE 5.0..599; Netapi32.lib] */
-void DsRoleFreeMemory( 
- PVOID Buffer 
-);
+void DsRoleFreeMemory(PVOID Buffer);
 #endif /* _WIN32_WCE */
 
 #endif /* _DSROLE_ */

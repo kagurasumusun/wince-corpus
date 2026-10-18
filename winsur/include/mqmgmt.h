@@ -1,11 +1,11 @@
-/* Mqmgmt.h -- Windows CE unified surface
+/* mqmgmt.h -- Windows CE unified surface
  *
  * ONE tree for every CE generation.  Version differences use
  * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 5 constants, 2 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 5 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _MQMGMT_
 #define _MQMGMT_
@@ -22,19 +22,5 @@
 #define MQ_ERROR_ILLEGAL_PROPERTY_VT 0xC00E0019
 #define MQ_ERROR_SERVICE_NOT_AVAILABLE 0xC00E000B
 #define MQ_INFORMATION_UNSUPPORTED_PROPERTY 0x400E0004
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
-
-/* MQMgmtAction  [function; ce-only; CE 5.0..699; Msmqrt.lib, msmqrt.lib] */
-HRESULT MQMgmtAction(
- LPCWSTR pMachineName, 
- LPCWSTR pObjectName, 
- LPCWSTR pAction 
-);
-#endif /* _WIN32_WCE */
 
 #endif /* _MQMGMT_ */

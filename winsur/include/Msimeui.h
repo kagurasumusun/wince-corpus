@@ -18,9 +18,7 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* ImeGetUIClassName  [function; ce-only; CE 5.0..699; Msimeuic.lib] */
-void ImeGetUIClassName(
- LPTSTR lpszImeUIClassName
-);
+void ImeGetUIClassName(LPTSTR lpszImeUIClassName);
 #endif /* _WIN32_WCE */
 
 #endif /* _MSIMEUI_ */

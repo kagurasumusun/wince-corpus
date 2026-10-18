@@ -43,27 +43,19 @@ DWORD BthAGInitPhoneExt(void);
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* BthAGATHandler  [function; ce-only; CE 5.0..699] */
-BOOL BthAGATHandler (
- LPSTR szCommand, 
- DWORD cbCommand
-);
+BOOL BthAGATHandler (LPSTR szCommand,
+ DWORD cbCommand);
 
 /* BthAGGetLastDialed  [function; ce-only; CE 5.0..699; Btagsvc_phoneext.lib] */
-BOOL BthAGGetLastDialed(
- LPWSTR pwszNumber
-);
+BOOL BthAGGetLastDialed(LPWSTR pwszNumber);
 
 /* BthAGGetNameByPhoneNumber  [function; ce-only; CE 5.0..699; Btagsvc_phoneext.lib] */
-BOOL BthAGGetNameByPhoneNumber (
- LPCWSTR pwszNumber,
- LPWSTR pwszName
-);
+BOOL BthAGGetNameByPhoneNumber (LPCWSTR pwszNumber,
+ LPWSTR pwszName);
 
 /* BthAGGetSpeedDial  [function; ce-only; CE 5.0..699; Btagsvc_phoneext.lib] */
-BOOL BthAGGetSpeedDial(
- unsigned short usIndex,
- LPwSTR pwszNumber
-);
+BOOL BthAGGetSpeedDial(unsigned short usIndex,
+ LPwSTR pwszNumber);
 
 /* BthAGNetworkAnswerCall  [function; ce-only; CE 5.0..699; Btagsvc_network.lib] */
 DWORD BthAGNetworkAnswerCall(void);
@@ -78,15 +70,13 @@ DWORD BthAGNetworkDialNumber(LPSTR pszNumber);
 DWORD BthAGNetworkHangupCall(DWORD dwFlags);
 
 /* BthAGNetworkGetCallState  [function; ce-only; CE 5.0..699; Btagsvc_network.lib] */
-DWORD BthAGNetworkGetCallState ( PDWORD pdwFlags);
+DWORD BthAGNetworkGetCallState (PDWORD pdwFlags);
 
 /* BthAGNetworkHoldCall  [function; ce-only; CE 5.0..699; Btagsvc_network.lib] */
 DWORD BthAgNetworkHoldCall(void);
 
 /* BthAGNetworkInit  [function; ce-only; CE 5.0..699; Btagsvc_network.lib] */
-DWORD BthAGNetworkInit(
- HINSTANCE hInstance
-);
+DWORD BthAGNetworkInit(HINSTANCE hInstance);
 
 /* BthAGNetworkRejectCall  [function; ce-only; CE 5.0..699; Btagsvc_network.lib] */
 DWORD BthAGNetworkRejectCall(void);
@@ -110,11 +100,9 @@ BOOL BthAGOverrideCallOut(BOOL fHandsfree);
 void BthAGPhoneExtDeinit(void);
 
 /* BthAGPhoneExtEvent  [function; ce-only; CE 5.0..699; Btagsvc_phoneext.lib] */
-void BthAGPhoneExtEvent(
- DWORD dwEvent,
+void BthAGPhoneExtEvent(DWORD dwEvent,
  DWORD dwParam,
- VOID* pvParam2
-);
+ VOID* pvParam2);
 
 /* BthAGPhoneExtInit  [function; ce-only; CE 5.0..699; Btagsvc_phoneext.lib] */
 DWORD BthAGInitPhoneExt(void);

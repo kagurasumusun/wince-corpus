@@ -18,6 +18,8 @@
  * ================================================================ */
 
 /* HWXGUIDE  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_TAGHWXGUIDE
+#define __WINCE_DEFINED_TAGHWXGUIDE
 typedef struct tagHWXGUIDE {
  UINT cHorzBox;
  UINT cVertBox;
@@ -31,14 +33,18 @@ typedef struct tagHWXGUIDE {
  UINT cyWriting;
  UINT cyMid;
  UINT cyBase;
- UINT nDir; 
+ UINT nDir;
 } HWXGUIDE, *PHWXGUIDE;
+#endif /* __WINCE_DEFINED_TAGHWXGUIDE */
 
 /* HWXRESULTS  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_TAGHWXRESULTS
+#define __WINCE_DEFINED_TAGHWXRESULTS
 typedef struct tagHWXRESULTS {
  USHORT indxBox;
- WCHAR rgChar[1] 
+ WCHAR rgChar[1]
 } HWXRESULTS, *PHWXRESULTS;
+#endif /* __WINCE_DEFINED_TAGHWXRESULTS */
 
 /* ==================================================================
  * functions and callbacks

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2 constants, 16 declarations, 3 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 2 constants, 15 declarations, 4 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _FMD_
 #define _FMD_
@@ -26,6 +26,8 @@
 
 /* FlashInfoEx  [struct; ce-only] */
 
+/* FMDInfo  [struct; ce-only] */
+
 /* FMDInterface  [struct; ce-only] */
 
 /* SectorInfo  [struct, macro; ce-only] */
@@ -37,12 +39,15 @@
  * ================================================================ */
 
 /* RawWriteBlocksReq  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__RAWWRITEBLOCKSREQ
+#define __WINCE_DEFINED__RAWWRITEBLOCKSREQ
 typedef struct _RawWriteBlocksReq {
  DWORD dwStartBlock;
  DWORD dwNumBlocks;
  LPBYTE pBuffer;
  DWORD cbBuffer;
 } RawWriteBlocksReq, *PRawWriteBlocksReq;
+#endif /* __WINCE_DEFINED__RAWWRITEBLOCKSREQ */
 
 /* ==================================================================
  * functions and callbacks
@@ -51,14 +56,10 @@ typedef struct _RawWriteBlocksReq {
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* FMD_Deinit  [function; ce-only; CE 4.0..699] */
-BOOL FMD_Deinit(
-PVOID hFMD
-);
+BOOL FMD_Deinit(PVOID hFMD);
 
 /* FMD_GetInfo  [function; ce-only; CE 4.0..699] */
-BOOL FMD_GetInfo(
- PFlashInfo pFlashInfo
-);
+BOOL FMD_GetInfo(PFlashInfo pFlashInfo);
 
 /* FMD_PowerDown  [function; ce-only; CE 4.0..699] */
 VOID FMD_PowerDown(VOID);
@@ -70,10 +71,8 @@ VOID FMD_PowerUp(VOID);
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* FMD_GetInfoEx  [function; ce-only; CE 6.0..699] */
-BOOL FMD_GetInfoEx(
- PFlashInfoEx pFlashInfo,
- PDWORD pdwNumRegions
-);
+BOOL FMD_GetInfoEx(PFlashInfoEx pFlashInfo,
+ PDWORD pdwNumRegions);
 #endif /* _WIN32_WCE */
 
 #endif /* _FMD_ */

@@ -18,7 +18,9 @@
  * ================================================================ */
 
 /* CAxWindow  [typedef; ce-only] */
+#ifdef __cplusplus
 typedef CAxWindowT<CWindow> CAxWindow;
+#endif /* __cplusplus */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

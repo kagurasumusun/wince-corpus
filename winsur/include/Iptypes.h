@@ -55,59 +55,89 @@
  * ================================================================ */
 
 /* IF_OPER_STATUS  [enum; shared] */
+#ifndef __WINCE_DEFINED_IF_OPER_STATUS
+#define __WINCE_DEFINED_IF_OPER_STATUS
 typedef enum {
- IfOperStatusUp = 1, 
- IfOperStatusDown, 
- IfOperStatusTesting, 
- IfOperStatusUnknown, 
- IfOperStatusDormant, 
- IfOperStatusNotPresent, 
+ IfOperStatusUp = 1,
+ IfOperStatusDown,
+ IfOperStatusTesting,
+ IfOperStatusUnknown,
+ IfOperStatusDormant,
+ IfOperStatusNotPresent,
  IfOperStatusLowerLayerDown
 } IF_OPER_STATUS;
+#endif /* __WINCE_DEFINED_IF_OPER_STATUS */
+#ifndef __WINCE_DEFINED_PIF_OPER_STATUS
+#define __WINCE_DEFINED_PIF_OPER_STATUS
 typedef IF_OPER_STATUS *PIF_OPER_STATUS, *LPIF_OPER_STATUS;
+#endif /* __WINCE_DEFINED_PIF_OPER_STATUS */
 
 /* IP_DAD_STATE  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_IP_DAD_STATE
+#define __WINCE_DEFINED_IP_DAD_STATE
 typedef enum {
- IpDadStateInvalid = 0, 
- IpDadStateTentative, 
- IpDadStateDuplicate, 
- IpDadStateDeprecated, 
+ IpDadStateInvalid = 0,
+ IpDadStateTentative,
+ IpDadStateDuplicate,
+ IpDadStateDeprecated,
  IpDadStatePreferred
 } IP_DAD_STATE;
+#endif /* __WINCE_DEFINED_IP_DAD_STATE */
+#ifndef __WINCE_DEFINED_PIP_DAD_STATE
+#define __WINCE_DEFINED_PIP_DAD_STATE
 typedef IP_DAD_STATE *PIP_DAD_STATE, *LPIP_DAD_STATE;
+#endif /* __WINCE_DEFINED_PIP_DAD_STATE */
 
 /* IP_PREFIX_ORIGIN  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_IP_PREFIX_ORIGIN
+#define __WINCE_DEFINED_IP_PREFIX_ORIGIN
 typedef enum {
- IpPrefixOriginOther = 0, 
- IpPrefixOriginManual, 
- IpPrefixOriginWellKnown, 
- IpPrefixOriginDhcp, 
+ IpPrefixOriginOther = 0,
+ IpPrefixOriginManual,
+ IpPrefixOriginWellKnown,
+ IpPrefixOriginDhcp,
  IpPrefixOriginRouterAdvertisement
 } IP_PREFIX_ORIGIN;
+#endif /* __WINCE_DEFINED_IP_PREFIX_ORIGIN */
+#ifndef __WINCE_DEFINED_PIP_PREFIX_ORIGIN
+#define __WINCE_DEFINED_PIP_PREFIX_ORIGIN
 typedef IP_PREFIX_ORIGIN *PIP_PREFIX_ORIGIN, *LPIP_PREFIX_ORIGIN;
+#endif /* __WINCE_DEFINED_PIP_PREFIX_ORIGIN */
 
 /* IP_SUFFIX_ORIGIN  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_IP_SUFFIX_ORIGIN
+#define __WINCE_DEFINED_IP_SUFFIX_ORIGIN
 typedef enum {
- IpSuffixOriginOther = 0, 
- IpSuffixOriginManual, 
- IpSuffixOriginWellKnown, 
- IpSuffixOriginDhcp, 
- IpSuffixOriginLinkLayerAddress, 
+ IpSuffixOriginOther = 0,
+ IpSuffixOriginManual,
+ IpSuffixOriginWellKnown,
+ IpSuffixOriginDhcp,
+ IpSuffixOriginLinkLayerAddress,
  IpSuffixOriginRandom
 } IP_SUFFIX_ORIGIN;
+#endif /* __WINCE_DEFINED_IP_SUFFIX_ORIGIN */
+#ifndef __WINCE_DEFINED_PIP_SUFFIX_ORIGIN
+#define __WINCE_DEFINED_PIP_SUFFIX_ORIGIN
 typedef IP_SUFFIX_ORIGIN *PIP_SUFFIX_ORIGIN, *LPIP_SUFFIX_ORIGIN;
+#endif /* __WINCE_DEFINED_PIP_SUFFIX_ORIGIN */
 
 /* SCOPE_LEVEL  [enum; shared] */
+#ifndef __WINCE_DEFINED_SCOPE_LEVEL
+#define __WINCE_DEFINED_SCOPE_LEVEL
 typedef enum {
- ScopeLevelInterface = 1, 
- ScopeLevelLink = 2, 
- ScopeLevelSubnet = 3, 
- ScopeLevelAdmin = 4, 
- ScopeLevelSite = 5, 
- ScopeLevelOrganization = 8, 
+ ScopeLevelInterface = 1,
+ ScopeLevelLink = 2,
+ ScopeLevelSubnet = 3,
+ ScopeLevelAdmin = 4,
+ ScopeLevelSite = 5,
+ ScopeLevelOrganization = 8,
  ScopeLevelGlobal = 14
 } SCOPE_LEVEL;
+#endif /* __WINCE_DEFINED_SCOPE_LEVEL */
+#ifndef __WINCE_DEFINED_PSCOPE_LEVEL
+#define __WINCE_DEFINED_PSCOPE_LEVEL
 typedef SCOPE_LEVEL *PSCOPE_LEVEL, *LPSCOPE_LEVEL;
+#endif /* __WINCE_DEFINED_PSCOPE_LEVEL */
 
 /* IP_ADDRESS_STRING  [struct; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */

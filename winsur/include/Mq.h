@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 344 constants, 17 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 344 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _MQ_
 #define _MQ_
@@ -361,34 +361,5 @@
 #define PROPID_QM_SITE_ID 201
 #define QUERY_SORTASCEND 0
 #define QUERY_SORTDESCEND 1
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
-
-/* MQCloseCursor  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
-HRESULT APIENTRY MQCloseCursor(
- HANDLE hCursor
-);
-
-/* MQDeleteQueue  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
-HRESULT APIENTRY MQDeleteQueue(
- LPCWSTR lpwcsFormatName
-);
-
-/* MQFreeMemory  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
-VOID MQFreeMemory(
- PVOID pvMemory
-);
-
-/* MQPathNameToFormatName  [function; ce-only; CE 3.0..399, 5.0..699; msmqapix.lib, Msmqrt.lib, msmqrt.lib] */
-HRESULT APIENTRY MQPathNameToFormatName(
- LPCWSTR lpwcsPathName,
- LPWSTR lpwcsFormatName,
- LPDWORD lpdwCount
-);
-#endif /* _WIN32_WCE */
 
 #endif /* _MQ_ */

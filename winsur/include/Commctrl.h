@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1815 constants, 325 declarations, 18 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 1815 constants, 322 declarations, 20 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _COMMCTRL_
 #define _COMMCTRL_
@@ -1839,73 +1839,65 @@
  * ================================================================ */
 
 /* FORWARD_WM_NOTIFY  [macro, function; shared] */
-VOID FORWARD_WM_NOTIFY( 
- hwnd, 
- idFrom, 
- pnmhdr, 
- fn 
-);
+VOID FORWARD_WM_NOTIFY(hwnd,
+ idFrom,
+ pnmhdr,
+ fn);
 
 /* HANDLE_WM_NOTIFY  [macro, function; shared] */
-#define HANDLE_WM_NOTIFY(hwnd, wParam, lParam, fn) \ 
+#define HANDLE_WM_NOTIFY(hwnd, wParam, lParam, fn) \
  (fn)((hwnd), (int)(wParam), (NMHDR FAR*)(lParam));
 
 /* HD_ITEM  [struct; ce-only] */
 
 /* Header_CreateDragImage  [function, macro; shared; Commctrl.lib] */
-HIMAGELIST Header_CreateDragImage( 
-HWND hwndHD, 
+HIMAGELIST Header_CreateDragImage(HWND hwndHD,
 int iIndex);
 
 /* Header_GetImageList  [function, macro; shared; Commctrl.lib] */
-HIMAGELIST Header_GetImageList( 
-HWND hwndHD);
+HIMAGELIST Header_GetImageList(HWND hwndHD);
+
+/* Header_GetItemCount  [macro, function; shared; Commctrl.lib] */
 
 /* Header_GetItemRect  [function, macro; shared; Commctrl.lib] */
-BOOL Header_GetItemRect( 
-HWND hwndHD, 
-int iIndex, 
-LPRECT lpItemRect );
+BOOL Header_GetItemRect(HWND hwndHD,
+int iIndex,
+LPRECT lpItemRect);
 
 /* Header_GetOrderArray  [function, macro; shared; Commctrl.lib] */
-BOOL Header_GetOrderArray( 
-HWND hwndHD, 
-int iSize, 
-int *lpiArray );
+BOOL Header_GetOrderArray(HWND hwndHD,
+int iSize,
+int *lpiArray);
+
+/* Header_Layout  [macro, function; shared; Commctrl.lib] */
 
 /* Header_OrderToIndex  [function, macro; shared; Commctrl.lib] */
-int Header_OrderToIndex( 
-HWND hwndHD, 
-int iOrder );
+int Header_OrderToIndex(HWND hwndHD,
+int iOrder);
 
 /* Header_SetHotDivider  [function, macro; shared; Commctrl.lib] */
-int Header_SetHotDivider( 
-HWND hwndHD, 
-BOOL flag, 
-DWORD dwInputValue );
+int Header_SetHotDivider(HWND hwndHD,
+BOOL flag,
+DWORD dwInputValue);
 
 /* Header_SetImageList  [function, macro; shared; Commctrl.lib] */
-HIMAGELIST Header_SetImageList( 
-HWND hwndHD, 
-HIMAGELIST himl );
+HIMAGELIST Header_SetImageList(HWND hwndHD,
+HIMAGELIST himl);
 
 /* Header_SetItem  [function, macro; shared; Commctrl.lib] */
-BOOL Header_SetItem( hwndHD, i, phdi );
+BOOL Header_SetItem(hwndHD, i, phdi);
 
 /* Header_SetOrderArray  [function, macro; shared; Commctrl.lib] */
-BOOL Header_SetOrderArray( 
-HWND hwndHD, 
-int iSize, 
-int *lpiArray );
+BOOL Header_SetOrderArray(HWND hwndHD,
+int iSize,
+int *lpiArray);
 
 /* ImageList_AddIcon  [macro, function; shared; Commctrl.lib, Imgctl.lib, imgctl.lib] */
 
 /* INDEXTOOVERLAYMASK  [macro, function; shared] */
 
 /* INDEXTOSTATEIMAGEMASK  [macro, function; shared] */
-UINT INDEXTOSTATEIMAGEMASK( 
- UINT i 
-);
+UINT INDEXTOSTATEIMAGEMASK(UINT i);
 
 /* LV_COLUMN  [struct; ce-only] */
 
@@ -1934,6 +1926,8 @@ UINT INDEXTOSTATEIMAGEMASK(
  * ================================================================ */
 
 /* COMMANDBANDSRESTOREINFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_TAGCOMMANDBANDSRESTOREINFO
+#define __WINCE_DEFINED_TAGCOMMANDBANDSRESTOREINFO
 typedef struct tagCOMMANDBANDSRESTOREINFO {
  UINT cbSize;
  UINT wID;
@@ -1941,30 +1935,45 @@ typedef struct tagCOMMANDBANDSRESTOREINFO {
  UINT cxRestored;
  BOOL fMaximized;
 } COMMANDBANDSRESTOREINFO, *LPCOMMANDBANDSRESTOREINFO;
+#endif /* __WINCE_DEFINED_TAGCOMMANDBANDSRESTOREINFO */
 
 /* HD_HITTESTINFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__HD_HITTESTINFO
+#define __WINCE_DEFINED__HD_HITTESTINFO
 typedef struct _HD_HITTESTINFO {
- POINT pt; 
- UINT flags; 
- int iItem; 
+ POINT pt;
+ UINT flags;
+ int iItem;
 } HD_HITTESTINFO;
+#endif /* __WINCE_DEFINED__HD_HITTESTINFO */
+#ifndef __WINCE_DEFINED_PHD_HITTESTINFO
+#define __WINCE_DEFINED_PHD_HITTESTINFO
 typedef HD_HITTESTINFO *PHD_HITTESTINFO, *LPHD_HITTESTINFO;
+#endif /* __WINCE_DEFINED_PHD_HITTESTINFO */
 
 /* HDITEM  [struct; shared; A/W HDITEMA,HDITEMW (CE is W-side)] */
+#ifndef __WINCE_DEFINED__HDITEM
+#define __WINCE_DEFINED__HDITEM
 typedef struct _HDITEM {
- UINT mask; 
- int cxy; 
- LPTSTR pszText; 
- HBITMAP hbm; 
- int cchTextMax; 
- int fmt; 
- LPARAM lParam; 
+ UINT mask;
+ int cxy;
+ LPTSTR pszText;
+ HBITMAP hbm;
+ int cchTextMax;
+ int fmt;
+ LPARAM lParam;
  int iImage;
  int iOrder;
 } HDITEM;
+#endif /* __WINCE_DEFINED__HDITEM */
+#ifndef __WINCE_DEFINED_PHDITEM
+#define __WINCE_DEFINED_PHDITEM
 typedef HDITEM *PHDITEM, *LPHDITEM;
+#endif /* __WINCE_DEFINED_PHDITEM */
 
 /* ICONINFO  [struct; shared] */
+#ifndef __WINCE_DEFINED__ICONINFO
+#define __WINCE_DEFINED__ICONINFO
 typedef struct _ICONINFO {
  BOOL fIcon;
  DWORD xHotspot;
@@ -1972,27 +1981,45 @@ typedef struct _ICONINFO {
  HBITMAP hbmMask;
  HBITMAP hbmColor;
 } ICONINFO;
+#endif /* __WINCE_DEFINED__ICONINFO */
+#ifndef __WINCE_DEFINED_PICONINFO
+#define __WINCE_DEFINED_PICONINFO
 typedef ICONINFO *PICONINFO, *LPICONINFO;
+#endif /* __WINCE_DEFINED_PICONINFO */
 
 /* LV_FINDINFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__LV_FINDINFO
+#define __WINCE_DEFINED__LV_FINDINFO
 typedef struct _LV_FINDINFO {
- UINT flags; 
- LPCSTR psz; 
- LPARAM lParam; 
- POINT pt; 
- UINT vkDirection; 
+ UINT flags;
+ LPCSTR psz;
+ LPARAM lParam;
+ POINT pt;
+ UINT vkDirection;
 } LV_FINDINFO;
+#endif /* __WINCE_DEFINED__LV_FINDINFO */
+#ifndef __WINCE_DEFINED_PLV_FINDINFO
+#define __WINCE_DEFINED_PLV_FINDINFO
 typedef LV_FINDINFO *PLV_FINDINFO, *LPLV_FINDINFO;
+#endif /* __WINCE_DEFINED_PLV_FINDINFO */
 
 /* LV_HITTESTINFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__LV_HITTESTINFO
+#define __WINCE_DEFINED__LV_HITTESTINFO
 typedef struct _LV_HITTESTINFO {
- POINT pt; 
- UINT flags; 
- int iItem; 
+ POINT pt;
+ UINT flags;
+ int iItem;
 } LV_HITTESTINFO;
+#endif /* __WINCE_DEFINED__LV_HITTESTINFO */
+#ifndef __WINCE_DEFINED_PLV_HITTESTINFO
+#define __WINCE_DEFINED_PLV_HITTESTINFO
 typedef LV_HITTESTINFO *PLV_HITTESTINFO, *LPLV_HITTESTINFO;
+#endif /* __WINCE_DEFINED_PLV_HITTESTINFO */
 
 /* LVBKIMAGE  [struct; shared; A/W LVBKIMAGEA,LVBKIMAGEW (CE is W-side)] */
+#ifndef __WINCE_DEFINED_TAGLVBKIMAGE
+#define __WINCE_DEFINED_TAGLVBKIMAGE
 typedef struct tagLVBKIMAGE {
  ULONG ulFlags;
  HBITMAP hbm;
@@ -2001,21 +2028,30 @@ typedef struct tagLVBKIMAGE {
  int xOffsetPercent;
  int yOffsetPercent;
 } LVBKIMAGE, *LPLVBKIMAGE;
+#endif /* __WINCE_DEFINED_TAGLVBKIMAGE */
 
 /* LVCOLUMN  [struct; shared; A/W LVCOLUMNA,LVCOLUMNW (CE is W-side)] */
-typedef struct _LVCOLUMN { 
- UINT mask; 
- int fmt; 
- int cx; 
- LPTSTR pszText; 
- int cchTextMax; 
- int iSubItem; 
+#ifndef __WINCE_DEFINED__LVCOLUMN
+#define __WINCE_DEFINED__LVCOLUMN
+typedef struct _LVCOLUMN {
+ UINT mask;
+ int fmt;
+ int cx;
+ LPTSTR pszText;
+ int cchTextMax;
+ int iSubItem;
  int iOrder;
  int iImage;
 } LVCOLUMN;
+#endif /* __WINCE_DEFINED__LVCOLUMN */
+#ifndef __WINCE_DEFINED_PLVCOLUMN
+#define __WINCE_DEFINED_PLVCOLUMN
 typedef LVCOLUMN *PLVCOLUMN, *LPLVCOLUMN;
+#endif /* __WINCE_DEFINED_PLVCOLUMN */
 
 /* LVGROUP  [struct; shared] */
+#ifndef __WINCE_DEFINED_LVGROUP
+#define __WINCE_DEFINED_LVGROUP
 typedef struct LVGROUP {
  UINT cbSize;
  UINT mask;
@@ -2028,8 +2064,11 @@ typedef struct LVGROUP {
  UINT state;
  UINT uAlign;
 } LVGROUP, *PLVGROUP;
+#endif /* __WINCE_DEFINED_LVGROUP */
 
 /* LVGROUPMETRICS  [struct; shared] */
+#ifndef __WINCE_DEFINED_LVGROUPMETRICS
+#define __WINCE_DEFINED_LVGROUPMETRICS
 typedef struct LVGROUPMETRICS {
  UINT cbSize;
  UINT mask;
@@ -2044,32 +2083,47 @@ typedef struct LVGROUPMETRICS {
  COLORREF crRightHeader;
  COLORREF crFooter;
 } LVGROUPMETRICS, *PLVGROUPMETRICS;
+#endif /* __WINCE_DEFINED_LVGROUPMETRICS */
 
 /* LVHITTESTINFO  [struct; shared] */
-typedef struct _LVHITTESTINFO { 
- POINT pt; 
- UINT flags; 
- int iItem; 
+#ifndef __WINCE_DEFINED__LVHITTESTINFO
+#define __WINCE_DEFINED__LVHITTESTINFO
+typedef struct _LVHITTESTINFO {
+ POINT pt;
+ UINT flags;
+ int iItem;
  int iSubItem;
 } LVHITTESTINFO;
+#endif /* __WINCE_DEFINED__LVHITTESTINFO */
+#ifndef __WINCE_DEFINED_PLVHITTESTINFO
+#define __WINCE_DEFINED_PLVHITTESTINFO
 typedef LVHITTESTINFO *PLVHITTESTINFO, *LPLVHITTESTINFO;
+#endif /* __WINCE_DEFINED_PLVHITTESTINFO */
 
 /* LVITEM  [struct; shared; A/W LVITEMA,LVITEMW (CE is W-side)] */
-typedef struct _LVITEM { 
-UINT mask; 
-int iItem; 
-int iSubItem; 
-UINT state; 
-UINT stateMask; 
-LPTSTR pszText; 
-int cchTextMax; 
-int iImage; 
-LPARAM lParam; 
-int iIndent; } 
+#ifndef __WINCE_DEFINED__LVITEM
+#define __WINCE_DEFINED__LVITEM
+typedef struct _LVITEM {
+UINT mask;
+int iItem;
+int iSubItem;
+UINT state;
+UINT stateMask;
+LPTSTR pszText;
+int cchTextMax;
+int iImage;
+LPARAM lParam;
+int iIndent; }
 LVITEM;
+#endif /* __WINCE_DEFINED__LVITEM */
+#ifndef __WINCE_DEFINED_PLVITEM
+#define __WINCE_DEFINED_PLVITEM
 typedef LVITEM *PLVITEM, *LPLVITEM;
+#endif /* __WINCE_DEFINED_PLVITEM */
 
 /* LVSETINFOTIP  [struct; shared] */
+#ifndef __WINCE_DEFINED_LVSETINFOTIP
+#define __WINCE_DEFINED_LVSETINFOTIP
 typedef struct LVSETINFOTIP {
  UINT cbSize;
  DWORD dwFlags;
@@ -2077,29 +2131,41 @@ typedef struct LVSETINFOTIP {
  int iItem;
  int iSubItem;
 } LVSETINFOTIP, *PLVSETINFOTIP;
+#endif /* __WINCE_DEFINED_LVSETINFOTIP */
 
 /* MCHITTESTINFO  [struct; shared] */
+#ifndef __WINCE_DEFINED_MCHITTESTINFO
+#define __WINCE_DEFINED_MCHITTESTINFO
 typedef struct {
  UINT cbSize;
  POINT pt;
- UINT uHit; 
+ UINT uHit;
  SYSTEMTIME st;
 } MCHITTESTINFO, *PMCHITTESTINFO;
+#endif /* __WINCE_DEFINED_MCHITTESTINFO */
 
 /* PBRANGE  [struct; shared] */
+#ifndef __WINCE_DEFINED_PBRANGE
+#define __WINCE_DEFINED_PBRANGE
 typedef struct {
  int iLow;
- int iHigh; 
+ int iHigh;
 } PBRANGE, *PPBRANGE;
+#endif /* __WINCE_DEFINED_PBRANGE */
 
 /* RBHITTESTINFO  [struct; shared] */
+#ifndef __WINCE_DEFINED__RB_HITTESTINFO
+#define __WINCE_DEFINED__RB_HITTESTINFO
 typedef struct _RB_HITTESTINFO {
  POINT pt;
  UINT flags;
  int iBand;
 } RBHITTESTINFO, FAR* LPRBHITTESTINFO;
+#endif /* __WINCE_DEFINED__RB_HITTESTINFO */
 
 /* REBARBANDINFO  [struct; shared; A/W REBARBANDINFOA,REBARBANDINFOW (CE is W-side)] */
+#ifndef __WINCE_DEFINED_TAGREBARBANDINFO
+#define __WINCE_DEFINED_TAGREBARBANDINFO
 typedef struct tagREBARBANDINFO {
  UINT cbSize;
  UINT fMask;
@@ -2115,14 +2181,17 @@ typedef struct tagREBARBANDINFO {
  UINT cx;
  HBITMAP hbmBack;
  UINT wID;
- UINT cyChild; 
+ UINT cyChild;
  UINT cyMaxChild;
  UINT cyIntegral;
  UINT cxIdeal;
  LPARAM lParam;
 } REBARBANDINFO, FAR* LPREBARBANDINFO;
+#endif /* __WINCE_DEFINED_TAGREBARBANDINFO */
 
 /* TBREPLACEBITMAP  [struct; shared] */
+#ifndef __WINCE_DEFINED_TBREPLACEBITMAP
+#define __WINCE_DEFINED_TBREPLACEBITMAP
 typedef struct {
  HINSTANCE hInstOld;
  UINT nIDOld;
@@ -2130,34 +2199,55 @@ typedef struct {
  UINT nIDNew;
  int nButtons;
 } TBREPLACEBITMAP, *LPTBREPLACEBITMAP;
+#endif /* __WINCE_DEFINED_TBREPLACEBITMAP */
 
 /* TC_HITTESTINFO  [struct; ce-only] */
-typedef struct _TC_HITTESTINFO { 
- POINT pt; 
- UINT flags; 
+#ifndef __WINCE_DEFINED__TC_HITTESTINFO
+#define __WINCE_DEFINED__TC_HITTESTINFO
+typedef struct _TC_HITTESTINFO {
+ POINT pt;
+ UINT flags;
 } TC_HITTESTINFO;
+#endif /* __WINCE_DEFINED__TC_HITTESTINFO */
+#ifndef __WINCE_DEFINED_PTC_HITTESTINFO
+#define __WINCE_DEFINED_PTC_HITTESTINFO
 typedef TC_HITTESTINFO *PTC_HITTESTINFO, *LPTC_HITTESTINFO;
+#endif /* __WINCE_DEFINED_PTC_HITTESTINFO */
 
 /* TCHITTESTINFO  [struct; shared] */
-typedef struct _TCHITTESTINFO { 
- POINT pt; 
- UINT flags; 
+#ifndef __WINCE_DEFINED__TCHITTESTINFO
+#define __WINCE_DEFINED__TCHITTESTINFO
+typedef struct _TCHITTESTINFO {
+ POINT pt;
+ UINT flags;
 } TCHITTESTINFO;
+#endif /* __WINCE_DEFINED__TCHITTESTINFO */
+#ifndef __WINCE_DEFINED_PTCHITTESTINFO
+#define __WINCE_DEFINED_PTCHITTESTINFO
 typedef TCHITTESTINFO *PTCHITTESTINFO, *LPTCHITTESTINFO;
+#endif /* __WINCE_DEFINED_PTCHITTESTINFO */
 
 /* TCITEM  [struct; shared; A/W TCITEMA,TCITEMW (CE is W-side)] */
-typedef struct tagTCITEM { 
+#ifndef __WINCE_DEFINED_TAGTCITEM
+#define __WINCE_DEFINED_TAGTCITEM
+typedef struct tagTCITEM {
  UINT mask;
  DWORD dwState;
  DWORD dwStateMask;
  LPTSTR pszText;
- int cchTextMax ;
+ int cchTextMax;
  int iImage;
  LPARAM lParam;
 } TCITEM;
+#endif /* __WINCE_DEFINED_TAGTCITEM */
+#ifndef __WINCE_DEFINED_PTCITEM
+#define __WINCE_DEFINED_PTCITEM
 typedef TCITEM *PTCITEM, *LPTCITEM;
+#endif /* __WINCE_DEFINED_PTCITEM */
 
 /* TCITEMHEADER  [struct; shared; A/W TCITEMHEADERA,TCITEMHEADERW (CE is W-side)] */
+#ifndef __WINCE_DEFINED_TAGTCITEMHEADER
+#define __WINCE_DEFINED_TAGTCITEMHEADER
 typedef struct tagTCITEMHEADER{
  UINT mask;
  UINT lpReserved1;
@@ -2166,13 +2256,20 @@ typedef struct tagTCITEMHEADER{
  int cchTextMax;
  int iImage;
 } TCITEMHEADER, FAR* LPTCITEMHEADER;
+#endif /* __WINCE_DEFINED_TAGTCITEMHEADER */
 
 /* UDACCEL  [struct; shared] */
+#ifndef __WINCE_DEFINED_UDACCEL
+#define __WINCE_DEFINED_UDACCEL
 typedef struct {
- int nSec; 
- int nInc; 
+ int nSec;
+ int nInc;
 } UDACCEL;
+#endif /* __WINCE_DEFINED_UDACCEL */
+#ifndef __WINCE_DEFINED_PUDACCEL
+#define __WINCE_DEFINED_PUDACCEL
 typedef UDACCEL *PUDACCEL, *LPUDACCEL;
+#endif /* __WINCE_DEFINED_PUDACCEL */
 
 /* IMAGEINFO  [struct, typedef; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
@@ -2226,149 +2323,107 @@ BOOL CommandBands_IsVisible (HWND hwndCmdBands);
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* CommandBands_AddAdornments  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
-BOOL CommandBands_AddAdornments(
- HWND hwndCmdBands, 
- HINSTANCE hinst, 
- DWORD dwFlags, 
- LPREBARBANDINFO prbbi
-);
+BOOL CommandBands_AddAdornments(HWND hwndCmdBands,
+ HINSTANCE hinst,
+ DWORD dwFlags,
+ LPREBARBANDINFO prbbi);
 
 /* CommandBands_AddBands  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
-BOOL CommandBands_AddBands(
- HWND hwndCmdBands, 
- HINSTANCE hinst, 
- UINT cBands, 
- LPREBARBANDINFO prbbi
-);
+BOOL CommandBands_AddBands(HWND hwndCmdBands,
+ HINSTANCE hinst,
+ UINT cBands,
+ LPREBARBANDINFO prbbi);
 
 /* CommandBands_GetCommandBar  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
-HWND CommandBands_GetCommandBar(
- HWND hwndCmdBands, 
- UINT uBand
-);
+HWND CommandBands_GetCommandBar(HWND hwndCmdBands,
+ UINT uBand);
 
 /* CommandBands_GetRestoreInformation  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
-BOOL WINAPI CommandBands_GetRestoreInformation(
- HWND hwndCmdBands, 
- UINT uBand, 
- LPCOMMANDBANDSRESTOREINFO pcbri
-);
+BOOL WINAPI CommandBands_GetRestoreInformation(HWND hwndCmdBands,
+ UINT uBand,
+ LPCOMMANDBANDSRESTOREINFO pcbri);
 
 /* CommandBands_Height  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib] */
-UINT CommandBands_Height(
- HWND hwndCmdBands
-);
+UINT CommandBands_Height(HWND hwndCmdBands);
 
 /* CommandBands_Show  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
-BOOL WINAPI CommandBands_Show(
- HWND hwndCmdBands, 
- BOOL fShow
-);
+BOOL WINAPI CommandBands_Show(HWND hwndCmdBands,
+ BOOL fShow);
 
 /* CommandBar_AddAdornments  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
-BOOL CommandBar_AddAdornments(
- HWND hwndCB, 
- DWORD dwFlags, 
- DWORD dwReserved
-);
+BOOL CommandBar_AddAdornments(HWND hwndCB,
+ DWORD dwFlags,
+ DWORD dwReserved);
 
 /* CommandBar_AddBitmap  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
-int CommandBar_AddBitmap(
- HWND hwndCB, 
- HINSTANCE hInst, 
- int idBitmap, 
- int iNumImages, 
- int iImageWidth, 
- int iImageHeight
-);
+int CommandBar_AddBitmap(HWND hwndCB,
+ HINSTANCE hInst,
+ int idBitmap,
+ int iNumImages,
+ int iImageWidth,
+ int iImageHeight);
 
 /* CommandBar_AddToolTips  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib] */
-BOOL CommandBar_AddToolTips(
- HWND hwndCB, 
- UINT uNumToolTips, 
- LPTSTR lpToolTips
-);
+BOOL CommandBar_AddToolTips(HWND hwndCB,
+ UINT uNumToolTips,
+ LPTSTR lpToolTips);
 
 /* CommandBar_Create  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
-HWND CommandBar_Create(
- HINSTANCE hInst, 
- HWND hwndParent, 
- int idCmdBar
-);
+HWND CommandBar_Create(HINSTANCE hInst,
+ HWND hwndParent,
+ int idCmdBar);
 
 /* CommandBar_Destroy  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib] */
-void CommandBar_Destroy(
- HWND hwndCB
-);
+void CommandBar_Destroy(HWND hwndCB);
 
 /* CommandBar_DrawMenuBar  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
-BOOL CommandBar_DrawMenuBar(
- HWND hwndCB, 
- WORD iButton
-);
+BOOL CommandBar_DrawMenuBar(HWND hwndCB,
+ WORD iButton);
 
 /* CommandBar_GetMenu  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
-HMENU CommandBar_GetMenu(
- HWND hwndCB, 
- WORD iButton
-);
+HMENU CommandBar_GetMenu(HWND hwndCB,
+ WORD iButton);
 
 /* CommandBar_Height  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
-int CommandBar_Height(
- HWND hwndCB
-);
+int CommandBar_Height(HWND hwndCB);
 
 /* CommandBar_InsertComboBox  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
-HWND CommandBar_InsertComboBox(
- HWND hwndCB, 
- HINSTANCE hInst, 
- int iWidth, 
- UINT dwStyle, 
- WORD idComboBox, 
- WORD iButton
-);
+HWND CommandBar_InsertComboBox(HWND hwndCB,
+ HINSTANCE hInst,
+ int iWidth,
+ UINT dwStyle,
+ WORD idComboBox,
+ WORD iButton);
 
 /* CommandBar_InsertMenubar  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
-BOOL CommandBar_InsertMenubar(
- HWND hwndCB, 
- HINSTANCE hInst, 
- WORD idMenu, 
- WORD iButton
-);
+BOOL CommandBar_InsertMenubar(HWND hwndCB,
+ HINSTANCE hInst,
+ WORD idMenu,
+ WORD iButton);
 
 /* CommandBar_InsertMenubarEx  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
-BOOL CommandBar_InsertMenubarEx(
- HWND hwndCB, 
- HINSTANCE hInst, 
- LPTSTR pszMenu, 
- WORD iButton
-);
+BOOL CommandBar_InsertMenubarEx(HWND hwndCB,
+ HINSTANCE hInst,
+ LPTSTR pszMenu,
+ WORD iButton);
 
 /* CommandBar_IsVisible  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib] */
-BOOL CommandBar_IsVisible(
- HWND hwndCB
-);
+BOOL CommandBar_IsVisible(HWND hwndCB);
 
 /* CommandBar_Show  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctl.lib, Commctrl.lib, commctrl.lib] */
-BOOL CommandBar_Show(
- HWND hwndCB, 
- BOOL fShow
-);
+BOOL CommandBar_Show(HWND hwndCB,
+ BOOL fShow);
 
 /* ImageList_RemoveAll  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib, Imgctl.lib, imgctl.lib] */
-BOOL ImageList_RemoveAll(
- himl 
-);
+BOOL ImageList_RemoveAll(himl);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x200 && _WIN32_WCE < 0x210) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.0..209, 2.11..2.12, 3.0..699 */
 
 /* ACM_Open  [function; ce-only; CE 2.0..209, 2.11..2.12, 3.0..699; Acmdwrap.lib] */
-PVOID ACM_Open(
- DWORD dwData,
+PVOID ACM_Open(DWORD dwData,
  DWORD dwAccess,
- DWORD dwShareMode
-);
+ DWORD dwShareMode);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
@@ -2377,114 +2432,82 @@ PVOID ACM_Open(
 DWORD CommDlgExtendedError();
 
 /* CreateStatusWindow  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib; A/W CreateStatusWindowA,CreateStatusWindowW (CE is W-side)] */
-HWND CreateStatusWindow(
- LONG style, 
- LPSTR lpszText, 
- HWND hwndParent, 
- WORD wID 
-);
+HWND CreateStatusWindow(LONG style,
+ LPSTR lpszText,
+ HWND hwndParent,
+ WORD wID);
 
 /* CreateUpDownControl  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Comctl32.dll, Comctl32.lib; lib:win32-reference] */
-HWND CreateUpDownControl(
- DWORD dwStyle, 
- int x, 
- int y, 
- int cx, 
- int cy, 
- HWND hParent, 
- int nID, 
- HINSTANCE hInst, 
- HWND hBuddy, 
- int nUpper, 
- int nLower, 
- int nPos 
-);
+HWND CreateUpDownControl(DWORD dwStyle,
+ int x,
+ int y,
+ int cx,
+ int cy,
+ HWND hParent,
+ int nID,
+ HINSTANCE hInst,
+ HWND hBuddy,
+ int nUpper,
+ int nLower,
+ int nPos);
 
 /* DateTime_GetMonthCal  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-HWND DateTime_GetMonthCal( 
- HWND hwndDP
-);
+HWND DateTime_GetMonthCal(HWND hwndDP);
 
 /* DateTime_GetMonthCalColor  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-COLORREF DateTime_GetMonthCalColor( 
- HWND hwndDP, 
- int iColor
-);
+COLORREF DateTime_GetMonthCalColor(HWND hwndDP,
+ int iColor);
 
 /* DateTime_GetMonthCalFont  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-HFONT DateTime_GetMonthCalFont(
- HWND hwndDP
-);
+HFONT DateTime_GetMonthCalFont(HWND hwndDP);
 
 /* DateTime_GetRange  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-DWORD DateTime_GetRange(
- HWND hwndDT, 
- LPSYSTEMTIME lpSysTimeArray
-);
+DWORD DateTime_GetRange(HWND hwndDT,
+ LPSYSTEMTIME lpSysTimeArray);
 
 /* DateTime_GetSystemtime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-DWORD DateTime_GetSystemtime(
- HWND hwndDP, 
- LPSYSTEMTIME lpSysTime
-);
+DWORD DateTime_GetSystemtime(HWND hwndDP,
+ LPSYSTEMTIME lpSysTime);
 
 /* DateTime_SetFormat  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-BOOL DateTime_SetFormat(
- HWND hwndDT, 
- LPCTSTR lpszFormat
-);
+BOOL DateTime_SetFormat(HWND hwndDT,
+ LPCTSTR lpszFormat);
 
 /* DateTime_SetMonthCalColor  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-COLORREF DateTime_SetMonthCalColor(
- HWND hwndDP, 
- int iColor, 
- COLORREF clr
-);
+COLORREF DateTime_SetMonthCalColor(HWND hwndDP,
+ int iColor,
+ COLORREF clr);
 
 /* DateTime_SetRange  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-BOOL DateTime_SetRange(
- HWND hwndDT, 
- DWORD flags, 
- LPSYSTEMTIME lpSysTimeArray
-);
+BOOL DateTime_SetRange(HWND hwndDT,
+ DWORD flags,
+ LPSYSTEMTIME lpSysTimeArray);
 
 /* DateTime_SetSystemtime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-BOOL DateTime_SetSystemtime(
- HWND hwndDT, 
- DWORD flag, 
- LPSYSTEMTIME lpSysTime
-);
+BOOL DateTime_SetSystemtime(HWND hwndDT,
+ DWORD flag,
+ LPSYSTEMTIME lpSysTime);
 
 /* DrawStatusText  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib; A/W DrawStatusTextA,DrawStatusTextW (CE is W-side)] */
-void DrawStatusText(
- HDC hdc, 
- LPRECT lprc, 
- LPCWSTR pszText, 
- UINT uFlags 
-);
+void DrawStatusText(HDC hdc,
+ LPRECT lprc,
+ LPCWSTR pszText,
+ UINT uFlags);
 
 /* ImageList_DragEnter  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib, Imgctl.lib, imgctl.lib] */
-BOOL WINAPI ImageList_DragEnter(
- HWND hwndLock, 
- int x, 
- int y 
-);
+BOOL WINAPI ImageList_DragEnter(HWND hwndLock,
+ int x,
+ int y);
 
 /* ImageList_DragLeave  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib, Imgctl.lib, imgctl.lib] */
-BOOL WINAPI ImageList_DragLeave(
- HWND hwndLock 
-);
+BOOL WINAPI ImageList_DragLeave(HWND hwndLock);
 
 /* ImageList_DragMove  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib, Imgctl.lib, imgctl.lib] */
-BOOL WINAPI ImageList_DragMove(
- int x, 
- int y 
-);
+BOOL WINAPI ImageList_DragMove(int x,
+ int y);
 
 /* ImageList_DragShowNolock  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib, Imgctl.lib, imgctl.lib] */
-BOOL WINAPI ImageList_DragShowNolock(
- BOOL fShow 
-);
+BOOL WINAPI ImageList_DragShowNolock(BOOL fShow);
 
 /* ImageList_EndDrag  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib, commctrl.lib, Imgctl.lib, imgctl.lib] */
 BOOL WINAPI ImageList_EndDrag(void);
@@ -2493,913 +2516,616 @@ BOOL WINAPI ImageList_EndDrag(void);
 void InitCommonControls(void);
 
 /* ListView_ApproximateViewRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-DWORD ListView_ApproximateViewRect(
- HWND hwndLV, 
- int cx, 
- int cy, 
- int iCount 
-);
+DWORD ListView_ApproximateViewRect(HWND hwndLV,
+ int cx,
+ int cy,
+ int iCount);
 
 /* ListView_Arrange  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL ListView_Arrange( 
- HWND hwnd, 
- UINT code 
-);
+BOOL ListView_Arrange(HWND hwnd,
+ UINT code);
 
 /* ListView_DeleteAllItems  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL ListView_DeleteAllItems( 
- HWND hwnd 
-);
+BOOL ListView_DeleteAllItems(HWND hwnd);
 
 /* ListView_DeleteColumn  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL ListView_DeleteColumn( 
- HWND hwnd, 
- int iCol 
-);
+BOOL ListView_DeleteColumn(HWND hwnd,
+ int iCol);
 
 /* ListView_DeleteItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL ListView_DeleteItem( 
- HWND hwnd, 
- int iItem 
-);
+BOOL ListView_DeleteItem(HWND hwnd,
+ int iItem);
 
 /* ListView_EditLabel  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-HWND ListView_EditLabel( 
- HWND hwnd, 
- int iItem 
-);
+HWND ListView_EditLabel(HWND hwnd,
+ int iItem);
 
 /* ListView_EnsureVisible  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL ListView_EnsureVisible( 
- HWND hwnd, 
- int i, 
- BOOL fPartialOK 
-);
+BOOL ListView_EnsureVisible(HWND hwnd,
+ int i,
+ BOOL fPartialOK);
 
 /* ListView_FindItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-int ListView_FindItem( 
- HWND hwnd, 
- int iStart, 
- const LV_FINDINFO FAR* plvfi 
-);
+int ListView_FindItem(HWND hwnd,
+ int iStart,
+ const LV_FINDINFO FAR* plvfi);
 
 /* ListView_GetBkColor  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-COLORREF ListView_GetBkColor( 
- HWND hwnd 
-);
+COLORREF ListView_GetBkColor(HWND hwnd);
 
 /* ListView_GetCallbackMask  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-UINT ListView_GetCallbackMask( 
- HWND hwnd 
-);
+UINT ListView_GetCallbackMask(HWND hwnd);
 
 /* ListView_GetCheckState  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL ListView_GetCheckState(
- HWND hwndLV, 
- UINT iIndex 
-);
+BOOL ListView_GetCheckState(HWND hwndLV,
+ UINT iIndex);
 
 /* ListView_GetColumnOrderArray  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL ListView_GetColumnOrderArray(
- HWND hwndLV, 
- int iCount, 
- int* lpiArray 
-);
+BOOL ListView_GetColumnOrderArray(HWND hwndLV,
+ int iCount,
+ int* lpiArray);
 
 /* ListView_GetColumnWidth  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-int ListView_GetColumnWidth( 
- HWND hwnd, 
- int iCol 
-);
+int ListView_GetColumnWidth(HWND hwnd,
+ int iCol);
 
 /* ListView_GetCountPerPage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-int ListView_GetCountPerPage( 
- HWND hwnd 
-);
+int ListView_GetCountPerPage(HWND hwnd);
 
 /* ListView_GetEditControl  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-HWND ListView_GetEditControl( 
- HWND hwnd 
-);
+HWND ListView_GetEditControl(HWND hwnd);
 
 /* ListView_GetExtendedListViewStyle  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-DWORD ListView_GetExtendedListViewStyle(
- HWND hwndLV 
-);
+DWORD ListView_GetExtendedListViewStyle(HWND hwndLV);
 
 /* ListView_GetHeader  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-HWND ListView_GetHeader(
- hwndLV 
-);
+HWND ListView_GetHeader(hwndLV);
 
 /* ListView_GetISearchString  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL ListView_GetISearchString( 
- HWND hwnd, 
- LPSTR lpsz 
-);
+BOOL ListView_GetISearchString(HWND hwnd,
+ LPSTR lpsz);
 
 /* ListView_GetItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL ListView_GetItem( 
- HWND hwnd, 
- LVITEM FAR* pitem 
-);
+BOOL ListView_GetItem(HWND hwnd,
+ LVITEM FAR* pitem);
 
 /* ListView_GetItemCount  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-int ListView_GetItemCount( 
- HWND hwnd 
-);
+int ListView_GetItemCount(HWND hwnd);
 
 /* ListView_GetItemPosition  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL ListView_GetItemPosition( 
- HWND hwnd, 
- int i, 
- POINT FAR* ppt 
-);
+BOOL ListView_GetItemPosition(HWND hwnd,
+ int i,
+ POINT FAR* ppt);
 
 /* ListView_GetItemRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL ListView_GetItemRect( 
- HWND hwnd, 
- int i, 
- RECT FAR* prc, 
- int code 
-);
+BOOL ListView_GetItemRect(HWND hwnd,
+ int i,
+ RECT FAR* prc,
+ int code);
 
 /* ListView_GetItemSpacing  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-DWORD ListView_GetItemSpacing( 
- HWND hwnd, 
- BOOL fSmall 
-);
+DWORD ListView_GetItemSpacing(HWND hwnd,
+ BOOL fSmall);
 
 /* ListView_GetItemState  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-UINT WINAPI ListView_GetItemState( 
- HWND hwnd, 
- int i, 
- UINT mask 
-);
+UINT WINAPI ListView_GetItemState(HWND hwnd,
+ int i,
+ UINT mask);
 
 /* ListView_GetItemText  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-void WINAPI ListView_GetItemText( 
- HWND hwnd, 
- int iItem, 
+void WINAPI ListView_GetItemText(HWND hwnd,
+ int iItem,
  int iSubItem,
- LPSTR pszText, 
- int cchTextMax 
-);
+ LPSTR pszText,
+ int cchTextMax);
 
 /* ListView_GetNextItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-int ListView_GetNextItem( 
- HWND hwnd, 
- int iStart, 
- UINT flags 
-);
+int ListView_GetNextItem(HWND hwnd,
+ int iStart,
+ UINT flags);
 
 /* ListView_GetOrigin  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL ListView_GetOrigin( 
- HWND hwnd, 
- LPPOINT lpptOrg 
-);
+BOOL ListView_GetOrigin(HWND hwnd,
+ LPPOINT lpptOrg);
 
 /* ListView_GetSelectedCount  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-UINT ListView_GetSelectedCount( 
- HWND hwnd 
-);
+UINT ListView_GetSelectedCount(HWND hwnd);
 
 /* ListView_GetSelectionMark  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-INT ListView_GetSelectionMark(
- HWND hwndLV 
-);
+INT ListView_GetSelectionMark(HWND hwndLV);
 
 /* ListView_GetStringWidth  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-int ListView_GetStringWidth( 
- HWND hwnd, 
- LPCSTR psz 
-);
+int ListView_GetStringWidth(HWND hwnd,
+ LPCSTR psz);
 
 /* ListView_GetSubItemRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL ListView_GetSubItemRect( 
- HWND hwndLV, 
- int iItem, 
- int iSubItem, 
- int code, 
- LPRECT lpRect 
-);
+BOOL ListView_GetSubItemRect(HWND hwndLV,
+ int iItem,
+ int iSubItem,
+ int code,
+ LPRECT lpRect);
 
 /* ListView_GetTextBkColor  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-COLORREF ListView_GetTextBkColor( 
- HWND hwnd 
-);
+COLORREF ListView_GetTextBkColor(HWND hwnd);
 
 /* ListView_GetTextColor  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-COLORREF ListView_GetTextColor( 
- HWND hwnd 
-);
+COLORREF ListView_GetTextColor(HWND hwnd);
 
 /* ListView_GetTopIndex  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-int ListView_GetTopIndex( 
- HWND hwnd 
-);
+int ListView_GetTopIndex(HWND hwnd);
 
 /* ListView_GetViewRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL ListView_GetViewRect( 
- HWND hwnd, 
- RECT FAR* prc 
-);
+BOOL ListView_GetViewRect(HWND hwnd,
+ RECT FAR* prc);
 
 /* ListView_HitTest  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-int ListView_HitTest( 
- HWND hwnd, 
- LV_HITTESTINFO FAR* pinfo 
-);
+int ListView_HitTest(HWND hwnd,
+ LV_HITTESTINFO FAR* pinfo);
 
 /* ListView_InsertItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-int ListView_InsertItem( 
- HWND hwnd, 
- const LVITEM FAR* pitem 
-);
+int ListView_InsertItem(HWND hwnd,
+ const LVITEM FAR* pitem);
 
 /* ListView_RedrawItems  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL ListView_RedrawItems( 
- HWND hwnd, 
- int iFirst, 
- int iLast 
-);
+BOOL ListView_RedrawItems(HWND hwnd,
+ int iFirst,
+ int iLast);
 
 /* ListView_Scroll  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL ListView_Scroll( 
- HWND hwnd, 
- int dx, 
- int dy 
-);
+BOOL ListView_Scroll(HWND hwnd,
+ int dx,
+ int dy);
 
 /* ListView_SetBkColor  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL ListView_SetBkColor( 
- HWND hwnd, 
- COLORREF clrBk 
-);
+BOOL ListView_SetBkColor(HWND hwnd,
+ COLORREF clrBk);
 
 /* ListView_SetCallbackMask  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL ListView_SetCallbackMask( 
- HWND hwnd, 
- UINT mask 
-);
+BOOL ListView_SetCallbackMask(HWND hwnd,
+ UINT mask);
 
 /* ListView_SetColumnOrderArray  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL ListView_SetColumnOrderArray(
- HWND hwndLV, 
- int iCount, 
- int* lpiArray 
-);
+BOOL ListView_SetColumnOrderArray(HWND hwndLV,
+ int iCount,
+ int* lpiArray);
 
 /* ListView_SetColumnWidth  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL ListView_SetColumnWidth( 
- HWND hwnd, 
- int iCol, 
- int cx 
-);
+BOOL ListView_SetColumnWidth(HWND hwnd,
+ int iCol,
+ int cx);
 
 /* ListView_SetExtendedListViewStyle  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-void ListView_SetExtendedListViewStyle(
- HWND hwndLV, 
- DWORD dwExStyle 
-);
+void ListView_SetExtendedListViewStyle(HWND hwndLV,
+ DWORD dwExStyle);
 
 /* ListView_SetIconSpacing  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-DWORD ListView_SetIconSpacing(
- HWND hwndLV, 
- int cx, 
- int cy 
-);
+DWORD ListView_SetIconSpacing(HWND hwndLV,
+ int cx,
+ int cy);
 
 /* ListView_SetItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL ListView_SetItem( 
- HWND hwnd, 
- const LVITEM FAR* pitem 
-);
+BOOL ListView_SetItem(HWND hwnd,
+ const LVITEM FAR* pitem);
 
 /* ListView_SetItemCount  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-void ListView_SetItemCount( 
- HWND hwndLV, 
- int cItems 
-);
+void ListView_SetItemCount(HWND hwndLV,
+ int cItems);
 
 /* ListView_SetItemCountEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-void ListView_SetItemCountEx(
- HWND hwndLV, 
- int cItems, 
- DWORD dwFlags 
-);
+void ListView_SetItemCountEx(HWND hwndLV,
+ int cItems,
+ DWORD dwFlags);
 
 /* ListView_SetItemPosition  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL ListView_SetItemPosition( 
- HWND hwnd, 
- int i, 
- int x, 
- int y 
-);
+BOOL ListView_SetItemPosition(HWND hwnd,
+ int i,
+ int x,
+ int y);
 
 /* ListView_SetItemPosition32  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-void ListView_SetItemPosition32( 
- HWND hwnd, 
- int iItem, 
- int x, 
- int y 
-);
+void ListView_SetItemPosition32(HWND hwnd,
+ int iItem,
+ int x,
+ int y);
 
 /* ListView_SetItemState  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-void WINAPI ListView_SetItemState( 
- HWND hwnd, 
- int i, 
- UINT state, 
- UINT mask 
-);
+void WINAPI ListView_SetItemState(HWND hwnd,
+ int i,
+ UINT state,
+ UINT mask);
 
 /* ListView_SetItemText  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-void WINAPI ListView_SetItemText( 
- HWND hwnd, 
- int i, 
- int iSubItem, 
- LPCSTR pszText 
-);
+void WINAPI ListView_SetItemText(HWND hwnd,
+ int i,
+ int iSubItem,
+ LPCSTR pszText);
 
 /* ListView_SetSelectionMark  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-INT ListView_SetSelectionMark(
- HWND hwndLV, 
- INT iIndex 
-);
+INT ListView_SetSelectionMark(HWND hwndLV,
+ INT iIndex);
 
 /* ListView_SetTextBkColor  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL ListView_SetTextBkColor( 
- HWND hwnd, 
- COLORREF clrText 
-);
+BOOL ListView_SetTextBkColor(HWND hwnd,
+ COLORREF clrText);
 
 /* ListView_SetTextColor  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL ListView_SetTextColor( 
- HWND hwnd, 
- COLORREF clrText 
-);
+BOOL ListView_SetTextColor(HWND hwnd,
+ COLORREF clrText);
 
 /* ListView_SubItemHitTest  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-INT ListView_SubItemHitTest(
- HWND hwndLV, 
- LPLVHITTESTINFO pInfo 
-);
+INT ListView_SubItemHitTest(HWND hwndLV,
+ LPLVHITTESTINFO pInfo);
 
 /* ListView_Update  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL ListView_Update( 
- HWND hwnd, 
- int iItem 
-);
+BOOL ListView_Update(HWND hwnd,
+ int iItem);
 
 /* MonthCal_GetColor  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-COLORREF MonthCal_GetColor(
- HWND hwndMC, 
- INT iColor 
-);
+COLORREF MonthCal_GetColor(HWND hwndMC,
+ INT iColor);
 
 /* MonthCal_GetCurSel  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-BOOL MonthCal_GetCurSel(
- HWND hwndMC, 
- LPSYSTEMTIME lpSysTime 
-);
+BOOL MonthCal_GetCurSel(HWND hwndMC,
+ LPSYSTEMTIME lpSysTime);
 
 /* MonthCal_GetFirstDayOfWeek  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-DWORD MonthCal_GetFirstDayOfWeek(
- HWND hwndMC 
-);
+DWORD MonthCal_GetFirstDayOfWeek(HWND hwndMC);
 
 /* MonthCal_GetMaxSelCount  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-DWORD MonthCal_GetMaxSelCount(
- HWND hwndMC 
-);
+DWORD MonthCal_GetMaxSelCount(HWND hwndMC);
 
 /* MonthCal_GetMaxTodayWidth  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-DWORD MonthCal_GetMaxTodayWidth(
- HWND hwndMC 
-);
+DWORD MonthCal_GetMaxTodayWidth(HWND hwndMC);
 
 /* MonthCal_GetMinReqRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-BOOL MonthCal_GetMinReqRect(
- HWND hwndMC, 
- LPRECT lpRectInfo 
-);
+BOOL MonthCal_GetMinReqRect(HWND hwndMC,
+ LPRECT lpRectInfo);
 
 /* MonthCal_GetMonthDelta  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-INT MonthCal_GetMonthDelta(
- HWND hwndMC 
-);
+INT MonthCal_GetMonthDelta(HWND hwndMC);
 
 /* MonthCal_GetMonthRange  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-DWORD MonthCal_GetMonthRange(
- HWND hwndMC, 
- DWORD dwFlag, 
- LPSYSTEMTIME lprgSysTimeArray 
-);
+DWORD MonthCal_GetMonthRange(HWND hwndMC,
+ DWORD dwFlag,
+ LPSYSTEMTIME lprgSysTimeArray);
 
 /* MonthCal_GetRange  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-DWORD MonthCal_GetRange(
- HWND hwndMC, 
- LPSYSTEMTIME lprgSysTimeArray 
-);
+DWORD MonthCal_GetRange(HWND hwndMC,
+ LPSYSTEMTIME lprgSysTimeArray);
 
 /* MonthCal_GetSelRange  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-BOOL MonthCal_GetSelRange(
- HWND hwndMC, 
- LPSYSTEMTIME lprgSysTimeArray 
-);
+BOOL MonthCal_GetSelRange(HWND hwndMC,
+ LPSYSTEMTIME lprgSysTimeArray);
 
 /* MonthCal_GetToday  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-BOOL MonthCal_GetToday(
- HWND hwndMC, 
- LPSYSTEMTIME lpToday 
-);
+BOOL MonthCal_GetToday(HWND hwndMC,
+ LPSYSTEMTIME lpToday);
 
 /* MonthCal_HitTest  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-DWORD MonthCal_HitTest(
- HWND hwndMC, 
- PMCHITTESTINFO pMCHitTest 
-);
+DWORD MonthCal_HitTest(HWND hwndMC,
+ PMCHITTESTINFO pMCHitTest);
 
 /* MonthCal_SetColor  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-COLORREF MonthCal_SetColor(
- HWND hwndMC, 
- INT iColor, 
- COLORREF clr 
-);
+COLORREF MonthCal_SetColor(HWND hwndMC,
+ INT iColor,
+ COLORREF clr);
 
 /* MonthCal_SetCurSel  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-BOOL MonthCal_SetCurSel(
- HWND hwndMC, 
- LPSYSTEMTIME lpSysTime 
-);
+BOOL MonthCal_SetCurSel(HWND hwndMC,
+ LPSYSTEMTIME lpSysTime);
 
 /* MonthCal_SetFirstDayOfWeek  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-DWORD MonthCal_SetFirstDayOfWeek(
- HWND hwndMC, 
- INT iDay 
-);
+DWORD MonthCal_SetFirstDayOfWeek(HWND hwndMC,
+ INT iDay);
 
 /* MonthCal_SetMaxSelCount  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-BOOL MonthCal_SetMaxSelCount(
- HWND hwndMC, 
- UINT iMax 
-);
+BOOL MonthCal_SetMaxSelCount(HWND hwndMC,
+ UINT iMax);
 
 /* MonthCal_SetMonthDelta  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-INT MonthCal_SetMonthDelta(
- HWND hwndMC, 
- INT iDelta 
-);
+INT MonthCal_SetMonthDelta(HWND hwndMC,
+ INT iDelta);
 
 /* MonthCal_SetRange  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-BOOL MonthCal_SetRange(
- HWND hwndMC, 
- DWORD fWhichLimit, 
- LPSYSTEMTIME lprgSysTimeArray 
-);
+BOOL MonthCal_SetRange(HWND hwndMC,
+ DWORD fWhichLimit,
+ LPSYSTEMTIME lprgSysTimeArray);
 
 /* MonthCal_SetSelRange  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Commctrl.lib] */
-BOOL MonthCal_SetSelRange(
- HWND hwndMC, 
- LPSYSTEMTIME lprgSysTimeArray 
-);
+BOOL MonthCal_SetSelRange(HWND hwndMC,
+ LPSYSTEMTIME lprgSysTimeArray);
 
 /* MonthCal_SetToday  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-void MonthCal_SetToday(
- HWND hwndMC, 
- LPSYSTEMTIME lpSysTime 
-);
+void MonthCal_SetToday(HWND hwndMC,
+ LPSYSTEMTIME lpSysTime);
 
 /* TabCtrl_AdjustRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-void TabCtrl_AdjustRect( 
- HWND hwnd, 
- BOOL fLarger, 
- RECT FAR* prc 
-);
+void TabCtrl_AdjustRect(HWND hwnd,
+ BOOL fLarger,
+ RECT FAR* prc);
 
 /* TabCtrl_DeleteAllItems  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL TabCtrl_DeleteAllItems( 
- HWND hwnd 
-);
+BOOL TabCtrl_DeleteAllItems(HWND hwnd);
 
 /* TabCtrl_DeleteItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL TabCtrl_DeleteItem( 
- HWND hwnd, 
- int iItem 
-);
+BOOL TabCtrl_DeleteItem(HWND hwnd,
+ int iItem);
 
 /* TabCtrl_DeselectAll  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-void TabCtrl_DeselectAll(
- HWND hwndTab, 
- UINT fExcludeFocus
-);
+void TabCtrl_DeselectAll(HWND hwndTab,
+ UINT fExcludeFocus);
 
 /* TabCtrl_GetCurFocus  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-int TabCtrl_GetCurFocus( 
- HWND hwnd 
-);
+int TabCtrl_GetCurFocus(HWND hwnd);
 
 /* TabCtrl_GetCurSel  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-int TabCtrl_GetCurSel( 
- HWND hwnd 
-);
+int TabCtrl_GetCurSel(HWND hwnd);
 
 /* TabCtrl_GetExtendedStyle  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-DWORD TabCtrl_GetExtendedStyle( 
- HWND hwndTab
-);
+DWORD TabCtrl_GetExtendedStyle(HWND hwndTab);
 
 /* TabCtrl_GetItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL TabCtrl_GetItem( 
- HWND hwnd, 
- int iItem, 
- TCITEM FAR* pitem 
-);
+BOOL TabCtrl_GetItem(HWND hwnd,
+ int iItem,
+ TCITEM FAR* pitem);
 
 /* TabCtrl_GetItemCount  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-int TabCtrl_GetItemCount( 
- HWND hwnd 
-);
+int TabCtrl_GetItemCount(HWND hwnd);
 
 /* TabCtrl_GetItemRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL TabCtrl_GetItemRect( 
- HWND hwnd, 
- int iItem, 
- RECT FAR* prc 
-);
+BOOL TabCtrl_GetItemRect(HWND hwnd,
+ int iItem,
+ RECT FAR* prc);
 
 /* TabCtrl_GetRowCount  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-int TabCtrl_GetRowCount( 
- HWND hwnd 
-);
+int TabCtrl_GetRowCount(HWND hwnd);
 
 /* TabCtrl_HighlightItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL TabCtrl_HighlightItem(
- HWND hwndTab, 
- INT idItem, 
- WORD fHighlight 
-);
+BOOL TabCtrl_HighlightItem(HWND hwndTab,
+ INT idItem,
+ WORD fHighlight);
 
 /* TabCtrl_HitTest  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-int TabCtrl_HitTest( 
- HWND hwnd, 
- TC_HITTESTINFO FAR* pinfo 
-);
+int TabCtrl_HitTest(HWND hwnd,
+ TC_HITTESTINFO FAR* pinfo);
 
 /* TabCtrl_InsertItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-int TabCtrl_InsertItem( 
- HWND hwnd, 
- int iItem, 
- const TCITEM FAR* pitem 
-);
+int TabCtrl_InsertItem(HWND hwnd,
+ int iItem,
+ const TCITEM FAR* pitem);
 
 /* TabCtrl_RemoveImage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-void TabCtrl_RemoveImage( 
- HWND hwnd, 
- int iImage 
-);
+void TabCtrl_RemoveImage(HWND hwnd,
+ int iImage);
 
 /* TabCtrl_SetCurFocus  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-VOID TabCtrl_SetCurFocus( 
- HWND hwnd,
- int iItem 
-);
+VOID TabCtrl_SetCurFocus(HWND hwnd,
+ int iItem);
 
 /* TabCtrl_SetCurSel  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-int TabCtrl_SetCurSel( 
- HWND hwnd, 
- int iItem 
-);
+int TabCtrl_SetCurSel(HWND hwnd,
+ int iItem);
 
 /* TabCtrl_SetItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL TabCtrl_SetItem( 
- HWND hwnd, 
- int iItem, 
- TCITEM FAR* pitem 
-);
+BOOL TabCtrl_SetItem(HWND hwnd,
+ int iItem,
+ TCITEM FAR* pitem);
 
 /* TabCtrl_SetItemExtra  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL TabCtrl_SetItemExtra( 
- HWND hwnd, 
- int cb 
-);
+BOOL TabCtrl_SetItemExtra(HWND hwnd,
+ int cb);
 
 /* TabCtrl_SetItemSize  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-DWORD TabCtrl_SetItemSize( 
- HWND hwnd, 
- int cx, 
- int cy 
-);
+DWORD TabCtrl_SetItemSize(HWND hwnd,
+ int cx,
+ int cy);
 
 /* TabCtrl_SetMinTabWidth  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-int TabCtrl_SetMinTabWidth(
- HWND hwndTab, 
- INT cx 
-);
+int TabCtrl_SetMinTabWidth(HWND hwndTab,
+ INT cx);
 
 /* TabCtrl_SetPadding  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-void TabCtrl_SetPadding( 
- HWND hwnd, 
- int cx, 
- int cy 
-);
+void TabCtrl_SetPadding(HWND hwnd,
+ int cx,
+ int cy);
 
 /* TreeView_DeleteAllItems  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL TreeView_DeleteAllItems( 
- hwnd 
-);
+BOOL TreeView_DeleteAllItems(hwnd);
 
 /* TreeView_DeleteItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL TreeView_DeleteItem( 
- hwnd, 
- hitem 
-);
+BOOL TreeView_DeleteItem(hwnd,
+ hitem);
 
 /* TreeView_EditLabel  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-HWND TreeView_EditLabel( 
- hwnd, 
- hitem 
-);
+HWND TreeView_EditLabel(hwnd,
+ hitem);
 
 /* TreeView_EndEditLabelNow  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL TreeView_EndEditLabelNow( 
- hwnd, 
- fCancel 
-);
+BOOL TreeView_EndEditLabelNow(hwnd,
+ fCancel);
 
 /* TreeView_EnsureVisible  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL TreeView_EnsureVisible( 
- hwnd, 
- hitem 
-);
+BOOL TreeView_EnsureVisible(hwnd,
+ hitem);
 
 /* TreeView_Expand  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL TreeView_Expand( 
- hwnd, 
- hitem, 
- flag 
-);
+BOOL TreeView_Expand(hwnd,
+ hitem,
+ flag);
 
 /* TreeView_GetCount  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-UINT TreeView_GetCount(
- hwnd 
-);
+UINT TreeView_GetCount(hwnd);
 
 /* TreeView_GetEditControl  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-HWND TreeView_GetEditControl( 
- hwnd 
-);
+HWND TreeView_GetEditControl(hwnd);
 
 /* TreeView_GetIndent  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-UINT TreeView_GetIndent( 
- hwnd 
-);
+UINT TreeView_GetIndent(hwnd);
 
 /* TreeView_GetISearchString  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL TreeView_GetISearchString( 
- hwnd, 
- lpsz
-);
+BOOL TreeView_GetISearchString(hwnd,
+ lpsz);
 
 /* TreeView_GetItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL TreeView_GetItem( 
- hwnd, 
- pitem 
-);
+BOOL TreeView_GetItem(hwnd,
+ pitem);
 
 /* TreeView_GetItemRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL TreeView_GetItemRect( 
- hwnd, 
- hitem, 
- prc, 
- fItemRect 
-);
+BOOL TreeView_GetItemRect(hwnd,
+ hitem,
+ prc,
+ fItemRect);
 
 /* TreeView_GetVisibleCount  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-UINT TreeView_GetVisibleCount( 
- hwnd 
-);
+UINT TreeView_GetVisibleCount(hwnd);
 
 /* TreeView_Select  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL TreeView_Select( 
- hwnd, 
- hitem, 
- flag 
-);
+BOOL TreeView_Select(hwnd,
+ hitem,
+ flag);
 
 /* TreeView_SelectDropTarget  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL TreeView_SelectDropTarget( 
- hwnd, 
- hitem 
-);
+BOOL TreeView_SelectDropTarget(hwnd,
+ hitem);
 
 /* TreeView_SelectItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL TreeView_SelectItem( 
- hwnd, 
- hitem 
-);
+BOOL TreeView_SelectItem(hwnd,
+ hitem);
 
 /* TreeView_SelectSetFirstVisible  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL TreeView_SelectSetFirstVisible( 
- hwnd, 
- hitem 
-);
+BOOL TreeView_SelectSetFirstVisible(hwnd,
+ hitem);
 
 /* TreeView_SetIndent  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL TreeView_SetIndent( 
- hwnd, 
- indent 
-);
+BOOL TreeView_SetIndent(hwnd,
+ indent);
 
 /* TreeView_SetItem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL TreeView_SetItem( 
- hwnd, 
- pitem 
-);
+BOOL TreeView_SetItem(hwnd,
+ pitem);
 
 /* TreeView_SortChildren  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL TreeView_SortChildren( 
- hwnd, 
- hitem, 
- fRecurse 
-);
+BOOL TreeView_SortChildren(hwnd,
+ hitem,
+ fRecurse);
 
 /* TreeView_SortChildrenCB  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL TreeView_SortChildrenCB( 
- hwnd, 
- psort, 
- fRecurse 
-);
+BOOL TreeView_SortChildrenCB(hwnd,
+ psort,
+ fRecurse);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* Animate_Close  [function; shared; CE 5.0..699] */
-BOOL Animate_Close(
- HWND hwnd
-);
+BOOL Animate_Close(HWND hwnd);
 
 /* Animate_Create  [function; shared; CE 5.0..699] */
-HWND Animate_Create(
- HWND hwndP,
+HWND Animate_Create(HWND hwndP,
  UINT id,
  DWORD dwStyle,
- HINSTANCE hInstance
-);
+ HINSTANCE hInstance);
 
 /* Animate_Open  [function; shared; CE 5.0..699] */
-BOOL Animate_Open(
- HWND hwndAnim,
- LPTSTR lpszName
-);
+BOOL Animate_Open(HWND hwndAnim,
+ LPTSTR lpszName);
 
 /* Animate_OpenEx  [function; shared; CE 5.0..699] */
-BOOL Animate_OpenEx(
- HWND hwndAnim,
+BOOL Animate_OpenEx(HWND hwndAnim,
  HINSTANCE hinst,
- LPTSTR lpszName
-);
+ LPTSTR lpszName);
 
 /* Animate_Play  [function; shared; CE 5.0..699] */
-BOOL Animate_Play(
- HWND hwndAnim,
+BOOL Animate_Play(HWND hwndAnim,
  UINT wFrom,
  UINT wTo,
- UINT cRepeat
-);
+ UINT cRepeat);
 
 /* Animate_Seek  [function; shared; CE 5.0..699] */
-BOOL Animate_Seek(
- HWND hwndAnim,
- UINT wFrame
-);
+BOOL Animate_Seek(HWND hwndAnim,
+ UINT wFrame);
 
 /* Animate_Stop  [function; shared; CE 5.0..699] */
-BOOL Animate_Stop(
- HWND hwndAnim
-);
+BOOL Animate_Stop(HWND hwndAnim);
 
 /* CommandBar_AlignAdornments  [function; ce-only; CE 5.0..699; Commctrl.lib, commctrl.lib] */
-void CommandBar_AlignAdornments(
- HWND hwndCB
-);
+void CommandBar_AlignAdornments(HWND hwndCB);
 
 /* ListView_EnableGroupView  [function; shared; CE 5.0..699] */
-int ListView_EnableGroupView(
- HWND hwnd,
- BOOL fEnable
-);
+int ListView_EnableGroupView(HWND hwnd,
+ BOOL fEnable);
 
 /* ListView_GetBkImage  [function; shared; CE 5.0..699] */
-BOOL ListView_GetBkImage(
- HWND hwndLV,
- LPLVBKIMAGE plvbki
-);
+BOOL ListView_GetBkImage(HWND hwndLV,
+ LPLVBKIMAGE plvbki);
 
 /* ListView_GetGroupCount  [function; shared; CE 5.0..699] */
-int ListView_GetGroupCount(
- HWND hwnd
-);
+int ListView_GetGroupCount(HWND hwnd);
 
 /* ListView_GetGroupInfo  [function; shared; CE 5.0..699] */
-int ListView_GetGroupInfo(
- HWND hwnd,
+int ListView_GetGroupInfo(HWND hwnd,
  int iGroupId,
- PLVGROUP pgrp
-);
+ PLVGROUP pgrp);
 
 /* ListView_GetGroupInfoByIndex  [function; shared; CE 5.0..699] */
-BOOL ListView_GetGroupInfoByIndex(
- HWND hwnd,
+BOOL ListView_GetGroupInfoByIndex(HWND hwnd,
  int iIndex,
  PLVGROUP pgrp);
 
 /* ListView_GetToolTips  [function; shared; CE 5.0..699] */
-HWND ListView_GetToolTips(
- HWND hwnd
-);
+HWND ListView_GetToolTips(HWND hwnd);
 
 /* ListView_HasGroup  [function; shared; CE 5.0..699] */
-BOOL ListView_HasGroup(
- HWND hwnd,
- int dwGroupId
-);
+BOOL ListView_HasGroup(HWND hwnd,
+ int dwGroupId);
 
 /* ListView_InsertGroup  [function; shared; CE 5.0..699] */
-int ListView_InsertGroup(
- HWND hwnd,
+int ListView_InsertGroup(HWND hwnd,
  int index,
- PLVGROUP pgrp
-);
+ PLVGROUP pgrp);
 
 /* ListView_IsGroupViewEnabled  [function; shared; CE 5.0..699] */
-BOOL ListView_IsGroupViewEnabled(
- HWND hwnd
-);
+BOOL ListView_IsGroupViewEnabled(HWND hwnd);
 
 /* ListView_MapIDToIndex  [function; shared; CE 5.0..699] */
-UINT ListView_MapIDToIndex(
- HWND hwnd,
- UINT id
-);
+UINT ListView_MapIDToIndex(HWND hwnd,
+ UINT id);
 
 /* ListView_MapIndexToID  [function; shared; CE 5.0..699] */
-UINT ListView_MapIndexToID(
- HWND hwnd,
- UINT index
-);
+UINT ListView_MapIndexToID(HWND hwnd,
+ UINT index);
 
 /* ListView_RemoveGroup  [function; shared; CE 5.0..699] */
-int ListView_RemoveGroup(
- HWND hwnd,
- int iGroupId
-);
+int ListView_RemoveGroup(HWND hwnd,
+ int iGroupId);
 
 /* ListView_SetBkImage  [function; shared; CE 5.0..699] */
-BOOL ListView_SetBkImage(
- HWND hwndLV,
- LPLVBKIMAGE plvbki
-);
+BOOL ListView_SetBkImage(HWND hwndLV,
+ LPLVBKIMAGE plvbki);
 
 /* ListView_SetExtendedListViewStyleEx  [function; shared; CE 5.0..699] */
-void ListView_SetExtendedListViewStyleEx(
- HWND hwndLV,
+void ListView_SetExtendedListViewStyleEx(HWND hwndLV,
  DWORD dwExMask,
- DWORD dwExStyle
-);
+ DWORD dwExStyle);
 
 /* ListView_SetGroupInfo  [function; shared; CE 5.0..699] */
-int ListView_SetGroupInfo(
- HWND hwnd,
+int ListView_SetGroupInfo(HWND hwnd,
  int iGroupId,
- PLVGROUP pgrp
-);
+ PLVGROUP pgrp);
 
 /* ListView_SetInfoTip  [function; shared; CE 5.0..699] */
-BOOL ListView_SetInfoTip(
- HWND hwnd,
- PLVSETINFOTIP plvSetInfoTip
-);
+BOOL ListView_SetInfoTip(HWND hwnd,
+ PLVSETINFOTIP plvSetInfoTip);
 
 /* ListView_SetToolTips  [function; shared; CE 5.0..699] */
-HWND ListView_SetToolTips(
- HWND hwnd,
- HWND hwndToolTip
-);
-
-/* SHGetDocumentsFolder  [function; ce-only; CE 5.0..699; Ceshell.lib, ceshell.lib] */
-BOOL SHGetDocumentsFolder(
- LPCTSTR pszVolume,
- LPTSTR pszDocs
-);
+HWND ListView_SetToolTips(HWND hwnd,
+ HWND hwndToolTip);
 
 /* WM_FILECHANGEINFO  [function; ce-only; CE 5.0..699; Ceshell.lib, ceshell.lib] */
-LRESULT CALLBACK WindowProc(
- HWND hwnd,
+LRESULT CALLBACK WindowProc(HWND hwnd,
  UINT msg,
  WPARAM wParam,
- LPARAM lParam
-);
+ LPARAM lParam);
 #endif /* _WIN32_WCE */
 
 #endif /* _COMMCTRL_ */

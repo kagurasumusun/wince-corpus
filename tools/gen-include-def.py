@@ -241,9 +241,60 @@ def c_decl_text(text):
         pre = (match.group("pre") or "").lower()
         kw = match.group("kw").lower()
         text = leading + pre + kw + body[match.end():]
+    text = _finish_decl_semicolons(text)
     if quality_filters.is_cpp_declaration(text):
         return "#ifdef __cplusplus\n" + text + "\n#endif /* __cplusplus */"
     return text
+
+
+def _finish_decl_semicolons(text):
+    """Some pages' PRE blocks omit the trailing ';'.  Two such
+    declarations back to back are a syntax error that leaks into the
+    next declarations of the translation unit -- close them at emission
+    (derived repair; macros are left alone).  Handles one declaration
+    per line as well as blocks of several per text."""
+    if not text or text.lstrip().startswith("#"):
+        return text
+    lines = text.split("\n")
+    for i, line in enumerate(lines):
+        stripped = line.rstrip()
+        if not stripped.endswith(")"):
+            continue
+        if stripped.endswith(("(void)", "()")) or True:
+            nxt = ""
+            for later in lines[i + 1:]:
+                if later.strip():
+                    nxt = later.strip()
+                    break
+            if not nxt:
+                lines[i] = stripped + ";"
+            elif re.match(r"^[A-Za-z_]", nxt) and not nxt.startswith("*"):
+                # next declaration begins here: this one was not closed
+                lines[i] = stripped + ";"
+    return "\n".join(lines)
+
+
+def type_guard_lines(name, text):
+    """Wrap a type definition in a per-type guard so the same documented
+    type can appear in several fragments without a redefinition when the
+    whole tree is compiled as one translation unit -- and each fragment
+    stays self-contained.  The guard keys on the struct/enum TAG when
+    the text declares one (tags collide before typedef names do).
+    DERIVED emission policy."""
+    if not text:
+        return []
+    if text.lstrip().startswith("#ifdef __cplusplus"):
+        return [text]  # C++-only: guarded separately; no C type to protect
+    tag_match = re.search(r"\b(?:struct|union|enum)\s+([A-Za-z_]\w*)\s*\{",
+                          text)
+    guard = re.sub(r"\W", "_",
+                   tag_match.group(1) if tag_match else (name or "")).upper()
+    if not guard or guard == "_":
+        return [text]
+    return [f"#ifndef __WINCE_DEFINED_{guard}",
+            f"#define __WINCE_DEFINED_{guard}",
+            text,
+            f"#endif /* __WINCE_DEFINED_{guard} */"]
 
 
 def load_heuristic_headers():
@@ -611,12 +662,13 @@ def write_includes(out, by_header, generated):
 
 
 def load_derived_forwards():
-    """data/derived-forward-types.tsv -> [(name, form, note)].
+    """data/derived-forward-types.tsv -> [(name, form, note, definition)].
 
-    Derived opaque forwards so printed prototypes compile where no
-    corpus page prints the type body.  DERIVED structure -- the form
-    (struct-forward / struct-pointer / void-pointer / guid-ref /
-    int-placeholder) and the note travel with every emission."""
+    Derived opaque forwards / stand-in typedefs so printed prototypes
+    compile where no corpus page prints the type body.  DERIVED
+    structure -- the form, the note and any verbatim definition travel
+    with every emission.  ``definition`` (optional column) is emitted
+    verbatim in place of the form template."""
     path = os.path.join(ROOT, "data", "derived-forward-types.tsv")
     out = []
     if not os.path.exists(path):
@@ -630,8 +682,9 @@ def load_derived_forwards():
             form = (row.get("form")
                     or (cells[1] if len(cells) > 1 else "struct-forward"))
             note = row.get("note") or ""
+            definition = row.get("definition") or ""
             if name:
-                out.append((name, form, note))
+                out.append((name, form, note, definition))
     return out
 
 
@@ -3264,6 +3317,25 @@ def run_unified(args):
                 "#include <stdarg.h>",
                 "/* stdbool.h is ISO C99 (bool printed by some pages). */",
                 "#include <stdbool.h>",
+                "/* stdio.h is ISO C (FILE used by some page prototypes). */",
+                "#include <stdio.h>",
+                "/* MFC/ATL message-map keywords some pages print bare. */",
+                "#ifndef afx_msg",
+                "#define afx_msg",
+                "#endif",
+                "/* OLE calling conventions some pages print bare. */",
+                "#ifndef WINOLEAPI",
+                "#define WINOLEAPI HRESULT STDMETHODCALLTYPE",
+                "#endif",
+                "#ifndef WINOLEAUTAPI",
+                "#define WINOLEAUTAPI HRESULT STDMETHODCALLTYPE",
+                "#endif",
+                "#ifndef ATLAPI",
+                "#define ATLAPI HRESULT STDMETHODCALLTYPE",
+                "#endif",
+                "#ifndef interface",
+                "#define interface struct",
+                "#endif",
                 "#ifndef CONST",
                 "#define CONST const",
                 "#endif",
@@ -3526,7 +3598,7 @@ def run_unified(args):
             lines.append(" * these (DERIVED, not quoted; data/derived-forward-")
             lines.append(" * types.tsv)")
             lines.append(" * " + "=" * 64 + " */")
-            for fname, form, fnote in fwd_rows:
+            for fname, form, fnote, fdefn in fwd_rows:
                 if fname in emitted_type_names:
                     continue
                 emitted_type_names.add(fname)
@@ -3536,7 +3608,9 @@ def run_unified(args):
                     base = fname[1:]
                 else:
                     base = fname
-                if form == "struct-pointer":
+                if fdefn:
+                    decl = fdefn
+                elif form == "struct-pointer":
                     decl = f"typedef struct _{base} *{fname};"
                 elif form == "void-pointer":
                     decl = f"typedef void *{fname};"
@@ -3762,14 +3836,19 @@ def run_unified(args):
                     if "(" in txt and not txt.rstrip().endswith(";"):
                         if re.search(r"\)\s*$", txt.rstrip()):
                             txt = txt.rstrip() + ";"
-                    head.append(txt)
+                    txt = c_decl_text(txt)
+                    if bucket_key == "types":
+                        head.extend(type_guard_lines(ename or "", txt))
+                    else:
+                        head.append(txt)
                     if bucket_key == "types" and ename:
                         body = declaration.get("text") or ""
                         if re.search(r"\btypedef\s+(struct|union|enum)\b", body) \
                                 and re.search(r"\b" + re.escape(ename) + r"\s*;", body) \
                                 and ("LP" + ename) not in body:
-                            head.append(
-                                f"typedef {ename} *P{ename}, *LP{ename};")
+                            head.extend(type_guard_lines(
+                                "P" + ename,
+                                f"typedef {ename} *P{ename}, *LP{ename};"))
                 elif info.get("name_only"):
                     pass  # comment above is the whole record
                 else:
@@ -3791,7 +3870,7 @@ def run_unified(args):
                     lines.append("")
                     lines.append(
                         f"/* {d.get('name')}  [extra {d.get('type')}] */")
-                    lines.append(text)
+                    lines.extend(type_guard_lines(d.get("name") or "", text))
                     if d.get("name"):
                         emitted_type_names.add(d.get("name"))
         if open_decl_guard is not None:
@@ -3832,7 +3911,11 @@ def run_unified(args):
                 for d in sorted(group, key=lambda x: x.get("name") or ""):
                     text = c_decl_text(d.get("declaration") or "")
                     if text:
-                        lines.append(text)
+                        if decl_type in ("typedef", "enum", "struct"):
+                            lines.extend(type_guard_lines(
+                                d.get("name") or "", text))
+                        else:
+                            lines.append(text)
         if key.lower() == "windef.h":
             lines += [
                 "typedef RECT *PRECT, *LPRECT;",

@@ -18,19 +18,25 @@
  * ================================================================ */
 
 /* PARTENTRY  [struct; ce-only] */
-typedef struct _PARTENTRY { 
+#ifndef __WINCE_DEFINED__PARTENTRY
+#define __WINCE_DEFINED__PARTENTRY
+typedef struct _PARTENTRY {
  BYTE Part_BootInd;
  BYTE Part_FirstHead;
  BYTE Part_FirstSector;
  BYTE Part_FirstTrack;
  BYTE Part_FileSystem;
- BYTE Part_LastHead; 
+ BYTE Part_LastHead;
  BYTE Part_LastSector;
  BYTE Part_LastTrack;
  DWORD Part_StartSector;
  DWORD Part_TotalSectors;
 } PARTENTRY;
+#endif /* __WINCE_DEFINED__PARTENTRY */
+#ifndef __WINCE_DEFINED_PPARTENTRY
+#define __WINCE_DEFINED_PPARTENTRY
 typedef PARTENTRY *PPARTENTRY, *LPPARTENTRY;
+#endif /* __WINCE_DEFINED_PPARTENTRY */
 
 /* ==================================================================
  * functions and callbacks
@@ -39,45 +45,33 @@ typedef PARTENTRY *PPARTENTRY, *LPPARTENTRY;
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* BP_GetPartitionInfo  [function; ce-only; CE 5.0..699; Bootpart.lib] */
-PPARTENTRY BP_GetPartitionInfo(
- HANDLE hPartition, 
-);
+PPARTENTRY BP_GetPartitionInfo(HANDLE hPartition,);
 
 /* BP_LowLevelFormat  [function; ce-only; CE 5.0..699; Bootpart.lib] */
-BOOL BP_LowLevelFormat(
- DWORD dwStartBlock,
+BOOL BP_LowLevelFormat(DWORD dwStartBlock,
  DWORD dwNumBlocks,
- DWORD dwFlags
-);
+ DWORD dwFlags);
 
 /* BP_OpenPartition  [function; ce-only; CE 5.0..699; Bootpart.lib] */
-HANDLE BP_OpenPartition(
- DWORD dwStartSector, 
+HANDLE BP_OpenPartition(DWORD dwStartSector,
  DWORD dwNumSectors,
  DWORD dwPartType,
  BOOL fActive,
- DWORD dwCreationFlags
-);
+ DWORD dwCreationFlags);
 
 /* BP_ReadData  [function; ce-only; CE 5.0..699; Bootpart.lib] */
-BOOL BP_ReadData(
- HANDLE hPartition, 
+BOOL BP_ReadData(HANDLE hPartition,
  LPBYTE pbBuffer,
- DWORD dwLength
-);
+ DWORD dwLength);
 
 /* BP_SetDataPointer  [function; ce-only; CE 5.0..699; Bootpart.lib] */
-BOOL BP_SetDataPointer(
- HANDLE hPartition, 
- DWORD dwAddress
-);
+BOOL BP_SetDataPointer(HANDLE hPartition,
+ DWORD dwAddress);
 
 /* BP_WriteData  [function; ce-only; CE 5.0..699; Bootpart.lib] */
-BOOL BP_WriteData(
- HANDLE hPartition, 
+BOOL BP_WriteData(HANDLE hPartition,
  LPBYTE pbBuffer,
- DWORD dwLength
-);
+ DWORD dwLength);
 #endif /* _WIN32_WCE */
 
 #endif /* _BOOTPART_ */

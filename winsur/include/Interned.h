@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 4 declarations, 24 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 4 declarations, 24 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _INTERNED_
 #define _INTERNED_
@@ -68,21 +68,27 @@
  * ================================================================ */
 
 /* Close  [function, typedef; ce-only; heuristic-prefix] */
-Private Sub winsock_Close( );
+Private Sub winsock_Close();
 
 /* EVENT  [function, typedef; ce-only] */
-HRESULT Event(
- int index, 
- DWORD *pdispidEvt
-);
+HRESULT Event(int index,
+ DWORD *pdispidEvt);
 
 /* Scroll  [function, typedef; ce-only; heuristic-prefix] */
-Private Sub grid_Scroll( );
+Private Sub grid_Scroll();
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* Count  [function; ce-only; CE 5.0..699] */
 HRESULT Count(long *pCount);
 #endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* function */
+HRESULT Event(int index, DWORD *pdispidEvt);
 
 #endif /* _INTERNED_ */

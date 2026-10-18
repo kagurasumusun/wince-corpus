@@ -18,21 +18,17 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* GetDmpLines  [function; ce-only; CE 6.0..699; dwdmptxt.lib] */
-HRESULT GetDmpLines(
- HANDLE hDmpFile,
+HRESULT GetDmpLines(HANDLE hDmpFile,
  LPWSTR pwzBuf,
  DWORD dwBufSize,
  DWORD dwBegLine,
- DWORD dwEndLine
-);
+ DWORD dwEndLine);
 
 /* InitDmpTxt  [function; ce-only; CE 6.0..699; dwdmptxt.lib] */
-HRESULT InitDmpTxt(
- LPCWSTR pwzFilePath,
+HRESULT InitDmpTxt(LPCWSTR pwzFilePath,
  DWORD dwMaxCharsPerLine,
  DWORD* pdwTotalLines,
- HANDLE* phDmpFile
-);
+ HANDLE* phDmpFile);
 #endif /* _WIN32_WCE */
 
 #endif /* _DWDMPTXT_ */

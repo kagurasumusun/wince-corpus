@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 22 constants, 15 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 22 constants, 5 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _GPSAPI_
 #define _GPSAPI_
@@ -47,30 +47,50 @@
  * ================================================================ */
 
 /* GPS_FIX_QUALITY  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_GPS_FIX_QUALITY
+#define __WINCE_DEFINED_GPS_FIX_QUALITY
 typedef enum {
  GPS_FIX_QUALITY_UNKNOWN = 0,
  GPS_FIX_QUALITY_GPS,
  GPS_FIX_QUALITY_DGPS
 } GPS_FIX_QUALITY;
+#endif /* __WINCE_DEFINED_GPS_FIX_QUALITY */
+#ifndef __WINCE_DEFINED_PGPS_FIX_QUALITY
+#define __WINCE_DEFINED_PGPS_FIX_QUALITY
 typedef GPS_FIX_QUALITY *PGPS_FIX_QUALITY, *LPGPS_FIX_QUALITY;
+#endif /* __WINCE_DEFINED_PGPS_FIX_QUALITY */
 
 /* GPS_FIX_SELECTION  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_GPS_FIX_SELECTION
+#define __WINCE_DEFINED_GPS_FIX_SELECTION
 typedef enum {
  GPS_FIX_SELECTION_UNKNOWN = 0,
  GPS_FIX_SELECTION_AUTO,
  GPS_FIX_SELECTION_MANUAL
 } GPS_FIX_SELECTION;
+#endif /* __WINCE_DEFINED_GPS_FIX_SELECTION */
+#ifndef __WINCE_DEFINED_PGPS_FIX_SELECTION
+#define __WINCE_DEFINED_PGPS_FIX_SELECTION
 typedef GPS_FIX_SELECTION *PGPS_FIX_SELECTION, *LPGPS_FIX_SELECTION;
+#endif /* __WINCE_DEFINED_PGPS_FIX_SELECTION */
 
 /* GPS_FIX_TYPE  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_GPS_FIX_TYPE
+#define __WINCE_DEFINED_GPS_FIX_TYPE
 typedef enum {
  GPS_FIX_UNKNOWN = 0,
  GPS_FIX_2D,
  GPS_FIX_3D
 } GPS_FIX_TYPE;
+#endif /* __WINCE_DEFINED_GPS_FIX_TYPE */
+#ifndef __WINCE_DEFINED_PGPS_FIX_TYPE
+#define __WINCE_DEFINED_PGPS_FIX_TYPE
 typedef GPS_FIX_TYPE *PGPS_FIX_TYPE, *LPGPS_FIX_TYPE;
+#endif /* __WINCE_DEFINED_PGPS_FIX_TYPE */
 
 /* GPS_POSITION  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__GPS_POSITION
+#define __WINCE_DEFINED__GPS_POSITION
 typedef struct _GPS_POSITION {
  DWORD dwVersion;
  DWORD dwSize;
@@ -98,31 +118,7 @@ typedef struct _GPS_POSITION {
  DWORD rgdwSatellitesInViewAzimuth[GPS_MAX_SATELLITES];
  DWORD rgdwSatellitesInViewSignalToNoiseRatio[GPS_MAX_SATELLITES];
 } GPS_POSITION, *PGPS_POSITION;
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-/* GPSCloseDevice  [function; ce-only; unified-kb; unified-kb] */
-DWORD GPSCloseDevice(
- HANDLE hGPSDevice
-);
-
-/* GPSGetPosition  [function; ce-only; unified-kb; unified-kb] */
-DWORD GPSGetPosition(
- HANDLE hGPSDevice,
- GPS_POSITION *pGPSPosition,
- DWORD dwMaximumAge,
- DWORD dwFlags
-);
-
-/* GPSOpenDevice  [function; ce-only; unified-kb; unified-kb] */
-HANDLE GPSOpenDevice(
- HANDLE hNewLocationData,
- HANDLE hDeviceStateChange,
- const WCHAR *szDeviceName,
- DWORD dwFlags
-);
+#endif /* __WINCE_DEFINED__GPS_POSITION */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

@@ -18,10 +18,8 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* UfnGetSystemSerialNumber  [function; ce-only; CE 6.0..699; UfnClientLibBase.lib] */
-DWORD UfnGetSystemSerialNumber(
- LPWSTR pszSerialNumber,
- DWORD cchSerialNumber
-);
+DWORD UfnGetSystemSerialNumber(LPWSTR pszSerialNumber,
+ DWORD cchSerialNumber);
 #endif /* _WIN32_WCE */
 
 #endif /* _USBFNTYPES_ */

@@ -160,14 +160,14 @@ _SAMPLE_PATH = re.compile(
 
 _MIDL_ATTR_WORDS = frozenset(
     "in out string unique ptr ref const optional retval app odl hidden local "
-    "propget propput propputref helpstring helpstringcontext helpstringdll "
-    "switch_is size_is length_is first_is last_is max_is min_is byte_count "
-    "defaultvalue v1_enum public import export library addref release "
-    "allocate call_as entry idl_quote ignore include require_endpoint "
-    "case context_handle encode decode error_status_t handle_t "
-    "implicit_handle explicit_handle param_sourcecode software_aggregate "
-    "asynchronous broadcast represent_as type_handle user_marshal "
-    "usage_aggregate".split())
+    "private public propget propput propputref helpstring helpstringcontext "
+    "helpstringdll switch_is size_is length_is first_is last_is max_is "
+    "min_is byte_count defaultvalue v1_enum import export library addref "
+    "release allocate call_as entry idl_quote ignore include "
+    "require_endpoint case context_handle encode decode error_status_t "
+    "handle_t implicit_handle explicit_handle param_sourcecode "
+    "software_aggregate asynchronous broadcast represent_as type_handle "
+    "user_marshal usage_aggregate".split())
 _MIDL_ATTR = re.compile(r"\[\s*([^\[\]]*?)\s*\]")
 _MIDDL_OK_IDENT = re.compile(r"^[A-Za-z_]\w*(\s*\+\s*[A-Za-z0-9_]+)?$")
 
@@ -208,7 +208,7 @@ _CPP_MARKERS = (
     r"\bnew\s*\(",
     r"\bdelete\s*[\(\[]",
     r"[A-Za-z_]\w*\s*&\s*[A-Za-z_]\w*\s*[,)]",      # reference parameter
-    r"[,(]\s*[^,()]*\b[A-Za-z_]\w*\s*=\s*[^=]",     # default argument
+    r"\([^()]*\b[A-Za-z_]\w*\s*=\s*[^=]",           # default argument
     r"\bC[A-Z][A-Za-z0-9_]*[a-z][A-Za-z0-9_]*\b",   # MFC/ATL CName types
     r"\b[A-Za-z_]\w*\s*<\s*[A-Za-z_]",              # template instantiation
 )
@@ -315,6 +315,15 @@ def is_broken_c(text: str) -> bool:
     # ``int __swi( unsigned swi_number, arg2, arg3, arg4 )`` -- the page
     # printed untyped placeholder parameters.
     if re.search(r"[,(]\s*arg[0-9]+\s*[,)]", body):
+        return True
+    # bare numeric parameter: the page printed ``Foo(int, 42)``-style junk
+    if re.search(r"[,(]\s*[0-9]+\s*[,)]", body):
+        return True
+    # ``VARIANTotherCollection`` / ``size_tcount`` -- the page lost the
+    # spaces: an ALL-CAPS run or _t name glued onto the next word.
+    if re.search(r"\b[A-Z]{3,}[a-z]", body):
+        return True
+    if re.search(r"\b[A-Za-z]+_t[a-z]", body):
         return True
     # stray apostrophe breaks the C tokeniser ('missing terminating ' ')
     if body.count("'") % 2 == 1:

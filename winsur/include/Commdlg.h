@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 198 constants, 25 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 198 constants, 23 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _COMMDLG_
 #define _COMMDLG_
@@ -231,67 +231,55 @@
  * ================================================================ */
 
 /* DEVNAMES  [struct; shared] */
+#ifndef __WINCE_DEFINED_TAGDEVNAMES
+#define __WINCE_DEFINED_TAGDEVNAMES
 typedef struct tagDEVNAMES {
- WORD wDriverOffset; 
- WORD wDeviceOffset; 
- WORD wOutputOffset; 
- WORD wDefault; 
+ WORD wDriverOffset;
+ WORD wDeviceOffset;
+ WORD wOutputOffset;
+ WORD wDefault;
 } DEVNAMES;
+#endif /* __WINCE_DEFINED_TAGDEVNAMES */
+#ifndef __WINCE_DEFINED_PDEVNAMES
+#define __WINCE_DEFINED_PDEVNAMES
 typedef DEVNAMES *PDEVNAMES, *LPDEVNAMES;
+#endif /* __WINCE_DEFINED_PDEVNAMES */
 
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
 /* ChooseColor  [function; ce-only; unified-kb; unified-kb] */
-BOOL ChooseColor( LPCHOOSECOLOR lpcc);
+BOOL ChooseColor(LPCHOOSECOLOR lpcc);
 
 /* ChooseFont  [function; ce-only; unified-kb; unified-kb] */
-BOOL APIENTRY ChooseFont(  LPCHOOSEFONT lpcf  );
+BOOL APIENTRY ChooseFont(LPCHOOSEFONT lpcf);
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
 
-/* CCHookProc  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-UINT APIENTRY CCHookProc(
- HWND hdlg, 
- UINT uiMsg, 
- WPARAM wParam, 
- LPARAM lParam
-);
-
 /* GetOpenFileName  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Fileopen.lib, fileopen.lib; A/W GetOpenFileNameA,GetOpenFileNameW (CE is W-side)] */
-BOOL GetOpenFileName( 
- LPOPENFILENAME lpofn
-);
+BOOL GetOpenFileName(LPOPENFILENAME lpofn);
 
 /* GetSaveFileName  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Fileopen.lib, fileopen.lib; A/W GetSaveFileNameA,GetSaveFileNameW (CE is W-side)] */
-BOOL GetSaveFileName( 
- LPOPENFILENAME lpofn
-);
+BOOL GetSaveFileName(LPOPENFILENAME lpofn);
 
 /* PagePaintHook  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-UINT CALLBACK PagePaintHook(
- HWND hdlg, 
- UINT uiMsg, 
- WPARAM wParam, 
- LPARAM lParam
-);
+UINT CALLBACK PagePaintHook(HWND hdlg,
+ UINT uiMsg,
+ WPARAM wParam,
+ LPARAM lParam);
 
 /* PageSetupHook  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-UINT CALLBACK PageSetupHook(
- HWND hdlg, 
- UINT uiMsg, 
- WPARAM wParam, 
- LPARAM lParam
-);
+UINT CALLBACK PageSetupHook(HWND hdlg,
+ UINT uiMsg,
+ WPARAM wParam,
+ LPARAM lParam);
 
 /* PrintHookProc  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-UINT APIENTRY PrintHookProc(
- HWND hdlg, 
- UINT uiMsg, 
- WPARAM wParam, 
- LPARAM lParam 
-);
+UINT APIENTRY PrintHookProc(HWND hdlg,
+ UINT uiMsg,
+ WPARAM wParam,
+ LPARAM lParam);
 #endif /* _WIN32_WCE */
 
 #endif /* _COMMDLG_ */

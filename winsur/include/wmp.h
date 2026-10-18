@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 44 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 41 extra decls
  */
 #ifndef _WMP_
 #define _WMP_
@@ -19,7 +19,6 @@
 /* function */
 void AudioLanguageChange(long LangID);
 void Click(short nButton, short nShiftState, long fX, long fY);
-void CurrentPlaylistChange(WMPPlaylistChangeEventType change);
 void DoubleClick(short nButton, short nShiftState, long fX, long fY);
 void Error();
 void KeyDown(short nKeyCode, short nShiftState);
@@ -43,8 +42,6 @@ HRESULT get_duration(double* pDuration);
 HRESULT get_errorCount(long* plNumErrors);
 HRESULT get_imageSourceHeight(long* pHeight);
 HRESULT get_imageSourceWidth(long* pWidth);
-HRESULT get_openState(WMPOpenState* pwmpos);
-HRESULT get_playState(WMPPlayState* pwmpps);
 HRESULT get_volume(long* plVolume);
 HRESULT put_balance(long lBalance);
 HRESULT put_currentPosition(double dCurrentPosition);

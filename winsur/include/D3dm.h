@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 26 constants, 0 declarations, 0 outlines, 0 base types, 13 extra macros, 58 extra decls
+ * 26 constants, 0 declarations, 0 outlines, 0 base types, 13 extra macros, 55 extra decls
  */
 #ifndef _D3DM_
 #define _D3DM_
@@ -70,7 +70,6 @@
 /* function */
 HRESULT AddDirtyRect(CONST RECT* pDirtyRect);
 HRESULT BeginScene();
-VOID WINAPI Direct3DMobileCreate(UINT SDKVersion);
 HRESULT EndScene();
 UINT GetAdapterCount();
 UINT GetAdapterModeCount(UINT Adapter);
@@ -84,7 +83,6 @@ void PreLoad();
 HRESULT RegisterSoftwareDevice(VOID* pInitializeFunction);
 HRESULT ResourceManagerDiscardBytes(DWORD Bytes);
 HRESULT SetCurrentTexturePalette(UINT PaletteNumber);
-DWORD SetLOD(DWORD LODNew);
 DWORD SetPriority(DWORD PriorityNew);
 HRESULT UnlockRect();
 HRESULT ValidateDevice(DWORD* pNumPasses);

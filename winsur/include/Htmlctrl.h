@@ -18,20 +18,22 @@
  * ================================================================ */
 
 /* INLINEIMAGEINFO  [struct, typedef; ce-only] */
-typedef struct tagINLINEIMAGEINFO { 
-DWORD dwCookie; 
-int iOrigHeight; 
-int iOrigWidth; 
-HBITMAP hbm; 
-BOOL bOwnBitmap; 
+#ifndef __WINCE_DEFINED_TAGINLINEIMAGEINFO
+#define __WINCE_DEFINED_TAGINLINEIMAGEINFO
+typedef struct tagINLINEIMAGEINFO {
+DWORD dwCookie;
+int iOrigHeight;
+int iOrigWidth;
+HBITMAP hbm;
+BOOL bOwnBitmap;
 } INLINEIMAGEINFO, *LPINLINEIMAGEINFO;
+#endif /* __WINCE_DEFINED_TAGINLINEIMAGEINFO */
 
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
 /* InitHTMLControl  [function; ce-only; unified-kb; unified-kb] */
-BOOL InitHTMLControl( 
-HINSTANCE hinst );
+BOOL InitHTMLControl(HINSTANCE hinst);
 
 #endif /* _HTMLCTRL_ */

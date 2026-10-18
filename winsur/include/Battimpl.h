@@ -24,14 +24,10 @@ void WINAPI BatteryPDDDeinitialize(void);
 LONG BatteryPDDGetLevels(void);
 
 /* BatteryPDDInitialize  [function; ce-only; CE 4.0..699] */
-BOOL WINAPI BatteryPDDInitialize(
- LPCTSTR pszRegistryContext
-);
+BOOL WINAPI BatteryPDDInitialize(LPCTSTR pszRegistryContext);
 
 /* BatteryPDDPowerHandler  [function; ce-only; CE 4.0..699] */
-void WINAPI BatteryPDDPowerHandler(
- BOOL bOff
-);
+void WINAPI BatteryPDDPowerHandler(BOOL bOff);
 
 /* BatteryPDDResume  [function; ce-only; CE 4.0..699] */
 void WINAPI BatteryPDDResume(void);

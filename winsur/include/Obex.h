@@ -26,6 +26,8 @@
  * ================================================================ */
 
 /* OBEX_EVENT  [enum; ce-only] */
+#ifndef __WINCE_DEFINED__OBEX_EVENT
+#define __WINCE_DEFINED__OBEX_EVENT
 typedef enum _OBEX_EVENT {
  OE_QUERY_PASSWORD = 0,
  OE_NEW_CONNECTION = OE_QUERY_PASSWORD + 1,
@@ -36,26 +38,33 @@ typedef enum _OBEX_EVENT {
  OE_DEVICE_DEPARTURE = OE_DEVICE_ARRIVAL + 1,
  OE_DEVICE_UPDATE = OE_DEVICE_DEPARTURE + 1
 } OBEX_EVENT, *LPOBEX_EVENT;
+#endif /* __WINCE_DEFINED__OBEX_EVENT */
 
 /* OBEX_HEADER  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__OBEX_HEADER
+#define __WINCE_DEFINED__OBEX_HEADER
 typedef struct _OBEX_HEADER {
  byte bId;
- [switch_is(bId & OBEX_HEADER_4BYTE)]
+
  union {
- [case(OBEX_HEADER_UNICODE)]
- [string] LPWSTR pszData;
- [case(OBEX_HEADER_4BYTE)]
+
+ LPWSTR pszData;
+
  DWORD dwData;
- [case(OBEX_HEADER_1BYTE)]
+
  byte bData;
- [case(OBEX_HEADER_STREAM)]
+
  struct {
- DWORD dwSize; 
- [size_is(dwSize)] byte* pbaData;
+ DWORD dwSize;
+ byte* pbaData;
  } ba;
  } value;
 } OBEX_HEADER;
+#endif /* __WINCE_DEFINED__OBEX_HEADER */
+#ifndef __WINCE_DEFINED_POBEX_HEADER
+#define __WINCE_DEFINED_POBEX_HEADER
 typedef OBEX_HEADER *POBEX_HEADER, *LPOBEX_HEADER;
+#endif /* __WINCE_DEFINED_POBEX_HEADER */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 6 constants, 5 declarations, 6 outlines, 0 base types, 0 extra macros, 24 extra decls
+ * 6 constants, 4 declarations, 7 outlines, 0 base types, 0 extra macros, 25 extra decls
  */
 #ifndef _IEXCHANGECLIENT_
 #define _IEXCHANGECLIENT_
@@ -28,6 +28,8 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
+/* GALSearchCriteria  [struct; ce-only] */
+
 /* IExchangeClient::RequestContacts  [struct; ce-only; OWAExchangeClient.lib] */
 
 /* IExchangeClient::RequestFreeBusyData  [struct; ce-only; OWAExchangeClient.lib] */
@@ -47,12 +49,17 @@
  * ================================================================ */
 
 /* ContactsSearchCriteria  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_CONTACTSSEARCHCRITERIA
+#define __WINCE_DEFINED_CONTACTSSEARCHCRITERIA
 struct ContactsSearchCriteria {
  WCHAR* wszFirstName;
  WCHAR* wszLastName;
 };
+#endif /* __WINCE_DEFINED_CONTACTSSEARCHCRITERIA */
 
 /* ExchangeClientRequestStatus  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_EXCHANGECLIENTREQUESTSTATUS
+#define __WINCE_DEFINED_EXCHANGECLIENTREQUESTSTATUS
 enum ExchangeClientRequestStatus
 {
  e_ecrsPending = 0,
@@ -68,8 +75,11 @@ enum ExchangeClientRequestStatus
  e_ecrsCancelled,
  e_ecrsNoCredentials
 };
+#endif /* __WINCE_DEFINED_EXCHANGECLIENTREQUESTSTATUS */
 
 /* ExchangeClientRequestType  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_EXCHANGECLIENTREQUESTTYPE
+#define __WINCE_DEFINED_EXCHANGECLIENTREQUESTTYPE
 enum ExchangeClientRequestType
 {
  e_ecrtInvalid = 0,
@@ -77,24 +87,26 @@ enum ExchangeClientRequestType
  e_ecrtGALSearch,
  e_ecrtFreeBusy
 };
+#endif /* __WINCE_DEFINED_EXCHANGECLIENTREQUESTTYPE */
 
 /* FreeBusyCriteria  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_FREEBUSYCRITERIA
+#define __WINCE_DEFINED_FREEBUSYCRITERIA
 struct FreeBusyCriteria {
  WCHAR* wszAlias;
  SYSTEMTIME* pstStart;
 };
-
-/* GALSearchCriteria  [struct; ce-only] */
-struct GALSearchCriteria {
- WCHAR* wszAlias;
- WCHAR* wszFirstName;
- WCHAR* wszLastName;
-};
+#endif /* __WINCE_DEFINED_FREEBUSYCRITERIA */
 
 /* wszLastName  [extra struct] */
+#ifndef __WINCE_DEFINED_CONTACTSSEARCHCRITERIA
+#define __WINCE_DEFINED_CONTACTSSEARCHCRITERIA
 struct ContactsSearchCriteria { WCHAR* wszFirstName; WCHAR* wszLastName; };
+#endif /* __WINCE_DEFINED_CONTACTSSEARCHCRITERIA */
 
 /* e_ecrsNoCredentials  [extra enum] */
+#ifndef __WINCE_DEFINED_EXCHANGECLIENTREQUESTSTATUS
+#define __WINCE_DEFINED_EXCHANGECLIENTREQUESTSTATUS
 enum ExchangeClientRequestStatus
 {
  e_ecrsPending = 0,
@@ -110,8 +122,11 @@ enum ExchangeClientRequestStatus
  e_ecrsCancelled,
  e_ecrsNoCredentials,
 };
+#endif /* __WINCE_DEFINED_EXCHANGECLIENTREQUESTSTATUS */
 
 /* e_ecrtFreeBusy  [extra enum] */
+#ifndef __WINCE_DEFINED_EXCHANGECLIENTREQUESTTYPE
+#define __WINCE_DEFINED_EXCHANGECLIENTREQUESTTYPE
 enum ExchangeClientRequestType
 {
  e_ecrtInvalid = 0,
@@ -119,15 +134,25 @@ enum ExchangeClientRequestType
  e_ecrtGALSearch,
  e_ecrtFreeBusy,
 };
+#endif /* __WINCE_DEFINED_EXCHANGECLIENTREQUESTTYPE */
 
 /* pstStart  [extra struct] */
+#ifndef __WINCE_DEFINED_FREEBUSYCRITERIA
+#define __WINCE_DEFINED_FREEBUSYCRITERIA
 struct FreeBusyCriteria { WCHAR* wszAlias; SYSTEMTIME* pstStart; };
+#endif /* __WINCE_DEFINED_FREEBUSYCRITERIA */
 
 /* pStatus  [extra enum] */
+#ifndef __WINCE_DEFINED_PSTATUS
+#define __WINCE_DEFINED_PSTATUS
 HRESULT GetStatus(enum ExchangeClientRequestStatus* pStatus);
+#endif /* __WINCE_DEFINED_PSTATUS */
 
 /* pecrt  [extra enum] */
+#ifndef __WINCE_DEFINED_PECRT
+#define __WINCE_DEFINED_PECRT
 HRESULT GetType(enum ExchangeClientRequestType* pecrt);
+#endif /* __WINCE_DEFINED_PECRT */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main
@@ -137,6 +162,7 @@ HRESULT GetType(enum ExchangeClientRequestType* pecrt);
 /* function */
 HRESULT CancelPendingRequests();
 HRESULT GetAlias(WCHAR* wszBuffer, UINT cchBuffer);
+HRESULT GetDisplayName(WCHAR* wszNameBuffer, UINT cchNameBuffer);
 HRESULT GetEmailAddress(WCHAR* wszBuffer, UINT cchBuffer);
 HRESULT GetFreeBusyData(WCHAR* wszDataBuffer, UINT cchDataBuffer);
 HRESULT GetHomeAddress(WCHAR* wszBuffer, UINT cchBuffer);

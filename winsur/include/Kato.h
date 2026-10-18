@@ -18,23 +18,17 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* KatoDebug  [function; ce-only; CE 5.0..699; Kato.lib, kato.lib] */
-BOOL KatoDebug(
- BOOL fEnabled,
+BOOL KatoDebug(BOOL fEnabled,
  DWORD dwMaxLogVerbosity,
  DWORD dwMaxCommentVerbosity,
- DWORD dwMaxLevel
-);
+ DWORD dwMaxLevel);
 
 /* KatoGetServer  [function; ce-only; CE 5.0..699; Kato.lib, kato.lib] */
-BOOL KatoGetServer(
- LPTSTR szServer,
- INT nCount
-);
+BOOL KatoGetServer(LPTSTR szServer,
+ INT nCount);
 
 /* KatoSetServer  [function; ce-only; CE 5.0..699; Kato.lib, kato.lib] */
-BOOL KatoSetServer(
- LPCTSTR szServer
-);
+BOOL KatoSetServer(LPCTSTR szServer);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

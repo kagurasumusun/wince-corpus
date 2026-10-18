@@ -38,15 +38,11 @@
 DWORD AttemptConnection();
 
 /* GetPCSyncName  [function; ce-only; CE 5.0..599] */
-HRESULT GetPCSyncName( 
- WCHAR* wszNameBuffer, 
- INT cchNameBuffer 
-);
+HRESULT GetPCSyncName(WCHAR* wszNameBuffer,
+ INT cchNameBuffer);
 
 /* SetPCSyncName  [function; ce-only; CE 5.0..599] */
-HRESULT SetPCSyncName( 
- const WCHAR* c_wszPCName 
-);
+HRESULT SetPCSyncName(const WCHAR* c_wszPCName);
 #endif /* _WIN32_WCE */
 
 #endif /* _VOIPLAP_ */

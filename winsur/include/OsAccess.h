@@ -20,7 +20,6 @@
 HRESULT Disable(void);
 HRESULT GetFullThdContextRegList(IeXdi2EnumCpuRegs**ppiOsAxsEnumCpuRegThreadCtx);
 HRESULT GetPageSize(DWORD*pdwVmPageSize);
-HRESULT NotifyModuledOle(VARIANTvtModId, VARIANTvtLoaded);
 HRESULT SingleStepInCurThread(BOOL fIgnoreCurrentExcept, BOOL fOneCycleOnly);
 
 #endif /* _OSACCESS_ */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 30 constants, 9 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
+ * 30 constants, 7 declarations, 1 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _ICMPAPI_
 #define _ICMPAPI_
@@ -54,18 +54,9 @@
  * declaration body no page prints
  * ================================================================ */
 
-/* ICMP_ECHO_REPLY  [struct; shared] */
-struct icmp_echo_reply {
- IPAddr Address;
- unsigned long Status;
- unsigned long RoundTripTime;
- unsigned short DataSize; 
- unsigned short Reserved; 
- void FAR* Data;
- struct ip_option_information Options; 
-} ICMP_ECHO_REPLY;
-
 /* IP_OPTION_INFORMATION  [struct; shared] */
+#ifndef __WINCE_DEFINED_IP_OPTION_INFORMATION
+#define __WINCE_DEFINED_IP_OPTION_INFORMATION
 typedef struct IP_OPTION_INFORMATION {
  unsigned char Ttl;
  unsigned char Tos;
@@ -73,7 +64,21 @@ typedef struct IP_OPTION_INFORMATION {
  unsigned char OptionsSize;
  unsigned char FAR* OptionsData;
 } IP_OPTION_INFORMATION;
+#endif /* __WINCE_DEFINED_IP_OPTION_INFORMATION */
+#ifndef __WINCE_DEFINED_PIP_OPTION_INFORMATION
+#define __WINCE_DEFINED_PIP_OPTION_INFORMATION
 typedef IP_OPTION_INFORMATION *PIP_OPTION_INFORMATION, *LPIP_OPTION_INFORMATION;
+#endif /* __WINCE_DEFINED_PIP_OPTION_INFORMATION */
+
+/* ICMP_ECHO_REPLY  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   Address */
+/*   Status */
+/*   RoundTripTime */
+/*   DataSize */
+/*   Reserved */
+/*   Data */
+/*   Options */
 
 /* ==================================================================
  * functions and callbacks
@@ -82,24 +87,10 @@ typedef IP_OPTION_INFORMATION *PIP_OPTION_INFORMATION, *LPIP_OPTION_INFORMATION;
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
 
 /* IcmpCloseHandle  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Icmplib.lib, Iphlpapi.dll, Iphlpapi.lib] */
-BOOL WINAPI IcmpCloseHandle(
- HANDLE IcmpHandle 
-);
+BOOL WINAPI IcmpCloseHandle(HANDLE IcmpHandle);
 
 /* IcmpCreateFile  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Icmplib.lib, Iphlpapi.dll, Iphlpapi.lib] */
 HANDLE WINAPI IcmpCreateFile(VOID);
-
-/* IcmpSendEcho  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Icmplib.lib, Iphlpapi.dll, Iphlpapi.lib] */
-DWORD WINAPI IcmpSendEcho(
- HANDLE IcmpHandle, 
- IPAddr DestinationAddress,
- LPVOID RequestData, 
- WORD RequestSize, 
- PIP_OPTION_INFORMATION RequestOptions, 
- LPVOID ReplyBuffer,
- DWORD ReplySize, 
- DWORD Timeout 
-);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
@@ -111,16 +102,12 @@ HANDLE WINAPI Icmp6CreateFile(VOID);
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* Icmp6ParseReplies  [function; shared; CE 5.0..699; Icmplib.lib, Iphlpapi.dll, Iphlpapi.lib] */
-DWORD Icmp6ParseReplies(
- LPVOID ReplyBuffer,
- DWORD ReplySize
-);
+DWORD Icmp6ParseReplies(LPVOID ReplyBuffer,
+ DWORD ReplySize);
 
 /* IcmpParseReplies  [function; shared; CE 5.0..699; Icmplib.lib, Iphlpapi.dll, Iphlpapi.lib] */
-DWORD IcmpParseReplies(
- LPVOID ReplyBuffer,
- DWORD ReplySize
-);
+DWORD IcmpParseReplies(LPVOID ReplyBuffer,
+ DWORD ReplySize);
 #endif /* _WIN32_WCE */
 
 #endif /* _ICMPAPI_ */

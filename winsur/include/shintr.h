@@ -18,49 +18,35 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* __fmac  [function; ce-only; CE 4.0..699] */
-Float __fmac( 
- float Arg1, 
- float Arg1, 
- float Arg1 
-);
+Float __fmac(float Arg1,
+ float Arg1,
+ float Arg1);
 
 /* __movca  [function; ce-only; CE 4.0..699] */
-void __movca( 
- unsigned long value, 
- unsigned long* addr 
-);
+void __movca(unsigned long value,
+ unsigned long* addr);
 
 /* _Convolve  [function; ce-only; CE 4.0..699] */
-Float _Convolve(
- int nelement,
+Float _Convolve(int nelement,
  float* pstart,
  float* pend,
  float* pdata,
- float* pfilter
-);
+ float* pfilter);
 
 /* _Dot3dVW0  [function; ce-only; CE 4.0..699] */
-float _Dot3dVW0( 
- float* vector1, 
- float* vector2 
-);
+float _Dot3dVW0(float* vector1,
+ float* vector2);
 
 /* _Dot3dVW1  [function; ce-only; CE 4.0..699] */
-float _Dot3dVW1( 
- float* vector1, 
- float* vector2 
-);
+float _Dot3dVW1(float* vector1,
+ float* vector2);
 
 /* _Dot4dV  [function; ce-only; CE 4.0..699] */
-float _Dot4dV( 
- float* vector1, 
- float* vector2 
-);
+float _Dot4dV(float* vector1,
+ float* vector2);
 
 /* _XDMultMatrix  [function; ce-only; CE 4.0..699] */
-void _XDMultMatrix( 
- float* matrix 
-);
+void _XDMultMatrix(float* matrix);
 #endif /* _WIN32_WCE */
 
 #endif /* _SHINTR_ */

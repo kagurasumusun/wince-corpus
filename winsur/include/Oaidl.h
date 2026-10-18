@@ -144,6 +144,8 @@ typedef struct FARSTRUCT tagSAFEARRAY {
  * ================================================================ */
 
 /* CALLCONV  [enum; shared] */
+#ifndef __WINCE_DEFINED_TAGCALLCONV
+#define __WINCE_DEFINED_TAGCALLCONV
 typedef enum tagCALLCONV {
  CC_CDECL = 1,
  CC_MSCPASCAL = 2,
@@ -156,12 +158,21 @@ typedef enum tagCALLCONV {
  CC_MPWPASCAL = 8,
  CC_MAX = 9
 } CALLCONV;
+#endif /* __WINCE_DEFINED_TAGCALLCONV */
+#ifndef __WINCE_DEFINED_PCALLCONV
+#define __WINCE_DEFINED_PCALLCONV
 typedef CALLCONV *PCALLCONV, *LPCALLCONV;
+#endif /* __WINCE_DEFINED_PCALLCONV */
 
 /* CURRENCY  [typedef; ce-only] */
+#ifndef __WINCE_DEFINED_CURRENCY
+#define __WINCE_DEFINED_CURRENCY
 typedef CY CURRENCY;
+#endif /* __WINCE_DEFINED_CURRENCY */
 
 /* DESCKIND  [enum; shared] */
+#ifndef __WINCE_DEFINED_TAGDESCKIND
+#define __WINCE_DEFINED_TAGDESCKIND
 typedef enum tagDESCKIND {
  DESCKIND_NONE,
  DESCKIND_FUNCDESC,
@@ -169,9 +180,15 @@ typedef enum tagDESCKIND {
  DESCKIND_TYPECOMP,
  DESCKIND_IMPLICITAPPOBJ
 } DESCKIND;
+#endif /* __WINCE_DEFINED_TAGDESCKIND */
+#ifndef __WINCE_DEFINED_PDESCKIND
+#define __WINCE_DEFINED_PDESCKIND
 typedef DESCKIND *PDESCKIND, *LPDESCKIND;
+#endif /* __WINCE_DEFINED_PDESCKIND */
 
 /* FUNCFLAGS  [enum; shared] */
+#ifndef __WINCE_DEFINED_TAGFUNCFLAGS
+#define __WINCE_DEFINED_TAGFUNCFLAGS
 typedef enum tagFUNCFLAGS {
  FUNCFLAG_FRESTRICTED = 0x1,
  FUNCFLAG_FSOURCE = 0x2,
@@ -187,9 +204,15 @@ typedef enum tagFUNCFLAGS {
  FUNCFLAG_FREPLACEABLE = 0x800,
  FUNCFLAG_FIMMEDIATEBIND = 0x1000
 } FUNCFLAGS;
+#endif /* __WINCE_DEFINED_TAGFUNCFLAGS */
+#ifndef __WINCE_DEFINED_PFUNCFLAGS
+#define __WINCE_DEFINED_PFUNCFLAGS
 typedef FUNCFLAGS *PFUNCFLAGS, *LPFUNCFLAGS;
+#endif /* __WINCE_DEFINED_PFUNCFLAGS */
 
 /* FUNCKIND  [enum; shared] */
+#ifndef __WINCE_DEFINED_TAGFUNCKIND
+#define __WINCE_DEFINED_TAGFUNCKIND
 typedef enum tagFUNCKIND {
  FUNC_VIRTUAL,
  FUNC_PUREVIRTUAL,
@@ -197,55 +220,88 @@ typedef enum tagFUNCKIND {
  FUNC_STATIC,
  FUNC_DISPATCH,
 } FUNCKIND;
+#endif /* __WINCE_DEFINED_TAGFUNCKIND */
+#ifndef __WINCE_DEFINED_PFUNCKIND
+#define __WINCE_DEFINED_PFUNCKIND
 typedef FUNCKIND *PFUNCKIND, *LPFUNCKIND;
+#endif /* __WINCE_DEFINED_PFUNCKIND */
 
 /* HREFTYPE  [typedef; ce-only] */
+#ifndef __WINCE_DEFINED_HREFTYPE
+#define __WINCE_DEFINED_HREFTYPE
 typedef unsigned long HREFTYPE;
+#endif /* __WINCE_DEFINED_HREFTYPE */
 
 /* INVOKEKIND  [enum; shared] */
+#ifndef __WINCE_DEFINED_TAGINVOKEKIND
+#define __WINCE_DEFINED_TAGINVOKEKIND
 typedef enum tagINVOKEKIND {
  INVOKE_FUNC = DISPATCH_METHOD,
  INVOKE_PROPERTYGET = DISPATCH_PROPERTYGET,
  INVOKE_PROPERTYPUT = DISPATCH_PROPERTYPUT,
  INVOKE_PROPERTYPUTREF = DISPATCH_PROPERTYPUTREF
 } INVOKEKIND;
+#endif /* __WINCE_DEFINED_TAGINVOKEKIND */
+#ifndef __WINCE_DEFINED_PINVOKEKIND
+#define __WINCE_DEFINED_PINVOKEKIND
 typedef INVOKEKIND *PINVOKEKIND, *LPINVOKEKIND;
+#endif /* __WINCE_DEFINED_PINVOKEKIND */
 
 /* SAFEARRAYBOUND  [struct; shared] */
+#ifndef __WINCE_DEFINED_TAGSAFEARRAYBOUND
+#define __WINCE_DEFINED_TAGSAFEARRAYBOUND
 typedef struct tagSAFEARRAYBOUND {
  unsigned long cElements;
  long lLbound;
 } SAFEARRAYBOUND;
+#endif /* __WINCE_DEFINED_TAGSAFEARRAYBOUND */
+#ifndef __WINCE_DEFINED_PSAFEARRAYBOUND
+#define __WINCE_DEFINED_PSAFEARRAYBOUND
 typedef SAFEARRAYBOUND *PSAFEARRAYBOUND, *LPSAFEARRAYBOUND;
+#endif /* __WINCE_DEFINED_PSAFEARRAYBOUND */
 
 /* SYSKIND  [enum; shared] */
+#ifndef __WINCE_DEFINED_TAGSYSKIND
+#define __WINCE_DEFINED_TAGSYSKIND
 typedef enum tagSYSKIND {
- SYS_WIN16 = 0, 
- SYS_WIN32 = SYS_WIN16 +1, 
+ SYS_WIN16 = 0,
+ SYS_WIN32 = SYS_WIN16 +1,
  SYS_MAC = SYS_WIN32 +1
 } SYSKIND;
+#endif /* __WINCE_DEFINED_TAGSYSKIND */
+#ifndef __WINCE_DEFINED_PSYSKIND
+#define __WINCE_DEFINED_PSYSKIND
 typedef SYSKIND *PSYSKIND, *LPSYSKIND;
+#endif /* __WINCE_DEFINED_PSYSKIND */
 
 /* TYPEFLAGS  [enum; shared] */
+#ifndef __WINCE_DEFINED_TAGTYPEFLAGS
+#define __WINCE_DEFINED_TAGTYPEFLAGS
 typedef enum tagTYPEFLAGS {
- TYPEFLAG_FAPPOBJECT = 0x01, 
- TYPEFLAG_FCANCREATE = 0x02, 
- TYPEFLAG_FLICENSED = 0x04, 
+ TYPEFLAG_FAPPOBJECT = 0x01,
+ TYPEFLAG_FCANCREATE = 0x02,
+ TYPEFLAG_FLICENSED = 0x04,
  TYPEFLAG_FPREDECLID = 0x08,
- TYPEFLAG_FHIDDEN = 0x10, 
- TYPEFLAG_FCONTROL = 0x20, 
- TYPEFLAG_FDUAL = 0x40, 
- TYPEFLAG_FNONEXTENSIBLE = 0x80, 
- TYPEFLAG_FOLEAUTOMATION = 0x100, 
- TYPEFLAG_FRESTRICTED = 0x200, 
- TYPEFLAG_FAGGREGATABLE = 0x400, 
- TYPEFLAG_FREPLACEABLE = 0x800, 
- TYPEFLAG_FDISPATCHABLE = 0x1000, 
- TYPEFLAG_FREVERSEBIND = 0x2000, 
+ TYPEFLAG_FHIDDEN = 0x10,
+ TYPEFLAG_FCONTROL = 0x20,
+ TYPEFLAG_FDUAL = 0x40,
+ TYPEFLAG_FNONEXTENSIBLE = 0x80,
+ TYPEFLAG_FOLEAUTOMATION = 0x100,
+ TYPEFLAG_FRESTRICTED = 0x200,
+ TYPEFLAG_FAGGREGATABLE = 0x400,
+ TYPEFLAG_FREPLACEABLE = 0x800,
+ TYPEFLAG_FDISPATCHABLE = 0x1000,
+ TYPEFLAG_FREVERSEBIND = 0x2000,
 } TYPEFLAGS;
+#endif /* __WINCE_DEFINED_TAGTYPEFLAGS */
+#ifndef __WINCE_DEFINED_PTYPEFLAGS
+#define __WINCE_DEFINED_PTYPEFLAGS
 typedef TYPEFLAGS *PTYPEFLAGS, *LPTYPEFLAGS;
+#endif /* __WINCE_DEFINED_PTYPEFLAGS */
 
 /* TYPEKIND  [enum; shared] */
+#ifndef __WINCE_DEFINED_TAGTYPEKIND
+#define __WINCE_DEFINED_TAGTYPEKIND
 typedef enum tagTYPEKIND {
  TKIND_ENUM = 0,
  TKIND_RECORD,
@@ -257,39 +313,52 @@ typedef enum tagTYPEKIND {
  TKIND_UNION,
  TKIND_MAX
 } TYPEKIND;
+#endif /* __WINCE_DEFINED_TAGTYPEKIND */
+#ifndef __WINCE_DEFINED_PTYPEKIND
+#define __WINCE_DEFINED_PTYPEKIND
 typedef TYPEKIND *PTYPEKIND, *LPTYPEKIND;
+#endif /* __WINCE_DEFINED_PTYPEKIND */
 
 /* VARKIND  [enum; shared] */
-typedef enum tagVARKIND { 
- VAR_PERINSTANCE = 0, 
- VAR_STATIC = VAR_PERINSTANCE +1, 
- VAR_CONST = VAR_STATIC +1, 
- VAR_DISPATCH = VAR_CONST +1 
+#ifndef __WINCE_DEFINED_TAGVARKIND
+#define __WINCE_DEFINED_TAGVARKIND
+typedef enum tagVARKIND {
+ VAR_PERINSTANCE = 0,
+ VAR_STATIC = VAR_PERINSTANCE +1,
+ VAR_CONST = VAR_STATIC +1,
+ VAR_DISPATCH = VAR_CONST +1
 } VARKIND;
+#endif /* __WINCE_DEFINED_TAGVARKIND */
+#ifndef __WINCE_DEFINED_PVARKIND
+#define __WINCE_DEFINED_PVARKIND
 typedef VARKIND *PVARKIND, *LPVARKIND;
+#endif /* __WINCE_DEFINED_PVARKIND */
 
 /* VARTYPE  [enum, function; ce-only] */
+#ifndef __WINCE_DEFINED_VARENUM
+#define __WINCE_DEFINED_VARENUM
 typedef unsigned short VARTYPE;
 enum VARENUM {
- VT_EMPTY = 0, 
- VT_NULL = 1, 
- VT_I2 = 2, 
- VT_I4 = 3, 
- VT_R4 = 4, 
- VT_R8 = 5, 
- VT_CY = 6, 
- VT_DATE = 7, 
- VT_BSTR = 8, 
- VT_DISPATCH = 9, 
- VT_ERROR = 10, 
- VT_BOOL = 11, 
- VT_VARIANT = 12, 
- VT_UNKNOWN = 13, 
- VT_UI1 = 17, 
+ VT_EMPTY = 0,
+ VT_NULL = 1,
+ VT_I2 = 2,
+ VT_I4 = 3,
+ VT_R4 = 4,
+ VT_R8 = 5,
+ VT_CY = 6,
+ VT_DATE = 7,
+ VT_BSTR = 8,
+ VT_DISPATCH = 9,
+ VT_ERROR = 10,
+ VT_BOOL = 11,
+ VT_VARIANT = 12,
+ VT_UNKNOWN = 13,
+ VT_UI1 = 17,
 };
 VT_RESERVED = 0x8000
 VT_BYREF = 0x4000
 VT_ARRAY = 0x2000
+#endif /* __WINCE_DEFINED_VARENUM */
 
 /* EXCEPINFO  [struct; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
@@ -309,19 +378,34 @@ VT_ARRAY = 0x2000
 /*   decVal */
 
 /* CLIPDATA  [extra struct] */
+#ifndef __WINCE_DEFINED_TAGCLIPDATA
+#define __WINCE_DEFINED_TAGCLIPDATA
 typedef struct tagCLIPDATA { // cbSize is the size of the buffer pointed to // by pClipData, plus sizeof(ulClipFmt) ULONG cbSize; long ulClipFmt; BYTE* pClipData; } CLIPDATA;
+#endif /* __WINCE_DEFINED_TAGCLIPDATA */
 
 /* CY  [extra struct] */
+#ifndef __WINCE_DEFINED_TAGCY
+#define __WINCE_DEFINED_TAGCY
 typedef struct tagCY { unsigned long Lo; long Hi; } CY;
+#endif /* __WINCE_DEFINED_TAGCY */
 
 /* DECIMAL  [extra struct] */
+#ifndef __WINCE_DEFINED_TAGDEC
+#define __WINCE_DEFINED_TAGDEC
 typedef struct tagDEC { USHORT wReserved; BYTE scale; BYTE sign; ULONG Hi32; ULONGLONG Lo64; } DECIMAL;
+#endif /* __WINCE_DEFINED_TAGDEC */
 
 /* tagIDLDESC  [extra struct] */
+#ifndef __WINCE_DEFINED_TAGIDLDESC
+#define __WINCE_DEFINED_TAGIDLDESC
 typedef struct tagIDLDESC { ULONG dwReserved; USHORT wIDLFlags; };
+#endif /* __WINCE_DEFINED_TAGIDLDESC */
 
 /* VARIANT_BOOL  [extra typedef] */
+#ifndef __WINCE_DEFINED_VARIANT_BOOL
+#define __WINCE_DEFINED_VARIANT_BOOL
 typedef short VARIANT_BOOL;
+#endif /* __WINCE_DEFINED_VARIANT_BOOL */
 
 /* ==================================================================
  * functions and callbacks
@@ -330,27 +414,21 @@ typedef short VARIANT_BOOL;
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* DISPID  [?; ce-only; CE 4.0..699] */
-Typedef LONG DISPID;
+typedef LONG DISPID;
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* FreePropVariantArray  [function; shared; CE 5.0..699; Oleaut32.lib, oleaut32.lib] */
-WINOLEAPI FreePropVariantArray(
- ULONG cVariants,
- PROPVARIANT* rgvars
-);
+WINOLEAPI FreePropVariantArray(ULONG cVariants,
+ PROPVARIANT* rgvars);
 
 /* PropVariantClear  [function; shared; CE 5.0..699; Oleaut32.lib, oleaut32.lib] */
-WINOLEAPI PropVariantClear(
- PROPVARIANT* pvar
-);
+WINOLEAPI PropVariantClear(PROPVARIANT* pvar);
 
 /* PropVariantCopy  [function; shared; CE 5.0..699; Oleaut32.lib, oleaut32.lib] */
-WINOLEAPI PropVariantCopy(
- PROPVARIANT* pvarDest,
- const PROPVARIANT* pvarSrc
-);
+WINOLEAPI PropVariantCopy(PROPVARIANT* pvarDest,
+ const PROPVARIANT* pvarSrc);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

@@ -36,6 +36,8 @@
  * ================================================================ */
 
 /* FILELOCKSTATE  [struct; ce-only; Fsdmgr.lib] */
+#ifndef __WINCE_DEFINED__FILELOCKSTATE
+#define __WINCE_DEFINED__FILELOCKSTATE
 typedef struct _FILELOCKSTATE {
  DWORD dwPosLow;
  DWORD dwPosHigh;
@@ -46,13 +48,15 @@ typedef struct _FILELOCKSTATE {
  DWORD cQueue;
  PVOID pvLockContainer;
 } FILELOCKSTATE, * PFILELOCKSTATE;
+#endif /* __WINCE_DEFINED__FILELOCKSTATE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* PEMPTYLOCKCONTAINER  [callback; ce-only; CE 5.0..699; Fsdmgr.lib] */
-typedef VOID(*PEMPTYLOCKCONTAINER)(
- PFILELOCKSTATE pFileLockState
-);
+#ifndef __WINCE_DEFINED_PEMPTYLOCKCONTAINER
+#define __WINCE_DEFINED_PEMPTYLOCKCONTAINER
+typedef VOID(*PEMPTYLOCKCONTAINER)(PFILELOCKSTATE pFileLockState);
+#endif /* __WINCE_DEFINED_PEMPTYLOCKCONTAINER */
 #endif /* _WIN32_WCE */
 
 /* ==================================================================
@@ -60,129 +64,101 @@ typedef VOID(*PEMPTYLOCKCONTAINER)(
  * ================================================================ */
 
 /* FSDMGR_CachedRead  [function; ce-only; unified-kb; unified-kb] */
-DWORD FSDMGR_CachedRead(
- DWORD dwCacheId,
+DWORD FSDMGR_CachedRead(DWORD dwCacheId,
  DWORD dwBlockNum,
  DWORD dwNumBlocks,
  PVOID pBuffer,
- DWORD dwReadFlags
-);
+ DWORD dwReadFlags);
 
 /* FSDMGR_CachedWrite  [function; ce-only; unified-kb; unified-kb] */
-DWORD FSDMGR_CachedWrite(
- DWORD dwCacheId,
+DWORD FSDMGR_CachedWrite(DWORD dwCacheId,
  DWORD dwBlockNum,
  DWORD dwNumBlocks,
  PVOID pBuffer,
- DWORD dwWriteFlags
-);
+ DWORD dwWriteFlags);
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* CachedRead  [function; ce-only; CE 5.0..699; Fsdmgr.lib] */
-DWORD CachedRead(
- DWORD dwCacheId, 
+DWORD CachedRead(DWORD dwCacheId,
  DWORD dwBlockNum,
  DWORD dwNumBlocks,
  PVOID pBuffer,
- DWORD dwReadFlags
-);
+ DWORD dwReadFlags);
 
 /* CachedWrite  [function; ce-only; CE 5.0..699; Fsdmgr.lib] */
-DWORD CachedWrite(
- DWORD dwCacheId, 
+DWORD CachedWrite(DWORD dwCacheId,
  DWORD dwBlockNum,
  DWORD dwNumBlocks,
  PVOID pBuffer,
- DWORD dwWriteFlags
-);
+ DWORD dwWriteFlags);
 
 /* CacheIoControl  [function; ce-only; CE 5.0..699; Fsdmgr.lib] */
-BOOL CacheIoControl(
- DWORD dwCacheId, 
+BOOL CacheIoControl(DWORD dwCacheId,
  DWORD dwIoControlCode,
  LPVOID lpInbuf,
  DWORD nInBufSize,
  LPVOID lpOutBuf,
  DWORD nOutBufSize,
  LPDWORD lpBytesReturned,
- LPOVERLAPPED lpOverlapped
-);
+ LPOVERLAPPED lpOverlapped);
 
 /* CreateCache  [function; ce-only; CE 5.0..699; Fsdmgr.lib] */
-DWORD CreateCache(
- HANDLE hDsk, 
+DWORD CreateCache(HANDLE hDsk,
  DWORD dwStart,
  DWORD dwEnd,
  DWORD dwCacheSize,
  DWORD dwBlockSize,
- DWORD dwCreateFlags
-);
+ DWORD dwCreateFlags);
 
 /* DeleteCache  [function; ce-only; CE 5.0..699; Fsdmgr.lib] */
-DWORD DeleteCache(
- DWORD dwCacheId 
-);
+DWORD DeleteCache(DWORD dwCacheId);
 
 /* FSDMGR_EmptyLockContainer  [function; ce-only; CE 5.0..699; Fsdmgr.lib] */
-BOOL MyFSD_EmptyLockContainer(
- PFILELOCKSTATE pFileLockState
-);
+BOOL MyFSD_EmptyLockContainer(PFILELOCKSTATE pFileLockState);
 
 /* MyFSD_FsIoControl  [function; ce-only; CE 5.0..699; Fsdmgr.lib] */
-BOOL MyFSD_FsIoControl( 
- DWORD pVol,
+BOOL MyFSD_FsIoControl(DWORD pVol,
  DWORD dwIoControlCode,
  LPVOID lpInBuffer,
  DWORD nInBufferSize,
  LPVOID lpOutBuffer,
  DWORD nOutBufferSize,
  LPDWORD lpBytesReturned,
- LPOVERLAPPED lpOverlapped
-);
+ LPOVERLAPPED lpOverlapped);
 
 /* MyFSD_UnLockFileEx  [function; ce-only; CE 5.0..699; Fsdmgr.lib] */
-BOOL MyFSD_UnlockFileEx(
- DWORD dwFile,
+BOOL MyFSD_UnlockFileEx(DWORD dwFile,
  DWORD dwReserved,
  DWORD nNumberOfBytesToUnlockLow,
  DWORD nNumberOfBytesToUnlockHigh,
- LPOVERLAPPED lpOverlapped
-);
+ LPOVERLAPPED lpOverlapped);
 
 /* ResizeCache  [function; ce-only; CE 5.0..699; Fsdmgr.lib] */
-DWORD ResizeCache(
- DWORD dwCacheId, 
+DWORD ResizeCache(DWORD dwCacheId,
  DWORD dwSize,
- DWORD dwResizeFlags
-);
+ DWORD dwResizeFlags);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* FSDMGR_CacheIoControl  [function; ce-only; CE 6.0..699; Fsdmgr.lib] */
-BOOL FSDMGR_CacheIoControl(
- DWORD dwCacheId,
+BOOL FSDMGR_CacheIoControl(DWORD dwCacheId,
  DWORD dwIoControlCode,
  LPVOID lpInBuf,
  DWORD nInBufSize,
  LPVOID lpOutBuf,
  DWORD nOutBufSize,
  LPDWORD lpBytesReturned,
- LPOVERLAPPED lpOverlapped
-);
+ LPOVERLAPPED lpOverlapped);
 
 /* FSDMGR_DeleteCache  [function; ce-only; CE 6.0..699; Fsdmgr.lib] */
-DWORD FSDMGR_DeleteCache(
- DWORD dwCacheId
-);
+DWORD FSDMGR_DeleteCache(DWORD dwCacheId);
 
 /* FSDMGR_ResizeCache  [function; ce-only; CE 6.0..699; Fsdmgr.lib] */
-DWORD FSDMGR_ResizeCache(
- DWORD dwCacheId,
+DWORD FSDMGR_ResizeCache(DWORD dwCacheId,
  DWORD dwSize,
- DWORD dwResizeFlags
-);
+ DWORD dwResizeFlags);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

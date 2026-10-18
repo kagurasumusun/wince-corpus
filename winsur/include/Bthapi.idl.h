@@ -24,11 +24,17 @@
  * ================================================================ */
 
 /* NodeData  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_NODEDATA
+#define __WINCE_DEFINED_NODEDATA
 typedef struct NodeData {
  USHORT type;
  USHORT specificType;
  NodeDataUnion u;
 } NodeData;
+#endif /* __WINCE_DEFINED_NODEDATA */
+#ifndef __WINCE_DEFINED_PNODEDATA
+#define __WINCE_DEFINED_PNODEDATA
 typedef NodeData *PNodeData, *LPNodeData;
+#endif /* __WINCE_DEFINED_PNODEDATA */
 
 #endif /* _BTHAPI_IDL_ */

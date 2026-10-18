@@ -16,77 +16,51 @@
  * ================================================================ */
 
 /* FindClosePartition  [function; ce-only; unified-kb; unified-kb] */
-BOOL WINAPI FindClosePartition( 
- HANDLE hSearch 
-);
+BOOL WINAPI FindClosePartition(HANDLE hSearch);
 
 /* FindCloseStore  [function; ce-only; unified-kb; unified-kb] */
-BOOL WINAPI FindCloseStore( 
- HANDLE hSearch 
-);
+BOOL WINAPI FindCloseStore(HANDLE hSearch);
 
 /* FormatStore  [function; ce-only; unified-kb; unified-kb] */
-BOOL WINAPI FormatStore( 
- HANDLE hStore 
-);
+BOOL WINAPI FormatStore(HANDLE hStore);
 
 /* OpenStore  [function; ce-only; unified-kb; unified-kb] */
-HANDLE OpenStore( 
- LPCSTR szDeviceName 
-);
+HANDLE OpenStore(LPCSTR szDeviceName);
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* DeletePartition  [function; ce-only; CE 5.0..699; Storeapi.lib] */
-BOOL WINAPI DeletePartition(
- HANDLE hStore,
- LPCTSTR szPartitionName
-);
+BOOL WINAPI DeletePartition(HANDLE hStore,
+ LPCTSTR szPartitionName);
 
 /* DismountPartition  [function; ce-only; CE 5.0..699; Storeapi.lib] */
-BOOL WINAPI DismountPartition(
- HANDLE hPartition
-);
+BOOL WINAPI DismountPartition(HANDLE hPartition);
 
 /* DismountStore  [function; ce-only; CE 5.0..699; Storeapi.lib] */
-BOOL WINAPI DismountStore(
- HANDLE hStore
-);
+BOOL WINAPI DismountStore(HANDLE hStore);
 
 /* FormatPartition  [function; ce-only; CE 5.0..699; Storeapi.lib] */
-BOOL WINAPI FormatPartition(
- HANDLE hPartition
-);
+BOOL WINAPI FormatPartition(HANDLE hPartition);
 
 /* FormatPartitionEx  [function; ce-only; CE 5.0..699; Storeapi.lib] */
-BOOL WINAPI FormatPartitionEx(
- HANDLE hPartition,
+BOOL WINAPI FormatPartitionEx(HANDLE hPartition,
  BYTE bPartType,
- BOOL bAuto
-);
+ BOOL bAuto);
 
 /* MountPartition  [function; ce-only; CE 5.0..699; Storeapi.lib] */
-BOOL WINAPI MountPartition(
- HANDLE hPartition
-);
+BOOL WINAPI MountPartition(HANDLE hPartition);
 
 /* OpenPartition  [function; ce-only; CE 5.0..699; Storeapi.lib] */
-HANDLE WINAPI OpenPartition(
- HANDLE hStore,
- LPCTSTR szPartitionName
-);
+HANDLE WINAPI OpenPartition(HANDLE hStore,
+ LPCTSTR szPartitionName);
 
 /* RenamePartition  [function; ce-only; CE 5.0..699; Storeapi.lib] */
-BOOL WINAPI RenamePartition(
- HANDLE hPartition,
- LPCTSTR szNewName
-);
+BOOL WINAPI RenamePartition(HANDLE hPartition,
+ LPCTSTR szNewName);
 
 /* SetPartitionAttributes  [function; ce-only; CE 5.0..699; Storeapi.lib] */
-BOOL WINAPI SetPartitionAttributes(
- HANDLE hPartition,
- DWORD dwAttrs
-);
+BOOL WINAPI SetPartitionAttributes(HANDLE hPartition,
+ DWORD dwAttrs);
 #endif /* _WIN32_WCE */
 
 #endif /* _STOREMGR_ */

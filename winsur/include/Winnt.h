@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1447 constants, 20 declarations, 22 outlines, 21 base types, 0 extra macros, 0 extra decls
+ * 1447 constants, 20 declarations, 25 outlines, 21 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINNT_
 #define _WINNT_
@@ -1577,20 +1577,22 @@ typedef WCHAR TBYTE;
 
 /* definition  [typedef; ce-only; heuristic-prefix] */
 
+/* EDITSTREAM  [macro, typedef; ce-only; heuristic-prefix] */
+
+/* EM_CANPASTE  [macro, typedef; ce-only; heuristic-prefix] */
+
 /* firstChild  [typedef; ce-only; heuristic-prefix] */
 
 /* lastChild  [typedef; ce-only; heuristic-prefix] */
 
 /* MAKELANGID  [macro, function; shared] */
-WORD MAKELANGID( 
- USHORT usPrimaryLanguage, 
- USHORT usSubLanguage 
-);
+WORD MAKELANGID(USHORT usPrimaryLanguage,
+ USHORT usSubLanguage);
 
 /* MAKELCID  [macro, function; shared] */
-#define MAKELCID(lgid, srtid) \ 
- ((DWORD)((((DWORD)((WORD )(srtid))) << 16) | \ 
- ((DWORD)((WORD )(lgid)))));
+#define MAKELCID(lgid, srtid) \
+ ((DWORD)((((DWORD)((WORD)(srtid))) << 16) | \
+ ((DWORD)((WORD)(lgid)))));
 
 /* namespaceURI  [typedef; ce-only; heuristic-prefix] */
 
@@ -1617,15 +1619,15 @@ WORD MAKELANGID(
 /* previousSibling  [typedef; ce-only; heuristic-prefix] */
 
 /* PRIMARYLANGID  [macro, function; shared] */
-WORD PRIMARYLANGID( 
- WORD lgid 
-);
+WORD PRIMARYLANGID(WORD lgid);
 
 /* specified  [typedef; ce-only; heuristic-prefix] */
 
 /* SUBLANGID  [macro, function; shared] */
 
 /* TEXT  [macro, typedef, function; shared] */
+
+/* VIEWATTRIBUTES  [macro, typedef; ce-only; heuristic-prefix] */
 
 /* xml  [typedef; ce-only; heuristic-prefix] */
 
@@ -1636,37 +1638,55 @@ WORD PRIMARYLANGID(
  * ================================================================ */
 
 /* FILE_NOTIFY_INFORMATION  [struct; shared] */
+#ifndef __WINCE_DEFINED__FILE_NOTIFY_INFORMATION
+#define __WINCE_DEFINED__FILE_NOTIFY_INFORMATION
 typedef struct _FILE_NOTIFY_INFORMATION {
- DWORD NextEntryOffset; 
- DWORD Action; 
- DWORD FileNameLength; 
- WCHAR FileName[1]; 
+ DWORD NextEntryOffset;
+ DWORD Action;
+ DWORD FileNameLength;
+ WCHAR FileName[1];
 } FILE_NOTIFY_INFORMATION, *PFILE_NOTIFY_INFORMATION;
+#endif /* __WINCE_DEFINED__FILE_NOTIFY_INFORMATION */
 
 /* IMAGE_DATA_DIRECTORY  [struct; shared] */
+#ifndef __WINCE_DEFINED__IMAGE_DATA_DIRECTORY
+#define __WINCE_DEFINED__IMAGE_DATA_DIRECTORY
 typedef struct _IMAGE_DATA_DIRECTORY {
  DWORD VirtualAddress;
  DWORD Size;
 } IMAGE_DATA_DIRECTORY, *PIMAGE_DATA_DIRECTORY;
+#endif /* __WINCE_DEFINED__IMAGE_DATA_DIRECTORY */
 
 /* MEMORY_BASIC_INFORMATION  [struct; ce-only; harvest-kb; harvest-kb] */
-typedef struct _MEMORY_BASIC_INFORMATION { 
- PVOID BaseAddress; 
- PVOID AllocationBase; 
- DWORD AllocationProtect; 
- DWORD RegionSize; 
- DWORD State; 
- DWORD Protect; 
- DWORD Type; 
-} MEMORY_BASIC_INFORMATION; 
+#ifndef __WINCE_DEFINED__MEMORY_BASIC_INFORMATION
+#define __WINCE_DEFINED__MEMORY_BASIC_INFORMATION
+typedef struct _MEMORY_BASIC_INFORMATION {
+ PVOID BaseAddress;
+ PVOID AllocationBase;
+ DWORD AllocationProtect;
+ DWORD RegionSize;
+ DWORD State;
+ DWORD Protect;
+ DWORD Type;
+} MEMORY_BASIC_INFORMATION;
 typedef MEMORY_BASIC_INFORMATION *PMEMORY_BASIC_INFORMATION;
+#endif /* __WINCE_DEFINED__MEMORY_BASIC_INFORMATION */
+#ifndef __WINCE_DEFINED_PMEMORY_BASIC_INFORMATION
+#define __WINCE_DEFINED_PMEMORY_BASIC_INFORMATION
 typedef MEMORY_BASIC_INFORMATION *PMEMORY_BASIC_INFORMATION, *LPMEMORY_BASIC_INFORMATION;
+#endif /* __WINCE_DEFINED_PMEMORY_BASIC_INFORMATION */
 
 /* PDATA_EH  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_PDATA_EH
+#define __WINCE_DEFINED_PDATA_EH
 struct PDATA_EH { unsigned int* pHandler; unsigned int* pHandlerData;};
+#endif /* __WINCE_DEFINED_PDATA_EH */
 
 /* SECURITY_DESCRIPTOR  [typedef, struct; shared; entity-headers] */
+#ifndef __WINCE_DEFINED_SECURITY_DESCRIPTOR
+#define __WINCE_DEFINED_SECURITY_DESCRIPTOR
 typedef PVOID PSECURITY_DESCRIPTOR;
+#endif /* __WINCE_DEFINED_SECURITY_DESCRIPTOR */
 
 /* EXCEPTION_RECORD  [struct; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
@@ -1693,25 +1713,19 @@ void _enable(void);
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* __emul  [function; ce-only; CE 4.0..699] */
-__int64 __cdecl __emul(
- int int1,
- int int2
-);
+__int64 __cdecl __emul(int int1,
+ int int2);
 
 /* __emulu  [function; ce-only; CE 4.0..699] */
-unsigned __int64 __cdecl __emulu(
- int int1,
- int int2
-);
+unsigned __int64 __cdecl __emulu(int int1,
+ int int2);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* SecureZeroMemory  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-PVOID SecureZeroMemory(
- PVOID ptr,
- SIZE_T cnt
-);
+PVOID SecureZeroMemory(PVOID ptr,
+ SIZE_T cnt);
 #endif /* _WIN32_WCE */
 
 #endif /* _WINNT_ */

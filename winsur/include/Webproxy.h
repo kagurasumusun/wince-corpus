@@ -18,10 +18,13 @@
  * ================================================================ */
 
 /* PROXY_HTTP_INFORMATION  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__PROXY_HTTP_INFORMATION
+#define __WINCE_DEFINED__PROXY_HTTP_INFORMATION
 typedef struct _PROXY_HTTP_INFORMATION {
  DWORD dwSize;
  DWORD dwProxyVersion;
 } PROXY_HTTP_INFORMATION, *PPROXY_HTTP_INFORMATION;
+#endif /* __WINCE_DEFINED__PROXY_HTTP_INFORMATION */
 
 /* ==================================================================
  * functions and callbacks
@@ -30,17 +33,13 @@ typedef struct _PROXY_HTTP_INFORMATION {
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* ProxyInitializeFilter  [function; ce-only; CE 5.0..699] */
-DWORD WINAPI ProxyInitializeFilter(
- PPROXY_HTTP_INFORMATION pInfo
-);
+DWORD WINAPI ProxyInitializeFilter(PPROXY_HTTP_INFORMATION pInfo);
 
 /* ProxyNotifyAddrChange  [function; ce-only; CE 5.0..699] */
 DWORD WINAPI ProxyNotifyAddrChange(void);
 
 /* ProxySignalFilter  [function; ce-only; CE 5.0..699] */
-DWORD ProxySignalFilter(
- DWORD dwSignal
-);
+DWORD ProxySignalFilter(DWORD dwSignal);
 
 /* ProxyUninitializeFilter  [function; ce-only; CE 5.0..699] */
 DWORD WINAPI ProxyUninitializeFilter (void);

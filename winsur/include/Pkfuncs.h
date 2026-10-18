@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 19 constants, 118 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 19 constants, 105 declarations, 3 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _PKFUNCS_
 #define _PKFUNCS_
@@ -43,6 +43,10 @@
 
 /* IsInPwrHdlr  [macro; ce-only] */
 
+/* NKPagePoolParameters  [struct; ce-only] */
+
+/* NKPagePoolState  [struct; ce-only] */
+
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
@@ -50,6 +54,8 @@
  * ================================================================ */
 
 /* CacheInfo  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__CACHEINFO
+#define __WINCE_DEFINED__CACHEINFO
 typedef struct _CacheInfo {
  DWORD dwL1Flags;
  DWORD dwL1ICacheSize;
@@ -66,14 +72,23 @@ typedef struct _CacheInfo {
  DWORD dwL2DCacheLineSize;
  DWORD dwL2DCacheNumWays;
 } CacheInfo, *PCacheInfo;
+#endif /* __WINCE_DEFINED__CACHEINFO */
 
 /* CallSnapshot  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__CALLSNAPSHOT
+#define __WINCE_DEFINED__CALLSNAPSHOT
 typedef struct _CallSnapshot {
  DWORD dwReturnAddr;
 } CallSnapshot;
+#endif /* __WINCE_DEFINED__CALLSNAPSHOT */
+#ifndef __WINCE_DEFINED_PCALLSNAPSHOT
+#define __WINCE_DEFINED_PCALLSNAPSHOT
 typedef CallSnapshot *PCallSnapshot, *LPCallSnapshot;
+#endif /* __WINCE_DEFINED_PCALLSNAPSHOT */
 
 /* CallSnapshot3  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__CALLSNAPSHOT3
+#define __WINCE_DEFINED__CALLSNAPSHOT3
 typedef struct _CallSnapshot3 {
  DWORD dwReturnAddr;
  DWORD dwFramePtr;
@@ -81,18 +96,30 @@ typedef struct _CallSnapshot3 {
  DWORD dwVMProc;
  DWORD dwParams[4];
 } CallSnapshot3;
+#endif /* __WINCE_DEFINED__CALLSNAPSHOT3 */
+#ifndef __WINCE_DEFINED_PCALLSNAPSHOT3
+#define __WINCE_DEFINED_PCALLSNAPSHOT3
 typedef CallSnapshot3 *PCallSnapshot3, *LPCallSnapshot3;
+#endif /* __WINCE_DEFINED_PCALLSNAPSHOT3 */
 
 /* CallSnapshotEx  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__CALLSNAPSHOTEX
+#define __WINCE_DEFINED__CALLSNAPSHOTEX
 typedef struct _CallSnapshotEx {
  DWORD dwReturnAddr;
  DWORD dwFramePtr;
  DWORD dwCurProc;
  DWORD dwParams[4];
 } CallSnapshotEx;
+#endif /* __WINCE_DEFINED__CALLSNAPSHOTEX */
+#ifndef __WINCE_DEFINED_PCALLSNAPSHOTEX
+#define __WINCE_DEFINED_PCALLSNAPSHOTEX
 typedef CallSnapshotEx *PCallSnapshotEx, *LPCallSnapshotEx;
+#endif /* __WINCE_DEFINED_PCALLSNAPSHOTEX */
 
 /* CeLogImportTable  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__CELOGIMPORTTABLE
+#define __WINCE_DEFINED__CELOGIMPORTTABLE
 typedef struct _CeLogImportTable {
  DWORD dwVersion;
  FARPROC pCreateEventW;
@@ -119,9 +146,15 @@ typedef struct _CeLogImportTable {
  DWORD dwCeLogSmallBuf;
  DWORD dwDefaultThreadQuantum;
 } CeLogImportTable;
+#endif /* __WINCE_DEFINED__CELOGIMPORTTABLE */
+#ifndef __WINCE_DEFINED_PCELOGIMPORTTABLE
+#define __WINCE_DEFINED_PCELOGIMPORTTABLE
 typedef CeLogImportTable *PCeLogImportTable, *LPCeLogImportTable;
+#endif /* __WINCE_DEFINED_PCELOGIMPORTTABLE */
 
 /* DEVICE_ID  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__DEVICE_ID
+#define __WINCE_DEFINED__DEVICE_ID
 typedef struct _DEVICE_ID {
  DWORD dwSize;
  DWORD dwPresetIDOffset;
@@ -129,8 +162,11 @@ typedef struct _DEVICE_ID {
  DWORD dwPlatformIDOffset;
  DWORD dwPlatformIDBytes;
 } DEVICE_ID, *PDEVICE_ID;
+#endif /* __WINCE_DEFINED__DEVICE_ID */
 
 /* DEVICE_LOCATION  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__DEVICE_LOCATION
+#define __WINCE_DEFINED__DEVICE_LOCATION
 typedef struct _DEVICE_LOCATION {
  DWORD IfcType;
  DWORD BusNumber;
@@ -138,53 +174,45 @@ typedef struct _DEVICE_LOCATION {
  PVOID PhysicalLoc;
  DWORD Pin;
 } DEVICE_LOCATION, *PDEVICE_LOCATION;
+#endif /* __WINCE_DEFINED__DEVICE_LOCATION */
 
 /* DEVICE_PSL_NOTIFY  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__DEVICE_PSL_NOTIFY
+#define __WINCE_DEFINED__DEVICE_PSL_NOTIFY
 typedef struct _DEVICE_PSL_NOTIFY {
  DWORD dwSize;
  DWORD dwFlags;
  HANDLE hProc;
  HANDLE hThread;
 } DEVICE_PSL_NOTIFY, *PDEVICE_PSL_NOTIFY;
+#endif /* __WINCE_DEFINED__DEVICE_PSL_NOTIFY */
 
 /* KD_BPINFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__KD_BPINFO
+#define __WINCE_DEFINED__KD_BPINFO
 typedef struct _KD_BPINFO {
- int nVersion; 
- ULONG ulFlags; 
- ULONG ulAddress; 
- ULONG ulHandle; 
+ int nVersion;
+ ULONG ulFlags;
+ ULONG ulAddress;
+ ULONG ulHandle;
  ULONG ulCount;
 } KD_BPINFO, *PKD_BPINFO;
+#endif /* __WINCE_DEFINED__KD_BPINFO */
 
 /* KD_EXCEPTION_INFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__KD_EXCEPTION_INFO
+#define __WINCE_DEFINED__KD_EXCEPTION_INFO
 typedef struct _KD_EXCEPTION_INFO {
- int nVersion; 
- ULONG ulFlags; 
- ULONG ulAddress; 
- ULONG ulExceptionCode; 
+ int nVersion;
+ ULONG ulFlags;
+ ULONG ulAddress;
+ ULONG ulExceptionCode;
 } KD_EXCEPTION_INFO, *PKD_EXCEPTION_INFO;
-
-/* NKPagePoolParameters  [struct; ce-only] */
-typedef struct {
- WORD NKVersion;
- WORD OEMVersion;
- PagePoolParameters Loader;
- PagePoolParameters File;
-} NKPagePoolParameters;
-typedef NKPagePoolParameters *PNKPagePoolParameters, *LPNKPagePoolParameters;
-
-/* NKPagePoolState  [struct; ce-only] */
-typedef struct {
- WORD Version;
- WORD Reserved;
- PagePoolParameters LoaderParams;
- PagePoolState LoaderState;
- PagePoolParameters FileParams;
- PagePoolState FileState;
-} NKPagePoolState;
-typedef NKPagePoolState *PNKPagePoolState, *LPNKPagePoolState;
+#endif /* __WINCE_DEFINED__KD_EXCEPTION_INFO */
 
 /* PagePoolParameters  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_PAGEPOOLPARAMETERS
+#define __WINCE_DEFINED_PAGEPOOLPARAMETERS
 typedef struct {
  DWORD Target;
  DWORD Maximum;
@@ -193,9 +221,15 @@ typedef struct {
  WORD NormalPriority256;
  WORD CriticalPriority256;
 } PagePoolParameters;
+#endif /* __WINCE_DEFINED_PAGEPOOLPARAMETERS */
+#ifndef __WINCE_DEFINED_PPAGEPOOLPARAMETERS
+#define __WINCE_DEFINED_PPAGEPOOLPARAMETERS
 typedef PagePoolParameters *PPagePoolParameters, *LPPagePoolParameters;
+#endif /* __WINCE_DEFINED_PPAGEPOOLPARAMETERS */
 
 /* PagePoolState  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_PAGEPOOLSTATE
+#define __WINCE_DEFINED_PAGEPOOLSTATE
 typedef struct {
  DWORD CurrentSize;
  DWORD TrimCount;
@@ -204,22 +238,35 @@ typedef struct {
  DWORD CriticalTime;
  DWORD FailCount;
 } PagePoolState;
+#endif /* __WINCE_DEFINED_PAGEPOOLSTATE */
+#ifndef __WINCE_DEFINED_PPAGEPOOLSTATE
+#define __WINCE_DEFINED_PPAGEPOOLSTATE
 typedef PagePoolState *PPagePoolState, *LPPagePoolState;
+#endif /* __WINCE_DEFINED_PPAGEPOOLSTATE */
 
 /* PHYSICAL_BASIC_INFORMATION  [struct; ce-only] */
-typedef struct _PHYSICAL_BASIC_INFORMATION { 
- PVOID lpBaseAddress; 
- DWORD dwRegionSize; 
- DWORD dwType; 
-} PHYSICAL_BASIC_INFORMATION; 
+#ifndef __WINCE_DEFINED__PHYSICAL_BASIC_INFORMATION
+#define __WINCE_DEFINED__PHYSICAL_BASIC_INFORMATION
+typedef struct _PHYSICAL_BASIC_INFORMATION {
+ PVOID lpBaseAddress;
+ DWORD dwRegionSize;
+ DWORD dwType;
+} PHYSICAL_BASIC_INFORMATION;
 typedef PHYSICAL_BASIC_INFORMATION* PPHYSICAL_BASIC_INFORMATION;
+#endif /* __WINCE_DEFINED__PHYSICAL_BASIC_INFORMATION */
+#ifndef __WINCE_DEFINED_PPHYSICAL_BASIC_INFORMATION
+#define __WINCE_DEFINED_PPHYSICAL_BASIC_INFORMATION
 typedef PHYSICAL_BASIC_INFORMATION *PPHYSICAL_BASIC_INFORMATION, *LPPHYSICAL_BASIC_INFORMATION;
+#endif /* __WINCE_DEFINED_PPHYSICAL_BASIC_INFORMATION */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* PFNAPIERRHANDLER  [callback; ce-only; CE 6.0..699; coredll.lib] */
+#ifndef __WINCE_DEFINED_PFNAPIERRHANDLER
+#define __WINCE_DEFINED_PFNAPIERRHANDLER
 typedef DWORD (*PFNAPIERRHANDLER)(DWORD);
 DWORD pfnHandler(DWORD iMethod);
+#endif /* __WINCE_DEFINED_PFNAPIERRHANDLER */
 #endif /* _WIN32_WCE */
 
 /* ==================================================================
@@ -229,9 +276,7 @@ DWORD pfnHandler(DWORD iMethod);
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* CacheSync  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-VOID CacheSync(
- int flags
-);
+VOID CacheSync(int flags);
 
 /* CeGetRandomSeed  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib] */
 __int64 CeGetRandomSeed (void);
@@ -246,151 +291,97 @@ DWORD GetCurrentPermissions (void);
 HANDLE GetOwnerProcess (void);
 
 /* InterruptDisable  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
-VOID InterruptDisable(
- DWORD idInt
-);
+VOID InterruptDisable(DWORD idInt);
 
 /* InterruptDone  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
-VOID InterruptDone(
- DWORD idInt
-);
+VOID InterruptDone(DWORD idInt);
 
 /* InterruptInitialize  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-BOOL InterruptInitialize(
- DWORD idInt,
+BOOL InterruptInitialize(DWORD idInt,
  HANDLE hEvent,
  LPVOID pvData,
- DWORD cbData
-);
+ DWORD cbData);
 
 /* KernelIoControl  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-BOOL KernelIoControl(
- DWORD dwIoControlCode,
+BOOL KernelIoControl(DWORD dwIoControlCode,
  LPVOID lpInBuf,
  DWORD nInBufSize,
  LPVOID lpOutBuf,
  DWORD nOutBufSize,
- LPDWORD lpBytesReturned
-);
+ LPDWORD lpBytesReturned);
 
 /* LoadDriver  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-HINSTANCE LoadDriver(
- LPCWSTR lpszFileName
-);
+HINSTANCE LoadDriver(LPCWSTR lpszFileName);
 
 /* LockPages  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-BOOL LockPages(
- LPVOID lpvAddress,
+BOOL LockPages(LPVOID lpvAddress,
  DWORD cbSize,
  PDWORD pPFNs,
- int fOptions
-);
+ int fOptions);
 
 /* MapPtrToProcess  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-LPVOID MapPtrToProcess(
- LPVOID lpv,
- HANDLE hProc
-);
+LPVOID MapPtrToProcess(LPVOID lpv,
+ HANDLE hProc);
 
 /* SetKMode  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-BOOL SetKMode(
- BOOL fMode
-);
+BOOL SetKMode(BOOL fMode);
 
 /* SetProcPermissions  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-DWORD SetProcPermissions(
- DWORD newperms
-);
+DWORD SetProcPermissions(DWORD newperms);
 
 /* SetStoreQueueBase  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-LPVOID SetStoreQueueBase(
- DWORD dwPhysPage
-);
+LPVOID SetStoreQueueBase(DWORD dwPhysPage);
 
 /* UnlockPages  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-BOOL UnlockPages(
- LPVOID lpvAddress,
- DWORD cbSize
-);
+BOOL UnlockPages(LPVOID lpvAddress,
+ DWORD cbSize);
 
 /* UnMapPtr  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-LPVOID UnMapPtr(
- LPVOID lpv
-);
+LPVOID UnMapPtr(LPVOID lpv);
 
 /* VirtualCopy  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-BOOL VirtualCopy(
- LPVOID lpvDest,
+BOOL VirtualCopy(LPVOID lpvDest,
  LPVOID lpvSrc,
  DWORD cbSize,
- DWORD fdwProtect
-);
+ DWORD fdwProtect);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
 
-/* OEMKDIoControl  [function; ce-only; CE 3.0..699; Nk.lib] */
-BOOL OEMKDIoControl(
- DWORD dwIoControlCode, 
- LPVOID lpBuf, 
- DWORD nBufSize 
-);
-
 /* ReadRegistryFromOEM  [function; ce-only; CE 3.0..699; Nk.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
-DWORD ReadRegistryFromOEM(
- DWORD dwFlags, 
- LPBYTE lpData, 
- DWORD cbData 
-);
+DWORD ReadRegistryFromOEM(DWORD dwFlags,
+ LPBYTE lpData,
+ DWORD cbData);
 
 /* SetCleanRebootFlag  [function; ce-only; CE 3.0..699; Coredll.lib, coredll.lib] */
 void SetCleanRebootFlag(void);
 
 /* SetOOMEvent  [function; ce-only; CE 3.0..699; Coredll.lib, coredll.lib] */
-void SetOOMEvent(
- HANDLE hEvent,
+void SetOOMEvent(HANDLE hEvent,
  DWORD cpLow,
  DWORD cpCritical,
  DWORD cpLowBlockSize,
- DWORD cpCriticalBlockSize 
-);
+ DWORD cpCriticalBlockSize);
 
 /* VirtualSetPageFlags  [function; ce-only; CE 3.0..699; Coredll.lib, coredll.lib] */
-BOOL VirtualSetPageFlags(
- LPVOID lpvAddress, 
- DWORD cbSize, 
- DWORD dwFlags, 
- LPDWORD lpdwOldFlags 
-);
+BOOL VirtualSetPageFlags(LPVOID lpvAddress,
+ DWORD cbSize,
+ DWORD dwFlags,
+ LPDWORD lpdwOldFlags);
 
 /* WriteRegistryToOEM  [function; ce-only; CE 3.0..699; Nk.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
-BOOL WriteRegistryToOEM( 
- DWORD dwFlags, 
- LPBYTE lpData, 
- DWORD cbData 
-);
+BOOL WriteRegistryToOEM(DWORD dwFlags,
+ LPBYTE lpData,
+ DWORD cbData);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* FreeIntChainHandler  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-BOOL FreeIntChainHandler(
- HANDLE hInstance
-);
+BOOL FreeIntChainHandler(HANDLE hInstance);
 
 /* LoadKernelLibrary  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-HANDLE LoadKernelLibrary(
- LPCWSTR lpszFileName
-);
-
-/* NKCreateStaticMapping  [function; ce-only; CE 4.0..699; Coredll.lib, Nkstub.lib] */
-LPVOID NKCreateStaticMapping(
- DWORD dwPhysBase,
- DWORD dwSize
-);
-
-/* NKForceCleanBoot  [function; ce-only; CE 4.0..699; Coredll.lib, Nkstub.lib] */
-VOID NKForceCleanBoot(void);
+HANDLE LoadKernelLibrary(LPCWSTR lpszFileName);
 
 /* PowerOffSystem  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
 void PowerOffSystem(void);
@@ -399,64 +390,48 @@ void PowerOffSystem(void);
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* AllocPhysMem  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-LPVOID AllocPhysMem(
- DWORD cbSize,
+LPVOID AllocPhysMem(DWORD cbSize,
  DWORD fdwProtect,
  DWORD dwAlignmentMask,
  DWORD dwFlags,
- PULONG pPhysicalAddress
-);
+ PULONG pPhysicalAddress);
 
 /* CacheRangeFlush  [function; ce-only; CE 5.0..699; Coredll.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
-void CacheRangeFlush(
- LPVOID pAddr,
+void CacheRangeFlush(LPVOID pAddr,
  DWORD dwLength,
- DWORD dwFlags
-);
+ DWORD dwFlags);
 
 /* CaptureDumpFileOnDevice  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL CaptureDumpFileOnDevice(
- DWORD dwProcessId,
- DWORD dwThreadId, 
- LPCWSTR pwzExtraFilesPath
-);
+BOOL CaptureDumpFileOnDevice(DWORD dwProcessId,
+ DWORD dwThreadId,
+ LPCWSTR pwzExtraFilesPath);
 
 /* CeGetCacheInfo  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL CeGetCacheInfo(
- DWORD cbSize,
- PCacheInfo pCacheInfo
-);
+BOOL CeGetCacheInfo(DWORD cbSize,
+ PCacheInfo pCacheInfo);
 
 /* CeSetMemoryAttributes  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL CeSetMemoryAttributes(
- LPVOID pVirtualAddr,
+BOOL CeSetMemoryAttributes(LPVOID pVirtualAddr,
  LPVOID pShiftedPhysAddr,
  DWORD cbSize,
- DWORD dwAttributes
-);
+ DWORD dwAttributes);
 
 /* CeVirtualSharedAlloc  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-LPVOID CeVirtualSharedAlloc(
- LPVOID lpvAddr,
+LPVOID CeVirtualSharedAlloc(LPVOID lpvAddr,
  DWORD cbSize,
- DWORD fdwAction
-);
+ DWORD fdwAction);
 
 /* CreateStaticMapping  [function; ce-only; CE 5.0..699; Coredll.lib, Nkstub.lib] */
-LPVOID CreateStaticMapping(
- DWORD dwPhysBase,
- DWORD dwSize
-);
+LPVOID CreateStaticMapping(DWORD dwPhysBase,
+ DWORD dwSize);
 
 /* CreateWatchDogTimer  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-HANDLE CreateWatchDogTimer(
- LPCWSTR pszWatchDogName,
+HANDLE CreateWatchDogTimer(LPCWSTR pszWatchDogName,
  DWORD dwPeriod,
  DWORD dwWait,
  DWORD dwDfltAction,
  DWORD dwParam,
- DWORD dwFlags
-);
+ DWORD dwFlags);
 
 /* DrWatsonClear  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL DrWatsonClear(void);
@@ -468,293 +443,189 @@ BOOL DrWatsonFlush(void);
 DWORD DrWatsonGetSize(void);
 
 /* DrWatsonReadData  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-DWORD DrWatsonReadData(
- DWORD dwOffset,
+DWORD DrWatsonReadData(DWORD dwOffset,
  LPVOID pData,
- DWORD cbSize
-);
+ DWORD cbSize);
 
 /* DrWatsonWriteData  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-DWORD DrWatsonWriteData(
- DWORD dwOffset,
+DWORD DrWatsonWriteData(DWORD dwOffset,
  LPVOID pData,
- DWORD cbSize
-);
+ DWORD cbSize);
 
 /* FreePhysMem  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL FreePhysMem(
- LPVOID lpvAddress
-);
+BOOL FreePhysMem(LPVOID lpvAddress);
 
 /* GetCallerProcess  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 HANDLE GetCallerProcess(void);
 
 /* GetEventData  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-DWORD GetEventData(
- HANDLE hEvent
-);
+DWORD GetEventData(HANDLE hEvent);
 
 /* GetThreadCallStack  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-ULONG GetThreadCallStack(
- HANDLE hThrd,
+ULONG GetThreadCallStack(HANDLE hThrd,
  ULONG dwMaxFrames,
- LPVOID lpFrames[],
+ LPVOID lpFrames,
  DWORD dwFlags,
- DWORD dwSkip
-);
+ DWORD dwSkip);
 
 /* InterruptMask  [function; ce-only; CE 5.0..699; Coredll.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
-VOID InterruptMask(
- DWORD idInt,
- BOOL fDisable
-);
+VOID InterruptMask(DWORD idInt,
+ BOOL fDisable);
 
 /* IsNamedEventSignaled  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL IsNamedEventSignaled(
- LPCWSTR pszName,
- DWORD dwFlags
-);
+BOOL IsNamedEventSignaled(LPCWSTR pszName,
+ DWORD dwFlags);
 
 /* KernelLibIoControl  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL KernelLibIoControl(
- HANDLE hModule,
+BOOL KernelLibIoControl(HANDLE hModule,
  DWORD dwIoControlCode,
  LPVOID lpInBuf,
  DWORD nInBufSize,
  LPVOID lpOutBuf,
  DWORD nOutBufSize,
- LPDWORD lpBytesReturned
-);
+ LPDWORD lpBytesReturned);
 
 /* KLibAllocShareMem  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL KLibAllocShareMem(
- DWORD nPages,
+BOOL KLibAllocShareMem(DWORD nPages,
  BOOL fNoCache,
  LPVOID* pVa,
- LPVOID* pPa
-);
+ LPVOID* pPa);
 
 /* KLibFreeShareMem  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL KLibFreeShareMem(
- DWORD nPages,
+BOOL KLibFreeShareMem(DWORD nPages,
  LPVOID pVa,
- LPVOID pPa
-);
+ LPVOID pPa);
 
 /* LoadIntChainHandler  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-HANDLE LoadIntChainHandler(
- LPCWSTR lpFilename,
+HANDLE LoadIntChainHandler(LPCWSTR lpFilename,
  LPCWSTR lpszFunctionName,
- BYTE bIRQ
-);
+ BYTE bIRQ);
 
 /* MapCallerPtr  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-LPVOID MapCallerPtr(
- LPVOID ptr,
- DWORD dwLen
-);
-
-/* NKRegCloseKey  [function; ce-only; CE 5.0..699; Coredll.lib, Nkstub.lib] */
-LONG NKRegCloseKey(
- HKEY hKey
-);
-
-/* NKRegQueryValueEx  [function; ce-only; CE 5.0..699; Coredll.lib, Nkstub.lib] */
-LONG NKRegQueryValueEx(
- HKEY hKey, 
- LPCWSTR lpValueName, 
- LPDWORD lpReserved, 
- LPDWORD lpType, 
- LPBYTE lpData, 
- LPDWORD lpcbData
-);
-
-/* NKRegSetValueEx  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-LONG NKRegSetValueEx(
- HKEY hKey, 
- LPCWSTR lpValueName, 
- DWORD dwReserved, 
- DWORD dwType, 
- LPBYTE lpData, 
- DWORD cbData
-);
-
-/* NKVirtualSetAttributes  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL NKVirtualSetAttributes(
- LPVOID lpvAddress,
- DWORD cbSize,
- DWORD dwNewFlags,
- DWORD dwMask,
- LPDWORD lpdwOldFlags
-);
+LPVOID MapCallerPtr(LPVOID ptr,
+ DWORD dwLen);
 
 /* OpenWatchDogTimer  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-HANDLE OpenWatchDogTimer(
- LPCWSTR pszWatchDogName,
- DWORD dwFlags
-);
+HANDLE OpenWatchDogTimer(LPCWSTR pszWatchDogName,
+ DWORD dwFlags);
 
 /* PageOutModule  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL PageOutModule(
- HANDLE hModule,
- DWORD dwFlags
-);
+BOOL PageOutModule(HANDLE hModule,
+ DWORD dwFlags);
 
 /* RefreshWatchDogTimer  [function; ce-only; CE 5.0..699; Coredll.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
-BOOL RefreshWatchDogTimer(
- HANDLE hWatchDog,
- DWORD dwFlags
-);
+BOOL RefreshWatchDogTimer(HANDLE hWatchDog,
+ DWORD dwFlags);
 
 /* SetEventData  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL SetEventData(
- HANDLE hEvent,
- DWORD dwData
-);
+BOOL SetEventData(HANDLE hEvent,
+ DWORD dwData);
 
 /* SetJITDebuggerPath  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL SetJITDebuggerPath(
- LPCWSTR pszDbgrPath 
-);
+BOOL SetJITDebuggerPath(LPCWSTR pszDbgrPath);
 
 /* SleepTillTick  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 void SleepTillTick();
 
 /* StartWatchDogTimer  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL StartWatchDogTimer(
- HANDLE hWatchDog,
- DWORD dwFlags
-);
+BOOL StartWatchDogTimer(HANDLE hWatchDog,
+ DWORD dwFlags);
 
 /* StopWatchDogTimer  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL StopWatchDogTimer(
- HANDLE hWatchDog,
- DWORD dwFlags
-);
+BOOL StopWatchDogTimer(HANDLE hWatchDog,
+ DWORD dwFlags);
 
 /* VirtualSetAttributes  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL VirtualSetAttributes(
- LPVOID lpvAddress,
+BOOL VirtualSetAttributes(LPVOID lpvAddress,
  DWORD cbSize,
  DWORD dwNewFlags,
  DWORD dwMask,
- LPDWORD lpdwOldFlags
-);
+ LPDWORD lpdwOldFlags);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* CeAllocAsynchronousBuffer  [function; ce-only; CE 6.0..699; coredll.lib] */
-HRESULT CeAllocAsynchronousBuffer(
- PVOID * ppDestAsyncMarshalled,
+HRESULT CeAllocAsynchronousBuffer(PVOID * ppDestAsyncMarshalled,
  PVOID pSrcSyncMarshalled,
  DWORD cbSrc,
- DWORD ArgumentDescriptor
-);
+ DWORD ArgumentDescriptor);
 
 /* CeAllocDuplicateBuffer  [function; ce-only; CE 6.0..699; coredll.lib] */
-HRESULT CeAllocDuplicateBuffer(
- PVOID * ppDestDuplicate,
+HRESULT CeAllocDuplicateBuffer(PVOID * ppDestDuplicate,
  PVOID pSrcMarshalled,
  DWORD cbSrc,
- DWORD ArgumentDescriptor
-);
+ DWORD ArgumentDescriptor);
 
 /* CeCallUserProc  [function; ce-only; CE 6.0..699; coredll.lib] */
-BOOL CeCallUserProc(
- LPCWSTR pszDllName,
+BOOL CeCallUserProc(LPCWSTR pszDllName,
  LPCWSTR pszFuncName,
  LPVOID lpInBuffer,
  DWORD nInBufferSize,
  LPVOID lpOutBuffer,
  DWORD nOutBufferSize,
- LPDWORD lpBytesReturned
-);
+ LPDWORD lpBytesReturned);
 
 /* CeCloseCallerBuffer  [function; ce-only; CE 6.0..699; coredll.lib] */
-HRESULT CeCloseCallerBuffer(
- PVOID pDestMarshalled,
+HRESULT CeCloseCallerBuffer(PVOID pDestMarshalled,
  PVOID pSrcUnmarshalled,
  DWORD cbSrc,
- DWORD ArgumentDescriptor
-);
+ DWORD ArgumentDescriptor);
 
 /* CeFlushAsynchronousBuffer  [function; ce-only; CE 6.0..699; coredll.lib] */
-HRESULT CeFlushAsynchronousBuffer(
- PVOID pDestAsyncMarshalled,
+HRESULT CeFlushAsynchronousBuffer(PVOID pDestAsyncMarshalled,
  PVOID pSrcSyncMarshalled,
  PVOID pSrcUnmarshalled,
  DWORD cbSrc,
- DWORD ArgumentDescriptor
-);
+ DWORD ArgumentDescriptor);
 
 /* CeFreeAsynchronousBuffer  [function; ce-only; CE 6.0..699; coredll.lib] */
-HRESULT CeFreeAsynchronousBuffer(
- PVOID pDestAsyncMarshalled,
+HRESULT CeFreeAsynchronousBuffer(PVOID pDestAsyncMarshalled,
  PVOID pSrcSyncMarshalled,
  DWORD cbSrc,
- DWORD ArgumentDescriptor
-);
+ DWORD ArgumentDescriptor);
 
 /* CeFreeDuplicateBuffer  [function; ce-only; CE 6.0..699; coredll.lib] */
-HRESULT CeFreeDuplicateBuffer(
- PVOID pDestDuplicate,
+HRESULT CeFreeDuplicateBuffer(PVOID pDestDuplicate,
  PVOID pSrcMarshalled,
  DWORD cbSrc,
- DWORD ArgumentDescriptor
-);
+ DWORD ArgumentDescriptor);
 
 /* CeGetRawTime  [function; ce-only; CE 6.0..699; coredll.lib] */
-BOOL CeGetRawTime(
- ULONGLONG * pui64Millsec
-);
+BOOL CeGetRawTime(ULONGLONG * pui64Millsec);
 
 /* CeGetRawTimeOffset  [function; ce-only; CE 6.0..699; coredll.lib] */
-BOOL CeGetRawTimeOffset(
- LONGLONG * pi64Offset
-);
+BOOL CeGetRawTimeOffset(LONGLONG * pi64Offset);
 
 /* CeImpersonateCurrentProcess  [function; ce-only; CE 6.0..699; coredll.dll] */
-BOOL CeImpersonateCurrentProcess (
- void
-);
+BOOL CeImpersonateCurrentProcess (void);
 
 /* CeRemoteHeapCreate  [function; ce-only; CE 6.0..699; coredll.lib] */
-HANDLE CeRemoteHeapCreate (
- DWORD dwProcessId,
- DWORD dwFlags
-);
+HANDLE CeRemoteHeapCreate (DWORD dwProcessId,
+ DWORD dwFlags);
 
 /* CeRemoteHeapTranslatePointer  [function; ce-only; CE 6.0..699; coredll.lib] */
-LPVOID CeRemoteHeapTranslatePointer(
- HANDLE hHeap,
+LPVOID CeRemoteHeapTranslatePointer(HANDLE hHeap,
  DWORD dwFlags,
- LPVOID ptr
-);
+ LPVOID ptr);
 
 /* CreateAPIHandle  [function; ce-only; CE 6.0..699; coredll.lib] */
-HANDLE CreateAPIHandle(
- HANDLE hASet,
- LPVOID pvData
-);
+HANDLE CreateAPIHandle(HANDLE hASet,
+ LPVOID pvData);
 
 /* DeleteStaticMapping  [function; ce-only; CE 6.0..699; Nkstub.lib] */
-BOOL DeleteStaticMapping(
- LPVOID pVirtBase,
- DWORD dwSize
-);
+BOOL DeleteStaticMapping(LPVOID pVirtBase,
+ DWORD dwSize);
 
 /* ForwardDeviceIoControl  [function; ce-only; CE 6.0..699; coredll.lib] */
-BOOL ForwardDeviceIoControl (
- HANDLE hDevice,
+BOOL ForwardDeviceIoControl (HANDLE hDevice,
  DWORD dwIoControlCode,
  LPVOID lpInBuf,
  DWORD nInBufSize,
  LPVOID lpOutBuf,
  DWORD nOutBufSize,
  LPDWORD lpBytesReturned,
- LPOVERLAPPED lpOverlapped
-);
+ LPOVERLAPPED lpOverlapped);
 
 /* GetCallerVMProcessId  [function; ce-only; CE 6.0..699; coredll.lib] */
 DWORD GetCallerVMProcessId (void);
@@ -763,46 +634,30 @@ DWORD GetCallerVMProcessId (void);
 DWORD GetDirectCallerProcessId (void);
 
 /* KLibUnalignedAccessEnable  [function; ce-only; CE 6.0..699; coredll.lib] */
-BOOL KLibUnalignedAccessEnable (
- BOOL fEnable
-);
-
-/* NKDeleteStaticMapping  [function; ce-only; CE 6.0..699; Nkstub.lib] */
-BOOL NKDeleteStaticMapping (
- LPVOID pVirtAddr,
- DWORD dwSize
-);
+BOOL KLibUnalignedAccessEnable (BOOL fEnable);
 
 /* RegisterAPISet  [function; ce-only; CE 6.0..699; coredll.lib] */
-BOOL RegisterAPISet(
- HANDLE hASet,
- DWORD dwSetID
-);
+BOOL RegisterAPISet(HANDLE hASet,
+ DWORD dwSetID);
 
 /* SetAPIErrorHandler  [function; ce-only; CE 6.0..699; coredll.lib] */
-BOOL SetAPIErrorHandler(
- HANDLE hApiSet,
- PFNAPIERRHANDLER pfnHandler
-);
+BOOL SetAPIErrorHandler(HANDLE hApiSet,
+ PFNAPIERRHANDLER pfnHandler);
 
 /* VirtualAllocCopyEx  [function; ce-only; CE 6.0..699; coredll.lib] */
-LPVOID VirtualAllocCopyEx (
- HANDLE hSrcProc,
+LPVOID VirtualAllocCopyEx (HANDLE hSrcProc,
  HANDLE hDstProc,
  LPVOID pAddr,
  DWORD cbSize,
- DWORD dwProtect
-);
+ DWORD dwProtect);
 
 /* VirtualCopyEx  [function; ce-only; CE 6.0..699; coredll.lib] */
-BOOL VirtualCopyEx(
- HANDLE hDstProc,
+BOOL VirtualCopyEx(HANDLE hDstProc,
  LPVOID lpvDest,
  HANDLE hSrcProc,
  LPVOID lpvSrc,
  DWORD cbSize,
- DWORD fdwProtect
-);
+ DWORD fdwProtect);
 #endif /* _WIN32_WCE */
 
 #endif /* _PKFUNCS_ */

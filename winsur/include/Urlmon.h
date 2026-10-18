@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 48 declarations, 2 outlines, 0 base types, 0 extra macros, 37 extra decls
+ * 0 constants, 44 declarations, 2 outlines, 0 base types, 0 extra macros, 37 extra decls
  */
 #ifndef _URLMON_
 #define _URLMON_
@@ -26,6 +26,8 @@
  * ================================================================ */
 
 /* BINDF  [enum; ce-only; urlmon.lib] */
+#ifndef __WINCE_DEFINED_BINDF
+#define __WINCE_DEFINED_BINDF
 typedef enum {
  BINDF_ASYNCHRONOUS = 0x00000001,
  BINDF_ASYNCSTORAGE = 0x00000002,
@@ -52,9 +54,15 @@ typedef enum {
  BINDF_PREFERDEFAULTHANDLER = 0x00400000,
  BINDF_RESERVED_3 = 0x00800000
 } BINDF;
+#endif /* __WINCE_DEFINED_BINDF */
+#ifndef __WINCE_DEFINED_PBINDF
+#define __WINCE_DEFINED_PBINDF
 typedef BINDF *PBINDF, *LPBINDF;
+#endif /* __WINCE_DEFINED_PBINDF */
 
 /* BINDINFO_OPTIONS  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_BINDINFO_OPTIONS
+#define __WINCE_DEFINED_BINDINFO_OPTIONS
 typedef enum {
  BINDINFO_OPTIONS_WININETFLAG = 0x00010000,
  BINDINFO_OPTIONS_ENABLE_UTF8 = 0x00020000,
@@ -62,16 +70,28 @@ typedef enum {
  BINDINFO_OPTIONS_USE_IE_ENCODING = 0x00080000,
  BINDINFO_OPTIONS_BINDTOOBJECT = 0x00100000
 } BINDINFO_OPTIONS;
+#endif /* __WINCE_DEFINED_BINDINFO_OPTIONS */
+#ifndef __WINCE_DEFINED_PBINDINFO_OPTIONS
+#define __WINCE_DEFINED_PBINDINFO_OPTIONS
 typedef BINDINFO_OPTIONS *PBINDINFO_OPTIONS, *LPBINDINFO_OPTIONS;
+#endif /* __WINCE_DEFINED_PBINDINFO_OPTIONS */
 
 /* BINDINFOF  [enum; ce-only; urlmon.lib] */
+#ifndef __WINCE_DEFINED_TAGBINDINFOF
+#define __WINCE_DEFINED_TAGBINDINFOF
 typedef enum tagBINDINFOF {
  BINDINFOF_URLENCODESTGMEDDATA,
  BINDINFOF_URLENCODEDEXTRAINFO
 } BINDINFOF;
+#endif /* __WINCE_DEFINED_TAGBINDINFOF */
+#ifndef __WINCE_DEFINED_PBINDINFOF
+#define __WINCE_DEFINED_PBINDINFOF
 typedef BINDINFOF *PBINDINFOF, *LPBINDINFOF;
+#endif /* __WINCE_DEFINED_PBINDINFOF */
 
 /* BINDSTATUS  [enum; ce-only; urlmon.lib] */
+#ifndef __WINCE_DEFINED_TAGBINDSTATUS
+#define __WINCE_DEFINED_TAGBINDSTATUS
 typedef enum tagBINDSTATUS {
  BINDSTATUS_FINDINGRESOURCE,
  BINDSTATUS_CONNECTING,
@@ -124,9 +144,15 @@ typedef enum tagBINDSTATUS {
  BINDSTATUS_CACHECONTROL,
  BINDSTATUS_SIZEAVAILABLE,
 } BINDSTATUS;
+#endif /* __WINCE_DEFINED_TAGBINDSTATUS */
+#ifndef __WINCE_DEFINED_PBINDSTATUS
+#define __WINCE_DEFINED_PBINDSTATUS
 typedef BINDSTATUS *PBINDSTATUS, *LPBINDSTATUS;
+#endif /* __WINCE_DEFINED_PBINDSTATUS */
 
 /* BINDSTRING  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_TAGBINDSTRING
+#define __WINCE_DEFINED_TAGBINDSTRING
 typedef enum tagBINDSTRING {
  BINDSTRING_HEADERS = 1,
  BINDSTRING_ACCEPT_MIMES,
@@ -146,18 +172,30 @@ typedef enum tagBINDSTRING {
  BINDSTRING_FLAG_BIND_TO_OBJECT,
  BINDSTRING_PTR_BIND_CONTEXT
 } BINDSTRING;
+#endif /* __WINCE_DEFINED_TAGBINDSTRING */
+#ifndef __WINCE_DEFINED_PBINDSTRING
+#define __WINCE_DEFINED_PBINDSTRING
 typedef BINDSTRING *PBINDSTRING, *LPBINDSTRING;
+#endif /* __WINCE_DEFINED_PBINDSTRING */
 
 /* BINDVERB  [enum; ce-only; urlmon.lib] */
+#ifndef __WINCE_DEFINED_BINDVERB
+#define __WINCE_DEFINED_BINDVERB
 typedef enum {
  BINDVERB_GET,
  BINDVERB_POST,
  BINDVERB_PUT,
  BINDVERB_CUSTOM
 } BINDVERB;
+#endif /* __WINCE_DEFINED_BINDVERB */
+#ifndef __WINCE_DEFINED_PBINDVERB
+#define __WINCE_DEFINED_PBINDVERB
 typedef BINDVERB *PBINDVERB, *LPBINDVERB;
+#endif /* __WINCE_DEFINED_PBINDVERB */
 
 /* BSCF  [enum; ce-only; urlmon.lib] */
+#ifndef __WINCE_DEFINED_BSCF
+#define __WINCE_DEFINED_BSCF
 typedef enum {
  BSCF_FIRSTDATANOTIFICATION,
  BSCF_INTERMEDIATEDATANOTIFICATION,
@@ -165,9 +203,15 @@ typedef enum {
  BSCF_DATAFULLYAVAILABLE,
  BSCF_AVAILABLEDATASIZEUNKNOWN
  } BSCF;
+#endif /* __WINCE_DEFINED_BSCF */
+#ifndef __WINCE_DEFINED_PBSCF
+#define __WINCE_DEFINED_PBSCF
 typedef BSCF *PBSCF, *LPBSCF;
+#endif /* __WINCE_DEFINED_PBSCF */
 
 /* HIT_LOGGING_INFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__HIT_LOGGING_INFO
+#define __WINCE_DEFINED__HIT_LOGGING_INFO
 typedef struct _HIT_LOGGING_INFO {
  DWORD dwStructSize;
  LPSTR lpszLoggedUrlName;
@@ -175,14 +219,23 @@ typedef struct _HIT_LOGGING_INFO {
  SYSTEMTIME EndTime;
  LPSTR lpszExtendedInfo;
 } HIT_LOGGING_INFO, *LPHIT_LOGGING_INFO;
+#endif /* __WINCE_DEFINED__HIT_LOGGING_INFO */
 
 /* MONIKERPROPERTY  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_MONIKERPROPERTY
+#define __WINCE_DEFINED_MONIKERPROPERTY
 typedef enum {
  MIMETYPEPROP = 0x00000000
 } MONIKERPROPERTY;
+#endif /* __WINCE_DEFINED_MONIKERPROPERTY */
+#ifndef __WINCE_DEFINED_PMONIKERPROPERTY
+#define __WINCE_DEFINED_PMONIKERPROPERTY
 typedef MONIKERPROPERTY *PMONIKERPROPERTY, *LPMONIKERPROPERTY;
+#endif /* __WINCE_DEFINED_PMONIKERPROPERTY */
 
 /* PARSEACTION  [enum; ce-only] */
+#ifndef __WINCE_DEFINED__TAGPARSEACTION
+#define __WINCE_DEFINED__TAGPARSEACTION
 typedef enum _tagPARSEACTION {
  PARSE_CANONICALIZE = 1,
  PARSE_FRIENDLY,
@@ -204,9 +257,15 @@ typedef enum _tagPARSEACTION {
  PARSE_ESCAPE,
  PARSE_UNESCAPE
 } PARSEACTION;
+#endif /* __WINCE_DEFINED__TAGPARSEACTION */
+#ifndef __WINCE_DEFINED_PPARSEACTION
+#define __WINCE_DEFINED_PPARSEACTION
 typedef PARSEACTION *PPARSEACTION, *LPPARSEACTION;
+#endif /* __WINCE_DEFINED_PPARSEACTION */
 
 /* PI_FLAGS  [enum; ce-only] */
+#ifndef __WINCE_DEFINED__TAGPI_FLAGS
+#define __WINCE_DEFINED__TAGPI_FLAGS
 typedef enum _tagPI_FLAGS {
  PI_PARSE_URL = 0x00000001,
  PI_FILTER_MODE = 0x00000002,
@@ -223,25 +282,43 @@ typedef enum _tagPI_FLAGS {
  PI_LOADAPPDIRECT = 0x00004000,
  PD_FORCE_SWITCH = 0x00010000
 } PI_FLAGS;
+#endif /* __WINCE_DEFINED__TAGPI_FLAGS */
+#ifndef __WINCE_DEFINED_PPI_FLAGS
+#define __WINCE_DEFINED_PPI_FLAGS
 typedef PI_FLAGS *PPI_FLAGS, *LPPI_FLAGS;
+#endif /* __WINCE_DEFINED_PPI_FLAGS */
 
 /* PROTOCOLDATA  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__TAGPROTOCOLDATA
+#define __WINCE_DEFINED__TAGPROTOCOLDATA
 typedef struct _tagPROTOCOLDATA {
  DWORD grfFlags;
  DWORD dwState;
  LPVOID pData;
  ULONG cbData;
 } PROTOCOLDATA;
+#endif /* __WINCE_DEFINED__TAGPROTOCOLDATA */
+#ifndef __WINCE_DEFINED_PPROTOCOLDATA
+#define __WINCE_DEFINED_PPROTOCOLDATA
 typedef PROTOCOLDATA *PPROTOCOLDATA, *LPPROTOCOLDATA;
+#endif /* __WINCE_DEFINED_PPROTOCOLDATA */
 
 /* PSUACTION  [enum; ce-only] */
+#ifndef __WINCE_DEFINED__TAGPSUACTION
+#define __WINCE_DEFINED__TAGPSUACTION
 typedef enum _tagPSUACTION {
  PSU_DEFAULT = 1,
  PSU_SECURITY_URL_ONLY
 } PSUACTION;
+#endif /* __WINCE_DEFINED__TAGPSUACTION */
+#ifndef __WINCE_DEFINED_PPSUACTION
+#define __WINCE_DEFINED_PPSUACTION
 typedef PSUACTION *PPSUACTION, *LPPSUACTION;
+#endif /* __WINCE_DEFINED_PPSUACTION */
 
 /* PUAF  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_PUAF
+#define __WINCE_DEFINED_PUAF
 typedef enum {
  PUAF_DEFAULT = 0x0000000,
  PUAF_NOUI = 0x00000001,
@@ -253,9 +330,15 @@ typedef enum {
  PUAF_TRUSTED = 0x00000040,
  PUAF_ACCEPT_WILDCARD_SCHEME = 0x00000080
 } PUAF;
+#endif /* __WINCE_DEFINED_PUAF */
+#ifndef __WINCE_DEFINED_PPUAF
+#define __WINCE_DEFINED_PPUAF
 typedef PUAF *PPUAF, *LPPUAF;
+#endif /* __WINCE_DEFINED_PPUAF */
 
 /* QUERYOPTION  [enum; ce-only] */
+#ifndef __WINCE_DEFINED__TAGQUERYOPTION
+#define __WINCE_DEFINED__TAGQUERYOPTION
 typedef enum _tagQUERYOPTION {
  QUERY_EXPIRATION_DATE = 1,
  QUERY_TIME_OF_LAST_CHANGE,
@@ -272,24 +355,42 @@ typedef enum _tagQUERYOPTION {
  QUERY_IS_SECURE,
  QUERY_IS_SAFE
 } QUERYOPTION;
+#endif /* __WINCE_DEFINED__TAGQUERYOPTION */
+#ifndef __WINCE_DEFINED_PQUERYOPTION
+#define __WINCE_DEFINED_PQUERYOPTION
 typedef QUERYOPTION *PQUERYOPTION, *LPQUERYOPTION;
+#endif /* __WINCE_DEFINED_PQUERYOPTION */
 
 /* SZM_FLAGS  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_SZM_FLAGS
+#define __WINCE_DEFINED_SZM_FLAGS
 typedef enum {
  SZM_CREATE = 0x00000000,
  SZM_DELETE = 0x00000001
 } SZM_FLAGS;
+#endif /* __WINCE_DEFINED_SZM_FLAGS */
+#ifndef __WINCE_DEFINED_PSZM_FLAGS
+#define __WINCE_DEFINED_PSZM_FLAGS
 typedef SZM_FLAGS *PSZM_FLAGS, *LPSZM_FLAGS;
+#endif /* __WINCE_DEFINED_PSZM_FLAGS */
 
 /* URL_ENCODING  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_URL_ENCODING
+#define __WINCE_DEFINED_URL_ENCODING
 typedef enum {
  URL_ENCODING_NONE = 0x00000000,
  URL_ENCODING_ENABLE_UTF8 = 0x10000000,
  URL_ENCODING_DISABLE_UTF8 = 0x20000000
 } URL_ENCODING;
+#endif /* __WINCE_DEFINED_URL_ENCODING */
+#ifndef __WINCE_DEFINED_PURL_ENCODING
+#define __WINCE_DEFINED_PURL_ENCODING
 typedef URL_ENCODING *PURL_ENCODING, *LPURL_ENCODING;
+#endif /* __WINCE_DEFINED_PURL_ENCODING */
 
 /* URLTEMPLATE  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_TAGURLTEMPLATE
+#define __WINCE_DEFINED_TAGURLTEMPLATE
 typedef enum tagURLTEMPLATE {
  URLTEMPLATE_CUSTOM = 0x00000,
  URLTEMPLATE_PREDEFINED_MIN = 0x10000,
@@ -299,9 +400,15 @@ typedef enum tagURLTEMPLATE {
  URLTEMPLATE_HIGH = 0x12000,
  URLTEMPLATE_PREDEFINED_MAX = 0x20000
 } URLTEMPLATE;
+#endif /* __WINCE_DEFINED_TAGURLTEMPLATE */
+#ifndef __WINCE_DEFINED_PURLTEMPLATE
+#define __WINCE_DEFINED_PURLTEMPLATE
 typedef URLTEMPLATE *PURLTEMPLATE, *LPURLTEMPLATE;
+#endif /* __WINCE_DEFINED_PURLTEMPLATE */
 
 /* URLZONE  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_TAGURLZONE
+#define __WINCE_DEFINED_TAGURLZONE
 typedef enum tagURLZONE {
  URLZONE_PREDEFINED_MIN = 0,
  URLZONE_LOCAL_MACHINE = 0,
@@ -313,17 +420,29 @@ typedef enum tagURLZONE {
  URLZONE_USER_MIN = 1000,
  URLZONE_USER_MAX = 10000
 } URLZONE;
+#endif /* __WINCE_DEFINED_TAGURLZONE */
+#ifndef __WINCE_DEFINED_PURLZONE
+#define __WINCE_DEFINED_PURLZONE
 typedef URLZONE *PURLZONE, *LPURLZONE;
+#endif /* __WINCE_DEFINED_PURLZONE */
 
 /* URLZONEREG  [enum; ce-only] */
+#ifndef __WINCE_DEFINED__URLZONEREG
+#define __WINCE_DEFINED__URLZONEREG
 typedef enum _URLZONEREG {
  URLZONEREG_DEFAULT = 0,
  URLZONEREG_HKLM,
  URLZONEREG_HKCU
 } URLZONEREG;
+#endif /* __WINCE_DEFINED__URLZONEREG */
+#ifndef __WINCE_DEFINED_PURLZONEREG
+#define __WINCE_DEFINED_PURLZONEREG
 typedef URLZONEREG *PURLZONEREG, *LPURLZONEREG;
+#endif /* __WINCE_DEFINED_PURLZONEREG */
 
 /* ZAFLAGS  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_ZAFLAGS
+#define __WINCE_DEFINED_ZAFLAGS
 typedef enum {
  ZAFLAGS_CUSTOM_EDIT = 0x00000001,
  ZAFLAGS_ADD_SITES = 0x00000002,
@@ -334,7 +453,11 @@ typedef enum {
  ZAFLAGS_SUPPORTS_VERIFICATION = 0x00000040,
  ZAFLAGS_UNC_AS_INTRANET = 0x00000080
 } ZAFLAGS;
+#endif /* __WINCE_DEFINED_ZAFLAGS */
+#ifndef __WINCE_DEFINED_PZAFLAGS
+#define __WINCE_DEFINED_PZAFLAGS
 typedef ZAFLAGS *PZAFLAGS, *LPZAFLAGS;
+#endif /* __WINCE_DEFINED_PZAFLAGS */
 
 /* ==================================================================
  * functions and callbacks
@@ -343,86 +466,66 @@ typedef ZAFLAGS *PZAFLAGS, *LPZAFLAGS;
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* CoInternetCombineUrl  [function; ce-only; CE 4.0..699; Urlmon.lib, urlmon.lib] */
-HRESULT CoInternetCombineUrl(
- LPCWSTR pwzBaseUrl,
+HRESULT CoInternetCombineUrl(LPCWSTR pwzBaseUrl,
  LPCWSTR pwzRelativeUrl,
  DWORD dwCombineFlags,
  LPWSTR pwzResult,
  DWORD cchResult,
  DWORD* pcchResult,
- DWORD dwReserved
-);
+ DWORD dwReserved);
 
 /* CoInternetGetProtocolFlags  [function; ce-only; CE 4.0..699; Urlmon.lib, urlmon.lib] */
-STDAPI CoInternetGetProtocolFlags(
- LPCWSTR pwzUrl,
+STDAPI CoInternetGetProtocolFlags(LPCWSTR pwzUrl,
  DWORD* pdwFlags,
- DWORD dwReserved
-);
+ DWORD dwReserved);
 
 /* CoInternetGetSecurityUrl  [function; ce-only; CE 4.0..699; Urlmon.lib, urlmon.lib] */
-HRESULT CoInternetGetSecurityURL(
- LPCWSTR pwzUrl,
+HRESULT CoInternetGetSecurityURL(LPCWSTR pwzUrl,
  LPWSTR* ppwzSecUrl,
  PSUACTION psuAction,
- DWORD dwReserved
-);
+ DWORD dwReserved);
 
 /* CoInternetParseUrl  [function; ce-only; CE 4.0..699; Urlmon.lib, urlmon.lib] */
-STDAPI CoInternetParseUrl(
- LPCWSTR pwzUrl,
+STDAPI CoInternetParseUrl(LPCWSTR pwzUrl,
  PARSEACTION ParseAction,
  DWORD dwFlags,
  LPWSTR pszResult,
  DWORD cchResult,
  DWORD* pcchResult,
- DWORD dwReserved
-);
+ DWORD dwReserved);
 
 /* CoInternetQueryInfo  [function; ce-only; CE 4.0..699; Urlmon.lib, urlmon.lib] */
-HRESULT CoInternetQueryInfo(
- LPCWSTR pwzUrl,
+HRESULT CoInternetQueryInfo(LPCWSTR pwzUrl,
  QUERYOPTION QueryOption,
  DWORD dwQueryFlags,
  LPVOID pvBuffer,
  DWORD cbBuffer,
  DWORD* pcbBuffer,
- DWORD dwReserved
-);
+ DWORD dwReserved);
 
 /* IsLoggingEnabled  [function; ce-only; CE 4.0..699; Urlmon.lib, urlmon.lib] */
-BOOL IsLoggingEnabled(
- LPCTSTR pszUrl
-);
+BOOL IsLoggingEnabled(LPCTSTR pszUrl);
 
 /* ObtainUserAgentString  [function; ce-only; CE 4.0..699; Urlmon.lib, urlmon.lib] */
-HRESULT ObtainUserAgentString(
- DWORD dwOption,
+HRESULT ObtainUserAgentString(DWORD dwOption,
  LPCSTR pcszUAOut,
- DWORD* cbSize
-);
+ DWORD* cbSize);
 
 /* UrlMkGetSessionOption  [function; ce-only; CE 4.0..699; Urlmon.lib, urlmon.lib] */
-HRESULT UrlMkGetSessionOption(
- DWORD dwOption,
+HRESULT UrlMkGetSessionOption(DWORD dwOption,
  LPVOID pBuffer,
  DWORD dwBufferLength,
  DWORD* pdwBufferLength,
- DWORD dwReserved
-);
+ DWORD dwReserved);
 
 /* UrlMkSetSessionOption  [function; ce-only; CE 4.0..699; Urlmon.lib, urlmon.lib] */
-HRESULT UrlMkSetSessionOption(
- DWORD dwOption,
+HRESULT UrlMkSetSessionOption(DWORD dwOption,
  LPVOID pBuffer,
  DWORD dwBufferLength,
- DWORD dwReserved
-);
+ DWORD dwReserved);
 
 /* WriteHitLogging  [function; ce-only; CE 4.0..699; Urlmon.lib, urlmon.lib] */
-BOOL WriteHitLogging (
- LPHIT_LOGGING_INFO lpLogginginfo
-);
+BOOL WriteHitLogging (LPHIT_LOGGING_INFO lpLogginginfo);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

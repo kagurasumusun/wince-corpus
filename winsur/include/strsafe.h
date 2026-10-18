@@ -30,268 +30,208 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* StringCbCat  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCbCatA,StringCbCatW (CE is W-side)] */
-HRESULT StringCbCat(
- LPTSTR pszDest,
+HRESULT StringCbCat(LPTSTR pszDest,
  size_t cbDestest,
- LPCTSTR pszSrc
-);
+ LPCTSTR pszSrc);
 
 /* StringCbCatEx  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCbCatExA,StringCbCatExW (CE is W-side)] */
-HRESULT StringCbCatEx(
- LPTSTR pszDest,
+HRESULT StringCbCatEx(LPTSTR pszDest,
  size_t cbDest,
  LPCTSTR pszSrc,
  LPTSTR *ppszDestEnd,
  size_t *pcbRemaining,
- DWORD dwFlags
-);
+ DWORD dwFlags);
 
 /* StringCbCatN  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCbCatNA,StringCbCatNW (CE is W-side)] */
-HRESULT StringCbCatN( 
- LPTSTR pszDest,
+HRESULT StringCbCatN(LPTSTR pszDest,
  size_t cbDest,
  LPCTSTR pszSrc,
- size_t cbMaxAppend
-);
+ size_t cbMaxAppend);
 
 /* StringCbCatNEx  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCbCatNExA,StringCbCatNExW (CE is W-side)] */
-HRESULT StringCbCatNEx( 
- LPTSTR pszDest,
+HRESULT StringCbCatNEx(LPTSTR pszDest,
  size_t cbDest,
  LPCTSTR pszSrc,
  size_t cbMaxAppend,
  LPTSTR *ppszDestEnd,
  size_t *pcbRemaining,
- DWORD dwFlags
-);
+ DWORD dwFlags);
 
 /* StringCbCopy  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCbCopyA,StringCbCopyW (CE is W-side)] */
-HRESULT StringCbCopy( 
- LPTSTR pszDest,
+HRESULT StringCbCopy(LPTSTR pszDest,
  size_t cbDest,
- LPCTSTR pszSrc
-);
+ LPCTSTR pszSrc);
 
 /* StringCbCopyEx  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCbCopyExA,StringCbCopyExW (CE is W-side)] */
-HRESULT StringCbCopyEx( 
- LPTSTR pszDest,
+HRESULT StringCbCopyEx(LPTSTR pszDest,
  size_t cbDest,
  LPCTSTR pszSrc,
  LPTSTR *ppszDestEnd,
  size_t *pcbRemaining,
- DWORD dwFlags
-);
+ DWORD dwFlags);
 
 /* StringCbCopyN  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCbCopyNA,StringCbCopyNW (CE is W-side)] */
-HRESULT StringCbCopyN( 
- LPTSTR pszDest,
+HRESULT StringCbCopyN(LPTSTR pszDest,
  size_t cbDest,
  LPCTSTR pszSrc,
- size_t cbSrc
-);
+ size_t cbSrc);
 
 /* StringCbCopyNEx  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCbCopyNExA,StringCbCopyNExW (CE is W-side)] */
-HRESULT StringCbCopyNEx( 
- LPTSTR pszDest,
+HRESULT StringCbCopyNEx(LPTSTR pszDest,
  size_t cbDest,
  LPCTSTR pszSrc,
  size_t cbSrc,
  LPTSTR *ppszDestEnd,
  size_t *pcbRemaining,
- DWORD dwFlags
-);
+ DWORD dwFlags);
 
 /* StringCbGets  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCbGetsA,StringCbGetsW (CE is W-side)] */
-HRESULT StringCbGets( 
- LPTSTR pszDest,
- size_t cbDest
-);
+HRESULT StringCbGets(LPTSTR pszDest,
+ size_t cbDest);
 
 /* StringCbGetsEx  [function; shared; CE 5.0..699; A/W StringCbGetsExA,StringCbGetsExW (CE is W-side)] */
-HRESULT StringCbGetsEx( 
- LPTSTR pszDest,
+HRESULT StringCbGetsEx(LPTSTR pszDest,
  size_t cbDest,
  LPTSTR *ppszDestEnd,
  size_t *pcbRemaining,
- DWORD dwFlags
-);
+ DWORD dwFlags);
 
 /* StringCbLength  [function; shared; CE 5.0..699; coredll.dll, strsafe.lib; A/W StringCbLengthA,StringCbLengthW (CE is W-side)] */
-HRESULT StringCbLength( 
- LPCTSTR psz,
+HRESULT StringCbLength(LPCTSTR psz,
  size_t cbMax,
- size_t *pcb
-);
+ size_t *pcb);
 
 /* StringCbPrintf  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCbPrintfA,StringCbPrintfW (CE is W-side)] */
-HRESULT StringCbPrintf( 
- LPTSTR pszDest,
+HRESULT StringCbPrintf(LPTSTR pszDest,
  size_t cbDest,
  LPCTSTR pszFormat,
- ...
-);
+ ...);
 
 /* StringCbPrintfEx  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCbPrintfExA,StringCbPrintfExW (CE is W-side)] */
-HRESULT StringCbPrintfEx( 
- LPTSTR pszDest,
+HRESULT StringCbPrintfEx(LPTSTR pszDest,
  size_t cbDest,
  LPTSTR *ppszDestEnd,
  size_t *pcbRemaining,
  DWORD dwFlags,
  LPCTSTR pszFormat,
- ...
-);
+ ...);
 
 /* StringCbVPrintf  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCbVPrintfA,StringCbVPrintfW (CE is W-side)] */
-HRESULT StringCbVPrintf( 
- LPTSTR pszDest,
+HRESULT StringCbVPrintf(LPTSTR pszDest,
  size_t cbDest,
  LPCTSTR pszFormat,
- va_list argList
-);
+ va_list argList);
 
 /* StringCbVPrintfEx  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCbVPrintfExA,StringCbVPrintfExW (CE is W-side)] */
-HRESULT StringCbVPrintfEx( 
- LPTSTR pszDest,
+HRESULT StringCbVPrintfEx(LPTSTR pszDest,
  size_t cbDest,
  LPTSTR *ppszDestEnd,
  size_t *pcbRemaining,
  DWORD dwFlags,
  LPCTSTR pszFormat,
- va_list argList
-);
+ va_list argList);
 
 /* StringCchCat  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCchCatA,StringCchCatW (CE is W-side)] */
-HRESULT StringCchCat( 
- LPTSTR pszDest,
+HRESULT StringCchCat(LPTSTR pszDest,
  size_t cchDest,
- LPCTSTR pszSrc
-);
+ LPCTSTR pszSrc);
 
 /* StringCchCatEx  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCchCatExA,StringCchCatExW (CE is W-side)] */
-HRESULT StringCchCatEx( 
- LPTSTR pszDest,
+HRESULT StringCchCatEx(LPTSTR pszDest,
  size_t cchDest,
  LPCTSTR pszSrc,
  LPTSTR *ppszDestEnd,
  size_t *pcchRemaining,
- DWORD dwFlags
-);
+ DWORD dwFlags);
 
 /* StringCchCatN  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCchCatNA,StringCchCatNW (CE is W-side)] */
-HRESULT StringCchCatN( 
- LPTSTR pszDest,
+HRESULT StringCchCatN(LPTSTR pszDest,
  size_t cchDest,
  LPCTSTR pszSrc,
- size_t cchMaxAppend
-);
+ size_t cchMaxAppend);
 
 /* StringCchCatNEx  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCchCatNExA,StringCchCatNExW (CE is W-side)] */
-HRESULT StringCchCatNEx( 
- LPTSTR pszDest,
+HRESULT StringCchCatNEx(LPTSTR pszDest,
  size_t cchDest,
  LPCTSTR pszSrc,
  size_t cchMaxAppend,
  LPTSTR *ppszDestEnd,
  size_t *pcchRemaining,
- DWORD dwFlags
-);
+ DWORD dwFlags);
 
 /* StringCchCopy  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCchCopyA,StringCchCopyW (CE is W-side)] */
-HRESULT StringCchCopy( 
- LPTSTR pszDest,
+HRESULT StringCchCopy(LPTSTR pszDest,
  size_t cchDest,
- LPCTSTR pszSrc
-);
+ LPCTSTR pszSrc);
 
 /* StringCchCopyEx  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCchCopyExA,StringCchCopyExW (CE is W-side)] */
-HRESULT StringCchCopyEx( 
- LPTSTR pszDest,
+HRESULT StringCchCopyEx(LPTSTR pszDest,
  size_t cchDest,
  LPCTSTR pszSrc,
  LPTSTR *ppszDestEnd,
  size_t *pcchRemaining,
- DWORD dwFlags
-);
+ DWORD dwFlags);
 
 /* StringCchCopyN  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCchCopyNA,StringCchCopyNW (CE is W-side)] */
-HRESULT StringCchCopyN( 
- LPTSTR pszDest,
+HRESULT StringCchCopyN(LPTSTR pszDest,
  size_t cchDest,
  LPCTSTR pszSrc,
- size_t cchSrc
-);
+ size_t cchSrc);
 
 /* StringCchCopyNEx  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCchCopyNExA,StringCchCopyNExW (CE is W-side)] */
-HRESULT StringCchCopyNEx( 
- LPTSTR pszDest,
+HRESULT StringCchCopyNEx(LPTSTR pszDest,
  size_t cchDest,
  LPCTSTR pszSrc,
  size_t cchSrc,
  LPTSTR *ppszDestEnd,
  size_t *pcchRemaining,
- DWORD dwFlags
-);
+ DWORD dwFlags);
 
 /* StringCchGets  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCchGetsA,StringCchGetsW (CE is W-side)] */
-HRESULT StringCchGets( 
- LPTSTR pszDest,
- size_t cchDest
-);
+HRESULT StringCchGets(LPTSTR pszDest,
+ size_t cchDest);
 
 /* StringCchGetsEx  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCchGetsExA,StringCchGetsExW (CE is W-side)] */
-HRESULT StringCchGetsEx( 
- LPTSTR pszDest,
+HRESULT StringCchGetsEx(LPTSTR pszDest,
  size_t cchDest,
  LPTSTR *ppszDestEnd,
  size_t *pcchRemaining,
- DWORD dwFlags
-);
+ DWORD dwFlags);
 
 /* StringCchLength  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCchLengthA,StringCchLengthW (CE is W-side)] */
-HRESULT StringCchLength( 
- LPCTSTR psz,
+HRESULT StringCchLength(LPCTSTR psz,
  size_t cchMax,
- size_t *pcch
-);
+ size_t *pcch);
 
 /* StringCchPrintf  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCchPrintfA,StringCchPrintfW (CE is W-side)] */
-HRESULT StringCchPrintf( 
- LPTSTR pszDest,
+HRESULT StringCchPrintf(LPTSTR pszDest,
  size_t cchDest,
  LPCTSTR pszFormat,
- ...
-);
+ ...);
 
 /* StringCchPrintfEx  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCchPrintfExA,StringCchPrintfExW (CE is W-side)] */
-HRESULT StringCchPrintfEx( 
- LPTSTR pszDest,
+HRESULT StringCchPrintfEx(LPTSTR pszDest,
  size_t cchDest,
  LPTSTR *ppszDestEnd,
  size_t *pcchRemaining,
  DWORD dwFlags,
  LPCTSTR pszFormat,
- ...
-);
+ ...);
 
 /* StringCchVPrintf  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCchVPrintfA,StringCchVPrintfW (CE is W-side)] */
-HRESULT StringCchVPrintf( 
- LPTSTR pszDest,
+HRESULT StringCchVPrintf(LPTSTR pszDest,
  size_t cchDest,
  LPCTSTR pszFormat,
- va_list argList
-);
+ va_list argList);
 
 /* StringCchVPrintfEx  [function; shared; CE 5.0..699; strsafe.lib; A/W StringCchVPrintfExA,StringCchVPrintfExW (CE is W-side)] */
-HRESULT StringCchVPrintfEx( 
- LPTSTR pszDest,
+HRESULT StringCchVPrintfEx(LPTSTR pszDest,
  size_t cchDest,
  LPTSTR *ppszDestEnd,
  size_t *pcchRemaining,
  DWORD dwFlags,
  LPCTSTR pszFormat,
- va_list argList
-);
+ va_list argList);
 #endif /* _WIN32_WCE */
 
 #endif /* _STRSAFE_ */

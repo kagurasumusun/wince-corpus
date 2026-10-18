@@ -26,26 +26,20 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* CeSvcAdd  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-HRESULT CeSvcAdd( 
- LPTSTR pszSvcName,
+HRESULT CeSvcAdd(LPTSTR pszSvcName,
  LPTSTR pszSvcClass,
- LPVOID pSvcInfo
-);
+ LPVOID pSvcInfo);
 
 /* CeSvcQueryInfo  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-HRESULT CeSvcQueryInfo( 
- LPTSTR pszSvcName,
+HRESULT CeSvcQueryInfo(LPTSTR pszSvcName,
  LPTSTR pszSvcClass,
  LPVOID pszSvcInfo,
- DWORD cbBuffer
-);
+ DWORD cbBuffer);
 
 /* CeSvcRemove  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-HRESULT CeSvcRemove( 
- LPTSTR pszSvcName,
+HRESULT CeSvcRemove(LPTSTR pszSvcName,
  LPTSTR pszSvcClass,
- DWORD dwSvcFlags
-);
+ DWORD dwSvcFlags);
 #endif /* _WIN32_WCE */
 
 #endif /* _CEUTIL_ */

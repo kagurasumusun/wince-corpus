@@ -1,11 +1,11 @@
-/* shellapi.h -- Windows CE unified surface
+/* ShellApi.h -- Windows CE unified surface
  *
  * ONE tree for every CE generation.  Version differences use
  * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 171 constants, 37 declarations, 0 outlines, 1 base types, 0 extra macros, 0 extra decls
+ * 171 constants, 19 declarations, 10 outlines, 1 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _SHELLAPI_
 #define _SHELLAPI_
@@ -230,102 +230,82 @@
 typedef HANDLE HDESK;
 
 /* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* HIMAGELIST  [typedef; ce-only; heuristic-prefix] */
+
+/* HIMC  [typedef; ce-only; heuristic-prefix] */
+
+/* LPCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
+
+/* LUID  [typedef; ce-only; heuristic-prefix] */
+
+/* PCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
+
+/* PCWCH  [typedef; ce-only; heuristic-prefix] */
+
+/* PLUID  [typedef; ce-only; heuristic-prefix] */
+
+/* REGSAM  [typedef; ce-only; heuristic-prefix] */
+
+/* UNSIGNED  [typedef; ce-only; heuristic-prefix] */
+
+/* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
 
 /* NOTIFYICONDATA  [struct; shared; A/W NOTIFYICONDATAA,NOTIFYICONDATAW (CE is W-side)] */
-typedef struct _NOTIFYICONDATA { 
+#ifndef __WINCE_DEFINED__NOTIFYICONDATA
+#define __WINCE_DEFINED__NOTIFYICONDATA
+typedef struct _NOTIFYICONDATA {
  DWORD cbSize;
- HWND hWnd; 
- UINT uID; 
- UINT uFlags; 
- UINT uCallbackMessage; 
- HICON hIcon; 
- WCHAR szTip[64]; 
+ HWND hWnd;
+ UINT uID;
+ UINT uFlags;
+ UINT uCallbackMessage;
+ HICON hIcon;
+ WCHAR szTip[64];
 } NOTIFYICONDATA, *PNOTIFYICONDATA;
+#endif /* __WINCE_DEFINED__NOTIFYICONDATA */
 
 /* SHELLEXECUTEINFO  [struct; ce-only; harvest-kb; harvest-kb] */
-typedef struct _SHELLEXECUTEINFO { 
- DWORD cbSize; 
- ULONG fMask; 
- HWND hwnd; 
- LPCSTR lpVerb; 
- LPCSTR lpFile; 
- LPCSTR lpParameters; 
- LPCSTR lpDirectory; 
- int nShow; 
- HINSTANCE hInstApp; 
- // Optional members 
- LPVOID lpIDList; 
- LPCSTR lpClass; 
- HKEY hkeyClass; 
- DWORD dwHotKey; 
- HANDLE hIcon; 
- HANDLE hProcess; 
+#ifndef __WINCE_DEFINED__SHELLEXECUTEINFO
+#define __WINCE_DEFINED__SHELLEXECUTEINFO
+typedef struct _SHELLEXECUTEINFO {
+ DWORD cbSize;
+ ULONG fMask;
+ HWND hwnd;
+ LPCSTR lpVerb;
+ LPCSTR lpFile;
+ LPCSTR lpParameters;
+ LPCSTR lpDirectory;
+ int nShow;
+ HINSTANCE hInstApp;
+ // Optional members
+ LPVOID lpIDList;
+ LPCSTR lpClass;
+ HKEY hkeyClass;
+ DWORD dwHotKey;
+ HANDLE hIcon;
+ HANDLE hProcess;
 } SHELLEXECUTEINFO, FAR *LPSHELLEXECUTEINFO;
+#endif /* __WINCE_DEFINED__SHELLEXECUTEINFO */
 
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
-/* SHGetSpecialFolderPath  [function; shared; unified-kb; unified-kb] */
-BOOL SHGetSpecialFolderPath( 
- HWND hwndOwner, 
- LPTSTR lpszPath, 
- int nFolder, 
- BOOL fCreate 
-);
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* SHCreateShortcut  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Shortcut.lib, shortcut.lib] */
-DWORD WINAPI SHCreateShortcut(
- LPTSTR szShortcut, 
- LPTSTR szTarget 
-);
-
-/* SHGetShortcutTarget  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Shortcut.lib, shortcut.lib] */
-BOOL SHGetShortcutTarget(
- LPTSTR szShortcut, 
- LPTSTR szTarget, 
- int cbMax 
-);
-
-/* SHLoadDIBitmap  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Shmisc.lib, shmisc.lib] */
-HBITMAP SHLoadDIBitmap(
- LPCTSTR szFileName 
-);
-
-/* SHShowOutOfMemory  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Shmisc.lib, shmisc.lib] */
-int SHShowOutOfMemory(
- HWND hwndOwner, 
- UINT grfFlags 
-);
-#endif /* _WIN32_WCE */
-
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
 
 /* ExtractIconEx  [function; shared; CE 2.11..2.12, 3.0..699; A/W ExtractIconExA,ExtractIconExW (CE is W-side)] */
-HICON ExtractIconEx(
- LPCTSTR lpszFile, 
+HICON ExtractIconEx(LPCTSTR lpszFile,
  int nIconIndex,
  HICON FAR* phiconLarge,
  HICON FAR* phiconSmall,
- UINT nIcons
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
-
-/* SHCreateShortcutEx  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-DWORD WINAPI SHCreateShortcutEx(
- LPTSTR lpszDir,
- LPTSTR lpszTarget,
- LPTSTR szShortcut,
- LPDWORD lpcbShortcut
-);
+ UINT nIcons);
 #endif /* _WIN32_WCE */
 
 #endif /* _SHELLAPI_ */

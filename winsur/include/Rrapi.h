@@ -18,9 +18,7 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* CeRapiFreeBuffer  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Rapi.lib, rapi.lib] */
-HRESULT CeRapiFreeBuffer( 
- LPVOID Buffer 
-);
+HRESULT CeRapiFreeBuffer(LPVOID Buffer);
 #endif /* _WIN32_WCE */
 
 #endif /* _RRAPI_ */

@@ -18,12 +18,17 @@
  * ================================================================ */
 
 /* DEFRAG_OPTIONS  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__DEFRAG_OPTIONS
+#define __WINCE_DEFINED__DEFRAG_OPTIONS
 typedef struct _DEFRAG_OPTIONS {
  DWORD dwFatToUse;
  DWORD dwFlags;
 } DEFRAG_OPTIONS, *PDEFRAG_OPTIONS;
+#endif /* __WINCE_DEFINED__DEFRAG_OPTIONS */
 
 /* FRAGNODE  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__FRAGNODE
+#define __WINCE_DEFINED__FRAGNODE
 typedef struct _FRAGNODE {
  DWORD dwStartCluster;
  DWORD dwLength;
@@ -32,6 +37,7 @@ typedef struct _FRAGNODE {
  DWORD dwDirEntryOffset;
  _FRAGNODE* pNext;
 } FRAGNODE, *PFRAGNODE;
+#endif /* __WINCE_DEFINED__FRAGNODE */
 
 /* ==================================================================
  * functions and callbacks
@@ -40,10 +46,8 @@ typedef struct _FRAGNODE {
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* DefragVolumeUI  [function; ce-only; CE 5.0..699; Fatutil.dll] */
-VOID DefragVolumeUI(
- HANDLE hVolume,
- HWND hWnd
-);
+VOID DefragVolumeUI(HANDLE hVolume,
+ HWND hWnd);
 #endif /* _WIN32_WCE */
 
 #endif /* _DEFRAGDISK_ */

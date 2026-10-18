@@ -18,27 +18,19 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
 
 /* TouchCalibrateUI_DrawConfirmationScreen  [function; ce-only; CE 3.0..699] */
-void TouchCalibrateUI_DrawConfirmationScreen( 
- HDC hdc 
-);
+void TouchCalibrateUI_DrawConfirmationScreen(HDC hdc);
 
 /* TouchCalibrateUI_DrawMainScreen  [function; ce-only; CE 3.0..699] */
-void TouchCalibrateUI_DrawMainScreen( 
- HDC hdc 
-);
+void TouchCalibrateUI_DrawMainScreen(HDC hdc);
 
 /* TouchCalibrateUI_HandleUserInputMessage  [function; ce-only; CE 3.0..699] */
-void TouchCalibrateUI_HandleUserInputMessage( 
- UINT Message, 
- UINT wParam, 
- UINT lParam 
-);
+void TouchCalibrateUI_HandleUserInputMessage(UINT Message,
+ UINT wParam,
+ UINT lParam);
 
 /* TouchCalibrateUI_WaitForConfirmation  [function; ce-only; CE 3.0..699] */
-void TouchCalibrateUI_WaitForConfirmation( 
- HANDLE hevt, 
- HDC hdc 
-);
+void TouchCalibrateUI_WaitForConfirmation(HANDLE hevt,
+ HDC hdc);
 #endif /* _WIN32_WCE */
 
 #endif /* _CALIBRUI_ */

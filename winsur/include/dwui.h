@@ -18,6 +18,8 @@
  * ================================================================ */
 
 /* _BucketResponse  [struct; ce-only; DwUI.dll] */
+#ifndef __WINCE_DEFINED__BUCKETRESPONSE
+#define __WINCE_DEFINED__BUCKETRESPONSE
 typedef struct _BucketResponse {
  BOOL fUploadSucceeded;
  DWORD dwUploadError;
@@ -27,10 +29,13 @@ typedef struct _BucketResponse {
  char* pchResponse;
  int iResponseType;
 } BucketResponse;
+#endif /* __WINCE_DEFINED__BUCKETRESPONSE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* iResponseType  [?; ce-only; CE 6.0..699; DwUI.dll] */
+#ifndef __WINCE_DEFINED_IRESPONSETYPE
+#define __WINCE_DEFINED_IRESPONSETYPE
 enum {
  ResponseTypeMin = 0,
  ResponseTypeDialogLink = 0,
@@ -39,6 +44,7 @@ enum {
  ResponseTypeLightweight = 3,
  ResponseTypeMax = 4,
 };
+#endif /* __WINCE_DEFINED_IRESPONSETYPE */
 #endif /* _WIN32_WCE */
 
 /* ==================================================================
@@ -48,15 +54,11 @@ enum {
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* GetUserConsent  [function; ce-only; CE 6.0..699; DwUI.dll] */
-HRESULT GetUserConsent(
- LPCWSTR pwzDumpFilePath,
- BOOL* pfUserConsented
-);
+HRESULT GetUserConsent(LPCWSTR pwzDumpFilePath,
+ BOOL* pfUserConsented);
 
 /* WatsonUploadResponse  [function; ce-only; CE 6.0..699; DwUI.dll] */
-HRESULT WatsonUploadResponse(
- BucketResponse* pBucketResponse
-);
+HRESULT WatsonUploadResponse(BucketResponse* pBucketResponse);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================
@@ -65,7 +67,6 @@ HRESULT WatsonUploadResponse(
  * ================================================================ */
 
 /* function */
-#ifdef __cplusplus
 enum {
  ResponseTypeMin = 0,
  ResponseTypeDialogLink = 0,
@@ -74,6 +75,5 @@ enum {
  ResponseTypeLightweight = 3,
  ResponseTypeMax = 4,
 };
-#endif /* __cplusplus */
 
 #endif /* _DWUI_ */

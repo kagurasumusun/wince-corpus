@@ -18,15 +18,21 @@
  * ================================================================ */
 
 /* SERIAL_DEV_STATUS  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__SERIAL_DEV_STATUS
+#define __WINCE_DEFINED__SERIAL_DEV_STATUS
 typedef struct _SERIAL_DEV_STATUS {
  DWORD Errors;
  COMSTAT ComStat;
 } SERIAL_DEV_STATUS, *PSERIAL_DEV_STATUS;
+#endif /* __WINCE_DEFINED__SERIAL_DEV_STATUS */
 
 /* SERIAL_QUEUE_SIZES  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__SERIAL_QUEUE_SIZES
+#define __WINCE_DEFINED__SERIAL_QUEUE_SIZES
 typedef struct _SERIAL_QUEUE_SIZES {
  DWORD cbInQueue;
  DWORD cbOutQueue;
 } SERIAL_QUEUE_SIZES, *PSERIAL_QUEUE_SIZES;
+#endif /* __WINCE_DEFINED__SERIAL_QUEUE_SIZES */
 
 #endif /* _PEGDSER_ */

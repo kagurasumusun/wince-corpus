@@ -27,6 +27,8 @@
  * ================================================================ */
 
 /* MSGQUEUEINFO  [typedef; ce-only] */
+#ifndef __WINCE_DEFINED_MSGQUEUEINFO
+#define __WINCE_DEFINED_MSGQUEUEINFO
 typedef MSGQUEUEINFO{
  DWORD dwSize;
  DWORD dwFlags;
@@ -37,6 +39,7 @@ typedef MSGQUEUEINFO{
  WORD wNumReaders;
  WORD wNumWriters;
 } MSGQUEUEINFO, *PMSGQUEUEINFO, FAR* LPMSGQUEUEINFO;
+#endif /* __WINCE_DEFINED_MSGQUEUEINFO */
 
 /* ==================================================================
  * functions and callbacks
@@ -45,34 +48,26 @@ typedef MSGQUEUEINFO{
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* CloseMsgQueue  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL CloseMsgQueue(
- HANDLE hMsgQ
-);
+BOOL CloseMsgQueue(HANDLE hMsgQ);
 
 /* GetMsgQueueInfo  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL GetMsgQueueInfo(
- HANDLE hMsgQ,
- LPMSGQUEUEINFO lpInfo
-);
+BOOL GetMsgQueueInfo(HANDLE hMsgQ,
+ LPMSGQUEUEINFO lpInfo);
 
 /* ReadMsgQueue  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL ReadMsgQueue(
- HANDLE hMsgQ,
+BOOL ReadMsgQueue(HANDLE hMsgQ,
  LPVOID lpBuffer,
  DWORD cbBufferSize,
  LPDWORD lpNumberOfBytesRead,
  DWORD dwTimeout,
- DWORD* pdwFlags
-);
+ DWORD* pdwFlags);
 
 /* WriteMsgQueue  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL WriteMsgQueue(
- HANDLE hMsgQ,
+BOOL WriteMsgQueue(HANDLE hMsgQ,
  LPVOID lpBuffer,
  DWORD cbDataSize,
  DWORD dwTimeout,
- DWORD dwFlags
-);
+ DWORD dwFlags);
 #endif /* _WIN32_WCE */
 
 #endif /* _MSGQUEUE_ */

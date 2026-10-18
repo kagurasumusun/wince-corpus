@@ -29,10 +29,8 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* PowerPolicyNotify  [function; ce-only; CE 5.0..699; Coredll.lib] */
-BOOL PowerPolicyNotify(
- DWORD dwMessage,
- DWORD dwData
-);
+BOOL PowerPolicyNotify(DWORD dwMessage,
+ DWORD dwData);
 #endif /* _WIN32_WCE */
 
 #endif /* _PMPOLICY_ */

@@ -139,6 +139,8 @@
  * ================================================================ */
 
 /* AsnAny  [struct, typedef; shared; snmp.lib] */
+#ifndef __WINCE_DEFINED_ASNANY
+#define __WINCE_DEFINED_ASNANY
 typedef struct {
  BYTE asnType;
  union {
@@ -156,43 +158,77 @@ typedef struct {
  AsnOpaque arbitrary;
  } asnValue;
 } AsnAny;
+#endif /* __WINCE_DEFINED_ASNANY */
+#ifndef __WINCE_DEFINED_PASNANY
+#define __WINCE_DEFINED_PASNANY
 typedef AsnAny *PAsnAny, *LPAsnAny;
+#endif /* __WINCE_DEFINED_PASNANY */
 
 /* AsnCounter64  [struct, typedef; ce-only; snmp.lib] */
+#ifndef __WINCE_DEFINED_ASNCOUNTER64
+#define __WINCE_DEFINED_ASNCOUNTER64
 typedef struct {
  ULONG LowPart;
  ULONG HighPart;
 } AsnCounter64;
+#endif /* __WINCE_DEFINED_ASNCOUNTER64 */
+#ifndef __WINCE_DEFINED_PASNCOUNTER64
+#define __WINCE_DEFINED_PASNCOUNTER64
 typedef AsnCounter64 *PAsnCounter64, *LPAsnCounter64;
+#endif /* __WINCE_DEFINED_PASNCOUNTER64 */
 
 /* AsnObjectIdentifier  [struct, typedef; shared; snmp.lib] */
+#ifndef __WINCE_DEFINED_ASNOBJECTIDENTIFIER
+#define __WINCE_DEFINED_ASNOBJECTIDENTIFIER
 typedef struct {
  UINT idLength;
  UINT* ids;
 } AsnObjectIdentifier;
+#endif /* __WINCE_DEFINED_ASNOBJECTIDENTIFIER */
+#ifndef __WINCE_DEFINED_PASNOBJECTIDENTIFIER
+#define __WINCE_DEFINED_PASNOBJECTIDENTIFIER
 typedef AsnObjectIdentifier *PAsnObjectIdentifier, *LPAsnObjectIdentifier;
+#endif /* __WINCE_DEFINED_PASNOBJECTIDENTIFIER */
 
 /* AsnOctetString  [struct, typedef; shared; snmp.lib] */
+#ifndef __WINCE_DEFINED_ASNOCTETSTRING
+#define __WINCE_DEFINED_ASNOCTETSTRING
 typedef struct {
  BYTE* stream;
  UINT length;
  BOOL dynamic;
 } AsnOctetString;
+#endif /* __WINCE_DEFINED_ASNOCTETSTRING */
+#ifndef __WINCE_DEFINED_PASNOCTETSTRING
+#define __WINCE_DEFINED_PASNOCTETSTRING
 typedef AsnOctetString *PAsnOctetString, *LPAsnOctetString;
+#endif /* __WINCE_DEFINED_PASNOCTETSTRING */
 
 /* SnmpVarBind  [struct, typedef; shared; snmp.lib] */
+#ifndef __WINCE_DEFINED_SNMPVARBIND
+#define __WINCE_DEFINED_SNMPVARBIND
 typedef struct {
  AsnObjectName name;
  AsnObjectSyntax value;
 }SnmpVarBind;
+#endif /* __WINCE_DEFINED_SNMPVARBIND */
+#ifndef __WINCE_DEFINED_PSNMPVARBIND
+#define __WINCE_DEFINED_PSNMPVARBIND
 typedef SnmpVarBind *PSnmpVarBind, *LPSnmpVarBind;
+#endif /* __WINCE_DEFINED_PSNMPVARBIND */
 
 /* SnmpVarBindList  [struct, typedef; shared; snmp.lib] */
+#ifndef __WINCE_DEFINED_SNMPVARBINDLIST
+#define __WINCE_DEFINED_SNMPVARBINDLIST
 typedef struct {
  SnmpVarBind* list;
  UINT len;
 }SnmpVarBindList;
+#endif /* __WINCE_DEFINED_SNMPVARBINDLIST */
+#ifndef __WINCE_DEFINED_PSNMPVARBINDLIST
+#define __WINCE_DEFINED_PSNMPVARBINDLIST
 typedef SnmpVarBindList *PSnmpVarBindList, *LPSnmpVarBindList;
+#endif /* __WINCE_DEFINED_PSNMPVARBINDLIST */
 
 /* ==================================================================
  * functions and callbacks
@@ -204,133 +240,91 @@ typedef SnmpVarBindList *PSnmpVarBindList, *LPSnmpVarBindList;
 VOID SnmpExtensionClose();
 
 /* SnmpExtensionInitEx  [function; shared; CE 3.0..699; Snmp.lib, snmp.lib] */
-BOOL SnmpExtensionInitEx(
- AsnObjectIdentifier* pNextSupportedRegion 
-);
+BOOL SnmpExtensionInitEx(AsnObjectIdentifier* pNextSupportedRegion);
 
 /* SnmpExtensionQuery  [function; shared; CE 3.0..699; Snmp.lib, snmp.lib] */
-BOOL SnmpExtensionQuery( 
- BYTE bPduType, 
- SnmpVarBindList pVarBindList, 
- AsnInteger32 pErrorStatus, 
- AsnInteger32 pErrorIndex 
-);
+BOOL SnmpExtensionQuery(BYTE bPduType,
+ SnmpVarBindList pVarBindList,
+ AsnInteger32 pErrorStatus,
+ AsnInteger32 pErrorIndex);
 
 /* SnmpExtensionQueryEx  [function; shared; CE 3.0..699; Snmp.lib, snmp.lib] */
-BOOL SnmpExtensionQueryEx(
- DWORD dwRequestType, 
- DWORD dwTransactionId, 
- SnmpVarBindList pVarBindList, 
- AsnOctetString pContextInfo, 
- AsnInteger32 pErrorStatus, 
- AsnInteger32 pErrorIndex 
-);
+BOOL SnmpExtensionQueryEx(DWORD dwRequestType,
+ DWORD dwTransactionId,
+ SnmpVarBindList pVarBindList,
+ AsnOctetString pContextInfo,
+ AsnInteger32 pErrorStatus,
+ AsnInteger32 pErrorIndex);
 
 /* SnmpExtensionTrap  [function; shared; CE 3.0..699; Snmp.lib, snmp.lib] */
-BOOL SnmpExtensionTrap(
- AsnObjectIdentifier pEnterpriseOid, 
- AsnInteger32 pGenericTrapId, 
- AsnInteger32 pSpecificTrapId, 
- AsnTimeticks pTimeStamp, 
- SnmpVarBindList pVarBindList 
-);
+BOOL SnmpExtensionTrap(AsnObjectIdentifier pEnterpriseOid,
+ AsnInteger32 pGenericTrapId,
+ AsnInteger32 pSpecificTrapId,
+ AsnTimeticks pTimeStamp,
+ SnmpVarBindList pVarBindList);
 
 /* SnmpSvcGetUptime  [function; shared; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
 DWORD SnmpSvcGetUptime();
 
 /* SnmpSvcSetLogLevel  [function; shared; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
-DWORD SnmpSvcSetLogLevel(
- INT nLogLevel 
-);
+DWORD SnmpSvcSetLogLevel(INT nLogLevel);
 
 /* SnmpSvcSetLogType  [function; shared; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
-DWORD SnmpSvcSetLogType(
- INT nLogType 
-);
+DWORD SnmpSvcSetLogType(INT nLogType);
 
 /* SnmpUtilDbgPrint  [function; shared; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
-VOID SnmpUtilDbgPrint(
- INT nLogLevel, 
- LPSTR szFormat 
-);
+VOID SnmpUtilDbgPrint(INT nLogLevel,
+ LPSTR szFormat);
 
 /* SnmpUtilIdsToA  [function; shared; CE 3.0..699; Snmpapi.lib, snmpapi.lib] */
-LPSTR SnmpUtilIdsToA(
- UINT Ids, 
- UINT IdLength 
-);
+LPSTR SnmpUtilIdsToA(UINT Ids,
+ UINT IdLength);
 
 /* SnmpUtilIdsToW  [function; ce-only; CE 3.0..699; Snmpapi.lib, snmpapi.lib] */
-LPTSTR SnmpUtilIdsToW(
- UINT Ids, 
- UINT IdLength 
-);
+LPTSTR SnmpUtilIdsToW(UINT Ids,
+ UINT IdLength);
 
 /* SnmpUtilMemFree  [function; shared; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
-VOID SnmpUtilMemFree(
- LPVOID pMem 
-);
+VOID SnmpUtilMemFree(LPVOID pMem);
 
 /* SnmpUtilMemReAlloc  [function; shared; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
-LPVOID SnmpUtilMemReAlloc(
- LPVOID pmem, 
- UINT nBytes 
-);
+LPVOID SnmpUtilMemReAlloc(LPVOID pmem,
+ UINT nBytes);
 
 /* SnmpUtilOctetsFree  [function; shared; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
-VOID SnmpUtilOctetsFree(
- AsnOctetString* pOctetsDst 
-);
+VOID SnmpUtilOctetsFree(AsnOctetString* pOctetsDst);
 
 /* SnmpUtilOidFree  [function; shared; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
-VOID SnmpUtilOidFree(
- AsnObjectIdentifier* pOid 
-);
+VOID SnmpUtilOidFree(AsnObjectIdentifier* pOid);
 
 /* SnmpUtilOidNCmp  [function; shared; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
-VOID SnmpUtilOidFree(
- AsnObjectIdentifier* pOid1, 
- AsnObjectIdentifier* pOid2, 
- UINT nSubIds 
-);
+VOID SnmpUtilOidFree(AsnObjectIdentifier* pOid1,
+ AsnObjectIdentifier* pOid2,
+ UINT nSubIds);
 
 /* SnmpUtilOidToA  [function; shared; CE 3.0..699; Snmpapi.lib, snmpapi.lib] */
-LPSTR SnmpUtilOidToA(
- AsnObjectIdentifier Oid 
-);
+LPSTR SnmpUtilOidToA(AsnObjectIdentifier Oid);
 
 /* SnmpUtilOidToW  [function; ce-only; CE 3.0..699; Snmpapi.lib, snmpapi.lib] */
-LPTSTR SnmpUtilOidToW(
- AsnObjectIdentifier Oid 
-);
+LPTSTR SnmpUtilOidToW(AsnObjectIdentifier Oid);
 
 /* SnmpUtilPrintToStrAsnAny  [function; ce-only; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
-VOID SnmpUtilPrintToStrAsnAny(
- OUT TCHAR *szOut,
- AsnAny *pAny 
-);
+VOID SnmpUtilPrintToStrAsnAny(OUT TCHAR *szOut,
+ AsnAny *pAny);
 
 /* SnmpUtilVarBindCpy  [function; shared; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
-VOID SnmpUtilVarBindCpy(
- SnmpVarBind* pVbDest, 
- SnmpVarBind* pVbSrc 
-);
+VOID SnmpUtilVarBindCpy(SnmpVarBind* pVbDest,
+ SnmpVarBind* pVbSrc);
 
 /* SnmpUtilVarBindFree  [function; shared; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
-VOID SnmpUtilVarBindFree(
- SnmpVarBind* pVb 
-);
+VOID SnmpUtilVarBindFree(SnmpVarBind* pVb);
 
 /* SnmpUtilVarBindListCpy  [function; shared; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
-VOID SnmpUtilVarBindListCpy(
- SnmpVarBindList* pVblDst,
- SnmpVarBindList* pVblSrc 
-);
+VOID SnmpUtilVarBindListCpy(SnmpVarBindList* pVblDst,
+ SnmpVarBindList* pVblSrc);
 
 /* SnmpUtilVarBindListFree  [function; shared; CE 3.0..699; snmp.lib, Snmpapi.lib, snmpapi.lib] */
-VOID SnmpUtilVarBindListFree(
- SnmpVarBindList* pVbl 
-);
+VOID SnmpUtilVarBindListFree(SnmpVarBindList* pVbl);
 #endif /* _WIN32_WCE */
 
 #endif /* _SNMP_ */

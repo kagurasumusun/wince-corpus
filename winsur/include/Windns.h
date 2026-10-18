@@ -64,7 +64,7 @@ typedef struct _DnsRecord {
  union {
  DNS_A_DATA A;
  DNS_SOA_DATA SOA, Soa;
- DNS_PTR_DATA PTR, Ptr, NS, Ns, CNAME, Cname, 
+ DNS_PTR_DATA PTR, Ptr, NS, Ns, CNAME, Cname,
  MB, Mb, MD, Md, MF, Mf, MG, Mg, MR, Mr;
  DNS_MINFO_DATA MINFO, Minfo, RP, Rp;
  DNS_MX_DATA MX, Mx, AFSDB, Afsdb, RT, Rt;
@@ -91,12 +91,17 @@ typedef struct _DnsRecord {
  * ================================================================ */
 
 /* DNS_ATMA_DATA  [struct; shared] */
+#ifndef __WINCE_DEFINED_DNS_ATMA_DATA
+#define __WINCE_DEFINED_DNS_ATMA_DATA
 typedef struct {
  BYTE AddressType;
  BYTE Address[DNS_ATMA_MAX_ADDR_LENGTH];
 } DNS_ATMA_DATA, *PDNS_ATMA_DATA;
+#endif /* __WINCE_DEFINED_DNS_ATMA_DATA */
 
 /* DNS_HEADER  [struct; shared] */
+#ifndef __WINCE_DEFINED__DNS_HEADER
+#define __WINCE_DEFINED__DNS_HEADER
 typedef struct _DNS_HEADER {
  WORD Xid;
  BYTE RecursionDesired;
@@ -112,16 +117,22 @@ typedef struct _DNS_HEADER {
  WORD NameServerCount;
  WORD AdditionalCount;
 } DNS_HEADER, *PDNS_HEADER;
+#endif /* __WINCE_DEFINED__DNS_HEADER */
 
 /* DNS_KEY_DATA  [struct; shared] */
+#ifndef __WINCE_DEFINED_DNS_KEY_DATA
+#define __WINCE_DEFINED_DNS_KEY_DATA
 typedef struct {
  WORD wFlags;
  BYTE chProtocol;
  BYTE chAlgorithm;
  BYTE Key[1];
 } DNS_KEY_DATA, *PDNS_KEY_DATA;
+#endif /* __WINCE_DEFINED_DNS_KEY_DATA */
 
 /* DNS_LOC_DATA  [struct; shared] */
+#ifndef __WINCE_DEFINED_DNS_LOC_DATA
+#define __WINCE_DEFINED_DNS_LOC_DATA
 typedef struct {
  WORD wVersion;
  WORD wSize;
@@ -131,45 +142,66 @@ typedef struct {
  DWORD dwLongitude;
  DWORD dwAltitude;
 } DNS_LOC_DATA, *PDNS_LOC_DATA;
+#endif /* __WINCE_DEFINED_DNS_LOC_DATA */
 
 /* DNS_MESSAGE_BUFFER  [struct; shared] */
+#ifndef __WINCE_DEFINED__DNS_MESSAGE_BUFFER
+#define __WINCE_DEFINED__DNS_MESSAGE_BUFFER
 typedef struct _DNS_MESSAGE_BUFFER {
  DNS_HEADER MessageHead;
  CHAR MessageBody[1];
 } DNS_MESSAGE_BUFFER, *PDNS_MESSAGE_BUFFER;
+#endif /* __WINCE_DEFINED__DNS_MESSAGE_BUFFER */
 
 /* DNS_MINFO_DATA  [struct; shared; A/W DNS_MINFO_DATAA,DNS_MINFO_DATAW (CE is W-side)] */
+#ifndef __WINCE_DEFINED_DNS_MINFO_DATA
+#define __WINCE_DEFINED_DNS_MINFO_DATA
 typedef struct {
  LPTSTR pNameMailbox;
  LPTSTR pNameErrorsMailbox;
 } DNS_MINFO_DATA, *PDNS_MINFO_DATA;
+#endif /* __WINCE_DEFINED_DNS_MINFO_DATA */
 
 /* DNS_MX_DATA  [struct; shared; A/W DNS_MX_DATAA,DNS_MX_DATAW (CE is W-side)] */
+#ifndef __WINCE_DEFINED_DNS_MX_DATA
+#define __WINCE_DEFINED_DNS_MX_DATA
 typedef struct {
  LPTSTR pNameExchange;
  WORD wPreference;
  WORD Pad;
 } DNS_MX_DATA, *PDNS_MX_DATA;
+#endif /* __WINCE_DEFINED_DNS_MX_DATA */
 
 /* DNS_NULL_DATA  [struct; shared] */
+#ifndef __WINCE_DEFINED_DNS_NULL_DATA
+#define __WINCE_DEFINED_DNS_NULL_DATA
 typedef struct {
  DWORD dwByteCount;
  BYTE Data[1];
 } DNS_NULL_DATA, *PDNS_NULL_DATA;
+#endif /* __WINCE_DEFINED_DNS_NULL_DATA */
 
 /* DNS_NXT_DATA  [struct; shared; A/W DNS_NXT_DATAA,DNS_NXT_DATAW (CE is W-side)] */
+#ifndef __WINCE_DEFINED_DNS_NXT_DATA
+#define __WINCE_DEFINED_DNS_NXT_DATA
 typedef struct {
  LPTSTR pNameNext;
  WORD wNumTypes;
  WORD wTypes[1];
 } DNS_NXT_DATA, *PDNS_NXT_DATA;
+#endif /* __WINCE_DEFINED_DNS_NXT_DATA */
 
 /* DNS_PTR_DATA  [struct; shared; A/W DNS_PTR_DATAA,DNS_PTR_DATAW (CE is W-side)] */
+#ifndef __WINCE_DEFINED_DNS_PTR_DATA
+#define __WINCE_DEFINED_DNS_PTR_DATA
 typedef struct {
  LPTSTR pNameHost;
 } DNS_PTR_DATA, *PDNS_PTR_DATA;
+#endif /* __WINCE_DEFINED_DNS_PTR_DATA */
 
 /* DNS_RECORD_FLAGS  [struct; shared] */
+#ifndef __WINCE_DEFINED__DNSRECORDFLAGS
+#define __WINCE_DEFINED__DNSRECORDFLAGS
 typedef struct _DnsRecordFlags {
  DWORD Section :2;
  DWORD Delete :1;
@@ -177,9 +209,15 @@ typedef struct _DnsRecordFlags {
  DWORD Unused :3;
  DWORD Reserved :24;
 } DNS_RECORD_FLAGS;
+#endif /* __WINCE_DEFINED__DNSRECORDFLAGS */
+#ifndef __WINCE_DEFINED_PDNS_RECORD_FLAGS
+#define __WINCE_DEFINED_PDNS_RECORD_FLAGS
 typedef DNS_RECORD_FLAGS *PDNS_RECORD_FLAGS, *LPDNS_RECORD_FLAGS;
+#endif /* __WINCE_DEFINED_PDNS_RECORD_FLAGS */
 
 /* DNS_SIG_DATA  [struct; shared; A/W DNS_SIG_DATAA,DNS_SIG_DATAW (CE is W-side)] */
+#ifndef __WINCE_DEFINED_DNS_SIG_DATA
+#define __WINCE_DEFINED_DNS_SIG_DATA
 typedef struct {
  LPTSTR pNameSigner;
  WORD wTypeCovered;
@@ -192,8 +230,11 @@ typedef struct {
  WORD Pad;
  BYTE Signature[1];
 } DNS_SIG_DATA, *PDNS_SIG_DATA;
+#endif /* __WINCE_DEFINED_DNS_SIG_DATA */
 
 /* DNS_SOA_DATA  [struct; shared; A/W DNS_SOA_DATAA,DNS_SOA_DATAW (CE is W-side)] */
+#ifndef __WINCE_DEFINED_DNS_SOA_DATA
+#define __WINCE_DEFINED_DNS_SOA_DATA
 typedef struct {
  LPTSTR pNamePrimaryServer;
  LPTSTR pNameAdministrator;
@@ -203,8 +244,11 @@ typedef struct {
  DWORD dwExpire;
  DWORD dwDefaultTtl;
 } DNS_SOA_DATA, *PDNS_SOA_DATA;
+#endif /* __WINCE_DEFINED_DNS_SOA_DATA */
 
 /* DNS_SRV_DATA  [struct; shared; A/W DNS_SRV_DATAA,DNS_SRV_DATAW (CE is W-side)] */
+#ifndef __WINCE_DEFINED_DNS_SRV_DATA
+#define __WINCE_DEFINED_DNS_SRV_DATA
 typedef struct {
  LPTSTR pNameTarget;
  WORD wPriority;
@@ -212,8 +256,11 @@ typedef struct {
  WORD wPort;
  WORD Pad;
 } DNS_SRV_DATA, *PDNS_SRV_DATA;
+#endif /* __WINCE_DEFINED_DNS_SRV_DATA */
 
 /* DNS_TKEY_DATA  [struct; shared; A/W DNS_TKEY_DATAA,DNS_TKEY_DATAW (CE is W-side)] */
+#ifndef __WINCE_DEFINED_DNS_TKEY_DATA
+#define __WINCE_DEFINED_DNS_TKEY_DATA
 typedef struct {
  LPTSTR pNameAlgorithm;
  PBYTE pAlgorithmPacket;
@@ -228,8 +275,11 @@ typedef struct {
  UCHAR cAlgNameLength;
  BOOL bPacketPointers;
 } DNS_TKEY_DATA, *PDNS_TKEY_DATA;
+#endif /* __WINCE_DEFINED_DNS_TKEY_DATA */
 
 /* DNS_TSIG_DATA  [struct; shared; A/W DNS_TSIG_DATAA,DNS_TSIG_DATAW (CE is W-side)] */
+#ifndef __WINCE_DEFINED_DNS_TSIG_DATA
+#define __WINCE_DEFINED_DNS_TSIG_DATA
 typedef struct {
  LPTSTR pNameAlgorithm;
  PBYTE pAlgorithmPacket;
@@ -244,38 +294,54 @@ typedef struct {
  UCHAR cAlgNameLength;
  BOOL bPacketPointers;
 } DNS_TSIG_DATA, *PDNS_TSIG_DATA;
+#endif /* __WINCE_DEFINED_DNS_TSIG_DATA */
 
 /* DNS_TXT_DATA  [struct; shared; A/W DNS_TXT_DATAA,DNS_TXT_DATAW (CE is W-side)] */
+#ifndef __WINCE_DEFINED_DNS_TXT_DATA
+#define __WINCE_DEFINED_DNS_TXT_DATA
 typedef struct {
  DWORD dwStringCount;
  LPTSTR pStringArray[1];
 } DNS_TXT_DATA, *PDNS_TXT_DATA;
+#endif /* __WINCE_DEFINED_DNS_TXT_DATA */
 
 /* DNS_WINSR_DATA  [struct; shared; A/W DNS_WINSR_DATAA,DNS_WINSR_DATAW (CE is W-side)] */
+#ifndef __WINCE_DEFINED_DNS_WINSR_DATA
+#define __WINCE_DEFINED_DNS_WINSR_DATA
 typedef struct {
  DWORD dwMappingFlag;
  DWORD dwLookupTimeout;
  DWORD dwCacheTimeout;
  LPTSTR pNameResultDomain;
 } DNS_WINSR_DATA, *PDNS_WINSR_DATA;
+#endif /* __WINCE_DEFINED_DNS_WINSR_DATA */
 
 /* DNS_WIRE_QUESTION  [struct; shared] */
+#ifndef __WINCE_DEFINED__DNS_WIRE_QUESTION
+#define __WINCE_DEFINED__DNS_WIRE_QUESTION
 typedef struct _DNS_WIRE_QUESTION {
  WORD QuestionType;
  WORD QuestionClass;
 } DNS_WIRE_QUESTION, *PDNS_WIRE_QUESTION;
+#endif /* __WINCE_DEFINED__DNS_WIRE_QUESTION */
 
 /* DNS_WIRE_RECORD  [struct; shared] */
+#ifndef __WINCE_DEFINED__DNS_WIRE_RECORD
+#define __WINCE_DEFINED__DNS_WIRE_RECORD
 typedef struct _DNS_WIRE_RECORD {
  WORD RecordType;
  WORD RecordClass;
  DWORD TimeToLive;
  WORD DataLength;
 } DNS_WIRE_RECORD, *PDNS_WIRE_RECORD;
+#endif /* __WINCE_DEFINED__DNS_WIRE_RECORD */
 
 /* IP6_ADDRESS  [struct; shared] */
+#ifndef __WINCE_DEFINED_IP6_ADDRESS
+#define __WINCE_DEFINED_IP6_ADDRESS
 typedef struct {
  DWORD IP6Dword[4];
 } IP6_ADDRESS, *PIP6_ADDRESS;
+#endif /* __WINCE_DEFINED_IP6_ADDRESS */
 
 #endif /* _WINDNS_ */

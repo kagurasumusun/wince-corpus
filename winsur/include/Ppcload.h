@@ -33,7 +33,7 @@ DWORD Load_PegFreeSpace(void);
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x210) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x400)) /* CE 1.0..209, 2.11..399 */
 
 /* Load  [function; ce-only; CE 1.0..209, 2.11..399; Ppcload.dll] */
-Private Sub form_Load( );
+Private Sub form_Load();
 #endif /* _WIN32_WCE */
 
 /* ==================================================================
@@ -42,7 +42,7 @@ Private Sub form_Load( );
  * ================================================================ */
 
 /* function */
-Private Sub Form_Load()
-Private Sub form_Load()
+Private Sub Form_Load();
+Private Sub form_Load();
 
 #endif /* _PPCLOAD_ */

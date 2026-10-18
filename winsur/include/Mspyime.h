@@ -21,14 +21,10 @@
 void ClearEudpContent(void);
 
 /* GetPinyinType  [function; ce-only; CE 5.0..699; Chsime03.lib] */
-BOOL GetPinyinType(
- DWORD* pdwType
-);
+BOOL GetPinyinType(DWORD* pdwType);
 
 /* SetPinyinType  [function; ce-only; CE 5.0..699; Chsime03.lib] */
-BOOL SetPinyinType(
- DWORD dwType
-);
+BOOL SetPinyinType(DWORD dwType);
 #endif /* _WIN32_WCE */
 
 #endif /* _MSPYIME_ */

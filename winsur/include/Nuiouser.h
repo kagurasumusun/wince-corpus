@@ -58,6 +58,8 @@
  * ================================================================ */
 
 /* NDISUIO_QUERY_BINDING  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__NDISUIO_QUERY_BINDING
+#define __WINCE_DEFINED__NDISUIO_QUERY_BINDING
 typedef struct _NDISUIO_QUERY_BINDING {
  ULONG BindingIndex;
  ULONG DeviceNameOffset;
@@ -65,11 +67,15 @@ typedef struct _NDISUIO_QUERY_BINDING {
  ULONG DeviceDescrOffset;
  ULONG DeviceDescrLength;
 } NDISUIO_QUERY_BINDING, *PNDISUIO_QUERY_BINDING;
+#endif /* __WINCE_DEFINED__NDISUIO_QUERY_BINDING */
 
 /* NDISUIO_REQUEST_NOTIFICATION  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_NDISUIO_REQUEST_NOTIFICATION
+#define __WINCE_DEFINED_NDISUIO_REQUEST_NOTIFICATION
 typedef struct{
  HANDLE hMsgQueue;
  DWORD dwNotificationTypes;
 }NDISUIO_REQUEST_NOTIFICATION, *PNDISUIO_REQUEST_NOTIFICATION;
+#endif /* __WINCE_DEFINED_NDISUIO_REQUEST_NOTIFICATION */
 
 #endif /* _NUIOUSER_ */

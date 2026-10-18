@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 539 constants, 100 declarations, 1 outlines, 0 base types, 1 extra macros, 3 extra decls
+ * 539 constants, 100 declarations, 1 outlines, 0 base types, 1 extra macros, 2 extra decls
  */
 #ifndef _WININET_
 #define _WININET_
@@ -569,18 +569,26 @@
  * ================================================================ */
 
 /* HTTP_VERSION_INFO  [struct; shared] */
+#ifndef __WINCE_DEFINED_HTTP_VERSION_INFO
+#define __WINCE_DEFINED_HTTP_VERSION_INFO
 typedef struct {
  DWORD dwMajorVersion;
  DWORD dwMinorVersion;
 } HTTP_VERSION_INFO, *LPHTTP_VERSION_INFO;
+#endif /* __WINCE_DEFINED_HTTP_VERSION_INFO */
 
 /* INTERNET_ASYNC_RESULT  [struct; shared; Wininet.lib] */
+#ifndef __WINCE_DEFINED_INTERNET_ASYNC_RESULT
+#define __WINCE_DEFINED_INTERNET_ASYNC_RESULT
 typedef struct {
  DWORD dwResult;
  DWORD dwError;
 } INTERNET_ASYNC_RESULT, *LPINTERNET_ASYNC_RESULT;
+#endif /* __WINCE_DEFINED_INTERNET_ASYNC_RESULT */
 
 /* INTERNET_BUFFERS  [struct; shared; A/W INTERNET_BUFFERSA,INTERNET_BUFFERSW (CE is W-side)] */
+#ifndef __WINCE_DEFINED__INTERNET_BUFFERS
+#define __WINCE_DEFINED__INTERNET_BUFFERS
 typedef struct _INTERNET_BUFFERS {
  DWORD dwStructSize;
  _INTERNET_BUFFERS* Next;
@@ -593,8 +601,11 @@ typedef struct _INTERNET_BUFFERS {
  DWORD dwOffsetLow;
  DWORD dwOffsetHigh;
 } INTERNET_BUFFERS, *LPINTERNET_BUFFERS;
+#endif /* __WINCE_DEFINED__INTERNET_BUFFERS */
 
 /* INTERNET_CACHE_ENTRY_INFO  [struct; shared; Wininet.lib; A/W INTERNET_CACHE_ENTRY_INFOA,INTERNET_CACHE_ENTRY_INFOW (CE is W-side)] */
+#ifndef __WINCE_DEFINED__INTERNET_CACHE_ENTRY_INFO
+#define __WINCE_DEFINED__INTERNET_CACHE_ENTRY_INFO
 typedef struct _INTERNET_CACHE_ENTRY_INFO {
  DWORD dwStructSize;
  LPTSTR lpszSourceUrlName;
@@ -616,14 +627,20 @@ typedef struct _INTERNET_CACHE_ENTRY_INFO {
  DWORD dwExemptDelta;
  };
 } INTERNET_CACHE_ENTRY_INFO, *LPINTERNET_CACHE_ENTRY_INFO;
+#endif /* __WINCE_DEFINED__INTERNET_CACHE_ENTRY_INFO */
 
 /* INTERNET_CACHE_TIMESTAMPS  [struct; shared] */
+#ifndef __WINCE_DEFINED__INTERNET_CACHE_TIMESTAMPS
+#define __WINCE_DEFINED__INTERNET_CACHE_TIMESTAMPS
 typedef struct _INTERNET_CACHE_TIMESTAMPS {
  FILETIME ftExpires;
  FILETIME ftLastModified;
 } INTERNET_CACHE_TIMESTAMPS, *LPINTERNET_CACHE_TIMESTAMPS;
+#endif /* __WINCE_DEFINED__INTERNET_CACHE_TIMESTAMPS */
 
 /* INTERNET_CERTIFICATE_INFO  [struct; shared] */
+#ifndef __WINCE_DEFINED_INTERNET_CERTIFICATE_INFO
+#define __WINCE_DEFINED_INTERNET_CERTIFICATE_INFO
 typedef struct {
  FILETIME ftExpiry;
  FILETIME ftStart;
@@ -634,14 +651,20 @@ typedef struct {
  LPTSTR lpszEncryptionAlgName;
  DWORD dwKeySize;
 } INTERNET_CERTIFICATE_INFO, *LPINTERNET_CERTIFICATE_INFO;
+#endif /* __WINCE_DEFINED_INTERNET_CERTIFICATE_INFO */
 
 /* INTERNET_CONNECTED_INFO  [struct; shared] */
+#ifndef __WINCE_DEFINED_INTERNET_CONNECTED_INFO
+#define __WINCE_DEFINED_INTERNET_CONNECTED_INFO
 typedef struct {
  DWORD dwConnectedState;
  DWORD dwFlags;
 } INTERNET_CONNECTED_INFO, *LPINTERNET_CONNECTED_INFO;
+#endif /* __WINCE_DEFINED_INTERNET_CONNECTED_INFO */
 
 /* INTERNET_PER_CONN_OPTION  [struct; shared; A/W INTERNET_PER_CONN_OPTIONA,INTERNET_PER_CONN_OPTIONW (CE is W-side)] */
+#ifndef __WINCE_DEFINED_INTERNET_PER_CONN_OPTION
+#define __WINCE_DEFINED_INTERNET_PER_CONN_OPTION
 typedef struct {
  DWORD dwOption;
  union {
@@ -650,8 +673,11 @@ typedef struct {
  FILETIME ftValue;
  } Value;
 } INTERNET_PER_CONN_OPTION, *LPINTERNET_PER_CONN_OPTION;
+#endif /* __WINCE_DEFINED_INTERNET_PER_CONN_OPTION */
 
 /* INTERNET_PER_CONN_OPTION_LIST  [struct; shared; A/W INTERNET_PER_CONN_OPTION_LISTA,INTERNET_PER_CONN_OPTION_LISTW (CE is W-side)] */
+#ifndef __WINCE_DEFINED_INTERNET_PER_CONN_OPTION_LIST
+#define __WINCE_DEFINED_INTERNET_PER_CONN_OPTION_LIST
 typedef struct {
  DWORD dwSize;
  LPTSTR pszConnection;
@@ -659,15 +685,21 @@ typedef struct {
  DWORD dwOptionError;
  LPINTERNET_PER_CONN_OPTION pOptions;
 } INTERNET_PER_CONN_OPTION_LIST, *LPINTERNET_PER_CONN_OPTION_LIST;
+#endif /* __WINCE_DEFINED_INTERNET_PER_CONN_OPTION_LIST */
 
 /* INTERNET_PROXY_INFO  [struct; shared] */
+#ifndef __WINCE_DEFINED_INTERNET_PROXY_INFO
+#define __WINCE_DEFINED_INTERNET_PROXY_INFO
 typedef struct {
  DWORD dwAccessType;
  LPCTSTR lpszProxy;
  LPCTSTR lpszProxyBypass;
 } INTERNET_PROXY_INFO, *LPINTERNET_PROXY_INFO;
+#endif /* __WINCE_DEFINED_INTERNET_PROXY_INFO */
 
 /* INTERNET_SCHEME  [enum; shared; Wininet.lib] */
+#ifndef __WINCE_DEFINED_INTERNET_SCHEME
+#define __WINCE_DEFINED_INTERNET_SCHEME
 typedef enum {
  INTERNET_SCHEME_PARTIAL = -2,
  INTERNET_SCHEME_UNKNOWN = -1,
@@ -685,14 +717,20 @@ typedef enum {
  INTERNET_SCHEME_FIRST = INTERNET_SCHEME_FTP,
  INTERNET_SCHEME_LAST = INTERNET_SCHEME_VBSCRIPT
 } INTERNET_SCHEME, *LPINTERNET_SCHEME;
+#endif /* __WINCE_DEFINED_INTERNET_SCHEME */
 
 /* INTERNET_VERSION_INFO  [struct; shared] */
+#ifndef __WINCE_DEFINED_INTERNET_VERSION_INFO
+#define __WINCE_DEFINED_INTERNET_VERSION_INFO
 typedef struct {
  DWORD dwMajorVersion;
  DWORD dwMinorVersion;
 } INTERNET_VERSION_INFO, *LPINTERNET_VERSION_INFO;
+#endif /* __WINCE_DEFINED_INTERNET_VERSION_INFO */
 
 /* InternetCookieState  [enum; shared] */
+#ifndef __WINCE_DEFINED_INTERNETCOOKIESTATE
+#define __WINCE_DEFINED_INTERNETCOOKIESTATE
 typedef enum InternetCookieState {
  COOKIE_STATE_UNKNOWN = 0x0,
  COOKIE_STATE_ACCEPT = 0x1,
@@ -702,7 +740,11 @@ typedef enum InternetCookieState {
  COOKIE_STATE_REJECT = 0x5,
  COOKIE_STATE_MAX = COOKIE_STATE_REJECT
 } InternetCookieState;
+#endif /* __WINCE_DEFINED_INTERNETCOOKIESTATE */
+#ifndef __WINCE_DEFINED_PINTERNETCOOKIESTATE
+#define __WINCE_DEFINED_PINTERNETCOOKIESTATE
 typedef InternetCookieState *PInternetCookieState, *LPInternetCookieState;
+#endif /* __WINCE_DEFINED_PINTERNETCOOKIESTATE */
 
 /* INTERNET_AUTH_NOTIFY_DATA  [struct; shared] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
@@ -717,262 +759,194 @@ typedef InternetCookieState *PInternetCookieState, *LPInternetCookieState;
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* CommitUrlCacheEntry  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W CommitUrlCacheEntryA,CommitUrlCacheEntryW (CE is W-side)] */
-BOOL CommitUrlCacheEntry( 
- LPCTSTR lpszUrlName,
- LPCTSTR lpszLocalFileName, 
+BOOL CommitUrlCacheEntry(LPCTSTR lpszUrlName,
+ LPCTSTR lpszLocalFileName,
  FILETIME ExpireTime,
- FILETIME LastModifiedTime, 
+ FILETIME LastModifiedTime,
  DWORD CacheEntryType,
- LPBYTE lpHeaderInfo, 
+ LPBYTE lpHeaderInfo,
  DWORD dwHeaderSize,
- LPCTSTR lpszFileExtension, 
- DWORD dwReserved
-);
+ LPCTSTR lpszFileExtension,
+ DWORD dwReserved);
 
 /* CreateUrlCacheEntry  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W CreateUrlCacheEntryA,CreateUrlCacheEntryW (CE is W-side)] */
-BOOL CreateUrlCacheEntry( 
- LPCTSTR lpszUrlName,
- DWORD dwExpectedFileSize, 
+BOOL CreateUrlCacheEntry(LPCTSTR lpszUrlName,
+ DWORD dwExpectedFileSize,
  LPCTSTR lpszFileExtension,
- LPTSTR lpszFileName, 
- DWORD dwReserved
-);
+ LPTSTR lpszFileName,
+ DWORD dwReserved);
 
 /* DeleteUrlCacheEntry  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W DeleteUrlCacheEntryA,DeleteUrlCacheEntryW (CE is W-side)] */
-BOOL DeleteUrlCacheEntry( 
- LPCTSTR lpszUrlName
-);
+BOOL DeleteUrlCacheEntry(LPCTSTR lpszUrlName);
 
 /* FindCloseUrlCache  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib] */
-BOOL FindCloseUrlCache( 
- HANDLE hEnumHandle
-);
+BOOL FindCloseUrlCache(HANDLE hEnumHandle);
 
 /* FindFirstUrlCacheEntry  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W FindFirstUrlCacheEntryA,FindFirstUrlCacheEntryW (CE is W-side)] */
-HANDLE FindFirstUrlCacheEntry( 
- LPCTSTR lpszUrlSearchPattern,
+HANDLE FindFirstUrlCacheEntry(LPCTSTR lpszUrlSearchPattern,
  LPINTERNET_CACHE_ENTRY_INFO lpFirstCacheEntryInfo,
- LPDWORD lpdwFirstCacheEntryInfoBufferSize
-);
+ LPDWORD lpdwFirstCacheEntryInfoBufferSize);
 
 /* FindNextUrlCacheEntry  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W FindNextUrlCacheEntryA,FindNextUrlCacheEntryW (CE is W-side)] */
-BOOL FindNextUrlCacheEntry( 
- HANDLE hEnumHandle,
+BOOL FindNextUrlCacheEntry(HANDLE hEnumHandle,
  LPINTERNET_CACHE_ENTRY_INFO lpNextCacheEntryInfo,
- LPDWORD lpdwNextCacheEntryInfoBufferSize
-);
+ LPDWORD lpdwNextCacheEntryInfoBufferSize);
 
 /* GetUrlCacheEntryInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W GetUrlCacheEntryInfoA,GetUrlCacheEntryInfoW (CE is W-side)] */
-BOOL GetUrlCacheEntryInfo( 
- LPCTSTR lpszUrlName,
+BOOL GetUrlCacheEntryInfo(LPCTSTR lpszUrlName,
  LPINTERNET_CACHE_ENTRY_INFO lpCacheEntryInfo,
- LPDWORD lpdwCacheEntryInfoBufferSize
-);
+ LPDWORD lpdwCacheEntryInfoBufferSize);
 
 /* GetUrlCacheEntryInfoEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W GetUrlCacheEntryInfoExA,GetUrlCacheEntryInfoExW (CE is W-side)] */
-BOOL GetUrlCacheEntryInfoEx( 
- LPCSTR lpszUrl,
+BOOL GetUrlCacheEntryInfoEx(LPCSTR lpszUrl,
  LPINTERNET_CACHE_ENTRY_INFO lpCacheEntryInfo,
- LPDWORD lpdwCacheEntryInfoBufSize, 
+ LPDWORD lpdwCacheEntryInfoBufSize,
  LPSTR lpszReserved,
- LPDWORD lpdwReserved, 
- LPVOID lpReserved, 
- DWORD dwFlags 
-);
+ LPDWORD lpdwReserved,
+ LPVOID lpReserved,
+ DWORD dwFlags);
 
 /* InternetCanonicalizeUrl  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Schannel.lib, schannel.lib, Secur32.lib, secur32.lib, wininet.lib; A/W InternetCanonicalizeUrlA,InternetCanonicalizeUrlW (CE is W-side)] */
-BOOL WINAPI InternetCanonicalizeUrl(
- LPCTSTR lpszUrl, 
- LPWSTR lpszBuffer, 
- LPDWORD lpdwBufferLength, 
- DWORD dwFlags 
-);
+BOOL WINAPI InternetCanonicalizeUrl(LPCTSTR lpszUrl,
+ LPWSTR lpszBuffer,
+ LPDWORD lpdwBufferLength,
+ DWORD dwFlags);
 
 /* InternetCombineUrl  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetCombineUrlA,InternetCombineUrlW (CE is W-side)] */
-BOOL WINAPI InternetCombineUrl(
- LPCTSTR lpszBaseUrl, 
- LPCTSTR lpszRelativeUrl, 
- LPTSTR lpszBuffer, 
- LPDWORD lpdwBufferLength, 
- DWORD dwFlags
-);
+BOOL WINAPI InternetCombineUrl(LPCTSTR lpszBaseUrl,
+ LPCTSTR lpszRelativeUrl,
+ LPTSTR lpszBuffer,
+ LPDWORD lpdwBufferLength,
+ DWORD dwFlags);
 
 /* InternetGetCookie  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetGetCookieA,InternetGetCookieW (CE is W-side)] */
-BOOL InternetGetCookie(
- LPCTSTR lpszUrl,
- LPCTSTR lpszCookieName, 
- LPSTR lpCookieData, 
- LPDWORD lpdwSize
-);
+BOOL InternetGetCookie(LPCTSTR lpszUrl,
+ LPCTSTR lpszCookieName,
+ LPSTR lpCookieData,
+ LPDWORD lpdwSize);
 
 /* InternetGetLastResponseInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetGetLastResponseInfoA,InternetGetLastResponseInfoW (CE is W-side)] */
-BOOL WINAPI InternetGetLastResponseInfo( 
- LPDWORD lpdwError, 
- LPTSTR lpszBuffer, 
- LPDWORD lpdwBufferLength
-);
+BOOL WINAPI InternetGetLastResponseInfo(LPDWORD lpdwError,
+ LPTSTR lpszBuffer,
+ LPDWORD lpdwBufferLength);
 
 /* InternetSetCookie  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetSetCookieA,InternetSetCookieW (CE is W-side)] */
-BOOL InternetSetCookie(
- LPCTSTR lpszUrl, 
- LPCTSTR lpszCookieName, 
- LPCTSTR lpszCookieData
-);
+BOOL InternetSetCookie(LPCTSTR lpszUrl,
+ LPCTSTR lpszCookieName,
+ LPCTSTR lpszCookieData);
 
 /* InternetTimeFromSystemTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetTimeFromSystemTimeA,InternetTimeFromSystemTimeW (CE is W-side)] */
-BOOL WINAPI InternetTimeFromSystemTime(
- CONST SYSTEMTIME* pst, 
- DWORD dwRFC, 
- LPTSTR lpszTime, 
- DWORD cbTime
-);
+BOOL WINAPI InternetTimeFromSystemTime(CONST SYSTEMTIME* pst,
+ DWORD dwRFC,
+ LPTSTR lpszTime,
+ DWORD cbTime);
 
 /* InternetTimeToSystemTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetTimeToSystemTimeA,InternetTimeToSystemTimeW (CE is W-side)] */
-BOOL InternetTimeToSystemTime(
- LPCTSTR lpszTime, 
- SYSTEMTIME* pst, 
- DWORD dwReserved
-);
+BOOL InternetTimeToSystemTime(LPCTSTR lpszTime,
+ SYSTEMTIME* pst,
+ DWORD dwReserved);
 
 /* InternetUnlockRequestFile  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib] */
-BOOL InternetUnlockRequestFile(
- HANDLE hLockRequestInfo
-);
+BOOL InternetUnlockRequestFile(HANDLE hLockRequestInfo);
 
 /* RetrieveUrlCacheEntryFile  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W RetrieveUrlCacheEntryFileA,RetrieveUrlCacheEntryFileW (CE is W-side)] */
-BOOL RetrieveUrlCacheEntryFile(
- LPCTSTR lpszUrlName, 
+BOOL RetrieveUrlCacheEntryFile(LPCTSTR lpszUrlName,
  LPINTERNET_CACHE_ENTRY_INFO lpCacheEntryInfo,
- LPDWORD lpdwCacheEntryInfoBufferSize, 
- DWORD dwReserved
-);
+ LPDWORD lpdwCacheEntryInfoBufferSize,
+ DWORD dwReserved);
 
 /* SetUrlCacheEntryInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W SetUrlCacheEntryInfoA,SetUrlCacheEntryInfoW (CE is W-side)] */
-BOOL SetUrlCacheEntryInfo(
- LPCSTR lpszUrlName,
+BOOL SetUrlCacheEntryInfo(LPCSTR lpszUrlName,
  LPINTERNET_CACHE_ENTRY_INFO lpCacheEntryInfo,
- DWORD dwFieldControl
-);
+ DWORD dwFieldControl);
 
 /* UnlockUrlCacheEntryFile  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W UnlockUrlCacheEntryFileA,UnlockUrlCacheEntryFileW (CE is W-side)] */
-BOOL UnlockUrlCacheEntryFile(
- LPCSTR lpszUrlName,
- DWORD dwReserved
-);
+BOOL UnlockUrlCacheEntryFile(LPCSTR lpszUrlName,
+ DWORD dwReserved);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* InternetGetConnectedState  [function; shared; CE 3.0..399, 5.0..699; Wininet.lib, wininet.lib] */
-BOOL InternetGetConnectedState(
- LPDWORD lpdwFlags,
- DWORD dwReserved
-);
+BOOL InternetGetConnectedState(LPDWORD lpdwFlags,
+ DWORD dwReserved);
 
 /* InternetGoOnline  [function; shared; CE 3.0..399, 5.0..699; Wininet.lib, wininet.lib; A/W InternetGoOnlineA,InternetGoOnlineW (CE is W-side)] */
-BOOL InternetGoOnline(
- LPTSTR lpszURL,
+BOOL InternetGoOnline(LPTSTR lpszURL,
  HWND hwndParent,
- DWORD dwReserved
-);
+ DWORD dwReserved);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* InternetAttemptConnect  [function; shared; CE 5.0..699; Wininet.lib, wininet.lib] */
-DWORD InternetAttemptConnect(
- DWORD dwReserved
-);
+DWORD InternetAttemptConnect(DWORD dwReserved);
 
 /* InternetCheckConnection  [function; shared; CE 5.0..699; Wininet.lib, wininet.lib; A/W InternetCheckConnectionA,InternetCheckConnectionW (CE is W-side)] */
-BOOL InternetCheckConnection(
- LPCTSTR lpszUrl,
+BOOL InternetCheckConnection(LPCTSTR lpszUrl,
  DWORD dwFlags,
- DWORD dwReserved
-);
+ DWORD dwReserved);
 
 /* InternetConfirmZoneCrossing  [function; shared; CE 5.0..699; Wininet.lib, wininet.lib; A/W InternetConfirmZoneCrossingA,InternetConfirmZoneCrossingW (CE is W-side)] */
-DWORD InternetConfirmZoneCrossing(
- HWND hWnd,
+DWORD InternetConfirmZoneCrossing(HWND hWnd,
  LPTSTR szUrlPrev,
  LPTSTR szUrlNew,
- BOOL bPost
-);
+ BOOL bPost);
 
 /* InternetEnumPerSiteCookieDecisionA  [function; shared; CE 5.0..699; Wininet.lib, wininet.lib] */
-BOOL InternetEnumPerSiteCookieDecisionA(
- LPSTR pszSiteName,
+BOOL InternetEnumPerSiteCookieDecisionA(LPSTR pszSiteName,
  unsigned long *pcSiteNameSize,
  unsigned long *pdwDecision,
- unsigned long dwIndex
-);
+ unsigned long dwIndex);
 
 /* InternetEnumPerSiteCookieDecisionW  [function; shared; CE 5.0..699; Wininet.lib, wininet.lib] */
-BOOL InternetEnumPerSiteCookieDecisionW(
- LPSTR pszSiteName,
+BOOL InternetEnumPerSiteCookieDecisionW(LPSTR pszSiteName,
  unsigned long *pcSiteNameSize,
  unsigned long *pdwDecision,
- unsigned long dwIndex
-);
+ unsigned long dwIndex);
 
 /* InternetGetConnectedStateEx  [function; shared; CE 5.0..699; Wininet.lib, wininet.lib; A/W InternetGetConnectedStateExA,InternetGetConnectedStateExW (CE is W-side)] */
-BOOL InternetGetConnectedStateEx(
- LPDWORD lpdwFlags,
+BOOL InternetGetConnectedStateEx(LPDWORD lpdwFlags,
  LPTSTR lpszConnectionName,
  DWORD dwNameLen,
- DWORD dwReserved
-);
+ DWORD dwReserved);
 
 /* InternetGetPerSiteCookieDecisionA  [function; shared; CE 5.0..699; Wininet.lib, wininet.lib] */
-BOOL InternetGetPerSiteCookieDecisionA ( 
- LPCSTR pchHostName, 
- unsigned long* pResult
-);
+BOOL InternetGetPerSiteCookieDecisionA (LPCSTR pchHostName,
+ unsigned long* pResult);
 
 /* InternetGetPerSiteCookieDecisionW  [function; shared; CE 5.0..699; Wininet.lib, wininet.lib] */
-BOOL InternetGetPerSiteCookieDecisionW ( 
- LPCSTR pchHostName, 
- unsigned long* pResult
-);
+BOOL InternetGetPerSiteCookieDecisionW (LPCSTR pchHostName,
+ unsigned long* pResult);
 
 /* InternetSetCookieEx  [function; shared; CE 5.0..699; Wininet.lib, wininet.lib; A/W InternetSetCookieExA,InternetSetCookieExW (CE is W-side)] */
-BOOL InternetSetCookieEx( 
- LPCTSTR lpszUrl,
+BOOL InternetSetCookieEx(LPCTSTR lpszUrl,
  LPCTSTR lpszCookieName,
  LPCTSTR lpszCookieData,
  DWORD dwFlags,
- DWORD_PTR dwReserved
-);
+ DWORD_PTR dwReserved);
 
 /* InternetSetPerSiteCookieDecisionA  [function; shared; CE 5.0..699; Wininet.lib, wininet.lib] */
-BOOL InternetSetPerSiteCookieDecisionA( 
- LPCSTR pchHostName, 
- DWORD dwDecision
-);
+BOOL InternetSetPerSiteCookieDecisionA(LPCSTR pchHostName,
+ DWORD dwDecision);
 
 /* InternetSetPerSiteCookieDecisionW  [function; shared; CE 5.0..699; Wininet.lib, wininet.lib] */
-BOOL InternetSetPerSiteCookieDecisionW( 
- LPCSTR pchHostName, 
- DWORD dwDecision
-);
+BOOL InternetSetPerSiteCookieDecisionW(LPCSTR pchHostName,
+ DWORD dwDecision);
 
 /* ReadUrlCacheEntryStream  [function; shared; CE 5.0..699; Wininet.lib, wininet.lib] */
-BOOL ReadUrlCacheEntryStream(
- HANDLE hUrlCacheStream,
+BOOL ReadUrlCacheEntryStream(HANDLE hUrlCacheStream,
  DWORD dwLocation,
  LPVOID lpBuffer,
  LPDWORD lpdwLen,
- DWORD dwReserved
-);
+ DWORD dwReserved);
 
 /* RetrieveUrlCacheEntryStream  [function; shared; CE 5.0..699; Wininet.lib, wininet.lib; A/W RetrieveUrlCacheEntryStreamA,RetrieveUrlCacheEntryStreamW (CE is W-side)] */
-HANDLE RetrieveUrlCacheEntryStream(
- LPCTSTR lpszUrlName
+HANDLE RetrieveUrlCacheEntryStream(LPCTSTR lpszUrlName
  LPINTERNET_CACHE_ENTRY_INFO lpCacheEntryInfo,
  LPDWORD lpdwCacheEntryInfoBufferSize,
  BOOL fRandomRead,
- DWORD dwReserved
-);
+ DWORD dwReserved);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
@@ -981,29 +955,17 @@ HANDLE RetrieveUrlCacheEntryStream(
 BOOL InternetClearAllPerSiteCookieDecisions(void);
 
 /* PrivacyGetZonePreferenceW  [function; shared; CE 6.0..699; wininet.lib] */
-DWORD PrivacyGetZonePreferenceW (
- DWORD dwZone,
+DWORD PrivacyGetZonePreferenceW (DWORD dwZone,
  DWORD dwType,
  LPDWORD pdwTemplate,
  LPWSTR pszBuffer,
- LPDWORD pdwBufferLength
-);
+ LPDWORD pdwBufferLength);
 
 /* PrivacySetZonePreferenceW  [function; shared; CE 6.0..699; wininet.lib] */
-DWORD PrivacyGetZonePreferenceW(
- DWORD dwZone,
+DWORD PrivacyGetZonePreferenceW(DWORD dwZone,
  DWORD dwType,
  DWORD dwTemplate,
- LPCWSTR pszPreference,
-);
+ LPCWSTR pszPreference,);
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-INTERNET_STATUS_CALLBACK WINAPIInternetSetStatusCallback(HINTERNEThInternet,INTERNET_STATUS_CALLBACKlpfnInternetCallback);
 
 #endif /* _WININET_ */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 1 outlines, 0 base types, 0 extra macros, 125 extra decls
+ * 0 constants, 0 declarations, 1 outlines, 0 base types, 0 extra macros, 124 extra decls
  */
 #ifndef _AFXWIN_
 #define _AFXWIN_
@@ -151,9 +151,6 @@ void SetColumnWidth(int cxWidth);
 int SetComboCurSel (int nSelect);
 int SetCurSel(int nSelect);
 void SetDefID(UINT nID);
-#ifdef __cplusplus
-void SetDialogBkColor(COLORREF clrCtlBk = RGB(192, 192, 192), COLORREF clrCtlText = RGB(0, 0, 0));
-#endif /* __cplusplus */
 int SetDroppedWidth(UINT nWidth);
 BOOL SetEditSel(int nStartChar, int nEndChar);
 void SetHelpID(UINT nIDR);

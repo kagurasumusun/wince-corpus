@@ -48,16 +48,24 @@
  * ================================================================ */
 
 /* CENOTIFYREQUEST  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__CENOTIFYREQUEST
+#define __WINCE_DEFINED__CENOTIFYREQUEST
 typedef struct _CENOTIFYREQUEST {
  DWORD dwSize;
- HWND hwnd; 
+ HWND hwnd;
  DWORD dwFlags;
  HANDLE hHeap;
  DWORD dwParam;
 } CENOTIFYREQUEST;
+#endif /* __WINCE_DEFINED__CENOTIFYREQUEST */
+#ifndef __WINCE_DEFINED_PCENOTIFYREQUEST
+#define __WINCE_DEFINED_PCENOTIFYREQUEST
 typedef CENOTIFYREQUEST *PCENOTIFYREQUEST, *LPCENOTIFYREQUEST;
+#endif /* __WINCE_DEFINED_PCENOTIFYREQUEST */
 
 /* CEPROPSPEC  [struct; ce-only; Coredll.lib, coredll.lib] */
+#ifndef __WINCE_DEFINED_CEPROPSPEC
+#define __WINCE_DEFINED_CEPROPSPEC
 typedef struct CEPROPSPEC {
  WORD wVersion;
  CEPROPID propid;
@@ -65,9 +73,15 @@ typedef struct CEPROPSPEC {
  LPWSTR pwszPropName;
  DWORD cchPropName;
 } CEPROPSPEC;
+#endif /* __WINCE_DEFINED_CEPROPSPEC */
+#ifndef __WINCE_DEFINED_PCEPROPSPEC
+#define __WINCE_DEFINED_PCEPROPSPEC
 typedef CEPROPSPEC *PCEPROPSPEC, *LPCEPROPSPEC;
+#endif /* __WINCE_DEFINED_PCEPROPSPEC */
 
 /* CEVOLUMEOPTIONS  [struct; ce-only; Coredll.lib, coredll.lib] */
+#ifndef __WINCE_DEFINED_CEVOLUMEOPTIONS
+#define __WINCE_DEFINED_CEVOLUMEOPTIONS
 typedef struct CEVOLUMEOPTIONS {
  WORD wVersion;
  DWORD cbBufferPool;
@@ -78,7 +92,11 @@ typedef struct CEVOLUMEOPTIONS {
  WCHAR wszPassword[CCH_MAX_PASSWORD + 1];
  DWORD dwFlags;
 } CEVOLUMEOPTIONS;
+#endif /* __WINCE_DEFINED_CEVOLUMEOPTIONS */
+#ifndef __WINCE_DEFINED_PCEVOLUMEOPTIONS
+#define __WINCE_DEFINED_PCEVOLUMEOPTIONS
 typedef CEVOLUMEOPTIONS *PCEVOLUMEOPTIONS, *LPCEVOLUMEOPTIONS;
+#endif /* __WINCE_DEFINED_PCEVOLUMEOPTIONS */
 
 /* ==================================================================
  * functions and callbacks
@@ -87,143 +105,105 @@ typedef CEVOLUMEOPTIONS *PCEVOLUMEOPTIONS, *LPCEVOLUMEOPTIONS;
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* CeSeekDatabaseEx  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-CEOID CeSeekDatabaseEx(
- HANDLE hDatabase,
- DWORD dwSeekType, 
- DWORD dwValue, 
+CEOID CeSeekDatabaseEx(HANDLE hDatabase,
+ DWORD dwSeekType,
+ DWORD dwValue,
  WORD wNumVals,
- LPDWORD lpdwIndex
-);
+ LPDWORD lpdwIndex);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* CeEndTransaction  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL CeEndTransaction(
- HANDLE hSession,
- BOOL fCommit
-);
+BOOL CeEndTransaction(HANDLE hSession,
+ BOOL fCommit);
 
 /* CeGetDatabaseProps  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL CeGetDatabaseProps (
- HANDLE hDatabase,
+BOOL CeGetDatabaseProps (HANDLE hDatabase,
  LPWORD lpcPropID,
  CEPROPID* prgPropID,
- CEPROPSPEC* prgProps
-);
+ CEPROPSPEC* prgProps);
 
 /* CeGetDatabaseSession  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-HANDLE CeGetDatabaseSession(
- HANDLE hDatabase
-);
+HANDLE CeGetDatabaseSession(HANDLE hDatabase);
 
 /* CeOpenStream  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-HANDLE CeOpenStream(
- HANDLE hDatabase,
+HANDLE CeOpenStream(HANDLE hDatabase,
  CEPROPID propid,
- DWORD dwMode
-);
+ DWORD dwMode);
 
 /* CeSetSessionOption  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL CeSetSessionOption(
- HANDLE hSession,
+BOOL CeSetSessionOption(HANDLE hSession,
  ULONG ulOptionId,
- DWORD dwValue
-);
+ DWORD dwValue);
 
 /* CeStreamRead  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL CeStreamRead(
- HANDLE hStream,
+BOOL CeStreamRead(HANDLE hStream,
  LPBYTE lprgbBuffer,
  DWORD cbRead,
- LPDWORD lpcbRead
-);
+ LPDWORD lpcbRead);
 
 /* CeStreamSaveChanges  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL CeStreamSaveChanges(
- HANDLE hStream
-);
+BOOL CeStreamSaveChanges(HANDLE hStream);
 
 /* CeStreamSeek  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL CeStreamSeek(
- HANDLE hStream,
+BOOL CeStreamSeek(HANDLE hStream,
  DWORD cbMove,
  DWORD dwOrigin,
- LPDWORD lpcbNewOffset
-);
+ LPDWORD lpcbNewOffset);
 
 /* CeStreamSetSize  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL CeStreamSetSize(
- HANDLE hStream,
- DWORD cbSize
-);
+BOOL CeStreamSetSize(HANDLE hStream,
+ DWORD cbSize);
 
 /* CeStreamWrite  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL CeStreamWrite(
- HANDLE hStream,
+BOOL CeStreamWrite(HANDLE hStream,
  LPBYTE lprgbBuffer,
  DWORD cbWrite,
- LPDWORD lpcbWritten
-);
+ LPDWORD lpcbWritten);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* CeAttachCustomTrackingData  [function; ce-only; CE 6.0..699; coredll.lib] */
-BOOL CeAttachCustomTrackingData(
- HANDLE hChangeEnum,
+BOOL CeAttachCustomTrackingData(HANDLE hChangeEnum,
  CEOID oidChangeRecord,
  BYTE* rgbData,
- DWORD ccb
-);
+ DWORD ccb);
 
 /* CeEndSyncSession  [function; ce-only; CE 6.0..699; coredll.lib] */
-BOOL CeEndSyncSession(
- HANDLE hSession,
- DWORD dwOutcome
-);
+BOOL CeEndSyncSession(HANDLE hSession,
+ DWORD dwOutcome);
 
 /* CeFindNextChangedRecord  [function; ce-only; CE 6.0..699; coredll.lib] */
-CEOID CeFindNextChangedRecord(
- HANDLE hChangeEnum
-);
+CEOID CeFindNextChangedRecord(HANDLE hChangeEnum);
 
 /* CeGetChangedRecordCnt  [function; ce-only; CE 6.0..699; coredll.lib] */
-BOOL CeGetChangedRecordCnt(
- HANDLE hSession,
+BOOL CeGetChangedRecordCnt(HANDLE hSession,
  CEOID oidDB,
- DWORD* pdwCnt
-);
+ DWORD* pdwCnt);
 
 /* CeGetChangedRecords  [function; ce-only; CE 6.0..699; coredll.lib] */
-HANDLE CeGetChangedRecords(
- HANDLE hSession,
+HANDLE CeGetChangedRecords(HANDLE hSession,
  CEOID oidDB,
- DWORD dwChangeType
-);
+ DWORD dwChangeType);
 
 /* CeGetCustomTrackingData  [function; ce-only; CE 6.0..699; coredll.lib] */
-BOOL CeGetCustomTrackingData(
- HANDLE hChangeEnum,
+BOOL CeGetCustomTrackingData(HANDLE hChangeEnum,
  CEOID oidChangeRecord,
  BYTE* rgbData,
- DWORD* pccb
-);
+ DWORD* pccb);
 
 /* CeGetPropChangeInfo  [function; ce-only; CE 6.0..699; coredll.lib] */
-BOOL CeGetPropChangeInfo(
- HANDLE hChangeEnum,
+BOOL CeGetPropChangeInfo(HANDLE hChangeEnum,
  CEOID oidChangeRecord,
  CEPROPID propid,
- BOOL* pfPropChanged
-);
+ BOOL* pfPropChanged);
 
 /* CeMarkRecord  [function; ce-only; CE 6.0..699; coredll.lib] */
-BOOL CeMarkRecord(
- HANDLE hChangeEnum,
+BOOL CeMarkRecord(HANDLE hChangeEnum,
  CEOID oidChangeRecord,
- BOOL fChanged
-);
+ BOOL fChanged);
 #endif /* _WIN32_WCE */
 
 #endif /* _WINDBASE_ */

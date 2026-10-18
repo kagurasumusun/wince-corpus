@@ -18,23 +18,17 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x500)) /* CE 2.11..2.12, 3.0..499 */
 
 /* KeybdDriverGetInfo  [function; ce-only; CE 2.11..2.12, 3.0..499; LayoutManager.lib] */
-BOOL KeybdDriverGetInfo(
- INT iKeybdId,
+BOOL KeybdDriverGetInfo(INT iKeybdId,
  INT iIndex,
- LPVOID lpOutput 
-);
+ LPVOID lpOutput);
 
 /* KeybdDriverPowerHandler  [function; ce-only; CE 2.11..2.12, 3.0..499; LayoutManager.lib] */
-void KeybdDriverPowerHandler(
- BOOL bOff 
-);
+void KeybdDriverPowerHandler(BOOL bOff);
 
 /* KeybdDriverSetMode  [function; ce-only; CE 2.11..2.12, 3.0..499; LayoutManager.lib] */
-BOOL KeybdDriverSetMode(
- INT iKeybdId,
+BOOL KeybdDriverSetMode(INT iKeybdId,
  INT iIndex,
- LPVOID lpInput 
-);
+ LPVOID lpInput);
 #endif /* _WIN32_WCE */
 
 #endif /* _KEYBDDR_ */

@@ -160,249 +160,495 @@ typedef unsigned long DWORD;
  * ================================================================ */
 
 /* BOOL  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_BOOL
+#define __WINCE_DEFINED_BOOL
 typedef int BOOL;
+#endif /* __WINCE_DEFINED_BOOL */
 
 /* BYTE  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_BYTE
+#define __WINCE_DEFINED_BYTE
 typedef unsigned char BYTE;
+#endif /* __WINCE_DEFINED_BYTE */
 
 /* CHAR  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_CHAR
+#define __WINCE_DEFINED_CHAR
 typedef char CHAR;
+#endif /* __WINCE_DEFINED_CHAR */
 
 /* DWORD64  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_DWORD64
+#define __WINCE_DEFINED_DWORD64
 typedef unsigned __int64 DWORD64;
+#endif /* __WINCE_DEFINED_DWORD64 */
 
 /* FLOAT  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_FLOAT
+#define __WINCE_DEFINED_FLOAT
 typedef float FLOAT;
+#endif /* __WINCE_DEFINED_FLOAT */
 
 /* HFILE  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HFILE
+#define __WINCE_DEFINED_HFILE
 typedef int HFILE;
+#endif /* __WINCE_DEFINED_HFILE */
 
 /* INT64  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_INT64
+#define __WINCE_DEFINED_INT64
 typedef signed __int64 INT64;
+#endif /* __WINCE_DEFINED_INT64 */
 
 /* LCTYPE  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_LCTYPE
+#define __WINCE_DEFINED_LCTYPE
 typedef DWORD LCTYPE;
+#endif /* __WINCE_DEFINED_LCTYPE */
 
 /* LONG  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_LONG
+#define __WINCE_DEFINED_LONG
 typedef long LONG;
+#endif /* __WINCE_DEFINED_LONG */
 
 /* LONG64  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_LONG64
+#define __WINCE_DEFINED_LONG64
 typedef __int64 LONG64;
+#endif /* __WINCE_DEFINED_LONG64 */
 
 /* LPARAM  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_LPARAM
+#define __WINCE_DEFINED_LPARAM
 typedef LONG_PTR LPARAM;
+#endif /* __WINCE_DEFINED_LPARAM */
 
 /* LPBOOL  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_LPBOOL
+#define __WINCE_DEFINED_LPBOOL
 typedef BOOL far *LPBOOL;
+#endif /* __WINCE_DEFINED_LPBOOL */
 
 /* LPBYTE  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_LPBYTE
+#define __WINCE_DEFINED_LPBYTE
 typedef BYTE far *LPBYTE;
+#endif /* __WINCE_DEFINED_LPBYTE */
 
 /* LPCOLORREF  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_LPCOLORREF
+#define __WINCE_DEFINED_LPCOLORREF
 typedef DWORD *LPCOLORREF;
+#endif /* __WINCE_DEFINED_LPCOLORREF */
 
 /* LPDWORD  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_LPDWORD
+#define __WINCE_DEFINED_LPDWORD
 typedef DWORD *LPDWORD;
+#endif /* __WINCE_DEFINED_LPDWORD */
 
 /* LPLONG  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_LPLONG
+#define __WINCE_DEFINED_LPLONG
 typedef long *LPLONG;
+#endif /* __WINCE_DEFINED_LPLONG */
 
 /* LRESULT  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_LRESULT
+#define __WINCE_DEFINED_LRESULT
 typedef LONG_PTR LRESULT;
+#endif /* __WINCE_DEFINED_LRESULT */
 
 /* PBOOL  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_PBOOL
+#define __WINCE_DEFINED_PBOOL
 typedef BOOL *PBOOL;
+#endif /* __WINCE_DEFINED_PBOOL */
 
 /* PBYTE  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_PBYTE
+#define __WINCE_DEFINED_PBYTE
 typedef BYTE *PBYTE;
+#endif /* __WINCE_DEFINED_PBYTE */
 
 /* PCHAR  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_PCHAR
+#define __WINCE_DEFINED_PCHAR
 typedef CHAR *PCHAR;
+#endif /* __WINCE_DEFINED_PCHAR */
 
 /* PCSTR  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_PCSTR
+#define __WINCE_DEFINED_PCSTR
 typedef CONST CHAR *PCSTR;
+#endif /* __WINCE_DEFINED_PCSTR */
 
 /* PFLOAT  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_PFLOAT
+#define __WINCE_DEFINED_PFLOAT
 typedef FLOAT *PFLOAT;
+#endif /* __WINCE_DEFINED_PFLOAT */
 
 /* PLCID  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_PLCID
+#define __WINCE_DEFINED_PLCID
 typedef PDWORD PLCID;
+#endif /* __WINCE_DEFINED_PLCID */
 
 /* PSHORT  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_PSHORT
+#define __WINCE_DEFINED_PSHORT
 typedef SHORT *PSHORT;
+#endif /* __WINCE_DEFINED_PSHORT */
 
 /* PSTR  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_PSTR
+#define __WINCE_DEFINED_PSTR
 typedef CHAR *PSTR;
+#endif /* __WINCE_DEFINED_PSTR */
 
 /* PTCHAR  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_PTCHAR
+#define __WINCE_DEFINED_PTCHAR
 typedef TCHAR *PTCHAR;
+#endif /* __WINCE_DEFINED_PTCHAR */
 
 /* SC_LOCK  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_SC_LOCK
+#define __WINCE_DEFINED_SC_LOCK
 typedef LPVOID SC_LOCK;
+#endif /* __WINCE_DEFINED_SC_LOCK */
 
 /* UINT  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_UINT
+#define __WINCE_DEFINED_UINT
 typedef unsigned int UINT;
+#endif /* __WINCE_DEFINED_UINT */
 
 /* UINT64  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_UINT64
+#define __WINCE_DEFINED_UINT64
 typedef unsigned __int64 UINT64;
+#endif /* __WINCE_DEFINED_UINT64 */
 
 /* ULONG  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_ULONG
+#define __WINCE_DEFINED_ULONG
 typedef unsigned long ULONG;
+#endif /* __WINCE_DEFINED_ULONG */
 
 /* ULONG64  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_ULONG64
+#define __WINCE_DEFINED_ULONG64
 typedef unsigned __int64 ULONG64;
+#endif /* __WINCE_DEFINED_ULONG64 */
 
 /* WCHAR  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_WCHAR
+#define __WINCE_DEFINED_WCHAR
 typedef wchar_t WCHAR;
+#endif /* __WINCE_DEFINED_WCHAR */
 
 /* WORD  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_WORD
+#define __WINCE_DEFINED_WORD
 typedef unsigned short WORD;
+#endif /* __WINCE_DEFINED_WORD */
 
 /* WPARAM  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_WPARAM
+#define __WINCE_DEFINED_WPARAM
 typedef UINT_PTR WPARAM;
+#endif /* __WINCE_DEFINED_WPARAM */
 
 /* ATOM  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_ATOM
+#define __WINCE_DEFINED_ATOM
 typedef WORD ATOM;
+#endif /* __WINCE_DEFINED_ATOM */
 
 /* BOOLEAN  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_BOOLEAN
+#define __WINCE_DEFINED_BOOLEAN
 typedef BYTE BOOLEAN;
+#endif /* __WINCE_DEFINED_BOOLEAN */
 
 /* HANDLE  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HANDLE
+#define __WINCE_DEFINED_HANDLE
 typedef PVOID HANDLE;
+#endif /* __WINCE_DEFINED_HANDLE */
 
 /* HBITMAP  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HBITMAP
+#define __WINCE_DEFINED_HBITMAP
 typedef HANDLE HBITMAP;
+#endif /* __WINCE_DEFINED_HBITMAP */
 
 /* HBRUSH  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HBRUSH
+#define __WINCE_DEFINED_HBRUSH
 typedef HANDLE HBRUSH;
+#endif /* __WINCE_DEFINED_HBRUSH */
 
 /* HCONV  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HCONV
+#define __WINCE_DEFINED_HCONV
 typedef HANDLE HCONV;
+#endif /* __WINCE_DEFINED_HCONV */
 
 /* HCONVLIST  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HCONVLIST
+#define __WINCE_DEFINED_HCONVLIST
 typedef HANDLE HCONVLIST;
+#endif /* __WINCE_DEFINED_HCONVLIST */
 
 /* HDC  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HDC
+#define __WINCE_DEFINED_HDC
 typedef HANDLE HDC;
+#endif /* __WINCE_DEFINED_HDC */
 
 /* HDDEDATA  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HDDEDATA
+#define __WINCE_DEFINED_HDDEDATA
 typedef HANDLE HDDEDATA;
+#endif /* __WINCE_DEFINED_HDDEDATA */
 
 /* HDESK  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HDESK
+#define __WINCE_DEFINED_HDESK
 typedef HANDLE HDESK;
+#endif /* __WINCE_DEFINED_HDESK */
 
 /* HDROP  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HDROP
+#define __WINCE_DEFINED_HDROP
 typedef HANDLE HDROP;
+#endif /* __WINCE_DEFINED_HDROP */
 
 /* HDWP  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HDWP
+#define __WINCE_DEFINED_HDWP
 typedef HANDLE HDWP;
+#endif /* __WINCE_DEFINED_HDWP */
 
 /* HENHMETAFILE  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HENHMETAFILE
+#define __WINCE_DEFINED_HENHMETAFILE
 typedef HANDLE HENHMETAFILE;
+#endif /* __WINCE_DEFINED_HENHMETAFILE */
 
 /* HFONT  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HFONT
+#define __WINCE_DEFINED_HFONT
 typedef HANDLE HFONT;
+#endif /* __WINCE_DEFINED_HFONT */
 
 /* HGDIOBJ  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HGDIOBJ
+#define __WINCE_DEFINED_HGDIOBJ
 typedef HANDLE HGDIOBJ;
+#endif /* __WINCE_DEFINED_HGDIOBJ */
 
 /* HGLOBAL  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HGLOBAL
+#define __WINCE_DEFINED_HGLOBAL
 typedef HANDLE HGLOBAL;
+#endif /* __WINCE_DEFINED_HGLOBAL */
 
 /* HHOOK  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HHOOK
+#define __WINCE_DEFINED_HHOOK
 typedef HANDLE HHOOK;
+#endif /* __WINCE_DEFINED_HHOOK */
 
 /* HICON  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HICON
+#define __WINCE_DEFINED_HICON
 typedef HANDLE HICON;
+#endif /* __WINCE_DEFINED_HICON */
 
 /* HINSTANCE  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HINSTANCE
+#define __WINCE_DEFINED_HINSTANCE
 typedef HANDLE HINSTANCE;
+#endif /* __WINCE_DEFINED_HINSTANCE */
 
 /* HKEY  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HKEY
+#define __WINCE_DEFINED_HKEY
 typedef HANDLE HKEY;
+#endif /* __WINCE_DEFINED_HKEY */
 
 /* HKL  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HKL
+#define __WINCE_DEFINED_HKL
 typedef HANDLE HKL;
+#endif /* __WINCE_DEFINED_HKL */
 
 /* HLOCAL  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HLOCAL
+#define __WINCE_DEFINED_HLOCAL
 typedef HANDLE HLOCAL;
+#endif /* __WINCE_DEFINED_HLOCAL */
 
 /* HMENU  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HMENU
+#define __WINCE_DEFINED_HMENU
 typedef HANDLE HMENU;
+#endif /* __WINCE_DEFINED_HMENU */
 
 /* HMETAFILE  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HMETAFILE
+#define __WINCE_DEFINED_HMETAFILE
 typedef HANDLE HMETAFILE;
+#endif /* __WINCE_DEFINED_HMETAFILE */
 
 /* HMODULE  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HMODULE
+#define __WINCE_DEFINED_HMODULE
 typedef HINSTANCE HMODULE;
+#endif /* __WINCE_DEFINED_HMODULE */
 
 /* HMONITOR  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HMONITOR
+#define __WINCE_DEFINED_HMONITOR
 typedef HANDLE HMONITOR;
+#endif /* __WINCE_DEFINED_HMONITOR */
 
 /* HPALETTE  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HPALETTE
+#define __WINCE_DEFINED_HPALETTE
 typedef HANDLE HPALETTE;
+#endif /* __WINCE_DEFINED_HPALETTE */
 
 /* HPEN  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HPEN
+#define __WINCE_DEFINED_HPEN
 typedef HANDLE HPEN;
+#endif /* __WINCE_DEFINED_HPEN */
 
 /* HRGN  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HRGN
+#define __WINCE_DEFINED_HRGN
 typedef HANDLE HRGN;
+#endif /* __WINCE_DEFINED_HRGN */
 
 /* HRSRC  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HRSRC
+#define __WINCE_DEFINED_HRSRC
 typedef HANDLE HRSRC;
+#endif /* __WINCE_DEFINED_HRSRC */
 
 /* HSZ  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HSZ
+#define __WINCE_DEFINED_HSZ
 typedef HANDLE HSZ;
+#endif /* __WINCE_DEFINED_HSZ */
 
 /* HWND  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HWND
+#define __WINCE_DEFINED_HWND
 typedef HANDLE HWND;
+#endif /* __WINCE_DEFINED_HWND */
 
 /* LANGID  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_LANGID
+#define __WINCE_DEFINED_LANGID
 typedef WORD LANGID;
+#endif /* __WINCE_DEFINED_LANGID */
 
 /* LPCWSTR  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_LPCWSTR
+#define __WINCE_DEFINED_LPCWSTR
 typedef CONST WCHAR *LPCWSTR;
+#endif /* __WINCE_DEFINED_LPCWSTR */
 
 /* LPHANDLE  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_LPHANDLE
+#define __WINCE_DEFINED_LPHANDLE
 typedef HANDLE *LPHANDLE;
+#endif /* __WINCE_DEFINED_LPHANDLE */
 
 /* LPWORD  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_LPWORD
+#define __WINCE_DEFINED_LPWORD
 typedef WORD *LPWORD;
+#endif /* __WINCE_DEFINED_LPWORD */
 
 /* LPWSTR  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_LPWSTR
+#define __WINCE_DEFINED_LPWSTR
 typedef WCHAR *LPWSTR;
+#endif /* __WINCE_DEFINED_LPWSTR */
 
 /* PBOOLEAN  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_PBOOLEAN
+#define __WINCE_DEFINED_PBOOLEAN
 typedef BOOLEAN *PBOOLEAN;
+#endif /* __WINCE_DEFINED_PBOOLEAN */
 
 /* PCWSTR  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_PCWSTR
+#define __WINCE_DEFINED_PCWSTR
 typedef CONST WCHAR *PCWSTR;
+#endif /* __WINCE_DEFINED_PCWSTR */
 
 /* PHANDLE  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_PHANDLE
+#define __WINCE_DEFINED_PHANDLE
 typedef HANDLE *PHANDLE;
+#endif /* __WINCE_DEFINED_PHANDLE */
 
 /* PHKEY  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_PHKEY
+#define __WINCE_DEFINED_PHKEY
 typedef HKEY *PHKEY;
+#endif /* __WINCE_DEFINED_PHKEY */
 
 /* PUCHAR  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_PUCHAR
+#define __WINCE_DEFINED_PUCHAR
 typedef UCHAR *PUCHAR;
+#endif /* __WINCE_DEFINED_PUCHAR */
 
 /* PWCHAR  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_PWCHAR
+#define __WINCE_DEFINED_PWCHAR
 typedef WCHAR *PWCHAR;
+#endif /* __WINCE_DEFINED_PWCHAR */
 
 /* PWORD  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_PWORD
+#define __WINCE_DEFINED_PWORD
 typedef WORD *PWORD;
+#endif /* __WINCE_DEFINED_PWORD */
 
 /* PWSTR  [typedef, struct; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_PWSTR
+#define __WINCE_DEFINED_PWSTR
 typedef WCHAR *PWSTR;
+#endif /* __WINCE_DEFINED_PWSTR */
 
 /* SC_HANDLE  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_SC_HANDLE
+#define __WINCE_DEFINED_SC_HANDLE
 typedef HANDLE SC_HANDLE;
+#endif /* __WINCE_DEFINED_SC_HANDLE */
 
 /* SERVICE_STATUS_HANDLE  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_SERVICE_STATUS_HANDLE
+#define __WINCE_DEFINED_SERVICE_STATUS_HANDLE
 typedef HANDLE SERVICE_STATUS_HANDLE;
+#endif /* __WINCE_DEFINED_SERVICE_STATUS_HANDLE */
 
 /* HCURSOR  [typedef; shared; entity-headers; win32-reference] */
+#ifndef __WINCE_DEFINED_HCURSOR
+#define __WINCE_DEFINED_HCURSOR
 typedef HICON HCURSOR;
+#endif /* __WINCE_DEFINED_HCURSOR */
 
 #endif /* _BASETSD_ */

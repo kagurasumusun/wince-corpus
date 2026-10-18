@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 6 constants, 18 declarations, 0 outlines, 0 base types, 0 extra macros, 32 extra decls
+ * 6 constants, 18 declarations, 0 outlines, 0 base types, 0 extra macros, 33 extra decls
  */
 #ifndef _MLANG_
 #define _MLANG_
@@ -31,14 +31,19 @@
  * ================================================================ */
 
 /* DetectEncodingInfo  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_TAGDETECTENCODINGINFO
+#define __WINCE_DEFINED_TAGDETECTENCODINGINFO
 typedef struct tagDetectEncodingInfo {
  UINT nLangID;
  UINT nCodePage;
  INT nDocPercent;
  INT nConfidence;
 } DetectEncodingInfo, *pDetectEncodingInfo;
+#endif /* __WINCE_DEFINED_TAGDETECTENCODINGINFO */
 
 /* MIMECONTF  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_TAGMIMECONTF
+#define __WINCE_DEFINED_TAGMIMECONTF
 typedef enum tagMIMECONTF {
  MIMECONTF_MAILNEWS = 0x00000001,
  MIMECONTF_BROWSER = 0x00000002,
@@ -54,9 +59,15 @@ typedef enum tagMIMECONTF {
  MIMECONTF_MIME_LATEST = 0x20000000,
  MIMECONTF_MIME_REGISTRY = 0x40000000
 } MIMECONTF;
+#endif /* __WINCE_DEFINED_TAGMIMECONTF */
+#ifndef __WINCE_DEFINED_PMIMECONTF
+#define __WINCE_DEFINED_PMIMECONTF
 typedef MIMECONTF *PMIMECONTF, *LPMIMECONTF;
+#endif /* __WINCE_DEFINED_PMIMECONTF */
 
 /* MIMECPINFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_TAGMIMECPINFO
+#define __WINCE_DEFINED_TAGMIMECPINFO
 typedef struct tagMIMECPINFO {
  DWORD dwFlags;
  UINT uiCodePage;
@@ -69,15 +80,21 @@ typedef struct tagMIMECPINFO {
  WCHAR wszProportionalFont[MAX_MIMEFACE_NAME];
  BYTE bGDICharset;
 } MIMECPINFO, *PMIMECPINFO;
+#endif /* __WINCE_DEFINED_TAGMIMECPINFO */
 
 /* MIMECSETINFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_TAGMIMECSETINFO
+#define __WINCE_DEFINED_TAGMIMECSETINFO
 typedef struct tagMIMECSETINFO {
  UINT uiCodePage;
  UINT uiInternetEncoding;
  WCHAR wszCharset[MAX_MIMECSET_NAME];
 } MIMECSETINFO, *PMIMECSETINFO;
+#endif /* __WINCE_DEFINED_TAGMIMECSETINFO */
 
 /* MLCONVCHAR  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_TAGMLCONVCHARF
+#define __WINCE_DEFINED_TAGMLCONVCHARF
 typedef enum tagMLCONVCHARF {
  MLCONVCHARF_NONE = 0,
  MLCONVCHARF_AUTODETECT = 1,
@@ -86,9 +103,15 @@ typedef enum tagMLCONVCHARF {
  MLCONVCHARF_USEDEFCHAR = 8,
  MLCONVCHARF_NOBESTFITCHARS = 16
 } MLCONVCHAR;
+#endif /* __WINCE_DEFINED_TAGMLCONVCHARF */
+#ifndef __WINCE_DEFINED_PMLCONVCHAR
+#define __WINCE_DEFINED_PMLCONVCHAR
 typedef MLCONVCHAR *PMLCONVCHAR, *LPMLCONVCHAR;
+#endif /* __WINCE_DEFINED_PMLCONVCHAR */
 
 /* MLCP  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_TAGMLCPF
+#define __WINCE_DEFINED_TAGMLCPF
 typedef enum tagMLCPF {
  MLDETECTF_MAILNEWS = 0x0001,
  MLDETECTF_BROWSER = 0x0002,
@@ -98,9 +121,15 @@ typedef enum tagMLCPF {
  MLDETECTF_PREFERRED_ONLY = 0x0020,
  MLDETECTF_FILTER_SPECIALCHAR = 0x0040
 } MLCP;
+#endif /* __WINCE_DEFINED_TAGMLCPF */
+#ifndef __WINCE_DEFINED_PMLCP
+#define __WINCE_DEFINED_PMLCP
 typedef MLCP *PMLCP, *LPMLCP;
+#endif /* __WINCE_DEFINED_PMLCP */
 
 /* MLDETECTCP  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_TAGMLDETECTCP
+#define __WINCE_DEFINED_TAGMLDETECTCP
 typedef enum tagMLDETECTCP {
  MLDETECTCP_NONE = 0,
  MLDETECTCP_7BIT = 1,
@@ -108,16 +137,25 @@ typedef enum tagMLDETECTCP {
  MLDETECTCP_DBCS = 4,
  MLDETECTCP_HTML = 8
 } MLDETECTCP;
+#endif /* __WINCE_DEFINED_TAGMLDETECTCP */
+#ifndef __WINCE_DEFINED_PMLDETECTCP
+#define __WINCE_DEFINED_PMLDETECTCP
 typedef MLDETECTCP *PMLDETECTCP, *LPMLDETECTCP;
+#endif /* __WINCE_DEFINED_PMLDETECTCP */
 
 /* RFC1766INFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_TAGRFC1766INFO
+#define __WINCE_DEFINED_TAGRFC1766INFO
 typedef struct tagRFC1766INFO {
  LCID lcid;
  WCHAR wszRfc1766[MAX_RFC1766_NAME];
  WCHAR wszLocaleName[MAX_LOCALE_NAME];
 } RFC1766INFO, *PRFC1766INFO;
+#endif /* __WINCE_DEFINED_TAGRFC1766INFO */
 
 /* SCRIPTCONTF  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_TAGSCRIPTCONTF
+#define __WINCE_DEFINED_TAGSCRIPTCONTF
 typedef enum tagSCRIPTCONTF {
  sidDefault,
  sidMerge,
@@ -163,9 +201,15 @@ typedef enum tagSCRIPTCONTF {
  sidFEFirst = sidHangul,
  sidFELast = sidHan
 } SCRIPTCONTF;
+#endif /* __WINCE_DEFINED_TAGSCRIPTCONTF */
+#ifndef __WINCE_DEFINED_PSCRIPTCONTF
+#define __WINCE_DEFINED_PSCRIPTCONTF
 typedef SCRIPTCONTF *PSCRIPTCONTF, *LPSCRIPTCONTF;
+#endif /* __WINCE_DEFINED_PSCRIPTCONTF */
 
 /* SCRIPTFONTCONTF  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_TAGSCRIPTFONTCONTF
+#define __WINCE_DEFINED_TAGSCRIPTFONTCONTF
 typedef enum tagSCRIPTFONTCONTF {
  SCRIPTCONTF_FIXED_FONT = 0x00000001,
  SCRIPTCONTF_PROPORTIONAL_FONT = 0x00000002,
@@ -173,14 +217,24 @@ typedef enum tagSCRIPTFONTCONTF {
  SCRIPTCONTF_SCRIPT_HIDE = 0x00020000,
  SCRIPTCONTF_SCRIPT_SYSTEM = 0x00040000
 } SCRIPTFONTCONTF;
+#endif /* __WINCE_DEFINED_TAGSCRIPTFONTCONTF */
+#ifndef __WINCE_DEFINED_PSCRIPTFONTCONTF
+#define __WINCE_DEFINED_PSCRIPTFONTCONTF
 typedef SCRIPTFONTCONTF *PSCRIPTFONTCONTF, *LPSCRIPTFONTCONTF;
+#endif /* __WINCE_DEFINED_PSCRIPTFONTCONTF */
 
 /* UNICODERANGE  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_TAGUNICODERANGE
+#define __WINCE_DEFINED_TAGUNICODERANGE
 typedef struct tagUNICODERANGE {
  WCHAR wcFrom;
  WCHAR wcTo;
 } UNICODERANGE;
+#endif /* __WINCE_DEFINED_TAGUNICODERANGE */
+#ifndef __WINCE_DEFINED_PUNICODERANGE
+#define __WINCE_DEFINED_PUNICODERANGE
 typedef UNICODERANGE *PUNICODERANGE, *LPUNICODERANGE;
+#endif /* __WINCE_DEFINED_PUNICODERANGE */
 
 /* ==================================================================
  * functions and callbacks
@@ -189,54 +243,42 @@ typedef UNICODERANGE *PUNICODERANGE, *LPUNICODERANGE;
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* ConvertINetMultiByteToUnicode  [function; ce-only; CE 4.0..699; Mlang.dll, mlang.dll] */
-HRESULT ConvertINetMultiByteToUnicode(
- LPDWORD lpdwMode,
+HRESULT ConvertINetMultiByteToUnicode(LPDWORD lpdwMode,
  DWORD dwSrcEncoding,
  LPCSTR lpSrcStr,
  LPINT lpnMultiCharCount,
  LPWSTR lpDstStr,
- LPINT lpnWideCharCount
-);
+ LPINT lpnWideCharCount);
 
 /* ConvertINetString  [function; ce-only; CE 4.0..699; Mlang.dll, mlang.dll] */
-HRESULT ConvertINetString(
- LPDWORD lpdwMode,
+HRESULT ConvertINetString(LPDWORD lpdwMode,
  DWORD dwSrcEncoding,
  DWORD dwDstEncoding,
  LPCSTR lpSrcStr,
  LPINT lpnSrcSize,
  LPBYTE lpDstStr,
- LPINT lpnDstSize
-);
+ LPINT lpnDstSize);
 
 /* ConvertINetUnicodeToMultiByte  [function; ce-only; CE 4.0..699; Mlang.dll, mlang.dll] */
-HRESULT ConvertINetUnicodeToMultiByte(
- LPDWORD lpdwMode,
+HRESULT ConvertINetUnicodeToMultiByte(LPDWORD lpdwMode,
  DWORD dwEncoding,
  LPCWSTR lpSrcStr,
  LPINT lpnWideCharCount,
  LPSTR lpDstStr,
- LPINT lpnMultiCharCount
-);
+ LPINT lpnMultiCharCount);
 
 /* IsConvertINetStringAvailable  [function; ce-only; CE 4.0..699; Mlang.dll, mlang.dll] */
-HRESULT IsConvertINetStringAvailable(
- DWORD dwSrcEncoding,
- DWORD dwDstEncoding
-);
+HRESULT IsConvertINetStringAvailable(DWORD dwSrcEncoding,
+ DWORD dwDstEncoding);
 
 /* LcidToRfc1766  [function; ce-only; CE 4.0..699; Mlang.dll, mlang.dll] */
-HRESULT LcidToRfc1766(
- LCID Locale,
+HRESULT LcidToRfc1766(LCID Locale,
  LPTSTR pszRfc1766,
- int nChar
-);
+ int nChar);
 
 /* Rfc1766ToLcid  [function; ce-only; CE 4.0..699; Mlang.dll, mlang.dll] */
-HRESULT Rfc1766ToLcid(
- LCID* pLocale,
- LPTSTR pszRfc1766
-);
+HRESULT Rfc1766ToLcid(LCID* pLocale,
+ LPTSTR pszRfc1766);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================
@@ -266,6 +308,7 @@ HRESULT GetFontCodePages(HDC hDC, HFONT hFont, DWORD* pdwCodePages);
 HRESULT GetFontUnicodeRanges(HDC hDC, UINT* puiRanges, UNICODERANGE* pUranges);
 HRESULT GetNumberOfCodePageInfo(UINT* pcCodePage);
 HRESULT GetNumberOfScripts(UINT* pnScripts);
+HRESULT GetProperty(DWORD* pdwProperty);
 HRESULT GetSourceCodePage(UINT* puiSrcCodePage);
 HRESULT GetStrCodePages(const WCHAR* pszSrc, long cchSrc, DWORD dwPriorityCodePages, DWORD* pdwCodePages, long* pcchCodePages);
 HRESULT IsConvertible(DWORD dwSrcEncoding, DWORD dwDstEncoding);

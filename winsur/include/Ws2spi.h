@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2 constants, 57 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
+ * 2 constants, 1 declarations, 11 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WS2SPI_
 #define _WS2SPI_
@@ -21,49 +21,61 @@
 #define WSPDESCRIPTION_LEN 255
 
 /* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* WSPAccept  [struct; ce-only; Ws2.lib] */
+
+/* WSPBind  [struct; ce-only; Ws2.lib] */
+
+/* WSPConnect  [struct; ce-only; Ws2.lib] */
+
+/* WSPGetPeerName  [struct; ce-only; Ws2.lib] */
+
+/* WSPGetSockName  [struct; ce-only; Ws2.lib] */
+
+/* WSPJoinLeaf  [struct; ce-only; Ws2.lib] */
+
+/* WSPRecvFrom  [struct; ce-only; Ws2.lib] */
+
+/* WSPSelect  [struct; ce-only; Ws2.lib] */
+
+/* WSPSendTo  [struct; ce-only; Ws2.lib] */
+
+/* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
 
 /* WSATHREADID  [struct; shared] */
+#ifndef __WINCE_DEFINED__WSATHREADID
+#define __WINCE_DEFINED__WSATHREADID
 typedef struct _WSATHREADID {
  HANDLE ThreadHandle;
  DWORD Reserved;
 } WSATHREADID, *LPWSATHREADID;
+#endif /* __WINCE_DEFINED__WSATHREADID */
+
+/* NSP_Routine  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   cbSize */
+/*   dwMajorVersion */
+/*   dwMinorVersion */
+/*   NSPCleanup */
+/*   NSPLookupServiceBegin */
+/*   NSPLookupServiceNext */
+/*   NSPLookupServiceEnd */
+/*   NSPSetService */
+/*   NSPInstallServiceClass */
+/*   NSPRemoveServiceClass */
+/*   NSPGetServiceClassInfo */
+/*   NSPIoctl */
 
 /* WSPDATA  [struct; shared] */
-typedef struct WSPData {
- WORD wVersion;
- WORD wHighVersion;
- WCHAR szDescription[WSPDESCRIPTION_LEN+1];
-} WSPDATA, FAR * LPWSPDATA;
-
-/* WSPSelect  [struct; ce-only; Ws2.lib] */
-int WSPSelect(
- int nfds,
- fd_set FAR* readfds,
- fd_set FAR* writefds,
- fd_set FAR* exceptfds,
- const struct timeval FAR* timeout,
- LPINT lpErrno 
-);
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
-
-/* NSPLookupServiceEnd  [function; ce-only; CE 5.0..699; Ws2.lib] */
-int NSPLookupServiceEnd(
- HANDLE hLookup
-);
-
-/* WSPCleanup  [function; ce-only; CE 5.0..699; Ws2.lib] */
-int WSPCleanup(
- LPINT lpErrno 
-);
-#endif /* _WIN32_WCE */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   wVersion */
+/*   wHighVersion */
+/*   szDescription */
 
 #endif /* _WS2SPI_ */

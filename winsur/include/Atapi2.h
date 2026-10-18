@@ -18,17 +18,20 @@
  * ================================================================ */
 
 /* INQUIRY_DATA  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__INQUIRY_DATA
+#define __WINCE_DEFINED__INQUIRY_DATA
 typedef struct _INQUIRY_DATA {
- UCHAR inqDevType; 
- UCHAR inqRMB; 
- UCHAR inqVersion; 
- UCHAR inqAtapiVersion; 
- UCHAR inqLength; 
- UCHAR inqReserved[3]; 
- UCHAR inqVendor[8]; 
- UCHAR inqProdID[16]; 
- UCHAR inqRev[4]; 
- UCHAR inqReserved2[60]; 
+ UCHAR inqDevType;
+ UCHAR inqRMB;
+ UCHAR inqVersion;
+ UCHAR inqAtapiVersion;
+ UCHAR inqLength;
+ UCHAR inqReserved[3];
+ UCHAR inqVendor[8];
+ UCHAR inqProdID[16];
+ UCHAR inqRev[4];
+ UCHAR inqReserved2[60];
 } INQUIRY_DATA, *PINQUIRY_DATA;
+#endif /* __WINCE_DEFINED__INQUIRY_DATA */
 
 #endif /* _ATAPI2_ */

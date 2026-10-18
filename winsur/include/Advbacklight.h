@@ -18,9 +18,7 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* BacklightAdvApplet  [function; ce-only; CE 4.0..699] */
-BOOL BacklightAdvApplet(
- HWND hDlg
-);
+BOOL BacklightAdvApplet(HWND hDlg);
 #endif /* _WIN32_WCE */
 
 #endif /* _ADVBACKLIGHT_ */

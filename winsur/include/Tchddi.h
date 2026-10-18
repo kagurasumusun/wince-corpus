@@ -18,6 +18,8 @@
  * ================================================================ */
 
 /* enumTouchPanelSampleFlags  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_ENUMTOUCHPANELSAMPLEFLAGS
+#define __WINCE_DEFINED_ENUMTOUCHPANELSAMPLEFLAGS
 enum enumTouchPanelSampleFlags {
  TouchSampleValidFlag = 0x01,
  TouchSampleDownFlag = 0x02,
@@ -26,8 +28,11 @@ enum enumTouchPanelSampleFlags {
  TouchSampleIgnore = 0x10,
  TouchSampleMouse = 0x40000000
 };
+#endif /* __WINCE_DEFINED_ENUMTOUCHPANELSAMPLEFLAGS */
 
 /* TPDC_CALIBRATION_POINT  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_TPDC_CALIBRATION_POINT
+#define __WINCE_DEFINED_TPDC_CALIBRATION_POINT
 struct TPDC_CALIBRATION_POINT {
  INT PointNumber;
  INT cDisplayWidth;
@@ -35,18 +40,23 @@ struct TPDC_CALIBRATION_POINT {
  INT CalibrationX;
  INT CalibrationY;
 };
+#endif /* __WINCE_DEFINED_TPDC_CALIBRATION_POINT */
 
 /* TPDC_SAMPLE_RATE  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_TPDC_SAMPLE_RATE
+#define __WINCE_DEFINED_TPDC_SAMPLE_RATE
 struct TPDC_SAMPLE_RATE {
  INT SamplesPerSecondLow;
  INT SamplesPerSecondHigh;
- INT CurrentSampleRateSetting; 
+ INT CurrentSampleRateSetting;
 };
+#endif /* __WINCE_DEFINED_TPDC_SAMPLE_RATE */
 
 /* x40000000  [extra enum] */
-#ifdef __cplusplus
+#ifndef __WINCE_DEFINED_ENUMTOUCHPANELSAMPLEFLAGS
+#define __WINCE_DEFINED_ENUMTOUCHPANELSAMPLEFLAGS
 enum enumTouchPanelSampleFlags {TouchSampleValidFlag = 0x01,TouchSampleDownFlag = 0x02,TouchSampleIsCalibratedFlag = 0x04,TouchSamplePreviousDownFlag = 0x08,TouchSampleIgnore = 0x10,TouchSampleMouse = 0x40000000};
-#endif /* __cplusplus */
+#endif /* __WINCE_DEFINED_ENUMTOUCHPANELSAMPLEFLAGS */
 
 /* ==================================================================
  * functions and callbacks
@@ -58,24 +68,18 @@ enum enumTouchPanelSampleFlags {TouchSampleValidFlag = 0x01,TouchSampleDownFlag 
 VOID TouchPanelDisable(void);
 
 /* TouchPanelGetDeviceCaps  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Tchmain.lib] */
-BOOL TouchPanelGetDeviceCaps(
- INT iIndex,
- LPVOID lpOutput 
-);
+BOOL TouchPanelGetDeviceCaps(INT iIndex,
+ LPVOID lpOutput);
 
 /* TouchPanelPowerHandler  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Tchmain.lib] */
-VOID TouchPanelPowerHandler(
- BOOL bOff
-);
+VOID TouchPanelPowerHandler(BOOL bOff);
 
 /* TouchPanelReadCalibrationAbort  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Tchmain.lib] */
 VOID TouchPanelReadCalibrationAbort(void);
 
 /* TouchPanelSetMode  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Tchmain.lib] */
-BOOL TouchPanelSetMode(
- INT iIndex,
- LPVOID lpInput 
-);
+BOOL TouchPanelSetMode(INT iIndex,
+ LPVOID lpInput);
 #endif /* _WIN32_WCE */
 
 #endif /* _TCHDDI_ */

@@ -44,7 +44,9 @@ UNKNOWN_TYPE_RE = re.compile(
     r"\s*;?\s*(did you mean.*)?$")
 DEFINES_TYPE = re.compile(
     r"^\s*(?:typedef\s+)?(?:struct|union|enum)\s+(?P<tag>\w+)|"
-    r"^\s*typedef\s+[^;(]*?\b(?P<tname>\w+)\s*;", re.M)
+    r"^\s*typedef\s+[^;]*?\b(?P<tname>\w+)\s*;|"
+    r"^\s*\}\s*(?P<stname>\w+)\s*[,;]|"
+    r"^\s*#\s*define\s+(?P<macro>[A-Za-z_]\w*)\b", re.M)
 FORWARD_HINT = re.compile(r"\b(?:struct|union|enum)\s+(\w+)\s*\*")
 
 
@@ -74,7 +76,7 @@ def type_definers(fragments):
     out = collections.defaultdict(set)
     for name, text in fragments.items():
         for match in DEFINES_TYPE.finditer(text):
-            for key in ("tag", "tname"):
+            for key in ("tag", "tname", "stname", "macro"):
                 if match.group(key):
                     out[match.group(key)].add(name)
     return out

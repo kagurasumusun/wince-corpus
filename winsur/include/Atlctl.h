@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 58 extra decls
+ * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 57 extra decls
  */
 #ifndef _ATLCTL_
 #define _ATLCTL_
@@ -95,6 +95,5 @@ HRESULT SendOnViewChange(DWORD dwAspect, LONG lindex = -1);
 #endif /* __cplusplus */
 BOOL SetControlFocus(BOOL bGrab);
 HRESULT SetObjectRects(LPCRECT prcPos, LPCRECT prcClip);
-HRESULT UIDeactivate();
 
 #endif /* _ATLCTL_ */

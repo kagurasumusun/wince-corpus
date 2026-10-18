@@ -26,6 +26,8 @@
  * ================================================================ */
 
 /* DMUS_PORTPARAMS  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__DMUS_PORTPARAMS
+#define __WINCE_DEFINED__DMUS_PORTPARAMS
 typedef struct _DMUS_PORTPARAMS {
  DWORD dwSize;
  DWORD dwValidParams;
@@ -36,15 +38,22 @@ typedef struct _DMUS_PORTPARAMS {
  DWORD dwEffectFlags;
  DWORD fShare;
 } DMUS_PORTPARAMS, *LPDMUS_PORTPARAMS;
+#endif /* __WINCE_DEFINED__DMUS_PORTPARAMS */
 
 /* DMUS_WAVES_REVERB_PARAMS  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__DMUS_WAVES_REVERB_PARAMS
+#define __WINCE_DEFINED__DMUS_WAVES_REVERB_PARAMS
 typedef struct _DMUS_WAVES_REVERB_PARAMS {
  float fInGain;
  float fReverbMix;
  float fReverbTime;
  float fHighFreqRTRatio;
 } DMUS_WAVES_REVERB_PARAMS;
+#endif /* __WINCE_DEFINED__DMUS_WAVES_REVERB_PARAMS */
+#ifndef __WINCE_DEFINED_PDMUS_WAVES_REVERB_PARAMS
+#define __WINCE_DEFINED_PDMUS_WAVES_REVERB_PARAMS
 typedef DMUS_WAVES_REVERB_PARAMS *PDMUS_WAVES_REVERB_PARAMS, *LPDMUS_WAVES_REVERB_PARAMS;
+#endif /* __WINCE_DEFINED_PDMUS_WAVES_REVERB_PARAMS */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main
@@ -59,7 +68,7 @@ HRESULT GetDLId(DWORD* pdwStartDLId, DWORD dwCount);
 HRESULT GetMaxBytes(LPDWORD pcb);
 HRESULT GetRawBufferPtr(LPBYTE* ppData);
 HRESULT GetUsedBytes(LPDWORD pcb);
-HRESULT ResetReadPtr()
+HRESULT ResetReadPtr();
 HRESULT SetChannelPriority(DWORD dwChannelGroup, DWORD dwChannel, DWORD dwPriority);
 HRESULT SetNumChannelGroups(DWORD dwChannelGroups);
 HRESULT SetPatch(DWORD dwPatch);

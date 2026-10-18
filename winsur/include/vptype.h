@@ -18,6 +18,8 @@
  * ================================================================ */
 
 /* AMVP_MODE  [enum, typedef; shared; entity-headers] */
+#ifndef __WINCE_DEFINED__AMVP_MODE
+#define __WINCE_DEFINED__AMVP_MODE
 typedef enum _AMVP_MODE {
  AMVP_MODE_WEAVE,
  AMVP_MODE_BOBINTERLEAVED,
@@ -25,6 +27,10 @@ typedef enum _AMVP_MODE {
  AMVP_MODE_SKIPEVEN,
  AMVP_MODE_SKIPODD
 } AMVP_MODE;
+#endif /* __WINCE_DEFINED__AMVP_MODE */
+#ifndef __WINCE_DEFINED_PAMVP_MODE
+#define __WINCE_DEFINED_PAMVP_MODE
 typedef AMVP_MODE *PAMVP_MODE, *LPAMVP_MODE;
+#endif /* __WINCE_DEFINED_PAMVP_MODE */
 
 #endif /* _VPTYPE_ */

@@ -30,10 +30,16 @@
  * ================================================================ */
 
 /* D3DXVECTOR4  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_D3DXVECTOR4
+#define __WINCE_DEFINED_D3DXVECTOR4
 typedef struct D3DXVECTOR4 {
  FLOAT x, y, z, w;
 } D3DXVECTOR4;
+#endif /* __WINCE_DEFINED_D3DXVECTOR4 */
+#ifndef __WINCE_DEFINED_PD3DXVECTOR4
+#define __WINCE_DEFINED_PD3DXVECTOR4
 typedef D3DXVECTOR4 *PD3DXVECTOR4, *LPD3DXVECTOR4;
+#endif /* __WINCE_DEFINED_PD3DXVECTOR4 */
 
 /* ==================================================================
  * functions and callbacks
@@ -42,20 +48,14 @@ typedef D3DXVECTOR4 *PD3DXVECTOR4, *LPD3DXVECTOR4;
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x500)) /* CE 4.0..499 */
 
 /* D3DXVec4Dot  [function; ce-only; CE 4.0..499; D3dx8.lib] */
-FLOAT D3DXVec4Dot(
- CONST D3DXVECTOR4* pV1,
- CONST D3DXVECTOR4* pV2
-);
+FLOAT D3DXVec4Dot(CONST D3DXVECTOR4* pV1,
+ CONST D3DXVECTOR4* pV2);
 
 /* D3DXVec4Length  [function; ce-only; CE 4.0..499; D3dx8.lib] */
-FLOAT D3DXVec4Length(
- CONST D3DXVECTOR4* pV
-);
+FLOAT D3DXVec4Length(CONST D3DXVECTOR4* pV);
 
 /* D3DXVec4LengthSq  [function; ce-only; CE 4.0..499; D3dx8.lib] */
-FLOAT D3DXVec4LengthSq(
- CONST D3DXVECTOR4* pV
-);
+FLOAT D3DXVec4LengthSq(CONST D3DXVECTOR4* pV);
 #endif /* _WIN32_WCE */
 
 #endif /* _D3DX8MATH_ */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 13 constants, 55 declarations, 0 outlines, 0 base types, 0 extra macros, 6 extra decls
+ * 13 constants, 52 declarations, 0 outlines, 0 base types, 0 extra macros, 6 extra decls
  */
 #ifndef _USBDI_
 #define _USBDI_
@@ -38,16 +38,19 @@
  * ================================================================ */
 
 /* LPDEVICE_NOTIFY_ROUTINE  [typedef; ce-only] */
-typedef BOOL (WINAPI *LPDEVICE_NOTIFY_ROUTINE)(
- LPVOID lpvNotifyParameter,
+#ifndef __WINCE_DEFINED_LPDEVICE_NOTIFY_ROUTINE
+#define __WINCE_DEFINED_LPDEVICE_NOTIFY_ROUTINE
+typedef BOOL (WINAPI *LPDEVICE_NOTIFY_ROUTINE)(LPVOID lpvNotifyParameter,
  DWORD dwCode,
  LPDWORD* dwInfo1,
  LPDWORD* dwInfo2,
  LPDWORD* dwInfo3,
- LPDWORD* dwInfo4
-);
+ LPDWORD* dwInfo4);
+#endif /* __WINCE_DEFINED_LPDEVICE_NOTIFY_ROUTINE */
 
 /* USB_DRIVER_SETTINGS  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_USB_DRIVER_SETTINGS
+#define __WINCE_DEFINED_USB_DRIVER_SETTINGS
 typedef struct {
  DWORD dwCount;
  DWORD dwVendorId;
@@ -60,64 +63,55 @@ typedef struct {
  DWORD dwInterfaceSubClass;
  DWORD dwInterfaceProtocol;
 } USB_DRIVER_SETTINGS;
+#endif /* __WINCE_DEFINED_USB_DRIVER_SETTINGS */
+#ifndef __WINCE_DEFINED_PUSB_DRIVER_SETTINGS
+#define __WINCE_DEFINED_PUSB_DRIVER_SETTINGS
 typedef USB_DRIVER_SETTINGS *PUSB_DRIVER_SETTINGS, *LPUSB_DRIVER_SETTINGS;
+#endif /* __WINCE_DEFINED_PUSB_DRIVER_SETTINGS */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* LPGET_USBD_VERSION  [callback; ce-only; CE 5.0..699] */
-typedef VOID (* LPGET_USBD_VERSION)(
- LPDWORD lpdwMajorVersion,
- LPDWORD lpdwMinorVersion
-);
+#ifndef __WINCE_DEFINED_LPGET_USBD_VERSION
+#define __WINCE_DEFINED_LPGET_USBD_VERSION
+typedef VOID (* LPGET_USBD_VERSION)(LPDWORD lpdwMajorVersion,
+ LPDWORD lpdwMinorVersion);
+#endif /* __WINCE_DEFINED_LPGET_USBD_VERSION */
 
 /* LPOPEN_CLIENT_REGISTRY_KEY  [callback; ce-only; CE 5.0..699] */
-typedef HKEY (* LPOPEN_CLIENT_REGISTRY_KEY)(
- LPCWSTR szUniqueDriverId
-);
+#ifndef __WINCE_DEFINED_LPOPEN_CLIENT_REGISTRY_KEY
+#define __WINCE_DEFINED_LPOPEN_CLIENT_REGISTRY_KEY
+typedef HKEY (* LPOPEN_CLIENT_REGISTRY_KEY)(LPCWSTR szUniqueDriverId);
+#endif /* __WINCE_DEFINED_LPOPEN_CLIENT_REGISTRY_KEY */
 
 /* LPREGISTER_CLIENT_DRIVER_ID  [callback; ce-only; CE 5.0..699] */
-typedef BOOL (* LPREGISTER_CLIENT_DRIVER_ID)(
- LPCWSTR szUniqueDriverId
-);
+#ifndef __WINCE_DEFINED_LPREGISTER_CLIENT_DRIVER_ID
+#define __WINCE_DEFINED_LPREGISTER_CLIENT_DRIVER_ID
+typedef BOOL (* LPREGISTER_CLIENT_DRIVER_ID)(LPCWSTR szUniqueDriverId);
+#endif /* __WINCE_DEFINED_LPREGISTER_CLIENT_DRIVER_ID */
 
 /* LPUN_REGISTER_CLIENT_DRIVER_ID  [callback; ce-only; CE 5.0..699] */
-typedef BOOL (* LPUN_REGISTER_CLIENT_DRIVER_ID)(
- LPCWSTR szUniqueDriverId
-);
+#ifndef __WINCE_DEFINED_LPUN_REGISTER_CLIENT_DRIVER_ID
+#define __WINCE_DEFINED_LPUN_REGISTER_CLIENT_DRIVER_ID
+typedef BOOL (* LPUN_REGISTER_CLIENT_DRIVER_ID)(LPCWSTR szUniqueDriverId);
+#endif /* __WINCE_DEFINED_LPUN_REGISTER_CLIENT_DRIVER_ID */
 #endif /* _WIN32_WCE */
 
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
-
-/* USBInstallDriver  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL USBInstallDriver(
- LPCWSTR szDriverLibFile 
-);
-
-/* USBUnInstallDriver  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL USBUnInstallDriver(void);
-#endif /* _WIN32_WCE */
-
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x500)) /* CE 2.11..2.12, 3.0..499 */
 
 /* GetUSBDVersion  [function; ce-only; CE 2.11..2.12, 3.0..499; Usbd.lib] */
-VOID GetUSBDVersion(
- LPDWORD lpdwMajorVersion,
- LPDWORD lpdwMinorVersion 
-);
+VOID GetUSBDVersion(LPDWORD lpdwMajorVersion,
+ LPDWORD lpdwMinorVersion);
 
 /* OpenClientRegistryKey  [function; ce-only; CE 2.11..2.12, 3.0..499] */
-HKEY OpenClientRegistryKey(
- LPCWSTR szUniqueDriverId 
-);
+HKEY OpenClientRegistryKey(LPCWSTR szUniqueDriverId);
 
 /* RegisterClientDriverID  [function; ce-only; CE 2.11..2.12, 3.0..499] */
-BOOL RegisterClientDriverID(
- LPCWSTR szUniqueDriverId 
-);
+BOOL RegisterClientDriverID(LPCWSTR szUniqueDriverId);
 #endif /* _WIN32_WCE */
 
 #endif /* _USBDI_ */

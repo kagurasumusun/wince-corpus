@@ -18,16 +18,24 @@
  * ================================================================ */
 
 /* IMESHF  [struct; shared] */
+#ifndef __WINCE_DEFINED_IMESHF
+#define __WINCE_DEFINED_IMESHF
 typedef struct {
- WORD cbShf; 
+ WORD cbShf;
  WORD verDic;
- CHAR szTitle[48]; 
- CHAR szDescription[256]; 
- CHAR szCopyright[128]; 
+ CHAR szTitle[48];
+ CHAR szDescription[256];
+ CHAR szCopyright[128];
 } IMESHF;
+#endif /* __WINCE_DEFINED_IMESHF */
+#ifndef __WINCE_DEFINED_PIMESHF
+#define __WINCE_DEFINED_PIMESHF
 typedef IMESHF *PIMESHF, *LPIMESHF;
+#endif /* __WINCE_DEFINED_PIMESHF */
 
 /* IPCANDIDATE  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_TAGIPCANDIDATE
+#define __WINCE_DEFINED_TAGIPCANDIDATE
 typedef struct tagIPCANDIDATE {
  DWORD dwSize;
  DWORD dwFlags;
@@ -37,13 +45,20 @@ typedef struct tagIPCANDIDATE {
  DWORD dwPrivateDataSize;
  DWORD dwOffset[1];
 } IPCANDIDATE, *PIPCANDIDATE;
+#endif /* __WINCE_DEFINED_TAGIPCANDIDATE */
 
 /* POSTBL  [struct; shared] */
+#ifndef __WINCE_DEFINED__POSTBL
+#define __WINCE_DEFINED__POSTBL
 typedef struct _POSTBL {
- WORD nPos; 
- BYTE* szName; 
+ WORD nPos;
+ BYTE* szName;
 } POSTBL;
+#endif /* __WINCE_DEFINED__POSTBL */
+#ifndef __WINCE_DEFINED_PPOSTBL
+#define __WINCE_DEFINED_PPOSTBL
 typedef POSTBL *PPOSTBL, *LPPOSTBL;
+#endif /* __WINCE_DEFINED_PPOSTBL */
 
 /* ==================================================================
  * functions and callbacks
@@ -52,9 +67,7 @@ typedef POSTBL *PPOSTBL, *LPPOSTBL;
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* CreateIFEDictionaryInstance  [function; shared; CE 4.0..699; Imejpp.dll, imejpp.dll] */
-HRESULT CreateIFEDictionaryInstance(
- VOID** ppvObj
-);
+HRESULT CreateIFEDictionaryInstance(VOID** ppvObj);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

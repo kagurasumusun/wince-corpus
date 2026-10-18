@@ -5,11 +5,17 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 3 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _ROMLDR_
 #define _ROMLDR_
 
+
+/* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* OEMRomChain  [struct; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -18,6 +24,8 @@
  * ================================================================ */
 
 /* ROMHDR  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_ROMHDR
+#define __WINCE_DEFINED_ROMHDR
 typedef struct ROMHDR {
  ULONG dllfirst;
  ULONG dlllast;
@@ -42,13 +50,10 @@ typedef struct ROMHDR {
  ULONG ulTrackingStart;
  ULONG ulTrackingLen;
 } ROMHDR;
+#endif /* __WINCE_DEFINED_ROMHDR */
+#ifndef __WINCE_DEFINED_PROMHDR
+#define __WINCE_DEFINED_PROMHDR
 typedef ROMHDR *PROMHDR, *LPROMHDR;
-
-/* OEMRomChain  [struct; ce-only] */
-typedef struct ROMChain_t{
- struct ROMChain_t* pNext;
- ROMHDR* pTOC;
-} ROMChain_t, OEMRomChain;
-typedef OEMRomChain *POEMRomChain, *LPOEMRomChain;
+#endif /* __WINCE_DEFINED_PROMHDR */
 
 #endif /* _ROMLDR_ */

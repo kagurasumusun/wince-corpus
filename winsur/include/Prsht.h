@@ -143,117 +143,79 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* PropSheet_AddPage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL PropSheet_AddPage( 
- hPropSheetDlg, 
- hpage 
-);
+BOOL PropSheet_AddPage(hPropSheetDlg,
+ hpage);
 
 /* PropSheet_Apply  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL PropSheet_Apply( 
- hPropSheetDlg 
-);
+BOOL PropSheet_Apply(hPropSheetDlg);
 
 /* PropSheet_CancelToClose  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-VOID PropSheet_CancelToClose( 
- hPropSheetDlg 
-);
+VOID PropSheet_CancelToClose(hPropSheetDlg);
 
 /* PropSheet_Changed  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL PropSheet_Changed( 
- hPropSheetDlg, 
- hwndPage
-);
+BOOL PropSheet_Changed(hPropSheetDlg,
+ hwndPage);
 
 /* PropSheet_GetCurrentPageHwnd  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-HWND PropSheet_GetCurrentPageHwnd( 
- hDlg 
-);
+HWND PropSheet_GetCurrentPageHwnd(hDlg);
 
 /* PropSheet_GetTabControl  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-HWND PropSheet_GetTabControl( 
- hPropSheetDlg 
-);
+HWND PropSheet_GetTabControl(hPropSheetDlg);
 
 /* PropSheet_IsDialogMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL PropSheet_IsDialogMessage( 
- hDlg, 
- pMsg 
-);
+BOOL PropSheet_IsDialogMessage(hDlg,
+ pMsg);
 
 /* PropSheet_PressButton  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL PropSheet_PressButton( 
- hPropSheetDlg, 
- iButton 
-);
+BOOL PropSheet_PressButton(hPropSheetDlg,
+ iButton);
 
 /* PropSheet_QuerySiblings  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-int PropSheet_QuerySiblings( 
- hPropSheetDlg, 
- param1, 
- param2 
-);
+int PropSheet_QuerySiblings(hPropSheetDlg,
+ param1,
+ param2);
 
 /* PropSheet_RebootSystem  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-void PropSheet_RebootSystem( 
- hPropSheetDlg 
-);
+void PropSheet_RebootSystem(hPropSheetDlg);
 
 /* PropSheet_RemovePage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-void PropSheet_RemovePage( 
- hPropSheetDlg, 
- index, 
- hpage 
-);
+void PropSheet_RemovePage(hPropSheetDlg,
+ index,
+ hpage);
 
 /* PropSheet_RestartWindows  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-void PropSheet_RestartWindows( 
- hPropSheetDlg 
-);
+void PropSheet_RestartWindows(hPropSheetDlg);
 
 /* PropSheet_SetCurSel  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL PropSheet_SetCurSel( 
- hPropSheetDlg, 
- hpage, 
- index 
-);
+BOOL PropSheet_SetCurSel(hPropSheetDlg,
+ hpage,
+ index);
 
 /* PropSheet_SetCurSelByID  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL PropSheet_SetCurSelByID( 
- hPropSheetDlg, 
- id 
-);
+BOOL PropSheet_SetCurSelByID(hPropSheetDlg,
+ id);
 
 /* PropSheet_SetFinishText  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-VOID PropSheet_SetFinishText( 
- hPropSheetDlg, 
- lpszText 
-);
+VOID PropSheet_SetFinishText(hPropSheetDlg,
+ lpszText);
 
 /* PropSheet_SetTitle  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-void PropSheet_SetTitle( 
- hPropSheetDlg, 
- dwStyle, 
- lpszText 
-);
+void PropSheet_SetTitle(hPropSheetDlg,
+ dwStyle,
+ lpszText);
 
 /* PropSheet_SetWizButtons  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-VOID PropSheet_SetWizButtons( 
- HWND hPropSheetDlg, 
- DWORD dwFlags 
-);
+VOID PropSheet_SetWizButtons(HWND hPropSheetDlg,
+ DWORD dwFlags);
 
 /* PropSheet_UnChanged  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-void PropSheet_UnChanged( 
- hPropSheetDlg, 
- hwndPage 
-);
+void PropSheet_UnChanged(hPropSheetDlg,
+ hwndPage);
 
 /* PropSheetProc  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-int CALLBACK PropSheetProc(
- HWND hwndDlg, 
- UINT uMsg, 
- LPARAM lParam 
-);
+int CALLBACK PropSheetProc(HWND hwndDlg,
+ UINT uMsg,
+ LPARAM lParam);
 #endif /* _WIN32_WCE */
 
 #endif /* _PRSHT_ */

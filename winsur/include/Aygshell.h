@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 56 constants, 57 declarations, 2 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 56 constants, 7 declarations, 5 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _AYGSHELL_
 #define _AYGSHELL_
@@ -80,6 +80,10 @@
 
 /* SHACTIVATEINFO  [struct; ce-only; aygshell.lib] */
 
+/* SHGetMenu  [macro; ce-only] */
+
+/* SHGetSubMenu  [macro; ce-only] */
+
 /* SHINITDLGINFO  [struct, macro; ce-only; aygshell.lib] */
 typedef struct tagSHINITDIALOG {
  DWORD dwMask;
@@ -89,6 +93,8 @@ typedef struct tagSHINITDIALOG {
 
 /* SHORTS  [typedef; ce-only; heuristic-prefix] */
 
+/* SHSetSubMenu  [macro; ce-only] */
+
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
@@ -96,14 +102,22 @@ typedef struct tagSHINITDIALOG {
  * ================================================================ */
 
 /* SHCHANGENOTIFYENTRY  [struct; shared; ceshell.lib] */
+#ifndef __WINCE_DEFINED_TAGSHCHANGENOTIFYENTRY
+#define __WINCE_DEFINED_TAGSHCHANGENOTIFYENTRY
 typedef struct tagSHCHANGENOTIFYENTRY {
  DWORD dwEventMask;
  LPTSTR pszWatchDir;
  BOOL fRecursive;
 } SHCHANGENOTIFYENTRY;
+#endif /* __WINCE_DEFINED_TAGSHCHANGENOTIFYENTRY */
+#ifndef __WINCE_DEFINED_PSHCHANGENOTIFYENTRY
+#define __WINCE_DEFINED_PSHCHANGENOTIFYENTRY
 typedef SHCHANGENOTIFYENTRY *PSHCHANGENOTIFYENTRY, *LPSHCHANGENOTIFYENTRY;
+#endif /* __WINCE_DEFINED_PSHCHANGENOTIFYENTRY */
 
 /* SHMENUBARINFO  [struct; ce-only; aygshell.lib] */
+#ifndef __WINCE_DEFINED_TAGSHMENUBARINFO
+#define __WINCE_DEFINED_TAGSHMENUBARINFO
 typedef struct tagSHMENUBARINFO {
  DWORD cbSize;
  HWND hwndParent;
@@ -115,150 +129,30 @@ typedef struct tagSHMENUBARINFO {
  HWND hwndMB;
  COLORREF clrBk;
 } SHMENUBARINFO, *PSHMENUBARINFO;
+#endif /* __WINCE_DEFINED_TAGSHMENUBARINFO */
 
 /* SHNP  [enum; ce-only] */
+#ifndef __WINCE_DEFINED__SHNP
+#define __WINCE_DEFINED__SHNP
 typedef enum _SHNP {
  SHNP_INFORM,
  SHNP_ICONIC
 } SHNP;
+#endif /* __WINCE_DEFINED__SHNP */
+#ifndef __WINCE_DEFINED_PSHNP
+#define __WINCE_DEFINED_PSHNP
 typedef SHNP *PSHNP, *LPSHNP;
+#endif /* __WINCE_DEFINED_PSHNP */
 
 /* SHRGINFO  [struct; ce-only; aygshell.lib] */
+#ifndef __WINCE_DEFINED_TAGSHRGI
+#define __WINCE_DEFINED_TAGSHRGI
 typedef struct tagSHRGI {
  DWORD cbSize;
  HWND hwndClient;
  POINT ptDown;
  DWORD dwFlags;
 } SHRGINFO, *PSHRGINFO;
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-/* SHCreateMenuBar  [function; ce-only; unified-kb; unified-kb] */
-BOOL SHCreateMenuBar( 
- SHMENUBARINFO* pmb 
-);
-
-/* SHFullScreen  [function; ce-only; unified-kb; unified-kb] */
-BOOL SHFullScreen( 
- HWND hwndRequester, 
- DWORD dwState 
-);
-
-/* SHSipInfo  [function; ce-only; unified-kb; unified-kb] */
-BOOL WINAPI SHSipInfo( 
- UINT uiAction, 
- UINT uiParam, 
- PVOID pvParam, 
- UINT fWinIni 
-);
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 5.0..699 */
-
-/* SHCloseApps  [function; ce-only; CE 2.11..2.12, 5.0..699; Aygshell.lib, aygshell.lib] */
-BOOL SHCloseApps(
- DWORD dwMemSought
-);
-
-/* SHGetAppKeyAssoc  [function; ce-only; CE 2.11..2.12, 5.0..699; Aygshell.lib, aygshell.lib] */
-BYTE SHGetAppKeyAssoc(
- LPCTSTR ptszApp
-);
-
-/* SHInitExtraControls  [function; ce-only; CE 2.11..2.12, 5.0..699; Aygshell.lib, aygshell.lib] */
-BOOL SHInitExtraControls(void);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
-
-/* SHChangeNotifyDeregister  [function; shared; CE 5.0..699; Aygshell.lib, aygshell.lib, ceshell.lib] */
-BOOL WINAPI SHChangeNotifyDeregister(
- HWND hwnd
-);
-
-/* SHChangeNotifyRegister  [function; shared; CE 5.0..699; Aygshell.lib, aygshell.lib, ceshell.lib] */
-BOOL WINAPI SHChangeNotifyRegister(
- HWND hwnd,
- SHCHANGENOTIFYENTRY * pshcne
-);
-
-/* SHDoneButton  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-BOOL SHDoneButton(
- HWND hwndRequester,
- DWORD dwState
-);
-
-/* SHFindMenuBar  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-HWND WINAPI SHFindMenuBar(
- HWND hwnd
-);
-
-/* SHFreeContextMenuExtensions  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-BOOL SHFreeContextMenuExtensions(
- HANDLE hCMExtensions
-);
-
-/* SHGetAutoRunPath  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-BOOL SHGetAutoRunPath(
- LPTSTR pAutoRunPath
-);
-
-/* SHGetEmergencyCallList  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-HRESULT SHGetEmergencyCallList(
- TCHAR* pwszBuffer,
- UINT uLenBuf
-);
-
-/* SHGetInputContext  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-HRESULT SHGetInputContext (
- HWND hwnd,
- DWORD dwFeature,
- LPVOID lpValue,
- LPDWORD lpdwSize
-);
-
-/* SHInputDialog  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-void SHInputDialog(
- HWND hwnd,
- UINT uMsg,
- WPARAM wParam
-);
-
-/* SHInvokeContextMenuCommand  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-BOOL SHInvokeContextMenuCommand(
- HWND hwndOwner,
- UINT idCmd,
- HANDLE hCMExtensions
-);
-
-/* SHNavigateBack  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-void SHNavigateBack(void);
-
-/* SHSetAppKeyWndAssoc  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-BOOL SHSetAppKeyWndAssoc(
- BYTE bVk,
- HWND hwnd
-);
-
-/* SHSetBack  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-void SHSetBack(
- int eOp,
- HWND hwnd
-);
-
-/* SHSetInputContext  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-HRESULT SHSetInputContext (
- HWND hwnd,
- DWORD dwFeature,
- const LPVOID lpValue
-);
-
-/* SHSetNavBarText  [function; ce-only; CE 5.0..699; Aygshell.lib, aygshell.lib] */
-BOOL SHSetNavBarText(
- HWND hwndRequester,
- LPCTSTR pszText
-);
-#endif /* _WIN32_WCE */
+#endif /* __WINCE_DEFINED_TAGSHRGI */
 
 #endif /* _AYGSHELL_ */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 62 declarations, 10 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 62 declarations, 10 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _D3DMX_
 #define _D3DMX_
@@ -42,6 +42,9 @@
  * ================================================================ */
 
 /* FIXED  [typedef, struct; shared] */
+#ifndef __WINCE_DEFINED_FIXED
+#define __WINCE_DEFINED_FIXED
 typedef int FIXED; // signed 15.16 fixed-point format
+#endif /* __WINCE_DEFINED_FIXED */
 
 #endif /* _D3DMX_ */

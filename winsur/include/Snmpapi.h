@@ -18,9 +18,7 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
 
 /* SnmpUtilMemAlloc  [function; shared; CE 3.0..699; Snmp.lib, snmp.lib, Snmpapi.lib] */
-LPVOID SnmpUtilMemAlloc(
- UINT nBytes 
-);
+LPVOID SnmpUtilMemAlloc(UINT nBytes);
 #endif /* _WIN32_WCE */
 
 #endif /* _SNMPAPI_ */

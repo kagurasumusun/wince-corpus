@@ -18,8 +18,7 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 5.0..599 */
 
 /* _set_new_handler  [function; ce-only; CE 5.0..599; coredll.dll] */
-_PNH _set_new_handler(
- _PNH pNewHandler);
+_PNH _set_new_handler(_PNH pNewHandler);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

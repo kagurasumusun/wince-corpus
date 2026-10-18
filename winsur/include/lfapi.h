@@ -34,12 +34,15 @@
  * ================================================================ */
 
 /* LOCATION_SERVICE_STATE  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__LOCATION_SERVICE_STATE
+#define __WINCE_DEFINED__LOCATION_SERVICE_STATE
 typedef struct _LOCATION_SERVICE_STATE {
- DWORD serviceState; 
+ DWORD serviceState;
  DWORD numLoadedProviders;
  DWORD numLoadedResolvers;
  DWORD numActiveProviders;
  DWORD numActiveResolvers;
 } LOCATION_SERVICE_STATE, *PLOCATION_SERVICE_STATE;
+#endif /* __WINCE_DEFINED__LOCATION_SERVICE_STATE */
 
 #endif /* _LFAPI_ */

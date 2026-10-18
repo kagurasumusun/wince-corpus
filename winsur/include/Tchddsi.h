@@ -24,21 +24,15 @@ VOID DdsiTouchPanelDisable(void);
 BOOL DdsiTouchPanelEnable(void);
 
 /* DdsiTouchPanelGetDeviceCaps  [function; ce-only; CE 2.11..2.12, 3.0..699; Tchmdd.lib] */
-BOOL DdsiTouchPanelGetDeviceCaps(
- ULONG iIndex,
- LPVOID lpOutput 
-);
+BOOL DdsiTouchPanelGetDeviceCaps(ULONG iIndex,
+ LPVOID lpOutput);
 
 /* DdsiTouchPanelPowerHandler  [function; ce-only; CE 2.11..2.12, 3.0..699; Tchmdd.lib] */
-VOID DdsiTouchPanelPowerHandler(
- BOOL bOff
-);
+VOID DdsiTouchPanelPowerHandler(BOOL bOff);
 
 /* DdsiTouchPanelSetMode  [function; ce-only; CE 2.11..2.12, 3.0..699; Tchmdd.lib] */
-BOOL DdsiTouchPanelSetMode(
- ULONG iIndex,
- LPVOID lpInput 
-);
+BOOL DdsiTouchPanelSetMode(ULONG iIndex,
+ LPVOID lpInput);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */

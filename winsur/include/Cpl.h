@@ -40,26 +40,38 @@
  * ================================================================ */
 
 /* CPLINFO  [struct; shared] */
-typedef struct tagCPLINFO { 
- int idIcon; 
- int idName; 
- int idInfo; 
- LONG lData; 
+#ifndef __WINCE_DEFINED_TAGCPLINFO
+#define __WINCE_DEFINED_TAGCPLINFO
+typedef struct tagCPLINFO {
+ int idIcon;
+ int idName;
+ int idInfo;
+ LONG lData;
 } CPLINFO;
+#endif /* __WINCE_DEFINED_TAGCPLINFO */
+#ifndef __WINCE_DEFINED_PCPLINFO
+#define __WINCE_DEFINED_PCPLINFO
 typedef CPLINFO *PCPLINFO, *LPCPLINFO;
+#endif /* __WINCE_DEFINED_PCPLINFO */
 
 /* NEWCPLINFO  [struct; shared; A/W NEWCPLINFOA,NEWCPLINFOW (CE is W-side)] */
-typedef struct tagNEWCPLINFO { 
- DWORD dwSize; 
- DWORD dwFlags; 
- DWORD dwHelpContext; 
- LONG lData; 
- HICON hIcon; 
- TCHAR szName[32]; 
- TCHAR szInfo[64]; 
- TCHAR szHelpFile[128]; 
+#ifndef __WINCE_DEFINED_TAGNEWCPLINFO
+#define __WINCE_DEFINED_TAGNEWCPLINFO
+typedef struct tagNEWCPLINFO {
+ DWORD dwSize;
+ DWORD dwFlags;
+ DWORD dwHelpContext;
+ LONG lData;
+ HICON hIcon;
+ TCHAR szName[32];
+ TCHAR szInfo[64];
+ TCHAR szHelpFile[128];
 } NEWCPLINFO;
+#endif /* __WINCE_DEFINED_TAGNEWCPLINFO */
+#ifndef __WINCE_DEFINED_PNEWCPLINFO
+#define __WINCE_DEFINED_PNEWCPLINFO
 typedef NEWCPLINFO *PNEWCPLINFO, *LPNEWCPLINFO;
+#endif /* __WINCE_DEFINED_PNEWCPLINFO */
 
 /* ==================================================================
  * functions and callbacks
@@ -68,12 +80,12 @@ typedef NEWCPLINFO *PNEWCPLINFO, *LPNEWCPLINFO;
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* CPlApplet  [function; ce-only; CE 5.0..699] */
-LONG CPlApplet(
- HWND hwndCPl,
+#ifdef __cplusplus
+LONG CPlApplet(HWND hwndCPl,
  UINT msg,
  LPARAM lParam1,
- LPARAM lParam2
-);
+ LPARAM lParam2);
+#endif /* __cplusplus */
 #endif /* _WIN32_WCE */
 
 #endif /* _CPL_ */

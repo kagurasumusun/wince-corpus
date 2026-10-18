@@ -66,7 +66,7 @@ BOOL TransportView(HWND hwndParent, MailMsg *MsgPtr);
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213)) /* CE 2.11..2.12 */
 
 /* TransportErrorMsg  [function; ce-only; CE 2.11..2.12] */
-int TransportErrorMsg(HANDLE hService, LPWSTR szBuf, int iBufLen, 
+int TransportErrorMsg(HANDLE hService, LPWSTR szBuf, int iBufLen,
 int *piSrcLine,);
 #endif /* _WIN32_WCE */
 

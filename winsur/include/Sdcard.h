@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 5 constants, 5 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 5 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _SDCARD_
 #define _SDCARD_
@@ -34,14 +34,12 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* BUILD_IO_RW_EXTENDED_ARG  [function; ce-only; CE 5.0..699] */
-DWORD BUILD_IO_RW_EXTENDED_ARG(
- Read_Write,
+DWORD BUILD_IO_RW_EXTENDED_ARG(Read_Write,
  BlockMode,
  Function,
  Address,
  IncrementAddress,
- Count
-);
+ Count);
 #endif /* _WIN32_WCE */
 
 #endif /* _SDCARD_ */

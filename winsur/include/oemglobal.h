@@ -18,12 +18,10 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* pfnSetMemoryAttributes  [function; ce-only; CE 6.0..699] */
-extern BOOL (*pfnSetMemoryAttributes)( 
- LPVOID pVirtualAddr, 
- LPVOID pPhysAddr, 
- DWORD cbSize, 
- DWORD dwAttributes 
-);
+extern BOOL (*pfnSetMemoryAttributes)(LPVOID pVirtualAddr,
+ LPVOID pPhysAddr,
+ DWORD cbSize,
+ DWORD dwAttributes);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

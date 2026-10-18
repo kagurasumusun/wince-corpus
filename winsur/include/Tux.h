@@ -36,11 +36,16 @@
  * ================================================================ */
 
 /* SPS_LOAD_DLL  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__SPS_LOAD_DLL
+#define __WINCE_DEFINED__SPS_LOAD_DLL
 typedef struct _SPS_LOAD_DLL {
  BOOL fUnicode;
 } SPS_LOAD_DLL, *LPSPS_LOAD_DLL;
+#endif /* __WINCE_DEFINED__SPS_LOAD_DLL */
 
 /* SPS_SHELL_INFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__SPS_SHELL_INFO
+#define __WINCE_DEFINED__SPS_SHELL_INFO
 typedef struct _SPS_SHELL_INFO {
  HINSTANCE hInstance;
  HWND hWnd;
@@ -49,17 +54,24 @@ typedef struct _SPS_SHELL_INFO {
  BOOL fUsingServer;
  LPCTSTR szDllCmdLine;
 } SPS_SHELL_INFO, *LPSPS_SHELL_INFO;
+#endif /* __WINCE_DEFINED__SPS_SHELL_INFO */
 
 /* TPS_EXECUTE  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__TPS_EXECUTE
+#define __WINCE_DEFINED__TPS_EXECUTE
 typedef struct _TPS_EXECUTE {
  DWORD dwRandomSeed;
  DWORD dwThreadCount;
  DWORD dwThreadNumber;
 } TPS_EXECUTE, *LPTPS_EXECUTE;
+#endif /* __WINCE_DEFINED__TPS_EXECUTE */
 
 /* TPS_QUERY_THREAD_COUNT  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__TPS_QUERY_THREAD_COUNT
+#define __WINCE_DEFINED__TPS_QUERY_THREAD_COUNT
 typedef struct _TPS_QUERY_THREAD_COUNT {
  DWORD dwThreadCount;
 } TPS_QUERY_THREAD_COUNT, *LPTPS_QUERY_THREAD_COUNT;
+#endif /* __WINCE_DEFINED__TPS_QUERY_THREAD_COUNT */
 
 #endif /* _TUX_ */

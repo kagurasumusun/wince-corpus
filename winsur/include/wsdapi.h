@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 8 constants, 20 declarations, 50 outlines, 0 base types, 0 extra macros, 63 extra decls
+ * 8 constants, 19 declarations, 51 outlines, 0 base types, 0 extra macros, 63 extra decls
  */
 #ifndef _WSDAPI_
 #define _WSDAPI_
@@ -44,31 +44,22 @@
  * ================================================================ */
 
 /* WSD_APP_SEQUENCE  [struct; shared; wsdapi.lib] */
+#ifndef __WINCE_DEFINED__WSD_APP_SEQUENCE
+#define __WINCE_DEFINED__WSD_APP_SEQUENCE
 typedef struct _WSD_APP_SEQUENCE {
  ULONGLONG InstanceId;
  const WCHAR* SequenceId;
  ULONGLONG MessageNumber;
 } WSD_APP_SEQUENCE;
+#endif /* __WINCE_DEFINED__WSD_APP_SEQUENCE */
+#ifndef __WINCE_DEFINED_PWSD_APP_SEQUENCE
+#define __WINCE_DEFINED_PWSD_APP_SEQUENCE
 typedef WSD_APP_SEQUENCE *PWSD_APP_SEQUENCE, *LPWSD_APP_SEQUENCE;
-
-/* WSD_DATETIME  [struct; shared; wsdapi.lib] */
-typedef struct _WSD_DATETIME {
- BOOL isPositive;
- ULONG year;
- UCHAR month;
- UCHAR day;
- UCHAR hour;
- UCHAR minute;
- UCHAR second;
- UINT millisecond;
- BOOL TZIsLocal;
- BOOL TZIsPositive;
- UCHAR TZHour;
- UCHAR TZMinute;
-} WSD_DATETIME;
-typedef WSD_DATETIME *PWSD_DATETIME, *LPWSD_DATETIME;
+#endif /* __WINCE_DEFINED_PWSD_APP_SEQUENCE */
 
 /* WSD_DURATION  [struct; shared; wsdapi.lib] */
+#ifndef __WINCE_DEFINED__WSD_DURATION
+#define __WINCE_DEFINED__WSD_DURATION
 typedef struct _WSD_DURATION {
  BOOL isPositive;
  ULONG year;
@@ -79,30 +70,41 @@ typedef struct _WSD_DURATION {
  ULONG second;
  ULONG millisecond;
 } WSD_DURATION;
+#endif /* __WINCE_DEFINED__WSD_DURATION */
+#ifndef __WINCE_DEFINED_PWSD_DURATION
+#define __WINCE_DEFINED_PWSD_DURATION
 typedef WSD_DURATION *PWSD_DURATION, *LPWSD_DURATION;
+#endif /* __WINCE_DEFINED_PWSD_DURATION */
 
 /* WSD_EVENTING_DELIVERY_MODE  [struct; shared; wsdapi.lib] */
+#ifndef __WINCE_DEFINED__WSD_EVENTING_DELIVERY_MODE
+#define __WINCE_DEFINED__WSD_EVENTING_DELIVERY_MODE
 typedef struct _WSD_EVENTING_DELIVERY_MODE {
  const WCHAR* Mode;
  void* Data;
 } WSD_EVENTING_DELIVERY_MODE;
+#endif /* __WINCE_DEFINED__WSD_EVENTING_DELIVERY_MODE */
+#ifndef __WINCE_DEFINED_PWSD_EVENTING_DELIVERY_MODE
+#define __WINCE_DEFINED_PWSD_EVENTING_DELIVERY_MODE
 typedef WSD_EVENTING_DELIVERY_MODE *PWSD_EVENTING_DELIVERY_MODE, *LPWSD_EVENTING_DELIVERY_MODE;
-
-/* WSD_EVENTING_EXPIRES  [struct; shared; wsdapi.lib] */
-typedef struct _WSD_EVENTING_EXPIRES {
- WSD_DURATION* Duration;
- WSD_DATETIME* DateTime;
-} WSD_EVENTING_EXPIRES;
-typedef WSD_EVENTING_EXPIRES *PWSD_EVENTING_EXPIRES, *LPWSD_EVENTING_EXPIRES;
+#endif /* __WINCE_DEFINED_PWSD_EVENTING_DELIVERY_MODE */
 
 /* WSD_EVENTING_FILTER  [struct; shared; wsdapi.lib] */
+#ifndef __WINCE_DEFINED__WSD_EVENTING_FILTER
+#define __WINCE_DEFINED__WSD_EVENTING_FILTER
 typedef struct _WSD_EVENTING_FILTER {
  const WCHAR* Dialect;
  void* Data;
 } WSD_EVENTING_FILTER;
+#endif /* __WINCE_DEFINED__WSD_EVENTING_FILTER */
+#ifndef __WINCE_DEFINED_PWSD_EVENTING_FILTER
+#define __WINCE_DEFINED_PWSD_EVENTING_FILTER
 typedef WSD_EVENTING_FILTER *PWSD_EVENTING_FILTER, *LPWSD_EVENTING_FILTER;
+#endif /* __WINCE_DEFINED_PWSD_EVENTING_FILTER */
 
 /* WSD_PROTOCOL_TYPE  [enum; shared; wsdapi.lib] */
+#ifndef __WINCE_DEFINED__WSD_PROTOCOL_TYPE
+#define __WINCE_DEFINED__WSD_PROTOCOL_TYPE
 typedef enum _WSD_PROTOCOL_TYPE
 {
  WSD_PT_NONE = 0x00,
@@ -111,27 +113,49 @@ typedef enum _WSD_PROTOCOL_TYPE
  WSD_PT_HTTPS = 0x04,
  WSD_PT_ALL = 0xff
 }WSD_PROTOCOL_TYPE;
+#endif /* __WINCE_DEFINED__WSD_PROTOCOL_TYPE */
+#ifndef __WINCE_DEFINED_PWSD_PROTOCOL_TYPE
+#define __WINCE_DEFINED_PWSD_PROTOCOL_TYPE
 typedef WSD_PROTOCOL_TYPE *PWSD_PROTOCOL_TYPE, *LPWSD_PROTOCOL_TYPE;
+#endif /* __WINCE_DEFINED_PWSD_PROTOCOL_TYPE */
 
 /* WSD_URI_LIST  [struct; shared; wsdapi.lib] */
+#ifndef __WINCE_DEFINED__WSD_URI_LIST
+#define __WINCE_DEFINED__WSD_URI_LIST
 typedef struct _WSD_URI_LIST {
  WSD_URI_LIST* Next;
  const WCHAR* Element;
 } WSD_URI_LIST;
+#endif /* __WINCE_DEFINED__WSD_URI_LIST */
+#ifndef __WINCE_DEFINED_PWSD_URI_LIST
+#define __WINCE_DEFINED_PWSD_URI_LIST
 typedef WSD_URI_LIST *PWSD_URI_LIST, *LPWSD_URI_LIST;
+#endif /* __WINCE_DEFINED_PWSD_URI_LIST */
 
 /* WSD_EVENTING_FILTER_ACTION  [struct; shared; wsdapi.lib] */
+#ifndef __WINCE_DEFINED__WSD_EVENTING_FILTER_ACTION
+#define __WINCE_DEFINED__WSD_EVENTING_FILTER_ACTION
 typedef struct _WSD_EVENTING_FILTER_ACTION {
  WSD_URI_LIST* Actions;
 } WSD_EVENTING_FILTER_ACTION;
+#endif /* __WINCE_DEFINED__WSD_EVENTING_FILTER_ACTION */
+#ifndef __WINCE_DEFINED_PWSD_EVENTING_FILTER_ACTION
+#define __WINCE_DEFINED_PWSD_EVENTING_FILTER_ACTION
 typedef WSD_EVENTING_FILTER_ACTION *PWSD_EVENTING_FILTER_ACTION, *LPWSD_EVENTING_FILTER_ACTION;
+#endif /* __WINCE_DEFINED_PWSD_EVENTING_FILTER_ACTION */
 
 /* WSD_SCOPES  [struct; shared; wsdapi.lib] */
+#ifndef __WINCE_DEFINED__WSD_SCOPES
+#define __WINCE_DEFINED__WSD_SCOPES
 typedef struct _WSD_SCOPES {
  const WCHAR* MatchBy;
  WSD_URI_LIST* Scopes;
 } WSD_SCOPES;
+#endif /* __WINCE_DEFINED__WSD_SCOPES */
+#ifndef __WINCE_DEFINED_PWSD_SCOPES
+#define __WINCE_DEFINED_PWSD_SCOPES
 typedef WSD_SCOPES *PWSD_SCOPES, *LPWSD_SCOPES;
+#endif /* __WINCE_DEFINED_PWSD_SCOPES */
 
 /* REQUESTBODY_GetStatus  [struct; shared; wsdapi.lib] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
@@ -181,6 +205,21 @@ typedef WSD_SCOPES *PWSD_SCOPES, *LPWSD_SCOPES;
 /* DERIVED member outline -- documented order, types/offsets not stated */
 /*   EndpointReference */
 /*   Any */
+
+/* WSD_DATETIME  [struct; shared; wsdapi.lib] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   isPositive */
+/*   year */
+/*   month */
+/*   day */
+/*   hour */
+/*   minute */
+/*   second */
+/*   millisecond */
+/*   TZIsLocal */
+/*   TZIsPositive */
+/*   TZHour */
+/*   TZMinute */
 
 /* WSD_ENDPOINT_REFERENCE  [struct; shared; wsdapi.lib] */
 /* DERIVED member outline -- documented order, types/offsets not stated */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 33 constants, 66 declarations, 0 outlines, 0 base types, 0 extra macros, 10 extra decls
+ * 33 constants, 63 declarations, 0 outlines, 0 base types, 0 extra macros, 10 extra decls
  */
 #ifndef _OBJBASE_
 #define _OBJBASE_
@@ -56,9 +56,7 @@
  * ================================================================ */
 
 /* CoInitialize  [macro, function; shared; Ole232.lib, Ole32.lib] */
-HRESULT CoInitialize(
- LPVOID pvReserved 
-);
+HRESULT CoInitialize(LPVOID pvReserved);
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -67,15 +65,21 @@ HRESULT CoInitialize(
  * ================================================================ */
 
 /* AUTH_IDENTITY  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__AUTH_IDENTITY
+#define __WINCE_DEFINED__AUTH_IDENTITY
 typedef struct _AUTH_IDENTITY {
- [size_is(UserLength+1)] USHORT *User;
+ USHORT *User;
  ULONG UserLength;
- [size_is(DomainLength+1)] USHORT * Domain;
+ USHORT * Domain;
  ULONG DomainLength;
- [size_is(DomainLength+1)] USHORT *Password;
+ USHORT *Password;
  ULONG Flags;
 } AUTH_IDENTITY;
+#endif /* __WINCE_DEFINED__AUTH_IDENTITY */
+#ifndef __WINCE_DEFINED_PAUTH_IDENTITY
+#define __WINCE_DEFINED_PAUTH_IDENTITY
 typedef AUTH_IDENTITY *PAUTH_IDENTITY, *LPAUTH_IDENTITY;
+#endif /* __WINCE_DEFINED_PAUTH_IDENTITY */
 
 /* ==================================================================
  * functions and callbacks
@@ -84,40 +88,30 @@ typedef AUTH_IDENTITY *PAUTH_IDENTITY, *LPAUTH_IDENTITY;
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x200 && _WIN32_WCE < 0x210) || (_WIN32_WCE >= 0x212 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.0..209, 2.12..399, 5.0..699 */
 
 /* Exp  [function; ce-only; CE 2.0..209, 2.12..399, 5.0..699; coredll.dll, ole232.lib] */
-double exp( doublex);
+double exp(doublex);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
 
 /* CoFreeLibrary  [function; shared; CE 2.11..2.12, 3.0..699; Ole32.lib, ole32.lib] */
-void CoFreeLibrary(
- HINSTANCE hInst
-);
+void CoFreeLibrary(HINSTANCE hInst);
 
 /* CoFreeUnusedLibraries  [function; shared; CE 2.11..2.12, 3.0..699; Ole32.lib, ole32.lib] */
 void CoFreeUnusedLibraries();
 
 /* CoInitializeEx  [function; shared; CE 2.11..2.12, 3.0..699; Ole32.lib, ole32.lib] */
-HRESULT CoInitializeEx(
- LPVOID pvReserved, 
- DWORD dwCoInit
-);
+HRESULT CoInitializeEx(LPVOID pvReserved,
+ DWORD dwCoInit);
 
 /* CoTaskMemAlloc  [function; shared; CE 2.11..2.12, 3.0..699; Ole32.lib, ole32.lib] */
-LPVOID CoTaskMemAlloc(
- ULONG cb
-);
+LPVOID CoTaskMemAlloc(ULONG cb);
 
 /* CoTaskMemFree  [function; shared; CE 2.11..2.12, 3.0..699; Ole32.lib, ole32.lib] */
-void CoTaskMemFree(
- LPVOID pv
-);
+void CoTaskMemFree(LPVOID pv);
 
 /* CoTaskMemRealloc  [function; shared; CE 2.11..2.12, 3.0..699; Ole32.lib, ole32.lib] */
-LPVOID CoTaskMemRealloc(
- LPVOID pv, 
- ULONG cb
-);
+LPVOID CoTaskMemRealloc(LPVOID pv,
+ ULONG cb);
 
 /* CoUninitialize  [function; shared; CE 2.11..2.12, 3.0..699; Ole32.lib, ole32.lib] */
 void CoUninitialize();
@@ -129,18 +123,16 @@ void CoUninitialize();
 ULONG CoAddRefServerProcess(void);
 
 /* CoFileTimeNow  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
-HRESULT CoFileTimeNow(
- FILETIME* lpFileTime
-);
+HRESULT CoFileTimeNow(FILETIME* lpFileTime);
 
 /* CoFreeAllLibraries  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
-void CoFreeAllLibraries( );
+void CoFreeAllLibraries();
 
 /* CoGetCurrentProcess  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
 DWORD CoGetCurrentProcess(void);
 
 /* CoImpersonateClient  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
-HRESULT CoImpersonateClient( );
+HRESULT CoImpersonateClient();
 
 /* CoReleaseServerProcess  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
 ULONG CoReleaseServerProcess(void);
@@ -149,15 +141,13 @@ ULONG CoReleaseServerProcess(void);
 WINOLEAPI CoResumeClassObjects(void);
 
 /* CoRevertToSelf  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
-HRESULT CoRevertToSelf( );
+HRESULT CoRevertToSelf();
 
 /* CoRevokeClassObject  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
-HRESULT CoRevokeClassObject(
- DWORD dwRegister
-);
+HRESULT CoRevokeClassObject(DWORD dwRegister);
 
 /* CoRevokeMallocSpy  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
-HRESULT CoRevokeMallocSpy( );
+HRESULT CoRevokeMallocSpy();
 
 /* CoSuspendClassObjects  [function; shared; CE 3.0..699; Ole232.lib, Ole32.lib, ole32.lib] */
 WINOLEAPI CoSuspendClassObjects(void);
@@ -172,10 +162,8 @@ void UpdateDCOMSettings(void);
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* CoFreeUnusedLibrariesEx  [function; shared; CE 5.0..699; Ole32.lib, ole32.lib] */
-void CoFreeUnusedLibrariesEx(
- DWORD dwUnloadDelay,
- DWORD dwReserved
-);
+void CoFreeUnusedLibrariesEx(DWORD dwUnloadDelay,
+ DWORD dwReserved);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

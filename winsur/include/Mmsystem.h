@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 860 constants, 104 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 860 constants, 101 declarations, 3 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _MMSYSTEM_
 #define _MMSYSTEM_
@@ -879,163 +879,183 @@
 #define WOM_OPEN MM_WOM_OPEN
 
 /* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* MMTIME  [struct; ce-only] */
+
+/* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
 
 /* AUDIOGAINCLASS  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_TAGAUDIOGAINCLASS
+#define __WINCE_DEFINED_TAGAUDIOGAINCLASS
 typedef struct tagAUDIOGAINCLASS {
  DWORD dwPriority;
  DWORD dwRelativeGain;
 } AUDIOGAINCLASS, * PAUDIOGAINCLASS;
+#endif /* __WINCE_DEFINED_TAGAUDIOGAINCLASS */
 
 /* MIXERCONTROL  [struct; shared; A/W MIXERCONTROLA,MIXERCONTROLW (CE is W-side)] */
-typedef struct { 
- DWORD cbStruct; 
- DWORD dwControlID; 
- DWORD dwControlType; 
- DWORD fdwControl; 
- DWORD cMultipleItems; 
- CHAR szShortName[MIXER_SHORT_NAME_CHARS]; 
- CHAR szName[MIXER_LONG_NAME_CHARS]; 
- union { 
- struct { 
- LONG lMinimum; 
- LONG lMaximum; 
- }; 
- struct { 
- DWORD dwMinimum; 
- DWORD dwMaximum; 
- }; 
- DWORD dwReserved[6]; 
- } Bounds; 
- union { 
- DWORD cSteps; 
- DWORD cbCustomData; 
- DWORD dwReserved[6]; 
- } Metrics; 
+#ifndef __WINCE_DEFINED_MIXERCONTROL
+#define __WINCE_DEFINED_MIXERCONTROL
+typedef struct {
+ DWORD cbStruct;
+ DWORD dwControlID;
+ DWORD dwControlType;
+ DWORD fdwControl;
+ DWORD cMultipleItems;
+ CHAR szShortName[MIXER_SHORT_NAME_CHARS];
+ CHAR szName[MIXER_LONG_NAME_CHARS];
+ union {
+ struct {
+ LONG lMinimum;
+ LONG lMaximum;
+ };
+ struct {
+ DWORD dwMinimum;
+ DWORD dwMaximum;
+ };
+ DWORD dwReserved[6];
+ } Bounds;
+ union {
+ DWORD cSteps;
+ DWORD cbCustomData;
+ DWORD dwReserved[6];
+ } Metrics;
 } MIXERCONTROL, *PMIXERCONTROL, FAR* LPMIXERCONTROL;
+#endif /* __WINCE_DEFINED_MIXERCONTROL */
 
 /* MIXERCONTROLDETAILS  [struct; shared] */
-typedef struct { 
- DWORD cbStruct; 
- DWORD dwControlID; 
- DWORD cChannels; 
- union { 
- HWND hwndOwner; 
- DWORD cMultipleItems; 
- }; 
- DWORD cbDetails; 
- LPVOID paDetails; 
+#ifndef __WINCE_DEFINED_MIXERCONTROLDETAILS
+#define __WINCE_DEFINED_MIXERCONTROLDETAILS
+typedef struct {
+ DWORD cbStruct;
+ DWORD dwControlID;
+ DWORD cChannels;
+ union {
+ HWND hwndOwner;
+ DWORD cMultipleItems;
+ };
+ DWORD cbDetails;
+ LPVOID paDetails;
 } MIXERCONTROLDETAILS;
+#endif /* __WINCE_DEFINED_MIXERCONTROLDETAILS */
+#ifndef __WINCE_DEFINED_PMIXERCONTROLDETAILS
+#define __WINCE_DEFINED_PMIXERCONTROLDETAILS
 typedef MIXERCONTROLDETAILS *PMIXERCONTROLDETAILS, *LPMIXERCONTROLDETAILS;
+#endif /* __WINCE_DEFINED_PMIXERCONTROLDETAILS */
 
 /* MIXERCONTROLDETAILS_BOOLEAN  [struct, typedef; shared] */
-typedef struct { 
- LONG fValue; 
+#ifndef __WINCE_DEFINED_MIXERCONTROLDETAILS_BOOLEAN
+#define __WINCE_DEFINED_MIXERCONTROLDETAILS_BOOLEAN
+typedef struct {
+ LONG fValue;
 } MIXERCONTROLDETAILS_BOOLEAN;
+#endif /* __WINCE_DEFINED_MIXERCONTROLDETAILS_BOOLEAN */
+#ifndef __WINCE_DEFINED_PMIXERCONTROLDETAILS_BOOLEAN
+#define __WINCE_DEFINED_PMIXERCONTROLDETAILS_BOOLEAN
 typedef MIXERCONTROLDETAILS_BOOLEAN *PMIXERCONTROLDETAILS_BOOLEAN, *LPMIXERCONTROLDETAILS_BOOLEAN;
+#endif /* __WINCE_DEFINED_PMIXERCONTROLDETAILS_BOOLEAN */
 
 /* MIXERCONTROLDETAILS_LISTTEXT  [struct, typedef; shared; A/W MIXERCONTROLDETAILS_LISTTEXTA,MIXERCONTROLDETAILS_LISTTEXTW (CE is W-side)] */
-typedef struct { 
- DWORD dwParam1; 
- DWORD dwParam2; 
- CHAR szName[MIXER_LONG_NAME_CHARS]; 
+#ifndef __WINCE_DEFINED_MIXERCONTROLDETAILS_LISTTEXT
+#define __WINCE_DEFINED_MIXERCONTROLDETAILS_LISTTEXT
+typedef struct {
+ DWORD dwParam1;
+ DWORD dwParam2;
+ CHAR szName[MIXER_LONG_NAME_CHARS];
 } MIXERCONTROLDETAILS_LISTTEXT;
+#endif /* __WINCE_DEFINED_MIXERCONTROLDETAILS_LISTTEXT */
+#ifndef __WINCE_DEFINED_PMIXERCONTROLDETAILS_LISTTEXT
+#define __WINCE_DEFINED_PMIXERCONTROLDETAILS_LISTTEXT
 typedef MIXERCONTROLDETAILS_LISTTEXT *PMIXERCONTROLDETAILS_LISTTEXT, *LPMIXERCONTROLDETAILS_LISTTEXT;
+#endif /* __WINCE_DEFINED_PMIXERCONTROLDETAILS_LISTTEXT */
 
 /* MIXERCONTROLDETAILS_SIGNED  [struct, typedef; shared] */
-typedef struct { 
- LONG lValue; 
+#ifndef __WINCE_DEFINED_MIXERCONTROLDETAILS_SIGNED
+#define __WINCE_DEFINED_MIXERCONTROLDETAILS_SIGNED
+typedef struct {
+ LONG lValue;
 } MIXERCONTROLDETAILS_SIGNED;
+#endif /* __WINCE_DEFINED_MIXERCONTROLDETAILS_SIGNED */
+#ifndef __WINCE_DEFINED_PMIXERCONTROLDETAILS_SIGNED
+#define __WINCE_DEFINED_PMIXERCONTROLDETAILS_SIGNED
 typedef MIXERCONTROLDETAILS_SIGNED *PMIXERCONTROLDETAILS_SIGNED, *LPMIXERCONTROLDETAILS_SIGNED;
+#endif /* __WINCE_DEFINED_PMIXERCONTROLDETAILS_SIGNED */
 
 /* MIXERCONTROLDETAILS_UNSIGNED  [struct, typedef; shared] */
-typedef struct { 
- DWORD dwValue; 
+#ifndef __WINCE_DEFINED_MIXERCONTROLDETAILS_UNSIGNED
+#define __WINCE_DEFINED_MIXERCONTROLDETAILS_UNSIGNED
+typedef struct {
+ DWORD dwValue;
 } MIXERCONTROLDETAILS_UNSIGNED;
+#endif /* __WINCE_DEFINED_MIXERCONTROLDETAILS_UNSIGNED */
+#ifndef __WINCE_DEFINED_PMIXERCONTROLDETAILS_UNSIGNED
+#define __WINCE_DEFINED_PMIXERCONTROLDETAILS_UNSIGNED
 typedef MIXERCONTROLDETAILS_UNSIGNED *PMIXERCONTROLDETAILS_UNSIGNED, *LPMIXERCONTROLDETAILS_UNSIGNED;
+#endif /* __WINCE_DEFINED_PMIXERCONTROLDETAILS_UNSIGNED */
 
 /* MIXERLINECONTROLS  [struct; shared; A/W MIXERLINECONTROLSA,MIXERLINECONTROLSW (CE is W-side)] */
-typedef struct { 
- DWORD cbStruct; 
- DWORD dwLineID; 
- union { 
- DWORD dwControlID; 
- DWORD dwControlType; 
- }; 
- DWORD cControls; 
- DWORD cbmxctrl; 
- LPMIXERCONTROL pamxctrl; 
-} MIXERLINECONTROLS;
-typedef MIXERLINECONTROLS *PMIXERLINECONTROLS, *LPMIXERLINECONTROLS;
-
-/* MMTIME  [struct; ce-only] */
-typedef struct mmtime_tag {
- UINT wType; 
+#ifndef __WINCE_DEFINED_MIXERLINECONTROLS
+#define __WINCE_DEFINED_MIXERLINECONTROLS
+typedef struct {
+ DWORD cbStruct;
+ DWORD dwLineID;
  union {
- DWORD ms; 
- DWORD sample; 
- DWORD cb; 
- DWORD ticks; 
- struct {
- BYTE hour; 
- BYTE min; 
- BYTE sec; 
- BYTE frame; 
- BYTE fps; 
- BYTE dummy; 
- BYTE pad[2]
- } smpte; 
- struct {
- DWORD songptrpos;
- } midi; 
- } u; 
-} MMTIME;
-typedef MMTIME *PMMTIME, *LPMMTIME;
+ DWORD dwControlID;
+ DWORD dwControlType;
+ };
+ DWORD cControls;
+ DWORD cbmxctrl;
+ LPMIXERCONTROL pamxctrl;
+} MIXERLINECONTROLS;
+#endif /* __WINCE_DEFINED_MIXERLINECONTROLS */
+#ifndef __WINCE_DEFINED_PMIXERLINECONTROLS
+#define __WINCE_DEFINED_PMIXERLINECONTROLS
+typedef MIXERLINECONTROLS *PMIXERLINECONTROLS, *LPMIXERLINECONTROLS;
+#endif /* __WINCE_DEFINED_PMIXERLINECONTROLS */
 
 /* STREAMPROPS  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_TAGSTREAMPROPS
+#define __WINCE_DEFINED_TAGSTREAMPROPS
 typedef struct tagSTREAMPROPS {
  DWORD dwClassID;
  DWORD dwFlags;
 } STREAMPROPS, *PSTREAMPROPS;
+#endif /* __WINCE_DEFINED_TAGSTREAMPROPS */
 
 /* TIMECAPS  [struct; shared] */
-typedef struct timecaps_tag {
- UINT wPeriodMin; 
- UINT wPeriodMax; 
-} TIMECAPS, *PTIMECAPS;
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   wPeriodMin */
+/*   wPeriodMax */
 
 /* WAVEHDR  [struct; shared] */
-typedef struct {
- LPSTR lpData;
- DWORD dwBufferLength;
- DWORD dwBytesRecorded;
- DWORD dwUser;
- DWORD dwFlags;
- DWORD dwLoops;
- struct wavehdr_tag* lpNext;
- DWORD reserved;}
-WAVEHDR;
-typedef WAVEHDR *PWAVEHDR, *LPWAVEHDR;
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   lpData */
+/*   dwBufferLength */
+/*   dwBytesRecorded */
+/*   dwUser */
+/*   dwFlags */
+/*   dwLoops */
+/*   lpNext */
+/*   reserved */
 
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
 /* PlaySound  [function; ce-only; unified-kb; unified-kb] */
-BOOL WINAPI PlaySound( 
- LPCSTR pszSound, 
- HMODULE hmod, 
- DWORD fdwSound 
-);
+BOOL WINAPI PlaySound(LPCSTR pszSound,
+ HMODULE hmod,
+ DWORD fdwSound);
 
 /* sndPlaySound  [function; ce-only; unified-kb; unified-kb] */
-BOOL sndPlaySound( 
- LPCTSTR lpszSoundName, 
- UINT fuSound 
-);
+BOOL sndPlaySound(LPCTSTR lpszSoundName,
+ UINT fuSound);
 
 /* timeGetTime  [function; shared; unified-kb; unified-kb] */
 DWORD timeGetTime(void);

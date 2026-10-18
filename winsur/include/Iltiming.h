@@ -18,6 +18,8 @@
  * ================================================================ */
 
 /* ILTIMING_MESSAGE  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_TILTIMING_MESSAGE
+#define __WINCE_DEFINED_TILTIMING_MESSAGE
 typedef struct tILTIMING_MESSAGE {
  WORD wMsg;
  WORD wNumInterrupts;
@@ -27,5 +29,6 @@ typedef struct tILTIMING_MESSAGE {
  DWORD dwFrequency;
  PVOID pfnPerfCountSinceTick;
 } ILTIMING_MESSAGE, *PILTIMING_MESSAGE;
+#endif /* __WINCE_DEFINED_TILTIMING_MESSAGE */
 
 #endif /* _ILTIMING_ */

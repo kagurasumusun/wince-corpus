@@ -18,12 +18,15 @@
  * ================================================================ */
 
 /* EXTSTACKTRACE  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__EXTSTACKTRACE
+#define __WINCE_DEFINED__EXTSTACKTRACE
 typedef struct _EXTSTACKTRACE {
  ULONG FramePointer;
  ULONG ProgramCounter;
  ULONG ReturnAddress;
  ULONG Args[4];
 } EXTSTACKTRACE, *PEXTSTACKTRACE;
+#endif /* __WINCE_DEFINED__EXTSTACKTRACE */
 
 /* ==================================================================
  * functions and callbacks
@@ -35,86 +38,64 @@ typedef struct _EXTSTACKTRACE {
 ULONG CheckControlC(VOID);
 
 /* GetSymbol  [function; ce-only; CE 5.0..699] */
-VOID GetSymbol(
- PVOID offset,
+VOID GetSymbol(PVOID offset,
  PUCHAR pchBuffer,
- PULONG pDisplacement
-);
+ PULONG pDisplacement);
 
 /* Ioctl  [function; ce-only; CE 5.0..699] */
-ULONG Ioctl(
- USHORT IoctlType,
+ULONG Ioctl(USHORT IoctlType,
  PVOID lpvData,
- ULONG cbSizeOfContext
-);
+ ULONG cbSizeOfContext);
 
 /* ReadControlSpace  [function; ce-only; CE 5.0..699] */
-VOID ReadControlSpace(
- USHORT processor,
+VOID ReadControlSpace(USHORT processor,
  ULONG address,
  PVOID buf,
- ULONG size
-);
+ ULONG size);
 
 /* ReadIoSpace  [function; ce-only; CE 5.0..699] */
-VOID ReadIoSpace(
- ULONG address,
+VOID ReadIoSpace(ULONG address,
  PULONG data,
- PULONG size
-);
+ PULONG size);
 
 /* ReadMemory  [function; ce-only; CE 5.0..699] */
-ULONG ReadMemory(
- ULONG offset,
+ULONG ReadMemory(ULONG offset,
  PVOID lpBuffer,
  ULONG cb,
- PULONG lpcbBytesRead
-);
+ PULONG lpcbBytesRead);
 
 /* ReadPhysical  [function; ce-only; CE 5.0..699] */
-VOID ReadPhysical(
- LARGE_INTEGER address,
+VOID ReadPhysical(LARGE_INTEGER address,
  PVOID buf,
  ULONG size,
- PULONG sizer
-);
+ PULONG sizer);
 
 /* SetThreadForOperation  [function; ce-only; CE 5.0..699] */
-VOID SetTreadForOperation(
- PULONG Thread
-);
+VOID SetTreadForOperation(PULONG Thread);
 
 /* StackTrace  [function; ce-only; CE 5.0..699] */
-ULONG StackTrace(
- ULONG FramePointer,
+ULONG StackTrace(ULONG FramePointer,
  ULONG StackPointer,
  ULONG ProgramCounter,
  PEXTSTACKTRACE StackFrames,
- ULONG Frames
-);
+ ULONG Frames);
 
 /* WriteIoSpace  [function; ce-only; CE 5.0..699] */
-VOID WriteIoSpace(
- ULONG address,
+VOID WriteIoSpace(ULONG address,
  ULONG data,
- PULONG size
-);
+ PULONG size);
 
 /* WriteMemory  [function; ce-only; CE 5.0..699] */
-ULONG WriteMemory(
- ULONG offset,
+ULONG WriteMemory(ULONG offset,
  LPCVOID lpbuffer,
  ULONG cb,
- PULONG lpcbBytesWritten
-);
+ PULONG lpcbBytesWritten);
 
 /* WritePhysical  [function; ce-only; CE 5.0..699] */
-VOID WritePhysical(
- LARGE_INTEGER address,
+VOID WritePhysical(LARGE_INTEGER address,
  PVOID buf,
  ULONG size,
- PULONG sizew
-);
+ PULONG sizew);
 #endif /* _WIN32_WCE */
 
 #endif /* _WDBGEXTS_CE_ */

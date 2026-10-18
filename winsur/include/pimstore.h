@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 71 constants, 11 declarations, 24 outlines, 0 base types, 0 extra macros, 17 extra decls
+ * 71 constants, 11 declarations, 24 outlines, 0 base types, 0 extra macros, 18 extra decls
  */
 #ifndef _PIMSTORE_
 #define _PIMSTORE_
@@ -148,20 +148,28 @@
  * ================================================================ */
 
 /* OlBusyStatus  [enum; ce-only; Pimstore.lib] */
+#ifndef __WINCE_DEFINED_OLBUSYSTATUS
+#define __WINCE_DEFINED_OLBUSYSTATUS
 enum OlBusyStatus {
  olFree = 0,
  olTentative = 1,
  olBusy = 2,
  olOutOfOffice = 3
 };
+#endif /* __WINCE_DEFINED_OLBUSYSTATUS */
 
 /* OlCurrentCity  [enum; ce-only; Pimstore.lib] */
+#ifndef __WINCE_DEFINED_OLCURRENTCITY
+#define __WINCE_DEFINED_OLCURRENTCITY
 enum OlCurrentCity {
  olHomeCity = 0,
  olVisitingCity = 1
 };
+#endif /* __WINCE_DEFINED_OLCURRENTCITY */
 
 /* OlDaysOfWeek  [enum; ce-only; Pimstore.lib] */
+#ifndef __WINCE_DEFINED_OLDAYSOFWEEK
+#define __WINCE_DEFINED_OLDAYSOFWEEK
 enum OlDaysOfWeek {
  olSunday = 1,
  olMonday = 2,
@@ -171,8 +179,11 @@ enum OlDaysOfWeek {
  olFriday = 32,
  olSaturday = 64
 };
+#endif /* __WINCE_DEFINED_OLDAYSOFWEEK */
 
 /* OlDefaultFolders  [enum; ce-only; Pimstore.lib] */
+#ifndef __WINCE_DEFINED_OLDEFAULTFOLDERS
+#define __WINCE_DEFINED_OLDEFAULTFOLDERS
 enum OlDefaultFolders {
  olFolderCalendar = 9,
  olFolderContacts = 10,
@@ -180,31 +191,43 @@ enum OlDefaultFolders {
  olFolderCities = 101,
  olFolderInfrared = 102
 };
+#endif /* __WINCE_DEFINED_OLDEFAULTFOLDERS */
 
 /* OlImportance  [enum; ce-only; Pimstore.lib] */
+#ifndef __WINCE_DEFINED_OLIMPORTANCE
+#define __WINCE_DEFINED_OLIMPORTANCE
 enum OlImportance {
  olImportanceLow = 0,
  olImportanceNormal = 1,
  olImportanceHigh = 2
 };
+#endif /* __WINCE_DEFINED_OLIMPORTANCE */
 
 /* OlItemType  [enum; ce-only; Pimstore.lib] */
+#ifndef __WINCE_DEFINED_OLITEMTYPE
+#define __WINCE_DEFINED_OLITEMTYPE
 enum OlItemType {
  olAppointmentItem = 1,
  olContactItem = 2,
  olTaskItem = 3,
  olCityItem = 102
 };
+#endif /* __WINCE_DEFINED_OLITEMTYPE */
 
 /* OlMeetingStatus  [enum; ce-only; Pimstore.lib] */
+#ifndef __WINCE_DEFINED_OLMEETINGSTATUS
+#define __WINCE_DEFINED_OLMEETINGSTATUS
 enum OlMeetingStatus {
  olNonMeeting = 0,
  olMeeting = 1,
  olMeetingAccepted = 3,
  olMeetingCanceled = 7
 };
+#endif /* __WINCE_DEFINED_OLMEETINGSTATUS */
 
 /* OlRecurrenceType  [enum; ce-only; Pimstore.lib] */
+#ifndef __WINCE_DEFINED_OLRECURRENCETYPE
+#define __WINCE_DEFINED_OLRECURRENCETYPE
 enum OlRecurrenceType {
  olRecursOnce = -1,
  olRecursDaily = 0,
@@ -214,8 +237,11 @@ enum OlRecurrenceType {
  olRecursYearly = 5,
  olRecursYearNth = 6
 };
+#endif /* __WINCE_DEFINED_OLRECURRENCETYPE */
 
 /* OlReminderOptions  [enum; ce-only; Pimstore.lib] */
+#ifndef __WINCE_DEFINED_OLREMINDEROPTIONS
+#define __WINCE_DEFINED_OLREMINDEROPTIONS
 enum OlReminderOptions {
  olLED = 1,
  olVibrate = 2,
@@ -223,37 +249,46 @@ enum OlReminderOptions {
  olSound = 8,
  olRepeat = 16
 };
+#endif /* __WINCE_DEFINED_OLREMINDEROPTIONS */
 
 /* OlSensitivity  [enum; ce-only; Pimstore.lib] */
+#ifndef __WINCE_DEFINED_OLSENSITIVITY
+#define __WINCE_DEFINED_OLSENSITIVITY
 enum OlSensitivity {
  olNormal = 0,
  olPersonal = 1,
  olPrivate = 2,
  olConfidential = 3
 };
+#endif /* __WINCE_DEFINED_OLSENSITIVITY */
 
 /* PIMTYPE  [extra enum] */
+#ifndef __WINCE_DEFINED_TAGPIMTYPE
+#define __WINCE_DEFINED_TAGPIMTYPE
 typedef enum tagPIMTYPE { PT_CALENDAR = 0, PT_TASKS, PT_CONTACT } PIMTYPE;
+#endif /* __WINCE_DEFINED_TAGPIMTYPE */
 
 /* olConfidential  [extra enum] */
-#ifdef __cplusplus
+#ifndef __WINCE_DEFINED_OLSENSITIVITY
+#define __WINCE_DEFINED_OLSENSITIVITY
 enum OlSensitivity {
  olNormal = 0,
  olPersonal = 1,
  olPrivate = 2,
  olConfidential = 3
 };
-#endif /* __cplusplus */
+#endif /* __WINCE_DEFINED_OLSENSITIVITY */
 
 /* olMeetingCanceled  [extra enum] */
-#ifdef __cplusplus
+#ifndef __WINCE_DEFINED_OLMEETINGSTATUS
+#define __WINCE_DEFINED_OLMEETINGSTATUS
 enum OlMeetingStatus {
  olNonMeeting = 0,
  olMeeting = 1,
  olMeetingAccepted = 3,
  olMeetingCanceled = 7
 };
-#endif /* __cplusplus */
+#endif /* __WINCE_DEFINED_OLMEETINGSTATUS */
 
 /* ==================================================================
  * functions and callbacks
@@ -262,13 +297,11 @@ enum OlMeetingStatus {
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* CePimCommand  [function; ce-only; CE 3.0..399, 5.0..699; Pimstore.lib] */
-void CePimCommand(
- HWND hWnd,
+void CePimCommand(HWND hWnd,
  PIMTYPE ptData,
  UINT uDataCount,
  HANDLE * rghData,
- void pReserved
-);
+ void pReserved);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================
@@ -284,6 +317,7 @@ HRESULT Delete();
 HRESULT Display();
 HRESULT Logoff();
 HRESULT Logon(long hWnd);
+HRESULT ReceiveFromInfrared();
 HRESULT Remove(int iItem);
 HRESULT Save();
 HRESULT Send();

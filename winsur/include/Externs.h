@@ -18,22 +18,16 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* MiniportShutdown  [function; ce-only; CE 5.0..699] */
-VOID MiniportShutdown(
- PVOID ShutdownContext
-);
+VOID MiniportShutdown(PVOID ShutdownContext);
 
 /* MiniportSynchronizeISR  [function; ce-only; CE 5.0..699] */
-BOOLEAN MiniportSynchronizeISR(
- PVOID SynchronizeContext 
-);
+BOOLEAN MiniportSynchronizeISR(PVOID SynchronizeContext);
 
 /* MiniportTimer  [function; ce-only; CE 5.0..699] */
-VOID MiniportTimer(
- PVOID SystemSpecific1,
+VOID MiniportTimer(PVOID SystemSpecific1,
  PVOID FunctionContext,
  PVOID SystemSpecific2,
- PVOID SystemSpecific3
-);
+ PVOID SystemSpecific3);
 #endif /* _WIN32_WCE */
 
 #endif /* _EXTERNS_ */

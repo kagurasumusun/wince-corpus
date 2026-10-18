@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 9 constants, 67 declarations, 0 outlines, 0 base types, 0 extra macros, 3 extra decls
+ * 9 constants, 64 declarations, 2 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _BT_API_
 #define _BT_API_
@@ -28,24 +28,38 @@
 #define RFCOMM_PORT_FLAGS_REMOTE_DCB 0x00000001
 
 /* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* BT_LINK_KEY_EVENT  [struct; ce-only] */
+
+/* PORTEMUPortParams  [struct; ce-only] */
+
+/* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
 
 /* BT_DISCONNECT_EVENT  [struct; ce-only] */
-typedef struct { 
+#ifndef __WINCE_DEFINED_BT_DISCONNECT_EVENT
+#define __WINCE_DEFINED_BT_DISCONNECT_EVENT
+typedef struct {
  DWORD dwSize;
  USHORT hConnection;
  UCHAR ucReason;
 } BT_DISCONNECT_EVENT, *PBT_DISCONNECT_EVENT;
+#endif /* __WINCE_DEFINED_BT_DISCONNECT_EVENT */
 
 /* BTEVENT  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__BTEVENT
+#define __WINCE_DEFINED__BTEVENT
 typedef struct _BTEVENT {
  DWORD dwEventId;
  DWORD dwReserved;
  BYTE baEventData[64];
 } BTEVENT, *PBTEVENT;
+#endif /* __WINCE_DEFINED__BTEVENT */
 
 /* ==================================================================
  * functions and callbacks
@@ -60,123 +74,85 @@ int BthCancelInquiry(void);
 int BthClearInquiryFilter(void);
 
 /* BthCloseConnection  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthCloseConnection(
- unsigned short handle
-);
+int BthCloseConnection(unsigned short handle);
 
 /* BthGetBasebandHandles  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthGetBasebandHandles(
- int cHandles,
+int BthGetBasebandHandles(int cHandles,
  unsigned short* pHandles,
- int* pcHandlesReturned
-);
+ int* pcHandlesReturned);
 
 /* BthGetHardwareStatus  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthGetHardwareStatus(
- int* pistatus
-);
+int BthGetHardwareStatus(int* pistatus);
 
 /* BthNsLookupServiceEnd  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-INT BthNsLookupServiceEnd(
- HANDLE hLookup
-);
+INT BthNsLookupServiceEnd(HANDLE hLookup);
 
 /* BthReadAuthenticationEnable  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthReadAuthenticationEnable(
- unsigned char* pae
-);
+int BthReadAuthenticationEnable(unsigned char* pae);
 
 /* BthReadCOD  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthReadCOD(
- unsigned int* pcod
-);
+int BthReadCOD(unsigned int* pcod);
 
 /* BthReadLocalVersion  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthReadLocalVersion(
- unsigned char* phci_version,
+int BthReadLocalVersion(unsigned char* phci_version,
  unsigned short* phci_revision,
  unsigned char* plmp_version,
  unsigned short* plmp_subversion,
  unsigned short* pmanufacturer,
- unsigned char* plmp_features
-);
+ unsigned char* plmp_features);
 
 /* BthReadPageTimeout  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthReadPageTimeout(
- unsigned short* ptimeout
-);
+int BthReadPageTimeout(unsigned short* ptimeout);
 
 /* BthReadScanEnableMask  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthReadScanEnableMask(
- unsigned char* pmask
-);
+int BthReadScanEnableMask(unsigned char* pmask);
 
 /* BthSetSecurityUI  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthSetSecurityUI(
- HANDLE hEvent,
+int BthSetSecurityUI(HANDLE hEvent,
  DWORD dwStoreTimeout,
- DWORD dwProcTimeout
-);
+ DWORD dwProcTimeout);
 
 /* BthTerminateIdleConnections  [function; ce-only; CE 4.0..699; Btdrt.lib] */
 int BthTerminateIdleConnections(void);
 
 /* BthWriteAuthenticationEnable  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthWriteAuthenticationEnable(
- unsigned char ae
-);
+int BthWriteAuthenticationEnable(unsigned char ae);
 
 /* BthWriteCOD  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthWriteCOD(
- unsigned int cod
-);
+int BthWriteCOD(unsigned int cod);
 
 /* BthWritePageTimeout  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthWritePageTimeout(
- unsigned short timeout
-);
+int BthWritePageTimeout(unsigned short timeout);
 
 /* BthWriteScanEnableMask  [function; ce-only; CE 4.0..699; Btdrt.lib] */
-int BthWriteScanEnableMask(
- unsigned char mask
-);
+int BthWriteScanEnableMask(unsigned char mask);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* BthAcceptSCOConnections  [function; ce-only; CE 5.0..699; Btdrt.lib] */
-int BthAcceptSCOConnections ( BOOL fAccept);
+int BthAcceptSCOConnections (BOOL fAccept);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* BthActivatePAN  [function; ce-only; CE 6.0..699; Btdrt.lib] */
-int BthActivatePAN (
- BOOL fActivate
-);
+int BthActivatePAN (BOOL fActivate);
 
 /* BthNotifyEvent  [function; ce-only; CE 6.0..699; heuristic-prefix] */
-HANDLE BthNotifyEvent(
- PBTEVENT pbtEvent,
- DWORD dwEventClass
-);
+HANDLE BthNotifyEvent(PBTEVENT pbtEvent,
+ DWORD dwEventClass);
 
 /* BthSetCODInquiryFilter  [function; ce-only; CE 6.0..699; Btdrt.lib] */
-int BthSetCODInquiryFilter (
- unsigned int cod,
- unsigned int codMask
-);
+int BthSetCODInquiryFilter (unsigned int cod,
+ unsigned int codMask);
 
 /* RequestBluetoothNotifications  [function; ce-only; CE 6.0..699; coredll.lib] */
-HANDLE RequestBluetoothNotifications(
- DWORD dwClass,
- HANDLE hMsgQ
-);
+HANDLE RequestBluetoothNotifications(DWORD dwClass,
+ HANDLE hMsgQ);
 
 /* StopBluetoothNotifications  [function; ce-only; CE 6.0..699; coredll.lib] */
-BOOL StopBluetoothNotifications(
- HANDLE h
-);
+BOOL StopBluetoothNotifications(HANDLE h);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

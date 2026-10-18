@@ -18,10 +18,16 @@
  * ================================================================ */
 
 /* SHITEMID  [struct; shared] */
-typedef struct _SHITEMID { 
- USHORT cb; 
- BYTE abID[1]; 
+#ifndef __WINCE_DEFINED__SHITEMID
+#define __WINCE_DEFINED__SHITEMID
+typedef struct _SHITEMID {
+ USHORT cb;
+ BYTE abID[1];
  } SHITEMID;
+#endif /* __WINCE_DEFINED__SHITEMID */
+#ifndef __WINCE_DEFINED_PSHITEMID
+#define __WINCE_DEFINED_PSHITEMID
 typedef SHITEMID *PSHITEMID, *LPSHITEMID;
+#endif /* __WINCE_DEFINED_PSHITEMID */
 
 #endif /* _SHTYPES_ */

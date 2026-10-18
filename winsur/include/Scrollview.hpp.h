@@ -18,6 +18,8 @@
  * ================================================================ */
 
 /* SCROLL_STATE  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_SCROLL_STATE
+#define __WINCE_DEFINED_SCROLL_STATE
 enum SCROLL_STATE {
  SCROLL_NO_PRESS,
  SCROLL_UP_PRESS,
@@ -28,8 +30,11 @@ enum SCROLL_STATE {
  SCROLL_UNAVAIL,
  SCROLL_NEXT_FREE
 };
+#endif /* __WINCE_DEFINED_SCROLL_STATE */
 
 /* ScrollBarInfoInternal  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_SCROLLBARINFOINTERNAL
+#define __WINCE_DEFINED_SCROLLBARINFOINTERNAL
 struct ScrollBarInfoInternal {
  SCROLLINFO si;
  BOOL bInSetSBInfo;
@@ -39,8 +44,11 @@ struct ScrollBarInfoInternal {
  UINT fnBar;
  UINT idTimer;
 };
+#endif /* __WINCE_DEFINED_SCROLLBARINFOINTERNAL */
 
 /* SCROLL_NEXT_FREE  [extra enum] */
+#ifndef __WINCE_DEFINED_SCROLL_STATE
+#define __WINCE_DEFINED_SCROLL_STATE
 enum SCROLL_STATE {
  SCROLL_NO_PRESS,
  SCROLL_UP_PRESS,
@@ -51,6 +59,7 @@ enum SCROLL_STATE {
  SCROLL_UNAVAIL,
  SCROLL_NEXT_FREE
 };
+#endif /* __WINCE_DEFINED_SCROLL_STATE */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

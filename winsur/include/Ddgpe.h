@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 5 declarations, 1 outlines, 0 base types, 0 extra macros, 4 extra decls
+ * 0 constants, 0 declarations, 6 outlines, 0 base types, 0 extra macros, 3 extra decls
  */
 #ifndef _DDGPE_
 #define _DDGPE_
@@ -15,71 +15,17 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-/* DDGPEStandardHeader  [macro; ce-only; Ddgpe.lib] */
+/* DDGPEAllocSurfaceData  [struct, macro; ce-only; Ddgpe.lib] */
 
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
+/* DDGPEBltParams  [struct, macro; ce-only; Ddgpe.lib] */
 
 /* DDGPEDriverData  [struct; ce-only; Ddgpe.lib] */
-typedef struct DDGPEDriverData {
- DDGPEStandardHeader;
- DWORD dwDriverFlag
-} DDGPEDriverData;
-typedef DDGPEDriverData *PDDGPEDriverData, *LPDDGPEDriverData;
+
+/* DDGPEStandardHeader  [macro; ce-only; Ddgpe.lib] */
 
 /* EDDGPEPixelFormat  [enum; ce-only; Ddgpe.lib] */
-typedef enum EDDGPEPixelFormat{
- ddgpePixelFormat_1bpp = 0,
- ddgpePixelFormat_2bpp, 
- ddgpePixelFormat_4bpp, 
- ddgpePixelFormat_8bpp, 
- ddgpePixelFormat_565, 
- ddgpePixelFormat_5551, 
- ddgpePixelFormat_4444, 
- ddgpePixelFormat_5550, 
- ddgpePixelFormat_8880, 
- ddgpePixelFormat_8888, 
- ddgpePixelFormat_YUYV422, 
- ddgpePixelFormat_UYVY422,
- ddgpePixelFormat_YV12,
- // some generic types
- // Use dwPixelFormatData in conjunction with this info
- ddgpePixelFormat_15bppGeneric, 
- ddgpePixelFormat_16bppGeneric, 
- ddgpePixelFormat_24bppGeneric, 
- ddgpePixelFormat_32bppGeneric, 
- ddgpePixelFormat_UnknownFormat,
- // you can assign custom formats starting with this value
- ddgpePixelFormat_CustomFormat = 0x1000
-};
 
-/* x1000  [extra enum] */
-#ifdef __cplusplus
-enum EDDGPEPixelFormat
-{
- ddgpePixelFormat_1bpp = 0,
- ddgpePixelFormat_2bpp,
- ddgpePixelFormat_4bpp,
- ddgpePixelFormat_8bpp,
- ddgpePixelFormat_565,
- ddgpePixelFormat_5551,
- ddgpePixelFormat_4444,
- ddgpePixelFormat_5550,
- ddgpePixelFormat_8880,
- ddgpePixelFormat_8888,
- ddgpePixelFormat_YUYV422,
- ddgpePixelFormat_UYVY422,
- ddgpePixelFormat_15bppGeneric,
- ddgpePixelFormat_16bppGeneric,
- ddgpePixelFormat_24bppGeneric,
- ddgpePixelFormat_32bppGeneric,
- ddgpePixelFormat_UnknownFormat,
- ddgpePixelFormat_CustomFormat = 0x1000
-};
-#endif /* __cplusplus */
+/* GPEModeEx  [struct, macro; ce-only; Ddgpe.lib] */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

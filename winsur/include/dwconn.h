@@ -18,22 +18,16 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* OpenConnection  [function; ce-only; CE 6.0..699; DwConn.lib] */
-HRESULT OpenConnection(
- HANDLE* phConnection,
+HRESULT OpenConnection(HANDLE* phConnection,
  LPCWSTR* ppszServer,
- LPWSTR* ppszProxy
-);
+ LPWSTR* ppszProxy);
 
 /* ReleaseConnection  [function; ce-only; CE 6.0..699; DwConn.lib] */
-VOID ReleaseConnection(
- HANDLE phConnection,
- LPWSTR pszProxy
-);
+VOID ReleaseConnection(HANDLE phConnection,
+ LPWSTR pszProxy);
 
 /* ScheduleConnection  [function; ce-only; CE 6.0..699; DwConn.lib] */
-HRESULT ScheduleConnection(
- DWORD dwConnectionFlags
-);
+HRESULT ScheduleConnection(DWORD dwConnectionFlags);
 #endif /* _WIN32_WCE */
 
 #endif /* _DWCONN_ */

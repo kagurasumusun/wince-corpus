@@ -18,20 +18,29 @@
  * ================================================================ */
 
 /* VoIPCallType  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_VOIPCALLTYPE
+#define __WINCE_DEFINED_VOIPCALLTYPE
 typedef enum VoIPCallType {
 ..e_vctInvalid = 0,
 ..e_vctIncoming,
 ..e_vctOutgoing,
 ..e_vctMissed
 } VoIPCallType;
+#endif /* __WINCE_DEFINED_VOIPCALLTYPE */
+#ifndef __WINCE_DEFINED_PVOIPCALLTYPE
+#define __WINCE_DEFINED_PVOIPCALLTYPE
 typedef VoIPCallType *PVoIPCallType, *LPVoIPCallType;
+#endif /* __WINCE_DEFINED_PVOIPCALLTYPE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* VOIP_INVALID_SPEED_DIAL_ENTRY  [?; ce-only; CE 6.0..699] */
+#ifndef __WINCE_DEFINED_VOIP_INVALID_SPEED_DIAL_ENTRY
+#define __WINCE_DEFINED_VOIP_INVALID_SPEED_DIAL_ENTRY
 enum {
 ..VOIP_INVALID_SPEED_DIAL_ENTRY = -1
 };
+#endif /* __WINCE_DEFINED_VOIP_INVALID_SPEED_DIAL_ENTRY */
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

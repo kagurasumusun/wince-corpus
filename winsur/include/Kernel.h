@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 5 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 4 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _KERNEL_
 #define _KERNEL_
@@ -24,17 +24,8 @@ void FlushDCache(void);
 void FlushICache(void);
 
 /* KLocalFileTimeToFileTime  [function; ce-only; CE 4.0..699; Nk.lib] */
-BOOL KLocalFileTimeToFileTime(
- const FILETIME* lpft,
- LPFILETIME lpst
-);
-
-/* OEMCacheRangeFlush  [function; ce-only; CE 4.0..699] */
-void OEMCacheRangeFlush(
- LPVOID pAddr,
- DWORD dwLength,
- DWORD dwFlags 
-);
+BOOL KLocalFileTimeToFileTime(const FILETIME* lpft,
+ LPFILETIME lpst);
 
 /* SC_GetTickCount  [function; ce-only; CE 4.0..699; Nk.lib, Nkstub.lib] */
 DWORD SC_GetTickCount(void);

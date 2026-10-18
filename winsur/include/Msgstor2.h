@@ -18,18 +18,24 @@
  * ================================================================ */
 
 /* TransportCheckForNewMailInfo  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_TRANSPORTCHECKFORNEWMAILINFO
+#define __WINCE_DEFINED_TRANSPORTCHECKFORNEWMAILINFO
 typedef struct TransportCheckForNewMailInfo{
  TransportFolderList* ptfl;
  BOOL fFree;
  HANDLE hTerminateEvent;
  DWORD dwReserverd;
 } TransportCheckForNewMailInfo, *lpTransportCheckForNewMailInfo;
+#endif /* __WINCE_DEFINED_TRANSPORTCHECKFORNEWMAILINFO */
 
 /* TransportFolderList  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_TRANSPORTFOLDERLIST_S
+#define __WINCE_DEFINED_TRANSPORTFOLDERLIST_S
 typedef struct TransportFolderList_s {
  UINT uiCount;
- lpTransportFolderInfo FolderArray[];
+ lpTransportFolderInfo FolderArray;
 } TransportFolderList, *lpTransportFolderList;
+#endif /* __WINCE_DEFINED_TRANSPORTFOLDERLIST_S */
 
 /* ==================================================================
  * functions and callbacks
@@ -38,62 +44,62 @@ typedef struct TransportFolderList_s {
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213)) /* CE 2.11..2.12 */
 
 /* MailOpenNotifyEx  [function; ce-only; CE 2.11..2.12] */
-BOOL MailOpenNotifyEx (HANDLE * phMail, WORD* pwVersion 
+BOOL MailOpenNotifyEx (HANDLE * phMail, WORD* pwVersion
 BOOL fAllowCreate, HWND hwndNotify);
 
 /* TransportCancel  [function; ce-only; CE 2.11..2.12] */
-BOOL TransportCancel( HANDLE hService);
+BOOL TransportCancel(HANDLE hService);
 
 /* TransportCopy  [function; ce-only; CE 2.11..2.12] */
-BOOL TransportCopy(HANDLE hService, MailMsg *MsgPtr, 
+BOOL TransportCopy(HANDLE hService, MailMsg *MsgPtr,
 LPWSTR szDestFolderID);
 
 /* TransportCountEx  [function; ce-only; CE 2.11..2.12] */
-BOOL TransportCountEx(HANDLE hService, LPWSTR szFolderID, 
+BOOL TransportCountEx(HANDLE hService, LPWSTR szFolderID,
 WORD *pwNumMsg);
 
 /* TransportDelFolder  [function; ce-only; CE 2.11..2.12] */
 BOOL TransportDelFolder(HANDLE hService, LPWSTR szFolderID);
 
 /* TransportDownloadAttachment  [function; ce-only; CE 2.11..2.12] */
-Int TransportDownloadAttachment (HANDLE serviceHandle_p, 
+Int TransportDownloadAttachment (HANDLE serviceHandle_p,
 MailMsg* mailMessage_p, MailAtt* mailAtt_p);
 
 /* TransportDuplicateHandle  [function; ce-only; CE 2.11..2.12] */
-BOOL TransportDuplicateHandle(HANDLE hService, 
+BOOL TransportDuplicateHandle(HANDLE hService,
 HANDLE *phDuplicate);
 
 /* TransportErrorEx  [function; ce-only; CE 2.11..2.12] */
 int TransportErrorEx(HANDLE, hService, BOOL *pfCritical);
 
 /* TransportExpunge  [function; ce-only; CE 2.11..2.12] */
-BOOL TransportExpunge( HANDLE hService, lpTransportFolderList pFolders);
+BOOL TransportExpunge(HANDLE hService, lpTransportFolderList pFolders);
 
 /* TransportFreeFolderID  [function; ce-only; CE 2.11..2.12] */
 BOOL TransportFreeFolderID(HANDLE hService, LPWSTR szFolderID);
 
 /* TransportFreeFolderList  [function; ce-only; CE 2.11..2.12] */
-BOOL TransportFreeFolderList(HANDLE hService, 
+BOOL TransportFreeFolderList(HANDLE hService,
 lpTransportFolderList pFolders);
 
 /* TransportGetFolders  [function; ce-only; CE 2.11..2.12] */
-BOOL TransportGetFolders(HANDLE hService, LPWSTR szParentID, 
+BOOL TransportGetFolders(HANDLE hService, LPWSTR szParentID,
 lpTransportFolderList *ppFolders);
 
 /* TransportGetInboxId  [function; ce-only; CE 2.11..2.12] */
 BOOL TransportGetInboxID(HANDLE hService, LPWSTR *pszInboxID);
 
 /* TransportMove  [function; ce-only; CE 2.11..2.12] */
-BOOL TransportMove(HANDLE hService, MailMsg *MsgPtr, 
+BOOL TransportMove(HANDLE hService, MailMsg *MsgPtr,
 LPWSTR szDestFolderID);
 
 /* TransportPut  [function; ce-only; CE 2.11..2.12] */
-BOOL TransportPut(HANDLE hService, LPWSTR szFolderID, 
+BOOL TransportPut(HANDLE hService, LPWSTR szFolderID,
 MailMsg *MsgPtr);
 
 /* TransportRecvEx  [function; ce-only; CE 2.11..2.12] */
-BOOL TransportRecvEx(HANDLE hService, LPWSTR szFolderID, 
-WORD wMsgID, short sNumLines, MailMsg *MsgPtr, 
+BOOL TransportRecvEx(HANDLE hService, LPWSTR szFolderID,
+WORD wMsgID, short sNumLines, MailMsg *MsgPtr,
 lpMailAttArray *lplMaa);
 
 /* TransportSetMsgFlags  [function; ce-only; CE 2.11..2.12] */

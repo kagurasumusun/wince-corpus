@@ -18,14 +18,17 @@
  * ================================================================ */
 
 /* TLPUBINFO  [struct; ce-only] */
-typedef struct TLPUBINFO { 
- DWORD cbSize; 
- DWORD dwVersion; 
- DWORD dwFlags; 
- DWORD dwConnectTimeOut; 
- DWORD dwKeepAliveTimeOut; 
- DWORD cbDataSize; 
- BYTE pData[1]; 
+#ifndef __WINCE_DEFINED_TLPUBINFO
+#define __WINCE_DEFINED_TLPUBINFO
+typedef struct TLPUBINFO {
+ DWORD cbSize;
+ DWORD dwVersion;
+ DWORD dwFlags;
+ DWORD dwConnectTimeOut;
+ DWORD dwKeepAliveTimeOut;
+ DWORD cbDataSize;
+ BYTE pData[1];
 } TLPUBINFO, *PTLPUBINFO;
+#endif /* __WINCE_DEFINED_TLPUBINFO */
 
 #endif /* _TL_IDL_ */

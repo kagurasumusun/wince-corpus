@@ -18,6 +18,8 @@
  * ================================================================ */
 
 /* DMTASKINFO  [struct, typedef; ce-only] */
+#ifndef __WINCE_DEFINED_DMTASKINFO
+#define __WINCE_DEFINED_DMTASKINFO
 typedef struct {
  DWORD dwSize;
  SYSTEMTIME stStartTime;
@@ -33,6 +35,7 @@ typedef struct {
  LPTSTR pwzData;
  LPTSTR pwzXml;
 } DMTASKINFO, *PDMTASKINFO;
+#endif /* __WINCE_DEFINED_DMTASKINFO */
 
 /* ==================================================================
  * functions and callbacks
@@ -41,15 +44,11 @@ typedef struct {
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* CeSetDevMgmtTask  [function; ce-only; CE 4.0..699] */
-HRESULT CeSetDevMgmtTask(
- DMTASKINFO* pdi
-);
+HRESULT CeSetDevMgmtTask(DMTASKINFO* pdi);
 
 /* CeStartDevMgmtService  [function; ce-only; CE 4.0..699] */
-HANDLE CeStartDevMgmtService(
- int nAction,
- HWND hCallbackWnd
-);
+HANDLE CeStartDevMgmtService(int nAction,
+ HWND hCallbackWnd);
 #endif /* _WIN32_WCE */
 
 #endif /* _DEVMGMT_ */

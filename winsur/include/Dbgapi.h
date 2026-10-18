@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 14 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 10 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _DBGAPI_
 #define _DBGAPI_
@@ -24,34 +24,28 @@
  * ================================================================ */
 
 /* DBGPARAM  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__DBGPARAM
+#define __WINCE_DEFINED__DBGPARAM
 typedef struct _DBGPARAM {
  WCHAR lpszName[32];
  WCHAR rglpszZones[16][32];
  ULONG ulZoneMask;
 } DBGPARAM, *LPDBGPARAM;
+#endif /* __WINCE_DEFINED__DBGPARAM */
 
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
-/* NKDbgPrintfW  [function; ce-only; unified-kb; unified-kb] */
-void WINAPIV NKDbgPrintfW(
- LPCWSTR lpszFmt,...
-);
-
 /* WriteDebugLED  [function; ce-only; unified-kb; unified-kb] */
-void WriteDebugLED( 
- WORD wIndex, 
- DWORD dwPattern 
-);
+void WriteDebugLED(WORD wIndex,
+ DWORD dwPattern);
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* RegisterDbgZones  [function; ce-only; CE 5.0..699] */
-BOOL RegisterDbgZones(
- HMODULE hMod,
- LPDBGPARAM lpdbgparam
-);
+BOOL RegisterDbgZones(HMODULE hMod,
+ LPDBGPARAM lpdbgparam);
 #endif /* _WIN32_WCE */
 
 #endif /* _DBGAPI_ */

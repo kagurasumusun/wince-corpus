@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 50 constants, 37 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 50 constants, 26 declarations, 11 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _SIMMGR_
 #define _SIMMGR_
@@ -69,47 +69,56 @@
 #define SIM_SMSSTORAGE_SIM 0
 
 /* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* SIMCAPS  [struct; ce-only] */
+
+/* SIMFILEREFRESH  [struct; ce-only] */
+
+/* SIMMESSAGE  [struct; ce-only] */
+
+/* SIMMESSAGECHANGE  [struct; ce-only] */
+
+/* SIMPBECHANGE  [struct; ce-only] */
+
+/* SIMPHONEBOOKADDITIONALNUMBER  [struct; ce-only] */
+
+/* SIMPHONEBOOKCAPS  [struct; ce-only] */
+
+/* SIMPHONEBOOKEMAILADDRESS  [struct; ce-only] */
+
+/* SIMPHONEBOOKENTRY  [struct; ce-only; cellcore.lib] */
+
+/* SIMPHONEBOOKENTRYEX  [struct; ce-only] */
+
+/* SIMRECORDINFO  [struct; ce-only] */
+
+/* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
 
 /* SIMLOCKINGPWDLENGTH  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_SIMLOCKINGPWDLENGTH
+#define __WINCE_DEFINED_SIMLOCKINGPWDLENGTH
 typedef struct simlockingpwdlength {
  DWORD dwFacility;
  DWORD dwPasswordLength;
 } SIMLOCKINGPWDLENGTH, FAR *LPSIMLOCKINGPWDLENGTH;
-
-/* SIMMESSAGECHANGE  [struct; ce-only] */
-typedef struct simmessagechange_tag {
- DWORD dwEntry;
- DWORD dwStorage;
-} SIMMESSAGECHANGE, FAR *LPSIMMESSAGECHANGE;
-
-/* SIMPBECHANGE  [struct; ce-only] */
-typedef struct simpbechange_tag {
- DWORD dwEntry;
- DWORD dwStorage;
-} SIMPBECHANGE, FAR *LPSIMPBECHANGE;
-
-/* SIMRECORDINFO  [struct; ce-only] */
-typedef struct simrecordinfo_tag {
- DWORD cbSize;
- DWORD dwParams;
- DWORD dwRecordType;
- DWORD dwItemCount;
- DWORD dwSize;
-} SIMRECORDINFO, FAR *LPSIMRECORDINFO;
+#endif /* __WINCE_DEFINED_SIMLOCKINGPWDLENGTH */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* SIMCALLBACK  [callback; ce-only; CE 6.0..699; cellcore.lib] */
-typedef void (*SIMCALLBACK) (
- DWORD dwNotifyCode,
+#ifndef __WINCE_DEFINED_SIMCALLBACK
+#define __WINCE_DEFINED_SIMCALLBACK
+typedef void (*SIMCALLBACK) (DWORD dwNotifyCode,
  const void* pData,
  DWORD dwDataSize,
- DWORD dwParam
-);
+ DWORD dwParam);
+#endif /* __WINCE_DEFINED_SIMCALLBACK */
 #endif /* _WIN32_WCE */
 
 #endif /* _SIMMGR_ */

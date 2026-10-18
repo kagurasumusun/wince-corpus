@@ -45,6 +45,8 @@
  * ================================================================ */
 
 /* HEAPENTRY32  [struct; shared] */
+#ifndef __WINCE_DEFINED_TAGHEAPENTRY32
+#define __WINCE_DEFINED_TAGHEAPENTRY32
 typedef struct tagHEAPENTRY32 {
  DWORD dwSize;
  HANDLE hHandle;
@@ -58,18 +60,24 @@ typedef struct tagHEAPENTRY32 {
  } HEAPENTRY32;
  typedef HEAPENTRY32* PHEAPENTRY32;
 typedef HEAPENTRY32* LPHEAPENTRY32;
+#endif /* __WINCE_DEFINED_TAGHEAPENTRY32 */
 
 /* HEAPLIST32  [struct; shared] */
-typedef struct tagHEAPLIST32 { 
- DWORD dwSize; 
- DWORD th32ProcessID; 
- DWORD th32HeapID; 
- DWORD dwFlags; 
- } HEAPLIST32; 
- typedef HEAPLIST32* PHEAPLIST32; 
+#ifndef __WINCE_DEFINED_TAGHEAPLIST32
+#define __WINCE_DEFINED_TAGHEAPLIST32
+typedef struct tagHEAPLIST32 {
+ DWORD dwSize;
+ DWORD th32ProcessID;
+ DWORD th32HeapID;
+ DWORD dwFlags;
+ } HEAPLIST32;
+ typedef HEAPLIST32* PHEAPLIST32;
 typedef HEAPLIST32* LPHEAPLIST32;
+#endif /* __WINCE_DEFINED_TAGHEAPLIST32 */
 
 /* THREADENTRY32  [struct; shared] */
+#ifndef __WINCE_DEFINED_TAGTHREADENTRY32
+#define __WINCE_DEFINED_TAGTHREADENTRY32
 typedef struct tagTHREADENTRY32 {
  DWORD dwSize;
  DWORD cntUsage;
@@ -83,94 +91,69 @@ typedef struct tagTHREADENTRY32 {
  } THREADENTRY32;
  typedef THREADENTRY32* PTHREADENTRY32;
 typedef THREADENTRY32* LPTHREADENTRY32;
+#endif /* __WINCE_DEFINED_TAGTHREADENTRY32 */
 
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
 /* CloseToolhelp32Snapshot  [function; ce-only; unified-kb; unified-kb] */
-BOOL WINAPI CloseToolhelp32Snapshot( 
- HANDLE hSnapshot 
-);
+BOOL WINAPI CloseToolhelp32Snapshot(HANDLE hSnapshot);
 
 /* CreateToolhelp32Snapshot  [function; shared; unified-kb; unified-kb] */
-HANDLE WINAPI CreateToolhelp32Snapshot( 
- DWORD dwFlags, 
- DWORD th32ProcessID 
-);
+HANDLE WINAPI CreateToolhelp32Snapshot(DWORD dwFlags,
+ DWORD th32ProcessID);
 
 /* Module32First  [function; shared; unified-kb; unified-kb] */
-BOOL WINAPI Module32First( 
- HANDLE hSnapshot, 
- LPMODULEENTRY32 lpme 
-);
+BOOL WINAPI Module32First(HANDLE hSnapshot,
+ LPMODULEENTRY32 lpme);
 
 /* Module32Next  [function; shared; unified-kb; unified-kb] */
-BOOL WINAPI Module32Next( 
- HANDLE hSnapshot, 
- LPMODULEENTRY32 lpme 
-);
+BOOL WINAPI Module32Next(HANDLE hSnapshot,
+ LPMODULEENTRY32 lpme);
 
 /* Process32First  [function; shared; unified-kb; unified-kb] */
-BOOL WINAPI Process32First( 
- HANDLE hSnapshot, 
- LPPROCESSENTRY32 lppe 
-);
+BOOL WINAPI Process32First(HANDLE hSnapshot,
+ LPPROCESSENTRY32 lppe);
 
 /* Process32Next  [function; shared; unified-kb; unified-kb] */
-BOOL WINAPI Process32Next( 
- HANDLE hSnapshot, 
- LPPROCESSENTRY32 lppe 
-);
+BOOL WINAPI Process32Next(HANDLE hSnapshot,
+ LPPROCESSENTRY32 lppe);
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* Heap32First  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib] */
-BOOL WINAPI Heap32First(
- HANDLE hSnapshot,
+BOOL WINAPI Heap32First(HANDLE hSnapshot,
  LPHEAPENTRY32 lphe,
  DWORD th32ProcessID,
- DWORD th32HeapID
-);
+ DWORD th32HeapID);
 
 /* Heap32ListFirst  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib] */
-BOOL WINAPI Heap32ListFirst(
- HANDLE hSnapshot,
- LPHEAPLIST32 lphl
-);
+BOOL WINAPI Heap32ListFirst(HANDLE hSnapshot,
+ LPHEAPLIST32 lphl);
 
 /* Heap32ListNext  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib] */
-BOOL WINAPI Heap32ListNext(
- HANDLE hSnapshot,
- LPHEAPLIST32 lphl
-);
+BOOL WINAPI Heap32ListNext(HANDLE hSnapshot,
+ LPHEAPLIST32 lphl);
 
 /* Heap32Next  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib] */
-BOOL WINAPI Heap32Next(
- HANDLE hSnapshot,
- LPHEAPENTRY32 lphe
-);
+BOOL WINAPI Heap32Next(HANDLE hSnapshot,
+ LPHEAPENTRY32 lphe);
 
 /* Thread32First  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib] */
-BOOL WINAPI Thread32First(
- HANDLE hSnapshot,
- LPTHREADENTRY32 lpte
-);
+BOOL WINAPI Thread32First(HANDLE hSnapshot,
+ LPTHREADENTRY32 lpte);
 
 /* Thread32Next  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib] */
-BOOL WINAPI Thread32Next(
- HANDLE hSnapshot,
- LPTHREADENTRY32 lpte
-);
+BOOL WINAPI Thread32Next(HANDLE hSnapshot,
+ LPTHREADENTRY32 lpte);
 
 /* Toolhelp32ReadProcessMemory  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Toolhelp.lib, toolhelp.lib] */
-BOOL WINAPI Toolhelp32ReadProcessMemory(
- DWORD th32ProcessID,
+BOOL WINAPI Toolhelp32ReadProcessMemory(DWORD th32ProcessID,
  LPCVOID lpBaseAddress,
  LPVOID lpBuffer,
  DWORD cbRead,
- LPDWORD lpNumberOfBytesRead
-);
+ LPDWORD lpNumberOfBytesRead);
 #endif /* _WIN32_WCE */
 
 #endif /* _TLHELP32_ */

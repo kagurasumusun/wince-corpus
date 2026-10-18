@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 26 constants, 43 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 26 constants, 40 declarations, 3 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _EXTAPI_
 #define _EXTAPI_
@@ -90,40 +90,10 @@
  dwParam2;
  dwParam3;
 
-/* ==================================================================
- * types -- structures, enumerations and typedefs; the member
- * outlines marked DERIVED below document a structure whose
- * declaration body no page prints
- * ================================================================ */
-
 /* LINEGENERALINFO  [struct; ce-only] */
-typedef struct linegeneralinfo_tag {
- DWORD dwTotalSize;
- DWORD dwNeededSize;
- DWORD dwUsedSize;
- DWORD dwManufacturerSize;
- DWORD dwManufacturerOffset;
- DWORD dwModelSize;
- DWORD dwModelOffset;
- DWORD dwRevisionSize;
- DWORD dwRevisionOffset;
- DWORD dwSerialNumberSize;
- DWORD dwSerialNumberOffset;
- DWORD dwSubscriberNumberSize;
- DWORD dwSubscriberNumberOffset;
-} LINEGENERALINFO, * LPLINEGENERALINFO;
+
+/* LINEOPERATOR  [struct; ce-only] */
 
 /* LINEOPERATORSTATUS  [struct; ce-only] */
-typedef struct lineoperatorstatus_tag {
- DWORD dwTotalSize;
- DWORD dwNeededSize;
- DWORD dwUsedSize;
- DWORD dwPreferredCount;
- DWORD dwPreferredSize;
- DWORD dwPreferredOffset;
- DWORD dwAvailableCount;
- DWORD dwAvailableSize;
- DWORD dwAvailableOffset;
-} LINEOPERATORSTATUS, * LPLINEOPERATORSTATUS;
 
 #endif /* _EXTAPI_ */

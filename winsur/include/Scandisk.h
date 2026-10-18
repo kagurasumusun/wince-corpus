@@ -18,10 +18,13 @@
  * ================================================================ */
 
 /* SCAN_OPTIONS  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__SCAN_OPTIONS
+#define __WINCE_DEFINED__SCAN_OPTIONS
 typedef struct _SCAN_OPTIONS {
  DWORD dwFlags;
  DWORD dwFatToUse;
 } SCAN_OPTIONS, *PSCAN_OPTIONS;
+#endif /* __WINCE_DEFINED__SCAN_OPTIONS */
 
 /* ==================================================================
  * functions and callbacks
@@ -30,10 +33,8 @@ typedef struct _SCAN_OPTIONS {
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* ScanVolumeUI  [function; ce-only; CE 5.0..699; Fatutil.dll] */
-VOID ScanVolumeUI(
- HANDLE hVolume,
- HWND hWnd
-);
+VOID ScanVolumeUI(HANDLE hVolume,
+ HWND hWnd);
 #endif /* _WIN32_WCE */
 
 #endif /* _SCANDISK_ */

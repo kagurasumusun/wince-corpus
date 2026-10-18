@@ -27,9 +27,7 @@ DWORD AutoDialEndConnection(void);
 DWORD AutoDialInitializeModule(void);
 
 /* AutoDialStartConnection  [function; ce-only; CE 4.0..699; Autodial.lib] */
-DWORD AutoDialStartConnection(
- TCHAR* szUseDialEntry
-);
+DWORD AutoDialStartConnection(TCHAR* szUseDialEntry);
 #endif /* _WIN32_WCE */
 
 #endif /* _AUTODIAL_ */

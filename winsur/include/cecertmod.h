@@ -32,13 +32,11 @@
 DWORD CertInit();
 
 /* CertVerify  [function; ce-only; CE 6.0..699; Certmod.dll] */
-DWORD CertVerify (
- HANDLE hFile,
+DWORD CertVerify (HANDLE hFile,
  LPCWSTR pszFileName,
  LPWSTR pUserName,
  DWORD cchUserName,
- LPDWORD pdwCertFlags
-);
+ LPDWORD pdwCertFlags);
 #endif /* _WIN32_WCE */
 
 #endif /* _CECERTMOD_ */

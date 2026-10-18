@@ -16,12 +16,10 @@
  * ================================================================ */
 
 /* GetDeviceUniqueID  [function; ce-only; unified-kb; unified-kb] */
-HRESULT GetDeviceUniqueID(
- LPBYTE pbApplicationData,
+HRESULT GetDeviceUniqueID(LPBYTE pbApplicationData,
  DWORD cbApplictionData,
  DWORD dwDeviceIDVersion,
  LPBYTE pbDeviceIDOutput,
- DWORD* pcbDeviceIDOutput
-);
+ DWORD* pcbDeviceIDOutput);
 
 #endif /* _GETDEVICEUNIQUEID_ */

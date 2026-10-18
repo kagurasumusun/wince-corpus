@@ -18,6 +18,8 @@
  * ================================================================ */
 
 /* DEBUG_ACCESS_CAPABILITIES_STRUCT  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__DEBUG_ACCESS_CAPABILITIES_STRUCT
+#define __WINCE_DEFINED__DEBUG_ACCESS_CAPABILITIES_STRUCT
 typedef struct _DEBUG_ACCESS_CAPABILITIES_STRUCT{
  BOOL fWriteCBPWhileRunning;
  BOOL fReadCBPWhileRunning;
@@ -31,5 +33,6 @@ typedef struct _DEBUG_ACCESS_CAPABILITIES_STRUCT{
  BOOL fReadRegWhileRunning;
 }
 DEBUG_ACCESS_CAPABILITIES_STRUCT, *PDEBUG_ACCESS_CAPABILITIES_STRUCT;
+#endif /* __WINCE_DEFINED__DEBUG_ACCESS_CAPABILITIES_STRUCT */
 
 #endif /* _EXDI_ */

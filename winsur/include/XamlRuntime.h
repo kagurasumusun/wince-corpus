@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1 constants, 57 declarations, 7 outlines, 0 base types, 0 extra macros, 48 extra decls
+ * 11 constants, 4 declarations, 59 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _XAMLRUNTIME_
 #define _XAMLRUNTIME_
@@ -17,6 +17,16 @@
  * that differ per generation pool into #if/#elif
  * chains with the evidence after the #endif)
  * ================================================================ */
+#define XRFontStretch_Condensed 0x3
+#define XRFontStretch_Expanded 0x7
+#define XRFontStretch_ExtraCondensed 0x2
+#define XRFontStretch_ExtraExpanded 0x8
+#define XRFontStretch_Medium 0x5
+#define XRFontStretch_Normal 0x5
+#define XRFontStretch_SemiCondensed 0x4
+#define XRFontStretch_SemiExpanded 0x6
+#define XRFontStretch_UltraCondensed 0x1
+#define XRFontStretch_UltraExpanded 0x9
 #define XRS_STRING 0
 
 /* ==================================================================
@@ -29,11 +39,115 @@
 
 /* PFN_TYPE_CONVERTER  [typedef; ce-only] */
 
+/* XRAlignmentX  [enum; ce-only] */
+
+/* XRAlignmentY  [enum; ce-only] */
+
+/* XRBrushMappingMode  [enum; ce-only] */
+
+/* XRClickMode  [enum; ce-only] */
+
+/* XRClockState  [enum; ce-only] */
+
+/* XRColorInterpolationMode  [enum; ce-only] */
+
+/* XRCornerRadius  [struct; ce-only] */
+
+/* XRCursor  [enum; ce-only] */
+
 /* XRDependencyPropertyMetaData  [struct; ce-only] */
+
+/* XRDragCompletedEventArgs  [struct; ce-only] */
+
+/* XRDragDeltaEventArgs  [struct; ce-only] */
+
+/* XRDragStartedEventArgs  [struct; ce-only] */
+
+/* XRDuration  [struct; ce-only] */
+
+/* XREventArgs  [struct; ce-only] */
+
+/* XRFillBehavior  [enum; ce-only] */
+
+/* XRFillRule  [enum; ce-only] */
+
+/* XRFontStretch  [enum; ce-only] */
+
+/* XRFontStyle  [enum; ce-only] */
+
+/* XRFontWeight  [enum; ce-only] */
+
+/* XRGradientSpreadMethod  [enum; ce-only] */
+
+/* XRGridLength  [struct; ce-only] */
+
+/* XRGridUnitType  [enum; ce-only] */
+
+/* XRHorizontalAlignment  [enum; ce-only] */
+
+/* XRKeyboardNavigationMode  [enum; ce-only] */
+
+/* XRKeyEventArgs  [struct; ce-only] */
+
+/* XRKeyTime  [struct; ce-only] */
+
+/* XRLineStackingStrategy  [enum; ce-only] */
+
+/* XRMouseButtonEventArgs  [struct; ce-only] */
 
 /* XRMouseEventArgs  [struct; ce-only] */
 
+/* XROrientation  [enum; ce-only] */
+
+/* XRPenLineCap  [enum; ce-only] */
+
+/* XRPenLineJoin  [enum; ce-only] */
+
+/* XRPoint  [struct; ce-only] */
+
+/* XRRect  [struct; ce-only] */
+
+/* XRRepeatBehavior  [struct; ce-only] */
+
 /* XRRoutedEventArgs  [struct; ce-only] */
+
+/* XRScrollBarVisibility  [enum; ce-only] */
+
+/* XRScrollChangedEventArgs  [struct; ce-only] */
+
+/* XRScrollEventArgs  [struct; ce-only] */
+
+/* XRScrollEventType  [enum; ce-only] */
+
+/* XRSize  [struct; ce-only] */
+
+/* XRSizeChangedEventArgs  [struct; ce-only] */
+
+/* XRStretch  [enum; ce-only] */
+
+/* XRStyleSimulations  [enum; ce-only] */
+
+/* XRSweepDirection  [enum; ce-only] */
+
+/* XRTextAlignment  [enum; ce-only] */
+
+/* XRTextChangedEventArgs  [struct; ce-only] */
+
+/* XRTextDecorationType  [enum; ce-only] */
+
+/* XRTextWrapping  [enum; ce-only] */
+
+/* XRThickness  [struct; ce-only] */
+
+/* XRThreeState  [enum; ce-only] */
+
+/* XRTimeSpan  [struct; ce-only] */
+
+/* XRVerticalAlignment  [enum; ce-only] */
+
+/* XRVisibility  [enum; ce-only] */
+
+/* XRWindowCreateParams  [struct; ce-only] */
 
 /* XRXamlSource  [struct; ce-only] */
 
@@ -44,6 +158,8 @@
  * ================================================================ */
 
 /* VALUE_TYPE  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_VALUE_TYPE
+#define __WINCE_DEFINED_VALUE_TYPE
 enum VALUE_TYPE
 {
  VTYPE_NONE = 0,
@@ -62,803 +178,13 @@ enum VALUE_TYPE
  VTYPE_CORNER_RADIUS = 13,
  VTYPE_OBJECT = 14
 };
-
-/* XRAlignmentX  [enum; ce-only] */
-enum XRAlignmentX{
- XRAlignmentX_Left=0,
- XRAlignmentX_Center=1,
- XRAlignmentX_Right=2
-};
-
-/* XRAlignmentY  [enum; ce-only] */
-enum XRAlignmentY{
- XRAlignmentY_Top=0,
- XRAlignmentY_Center=1,
- XRAlignmentY_Bottom=2
-};
-
-/* XRBrushMappingMode  [enum; ce-only] */
-enum XRBrushMappingMode
-{
- XRBrushMappingMode_Absolute=0,
- XRBrushMappingMode_RelativeToBoundingBox=1
-};
-
-/* XRClickMode  [enum; ce-only] */
-enum XRClickMode{
- XRClickMode_Release = 0, 
- XRClickMode_Press, 
- XRClickMode_Hover,
-};
-
-/* XRClockState  [enum; ce-only] */
-enum XRClockState
-{
- XRClockState_Active=0,
- XRClockState_Filling=1,
- XRClockState_Stopped=2
-};
-
-/* XRColorInterpolationMode  [enum; ce-only] */
-enum XRColorInterpolationMode{
- XRColorInterpolationMode_ScRgbLinearInterpolation=0,
- XRColorInterpolationMode_SRgbLinearInterpolation=1
-};
-
-/* XRCornerRadius  [struct; ce-only] */
-struct XRCornerRadius{
- float TopLeft;
- float TopRight;
- float BottomRight;
- float BottomLeft;
-};
-
-/* XRCursor  [enum; ce-only] */
-enum XRCursor
-{
- XRCursor_Default = 0,
- XRCursor_Arrow = 1,
- XRCursor_Hand = 2,
- XRCursor_Wait = 3,
- XRCursor_IBeam = 4,
- XRCursor_Stylus = 5,
- XRCursor_Eraser = 6,
- XRCursor_SizeNS = 7,
- XRCursor_SizeWE = 8,
- XRCursor_None = 9
-};
-
-/* XRDragCompletedEventArgs  [struct; ce-only] */
-struct XRDragCompletedEventArgs : XRRoutedEventArgs{
- double HorizontalChange;
- double VerticalChange;
- bool Cancelled;
-};
-
-/* XRDragDeltaEventArgs  [struct; ce-only] */
-struct XRDragDeltaEventArgs : XRRoutedEventArgs{
- double HorizontalDelta;
- double VeriticalDelta;
-};
-
-/* XRDragStartedEventArgs  [struct; ce-only] */
-struct XRDragStartedEventArgs : XRRoutedEventArgs{
- double VerticalOffset;
- double HorizontalOffset;
-};
-
-/* XRDuration  [struct; ce-only] */
-struct XRDuration{
- enum _DurationType{
- DurationType_Automatic,
- DurationType_TimeSpan,
- DurationType_Forever
- };
- XRTimeSpan TimeSpan;
- _DurationType DurationType;
-};
-
-/* XREventArgs  [struct; ce-only] */
-struct XREventArgs{
- UINT Size;
-};
-
-/* XRFillBehavior  [enum; ce-only] */
-enum XRFillBehavior{
- XRFillBehavior_HoldEnd=0,
- XRFillBehavior_Stop=1
-};
-
-/* XRFillRule  [enum; ce-only] */
-enum XRFillRule
-{
- XRFillRule_EvenOdd=0,
- XRFillRule_Nonzero=1
-};
-
-/* XRFontStretch  [enum; ce-only] */
-enum XRFontStretch{
- XRFontStretch_UltraCondensed=1,
- XRFontStretch_ExtraCondensed=2,
- XRFontStretch_Condensed=3,
- XRFontStretch_SemiCondensed=4,
- XRFontStretch_Normal=5,
- XRFontStretch_Medium=5,
- XRFontStretch_SemiExpanded=6,
- XRFontStretch_Expanded=7,
- XRFontStretch_ExtraExpanded=8,
- XRFontStretch_UltraExpanded=9
-};
-
-/* XRFontStyle  [enum; ce-only] */
-enum XRFontStyle{
- XRFontStyle_Normal=0,
- XRFontStyle_Oblique=1,
- XRFontStyle_Italic=2
-};
-
-/* XRFontWeight  [enum; ce-only] */
-enum XRFontWeight{
- XRFontWeight_Thin=100,
- XRFontWeight_ExtraLight=200,
- XRFontWeight_Light=300,
- XRFontWeight_Normal=400,
- XRFontWeight_Medium=500,
- XRFontWeight_SemiBold=600,
- XRFontWeight_Bold=700,
- XRFontWeight_ExtraBold=800,
- XRFontWeight_Black=900,
- XRFontWeight_ExtraBlack=950
-};
-
-/* XRGradientSpreadMethod  [enum; ce-only] */
-enum XRGradientSpreadMethod{
- XRGradientSpreadMethod_Pad=0,
- XRGradientSpreadMethod_Reflect=1,
- XRGradientSpreadMethod_Repeat=2
-};
-
-/* XRGridLength  [struct; ce-only] */
-struct XRGridLength{
- float UnitValue;
- XRGridUnitType UnitType;
-};
-
-/* XRGridUnitType  [enum; ce-only] */
-enum XRGridUnitType{
- XRGridUnitType_Auto=0,
- XRGridUnitType_Pixel=1,
- XRGridUnitType_Star=2
-};
-
-/* XRHorizontalAlignment  [enum; ce-only] */
-enum XRHorizontalAlignment{
- XRHorizontalAlignment_Left=0,
- XRHorizontalAlignment_Center=1,
- XRHorizontalAlignment_Right=2,
- XRHorizontalAlignment_Stretch=3
-};
-
-/* XRKeyboardNavigationMode  [enum; ce-only] */
-enum XRKeyboardNavigationMode{
- XRKeyboardNavigationMode_Local=0,
- XRKeyboardNavigationMode_Cycle=1,
- XRKeyboardNavigationMode_Once=2
-};
-
-/* XRKeyEventArgs  [struct; ce-only] */
-struct XRKeyEventArgs : XRRoutedEventArgs{
- BOOL Handled;
- UINT PlatformKeyCode;
-};
-
-/* XRKeyTime  [struct; ce-only] */
-struct XRKeyTime : public XRTimeSpan
-{
-};
-
-/* XRLineStackingStrategy  [enum; ce-only] */
-enum XRLineStackingStrategy{
- XRLineStackingStrategy_MaxHeight=0,
- XRLineStackingStrategy_BlockLineHeight=1
-};
-
-/* XRMouseButtonEventArgs  [struct; ce-only] */
-struct XRMouseButtonEventArgs : XRMouseEventArgs{
- BOOL Handled;
-};
-
-/* XROrientation  [enum; ce-only] */
-enum XROrientation{
- XROrientation_Vertical=0,
- XROrientation_Horizontal=1
-};
-
-/* XRPenLineCap  [enum; ce-only] */
-enum XRPenLineCap{
- XRPenLineCap_Flat=0,
- XRPenLineCap_Square=1,
- XRPenLineCap_Round=2,
- XRPenLineCap_Triangle=3
-};
-
-/* XRPenLineJoin  [enum; ce-only] */
-enum XRPenLineJoin{
- XRPenLineJoin_Miter=0,
- XRPenLineJoin_Bevel=1,
- XRPenLineJoin_Round=2
-};
-
-/* XRPoint  [struct; ce-only] */
-struct XRPoint{
- float x;
- float y;
-};
-
-/* XRRect  [struct; ce-only] */
-struct XRRect{
- float left;
- float top;
- float right;
- float bottom;
-};
-
-/* XRRepeatBehavior  [struct; ce-only] */
-struct XRRepeatBehavior{
- enum RepeatBehaviorType{
- RepeatBehaviorType_IterationCount,
- RepeatBehaviorType_RepeatDuration,
- RepeatBehaviorType_Forever
- };
- float IterationCount;
- XRTimeSpan RepeatDuration;
- RepeatBehaviorType BehaviorType;
-};
-
-/* XRScrollBarVisibility  [enum; ce-only] */
-enum XRScrollBarVisibility
-{
- XRScrollBarVisibility_Disabled = 0,
- XRScrollBarVisibility_Auto,
- XRScrollBarVisibility_Hidden,
- XRScrollBarVisibility_Visible
-};
-
-/* XRScrollChangedEventArgs  [struct; ce-only] */
-struct XRScrollChangedEventArgs : XRRoutedEventArgs
-{
- float XOffset;
- float YOffset;
-};
-
-/* XRScrollEventArgs  [struct; ce-only] */
-struct XRScrollEventArgs : XRRoutedEventArgs
-{
- float NewValue;
- XRScrollEventType ScrollEventType;
-};
-
-/* XRScrollEventType  [enum; ce-only] */
-enum XRScrollEventType{
- XRScrollEventType_EndScroll = 8,
- XRScrollEventType_First = 6,
- XRScrollEventType_LargeDecrement = 2,
- XRScrollEventType_LargeIncrement = 3,
- XRScrollEventType_Last = 7,
- XRScrollEventType_SmallDecrement = 0,
- XRScrollEventType_SmallIncrement = 1,
- XRScrollEventType_ThumbPosition = 4,
- XRScrollEventType_ThumbTrack = 5
-};
-
-/* XRSize  [struct; ce-only] */
-struct XRSize{
- float cx;
- float cy;
-};
-
-/* XRSizeChangedEventArgs  [struct; ce-only] */
-struct XRSizeChangedEventArgs : XRRoutedEventArgs
-{
- XRSize PreviousSize;
- XRSize NewSize;
-};
-
-/* XRStretch  [enum; ce-only] */
-enum XRStretch{
- XRStretch_None=0,
- XRStretch_Fill=1,
- XRStretch_Uniform=2,
- XRStretch_UniformToFill=3
-};
-
-/* XRStyleSimulations  [enum; ce-only] */
-enum XRStyleSimulations{
- XRStyleSimulations_None=0,
- XRStyleSimulations_BoldSimulation=1,
- XRStyleSimulations_ItalicSimulation=2,
- XRStyleSimulations_BoldItalicSimulation=3
-};
-
-/* XRSweepDirection  [enum; ce-only] */
-enum XRSweepDirection
-{
- XRSweepDirection_Counterclockwise=0,
- XRSweepDirection_Clockwise=1
-};
-
-/* XRTextAlignment  [enum; ce-only] */
-enum XRTextAlignment{
- XRTextAlignment_Center=0,
- XRTextAlignment_Left=1,
- XRTextAlignment_Right=2
-};
-
-/* XRTextChangedEventArgs  [struct; ce-only] */
-struct XRTextChangedEventArgs : XRRoutedEventArgs{
-};
-
-/* XRTextDecorationType  [enum; ce-only] */
-enum XRTextDecorationType{
- XRTextDecorationType_None=0,
- XRTextDecorationType_Underline=1
-};
-
-/* XRTextWrapping  [enum; ce-only] */
-enum XRTextWrapping{
- XRTextWrapping_NoWrap = 1,
- XRTextWrapping_Wrap = 2
-};
-
-/* XRThickness  [struct; ce-only] */
-struct XRThickness{
- float Left;
- float Top;
- float Right;
- float Bottom;
-};
-
-/* XRThreeState  [enum; ce-only] */
-enum XRThreeState
-{
- XRThreeState_Unchecked = 0,
- XRThreeState_Checked,
- XRThreeState_Indeterminate
-};
-
-/* XRTimeSpan  [struct; ce-only] */
-struct XRTimeSpan
-{
- XRTimeSpan(){};
- XRTimeSpan(__int64 TotalTicks)
- XRTimeSpan(int Days, int Hours, int Minutes, int Seconds, 
- int Milliseconds)
- static const int MinutesPerDay = 3600;
- static const int HoursPerDay = 24;
- static const int MinutesPerHour = 60;
- static const int MillisecondPerSecond = 1000;
- __int64 TotalSeconds()
- __int64 TotalMinutes()
- __int64 TotalHours()
- __int64 TotalMilliseconds()
- static __int64 FromSeconds(double Value)
- static __int64 Interval(double Value, int scale)
- __int64 Ticks;
- static const __int64 TicksPerDay = 864000000000;
- static const __int64 TicksPerHour = 36000000000;
- static const __int64 TicksPerMinute = 600000000;
- static const __int64 TicksPerSecond = 10000000;
- static const __int64 TicksPerMillisecond = 10000;
-};
-
-/* XRVerticalAlignment  [enum; ce-only] */
-enum XRVerticalAlignment{
- XRVerticalAlignment_Top=0,
- XRVerticalAlignment_Center=1,
- XRVerticalAlignment_Bottom=2,
- XRVerticalAlignment_Stretch=3
-};
-
-/* XRVisibility  [enum; ce-only] */
-enum XRVisibility{
- XRVisibility_Visible = 0,
- XRVisibility_Collapsed = 1
-};
-
-/* XRLineStackingStrategy_BlockLineHeight  [extra enum] */
-#ifdef __cplusplus
-enum XRLineStackingStrategy{ XRLineStackingStrategy_MaxHeight=0, XRLineStackingStrategy_BlockLineHeight=1 };
-#endif /* __cplusplus */
-
-/* XRTextWrapping_Wrap  [extra enum] */
-#ifdef __cplusplus
-enum XRTextWrapping{ XRTextWrapping_NoWrap = 1, XRTextWrapping_Wrap = 2 };
-#endif /* __cplusplus */
-
-/* XRFontWeight_ExtraBlack  [extra enum] */
-#ifdef __cplusplus
-enum XRFontWeight{
- XRFontWeight_Thin=100,
- XRFontWeight_ExtraLight=200,
- XRFontWeight_Light=300,
- XRFontWeight_Normal=400,
- XRFontWeight_Medium=500,
- XRFontWeight_SemiBold=600,
- XRFontWeight_Bold=700,
- XRFontWeight_ExtraBold=800,
- XRFontWeight_Black=900,
- XRFontWeight_ExtraBlack=950
-};
-#endif /* __cplusplus */
-
-/* XRPenLineJoin_Round  [extra enum] */
-#ifdef __cplusplus
-enum XRPenLineJoin{
- XRPenLineJoin_Miter=0,
- XRPenLineJoin_Bevel=1,
- XRPenLineJoin_Round=2
-};
-#endif /* __cplusplus */
-
-/* XRClockState_Stopped  [extra enum] */
-#ifdef __cplusplus
-enum XRClockState
-{
- XRClockState_Active=0,
- XRClockState_Filling=1,
- XRClockState_Stopped=2
-};
-#endif /* __cplusplus */
-
-/* DurationType  [extra struct] */
-struct XRDuration{
- enum _DurationType{
- DurationType_Automatic,
- DurationType_TimeSpan,
- DurationType_Forever
- };
- XRTimeSpan TimeSpan;
- _DurationType DurationType;
-};
-
-/* XRColorInterpolationMode_SRgbLinearInterpolation  [extra enum] */
-#ifdef __cplusplus
-enum XRColorInterpolationMode{ XRColorInterpolationMode_ScRgbLinearInterpolation=0, XRColorInterpolationMode_SRgbLinearInterpolation=1 };
-#endif /* __cplusplus */
-
-/* XRGridUnitType_Star  [extra enum] */
-#ifdef __cplusplus
-enum XRGridUnitType{
- XRGridUnitType_Auto=0,
- XRGridUnitType_Pixel=1,
- XRGridUnitType_Star=2
-};
-#endif /* __cplusplus */
-
-/* XRStretch_UniformToFill  [extra enum] */
-#ifdef __cplusplus
-enum XRStretch{
- XRStretch_None=0,
- XRStretch_Fill=1,
- XRStretch_Uniform=2,
- XRStretch_UniformToFill=3
-};
-#endif /* __cplusplus */
-
-/* XRStyleSimulations_BoldItalicSimulation  [extra enum] */
-#ifdef __cplusplus
-enum XRStyleSimulations{
- XRStyleSimulations_None=0,
- XRStyleSimulations_BoldSimulation=1,
- XRStyleSimulations_ItalicSimulation=2,
- XRStyleSimulations_BoldItalicSimulation=3
-};
-#endif /* __cplusplus */
-
-/* XRGradientSpreadMethod_Repeat  [extra enum] */
-#ifdef __cplusplus
-enum XRGradientSpreadMethod{
- XRGradientSpreadMethod_Pad=0,
- XRGradientSpreadMethod_Reflect=1,
- XRGradientSpreadMethod_Repeat=2
-};
-#endif /* __cplusplus */
-
-/* XRThreeState_Indeterminate  [extra enum] */
-enum XRThreeState
-{
- XRThreeState_Unchecked = 0,
- XRThreeState_Checked,
- XRThreeState_Indeterminate
-};
-
-/* XRPenLineCap_Triangle  [extra enum] */
-#ifdef __cplusplus
-enum XRPenLineCap{
- XRPenLineCap_Flat=0,
- XRPenLineCap_Square=1,
- XRPenLineCap_Round=2,
- XRPenLineCap_Triangle=3
-};
-#endif /* __cplusplus */
-
-/* XRAlignmentY_Bottom  [extra enum] */
-#ifdef __cplusplus
-enum XRAlignmentY{
- XRAlignmentY_Top=0,
- XRAlignmentY_Center=1,
- XRAlignmentY_Bottom=2
-};
-#endif /* __cplusplus */
-
-/* XRBrushMappingMode_RelativeToBoundingBox  [extra enum] */
-#ifdef __cplusplus
-enum XRBrushMappingMode
-{
- XRBrushMappingMode_Absolute=0,
- XRBrushMappingMode_RelativeToBoundingBox=1
-};
-#endif /* __cplusplus */
-
-/* NewSize  [extra struct] */
-struct XRSizeChangedEventArgs : XRRoutedEventArgs
-{
- XRSize PreviousSize;
- XRSize NewSize;
-};
-
-/* BehaviorType  [extra struct] */
-struct XRRepeatBehavior{
- enum RepeatBehaviorType{
- RepeatBehaviorType_IterationCount,
- RepeatBehaviorType_RepeatDuration,
- RepeatBehaviorType_Forever
- };
- float IterationCount;
- XRTimeSpan RepeatDuration;
- RepeatBehaviorType BehaviorType;
-};
-
-/* XRVerticalAlignment_Stretch  [extra enum] */
-#ifdef __cplusplus
-enum XRVerticalAlignment{
- XRVerticalAlignment_Top=0,
- XRVerticalAlignment_Center=1,
- XRVerticalAlignment_Bottom=2,
- XRVerticalAlignment_Stretch=3
-};
-#endif /* __cplusplus */
-
-/* XRVisibility_Collapsed  [extra enum] */
-#ifdef __cplusplus
-enum XRVisibility{ XRVisibility_Visible = 0, XRVisibility_Collapsed = 1 };
-#endif /* __cplusplus */
-
-/* Handled  [extra struct] */
-struct XRMouseButtonEventArgs : XRMouseEventArgs{ BOOL Handled; };
-
-/* XRSweepDirection_Clockwise  [extra enum] */
-#ifdef __cplusplus
-enum XRSweepDirection
-{
- XRSweepDirection_Counterclockwise=0,
- XRSweepDirection_Clockwise=1
-};
-#endif /* __cplusplus */
-
-/* HorizontalOffset  [extra struct] */
-struct XRDragStartedEventArgs : XRRoutedEventArgs{ double VerticalOffset; double HorizontalOffset; };
-
-/* XRTextDecorationType_Underline  [extra enum] */
-#ifdef __cplusplus
-enum XRTextDecorationType{ XRTextDecorationType_None=0, XRTextDecorationType_Underline=1 };
-#endif /* __cplusplus */
-
-/* XRTextAlignment_Right  [extra enum] */
-#ifdef __cplusplus
-enum XRTextAlignment{
- XRTextAlignment_Center=0,
- XRTextAlignment_Left=1,
- XRTextAlignment_Right=2
-};
-#endif /* __cplusplus */
-
-/* PlatformKeyCode  [extra struct] */
-struct XRKeyEventArgs : XRRoutedEventArgs{ BOOL Handled; UINT PlatformKeyCode; };
-
-/* ScrollEventType  [extra struct] */
-struct XRScrollEventArgs : XRRoutedEventArgs
-{
- float NewValue;
- XRScrollEventType ScrollEventType;
-};
-
-/* BottomLeft  [extra struct] */
-struct XRCornerRadius{
- float TopLeft;
- float TopRight;
- float BottomRight;
- float BottomLeft;
-};
-
-/* XRFillRule_Nonzero  [extra enum] */
-#ifdef __cplusplus
-enum XRFillRule
-{
- XRFillRule_EvenOdd=0,
- XRFillRule_Nonzero=1
-};
-#endif /* __cplusplus */
-
-/* XRKeyboardNavigationMode_Once  [extra enum] */
-#ifdef __cplusplus
-enum XRKeyboardNavigationMode{
- XRKeyboardNavigationMode_Local=0,
- XRKeyboardNavigationMode_Cycle=1,
- XRKeyboardNavigationMode_Once=2
-};
-#endif /* __cplusplus */
-
-/* XRHorizontalAlignment_Stretch  [extra enum] */
-#ifdef __cplusplus
-enum XRHorizontalAlignment{
- XRHorizontalAlignment_Left=0,
- XRHorizontalAlignment_Center=1,
- XRHorizontalAlignment_Right=2,
- XRHorizontalAlignment_Stretch=3
-};
-#endif /* __cplusplus */
-
-/* Bottom  [extra struct] */
-struct XRThickness{
- float Left;
- float Top;
- float Right;
- float Bottom;
-};
-
-/* XROrientation_Horizontal  [extra enum] */
-#ifdef __cplusplus
-enum XROrientation{ XROrientation_Vertical=0, XROrientation_Horizontal=1 };
-#endif /* __cplusplus */
-
-/* XRScrollEventType_ThumbTrack  [extra enum] */
-#ifdef __cplusplus
-enum XRScrollEventType{
- XRScrollEventType_EndScroll = 8,
- XRScrollEventType_First = 6,
- XRScrollEventType_LargeDecrement = 2,
- XRScrollEventType_LargeIncrement = 3,
- XRScrollEventType_Last = 7,
- XRScrollEventType_SmallDecrement = 0,
- XRScrollEventType_SmallIncrement = 1,
- XRScrollEventType_ThumbPosition = 4,
- XRScrollEventType_ThumbTrack = 5
-};
-#endif /* __cplusplus */
-
-/* YOffset  [extra struct] */
-struct XRScrollChangedEventArgs : XRRoutedEventArgs
-{
- float XOffset;
- float YOffset;
-};
-
-/* XRClickMode_Hover  [extra enum] */
-enum XRClickMode{
- XRClickMode_Release = 0,
- XRClickMode_Press,
- XRClickMode_Hover,
-};
-
-/* XRFillBehavior_Stop  [extra enum] */
-#ifdef __cplusplus
-enum XRFillBehavior{ XRFillBehavior_HoldEnd=0, XRFillBehavior_Stop=1 };
-#endif /* __cplusplus */
-
-/* XRAlignmentX_Right  [extra enum] */
-#ifdef __cplusplus
-enum XRAlignmentX{
- XRAlignmentX_Left=0,
- XRAlignmentX_Center=1,
- XRAlignmentX_Right=2
-};
-#endif /* __cplusplus */
-
-/* cy  [extra struct] */
-struct XRSize{ float cx; float cy; };
-
-/* Cancelled  [extra struct] */
-struct XRDragCompletedEventArgs : XRRoutedEventArgs{
- double HorizontalChange;
- double VerticalChange;
- bool Cancelled;
-};
-
-/* TicksPerMillisecond  [extra struct] */
-struct XRTimeSpan
-{
- XRTimeSpan(){};
- XRTimeSpan(__int64 TotalTicks)
- XRTimeSpan(int Days, int Hours, int Minutes, int Seconds,
- int Milliseconds)
- static const int MinutesPerDay = 3600;
- static const int HoursPerDay = 24;
- static const int MinutesPerHour = 60;
- static const int MillisecondPerSecond = 1000;
- __int64 TotalSeconds()
- __int64 TotalMinutes()
- __int64 TotalHours()
- __int64 TotalMilliseconds()
- static __int64 FromSeconds(double Value)
- static __int64 Interval(double Value, int scale)
- __int64 Ticks;
- static const __int64 TicksPerDay = 864000000000;
- static const __int64 TicksPerHour = 36000000000;
- static const __int64 TicksPerMinute = 600000000;
- static const __int64 TicksPerSecond = 10000000;
- static const __int64 TicksPerMillisecond = 10000;
-};
-
-/* XRScrollBarVisibility_Visible  [extra enum] */
-enum XRScrollBarVisibility
-{
- XRScrollBarVisibility_Disabled = 0,
- XRScrollBarVisibility_Auto,
- XRScrollBarVisibility_Hidden,
- XRScrollBarVisibility_Visible
-};
-
-/* XRCursor_None  [extra enum] */
-#ifdef __cplusplus
-enum XRCursor
-{
- XRCursor_Default = 0,
- XRCursor_Arrow = 1,
- XRCursor_Hand = 2,
- XRCursor_Wait = 3,
- XRCursor_IBeam = 4,
- XRCursor_Stylus = 5,
- XRCursor_Eraser = 6,
- XRCursor_SizeNS = 7,
- XRCursor_SizeWE = 8,
- XRCursor_None = 9
-};
-#endif /* __cplusplus */
-
-/* VeriticalDelta  [extra struct] */
-struct XRDragDeltaEventArgs : XRRoutedEventArgs{ double HorizontalDelta; double VeriticalDelta; };
-
-/* bottom  [extra struct] */
-struct XRRect{
- float left;
- float top;
- float right;
- float bottom;
-};
-
-/* XRFontStyle_Italic  [extra enum] */
-#ifdef __cplusplus
-enum XRFontStyle{
- XRFontStyle_Normal=0,
- XRFontStyle_Oblique=1,
- XRFontStyle_Italic=2
-};
-#endif /* __cplusplus */
-
-/* UnitType  [extra struct] */
-struct XRGridLength{ float UnitValue; XRGridUnitType UnitType; };
+#endif /* __WINCE_DEFINED_VALUE_TYPE */
 
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
-
-/* FreeXRValue  [function; ce-only; CE 6.0..699] */
-void WINAPI FreeXRValue(
- XRValue* pValue
-);
 
 /* XamlRuntimeInitialize  [function; ce-only; CE 6.0..699] */
 BOOL WINAPI XamlRuntimeInitialize();
@@ -867,14 +193,12 @@ BOOL WINAPI XamlRuntimeInitialize();
 BOOL WINAPI XamlRuntimeUninitialize();
 
 /* XR_HOOKPROC  [function; ce-only; CE 6.0..699] */
-BOOL CALLBACK HostHookProc(
- VOID* pv,
+BOOL CALLBACK HostHookProc(VOID* pv,
  HWND hwnd,
  UINT Msg,
  WPARAM wParam,
  LPARAM lParam,
- LRESULT* pRetVal
-);
+ LRESULT* pRetVal);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

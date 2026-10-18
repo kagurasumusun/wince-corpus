@@ -29,41 +29,29 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* ber_alloc_t  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib] */
-BerElement* ber_alloc_t(
- INT iOptions
-);
+BerElement* ber_alloc_t(INT iOptions);
 
 /* ber_first_element  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib] */
-ULONG ber_first_element(
- BerElement* pBerElement,
+ULONG ber_first_element(BerElement* pBerElement,
  ULONG* pLen,
- CHAR** ppOpaque
-);
+ CHAR** ppOpaque);
 
 /* ber_free  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib] */
-void ber_free(
- BerElement* pBerElement,
- INT fbuf
-);
+void ber_free(BerElement* pBerElement,
+ INT fbuf);
 
 /* ber_next_element  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib] */
-ULONG ber_next_element(
- BerElement* pBerElement,
+ULONG ber_next_element(BerElement* pBerElement,
  ULONG* pLen,
- CHAR* pOpaque
-);
+ CHAR* pOpaque);
 
 /* ber_peek_tag  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib] */
-ULONG ber_peek_tag(
- BerElement* pBerElement,
- ULONG* pLen
-);
+ULONG ber_peek_tag(BerElement* pBerElement,
+ ULONG* pLen);
 
 /* ber_skip_tag  [function; shared; CE 4.0..699; Wldap32.lib, wldap32.lib] */
-ULONG ber_skip_tag(
- BerElement* pBerElement,
- ULONG* pLen
-);
+ULONG ber_skip_tag(BerElement* pBerElement,
+ ULONG* pLen);
 #endif /* _WIN32_WCE */
 
 #endif /* _WINBER_ */

@@ -27,10 +27,16 @@
  * ================================================================ */
 
 /* BIND_FLAGS  [enum; shared] */
+#ifndef __WINCE_DEFINED_TAGBIND_FLAGS
+#define __WINCE_DEFINED_TAGBIND_FLAGS
 typedef enum tagBIND_FLAGS {
- BIND_MAYBOTHERUSER = 1, 
- BIND_JUSTTESTEXISTENCE = 2, 
+ BIND_MAYBOTHERUSER = 1,
+ BIND_JUSTTESTEXISTENCE = 2,
 } BIND_FLAGS;
+#endif /* __WINCE_DEFINED_TAGBIND_FLAGS */
+#ifndef __WINCE_DEFINED_PBIND_FLAGS
+#define __WINCE_DEFINED_PBIND_FLAGS
 typedef BIND_FLAGS *PBIND_FLAGS, *LPBIND_FLAGS;
+#endif /* __WINCE_DEFINED_PBIND_FLAGS */
 
 #endif /* _OBJIDL_IDL_ */

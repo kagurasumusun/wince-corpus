@@ -27,36 +27,28 @@ HWND OomUI_CreateOomWindow(void);
 BOOL OomUI_FShowOomWindow(void);
 
 /* OomUI_Initialize  [function; ce-only; CE 3.0..699] */
-VOID OomUI_Initialize( 
- HINSTANCE hinst 
-);
+VOID OomUI_Initialize(HINSTANCE hinst);
 
 /* OomUI_NotRespondingWndProc  [function; ce-only; CE 3.0..699] */
-LRESULT CALLBACK OomUI_NotRespondingWndProc( 
- HWND hwnd, 
- UINT message, 
- WPARAM wParam, 
- LPARAM lParam 
-);
+LRESULT CALLBACK OomUI_NotRespondingWndProc(HWND hwnd,
+ UINT message,
+ WPARAM wParam,
+ LPARAM lParam);
 
 /* OomUI_OnShow  [function; ce-only; CE 3.0..699] */
 VOID OomUI_OnShow(void);
 
 /* OomUI_OomWndProc  [function; ce-only; CE 3.0..699] */
-LRESULT CALLBACK OomUI_OomWndProc( 
- HWND hwnd, 
- UINT message, 
- WPARAM wParam, 
- LPARAM lParam 
-);
+LRESULT CALLBACK OomUI_OomWndProc(HWND hwnd,
+ UINT message,
+ WPARAM wParam,
+ LPARAM lParam);
 
 /* OomUICallback_IsCritical  [function; ce-only; CE 3.0..699] */
 BOOL OomUICallback_IsCritical(void);
 
 /* OomUICallback_NonClientPaint  [function; ce-only; CE 3.0..699] */
-VOID OomUICallback_NonClientPaint( 
- HWND hwnd 
-);
+VOID OomUICallback_NonClientPaint(HWND hwnd);
 #endif /* _WIN32_WCE */
 
 #endif /* _OOMUI_ */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 26 declarations, 3 outlines, 0 base types, 0 extra macros, 51 extra decls
+ * 0 constants, 22 declarations, 4 outlines, 0 base types, 0 extra macros, 51 extra decls
  */
 #ifndef _DDRAW_
 #define _DDRAW_
@@ -31,14 +31,19 @@
  * ================================================================ */
 
 /* DDARGB  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__DDARGB
+#define __WINCE_DEFINED__DDARGB
 typedef struct _DDARGB{
  BYTE blue;
  BYTE green;
  BYTE red;
  BYTE alpha;
 } DDARGB, *LPDDARGB;
+#endif /* __WINCE_DEFINED__DDARGB */
 
 /* DDCOLORCONTROL  [struct; shared] */
+#ifndef __WINCE_DEFINED__DDCOLORCONTROL
+#define __WINCE_DEFINED__DDCOLORCONTROL
 typedef struct _DDCOLORCONTROL {
  DWORD dwSize;
  DWORD dwFlags;
@@ -50,31 +55,43 @@ typedef struct _DDCOLORCONTROL {
  LONG lGamma;
  LONG lColorEnable;
 } DDCOLORCONTROL, FAR* LPDDCOLORCONTROL;
+#endif /* __WINCE_DEFINED__DDCOLORCONTROL */
 
 /* DDCOLORKEY  [struct; shared] */
-typedef struct _DDCOLORKEY{ 
- DWORD dwColorSpaceLowValue; 
- DWORD dwColorSpaceHighValue; 
+#ifndef __WINCE_DEFINED__DDCOLORKEY
+#define __WINCE_DEFINED__DDCOLORKEY
+typedef struct _DDCOLORKEY{
+ DWORD dwColorSpaceLowValue;
+ DWORD dwColorSpaceHighValue;
 } DDCOLORKEY,FAR *LPDDCOLORKEY;
+#endif /* __WINCE_DEFINED__DDCOLORKEY */
 
 /* DDGAMMARAMP  [struct; shared] */
+#ifndef __WINCE_DEFINED__DDGAMMARAMP
+#define __WINCE_DEFINED__DDGAMMARAMP
 typedef struct _DDGAMMARAMP
 {
  WORD red[256];
  WORD green[256];
  WORD blue[256];
 }DDGAMMARAMP, *LPDDGAMMARAMP;
+#endif /* __WINCE_DEFINED__DDGAMMARAMP */
 
 /* DDOVERLAYFX  [struct; shared] */
-typedef struct _DDOVERLAYFX{ 
- DWORD dwSize; 
- DWORD dwAlphaConstBitDepth; 
- DWORD dwAlphaConst; 
- DDCOLORKEY dckDestColorkey; 
- DDCOLORKEY dckSrcColorkey; 
+#ifndef __WINCE_DEFINED__DDOVERLAYFX
+#define __WINCE_DEFINED__DDOVERLAYFX
+typedef struct _DDOVERLAYFX{
+ DWORD dwSize;
+ DWORD dwAlphaConstBitDepth;
+ DWORD dwAlphaConst;
+ DDCOLORKEY dckDestColorkey;
+ DDCOLORKEY dckSrcColorkey;
 } DDOVERLAYFX,FAR *LPDDOVERLAYFX;
+#endif /* __WINCE_DEFINED__DDOVERLAYFX */
 
 /* DDPIXELFORMAT  [struct; shared] */
+#ifndef __WINCE_DEFINED__DDPIXELFORMAT
+#define __WINCE_DEFINED__DDPIXELFORMAT
 typedef struct _DDPIXELFORMAT {
  DWORD dwSize;
  DWORD dwFlags;
@@ -105,28 +122,40 @@ typedef struct _DDPIXELFORMAT {
  DWORD dwRGBAlphaBitMask;
  };
 } DDPIXELFORMAT, FAR* LPDDPIXELFORMAT;
+#endif /* __WINCE_DEFINED__DDPIXELFORMAT */
 
 /* DDSCAPS  [struct; shared] */
-typedef struct _DDSCAPS{ 
- DWORD dwCaps; 
+#ifndef __WINCE_DEFINED__DDSCAPS
+#define __WINCE_DEFINED__DDSCAPS
+typedef struct _DDSCAPS{
+ DWORD dwCaps;
 } DDSCAPS, FAR* LPDDSCAPS;
+#endif /* __WINCE_DEFINED__DDSCAPS */
 
 /* DDSCAPS2  [struct; shared] */
-typedef struct _DDSCAPS2 { 
- DWORD dwCaps; 
- DWORD dwCaps2; 
- DWORD dwCaps3; 
- DWORD dwCaps4; 
+#ifndef __WINCE_DEFINED__DDSCAPS2
+#define __WINCE_DEFINED__DDSCAPS2
+typedef struct _DDSCAPS2 {
+ DWORD dwCaps;
+ DWORD dwCaps2;
+ DWORD dwCaps3;
+ DWORD dwCaps4;
 } DDSCAPS2, FAR* LPDDSCAPS2;
+#endif /* __WINCE_DEFINED__DDSCAPS2 */
 
 /* DDSCAPSEX  [struct; ce-only] */
-typedef struct _DDSCAPSEX { 
- DWORD dwCaps2; 
- DWORD dwCaps3; 
- DWORD dwCaps4; 
+#ifndef __WINCE_DEFINED__DDSCAPSEX
+#define __WINCE_DEFINED__DDSCAPSEX
+typedef struct _DDSCAPSEX {
+ DWORD dwCaps2;
+ DWORD dwCaps3;
+ DWORD dwCaps4;
 } DDSCAPSEX, FAR* LPDDSCAPSEX;
+#endif /* __WINCE_DEFINED__DDSCAPSEX */
 
 /* DDSURFACEDESC  [struct; shared] */
+#ifndef __WINCE_DEFINED__DDSURFACEDESC
+#define __WINCE_DEFINED__DDSURFACEDESC
 typedef struct _DDSURFACEDESC {
  DWORD dwSize;
  DWORD dwFlags;
@@ -145,51 +174,45 @@ typedef struct _DDSURFACEDESC {
  DDSCAPS ddsCaps;
  DWORD dwSurfaceSize;
 } DDSURFACEDESC, FAR* LPDDSURFACEDESC;
-
-/* DDSURFACEDESC2  [struct; shared] */
-typedef struct _DDSURFACEDESC2 { 
- DWORD dwSize; 
- DWORD dwFlags; 
- DWORD dwHeight; 
- DWORD dwWidth; 
- union 
- { 
- LONG lPitch; 
- DWORD dwLinearSize; 
- } DUMMYUNIONNAMEN(1); 
- DWORD dwBackBufferCount; 
- union 
- { 
- DWORD dwMipMapCount; 
- DWORD dwRefreshRate; 
- } DUMMYUNIONNAMEN(2); 
- DWORD dwAlphaBitDepth; 
- DWORD dwReserved; 
- LPVOID lpSurface; 
- DDCOLORKEY ddckCKDestOverlay; 
- DDCOLORKEY ddckCKDestBlt; 
- DDCOLORKEY ddckCKSrcOverlay; 
- DDCOLORKEY ddckCKSrcBlt; 
- DDPIXELFORMAT ddpfPixelFormat; 
- DDSCAPS2 ddsCaps; 
- DWORD dwTextureStage; 
-} DDSURFACEDESC2, FAR* LPDDSURFACEDESC2;
+#endif /* __WINCE_DEFINED__DDSURFACEDESC */
 
 /* DDALPHABLTFX  [typedef; ce-only] */
+#ifndef __WINCE_DEFINED__DDALPHABLTFX
+#define __WINCE_DEFINED__DDALPHABLTFX
 typedef union _DDALPHABLTFX {
  DWORD dwSize;
  DDARGB ddargbScaleFactors;
  DWORD dwFillValue;
 } DDALPHABLTFX, FAR * LPDDALPHABLTFX;
+#endif /* __WINCE_DEFINED__DDALPHABLTFX */
 
 /* DDBLTFX  [struct; shared] */
-typedef struct _DDBLTFX{ 
- DWORD dwSize; 
- DWORD dwROP; 
- DWORD dwFillColor; 
- DDCOLORKEY ddckDestColorkey; 
- DDCOLORKEY ddckSrcColorkey; 
+#ifndef __WINCE_DEFINED__DDBLTFX
+#define __WINCE_DEFINED__DDBLTFX
+typedef struct _DDBLTFX{
+ DWORD dwSize;
+ DWORD dwROP;
+ DWORD dwFillColor;
+ DDCOLORKEY ddckDestColorkey;
+ DDCOLORKEY ddckSrcColorkey;
 } DDBLTFX,FAR* LPDDBLTFX;
+#endif /* __WINCE_DEFINED__DDBLTFX */
+
+/* DDSURFACEDESC2  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   dwSize */
+/*   dwFlags */
+/*   dwHeight */
+/*   dwWidth */
+/*   DUMMYUNIONNAMEN */
+/*   dwAlphaBitDepth */
+/*   dwReserved */
+/*   lpSurface */
+/*   ddckCKDestBlt */
+/*   ddckCKSrcOverlay */
+/*   ddckCKSrcBlt */
+/*   ddsCaps */
+/*   dwTextureStage */
 
 /* ==================================================================
  * functions and callbacks
@@ -198,19 +221,15 @@ typedef struct _DDBLTFX{
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x600)) /* CE 3.0..599 */
 
 /* EnumModesCallback2  [function; ce-only; CE 3.0..599] */
-HRESULT WINAPI EnumModesCallback( 
- LPDDSURFACEDESC2 lpDDSurfaceDesc, 
- LPVOID lpContext 
-);
+HRESULT WINAPI EnumModesCallback(LPDDSURFACEDESC2 lpDDSurfaceDesc,
+ LPVOID lpContext);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
 
 /* EnumModesCallback  [function; ce-only; CE 3.0..699] */
-HRESULT WINAPI EnumModesCallback(
- LPDDSURFACEDESC lpDDSurfaceDesc, 
- LPVOID lpContext
-);
+HRESULT WINAPI EnumModesCallback(LPDDSURFACEDESC lpDDSurfaceDesc,
+ LPVOID lpContext);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

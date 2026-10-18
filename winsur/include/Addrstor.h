@@ -18,7 +18,7 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200)) /* CE 1.0..199 */
 
 /* CloseAddressBook  [function; ce-only; CE 1.0..199] */
-void CloseAddressBook( );
+void CloseAddressBook();
 
 /* FreeAddressCard  [function; ce-only; CE 1.0..199] */
 void FreeAddressCard(AddressCard *pac);

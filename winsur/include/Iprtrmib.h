@@ -85,176 +85,221 @@
  * ================================================================ */
 
 /* MIB_IFROW  [struct; shared] */
+#ifndef __WINCE_DEFINED__MIB_IFROW
+#define __WINCE_DEFINED__MIB_IFROW
 typedef struct _MIB_IFROW {
  WCHAR wszName[MAX_INTERFACE_NAME_LEN];
- DWORD dwIndex; 
- DWORD dwType; 
- DWORD dwMtu; 
- DWORD dwSpeed; 
- DWORD dwPhysAddrLen; 
- BYTE bPhysAddr[MAXLEN_PHYSADDR]; 
- DWORD dwAdminStatus; 
- DWORD dwOperStatus; 
- DWORD dwLastChange; 
- DWORD dwInOctets; 
- DWORD dwInUcastPkts; 
- DWORD dwInNUcastPkts; 
- DWORD dwInDiscards; 
- DWORD dwInErrors; 
- DWORD dwInUnknownProtos; 
- DWORD dwOutOctets; 
- DWORD dwOutUcastPkts; 
- DWORD dwOutNUcastPkts; 
- DWORD dwOutDiscards; 
- DWORD dwOutErrors; 
- DWORD dwOutQLen; 
- DWORD dwDescrLen; 
- BYTE bDescr[MAXLEN_IFDESCR]; 
+ DWORD dwIndex;
+ DWORD dwType;
+ DWORD dwMtu;
+ DWORD dwSpeed;
+ DWORD dwPhysAddrLen;
+ BYTE bPhysAddr[MAXLEN_PHYSADDR];
+ DWORD dwAdminStatus;
+ DWORD dwOperStatus;
+ DWORD dwLastChange;
+ DWORD dwInOctets;
+ DWORD dwInUcastPkts;
+ DWORD dwInNUcastPkts;
+ DWORD dwInDiscards;
+ DWORD dwInErrors;
+ DWORD dwInUnknownProtos;
+ DWORD dwOutOctets;
+ DWORD dwOutUcastPkts;
+ DWORD dwOutNUcastPkts;
+ DWORD dwOutDiscards;
+ DWORD dwOutErrors;
+ DWORD dwOutQLen;
+ DWORD dwDescrLen;
+ BYTE bDescr[MAXLEN_IFDESCR];
 } MIB_IFROW, *PMIB_IFROW;
+#endif /* __WINCE_DEFINED__MIB_IFROW */
 
 /* MIB_IPADDRROW  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__MIB_IPADDRROW
+#define __WINCE_DEFINED__MIB_IPADDRROW
 typedef struct _MIB_IPADDRROW {
- DWORD dwAddr; 
- DWORD dwIndex; 
- DWORD dwMask; 
- DWORD dwBCastAddr; 
- DWORD dwReasmSize; 
- unsigned short unused1; 
- unsigned short unused2; 
+ DWORD dwAddr;
+ DWORD dwIndex;
+ DWORD dwMask;
+ DWORD dwBCastAddr;
+ DWORD dwReasmSize;
+ unsigned short unused1;
+ unsigned short unused2;
 } MIB_IPADDRROW, *PMIB_IPADDRROW;
+#endif /* __WINCE_DEFINED__MIB_IPADDRROW */
 
 /* MIB_IPFORWARDROW  [struct; shared] */
+#ifndef __WINCE_DEFINED__MIB_IPFORWARDROW
+#define __WINCE_DEFINED__MIB_IPFORWARDROW
 typedef struct _MIB_IPFORWARDROW {
- DWORD dwForwardDest; 
- DWORD dwForwardMask; 
- DWORD dwForwardPolicy; 
- DWORD dwForwardNextHop; 
- DWORD dwForwardIfIndex; 
- DWORD dwForwardType; 
- DWORD dwForwardProto; 
- DWORD dwForwardAge; 
- DWORD dwForwardNextHopAS; 
- DWORD dwForwardMetric1; 
- DWORD dwForwardMetric2; 
- DWORD dwForwardMetric3; 
- DWORD dwForwardMetric4; 
- DWORD dwForwardMetric5; 
+ DWORD dwForwardDest;
+ DWORD dwForwardMask;
+ DWORD dwForwardPolicy;
+ DWORD dwForwardNextHop;
+ DWORD dwForwardIfIndex;
+ DWORD dwForwardType;
+ DWORD dwForwardProto;
+ DWORD dwForwardAge;
+ DWORD dwForwardNextHopAS;
+ DWORD dwForwardMetric1;
+ DWORD dwForwardMetric2;
+ DWORD dwForwardMetric3;
+ DWORD dwForwardMetric4;
+ DWORD dwForwardMetric5;
 } MIB_IPFORWARDROW, *PMIB_IPFORWARDROW;
+#endif /* __WINCE_DEFINED__MIB_IPFORWARDROW */
 
 /* MIB_IPNETROW  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__MIB_IPNETROW
+#define __WINCE_DEFINED__MIB_IPNETROW
 typedef struct _MIB_IPNETROW {
- DWORD dwIndex; 
- DWORD dwPhysAddrLen; 
- BYTE bPhysAddr[MAXLEN_PHYSADDR]; 
- DWORD dwAddr; 
- DWORD dwType; 
+ DWORD dwIndex;
+ DWORD dwPhysAddrLen;
+ BYTE bPhysAddr[MAXLEN_PHYSADDR];
+ DWORD dwAddr;
+ DWORD dwType;
 } MIB_IPNETROW, *PMIB_IPNETROW;
+#endif /* __WINCE_DEFINED__MIB_IPNETROW */
 
 /* MIB_IPSTATS  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__MIB_IPSTATS
+#define __WINCE_DEFINED__MIB_IPSTATS
 typedef struct _MIB_IPSTATS {
- DWORD dwForwarding; 
- DWORD dwDefaultTTL; 
- DWORD dwInReceives; 
- DWORD dwInHdrErrors; 
- DWORD dwInAddrErrors; 
- DWORD dwForwDatagrams; 
- DWORD dwInUnknownProtos; 
- DWORD dwInDiscards; 
- DWORD dwInDelivers; 
- DWORD dwOutRequests; 
- DWORD dwRoutingDiscards; 
- DWORD dwOutDiscards; 
- DWORD dwOutNoRoutes; 
- DWORD dwReasmTimeout; 
- DWORD dwReasmReqds; 
- DWORD dwReasmOks; 
- DWORD dwReasmFails; 
- DWORD dwFragOks; 
- DWORD dwFragFails; 
- DWORD dwFragCreates; 
- DWORD dwNumIf; 
- DWORD dwNumAddr; 
- DWORD dwNumRoutes; 
+ DWORD dwForwarding;
+ DWORD dwDefaultTTL;
+ DWORD dwInReceives;
+ DWORD dwInHdrErrors;
+ DWORD dwInAddrErrors;
+ DWORD dwForwDatagrams;
+ DWORD dwInUnknownProtos;
+ DWORD dwInDiscards;
+ DWORD dwInDelivers;
+ DWORD dwOutRequests;
+ DWORD dwRoutingDiscards;
+ DWORD dwOutDiscards;
+ DWORD dwOutNoRoutes;
+ DWORD dwReasmTimeout;
+ DWORD dwReasmReqds;
+ DWORD dwReasmOks;
+ DWORD dwReasmFails;
+ DWORD dwFragOks;
+ DWORD dwFragFails;
+ DWORD dwFragCreates;
+ DWORD dwNumIf;
+ DWORD dwNumAddr;
+ DWORD dwNumRoutes;
 } MIB_IPSTATS, *PMIB_IPSTATS;
+#endif /* __WINCE_DEFINED__MIB_IPSTATS */
 
 /* MIB_PROXYARP  [struct; shared] */
+#ifndef __WINCE_DEFINED__MIB_PROXYARP
+#define __WINCE_DEFINED__MIB_PROXYARP
 typedef struct _MIB_PROXYARP {
- DWORD dwAddress; 
- DWORD dwMask; 
- DWORD dwIfIndex; 
+ DWORD dwAddress;
+ DWORD dwMask;
+ DWORD dwIfIndex;
 } MIB_PROXYARP, *PMIB_PROXYARP;
+#endif /* __WINCE_DEFINED__MIB_PROXYARP */
 
 /* MIB_TCPROW  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__MIB_TCPROW
+#define __WINCE_DEFINED__MIB_TCPROW
 typedef struct _MIB_TCPROW {
- DWORD dwState; 
- DWORD dwLocalAddr; 
- DWORD dwLocalPort; 
- DWORD dwRemoteAddr; 
- DWORD dwRemotePort; 
+ DWORD dwState;
+ DWORD dwLocalAddr;
+ DWORD dwLocalPort;
+ DWORD dwRemoteAddr;
+ DWORD dwRemotePort;
 } MIB_TCPROW, *PMIB_TCPROW;
+#endif /* __WINCE_DEFINED__MIB_TCPROW */
 
 /* MIB_TCPSTATS  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__MIB_TCPSTATS
+#define __WINCE_DEFINED__MIB_TCPSTATS
 typedef struct _MIB_TCPSTATS {
- DWORD dwRtoAlgorithm; 
- DWORD dwRtoMin; 
- DWORD dwRtoMax; 
- DWORD dwMaxConn; 
- DWORD dwActiveOpens; 
- DWORD dwPassiveOpens; 
- DWORD dwAttemptFails; 
- DWORD dwEstabResets; 
- DWORD dwCurrEstab; 
- DWORD dwInSegs; 
- DWORD dwOutSegs; 
- DWORD dwRetransSegs; 
- DWORD dwInErrs; 
- DWORD dwOutRsts; 
- DWORD dwNumConns; 
+ DWORD dwRtoAlgorithm;
+ DWORD dwRtoMin;
+ DWORD dwRtoMax;
+ DWORD dwMaxConn;
+ DWORD dwActiveOpens;
+ DWORD dwPassiveOpens;
+ DWORD dwAttemptFails;
+ DWORD dwEstabResets;
+ DWORD dwCurrEstab;
+ DWORD dwInSegs;
+ DWORD dwOutSegs;
+ DWORD dwRetransSegs;
+ DWORD dwInErrs;
+ DWORD dwOutRsts;
+ DWORD dwNumConns;
 } MIB_TCPSTATS, *PMIB_TCPSTATS;
+#endif /* __WINCE_DEFINED__MIB_TCPSTATS */
 
 /* MIB_UDPROW  [struct; shared] */
+#ifndef __WINCE_DEFINED__MIB_UDPROW
+#define __WINCE_DEFINED__MIB_UDPROW
 typedef struct _MIB_UDPROW {
- DWORD dwLocalAddr; 
- DWORD dwLocalPort; 
+ DWORD dwLocalAddr;
+ DWORD dwLocalPort;
 } MIB_UDPROW, *PMIB_UDPROW;
+#endif /* __WINCE_DEFINED__MIB_UDPROW */
 
 /* MIB_UDPSTATS  [struct; shared] */
+#ifndef __WINCE_DEFINED__MIB_UDPSTATS
+#define __WINCE_DEFINED__MIB_UDPSTATS
 typedef struct _MIB_UDPSTATS {
- DWORD dwInDatagrams; 
- DWORD dwNoPorts; 
- DWORD dwInErrors; 
- DWORD dwOutDatagrams; 
- DWORD dwNumAddrs; 
+ DWORD dwInDatagrams;
+ DWORD dwNoPorts;
+ DWORD dwInErrors;
+ DWORD dwOutDatagrams;
+ DWORD dwNumAddrs;
 } MIB_UDPSTATS, *PMIB_UDPSTATS;
+#endif /* __WINCE_DEFINED__MIB_UDPSTATS */
 
 /* MIBICMPSTATS  [struct; shared] */
+#ifndef __WINCE_DEFINED__MIBICMPSTATS
+#define __WINCE_DEFINED__MIBICMPSTATS
 typedef struct _MIBICMPSTATS {
- DWORD dwMsgs; 
- DWORD dwErrors; 
- DWORD dwDestUnreachs; 
- DWORD dwTimeExcds; 
- DWORD dwParmProbs; 
- DWORD dwSrcQuenchs; 
- DWORD dwRedirects; 
- DWORD dwEchos; 
- DWORD dwEchoReps; 
- DWORD dwTimestamps; 
- DWORD dwTimestampReps; 
- DWORD dwAddrMasks; 
- DWORD dwAddrMaskReps; 
+ DWORD dwMsgs;
+ DWORD dwErrors;
+ DWORD dwDestUnreachs;
+ DWORD dwTimeExcds;
+ DWORD dwParmProbs;
+ DWORD dwSrcQuenchs;
+ DWORD dwRedirects;
+ DWORD dwEchos;
+ DWORD dwEchoReps;
+ DWORD dwTimestamps;
+ DWORD dwTimestampReps;
+ DWORD dwAddrMasks;
+ DWORD dwAddrMaskReps;
 } MIBICMPSTATS;
+#endif /* __WINCE_DEFINED__MIBICMPSTATS */
+#ifndef __WINCE_DEFINED_PMIBICMPSTATS
+#define __WINCE_DEFINED_PMIBICMPSTATS
 typedef MIBICMPSTATS *PMIBICMPSTATS, *LPMIBICMPSTATS;
+#endif /* __WINCE_DEFINED_PMIBICMPSTATS */
 
 /* MIBICMPINFO  [struct; shared] */
+#ifndef __WINCE_DEFINED__MIBICMPINFO
+#define __WINCE_DEFINED__MIBICMPINFO
 typedef struct _MIBICMPINFO {
- MIBICMPSTATS icmpInStats; 
- MIBICMPSTATS icmpOutStats; 
+ MIBICMPSTATS icmpInStats;
+ MIBICMPSTATS icmpOutStats;
 } MIBICMPINFO;
+#endif /* __WINCE_DEFINED__MIBICMPINFO */
+#ifndef __WINCE_DEFINED_PMIBICMPINFO
+#define __WINCE_DEFINED_PMIBICMPINFO
 typedef MIBICMPINFO *PMIBICMPINFO, *LPMIBICMPINFO;
+#endif /* __WINCE_DEFINED_PMIBICMPINFO */
 
 /* MIB_ICMP  [struct, typedef; shared] */
+#ifndef __WINCE_DEFINED__MIB_ICMP
+#define __WINCE_DEFINED__MIB_ICMP
 typedef struct _MIB_ICMP {
- MIBICMPINFO stats; 
+ MIBICMPINFO stats;
 } MIB_ICMP, *PMIB_ICMP;
+#endif /* __WINCE_DEFINED__MIB_ICMP */
 
 #endif /* _IPRTRMIB_ */

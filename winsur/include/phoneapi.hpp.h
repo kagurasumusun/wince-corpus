@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1 constants, 5 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 1 constants, 1 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _PHONEAPI_HPP_
 #define _PHONEAPI_HPP_
@@ -18,28 +18,5 @@
  * chains with the evidence after the #endif)
  * ================================================================ */
 #define MPCF_DEFAULT 0x00000000
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
-
-/* PHOnHookDialing  [function; ce-only; CE 6.0..699; PhCommon.dll] */
-HRESULT PHOnHookDialing(
- const WCHAR CurrentChar
-);
-
-/* PHProcessProvisionXML  [function; ce-only; CE 6.0..699; PhCommon.dll] */
-HRESULT PHProcessProvisionXML(
-const WCHAR* pInputBuffer,
-WCHAR** ppOutputBuffer
-);
-
-/* PHValidateProvisionXML  [function; ce-only; CE 6.0..699; PhCommon.dll] */
-HRESULT PHValidateProvisionXML(
-const WCHAR* pInputBuffer
-);
-#endif /* _WIN32_WCE */
 
 #endif /* _PHONEAPI_HPP_ */

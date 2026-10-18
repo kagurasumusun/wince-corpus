@@ -24,9 +24,14 @@
  * ================================================================ */
 
 /* NcHitTestCode  [typedef; ce-only] */
+#ifndef __WINCE_DEFINED_NCHITTESTCODE
+#define __WINCE_DEFINED_NCHITTESTCODE
 typedef int NcHitTestCode;
+#endif /* __WINCE_DEFINED_NCHITTESTCODE */
 
 /* WidgetId  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_WIDGETID
+#define __WINCE_DEFINED_WIDGETID
 enum WidgetId{
  widInvalid = -1,
  widClose,
@@ -35,11 +40,17 @@ enum WidgetId{
  widOk,
  widHelp
 };
+#endif /* __WINCE_DEFINED_WIDGETID */
 
 /* bTopLevelWindow  [extra enum] */
+#ifndef __WINCE_DEFINED_BTOPLEVELWINDOW
+#define __WINCE_DEFINED_BTOPLEVELWINDOW
 static RECT WidgetRect(HWND hwnd, enum WidgetId wid, bool bTopLevelWindow);
+#endif /* __WINCE_DEFINED_BTOPLEVELWINDOW */
 
 /* widHelp  [extra enum] */
+#ifndef __WINCE_DEFINED_WIDGETID
+#define __WINCE_DEFINED_WIDGETID
 enum WidgetId{
  widInvalid = -1,
  widClose,
@@ -48,6 +59,7 @@ enum WidgetId{
  widOk,
  widHelp
 };
+#endif /* __WINCE_DEFINED_WIDGETID */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

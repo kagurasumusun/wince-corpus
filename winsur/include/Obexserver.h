@@ -18,6 +18,8 @@
  * ================================================================ */
 
 /* OBEXCOMMAND  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__OBEX_COMMAND
+#define __WINCE_DEFINED__OBEX_COMMAND
 typedef struct _obex_command {
  unsigned int uiOp;
  unsigned int uiResp;
@@ -27,8 +29,11 @@ typedef struct _obex_command {
  unsigned int * aPropID;
  ObexVariant * aPropVar;
 } ObexCommand;
+#endif /* __WINCE_DEFINED__OBEX_COMMAND */
 
 /* OBEXTRANSACTION  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__OBEX_TRANSACTION
+#define __WINCE_DEFINED__OBEX_TRANSACTION
 typedef struct _obex_transaction {
  unsigned int uiConnectionId;
  unsigned int uiTransactionId;
@@ -38,23 +43,32 @@ typedef struct _obex_transaction {
  MemFree ObexFree;
  ServerCallback ObexExecute;
 } ObexTransaction;
+#endif /* __WINCE_DEFINED__OBEX_TRANSACTION */
 
 /* ServerCallback  [struct; ce-only] */
-typedef int (*ServerCallback)(
- unsigned int uiOp,
+#ifndef __WINCE_DEFINED_SERVERCALLBACK
+#define __WINCE_DEFINED_SERVERCALLBACK
+typedef int (*ServerCallback)(unsigned int uiOp,
  unsigned int uiId,
- struct _obex_command * pCommand 
-);
+ struct _obex_command * pCommand);
+#endif /* __WINCE_DEFINED_SERVERCALLBACK */
 
 /* ServiceCallback  [struct; ce-only] */
-typedef int (*ServiceCallback)(
- struct _obex_transaction * pTrans 
-);
+#ifndef __WINCE_DEFINED_SERVICECALLBACK
+#define __WINCE_DEFINED_SERVICECALLBACK
+typedef int (*ServiceCallback)(struct _obex_transaction * pTrans);
+#endif /* __WINCE_DEFINED_SERVICECALLBACK */
 
 /* pCommand  [extra struct] */
+#ifndef __WINCE_DEFINED_PCOMMAND
+#define __WINCE_DEFINED_PCOMMAND
 typedef int (*ServerCallback)(unsigned int uiOp, unsigned int uiId, struct _obex_command * pCommand);
+#endif /* __WINCE_DEFINED_PCOMMAND */
 
 /* pTrans  [extra struct] */
+#ifndef __WINCE_DEFINED_PTRANS
+#define __WINCE_DEFINED_PTRANS
 typedef int (*ServiceCallback)(struct _obex_transaction * pTrans);
+#endif /* __WINCE_DEFINED_PTRANS */
 
 #endif /* _OBEXSERVER_ */

@@ -18,24 +18,18 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
 
 /* NLedDriverGetDeviceInfo  [function; ce-only; CE 2.11..2.12, 3.0..699; Nleddrv.lib] */
-BOOL NLedDriverGetDeviceInfo(
- INT nId,
- PVOID pOutput 
-);
+BOOL NLedDriverGetDeviceInfo(INT nId,
+ PVOID pOutput);
 
 /* NLedDriverInitialize  [function; ce-only; CE 2.11..2.12, 3.0..699; Nleddrv.lib] */
 BOOL NLedDriverInitialize (void);
 
 /* NLedDriverPowerDown  [function; ce-only; CE 2.11..2.12, 3.0..699; Nleddrv.lib] */
-VOID NLedDriverPowerDown(
- BOOL power_down 
-);
+VOID NLedDriverPowerDown(BOOL power_down);
 
 /* NLedDriverSetDevice  [function; ce-only; CE 2.11..2.12, 3.0..699; Nleddrv.lib] */
-BOOL NLedDriverSetDevice(
- INT nInfoId,
- PVOID pInput 
-);
+BOOL NLedDriverSetDevice(INT nInfoId,
+ PVOID pInput);
 #endif /* _WIN32_WCE */
 
 #endif /* _LED_DRVR_ */

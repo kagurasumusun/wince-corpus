@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 3 declarations, 0 outlines, 0 base types, 0 extra macros, 8 extra decls
+ * 0 constants, 3 declarations, 0 outlines, 0 base types, 0 extra macros, 7 extra decls
  */
 #ifndef _ATLCOM_
 #define _ATLCOM_
@@ -18,7 +18,9 @@
  * ================================================================ */
 
 /* CComObjectRoot  [typedef; ce-only] */
+#ifdef __cplusplus
 typedef CComObjectRootEx <CComObjectThreadModel> CComObjectRoot;
+#endif /* __cplusplus */
 
 /* ==================================================================
  * functions and callbacks
@@ -27,7 +29,7 @@ typedef CComObjectRootEx <CComObjectThreadModel> CComObjectRoot;
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x212 && _WIN32_WCE < 0x400)) /* CE 2.12..399 */
 
 /* AtlAdviseSinkMap  [function; ce-only; CE 2.12..399] */
-HRESULT AtlAdviseSinkMap( T* pT, bool bAdvise );
+HRESULT AtlAdviseSinkMap(T* pT, bool bAdvise);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================
@@ -39,7 +41,6 @@ HRESULT AtlAdviseSinkMap( T* pT, bool bAdvise );
 HRESULT FinalConstruct();
 void FinalRelease();
 ULONG InternalAddRef();
-HRESULT InternalQueryInterface(void* pThis, const _ATL_INTMAP_ENTRY* pEntries, REFIiD iid, void** ppvObject);
 ULONG InternalRelease();
 ULONG OuterAddRef();
 ULONG OuterRelease();

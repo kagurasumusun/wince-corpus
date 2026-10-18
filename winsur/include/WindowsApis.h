@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 350 constants, 39 declarations, 10 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 350 constants, 39 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDOWSAPIS_
 #define _WINDOWSAPIS_
@@ -373,34 +373,14 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
-/* HIMAGELIST  [typedef; ce-only; heuristic-prefix] */
-
-/* HIMC  [typedef; ce-only; heuristic-prefix] */
-
-/* LPCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
-
-/* LUID  [typedef; ce-only; heuristic-prefix] */
-
 /* MAKEINTATOM  [macro, function; shared] */
-LPTSTR MAKEINTATOM(
- WORD wInteger
-);
+LPTSTR MAKEINTATOM(WORD wInteger);
 
 /* PALETTEINDEX2BPP  [macro; ce-only] */
 #define PALETTEINDEX2BPP (i) \
  (((i)==0)?0x00000000: \
  (((i)==1)?0x00808080: \
  (((i)==2)?0x00C0C0C0:0x00FFFFFF)));
-
-/* PCRITICAL_SECTION  [typedef; ce-only; heuristic-prefix] */
-
-/* PCWCH  [typedef; ce-only; heuristic-prefix] */
-
-/* PLUID  [typedef; ce-only; heuristic-prefix] */
-
-/* REGSAM  [typedef; ce-only; heuristic-prefix] */
-
-/* UNSIGNED  [typedef; ce-only; heuristic-prefix] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -409,6 +389,8 @@ LPTSTR MAKEINTATOM(
  * ================================================================ */
 
 /* EXTENDED_NAME_FORMAT  [enum; shared] */
+#ifndef __WINCE_DEFINED_EXTENDED_NAME_FORMAT
+#define __WINCE_DEFINED_EXTENDED_NAME_FORMAT
 typedef enum {
  NameUnknown = 0,
  NameFullyQualifiedDN = 1,
@@ -421,20 +403,32 @@ typedef enum {
  NameServicePrincipal = 10,
  NameWindowsCeLocal = 0x80000001
 } EXTENDED_NAME_FORMAT, *PEXTENDED_NAME_FORMAT;
+#endif /* __WINCE_DEFINED_EXTENDED_NAME_FORMAT */
 
 /* GRADIENT_RECT  [struct; shared] */
+#ifndef __WINCE_DEFINED__GRADIENT_RECT
+#define __WINCE_DEFINED__GRADIENT_RECT
 typedef struct _GRADIENT_RECT {
  ULONG UpperLeft;
  ULONG LowerRight;
 }GRADIENT_RECT, *PGRADIENT_RECT;
+#endif /* __WINCE_DEFINED__GRADIENT_RECT */
 
 /* PERF_COUNTER_BLOCK  [struct, typedef; shared] */
+#ifndef __WINCE_DEFINED__PERF_COUNTER_BLOCK
+#define __WINCE_DEFINED__PERF_COUNTER_BLOCK
 typedef struct _PERF_COUNTER_BLOCK {
  DWORD ByteLength;
 } PERF_COUNTER_BLOCK;
+#endif /* __WINCE_DEFINED__PERF_COUNTER_BLOCK */
+#ifndef __WINCE_DEFINED_PPERF_COUNTER_BLOCK
+#define __WINCE_DEFINED_PPERF_COUNTER_BLOCK
 typedef PERF_COUNTER_BLOCK *PPERF_COUNTER_BLOCK, *LPPERF_COUNTER_BLOCK;
+#endif /* __WINCE_DEFINED_PPERF_COUNTER_BLOCK */
 
 /* PERF_COUNTER_DEFINITION  [struct, typedef; shared] */
+#ifndef __WINCE_DEFINED__PERF_COUNTER_DEFINITION
+#define __WINCE_DEFINED__PERF_COUNTER_DEFINITION
 typedef struct _PERF_COUNTER_DEFINITION {
  DWORD ByteLength;
  DWORD CounterNameTitleIndex;
@@ -447,9 +441,15 @@ typedef struct _PERF_COUNTER_DEFINITION {
  DWORD CounterSize;
  DWORD CounterOffset;
 } PERF_COUNTER_DEFINITION;
+#endif /* __WINCE_DEFINED__PERF_COUNTER_DEFINITION */
+#ifndef __WINCE_DEFINED_PPERF_COUNTER_DEFINITION
+#define __WINCE_DEFINED_PPERF_COUNTER_DEFINITION
 typedef PERF_COUNTER_DEFINITION *PPERF_COUNTER_DEFINITION, *LPPERF_COUNTER_DEFINITION;
+#endif /* __WINCE_DEFINED_PPERF_COUNTER_DEFINITION */
 
 /* PERF_DATA_BLOCK  [struct, typedef; shared] */
+#ifndef __WINCE_DEFINED__PERF_DATA_BLOCK
+#define __WINCE_DEFINED__PERF_DATA_BLOCK
 typedef struct _PERF_DATA_BLOCK {
  WCHAR Signature[4];
  DWORD LittleEndian;
@@ -466,9 +466,15 @@ typedef struct _PERF_DATA_BLOCK {
  DWORD SystemNameLength;
  DWORD SystemNameOffset;
 } PERF_DATA_BLOCK;
+#endif /* __WINCE_DEFINED__PERF_DATA_BLOCK */
+#ifndef __WINCE_DEFINED_PPERF_DATA_BLOCK
+#define __WINCE_DEFINED_PPERF_DATA_BLOCK
 typedef PERF_DATA_BLOCK *PPERF_DATA_BLOCK, *LPPERF_DATA_BLOCK;
+#endif /* __WINCE_DEFINED_PPERF_DATA_BLOCK */
 
 /* PERF_INSTANCE_DEFINITION  [struct, typedef; shared] */
+#ifndef __WINCE_DEFINED__PERF_INSTANCE_DEFINITION
+#define __WINCE_DEFINED__PERF_INSTANCE_DEFINITION
 typedef struct _PERF_INSTANCE_DEFINITION {
  DWORD ByteLength;
  DWORD ParentObjectTitleIndex;
@@ -477,9 +483,15 @@ typedef struct _PERF_INSTANCE_DEFINITION {
  DWORD NameOffset;
  DWORD NameLength;
 } PERF_INSTANCE_DEFINITION;
+#endif /* __WINCE_DEFINED__PERF_INSTANCE_DEFINITION */
+#ifndef __WINCE_DEFINED_PPERF_INSTANCE_DEFINITION
+#define __WINCE_DEFINED_PPERF_INSTANCE_DEFINITION
 typedef PERF_INSTANCE_DEFINITION *PPERF_INSTANCE_DEFINITION, *LPPERF_INSTANCE_DEFINITION;
+#endif /* __WINCE_DEFINED_PPERF_INSTANCE_DEFINITION */
 
 /* PERF_OBJECT_TYPE  [struct, typedef; shared] */
+#ifndef __WINCE_DEFINED__PERF_OBJECT_TYPE
+#define __WINCE_DEFINED__PERF_OBJECT_TYPE
 typedef struct _PERF_OBJECT_TYPE {
  DWORD TotalByteLength;
  DWORD DefinitionLength;
@@ -496,7 +508,11 @@ typedef struct _PERF_OBJECT_TYPE {
  LARGE_INTEGER PerfTime;
  LARGE_INTEGER PerfFreq;
 } PERF_OBJECT_TYPE;
+#endif /* __WINCE_DEFINED__PERF_OBJECT_TYPE */
+#ifndef __WINCE_DEFINED_PPERF_OBJECT_TYPE
+#define __WINCE_DEFINED_PPERF_OBJECT_TYPE
 typedef PERF_OBJECT_TYPE *PPERF_OBJECT_TYPE, *LPPERF_OBJECT_TYPE;
+#endif /* __WINCE_DEFINED_PPERF_OBJECT_TYPE */
 
 /* ==================================================================
  * functions and callbacks
@@ -505,98 +521,68 @@ typedef PERF_OBJECT_TYPE *PPERF_OBJECT_TYPE, *LPPERF_OBJECT_TYPE;
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* EnumUILanguagesProc  [function; ce-only; CE 4.0..699; Coreloc.lib] */
-BOOL CALLBACK EnumUILanguagesProc(
- LPTSTR lpUILanguageString
-);
+BOOL CALLBACK EnumUILanguagesProc(LPTSTR lpUILanguageString);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* FiberProc  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-VOID CALLBACK FiberProc(
- PVOID lpParameter
-);
+VOID CALLBACK FiberProc(PVOID lpParameter);
 
 /* GetCurrentPositionEx  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-WINGDIAPI BOOL WINAPI GetCurrentPositionEx(
- HDC hdc,
- LPPOINT lpPoint
-);
+WINGDIAPI BOOL WINAPI GetCurrentPositionEx(HDC hdc,
+ LPPOINT lpPoint);
 
 /* GetFontData  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-DWORD GetFontData(
- HDC hdc, 
- DWORD dwTable, 
- DWORD dwOffset, 
- LPVOID lpvBuffer, 
- DWORD cbData
-);
+DWORD GetFontData(HDC hdc,
+ DWORD dwTable,
+ DWORD dwOffset,
+ LPVOID lpvBuffer,
+ DWORD cbData);
 
 /* GetLayout  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-DWORD GetLayout(
- HDC hdc
-);
+DWORD GetLayout(HDC hdc);
 
 /* GetProp  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W GetPropA,GetPropW (CE is W-side)] */
-HANDLE GetProp(
- HWND hWnd,
- LPCTSTR lpString
-);
+HANDLE GetProp(HWND hWnd,
+ LPCTSTR lpString);
 
 /* GlobalAddAtom  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W GlobalAddAtomA,GlobalAddAtomW (CE is W-side)] */
-ATOM GlobalAddAtom(
- LPCTSTR lpString
-);
+ATOM GlobalAddAtom(LPCTSTR lpString);
 
 /* GlobalFindAtom  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W GlobalFindAtomA,GlobalFindAtomW (CE is W-side)] */
-ATOM GlobalFindAtom(
- LPCTSTR lpString
-);
+ATOM GlobalFindAtom(LPCTSTR lpString);
 
 /* InvalidateRgn  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL WINAPI InvalidateRgn(
- HWND hWnd,
+BOOL WINAPI InvalidateRgn(HWND hWnd,
  HRGN hRgn,
- BOOL fErase
-);
+ BOOL fErase);
 
 /* PropEnumProcEx  [function; shared; CE 5.0..699; A/W PROPENUMPROCEXA,PROPENUMPROCEXW (CE is W-side)] */
-BOOL CALLBACK PropEnumProcEx(
- HWND hwnd,
+BOOL CALLBACK PropEnumProcEx(HWND hwnd,
  LPTSTR lpszString,
  HANDLE hData,
- ULONG_PTR dwData
-);
+ ULONG_PTR dwData);
 
 /* RemoveProp  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W RemovePropA,RemovePropW (CE is W-side)] */
-HANDLE RemoveProp(
- HWND hWnd,
- LPCTSTR lpString
-);
+HANDLE RemoveProp(HWND hWnd,
+ LPCTSTR lpString);
 
 /* SetLayout  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-DWORD SetLayout(
- HDC hdc,
- DWORD dwLayout,
-);
+DWORD SetLayout(HDC hdc,
+ DWORD dwLayout,);
 
 /* SetProp  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W SetPropA,SetPropW (CE is W-side)] */
-BOOL SetProp(
- HWND hWnd,
+BOOL SetProp(HWND hWnd,
  LPCTSTR lpString,
- HANDLE hData
-);
+ HANDLE hData);
 
 /* SetUserDefaultLCID  [function; ce-only; CE 5.0..699; Coreloc.lib] */
-BOOL SetUserDefaultLCID(
- LCID Locale
-);
+BOOL SetUserDefaultLCID(LCID Locale);
 
 /* ValidateRgn  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL WINAPI ValidateRgn(
- HWND hWnd,
- HRGN hRgn
-);
+BOOL WINAPI ValidateRgn(HWND hWnd,
+ HRGN hRgn);
 #endif /* _WIN32_WCE */
 
 #endif /* _WINDOWSAPIS_ */

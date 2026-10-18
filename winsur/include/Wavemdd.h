@@ -18,37 +18,27 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* WAV_Close  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL WAV_Close(
- DWORD dwOpenData 
-);
+BOOL WAV_Close(DWORD dwOpenData);
 
 /* WAV_Deinit  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-PVOID WAV_Deinit(
- DWORD dwData 
-);
+PVOID WAV_Deinit(DWORD dwData);
 
 /* WAV_Init  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-PVOID WAV_Init(
- DWORD dwInfo 
-);
+PVOID WAV_Init(DWORD dwInfo);
 
 /* WAV_IOControl  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL WAV_IOControl(
- DWORD dwOpenData,
+BOOL WAV_IOControl(DWORD dwOpenData,
  DWORD dwCode,
  PBYTE pBufIn,
  DWORD dwLenIn,
  PBYTE pBufOut,
  DWORD dwLenOut,
- PDWORD pdwActualOut 
-);
+ PDWORD pdwActualOut);
 
 /* WAV_Open  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-PVOID WAV_Open(
- DWORD dwData,
+PVOID WAV_Open(DWORD dwData,
  DWORD dwAccess,
- DWORD dwShareMode 
-);
+ DWORD dwShareMode);
 
 /* WAV_PowerDown  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
 void WAV_PowerDown(void);
@@ -57,25 +47,19 @@ void WAV_PowerDown(void);
 void WAV_PowerUp(void);
 
 /* WAV_Read  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-DWORD WAV_Read(
- DWORD dwOpenData,
+DWORD WAV_Read(DWORD dwOpenData,
  LPVOID pBuf,
- DWORD len 
-);
+ DWORD len);
 
 /* WAV_Seek  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-DWORD WAV_Seek(
- DWORD dwOpenData,
+DWORD WAV_Seek(DWORD dwOpenData,
  long pos,
- DWORD type 
-);
+ DWORD type);
 
 /* WAV_Write  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-DWORD WAV_Write(
- DWORD dwOpenData,
+DWORD WAV_Write(DWORD dwOpenData,
  LPCVOID pBuf,
- DWORD len 
-);
+ DWORD len);
 #endif /* _WIN32_WCE */
 
 #endif /* _WAVEMDD_ */

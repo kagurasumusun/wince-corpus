@@ -18,10 +18,8 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* HcdMdd_SetCapability  [function; ce-only; CE 4.0..699] */
-DWORD HcdMdd_SetCapability(
- LPVOID lpvUhcdObject,
- DWORD dwCapability
-);
+DWORD HcdMdd_SetCapability(LPVOID lpvUhcdObject,
+ DWORD dwCapability);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

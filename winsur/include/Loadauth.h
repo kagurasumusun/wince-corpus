@@ -31,11 +31,14 @@
  * ================================================================ */
 
 /* WIN_CERTIFICATE  [struct; shared] */
+#ifndef __WINCE_DEFINED_WIN_CERTIFICATE
+#define __WINCE_DEFINED_WIN_CERTIFICATE
 typedef struct WIN_CERTIFICATE {
  DWORD dwLength;
  WORD wRevision;
  WORD wCertificateType;
- BYTE bCertificate[];
+ BYTE bCertificate;
 } WIN_CERTIFICATE, *LPWIN_CERTIFICATE;
+#endif /* __WINCE_DEFINED_WIN_CERTIFICATE */
 
 #endif /* _LOADAUTH_ */

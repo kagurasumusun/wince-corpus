@@ -28,45 +28,41 @@
  * ================================================================ */
 
 /* ConnMgrConRefTypeEnum  [enum; ce-only] */
+#ifndef __WINCE_DEFINED__CONNMGRCONREFTYPEENUM
+#define __WINCE_DEFINED__CONNMGRCONREFTYPEENUM
 typedef enum _ConnMgrConRefTypeEnum{
  ConRefType_NAP = 0,
  ConRefType_PROXY
 } ConnMgrConRefTypeEnum;
+#endif /* __WINCE_DEFINED__CONNMGRCONREFTYPEENUM */
+#ifndef __WINCE_DEFINED_PCONNMGRCONREFTYPEENUM
+#define __WINCE_DEFINED_PCONNMGRCONREFTYPEENUM
 typedef ConnMgrConRefTypeEnum *PConnMgrConRefTypeEnum, *LPConnMgrConRefTypeEnum;
+#endif /* __WINCE_DEFINED_PCONNMGRCONREFTYPEENUM */
 
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
 /* ConnMgrApiReadyEvent  [function; ce-only; unified-kb; unified-kb] */
-HANDLE WINAPI ConnMgrApiReadyEvent (
- void
-);
+HANDLE WINAPI ConnMgrApiReadyEvent (void);
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* ConnMgrConnectionStatus  [function; ce-only; CE 6.0..699; cellcore.lib] */
-HRESULT WINAPI ConnMgrConnectionStatus(
- HANDLE hConnection,
- DWORD *pdwStatus
-);
+HRESULT WINAPI ConnMgrConnectionStatus(HANDLE hConnection,
+ DWORD *pdwStatus);
 
 /* ConnMgrReleaseConnection  [function; ce-only; CE 6.0..699; cellcore.lib] */
-HRESULT WINAPI ConnMgrReleaseConnection(
- HANDLE hConnection,
- LONG lCache 
-);
+HRESULT WINAPI ConnMgrReleaseConnection(HANDLE hConnection,
+ LONG lCache);
 
 /* ConnMgrSetConnectionPriority  [function; ce-only; CE 6.0..699; cellcore.lib] */
-HRESULT WINAPI ConnMgrSetConnectionPriority(
- HANDLE hConnection,
- DWORD dwPriority
-);
+HRESULT WINAPI ConnMgrSetConnectionPriority(HANDLE hConnection,
+ DWORD dwPriority);
 
 /* ConnMgrUnregisterScheduledConnection  [function; ce-only; CE 6.0..699; cellcore.lib] */
-HRESULT WINAPI ConnMgrUnregisterScheduledConnection(
- LPCWSTR pwszToken
-);
+HRESULT WINAPI ConnMgrUnregisterScheduledConnection(LPCWSTR pwszToken);
 #endif /* _WIN32_WCE */
 
 #endif /* _CONNMGR_ */

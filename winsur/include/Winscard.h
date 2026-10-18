@@ -30,20 +30,31 @@
  * ================================================================ */
 
 /* SCARD_ATRMASK  [struct; shared] */
+#ifndef __WINCE_DEFINED__SCARD_ATRMASK
+#define __WINCE_DEFINED__SCARD_ATRMASK
 typedef struct _SCARD_ATRMASK {
- DWORD cbAtr; 
- BYTE rgbAtr[36]; 
- BYTE rgbMask[36]; 
+ DWORD cbAtr;
+ BYTE rgbAtr[36];
+ BYTE rgbMask[36];
 } SCARD_ATRMASK, *PSCARD_ATRMASK, *LPSCARD_ATRMASK;
+#endif /* __WINCE_DEFINED__SCARD_ATRMASK */
 
 /* SCARD_IO_REQUEST  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_SCARD_IO_REQUEST
+#define __WINCE_DEFINED_SCARD_IO_REQUEST
 typedef struct {
  DWORD dwProtocol;
  DWORD cbPciLength;
 } SCARD_IO_REQUEST;
+#endif /* __WINCE_DEFINED_SCARD_IO_REQUEST */
+#ifndef __WINCE_DEFINED_PSCARD_IO_REQUEST
+#define __WINCE_DEFINED_PSCARD_IO_REQUEST
 typedef SCARD_IO_REQUEST *PSCARD_IO_REQUEST, *LPSCARD_IO_REQUEST;
+#endif /* __WINCE_DEFINED_PSCARD_IO_REQUEST */
 
 /* SCARD_READERSTATE  [struct; shared; A/W SCARD_READERSTATEA,SCARD_READERSTATEW (CE is W-side)] */
+#ifndef __WINCE_DEFINED_SCARD_READERSTATE
+#define __WINCE_DEFINED_SCARD_READERSTATE
 typedef struct {
  LPCTSTR szReader;
  LPVOID pvUserData;
@@ -52,5 +63,6 @@ typedef struct {
  DWORD cbAtr;
  BYTE rgbAtr[36];
 } SCARD_READERSTATE, *PSCARD_READERSTATE, *LPSCARD_READERSTATE;
+#endif /* __WINCE_DEFINED_SCARD_READERSTATE */
 
 #endif /* _WINSCARD_ */

@@ -18,11 +18,14 @@
  * ================================================================ */
 
 /* MODULEINFO  [struct; shared] */
+#ifndef __WINCE_DEFINED__MODULEINFO
+#define __WINCE_DEFINED__MODULEINFO
 typedef struct _MODULEINFO {
  LPVOID lpBaseOfDll;
  DWORD SizeOfImage;
  LPVOID EntryPoint;
 } MODULEINFO, *LPMODULEINFO;
+#endif /* __WINCE_DEFINED__MODULEINFO */
 
 /* ==================================================================
  * functions and callbacks
@@ -31,18 +34,14 @@ typedef struct _MODULEINFO {
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* CeSetProcessVersion  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL CeSetProcessVersion(
- HANDLE hProcess,
- DWORD dwVersion
-);
+BOOL CeSetProcessVersion(HANDLE hProcess,
+ DWORD dwVersion);
 
 /* GetModuleInformation  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL GetModuleInformation(
- HANDLE hProcess,
+BOOL GetModuleInformation(HANDLE hProcess,
  HMODULE hModule,
  LPMODULEINFO lpmodinfo,
- DWORD cb
-);
+ DWORD cb);
 #endif /* _WIN32_WCE */
 
 #endif /* _PSAPI_ */

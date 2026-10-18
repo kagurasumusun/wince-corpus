@@ -48,9 +48,12 @@
  * ================================================================ */
 
 /* MIB_BEST_IF  [struct; shared] */
+#ifndef __WINCE_DEFINED__MIB_BEST_IF
+#define __WINCE_DEFINED__MIB_BEST_IF
 typedef struct _MIB_BEST_IF {
- DWORD dwDestAddr; 
- DWORD dwIfIndex; 
+ DWORD dwDestAddr;
+ DWORD dwIfIndex;
 } MIB_BEST_IF*, PMIB_BEST_IF;
+#endif /* __WINCE_DEFINED__MIB_BEST_IF */
 
 #endif /* _ROUTPROT_ */

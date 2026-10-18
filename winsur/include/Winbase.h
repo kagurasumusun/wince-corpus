@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 686 constants, 342 declarations, 8 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 686 constants, 334 declarations, 9 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINBASE_
 #define _WINBASE_
@@ -724,6 +724,8 @@
 
 /* SYSTEM_POWER_STATUS_EX  [struct; ce-only] */
 
+/* SYSTEM_POWER_STATUS_EX2  [struct; ce-only] */
+
 /* TypeFromPropID  [macro; ce-only; Fsdbase.lib] */
 
 /* ==================================================================
@@ -733,12 +735,20 @@
  * ================================================================ */
 
 /* CERECORDINFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__CERECORDINFO
+#define __WINCE_DEFINED__CERECORDINFO
 typedef struct _CERECORDINFO {
- CEOID oidParent; 
+ CEOID oidParent;
 } CERECORDINFO;
+#endif /* __WINCE_DEFINED__CERECORDINFO */
+#ifndef __WINCE_DEFINED_PCERECORDINFO
+#define __WINCE_DEFINED_PCERECORDINFO
 typedef CERECORDINFO *PCERECORDINFO, *LPCERECORDINFO;
+#endif /* __WINCE_DEFINED_PCERECORDINFO */
 
 /* COMMPROP  [struct; shared] */
+#ifndef __WINCE_DEFINED__COMMPROP
+#define __WINCE_DEFINED__COMMPROP
 typedef struct _COMMPROP {
  WORD wPacketLength;
  WORD wPacketVersion;
@@ -759,9 +769,15 @@ typedef struct _COMMPROP {
  DWORD dwProvSpec2;
  WCHAR wcProvChar[1];
 } COMMPROP;
+#endif /* __WINCE_DEFINED__COMMPROP */
+#ifndef __WINCE_DEFINED_PCOMMPROP
+#define __WINCE_DEFINED_PCOMMPROP
 typedef COMMPROP *PCOMMPROP, *LPCOMMPROP;
+#endif /* __WINCE_DEFINED_PCOMMPROP */
 
 /* COMMTIMEOUTS  [struct; shared] */
+#ifndef __WINCE_DEFINED__COMMTIMEOUTS
+#define __WINCE_DEFINED__COMMTIMEOUTS
 typedef struct _COMMTIMEOUTS {
  DWORD ReadIntervalTimeout;
  DWORD ReadTotalTimeoutMultiplier;
@@ -769,8 +785,11 @@ typedef struct _COMMTIMEOUTS {
  DWORD WriteTotalTimeoutMultiplier;
  DWORD WriteTotalTimeoutConstant;
 } COMMTIMEOUTS,*LPCOMMTIMEOUTS;
+#endif /* __WINCE_DEFINED__COMMTIMEOUTS */
 
 /* COMSTAT  [struct; shared] */
+#ifndef __WINCE_DEFINED__COMSTAT
+#define __WINCE_DEFINED__COMSTAT
 typedef struct _COMSTAT {
  DWORD fCtsHold :1;
  DWORD fDsrHold :1;
@@ -783,118 +802,142 @@ typedef struct _COMSTAT {
  DWORD cbInQue;
  DWORD cbOutQue;
 } COMSTAT, *LPCOMSTAT;
+#endif /* __WINCE_DEFINED__COMSTAT */
 
 /* CREATE_PROCESS_DEBUG_INFO  [struct; shared] */
-typedef struct _CREATE_PROCESS_DEBUG_INFO { 
- HANDLE hFile; 
- HANDLE hProcess; 
- HANDLE hThread; 
- LPVOID lpBaseOfImage; 
- DWORD dwDebugInfoFileOffset; 
- DWORD nDebugInfoSize; 
- LPVOID lpThreadLocalBase; 
+#ifndef __WINCE_DEFINED__CREATE_PROCESS_DEBUG_INFO
+#define __WINCE_DEFINED__CREATE_PROCESS_DEBUG_INFO
+typedef struct _CREATE_PROCESS_DEBUG_INFO {
+ HANDLE hFile;
+ HANDLE hProcess;
+ HANDLE hThread;
+ LPVOID lpBaseOfImage;
+ DWORD dwDebugInfoFileOffset;
+ DWORD nDebugInfoSize;
+ LPVOID lpThreadLocalBase;
  LPTHREAD_START_ROUTINE lpStartAddress;
- LPVOID lpImageName; 
- WORD fUnicode; 
+ LPVOID lpImageName;
+ WORD fUnicode;
 } CREATE_PROCESS_DEBUG_INFO;
+#endif /* __WINCE_DEFINED__CREATE_PROCESS_DEBUG_INFO */
+#ifndef __WINCE_DEFINED_PCREATE_PROCESS_DEBUG_INFO
+#define __WINCE_DEFINED_PCREATE_PROCESS_DEBUG_INFO
 typedef CREATE_PROCESS_DEBUG_INFO *PCREATE_PROCESS_DEBUG_INFO, *LPCREATE_PROCESS_DEBUG_INFO;
+#endif /* __WINCE_DEFINED_PCREATE_PROCESS_DEBUG_INFO */
 
 /* CREATE_THREAD_DEBUG_INFO  [struct; shared] */
-typedef struct _CREATE_THREAD_DEBUG_INFO { 
- HANDLE hThread; 
- LPVOID lpThreadLocalBase; 
- LPTHREAD_START_ROUTINE lpStartAddress; 
+#ifndef __WINCE_DEFINED__CREATE_THREAD_DEBUG_INFO
+#define __WINCE_DEFINED__CREATE_THREAD_DEBUG_INFO
+typedef struct _CREATE_THREAD_DEBUG_INFO {
+ HANDLE hThread;
+ LPVOID lpThreadLocalBase;
+ LPTHREAD_START_ROUTINE lpStartAddress;
 } CREATE_THREAD_DEBUG_INFO;
+#endif /* __WINCE_DEFINED__CREATE_THREAD_DEBUG_INFO */
+#ifndef __WINCE_DEFINED_PCREATE_THREAD_DEBUG_INFO
+#define __WINCE_DEFINED_PCREATE_THREAD_DEBUG_INFO
 typedef CREATE_THREAD_DEBUG_INFO *PCREATE_THREAD_DEBUG_INFO, *LPCREATE_THREAD_DEBUG_INFO;
-
-/* DCB  [struct; ce-only; harvest-kb; harvest-kb] */
-typedef struct _DCB {
- DWORD DCBlength;
- DWORD BaudRate; 
- DWORD fBinary:1;
- DWORD fParity:1;
- DWORD fOutxCtsFlow:1;
- DWORD fOutxDsrFlow:1;
- DWORD fDtrControl:2;
- DWORD fDsrSensitivity:1;
- DWORD fTXContinueOnXoff:1;
- DWORD fOutX: 1;
- DWORD fInX: 1;
- DWORD fErrorChar:1;
- DWORD fNull:1; 
- DWORD fRtsControl:2; 
- DWORD fAbortOnError:1;
- DWORD fDummy2:17;
- WORD wReserved;
- WORD XonLim; 
- WORD XoffLim; 
- BYTE ByteSize; 
- BYTE Parity; 
- BYTE StopBits;
- char XonChar; 
- char XoffChar; 
- char ErrorChar;
- char EofChar; 
- char EvtChar; 
- WORD wReserved1; 
-} DCB;
-typedef DCB *PDCB, *LPDCB;
+#endif /* __WINCE_DEFINED_PCREATE_THREAD_DEBUG_INFO */
 
 /* DeviceSearchType  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_DEVICESEARCHTYPE
+#define __WINCE_DEFINED_DEVICESEARCHTYPE
 typedef enum {
- DeviceSearchByLegacyName, 
- DeviceSearchByDeviceName, 
- DeviceSearchByBusName, 
- DeviceSearchByGuid, 
- DeviceSearchByParent 
+ DeviceSearchByLegacyName,
+ DeviceSearchByDeviceName,
+ DeviceSearchByBusName,
+ DeviceSearchByGuid,
+ DeviceSearchByParent
 } DeviceSearchType;
+#endif /* __WINCE_DEFINED_DEVICESEARCHTYPE */
+#ifndef __WINCE_DEFINED_PDEVICESEARCHTYPE
+#define __WINCE_DEFINED_PDEVICESEARCHTYPE
 typedef DeviceSearchType *PDeviceSearchType, *LPDeviceSearchType;
+#endif /* __WINCE_DEFINED_PDEVICESEARCHTYPE */
 
 /* EXIT_PROCESS_DEBUG_INFO  [struct; shared] */
-typedef struct _EXIT_PROCESS_DEBUG_INFO { 
- DWORD dwExitCode; 
+#ifndef __WINCE_DEFINED__EXIT_PROCESS_DEBUG_INFO
+#define __WINCE_DEFINED__EXIT_PROCESS_DEBUG_INFO
+typedef struct _EXIT_PROCESS_DEBUG_INFO {
+ DWORD dwExitCode;
 } EXIT_PROCESS_DEBUG_INFO;
+#endif /* __WINCE_DEFINED__EXIT_PROCESS_DEBUG_INFO */
+#ifndef __WINCE_DEFINED_PEXIT_PROCESS_DEBUG_INFO
+#define __WINCE_DEFINED_PEXIT_PROCESS_DEBUG_INFO
 typedef EXIT_PROCESS_DEBUG_INFO *PEXIT_PROCESS_DEBUG_INFO, *LPEXIT_PROCESS_DEBUG_INFO;
+#endif /* __WINCE_DEFINED_PEXIT_PROCESS_DEBUG_INFO */
 
 /* EXIT_THREAD_DEBUG_INFO  [struct; shared] */
-typedef struct _EXIT_THREAD_DEBUG_INFO { 
- DWORD dwExitCode; 
+#ifndef __WINCE_DEFINED__EXIT_THREAD_DEBUG_INFO
+#define __WINCE_DEFINED__EXIT_THREAD_DEBUG_INFO
+typedef struct _EXIT_THREAD_DEBUG_INFO {
+ DWORD dwExitCode;
 } EXIT_THREAD_DEBUG_INFO;
+#endif /* __WINCE_DEFINED__EXIT_THREAD_DEBUG_INFO */
+#ifndef __WINCE_DEFINED_PEXIT_THREAD_DEBUG_INFO
+#define __WINCE_DEFINED_PEXIT_THREAD_DEBUG_INFO
 typedef EXIT_THREAD_DEBUG_INFO *PEXIT_THREAD_DEBUG_INFO, *LPEXIT_THREAD_DEBUG_INFO;
+#endif /* __WINCE_DEFINED_PEXIT_THREAD_DEBUG_INFO */
 
 /* FINDEX_INFO_LEVELS  [enum; shared] */
+#ifndef __WINCE_DEFINED__FINDEX_INFO_LEVELS
+#define __WINCE_DEFINED__FINDEX_INFO_LEVELS
 typedef enum _FINDEX_INFO_LEVELS {
  FindExInfoStandard,
  FindExInfoMaxInfoLevel
 } FINDEX_INFO_LEVELS;
+#endif /* __WINCE_DEFINED__FINDEX_INFO_LEVELS */
+#ifndef __WINCE_DEFINED_PFINDEX_INFO_LEVELS
+#define __WINCE_DEFINED_PFINDEX_INFO_LEVELS
 typedef FINDEX_INFO_LEVELS *PFINDEX_INFO_LEVELS, *LPFINDEX_INFO_LEVELS;
+#endif /* __WINCE_DEFINED_PFINDEX_INFO_LEVELS */
 
 /* FINDEX_SEARCH_OPS  [enum; shared] */
-typedef enum _FINDEX_SEARCH_OPS { 
- FindExSearchNameMatch, 
- FindExSearchLimitToDirectories, 
- FindExSearchLimitToDevices 
+#ifndef __WINCE_DEFINED__FINDEX_SEARCH_OPS
+#define __WINCE_DEFINED__FINDEX_SEARCH_OPS
+typedef enum _FINDEX_SEARCH_OPS {
+ FindExSearchNameMatch,
+ FindExSearchLimitToDirectories,
+ FindExSearchLimitToDevices
 } FINDEX_SEARCH_OPS;
+#endif /* __WINCE_DEFINED__FINDEX_SEARCH_OPS */
+#ifndef __WINCE_DEFINED_PFINDEX_SEARCH_OPS
+#define __WINCE_DEFINED_PFINDEX_SEARCH_OPS
 typedef FINDEX_SEARCH_OPS *PFINDEX_SEARCH_OPS, *LPFINDEX_SEARCH_OPS;
+#endif /* __WINCE_DEFINED_PFINDEX_SEARCH_OPS */
 
 /* GET_FILEEX_INFO_LEVELS  [enum; shared] */
-typedef enum _GET_FILEEX_INFO_LEVELS { 
- GetFileExInfoStandard 
+#ifndef __WINCE_DEFINED__GET_FILEEX_INFO_LEVELS
+#define __WINCE_DEFINED__GET_FILEEX_INFO_LEVELS
+typedef enum _GET_FILEEX_INFO_LEVELS {
+ GetFileExInfoStandard
 } GET_FILEEX_INFO_LEVELS;
+#endif /* __WINCE_DEFINED__GET_FILEEX_INFO_LEVELS */
+#ifndef __WINCE_DEFINED_PGET_FILEEX_INFO_LEVELS
+#define __WINCE_DEFINED_PGET_FILEEX_INFO_LEVELS
 typedef GET_FILEEX_INFO_LEVELS *PGET_FILEEX_INFO_LEVELS, *LPGET_FILEEX_INFO_LEVELS;
+#endif /* __WINCE_DEFINED_PGET_FILEEX_INFO_LEVELS */
 
 /* LOAD_DLL_DEBUG_INFO  [struct; shared] */
-typedef struct _LOAD_DLL_DEBUG_INFO { 
- HANDLE hFile; 
- LPVOID lpBaseOfDll; 
- DWORD dwDebugInfoFileOffset; 
- DWORD nDebugInfoSize; 
- LPVOID lpImageName; 
- WORD fUnicode; 
+#ifndef __WINCE_DEFINED__LOAD_DLL_DEBUG_INFO
+#define __WINCE_DEFINED__LOAD_DLL_DEBUG_INFO
+typedef struct _LOAD_DLL_DEBUG_INFO {
+ HANDLE hFile;
+ LPVOID lpBaseOfDll;
+ DWORD dwDebugInfoFileOffset;
+ DWORD nDebugInfoSize;
+ LPVOID lpImageName;
+ WORD fUnicode;
 } LOAD_DLL_DEBUG_INFO;
+#endif /* __WINCE_DEFINED__LOAD_DLL_DEBUG_INFO */
+#ifndef __WINCE_DEFINED_PLOAD_DLL_DEBUG_INFO
+#define __WINCE_DEFINED_PLOAD_DLL_DEBUG_INFO
 typedef LOAD_DLL_DEBUG_INFO *PLOAD_DLL_DEBUG_INFO, *LPLOAD_DLL_DEBUG_INFO;
+#endif /* __WINCE_DEFINED_PLOAD_DLL_DEBUG_INFO */
 
 /* MEMORYSTATUS  [struct; shared] */
+#ifndef __WINCE_DEFINED__MEMORYSTATUS
+#define __WINCE_DEFINED__MEMORYSTATUS
 typedef struct _MEMORYSTATUS {
  DWORD dwLength;
  DWORD dwMemoryLoad;
@@ -905,8 +948,11 @@ typedef struct _MEMORYSTATUS {
  DWORD dwTotalVirtual;
  DWORD dwAvailVirtual;
 } MEMORYSTATUS, *LPMEMORYSTATUS;
+#endif /* __WINCE_DEFINED__MEMORYSTATUS */
 
 /* OSVERSIONINFO  [struct; shared; A/W OSVERSIONINFOA,OSVERSIONINFOW (CE is W-side)] */
+#ifndef __WINCE_DEFINED__OSVERSIONINFO
+#define __WINCE_DEFINED__OSVERSIONINFO
 typedef struct _OSVERSIONINFO{
  DWORD dwOSVersionInfoSize;
  DWORD dwMajorVersion;
@@ -915,65 +961,67 @@ typedef struct _OSVERSIONINFO{
  DWORD dwPlatformId;
  TCHAR szCSDVersion[128];
 } OSVERSIONINFO;
+#endif /* __WINCE_DEFINED__OSVERSIONINFO */
+#ifndef __WINCE_DEFINED_POSVERSIONINFO
+#define __WINCE_DEFINED_POSVERSIONINFO
 typedef OSVERSIONINFO *POSVERSIONINFO, *LPOSVERSIONINFO;
+#endif /* __WINCE_DEFINED_POSVERSIONINFO */
 
 /* OUTPUT_DEBUG_STRING_INFO  [struct; shared] */
-typedef struct _OUTPUT_DEBUG_STRING_INFO { 
- LPSTR lpDebugStringData; 
- WORD fUnicode; 
- WORD nDebugStringLength; 
+#ifndef __WINCE_DEFINED__OUTPUT_DEBUG_STRING_INFO
+#define __WINCE_DEFINED__OUTPUT_DEBUG_STRING_INFO
+typedef struct _OUTPUT_DEBUG_STRING_INFO {
+ LPSTR lpDebugStringData;
+ WORD fUnicode;
+ WORD nDebugStringLength;
 } OUTPUT_DEBUG_STRING_INFO;
+#endif /* __WINCE_DEFINED__OUTPUT_DEBUG_STRING_INFO */
+#ifndef __WINCE_DEFINED_POUTPUT_DEBUG_STRING_INFO
+#define __WINCE_DEFINED_POUTPUT_DEBUG_STRING_INFO
 typedef OUTPUT_DEBUG_STRING_INFO *POUTPUT_DEBUG_STRING_INFO, *LPOUTPUT_DEBUG_STRING_INFO;
+#endif /* __WINCE_DEFINED_POUTPUT_DEBUG_STRING_INFO */
 
 /* OVERLAPPED  [struct; shared] */
+#ifndef __WINCE_DEFINED__OVERLAPPED
+#define __WINCE_DEFINED__OVERLAPPED
 typedef struct _OVERLAPPED {
- ULONG_PTR Internal; 
- ULONG_PTR InternalHigh; 
- DWORD Offset; 
- DWORD OffsetHigh; 
- HANDLE hEvent; 
+ ULONG_PTR Internal;
+ ULONG_PTR InternalHigh;
+ DWORD Offset;
+ DWORD OffsetHigh;
+ HANDLE hEvent;
 } OVERLAPPED;
+#endif /* __WINCE_DEFINED__OVERLAPPED */
+#ifndef __WINCE_DEFINED_POVERLAPPED
+#define __WINCE_DEFINED_POVERLAPPED
 typedef OVERLAPPED *POVERLAPPED, *LPOVERLAPPED;
+#endif /* __WINCE_DEFINED_POVERLAPPED */
 
 /* SORTORDERSPEC  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__SORTORDERSPEC
+#define __WINCE_DEFINED__SORTORDERSPEC
 typedef struct _SORTORDERSPEC {
  CEPROPID propid;
  DWORD dwFlags;
 } SORTORDERSPEC;
+#endif /* __WINCE_DEFINED__SORTORDERSPEC */
+#ifndef __WINCE_DEFINED_PSORTORDERSPEC
+#define __WINCE_DEFINED_PSORTORDERSPEC
 typedef SORTORDERSPEC *PSORTORDERSPEC, *LPSORTORDERSPEC;
+#endif /* __WINCE_DEFINED_PSORTORDERSPEC */
 
 /* STORE_INFORMATION  [struct; ce-only; harvest-kb; harvest-kb] */
+#ifndef __WINCE_DEFINED_STORE_INFORMATION
+#define __WINCE_DEFINED_STORE_INFORMATION
 typedef struct STORE_INFORMATION {
  DWORD dwStoreSize;
  DWORD dwFreeSize;
 } STORE_INFORMATION, *LPSTORE_INFORMATION;
-
-/* SYSTEM_POWER_STATUS_EX2  [struct; ce-only] */
-typedef struct _SYSTEM_POWER_STATUS_EX2 {
- BYTE ACLineStatus;
- BYTE BatteryFlag;
- BYTE BatteryLifePercent;
- BYTE Reserved1;
- DWORD BatteryLifeTime;
- DWORD BatteryFullLifeTime;
- BYTE Reserved2;
- BYTE BackupBatteryFlag;
- BYTE BackupBatteryLifePercent;
- BYTE Reserved3;
- DWORD BackupBatteryLifeTime;
- DWORD BackupBatteryFullLifeTime;
- DWORD BatteryVoltage;
- DWORD BatteryCurrent;
- DWORD BatteryAverageCurrent;
- DWORD BatteryAverageInterval;
- DWORD BatterymAHourConsumed;
- DWORD BatteryTemperature;
- DWORD BackupBatteryVoltage;
- BYTE BatteryChemistry;
- // Add any extra information after the BatteryChemistry member.
-} SYSTEM_POWER_STATUS_EX2, *PSYSTEM_POWER_STATUS_EX2, *LPSYSTEM_POWER_STATUS_EX2;
+#endif /* __WINCE_DEFINED_STORE_INFORMATION */
 
 /* TIME_ZONE_INFORMATION  [struct; shared] */
+#ifndef __WINCE_DEFINED__TIME_ZONE_INFORMATION
+#define __WINCE_DEFINED__TIME_ZONE_INFORMATION
 typedef struct _TIME_ZONE_INFORMATION {
  LONG Bias;
  WCHAR StandardName[32];
@@ -983,55 +1031,77 @@ typedef struct _TIME_ZONE_INFORMATION {
  SYSTEMTIME DaylightDate;
  LONG DaylightBias;
 } TIME_ZONE_INFORMATION;
+#endif /* __WINCE_DEFINED__TIME_ZONE_INFORMATION */
+#ifndef __WINCE_DEFINED_PTIME_ZONE_INFORMATION
+#define __WINCE_DEFINED_PTIME_ZONE_INFORMATION
 typedef TIME_ZONE_INFORMATION *PTIME_ZONE_INFORMATION, *LPTIME_ZONE_INFORMATION;
+#endif /* __WINCE_DEFINED_PTIME_ZONE_INFORMATION */
 
 /* UNLOAD_DLL_DEBUG_INFO  [struct; shared] */
-typedef struct _UNLOAD_DLL_DEBUG_INFO { 
- LPVOID lpBaseOfDll; 
+#ifndef __WINCE_DEFINED__UNLOAD_DLL_DEBUG_INFO
+#define __WINCE_DEFINED__UNLOAD_DLL_DEBUG_INFO
+typedef struct _UNLOAD_DLL_DEBUG_INFO {
+ LPVOID lpBaseOfDll;
 } UNLOAD_DLL_DEBUG_INFO;
+#endif /* __WINCE_DEFINED__UNLOAD_DLL_DEBUG_INFO */
+#ifndef __WINCE_DEFINED_PUNLOAD_DLL_DEBUG_INFO
+#define __WINCE_DEFINED_PUNLOAD_DLL_DEBUG_INFO
 typedef UNLOAD_DLL_DEBUG_INFO *PUNLOAD_DLL_DEBUG_INFO, *LPUNLOAD_DLL_DEBUG_INFO;
+#endif /* __WINCE_DEFINED_PUNLOAD_DLL_DEBUG_INFO */
 
 /* VS_FIXEDFILEINFO  [struct; shared] */
-struct VS_FIXEDFILEINFO { 
-DWORD dwSignature; 
-DWORD dwStrucVersion; 
-DWORD dwFileVersionMS; 
-DWORD dwFileVersionLS; 
-DWORD dwProductVersionMS; 
-DWORD dwProductVersionLS; 
-DWORD dwFileFlagsMask; 
-DWORD dwFileFlags; 
-DWORD dwFileOS; 
-DWORD dwFileType; 
-DWORD dwFileSubtype; 
-DWORD dwFileDateMS; 
+#ifndef __WINCE_DEFINED_VS_FIXEDFILEINFO
+#define __WINCE_DEFINED_VS_FIXEDFILEINFO
+struct VS_FIXEDFILEINFO {
+DWORD dwSignature;
+DWORD dwStrucVersion;
+DWORD dwFileVersionMS;
+DWORD dwFileVersionLS;
+DWORD dwProductVersionMS;
+DWORD dwProductVersionLS;
+DWORD dwFileFlagsMask;
+DWORD dwFileFlags;
+DWORD dwFileOS;
+DWORD dwFileType;
+DWORD dwFileSubtype;
+DWORD dwFileDateMS;
 DWORD dwFileDateLS; };
+#endif /* __WINCE_DEFINED_VS_FIXEDFILEINFO */
 
 /* WIN32_FILE_ATTRIBUTE_DATA  [struct; shared] */
-typedef struct _WIN32_FILE_ATTRIBUTE_DATA{ 
- DWORD dwFileAttributes; 
- FILETIME ftCreationTime; 
- FILETIME ftLastAccessTime; 
- FILETIME ftLastWriteTime; 
- DWORD nFileSizeHigh; 
- DWORD nFileSizeLow; 
+#ifndef __WINCE_DEFINED__WIN32_FILE_ATTRIBUTE_DATA
+#define __WINCE_DEFINED__WIN32_FILE_ATTRIBUTE_DATA
+typedef struct _WIN32_FILE_ATTRIBUTE_DATA{
+ DWORD dwFileAttributes;
+ FILETIME ftCreationTime;
+ FILETIME ftLastAccessTime;
+ FILETIME ftLastWriteTime;
+ DWORD nFileSizeHigh;
+ DWORD nFileSizeLow;
 } WIN32_FILE_ATTRIBUTE_DATA, *LPWIN32_FILE_ATTRIBUTE_DATA;
+#endif /* __WINCE_DEFINED__WIN32_FILE_ATTRIBUTE_DATA */
 
 /* BY_HANDLE_FILE_INFORMATION  [struct; shared] */
-typedef struct _BY_HANDLE_FILE_INFORMATION { 
- DWORD dwFileAttributes; 
- FILETIME ftCreationTime; 
- FILETIME ftLastAccessTime; 
- FILETIME ftLastWriteTime; 
- DWORD dwVolumeSerialNumber; 
- DWORD nFileSizeHigh; 
- DWORD nFileSizeLow; 
- DWORD nNumberOfLinks; 
- DWORD nFileIndexHigh; 
+#ifndef __WINCE_DEFINED__BY_HANDLE_FILE_INFORMATION
+#define __WINCE_DEFINED__BY_HANDLE_FILE_INFORMATION
+typedef struct _BY_HANDLE_FILE_INFORMATION {
+ DWORD dwFileAttributes;
+ FILETIME ftCreationTime;
+ FILETIME ftLastAccessTime;
+ FILETIME ftLastWriteTime;
+ DWORD dwVolumeSerialNumber;
+ DWORD nFileSizeHigh;
+ DWORD nFileSizeLow;
+ DWORD nNumberOfLinks;
+ DWORD nFileIndexHigh;
  DWORD nFileIndexLow;
  DWORD dwOID;
 } BY_HANDLE_FILE_INFORMATION;
+#endif /* __WINCE_DEFINED__BY_HANDLE_FILE_INFORMATION */
+#ifndef __WINCE_DEFINED_PBY_HANDLE_FILE_INFORMATION
+#define __WINCE_DEFINED_PBY_HANDLE_FILE_INFORMATION
 typedef BY_HANDLE_FILE_INFORMATION *PBY_HANDLE_FILE_INFORMATION, *LPBY_HANDLE_FILE_INFORMATION;
+#endif /* __WINCE_DEFINED_PBY_HANDLE_FILE_INFORMATION */
 
 /* COMMCONFIG  [struct; shared; entity-headers] */
 /* DERIVED member outline -- documented order, types/offsets not stated */
@@ -1044,135 +1114,133 @@ typedef BY_HANDLE_FILE_INFORMATION *PBY_HANDLE_FILE_INFORMATION, *LPBY_HANDLE_FI
 /*   dwProviderSize */
 /*   wcProviderData */
 
+/* DCB  [struct; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   DCBlength */
+/*   BaudRate */
+/*   fBinary */
+/*   fParity */
+/*   fOutxCtsFlow */
+/*   fOutxDsrFlow */
+/*   fDtrControl */
+/*   fDsrSensitivity */
+/*   fTXContinueOnXoff */
+/*   fOutX */
+/*   fInX */
+/*   fErrorChar */
+/*   fNull */
+/*   fRtsControl */
+/*   fAbortOnError */
+/*   fDummy2 */
+/*   wReserved */
+/*   XonLim */
+/*   XoffLim */
+/*   ByteSize */
+/*   Parity */
+/*   StopBits */
+/*   XonChar */
+/*   XoffChar */
+/*   ErrorChar */
+/*   EofChar */
+/*   EvtChar */
+/*   wReserved1 */
+
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
 /* DebugBreak  [function; shared; unified-kb; unified-kb] */
-void DebugBreak( void );
+void DebugBreak(void);
 
 /* ExitProcess  [function; ce-only; harvest-kb; harvest-kb] */
-VOID ExitProcess( 
-UINT uExitCode);
+VOID ExitProcess(UINT uExitCode);
 
 /* GlobalDeleteAtom  [function; shared; unified-kb; unified-kb] */
-ATOM GlobalDeleteAtom( 
- ATOM nAtom 
-);
+ATOM GlobalDeleteAtom(ATOM nAtom);
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* CheckPassword  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, Fspass.lib, fspass.lib] */
-BOOL CheckPassword(
- LPWSTR lpszPassword 
-);
+BOOL CheckPassword(LPWSTR lpszPassword);
 
 /* GetStoreInformation  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-BOOL GetStoreInformation( 
- LPSTORE_INFORMATION lpsi 
-);
+BOOL GetStoreInformation(LPSTORE_INFORMATION lpsi);
 
 /* GetTickCount  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, nk.lib, OEMMain.lib, OEMMain_StaticKITL.lib] */
 DWORD GetTickCount(void);
 
 /* InterlockedTestExchange  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-LONG WINAPI InterlockedTestExchange(
- LPLONG Target,
+LONG WINAPI InterlockedTestExchange(LPLONG Target,
  LONG OldValue,
- LONG NewValue
-);
+ LONG NewValue);
 
 /* Random  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
 DWORD Random();
 
 /* RegisterDevice  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, device.lib] */
-HANDLE RegisterDevice(
- LPCWSTR lpszType,
+HANDLE RegisterDevice(LPCWSTR lpszType,
  DWORD dwIndex,
  LPCWSTR lpszLib,
- DWORD dwInfo
-);
+ DWORD dwInfo);
 
 /* SetDaylightTime  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-void SetDaylightTime(
- DWORD dst
-);
+void SetDaylightTime(DWORD dst);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
 
 /* CeCreateDatabase  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-CEOID CeCreateDatabase(
- LPWSTR lpszName, 
- DWORD dwDbaseType, 
- WORD wNumSortOrder, 
- SORTORDERSPEC* rgSortSpecs
-);
+CEOID CeCreateDatabase(LPWSTR lpszName,
+ DWORD dwDbaseType,
+ WORD wNumSortOrder,
+ SORTORDERSPEC* rgSortSpecs);
 
 /* CeDeleteDatabase  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-BOOL CeDeleteDatabase(
- CEOID oidDbase
-);
+BOOL CeDeleteDatabase(CEOID oidDbase);
 
 /* CeDeleteRecord  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-BOOL CeDeleteRecord(
- HANDLE hDatabase,
- CEOID oidRecord
-);
+BOOL CeDeleteRecord(HANDLE hDatabase,
+ CEOID oidRecord);
 
 /* CeFindFirstDatabase  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-HANDLE CeFindFirstDatabase(
- DWORD dwDbaseType
-);
+HANDLE CeFindFirstDatabase(DWORD dwDbaseType);
 
 /* CeFindNextDatabase  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-CEOID CeFindNextDatabase(
- HANDLE hEnum
-);
+CEOID CeFindNextDatabase(HANDLE hEnum);
 
 /* CeOpenDatabase  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-HANDLE CeOpenDatabase(
- PCEOID poid, 
- LPWSTR lpszName, 
- CEPROPID propid, 
- DWORD dwFlags, 
- HWND hwndNotify
-);
+HANDLE CeOpenDatabase(PCEOID poid,
+ LPWSTR lpszName,
+ CEPROPID propid,
+ DWORD dwFlags,
+ HWND hwndNotify);
 
 /* CeReadRecordProps  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-CEOID CeReadRecordProps(
- HANDLE hDbase, 
- DWORD dwFlags, 
- LPWORD lpcPropID, 
- CEPROPID* rgPropID, 
- LPBYTE* lplpBuffer, 
- LPDWORD lpcbBuffer
-);
+CEOID CeReadRecordProps(HANDLE hDbase,
+ DWORD dwFlags,
+ LPWORD lpcPropID,
+ CEPROPID* rgPropID,
+ LPBYTE* lplpBuffer,
+ LPDWORD lpcbBuffer);
 
 /* CeSeekDatabase  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-CEOID CeSeekDatabase(
- HANDLE hDatabase, 
- DWORD dwSeekType, 
- DWORD dwValue, 
- LPDWORD lpdwIndex
-);
+CEOID CeSeekDatabase(HANDLE hDatabase,
+ DWORD dwSeekType,
+ DWORD dwValue,
+ LPDWORD lpdwIndex);
 
 /* CreateFileForMapping  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
-HANDLE CreateFileForMapping( 
- LPCTSTR lpFileName,
+HANDLE CreateFileForMapping(LPCTSTR lpFileName,
  DWORD dwDesiredAccess,
  DWORD dwShareMode,
  LPSECURITY_ATTRIBUTES lpSecurityAttributes,
  DWORD dwCreationDisposition,
  DWORD dwFlagsAndAttributes,
- HANDLE hTemplateFile
-);
+ HANDLE hTemplateFile);
 
 /* DeleteAndRenameFile  [function; ce-only; CE 1.0..199, 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsmain.lib, fsmain.lib] */
-BOOL DeleteAndRenameFile( 
- LPCWSTR lpszDestFile, 
- LPCWSTR lpszSourceFile 
-);
+BOOL DeleteAndRenameFile(LPCWSTR lpszDestFile,
+ LPCWSTR lpszSourceFile);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
@@ -1183,9 +1251,7 @@ BOOL DeleteAndRenameFile(
 /* Windows CE supports only the Unicode version of this function. */
 /* Windows Embedded CE supports only the Unicode version of this function. */
 /* Windows CE supports only the Unicode version of this function. */
-LPTSTR CharLower(
- LPTSTR lpsz
-);
+LPTSTR CharLower(LPTSTR lpsz);
 
 /* CharLowerBuff  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coreloc.lib, coreloc.lib, locusa.lib; A/W CharLowerBuffA,CharLowerBuffW (CE is W-side)] */
 /* Windows CE supports only the Unicode version of this function. */
@@ -1194,21 +1260,15 @@ LPTSTR CharLower(
 /* Windows Embedded CE supports only the Unicode version of this function. */
 /* Windows CE supports only the Unicode version of this function. */
 /* Windows CE Notes Supports only the Unicode version of this function. */
-DWORD CharLowerBuff(
- LPTSTR lpsz,
- DWORD cchLength
-);
+DWORD CharLowerBuff(LPTSTR lpsz,
+ DWORD cchLength);
 
 /* CharNext  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Coreloc.lib, coreloc.lib, Locusa.lib, locusa.lib; A/W CharNextA,CharNextW (CE is W-side)] */
-LPTSTR CharNext(
- LPCTSTR lpsz
-);
+LPTSTR CharNext(LPCTSTR lpsz);
 
 /* CharPrev  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coreloc.lib, coreloc.lib, locusa.lib; A/W CharPrevA,CharPrevW (CE is W-side)] */
-LPTSTR CharPrev(
- LPCTSTR lpszStart,
- LPCTSTR lpszCurrent
-);
+LPTSTR CharPrev(LPCTSTR lpszStart,
+ LPCTSTR lpszCurrent);
 
 /* CharUpper  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coreloc.lib, coreloc.lib, locusa.lib; A/W CharUpperA,CharUpperW (CE is W-side)] */
 /* Windows CE supports only the Unicode version of this function. */
@@ -1216,9 +1276,7 @@ LPTSTR CharPrev(
 /* Windows CE supports only the Unicode version of this function. */
 /* Windows Embedded CE supports only the Unicode version of this function. */
 /* Windows CE supports only the Unicode version of this function. */
-LPTSTR CharUpper(
- LPTSTR lpsz
-);
+LPTSTR CharUpper(LPTSTR lpsz);
 
 /* CharUpperBuff  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coreloc.lib, coreloc.lib, locusa.lib; A/W CharUpperBuffA,CharUpperBuffW (CE is W-side)] */
 /* Windows CE supports only the Unicode version of this function. */
@@ -1227,55 +1285,40 @@ LPTSTR CharUpper(
 /* Windows Embedded CE supports only the Unicode version of this function. */
 /* Windows CE supports only the Unicode version of this function. */
 /* Windows CE Notes Supports only the Unicode version of this function. */
-DWORD CharUpperBuff(
- LPTSTR lpsz,
- DWORD cchLength
-);
+DWORD CharUpperBuff(LPTSTR lpsz,
+ DWORD cchLength);
 
 /* ClearCommBreak  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
-BOOL ClearCommBreak(
- HANDLE hFile
-);
+BOOL ClearCommBreak(HANDLE hFile);
 
 /* ClearCommError  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
-BOOL ClearCommError(
- HANDLE hFile,
+BOOL ClearCommError(HANDLE hFile,
  LPDWORD lpErrors,
- LPCOMSTAT lpStat
-);
+ LPCOMSTAT lpStat);
 
 /* CompareFileTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coremain.lib, Nkstub.lib] */
-LONG CompareFileTime( 
- const FILETIME* lpFileTime1,
- const FILETIME* lpFileTime2
-);
+LONG CompareFileTime(const FILETIME* lpFileTime1,
+ const FILETIME* lpFileTime2);
 
 /* ContinueDebugEvent  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-BOOL ContinueDebugEvent(
- DWORD dwProcessId,
+BOOL ContinueDebugEvent(DWORD dwProcessId,
  DWORD dwThreadId,
- DWORD dwContinueStatus
-);
+ DWORD dwContinueStatus);
 
 /* CreateEvent  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib; A/W CreateEventA,CreateEventW (CE is W-side)] */
-HANDLE CreateEvent(
- LPSECURITY_ATTRIBUTES
+HANDLE CreateEvent(LPSECURITY_ATTRIBUTES
  lpEventAttributes,
  BOOL bManualReset,
  BOOL InitialState,
- LPTSTR lpName
-);
+ LPTSTR lpName);
 
 /* CreateMutex  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib; A/W CreateMutexA,CreateMutexW (CE is W-side)] */
-HANDLE CreateMutex(
- LPSECURITY_ATTRIBUTES lpMutexAttributes,
+HANDLE CreateMutex(LPSECURITY_ATTRIBUTES lpMutexAttributes,
  BOOL bInitialOwner,
- LPCTSTR lpName
-);
+ LPCTSTR lpName);
 
 /* CreateProcess  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib; A/W CreateProcessA,CreateProcessW (CE is W-side)] */
-BOOL CreateProcess(
- LPCWSTR pszImageName,
+BOOL CreateProcess(LPCWSTR pszImageName,
  LPCWSTR pszCmdLine,
  LPSECURITY_ATTRIBUTES psaProcess,
  LPSECURITY_ATTRIBUTES psaThread,
@@ -1284,341 +1327,231 @@ BOOL CreateProcess(
  LPVOID pvEnvironment,
  LPWSTR pszCurDir,
  LPSTARTUPINFOW psiStartInfo,
- LPPROCESS_INFORMATION pProcInfo
-);
+ LPPROCESS_INFORMATION pProcInfo);
 
 /* CreateThread  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
-HANDLE CreateThread(
- LPSECURITY_ATTRIBUTES lpsa,
+HANDLE CreateThread(LPSECURITY_ATTRIBUTES lpsa,
  DWORD cbStack,
  LPTHREAD_START_ROUTINE lpStartAddr,
  LPVOID lpvThreadParam,
  DWORD fdwCreate,
- LPDWORD lpIDThread
-);
+ LPDWORD lpIDThread);
 
 /* DebugActiveProcess  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
-BOOL DebugActiveProcess( 
- DWORD dwProcessId 
-);
+BOOL DebugActiveProcess(DWORD dwProcessId);
 
 /* DeleteCriticalSection  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coremain.lib, coremain.lib] */
-void DeleteCriticalSection(
- LPCRITICAL_SECTION lpCriticalSection
-);
+void DeleteCriticalSection(LPCRITICAL_SECTION lpCriticalSection);
 
 /* DeviceIoControl  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Fsmain.lib, fsmain.lib] */
-BOOL DeviceIoControl(
- HANDLE hDevice,
+BOOL DeviceIoControl(HANDLE hDevice,
  DWORD dwIoControlCode,
  LPVOID lpInBuffer,
  DWORD nInBufferSize,
  LPVOID lpOutBuffer,
  DWORD nOutBufferSize,
  LPDWORD lpBytesReturned,
- LPOVERLAPPED lpOverlapped
-);
+ LPOVERLAPPED lpOverlapped);
 
 /* DllMain  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib] */
-BOOL WINAPI DllMain(
- HANDLE hinstDLL,
+BOOL WINAPI DllMain(HANDLE hinstDLL,
  DWORD dwReason,
- LPVOID lpvReserved
-);
+ LPVOID lpvReserved);
 
 /* EnterCriticalSection  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coremain.lib, coremain.lib] */
-void EnterCriticalSection(
- LPCRITICAL_SECTION lpCriticalSection
-);
+void EnterCriticalSection(LPCRITICAL_SECTION lpCriticalSection);
 
 /* EscapeCommFunction  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
-BOOL EscapeCommFunction(
- HANDLE hFile,
- DWORD dwFunc
-);
+BOOL EscapeCommFunction(HANDLE hFile,
+ DWORD dwFunc);
 
 /* ExitThread  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Coremain.lib, coremain.lib] */
-VOID ExitThread(
- DWORD dwExitCode
-);
+VOID ExitThread(DWORD dwExitCode);
 
 /* FileTimeToLocalFileTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, coremain.lib] */
-BOOL FileTimeToLocalFileTime(
- const FILETIME* lpFileTime,
- LPFILETIME lpLocalFileTime
-);
+BOOL FileTimeToLocalFileTime(const FILETIME* lpFileTime,
+ LPFILETIME lpLocalFileTime);
 
 /* FileTimeToSystemTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coremain.lib, Nkstub.lib] */
-BOOL FileTimeToSystemTime(
- const FILETIME* lpFileTime,
- LPSYSTEMTIME lpSystemTime
-);
+BOOL FileTimeToSystemTime(const FILETIME* lpFileTime,
+ LPSYSTEMTIME lpSystemTime);
 
 /* FindResource  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib; A/W FindResourceA,FindResourceW (CE is W-side)] */
-HRSRC FindResource( 
- HMODULE hModule, 
- LPCWSTR lpName, 
- LPCWSTR lpType 
-);
+HRSRC FindResource(HMODULE hModule,
+ LPCWSTR lpName,
+ LPCWSTR lpType);
 
 /* FlushInstructionCache  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-BOOL FlushInstructionCache(
- HANDLE hProcess,
+BOOL FlushInstructionCache(HANDLE hProcess,
  LPCVOID lpBaseAddress,
- DWORD dwSize
-);
+ DWORD dwSize);
 
 /* FormatMessage  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Fmtmsg.lib, fmtmsg.lib; A/W FormatMessageA,FormatMessageW (CE is W-side)] */
-DWORD FormatMessage(
- DWORD dwFlags, 
- LPCVOID lpSource, 
- DWORD dwMessageId, 
- DWORD dwLanguageId, 
- LPTSTR lpBuffer, 
- DWORD nSize, 
- va_list* Arguments
-);
+DWORD FormatMessage(DWORD dwFlags,
+ LPCVOID lpSource,
+ DWORD dwMessageId,
+ DWORD dwLanguageId,
+ LPTSTR lpBuffer,
+ DWORD nSize,
+ va_list* Arguments);
 
 /* FreeLibrary  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
-BOOL FreeLibrary(
- HMODULE hLibModule
-);
+BOOL FreeLibrary(HMODULE hLibModule);
 
 /* GetCommMask  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
-BOOL GetCommMask(
- HANDLE hFile,
- LPDWORD lpEvtMask
-);
+BOOL GetCommMask(HANDLE hFile,
+ LPDWORD lpEvtMask);
 
 /* GetCommModemStatus  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
-BOOL GetCommModemStatus(
- HANDLE hFile,
- LPDWORD lpModemStat
-);
+BOOL GetCommModemStatus(HANDLE hFile,
+ LPDWORD lpModemStat);
 
 /* GetCommProperties  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
-BOOL GetCommProperties(
- HANDLE hFile,
- LPCOMMPROP lpCommProp
-);
+BOOL GetCommProperties(HANDLE hFile,
+ LPCOMMPROP lpCommProp);
 
 /* GetCommState  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
-BOOL GetCommState(
- HANDLE hFile,
- LPDCB lpDCB
-);
+BOOL GetCommState(HANDLE hFile,
+ LPDCB lpDCB);
 
 /* GetCommTimeouts  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
-BOOL GetCommTimeouts(
- HANDLE hFile,
- LPCOMMTIMEOUTS lpCommTimeouts
-);
+BOOL GetCommTimeouts(HANDLE hFile,
+ LPCOMMTIMEOUTS lpCommTimeouts);
 
 /* GetDiskFreeSpaceEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Fsmain.lib, fsmain.lib; A/W GetDiskFreeSpaceExA,GetDiskFreeSpaceExW (CE is W-side)] */
-BOOL GetDiskFreeSpaceEx( 
- LPCWSTR lpDirectoryName, 
- PULARGE_INTEGER lpFreeBytesAvailableToCaller, 
- PULARGE_INTEGER lpTotalNumberOfBytes, 
- PULARGE_INTEGER lpTotalNumberOfFreeBytes 
-);
+BOOL GetDiskFreeSpaceEx(LPCWSTR lpDirectoryName,
+ PULARGE_INTEGER lpFreeBytesAvailableToCaller,
+ PULARGE_INTEGER lpTotalNumberOfBytes,
+ PULARGE_INTEGER lpTotalNumberOfFreeBytes);
 
 /* GetExitCodeProcess  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
-BOOL GetExitCodeProcess(
- HANDLE hProcess,
- LPDWORD lpExitCode
-);
+BOOL GetExitCodeProcess(HANDLE hProcess,
+ LPDWORD lpExitCode);
 
 /* GetExitCodeThread  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
-BOOL GetExitCodeThread(
- HANDLE hThread,
- LPDWORD lpExitCode
-);
+BOOL GetExitCodeThread(HANDLE hThread,
+ LPDWORD lpExitCode);
 
 /* GetFileAttributes  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib; A/W GetFileAttributesA,GetFileAttributesW (CE is W-side)] */
-DWORD GetFileAttributes(
- LPCTSTR lpFileName 
-);
+DWORD GetFileAttributes(LPCTSTR lpFileName);
 
 /* GetFileInformationByHandle  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-BOOL GetFileInformationByHandle( 
- HANDLE hFile, 
- LPBY_HANDLE_FILE_INFORMATION lpFileInformation
-);
+BOOL GetFileInformationByHandle(HANDLE hFile,
+ LPBY_HANDLE_FILE_INFORMATION lpFileInformation);
 
 /* GetFileSize  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-DWORD GetFileSize( 
- HANDLE hFile, 
- LPDWORD lpFileSizeHigh
-);
+DWORD GetFileSize(HANDLE hFile,
+ LPDWORD lpFileSizeHigh);
 
 /* GetFileTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, fsmain.lib] */
-BOOL GetFileTime(
- HANDLE hFile,
+BOOL GetFileTime(HANDLE hFile,
  LPFILETIME lpCreationTime,
  LPFILETIME lpLastAccessTime,
- LPFILETIME lpLastWriteTime
-);
+ LPFILETIME lpLastWriteTime);
 
 /* GetLastError  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib, Nkstub.lib] */
 DWORD GetLastError(void);
 
 /* GetLocalTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, coremain.lib] */
-void GetLocalTime(
- LPSYSTEMTIME lpSystemTime
-);
+void GetLocalTime(LPSYSTEMTIME lpSystemTime);
 
 /* GetModuleFileName  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib; A/W GetModuleFileNameA,GetModuleFileNameW (CE is W-side)] */
-WINAPI DWORD GetModuleFileName(
- HMODULE hModule,
+WINAPI DWORD GetModuleFileName(HMODULE hModule,
  LPWSTR lpFilename,
- DWORD nSize
-);
+ DWORD nSize);
 
 /* GetModuleHandle  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib; A/W GetModuleHandleA,GetModuleHandleW (CE is W-side)] */
-HMODULE GetModuleHandle(
- LPCTSTR lpModuleName
-);
+HMODULE GetModuleHandle(LPCTSTR lpModuleName);
 
 /* GetProcAddress  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-FARPROC GetProcAddress(
- HMODULE hModule,
- LPCWSTR lpProcName
-);
+FARPROC GetProcAddress(HMODULE hModule,
+ LPCWSTR lpProcName);
 
 /* GetProcessHeap  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Lmem.lib, lmem.lib] */
 HANDLE GetProcessHeap(VOID);
 
 /* GetSystemInfo  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
-VOID GetSystemInfo(
- LPSYSTEM_INFO lpSystemInfo
-);
-
-/* GetSystemPowerStatusEx2  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Getpower.lib, getpower.lib] */
-DWORD GetSystemPowerStatusEx2(
- PSYSTEM_POWER_STATUS_EX2 pSystemPowerStatusEx2,
- DWORD dwLen, 
- BOOL fUpdate
-);
+VOID GetSystemInfo(LPSYSTEM_INFO lpSystemInfo);
 
 /* GetSystemTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, coremain.lib] */
-void GetSystemTime(
- LPSYSTEMTIME lpSystemTime
-);
+void GetSystemTime(LPSYSTEMTIME lpSystemTime);
 
 /* GetThreadPriority  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
-int GetThreadPriority(
- HANDLE hThread
-);
+int GetThreadPriority(HANDLE hThread);
 
 /* GetThreadTimes  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
-BOOL GetThreadTimes (
- HANDLE hThread,
+BOOL GetThreadTimes (HANDLE hThread,
  LPFILETIME lpCreationTime,
  LPFILETIME lpExitTime,
  LPFILETIME lpKernelTime,
- LPFILETIME lpUserTime
-);
+ LPFILETIME lpUserTime);
 
 /* GetTimeZoneInformation  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, coremain.lib] */
-DWORD GetTimeZoneInformation(
- LPTIME_ZONE_INFORMATION lpTimeZoneInformation
-);
+DWORD GetTimeZoneInformation(LPTIME_ZONE_INFORMATION lpTimeZoneInformation);
 
 /* GetVersionEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Coremain.lib, coremain.lib; A/W GetVersionExA,GetVersionExW (CE is W-side)] */
-BOOL GetVersionEx( 
- LPOSVERSIONINFO lpVersionInformation
-);
+BOOL GetVersionEx(LPOSVERSIONINFO lpVersionInformation);
 
 /* GlobalMemoryStatus  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-void GlobalMemoryStatus(
- LPMEMORYSTATUS lpBuffer
-);
+void GlobalMemoryStatus(LPMEMORYSTATUS lpBuffer);
 
 /* HeapAlloc  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, lmem.lib] */
-LPVOID HeapAlloc(
- HANDLE hHeap,
+LPVOID HeapAlloc(HANDLE hHeap,
  DWORD dwFlags,
- DWORD dwBytes
-);
+ DWORD dwBytes);
 
 /* HeapCreate  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Lmem.lib, lmem.lib] */
-HANDLE HeapCreate(
- DWORD flOptions,
+HANDLE HeapCreate(DWORD flOptions,
  DWORD dwInitialSize,
- DWORD dwMaximumSize
-);
+ DWORD dwMaximumSize);
 
 /* HeapDestroy  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, lmem.lib] */
-BOOL HeapDestroy(
- HANDLE hHeap
-);
+BOOL HeapDestroy(HANDLE hHeap);
 
 /* HeapFree  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Lmem.lib, lmem.lib] */
-BOOL HeapFree(
- HANDLE hHeap,
+BOOL HeapFree(HANDLE hHeap,
  DWORD dwFlags,
- LPVOID lpMem 
-);
+ LPVOID lpMem);
 
 /* HeapReAlloc  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Lmem.lib, lmem.lib] */
-LPVOID HeapReAlloc(
- HANDLE hHeap,
+LPVOID HeapReAlloc(HANDLE hHeap,
  DWORD dwFlags,
  LPVOID lpMem,
- DWORD dwBytes
-);
+ DWORD dwBytes);
 
 /* HeapSize  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Lmem.lib, lmem.lib] */
-DWORD HeapSize(
- HANDLE hHeap,
+DWORD HeapSize(HANDLE hHeap,
  DWORD dwFlags,
- LPCVOID lpMem
-);
+ LPCVOID lpMem);
 
 /* InflateRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Rectapi.lib, rectapi.lib] */
-BOOL InflateRect(
- LPRECT lprc, 
- int dx, 
- int dy
-);
+BOOL InflateRect(LPRECT lprc,
+ int dx,
+ int dy);
 
 /* InitializeCriticalSection  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coremain.lib, coremain.lib] */
-void InitializeCriticalSection(
- LPCRITICAL_SECTION lpCriticalSection
-);
+void InitializeCriticalSection(LPCRITICAL_SECTION lpCriticalSection);
 
 /* InterlockedDecrement  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-LONG InterlockedDecrement(
- LPLONG lpAddend
-);
+LONG InterlockedDecrement(LPLONG lpAddend);
 
 /* InterlockedExchange  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-LONG InterlockedExchange(
- LPLONG Target,
- LONG Value
-);
+LONG InterlockedExchange(LPLONG Target,
+ LONG Value);
 
 /* InterlockedIncrement  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-LONG InterlockedIncrement(
- LPLONG lpAddend
-);
+LONG InterlockedIncrement(LPLONG lpAddend);
 
 /* IsBadCodePtr  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Lmem.lib, nk.lib] */
-BOOL IsBadCodePtr(
- FARPROC lpfn
-);
+BOOL IsBadCodePtr(FARPROC lpfn);
 
 /* IsBadReadPtr  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
-BOOL IsBadReadPtr(
- const void* lp,
- UINT ucb
-);
+BOOL IsBadReadPtr(const void* lp,
+ UINT ucb);
 
 /* IsBadWritePtr  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
-BOOL IsBadWritePtr(
- LPVOID lp,
- UINT ucb
-);
+BOOL IsBadWritePtr(LPVOID lp,
+ UINT ucb);
 
 /* IsCharAlpha  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coreloc.lib; A/W IsCharAlphaA,IsCharAlphaW (CE is W-side)] */
 /* Windows CE supports only the Unicode version of this function. */
@@ -1627,9 +1560,7 @@ BOOL IsBadWritePtr(
 /* Windows Embedded CE supports only the Unicode version of this function. */
 /* Windows CE supports only the Unicode version of this function. */
 /* Windows CE Notes Supports only the Unicode version of this function. */
-BOOL IsCharAlpha(
- TCHAR ch
-);
+BOOL IsCharAlpha(TCHAR ch);
 
 /* IsCharAlphaNumeric  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coreloc.lib; A/W IsCharAlphaNumericA,IsCharAlphaNumericW (CE is W-side)] */
 /* Windows CE supports only the Unicode version of this function. */
@@ -1638,9 +1569,7 @@ BOOL IsCharAlpha(
 /* Windows Embedded CE supports only the Unicode version of this function. */
 /* Windows CE supports only the Unicode version of this function. */
 /* Windows CE Notes Supports only the Unicode version of this function. */
-BOOL IsCharAlphaNumeric(
- TCHAR ch
-);
+BOOL IsCharAlphaNumeric(TCHAR ch);
 
 /* IsCharLower  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coreloc.lib; A/W IsCharLowerA,IsCharLowerW (CE is W-side)] */
 /* Windows CE supports only the Unicode version of this function. */
@@ -1649,9 +1578,7 @@ BOOL IsCharAlphaNumeric(
 /* Windows Embedded CE supports only the Unicode version of this function. */
 /* Windows CE supports only the Unicode version of this function. */
 /* Windows CE Notes Supports only the Unicode version of this function. */
-BOOL IsCharLower(
- TCHAR ch
-);
+BOOL IsCharLower(TCHAR ch);
 
 /* IsCharUpper  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coreloc.lib; A/W IsCharUpperA,IsCharUpperW (CE is W-side)] */
 /* Windows CE supports only the Unicode version of this function. */
@@ -1660,121 +1587,80 @@ BOOL IsCharLower(
 /* Windows Embedded CE supports only the Unicode version of this function. */
 /* Windows CE supports only the Unicode version of this function. */
 /* Windows CE Notes Supports only the Unicode version of this function. */
-BOOL IsCharUpper(
- TCHAR ch
-);
+BOOL IsCharUpper(TCHAR ch);
 
 /* KillTimer  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; timer.lib] */
-BOOL KillTimer(
- HWND hWnd, 
- UINT uIDEvent 
-);
+BOOL KillTimer(HWND hWnd,
+ UINT uIDEvent);
 
 /* LeaveCriticalSection  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coremain.lib, coremain.lib] */
-void LeaveCriticalSection(
- LPCRITICAL_SECTION lpCriticalSection
-);
+void LeaveCriticalSection(LPCRITICAL_SECTION lpCriticalSection);
 
 /* LoadFSD  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, device.lib] */
-BOOL LoadFSD(
- HANDLE hDevice, 
- LPCWSTR lpFSDName
-);
+BOOL LoadFSD(HANDLE hDevice,
+ LPCWSTR lpFSDName);
 
 /* LoadLibrary  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib; A/W LoadLibraryA,LoadLibraryW (CE is W-side)] */
-HINSTANCE LoadLibrary(
- LPCTSTR lpLibFileName
-);
+HINSTANCE LoadLibrary(LPCTSTR lpLibFileName);
 
 /* LoadResource  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
-HGLOBAL LoadResource( 
- HMODULE hModule, 
- HRSRC hResInfo 
-);
+HGLOBAL LoadResource(HMODULE hModule,
+ HRSRC hResInfo);
 
 /* LoadString  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Loadstr.lib, loadstr.lib; A/W LoadStringA,LoadStringW (CE is W-side)] */
-int LoadString(
- HINSTANCE hInstance,
+int LoadString(HINSTANCE hInstance,
  UINT uID,
  LPTSTR lpBuffer,
- int cchBufferMax
-);
+ int cchBufferMax);
 
 /* LocalAlloc  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Lmem.lib, lmem.lib] */
-HLOCAL LocalAlloc(
- UINT uFlags,
- UINT uBytes
-);
+HLOCAL LocalAlloc(UINT uFlags,
+ UINT uBytes);
 
 /* LocalFileTimeToFileTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, coremain.lib] */
-BOOL LocalFileTimeToFileTime(
- const FILETIME* lpLocalFileTime,
- LPFILETIME lpFileTime
-);
+BOOL LocalFileTimeToFileTime(const FILETIME* lpLocalFileTime,
+ LPFILETIME lpFileTime);
 
 /* LocalFree  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Lmem.lib, lmem.lib] */
-HLOCAL LocalFree(
- HLOCAL hMem
-);
+HLOCAL LocalFree(HLOCAL hMem);
 
 /* LocalReAlloc  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Lmem.lib, lmem.lib] */
-HLOCAL LocalReAlloc(
- HLOCAL hMem,
+HLOCAL LocalReAlloc(HLOCAL hMem,
  UINT uBytes,
- UINT fuFlags
-);
+ UINT fuFlags);
 
 /* LocalSize  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Lmem.lib, lmem.lib] */
-UINT LocalSize(
- HLOCAL hMem
-);
+UINT LocalSize(HLOCAL hMem);
 
 /* MapViewOfFile  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-LPVOID MapViewOfFile(
- HANDLE hFileMappingObject,
+LPVOID MapViewOfFile(HANDLE hFileMappingObject,
  DWORD dwDesiredAccess,
  DWORD dwFileOffsetHigh,
  DWORD dwFileOffsetLow,
- DWORD dwNumberOfBytesToMap
-);
+ DWORD dwNumberOfBytesToMap);
 
 /* MessageBeep  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Msgbeep.lib, msgbeep.lib] */
 BOOL
- MessageBeep(
- UINT
- uType
- );
+ MessageBeep(UINT
+ uType);
 
 /* MoveFile  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Fsmain.lib, fsmain.lib; A/W MoveFileA,MoveFileW (CE is W-side)] */
-BOOL MoveFile(
- LPCTSTR lpExistingFileName, 
- LPCTSTR lpNewFileName
-);
+BOOL MoveFile(LPCTSTR lpExistingFileName,
+ LPCTSTR lpNewFileName);
 
 /* MsgWaitForMultipleObjects  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Msgque.lib, msgque.lib] */
-DWORD MsgWaitForMultipleObjects(
- DWORD nCount, 
- LPHANDLE pHandles, 
- BOOL fWaitAll, 
- DWORD dwMilliseconds, 
- DWORD dwWakeMask 
-);
+DWORD MsgWaitForMultipleObjects(DWORD nCount,
+ LPHANDLE pHandles,
+ BOOL fWaitAll,
+ DWORD dwMilliseconds,
+ DWORD dwWakeMask);
 
 /* MsgWaitForMultipleObjectsEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Msgque.lib, msgque.lib] */
-DWORD MsgWaitForMultipleObjectsEx(
- DWORD nCount, 
- LPHANDLE pHandles, 
- DWORD dwMilliseconds, 
- DWORD dwWakeMask, 
- DWORD dwFlags 
-);
-
-/* OpenProcess  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, nk.lib] */
-HANDLE OpenProcess(
- DWORD fdwAccess,
- BOOL fInherit,
- DWORD IDProcess
-);
+DWORD MsgWaitForMultipleObjectsEx(DWORD nCount,
+ LPHANDLE pHandles,
+ DWORD dwMilliseconds,
+ DWORD dwWakeMask,
+ DWORD dwFlags);
 
 /* OutputDebugString  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Nk.lib, nk.lib; A/W OutputDebugStringA,OutputDebugStringW (CE is W-side)] */
 /* Windows CE supports only the Unicode version of this function. */
@@ -1783,301 +1669,207 @@ HANDLE OpenProcess(
 /* Windows Embedded CE supports only the Unicode version of this function. */
 /* Windows CE supports only the Unicode version of this function. */
 /* Windows CE Notes Supports only the Unicode version of this function. */
-void OutputDebugString(
- LPCTSTR lpOutputString 
-);
+void OutputDebugString(LPCTSTR lpOutputString);
 
 /* PulseEvent  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-BOOL PulseEvent(
- HANDLE hEvent
-);
+BOOL PulseEvent(HANDLE hEvent);
 
 /* PurgeComm  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
-BOOL PurgeComm(
- HANDLE hFile,
- DWORD dwFlags
-);
+BOOL PurgeComm(HANDLE hFile,
+ DWORD dwFlags);
 
 /* QueryPerformanceCounter  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, nk.lib] */
-BOOL QueryPerformanceCounter(
- LARGE_INTEGER* lpPerformanceCount
-);
+BOOL QueryPerformanceCounter(LARGE_INTEGER* lpPerformanceCount);
 
 /* QueryPerformanceFrequency  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, nk.lib] */
-BOOL QueryPerformanceFrequency(
- LARGE_INTEGER* lpFrequency
-);
+BOOL QueryPerformanceFrequency(LARGE_INTEGER* lpFrequency);
 
 /* RaiseException  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-void RaiseException(
- DWORD dwExceptionCode,
+void RaiseException(DWORD dwExceptionCode,
  DWORD dwExceptionFlags,
  DWORD nNumberOfArguments,
- const DWORD* lpArguments
-);
+ const DWORD* lpArguments);
 
 /* ReadFile  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Fsmain.lib, fsmain.lib] */
-BOOL ReadFile(
- HANDLE hFile,
+BOOL ReadFile(HANDLE hFile,
  LPVOID lpBuffer,
  DWORD nNumberOfBytesToRead,
  LPDWORD lpNumberOfBytesRead,
- LPOVERLAPPED lpOverlapped
-);
+ LPOVERLAPPED lpOverlapped);
 
 /* ReadProcessMemory  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
-BOOL ReadProcessMemory(
- HANDLE hProcess,
+BOOL ReadProcessMemory(HANDLE hProcess,
  LPCVOID lpBaseAddress,
  LPVOID lpBuffer,
  DWORD nSize,
- LPDWORD lpNumberOfBytesRead
-);
+ LPDWORD lpNumberOfBytesRead);
 
 /* ReleaseMutex  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Nk.lib, nk.lib] */
-BOOL ReleaseMutex(
- HANDLE hMutex
-);
+BOOL ReleaseMutex(HANDLE hMutex);
 
 /* RemoveDirectory  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Fsmain.lib, fsmain.lib; A/W RemoveDirectoryA,RemoveDirectoryW (CE is W-side)] */
-BOOL RemoveDirectory(
- LPCTSTR lpPathName
-);
+BOOL RemoveDirectory(LPCTSTR lpPathName);
 
 /* ResumeThread  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, nk.lib] */
-DWORD ResumeThread(
- HANDLE hThread
-);
+DWORD ResumeThread(HANDLE hThread);
 
 /* SetCommBreak  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
-BOOL SetCommBreak(
- HANDLE hFile
-);
+BOOL SetCommBreak(HANDLE hFile);
 
 /* SetCommMask  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
-BOOL SetCommMask(
- HANDLE hFile,
- DWORD dwEvtMask
-);
+BOOL SetCommMask(HANDLE hFile,
+ DWORD dwEvtMask);
 
 /* SetCommState  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
-BOOL SetCommState(
- HANDLE hFile,
- LPDCB lpDCB
-);
+BOOL SetCommState(HANDLE hFile,
+ LPDCB lpDCB);
 
 /* SetCommTimeouts  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
-BOOL SetCommTimeouts(
- HANDLE hFile,
- LPCOMMTIMEOUTS lpCommTimeouts
-);
+BOOL SetCommTimeouts(HANDLE hFile,
+ LPCOMMTIMEOUTS lpCommTimeouts);
 
 /* SetEndOfFile  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Fsmain.lib, fsmain.lib] */
-BOOL SetEndOfFile( 
- HANDLE hFile
-);
+BOOL SetEndOfFile(HANDLE hFile);
 
 /* SetFileAttributes  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib; A/W SetFileAttributesA,SetFileAttributesW (CE is W-side)] */
-BOOL SetFileAttributes(
- LPCTSTR lpFileName, 
- DWORD dwFileAttributes
-);
+BOOL SetFileAttributes(LPCTSTR lpFileName,
+ DWORD dwFileAttributes);
 
 /* SetFilePointer  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Fsmain.lib] */
-DWORD SetFilePointer( 
- HANDLE hFile, 
- LONG lDistanceToMove, 
- PLONG lpDistanceToMoveHigh, 
- DWORD dwMoveMethod
-);
+DWORD SetFilePointer(HANDLE hFile,
+ LONG lDistanceToMove,
+ PLONG lpDistanceToMoveHigh,
+ DWORD dwMoveMethod);
 
 /* SetFileTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, fsmain.lib] */
-BOOL SetFileTime(
- HANDLE hFile,
+BOOL SetFileTime(HANDLE hFile,
  const FILETIME* lpCreationTime,
  const FILETIME* lpLastAccessTime,
- const FILETIME* lpLastWriteTime
-);
+ const FILETIME* lpLastWriteTime);
 
 /* SetLastError  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nkstub.lib] */
-void SetLastError( 
- DWORD dwErrCode
-);
+void SetLastError(DWORD dwErrCode);
 
 /* SetLocalTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, coremain.lib] */
-BOOL SetLocalTime( 
- const SYSTEMTIME* lpSystemTime
-);
+BOOL SetLocalTime(const SYSTEMTIME* lpSystemTime);
 
 /* SetRect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Rectapi.lib, rectapi.lib] */
-BOOL SetRect(
- LPRECT lprc, 
- int xLeft, 
- int yTop, 
- int xRight, 
- int yBottom
-);
+BOOL SetRect(LPRECT lprc,
+ int xLeft,
+ int yTop,
+ int xRight,
+ int yBottom);
 
 /* SetSystemTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Coremain.lib, coremain.lib] */
-BOOL SetSystemTime(
- const SYSTEMTIME* lpSystemTime
-);
+BOOL SetSystemTime(const SYSTEMTIME* lpSystemTime);
 
 /* SetThreadPriority  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
-BOOL SetThreadPriority(
- HANDLE hThread,
- int nPriority
-);
+BOOL SetThreadPriority(HANDLE hThread,
+ int nPriority);
 
 /* SetTimeZoneInformation  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, coremain.lib] */
-BOOL SetTimeZoneInformation(
- const TIME_ZONE_INFORMATION* lpTimeZoneInformation
-);
+BOOL SetTimeZoneInformation(const TIME_ZONE_INFORMATION* lpTimeZoneInformation);
 
 /* SetupComm  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
-BOOL SetupComm(
- HANDLE hFile,
+BOOL SetupComm(HANDLE hFile,
  DWORD dwInQueue,
- DWORD dwOutQueue
-);
+ DWORD dwOutQueue);
 
 /* SizeofResource  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-DWORD SizeofResource(
- HMODULE hModule, 
- HRSRC hResInfo 
-);
+DWORD SizeofResource(HMODULE hModule,
+ HRSRC hResInfo);
 
 /* Sleep  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, nk.lib, Nkstub.lib] */
-void Sleep(
- DWORD dwMilliseconds
-);
+void Sleep(DWORD dwMilliseconds);
 
 /* SuspendThread  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-DWORD SuspendThread(
- HANDLE hThread
-);
+DWORD SuspendThread(HANDLE hThread);
 
 /* SystemTimeToFileTime  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coremain.lib, Nkstub.lib] */
-BOOL SystemTimeToFileTime(
- const SYSTEMTIME* lpSystemTime,
- LPFILETIME lpFileTime
-);
+BOOL SystemTimeToFileTime(const SYSTEMTIME* lpSystemTime,
+ LPFILETIME lpFileTime);
 
 /* TerminateProcess  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, nk.lib] */
-BOOL TerminateProcess(
- HANDLE hProcess,
- DWORD uExitCode
-);
+BOOL TerminateProcess(HANDLE hProcess,
+ DWORD uExitCode);
 
 /* TerminateThread  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, nk.lib] */
-BOOL TerminateThread(
- HANDLE hThread,
- DWORD dwExitCode
-);
+BOOL TerminateThread(HANDLE hThread,
+ DWORD dwExitCode);
 
 /* TimerProc  [function, callback; shared; CE 2.11..2.12, 3.0..399, 5.0..699] */
-void CALLBACK TimerProc(
- HWND hwnd, 
- UINT uMsg, 
- UINT idEvent, 
- DWORD dwTime 
-);
+void CALLBACK TimerProc(HWND hwnd,
+ UINT uMsg,
+ UINT idEvent,
+ DWORD dwTime);
 
 /* TlsFree  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Coremain.lib] */
-BOOL TlsFree(
- DWORD dwTlsIndex
-);
+BOOL TlsFree(DWORD dwTlsIndex);
 
 /* TlsGetValue  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Coremain.lib, coremain.lib] */
-LPVOID TlsGetValue(
- DWORD dwTlsIndex
-);
+LPVOID TlsGetValue(DWORD dwTlsIndex);
 
 /* TlsSetValue  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Coremain.lib, coremain.lib] */
-BOOL TlsSetValue(
- DWORD dwTlsIndex,
- LPVOID lpTlsValue
-);
+BOOL TlsSetValue(DWORD dwTlsIndex,
+ LPVOID lpTlsValue);
 
 /* TransmitCommChar  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
-BOOL TransmitCommChar(
- HANDLE hFile,
- char cChar
-);
+BOOL TransmitCommChar(HANDLE hFile,
+ char cChar);
 
 /* UnmapViewOfFile  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, nk.lib] */
-BOOL UnmapViewOfFile( 
- LPCVOID lpBaseAddress 
-);
+BOOL UnmapViewOfFile(LPCVOID lpBaseAddress);
 
 /* VirtualAlloc  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, nk.lib] */
-LPVOID VirtualAlloc(
- LPVOID lpAddress,
+LPVOID VirtualAlloc(LPVOID lpAddress,
  DWORD dwSize,
  DWORD flAllocationType,
- DWORD flProtect
-);
+ DWORD flProtect);
 
 /* VirtualFree  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, nk.lib] */
-BOOL VirtualFree(
- LPVOID lpAddress,
+BOOL VirtualFree(LPVOID lpAddress,
  DWORD dwSize,
- DWORD dwFreeType
-);
+ DWORD dwFreeType);
 
 /* VirtualProtect  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, nk.lib] */
-BOOL VirtualProtect(
- LPVOID lpAddress,
+BOOL VirtualProtect(LPVOID lpAddress,
  DWORD dwSize,
  DWORD flNewProtect,
- PDWORD lpflOldProtect
-);
+ PDWORD lpflOldProtect);
 
 /* VirtualQuery  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, nk.lib] */
-DWORD VirtualQuery(
- LPCVOID lpAddress,
+DWORD VirtualQuery(LPCVOID lpAddress,
  PMEMORY_BASIC_INFORMATION lpBuffer,
- DWORD dwLength
-);
+ DWORD dwLength);
 
 /* WaitCommEvent  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Serdev.lib, serdev.lib] */
-BOOL WaitCommEvent(
- HANDLE hFile,
+BOOL WaitCommEvent(HANDLE hFile,
  LPDWORD lpEvtMask,
- LPOVERLAPPED lpOverlapped
-);
+ LPOVERLAPPED lpOverlapped);
 
 /* WaitForMultipleObjects  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Nk.lib, nk.lib] */
-DWORD WaitForMultipleObjects(
- DWORD nCount,
+DWORD WaitForMultipleObjects(DWORD nCount,
  CONST HANDLE* lpHandles,
  BOOL fWaitAll,
- DWORD dwMilliseconds
-);
+ DWORD dwMilliseconds);
 
 /* WaitForSingleObject  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-DWORD WaitForSingleObject(
- HANDLE hHandle,
- DWORD dwMilliseconds
-);
+DWORD WaitForSingleObject(HANDLE hHandle,
+ DWORD dwMilliseconds);
 
 /* WriteFile  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Fsmain.lib, fsmain.lib] */
-BOOL WriteFile( 
- HANDLE hFile, 
- LPCVOID lpBuffer, 
- DWORD nNumberOfBytesToWrite, 
- LPDWORD lpNumberOfBytesWritten, 
- LPOVERLAPPED lpOverlapped
-);
+BOOL WriteFile(HANDLE hFile,
+ LPCVOID lpBuffer,
+ DWORD nNumberOfBytesToWrite,
+ LPDWORD lpNumberOfBytesWritten,
+ LPOVERLAPPED lpOverlapped);
 
 /* WriteProcessMemory  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Nk.lib, nk.lib] */
-BOOL WriteProcessMemory(
- HANDLE hProcess,
+BOOL WriteProcessMemory(HANDLE hProcess,
  LPVOID lpBaseAddress,
  LPVOID lpBuffer,
  DWORD nSize,
- LPDWORD lpNumberOfBytesWritten
-);
+ LPDWORD lpNumberOfBytesWritten);
 
 /* wsprintf  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coreloc.lib; A/W wsprintfA,wsprintfW (CE is W-side)] */
 /* Windows CE supports only the Unicode version of wsprintf. */
@@ -2086,11 +1878,9 @@ BOOL WriteProcessMemory(
 /* Windows Embedded CE supports only the Unicode version of wsprintf. */
 /* Windows CE supports only the Unicode version of wsprintf. */
 /* Windows CE Notes Supports only the Unicode version of this function. */
-int wsprintf(
- LPTSTR lpOut,
+int wsprintf(LPTSTR lpOut,
  LPCTSTR lpFmt,
- ...
-);
+ ...);
 
 /* wvsprintf  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coreloc.lib; A/W wvsprintfA,wvsprintfW (CE is W-side)] */
 /* Windows CE supports only the Unicode version of wvsprintf. */
@@ -2099,156 +1889,110 @@ int wsprintf(
 /* Windows Embedded CE supports only the Unicode version of wvsprintf. */
 /* Windows CE supports only the Unicode version of wvsprintf. */
 /* Windows CE Notes Supports only the Unicode version of this function. */
-int wvsprintf(
- LPTSTR lpOutput,
+int wvsprintf(LPTSTR lpOutput,
  LPCTSTR lpFormat,
- va_list ArgList
-);
+ va_list ArgList);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
 
 /* CeReadRecordPropsEx  [function; ce-only; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsdbase.lib, fsdbase.lib, Rapi.lib, rapi.lib] */
-CEOID CeReadRecordPropsEx( 
- HANDLE hDbase, 
+CEOID CeReadRecordPropsEx(HANDLE hDbase,
  DWORD dwFlags,
- LPWORD lpcPropID, 
- CEPROPID* rgPropID, 
+ LPWORD lpcPropID,
+ CEPROPID* rgPropID,
  LPBYTE* lplpBuffer,
- LPDWORD lpcbBuffer, 
- HANDLE hHeap
-);
+ LPDWORD lpcbBuffer,
+ HANDLE hHeap);
 
 /* CloseHandle  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-BOOL CloseHandle(
- HANDLE hObject
-);
+BOOL CloseHandle(HANDLE hObject);
 
 /* CopyFile  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsmain.lib, fsmain.lib; A/W CopyFileA,CopyFileW (CE is W-side)] */
-BOOL CopyFile(
- LPCTSTR lpExistingFileName, 
- LPCTSTR lpNewFileName, 
- BOOL bFailIfExists 
-);
+BOOL CopyFile(LPCTSTR lpExistingFileName,
+ LPCTSTR lpNewFileName,
+ BOOL bFailIfExists);
 
 /* CreateDirectory  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsmain.lib, fsmain.lib; A/W CreateDirectoryA,CreateDirectoryW (CE is W-side)] */
-BOOL CreateDirectory(
- LPCTSTR lpPathName, 
- LPSECURITY_ATTRIBUTES lpSecurityAttributes 
-);
+BOOL CreateDirectory(LPCTSTR lpPathName,
+ LPSECURITY_ATTRIBUTES lpSecurityAttributes);
 
 /* CreateFile  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, fsmain.lib; A/W CreateFileA,CreateFileW (CE is W-side)] */
-HANDLE CreateFile(
- LPCTSTR lpFileName,
+HANDLE CreateFile(LPCTSTR lpFileName,
  DWORD dwDesiredAccess,
  DWORD dwShareMode,
  LPSECURITY_ATTRIBUTES lpSecurityAttributes,
  DWORD dwCreationDisposition,
  DWORD dwFlagsAndAttributes,
- HANDLE hTemplateFile
-);
+ HANDLE hTemplateFile);
 
 /* CreateFileMapping  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib; A/W CreateFileMappingA,CreateFileMappingW (CE is W-side)] */
-HANDLE CreateFileMapping(
- HANDLE hFile,
+HANDLE CreateFileMapping(HANDLE hFile,
  LPSECURITY_ATTRIBUTES lpFileMappingAttributes,
  DWORD flProtect,
  DWORD dwMaximumSizeHigh,
  DWORD dwMaximumSizeLow,
- LPCTSTR lpName 
-);
+ LPCTSTR lpName);
 
 /* DeleteFile  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsmain.lib, fsmain.lib; A/W DeleteFileA,DeleteFileW (CE is W-side)] */
-BOOL DeleteFile(
- LPCTSTR lpFileName
-);
+BOOL DeleteFile(LPCTSTR lpFileName);
 
 /* FindClose  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib] */
-BOOL FindClose(
- HANDLE hFindFile
-);
+BOOL FindClose(HANDLE hFindFile);
 
 /* FindFirstFile  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsmain.lib, fsmain.lib; A/W FindFirstFileA,FindFirstFileW (CE is W-side)] */
-HANDLE FindFirstFile(
- LPCTSTR lpFileName, 
- LPWIN32_FIND_DATA lpFindFileData 
-);
+HANDLE FindFirstFile(LPCTSTR lpFileName,
+ LPWIN32_FIND_DATA lpFindFileData);
 
 /* FindNextFile  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsmain.lib, fsmain.lib; A/W FindNextFileA,FindNextFileW (CE is W-side)] */
-BOOL FindNextFile( 
- HANDLE hFindFile, 
- LPWIN32_FIND_DATA lpFindFileData 
-);
+BOOL FindNextFile(HANDLE hFindFile,
+ LPWIN32_FIND_DATA lpFindFileData);
 
 /* FlushFileBuffers  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Fsmain.lib, fsmain.lib] */
-BOOL WINAPI FlushFileBuffers(
- HANDLE hFile 
-);
+BOOL WINAPI FlushFileBuffers(HANDLE hFile);
 
 /* FlushViewOfFile  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
-BOOL FlushViewOfFile( 
- LPCVOID lpBaseAddress, 
- DWORD dwNumberOfBytesToFlush 
-);
+BOOL FlushViewOfFile(LPCVOID lpBaseAddress,
+ DWORD dwNumberOfBytesToFlush);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* ActivateDevice  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, device.lib] */
-HANDLE ActivateDevice(
- LPCWSTR lpszDevKey, 
- DWORD dwClientInfo
-);
+HANDLE ActivateDevice(LPCWSTR lpszDevKey,
+ DWORD dwClientInfo);
 
 /* CeGetReplChangeMask  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-BOOL CeGetReplChangeMask(
- LPDWORD lpmask
-);
+BOOL CeGetReplChangeMask(LPDWORD lpmask);
 
 /* CeGetThreadPriority  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
-int CeGetThreadPriority(
- HANDLE hThread
-);
+int CeGetThreadPriority(HANDLE hThread);
 
 /* CeGetThreadQuantum  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
-DWORD CeGetThreadQuantum(
- HANDLE hThread
-);
+DWORD CeGetThreadQuantum(HANDLE hThread);
 
 /* CeSetReplChangeMask  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-BOOL CeSetReplChangeMask(
- DWORD mask
-);
+BOOL CeSetReplChangeMask(DWORD mask);
 
 /* CeSetThreadPriority  [function; ce-only; CE 3.0..399, 5.0..699; Nk.lib, nk.lib] */
-BOOL CeSetThreadPriority(
- HANDLE hThread,
- int nPriority
-);
+BOOL CeSetThreadPriority(HANDLE hThread,
+ int nPriority);
 
 /* CeSetThreadQuantum  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
-BOOL CeSetThreadQuantum(
- HANDLE hThread,
- DWORD dwTime
-);
+BOOL CeSetThreadQuantum(HANDLE hThread,
+ DWORD dwTime);
 
 /* CreateSemaphore  [function; shared; CE 3.0..399, 5.0..699; Nk.lib, nk.lib; A/W CreateSemaphoreA,CreateSemaphoreW (CE is W-side)] */
-HANDLE CreateSemaphore(
- LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
+HANDLE CreateSemaphore(LPSECURITY_ATTRIBUTES lpSemaphoreAttributes,
  LONG lInitialCount,
  LONG lMaximumCount,
- LPCTSTR lpName
-);
+ LPCTSTR lpName);
 
 /* DeactivateDevice  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, device.lib] */
-BOOL DeactivateDevice(
- HANDLE hDevice
-);
+BOOL DeactivateDevice(HANDLE hDevice);
 
 /* DisableThreadLibraryCalls  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib] */
-BOOL DisableThreadLibraryCalls(
- HMODULE hLibModule
-);
+BOOL DisableThreadLibraryCalls(HMODULE hLibModule);
 
 /* GetCommandLine  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib; A/W GetCommandLineA,GetCommandLineW (CE is W-side)] */
 /* Windows CE supports only the Unicode version of this function. */
@@ -2258,25 +2002,19 @@ BOOL DisableThreadLibraryCalls(
 LPTSTR GetCommandLine(void);
 
 /* GetFileAttributesEx  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib; A/W GetFileAttributesExA,GetFileAttributesExW (CE is W-side)] */
-BOOL GetFileAttributesEx(
- LPCTSTR lpFileName, 
- GET_FILEEX_INFO_LEVELS fInfoLevelId, 
- LPVOID lpFileInformation 
-);
+BOOL GetFileAttributesEx(LPCTSTR lpFileName,
+ GET_FILEEX_INFO_LEVELS fInfoLevelId,
+ LPVOID lpFileInformation);
 
 /* GetFileVersionInfo  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib; A/W GetFileVersionInfoA,GetFileVersionInfoW (CE is W-side)] */
-BOOL GetFileVersionInfo(
- LPTSTR lptstrFilename,
+BOOL GetFileVersionInfo(LPTSTR lptstrFilename,
  DWORD dwHandle,
  DWORD dwLen,
- LPVOID lpData
-);
+ LPVOID lpData);
 
 /* GetFileVersionInfoSize  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib; A/W GetFileVersionInfoSizeA,GetFileVersionInfoSizeW (CE is W-side)] */
-DWORD GetFileVersionInfoSize(
- LPTSTR lptstrFilename,
- LPDWORD lpdwHandle
-);
+DWORD GetFileVersionInfoSize(LPTSTR lptstrFilename,
+ LPDWORD lpdwHandle);
 
 /* GetIdleTime  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
 DWORD GetIdleTime (void);
@@ -2285,408 +2023,294 @@ DWORD GetIdleTime (void);
 BOOL GetPasswordActive(void);
 
 /* GetTempFileName  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib; A/W GetTempFileNameA,GetTempFileNameW (CE is W-side)] */
-UINT GetTempFileName(
- LPCTSTR lpPathName, 
- LPCTSTR lpPrefixString, 
- UINT uUnique, 
- LPTSTR lpTempFileName
-);
+UINT GetTempFileName(LPCTSTR lpPathName,
+ LPCTSTR lpPrefixString,
+ UINT uUnique,
+ LPTSTR lpTempFileName);
 
 /* GetTempPath  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib; A/W GetTempPathA,GetTempPathW (CE is W-side)] */
-DWORD GetTempPath(
- DWORD ccBuffer, 
- LPTSTR lpszBuffer
-);
+DWORD GetTempPath(DWORD ccBuffer,
+ LPTSTR lpszBuffer);
 
 /* LoadFSDEx  [function; ce-only; CE 3.0..399, 5.0..699; Device.lib, device.lib] */
-BOOL LoadFSDEx(
- HANDLE hDevice, 
- LPCWSTR lpFSDName, 
- DWORD dwFlag
-);
+BOOL LoadFSDEx(HANDLE hDevice,
+ LPCWSTR lpFSDName,
+ DWORD dwFlag);
 
 /* LoadLibraryEx  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Nk.lib, nk.lib; A/W LoadLibraryExA,LoadLibraryExW (CE is W-side)] */
-HMODULE LoadLibraryEx(
- LPCTSTR lpLibFileName,
+HMODULE LoadLibraryEx(LPCTSTR lpLibFileName,
  HANDLE hFile,
- DWORD dwFlags
-);
+ DWORD dwFlags);
 
 /* ReleaseSemaphore  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-BOOL ReleaseSemaphore(
- HANDLE hSemaphore,
+BOOL ReleaseSemaphore(HANDLE hSemaphore,
  LONG lReleaseCount,
- LPLONG lpPreviousCount
-);
+ LPLONG lpPreviousCount);
 
 /* SetPassword  [function; ce-only; CE 3.0..399, 5.0..699; fspass.lib] */
-BOOL SetPassword(
- LPWSTR lpszOldPassword, 
- LPWSTR lpszNewPassword 
-);
+BOOL SetPassword(LPWSTR lpszOldPassword,
+ LPWSTR lpszNewPassword);
 
 /* SetPasswordActive  [function; ce-only; CE 3.0..399, 5.0..699; fspass.lib] */
-BOOL SetPasswordActive(
- BOOL bActive, 
- LPWSTR lpszPassword 
-);
+BOOL SetPasswordActive(BOOL bActive,
+ LPWSTR lpszPassword);
 
 /* SignalStarted  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-VOID SignalStarted(
- DWORD dw
-);
+VOID SignalStarted(DWORD dw);
 
 /* TryEnterCriticalSection  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-BOOL TryEnterCriticalSection(
- LPCRITICAL_SECTION lpCriticalSection
-);
+BOOL TryEnterCriticalSection(LPCRITICAL_SECTION lpCriticalSection);
 
 /* VerQueryValue  [function; shared; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib; A/W VerQueryValueA,VerQueryValueW (CE is W-side)] */
-BOOL VerQueryValue(
- const LPVOID pBlock,
+BOOL VerQueryValue(const LPVOID pBlock,
  LPTSTR lpSubBlock,
  LPVOID* lplpBuffer,
- PUINT puLen
-);
+ PUINT puLen);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
 
 /* CeResyncFilesys  [function; ce-only; CE 3.0..699; Device.lib, device.lib] */
-BOOL CeResyncFilesys(
- HANDLE hDevice
-);
+BOOL CeResyncFilesys(HANDLE hDevice);
 
 /* FindFirstFileEx  [function; shared; CE 3.0..699; Coredll.lib, coredll.lib, Fsmain.lib, fsmain.lib; A/W FindFirstFileExA,FindFirstFileExW (CE is W-side)] */
-HANDLE FindFirstFileEx(
- LPCTSTR lpFileName, 
- FINDEX_INFO_LEVELS fInfoLevelId, 
- LPVOID lpFindFileData, 
- FINDEX_SEARCH_OPS fSearchOp, 
- LPVOID lpSearchFilter, 
- DWORD dwAdditionalFlags 
-);
+HANDLE FindFirstFileEx(LPCTSTR lpFileName,
+ FINDEX_INFO_LEVELS fInfoLevelId,
+ LPVOID lpFindFileData,
+ FINDEX_SEARCH_OPS fSearchOp,
+ LPVOID lpSearchFilter,
+ DWORD dwAdditionalFlags);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* CeGenRandom  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-BOOL CeGenRandom(
- DWORD dwLen, 
- BYTE* pbBuffer 
-);
+BOOL CeGenRandom(DWORD dwLen,
+ BYTE* pbBuffer);
 
 /* CeGetFileNotificationInfo  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-BOOL CeGetFileNotificationInfo(
- HANDLE h,
+BOOL CeGetFileNotificationInfo(HANDLE h,
  DWORD dwFlags,
  LPVOID lpBuffer,
  DWORD nBufferLength,
  LPDWORD lpBytesReturned,
- LPDWORD lpBytesAvailable
-);
+ LPDWORD lpBytesAvailable);
 
 /* FindCloseChangeNotification  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib] */
-BOOL FindCloseChangeNotification(
- HANDLE hChangeHandle
-);
+BOOL FindCloseChangeNotification(HANDLE hChangeHandle);
 
 /* FindFirstChangeNotification  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib; A/W FindFirstChangeNotificationA,FindFirstChangeNotificationW (CE is W-side)] */
-HANDLE FindFirstChangeNotification(
- LPCTSTR lpPathName,
+HANDLE FindFirstChangeNotification(LPCTSTR lpPathName,
  BOOL bWatchSubtree,
- DWORD dwNotifyFilter
-);
+ DWORD dwNotifyFilter);
 
 /* FindNextChangeNotification  [function; shared; CE 4.0..699; Coredll.lib, coredll.lib] */
-BOOL FindNextChangeNotification(
- HANDLE hChangeHandle
-);
+BOOL FindNextChangeNotification(HANDLE hChangeHandle);
 
 /* SetUserData  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-BOOL SetUserData( 
- LPBYTE lpbUserData, 
- DWORD dwDataSize 
-);
+BOOL SetUserData(LPBYTE lpbUserData,
+ DWORD dwDataSize);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* ActivateDeviceEx  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-HANDLE ActivateDeviceEx(
- LPCWSTR lpszDevKey, 
- LPCVOID lpRegEnts, 
- DWORD cRegEnts, 
- LPVOID lpvParam
-);
+HANDLE ActivateDeviceEx(LPCWSTR lpszDevKey,
+ LPCVOID lpRegEnts,
+ DWORD cRegEnts,
+ LPVOID lpvParam);
 
 /* CeFsIoControl  [function; ce-only; CE 5.0..699; Device.lib] */
-BOOL CeFsIoControl(
- LPCWSTR pszDir,
+BOOL CeFsIoControl(LPCWSTR pszDir,
  DWORD dwIoControlCode,
  LPVOID lpInBuffer,
  DWORD nInBufferSize,
  LPVOID lpOutBuffer,
  DWORD nOutBufferSize,
  LPDWORD lpBytesReturned,
- LPOVERLAPPED lpOverlapped
-);
+ LPOVERLAPPED lpOverlapped);
 
 /* CeGetCanonicalPathName  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-DWORD CeGetCanonicalPathName(
- LPCWSTR lpPathName, 
+DWORD CeGetCanonicalPathName(LPCWSTR lpPathName,
  LPWSTR lpCanonicalPathName,
  DWORD cchCanonicalPathName,
- DWORD dwReserved
-);
+ DWORD dwReserved);
 
 /* CeZeroPointer  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-LPVOID CeZeroPointer(
- LPVOID ptr
-);
+LPVOID CeZeroPointer(LPVOID ptr);
 
 /* ConvertThreadToFiber  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-LPVOID WINAPI ConvertThreadToFiber(
- LPVOID lpParameter
-);
+LPVOID WINAPI ConvertThreadToFiber(LPVOID lpParameter);
 
 /* DeleteFiber  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-VOID WINAPI DeleteFiber(
- LPVOID lpFiber
-);
+VOID WINAPI DeleteFiber(LPVOID lpFiber);
 
 /* DuplicateHandle  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
-BOOL DuplicateHandle(
- HANDLE hSourceProcessHandle,
+BOOL DuplicateHandle(HANDLE hSourceProcessHandle,
  HANDLE hSourceHandle,
  HANDLE hTargetProcessHandle,
  LPHANDLE lpTargetHandle,
  DWORD dwDesiredAccess,
  BOOL bInheritHandle,
- DWORD dwOptions
-);
+ DWORD dwOptions);
 
 /* FreeLibraryAndExitThread  [function; shared; CE 5.0..699; Coredll.dll, coredll.dll] */
-VOID FreeLibraryAndExitThread(
- HMODULE hModule,
- DWORD dwExitCode
-);
+VOID FreeLibraryAndExitThread(HMODULE hModule,
+ DWORD dwExitCode);
 
 /* GetCurrentFiber  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 LPVOID GetCurrentFiber(void);
 
 /* GetCurrentFT  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-void GetCurrentFT(
- LPFILETIME lpFileTime
-);
+void GetCurrentFT(LPFILETIME lpFileTime);
 
 /* GetDllVersion  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-DWORD GetDllVersion(
- HMODULE hMod
-);
+DWORD GetDllVersion(HMODULE hMod);
 
 /* GetFiberData  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
 LPVOID WINAPI GetFiberData(void);
 
 /* GetProcessVersion  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-DWORD GetProcessVersion(
- DWORD ProcessId
-);
+DWORD GetProcessVersion(DWORD ProcessId);
 
 /* HeapCompact  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-UINT HeapCompact(
- HANDLE hHeap,
- DWORD dwFlags
-);
+UINT HeapCompact(HANDLE hHeap,
+ DWORD dwFlags);
 
 /* HeapValidate  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL HeapValidate(
- HANDLE hHeap,
+BOOL HeapValidate(HANDLE hHeap,
  DWORD dwFlags,
- LPCVOID lpMem 
-);
+ LPCVOID lpMem);
 
 /* InterlockedCompareExchange  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
-LONG InterlockedCompareExchange(
- LPLONG Destination,
+LONG InterlockedCompareExchange(LPLONG Destination,
  LONG Exchange,
- LONG Comperand
-);
+ LONG Comperand);
 
 /* InterlockedCompareExchangePointer  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-PVOID InterlockedCompareExchangePointer(
- PVOID* Destination,
+PVOID InterlockedCompareExchangePointer(PVOID* Destination,
  PVOID ExChange,
- PVOID Comperand
-);
+ PVOID Comperand);
 
 /* InterlockedExchangeAdd  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
-LONG InterlockedExchangeAdd(
- LPLONG Addend,
- LONG Increment
-);
+LONG InterlockedExchangeAdd(LPLONG Addend,
+ LONG Increment);
 
 /* InterlockedExchangePointer  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-PVOID InterlockedExchangePointer(
- PVOID* Target,
- PVOID Value
-);
+PVOID InterlockedExchangePointer(PVOID* Target,
+ PVOID Value);
 
 /* IsProcessorFeaturePresent  [function; shared; CE 5.0..699; Coredll.dll, OEMMain.lib, OEMMain_StaticKITL.lib] */
-BOOL IsProcessorFeaturePresent(
- DWORD dwProcessorFeature
-);
+BOOL IsProcessorFeaturePresent(DWORD dwProcessorFeature);
 
 /* LockFileEx  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL LockFileEx(
- HANDLE hFile, 
+BOOL LockFileEx(HANDLE hFile,
  DWORD dwFlags,
  DWORD dwReserved,
  DWORD nNumberOfBytesToLockLow,
  DWORD nNumberOfBytesToLockHigh,
- LPOVERLAPPED lpOverlapped
-);
+ LPOVERLAPPED lpOverlapped);
 
 /* LockResource  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib, Nk.lib] */
-LPVOID LockResource(
- HGLOBAL hResData 
-);
+LPVOID LockResource(HGLOBAL hResData);
 
 /* OpenEvent  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; A/W OpenEventA,OpenEventW (CE is W-side)] */
-HANDLE OpenEvent(
- DWORD dwDesiredAccess,
+HANDLE OpenEvent(DWORD dwDesiredAccess,
  BOOL bInheritHandle,
- LPCTSTR lpName
-);
+ LPCTSTR lpName);
 
 /* QueryInstructionSet  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL QueryInstructionSet(
- DWORD dwInstructionSet,
- LPDWORD lpdwCurrentInstructionSet
-);
+BOOL QueryInstructionSet(DWORD dwInstructionSet,
+ LPDWORD lpdwCurrentInstructionSet);
 
 /* ResourceCreateList  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL ResourceCreateList(
- DWORD dwResId, 
- DWORD dwMinimum, 
- DWORD dwCount
-);
+BOOL ResourceCreateList(DWORD dwResId,
+ DWORD dwMinimum,
+ DWORD dwCount);
 
 /* ResourceDestroyList  [function; ce-only; CE 5.0..699] */
-BOOL ResourceDestroyList (
- DWORD dwResId
-);
+BOOL ResourceDestroyList (DWORD dwResId);
 
 /* ResourceMarkAsShareable  [function; ce-only; CE 5.0..699] */
-BOOL ResourceMarkAsShareable(
- DWORD dwResId,
+BOOL ResourceMarkAsShareable(DWORD dwResId,
  DWORD dwId,
  DWORD dwLen,
- BOOL fShareable
-);
+ BOOL fShareable);
 
 /* ResourceRelease  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL ResourceRelease(
- DWORD dwResId, 
- DWORD dwBase, 
- DWORD dwLen
-);
+BOOL ResourceRelease(DWORD dwResId,
+ DWORD dwBase,
+ DWORD dwLen);
 
 /* ResourceRequest  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL ResourceRequest(
- DWORD dwResId, 
- DWORD dwBase, 
- DWORD dwLen
-);
+BOOL ResourceRequest(DWORD dwResId,
+ DWORD dwBase,
+ DWORD dwLen);
 
 /* ResourceRequestEx  [function; ce-only; CE 5.0..699] */
-BOOL ResourceRequestEx (
- DWORD dwResId,
+BOOL ResourceRequestEx (DWORD dwResId,
  DWORD dwId,
  DWORD dwLen,
- DWORD dwFlags
-);
+ DWORD dwFlags);
 
 /* StopDeviceNotifications  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL StopDeviceNotifications(
- HANDLE h
-);
+BOOL StopDeviceNotifications(HANDLE h);
 
 /* SwitchToFiber  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-VOID WINAPI SwitchToFiber(
- LPVOID lpFiber
-);
+VOID WINAPI SwitchToFiber(LPVOID lpFiber);
 
 /* UnlockFileEx  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL UnlockFileEx(
- HANDLE hFile, 
+BOOL UnlockFileEx(HANDLE hFile,
  DWORD dwReserved,
  DWORD nNumberOfBytesToLockLow,
  DWORD nNumberOfBytesToLockHigh,
- LPOVERLAPPED lpOverlapped
-);
+ LPOVERLAPPED lpOverlapped);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* DebugActiveProcessStop  [function; shared; CE 6.0..699; coredll.lib] */
-BOOL DebugActiveProcessStop (
- DWORD dwProcessId
-);
+BOOL DebugActiveProcessStop (DWORD dwProcessId);
 
 /* GetSystemTimeAsFileTime  [function; shared; CE 6.0..699; coredll.lib] */
-void GetSystemTimeAsFileTime(
- LPFILETIME lpSystemTimeAsFileTime
-);
+void GetSystemTimeAsFileTime(LPFILETIME lpSystemTimeAsFileTime);
 
 /* IsDebuggerPresent  [function; shared; CE 6.0..699; coredll.lib] */
 BOOL IsDebuggerPresent (void);
 
 /* OpenThread  [function; shared; CE 6.0..699; coredll.lib] */
-HANDLE OpenThread(
- DWORD dwDesiredAccess,
+HANDLE OpenThread(DWORD dwDesiredAccess,
  BOOL bInheritHandle,
- DWORD dwThreadId
-);
+ DWORD dwThreadId);
 
 /* RemoveVectoredExceptionHandler  [function; shared; CE 6.0..699; coredll.lib] */
-ULONG RemoveVectoredExceptionHandler(
- PVOID VectoredHandlerHandle
-);
+ULONG RemoveVectoredExceptionHandler(PVOID VectoredHandlerHandle);
 
 /* VirtualAllocEx  [function; shared; CE 6.0..699; coredll.lib] */
-LPVOID VirtualAllocEx(
- HANDLE hProcess,
+LPVOID VirtualAllocEx(HANDLE hProcess,
  LPVOID lpAddress,
  DWORD dwSize,
  DWORD flAllocationType,
- DWORD flProtect
-);
+ DWORD flProtect);
 
 /* VirtualFreeEx  [function; shared; CE 6.0..699; coredll.lib] */
-BOOL VirtualFreeEx(
- HANDLE hProcess,
+BOOL VirtualFreeEx(HANDLE hProcess,
  LPVOID lpAddress,
  DWORD dwSize,
- DWORD dwFreeType
-);
+ DWORD dwFreeType);
 
 /* VirtualProtectEx  [function; shared; CE 6.0..699; coredll.lib] */
-BOOL VirtualProtectEx(
- HANDLE hProcess,
+BOOL VirtualProtectEx(HANDLE hProcess,
  LPVOID lpAddress,
  DWORD dwSize,
  DWORD flNewProtect,
- PDWORD lpflOldProtect
-);
+ PDWORD lpflOldProtect);
 
 /* VirtualQueryEx  [function; shared; CE 6.0..699; coredll.lib] */
-DWORD VirtualQueryEx(
- HANDLE hProcess,
+DWORD VirtualQueryEx(HANDLE hProcess,
  LPCVOID lpAddress,
  PMEMORY_BASIC_INFORMATION lpBuffer,
- DWORD dwLength
-);
+ DWORD dwLength);
 #endif /* _WIN32_WCE */
 
 #endif /* _WINBASE_ */

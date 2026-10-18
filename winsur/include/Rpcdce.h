@@ -86,6 +86,8 @@
  * ================================================================ */
 
 /* SEC_WINNT_AUTH_IDENTITY  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__SEC_WINNT_AUTH_IDENTITY
+#define __WINCE_DEFINED__SEC_WINNT_AUTH_IDENTITY
 typedef struct _SEC_WINNT_AUTH_IDENTITY {
  unsigned short _RPC_FAR* User;
  unsigned long UserLength;
@@ -95,5 +97,6 @@ typedef struct _SEC_WINNT_AUTH_IDENTITY {
  unsigned long PasswordLength;
  unsigned long Flags;
 } SEC_WINNT_AUTH_IDENTITY, *PSEC_WINNT_AUTH_IDENTITY;
+#endif /* __WINCE_DEFINED__SEC_WINNT_AUTH_IDENTITY */
 
 #endif /* _RPCDCE_ */

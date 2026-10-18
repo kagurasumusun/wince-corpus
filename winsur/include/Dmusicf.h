@@ -18,11 +18,17 @@
  * ================================================================ */
 
 /* DMUS_MUTE_PARAM  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__DMUS_MUTE_PARAM
+#define __WINCE_DEFINED__DMUS_MUTE_PARAM
 typedef struct _DMUS_MUTE_PARAM {
  DWORD dwPChannel;
  DWORD dwPChannelMap;
  BOOL fMute;
  } DMUS_MUTE_PARAM;
+#endif /* __WINCE_DEFINED__DMUS_MUTE_PARAM */
+#ifndef __WINCE_DEFINED_PDMUS_MUTE_PARAM
+#define __WINCE_DEFINED_PDMUS_MUTE_PARAM
 typedef DMUS_MUTE_PARAM *PDMUS_MUTE_PARAM, *LPDMUS_MUTE_PARAM;
+#endif /* __WINCE_DEFINED_PDMUS_MUTE_PARAM */
 
 #endif /* _DMUSICF_ */

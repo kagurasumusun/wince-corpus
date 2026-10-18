@@ -18,6 +18,8 @@
  * ================================================================ */
 
 /* FILECHANGEINFO  [struct; ce-only; ceshell.lib] */
+#ifndef __WINCE_DEFINED__FILECHANGEINFO
+#define __WINCE_DEFINED__FILECHANGEINFO
 struct _FILECHANGEINFO {
  DWORD cbSize;
  LONG wEventId;
@@ -28,5 +30,6 @@ struct _FILECHANGEINFO {
  FILETIME ftModified;
  ULONG nFileSize;
 } FILECHANGEINFO, *LPFILECHANGEINFO;
+#endif /* __WINCE_DEFINED__FILECHANGEINFO */
 
 #endif /* _EXTFILE_ */

@@ -24,6 +24,7 @@
  * ================================================================ */
 
 /* CFileStatus  [struct; ce-only] */
+#ifdef __cplusplus
 struct CFileStatus
 {
 CTime m_ctime;
@@ -33,6 +34,7 @@ LONG m_size;
 BYTE m_attribute;
 TCHAR m_szFullName[_MAX_PATH];
 };
+#endif /* __cplusplus */
 
 /* _MAX_PATH  [extra struct] */
 #ifdef __cplusplus

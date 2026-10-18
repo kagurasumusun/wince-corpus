@@ -25,6 +25,25 @@
 #include <stdarg.h>
 /* stdbool.h is ISO C99 (bool printed by some pages). */
 #include <stdbool.h>
+/* stdio.h is ISO C (FILE used by some page prototypes). */
+#include <stdio.h>
+/* MFC/ATL message-map keywords some pages print bare. */
+#ifndef afx_msg
+#define afx_msg
+#endif
+/* OLE calling conventions some pages print bare. */
+#ifndef WINOLEAPI
+#define WINOLEAPI HRESULT STDMETHODCALLTYPE
+#endif
+#ifndef WINOLEAUTAPI
+#define WINOLEAUTAPI HRESULT STDMETHODCALLTYPE
+#endif
+#ifndef ATLAPI
+#define ATLAPI HRESULT STDMETHODCALLTYPE
+#endif
+#ifndef interface
+#define interface struct
+#endif
 #ifndef CONST
 #define CONST const
 #endif
@@ -737,6 +756,26 @@ typedef HICON HCURSOR;
  * these (DERIVED, not quoted; data/derived-forward-
  * types.tsv)
  * ================================================================ */
+/* DERIVED forward -- derived typedef: fundamental name no corpus page prints in a filed block */
+typedef void VOID;
+/* DERIVED forward -- derived typedef: OLE character; the pages print BSTR/LPOLESTR in terms of it */
+typedef WCHAR OLECHAR;
+/* DERIVED forward -- derived typedef: OLE string handle */
+typedef OLECHAR *BSTR;
+/* DERIVED forward -- derived typedef: OLE color */
+typedef DWORD OLE_COLOR;
+/* DERIVED forward -- derived typedef: OLE handle */
+typedef DWORD_PTR OLE_HANDLE;
+/* DERIVED forward -- derived typedef: OLE date */
+typedef double DATE;
+/* DERIVED forward -- derived typedef: media time */
+typedef double REFTIME;
+/* DERIVED forward -- derived typedef: OLE boolean */
+typedef short VARIANT_BOOL;
+/* DERIVED forward -- derived typedef: OLE status code */
+typedef LONG SCODE;
+/* DERIVED forward -- derived forward: tree-view handle; no corpus page prints the node struct */
+typedef void *HTREEITEM;
 /* DERIVED forward -- derived forward: CommCtrl handle; no corpus page prints the struct body */
 typedef struct _HIMAGELIST *HIMAGELIST;
 /* DERIVED forward -- derived forward: LP- pointer typedef; no corpus page prints the struct body */
@@ -757,6 +796,18 @@ typedef const struct _GUID *REFIiD;
 typedef int TunerInputType;
 /* DERIVED forward -- derived placeholder: enumeration body no corpus page prints */
 typedef int AMTunerModeType;
+/* DERIVED forward -- derived placeholder: enumeration body no corpus page prints */
+typedef int ADDRESS_TYPE;
+/* DERIVED forward -- derived placeholder: enumeration body no corpus page prints */
+typedef int ELEMENT_TAG_ID;
+/* DERIVED forward -- derived placeholder: enumeration body no corpus page prints */
+typedef int ControlCloseStatus;
+/* DERIVED forward -- derived placeholder: enumeration body no corpus page prints */
+typedef int ExtendedDisconnectReasonCode;
+/* DERIVED forward -- derived placeholder: enumeration body no corpus page prints */
+typedef int DVD_POS_CODE;
+/* DERIVED forward -- derived placeholder: enumeration body no corpus page prints */
+typedef int DVD_PROVIDER_ID;
 /* DERIVED forward -- derived forward: no corpus page prints the struct body */
 typedef struct DMO_MEDIA_TYPE DMO_MEDIA_TYPE;
 /* DERIVED forward -- derived forward: no corpus page prints the struct body */
@@ -766,35 +817,61 @@ typedef struct DMUS_NOTIFICATION_PMSG DMUS_NOTIFICATION_PMSG;
 /* DERIVED forward -- derived forward: no corpus page prints the struct body */
 typedef struct DMO_OUTPUT_DATA_BUFFER DMO_OUTPUT_DATA_BUFFER;
 /* DERIVED forward -- derived forward: no corpus page prints the struct body */
-typedef struct AM_MEDIA_TYPE AM_MEDIA_TYPE;
-/* DERIVED forward -- derived forward: outline only; no corpus page prints the struct body */
-typedef struct BITMAP BITMAP;
-/* DERIVED forward -- derived forward: outline only; no corpus page prints the struct body */
-typedef struct LOGBRUSH LOGBRUSH;
-/* DERIVED forward -- derived forward: outline only; no corpus page prints the struct body */
-typedef struct LOGFONT LOGFONT;
-/* DERIVED forward -- derived forward: outline only; no corpus page prints the struct body */
-typedef struct LOGPEN LOGPEN;
-/* DERIVED forward -- derived forward: outline only; no corpus page prints the struct body */
-typedef struct MSG MSG;
-/* DERIVED forward -- derived forward: outline only; no corpus page prints the struct body */
-typedef struct CY CY;
-/* DERIVED forward -- derived forward: no corpus page prints the struct body */
 typedef struct CEL_INT_DATA CEL_INT_DATA;
-/* DERIVED forward -- derived forward: no corpus page prints the type body */
-typedef struct ControlCloseStatus ControlCloseStatus;
 /* DERIVED forward -- derived forward: no corpus page prints the struct body */
 typedef struct DVDUserGOPData DVDUserGOPData;
 /* DERIVED forward -- derived forward: no corpus page prints the struct body */
 typedef struct DVD_AUDIO_STREAM_ATTR DVD_AUDIO_STREAM_ATTR;
 /* DERIVED forward -- derived forward: no corpus page prints the struct body */
 typedef struct DVD_ISRC DVD_ISRC;
-/* DERIVED forward -- derived forward: no corpus page prints the type body */
-typedef struct DVD_POS_CODE DVD_POS_CODE;
-/* DERIVED forward -- derived forward: no corpus page prints the type body */
-typedef struct DVD_PROVIDER_ID DVD_PROVIDER_ID;
-/* DERIVED forward -- derived forward: no corpus page prints the type body */
-typedef struct ExtendedDisconnectReasonCode ExtendedDisconnectReasonCode;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IUnknown IUnknown;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IDispatch IDispatch;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IStorage IStorage;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IStream IStream;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IMoniker IMoniker;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IOleClientSite IOleClientSite;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IOleAdviseHolder IOleAdviseHolder;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IPersistStorage IPersistStorage;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct ILockBytes ILockBytes;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IEnumVARIANT IEnumVARIANT;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IMarkupPointer IMarkupPointer;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IMarkupContainer IMarkupContainer;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IDisplayPointer IDisplayPointer;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IHTMLElement IHTMLElement;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IHTMLEventObj IHTMLEventObj;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IXMLDOMElement IXMLDOMElement;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IXMLDOMNode IXMLDOMNode;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IWSDXMLContext IWSDXMLContext;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IRTCCollection IRTCCollection;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct ITravelLogEntry ITravelLogEntry;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IWMPMedia IWMPMedia;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IeXdi2EnumCpuRegs IeXdi2EnumCpuRegs;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct ICity ICity;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IFontDisp IFontDisp;
 /* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
 typedef struct IDirectMusicBand IDirectMusicBand;
 /* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
@@ -813,6 +890,8 @@ typedef struct IbaseFilter IbaseFilter;
 typedef struct NodeDataUnion NodeDataUnion;
 /* DERIVED forward -- derived forward: no corpus page prints the union body */
 typedef struct SdpQueryUuidUnion SdpQueryUuidUnion;
+/* DERIVED forward -- derived forward: no corpus page prints the struct body */
+typedef struct PTM_FIELD_DESC PTM_FIELD_DESC;
 /* DERIVED forward -- derived forward: no corpus page prints the type body */
 typedef struct PCONFINFO PCONFINFO;
 /* DERIVED forward -- derived forward: no corpus page prints the type body */
@@ -823,6 +902,26 @@ typedef struct POBJTYPEINFO POBJTYPEINFO;
 typedef struct POBJUIDATA POBJUIDATA;
 /* DERIVED forward -- derived forward: ATL map entry; body no corpus page prints */
 typedef struct _ATL_INTMAP_ENTRY _ATL_INTMAP_ENTRY;
+/* DERIVED forward -- derived forward: OLE variant; body no corpus page prints in one filed block */
+typedef struct VARIANT VARIANT;
+/* DERIVED forward -- derived typedef: OLE wide string */
+typedef OLECHAR *LPOLESTR;
+/* DERIVED forward -- derived typedef: const OLE wide string */
+typedef const OLECHAR *LPCOLESTR;
+/* DERIVED forward -- derived forward: GUID struct body not filed from any one page */
+typedef struct _GUID GUID;
+/* DERIVED forward -- derived typedef: class id */
+typedef GUID CLSID;
+/* DERIVED forward -- derived typedef: interface id */
+typedef GUID IID;
+/* DERIVED forward -- derived forward: OLE decimal; body no corpus page prints in one filed block */
+typedef struct DECIMAL DECIMAL;
+/* DERIVED forward -- derived forward: OLE window handle */
+typedef void *OAHWND;
+/* DERIVED forward -- derived forward: USB handle */
+typedef void *USB_HANDLE;
+/* DERIVED forward -- derived forward: USB transfer handle */
+typedef void *USB_TRANSFER;
 
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
@@ -837,11 +936,11 @@ typedef struct _ATL_INTMAP_ENTRY _ATL_INTMAP_ENTRY;
 /* LOWORD  [macro; shared] */
 
 /* MAKELONG  [macro; shared] */
-#define MAKELONG(a, b) \ 
+#define MAKELONG(a, b) \
  ((LONG) (((WORD) (a)) | ((DWORD) ((WORD) (b))) << 16));
 
 /* MAKEWORD  [macro; shared] */
-#define MAKEWORD(a, b) \ 
+#define MAKEWORD(a, b) \
  ((WORD) (((BYTE) (a)) | ((WORD) ((BYTE) (b))) << 8));
 
 /* ==================================================================
@@ -851,42 +950,69 @@ typedef struct _ATL_INTMAP_ENTRY _ATL_INTMAP_ENTRY;
  * ================================================================ */
 
 /* POINT  [struct, function, library; shared] */
+#ifndef __WINCE_DEFINED_TAGPOINT
+#define __WINCE_DEFINED_TAGPOINT
 typedef struct tagPOINT {
  LONG x;
  LONG y;
 } POINT;
+#endif /* __WINCE_DEFINED_TAGPOINT */
+#ifndef __WINCE_DEFINED_PPOINT
+#define __WINCE_DEFINED_PPOINT
 typedef POINT *PPOINT, *LPPOINT;
+#endif /* __WINCE_DEFINED_PPOINT */
 
 /* POINTS  [struct; shared] */
-typedef struct tagPOINTS { 
+#ifndef __WINCE_DEFINED_TAGPOINTS
+#define __WINCE_DEFINED_TAGPOINTS
+typedef struct tagPOINTS {
  SHORT x;
- SHORT y; 
+ SHORT y;
 } POINTS;
+#endif /* __WINCE_DEFINED_TAGPOINTS */
+#ifndef __WINCE_DEFINED_PPOINTS
+#define __WINCE_DEFINED_PPOINTS
 typedef POINTS *PPOINTS, *LPPOINTS;
+#endif /* __WINCE_DEFINED_PPOINTS */
 
 /* RECT  [struct, library; shared] */
-typedef struct _RECT { 
- LONG left; 
- LONG top; 
- LONG right; 
- LONG bottom; 
+#ifndef __WINCE_DEFINED__RECT
+#define __WINCE_DEFINED__RECT
+typedef struct _RECT {
+ LONG left;
+ LONG top;
+ LONG right;
+ LONG bottom;
 } RECT;
+#endif /* __WINCE_DEFINED__RECT */
+#ifndef __WINCE_DEFINED_PRECT
+#define __WINCE_DEFINED_PRECT
 typedef RECT *PRECT, *LPRECT;
+#endif /* __WINCE_DEFINED_PRECT */
 
 /* RECTL  [struct; shared] */
-typedef struct _RECTL { 
- LONG left; 
- LONG top; 
- LONG right; 
- LONG bottom; 
+#ifndef __WINCE_DEFINED__RECTL
+#define __WINCE_DEFINED__RECTL
+typedef struct _RECTL {
+ LONG left;
+ LONG top;
+ LONG right;
+ LONG bottom;
 } RECTL, *PRECTL;
+#endif /* __WINCE_DEFINED__RECTL */
 
 /* SIZE  [struct, function, library; shared] */
-typedef struct tagSIZE { 
- LONG cx; 
- LONG cy; 
+#ifndef __WINCE_DEFINED_TAGSIZE
+#define __WINCE_DEFINED_TAGSIZE
+typedef struct tagSIZE {
+ LONG cx;
+ LONG cy;
 } SIZE;
+#endif /* __WINCE_DEFINED_TAGSIZE */
+#ifndef __WINCE_DEFINED_PSIZE
+#define __WINCE_DEFINED_PSIZE
 typedef SIZE *PSIZE, *LPSIZE;
+#endif /* __WINCE_DEFINED_PSIZE */
 typedef RECT *PRECT, *LPRECT;
 typedef CONST RECT *LPCRECT;
 typedef POINT *PPOINT, *LPPOINT;

@@ -18,6 +18,8 @@
  * ================================================================ */
 
 /* UPNPCB_ID  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_UPNPCB_ID
+#define __WINCE_DEFINED_UPNPCB_ID
 typedef enum {
  UPNPCB_INIT,
  UPNPCB_SUBSCRIBING,
@@ -27,16 +29,21 @@ typedef enum {
  UPNPCB_WAKEUP,
  UPNPCB_SHUTDOWN
 } UPNPCB_ID;
+#endif /* __WINCE_DEFINED_UPNPCB_ID */
+#ifndef __WINCE_DEFINED_PUPNPCB_ID
+#define __WINCE_DEFINED_PUPNPCB_ID
 typedef UPNPCB_ID *PUPNPCB_ID, *LPUPNPCB_ID;
+#endif /* __WINCE_DEFINED_PUPNPCB_ID */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* PUPNPCALLBACK  [callback; ce-only; CE 4.0..699; Upnpcapi.lib] */
-typedef DWORD (*PUPNPCALLBACK) (
- UPNPCB_ID callbackId,
+#ifndef __WINCE_DEFINED_PUPNPCALLBACK
+#define __WINCE_DEFINED_PUPNPCALLBACK
+typedef DWORD (*PUPNPCALLBACK) (UPNPCB_ID callbackId,
  PVOID pvUserContext,
- PVOID pvSvcParam
-);
+ PVOID pvSvcParam);
+#endif /* __WINCE_DEFINED_PUPNPCALLBACK */
 #endif /* _WIN32_WCE */
 
 #endif /* _UPNPDEVAPI_ */

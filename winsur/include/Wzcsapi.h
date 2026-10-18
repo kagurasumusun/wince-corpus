@@ -1,11 +1,11 @@
-/* wzcsapi.h -- Windows CE unified surface
+/* Wzcsapi.h -- Windows CE unified surface
  *
  * ONE tree for every CE generation.  Version differences use
  * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 13 constants, 20 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 13 constants, 6 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WZCSAPI_
 #define _WZCSAPI_
@@ -32,36 +32,53 @@
 #define TMMS_DEFAULT_TR 0x00000bb8
 
 /* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* INTF_ENTRY_EX  [struct; ce-only] */
+
+/* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
 
 /* INTF_KEY_ENTRY  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_INTF_KEY_ENTRY
+#define __WINCE_DEFINED_INTF_KEY_ENTRY
 typedef struct
 {
  LPWSTR wszGuid;
 } INTF_KEY_ENTRY, *PINTF_KEY_ENTRY;
+#endif /* __WINCE_DEFINED_INTF_KEY_ENTRY */
 
 /* INTFS_KEY_TABLE  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_INTFS_KEY_TABLE
+#define __WINCE_DEFINED_INTFS_KEY_TABLE
 typedef struct
 {
  DWORD dwNumIntfs;
  PINTF_KEY_ENTRY pIntfs;
 } INTFS_KEY_TABLE, *PINTFS_KEY_TABLE;
+#endif /* __WINCE_DEFINED_INTFS_KEY_TABLE */
 
 /* WZC_CONTEXT  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__WZC_CONTEXT_T
+#define __WINCE_DEFINED__WZC_CONTEXT_T
 typedef struct _wzc_context_t
 {
- DWORD dwFlags; 
- DWORD tmTr; 
- DWORD tmTc; 
- DWORD tmTp; 
- DWORD tmTf; 
- DWORD tmTd; 
+ DWORD dwFlags;
+ DWORD tmTr;
+ DWORD tmTc;
+ DWORD tmTp;
+ DWORD tmTf;
+ DWORD tmTd;
 } WZC_CONTEXT, *PWZC_CONTEXT;
+#endif /* __WINCE_DEFINED__WZC_CONTEXT_T */
 
 /* WZC_EAPOL_PARAMS  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__WZC_EAPOL_PARAMS
+#define __WINCE_DEFINED__WZC_EAPOL_PARAMS
 typedef struct _WZC_EAPOL_PARAMS
 {
  BOOL bEnable8021x;
@@ -70,37 +87,6 @@ typedef struct _WZC_EAPOL_PARAMS
  DWORD dwAuthDataLen;
  BYTE *pbAuthData;
 }WZC_EAPOL_PARAMS, *PWZC_EAPOL_PARAMS;
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
-
-/* WZCEnumInterfaces  [function; ce-only; CE 4.0..699; Wzcsapi.lib] */
-DWORD WZCEnumInterfaces(
- LPWSTR pSrvAddr,
- PINTFS_KEY_TABLE pIntfs
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
-
-/* WZCQueryContext  [function; ce-only; CE 5.0..699; Wzcsapi.lib] */
-DWORD WZCQueryContext(
- LPWSTR pSrvAddr,
- DWORD dwInFlags,
- PWZC_CONTEXT pContext,
- LPDWORD pdwOutFlags
-);
-
-/* WZCSetContext  [function; ce-only; CE 5.0..699; Wzcsapi.lib] */
-DWORD WZCSetContext(
- LPWSTR pSrvAddr,
- DWORD dwInFlags,
- PWZC_CONTEXT pContext,
- LPDWORD pdwOutFlags
-);
-#endif /* _WIN32_WCE */
+#endif /* __WINCE_DEFINED__WZC_EAPOL_PARAMS */
 
 #endif /* _WZCSAPI_ */

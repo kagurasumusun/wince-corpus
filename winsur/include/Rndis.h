@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 21 constants, 9 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 21 constants, 8 declarations, 2 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _RNDIS_
 #define _RNDIS_
@@ -42,6 +42,8 @@
 /* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
+
+/* RNDIS_PACKET  [struct; ce-only] */
 
 /* RNDIS_PDD_CHARACTERISTICS  [struct; ce-only] */
 

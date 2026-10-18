@@ -18,19 +18,15 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* ProviderIoctlCall  [function; ce-only; CE 6.0..699] */
-DWORD ProviderIoctlCall(
- HANDLE hProv, 
- DWORD dwCode, 
- BYTE* pBufIn, 
- DWORD cbIn, 
- BYTE* pBufOut, 
- DWORD* pcbOut
-);
+DWORD ProviderIoctlCall(HANDLE hProv,
+ DWORD dwCode,
+ BYTE* pBufIn,
+ DWORD cbIn,
+ BYTE* pBufOut,
+ DWORD* pcbOut);
 
 /* ProviderIoctlClose  [function; ce-only; CE 6.0..699] */
-DWORD ProviderIoctlClose(
- HANDLE hProv
-);
+DWORD ProviderIoctlClose(HANDLE hProv);
 
 /* ProviderStop  [function; ce-only; CE 6.0..699] */
 DWORD ProviderStop(void);
@@ -39,19 +35,15 @@ DWORD ProviderStop(void);
 DWORD ProviderStop(void);
 
 /* ResolverIoctlCall  [function; ce-only; CE 6.0..699] */
-DWORD ResolverIoctlCall(
- HANDLE hProv,
+DWORD ResolverIoctlCall(HANDLE hProv,
  DWORD dwCode,
  BYTE* pBufIn,
  DWORD cbIn,
  BYTE* pBufOut,
- DWORD* pcbOut
-);
+ DWORD* pcbOut);
 
 /* ResolverIoctlClose  [function; ce-only; CE 6.0..699] */
-DWORD ResolverIoctlClose(
- HANDLE hProv
-);
+DWORD ResolverIoctlClose(HANDLE hProv);
 
 /* ResolverStop  [function; ce-only; CE 6.0..699] */
 DWORD ResolverStop(void);

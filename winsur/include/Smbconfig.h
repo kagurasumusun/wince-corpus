@@ -18,39 +18,29 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* Add_Share  [function; ce-only; CE 5.0..699; Smbconfig.lib] */
-HRESULT Add_Share(
- const WCHAR* pName,
+HRESULT Add_Share(const WCHAR* pName,
  DWORD dwType,
  const WCHAR* pPath,
  const WCHAR* pACL,
  const WCHAR* pROACL,
  const WCHAR* pDriver,
- const WCHAR* pComment
-);
+ const WCHAR* pComment);
 
 /* Change_ACL  [function; ce-only; CE 5.0..699; Smbconfig.lib] */
-HRESULT Change_ACL(
- const WCHAR* pShareName,
+HRESULT Change_ACL(const WCHAR* pShareName,
  const WCHAR* pACL,
- const WCHAR* pROACL
-);
+ const WCHAR* pROACL);
 
 /* Del_Share  [function; ce-only; CE 5.0..699; Smbconfig.lib] */
-HRESULT Del_Share(
- const WCHAR* pName
-);
+HRESULT Del_Share(const WCHAR* pName);
 
 /* List_Connected_Users  [function; ce-only; CE 5.0..699; Smbconfig.lib] */
-HRESULT List_Connected_Users(
- WCHAR* pBuffer,
- UINT* puiLen
-);
+HRESULT List_Connected_Users(WCHAR* pBuffer,
+ UINT* puiLen);
 
 /* QueryAmountTransfered  [function; ce-only; CE 5.0..699; Smbconfig.lib] */
-HRESULT QueryAmountTransfered(
- LARGE_INTEGER* pRead,
- LARGE_INTEGER* pWritten
-);
+HRESULT QueryAmountTransfered(LARGE_INTEGER* pRead,
+ LARGE_INTEGER* pWritten);
 #endif /* _WIN32_WCE */
 
 #endif /* _SMBCONFIG_ */

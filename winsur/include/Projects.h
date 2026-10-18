@@ -34,16 +34,16 @@
 HANDLE FindFirstFlashCard(LPWIN32_FIND_DATA lpFindFlashData);
 
 /* FindFirstProjectFile  [function; ce-only; CE 2.11..2.12] */
-HANDLE FindFirstProjectFile(LPCTSTR lpFileName, 
-LPWIN32_FIND_DATA lpFindFileData, DWORD dwOidFlash, 
+HANDLE FindFirstProjectFile(LPCTSTR lpFileName,
+LPWIN32_FIND_DATA lpFindFileData, DWORD dwOidFlash,
 LPTSTR lpszProj);
 
 /* FindNextFlashCard  [function; ce-only; CE 2.11..2.12] */
-BOOL FindNextFlashCard(HANDLE hFlashCard, 
+BOOL FindNextFlashCard(HANDLE hFlashCard,
 LPWIN32_FIND_DATA lpFindFlashData);
 
 /* FindNextProjectFile  [function; ce-only; CE 2.11..2.12] */
-BOOL FindNextProjectFile(HANDLE hHandle, 
+BOOL FindNextProjectFile(HANDLE hHandle,
 LPWIN32_FIND_DATA lpFindProjData);
 #endif /* _WIN32_WCE */
 

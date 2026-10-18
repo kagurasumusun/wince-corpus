@@ -18,11 +18,14 @@
  * ================================================================ */
 
 /* BTH_RADIO_MODE  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_BTH_RADIO_MODE
+#define __WINCE_DEFINED_BTH_RADIO_MODE
 enum BTH_RADIO_MODE {
  BTH_POWER_OFF,
  BTH_CONNECTABLE,
  BTH_DISCOVERABLE
 };
+#endif /* __WINCE_DEFINED_BTH_RADIO_MODE */
 
 /* ==================================================================
  * functions and callbacks
@@ -31,16 +34,12 @@ enum BTH_RADIO_MODE {
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* BthGetMode  [function; ce-only; CE 6.0..699; Bthutil.lib] */
-int BthGetMode(
- DWORD*
- pdwMode
-);
+int BthGetMode(DWORD*
+ pdwMode);
 
 /* BthSetMode  [function; ce-only; CE 6.0..699; Bthutil.lib] */
-int BthSetMode(
- DWORD
- dwMode
-);
+int BthSetMode(DWORD
+ dwMode);
 #endif /* _WIN32_WCE */
 
 #endif /* _BTHUTIL_ */

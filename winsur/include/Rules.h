@@ -18,6 +18,8 @@
  * ================================================================ */
 
 /* FW_RULE_MASKS  [enum; ce-only] */
+#ifndef __WINCE_DEFINED__FW_RULE_MASKS
+#define __WINCE_DEFINED__FW_RULE_MASKS
 typedef enum _FW_RULE_MASKS {
  FWM_PRIVATE_HOST = 0x01,
  FWM_PUBLIC_HOST = 0x02,
@@ -33,6 +35,10 @@ typedef enum _FW_RULE_MASKS {
  FWM_PUBLIC_HOST_MASK= 0x800,
  FWM_PUBLIC_HOST_PREFIX = 0x1000
 } FW_RULE_MASKS;
+#endif /* __WINCE_DEFINED__FW_RULE_MASKS */
+#ifndef __WINCE_DEFINED_PFW_RULE_MASKS
+#define __WINCE_DEFINED_PFW_RULE_MASKS
 typedef FW_RULE_MASKS *PFW_RULE_MASKS, *LPFW_RULE_MASKS;
+#endif /* __WINCE_DEFINED_PFW_RULE_MASKS */
 
 #endif /* _RULES_ */

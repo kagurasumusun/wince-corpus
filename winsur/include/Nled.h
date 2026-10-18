@@ -18,11 +18,16 @@
  * ================================================================ */
 
 /* NLED_COUNT_INFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_NLED_COUNT_INFO
+#define __WINCE_DEFINED_NLED_COUNT_INFO
 struct NLED_COUNT_INFO {
- UINT cLeds; 
+ UINT cLeds;
 };
+#endif /* __WINCE_DEFINED_NLED_COUNT_INFO */
 
 /* NLED_SETTINGS_INFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_NLED_SETTINGS_INFO
+#define __WINCE_DEFINED_NLED_SETTINGS_INFO
 struct NLED_SETTINGS_INFO {
  UINT LedNum;
  INT OffOnBlink;
@@ -30,10 +35,13 @@ struct NLED_SETTINGS_INFO {
  LONG OnTime;
  LONG OffTime;
  INT MetaCycleOn;
- INT MetaCycleOff; 
+ INT MetaCycleOff;
 };
+#endif /* __WINCE_DEFINED_NLED_SETTINGS_INFO */
 
 /* NLED_SUPPORTS_INFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_NLED_SUPPORTS_INFO
+#define __WINCE_DEFINED_NLED_SUPPORTS_INFO
 struct NLED_SUPPORTS_INFO {
  UINT LedNum;
  LONG lCycleAdjust;
@@ -41,8 +49,9 @@ struct NLED_SUPPORTS_INFO {
  BOOL fAdjustOnTime;
  BOOL fAdjustOffTime;
  BOOL fMetaCycleOn;
- BOOL fMetaCycleOff; 
+ BOOL fMetaCycleOff;
 };
+#endif /* __WINCE_DEFINED_NLED_SUPPORTS_INFO */
 
 /* ==================================================================
  * functions and callbacks
@@ -51,10 +60,9 @@ struct NLED_SUPPORTS_INFO {
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400)) /* CE 2.11..2.12, 3.0..399 */
 
 /* NLedDriverDllEntry  [function; ce-only; CE 2.11..2.12, 3.0..399; heuristic-prefix] */
-BOOL NLedDriverDllEntry( 
-HANDLE hinstDll, 
-DWORD fdwReason, 
-LPVOID lpvReserved );
+BOOL NLedDriverDllEntry(HANDLE hinstDll,
+DWORD fdwReason,
+LPVOID lpvReserved);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

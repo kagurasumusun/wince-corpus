@@ -16,8 +16,6 @@
  * ================================================================ */
 
 /* CredFree  [function; shared; unified-kb; unified-kb] */
-HRESULT CredFree( 
- PBYTE pvBuffer 
-);
+HRESULT CredFree(PBYTE pvBuffer);
 
 #endif /* _CRED_ */

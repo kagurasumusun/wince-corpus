@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 12 constants, 4 declarations, 2 outlines, 0 base types, 0 extra macros, 12 extra decls
+ * 12 constants, 3 declarations, 3 outlines, 0 base types, 0 extra macros, 11 extra decls
  */
 #ifndef _VOIPMANAGER_
 #define _VOIPMANAGER_
@@ -36,6 +36,8 @@
 
 /* DirectoryClientRegParams  [struct; ce-only] */
 
+/* SIPServerRegistrationParameters  [struct; ce-only; Voipguid.lib] */
+
 /* VoIPMgrParameters  [struct; ce-only; Voipguid.lib] */
 
 /* ==================================================================
@@ -44,54 +46,61 @@
  * declaration body no page prints
  * ================================================================ */
 
-/* SIPServerRegistrationParameters  [struct; ce-only; Voipguid.lib] */
-typedef struct SIPServerRegistrationParameters { 
- const WCHAR *wszURI; 
- const WCHAR *wszServer; 
- const WCHAR *wszAccountName; 
- const WCHAR *wszAccountPassword; 
- const WCHAR *wszTransport; 
- const WCHAR *wszAuthType; 
-} SIPServerRegistrationParameters;
-typedef SIPServerRegistrationParameters *PSIPServerRegistrationParameters, *LPSIPServerRegistrationParameters;
-
 /* VoIPCallEvent  [enum; ce-only] */
-typedef enum VoIPCallEvent { 
- e_vceInvalid = 0, 
- e_vceStatusChanged, 
- e_vceMissed, 
- e_vceAutoBlocked, 
- e_vceAutoForwarded, 
- e_vceDropped, 
- e_vceRedirectSucceeded, 
- e_vceRedirectFailed 
+#ifndef __WINCE_DEFINED_VOIPCALLEVENT
+#define __WINCE_DEFINED_VOIPCALLEVENT
+typedef enum VoIPCallEvent {
+ e_vceInvalid = 0,
+ e_vceStatusChanged,
+ e_vceMissed,
+ e_vceAutoBlocked,
+ e_vceAutoForwarded,
+ e_vceDropped,
+ e_vceRedirectSucceeded,
+ e_vceRedirectFailed
 } VoIPCallEvent;
+#endif /* __WINCE_DEFINED_VOIPCALLEVENT */
+#ifndef __WINCE_DEFINED_PVOIPCALLEVENT
+#define __WINCE_DEFINED_PVOIPCALLEVENT
 typedef VoIPCallEvent *PVoIPCallEvent, *LPVoIPCallEvent;
+#endif /* __WINCE_DEFINED_PVOIPCALLEVENT */
 
 /* VoIPCallStatus  [enum; ce-only] */
-typedef enum VoIPCallStatus { 
- e_vcsInvalid = 0, 
- e_vcsIdle = RTCSS_IDLE, 
- e_vcsIncoming = RTCSS_INCOMING, 
- e_vcsAnswering = RTCSS_ANSWERING, 
- e_vcsInProgress = RTCSS_INPROGRESS, 
- e_vcsConnected = RTCSS_CONNECTED, 
- e_vcsDisconnected = RTCSS_DISCONNECTED, 
- e_vcsHolding = RTCSS_HOLD, 
- e_vcsReferring = RTCSS_REFER, 
- e_vcsInConference = RTCSS_REFER+1, 
+#ifndef __WINCE_DEFINED_VOIPCALLSTATUS
+#define __WINCE_DEFINED_VOIPCALLSTATUS
+typedef enum VoIPCallStatus {
+ e_vcsInvalid = 0,
+ e_vcsIdle = RTCSS_IDLE,
+ e_vcsIncoming = RTCSS_INCOMING,
+ e_vcsAnswering = RTCSS_ANSWERING,
+ e_vcsInProgress = RTCSS_INPROGRESS,
+ e_vcsConnected = RTCSS_CONNECTED,
+ e_vcsDisconnected = RTCSS_DISCONNECTED,
+ e_vcsHolding = RTCSS_HOLD,
+ e_vcsReferring = RTCSS_REFER,
+ e_vcsInConference = RTCSS_REFER+1,
 } VoIPCallStatus;
+#endif /* __WINCE_DEFINED_VOIPCALLSTATUS */
+#ifndef __WINCE_DEFINED_PVOIPCALLSTATUS
+#define __WINCE_DEFINED_PVOIPCALLSTATUS
 typedef VoIPCallStatus *PVoIPCallStatus, *LPVoIPCallStatus;
+#endif /* __WINCE_DEFINED_PVOIPCALLSTATUS */
 
 /* VoIPSystemEvent  [enum; ce-only] */
-typedef enum VoIPSystemEvent{ 
- e_vseInvalid = 0, 
- e_vseTerminated, 
- e_vseRegistering, 
- e_vseRegistrationSucceeded, 
- e_vseRegistrationFailed 
+#ifndef __WINCE_DEFINED_VOIPSYSTEMEVENT
+#define __WINCE_DEFINED_VOIPSYSTEMEVENT
+typedef enum VoIPSystemEvent{
+ e_vseInvalid = 0,
+ e_vseTerminated,
+ e_vseRegistering,
+ e_vseRegistrationSucceeded,
+ e_vseRegistrationFailed
 } VoIPSystemEvent;
+#endif /* __WINCE_DEFINED_VOIPSYSTEMEVENT */
+#ifndef __WINCE_DEFINED_PVOIPSYSTEMEVENT
+#define __WINCE_DEFINED_PVOIPSYSTEMEVENT
 typedef VoIPSystemEvent *PVoIPSystemEvent, *LPVoIPSystemEvent;
+#endif /* __WINCE_DEFINED_PVOIPSYSTEMEVENT */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main
@@ -102,7 +111,6 @@ typedef VoIPSystemEvent *PVoIPSystemEvent, *LPVoIPSystemEvent;
 HRESULT Hangup();
 HRESULT Ignore();
 HRESULT OnSystemEvent(VoIPSystemEvent vseEvent, INT_PTR iptrParam);
-HRESULT RegisterWithSIPServer(SIPServerRegistrationParameters *pParams);
 HRESULT Reregister(VoIPMgrParameters* pvmpMgrParams);
 HRESULT Unhold();
 HRESULT get_MissedCallTimeout(UINT* pnTimeoutMilliseconds);

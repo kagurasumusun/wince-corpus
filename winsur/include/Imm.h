@@ -257,15 +257,23 @@
  * ================================================================ */
 
 /* CANDIDATEFORM  [struct, typedef; shared] */
+#ifndef __WINCE_DEFINED__TAGCANDIDATEFORM
+#define __WINCE_DEFINED__TAGCANDIDATEFORM
 typedef struct _tagCANDIDATEFORM {
  DWORD dwIndex;
  DWORD dwStyle;
  POINT ptCurrentPos;
  RECT rcArea;
 } CANDIDATEFORM;
+#endif /* __WINCE_DEFINED__TAGCANDIDATEFORM */
+#ifndef __WINCE_DEFINED_PCANDIDATEFORM
+#define __WINCE_DEFINED_PCANDIDATEFORM
 typedef CANDIDATEFORM *PCANDIDATEFORM, *LPCANDIDATEFORM;
+#endif /* __WINCE_DEFINED_PCANDIDATEFORM */
 
 /* CANDIDATEINFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_TAGCANDIDATEINFO
+#define __WINCE_DEFINED_TAGCANDIDATEINFO
 typedef struct tagCANDIDATEINFO {
  DWORD dwSize;
  DWORD dwCount;
@@ -273,9 +281,15 @@ typedef struct tagCANDIDATEINFO {
  DWORD dwPrivateSize;
  DWORD dwPrivateOffset;
 } CANDIDATEINFO;
+#endif /* __WINCE_DEFINED_TAGCANDIDATEINFO */
+#ifndef __WINCE_DEFINED_PCANDIDATEINFO
+#define __WINCE_DEFINED_PCANDIDATEINFO
 typedef CANDIDATEINFO *PCANDIDATEINFO, *LPCANDIDATEINFO;
+#endif /* __WINCE_DEFINED_PCANDIDATEINFO */
 
 /* CANDIDATELIST  [struct; shared] */
+#ifndef __WINCE_DEFINED__TAGCANDIDATELIST
+#define __WINCE_DEFINED__TAGCANDIDATELIST
 typedef struct _tagCANDIDATELIST {
  DWORD dwSize;
  DWORD dwStyle;
@@ -283,48 +297,63 @@ typedef struct _tagCANDIDATELIST {
  DWORD dwSelection;
  DWORD dwPageStart;
  DWORD dwPageSize;
- DWORD dwOffset[];
+ DWORD dwOffset;
 } CANDIDATELIST;
+#endif /* __WINCE_DEFINED__TAGCANDIDATELIST */
+#ifndef __WINCE_DEFINED_PCANDIDATELIST
+#define __WINCE_DEFINED_PCANDIDATELIST
 typedef CANDIDATELIST *PCANDIDATELIST, *LPCANDIDATELIST;
+#endif /* __WINCE_DEFINED_PCANDIDATELIST */
 
 /* COMPOSITIONFORM  [struct, typedef; shared] */
-Typedef struct _tagCOMPOSITIONFORM {
+#ifndef __WINCE_DEFINED__TAGCOMPOSITIONFORM
+#define __WINCE_DEFINED__TAGCOMPOSITIONFORM
+typedef struct _tagCOMPOSITIONFORM {
  DWORD dwStyle;
  POINT ptCurrentPos;
  RECT rcArea;
 } COMPOSITIONFORM;
+#endif /* __WINCE_DEFINED__TAGCOMPOSITIONFORM */
 
 /* COMPOSITIONSTR  [struct; ce-only] */
-typedef struct tagCOMPOSITIONSTR { 
- DWORD dwSize; 
- DWORD dwCompReadAttrLen; 
- DWORD dwCompReadAttrOffset; 
- DWORD dwCompReadClsLen; 
- DWORD dwCompReadClsOffset; 
- DWORD dwCompReadStrLen; 
- DWORD dwCompReadStrOffset; 
- DWORD dwCompAttrLen; 
- DWORD dwCompAttrOffset; 
- DWORD dwCompClsLen; 
- DWORD dwCompClsOffset; 
- DWORD dwCompStrLen; 
- DWORD dwCompStrOffset; 
- DWORD dwCursorPos; 
- DWORD dwDeltaStart; 
- DWORD dwResultReadClsLen; 
- DWORD dwResultReadClsOffset; 
- DWORD dwResultReadStrLen; 
- DWORD dwResultReadStrOffset; 
- DWORD dwResultClsLen; 
- DWORD dwResultClsOffset; 
- DWORD dwResultStrLen; 
- DWORD dwResultStrOffset; 
- DWORD dwPrivateSize; 
- DWORD dwPrivateOffset; 
+#ifndef __WINCE_DEFINED_TAGCOMPOSITIONSTR
+#define __WINCE_DEFINED_TAGCOMPOSITIONSTR
+typedef struct tagCOMPOSITIONSTR {
+ DWORD dwSize;
+ DWORD dwCompReadAttrLen;
+ DWORD dwCompReadAttrOffset;
+ DWORD dwCompReadClsLen;
+ DWORD dwCompReadClsOffset;
+ DWORD dwCompReadStrLen;
+ DWORD dwCompReadStrOffset;
+ DWORD dwCompAttrLen;
+ DWORD dwCompAttrOffset;
+ DWORD dwCompClsLen;
+ DWORD dwCompClsOffset;
+ DWORD dwCompStrLen;
+ DWORD dwCompStrOffset;
+ DWORD dwCursorPos;
+ DWORD dwDeltaStart;
+ DWORD dwResultReadClsLen;
+ DWORD dwResultReadClsOffset;
+ DWORD dwResultReadStrLen;
+ DWORD dwResultReadStrOffset;
+ DWORD dwResultClsLen;
+ DWORD dwResultClsOffset;
+ DWORD dwResultStrLen;
+ DWORD dwResultStrOffset;
+ DWORD dwPrivateSize;
+ DWORD dwPrivateOffset;
 } COMPOSITIONSTR;
+#endif /* __WINCE_DEFINED_TAGCOMPOSITIONSTR */
+#ifndef __WINCE_DEFINED_PCOMPOSITIONSTR
+#define __WINCE_DEFINED_PCOMPOSITIONSTR
 typedef COMPOSITIONSTR *PCOMPOSITIONSTR, *LPCOMPOSITIONSTR;
+#endif /* __WINCE_DEFINED_PCOMPOSITIONSTR */
 
 /* COMPOSITIONSTRING  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_TAGCOMPOSITIONSTRING
+#define __WINCE_DEFINED_TAGCOMPOSITIONSTRING
 typedef struct tagCOMPOSITIONSTRING {
  DWORD dwSize;
  DWORD dwCompReadAttrLen;
@@ -352,9 +381,15 @@ typedef struct tagCOMPOSITIONSTRING {
  DWORD dwPrivateSize;
  DWORD dwPrivateOffset;
 } COMPOSITIONSTRING;
+#endif /* __WINCE_DEFINED_TAGCOMPOSITIONSTRING */
+#ifndef __WINCE_DEFINED_PCOMPOSITIONSTRING
+#define __WINCE_DEFINED_PCOMPOSITIONSTRING
 typedef COMPOSITIONSTRING *PCOMPOSITIONSTRING, *LPCOMPOSITIONSTRING;
+#endif /* __WINCE_DEFINED_PCOMPOSITIONSTRING */
 
 /* GUIDELINE  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_TAGGUIDELINE
+#define __WINCE_DEFINED_TAGGUIDELINE
 typedef struct tagGUIDELINE {
  DWORD dwSize;
  DWORD dwLevel;
@@ -364,21 +399,37 @@ typedef struct tagGUIDELINE {
  DWORD dwPrivateSize;
  DWORD dwPrivateOffset;
 } GUIDELINE;
+#endif /* __WINCE_DEFINED_TAGGUIDELINE */
+#ifndef __WINCE_DEFINED_PGUIDELINE
+#define __WINCE_DEFINED_PGUIDELINE
 typedef GUIDELINE *PGUIDELINE, *LPGUIDELINE;
+#endif /* __WINCE_DEFINED_PGUIDELINE */
 
 /* REGISTERWORD  [struct; shared; A/W REGISTERWORDA,REGISTERWORDW (CE is W-side)] */
+#ifndef __WINCE_DEFINED_TAGREGISTERWORD
+#define __WINCE_DEFINED_TAGREGISTERWORD
 typedef struct tagREGISTERWORD {
- LPTSTR lpReading; 
+ LPTSTR lpReading;
  LPTSTR lpWord;
 } REGISTERWORD;
+#endif /* __WINCE_DEFINED_TAGREGISTERWORD */
+#ifndef __WINCE_DEFINED_PREGISTERWORD
+#define __WINCE_DEFINED_PREGISTERWORD
 typedef REGISTERWORD *PREGISTERWORD, *LPREGISTERWORD;
+#endif /* __WINCE_DEFINED_PREGISTERWORD */
 
 /* STYLEBUF  [struct; shared; A/W STYLEBUFA,STYLEBUFW (CE is W-side)] */
+#ifndef __WINCE_DEFINED__TAGSTYLEBUF
+#define __WINCE_DEFINED__TAGSTYLEBUF
 typedef struct _tagSTYLEBUF {
  DWORD dwStyle;
  CHAR szDescription[32];
 } STYLEBUF;
+#endif /* __WINCE_DEFINED__TAGSTYLEBUF */
+#ifndef __WINCE_DEFINED_PSTYLEBUF
+#define __WINCE_DEFINED_PSTYLEBUF
 typedef STYLEBUF *PSTYLEBUF, *LPSTYLEBUF;
+#endif /* __WINCE_DEFINED_PSTYLEBUF */
 
 /* ==================================================================
  * functions and callbacks
@@ -387,12 +438,10 @@ typedef STYLEBUF *PSTYLEBUF, *LPSTYLEBUF;
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
 
 /* EnumRegisterWordProc  [function; ce-only; CE 2.11..2.12, 3.0..699] */
-UINT CALLBACK EnumRegisterWordProc(
- LPCTSTR lpszReading,
+UINT CALLBACK EnumRegisterWordProc(LPCTSTR lpszReading,
  DWORD dwStyle,
  LPCTSTR lpszString,
- LPVOID lpData 
-);
+ LPVOID lpData);
 #endif /* _WIN32_WCE */
 
 #endif /* _IMM_ */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 21 constants, 7 declarations, 1 outlines, 0 base types, 0 extra macros, 6 extra decls
+ * 21 constants, 7 declarations, 1 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _HTTPEXT_
 #define _HTTPEXT_
@@ -52,6 +52,8 @@
  * ================================================================ */
 
 /* HSE_SEND_HEADER_EX_INFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__HSE_SEND_HEADER_EX_INFO
+#define __WINCE_DEFINED__HSE_SEND_HEADER_EX_INFO
 typedef struct _HSE_SEND_HEADER_EX_INFO{
  LPCSTR pszStatus;
  LPCSTR pszHeader;
@@ -59,12 +61,16 @@ typedef struct _HSE_SEND_HEADER_EX_INFO{
  DWORD cchHeader;
  BOOL fKeepConn;
 } HSE_SEND_HEADER_EX_INFO, *LPHSE_SEND_HEADER_EX_INFO;
+#endif /* __WINCE_DEFINED__HSE_SEND_HEADER_EX_INFO */
 
 /* HSE_VERSION_INFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__HSE_VERSION_INFO
+#define __WINCE_DEFINED__HSE_VERSION_INFO
 typedef struct _HSE_VERSION_INFO{
- DWORD dwExtensionVersion; 
- CHAR lpszExtensionDesc[HSE_MAX_EXT_DLL_NAME_LEN]; 
+ DWORD dwExtensionVersion;
+ CHAR lpszExtensionDesc[HSE_MAX_EXT_DLL_NAME_LEN];
 } HSE_VERSION_INFO, *LPHSE_VERSION_INFO;
+#endif /* __WINCE_DEFINED__HSE_VERSION_INFO */
 
 /* ==================================================================
  * functions and callbacks
@@ -73,23 +79,10 @@ typedef struct _HSE_VERSION_INFO{
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* GetExtensionVersion  [function; ce-only; CE 3.0..399, 5.0..699] */
-BOOL WINAPI GetExtensionVersion(
- HSE_VERSION_INFO* pVer 
-);
+BOOL WINAPI GetExtensionVersion(HSE_VERSION_INFO* pVer);
 
 /* TerminateExtension  [function; ce-only; CE 3.0..399, 5.0..699] */
-BOOL WINAPI TerminateExtension(
- DWORD dwFlags 
-);
+BOOL WINAPI TerminateExtension(DWORD dwFlags);
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-BOOL WINAPIGetExtensionVersion(HSE_VERSION_INFO* pVer);
-BOOL WINAPITerminateExtension(DWORD dwFlags);
 
 #endif /* _HTTPEXT_ */

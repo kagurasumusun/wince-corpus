@@ -16,8 +16,6 @@
  * ================================================================ */
 
 /* OsAxSSetImageName  [function; ce-only] */
-HRESULT WINAPI OsAxSSetImageName(
- LPCWSTR szImageName
-);
+HRESULT WINAPI OsAxSSetImageName(LPCWSTR szImageName);
 
 #endif /* _OSAXS_ */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 26 constants, 1 declarations, 6 outlines, 0 base types, 0 extra macros, 20 extra decls
+ * 26 constants, 1 declarations, 6 outlines, 0 base types, 0 extra macros, 19 extra decls
  */
 #ifndef _SHOBJIDL_
 #define _SHOBJIDL_
@@ -70,6 +70,8 @@
  * ================================================================ */
 
 /* SHGNO  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_TAGSHGDN
+#define __WINCE_DEFINED_TAGSHGDN
 typedef enum tagSHGDN {
  SHGDN_NORMAL,
  SHGDN_INFOLDER,
@@ -77,7 +79,11 @@ typedef enum tagSHGDN {
  SHGDN_FORADDRESSBAR,
  SHGDN_FORPARSING
 } SHGNO;
+#endif /* __WINCE_DEFINED_TAGSHGDN */
+#ifndef __WINCE_DEFINED_PSHGNO
+#define __WINCE_DEFINED_PSHGNO
 typedef SHGNO *PSHGNO, *LPSHGNO;
+#endif /* __WINCE_DEFINED_PSHGNO */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main
@@ -94,6 +100,5 @@ HRESULT HrInit(VOID);
 HRESULT MarkFullscreenWindow(HWND hwnd, BOOL fFullscreen);
 HRESULT SaveViewState(void);
 HRESULT SetActiveAlt(HWND hwnd);
-HRESULT UIActivate(UINT uState);
 
 #endif /* _SHOBJIDL_ */

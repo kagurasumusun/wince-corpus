@@ -37,46 +37,42 @@
  * ================================================================ */
 
 /* SIPINFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_SIPINFO
+#define __WINCE_DEFINED_SIPINFO
 typedef struct{
  DWORD cbSize;
  DWORD fdwFlags;
  RECT rcVisibleDesktop;
- RECT rcSipRect; 
+ RECT rcSipRect;
  DWORD dwImDataSize;
  VOID* pvImData;
 } SIPINFO;
+#endif /* __WINCE_DEFINED_SIPINFO */
+#ifndef __WINCE_DEFINED_PSIPINFO
+#define __WINCE_DEFINED_PSIPINFO
 typedef SIPINFO *PSIPINFO, *LPSIPINFO;
+#endif /* __WINCE_DEFINED_PSIPINFO */
 
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
 /* SipGetInfo  [function; ce-only; unified-kb; unified-kb] */
-BOOL SipGetInfo( 
- SIPINFO* pSipInfo 
-);
+BOOL SipGetInfo(SIPINFO* pSipInfo);
 
 /* SipShowIM  [function; ce-only; unified-kb; unified-kb] */
-BOOL SipShowIM( 
- DWORD dwFlag 
-);
+BOOL SipShowIM(DWORD dwFlag);
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* SipRegisterNotification  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Coresip.lib, coresip.lib] */
-BOOL SipRegisterNotification( 
- HWND hWnd
-);
+BOOL SipRegisterNotification(HWND hWnd);
 
 /* SipSetDefaultRect  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Coresip.lib, coresip.lib] */
-BOOL SipSetDefaultRect( 
- RECT* pRect
-);
+BOOL SipSetDefaultRect(RECT* pRect);
 
 /* SipSetInfo  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Coresip.lib, coresip.lib] */
-BOOL SipSetInfo( 
- SIPINFO* pSipInfo
-);
+BOOL SipSetInfo(SIPINFO* pSipInfo);
 
 /* SipStatus  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Coresip.lib, coresip.lib] */
 DWORD SipStatus(void);

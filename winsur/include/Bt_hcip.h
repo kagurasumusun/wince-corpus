@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 13 constants, 12 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 13 constants, 11 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _BT_HCIP_
 #define _BT_HCIP_
@@ -38,13 +38,18 @@
  * ================================================================ */
 
 /* HCI_EVENT  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_HCI_EVENT
+#define __WINCE_DEFINED_HCI_EVENT
 enum HCI_EVENT {
  DEVICE_UP,
  DEVICE_DOWN,
  DEVICE_ERROR
 };
+#endif /* __WINCE_DEFINED_HCI_EVENT */
 
 /* HCI_PARAMETERS  [struct; ce-only] */
+#ifndef __WINCE_DEFINED___HCI_PARAMETERS
+#define __WINCE_DEFINED___HCI_PARAMETERS
 typedef struct __hci_parameters {
  unsigned int uiSize;
  unsigned int fInterfaceVersion;
@@ -64,9 +69,15 @@ typedef struct __hci_parameters {
  int iScoWritePacketSize;
  int iScoSampleSize;
 } HCI_PARAMETERS;
+#endif /* __WINCE_DEFINED___HCI_PARAMETERS */
+#ifndef __WINCE_DEFINED_PHCI_PARAMETERS
+#define __WINCE_DEFINED_PHCI_PARAMETERS
 typedef HCI_PARAMETERS *PHCI_PARAMETERS, *LPHCI_PARAMETERS;
+#endif /* __WINCE_DEFINED_PHCI_PARAMETERS */
 
 /* HCI_TYPE  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_HCI_TYPE
+#define __WINCE_DEFINED_HCI_TYPE
 enum HCI_TYPE {
  COMMAND_PACKET = 1,
  DATA_PACKET_ACL = 2,
@@ -74,14 +85,16 @@ enum HCI_TYPE {
  EVENT_PACKET = 4,
  ETYPE_FINISH = 5
 };
+#endif /* __WINCE_DEFINED_HCI_TYPE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* HCI_SetCallback  [callback; ce-only; CE 4.0..699; Btd.lib] */
+#ifndef __WINCE_DEFINED_HCI_SETCALLBACK
+#define __WINCE_DEFINED_HCI_SETCALLBACK
 typedef int (*HCI_TransportCallback)(HCI_EVENT eEvent, void* pEvent);
- int HCI_SetCallback(
- HCI_TransportCallback pfCallback
-);
+ int HCI_SetCallback(HCI_TransportCallback pfCallback);
+#endif /* __WINCE_DEFINED_HCI_SETCALLBACK */
 #endif /* _WIN32_WCE */
 
 /* ==================================================================
@@ -97,9 +110,7 @@ void HCI_CloseConnection(void);
 int HCI_OpenConnection(void);
 
 /* HCI_ReadHciParameters  [function; ce-only; CE 4.0..699; Btd.lib] */
-int HCI_ReadHciParameters(
- HCI_PARAMETERS* pParms
-);
+int HCI_ReadHciParameters(HCI_PARAMETERS* pParms);
 
 /* HCI_StartHardware  [function; ce-only; CE 4.0..699; Btd.lib] */
 int HCI_StartHardware(void);

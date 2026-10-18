@@ -64,12 +64,15 @@
  * ================================================================ */
 
 /* REG_NOTIFY_INFORMATION  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__REG_NOTIFY_INFORMATION
+#define __WINCE_DEFINED__REG_NOTIFY_INFORMATION
 typedef struct _REG_NOTIFY_INFORMATION {
- DWORD NextEntryOffset; 
- DWORD Action; 
- DWORD RegNameLength; 
- WCHAR RegName[1]; 
+ DWORD NextEntryOffset;
+ DWORD Action;
+ DWORD RegNameLength;
+ WCHAR RegName[1];
 } REG_NOTIFY_INFORMATION, *PREG_NOTIFY_INFORMATION;
+#endif /* __WINCE_DEFINED__REG_NOTIFY_INFORMATION */
 
 /* ==================================================================
  * functions and callbacks
@@ -78,62 +81,48 @@ typedef struct _REG_NOTIFY_INFORMATION {
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* RegCloseKey  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, Fsreg.lib, fsreg.lib, Nkstub.lib] */
-LONG RegCloseKey( 
- HKEY hKey 
-);
+LONG RegCloseKey(HKEY hKey);
 
 /* RegDeleteKey  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Fsreg.lib, fsreg.lib; A/W RegDeleteKeyA,RegDeleteKeyW (CE is W-side)] */
-LONG RegDeleteKey( 
- HKEY hKey, 
- LPCWSTR lpSubKey 
-);
+LONG RegDeleteKey(HKEY hKey,
+ LPCWSTR lpSubKey);
 
 /* RegDeleteValue  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Fsreg.lib, fsreg.lib; A/W RegDeleteValueA,RegDeleteValueW (CE is W-side)] */
-LONG RegDeleteValue( 
- HKEY hKey, 
- LPCWSTR lpValueName 
-);
+LONG RegDeleteValue(HKEY hKey,
+ LPCWSTR lpValueName);
 
 /* RegEnumKeyEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Fsreg.lib, fsreg.lib; A/W RegEnumKeyExA,RegEnumKeyExW (CE is W-side)] */
-LONG RegEnumKeyEx(
- HKEY hKey, 
- DWORD dwIndex, 
- LPWSTR lpName, 
- LPDWORD lpcName, 
- LPDWORD lpReserved, 
- LPWSTR lpClass, 
- LPDWORD lpcbClass, 
- PFILETIME lpftLastWriteTime 
-);
+LONG RegEnumKeyEx(HKEY hKey,
+ DWORD dwIndex,
+ LPWSTR lpName,
+ LPDWORD lpcName,
+ LPDWORD lpReserved,
+ LPWSTR lpClass,
+ LPDWORD lpcbClass,
+ PFILETIME lpftLastWriteTime);
 
 /* RegEnumValue  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Fsreg.lib, fsreg.lib; A/W RegEnumValueA,RegEnumValueW (CE is W-side)] */
-LONG RegEnumValue( 
- HKEY hKey, 
- DWORD dwIndex, 
- LPWSTR lpValueName, 
- LPDWORD lpcchValueName, 
- LPDWORD lpReserved, 
- LPDWORD lpType, 
- LPBYTE lpData, 
- LPDWORD lpcbData 
-);
+LONG RegEnumValue(HKEY hKey,
+ DWORD dwIndex,
+ LPWSTR lpValueName,
+ LPDWORD lpcchValueName,
+ LPDWORD lpReserved,
+ LPDWORD lpType,
+ LPBYTE lpData,
+ LPDWORD lpcbData);
 
 /* RegFlushKey  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, Fsreg.lib, fsreg.lib, Nkstub.lib] */
-LONG RegFlushKey( 
- HKEY hKey 
-);
+LONG RegFlushKey(HKEY hKey);
 
 /* RegQueryValueEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, Fsreg.lib, fsreg.lib, Nkstub.lib; A/W RegQueryValueExA,RegQueryValueExW (CE is W-side)] */
 /* Windows CE supports only the Unicode version of this function. */
 /* Windows CE supports only the Unicode version of this function. */
-LONG RegQueryValueEx( 
- HKEY hKey, 
- LPCWSTR lpValueName, 
- LPDWORD lpReserved, 
- LPDWORD lpType, 
- LPBYTE lpData, 
- LPDWORD lpcbData 
-);
+LONG RegQueryValueEx(HKEY hKey,
+ LPCWSTR lpValueName,
+ LPDWORD lpReserved,
+ LPDWORD lpType,
+ LPBYTE lpData,
+ LPDWORD lpcbData);
 
 /* RegSetValueEx  [function; shared; CE 2.11..2.12, 3.0..399, 5.0..699; Coredll.lib, coredll.lib, Fsreg.lib, fsreg.lib; A/W RegSetValueExA,RegSetValueExW (CE is W-side)] */
 /* Windows CE supports only the Unicode version of this function. */
@@ -141,70 +130,57 @@ LONG RegQueryValueEx(
 /* Windows CE supports only the Unicode version of this function. */
 /* Windows Embedded CE supports only the Unicode version of this function. */
 /* Windows CE supports only the Unicode version of this function. */
-LONG RegSetValueEx(
- HKEY hKey,
+LONG RegSetValueEx(HKEY hKey,
  LPCWSTR lpValueName,
  DWORD Reserved,
  DWORD dwType,
  const BYTE* lpData,
- DWORD cbData
-);
+ DWORD cbData);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 5.0..599 */
 
 /* RegNotifyChangeKeyValue  [function; shared; CE 5.0..599; Coredll.lib] */
-LONG RegNotifyChangeKeyValue( 
- HKEY hKey, 
- BOOL bWatchSubtree, 
- DWORD dwNotifyFilter, 
- HANDLE hEvent, 
- BOOL fAsynchronous 
-);
+LONG RegNotifyChangeKeyValue(HKEY hKey,
+ BOOL bWatchSubtree,
+ DWORD dwNotifyFilter,
+ HANDLE hEvent,
+ BOOL fAsynchronous);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* CeFindCloseRegChange  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL CeFindCloseRegChange (
- HANDLE hChangeHandle 
-);
+BOOL CeFindCloseRegChange (HANDLE hChangeHandle);
 
 /* CeFindFirstRegChange  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-HANDLE CeFindFirstRegChange (
- HKEY hKey,
+HANDLE CeFindFirstRegChange (HKEY hKey,
  BOOL bWatchSubtree,
- DWORD dwNotifyFilter
-);
+ DWORD dwNotifyFilter);
 
 /* CeFindNextRegChange  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL CeFindNextRegChange (
- HANDLE hChangeHandle 
-);
+BOOL CeFindNextRegChange (HANDLE hChangeHandle);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* CeRegGetNotificationInfo  [function; ce-only; CE 6.0..699; coredll.lib] */
-LONG CeRegGetNotificationInfo(
- __in HANDLE hChangeHandle,
- __in DWORD dwFlags, 
- __inout_bcount(nBufferLength) __opt LPVOID lpBuffer, 
- __in DWORD nBufferLength, 
- __out LPDWORD lpBytesReturned, 
- __out LPDWORD lpBytesAvailable );
+LONG CeRegGetNotificationInfo(__in HANDLE hChangeHandle,
+ __in DWORD dwFlags,
+ __inout_bcount(nBufferLength) __opt LPVOID lpBuffer,
+ __in DWORD nBufferLength,
+ __out LPDWORD lpBytesReturned,
+ __out LPDWORD lpBytesAvailable);
 
 /* CeRegTestSetValueW  [function; ce-only; CE 6.0..699; coredll.lib] */
-LONG CeRegTestSetValueW(
- __in HKEY hKey, 
- __in LPCWSTR lpValueName, 
- DWORD dwType, 
- __in_bcount(cbOldData) __opt CONST BYTE* lpOldData, 
+LONG CeRegTestSetValueW(__in HKEY hKey,
+ __in LPCWSTR lpValueName,
+ DWORD dwType,
+ __in_bcount(cbOldData) __opt CONST BYTE* lpOldData,
  DWORD cbOldData,
- __in_bcount(cbNewData) __opt CONST BYTE* lpNewData, 
+ __in_bcount(cbNewData) __opt CONST BYTE* lpNewData,
  DWORD cbNewData,
- DWORD dwFlags
- );
+ DWORD dwFlags);
 #endif /* _WIN32_WCE */
 
 #endif /* _WINREG_ */

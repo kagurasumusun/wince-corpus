@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 5 constants, 2 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 5 constants, 1 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WZCAPI_
 #define _WZCAPI_
@@ -22,5 +22,11 @@
 #define WZCCTL_VOLATILE 0x0004
 #define WZCCTL_WEPK_PRESENT 0x0001
 #define WZCCTL_WEPK_XFORMAT 0x0002
+
+/* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* WZC_WLAN_CONFIG  [struct; ce-only] */
 
 #endif /* _WZCAPI_ */

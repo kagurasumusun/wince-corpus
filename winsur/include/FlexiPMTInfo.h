@@ -26,6 +26,8 @@
  * ================================================================ */
 
 /* MODULE_FIELD_IDS  [enum; ce-only] */
+#ifndef __WINCE_DEFINED__MODULE_FIELD_IDS
+#define __WINCE_DEFINED__MODULE_FIELD_IDS
 typedef enum _MODULE_FIELD_IDS {
  mfiName = 0,
  mfiBasePointer,
@@ -39,9 +41,15 @@ typedef enum _MODULE_FIELD_IDS {
  mfiTrustLevel,
  mfiUserDefined = (-1L)
 } MODULE_FIELD_IDS;
+#endif /* __WINCE_DEFINED__MODULE_FIELD_IDS */
+#ifndef __WINCE_DEFINED_PMODULE_FIELD_IDS
+#define __WINCE_DEFINED_PMODULE_FIELD_IDS
 typedef MODULE_FIELD_IDS *PMODULE_FIELD_IDS, *LPMODULE_FIELD_IDS;
+#endif /* __WINCE_DEFINED_PMODULE_FIELD_IDS */
 
 /* PROC_FIELD_IDS  [enum; ce-only] */
+#ifndef __WINCE_DEFINED__PROC_FIELD_IDS
+#define __WINCE_DEFINED__PROC_FIELD_IDS
 typedef enum _PROC_FIELD_IDS {
  pfiStructAddr = (0L),
  pfiProcessSlot = (1L),
@@ -55,11 +63,17 @@ typedef enum _PROC_FIELD_IDS {
  pfiHandle = (9L),
  pfiTlsUsageBitMaskL = (10L),
  pfiTlsUsageBitMaskH = (11L),
- pfiUserDefined = (-1L) 
+ pfiUserDefined = (-1L)
 } PROC_FIELD_IDS;
+#endif /* __WINCE_DEFINED__PROC_FIELD_IDS */
+#ifndef __WINCE_DEFINED_PPROC_FIELD_IDS
+#define __WINCE_DEFINED_PPROC_FIELD_IDS
 typedef PROC_FIELD_IDS *PPROC_FIELD_IDS, *LPPROC_FIELD_IDS;
+#endif /* __WINCE_DEFINED_PPROC_FIELD_IDS */
 
 /* THREAD_FIELD_IDS  [enum; ce-only] */
+#ifndef __WINCE_DEFINED__THREAD_FIELD_IDS
+#define __WINCE_DEFINED__THREAD_FIELD_IDS
 typedef enum _THREAD_FIELD_IDS {
  tfiStructAddr = (0L),
  tfiRunState = (1L),
@@ -86,6 +100,10 @@ typedef enum _THREAD_FIELD_IDS {
  tfiPC = (22L),
  tfiUserDefined = (-1L)
 } THREAD_FIELD_IDS;
+#endif /* __WINCE_DEFINED__THREAD_FIELD_IDS */
+#ifndef __WINCE_DEFINED_PTHREAD_FIELD_IDS
+#define __WINCE_DEFINED_PTHREAD_FIELD_IDS
 typedef THREAD_FIELD_IDS *PTHREAD_FIELD_IDS, *LPTHREAD_FIELD_IDS;
+#endif /* __WINCE_DEFINED_PTHREAD_FIELD_IDS */
 
 #endif /* _FLEXIPMTINFO_ */

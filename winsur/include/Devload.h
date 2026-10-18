@@ -37,19 +37,28 @@
  * ================================================================ */
 
 /* POST_INIT_BUF  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__POST_INIT_BUF
+#define __WINCE_DEFINED__POST_INIT_BUF
 struct _POST_INIT_BUF {
  HANDLE p_hDevice;
  HKEY p_hDeviceKey;
 } POST_INIT_BUF, *PPOST_INIT_BUF;
+#endif /* __WINCE_DEFINED__POST_INIT_BUF */
 
 /* REGINI  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__REGINI
+#define __WINCE_DEFINED__REGINI
 typedef struct _REGINI {
  LPCWSTR lpszVal;
  LPBYTE pData;
  DWORD dwLen;
  DWORD dwType;
 } REGINI;
+#endif /* __WINCE_DEFINED__REGINI */
+#ifndef __WINCE_DEFINED_PREGINI
+#define __WINCE_DEFINED_PREGINI
 typedef REGINI *PREGINI, *LPREGINI;
+#endif /* __WINCE_DEFINED_PREGINI */
 
 /* ==================================================================
  * functions and callbacks
@@ -58,24 +67,18 @@ typedef REGINI *PREGINI, *LPREGINI;
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* EnumDevices  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-DWORD EnumDevices(
- LPTSTR lpszDevList,
- LPDWORD lpBuflen
-);
+DWORD EnumDevices(LPTSTR lpszDevList,
+ LPDWORD lpBuflen);
 
 /* EnumPnpIds  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-DWORD EnumPnpIds(
- LPTSTR lpszPnpList,
- LPDWORD lpBuflen
-);
+DWORD EnumPnpIds(LPTSTR lpszPnpList,
+ LPDWORD lpBuflen);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* OpenDeviceKey  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-HKEY OpenDeviceKey(
- LPCTSTR ActiveKey
-);
+HKEY OpenDeviceKey(LPCTSTR ActiveKey);
 #endif /* _WIN32_WCE */
 
 #endif /* _DEVLOAD_ */

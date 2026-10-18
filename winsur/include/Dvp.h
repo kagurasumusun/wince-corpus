@@ -18,39 +18,45 @@
  * ================================================================ */
 
 /* DDVIDEOPORTBANDWIDTH  [struct; shared] */
-typedef struct _DDVIDEOPORTBANDWIDTH { 
- DWORD dwSize; 
- DWORD dwCaps; 
- DWORD dwOverlay; 
- DWORD dwColorkey; 
- DWORD dwYInterpolate; 
- DWORD dwYInterpAndColorkey; 
- DWORD dwReserved1; 
- DWORD dwReserved2; 
+#ifndef __WINCE_DEFINED__DDVIDEOPORTBANDWIDTH
+#define __WINCE_DEFINED__DDVIDEOPORTBANDWIDTH
+typedef struct _DDVIDEOPORTBANDWIDTH {
+ DWORD dwSize;
+ DWORD dwCaps;
+ DWORD dwOverlay;
+ DWORD dwColorkey;
+ DWORD dwYInterpolate;
+ DWORD dwYInterpAndColorkey;
+ DWORD dwReserved1;
+ DWORD dwReserved2;
 } DDVIDEOPORTBANDWIDTH, *LPDDVIDEOPORTBANDWIDTH;
+#endif /* __WINCE_DEFINED__DDVIDEOPORTBANDWIDTH */
 
 /* DDVIDEOPORTCAPS  [struct; shared] */
-typedef struct _DDVIDEOPORTCAPS { 
- DWORD dwSize; 
- DWORD dwFlags; 
- DWORD dwMaxWidth; 
- DWORD dwMaxVBIWidth; 
- DWORD dwMaxHeight; 
- DWORD dwVideoPortID; 
- DWORD dwCaps; 
- DWORD dwFX; 
- DWORD dwNumAutoFlipSurfaces; 
- DWORD dwAlignVideoPortBoundary; 
- DWORD dwAlignVideoPortPrescaleWidth; 
- DWORD dwAlignVideoPortCropBoundary; 
- DWORD dwAlignVideoPortCropWidth; 
- DWORD dwPreshrinkXStep; 
- DWORD dwPreshrinkYStep; 
- DWORD dwNumVBIAutoFlipSurfaces; 
- DWORD dwNumPreferredAutoflip; 
- WORD wNumFilterTapsX; 
- WORD wNumFilterTapsY; 
+#ifndef __WINCE_DEFINED__DDVIDEOPORTCAPS
+#define __WINCE_DEFINED__DDVIDEOPORTCAPS
+typedef struct _DDVIDEOPORTCAPS {
+ DWORD dwSize;
+ DWORD dwFlags;
+ DWORD dwMaxWidth;
+ DWORD dwMaxVBIWidth;
+ DWORD dwMaxHeight;
+ DWORD dwVideoPortID;
+ DWORD dwCaps;
+ DWORD dwFX;
+ DWORD dwNumAutoFlipSurfaces;
+ DWORD dwAlignVideoPortBoundary;
+ DWORD dwAlignVideoPortPrescaleWidth;
+ DWORD dwAlignVideoPortCropBoundary;
+ DWORD dwAlignVideoPortCropWidth;
+ DWORD dwPreshrinkXStep;
+ DWORD dwPreshrinkYStep;
+ DWORD dwNumVBIAutoFlipSurfaces;
+ DWORD dwNumPreferredAutoflip;
+ WORD wNumFilterTapsX;
+ WORD wNumFilterTapsY;
 } DDVIDEOPORTCAPS, *LPDDVIDEOPORTCAPS;
+#endif /* __WINCE_DEFINED__DDVIDEOPORTCAPS */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

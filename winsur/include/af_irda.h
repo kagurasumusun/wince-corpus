@@ -27,6 +27,8 @@
  * ================================================================ */
 
 /* IAS_QUERY  [struct, typedef; ce-only] */
+#ifndef __WINCE_DEFINED_IAS_QUERY
+#define __WINCE_DEFINED_IAS_QUERY
 typedef struct IAS_QUERY {
  u_char irdaDeviceID[4];
  char irdaClassName[61];
@@ -45,10 +47,13 @@ typedef struct IAS_QUERY {
  u_char UsrStr[1];
  u_char Reserved[2];
  } irda AttribUsrStr;
- } irdaAttribute; 
+ } irdaAttribute;
 } _IAS_QUERY, *PIAS_QUERY;
+#endif /* __WINCE_DEFINED_IAS_QUERY */
 
 /* IAS_SET  [struct, typedef; ce-only] */
+#ifndef __WINCE_DEFINED__IAS_SET
+#define __WINCE_DEFINED__IAS_SET
 typedef struct _IAS_SET {
  char irdaClassName[61];
  char irdaAttribName[61];
@@ -68,15 +73,22 @@ typedef struct _IAS_SET {
  } irda AttribUsrStr;
  } irdaAttribute;
 } _IAS_SET, *PIAS_SET;
+#endif /* __WINCE_DEFINED__IAS_SET */
 
 /* IRDA_DEVICE_INFO  [struct, typedef; ce-only] */
+#ifndef __WINCE_DEFINED_IRDA_DEVICE_INFO
+#define __WINCE_DEFINED_IRDA_DEVICE_INFO
 typedef struct IRDA_DEVICE_INFO {
  u_char irdaDeviceID[4];
  char irdaDeviceName[22];
  u_char Reserved[2];
 } _IRDA_DEVICE_INFO;
+#endif /* __WINCE_DEFINED_IRDA_DEVICE_INFO */
 
 /* irdaServiceName  [extra struct] */
+#ifndef __WINCE_DEFINED_SOCKADDR_IRDA
+#define __WINCE_DEFINED_SOCKADDR_IRDA
 struct sockaddr_irda { u_short irdaAddressFamily; u_char irdaDeviceID[4]; char irdaServiceName[25];};
+#endif /* __WINCE_DEFINED_SOCKADDR_IRDA */
 
 #endif /* _AF_IRDA_ */

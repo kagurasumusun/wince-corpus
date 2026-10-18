@@ -18,25 +18,40 @@
  * ================================================================ */
 
 /* DMUS_NOTERANGE  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__DMUS_NOTERANGE
+#define __WINCE_DEFINED__DMUS_NOTERANGE
 typedef struct _DMUS_NOTERANGE {
 DWORD dwLowNote;
 DWORD dwHighNote;
 } DMUS_NOTERANGE, *LPDMUS_NOTERANGE;
+#endif /* __WINCE_DEFINED__DMUS_NOTERANGE */
 
 /* DMUS_WAVE  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_DMUS_WAVE
+#define __WINCE_DEFINED_DMUS_WAVE
 typedef struct {
  ULONG ulFirstExtCkIdx;
  ULONG ulCopyrightIdx;
  ULONG ulWaveDataIdx;
  WAVEFORMATEX WaveformatEx;
 } DMUS_WAVE;
+#endif /* __WINCE_DEFINED_DMUS_WAVE */
+#ifndef __WINCE_DEFINED_PDMUS_WAVE
+#define __WINCE_DEFINED_PDMUS_WAVE
 typedef DMUS_WAVE *PDMUS_WAVE, *LPDMUS_WAVE;
+#endif /* __WINCE_DEFINED_PDMUS_WAVE */
 
 /* DMUS_WAVEDATA  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_DMUS_WAVEDATA
+#define __WINCE_DEFINED_DMUS_WAVEDATA
 typedef struct {
  ULONG cbSize;
- BYTE byData[ ];
+ BYTE byData;
 } DMUS_WAVEDATA;
+#endif /* __WINCE_DEFINED_DMUS_WAVEDATA */
+#ifndef __WINCE_DEFINED_PDMUS_WAVEDATA
+#define __WINCE_DEFINED_PDMUS_WAVEDATA
 typedef DMUS_WAVEDATA *PDMUS_WAVEDATA, *LPDMUS_WAVEDATA;
+#endif /* __WINCE_DEFINED_PDMUS_WAVEDATA */
 
 #endif /* _DMDLS_ */

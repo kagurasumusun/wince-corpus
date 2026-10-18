@@ -27,11 +27,9 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..399, 5.0..699 */
 
 /* InsetRect  [function; ce-only; CE 2.11..2.12, 3.0..399, 5.0..699] */
-BOOL InsetRect( 
- LPRECT lprc, 
- int dx, 
- int dy 
-);
+BOOL InsetRect(LPRECT lprc,
+ int dx,
+ int dy);
 #endif /* _WIN32_WCE */
 
 #endif /* _WINDOWSX_ */

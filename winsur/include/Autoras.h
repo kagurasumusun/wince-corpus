@@ -18,9 +18,12 @@
  * ================================================================ */
 
 /* DIALER_NOTIFICATION  [struct; ce-only] */
-typedef struct { 
- DWORD dwNotificationId; 
- DWORD dwNotificationParam; 
+#ifndef __WINCE_DEFINED_DIALER_NOTIFICATION
+#define __WINCE_DEFINED_DIALER_NOTIFICATION
+typedef struct {
+ DWORD dwNotificationId;
+ DWORD dwNotificationParam;
 } DIALER_NOTIFICATION, PDIALER_NOTIFICATION;
+#endif /* __WINCE_DEFINED_DIALER_NOTIFICATION */
 
 #endif /* _AUTORAS_ */

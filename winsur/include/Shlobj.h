@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 277 constants, 4 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 277 constants, 2 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _SHLOBJ_
 #define _SHLOBJ_
@@ -306,12 +306,10 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* BrowseCallbackProc  [function; ce-only; CE 5.0..699; Ceshell.lib, ceshell.lib] */
-int CALLBACK BrowseCallbackProc(
- HWND hwnd,
+int CALLBACK BrowseCallbackProc(HWND hwnd,
  UINT uMsg,
  LPARAM lParam,
- LPARAM lpData
-);
+ LPARAM lpData);
 #endif /* _WIN32_WCE */
 
 #endif /* _SHLOBJ_ */

@@ -18,6 +18,8 @@
  * ================================================================ */
 
 /* TRANSPORT_COMMAND  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__TRANSPORT_COMMAND
+#define __WINCE_DEFINED__TRANSPORT_COMMAND
 typedef struct _TRANSPORT_COMMAND {
  DWORD Flags;
  DWORD Timeout;
@@ -25,12 +27,16 @@ typedef struct _TRANSPORT_COMMAND {
  DWORD dwLun;
  PVOID CommandBlock;
 } TRANSPORT_COMMAND, *PTRANSPORT_COMMAND;
+#endif /* __WINCE_DEFINED__TRANSPORT_COMMAND */
 
 /* TRANSPORT_DATA  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__TRANSPORT_DATA_BUFFER
+#define __WINCE_DEFINED__TRANSPORT_DATA_BUFFER
 typedef struct _TRANSPORT_DATA_BUFFER {
  DWORD RequestLength;
  DWORD TransferLength;
  PVOID DataBlock;
 } TRANSPORT_DATA, *PTRANSPORT_DATA;
+#endif /* __WINCE_DEFINED__TRANSPORT_DATA_BUFFER */
 
 #endif /* _USBMSC_ */

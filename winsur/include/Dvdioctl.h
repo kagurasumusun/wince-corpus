@@ -18,6 +18,8 @@
  * ================================================================ */
 
 /* DVD_REGIONCE  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__DVD_REGIONCE
+#define __WINCE_DEFINED__DVD_REGIONCE
 typedef struct _DVD_REGIONCE {
  HANDLE hDrive;
  UCHAR CopySystem;
@@ -25,5 +27,6 @@ typedef struct _DVD_REGIONCE {
  UCHAR SystemRegion;
  UCHAR ResetCount;
 } DVD_REGIONCE, *PDVD_REGIONCE;
+#endif /* __WINCE_DEFINED__DVD_REGIONCE */
 
 #endif /* _DVDIOCTL_ */

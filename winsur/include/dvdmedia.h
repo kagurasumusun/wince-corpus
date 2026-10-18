@@ -27,11 +27,14 @@
  * ================================================================ */
 
 /* KS_AM_KSPROPSETID_TSRateChange  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_KS_AM_KSPROPSETID_TSRATECHANGE
+#define __WINCE_DEFINED_KS_AM_KSPROPSETID_TSRATECHANGE
 typedef enum {
  KS_AM_RATE_SimpleRateChange=1,
  KS_AM_RATE_ExactRateChange=2,
  KS_AM_RATE_MaxFullDataRate=3,
  KS_AM_RATE_Step=4
 } KS_AM_PROPERTY_TS_RATE_CHANGE;
+#endif /* __WINCE_DEFINED_KS_AM_KSPROPSETID_TSRATECHANGE */
 
 #endif /* _DVDMEDIA_ */

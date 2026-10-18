@@ -24,6 +24,8 @@
  * ================================================================ */
 
 /* ButtonControlRectangleStyle_t  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_BUTTONCONTROLRECTANGLESTYLE_T
+#define __WINCE_DEFINED_BUTTONCONTROLRECTANGLESTYLE_T
 enum ButtonControlRectangleStyle_t {
  CBR_CLIENTRECT,
  CBR_CHECKBOX,
@@ -32,9 +34,13 @@ enum ButtonControlRectangleStyle_t {
  CBR_GROUPFRAME,
  CBR_PUSHBUTTON
 };
+#endif /* __WINCE_DEFINED_BUTTONCONTROLRECTANGLESTYLE_T */
 
 /* alignment  [extra enum] */
+#ifndef __WINCE_DEFINED_ALIGNMENT
+#define __WINCE_DEFINED_ALIGNMENT
 static void DrawText(HWND hwnd, HDC hdc, BOOL dbt, BOOL fDepress, UINT pbfPush, enum ButtonControlRectangleStyle_t bcrs, WORD alignment);
+#endif /* __WINCE_DEFINED_ALIGNMENT */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

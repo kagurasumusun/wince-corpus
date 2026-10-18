@@ -32,7 +32,7 @@
  * ================================================================ */
 
 /* DebugBreak  [function; ce-only; harvest-kb; harvest-kb] */
-void DebugBreak( void );
+void DebugBreak(void);
 
 /* GetCurrentProcess  [function; shared; unified-kb; unified-kb] */
 HANDLE GetCurrentProcess(void);
@@ -47,14 +47,10 @@ HANDLE GetCurrentThread(void);
 DWORD GetCurrentThreadId(void);
 
 /* ResetEvent  [function; shared; unified-kb; unified-kb] */
-BOOL ResetEvent( 
- HANDLE hEvent 
-);
+BOOL ResetEvent(HANDLE hEvent);
 
 /* SetEvent  [function; shared; unified-kb; unified-kb] */
-BOOL SetEvent( 
- HANDLE hEvent 
-);
+BOOL SetEvent(HANDLE hEvent);
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
@@ -68,10 +64,8 @@ DWORD CeGetCurrentTrust (void);
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* WaitForAPIReady  [function; ce-only; CE 6.0..699; coredll.dll] */
-DWORD WaitForAPIReady(
-DWORD dwAPISlotIndex,
-DWORD dwTimeout
-);
+DWORD WaitForAPIReady(DWORD dwAPISlotIndex,
+DWORD dwTimeout);
 #endif /* _WIN32_WCE */
 
 #endif /* _KFUNCS_ */

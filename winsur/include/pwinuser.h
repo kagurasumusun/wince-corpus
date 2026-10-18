@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 18 constants, 39 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 18 constants, 38 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _PWINUSER_
 #define _PWINUSER_
@@ -37,30 +37,44 @@
 #define TGF_SCOPE_WINDOW 0
 
 /* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* XRGestureEventArgs  [struct; ce-only] */
+
+/* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
 
 /* ANIMATEMESSAGEINFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_TAGANIMATEMESSAGEINFO
+#define __WINCE_DEFINED_TAGANIMATEMESSAGEINFO
 typedef struct tagANIMATEMESSAGEINFO {
  size_t cbSize;
  DWORD dwAnimationID;
  int nVPixelPosition;
  int nHPixelPosition;
 } ANIMATEMESSAGEINFO
+#endif /* __WINCE_DEFINED_TAGANIMATEMESSAGEINFO */
 
 /* GESTUREMETRICS  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_TAGGESTUREMETRICS
+#define __WINCE_DEFINED_TAGGESTUREMETRICS
 typedef struct tagGESTUREMETRICS {
  UINT cbSize;
  DWORD dwID;
  DWORD dwTimeout;
- DWORD dwDistanceTolerance; 
+ DWORD dwDistanceTolerance;
  DWORD dwAngularTolerance;
  DWORD dwExtraInfo;
 } GESTUREMETRICS, *LPGESTUREMETRICS;
+#endif /* __WINCE_DEFINED_TAGGESTUREMETRICS */
 
 /* GET_FOREGROUND_INFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_TAGGETFOREGROUNDINFO
+#define __WINCE_DEFINED_TAGGETFOREGROUNDINFO
 typedef struct tagGetForegroundInfo {
  HWND hwndActive;
  HWND hwndFocus;
@@ -72,14 +86,20 @@ typedef struct tagGetForegroundInfo {
  DWORD dwCompStrLen;
  HKL KeyboardLayoutHandle;
 } GET_FOREGROUND_INFO;
+#endif /* __WINCE_DEFINED_TAGGETFOREGROUNDINFO */
+#ifndef __WINCE_DEFINED_PGET_FOREGROUND_INFO
+#define __WINCE_DEFINED_PGET_FOREGROUND_INFO
 typedef GET_FOREGROUND_INFO *PGET_FOREGROUND_INFO, *LPGET_FOREGROUND_INFO;
+#endif /* __WINCE_DEFINED_PGET_FOREGROUND_INFO */
 
 /* PHYSICSENGINEINIT  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_TAGPHYSICSENGINEINIT
+#define __WINCE_DEFINED_TAGPHYSICSENGINEINIT
 typedef struct tagPHYSICSENGINEINIT {
  DWORD cbSize;
  DWORD dwEngineType;
  DWORD dwFlags;
- LONG lInitialVelocity; 
+ LONG lInitialVelocity;
  DWORD dwInitialAngle;
  BYTE bXAxisMovementMode;
  BYTE bXAxisBoundaryMode;
@@ -90,20 +110,32 @@ typedef struct tagPHYSICSENGINEINIT {
  POINT ptInitialPosition;
  SIZE sizeItem;
 } PHYSICSENGINEINIT;
+#endif /* __WINCE_DEFINED_TAGPHYSICSENGINEINIT */
+#ifndef __WINCE_DEFINED_PPHYSICSENGINEINIT
+#define __WINCE_DEFINED_PPHYSICSENGINEINIT
 typedef PHYSICSENGINEINIT *PPHYSICSENGINEINIT, *LPPHYSICSENGINEINIT;
+#endif /* __WINCE_DEFINED_PPHYSICSENGINEINIT */
 
 /* PHYSICSENGINESTATE  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_TAGPHYSICSENGINESTATE
+#define __WINCE_DEFINED_TAGPHYSICSENGINESTATE
 typedef struct tagPHYSICSENGINESTATE {
- DWORD cbSize; 
+ DWORD cbSize;
  DWORD dwTime;
  POINT ptPosition;
  LONG lVelocityX;
  LONG lVelocityY;
  BOOL fComplete;
 } PHYSICSENGINESTATE;
+#endif /* __WINCE_DEFINED_TAGPHYSICSENGINESTATE */
+#ifndef __WINCE_DEFINED_PPHYSICSENGINESTATE
+#define __WINCE_DEFINED_PPHYSICSENGINESTATE
 typedef PHYSICSENGINESTATE *PPHYSICSENGINESTATE, *LPPHYSICSENGINESTATE;
+#endif /* __WINCE_DEFINED_PPHYSICSENGINESTATE */
 
 /* WAGINFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_TAGWAGI
+#define __WINCE_DEFINED_TAGWAGI
 typedef struct tagWAGI {
  size_t cbSize;
  DWORD dwFlags;
@@ -115,6 +147,7 @@ typedef struct tagWAGI {
  BYTE bHorizontalExtent;
  BYTE bVerticalExtent;
 } WAGINFO
+#endif /* __WINCE_DEFINED_TAGWAGI */
 
 /* ==================================================================
  * functions and callbacks
@@ -123,33 +156,25 @@ typedef struct tagWAGI {
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 4.0..699 */
 
 /* BatteryNotifyOfTimeChange  [function; ce-only; CE 1.0..199, 4.0..699; Coredll.lib, coredll.lib] */
-void WINAPI BatteryNotifyOfTimeChange(
- BOOL fForward,
- FILETIME *pftDelta
-);
+void WINAPI BatteryNotifyOfTimeChange(BOOL fForward,
+ FILETIME *pftDelta);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x400) || (_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 3.0..399, 5.0..699 */
 
 /* NotifyWinUserSystem  [function; ce-only; CE 3.0..399, 5.0..699; Coredll.lib, coredll.lib] */
-void NotifyWinUserSystem(
- UINT uEvent
-);
+void NotifyWinUserSystem(UINT uEvent);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
 
 /* BatteryGetLifeTimeInfo  [function; ce-only; CE 3.0..699; Coredll.lib, coredll.lib] */
-void BatteryGetLifeTimeInfo( 
- LPSYSTEMTIME pstLastChange, 
- DWORD* pcmsCpuUsage, 
- DWORD* pcmsPreviousCpuUsage 
-);
+void BatteryGetLifeTimeInfo(LPSYSTEMTIME pstLastChange,
+ DWORD* pcmsCpuUsage,
+ DWORD* pcmsPreviousCpuUsage);
 
 /* RegisterTaskBar  [function; ce-only; CE 3.0..699; coredll.lib] */
-BOOL RegisterTaskBar( 
- HWND hwndTaskbar 
-);
+BOOL RegisterTaskBar(HWND hwndTaskbar);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
@@ -158,53 +183,39 @@ BOOL RegisterTaskBar(
 void GwesPowerOffSystem(void);
 
 /* NLedGetDeviceInfo  [function; ce-only; CE 4.0..699; Coredll.dll, coredll.dll] */
-BOOL WINAPI NLedGetDeviceInfo(
- UINT nInfoId,
- void* pOutput
-);
+BOOL WINAPI NLedGetDeviceInfo(UINT nInfoId,
+ void* pOutput);
 
 /* NLedSetDevice  [function; ce-only; CE 4.0..699; Coredll.dll, coredll.dll] */
-BOOL WINAPI NLedSetDevice(
- UINT nDeviceId,
- void* pInput
-);
+BOOL WINAPI NLedSetDevice(UINT nDeviceId,
+ void* pInput);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* GetForegroundInfo  [function; ce-only; CE 5.0..699] */
-BOOL WINAPI GetForegroundInfo(
- GET_FOREGROUND_INFO* pgfi
-);
+BOOL WINAPI GetForegroundInfo(GET_FOREGROUND_INFO* pgfi);
 
 /* GetForegroundKeyboardLayoutHandle  [function; ce-only; CE 5.0..699] */
-HKL GetForegroundKeyboardLayoutHandle( void );
+HKL GetForegroundKeyboardLayoutHandle(void);
 
 /* GetForegroundKeyboardTarget  [function; ce-only; CE 5.0..699] */
 HWND GetForegroundKeyboardTarget(void);
 
 /* ImmGetConversionStatusForeground  [function; ce-only; CE 5.0..699] */
-BOOL WINAPI ImmGetConversionStatusForeground(
- DWORD* pfdwConversion,
- DWORD* pfdwSentence
-);
+BOOL WINAPI ImmGetConversionStatusForeground(DWORD* pfdwConversion,
+ DWORD* pfdwSentence);
 
 /* KeybdGetDeviceInfo  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
-BOOL KeybdGetDeviceInfo(
- INT iIndex,
- LPVOID lpOutput 
-);
+BOOL KeybdGetDeviceInfo(INT iIndex,
+ LPVOID lpOutput);
 
 /* RegisterDesktop  [function; ce-only; CE 5.0..699] */
-BOOL RegisterDesktop( 
- HWND hwndDesktop
-);
+BOOL RegisterDesktop(HWND hwndDesktop);
 
 /* RegisterTaskBarEx  [function; ce-only; CE 5.0..699] */
-BOOL RegisterTaskBarEx( 
- HWND hwndTaskbar,
- BOOL bTaskBarOnTop
-);
+BOOL RegisterTaskBarEx(HWND hwndTaskbar,
+ BOOL bTaskBarOnTop);
 
 /* TouchCalibrate  [function; ce-only; CE 5.0..699; Coredll.lib, coredll.lib] */
 BOOL WINAPI TouchCalibrate(void);
@@ -213,38 +224,28 @@ BOOL WINAPI TouchCalibrate(void);
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
 /* DisableGestures  [function; ce-only; CE 6.0..699; TouchGesture.lib] */
-BOOL DisableGestures(
- HWND hwnd,
+BOOL DisableGestures(HWND hwnd,
  ULONGLONG ullFlags,
- UINT uScope
-);
+ UINT uScope);
 
 /* EnableGestures  [function; ce-only; CE 6.0..699; TouchGesture.lib] */
-BOOL EnableGestures(
- HWND hwnd,
+BOOL EnableGestures(HWND hwnd,
  ULONGLONG ullFlags,
- UINT uScope
-);
+ UINT uScope);
 
 /* GetAnimateMessageInfo  [function; ce-only; CE 6.0..699] */
-BOOL GetAnimateMessageInfo(
- HWND hWnd, 
- WPARAM wParam, 
- LPARAM lParam, 
- LPANIMATEMESSAGEINFO pAnimateMessageInfo
-);
+BOOL GetAnimateMessageInfo(HWND hWnd,
+ WPARAM wParam,
+ LPARAM lParam,
+ LPANIMATEMESSAGEINFO pAnimateMessageInfo);
 
 /* GetWindowAutoGesture  [function; ce-only; CE 6.0..699] */
-BOOL GetWindowAutoGesture(
- HWND hWnd, 
- LPWAGINFO lpAutoGestureInfo
-);
+BOOL GetWindowAutoGesture(HWND hWnd,
+ LPWAGINFO lpAutoGestureInfo);
 
 /* SetWindowAutoGesture  [function; ce-only; CE 6.0..699] */
-BOOL SetWindowAutoGesture(
- HWND hWnd, 
- LPWAGINFO lpAutoGestureInfo
-);
+BOOL SetWindowAutoGesture(HWND hWnd,
+ LPWAGINFO lpAutoGestureInfo);
 #endif /* _WIN32_WCE */
 
 #endif /* _PWINUSER_ */

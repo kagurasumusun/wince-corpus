@@ -44,39 +44,63 @@
  * ================================================================ */
 
 /* CEGUID  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__CEGUID
+#define __WINCE_DEFINED__CEGUID
 typedef struct _CEGUID {
  DWORD Data1;
  DWORD Data2;
  DWORD Data3;
  DWORD Data4;
 } CEGUID;
+#endif /* __WINCE_DEFINED__CEGUID */
+#ifndef __WINCE_DEFINED_PCEGUID
+#define __WINCE_DEFINED_PCEGUID
 typedef CEGUID *PCEGUID, *LPCEGUID;
+#endif /* __WINCE_DEFINED_PCEGUID */
 
 /* CEOSVERSIONINFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__CEOSVERSIONINFO
+#define __WINCE_DEFINED__CEOSVERSIONINFO
 typedef struct _CEOSVERSIONINFO {
- DWORD dwOSVersionInfoSize; 
- DWORD dwMajorVersion; 
- DWORD dwMinorVersion; 
- DWORD dwBuildNumber; 
- DWORD dwPlatformId; 
- WCHAR szCSDVersion[ 128 ]; 
+ DWORD dwOSVersionInfoSize;
+ DWORD dwMajorVersion;
+ DWORD dwMinorVersion;
+ DWORD dwBuildNumber;
+ DWORD dwPlatformId;
+ WCHAR szCSDVersion[ 128 ];
 } CEOSVERSIONINFO, * LPCEOSVERSIONINFO;
+#endif /* __WINCE_DEFINED__CEOSVERSIONINFO */
 
 /* RAPIINIT  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__RAPIINIT
+#define __WINCE_DEFINED__RAPIINIT
 typedef struct _RAPIINIT {
  DWORD cbSize;
  HANDLE heRapiInit;
  HRESULT hrRapiInit;
 } RAPIINIT;
+#endif /* __WINCE_DEFINED__RAPIINIT */
+#ifndef __WINCE_DEFINED_PRAPIINIT
+#define __WINCE_DEFINED_PRAPIINIT
 typedef RAPIINIT *PRAPIINIT, *LPRAPIINIT;
+#endif /* __WINCE_DEFINED_PRAPIINIT */
 
 /* RAPISTREAMFLAG  [enum; ce-only; rapi.lib] */
+#ifndef __WINCE_DEFINED_TAGRAPISTREAMFLAG
+#define __WINCE_DEFINED_TAGRAPISTREAMFLAG
 typedef enum tagRAPISTREAMFLAG {
  STREAM_TIMEOUT_READ
 } RAPISTREAMFLAG;
+#endif /* __WINCE_DEFINED_TAGRAPISTREAMFLAG */
+#ifndef __WINCE_DEFINED_PRAPISTREAMFLAG
+#define __WINCE_DEFINED_PRAPISTREAMFLAG
 typedef RAPISTREAMFLAG *PRAPISTREAMFLAG, *LPRAPISTREAMFLAG;
+#endif /* __WINCE_DEFINED_PRAPISTREAMFLAG */
 
 /* CENOTIREQUEST  [extra struct] */
+#ifndef __WINCE_DEFINED__CENOTIFYREQUEST
+#define __WINCE_DEFINED__CENOTIFYREQUEST
 typedef struct _CENOTIFYREQUEST { DWORD dwSize; HWND hwnd; DWORD dwFlags; HANDLE hHeap; DWORD dwParam; } CENOTIREQUEST;
+#endif /* __WINCE_DEFINED__CENOTIFYREQUEST */
 
 #endif /* _RAPITYPES_ */

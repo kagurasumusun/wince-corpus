@@ -18,10 +18,8 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* FormatVolumeUI  [function; ce-only; CE 5.0..699; Fatutil.dll] */
-VOID FormatVolumeUI(
- HANDLE hVolume,
- HWND hWnd
-);
+VOID FormatVolumeUI(HANDLE hVolume,
+ HWND hWnd);
 #endif /* _WIN32_WCE */
 
 #endif /* _FORMATDISK_ */

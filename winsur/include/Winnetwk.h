@@ -175,6 +175,8 @@
  * ================================================================ */
 
 /* CONNECTDLGSTRUCT  [struct, typedef; shared; A/W CONNECTDLGSTRUCTA,CONNECTDLGSTRUCTW (CE is W-side)] */
+#ifndef __WINCE_DEFINED_CONNECTDLGSTRUCT
+#define __WINCE_DEFINED_CONNECTDLGSTRUCT
 typedef struct {
  DWORD cbStructure;
  HWND hwndOwner;
@@ -182,9 +184,15 @@ typedef struct {
  DWORD dwFlags;
  DWORD dwDevNum;
 } CONNECTDLGSTRUCT;
+#endif /* __WINCE_DEFINED_CONNECTDLGSTRUCT */
+#ifndef __WINCE_DEFINED_PCONNECTDLGSTRUCT
+#define __WINCE_DEFINED_PCONNECTDLGSTRUCT
 typedef CONNECTDLGSTRUCT *PCONNECTDLGSTRUCT, *LPCONNECTDLGSTRUCT;
+#endif /* __WINCE_DEFINED_PCONNECTDLGSTRUCT */
 
 /* DISCDLGSTRUCT  [struct, typedef; shared; A/W DISCDLGSTRUCTA,DISCDLGSTRUCTW (CE is W-side)] */
+#ifndef __WINCE_DEFINED__WCESDK_WIN32_DISCDLGSTRUCT_STR
+#define __WINCE_DEFINED__WCESDK_WIN32_DISCDLGSTRUCT_STR
 typedef struct _wcesdk_win32_DISCDLGSTRUCT_str{
  DWORD cbStructure;
  HWND hwndOwner;
@@ -192,34 +200,56 @@ typedef struct _wcesdk_win32_DISCDLGSTRUCT_str{
  LPTSTR lpRemoteName;
  DWORD dwFlags;
 } DISCDLGSTRUCT;
+#endif /* __WINCE_DEFINED__WCESDK_WIN32_DISCDLGSTRUCT_STR */
+#ifndef __WINCE_DEFINED_PDISCDLGSTRUCT
+#define __WINCE_DEFINED_PDISCDLGSTRUCT
 typedef DISCDLGSTRUCT *PDISCDLGSTRUCT, *LPDISCDLGSTRUCT;
+#endif /* __WINCE_DEFINED_PDISCDLGSTRUCT */
 
 /* NETRESOURCE  [struct, typedef; shared; A/W NETRESOURCEA,NETRESOURCEW (CE is W-side)] */
+#ifndef __WINCE_DEFINED__NETRESOURCE
+#define __WINCE_DEFINED__NETRESOURCE
 typedef struct _NETRESOURCE {
- DWORD dwScope; 
- DWORD dwType; 
- DWORD dwDisplayType; 
- DWORD dwUsage; 
- LPTSTR lpLocalName; 
- LPTSTR lpRemoteName; 
- LPTSTR lpComment; 
- LPTSTR lpProvider; 
+ DWORD dwScope;
+ DWORD dwType;
+ DWORD dwDisplayType;
+ DWORD dwUsage;
+ LPTSTR lpLocalName;
+ LPTSTR lpRemoteName;
+ LPTSTR lpComment;
+ LPTSTR lpProvider;
 } NETRESOURCE;
+#endif /* __WINCE_DEFINED__NETRESOURCE */
+#ifndef __WINCE_DEFINED_PNETRESOURCE
+#define __WINCE_DEFINED_PNETRESOURCE
 typedef NETRESOURCE *PNETRESOURCE, *LPNETRESOURCE;
+#endif /* __WINCE_DEFINED_PNETRESOURCE */
 
 /* REMOTE_NAME_INFO  [struct, typedef; shared; A/W REMOTE_NAME_INFOA,REMOTE_NAME_INFOW (CE is W-side)] */
+#ifndef __WINCE_DEFINED__REMOTE_NAME_INFO
+#define __WINCE_DEFINED__REMOTE_NAME_INFO
 typedef struct _REMOTE_NAME_INFO {
- LPTSTR lpUniversalName; 
- LPTSTR lpConnectionName; 
+ LPTSTR lpUniversalName;
+ LPTSTR lpConnectionName;
  LPTSTR lpRemainingPath;
 } REMOTE_NAME_INFO;
+#endif /* __WINCE_DEFINED__REMOTE_NAME_INFO */
+#ifndef __WINCE_DEFINED_PREMOTE_NAME_INFO
+#define __WINCE_DEFINED_PREMOTE_NAME_INFO
 typedef REMOTE_NAME_INFO *PREMOTE_NAME_INFO, *LPREMOTE_NAME_INFO;
+#endif /* __WINCE_DEFINED_PREMOTE_NAME_INFO */
 
 /* UNIVERSAL_NAME_INFO  [struct, typedef; shared; A/W UNIVERSAL_NAME_INFOA,UNIVERSAL_NAME_INFOW (CE is W-side)] */
+#ifndef __WINCE_DEFINED__UNIVERSAL_NAME_INFO
+#define __WINCE_DEFINED__UNIVERSAL_NAME_INFO
 typedef struct _UNIVERSAL_NAME_INFO {
  LPTSTR lpUniversalName;
 } UNIVERSAL_NAME_INFO;
+#endif /* __WINCE_DEFINED__UNIVERSAL_NAME_INFO */
+#ifndef __WINCE_DEFINED_PUNIVERSAL_NAME_INFO
+#define __WINCE_DEFINED_PUNIVERSAL_NAME_INFO
 typedef UNIVERSAL_NAME_INFO *PUNIVERSAL_NAME_INFO, *LPUNIVERSAL_NAME_INFO;
+#endif /* __WINCE_DEFINED_PUNIVERSAL_NAME_INFO */
 
 /* ==================================================================
  * functions and callbacks
@@ -228,80 +258,58 @@ typedef UNIVERSAL_NAME_INFO *PUNIVERSAL_NAME_INFO, *LPUNIVERSAL_NAME_INFO;
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
 
 /* WNetAddConnection3  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Redir.lib, redir.lib; A/W WNetAddConnection3A,WNetAddConnection3W (CE is W-side)] */
-DWORD WNetAddConnection3(
- HWND hwndOwner, 
- LPNETRESOURCE lpNetResource, 
- LPTSTR lpPassword, 
- LPTSTR lpUserName, 
- DWORD dwFlags 
-);
+DWORD WNetAddConnection3(HWND hwndOwner,
+ LPNETRESOURCE lpNetResource,
+ LPTSTR lpPassword,
+ LPTSTR lpUserName,
+ DWORD dwFlags);
 
 /* WNetCancelConnection2  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Redir.lib, redir.lib; A/W WNetCancelConnection2A,WNetCancelConnection2W (CE is W-side)] */
-DWORD WNetCancelConnection2(
- LPTSTR lpName, 
- DWORD dwFlags, 
- BOOL fForce 
-);
+DWORD WNetCancelConnection2(LPTSTR lpName,
+ DWORD dwFlags,
+ BOOL fForce);
 
 /* WNetCloseEnum  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Redir.lib, redir.lib] */
-DWORD WNetCloseEnum(
- HANDLE hEnum 
-);
+DWORD WNetCloseEnum(HANDLE hEnum);
 
 /* WNetConnectionDialog1  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Redir.lib, redir.lib; A/W WNetConnectionDialog1A,WNetConnectionDialog1W (CE is W-side)] */
-DWORD WNetConnectionDialog1(
- LPCONNECTDLGSTRUCT lpConnectDlgStruct 
-);
+DWORD WNetConnectionDialog1(LPCONNECTDLGSTRUCT lpConnectDlgStruct);
 
 /* WNetDisconnectDialog  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Redir.lib, redir.lib] */
-DWORD WNetDisconnectDialog(
- HWND hwnd,
- DWORD dwType
-);
+DWORD WNetDisconnectDialog(HWND hwnd,
+ DWORD dwType);
 
 /* WNetDisconnectDialog1  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Redir.lib, redir.lib; A/W WNetDisconnectDialog1A,WNetDisconnectDialog1W (CE is W-side)] */
-DWORD WNetDisconnectDialog1(
- LPDISCDLGSTRUCT lpDiscDlgStruct 
-);
+DWORD WNetDisconnectDialog1(LPDISCDLGSTRUCT lpDiscDlgStruct);
 
 /* WNetEnumResource  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Redir.lib, redir.lib; A/W WNetEnumResourceA,WNetEnumResourceW (CE is W-side)] */
-DWORD WNetEnumResource( 
- HANDLE hEnum, 
- LPDWORD lpcCount, 
- LPVOID lpBuffer, 
- LPDWORD lpBufferSize 
-);
+DWORD WNetEnumResource(HANDLE hEnum,
+ LPDWORD lpcCount,
+ LPVOID lpBuffer,
+ LPDWORD lpBufferSize);
 
 /* WNetGetConnection  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Redir.lib, redir.lib; A/W WNetGetConnectionA,WNetGetConnectionW (CE is W-side)] */
-DWORD WNetGetConnection( 
- LPCTSTR lpLocalName, 
- LPTSTR lpRemoteName, 
- LPDWORD lpnLength 
-);
+DWORD WNetGetConnection(LPCTSTR lpLocalName,
+ LPTSTR lpRemoteName,
+ LPDWORD lpnLength);
 
 /* WNetGetUniversalName  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Redir.lib, redir.lib; A/W WNetGetUniversalNameA,WNetGetUniversalNameW (CE is W-side)] */
-DWORD WNetGetUniversalName(
- LPCTSTR lpLocalPath, 
- DWORD dwInfoLevel, 
- LPVOID lpBuffer, 
- LPDWORD lpBufferSize 
-);
+DWORD WNetGetUniversalName(LPCTSTR lpLocalPath,
+ DWORD dwInfoLevel,
+ LPVOID lpBuffer,
+ LPDWORD lpBufferSize);
 
 /* WNetGetUser  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Redir.lib, redir.lib; A/W WNetGetUserA,WNetGetUserW (CE is W-side)] */
-DWORD WNetGetUser( 
- LPCTSTR lpName, 
- LPTSTR lpUserName, 
- LPDWORD lpnLength 
-);
+DWORD WNetGetUser(LPCTSTR lpName,
+ LPTSTR lpUserName,
+ LPDWORD lpnLength);
 
 /* WNetOpenEnum  [function; shared; CE 2.11..2.12, 3.0..699; Coredll.lib, coredll.lib, Redir.lib, redir.lib; A/W WNetOpenEnumA,WNetOpenEnumW (CE is W-side)] */
-DWORD WNetOpenEnum(
- DWORD dwScope, 
- DWORD dwType, 
- DWORD dwUsage, 
- LPNETRESOURCE lpNetResource, 
- LPHANDLE lphEnum 
-);
+DWORD WNetOpenEnum(DWORD dwScope,
+ DWORD dwType,
+ DWORD dwUsage,
+ LPNETRESOURCE lpNetResource,
+ LPHANDLE lphEnum);
 #endif /* _WIN32_WCE */
 
 #endif /* _WINNETWK_ */

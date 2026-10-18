@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 71 constants, 96 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 71 constants, 60 declarations, 8 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINSOCK2_
 #define _WINSOCK2_
@@ -90,48 +90,62 @@
 #define XP1_UNI_SEND 0x00008000
 
 /* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* _DSCP_TRAFFIC_TYPE  [enum; ce-only] */
+
+/* WSAAccept  [struct, function; shared; Ws2.lib] */
+
+/* WSAConnect  [struct, function; shared; Ws2.lib] */
+
+/* WSAJoinLeaf  [struct, function; shared; Ws2.lib] */
+
+/* WSARecvFrom  [struct, function; shared; Ws2.lib] */
+
+/* WSASendTo  [struct, function; shared; Ws2.lib] */
+
+/* ==================================================================
  * types -- structures, enumerations and typedefs; the member
  * outlines marked DERIVED below document a structure whose
  * declaration body no page prints
  * ================================================================ */
 
-/* _DSCP_TRAFFIC_TYPE  [enum; ce-only] */
-typedef enum _DSCP_TRAFFIC_TYPE {
- DSCPTypeNotSet = 0,
- DSCPBestEffort = 1,
- DSCPBackground = 2,
- DSCPExcellentEffort = 3,
- DSCPVideo = 4,
- DSCPAudio = 5,
- DSCPControl = 6,
- NumDSCPTrafficTypes = 6
-} DSCP_TRAFFIC_TYPE
-
 /* AFPROTOCOLS  [struct; shared] */
+#ifndef __WINCE_DEFINED__AFPROTOCOLS
+#define __WINCE_DEFINED__AFPROTOCOLS
 typedef struct _AFPROTOCOLS {
  INT iAddressFamily;
  INT iProtocol;
 } AFPROTOCOLS, *PAFPROTOCOLS, *LPAFPROTOCOLS;
+#endif /* __WINCE_DEFINED__AFPROTOCOLS */
 
 /* BLOB  [struct; shared] */
+#ifndef __WINCE_DEFINED__BLOB
+#define __WINCE_DEFINED__BLOB
 typedef struct _BLOB {
- ULONG cbSize; 
- BYTE* pBlobData; 
+ ULONG cbSize;
+ BYTE* pBlobData;
 } BLOB, LPBLOB;
+#endif /* __WINCE_DEFINED__BLOB */
 
 /* gethostbyaddr  [struct, function; shared; winsock.lib, Ws2.lib] */
-struct hostent FAR* gethostbyaddr(
- const char FAR* addr,
+#ifndef __WINCE_DEFINED_GETHOSTBYADDR
+#define __WINCE_DEFINED_GETHOSTBYADDR
+struct hostent FAR* gethostbyaddr(const char FAR* addr,
  int len,
- int type
-);
+ int type);
+#endif /* __WINCE_DEFINED_GETHOSTBYADDR */
 
 /* gethostbyname  [struct, function; shared; winsock.lib, Ws2.lib] */
-struct hostent FAR* gethostbyname(
- const char FAR* name 
-);
+#ifndef __WINCE_DEFINED_GETHOSTBYNAME
+#define __WINCE_DEFINED_GETHOSTBYNAME
+struct hostent FAR* gethostbyname(const char FAR* name);
+#endif /* __WINCE_DEFINED_GETHOSTBYNAME */
 
 /* hostent  [struct; shared] */
+#ifndef __WINCE_DEFINED_HOSTENT
+#define __WINCE_DEFINED_HOSTENT
 struct hostent {
  char FAR* h_name;
  char FAR* FAR* h_aliases;
@@ -139,8 +153,11 @@ struct hostent {
  short h_length;
  char FAR* FAR* h_addr_list;
 };
+#endif /* __WINCE_DEFINED_HOSTENT */
 
 /* IN_ADDR  [struct, typedef; shared] */
+#ifndef __WINCE_DEFINED_IN_ADDR
+#define __WINCE_DEFINED_IN_ADDR
 struct in_addr {
  union {
  struct { u_char s_b1,s_b2,s_b3,s_b4; } S_un_b;
@@ -148,240 +165,288 @@ struct in_addr {
  u_long S_addr;
  } S_un;
 };
+#endif /* __WINCE_DEFINED_IN_ADDR */
 
 /* inet_ntoa  [struct, function; shared; winsock.lib, Ws2.lib] */
-char FAR* inet_ntoa(
- struct in_addr in
-);
+#ifndef __WINCE_DEFINED_INET_NTOA
+#define __WINCE_DEFINED_INET_NTOA
+char FAR* inet_ntoa(struct in_addr in);
+#endif /* __WINCE_DEFINED_INET_NTOA */
 
 /* LINGER  [struct, typedef; shared] */
+#ifndef __WINCE_DEFINED_LINGER
+#define __WINCE_DEFINED_LINGER
 struct linger {
  u_short l_onoff;
  u_short l_linger;
 };
+#endif /* __WINCE_DEFINED_LINGER */
 
 /* PROTOCOL_INFO  [struct; shared; A/W PROTOCOL_INFOA,PROTOCOL_INFOW (CE is W-side)] */
-typedef struct _PROTOCOL_INFO { 
- DWORD dwServiceFlags; 
- INT iAddressFamily; 
- INT iMaxSockAddr; 
- INT iMinSockAddr; 
- INT iSocketType; 
- INT iProtocol; 
- DWORD dwMessageSize; 
+#ifndef __WINCE_DEFINED__PROTOCOL_INFO
+#define __WINCE_DEFINED__PROTOCOL_INFO
+typedef struct _PROTOCOL_INFO {
+ DWORD dwServiceFlags;
+ INT iAddressFamily;
+ INT iMaxSockAddr;
+ INT iMinSockAddr;
+ INT iSocketType;
+ INT iProtocol;
+ DWORD dwMessageSize;
  LPTSTR lpProtocol;
 } PROTOCOL_INFO;
+#endif /* __WINCE_DEFINED__PROTOCOL_INFO */
+#ifndef __WINCE_DEFINED_PPROTOCOL_INFO
+#define __WINCE_DEFINED_PPROTOCOL_INFO
 typedef PROTOCOL_INFO *PPROTOCOL_INFO, *LPPROTOCOL_INFO;
+#endif /* __WINCE_DEFINED_PPROTOCOL_INFO */
 
 /* protoent  [struct; shared] */
+#ifndef __WINCE_DEFINED_PROTOENT
+#define __WINCE_DEFINED_PROTOENT
 struct protoent {
  char FAR* p_name;
  char FAR* FAR* p_aliases;
  short p_proto;
 };
+#endif /* __WINCE_DEFINED_PROTOENT */
 
 /* select  [struct, function; shared; winsock.lib, Ws2.lib] */
-int select(
- int nfds,
+#ifndef __WINCE_DEFINED_SELECT
+#define __WINCE_DEFINED_SELECT
+int select(int nfds,
  fd_set FAR* readfds,
  fd_set FAR* writefds,
  fd_set FAR* exceptfds,
- const struct timeval FAR* timeout
-);
+ const struct timeval FAR* timeout);
+#endif /* __WINCE_DEFINED_SELECT */
 
 /* servent  [struct; shared] */
+#ifndef __WINCE_DEFINED_SERVENT
+#define __WINCE_DEFINED_SERVENT
 struct servent {
  char FAR* s_name;
  char FAR* FAR* s_aliases;
  short s_port;
  char FAR* s_proto;
 };
+#endif /* __WINCE_DEFINED_SERVENT */
 
 /* SERVICE_ADDRESS  [struct; shared] */
-typedef struct _SERVICE_ADDRESS { 
- DWORD dwAddressType; 
- DWORD dwAddressFlags; 
- DWORD dwAddressLength; 
- DWORD dwPrincipalLength; 
- BYTE* lpAddress; 
- BYTE* lpPrincipal; 
+#ifndef __WINCE_DEFINED__SERVICE_ADDRESS
+#define __WINCE_DEFINED__SERVICE_ADDRESS
+typedef struct _SERVICE_ADDRESS {
+ DWORD dwAddressType;
+ DWORD dwAddressFlags;
+ DWORD dwAddressLength;
+ DWORD dwPrincipalLength;
+ BYTE* lpAddress;
+ BYTE* lpPrincipal;
 } SERVICE_ADDRESS;
+#endif /* __WINCE_DEFINED__SERVICE_ADDRESS */
+#ifndef __WINCE_DEFINED_PSERVICE_ADDRESS
+#define __WINCE_DEFINED_PSERVICE_ADDRESS
 typedef SERVICE_ADDRESS *PSERVICE_ADDRESS, *LPSERVICE_ADDRESS;
+#endif /* __WINCE_DEFINED_PSERVICE_ADDRESS */
 
 /* SERVICE_ADDRESSES  [struct; shared] */
-typedef struct _SERVICE_ADDRESSES { 
- DWORD dwAddressCount; 
- SERVICE_ADDRESS Addresses[1]; 
+#ifndef __WINCE_DEFINED__SERVICE_ADDRESSES
+#define __WINCE_DEFINED__SERVICE_ADDRESSES
+typedef struct _SERVICE_ADDRESSES {
+ DWORD dwAddressCount;
+ SERVICE_ADDRESS Addresses[1];
 } SERVICE_ADDRESSES;
+#endif /* __WINCE_DEFINED__SERVICE_ADDRESSES */
+#ifndef __WINCE_DEFINED_PSERVICE_ADDRESSES
+#define __WINCE_DEFINED_PSERVICE_ADDRESSES
 typedef SERVICE_ADDRESSES *PSERVICE_ADDRESSES, *LPSERVICE_ADDRESSES;
+#endif /* __WINCE_DEFINED_PSERVICE_ADDRESSES */
 
 /* SERVICE_TYPE_VALUE_ABS  [struct; shared; A/W SERVICE_TYPE_VALUE_ABSA,SERVICE_TYPE_VALUE_ABSW (CE is W-side)] */
-typedef struct _SERVICE_TYPE_VALUE_ABS { 
- DWORD dwNameSpace; 
- DWORD dwValueType; 
- DWORD dwValueSize; 
- LPTSTR lpValueName; 
- PVOID lpValue; 
+#ifndef __WINCE_DEFINED__SERVICE_TYPE_VALUE_ABS
+#define __WINCE_DEFINED__SERVICE_TYPE_VALUE_ABS
+typedef struct _SERVICE_TYPE_VALUE_ABS {
+ DWORD dwNameSpace;
+ DWORD dwValueType;
+ DWORD dwValueSize;
+ LPTSTR lpValueName;
+ PVOID lpValue;
 } SERVICE_TYPE_VALUE_ABS;
+#endif /* __WINCE_DEFINED__SERVICE_TYPE_VALUE_ABS */
+#ifndef __WINCE_DEFINED_PSERVICE_TYPE_VALUE_ABS
+#define __WINCE_DEFINED_PSERVICE_TYPE_VALUE_ABS
 typedef SERVICE_TYPE_VALUE_ABS *PSERVICE_TYPE_VALUE_ABS, *LPSERVICE_TYPE_VALUE_ABS;
+#endif /* __WINCE_DEFINED_PSERVICE_TYPE_VALUE_ABS */
 
 /* SOCKADDR  [struct, typedef; shared] */
+#ifndef __WINCE_DEFINED_SOCKADDR
+#define __WINCE_DEFINED_SOCKADDR
 struct sockaddr {
  u_short sa_family;
  char sa_data[14];
 };
+#endif /* __WINCE_DEFINED_SOCKADDR */
 
 /* SOCKADDR_IN  [struct, typedef; shared] */
+#ifndef __WINCE_DEFINED_SOCKADDR_IN
+#define __WINCE_DEFINED_SOCKADDR_IN
 struct sockaddr_in{
  short sin_family;
  unsigned short sin_port;
  IN_ADDR sin_addr;
  char sin_zero[8];
 };
+#endif /* __WINCE_DEFINED_SOCKADDR_IN */
 
 /* SOCKADDR_IRDA  [struct, typedef; shared] */
-struct sockaddr_irda { 
- u_short irdaAddressFamily; 
- u_char irdaDeviceID[4]; 
+#ifndef __WINCE_DEFINED_SOCKADDR_IRDA
+#define __WINCE_DEFINED_SOCKADDR_IRDA
+struct sockaddr_irda {
+ u_short irdaAddressFamily;
+ u_char irdaDeviceID[4];
  char irdaServiceName[25];};
+#endif /* __WINCE_DEFINED_SOCKADDR_IRDA */
 
 /* SOCKADDR_STORAGE  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_SOCKADDR_STORAGE
+#define __WINCE_DEFINED_SOCKADDR_STORAGE
 typedef struct sockaddr_storage {
  short ss_family;
  char __ss_pad1[_SS_PAD1SIZE];
  __int64 __ss_align;
  char __ss_pad2[_SS_PAD2SIZE];
 } SOCKADDR_STORAGE, *PSOCKADDR_STORAGE;
+#endif /* __WINCE_DEFINED_SOCKADDR_STORAGE */
 
 /* SOCKET_ADDRESS  [struct; shared] */
+#ifndef __WINCE_DEFINED__SOCKET_ADDRESS
+#define __WINCE_DEFINED__SOCKET_ADDRESS
 typedef struct _SOCKET_ADDRESS {
  LPSOCKADDR lpSockaddr;
  INT iSockaddrLength;
 } SOCKET_ADDRESS, *PSOCKET_ADDRESS;
+#endif /* __WINCE_DEFINED__SOCKET_ADDRESS */
 
 /* timeval  [struct; shared] */
+#ifndef __WINCE_DEFINED_TIMEVAL
+#define __WINCE_DEFINED_TIMEVAL
 struct timeval {
  long tv_sec;
  long tv_usec;
 };
+#endif /* __WINCE_DEFINED_TIMEVAL */
 
 /* TRANSMIT_FILE_BUFFERS  [struct; shared] */
-typedef struct _TRANSMIT_FILE_BUFFERS { 
- PVOID Head; 
- DWORD HeadLength; 
- PVOID Tail; 
- DWORD TailLength; 
+#ifndef __WINCE_DEFINED__TRANSMIT_FILE_BUFFERS
+#define __WINCE_DEFINED__TRANSMIT_FILE_BUFFERS
+typedef struct _TRANSMIT_FILE_BUFFERS {
+ PVOID Head;
+ DWORD HeadLength;
+ PVOID Tail;
+ DWORD TailLength;
 } TRANSMIT_FILE_BUFFERS;
+#endif /* __WINCE_DEFINED__TRANSMIT_FILE_BUFFERS */
+#ifndef __WINCE_DEFINED_PTRANSMIT_FILE_BUFFERS
+#define __WINCE_DEFINED_PTRANSMIT_FILE_BUFFERS
 typedef TRANSMIT_FILE_BUFFERS *PTRANSMIT_FILE_BUFFERS, *LPTRANSMIT_FILE_BUFFERS;
+#endif /* __WINCE_DEFINED_PTRANSMIT_FILE_BUFFERS */
 
 /* WSABUF  [struct; shared] */
+#ifndef __WINCE_DEFINED___WSABUF
+#define __WINCE_DEFINED___WSABUF
 typedef struct __WSABUF {
  u_long len;
  char FAR* buf;
 } WSABUF, FAR* LPWSABUF;
-
-/* WSADATA  [struct, typedef; shared] */
-typedef struct WSAData {
- WORD wVersion;
- WORD wHighVersion;
- char szDescription[WSADESCRIPTION_LEN+1];
- char szSystemStatus[WSASYS_STATUS_LEN+1];
- unsigned short iMaxSockets;
- unsigned short iMaxUdpDg;
- char FAR* lpVendorInfo;
-} WSADATA, *LPWSADATA;
+#endif /* __WINCE_DEFINED___WSABUF */
 
 /* WSAECOMPARATOR  [enum; shared] */
+#ifndef __WINCE_DEFINED__WSAECOMPARATOR
+#define __WINCE_DEFINED__WSAECOMPARATOR
 typedef enum _WSAEcomparator {
  COMP_EQUAL = 0,
  COMP_NOTLESS
 } WSAECOMPARATOR, *PWSAECOMPARATOR;
+#endif /* __WINCE_DEFINED__WSAECOMPARATOR */
 
 /* CSADDR_INFO  [struct; shared] */
-typedef struct _CSADDR_INFO { 
- SOCKET_ADDRESS LocalAddr; 
- SOCKET_ADDRESS RemoteAddr; 
- INT iSocketType; 
- INT iProtocol; 
+#ifndef __WINCE_DEFINED__CSADDR_INFO
+#define __WINCE_DEFINED__CSADDR_INFO
+typedef struct _CSADDR_INFO {
+ SOCKET_ADDRESS LocalAddr;
+ SOCKET_ADDRESS RemoteAddr;
+ INT iSocketType;
+ INT iProtocol;
 } CSADDR_INFO;
+#endif /* __WINCE_DEFINED__CSADDR_INFO */
+#ifndef __WINCE_DEFINED_PCSADDR_INFO
+#define __WINCE_DEFINED_PCSADDR_INFO
 typedef CSADDR_INFO *PCSADDR_INFO, *LPCSADDR_INFO;
+#endif /* __WINCE_DEFINED_PCSADDR_INFO */
 
 /* SERVICE_TYPE_INFO_ABS  [struct; shared; A/W SERVICE_TYPE_INFO_ABSA,SERVICE_TYPE_INFO_ABSW (CE is W-side)] */
-typedef struct _SERVICE_TYPE_INFO_ABS { 
- LPTSTR lpTypeName; 
- DWORD dwValueCount; 
- SERVICE_TYPE_VALUE_ABS Values[1]; 
+#ifndef __WINCE_DEFINED__SERVICE_TYPE_INFO_ABS
+#define __WINCE_DEFINED__SERVICE_TYPE_INFO_ABS
+typedef struct _SERVICE_TYPE_INFO_ABS {
+ LPTSTR lpTypeName;
+ DWORD dwValueCount;
+ SERVICE_TYPE_VALUE_ABS Values[1];
 } SERVICE_TYPE_INFO_ABS;
+#endif /* __WINCE_DEFINED__SERVICE_TYPE_INFO_ABS */
+#ifndef __WINCE_DEFINED_PSERVICE_TYPE_INFO_ABS
+#define __WINCE_DEFINED_PSERVICE_TYPE_INFO_ABS
 typedef SERVICE_TYPE_INFO_ABS *PSERVICE_TYPE_INFO_ABS, *LPSERVICE_TYPE_INFO_ABS;
+#endif /* __WINCE_DEFINED_PSERVICE_TYPE_INFO_ABS */
+
+/* WSADATA  [struct, typedef; shared] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   wVersion */
+/*   wHighVersion */
+/*   szDescription */
+/*   szSystemStatus */
+/*   iMaxSockets */
+/*   iMaxUdpDg */
+/*   lpVendorInfo */
+
+/* WSANAMESPACE_INFO  [struct; shared; A/W WSANAMESPACE_INFOA,WSANAMESPACE_INFOW (CE is W-side)] */
+/* DERIVED member outline -- documented order, types/offsets not stated */
+/*   NSProviderId */
+/*   dwNameSpace */
+/*   fActive */
+/*   dwVersion */
+/*   lpszIdentifier */
 
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
 
-#if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
-
-/* WSACleanup  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-int WSACleanup (void);
-#endif /* _WIN32_WCE */
-
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
 
 /* gethostname  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib; A/W GetHostNameW (CE is W-side)] */
-int gethostname(
- char FAR* name,
- int namelen
-);
+int gethostname(char FAR* name,
+ int namelen);
 
 /* htonl  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-u_long htonl(
- u_long hostlong
-);
+u_long htonl(u_long hostlong);
 
 /* htons  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-u_short htons(
- u_short hostshort
-);
+u_short htons(u_short hostshort);
 
 /* inet_addr  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-unsigned long inet_addr(
- const char FAR* cp
-);
+unsigned long inet_addr(const char FAR* cp);
 
 /* ntohl  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-u_long ntohl(
- u_long netlong
-);
+u_long ntohl(u_long netlong);
 
 /* ntohs  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-u_short ntohs(
- u_short netshort
-);
-
-/* WSAGetLastError  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-int WSAGetLastError(void);
-
-/* WSAStartup  [function; shared; CE 2.11..2.12, 3.0..699; winsock.lib, Ws2.lib] */
-int WSAStartup(
- WORD wVersionRequested,
- LPWSADATA lpWSAData
-);
-#endif /* _WIN32_WCE */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
-
-/* WSALookupServiceEnd  [function; shared; CE 4.0..699; Btdrt.lib, Ws2.lib] */
-INT WSALookupServiceEnd(
- HANDLE hLookup
-);
+u_short ntohs(u_short netshort);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* sethostname  [function; ce-only; CE 5.0..699; Ws2.lib] */
-int sethostname(
- char* pName,
- int cName
-);
+int sethostname(char* pName,
+ int cName);
 #endif /* _WIN32_WCE */
 
 #endif /* _WINSOCK2_ */

@@ -1,15 +1,29 @@
-/* sdcardddk.h -- Windows CE unified surface
+/* Sdcardddk.h -- Windows CE unified surface
  *
  * ONE tree for every CE generation.  Version differences use
  * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 46 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 0 constants, 20 declarations, 5 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _SDCARDDDK_
 #define _SDCARDDDK_
 
+
+/* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* SD_BUS_REQUEST  [struct; ce-only] */
+
+/* SD_PARSED_REGISTER_CID  [struct; ce-only] */
+
+/* SD_PARSED_REGISTER_CSD  [struct; ce-only] */
+
+/* SD_SLOT_EVENT_TYPE  [enum; ce-only] */
+
+/* SDIO_CARD_INFO  [struct; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -18,6 +32,8 @@
  * ================================================================ */
 
 /* FUNCTION_POWER_STATE  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__FUNCTION_POWER_STATE
+#define __WINCE_DEFINED__FUNCTION_POWER_STATE
 typedef struct _FUNCTION_POWER_STATE{
  BOOL fPowerControlSupport;
  BOOL fPowerControlEnabled;
@@ -29,40 +45,55 @@ typedef struct _FUNCTION_POWER_STATE{
  INT EnableDelta;
  INT SelectDelta;
 }FUNCTION_POWER_STATE, *PFUNCTION_POWER_STATE;
+#endif /* __WINCE_DEFINED__FUNCTION_POWER_STATE */
 
 /* SD_CARD_SWITCH_FUNCTION  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__SD_CARD_SWITCH_FUNCTION
+#define __WINCE_DEFINED__SD_CARD_SWITCH_FUNCTION
 typedef struct _SD_CARD_SWITCH_FUNCTION{
  DWORD dwSelectedFunction;
  DWORD dwMaxCurrentAllowed;
  DWORD dwTimeOut;
  BYTE clientData[512/8];
 }SD_CARD_SWITCH_FUNCTION, *PSD_CARD_SWITCH_FUNCTION;
+#endif /* __WINCE_DEFINED__SD_CARD_SWITCH_FUNCTION */
 
 /* SD_FS_TYPE  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_SD_FS_TYPE
+#define __WINCE_DEFINED_SD_FS_TYPE
 typedef enum {
  SD_FS_FAT_PARTITION_TABLE,
  SD_FS_FAT_NO_PARTITION_TABLE,
  SD_FS_UNIVERSAL,
  SD_FS_OTHER
 } SD_FS_TYPE, *PSD_FS_TYPE;
+#endif /* __WINCE_DEFINED_SD_FS_TYPE */
 
 /* SD_HOST_ALLOC_FREE_DMA_BUFFER  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_SD_HOST_ALLOC_FREE_DMA_BUFFER
+#define __WINCE_DEFINED_SD_HOST_ALLOC_FREE_DMA_BUFFER
 typedef struct {
  ULONG Length;
  BOOLEAN CacheEnabled;
  PVOID VirtualAddress;
  PHYSICAL_ADDRESS LogicalAddress;
 }SD_HOST_ALLOC_FREE_DMA_BUFFER, *PSD_HOST_ALLOC_FREE_DMA_BUFFER;
+#endif /* __WINCE_DEFINED_SD_HOST_ALLOC_FREE_DMA_BUFFER */
 
 /* SD_HOST_BLOCK_CAPABILITY  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__SD_HOST_BLOCK_CAPABILITY
+#define __WINCE_DEFINED__SD_HOST_BLOCK_CAPABILITY
 typedef struct _SD_HOST_BLOCK_CAPABILITY {
  USHORT ReadBlockSize;
  USHORT WriteBlockSize;
  USHORT ReadBlocks;
  USHORT WriteBlocks;
 } SD_HOST_BLOCK_CAPABILITY, *PSD_HOST_BLOCK_CAPABILITY;
+#endif /* __WINCE_DEFINED__SD_HOST_BLOCK_CAPABILITY */
 
 /* SD_INFO_TYPE  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_SD_INFO_TYPE
+#define __WINCE_DEFINED_SD_INFO_TYPE
 typedef enum {
  SD_INFO_REGISTER_OCR = 0,
  SD_INFO_REGISTER_CID,
@@ -79,16 +110,28 @@ typedef enum {
  SD_INFO_CARD_INTERFACE_EX,
  SD_INFO_SWITCH_FUNCTION
 } SD_INFO_TYPE;
+#endif /* __WINCE_DEFINED_SD_INFO_TYPE */
+#ifndef __WINCE_DEFINED_PSD_INFO_TYPE
+#define __WINCE_DEFINED_PSD_INFO_TYPE
 typedef SD_INFO_TYPE *PSD_INFO_TYPE, *LPSD_INFO_TYPE;
+#endif /* __WINCE_DEFINED_PSD_INFO_TYPE */
 
 /* SD_INTERFACE_MODE  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_SD_INTERFACE_MODE
+#define __WINCE_DEFINED_SD_INTERFACE_MODE
 typedef enum {
  SD_INTERFACE_SD_MMC_1BIT,
  SD_INTERFACE_SD_4BIT
 } SD_INTERFACE_MODE;
+#endif /* __WINCE_DEFINED_SD_INTERFACE_MODE */
+#ifndef __WINCE_DEFINED_PSD_INTERFACE_MODE
+#define __WINCE_DEFINED_PSD_INTERFACE_MODE
 typedef SD_INTERFACE_MODE *PSD_INTERFACE_MODE, *LPSD_INTERFACE_MODE;
+#endif /* __WINCE_DEFINED_PSD_INTERFACE_MODE */
 
 /* SD_INTERFACE_MODE_EX  [typedef; ce-only] */
+#ifndef __WINCE_DEFINED_SD_INTERFACE_MODE_EX
+#define __WINCE_DEFINED_SD_INTERFACE_MODE_EX
 typedef union{
  struct{
  ULONG sd4Bit:1;
@@ -99,33 +142,29 @@ typedef union{
  }bit;
  ULONG uInterfaceMode;
 }SD_INTERFACE_MODE_EX, *PSD_INTERFACE_MODE_EX;
+#endif /* __WINCE_DEFINED_SD_INTERFACE_MODE_EX */
 
 /* SD_IO_FUNCTION_ENABLE_INFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__SD_IO_FUNCTION_ENABLE_INFO
+#define __WINCE_DEFINED__SD_IO_FUNCTION_ENABLE_INFO
 typedef struct _SD_IO_FUNCTION_ENABLE_INFO {
  ULONG ReadyRetryCount;
  ULONG Interval;
 } SD_IO_FUNCTION_ENABLE_INFO, *PSD_IO_FUNCTION_ENABLE_INFO
+#endif /* __WINCE_DEFINED__SD_IO_FUNCTION_ENABLE_INFO */
 
 /* SD_IO_TRANSFER_TYPE  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_SD_IO_TRANSFER_TYPE
+#define __WINCE_DEFINED_SD_IO_TRANSFER_TYPE
 typedef enum {
  SD_IO_READ,
  SD_IO_WRITE,
 } SD_IO_TRANSFER_TYPE
-
-/* SD_PARSED_REGISTER_CID  [struct; ce-only] */
-typedef struct _SD_PARSED_REGISTER_CID {
- UCHAR ManufacturerID;
- CHAR OEMApplicationID[3];
- CHAR ProductName[7];
- UCHAR MajorProductRevision;
- UCHAR MinorProductRevision;
- DWORD ProductSerialNumber;
- UCHAR ManufacturingMonth;
- USHORT ManufacturingYear;
- UCHAR RawCIDRegister[16];
-} SD_PARSED_REGISTER_CID, *PSD_PARSED_REGISTER_CID;
+#endif /* __WINCE_DEFINED_SD_IO_TRANSFER_TYPE */
 
 /* SD_RESPONSE_TYPE  [enum; ce-only] */
+#ifndef __WINCE_DEFINED__SD_RESPONSE_TYPE
+#define __WINCE_DEFINED__SD_RESPONSE_TYPE
 typedef enum _SD_RESPONSE_TYPE {
  NoResponse,
  ResponseR1,
@@ -137,8 +176,11 @@ typedef enum _SD_RESPONSE_TYPE {
  ResponseR6,
  ResponseR7
 } SD_RESPONSE_TYPE, *PSD_RESPONSE_TYPE;
+#endif /* __WINCE_DEFINED__SD_RESPONSE_TYPE */
 
 /* SD_SET_FEATURE_TYPE  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_SD_SET_FEATURE_TYPE
+#define __WINCE_DEFINED_SD_SET_FEATURE_TYPE
 typedef enum {
  SD_IO_FUNCTION_ENABLE = 0,
  SD_IO_FUNCTION_DISABLE,
@@ -163,26 +205,25 @@ typedef enum {
  SD_DMA_ALLOC_PHYS_MEM,
  SD_DMA_FREE_PHYS_MEM
 } SD_SET_FEATURE_TYPE, *PSD_SET_FEATURE_TYPE;
-
-/* SD_SLOT_EVENT_TYPE  [enum; ce-only] */
-typedef enum _SD_SLOT_EVENT_TYPE{
- SDCardEjected = 1,
- SDCardSelected = 2,
- SDCardDeselected = 3,
- SDCardBeginSelectDeselect = 4,
- SDCardDeselectRequest = 5,
- SDCardSelectRequest = 6
-} SD_SLOT_EVENT_TYPE, *PSD_SLOT_EVENT_TYPE;
+#endif /* __WINCE_DEFINED_SD_SET_FEATURE_TYPE */
 
 /* SD_TRANSFER_CLASS  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_SD_TRANSFER_CLASS
+#define __WINCE_DEFINED_SD_TRANSFER_CLASS
 typedef enum {
  SD_READ,
  SD_WRITE,
  SD_COMMAND
 } SD_TRANSFER_CLASS;
+#endif /* __WINCE_DEFINED_SD_TRANSFER_CLASS */
+#ifndef __WINCE_DEFINED_PSD_TRANSFER_CLASS
+#define __WINCE_DEFINED_PSD_TRANSFER_CLASS
 typedef SD_TRANSFER_CLASS *PSD_TRANSFER_CLASS, *LPSD_TRANSFER_CLASS;
+#endif /* __WINCE_DEFINED_PSD_TRANSFER_CLASS */
 
 /* SDCARD_DEVICE_TYPE  [enum; ce-only] */
+#ifndef __WINCE_DEFINED__SDCARD_DEVICE_TYPE
+#define __WINCE_DEFINED__SDCARD_DEVICE_TYPE
 typedef enum _SDCARD_DEVICE_TYPE {
  Device_Unknown,
  Device_MMC,
@@ -190,48 +231,26 @@ typedef enum _SDCARD_DEVICE_TYPE {
  Device_SD_IO,
  Device_SD_Combo
 } SDCARD_DEVICE_TYPE, *PSDCARD_DEVICE_TYPE;
-
-/* SDIO_CARD_INFO  [struct; ce-only] */
-typedef struct _SDIO_CARD_INFO {
- UCHAR FunctionNumber;
- UCHAR DeviceCode;
- DWORD CISPointer;
- DWORD CSAPointer;
- UCHAR CardCapability;
-} SDIO_CARD_INFO, *PSDIO_CARD_INFO;
+#endif /* __WINCE_DEFINED__SDCARD_DEVICE_TYPE */
 
 /* SD_CARD_INTERFACE  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__SD_CARD_INTERFACE
+#define __WINCE_DEFINED__SD_CARD_INTERFACE
 typedef struct _SD_CARD_INTERFACE {
  SD_INTERFACE_MODE InterfaceMode;
  ULONG ClockRate;
  BOOL WriteProtected;
 } SD_CARD_INTERFACE, *PSD_CARD_INTERFACE;
+#endif /* __WINCE_DEFINED__SD_CARD_INTERFACE */
 
 /* SD_CARD_INTERFACE_EX  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__SD_CARD_INTERFACE_EX
+#define __WINCE_DEFINED__SD_CARD_INTERFACE_EX
 typedef struct _SD_CARD_INTERFACE_EX{
  SD_INTERFACE_MODE_EX InterfaceModeEx;
  ULONG ClockRate;
  ULONG Reserved[6];
 }SD_CARD_INTERFACE_EX, *PSD_CARD_INTERFACE_EX;
-
-/* ==================================================================
- * functions and callbacks
- * ================================================================ */
-
-#if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
-
-/* SDOutputBuffer  [function; ce-only; CE 5.0..699; Sdcardlib.lib, sdcardlib.lib] */
-VOID SDOutputBuffer(
- PVOID pBuffer,
- ULONG BufferSize
-);
-
-/* SDPerformSafeCopy  [function; ce-only; CE 5.0..699; Sdcardlib.lib, sdcardlib.lib] */
-BOOLEAN SDPerformSafeCopy(
- PVOID pDestination,
- PVOID pSource, 
- ULONG Length
-);
-#endif /* _WIN32_WCE */
+#endif /* __WINCE_DEFINED__SD_CARD_INTERFACE_EX */
 
 #endif /* _SDCARDDDK_ */

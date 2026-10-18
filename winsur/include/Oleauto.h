@@ -88,26 +88,38 @@
  * ================================================================ */
 
 /* Var  [struct; ce-only; heuristic-prefix] */
+#ifndef __WINCE_DEFINED_VAR
+#define __WINCE_DEFINED_VAR
 typedef struct Var {
  WORD wLength;
  WORD wValueLength;
  WORD wType;
- WCHAR szKey[];
- WORD Padding[];
- DWORD Value[];
+ WCHAR szKey;
+ WORD Padding;
+ DWORD Value;
 } Var;
+#endif /* __WINCE_DEFINED_VAR */
+#ifndef __WINCE_DEFINED_PVAR
+#define __WINCE_DEFINED_PVAR
 typedef Var *PVar, *LPVar;
+#endif /* __WINCE_DEFINED_PVAR */
 
 /* VarFileInfo  [struct; ce-only; heuristic-prefix] */
+#ifndef __WINCE_DEFINED_VARFILEINFO
+#define __WINCE_DEFINED_VARFILEINFO
 typedef struct VarFileInfo {
  WORD wLength;
  WORD wValueLength;
  WORD wType;
- WCHAR szKey[];
- WORD Padding[];
- Var Children[];
+ WCHAR szKey;
+ WORD Padding;
+ Var Children;
 } VarFileInfo;
+#endif /* __WINCE_DEFINED_VARFILEINFO */
+#ifndef __WINCE_DEFINED_PVARFILEINFO
+#define __WINCE_DEFINED_PVARFILEINFO
 typedef VarFileInfo *PVarFileInfo, *LPVarFileInfo;
+#endif /* __WINCE_DEFINED_PVARFILEINFO */
 
 /* ==================================================================
  * functions and callbacks
@@ -116,205 +128,139 @@ typedef VarFileInfo *PVarFileInfo, *LPVarFileInfo;
 #if defined(_WIN32_WCE) && ((_WIN32_WCE < 0x200) || (_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 1.0..199, 2.11..2.12, 3.0..699 */
 
 /* VarBoolFromI2  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarBoolFromI2(
- short sIn, 
- BOOL* pboolOut 
-);
+HRESULT VarBoolFromI2(short sIn,
+ BOOL* pboolOut);
 
 /* VarBoolFromI4  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarBoolFromI4(
- long lIn, 
- BOOL* pboolOut 
-);
+HRESULT VarBoolFromI4(long lIn,
+ BOOL* pboolOut);
 
 /* VarBoolFromR4  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarBoolFromR4(
- float fltIn, 
- BOOL* pboolOut 
-);
+HRESULT VarBoolFromR4(float fltIn,
+ BOOL* pboolOut);
 
 /* VarBoolFromR8  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarBoolFromR8(
- double dblIn, 
- BOOL* pboolOut 
-);
+HRESULT VarBoolFromR8(double dblIn,
+ BOOL* pboolOut);
 
 /* VarBoolFromUI1  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarBoolFromUI1(
- BYTE bIn, 
- BOOL* pboolOut 
-);
+HRESULT VarBoolFromUI1(BYTE bIn,
+ BOOL* pboolOut);
 
 /* VarI2FromBool  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarI2FromBool(
- BOOL boolIn, 
- short* psOut 
-);
+HRESULT VarI2FromBool(BOOL boolIn,
+ short* psOut);
 
 /* VarI2FromI4  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarI2FromI4(
- LONG lIn, 
- short* psOut 
-);
+HRESULT VarI2FromI4(LONG lIn,
+ short* psOut);
 
 /* VarI2FromR4  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarI2FromR4(
- float fltIn, 
- short* psOut 
-);
+HRESULT VarI2FromR4(float fltIn,
+ short* psOut);
 
 /* VarI2FromR8  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarI2FromR8(
- double dblIn, 
- short* psOut 
-);
+HRESULT VarI2FromR8(double dblIn,
+ short* psOut);
 
 /* VarI2FromUI1  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarI2FromUI1(
- BYTE bIn, 
- short* psOut 
-);
+HRESULT VarI2FromUI1(BYTE bIn,
+ short* psOut);
 
 /* VarI4FromBool  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarI4FromBool(
- BOOL boolIn, 
- long* plOut 
-);
+HRESULT VarI4FromBool(BOOL boolIn,
+ long* plOut);
 
 /* VarI4FromI2  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarI4FromUI1(
- short sIn, 
- long* plOut 
-);
+HRESULT VarI4FromUI1(short sIn,
+ long* plOut);
 
 /* VarI4FromR4  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarI4FromR4(
- float fltIn, 
- long* plOut 
-);
+HRESULT VarI4FromR4(float fltIn,
+ long* plOut);
 
 /* VarI4FromR8  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarI4FromR8(
- double dblIn, 
- long* plOut 
-);
+HRESULT VarI4FromR8(double dblIn,
+ long* plOut);
 
 /* VarI4FromUI1  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarI4FromUI1(
- BYTE bIn, 
- long* plOut 
-);
+HRESULT VarI4FromUI1(BYTE bIn,
+ long* plOut);
 
 /* VarR4FromBool  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarR4FromBool(
- BOOL boolIn, 
- float* pfltOut 
-);
+HRESULT VarR4FromBool(BOOL boolIn,
+ float* pfltOut);
 
 /* VarR4FromI2  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarR4FromI2(
- short sIn, 
- float* pfltOut 
-);
+HRESULT VarR4FromI2(short sIn,
+ float* pfltOut);
 
 /* VarR4FromI4  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarR4FromI4(
- long lIn, 
- float* pfltOut 
-);
+HRESULT VarR4FromI4(long lIn,
+ float* pfltOut);
 
 /* VarR4FromR8  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarR4FromR8(
- DOUBLE dblIn, 
- float* pfltOut 
-);
+HRESULT VarR4FromR8(DOUBLE dblIn,
+ float* pfltOut);
 
 /* VarR4FromUI1  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarR4FromUI1(
- BYTE bIn, 
- float* pfltOut 
-);
+HRESULT VarR4FromUI1(BYTE bIn,
+ float* pfltOut);
 
 /* VarR8FromBool  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarR8FromBool(
- BOOL boolIn, 
- double* pdblOut 
-);
+HRESULT VarR8FromBool(BOOL boolIn,
+ double* pdblOut);
 
 /* VarR8FromI2  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarR8FromI2(
- short sIn, 
- double* pdblOut 
-);
+HRESULT VarR8FromI2(short sIn,
+ double* pdblOut);
 
 /* VarR8FromI4  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarR8FromI4(
- long lIn, 
- double* pdblOut 
-);
+HRESULT VarR8FromI4(long lIn,
+ double* pdblOut);
 
 /* VarR8FromR4  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarR8FromR4(
- float fltIn, 
- double* pdblOut 
-);
+HRESULT VarR8FromR4(float fltIn,
+ double* pdblOut);
 
 /* VarR8FromUI1  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarR8FromUI1(
- BYTE bIn, 
- double* pdblOut 
-);
+HRESULT VarR8FromUI1(BYTE bIn,
+ double* pdblOut);
 
 /* VarUI1FromBool  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarUI1FromBool(
- BOOL boolIn, 
- BYTE* pbOut 
-);
+HRESULT VarUI1FromBool(BOOL boolIn,
+ BYTE* pbOut);
 
 /* VarUI1FromI2  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarUI1FromI2(
- short sIn, 
- BYTE* pbOut 
-);
+HRESULT VarUI1FromI2(short sIn,
+ BYTE* pbOut);
 
 /* VarUI1FromI4  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarUI1FromI4(
- long lIn, 
- BYTE* pbOut 
-);
+HRESULT VarUI1FromI4(long lIn,
+ BYTE* pbOut);
 
 /* VarUI1FromR4  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarUI1FromR4(
- float fltIn, 
- BYTE* pbOut 
-);
+HRESULT VarUI1FromR4(float fltIn,
+ BYTE* pbOut);
 
 /* VarUI1FromR8  [function; shared; CE 1.0..199, 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT VarUI1FromR8(
- double dblIn, 
- BYTE* pbOut 
-);
+HRESULT VarUI1FromR8(double dblIn,
+ BYTE* pbOut);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x211 && _WIN32_WCE < 0x213) || (_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 2.11..2.12, 3.0..699 */
 
 /* GetErrorInfo  [function; shared; CE 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-HRESULT GetErrorInfo( 
- DWORD dwReserved, 
- IerrorInfo** pperrinfo 
-);
+HRESULT GetErrorInfo(DWORD dwReserved,
+ IerrorInfo** pperrinfo);
 
 /* SystemTimeToVariantTime  [function; shared; CE 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-int SystemTimeToVariantTime(
- SYSTEMTIME lpSystemTime, 
- double* pvtime 
-);
+int SystemTimeToVariantTime(SYSTEMTIME lpSystemTime,
+ double* pvtime);
 
 /* VariantTimeToSystemTime  [function; shared; CE 2.11..2.12, 3.0..699; Oleaut32.lib, oleaut32.lib] */
-int VariantTimeToSystemTime(
- double vtime, 
- LPSYSTEMTIME lpSystemTime 
-);
+int VariantTimeToSystemTime(double vtime,
+ LPSYSTEMTIME lpSystemTime);
 #endif /* _WIN32_WCE */
 
 #endif /* _OLEAUTO_ */

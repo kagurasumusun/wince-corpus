@@ -49,23 +49,46 @@
  * ================================================================ */
 
 /* HREPLFLD  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_HREPLFLD
+#define __WINCE_DEFINED_HREPLFLD
 typedef struct _REPLFLD FAR* HREPLFLD;
+#endif /* __WINCE_DEFINED_HREPLFLD */
+#ifndef __WINCE_DEFINED_PHREPLFLD
+#define __WINCE_DEFINED_PHREPLFLD
 typedef HREPLFLD *PHREPLFLD, *LPHREPLFLD;
+#endif /* __WINCE_DEFINED_PHREPLFLD */
 
 /* HREPLITEM  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_HREPLITEM
+#define __WINCE_DEFINED_HREPLITEM
 typedef struct _REPLITEM FAR* HREPLITEM;
+#endif /* __WINCE_DEFINED_HREPLITEM */
+#ifndef __WINCE_DEFINED_PHREPLITEM
+#define __WINCE_DEFINED_PHREPLITEM
 typedef HREPLITEM *PHREPLITEM, *LPHREPLITEM;
+#endif /* __WINCE_DEFINED_PHREPLITEM */
 
 /* HREPLOBJ  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_HREPLOBJ
+#define __WINCE_DEFINED_HREPLOBJ
 typedef struct _REPLOBJ FAR* HREPLOBJ;
+#endif /* __WINCE_DEFINED_HREPLOBJ */
+#ifndef __WINCE_DEFINED_PHREPLOBJ
+#define __WINCE_DEFINED_PHREPLOBJ
 typedef HREPLOBJ *PHREPLOBJ, *LPHREPLOBJ;
+#endif /* __WINCE_DEFINED_PHREPLOBJ */
 
 /* ReplDialogs  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_REPLDIALOGS
+#define __WINCE_DEFINED_REPLDIALOGS
 enum ReplDialogs {
  OPTIONS_DIALOG
 };
+#endif /* __WINCE_DEFINED_REPLDIALOGS */
 
 /* STOREINFO  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_TAGSTOREINFO
+#define __WINCE_DEFINED_TAGSTOREINFO
 typedef struct tagStoreInfo {
  UINT cbStruct;
  UINT uFlags;
@@ -76,9 +99,13 @@ typedef struct tagStoreInfo {
  UINT cbStoreId;
  LPBYTE lpbStoreId;
 } STOREINFO, *PSTOREINFO;
+#endif /* __WINCE_DEFINED_TAGSTOREINFO */
 
 /* OPTIONS_DIALOG  [extra enum] */
+#ifndef __WINCE_DEFINED_REPLDIALOGS
+#define __WINCE_DEFINED_REPLDIALOGS
 enum ReplDialogs {OPTIONS_DIALOG };
+#endif /* __WINCE_DEFINED_REPLDIALOGS */
 
 /* ==================================================================
  * functions and callbacks
@@ -90,19 +117,15 @@ enum ReplDialogs {OPTIONS_DIALOG };
 HRESULT
  WINAPI
  OnSSPDisable
- (
- HWND
- hwndParent
- );
+ (HWND
+ hwndParent);
 
 /* OnSSPEnable  [function; ce-only; CE 6.0..699] */
 HRESULT
  WINAPI
  OnSSPEnable
- (
- HWND
- hwndParent
- );
+ (HWND
+ hwndParent);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

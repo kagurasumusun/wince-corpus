@@ -1,5 +1,5 @@
 /* ExtraDeclarations.h -- declarations without header assignment
- * 5190 unassigned declarations
+ * 4160 unassigned declarations
  */
 #ifndef _EXTRADECLARATIONS_H_
 #define _EXTRADECLARATIONS_H_
@@ -9,7 +9,8 @@ typedef int (*HCI_InquiryCompleteEvent) (void* pUserContext,
  void* pCallContext,
  unsigned char status,
  unsigned char num_responses);
-typedef enum ePNDatum_t{ PN_DA_WGS84 = MIN_PNDATUM_T }PNDatum_t;
+typedef enum ePN3State_t{ PN_3S_FALSE = MIN_PNALTHOLD_T, PN_3S_TRUE = 1, PN_3S_OTHER = MAX_PNALTHOLD_T }PN3State_t;
+typedef enum SPCFGRULEATTRIBUTES{ SPRAF_TopLevel = (1 << 0), SPRAF_Active = (1 << 1), SPRAF_Export = (1 << 2), SPRAF_Import = (1 << 3), SPRAF_Interpreter = (1 << 4), SPRAF_Dynamic = (1 << 5), SPRAF_AutoPause = (1 << 16) } SPCFGRULEATTRIBUTES;
 typedef enum CaptureMode { STRMBUF_TEMPORARY_RECORDING = 0, STRMBUF_PERMANENT_RECORDING} STRMBUF_CAPTURE_MODE;
 enum StreamControlState CheckStreamState(IMediaSample *pSample);
 enum MPEG2Level {
@@ -26,6 +27,14 @@ enum MPEG2Profile {
  MPEG2Profile_High
 };
 enum StreamControlState { STREAM_FLOWING, STREAM_DISCARDING };
+typedef enum {
+ MERIT_PREFERRED = 0x800000,
+ MERIT_NORMAL = 0x600000,
+ MERIT_UNLIKELY = 0x400000,
+ MERIT_DO_NOT_USE = 0x200000,
+ MERIT_SW_COMPRESSOR = 0x100000,
+ MERIT_HW_COMPRESSOR = 0x100050
+};
 HRESULT OnRequestProgress(IExchangeClientRequest* pRequest, enum ExchangeClientRequestStatus status);
 enum InterpolationHint {
  InterpolationHintDefault,
@@ -34,6 +43,159 @@ enum InterpolationHint {
  InterpolationHintAveraging,
  InterpolationHintBicubic
 };
+typedef enum {
+ ELEM_ADJ_BeforeBegin = 0,
+ ELEM_ADJ_AfterBegin = 1,
+ ELEM_ADJ_BeforeEnd = 2,
+ ELEM_ADJ_AfterEnd = 3,
+ ELEMENT_ADJACENCY_Max = 2147483647L
+} ELEMENT_ADJACENCY;
+typedef enum {
+ TAGID_NULL = 0,
+ TAGID_UNKNOWN = 1,
+ TAGID_A = 2,
+ TAGID_ACRONYM = 3,
+ TAGID_ADDRESS = 4,
+ TAGID_APPLET = 5,
+ TAGID_AREA = 6,
+ TAGID_B = 7,
+ TAGID_BASE = 8,
+ TAGID_BASEFONT = 9,
+ TAGID_BDO = 10,
+ TAGID_BGSOUND = 11,
+ TAGID_BIG = 12,
+ TAGID_BLINK = 13,
+ TAGID_BLOCKQUOTE = 14,
+ TAGID_BODY = 15,
+ TAGID_BR = 16,
+ TAGID_BUTTON = 17,
+ TAGID_CAPTION = 18,
+ TAGID_CENTER = 19,
+ TAGID_CITE = 20,
+ TAGID_CODE = 21,
+ TAGID_COL = 22,
+ TAGID_COLGROUP = 23,
+ TAGID_COMMENT = 24,
+ TAGID_COMMENT_RAW = 25,
+ TAGID_DD = 26,
+ TAGID_DEL = 27,
+ TAGID_DFN = 28,
+ TAGID_DIR = 29,
+ TAGID_DIV = 30,
+ TAGID_DL = 31,
+ TAGID_DT = 32,
+ TAGID_EM = 33,
+ TAGID_EMBED = 34,
+ TAGID_EVENT = 35,
+ TAGID_FIELDSET = 36,
+ TAGID_FONT = 37,
+ TAGID_FORM = 38,
+ TAGID_FRAME = 39,
+ TAGID_FRAMESET = 40,
+ TAGID_GENERIC = 41,
+ TAGID_H1 = 42,
+ TAGID_H2 = 43,
+ TAGID_H3 = 44,
+ TAGID_H4 = 45,
+ TAGID_H5 = 46,
+ TAGID_H6 = 47,
+ TAGID_HEAD = 48,
+ TAGID_HR = 49,
+ TAGID_HTML = 50,
+ TAGID_I = 51,
+ TAGID_IFRAME = 52,
+ TAGID_IMG = 53,
+ TAGID_INPUT = 54,
+ TAGID_INS = 55,
+ TAGID_KBD = 56,
+ TAGID_LABEL = 57,
+ TAGID_LEGEND = 58,
+ TAGID_LI = 59,
+ TAGID_LINK = 60,
+ TAGID_LISTING = 61,
+ TAGID_MAP = 62,
+ TAGID_MARQUEE = 63,
+ TAGID_MENU = 64,
+ TAGID_META = 65,
+ TAGID_NEXTID = 66,
+ TAGID_NOBR = 67,
+ TAGID_NOEMBED = 68,
+ TAGID_NOFRAMES = 69,
+ TAGID_NOSCRIPT = 70,
+ TAGID_OBJECT = 71,
+ TAGID_OL = 72,
+ TAGID_OPTION = 73,
+ TAGID_P = 74,
+ TAGID_PARAM = 75,
+ TAGID_PLAINTEXT = 76,
+ TAGID_PRE = 77,
+ TAGID_Q = 78,
+ TAGID_HTMLAREA = 79,
+ TAGID_RP = 80,
+ TAGID_RT = 81,
+ TAGID_RUBY = 82,
+ TAGID_S = 83,
+ TAGID_SAMP = 84,
+ TAGID_SCRIPT = 85,
+ TAGID_SELECT = 86,
+ TAGID_SMALL = 87,
+ TAGID_SPAN = 88,
+ TAGID_STRIKE = 89,
+ TAGID_STRONG = 90,
+ TAGID_STYLE = 91,
+ TAGID_SUB = 92,
+ TAGID_SUP = 93,
+ TAGID_TABLE = 94,
+ TAGID_TBODY = 95,
+ TAGID_TC = 96,
+ TAGID_TD = 97,
+ TAGID_TEXTAREA = 98,
+ TAGID_TFOOT = 99,
+ TAGID_TH = 100,
+ TAGID_THEAD = 101,
+ TAGID_TITLE = 102,
+ TAGID_TR = 103,
+ TAGID_TT = 104,
+ TAGID_U = 105,
+ TAGID_UL = 106,
+ TAGID_VAR = 107,
+ TAGID_WBR = 108,
+ TAGID_XMP = 109,
+ TAGID_COUNT = 110,
+ TAGID_LAST_PREDEFINED = 10000,
+ ELEMENT_TAG_ID_Max = 2147483647L
+} ELEMENT_TAG_ID;
+typedef enum {
+ MOVEUNIT_PREVCHAR = 0,
+ MOVEUNIT_NEXTCHAR = 1,
+ MOVEUNIT_PREVCLUSTERBEG = 2,
+ MOVEUNIT_NEXTCLUSTERBEG = 3,
+ MOVEUNIT_PREVCLUSTEREND = 4,
+ MOVEUNIT_NEXTCLUSTEREND = 5,
+ MOVEUNIT_PREVWORDBEG = 6,
+ MOVEUNIT_NEXTWORDBEG = 7,
+ MOVEUNIT_PREVWORDEND = 8,
+ MOVEUNIT_NEXTWORDEND = 9,
+ MOVEUNIT_PREVPROOFWORD = 10,
+ MOVEUNIT_NEXTPROOFWORD = 11,
+ MOVEUNIT_NEXTURLBEG = 12,
+ MOVEUNIT_PREVURLBEG = 13,
+ MOVEUNIT_NEXTURLEND = 14,
+ MOVEUNIT_PREVURLEND = 15,
+ MOVEUNIT_PREVSENTENCE = 16,
+ MOVEUNIT_NEXTSENTENCE = 17,
+ MOVEUNIT_PREVBLOCK = 18,
+ MOVEUNIT_NEXTBLOCK = 19,
+ MOVEUNIT_ACTION_Max = 2147483647L
+} MOVEUNIT_ACTION;
+typedef enum { POINTER_GRAVITY_Left = 0, POINTER_GRAVITY_Right = 1 } POINTER_GRAVITY;
+typedef enum {
+ TLEF_RELATIVE_INCLUDE_CURRENT = 0x00000001,
+ TLEF_RELATIVE_BACK = 0x00000010,
+ TLEF_RELATIVE_FORE = 0x00000020,
+ TLEF_INCLUDE_UNINVOKEABLE = 0x00000040,
+ TLEF_ABSOLUTE = 0x00000031
+} TLENUMF;
 enum ButtonControlRectangleStyle_t {
  CBR_CLIENTRECT,
  CBR_CHECKBOX,
@@ -42,8 +204,22 @@ enum ButtonControlRectangleStyle_t {
  CBR_GROUPFRAME,
  CBR_PUSHBUTTON
 };
+typedef enum {
+ STREAMBUFFER_EC_TIMEHOLE = 0x326,
+ STREAMBUFFER_EC_STALE_DATA_READ =
+ STREAMBUFFER_EC_TIMEHOLE + 1,
+ STREAMBUFFER_EC_STALE_FILE_DELETED =
+ STREAMBUFFER_EC_STALE_DATA_READ + 1,
+ STREAMBUFFER_EC_CONTENT_BECOMING_STALE =
+ STREAMBUFFER_EC_STALE_FILE_DELETED + 1,
+ STREAMBUFFER_EC_WRITE_FAILURE =
+ STREAMBUFFER_EC_CONTENT_BECOMING_STALE + 1,
+ STREAMBUFFER_EC_READ_FAILURE =
+ STREAMBUFFER_EC_WRITE_FAILURE + 1,
+ STREAMBUFFER_EC_RATE_CHANGED =
+ STREAMBUFFER_EC_READ_FAILURE + 1
+};
 typedef enum STRMBUF_PLAYBACK_TUNE_POLICY { STRMBUF_PLAYBACK_TUNE_FLUSH_AND_GO_TO_LIVE, STRMBUF_PLAYBACK_TUNE_IGNORED} STRMBUF_PLAYBACK_TUNE_POLICY;
-enum tagDOMNodeType {NODE_INVALID,NODE_ELEMENT, 1 NODE_ATTRIBUTE,NODE_TEXT,NODE_CDATA_SECTION,NODE_ENTITY_REFERENCE,NODE_ENTITY,NODE_PROCESSING_INSTRUCTION,NODE_COMMENT,NODE_DOCUMENT,NODE_DOCUMENT_TYPE,NODE_DOCUMENT_FRAGMENT,NODE_NOTATION} DOMNodeType;
 enum HCI_EVENT {DEVICE_UP,DEVICE_DOWN,DEVICE_ERROR};
 enum PROVIDER_SPECIFIC_MESSAGE_CLASS {
  PS_MESSAGE_CLASS0 = 0,
@@ -52,6 +228,40 @@ enum PROVIDER_SPECIFIC_MESSAGE_CLASS {
  PS_MESSAGE_CLASS3,
  PS_MESSAGE_CLASSUNSPECIFIED,
 };
+enum MANAGED_COMMANDHANDLER_TYPE {
+ MANAGED_COMMANDHANDLER_SYNC = 1,
+ MANAGED_COMMANDHANDLER_ASYNC = 2
+};
+enum MANAGED_DATATYPE {
+ MANAGED_DATATYPE_BYTES = 0,
+ MANAGED_DATATYPE_WORD = 2,
+ MANAGED_DATATYPE_DWORD = 3,
+ MANAGED_DATATYPE_WSTR = 5,
+ MANAGED_DATATYPE_END = 6
+};
+typedef enum {
+ MERIT_PREFERRED = 0x800000,
+ MERIT_NORMAL = 0x600000,
+ MERIT_UNLIKELY = 0x400000,
+ MERIT_DO_NOT_USE = 0x200000,
+ MERIT_SW_COMPRESSOR = 0x100000,
+ MERIT_HW_COMPRESSOR = 0x100050
+};
+typedef enum {
+ STREAMBUFFER_EC_TIMEHOLE = 0x326,
+ STREAMBUFFER_EC_STALE_DATA_READ =
+ STREAMBUFFER_EC_TIMEHOLE + 1,
+ STREAMBUFFER_EC_STALE_FILE_DELETED =
+ STREAMBUFFER_EC_STALE_DATA_READ + 1,
+ STREAMBUFFER_EC_CONTENT_BECOMING_STALE =
+ STREAMBUFFER_EC_STALE_FILE_DELETED + 1,
+ STREAMBUFFER_EC_WRITE_FAILURE =
+ STREAMBUFFER_EC_CONTENT_BECOMING_STALE + 1,
+ STREAMBUFFER_EC_READ_FAILURE =
+ STREAMBUFFER_EC_WRITE_FAILURE + 1,
+ STREAMBUFFER_EC_RATE_CHANGED =
+ STREAMBUFFER_EC_READ_FAILURE + 1
+ };
 DWORD AAM_AudioIoControl (DWORD dwFlag, DWORD dwIoControlCode, LPVOID lpInBuf, DWORD nInBufSize, LPVOID lpOutBuf, DWORD nOutBufSize, LPDWORD lpBytesReturned, LPOVERLAPPED lpOverLapped);
 DWORD AAM_EQBandControl(DWORD dwIndex, DWORD dwFlags, LONG *plValue);
 DWORD AAM_EnableSSD (BOOL bEnable);
@@ -64,12 +274,9 @@ DWORD AAM_RegisterAudioCtrl(AAM_SRCCAP pSrc, BOOL bRegister);
 DWORD AAM_RegisterCallback(DWORD idThread, BOOL bRegister);
 DWORD AAM_SelectSource(DWORD dwAudioSourceID);
 DWORD AAM_VolumeControl(DWORD dwFlag, LONG *plValue);
-DWORD AMGetErrorText(HRESULT hr, TCHAR *pBuffer, DWORD MaxLen);
-VOID STDAPI AMGetWideString(LPCWSTR pszString, LPWSTR *ppszReturn);
 HRESULT AMovieDllRegisterServer(void);
 HRESULT AMovieDllUnregisterServer(void);
 HRESULT Abort(IHeaderCollection* pHeaders);
-HRESULT AbortAsyncOperation(IWSDAsyncResult* pAsyncResult);
 BOOL AbortPipeTransfers(USB_PIPE hPipe, DWORD dwFlags);
 HRESULT Accept(ITransportConnection** ppiTransportConnection);
 HRESULT AcceptedContentType (BSTR* pbstrAcceptedContentType);
@@ -78,17 +285,11 @@ HRESULT ActivateDialog(UINT uDlg, HWND hwndParent, HREPLFLD hFolder, IEnumReplIt
 HRESULT ActivateWindow();
 HRESULT Active(void);
 HRESULT Add(IDispatch ** ppolItem);
-HRESULT AddBootableDevice(BSTR bstrBootableDeviceName, BSTR bstrBootableDeviceId, IPMBootableDevice** ppiBootableDevice);
-HRESULT AddBuddy(IRTCBuddy* pBuddy);
-HRESULT AddBuddyEx(BSTR bstrPresentityURI, BSTR bstrUserName, BSTR bstrData, VARIANT_BOOL fPersistent, RTC_BUDDY_SUBSCRIPTION_TYPE enSubscriptionType, IRTCProfile* pProfile, long lFlags, IRTCBuddy2** ppBuddy2);
 HRESULT AddCPU(BSTR bstrCPUName, long dwCpuNum, int wArchitecture, long dwCPUType, BSTR bstrCPUId, VARIANT vtPageSize, VARIANT vtLevel, BSTR bstrDefaultValue, IPMCPU** ppiCPU);
 HRESULT AddCPUFiles(BSTR bstrFullPath, BSTR bstrKeyName, BSTR bsOSIdOrName, VARIANT vtLocaleId, VARIANT vtFlags);
 HRESULT AddCallback(IUnknown* pUnkCallback);
-HRESULT AddDevice(BSTR bstrDeviceName, BSTR bstrDeviceId, IPMRemoteDevice** ppiDevice);
 HRESULT AddDynamicService(LPCWSTR pszServiceId, LPCWSTR pszEndpointAddress, const WSD_PORT_TYPE* pPortType, const WSDXML_NAME* pPortName, const WSDXML_ELEMENT* pAny, IUnknown* pService);
-HRESULT AddFile(BSTR bstrFullPath, BSTR bstrKeyName, IPMCPU* piPMCPU, IPMOS* piPMOS, long dwLocaleId, long dwFlags, IPMPackageFile** ppiPMPackageFile);
 HRESULT AddFilter(IBaseFilter *pFilter, LPCWSTR pName);
-HRESULT AddGroup(BSTR bstrGroupName, BSTR bstrData, IRTCProfile* pProfile, long lFlags, IRTCBuddyGroup** ppGroup);
 HRESULT AddImage(OLE_HANDLE hImage, OLE_HANDLE hImageMask, long lData);
 HRESULT AddItemToInfraredFolder(int olItem, IDispatch * polItem);
 HRESULT AddItemsFromResource (HINSTANCE hinst, PCWSTR pszMenuName, DWORD dwMenuState);
@@ -97,30 +298,19 @@ HRESULT AddNameToNamespace(const LPCWSTR* pszUri, const LPCWSTR* pszName, WSDXML
 HRESULT AddNamespace(const LPCWSTR* pszUri, const LPCWSTR* pszSuggestedPrefix, WSDXML_NAMESPACE** ppNamespace);
 HRESULT AddOS(BSTR bstrOSName, int wMajorVersion, int wMinorVersion, BSTR bstrOSTypeId, BSTR bstrOSId, IPMOS** ppiOS);
 HRESULT AddObject(BSTR in_bstrName, BSTR in_bstrID, ICcObject** out_ppiObject);
-HRESULT AddPackage(BSTR bstrPackageName, BSTR bstrPackageId, IPMPackage** ppiPackage);
 void AddParameterBytes(HPACKET hPacket, BYTE *pData, DWORD cbData);
 void AddParameterDWORD(HPACKET hPacket, DWORD dwData);
 void AddParameterString(HPACKET hPacket, WCHAR *szData);
 void AddParameterWORD(HPACKET hPacket, WORD wData);
-HRESULT AddParticipant(BSTR bstrAddress, BSTR bstrName, IRTCParticipant** ppParticipant);
-HRESULT AddParticipantEx(BSTR bstrAddress, BSTR bstrName, BSTR bstrEPID, IRTCParticipant2** ppParticipant);
 HRESULT AddParticipantToConference(IVoIPCurrentCall *piCall);
-HRESULT AddPlatform(BSTR bstrPlatformName, BSTR bstrPlatformId, IPMPlatform** ppiPlatform);
 HRESULT AddPort(IDirectMusicPort* pPort);
-HRESULT AddPropInfo(BSTR bstrPropInfoName, long dwPropInfoType, BSTR bstrPropInfoValue, IPMPropInfo** ppiPropInfo);
-HRESULT AddProperty(BSTR bstrLinkName, BSTR bstrPropId, IPMProperty** ppiProperty);
 HRESULT AddSIFile(LPCWSTR lpszFileName, DWORD *pdwID, DWORD dwFlag);
-HRESULT AddServiceCategoryName(BSTR bstrServiceCategoryName, BSTR bstrServiceCategoryId, IPMServiceCategory** ppiServiceCategory);
 HRESULT AddServiceInfo(BSTR bstrServiceCategoryIdOrName, BSTR bstrServiceCLSID);
 HRESULT AddSourceFilterForMoniker(IMoniker *pMoniker, IBindCtx *pCtx, LPCWSTR lpcwstrFilterName, IBaseFilter **ppFilter);
-HRESULT AddStartupServer(BSTR bstrStartupServerId, VARIANT_BOOL bDefault, IPMStartupServerInfo** ppiStartupServer);
 HRESULT AddTokens(ULONG cTokens, ISpObjectToken** pToken);
 HRESULT AddTokensFromDataKey(ISpDataKey* pDataKey, const WCHAR* pszSubKey, const WCHAR* pszCategoryId);
 HRESULT AddTokensFromTokenEnum(IEnumSpObjectTokens* pTokenEnum);
 HRESULT AddToolkit(BSTR bstrToolkitName, BSTR bstrToolkitId);
-HRESULT AddTransport(BSTR bstrTransportId, VARIANT_BOOL bDefault, IPMTransportInfo** ppiTransport);
-HRESULT AddWatcher(BSTR bstrPresentityURI, BSTR bstrUserName, BSTR bstrData, VARIANT_BOOL fBlocked, VARIANT_BOOL fPersistent, IRTCWatcher** ppWatcher);
-HRESULT AddWatcherEx(BSTR bstrPresentityURI, BSTR bstrUserName, BSTR bstrData, RTC_WATCHER_STATE enState, VARIANT_BOOL fPersistent, RTC_ACE_SCOPE enScope, IRTCProfile* pProfile, long lFlags, IRTCWatcher2** ppWatcher);
 HRESULT AddWithIndex(BSTR bstr, long lData, long *lpIndex);
 HRESULT Advise(IUnknown *pUnk, DWORD *pdwCookie);
 HRESULT AdvisePeriodic(REFERENCE_TIME StartTime, REFERENCE_TIME PeriodTime, HSEMAPHORE hSemaphore, DWORD *pdwAdviseToken);
@@ -134,15 +324,12 @@ HRESULT AllocateBuffer(DWORD dwSize, IDirectMusicDownload** ppIDMDownload);
 HRESULT AllocateSample(DWORD dwFlags, IStreamSample **ppSample);
 HRESULT AllowDialogNotifications (BSTR bstrDialogNotifications);
 HRESULT AlterQuality(Quality q);
-HRESULT AnswerSession(IRTCSession2* piSession);
 HRESULT AnswerWithSessionDescription(BSTR bstrContentType, BSTR bstrSessionDescription);
 HRESULT Apply(void);
 HRESULT Architecture(int* pwArchitecture);
 void Arrived(IDispatch* Queue, long Cursor);
 HRESULT AssignPChannel(DWORD dwPChannel, IDirectMusicPort* pPort, DWORD dwGroup, DWORD dwMChannel);
 HRESULT AssignPChannelBlock(DWORD dwBlockNum, IDirectMusicPort* pPort, DWORD dwGroup);
-HRESULT AsyncOperationComplete(IWSDAsyncResult* pAsyncResult, IUnknown* pAsyncState);
-HRESULT Attach(BSTR bstrProcessName, long dwTimeOut, VARIANT vtProcessId, IPMConnection** ppiConnection);
 HRESULT AttribChanged(DWORD dwAttribute);
 HRESULT AudioPause(void);
 HRESULT AudioResume(void);
@@ -155,16 +342,13 @@ void BeforeNavigate2(IDispatch* pdisp, VARIANT* pvtURL, VARIANT* pvtFlags, VARIA
 HRESULT BeforeWindowOpen(BSTR url, BSTR urlContext, BSTR name, BSTR features, IUnknown* punkEvents);
 HRESULT BeginDecode(IImageSink* sink, OPTIONAL IPropertySetStorage* newPropSet);
 HRESULT BeginFlush(void);
-HRESULT BeginGetMetadata(IWSDAsyncResult** ppResult);
 HRESULT BeginMessage(void);
-HRESULT BeginMessageWSDL(IWSDLOperation* pOperation);
 HRESULT BeginPermanentRecording(LONGLONG hyRetainedSizeInMilliseconds, LONGLONG* phyActualRetainedSizeInMillisecs);
 HRESULT BeginTemporaryRecording(LONGLONG hyBufferSizeInMilliseconds);
 HRESULT BindToDevice(IPropertyBag* pPropertyBag, IObexDevice** ppDevice);
 HRESULT BindToObject(IBindCtx *pbc, IMoniker *pmkToLeft, REFIID riidResult, void **ppvResult);
 HRESULT BindToSource(DWORD bindflags, IBindCtx* pbc);
 HRESULT BindToStorage(IBindCtx *pbc, IMoniker *pmkToLeft, REFIID riid, void **ppvObj);
-void BltPrepare (DDGPEBltParms *pddgpeBltParms);
 DWORD Bpp (void);
 HRESULT BreakConnect(void);
 HRESULT BstrFromVector(SAFEARRAY FAR *psa, BSTR FAR *pbstr);
@@ -183,11 +367,9 @@ HRESULT CanSeekForward(LONG *pCanSeekForward);
 HRESULT CancelNotification(void);
 HRESULT CategoryId(BSTR* pbstrServiceCategoryId);
 HANDLE CeHeapCreate(DWORD flOptions, DWORD dwInitialSize, DWORD dwMaximumSize, PFN_AllocHeapMem pfnAlloc, PFN_FreeHeapMem pfnFee);
-HRESULT CeRapiInvoke(LPCWSTR pDllPath, LPCWSTR pFunctionName, DWORD cbInput, BYTE *pInput, DWORD *pcbOutput, BYTE **ppOutput, IRAPIStream **ppIRAPIStream, DWORD dwReserved);
 VOID WINAPI CertEnumPhysicalStore(const void* pvSystemStore, DWORD dwFlags, void* pvArg, PFN_CERT_ENUM_PHYSICAL_STORE pfnEnum);
 VOID WINAPI CertEnumSystemStore(DWORD dwFlags, void *pvSystemStoreLocationPara, void *pvArg, PFN_CERT_ENUM_SYSTEM_STORE pfnEnum);
 VOID WINAPI CertEnumSystemStoreLocation(DWORD dwFlags, void *pvArg, PFN_CERT_ENUM_SYSTEM_STORE_LOCATION pfnEnum);
-void ChangeAnimationDuration(IXRStoryboard* pColorStoryboard);
 HRESULT ChangeChordMap(IDirectMusicSegment* pSegment, BOOL fTrackScale, IDirectMusicChordMap* pChordMap);
 BOOL Check(void);
 HRESULT CheckCapabilities(DWORD * pCapabilities);
@@ -244,16 +426,13 @@ HRESULT ComposeSegmentFromTemplate(IDirectMusicStyle* pStyle, IDirectMusicSegmen
 HRESULT ComposeTemplateFromShape(WORD wNumMeasures, WORD wShape, BOOL fIntro, BOOL fEnd, WORD wEndLength, IDirectMusicSegment** ppTemplate);
 HRESULT ComposeTransition(IDirectMusicSegment* pFromSeg, IDirectMusicSegment* pToSeg, MUSIC_TIME mtTime, WORD wCommand, DWORD dwFlags, IDirectMusicChordMap* pChordMap, IDirectMusicSegment** ppTransSeg);
 HRESULT ComposeWith(IMoniker *pmkRight, BOOL fOnlyIfNotGeneric, IMoniker **ppmkComposite);
-HRESULT ConferenceSessions(IRTCSession2* piSessionA, IRTCSession2* piSessionB);
 BOOL ConfigInit(PPCI_DEV_INFO pInfo);
 BOOL ConfigRsrc(PPCI_DEV_INFO pInfo,PPCI_RSRC pMemHead,PPCI_RSRC pIoHead,DWORD* pMemSize,DWORD* pIoSize);
 BOOL ConfigSet(PPCI_RSRC pRsrc);
 BOOL ConfigSize(PPCI_DEV_INFO pInfo);
 HRESULT Configure(HWND hWnd, IRemoteDevice* piDevice);
-HRESULT ConfigureServiceUI(IPMBootableDevice* piBootableDevice, IPMServiceInfo* piServiceInfo, VARIANT hWnd);
 HRESULT Connect(IPin *pReceivePin, const AM_MEDIA_TYPE *pmt);
 HRESULT ConnectDirect(IPin *ppinOut, IPin *ppinIn, const AM_MEDIA_TYPE *pmt);
-HRESULT ConnectWSDL(IWSDLPort* Port);
 HRESULT ConnectedTo(IPin **ppPin);
 HRESULT ConnectionMediaType(AM_MEDIA_TYPE *pmt);
 BOOL ContainsPalette(const VIDEOINFOHEADER *pVideoInfo);
@@ -280,7 +459,6 @@ HRESULT CreateBrowserWindow();
 HRESULT CreateCaptureBuffer(LPWAVEFORMATEX pwfx, DWORD dwFlags, DWORD dwCardAddress, LPDWORD pdwcbBufferSize, LPBYTE *ppbBuffer, LPVOID *ppvObj);
 HRESULT CreateClipper(DWORD dwFlags, LPDIRECTDRAWCLIPPER FAR *lplpDDClipper, IUnknown FAR *pUnkOuter);
 HRESULT CreateCommand(HPACKET *pHPacket);
-HRESULT CreateConvertCharset(UINT uiSrcCodePage, UINT uiDstCodePage, DWORD dwProperty, IMLangConvertCharset** ppMLangConvertCharset);
 HRESULT CreateDepthStencilSurface(UINT Width, UINT Height, D3DMFORMAT Format, D3DMMULTISAMPLE_TYPE MultiSample, IDirect3DMobileSurface** ppSurface);
 HRESULT CreateDevice(UINT Adapter, D3DMDEVTYPE DeviceType, HWND hFocusWindow, ULONG BehaviorFlags, D3DMPRESENT_PARAMETERS* pPresentationParameters, IDirect3DMobileDevice** ppReturnedDeviceInterface);
 HRESULT CreateErrorInfo(ICreateErrorInfo **pperrinfo);
@@ -289,7 +467,6 @@ HRESULT CreateFMCompatibleDC(OLE_HANDLE hFC, OLE_HANDLE *phDC);
 HRESULT CreateFormatEnumerator(UINT cfmtetc, FORMATETC* rgfmtetc, IEnumFORMATETC** ppenumfmtetc);
 HRESULT CreateGUID(BSTR* pbstrNewGuid);
 HRESULT CreateGrammar(ULONGLONG ullGrammarId, ISpRecoGrammar** ppGrammar);
-HRESULT CreateIdleSubscription (IRTCProfile* pServerProfile, BSTR bstrAcceptedContent, BSTR bstrEventPackage, IRTCSubscription2** ppSubscription);
 HRESULT CreateImageDecoder(IStream* stream, DecoderInitFlag flags, IImageDecoder** decoder);
 HRESULT CreateImageEncoderToFile(const CLSID* clsid, const WCHAR* filename, IImageEncoder** encoder);
 HRESULT CreateImageEncoderToStream(const CLSID* clsid, IStream* stream, IImageEncoder** encoder);
@@ -306,23 +483,16 @@ VOID WINAPI CreateMediaType(AM_MEDIA_TYPE const *pSrc);
 HRESULT CreateMoniker(LPOLESTR szName, IBindCtx* pBC, IMoniker** ppmk, DWORD dwReserved);
 HRESULT CreateNewBitmap(UINT width, UINT height, PixelFormatID pixelFormat, IBitmapImage** bitmap);
 HRESULT CreateNewItem (HWND hwndParent);
-HRESULT CreatePCToPCSession(IRTCClient2* piClient, IRTCProfile* piProfile, IRTCSession2** ppiSession);
-HRESULT CreatePortConnector(IWSDLPort* pPort, ISoapConnector** ppConnector);
 VOID STDAPI CreatePosPassThru(LPUNKNOWN pAgg, BOOL bRenderer, IPin *pPin, IUnknown **ppPassThru);
-HRESULT CreateProfile(BSTR bstrProfileXML, IRTCProfile** ppProfile);
-HRESULT CreateQuery(IRTCUserSearchQuery** ppQuery);
 HRESULT CreateRecoContext(ISpRecoContext** ppNewContext);
 HRESULT CreateRecord(VoIPCallType vct, IVoIPCallRecord** ppiRecord);
 HRESULT CreateRenderTarget(UINT Width, UINT Height, D3DMFORMAT Format, D3DMMULTISAMPLE_TYPE MultiSample, BOOL Lockable, IDirect3DMobileSurface** ppSurface);
 HRESULT CreateReoccurringTask(ISpTask* pTask, void* pvTaskData, HANDLE hCompEvent, ISpNotifySink** ppTaskCtrl);
 HRESULT CreateSegment(IDirectMusicSegment** ppSegment);
-HRESULT CreateSession(RTC_SESSION_TYPE enType, BSTR bstrLocalPhoneURI, IRTCProfile* pProfile, long lFlags, IRTCSession** ppSession);
-HRESULT CreateSessionWithDescription(BSTR bstrContentType, BSTR bstrSessionDescription, IRTCProfile* pProfile, long lFlags, IRTCSession2** ppSession2);
 HRESULT CreateSharedSample(IStreamSample *pExistingSample, DWORD dwFlags, IStreamSample **ppNewSample);
 HRESULT CreateSoundBuffer(LPWAVEFORMATEX pwfx, DWORD dwFlags, DWORD dwCardAddress, LPDWORD pdwcbBufferSize, LPBYTE *ppbBuffer, LPVOID *ppvObj);
 HRESULT CreateStorage(const WCHAR *pwcsName, DWORD grfMode, DWORD reserved1, DWORD reserved2, IStorage **ppstg);
 HRESULT CreateStream(const WCHAR *pwcsName, DWORD grfMode, DWORD reserved1, DWORD *reserved2, IStream *ppstm);
-HRESULT CreateSubscription(IRTCProfile* pServerProfile, BSTR bstrAcceptedContent, BSTR bstrEventPackage, BSTR bstrContentType, BSTR bstrMessageBody, IRTCSubscription** ppSubscription);
 HRESULT CreateTexture(UINT Width, UINT Height, UINT Levels, DWORD Usage, D3DMFORMAT Format, D3DMPOOL Pool, IDirect3DMobileTexture** ppTexture);
 HRESULT CreateThreadControl(ISpThreadTask* pTask, void* pvTaskData, long nPriority, ISpThreadControl** ppThreadCtrl);
 HRESULT CreateTypeLib2(SYSKIND syskind, LPOLESTR szFile, ICreateTypeLib2 **ppctlib);
@@ -336,26 +506,6 @@ VOID WINAPI CryptEnumOIDInfo(DWORD dwGroupId, DWORD dwFlags, void *pvArg, PFN_CR
 void CurrentItemChange(IDispatch* pdispMedia);
 BOOL CustomTrackPopupMenu(HMENU hmenu, UNIT uFlags, Int x, Int y, HWND hWnd, LPTPMPARAMS lpTpm, BOOL fSelectFirst, BOOL *pfCustomTracked);
 HRESULT DAdvise(FORMATETC* pFormatetc, DWORD advf, IAdviseSink* pAdvSink, DWORD* pdwConnection);
-VOID WINAPI DDGPEBlt (LPDDHAL_BLTDATA pd);
-VOID WINAPI DDGPECreateExecuteBuffer (LPDDHAL_CREATESURFACEDATA pd);
-VOID WINAPI DDGPECreatePalette (LPDDHAL_CREATEPALETTEDATA pd);
-VOID WINAPI DDGPECreateSurface (LPDDHAL_CREATESURFACEDATA pd);
-VOID WINAPI DDGPEDestroyDriver (LPDDHAL_DESTROYDRIVERDATA pd);
-VOID WINAPI DDGPEDestroyExecuteBuffer (LPDDHAL_DESTROYSURFACEDATA pd);
-VOID WINAPI DDGPEDestroyPalette (LPDDHAL_DESTROYPALETTEDATA pd);
-VOID WINAPI DDGPEDestroySurface (LPDDHAL_DESTROYSURFACEDATA pd);
-VOID WINAPI DDGPEFlip (LPDDHAL_FLIPDATA pd);
-VOID WINAPI DDGPEFlipToGDISurface (LPDDHAL_FLIPTOGDISURFACEDATA pd);
-VOID WINAPI DDGPEGetFlipStatus (LPDDHAL_GETFLIPSTATUSDATA pd);
-VOID WINAPI DDGPELock (LPDDHAL_LOCKDATA pd);
-VOID WINAPI DDGPESetColorKey (LPDDHAL_SETCOLORKEYDATA pd);
-VOID WINAPI DDGPESetColorKeyDrv (LPDDHAL_DRVSETCOLORKEYDATA pd);
-VOID WINAPI DDGPESetEntries (LPDDHAL_SETENTRIESDATA pd);
-VOID WINAPI DDGPESetMode (LPDDHAL_SETMODEDATA pd);
-VOID WINAPI DDGPESetPalette (LPDDHAL_SETPALETTEDATA pd);
-VOID WINAPI DDGPEUnlock (LPDDHAL_UNLOCKDATA pd);
-VOID WINAPI DDGPEWaitForVerticalBlank (LPDDHAL_WAITFORVERTICALBLANKDATA pd);
-HRESULT DMOEnum(REFGUID guidCategory, DWORD dwFlags, DWORD cInTypes, const DMO_PARTIAL_MEDIATYPE* pInTypes, DWORD cOutTypes, const DMO_PARTIAL_MEDIATYPE* pOutTypes, IEnumDMO** ppEnum);
 BOOL DRM_ND_GetPrivateKey(PrivateKeyDef *pDef);
 int Data();
 VOID WINAPI DbgAssert(const TCHAR *pCondition, const TCHAR *pFileName, INT iLine);
@@ -409,14 +559,11 @@ HRESULT DetectCodepageInIStream(DWORD dwFlag, DWORD dwPrefWinCodePage, IStream* 
 HRESULT DetectInputCodepage(DWORD dwFlag, DWORD dwPrefWinCodePage, CHAR* pSrcStr, INT* pcSrcSize, DetectEncodingInfo* lpEncoding, INT* pnScores);
 HRESULT DetectOutboundCodePageInIStream(DWORD dwFlags, IStream* pStrIn, UINT* puiPreferredCodePages, UINT nPreferredCodePages, UINT* puiDetectedCodePages, UINT* pnDetectedCodePages, WCHAR* lpSpecialChar);
 HRESULT Device (BSTR* pbstrDeviceId);
-HRESULT DeviceAdded(LONG lFindData, IUPnPDevice* pDevice);
-HRESULT DeviceByUDN(BSTR bstrUDN, IUPnPDevice** ppudDevice);
 DWORD DeviceConfig(DWORD Command, PPCI_DEV_INFO pInfo,PPCI_RSRC pRsrc1,PPCI_RSRC pRsrc2,DWORD* pMemSize,DWORD* pIoSize);
 HRESULT DeviceId (BSTR*pbstrDeviceId);
 HRESULT DeviceRemoved(LONG lFindData, BSTR bstrUDN);
 VOID WINAPI DirectDrawCreate(GUID FAR *lpGUID, LPDIRECTDRAW FAR *lplpDD, IUnknown FAR *pUnkOuter);
 VOID WINAPI DirectDrawCreateClipper(DWORD dwFlags, LPDIRECTDRAWCLIPPER FAR *lplpDDClipper, IUnknown FAR *pUnkOuter);
-HRESULT DisableProfile(IRTCProfile* pProfile);
 void DisableWindow();
 HRESULT Disconnect();
 void DisplayPinInfo(IPin *pReceivePin);
@@ -444,18 +591,13 @@ void EOS();
 BOOL EdbgCancelRegisterClient(CHAR * ServiceName CHAR * DeviceName);
 HRESULT EmulateRecognition(ISpPhrase* pPhrase);
 HRESULT EnableItem(DWORD dwEnable, DWORD dwCmdNum, DWORD dwFlag);
-HRESULT EnablePresenceEx(IRTCProfile* pProfile, VARIANT varStorage, long lFlags);
-HRESULT EnableProfile(IRTCProfile* pProfile, long lRegisterFlags);
-HRESULT EnableProfileEx(IRTCProfile* pProfile, long lRegisterFlags, long lRoamingFlags);
 HRESULT EnabledGet(DWORD *dwEnabled);
 HRESULT EnabledSet(DWORD dwEnabled);
 BOOL EncryptFile (LPTSTR, LPTSTR, LPTSTR);
 HRESULT EndFlush(void);
-HRESULT EndGetMetadata(IWSDAsyncResult* pResult);
 HRESULT EndMessage(void);
 HRESULT EndOfStream(void);
 HRESULT Enum(IEnumMoniker **ppenumMoniker);
-HRESULT EnumAdvise(IENumSTATDATA *ppEnumAdvise,);
 HRESULT EnumAllModules(IOsAxsEnumModule** ppienum);
 HRESULT EnumAllProcesses(IOsAxsEnumProcess** ppienum);
 HRESULT EnumAllThreads(IOsAxsEnumThread** ppienum);
@@ -497,45 +639,31 @@ HRESULT EnumTransports(IEnumVariant** ppiEnumTransport);
 HRESULT EnumUniversalPlatforms(IEnumVariant** ppiEnumUniversalPlatform);
 HRESULT EnumUsedModules(IOsAxsEnumModule**ppiOsAxsEnumMod);
 HRESULT EnumVerbs(IEnumOleVerb **ppEnumOleVerb);
-HRESULT EnumerateBuddies(IRTCEnumBuddies** ppEnum);
-HRESULT EnumerateGroups(IRTCEnumGroups** ppEnum);
 HRESULT EnumerateObjects(ICcCollection**out_ppiCollection);
-HRESULT EnumerateParticipants(IRTCEnumParticipants** ppEnum);
-HRESULT EnumeratePresenceDevices(IRTCEnumPresenceDevices** ppEnumDevices);
-HRESULT EnumerateProfiles(IRTCEnumProfiles** ppEnum);
-HRESULT EnumerateResults(IRTCEnumUserSearchResults** ppEnum);
-HRESULT EnumerateWatchers(IRTCEnumWatchers** ppEnum);
 BOOL EqualPins(IUnknown *pPin1, IUnknown *pPin2);
 BOOL ErrorAnalysis(INT32 cCalibrationPoints,INT32* pScreenXBuffer,INT32* pScreenYBuffer,INT32* pUncalXBuffer,INT32* pUncalYBuffer);
 HRESULT EvaluateSessionDescription(BSTR bstrContentType, BSTR bstrSessionDescription, VARIANT_BOOL* pfApplicationSession);
-HRESULT Event(RTC_EVENT RTCEvent, IDispatch* pEvent);
 HRESULT EventPackage(BSTR* pbstrEventPackage);
 DWORD EventThread(LPVOID threadParams);
 HRESULT ExecuteOperation(ISoapReader* pISoapReader, ISoapSerializer* pISoapSerializer);
-HRESULT ExecuteSearch(IRTCUserSearchQuery* pQuery, IRTCProfile* pProfile, LONG_PTR lCookie);
 HRESULT Exit(void);
 HANDLE ExitThreadEvent(void);
 int ExtensionLayer_CloseDriverInstance (void);
 int ExtensionLayer_CreateDriverInstance (void);
 int ExtensionLayer_InitializeOnce (void);
 int ExtensionLayer_UnInitialize (void);
-HRESULT FaultRequest(WSD_SOAP_HEADER* pRequestHeader, IWSDMessageParameters* pMessageParameters, WSD_SOAP_FAULT* pFault);
 HRESULT FileCopy(BSTR bstrSource, BSTR bstrDest, VARIANT_BOOL bOverWrite, long* pdwTotalSize);
 HRESULT FileDelete(BSTR bstrFullPath);
 HRESULT FileGetInfo(BSTR bstrRemotePath, long* pdwFileAttributes, long* pdwFileSize, VARIANT* pvtCreationTime);
 HRESULT Find(BSTR pwszRestriction, IDispatch ** ppolItem);
-HRESULT FindByType(BSTR bstrTypeURI, DWORD dwFlags, IUPnPDevices** pDevices);
-HRESULT FindByUDN(BSTR bstrUDN, IUPnPDevice** pDevice);
 HRESULT FindCallerInfoBySpeedDialEntry(INT idxSpeedDial, IVoIPCallerInfoRecord** ppiRecord);
 HRESULT FindCallerInfoByURI(BSTR bstrURI, IVoIPCallerInfoRecord** ppiRecord);
 HRESULT FindConnectionPoint(REFIID riid, IConnectionPoint **ppCP);
-HRESULT FindDevices(RAPIDEVICEID *pDeviceID, RAPI_GETDEVICEOPCODE opFlags,..IRAPIDevice** ppIDevice);
 HRESULT FindFile(BSTR bstrFileName,VARIANT_BOOL fUseExisting, BSTR*pbstrFullPath);
 HRESULT FindFilterByName(LPCWSTR pName, IBaseFilter **ppFilter);
 HRESULT FindItem(BSTR bstr, long lIndexStart, long *pIndex);
 HRESULT FindItemPartial(BSTR bstr, long lIndexStart, long *pIndex);
 HRESULT FindNext(IDispatch ** ppolItem);
-HRESULT FindObject(BSTRin_bstrNameOrID,ICcObject**out_ppiObject);
 HRESULT FindPin(LPCWSTR Id, IPin **ppPin);
 int FindPinNumber(IPin *iPin);
 VOID WINAPI FingerWorker(LPVOID lpv);
@@ -548,7 +676,6 @@ HRESULT FreeCommand(HPACKET hPacket);
 void FreeResources();
 void FreeSamples();
 void FreeString(HPACKET hPacket, WCHAR *pszData);
-void GWECacheSetSysColors(int cElements, CONST INT* rgcolor, CONST COLORREF* rgrgb);
 HRESULT Get(IHeaderCollection* pHeaders, IStream** ppStream);
 HRESULT GetActualDataLength(void);
 HRESULT GetAdditionalHeaderValues(BSTR bstrHeaderValuePairs);
@@ -567,7 +694,6 @@ HRESULT GetBackBuffer(UINT BackBuffer, D3DMBACKBUFFER_TYPE Type, IDirect3DMobile
 HRESULT GetBaseStream(ISpStreamFormat** ppStream);
 LONG GetBitmapFormatSize(const BITMAPINFOHEADER *pHeader);
 DWORD GetBitmapSize(const BITMAPINFOHEADER *pHeader);
-HRESULT GetBootableDevice(BSTR bstrBootableDeviceIdOrName, IPMBootableDevice** ppiBootableDevice);
 HRESULT GetBoundSource(IUnknown** ppunk);
 HRESULT GetBoundToLiveToken(LPOLESTR* ppszToken);
 HRESULT GetBounds(long *plxLeft, long *plyTop, long *pldxWidth, long *pldyHeight);
@@ -581,12 +707,10 @@ HRESULT GetCaptureMode(STRMBUF_CAPTURE_MODE* peStrmbufCaptureMode, LONGLONG* phy
 HRESULT GetCharsetInfo(BSTR Charset, PMIMECSETINFO pCharsetInfo);
 HRESULT GetClientSite(IOleClientSite **ppClientSite);
 HRESULT GetCommonBoolProperties(short *pwProps);
-HRESULT GetConnection(BSTR bstrConnectId, IPMConnection** ppiConnection);
 HRESULT GetConnectionFromId(BSTR bstrConnectionId, ICcConnection** ppiConnection);
 HRESULT GetConnectionInterface(IID *pIID);
 HRESULT GetConnectionPointContainer(IConnectionPointContainer **ppCPC);
 DWORD GetContentDirectory(IContentDirectory** ppContentDirectory);
-HRESULT GetControlInfo(IDVDStreaControlInfo** ppStream);
 int GetCount();
 int GetCountI();
 HRESULT GetCurMoniker(IMoniker** ppimkName);
@@ -598,7 +722,6 @@ DWORD GetCurrentTemp (DWORD dwShelfId);
 HRESULT GetCurrentlyViewedProcess(IOsAxsProcess** ppiOsAxsProcess);
 HRESULT GetDataItemArray(IExchangeClientDataItemArray** ppiArray);
 HRESULT GetDataKey(SPDATAKEYLOCATION spdkl, ISpDataKey** ppDataKey);
-HRESULT GetDataSearchInfo(IDVDDataSearchInfo** ppDSI);
 HRESULT GetDatastore(DWORD dwLocale, ICcDatastore** ppiDatastore);
 HRESULT GetDefaultFolder(int olFolder, IFolder **ppIFolder);
 HRESULT GetDeliveryBuffer(IMediaSample **ppSample, REFERENCE_TIME *pStartTime, REFERENCE_TIME *pEndTime, DWORD dwFlags);
@@ -606,20 +729,16 @@ HRESULT GetDepthStencilSurface(IDirect3DMobileSurface** ppZStencilSurface);
 HRESULT GetDescription(BSTR *pBstrDescription);
 HRESULT GetDestinationPosition(long *pLeft, long *pTop, long *pWidth, long *pHeight);
 HRESULT GetDevMemoryObject(IUnknown **ppUnkInnner, IUnknown *pUnkOuter);
-HRESULT GetDevice(BSTR bstrDeviceIdOrName, IPMRemoteDevice** ppiRemoteDevice);
 HRESULT GetDirect3D(IDirect3DMobile** ppD3DM);
-HRESULT GetDisplayName(IBindCtx *pbc, IMoniker *pmkToLeft, LPOlESTR * ppszDisplayName);
 HRESULT GetDllEntry(MEMBERID memid, INVOKEKIND invKind, BSTR FAR *pBstrDllName, BSTR FAR *pBstrName, unsigned short FAR *pwOrdinal);
 HRESULT GetDocumentURL(BSTR* pbstrDocument);
 HRESULT GetDocumentation(MEMBERID memid, BSTR FAR *pBstrName, BSTR FAR *pBstrDocString, unsigned long FAR *pdwHelpContext, BSTR FAR *pBstrHelpFile);
 HRESULT GetDocumentation2(MEMID memid, LCID lcid, BSTR FAR *pbstrHelpString, unsigned long FAR *pdwHelpStringContext, BSTR FAR *pbstrHelpStringDll);
-HRESULT GetDomain(UINT16 languageCode, IDVDDomain** ppDomain, UINT8* pExistFlag);
 HRESULT GetDriverDesc(PDSDRIVERDESC pDsDriverDesc);
 HRESULT GetDriverInfoDword(GUID guidQuery, DWORD *pdwInfo);
 HRESULT GetDriverInfoString(GUID guidDriverQuery, LANGID wLangID, LPOLESTR * ppszInfo);
 HRESULT GetDuration(LONGLONG *pDuration);
 HRESULT GetEncodeSink(IImageSink** sink);
-HRESULT GetEndpointProxy(IWSDEndpointProxy** ppEndpoint);
 HANDLE GetEvent();
 HRESULT GetExecModeAtAddress(ADDRESS_TYPE AddrCode, DWORD* pdwExecMode);
 HRESULT GetExtendedControl(IDispatch** ppDisp);
@@ -628,7 +747,6 @@ HRESULT GetFMSystemFont(OLE_HANDLE hFC, BOOL fSmall, IDispatch **ppdispFont);
 DWORD GetFOURCC(void);
 HRESULT GetFile(BSTR bstrRemotePath, BSTR bstrDest, long* pdwTotalSize);
 HRESULT GetFiltergraph(IGraphBuilder** ppfg);
-HRESULT GetFirstPlay(IDVDDomain* ppDomain);
 HRESULT GetFolderInfo(LPSTR lpszName, HREPLFLD *phFolder, IUnknown **ppObjHandler);
 HRESULT GetFormDisplayCaps(OLE_HANDLE hFC, LONG nIndex, LONG *pRetInfo);
 HRESULT GetFormsContextHandle(OLE_HANDLE *phFC);
@@ -638,7 +756,6 @@ HRESULT GetGraph(IDirectMusicGraph** ppGraph);
 HRESULT GetHaltReasons(VARIANT dwIndex,VARIANT*pdwHaltReasonCode,VARIANT*ppdwExceptionCode,VARIANT*ppChance, VARIANT*ppieXdiCodeBP, VARIANT*ppieXdiDataBP);
 HRESULT GetHeader(BSTR bstrHeaderName, BSTR** prgValues, UINT* pcValues);
 HRESULT GetHelpFile(BSTR *pBstrHelpFile);
-HRESULT GetHighlightInfo(IDVDHighlightInfo** ppHLI);
 HRESULT GetIFMDraw(IDispatch **ppdispFMDraw, long lxLeft, long lyTop, long lxWidth, long lyHeight);
 HRESULT GetImageSize(VIDEOINFOHEADER *pVideoInfo, long *pBufferSize, RECT *pSourceRect);
 HRESULT GetIndices(IDirect3DMobileIndexBuffer** ppIndexData);
@@ -646,17 +763,13 @@ HRESULT GetInfo(IMINFO *pimi);
 HRESULT GetInputObjectToken(ISpObjectToken** ppToken);
 HRESULT GetInputStream(ISpStreamFormat** ppStream);
 HRESULT GetInstrument(DWORD dwPatch, IDirectMusicInstrument** ppInstrument);
-HRESULT GetItem(DWORD dwItemIndex, IAMPlayListItem** ppItem);
 HRESULT GetItemAt(UINT idxItem, IUnknown** ppiItem);
 HRESULT GetItemFromOid(CEOID oid, IDispatch ** ppolItem);
-HRESULT GetLabeledDMAChannel(REFGUIDguidLabelSystem,WCHAR* plabelBuf,IDMAChannel** ppDMAChannel);
 HRESULT GetLatencyClock(IReferenceClock** ppClock);
 HRESULT GetLcidFromRfc1766(LCID* pLocale, BSTR bstrRfc1766);
 HRESULT GetLinkURL(BSTR* pbstrURL);
 HRESULT GetLoader(IDirectMusicLoader** ppLoader);
-HRESULT GetLocalAddress(IWSDAddress** ppAddress);
 HRESULT GetLocalPresenceInfo(RTC_PRESENCE_STATUS* penStatus, BSTR* pbstrNotes);
-HRESULT GetLowerParameters(IWSDMessageParameters** ppTxParams);
 HRESULT GetMapping(BSTR bstrRemoteAddress, RTC_PORT_TYPE enPortType, BSTR* pbstrInternalLocalAddress, long* plInternalLocalPort, BSTR* pbstrExternalLocalAddress, long* plExternalLocalPort);
 HRESULT GetMappingEx(BSTR bstrRemoteAddress, long lRemotePort, long lTransport, RTC_PORT_TYPE enPortType, BSTR* pbstrInternalLocalAddress, long* plInternalLocalPort, BSTR* pbstrExternalLocalAddress, long* plExternalLocalPort);
 HRESULT GetMarkerName(long MarkerNum, BSTR* pbstrMarkerName);
@@ -666,10 +779,8 @@ HRESULT GetMediaPositionInterface(REFIID riid, void **ppv);
 HRESULT GetMediaStream(REFMSPID idPurpose, IMediaStream **ppMediaStream);
 HRESULT GetMediaTime(LONGLONG * pStart, LONGLONG * pEnd);
 LONG GetMediaTypeVersion();
-HRESULT GetMenu(IDVDMenu** ppMenu);
 HRESULT GetMenuLanguageInfo(UNIT16* plangcount, UINT16* pLCBuffer, UINT8* pFlagsBuffer);
 HRESULT GetMessageText(BSTR* pbstrMessage);
-HRESULT GetMessageType(WSDUdpMessageType* pMessageType);
 HRESULT GetMinIdealImageSize(long *pWidth, long *pHeight);
 HRESULT GetMode (IPin* pPin, long* Mode);
 HRESULT GetModuleByID(DWORD dwID, IOsAxsProcess** ppiOsAxsModule);
@@ -678,7 +789,6 @@ HRESULT GetMoinker(DWORD dwAssign, DWORD dwWhichMoniker, IMoniker ** ppmk);
 HRESULT GetMoniker(DWORD dwAssign, DWORD dwWhichMoniker, IMoniker **ppmk);
 HRESULT GetMops(MEMBERID memid, BSTR FAR *pBstrMops);
 HRESULT GetMultiMediaStream(IMultiMediaStream **ppMultiMediaStream);
-HRESULT GetNamedEvent(WCHAR pwszEventName, DWORD dwItemIndex, IAMPlayListItem** ppItem, DWORD* pdwFlags);
 HRESULT GetNames(MEMBERID memid, BSTR FAR *rgBstrNames, unsigned int cMaxNames, unsigned int FAR *pcNames);
 DWORD GetNewLength(PSS_WINDOW_STATE pWindowState, DWORD dwNewOffset);
 DWORD GetNewOffset(PSS_WINDOW_STATE pWindowState, DWORD dwNewOffset);
@@ -694,14 +804,11 @@ HRESULT GetOperationParts(IenumSoapMappers** ppIEnumSoapMappers);
 HRESULT GetOsAxsService(ICcService**ppiOsAxsService);
 HRESULT GetOutputObjectToken(ISpObjectToken** ppObjectToken);
 HRESULT GetOutputStream(ISpStreamFormat** ppStream);
-HRESULT GetPGC(UINT16 pgcn, IDVDProgamChain* pPGC, UINT32* pPGCCat);
-HRESULT GetPackage(BSTR bstrPackageIdOrName, IPMPackage** ppiPackage);
 HRESULT GetPageInfo(LPPROPPAGEINFO pPageInfo);
 BOOL GetParameterBytes(HPACKET hPacket, BYTE *pData, DWORD cbData);
 BOOL GetParameterDWORD(HPACKET hPacket, DWORD *pdwData);
 BOOL GetParameterString(HPACKET hPacket, WCHAR **pszData);
 BOOL GetParameterWORD(HPACKET hPacket, WORD *pwData);
-HRESULT GetParentManagementInfo(IDVDParentalManagementTable** ppTable);
 HRESULT GetPath(LPCWSTR* ppszPath);
 HRESULT GetPhraseList(DWORD dwFlags, PWSTR pszBuf PDWORD *pdwSize);
 DWORD GetPhysicalModeId (void);
@@ -709,17 +816,14 @@ int GetPinCount(void);
 HRESULT GetPixelDataBuffer(const RECT* rect, PixelFormatID pixelFormat, BOOL lastPass, BitmapData* bitmapData);
 HRESULT GetPixelFormat(LPDDPIXELFORMAT lpDDPixelFormat);
 HRESULT GetPixelFormatID(PixelFormatID* pixelFormat);
-HRESULT GetPlatform(BSTR bstrPlatformIdOrName, IPMPlatform** ppiPlatform);
 HRESULT GetPointer(BYTE ** ppBuffer);
 HRESULT GetPositions(LONGLONG *pCurrent, LONGLONG *pStop);
 HRESULT GetPreroll(LONGLONG *pllPreroll);
 HRESULT GetPresenceData(BSTR* pbstrNamespace, BSTR* pbstrData);
 HRESULT GetProcessByID(DWORD dwID, IOsAxsProcess** ppiOsAxsProcess);
 HRESULT GetProfile(BSTR bstrUserAccount, BSTR bstrUserPassword, BSTR bstrUserURI, BSTR bstrServer, long lTransport, LONG_PTR lCookie);
-HRESULT GetPropInfo(BSTR bstrPropName, IPMPropInfo** ppiPropInfo);
 int GetPropToo(void);
 HRESULT GetProperties(ALLOCATOR_PROPERTIES *pProps);
-HRESULT GetProperty(BSTR bstrPropId, IPMProperty** ppiProperty);
 HRESULT GetRate(double *pdRate);
 HRESULT GetRecoContext(ISpRecoContext** ppRecoCtxt);
 HRESULT GetRecoProfile(ISpObjectToken** ppToken);
@@ -728,13 +832,11 @@ HRESULT GetRecordingPath(LPOLESTR* ppszPath);
 HRESULT GetRecordingSizeOnDisk(LPCOLESTR pszRecordingName, LONGLONG* pllBytes);
 HRESULT GetRecurrence(IRecurrencePattern * pRec);
 HRESULT GetRecurrencePattern(IRecurrencePattern * pRec);
-HRESULT GetRemoteAddress(IWSDAddress** ppAddress);
 HRESULT GetRemoteSessionDescription(BSTR* pbstrContentType, BSTR* pbstrSessionDescription);
 HRESULT GetRenderTarget(IDirect3DMobileSurface** ppRenderTarget);
 DWORD GetRequest();
 HRESULT GetRequestLine(BSTR* pbstrRequestLine);
 HRESULT GetRestorePosition(long *pLeft, long *pTop, long *pWidth, long *pHeight);
-HRESULT GetRetransmitParams(WSDUdpRetransmitParams* pParams);
 HRESULT GetRfc1766FromLcid(LCID Locale, BSTR* pbstrRfc1766);
 HRESULT GetRoutineDataByAddress(ADDRESS_TYPEAddrCode, ROUTINE_DATA*pPData, IOsAxsModule **ppiModule);
 HRESULT GetSampleTimes(IMediaSample *pMediaSample, REFERENCE_TIME *pStartTime, REFERENCE_TIME *pEndTime);
@@ -742,13 +844,9 @@ HRESULT GetSecuritySite(IInternetSecurityMgrSite** ppSite);
 HRESULT GetSegment(IDirectMusicSegment** ppSegment);
 HRESULT GetSegmentState(IDirectMusicSegmentState** ppSegmentState, MUSIC_TIME mtTime);
 HRESULT GetService(LPCOLESTR pwszDeviceId,LPCOLESTR pwszServiceCategoryId,ICcService** piService);
-HRESULT GetServiceCategory(BSTR bstrServiceCategoryIdOrName, IPMServiceCategory** ppiServiceCategory);
-HRESULT GetServiceInfo(BSTR bstrServiceIdOrName, IPMServiceInfo** ppiServiceInfo);
 HRESULT GetServiceMap(BSTR in_bstrServiceCategoryID, ICcServiceInfo** out_ppiServiceInfo);
 HRESULT GetServiceObject(BSTR bstrUDN, BSTR bstrServiceId, IDispatch** ppdispService);
 HRESULT GetServiceParamsShort(BSTR*pbstrShortParams);
-HRESULT GetServiceProxyById(LPCWSTR pszServiceId, IWSDServiceProxy** ppServiceProxy);
-HRESULT GetServiceProxyByType(const WSDXML_NAME* pType, IWSDServiceProxy** ppServiceProxy);
 HRESULT GetSize(void);
 HRESULT GetSoapOperations(IEnumWSDLOperations** ppIWSDLOperations);
 HRESULT GetSoapPorts(IEnumWSDLPorts** ppIWSDLPorts);
@@ -759,30 +857,22 @@ HRESULT GetSourceEndMarkerName(DWORD dwSourceIndex, BSTR* pbstrEndMarker);
 HRESULT GetSourceMoniker(IMoniker** ppmk);
 HRESULT GetSourcePosition(long *pLeft, long *pTop, long *pWidth, long *pHeight);
 HRESULT GetSourceStartMarkerName(DWORD dwSourceIndex, BSTR* pbstrStartMarker);
-HRESULT GetStartupServer(BSTR bstrStartupServerIdOrName, IPMStartupServerInfo** ppiStartupServer);
 HRESULT GetState(DWORD dwMilliSecsTimeout, FILTER_STATE *State);
 HRESULT GetStdDev(int nSamples, int *piResult, LONGLONG llSumSq, LONGLONG iTot);
 HRESULT GetStopPosition(LONGLONG* pStop);
-HRESULT GetStreamAttributes(IDVDStreamAttributes** ppAttr);
 HRESULT GetStreamSource(UINT StreamNumber, IDirect3DMobileVertexBuffer** ppStreamData, UINT* pStride);
-HRESULT GetStreamingInfo(IDVDStreamControlInfo** pControlInfo);
 HRESULT GetSurfaceLevel(UINT Level, IDirect3DMobileSurface** ppSurfaceLevel);
 HRESULT GetSyncSource(IReferenceClock **pClock);
-HRESULT GetTextDataManager(IDVDTextManager** ppTxtMgr);
 HRESULT GetTexture(DWORD Stage, IDirect3DMobileBaseTexture** ppTexture);
 HANDLE GetThreadHandle();
 DWORD GetThreadID();
 HRESULT GetThumbnail(OPTIONAL UINT thumbWidth, OPTIONAL UINT thumbHeight, IImage** thumbImage);
 HRESULT GetTime(REFERENCE_TIME *pTime);
-HRESULT GetTimeMap(UINT16 pgcn, IDVDTimeMap** ppTimeMap);
 HRESULT GetTimeOfLastChange(IBindCtx *pbc, IMoniker *pmkToLeft, FILETIME *pFileTime);
 HRESULT GetTimeZoneFromIndex(int iIndex, ITimeZone ** ppTimeZone);
 DWORD GetTimingInfo(LPDWORD lpdwAvgPerfTicks, LPDWORD lpdwMax, LPDWORD lpdwMin, LPDWORD lpdwDeltaMax, LPDWORD lpdwDeltaMin);
-HRESULT GetTitleSet(UINT16* zbVtsn, IDVDTitleSet** ppTitleSet);
-HRESULT GetTitleSetAttributes(UINT16 vtsn, UINT32** pVTSCategory, IDVDStreamAttributes** ppVideoAttr);
 HRESULT GetTool(DWORD dwIndex, IDirectMusicTool** ppTool);
 BOOL GetTransferError(USB_TRANSFER hTransfer, LPDWORD lpdwError);
-HRESULT GetTransport(BSTR bstrTransportIdOrName, IPMTransportInfo** ppiTransport);
 HRESULT GetTunePolicy(STRMBUF_PLAYBACK_TUNE_POLICY* peStrmbufPlaybackTunePolicy);
 HRESULT GetUniqueDeviceName(BSTR bstrDeviceIdentifier, BSTR bstrTemplateUDN, BSTR* pbstrUDN);
 LONG GetUnits(void);
@@ -798,9 +888,6 @@ HRESULT GetWindowHandle(HWND *pHwnd);
 LONG GetWindowHeight();
 HRESULT GetWindowPosition(long *pLeft, long *pTop, long *pWidth, long *pHeight);
 LONG GetWindowWidth();
-HRESULT GetXMLContext(IWSDXMLContext** ppContext);
-VOID WINAPI GetXRApplicationInstance(IXRApplication** ppApplication);
-HRESULT GetXamlSource(XRXamlSource* pXamlSource);
 HRESULT GetZoneMappings(DWORD dwZone, IEnumString** ppenumString, DWORD dwFlags);
 HRESULT GeteXdi2Service(ICcService**ppeXdi2Service);
 HRESULT GotFocus(void);
@@ -818,12 +905,7 @@ HRESULT Help(LPCWSTR lpszHelpDir);
 HRESULT HideCursor(long HideCursor);
 VOID WINAPI HighPriority(LPVOID lp);
 HRESULT HitTest(long lx, long ly);
-HRESULT HoldSession(IRTCSession2* piSession);
-HRESULT HotSpot(IASHTMLControl *pControl, BSTR bstrTarget, BSTR bstrData);
 HRESULT ID (BSTR* pbstrStreamId);
-BOOL IOControl(DWORD dwInst,DWORD dwIoControlCode,LPVOID lpInBuf,DWORD nInBufSize,LPVOID lpOutBuf,DWORD nOutBufSize,LPDWORD lpBytesReturned);
-HRESULT IRAvailable ();
-HRESULT ITNPhrase(ISpPhraseBuilder* pPhrase);
 HRESULT IconURL(BSTR bstrEncodingFormat, LONG lSizeX, LONG lSizeY, LONG lBitDepth, BSTR* pbstrIconURL);
 HRESULT Id(BSTR* pbstrBootableDeviceId);
 HRESULT ImageFail (DWORD dwCookie);
@@ -834,7 +916,6 @@ HRESULT Inactive(void);
 void IncrementPinVersion();
 void IncrementTypeVersion(void);
 HRESULT Info(long lIndex, AM_MEDIA_TYPE **ppmt, DWORD *pdwFlags, LCID *plcid, DWORD *pdwGroup, WCHAR **ppszName, IUnknown **ppObject, IUnknown **ppUnk);
-void Init (int width, int height, void *pBits, int stride, EGPEFormat format, EDDGPEPixelFormat pixelFormat);
 HRESULT InitASFormsManager(void);
 HRESULT InitAllocator(IMemAllocator **ppAlloc);
 HRESULT InitConnection(IRemoteDevice* piDevice);
@@ -847,14 +928,11 @@ void InitMediaType();
 HRESULT InitNew(IStorage *pStg);
 BOOL InitObjType (LPWSTR lpszObjType, IReplObjHandler *ppObjHandler, UINT uPartnerBit);
 BOOL InitPubKey (BYTE *pKey, DWORD cbBlob);
-HRESULT InitService(IPMBootableDevice* piBootableDevice, IPMServiceInfo* piServiceInfo);
 HRESULT InitSpNotifyCallback(ISpNotifyCallback* pSpCallback, WPARAM wParam, LPARAM lParam);
 DWORD InitialThreadProc(LPVOID pv);
-HRESULT InitializeRTCClient(IRTCClient2* piClient);
 HRESULT InitializeService(WCHAR *szService);
 BOOL InitializeStressModule(MODULE_PARAMS* pmp, UINT* pnThreads);
 UINT InitializeTestThread(HANDLE hThread, DWORD dwThreadId, int index);
-HRESULT InlineImage (IASHTMLControl *pControl, BSTR bstrTarget, DWORD dwCookie);
 HRESULT Insert(short ch);
 HRESULT InsertAt(long index, OLE_HANDLE hImage, OLE_HANDLE hImageMask, BSTR bstr, short wID, BOOL fBitmap);
 HRESULT InsertTool(IDirectMusicTool* pTool, DWORD* pdwPChannels, DWORD cPChannels, LONG lIndex);
@@ -947,20 +1025,13 @@ HRESULT LostFocus(void);
 VOID WINAPI LowPriority(HANDLE h);
 VOID WINAPI MBX_TA(void);
 VOID WINAPI MBX_TB(void);
-HRESULT MTPIPAuthorizeConnection (DWORD dwNonce, BOOL fAuthorize);
-HRESULT MTPIPGetConnectionData (MTPIPCONNECTIONINFO* pCI);
-HRESULT MTPIPRegisterConnectionNotification (HANDLE hEvent);
 HRESULT MarshalInterface(IStream *pStm, REFIID riid, void *pv, DWORD dwDestContext, void *pvDestContext, DWORD mshlflags);
-HRESULT MatchProbe(const WSD_SOAP_MESSAGE* pProbeMessage, IWSDMessageParameters* pMessageParameters, LPCWSTR pszId, ULONGLONG ullMetadataVersion, ULONGLONG ullInstanceId, ULONGLONG ullMessageNumber, LPCWSTR pszSessionId, const WSD_NAME_LIST* pTypesList, const WSD_URI_LIST* pScopesList, const WSD_URI_LIST* pXAddrsList);
-HRESULT MatchProbeEx(const WSD_SOAP_MESSAGE* pProbeMessage, IWSDMessageParameters* pMessageParameters, LPCWSTR pszId, ULONGLONG ullMetadataVersion, ULONGLONG ullInstanceId, ULONGLONG ullMessageNumber, LPCWSTR pszSessionId, const WSD_NAME_LIST* pTypesList, const WSD_URI_LIST* pScopesList, const WSD_URI_LIST* pXAddrsList, const WSDXML_ELEMENT* pHeaderAny, const WSDXML_ELEMENT* pReferenceParameterAny, const WSDXML_ELEMENT* pPolicyAny, const WSDXML_ELEMENT* pEndpointReferenceAny, const WSDXML_ELEMENT* pAny);
-HRESULT MatchResolve(const WSD_SOAP_MESSAGE* pResolveMessage, IWSDMessageParameters* pMessageParameters, LPCWSTR pszId, ULONGLONG ullMetadataVersion, ULONGLONG ullInstanceId, ULONGLONG ullMessageNumber, LPCWSTR pszSessionId, const WSD_NAME_LIST* pTypesList, const WSD_URI_LIST* pScopesList, const WSD_URI_LIST* pXAddrsList const WSDXML_ELEMENT* pHeaderAny, const WSDXML_ELEMENT* pReferenceParameterAny, const WSDXML_ELEMENT* pPolicyAny, const WSDXML_ELEMENT* pEndpointReferenceAny, const WSDXML_ELEMENT* pAny);
 VOID WINAPI MedPriority(HANDLE h);
 HRESULT MediaParameter(long EntryNum, BSTR bstrName, BSTR* pbstrValue);
 HRESULT MediaParameterName(long EntryNum, long Index, BSTR* pbstrName);
 HRESULT MenuCreate(PVCMDNAME pName, PLANGUAGE pLanguage, DWORD dwFlags, PIVCMDMENU *ppIVCmdMenu);
 HRESULT MenuDelete(PVCMDNAME pName);
 HRESULT MenuEnum(DWORD dwFlags, PTSTR pszApplicationFilter, PTSTR pszStateFilter, PIVCMDENUM *ppiVCmdEnum);
-HRESULT Meta(IASHTMLControl *pControl, BSTR bstrHTTPEQUIV, BSTR bstrContent);
 LONG Millisecs(void);
 HRESULT MkParseDisplayNameEx(IBindCtx* pbc, LPWSTR szDisplayName, ULONG* pcchEaten, IMoniker** ppmk);
 HRESULT ModifyTraining(LPTSTR lpszPhrase, DWORD dwFlags);
@@ -995,15 +1066,6 @@ void NotifyThread();
 HRESULT NotifyThreadSwitched(IOsAxsThread*pthrd);
 HRESULT Num(DWORD *pdwNumCmd);
 HRESULT Number(long *pVal);
-DWORD OEMFindFirstWakeSource(void);
-BOOL OEMGetInterrupt(PDEVICE_LOCATION pDevLoc, PDWORD Irq);
-void OEMInitPageTable (void);
-BOOL OEMIsROM(LPVOID pvAddr, DWORD cbSize);
-BOOL OEMKitlIoctl(DWORD code, VOID* pInBuffer, DWORD inSize, VOID* pOutBuffer, DWORD outSize, DWORD* pOutSize);
-void OEMNMIHandler (void);
-int OEMParallelPortGetStatus (void);
-DWORD OEMTranslateIrq(DWORD Irq);
-DWORD OEMTranslateSysIntr(DWORD SysIntr);
 LONG ObjectsActive();
 HRESULT OnActivate(void);
 void OnAngleChange(int cAngles, int nAngle);
@@ -1013,27 +1075,19 @@ HRESULT OnCallEvent(VoIPCallEvent vceEvent, IVoIPCurrentCall* piCurrentCall);
 void OnChapterChange(int nChapter);
 HRESULT OnConnect(IUnknown* pUnknown);
 HRESULT OnDeactivate(void);
-HRESULT OnDeviceConnected(IRAPIDevice* pIDevice);
-HRESULT OnDeviceDisconnected(IRAPIDevice* pIDevice);
 void OnDirectRender(IMediaSample *pMediaSample);
 HRESULT OnDisconnect(void);
 void OnDvdDriveReady(bool bReady);
 void OnInit();
-HRESULT OnLoaded(__in IXRDependencyObject *pRoot);
 void OnMenu(bool bInMenu);
-HRESULT OnNewProgramChain(IDVDProgramChain* pChain);
 HRESULT OnObjectAvailable(REFIID riid, IUnknown* punk);
 void OnParentalLevelChange(int nLevel);
-void OnPlaybackStateChange(EDDVDPlaybackState edvdState);
 void OnProhibitedChange(DVD_UOP_PROHIBITED edvdOperation, bool bProhibited);
 void OnReceiveFirstSample(IMediaSample *pMediaSample);
-HRESULT OnReinviteEvent(IRTCReInviteEvent* piReinviteEvent);
 void OnRename(IMoniker *pmk);
 void OnRenderEnd(IMediaSample *pMediaSample);
 void OnRenderStart(IMediaSample *pMediaSample);
 HRESULT OnRequestProgress(IExchangeClientRequest* pRequest, enum ExchangeClientRequestStatus status);
-HRESULT OnSessionOperationCompleteEvent(IRTCSessionOperationCompleteEvent* piEvent);
-HRESULT OnSessionStateChangeEvent(IRTCSessionStateChangeEvent* piSSCEvent);
 BOOL OnSize(LONG Width, LONG Height);
 HRESULT OnStartBinding(DWORD dwReserved, IBinding* pib);
 HRESULT OnStartStreaming(void);
@@ -1057,45 +1111,23 @@ HRESULT OpenKey(const WCHAR* pszSubKeyName, ISpDataKey** ppSubKey);
 HRESULT OpenStorage(const WCHAR *pwcsName, IStorage *pstgPriority, DWORD grfMode, SNB snbExclude, DWORD reserved, IStorage **ppstg);
 HRESULT OpenStream(const WCHAR *pwcsName, void *reserved1, DWORD grfMode, DWORD reserved2, IStream **ppstm);
 HRESULT PChannelInfo(DWORD dwPChannel, IDirectMusicPort** ppPort, DWORD* pdwGroup, DWORD* pdwMChannel);
-DWORD PDD_DeAllocateBuffer(LPVOID PDDContext, ULONG ulModeType, PVOID pBuffer);
-DWORD PDD_DeInit(LPVOID PDDContext);
-DWORD PDD_DeInitSensorMode(LPVOID PDDContext, ULONG ulModeType);
-DWORD PDD_FillBuffer(LPVOID PDDContext, ULONG ulModeType, PUCHAR pImage);
-DWORD PDD_GetAdapterInfo(LPVOID PDDContext, PADAPTERINFO pAdapterInfo);
-DWORD PDD_HandleCamControlChanges(LPVOID PDDContext, DWORD dwPropId, LONG lFlags, LONG lValue);
-DWORD PDD_HandleModeCustomProperties(LPVOID PDDContext, ULONG ulModeType, PUCHAR pInBuf, DWORD InBufLen, PUCHAR pOutBuf, DWORD OutBufLen, PDWORD pdwBytesTransferred);
-DWORD PDD_HandleVidProcAmpChanges(LPVOID PDDContext, DWORD dwPropId, LONG lFlags, LONG lValue);
-DWORD PDD_HandleVideoControlCapsChanges(LPVOID PDDContext, LONG lModeType, ULONG ulCaps);
-DWORD PDD_InitSensorMode(LPVOID PDDContext, ULONG ulModeType, LPVOID ModeContext);
-DWORD PDD_RegisterClientBuffer(LPVOID PDDContext, ULONG ulModeType, PVOID pBuffer);
-DWORD PDD_SetPowerState(LPVOID PDDContext, CEDEVICE_POWER_STATE PowerState);
-DWORD PDD_SetSensorModeFormat(LPVOID PDDContext, ULONG ulModeType, PCS_DATARANGE_VIDEO pCsDataRangeVideo);
-DWORD PDD_SetSensorState(LPVOID PDDContext, ULONG ulModeType, CSSTATE CsState);
-DWORD PDD_TakeStillPicture(LPVOID PDDContext, LPVOID pBurstModeInfo);
-DWORD PDD_UnRegisterClientBuffer(LPVOID PDDContext, ULONG ulModeType, PVOID pBuffer);
-HRESULT PHCreateTextDisplayItem(WCHAR* pText, IVoIPDisplayItem** ppItem);
-HRESULT PHInitCallerInfoDB(IVoIPCallerInfoDB** piCallerInfoDB);
 BOOL PIN_Close (DWORD Context);
 BOOL PIN_Deinit(DWORD dwContext);
 BOOL PIN_IOControl(DWORD dwContext, DWORD Ioctl, PUCHAR pInBuf, DWORD InBufLen, PUCHAR pOutBuf, DWORD OutBufLen, PDWORD pdwBytesTransferred);
 DWORD PIN_Init(LPCTSTR Context, LPVOID lpvBusContext);
 DWORD PIN_Open(DWORD Context, DWORD Access, DWORD ShareMode);
-HRESULT PNTMToWintm (SYSTEMTIME pTime, const PNTM pNTM);
 DWORD PRLED (BYTE ucPort, BOOL fState);
-VOID WINAPI PRThread(LPVOID lpvParam);
 BOOL PageSetupDlg(LPPAGESETUPDLG lppsd);
 void PaintWindow(BOOL bErase);
 HRESULT ParkSession (BSTR bstrParkServerURI);
 BOOL ParseCommand(LPCTSTR szCmd, LPCTSTR szCmdLine, PFN_FmtPuts pfnFmtPuts, PFN_Gets pfnGets);
 HRESULT ParseDisplayName(IBindCtx *pbc, IMoniker *pmkToLeft, LPOLESTR *pszDisplayName, ULONG *pchEaten, IMoniker **ppmkOut);
 HRESULT ParseFromTransitions(const SPPARSEINFO* pParseInfo, ISpPhraseBuilder** ppPhrase);
-HRESULT ParseRequest(ISoapReader* pReader, IWSDLPort** ppIWSDLPort, IWSDLOperation** ppIWSDLOperation);
 HRESULT PassNotify(Quality q);
 HRESULT Pause (void);
 HRESULT PerformanceAlignWindow();
 VOID WINAPI Philosopher(LPVOID lpPhilosopherID);
 void PinClickHandler(Pin source, PinClickEventArgs args);
-HRESULT Platform(IPMPlatform** ppiPlatform);
 HRESULT PlatformId(BSTR* pbstrPlatformId);
 HRESULT Play(DWORD dwReserved1, DWORD dwReserved2, DWORD dwFlags);
 HRESULT PlayBuffer(IDIRECTMUSICBUFFER* pBuffer);
@@ -1112,7 +1144,6 @@ HRESULT PrepareWindow();
 HRESULT PrevChar();
 void Print(TCHAR *pFormat, ...);
 BOOL PrintDlg(LPPRINTDLG lppd);
-HRESULT ProbeHandler(const WSD_SOAP_MESSAGE* pSoap, IWSDMessageParameters* pMessageParameters);
 HRESULT ProcessInput(DWORD dwInputStreamIndex, IMediaBuffer* pBuffer, DWORD dwFlags, REFERENCE_TIME rtTimestamp, REFERENCE_TIME rtTimelength);
 void ProcessStartupFolder();
 HRESULT ProcessVertices(UINT SrcStartIndex, UINT DestIndex, UINT VertexCount, IDirect3DMobileVertexBuffer* pDestBuffer, DWORD Flags);
@@ -1153,7 +1184,6 @@ HRESULT RadiansToDegrees (pPNPOSLLA pLLAPos);
 HRESULT ReInviteWithDescription(BSTR offerContentType, BSTR offerDescription);
 HRESULT ReInviteWithSessionDescription(BSTR bstrContentType, BSTR bstrSessionDescription, LONG_PTR lCookie);
 HRESULT ReadFromStream(IStream* pStream);
-HRESULT ReadRTPPacket(IUnknown *pDecoder, const CHAR *szFmtp, BYTE *pbRTPPayload, DWORD dwRTPPayloadSize, RTCRTPHeader *pRTPHeader, BYTE *pbEncodedFrame, DWORD dwEncodedFrameSize, DWORD *pdwFrameStartBitOffset, DWORD *pdwFrameEndBitOffset, BOOL *pfLastPacket);
 HRESULT ReadVOB(UINT16 hVOB, INT8* buf, UINT32 startBlock, UINT32 endBlock);
 void Ready(void);
 void ReallyFree (void);
@@ -1161,7 +1191,6 @@ HRESULT Receive(IMediaSample *pSample);
 HRESULT ReceiveAllocator(IMemAllocator *pAllocator, BOOL bReadOnly);
 HRESULT ReceiveCanBlock(void);
 HRESULT ReceiveConnection(IPin *pConnector, AM_MEDIA_TYPE *pmt);
-HRESULT ReceiveFromInfrared(IPOutlookItemCollection ** ppolItems);
 HRESULT ReceiveMsg(long uMsg, long wParam, long lParam);
 HRESULT ReceiveMultiple(IMediaSample **pSamples, long nSamples, long * nSamplesProcessed);
 HRESULT RecognizeStream(REFGUID rguidFmtId, const WAVEFORMATEX* pWaveFormatEx, HANDLE hRequestSync, HANDLE hDataAvailable, HANDLE hExit, BOOL fNewAudioStream, BOOL fRealTimeAudio, ISpObjectToken* pAudioObjectToken);
@@ -1169,7 +1198,6 @@ HRESULT Reconnect(IPin *ppin);
 HRESULT ReconnectEx(IPin *ppin, const AM_MEDIA_TYPE *pmt);
 HRESULT ReconnectPin(IPin *pPin, AM_MEDIA_TYPE const *pmt);
 void RecordFrameLateness(int trLate, int trFrame);
-HRESULT Redirect(RTC_SESSION_TYPE enType, BSTR bstrLocalPhoneURI, IRTCProfile* pProfile, long lFlags);
 HRESULT Redraw(void);
 HRESULT Reduce(IBindCtx *pbc, DWORD dwReduceHowFar, IMoniker **ppmkReduced);
 HRESULT Refer(BSTR bstrReferToURI, BSTR bstrReferCookie);
@@ -1177,13 +1205,9 @@ HRESULT ReferToSessionInfo(BSTR* pbstrReferToCallID, BSTR* pbstrReferToFromTag, 
 HRESULT ReferToURI(BSTR* pbstrReferredToURI);
 HRESULT ReferredByURI(BSTR* pbstrReferredByURI);
 void RefreshCache();
-LONG RegQueryInfoKey (HKEY hKey, LPWSTR lpClass, LPDWORD lpcbClass, LPDWORD lpReserved, LPDWORDlpcSubKeys, LPDWORD lpcbMaxSubKeyLen, LPDWORD lpcbMaxClassLen, LPDWORD lpcValues, LPDWORD lpcbMaxValueNameLen, LPDWORD lpcbMaxValueLen, LPDWORD lpcbSecurityDescriptor, PFILETIME lpftLastWriteTime);
 HRESULT Register(DWORD grfFlags, IUnknown *punkObject, IMoniker *pmkObjectName, DWORD *pdwRegister);
 HRESULT RegisterBindStatusCallback(IBindCtx* pbc, IBindStatusCallback* pbsc, IBindStatusCallback** ppbscPrevious, DWORD dwReserved);
 HRESULT RegisterBrowserEventSink();
-HRESULT RegisterCallback(IIMCallback *pIMCallback);
-HRESULT RegisterCallback2(IIMCallback2 *pIMCallback2);
-HRESULT RegisterCallbackEx (IIMCallback* pIMCallback);
 HRESULT RegisterClassImplCategories(REFCLSID rclsid, ULONG cCategories, CATID rgcatid);
 HRESULT RegisterClassReqCategories(REFCLSID rclsid, ULONG cCategories, CATID rgcatid);
 HRESULT RegisterFilter(REFCLSID clsidFilter, LPCWSTR Name, IMoniker **ppMoniker, const CLSID *pclsidCategory, const OLECHAR *szInstance, const REGFILTER2 *prf2);
@@ -1192,13 +1216,9 @@ HRESULT RegisterInterfaceInGlobal(IUnknown* pUnk, REFIID riid, DWORD* pdwCookie)
 HRESULT RegisterMediaTime(IMediaSample *pMediaSample);
 HRESULT RegisterMimeFilter(IClassFactory* pCF, REFCLSID rclsid, LPCWSTR pwzType);
 HRESULT RegisterNameSpace(IClassFactory* pCF, REFCLSID rclsid, LPCWSTR pwzProtocol, ULONG cPatterns, const LPCWSTR* ppwzPatterns, DWORD dwReserved);
-HRESULT RegisterNotificationCallBack(IAMTunerNotification *pNotify, long lEvents);
-HRESULT RegisterNotificationSink(IWSDiscoveryPublisherNotify* pSink);
 HRESULT RegisterObjectBound(IUnknown* punk);
 HRESULT RegisterObjectParam(LPOLESTR pszKey, IUnknown* punk);
 void RegisterPerfId();
-HRESULT RegisterScopeMatchingRule(IWSDScopeMatchingRule* pScopeMatchingRule);
-HRESULT RegisterUnsolicitedNotification (BSTR bstrAcceptedContent, BSTR bstrEventPackage, IRTCUnsolicitedSubscription** ppSubscription);
 HRESULT RelativePathTo(IMoniker *pmkOther, IMoniker **ppmkRelPath);
 HRESULT ReleaseBuffer(IMediaSample *pSample);
 void ReleaseDirectDraw(void);
@@ -1211,25 +1231,18 @@ HRESULT RemoteDbgDirectory(BSTR* pbstrRemoteDbgDirectory);
 void RemoveAll();
 HRESULT RemoveAt(long index);
 HRESULT RemoveAtIndex(long index);
-HRESULT RemoveBuddy(IRTCBuddy* pBuddy);
 HRESULT RemoveByID(short wID);
 HRESULT RemoveFilter(IBaseFilter *pFilter);
-HRESULT RemoveGroup(IRTCBuddyGroup* pGroup);
-HRESULT RemoveParticipant(IRTCParticipant* pParticipant);
 HRESULT RemovePort(IDirectMusicPort* pPort);
 HRESULT RemoveSIFile(DWORD dwID, DWORD dwFlag);
 HRESULT RemoveTool(IDirectMusicTool* pTool);
-HRESULT RemoveWatcher(IRTCWatcher* pWatcher);
 HRESULT Render(IMediaSample *pMediaSample);
 HRESULT RenderStream(const GUID* pCategory, const GUID* pType, IUnknown* pSource, IBaseFilter* pIntermediate, IBaseFilter* pSink);
-HRESULT ReplaceSession (BSTR IRTCSession* pReplacedSession);
-HRESULT ReplacedSession(IRTCSession** ppReplacedSession);
 void Reply(DWORD dw);
 HRESULT Request(IMediaSample* pSample, DWORD dwUser);
 HRESULT RequestAllocator(IMemAllocator* pPreferred, ALLOCATOR_PROPERTIES* pProps, IMemAllocator ** ppActual);
 HRESULT RequestContacts(struct ContactsSearchCriteria* pCriteria, IExchangeClientRequest** ppiRequest);
 HRESULT RequestFreeBusyData(struct FreeBusyCriteria* pCriteria, IExchangeClientRequest** ppiRequest);
-HRESULT RequestGALSearch(struct GALSearchCriteria* pCriteria, IExchangeClientRequest** ppiRequest);
 HRESULT RequestLicKey(DWORD dwReserved, BSTR *pbstrKey);
 HRESULT ReregisterDevice(BSTR bstrDeviceIdentifier, BSTR bstrXMLDesc, BSTR bstrProgIDDeviceControlClass, BSTR bstrInitString, BSTR bstrContainerId, BSTR bstrResourcePath, LONG nLifeTime);
 HRESULT ReregisterRunningDevice(BSTR bstrDeviceIdentifier, BSTR bstrXMLDesc, IUnknown* punkDeviceControl, BSTR bstrInitString, BSTR bstrResourcePath, LONG nLifeTime);
@@ -1240,11 +1253,9 @@ HRESULT ResetMediaTime(void);
 HRESULT ResetStreamingTimes(void);
 HRESULT ResetVirtualMachine(GUID* virtualMachineID, boolean hardReset);
 HRESULT Resize(UINT newWidth, UINT newHeight, PixelFormatID pixelFormat, InterpolationHint hints, IBitmapImage** outbmp);
-HRESULT ResolveHandler(const WSD_SOAP_MESSAGE* pSoap, IWSDMessageParameters* pMessageParameters);
 HRESULT RestoreAppZOrder(LONG ZOrder);
 HRESULT RestoreVirtualMachine(GUID* virtualMachineID);
 HRESULT RestoreZOrder(LONG ZOrder);
-HRESULT Restrict(BSTR pwszRestriction, IPOutlookItemCollection ** ppolItems);
 HRESULT Resubscribe(BSTR bstrContentType, BSTR bstrBody);
 HRESULT Retrieve(BSTR bstrAddress, BSTR bstrName, BSTR bstrReferredByURI, BSTR bstrRetrieveCallID, BSTR bstrRetrieveFromTag, BSTR bstrRetrieveToTag, VARIANT_BOOL fEarlyOnly);
 HRESULT RetrieveRecords(UCHAR* pStream, ULONG size, ISdpRecord** ppSdpRecords, ULONG* pNumRecords);
@@ -1253,16 +1264,7 @@ void Reverse();
 HRESULT RevokeBindStatusCallback(IBindCtx* pbc, IBindStatusCallback* pbsc);
 HRESULT RevokeFormatEnumerator(LPBC pbc, IEnumFORMATETC* pEFetc);
 HRESULT RevokeObjectBound(IUnknown* punk);
-HRESULT RootDevice(IUPnPDevice** ppudRootDevice);
 HRESULT Rotate(FLOAT angle, InterpolationHint hints, IBitmapImage** outbmp);
-BOOL SHEnumPropSheetHandlers(HKEY hkey, int* pcPages, HPROPSHEETPAGE* prghPropPages, IShellPropSheetExt** prgpispse);
-HRESULT SHGetDesktopFolder(IShellFolder** ppshf);
-VOID STDAPI SHGetFolderPath(HWND hwndOwner, int nFolder, HANDLE hToken, DWORD dwReserved, LPTSTR pszPath);
-BOOL SHLoadContextMenuExtensions(IUnknown* punkOwner, LPCTSTR pszContext, LPCTSTR pszClass, HMENU hmenu, UINT idCmdFirst, UINT idCmdLast, HANDLE* phCMExtensions);
-HRESULT SRModeGet(GUID *pgMode);
-HRESULT SRModeSet(GUID gMode);
-LONG STCalcDeltaUS (LARGE_INTEGER liStart, LARGE_INTEGER liCurrent);
-VOID WINAPI STThreadHigh (LPVOID lpvParam);
 HRESULT SaveCmd(IStream* pSaveStream, WCHAR** ppCoMemErrorText);
 BOOL ScheduleSample(IMediaSample *pMediaSample);
 HRESULT ScrollIntoView (DWORD dwCookie);
@@ -1276,11 +1278,7 @@ HRESULT SendOnRename(IMoniker *pmk,);
 HRESULT SendOnVirtualChannel(BSTR ChanName, BSTR ChanData);
 HRESULT SendQuality(REFERENCE_TIME trLate, REFERENCE_TIME trRealStream);
 void SendRepaint(void);
-HRESULT SendResponse(void* pBody, WSD_OPERATION* pOperation, IWSDMessageParameters* pMessageParameters);
-HRESULT SendTwoWayRequestAsync(const void* pBody, const WSD_OPERATION* pOperation, IUnknown* pAsyncState, IWSDAsyncCallback* pCallback, IWSDAsyncResult** pResult);
 VOID WINAPI ServerThread (PVOID pArg);
-HRESULT ServiceInstanceDied(IUPnPService* pus);
-HRESULT Session(IRTCSession2** ppSession);
 void Set(void);
 void SetAbortSignal(BOOL bAbort);
 HRESULT SetActualDataLength(long lLen);
@@ -1292,7 +1290,6 @@ HRESULT SetBaseStream(ISpStreamFormat* pStream, BOOL fSetFormatToBaseStreamForma
 HRESULT SetBlanket(IUnknown *pProxy, DWORD dwAuthnSvc, DWORD dwAuthzSvc, OLECHAR *pServerPrincName, DWORD dwAuthnLevel, DWORD dwImpLevel, RPC_AUTH_IDENTITY_HANDLE pAuthInfo, DWORD dwCapabilities);
 HRESULT SetBounds(long lxLeft, long lyTop, long ldxWidth, long ldyHeight);
 HRESULT SetBufferingDepth(const REFERENCE_TIME* ptStop);
-HRESULT SetCallback(IWSDAsyncCallback* pCallback, IUnknown* pAsyncState);
 HRESULT SetClientSite(IOleClientSite *pClientSite);
 void SetColorKey (DWORD dwColorKey);
 void SetColorKeyHigh (DWORD dwColorKey);
@@ -1310,10 +1307,8 @@ void SetDirectDraw(LPDIRECTDRAW pDirectDraw);
 void SetDirectDrawSurface (LPDDRAWI_DDRAWSURFACE_LCL lpDDSurface);
 HRESULT SetDirty(BOOL fDirty);
 HRESULT SetDiscontinuity(BOOL bDiscont);
-void SetDriverData (DDGPEDriverData *pDriverData);
 void SetDriverGUID (GUID guidDriverGUID);
 HRESULT SetErrorInfo(DWORD dwReserved, IErrorInfo *perrinfo);
-HRESULT SetEventingStatusCallback(IWSDEventingStatus* pStatus);
 void SetFOURCC(const GUID * pguid);
 void SetFilterGraph(IMediaEventSink *pSink);
 HRESULT SetFiltergraph(IGraphBuilder* pfg);
@@ -1324,15 +1319,12 @@ void SetFormatType(const GUID * pformattype);
 BOOL SetFrameLength(USB_HANDLE hDevice, HANDLE hEvent, USHORT uFrameLength);
 HRESULT SetFrequency(DWORD dwFrequency);
 HRESULT SetGraph(IDirectMusicGraph* pGraph);
-HRESULT SetHost(IXRVisualHost* pHost);
 HRESULT SetImInfo(IMINFO *pimi);
 HRESULT SetIndices(IDirect3DMobileIndexBuffer* pIndexData);
 HRESULT SetInput(IUnknown* pUnkInput, BOOL fAllowFormatChanges);
 HRESULT SetItem(DWORD dwEnable, DWORD dwCmdNum, DWORD dwFlag);
-HRESULT SetLocalAddress(IWSDAddress* pAddress);
 HRESULT SetLocalPresenceInfo(RTC_PRESENCE_STATUS enStatus, BSTR bstrNotes);
 HRESULT SetMediaTime(LONGLONG * pStart, LONGLONG * pEnd);
-HRESULT SetMessageType(WSDUdpMessageType messageType);
 HRESULT SetMode(DWORD dwMode);
 HRESULT SetMops(unsigned int index, BSTR bstrMops);
 HRESULT SetNotifyCallbackInterface(ISpNotifyCallback* pSpCallback, WPARAM wParam, LPARAM lParam);
@@ -1344,7 +1336,6 @@ HRESULT SetOutput(IUnknown* pUnkOutput, BOOL fAllowFormatChanges);
 HRESULT SetOutputFileName(const GUID* pType, LPCOLESTR lpwstrFile, IBaseFilter** ppf, IFileSinkFilter** pSink);
 HRESULT SetPageSite(IPropertyPageSite* pPageSite);
 HRESULT SetPath(LPCWSTR pszName, DWORD dwFlags, IHeaderCollection* pHeaders);
-HRESULT SetPortManager(IRTCPortManager* pPortManager);
 HRESULT SetPosition(DWORD dwNewPosition);
 HRESULT SetPositions(LONGLONG *pCurrent, DWORD dwCurrentFlags, LONGLONG *pStop, DWORD dwStopFlags);
 HRESULT SetPreroll(BOOL bIsPreroll);
@@ -1355,15 +1346,12 @@ HRESULT SetRate(double dRate);
 HRESULT SetRecoProfile(ISpObjectToken* pToken);
 HRESULT SetRecognizer(ISpObjectToken* pEngineToken);
 HRESULT SetRecordingPath(LPCOLESTR pszPath);
-HRESULT SetRemoteAddress(IWSDAddress* pAddress);
 HRESULT SetRenderTarget(IDirect3DMobileSurface* pRenderTarget, IDirect3DMobileSurface* pNewZStencil);
 void SetRepaintStatus(BOOL bRepaint);
-HRESULT SetRetransmitParams(WSDUdpRetransmitParams* pParams);
 HRESULT SetSameFormat(IMediaStream *pStreamThatHasDesiredFormat, DWORD dwFlags);
 void SetSampleSize(ULONG sz);
 HRESULT SetSaveObjects(IStream* pStream, ISpErrorLog* pErrorLog);
 HRESULT SetSecuritySite(IInternetSecurityMgrSite* pSite);
-HRESULT SetSessionDescriptionManager(IRTCSessionDescriptionManager* pSessionDescriptionManager);
 HRESULT SetSink(IQualityControl *piqc);
 HRESULT SetSite(ISpSREngineSite* pSite);
 HRESULT SetSourceMoniker(IMoniker* pmk, REFCLSID rclsid);
@@ -1424,26 +1412,21 @@ HRESULT SpeedGet(DWORD *pdwSpeed);
 HRESULT SpeedSet(DWORD dwSpeed);
 HRESULT Start(DWORD dwFlags);
 HRESULT StartBrowser(LPWSTR szURL);
-HRESULT StartCall (hPNDevice hPN, PNData_t Call, DWORD dwPeriod);
 HRESULT StartCommandHandler(WCHAR *szService, MANAGED_COMMANDHANDLER_TYPE type, HWND hwndNotify, UINT Msg);
 HRESULT StartListenAddressAndPort(BSTR bstrInternalLocalAddress, long lInternalLocalPort);
 HRESULT StartStreaming(void);
 HRESULT StartupServer(BSTR* pbstrStartupServerId);
-HRESULT StateVariableChanged(IUPnPService* pus, LPCWSTR pcwszStateVarName, VARIANT varValue);
 HRESULT StatusText(BSTR* pbstrText);
 void StatusTextChange(BSTR bstrText);
 HRESULT Stop();
 HRESULT StopAll(void);
-HRESULT StopCall (hPNDevice hPN, PNData_t Call);
 HRESULT StopCommandHandler();
 HRESULT StopListenAddressAndPort(BSTR bstrInternalLocalAddress, long lInternalLocalPort);
 HRESULT StopSpeaking(void);
 HRESULT StopStreaming(void);
-HRESULT StoreUsed(IASHTMLControl *pControl BSTR bstrTarget int iLoop);
 HRESULT StretchRect(IDirect3DMobileSurface* pSourceSurface, CONST RECT* pSourceRect, IDirect3DMobileSurface* pDestSurface, CONST RECT* pDestRect, D3DMTEXTUREFILTERTYPE Filter);
 HRESULT Subscribe(GUID PlatformID, GUID DeviceID, GUID PublisherID, ISubscriber* pSubscriber, IPublisher** ppPublisher, GUID* pCookieID);
 HRESULT SubscribeToOperation(const WSD_OPERATION* pOperation, IUnknown* pUnknown, const WSDXML_ELEMENT* pAny, WSDXML_ELEMENT** ppAny);
-HRESULT Subscription (IRTCUnsolicitedSubscription** ppSubscription);
 void Swap (LPDDRAWI_DDRAWSURFACE_LCL s1, LPDDRAWI_DDRAWSURFACE_LCL s2);
 HRESULT SwitchExecutionTo(IOsAxsProcess** ppiOldProc, IOsAxsThread**ppiOldThrd, IOsAxsProcess** ppiNewProc);
 HRESULT SwitchSink(IInternetProtocolSink* pOIProtSink);
@@ -1454,9 +1437,6 @@ HRESULT SysReAllocStringLen(BSTR FAR *pbstr, OLECHAR FAR *pch, unsigned int cch)
 HRESULT SysStringByteLen(BSTR bstr);
 HRESULT SysStringLen(BSTR bstr);
 VOID WINAPI TGTPLAT_Entry(UINT uiPddId, PFN_KEYBD_EVENT pfnKeybdEvent, PKEYBD_PDD *ppKeybdPdd);
-HRESULT TPWindowToPage(HANDLE hTileProxy, INT32* px, INT32* py);
-HRESULT TTSModeGet(GUID *pgVoice);
-HRESULT TTSModeSet(GUID gVoice);
 BOOL TakeFrameLengthControl(USB_HANDLE hDevice);
 HRESULT TearDown();
 DWORD TerminateStressModule(void);
@@ -1472,7 +1452,6 @@ HRESULT ThresholdGet(DWORD *pdwThreshold);
 HRESULT ThresholdSet(DWORD dwThreshold);
 void ThrottleWait(void);
 void TimerCallback(void);
-HRESULT Title(IASHTMLControl *pControl BSTR bstrTitle);
 void TitleChange(BSTR bstrTitle);
 BOOL TouchPanelEnable(PFN_TOUCH_PANEL_CALLBACK pfnCallback);
 BOOL TouchPanelInitializeCursor(PFN_DISP_DRIVER_MOVE_CURSOR);
@@ -1494,17 +1473,12 @@ BOOL TunerReset(HANDLE hTuner);
 BOOL TunerSeekStation(HANDLE hTuner, PTUNERSEEKINFO pTunerSeekInfo);
 BOOL TunerSetConfig(HANDLE hTuner, PTUNERCONFIG pTunerConfig);
 HRESULT TypeId(BSTR* pbstrTypeId);
-HRESULT URLDownloadToCacheFile(LPUNKNOWN lpUnkcaller, LPCSTR szURL, LPTSTR szFileName, DWORD dwBufLength, DWORD dwReserved, IBindStatusCallback* pBSC);
 HRESULT UnInitASFormsManager(void);
 HRESULT UnInitializeService();
 DWORD UnLoad(DWORD dwType, DWORD dwFlags);
 HRESULT UnPublish(LPCWSTR pszDeviceId, ULONGLONG ullInstanceId, ULONGLONG ullMessageNumber, LPCWSTR pszSessionId, const WSDXML_ELEMENT* pAny);
 BOOL UnRegisterClientSettings(LPCWSTR szUniqueDriverId, LPCWSTR szReserved, LPCUSB_DRIVER_SETTINGS lpDriverSettings);
-HRESULT UnRegisterNotificationCallBack(IAMTunerNotification *pNotify);
 BOOL UnRegisterNotificationRoutine(USB_HANDLE hDevice, LPDEVICE_NOTIFY_ROUTINE lpNotifyRoutine, LPVOID lpvNotifyParameter);
-HRESULT UnRegisterNotificationSink(IWSDiscoveryPublisherNotify* pSink);
-HRESULT UnRegisterScopeMatchingRule(IWSDScopeMatchingRule* pScopeMatchingRule);
-HRESULT UnholdSession(IRTCSession2* piSession);
 HRESULT UniversalSDK(BSTR* pbstrUniversalSDKGuid);
 HRESULT Unload(IDirectMusicPerformance* pPerformance);
 HRESULT UnloadInstrument(IDirectMusicDownloadedInstrument* pDownloadedInstrument);
@@ -1519,10 +1493,6 @@ HRESULT UpdateRemoteAddressEx(BSTR bstrRemoteAddress, long lRemotePort, BSTR bst
 HRESULT UpdateRemoteAddressEx2(BSTR bstrRemoteAddress, long lRemotePort, long lTransport, BSTR bstrInternalLocalAddress, long lInternalLocalPort, BSTR bstrExternalLocalAddress, long lExternalLocalPort);
 HRESULT UpdateTexture(IDirect3DMobileBaseTexture* pSourceTexture, IDirect3DMobileBaseTexture* pDestinationTexture);
 HRESULT UserOptionsDlg(HWND hwndParent);
-HRESULT VIOInitialize (LPVOID pvReserved);
-HRESULT VIORegisterDevice(REFCLSID rclsid, BOOL bRegister);
-HRESULT VIORegisterMinidriver(REFCLSID rclsidDevice, REFCLSID rclsidMinidriver, BOOL bRegister);
-HRESULT VIORegisterMinidriverManager(REFCLSID rclsidManager, BOOL bRegister);
 HRESULT VScroll (WPARAM wp);
 HRESULT VarBoolFromDisp(IDispatch *pdispIn, LCID lcid, BOOL *pboolOut);
 HRESULT VarBstrFromBool(BOOL boolIn, LCID lcid, ULONG dwFlags, BSTR pbstrOut);
@@ -1546,34 +1516,6 @@ HRESULT VectorFromBstr(BSTR bstr, SAFEARRAY FAR *FAR *ppsa);
 HRESULT VelocityToBearing(pPNVELBEAR pBearVel, const pPNVELENU pENUVel);
 HRESULT VerifyVideoFile(WCHAR *filename);
 HRESULT Version(BSTR* out_pbstrVersion);
-void WSASetLastError (int iError);
-void WSDAttachLinkedMemory (void* pParent, void* pChild);
-HRESULT WSDCreateDeviceHost(const WCHAR* pszLocalId, IWSDXMLContext* pContext, IWSDDeviceHost** ppDeviceHost);
-HRESULT WSDCreateDeviceHostAdvanced(const WCHAR* pszLocalId, IWSDXMLContext* pContext, IWSDAddress** ppHostAddresses, DWORD dwHostAddressCount, IWSDDeviceHost** ppDeviceHost);
-HRESULT WSDCreateDeviceProxy(const WCHAR* pszDeviceId, IWSDAddress* pDeviceAddress, const WCHAR* pszLocalId, IWSDXMLContext* pContext, IWSDDeviceProxy** ppDeviceProxy);
-HRESULT WSDCreateDiscoveryProvider(IWSDXMLContext* pContext, IWSDiscoveryProvider** ppProvider);
-HRESULT WSDCreateDiscoveryPublisher(IWSDXMLContext* pContext, IWSDiscoveryPublisher** ppPublisher);
-HRESULT WSDCreateHttpAddress(IWSDHttpAddress** ppAddress);
-HRESULT WSDCreateHttpMessageParameters(IWSDHttpMessageParameters** ppTxParams);
-HRESULT WSDCreateOutboundAttachment (IWSDOutboundAttachment** attachmentOut);
-VOID WINAPI WSDCreateUdpAddress(IWSDUdpAddress** ppAddress);
-VOID WINAPI WSDCreateUdpMessageParameters(IWSDUdpMessageParameters** ppTxParams);
-void WSDDetachLinkedMemory(void* pVoid);
-void WSDFreeLinkedMemory(void* pVoid);
-HRESULT WSDGenerateFault(const LPCWSTR* pszCode, const LPCWSTR* pszSubCode, const LPCWSTR* pszReason, const LPCWSTR* pszDetail, IWSDXMLContext* pContext, WSD_SOAP_FAULT** ppFault);
-HRESULT WSDGenerateFaultEx(WSDXML_NAME* pCode, WSDXML_NAME* pSubCode, WSD_LOCALIZED_STRING_LIST* pReasons, const LPCWSTR* pszDetail, WSD_SOAP_FAULT** ppFault);
-VOID WINAPI WSDGetConfigurationOption(DWORD dwOption, LPVOID pVoid, DWORD cbOutBuffer);
-void WSDRegisterNamespaces(IWSDXMLContext* pContext);
-VOID WINAPI WSDSetConfigurationOption(DWORD dwOption, LPVOID pVoid, DWORD cbInBuffer);
-VOID STDAPI WSDXMLAddChild(WSDXML_ELEMENT* pParent, WSDXML_ELEMENT* pChild);
-VOID STDAPI WSDXMLAddSibling(WSDXML_ELEMENT* pFirst, WSDXML_ELEMENT* pSecond);
-VOID STDAPI WSDXMLBuildAnyForSingleElement(WSDXML_NAME* pElementName, const LPCWSTR* pszText, WSDXML_ELEMENT** ppAny);
-VOID WINAPI WSDXMLCleanupElement(WSDXML_ELEMENT* pAny);
-VOID WINAPI WSDXMLCreateContext(IWSDXMLContext** ppContext);
-VOID WINAPI WSDXMLGetNameFromBuiltinNamespace(LPCWSTR pszNamespace, LPCWSTR pszName, WSDXML_NAME** ppName);
-VOID STDAPI WSDXMLGetValueFromAny(const WCHAR* pszNamespace, const WCHAR* pszName, WSDXML_ELEMENT* pAny, const LPCWSTR** ppszValue);
-DWORD WZCQueryLatencySensitiveMode(LPWSTR pSrvAddr, PWSTR wszInterfaceGuid, BOOL *pbEnable, ULONG *pPacketLatencyMs);
-DWORD WZCSetLatencySensitiveMode(LPWSTR pSrvAddr, PWSTR wszInterfaceGuid, BOOL bEnable, ULONG PacketLatencyMs);
 BOOL Wait(DWORD dwTimeout);
 HRESULT WaitForCompletion(long msTimeout, long *pEvCode);
 HRESULT WaitForNext(DWORD dwTimeout, IMediaSample **ppSample, DWORD *pdwUser);
@@ -1603,15 +1545,10 @@ void __asm(const char *, ...);
 void _asm (char*,...);
 int _controlfp_s (__out_opt unsigned int*_CurrentState, __in unsigned int _NewValue, __in unsigned int _Mask);
 int _isnanf (float);
-int _snprintf(char *buffer, size_tcount, const char *format ...);
-int _snwprintf(wchar_t *buffer, size_tcount, const wchar_t *format ...);
-int _vsnwprintf(wchar_t *buffer, size_tcount, constwchar_t *format, va_listargptr);
 UINT accessor_function (UINT actID, AsnAny *aryObject, UINT *pErrIndex);
 void add64_64_64 (const FILETIME *lpnum1, LPFILETIME lpnum2, LPFILETIME lpres);
 int asm_int(const char *);
-int bthlink_ConnectionCompleteEvent(void *pUserContext, void *pCallContext, unsigned char status, unsigned short connection_handle, BD_ADDR *pba, unsigned char link_type, unsigned char encryption_mode);
 int bthlink_CreateConnection_Out(void *pCallContext, unsigned char status);
-int btutil_UnScheduleEvent (SVSCookie ulCookie);
 UINT fn_somefunction (UINT actionId, AsnAny *objectArray, UINT *errorIndex);
 HRESULT get_AcceptedContentType(BSTR* pbstrAcceptedContentType);
 HRESULT get_ActiveBackColor(OLE_COLOR *pclr);
@@ -1626,7 +1563,6 @@ HRESULT get_AllDayEvent (VARIANT_BOOL *pbAllDayEvent);
 HRESULT get_Anniversary (DATE *pdaAnniversary);
 HRESULT get_AppName(BSTR *pbstrAppname);
 HRESULT get_AppSmallIcon(OLE_HANDLE *phSmallIcon);
-HRESULT get_Application (IPOutlookApp **ppIPOutlookApp);
 HRESULT get_AppointmentItem (Iappointment **ppAppointmentItem);
 HRESULT get_AreaCode (BSTR *pbstrAreaCode);
 HRESULT get_AssistantName (BSTR *pbstrAssistantName);
@@ -1651,14 +1587,10 @@ HRESULT get_Birthday (DATE *pdaBirthday);
 HRESULT get_BitErrorRate(long *pBitErrorRate);
 HRESULT get_BitRate(long *pBitRate);
 HRESULT get_Body (BSTR *pbstrBody);
-HRESULT get_BodyEntries(IXMLDOMNodeList** ppNodeList);
-HRESULT get_BodyEntry(BSTR LocalName, BSTR NamespaceURI, IXMLDOMElement** ppElement);
 HRESULT get_BodyInk (CEBLOB **ppBodyInk);
 HRESULT get_BodyLenth(long* pcbBody);
 HRESULT get_Border(VARIANT_BOOL *pfBorder);
 HRESULT get_BorderColor(long *Color);
-HRESULT get_Buddies(IRTCCollection** ppCollection);
-HRESULT get_Buddy(IRTCBuddy** ppBuddy);
 HRESULT get_Business2TelephoneNumber (BSTR *pbstrBusiness2TelephoneNumber);
 HRESULT get_BusinessAddressCity (BSTR *pbstrBusinessAddressCity);
 HRESULT get_BusinessAddressCountry (BSTR *pbstrBusinessAddressCountry);
@@ -1680,7 +1612,6 @@ HRESULT get_CharSet(BSTR *pbstr);
 HRESULT get_Children (BSTR *pbstrChildren);
 HRESULT get_Circular(BOOL *pfCircular);
 HRESULT get_ClassMsgSink(IDispatch **ppdispSink);
-HRESULT get_Client(IRTCClient** ppClient);
 HRESULT get_ClientCurVer(BSTR* pbstrCurVer);
 HRESULT get_ClientData(BSTR* pbstrData);
 HRESULT get_ClientMinVer(BSTR* pbstrMinVer);
@@ -1709,7 +1640,6 @@ HRESULT get_CurrentCallEnumerator(IVoIPCurrentCallEnumerator** ppiEnum);
 HRESULT get_CurrentCityIndex (long *plCurrentCityIndex);
 HRESULT get_CurrentPosition(REFTIME* pllTime);
 HRESULT get_CurrentTrack(unsigned char *pbcTrack);
-HRESULT get_DOM(IXMLDOMDocument** pIXMLDOMDocument);
 HRESULT get_Data(BSTR* pbstrData);
 HRESULT get_DateCompleted (DATE *pdaDateCompleted);
 HRESULT get_DayOfMonth (long *plDayOfMonth);
@@ -1747,14 +1677,8 @@ HRESULT get_EncodingStream(IUnknown** ppIEncodingStream);
 HRESULT get_End (DATE *pdaEnd);
 HRESULT get_EndTime (DATE *pdaEndTime);
 HRESULT get_Enumerator(IVoIPCallerInfoDBEnum** ppiEnum);
-HRESULT get_Envelope(IXMLDOMElement** ppElement);
 HRESULT get_EventSink(IDispatch **ppdispSink);
 HRESULT get_Exceptions (Iexceptions **ppExceptions);
-HRESULT get_Fault(IXMLDOMElement** ppElement);
-HRESULT get_FaultActor(IXMLDOMElement** ppElement);
-HRESULT get_FaultCode(IXMLDOMElement** ppElement);
-HRESULT get_FaultDetail(IXMLDOMElement** ppElement);
-HRESULT get_FaultString(IXMLDOMElement** ppElement);
 HRESULT get_FileAs (BSTR *pbstrFileAs);
 HRESULT get_FileContainer(ICcFileContainer**out_ppiFileContainer);
 HRESULT get_FirstName (BSTR *pbstrFirstName);
@@ -1773,14 +1697,8 @@ HRESULT get_FramesDroppedInRenderer(int *pcFramesDropped);
 HRESULT get_FriendlyName(BSTR* pbstr);
 HRESULT get_FriendlyNameEnumerator(IVoIPCallerInfoDBEnum** ppiEnum);
 HRESULT get_FullScreenMode(long *FullScreenMode);
-HRESULT get_Group(IRTCBuddyGroup** ppGroup);
-HRESULT get_Groups(IRTCCollection** ppCollection);
 HRESULT get_HTML(BSTR *pbstrHTML);
-HRESULT get_HTMLNotifySink (IASHTMLControlNotifySink **ppNotify);
 HRESULT get_HasUI(VARIANT_BOOL *pfHasUI);
-HRESULT get_Header(IXMLDOMElement** ppElement);
-HRESULT get_HeaderEntries(IXMLDOMNodeList** ppNodeList);
-HRESULT get_HeaderEntry(BSTR LocalName, BSTR NamespaceURI, XMLDOMElement** ppElement);
 HRESULT get_Height(long *pHeight);
 HRESULT get_HelpContext(BSTR *pbstrHelpFile, BSTR *pbstrHelpTopic);
 HRESULT get_HiliteBorderColor(OLE_COLOR *pclr);
@@ -1832,7 +1750,6 @@ HRESULT get_ItemFlags(long index unsigned char *pbFlags);
 HRESULT get_ItemHeight(long *plHeight);
 HRESULT get_ItemId(long *plItemId);
 HRESULT get_ItemWidth(long *plWidth);
-HRESULT get_Items (IPOutlookItemCollection **ppolItems);
 HRESULT get_Jitter(int *piJitter);
 HRESULT get_JobTitle (BSTR *pbstrJobTitle);
 HRESULT get_Key(BSTR* pbstrKey);
@@ -1858,7 +1775,6 @@ HRESULT get_MaxTitleWidth(long *plMaxTitleWidth);
 HRESULT get_MeetingStatus (long *plMeetingStatus);
 HRESULT get_Menu(IDispatch **ppdispMenu);
 HRESULT get_MenuLabel(IDispatch **ppdispLabel);
-HRESULT get_MenuTitlebar(IASTitlebar **ppTitlebar);
 HRESULT get_MenuVisible(BOOL *pfVisible);
 HRESULT get_MenuWrap(BOOL *pfWrap);
 HRESULT get_Message(BSTR* pbstrMessage);
@@ -1876,12 +1792,10 @@ HRESULT get_MoreInfoBannerImage(BSTR* pbstrMoreInfoBannerImage);
 HRESULT get_MoreInfoBannerURL(BSTR* pbstrMoreInfoBannerURL);
 HRESULT get_MoreInfoText(BSTR* pbstrMoreInfoText);
 HRESULT get_MoreInfoURL(BSTR* pbstrMoreInfoURL);
-HRESULT get_MustUnderstandHeaderEntries(IXMLDOMNodeList** ppNodeList);
 HRESULT get_MyServer(BSTR* pbstrServer);
 HRESULT get_MyURI(BSTR* pbstrURI);
 HRESULT get_Name (BSTR *pbstrName);
 HRESULT get_NaturalSize(long *plWidth, long *plHeight);
-HRESULT get_NavArrows (IASUserNavArrows **ppNavArrows);
 HRESULT get_NavState(long *plNavState);
 HRESULT get_NewEnum(IUnknown**pVal);
 HRESULT get_NoEndDate (VARIANT_BOOL *pbNoEndDate);
@@ -1910,9 +1824,6 @@ HRESULT get_PackageContainer(ICcPackageContainer** out_ppiPC);
 HRESULT get_PackageTypeContainer(ICcPackageTypeContainer**out_ppiPTC);
 HRESULT get_PagerNumber (BSTR *pbstrPagerNumber);
 HRESULT get_Parent(IDispatch **ppdispParent);
-HRESULT get_ParentDevice(IUPnPDevice** ppudDeviceParent);
-HRESULT get_Participant(IRTCParticipant** ppParticipant);
-HRESULT get_Participants(IRTCCollection** ppCollection);
 HRESULT get_PathName(BSTR* pbstrPathName);
 HRESULT get_PatternEndDate (DATE *pdaPatternEndDate);
 HRESULT get_PatternStartDate (DATE *pdaPatternStartDate);
@@ -1922,27 +1833,16 @@ HRESULT get_PortableSalt(BSTR* pPortableSalt);
 HRESULT get_PreferredAudioDevice(RTC_AUDIO_DEVICE enDevice, BSTR* pbstrDeviceName);
 HRESULT get_PreferredVideoDevice(BSTR* pbstrDeviceName);
 HRESULT get_PrerollTime(REFTIME *pllTime);
-HRESULT get_PresenceDevices(IRTCCollection** ppDevicesCollection);
 HRESULT get_PresenceProperty(RTC_PRESENCE_PROPERTY enProperty, BSTR* pbstrProperty);
 HRESULT get_PresentationURL(BSTR* pbstr);
 HRESULT get_PresentityURI(BSTR* pbstrPresentityURI);
-HRESULT get_Profile(IRTCProfile2** ppProfile);
-HRESULT get_Profiles(IRTCCollection** ppCollection);
 HRESULT get_ProjectContainer(ICcProjectContainer** out_ppiPC);
 HRESULT get_Property(BSTR pPropertyName, VARIANT* pPropertyValue);
 HRESULT get_PropertyContainer(ICcPropertyContainer**out_ppiSCC);
-HRESULT get_ProvideCommandDataSink(IASProvidePowerListBoxCommandData **ppSink);
 HRESULT get_ProviderData(BSTR* pbstrData);
 HRESULT get_ProviderName(BSTR* pbstrName);
 HRESULT get_ProviderURI(RTC_PROVIDER_URI enURI, BSTR* pbstrURI);
-HRESULT get_Query(IRTCUserSearchQuery** ppQuery);
 HRESULT get_QueueGuid(BSTR* pbstrGuidQueue);
-HRESULT get_RPCParameter(BSTR LocalName, BSTR NamespaceURI, IXMLDOMElement** ppElement);
-HRESULT get_RPCResult(IXMLDOMElement** ppElement);
-HRESULT get_RPCStruct(IXMLDOMElement** ppElement);
-HRESULT get_RTCClient(IRTCClient** ppiRTCClient);
-HRESULT get_RTCParticipant(IRTCParticipant** piparticipant);
-HRESULT get_RTCSession(IRTCSession** piSession);
 HRESULT get_RadioTelephoneNumber (BSTR *pbstrRadioTelephoneNumber);
 HRESULT get_RangeColor(long lRangeIndex, OLE_COLOR *pclr);
 HRESULT get_RangeCount(long *plCount);
@@ -1967,10 +1867,7 @@ HRESULT get_ReminderOptions (long *plReminderOptions);
 HRESULT get_ReminderSet (VARIANT_BOOL *pbReminderSet);
 HRESULT get_ReminderSoundFile (BSTR *pbstrReminderSoundFile);
 HRESULT get_ReminderTime (DATE *pdaReminderTime);
-HRESULT get_ResponseQueueInfo(IMSQQueueInfo** ppinfoResponse);
-HRESULT get_Results(IRTCCollection** ppCollection);
 HRESULT get_RingTone(BSTR* pbstrRingTonePath);
-HRESULT get_RootDevice(IUPnPDevice** ppudRootDevice);
 HRESULT get_ScrollArrowsVisible (BOOL *pfScrollArrowsVisible);
 HRESULT get_SearchDomain(BSTR* pbstrDomain);
 HRESULT get_SearchTerm(BSTR bstrName, BSTR* pbstrValue);
@@ -1984,8 +1881,6 @@ HRESULT get_Server(BSTR* Server);
 HRESULT get_ServiceCategoryContainer(ICcServiceCategoryContainer** out_ppiSCC);
 HRESULT get_ServiceTypeGuid(BSTR* pbstrGuidServiceType);
 HRESULT get_ServiceTypeIdentifier(BSTR* pVal);
-HRESULT get_Services(IUPnPServices** ppusServices);
-HRESULT get_Session(IRTCSession2** ppSession);
 HRESULT get_ShowInteractionSymbols (BOOL *pfShowInteractionSymbols);
 HRESULT get_SipServerParameters(BSTR* pbstrMyURI, BSTR* pbstrMyServer, BSTR* pbstrProfileString);
 HRESULT get_SortOrder(BOOL *pfAscending);
@@ -1995,7 +1890,6 @@ HRESULT get_SourceLeft(long *pSourceLeft);
 HRESULT get_SourceMachineGuid(BSTR* pbstrGuidSrcMachine);
 HRESULT get_SourceTop(long *pSourceTop);
 HRESULT get_SourceWidth(long *pSourceWidth);
-HRESULT get_Speech(IAPCSpeech **ppSpeech);
 HRESULT get_SpeechCommandId(long Index, long *plSpeechId);
 HRESULT get_SpeedDialEnumerator(IVoIPCallerInfoDBEnum** ppiEnum);
 HRESULT get_SpinMode(short *pmode);
@@ -2022,7 +1916,6 @@ HRESULT get_String(long index, BSTR *pbstr);
 HRESULT get_Style(DWORD *pdwStyle);
 HRESULT get_SubCaption(BSTR *pbstrSubCaption);
 HRESULT get_Subject (BSTR *pbstrSubject);
-HRESULT get_Subscription(IRTCSubscription** ppSubscription);
 HRESULT get_Suffix (BSTR *pbstrSuffix);
 HRESULT get_SupportedPlatform(BSTR*out_pbstrSupportedPlatform);
 HRESULT get_SupportsDST (VARIANT_BOOL *pbSupportsDST);
@@ -2037,7 +1930,6 @@ HRESULT get_Text(BSTR *pbstr);
 HRESULT get_TextPrivate(BOOL * pfTextPrivate);
 HRESULT get_TimezoneIndex (long *plTimezoneIndex);
 HRESULT get_Title (BSTR *pbstrTitle);
-HRESULT get_Titlebar (IASTitlebar **ppTitlebar);
 HRESULT get_TitlebarUpdateMode(WORD *pwTitlebarUpdateMode);
 HRESULT get_Top(long *pTop);
 HRESULT get_TopVisibleId(long *plTopVisibleId);
@@ -2061,12 +1953,8 @@ HRESULT get_Visible(long *pVisible);
 HRESULT get_VisibleRect (RECT *rcVisible);
 HRESULT get_VisitingCity (ICity **ppICity);
 HRESULT get_VoIPName(BSTR* pbstrVoIPName);
-HRESULT get_VoiceMenu(IVCmdMenu **ppVoiceMenu);
 HRESULT get_VoiceMenuActivateCommand(BSTR *pbstrCommand);
 HRESULT get_WaitStatus(BOOL *pfWaitStatus);
-HRESULT get_Watcher(BSTR bstrPresentityURI, IRTCWatcher** ppWatcher);
-HRESULT get_WatcherEx(RTC_WATCHER_MATCH_MODE enMode, BSTR bstrPresentityURI, IRTCWatcher2** ppWatcher);
-HRESULT get_Watchers(IRTCCollection** ppCollection);
 HRESULT get_WatermarkURL(BSTR* pbstrWatermarkURL);
 HRESULT get_WebPage (BSTR *pbstrWebPage);
 HRESULT get_Width(long *pWidth);
@@ -2088,33 +1976,21 @@ HRESULT get__NewEnum(IUnknown** ppNewEnum);
 HRESULT get_address(BSTR* pbstrPortAddress);
 HRESULT get_async(VARIANT_BOOL* isAsync);
 HRESULT get_attributeName(long lIndex, BSTR* pbstrAttributeName);
-HRESULT get_attributes(IXMLDOMNamedNodeMap** attributeMap);
 HRESULT get_baseName(BSTR* nameString);
 HRESULT get_bindStyle(BSTR* pbstrbindStyle);
 HRESULT get_callIndex(long* plCallIndex);
-HRESULT get_childNodes(IXMLDOMNodeList** childList);
 HRESULT get_comValue(VARIANT* pVarOut);
-HRESULT get_context(IXMLDOMNode** ppNode);
-HRESULT get_controls(IWMPControls** ppControl);
-HRESULT get_currentItem(IWMPMedia** ppIWMPMedia);
-HRESULT get_currentMedia(IWMPMedia** ppMedia);
-HRESULT get_currentPlaylist(IWMPPlaylist** ppPL);
 HRESULT get_currentPositionString(BSTR* pbstrCurrentPosition);
 HRESULT get_currentPositionTimecode(BSTR* bstrTimecode);
 HRESULT get_data(BSTR* data);
 HRESULT get_dataType(VARIANT* dataTypeName);
-HRESULT get_definition(IXMLDOMNode** definitionNode);
 HRESULT get_detail(BSTR* bstrDetail);
-HRESULT get_doctype(IXMLDOMDocumentType** documentType);
 HRESULT get_document(IDispatch** ppDisp);
-HRESULT get_documentElement(IXMLDOMElement** DOMElement);
 HRESULT get_documentation(BSTR* bstrDocumentation);
 HRESULT get_durationString(BSTR* pbstrDuration);
 HRESULT get_elementName(BSTR* pbstrElementName);
 HRESULT get_elementType(BSTR* pbstrElementType);
 HRESULT get_encoding(BSTR* pbstrEncodingStyle);
-HRESULT get_entities(IXMLDOMNamedNodeMap** entityMap);
-HRESULT get_error(IWMPError** ppError);
 HRESULT get_errorCode(long* errorCode);
 HRESULT get_errorDescription(BSTR* pbstrDescription);
 HRESULT get_expr(BSTR* expression);
@@ -2123,57 +1999,39 @@ HRESULT get_faultcode(BSTR* bstrFaultcode);
 HRESULT get_faultcodeNS(BSTR* bstrfaultcodeNS);
 HRESULT get_faultstring(BSTR* bstrFaultstring);
 HRESULT get_filepos(long* filePosition);
-HRESULT get_firstChild(IXMLDOMNode** firstChild);
-HRESULT get_implementation(IXMLDOMImplementation** impl);
 HRESULT get_input(VARIANT* pVar);
 HRESULT get_isAvailable(BSTR bstrItem, VARIANT_BOOL* pIsAvailable);
-HRESULT get_isIdentical(IWMPMedia* pIWMPMedia, VARIANT_BOOL* pvbool);
 HRESULT get_isInput(smIsInputEnum* pbIsInput);
-HRESULT get_item(long dwIndex, IWMPErrorItem** ppErrorItem);
-HRESULT get_lastChild(IXMLDOMNode** lastChild);
 HRESULT get_line(long* lineNumber);
 HRESULT get_linepos(long* linePosition);
 HRESULT get_messageName(BSTR* pbstrMessageName);
 HRESULT get_name(BSTR* pbstrOperationName);
 HRESULT get_namespaceURI(BSTR* namespaceURI);
-HRESULT get_namespaces(IXMLDOMSchemaCollection** namespaceCollection);
-HRESULT get_nextSibling(IXMLDOMNode** nextSibling);
 HRESULT get_nodeName(BSTR* name);
-HRESULT get_nodeType(DOMNodeType* type);
 HRESULT get_nodeTypeString(BSTR* nodeType);
 HRESULT get_nodeTypedValue(VARIANT* typedValue);
 HRESULT get_nodeValue(VARIANT* value);
 HRESULT get_notationName(BSTR* name);
-HRESULT get_notations(IXMLDOMNamedNodeMap** notationMap);
 HRESULT get_objectMethod(BSTR* pbstrobjectMethod);
 HRESULT get_objectProgID(BSTR* pbstrobjectProgID);
 HRESULT get_output(VARIANT* pOutput);
-HRESULT get_ownerDocument(IXMLDOMDocument** DOMDocument);
-HRESULT get_parentNode(IXMLDOMNode** parent);
-HRESULT get_parseError(IXMLDOMParseError** errorObj);
 HRESULT get_parsed(VARIANT_BOOL* isParsed);
 HRESULT get_partName(BSTR* pbstrpartName);
 HRESULT get_preferredEncoding(BSTR* pbstrpreferredEncoding);
 HRESULT get_prefix(BSTR* prefixString);
 HRESULT get_preserveWhiteSpace(VARIANT_BOOL* isPreserving);
-HRESULT get_previousSibling(IXMLDOMNode** previousSibling);
 HRESULT get_publicId(BSTR* publicID);
 HRESULT get_reason(BSTR* reasonString);
 HRESULT get_resolveExternals(VARIANT_BOOL* isResolving);
 HRESULT get_responseText(BSTR* pbstrBody);
 HRESULT get_schemas(VARIANT* otherCollection);
 HRESULT get_script(IDispatch** ppDisp);
-HRESULT get_settings(IWMPSettings** ppSettings);
 HRESULT get_soapAction(BSTR* pbstrSoapAction);
 HRESULT get_sourceURL(BSTR* pbstrSourceURL);
 HRESULT get_specified(VARIANT_BOOL* isSpecified);
 HRESULT get_srcText(BSTR* sourceString);
 HRESULT get_statusText(BSTR* pbstrStatus);
 HRESULT get_style(BSTR* pbstrstyle);
-HRESULT get_tagName(BSTR* tagName);
-HRESULT get_target(BSTR* name);
-HRESULT get_text(BSTR* text);
-HRESULT get_transport(BSTR* pbstrtransport);
 HRESULT get_uiMode(BSTR* pbstrMode);
 HRESULT get_url(BSTR* urlString);
 HRESULT get_validateOnParse(VARIANT_BOOL* isValidating);
@@ -2292,7 +2150,6 @@ HRESULT put_ForwardingURI(BSTR bstrForwardingURI);
 HRESULT put_FriendlyName(BSTR bstrFriendlyName);
 HRESULT put_FullScreenMode(long FullScreenMode);
 HRESULT put_HTML(BSTR bstrHTML);
-HRESULT put_HTMLNotifySink (IASHTMLControlNotifySink **ppNotify);
 HRESULT put_Height(long Height);
 HRESULT put_HelpContext(BSTR bstrHelpFile, BSTR bstrHelpTopic);
 HRESULT put_HiliteBorderColor(OLE_COLOR clr);
@@ -2393,7 +2250,6 @@ HRESULT put_PrerollTime(REFTIME llTime);
 HRESULT put_PresenceProperty(RTC_PRESENCE_PROPERTY enProperty, BSTR bstrProperty);
 HRESULT put_PresentityURI(BSTR bstrPresentityURI);
 HRESULT put_Property(BSTR pPropertyName, VARIANT PropertyValue);
-HRESULT put_ProvideCommandDataSink(IASProvidePowerListBoxCommandData *pSink);
 HRESULT put_RadioTelephoneNumber (BSTR bstrRadioTelephoneNumber);
 HRESULT put_RamUsed(long lRamUsed);
 HRESULT put_RangeColor(long lRangeIndex OLE_COLOR clr);
@@ -2450,7 +2306,6 @@ HRESULT put_String(long index, BSTR bstr);
 HRESULT put_SubCaption(BSTR bstrSubCaption);
 HRESULT put_Subject (BSTR bstrSubject);
 HRESULT put_Suffix (BSTR bstrSuffix);
-HRESULT put_SupportedPlatform(BSTRin_bstrSupportedPlatform);
 HRESULT put_TabColor(OLE_COLOR clr);
 HRESULT put_TabFocusBackColor(OLE_COLOR clr);
 HRESULT put_TabFocusForeColor(OLE_COLOR clr);
@@ -2476,7 +2331,6 @@ HRESULT put_Value(BSTR in_bstrVal);
 HRESULT put_Visible(long Visible);
 HRESULT put_VisitingCity (ICity *pICity);
 HRESULT put_VoIPName(BSTR bstrVoIPName);
-HRESULT put_VoiceMenu(IVCmdMenu *pVoiceMenu);
 HRESULT put_VoiceMenuActivateCommand(BSTR bstrCommand);
 HRESULT put_WaitStatus(BOOL fWaitStatus);
 HRESULT put_WebPage (BSTR bstrWebPage);
@@ -2495,9 +2349,6 @@ HRESULT put_YomiCompanyName (BSTR bstrYomiCompanyName);
 HRESULT put_YomiFirstName (BSTR bstrYomiFirstName);
 HRESULT put_YomiLastName (BSTR bstrYomiLastName);
 HRESULT put_async(VARIANT_BOOLisAsync);
-HRESULT put_currentItem(IWMPMedia* pIWMPMedia);
-HRESULT put_currentMedia(IWMPMedia* pMedia);
-HRESULT put_dataType(BSTRdataTypeName);
 HRESULT put_expr(BSTR expression);
 HRESULT put_input(VARIANT pVar);
 HRESULT put_nodeTypedValue(VARIANT typedValue);
@@ -2510,10 +2361,6 @@ HRESULT put_uiMode(BSTR bstrMode);
 HRESULT put_validateOnParse(VARIANT_BOOLisValidating);
 HRESULT put_value(VARIANT* attributeValue);
 HRESULT putref_HeaderHandler(IDispatch* pHeaderHandler);
-HRESULT putref_ResponseQueueInfo(IMSQQueueInfo* pinfoResponse);
-HRESULT putref_context(IXMLDOMNode* pNode);
-HRESULT putref_documentElement(IXMLDOMElement* DOMElement);
-HRESULT putref_schemas(VARIANTotherCollection);
 HRESULT set_AppSmallIcon(OLE_HANDLE hSmallIcon);
 HRESULT set_PreferredVideoDevice(BSTR bstrDeviceName);
 UINT setter_function (UINT actID, AsnAny *aryObject, UINT *pErrIndex);
@@ -2566,7 +2413,6 @@ HRESUTL SetMoniker(DWORD dwWhichMoinker, IMoniker *pmk);
 WINOLEAPI OleLoadFromStream(IStream *pStm, REFIID iidInterface, void **ppvObj);
 WINOLEAPI OleSaveToStream(IPersistStream *pPStm, IStream *pStm);
 WINOLEAPI ReadClassStg(IStorage *pStg, CLSID *pclsid);
-HRESULT APIENTRY MQSendMessage(QUEUEHANDLE hDestinationQueue, MQMSGPROPS *pMessageProps, ITransaction *pTransaction);
 BSTR SysAllocString(OLECHAR FAR *sz);
 BSTR SysAllocStringByteLen(char FAR *psz, unsigned int len);
 BSTR SysAllocStringLen(OLECHAR FAR *pch, unsigned int cch);
@@ -2618,16 +2464,18 @@ OBJECT *RemoveHead();
 OBJECT *RemoveTail();
 IAsyncReader* GetReader(void);
 T GetQueueObject();
-IMemAllocator * PeekAllocator()
-const BOOL ReadOnly()
-IMemInputPin * ConnectedIMemInputPin()
+HRESULT Init(void);
+IMemAllocator * PeekAllocator();
+const BOOL ReadOnly();
+IMemInputPin * ConnectedIMemInputPin();
 LPUNKNOWN GetOwner(void);
 HINSTANCE LoadOLEAut32();
-Private Sub object_OpenComplete()
-Private Sub object_StateChange(ByVal oldState As Long, ByVal newState As Long)
-Unable to Start Up ConPMon (earlier conpmon could be shutting down)
+Private Sub object_OpenComplete();
+Private Sub object_StateChange(ByVal oldState As Long, ByVal newState As Long);
+Unable to Start Up ConPMon (earlier conpmon could be shutting down);
+HRESULT GetDevice(IDirect3DMobileDevice** ppDevice);
 RESULT GetSourceURL(DWORD dwSourceIndex, BSTR* pbstrURL);
-HRESULT CreateBitmapFromBuffer(BitmapData* bitmapData, IBitmapImage** bitmap)
+HRESULT CreateBitmapFromBuffer(BitmapData* bitmapData, IBitmapImage** bitmap);
 HRESULT FindBehavior(BSTR bstrBehavior, BSTR bstrBehaviorUrl, IElementBehaviorSite *pSite, IElementBehavior **ppBehavior);
 HRESULT GetFocusRect(RECT *pRect);
 HRESULT GetLayoutInfo(LONG *plLayoutInfo);
@@ -2637,28 +2485,22 @@ HRESULT GetTextDescent(LONG *plDescent);
 HRESULT GetRenderInfo(LONG *plRenderInfo);
 HRESULT HitTestPoint(POINT *pPoint, IUnknown *pReserved, BOOL *pbHit);
 HRESULT GetRelatedBehaviors(LONG lDirection, LPOLESTR pchCategory, IEnumUnknown **ppEnumerator);
-HRESULT GetElement(IHTMLElement **ppElement);
 HRESULT GetMediaResolution(SIZE *psizeResolution);
 HRESULT InvalidateLayoutInfo(VOID);
 HRESULT InvalidateSize(VOID);
 HRESULT GetFontInfo(LOGFONTW *plf);
-HRESULT CreateEventObject(IHTMLEventObj **ppEventObject);
-HRESULT FireEvent(LONG lCookie, IHTMLEventObj *pEventObject);
 HRESULT GetEventCookie(LPOLESTR pchEvent, LONG *plCookie);
 HRESULT RegisterEvent(LPOLESTR pchEvent, LONG lFlags, LONG *plCookie);
 HRESULT RegisterName(LPOLESTR pchName);
 HRESULT RegisterUrn(LPOLESTR pchUrn);
-HRESULT GetDefaults(IHTMLElementDefaults **ppDefaults);
 HRESULT InvalidateRenderInfo(VOID);
 HRESULT InvalidateStyle(VOID);
-HRESULT GetSubmitInfo(IHTMLSubmitData *pSubmitData);
 HRESULT AddTag(BSTR bstrTagName, LONG lFlags);
 HRESULT CreateWithImplementation(IElementNamespace *pNamespace, BSTR bstrImplementation);
 HRESULT PopulateNamespaceTable(VOID);
 HRESULT CreateHTMLPropertyPage(IMoniker *pmk, IPropertyPage **ppPP);
 HRESULT ShowHTMLDialog(HWND hwndParent, IMoniker *pMk, VARIANT *pvarArgIn, WCHAR *pchOptions, VARIANT *pvarArgOut);
 HRESULT ShowHTMLDialogEx(HWND hwndParent, IMoniker *pMk, DWORD dwDialogFlags, VARIANT *pvarArgIn, WCHAR *pchOptions, VARIANT *pvarArgOut);
-HRESULT ShowModelessHTMLDialog(HWND hwndParent, IMoniker *pMk, VARIANT *pvarArgIn, WCHAR *pchOptions, IHTMLWindow2 **ppWindow);
 HRESULT GetCaretDirection(CARET_DIRECTION *peDir);
 HRESULT GetLocation(POINT *pPoint, BOOL fTranslate);
 HRESULT Hide(VOID);
@@ -2672,7 +2514,6 @@ HRESULT SetCaretDirection(CARET_DIRECTION eDir);
 HRESULT GetNextChange(BYTE *pbBuffer, long nBufferSize, long *pnRecordLength);
 HRESULT ExecChange(BYTE *pbRecord, BOOL fForward);
 HRESULT GetDisplayGravity(DISPLAY_GRAVITY *peGravity);
-HRESULT GetFlowElement(IHTMLElement **ppLayoutElement);
 HRESULT GetLineInfo(ILineInfo **ppLineInfo);
 HRESULT GetPointerGravity(POINTER_GRAVITY *peGravity);
 HRESULT IsAtBOL(BOOL *pfBOL);
@@ -2681,7 +2522,6 @@ HRESULT IsLeftOf(IDisplayPointer *pDispPointer, BOOL *pfIsLeftOf);
 HRESULT IsPositioned(BOOL *pfPositioned);
 HRESULT IsRightOf(IDisplayPointer *pDispPointer, BOOL *pfIsLeftOf);
 HRESULT MoveToMarkupPointer(IMarkupPointer *pPointer, IDisplayPointer *pDispLineContext);
-HRESULT MoveToPoint(POINT ptPoint, COORD_SYSTEM eCoordSystem, IHTMLElement *pElementContext, DWORD dwHitTestOptions, DWORD *pdwHitTestResults);
 HRESULT MoveToPointer(IDisplayPointer *pDispPointer);
 HRESULT MoveUnit(DISPLAY_MOVEUNIT eMoveUnit, LONG lXPos);
 HRESULT PositionMarkupPointer(IMarkupPointer *pMarkupPointer);
@@ -2690,79 +2530,49 @@ HRESULT SetDisplayGravity(DISPLAY_GRAVITY eGravity);
 HRESULT SetPointerGravity(POINTER_GRAVITY eGravity);
 HRESULT Unposition(VOID);
 HRESULT CreateDisplayPointer(IDisplayPointer **ppDispPointer);
-HRESULT GetCaret(IHTMLCaret **ppCaret);
-HRESULT GetComputedStyle(IMarkupPointer *pPointer, IHTMLComputedStyle **ppComputedStyle);
-HRESULT HasFlowLayout(IHTMLElement *pIElement, BOOL *pfHasFlowLayout);
-HRESULT ScrollRectIntoView(IHTMLElement *pIElement, RECT rect);
-HRESULT TransformPoint(POINT *pPoint, COORD_SYSTEM eSource, COORD_SYSTEM eDestination, IHTMLElement *pIElement);
-HRESULT TransformRect(RECT *pRect, COORD_SYSTEM eSource, COORD_SYSTEM eDestination, IHTMLElement *pIElement);
 HRESULT ChooseColorDlg(VARIANT initColor, VARIANT *rgbColor);
-HRESULT PostEditorEventNotify(DISPID inEvtDispId, IHTMLEventObj *pIEventObj);
-HRESULT PostHandleEvent(DISPID inEvtDispId, IHTMLEventObj *pIEventObj);
-HRESULT PreHandleEvent(DISPID inEvtDispId, IHTMLEventObj *pIEventObj);
-HRESULT SnapRect(IHTMLElement *pIElement, RECT *prcNew, ELEMENT_CORNER eHandle);
 HRESULT PreDrag(VOID);
-HRESULT AddDesigner(IHTMLEditDesigner *pIDesigner);
 HRESULT GetSelectionServices(IMarkupContainer *pIContainer, ISelectionServices **ppSelSvc);
 HRESULT MoveToSelectionAnchor(IMarkupPointer *pIStartAnchor);
 HRESULT MoveToSelectionEnd(IMarkupPointer *pIEndAnchor);
-HRESULT RemoveDesigner(IHTMLEditDesigner *pIDesigner);
 HRESULT FreezeVirtualCaretPos(BOOL fReCompute);
 HRESULT MoveToSelectionAnchorEx(IDisplayPointer *pIStartAnchor);
 HRESULT MoveToSelectionEndEx(IDisplayPointer *pIEndAnchor);
 HRESULT UnFreezeVirtualCaretPos(BOOL fReset);
 HRESULT IsPrimary(BOOL *pfPrimary);
 HRESULT SetPrimary(BOOL fPrimary);
-HRESULT AddSegment(IDisplayPointer *pDispPointerStart, IDisplayPointer *pDispPointerEnd, IHTMLRenderStyle *pIRenderStyle, IHighlightSegment **ppISegment);
 HRESULT MoveSegmentToPointers(IHighlightSegment *pISegment, IDisplayPointer *pDispPointerStart, IDisplayPointer *pDispPointerEnd);
 HRESULT RemoveSegment(IHighlightSegment *pISegment);
 HRESULT DrawToDC(HDC hDC);
 HRESULT SetDocumentPrinter(BSTR bstrPrinterName, HDC hDC);
 HRESULT GetActiveIMM(IActiveIMMApp **ppActiveIMM);
-HRESULT OwningDoc(IHTMLDocument2 **ppDoc);
-HRESULT CreateChangeLog(IHTMLChangeSink *pChangeSink, IHTMLChangeLog **ppChangeLog, BOOL fForward, BOOL fBackward);
 HRESULT GetAndClearDirtyRange(DWORD dwCookie, IMarkupPointer *pIPointerBegin, IMarkupPointer *pIPointerEnd);
-HRESULT GetMasterElement(IHTMLElement **ppElementMaster);
 long GetVersionNumber(VOID);
-HRESULT RegisterForDirtyRange(IHTMLChangeSink *pChangeSink, DWORD *pdwCookie);
 HRESULT UnRegisterForDirtyRange(DWORD dwCookie);
 HRESULT Cling(BOOL *pfCling);
-HRESULT CurrentScope(IHTMLElement **ppElemCurrent);
 HRESULT FindText(OLECHAR *pchFindText, DWORD dwFlags, IMarkupPointer *pIEndMatch, IMarkupPointer *pIEndSearch);
 HRESULT Gravity(POINTER_GRAVITY *pGravity);
 HRESULT IsLeftOfOrEqualTo(IMarkupPointer *pPointerThat, BOOL *pfResult);
 HRESULT IsRightOfOrEqualTo(IMarkupPointer *pPointerThat, BOOL *pfResult);
-HRESULT Left(BOOL fMove, MARKUP_CONTEXT_TYPE *pContext, IHTMLElement **ppElement, long *pcch, OLECHAR *pchText);
-HRESULT MoveAdjacentToElement(IHTMLElement *pElement, ELEMENT_ADJACENCY eAdj);
 HRESULT MoveToContainer(IMarkupContainer *pContainer, BOOL fAtStart);
-HRESULT Right(BOOL fMove, MARKUP_CONTEXT_TYPE *pContext, IHTMLElement **ppElement, long *pcch, OLECHAR *pchText);
 HRESULT SetCling(BOOL fCLing);
 HRESULT SetGravity(POINTER_GRAVITY Gravity);
 HRESULT UnPosition(VOID);
 HRESULT GetMarkupPosition(long *plMP);
 HRESULT IsAtWordBreak(BOOL *pfAtBreak);
 HRESULT IsInsideURL(IMarkupPointer *pRight, BOOL *pfResult);
-HRESULT MoveToContent(IHTMLElement *pIElement, BOOL fAtStart);
 HRESULT MoveToMarkupPosition(IMarkupContainer *pContainer, long lMP);
 HRESULT MoveUnitBounded(MOVEUNIT_ACTION muAction, IMarkupPointer *pIBoundary);
 HRESULT BeginUndoUnit(OLECHAR *pchTitle);
-HRESULT CloneElement(IHTMLElement *pElemCloneThis, IHTMLElement **ppElementTheClone);
-HRESULT CreateElement(ELEMENT_TAG_ID tagID, OLECHAR *pchAttributes, IHTMLElement **ppElement);
 HRESULT CreateMarkupContainer(IMarkupContainer **ppMarkupContainer);
 HRESULT CreateMarkupPointer(IMarkupPointer **ppPointer);
 HRESULT EndUndoUnit(VOID);
-HRESULT GetElementTagId(IHTMLElement *pElement, ELEMENT_TAG_ID *ptagId);
 HRESULT GetNameForTagID(ELEMENT_TAG_ID tagId, BSTR *pbstrName);
 HRESULT GetTagIDForName(BSTR bstrName, ELEMENT_TAG_ID *ptagId);
-HRESULT InsertElement(IHTMLElement *pElementInsert, IMarkupPointer *pPointerStart, IMarkupPointer *pPointerFinish);
-HRESULT MovePointersToRange(IHTMLTxtRange *pIRange, IMarkupPointer *pPointerStart, IMarkupPointer *pPointerFinish);
-HRESULT MoveRangeToPointers(IMarkupPointer *pPointerStart, IMarkupPointer *pPointerFinish, IHTMLTxtRange *pIRange);
 HRESULT ParseGlobal(HGLOBAL hglobalHTML, DWORD dwFlags, IMarkupContainer **ppContainerResult, IMarkupPointer *pPointerStart, IMarkupPointer *pPointerFinish);
 HRESULT ParseString(OLECHAR *pchHTML, DWORD dwFlags, IMarkupContainer **ppContainerResult, IMarkupPointer *ppPointerStart, IMarkupPointer *ppPointerFinish);
-HRESULT RemoveElement(IHTMLElement *pElementRemove);
 HRESULT ParseGlobalEx(HGLOBAL hglobalHTML, DWORD dwFlags, IMarkupContainer *pContext, IMarkupContainer **ppContainerResult, IMarkupPointer *pPointerStart, IMarkupPointer *pPointerFinish);
 HRESULT SaveSegmentsToClipboard(ISegmentList *pSegmentList, DWORD dwFlags);
-HRESULT ValidateElements(IMarkupPointer *pPointerStart, IMarkupPointer *pPointerFinish, IMarkupPointer *pPointerTarget, IMarkupPointer *pPointerStatus, IHTMLElement **ppElemFailBottom, IHTMLElement **ppElemFailTop);
 HRESULT FindTextFragFromMarkupPointer(IMarkupPointer *pPointerFind, long *piFrag, BOOL *pfFragFound);
 HRESULT GetTextFrag(long iFrag, BSTR *pbstrFrag, IMarkupPointer *pPointerFrag);
 HRESULT GetTextFragCount(long *pcFrags);
@@ -2771,7 +2581,6 @@ HRESULT RemoveTextFrag(long iFrag);
 HRESULT GetPainterInfo(HTML_PAINTER_INFO *pInfo);
 HRESULT OnResize(SIZE pt);
 HRESULT GetEventInfoFlags(long *plEventInfoFlags);
-HRESULT GetEventTarget(IHTMLElement **ppElement);
 HRESULT StringFromPartID(LONG lPartID, BSTR *pbstrPart);
 HRESULT OnMove(RECT rcDevice);
 HRESULT GetDrawInfo(LONG lFlags, HTML_PAINT_DRAW_INFO *pDrawInfo);
@@ -2787,7 +2596,7 @@ HRESULT Advance(VOID);
 HRESULT Current(ISegment **ppISegment);
 HRESULT First(VOID);
 HRESULT IsDone(VOID);
-HRESULT AddElementSegment(IHTMLElement *pIElement, IElementSegment **ppISegmentAdded);
+HRESULT AddSegment(IMarkupPointer *pIStart, IMarkupPointer *pIEnd, ISegment **ppISegmentAdded);
 HRESULT GetMarkupContainer(IMarkupContainer **ppIContainer);
 HRESULT GetSelectionServicesListener(ISelectionServicesListener **ppISelectionServicesListener);
 HRESULT SetSelectionType(SELECTION_TYPE eType, ISelectionServicesListener *pIListener);
@@ -2848,7 +2657,8 @@ void NewWindow(IDispatch **&ppDisp, VARIANT_BOOL *&Cancel);
 void PrintTemplateInstantiation(IDispatch *pDisp);
 void PrintTemplateTeardown(IDispatch *pDisp);
 HRESULT ShowBrowserBar(VARIANT *pvaClsid, VARIANT *pvarShow, VARIANT *pvarSize);
-DWORD IsDialogBoxHandled(HWND hWnd, DWORD dwAction, DWORD dwPermissions, LPCTSTR lpszText)
+DWORD IsDialogBoxHandled(HWND hWnd, DWORD dwAction, DWORD dwPermissions, LPCTSTR lpszText);
+HRESULT Redirect(BSTR bstrRedirectURI);
 BSTR _BuildVersion(void);
 VT_DISPATCH _CreateLogObject(void);
 BSTR _GetCPU(void);
@@ -2856,18 +2666,16 @@ BSTR _GetOSVer(void);
 long _LangHost(void);
 BSTR _Name(void);
 BSTR _StrConv(BSTR string, Integer convertFlag);
-Private Subobject_StateChange(ByValoldStateAs Long,ByValnewStateAs Long)
+Private Subobject_StateChange(ByValoldStateAs Long,ByValnewStateAs Long);
 long DRM_ND_DeregisterFromService (BSTR sServerUDN,);
-long DRM_ND_RegisterWithService (BSTR sOurUDN, BSTR sServerUDN, IUPnPService *pService);
 HRESULT EnumerateProcesses(SAFEARRAY(BSTR)*out_Processes, SAFEARRAY(DWORD)*out_ProcessesId);
-HRESULT SearchFileSystem(LPCOLESTRin_Criteria,LPCOLESTRin_StartingDirectory, SAFEARRAY(BSTR)*out_FileSystems);
 HRESULT EnumerateConnections(DWORD dwSizeActual, DWORD* pdwSizeReturned, BSTR Connections, VARIANT_BOOL* pfMoreEntries);
+HRESULT GetConnection(ICcDevice* piDevice, DWORD dwTimeout, ICcServiceCB* piCallback, BSTR* pbstrConnectionId, ICcConnection** piTargetDevice);
 HRESULT NotifyRunStateChange(RUN_STATUS_TYPE2 ers2Current, DWORD dwNbOfHaltReasons, HALT_REASON_TYPE2 *pehr2List, ADDRESS_TYPE CurrentExecAddress, DWORD64dw64CycleSinceLastRun);
 HRESULT ReadAll(DWORD dwCpuNum, DWORD *pdwNbRegsInList, REGVAL_TYPE** pprvList);
 HRESULT AddCodeBps(DWORD ccbp, CODE_BP_TYPE acbp, IeXdi2CodeBp *apieXdi2CodeBp);
 HRESULT AddDataBps(DWORD cdbp, DATA_BP_TYPE adbp, IeXdi2DataBp*apieXdi2DataBp);
 HRESULT UnregisterEmbeddedBpOpCode(DWORD dwOpCodeSizeInByte, const BYTE *pbOpCode, DWORD dwExecMode);
-HRESULT ReadClientScratchPad(GUIDguidClient, DWORD* pdwBuffOutSize, BYTE** ppbBufferOut);
 HRESULT WriteClientScratchPad(GUID guidClient, DWORD dwBuffInSize, const BYTE* pbBufferIn);
 HRESULT CreateCpuRegCustomList(DWORD dwNbRegsInList, LPOLESTR* pszRegName, IeXdi2EnumCpuRegs** ppieXdi2EnumCpuRegs);
 HRESULT EnumAllCpuRegGroups(DWORD* pdwNbGroups, CPU_REG_GROUP_STRUCT** ppscrg);
@@ -2876,71 +2684,99 @@ HRESULT GetMemAccessExclusionRange(LINEAR_MEM_MAP_TYPE lmt, DWORD* pdwNbTotalExc
 HRESULT SetMemAccessExclusionRange(LINEAR_MEM_MAP_TYPE lmt, DWORD dwNbTotalExclRange, MEM_ACCESS_EXCLUSION_RANGE* pmaerExclusionList);
 HRESULT GetAllRoutineData(ULONG*pcelt, ROUTINE_DATA**ppPData);
 HRESULT ReadRegsFromThdCtx(IeXdi2EnumCpuRegs* piOsAxsEnumCpuRegThreadCtx, DWORD* pdwNbRegsInList, REGVAL_TYPE **pprvList);
+HRESULT AddFile(BSTR bstrFullPath,BSTR bstrKeyName,IPMCPU* piPMCPU,IPMOS* piPMOS,long dwLocaleId,long dwFlagsIPMPackageFile** ppiPMPackageFile);
 HRESULT GetData2(FLEXI_GETDATA_TYPE2 fgds2, PTM_RAW_DATA **ppdatProcess, DWORD *pcProcess, DWORD *pcProcessTotal, PTM_RAW_DATA **ppdatThread, DWORD *pcThread, DWORD *pcThreadTotal, PTM_RAW_DATA **ppdatModule, DWORD *pcModule, DWORD *pcModuleTotal, PTM_RAW_DATA **ppdatContext, DWORD *pcContext, DWORD *pcContextTotal);
 HRESULT GetDescriptionTables2(PTM_FIELD_DESC** ppfdProcDescTable, DWORD* pcProcField, PTM_FIELD_DESC** ppfdThreadDescTable, DWORD* pcThreadField, PTM_FIELD_DESC** ppfdModDescTable, DWORD* pcModField, PTM_FIELD_DESC **ppfdCtxDescTable, DWORD *pcCtxField);
 HRESULT SnapCurrentDeviceState(DWORD *pdwDumpType, DWORD64 *pdw64DumpTotalSize, DWORD *pdwSegmentBufferSize, BYTE **ppbSegmentBuffer, DWORD64 *pdw64SegmentIndex, BOOL *pfComplete);
+enum {
+ CESVC_ROOT_COMMON = 0,
+ CESVC_ROOT_MACHINE = CESVC_ROOT_COMMON,
+ CESVC_ROOT_USER,
+ CESVC_DEVICES,
+ CESVC_DEVICEX,
+ CESVC_DEVICE,
+ CESVC_DEVICE_SELECTED,
+ CESVC_SERVICES,
+ CESVC_SERVICES_USER = CESVC_SERVICES,
+ CESVC_SERVICES_COMMON,
+ CESVC_SYNC,
+ CESVC_SYNC_COMMON,
+ CESVC_FILTERS,
+ CESVC_SPECIAL_DEFAULTS,
+ CESVC_CUSTOM_MENUS,
+ CESVC_SYNCX
+};
 FILE *_wfreopen(const wchar_t*path,constwchar_t*mode,FILE*stream);
 HRESULT GetDescriptionTables(PTM_FIELD_DESC**ppfdProcDescTable, DWORD*pcProcField, PTM_FIELD_DESC**ppfdThreadDescTable, DWORD*pcThreadField, PTM_FIELD_DESC**ppfdModDescTable, DWORD*pcModField);
-DWORD IsMessageBoxHandled(HWND hWnd, UINT uText, UINT uCaption, UINT uType)
+DWORD IsMessageBoxHandled(HWND hWnd, UINT uText, UINT uCaption, UINT uType);
 #pragma runtime_checks("",off) // ignore any RTC compiler options ... #pragma runtime_checks("",restore) // restore compiler option settings
-Private Subobject_OpenComplete()
+Private Subobject_OpenComplete();
 unsigned __int64 __cdecl __ull_rshift(unsigned__int64,int);
 __int64 __cdecl __ll_lshift(int64,int);
 __int64 __cdecl __ll_rshift(int64,int);
-IDirect3D8* Direct3DCreate8(UINT SDKVersion);
 BOOL KitlSetTimerCallback(int nSecs, PFN_KITLTIMERCB pfnCB, LPVOID lpParam);
 BOOL KitlStopTimerCallback(PFN_KITLTIMERCB pfnCB, LPVOID lpParam);
 HRESULT Download(IDirectMusicPerformance* pPerformance);
-HRESULT GetDMAChannel(DWORD dwIndex, IDMAChannel** ppChannel);
 BOOL TranEnumKnownDevice(PFN_EnumProc pfnCB, LPVOID pUserData);
 HRESULT AddCommand(BSTR szCmdName, BSTR szMethodName, long nBitmapOffset, long dwCookie VARIANT_BOOL FAR* pbResult);
 HRESULT AddCommandBarButton(long nButtonType, BSTR szCmdName, long dwCookie);
 HRESULT SetAddInInfo(long nInstanceHandle, IDispatch* pCmdDispatch, long nIDBitmapResourceMedium, long nIDBitmapResourceLarge, long dwCookie);
 HRESULT OnConnection (IApplication* pApp, VARIANT BOOL bFirstTime, Long dwCookie VARIANT_BOOL* OnConnection);
-public override string ToString ()
-public PluginDataView (PluginData data)
-public CommandPacket ReceiveCommand (PluginData pluginData)
-protected void RunOnPrimaryThread (AnonymousDelegate handler)
-public PluginNode (string description, string guidNode, string guidParent, PluginData data, PluginDataView view, PluginComponent hostPlugin, BuiltInIcon iconType)
-public CommandUICommand (CommandRoot root, string text, string hint, Icon menuIcon, Icon toolBarIcon)
-public CommandPacket ()
-public void CopyToClipboard ()
-public CommandPacketParameter (CommandPacketParameterType type, Object parameter)
-protected PluginData (PluginComponent host, string guid)
-public PluginComponent (string deviceGuid, string pluginGuid)
-public void RenderGeneric (GenericDataAcceptor acceptor)
-public DeviceDatbaseItem FindByGuid (string guid)
-public bool ConnectDevice (string deviceGuid)
-public GenericDataAcceptor (ListView listView)
-protected override void WndProc (ref Message m)
-public void AddItem (string category, string description, Object value)
-public PluginComponent FindPlugin (string guidDevice, string guidPlugin)
-public CommandPacketEventArgs (CommandPacket commandPacket)
-public CommandPacketParameter GetNextParameter ()
-public delegate void AnonymousDelegate ()
-public void StopService ()
-public CommandPacket ProcessCommand (CommandPacket commandIn, PluginData pluginData)
-public void StartCommandHandlerSync ()
-protected abstract void OnRenderGeneric (GenericDataAcceptor dataAcceptor)
-public void RefreshData ()
-public void StartCommandHandlerAsync ()
-public void AddData (PluginData data)
-public void SendCommand (CommandPacket commandIn, PluginData pluginData)
-public void RenderViews (Object hint)
-public RemoteToolFrameworkException (string message)
-public delegate void CommandTransportTerminatedEventHandler (Object sender, EventArgs e)
-public void AddNode (PluginNode node)
-public DeviceCommandTransport (string commandLine)
-public delegate void CommandPacketEventHandler (Object sender, CommandPacketEventArgs e)
+public override string ToString ();
+public PluginDataView (PluginData data);
+public CommandPacket ReceiveCommand (PluginData pluginData);
+protected void RunOnPrimaryThread (AnonymousDelegate handler);
+public PluginNode (string description, string guidNode, string guidParent, PluginData data, PluginDataView view, PluginComponent hostPlugin, BuiltInIcon iconType);
+public CommandUICommand (CommandRoot root, string text, string hint, Icon menuIcon, Icon toolBarIcon);
+public CommandPacket ();
+public void CopyToClipboard ();
+public CommandPacketParameter (CommandPacketParameterType type, Object parameter);
+protected PluginData (PluginComponent host, string guid);
+public bool SendFile (string desktopFile, string deviceFile, bool overwrite);
+public PluginComponent (string deviceGuid, string pluginGuid);
+public bool MakeDirectory (string deviceDirectory);
+public void RenderGeneric (GenericDataAcceptor acceptor);
+public DeviceDatbaseItem FindByGuid (string guid);
+public bool ConnectDevice (string deviceGuid);
+public GenericDataAcceptor (ListView listView);
+protected override void WndProc (ref Message m);
+public void AddItem (string category, string description, Object value);
+public PluginComponent FindPlugin (string guidDevice, string guidPlugin);
+public CommandPacketEventArgs (CommandPacket commandPacket);
+public bool ReceiveFile (string deviceFile, string desktopFile);
+public CommandPacketParameter GetNextParameter ();
+public delegate void AnonymousDelegate ();
+public void StopService ();
+public CommandPacket ProcessCommand (CommandPacket commandIn, PluginData pluginData);
+public void StartCommandHandlerSync ();
+protected abstract void OnRenderGeneric (GenericDataAcceptor dataAcceptor);
+public void RefreshData ();
+public void StartCommandHandlerAsync ();
+public void AddData (PluginData data);
+public void SendCommand (CommandPacket commandIn, PluginData pluginData);
+public void RenderViews (Object hint);
+public RemoteToolFrameworkException (string message);
+public delegate void CommandTransportTerminatedEventHandler (Object sender, EventArgs e);
+public void AddNode (PluginNode node);
+public DeviceCommandTransport (string commandLine);
+public delegate void CommandPacketEventHandler (Object sender, CommandPacketEventArgs e);
+HRESULT SetOSImage(BSTR in_bstrOSImage);
+HRESULT CmdOut(BSTR bstrData);
 HRESULT ReadMemoryX(DWORD dwCpuNum, LINEAR_MEM_MAP_TYPElmt, ADDRESS_TYPE Address, DWORD dwNbElemToRead, BYTE bAccessWidthInBytes, BYTE* pbReadBuffer, DWORD* pdwNbElementEffectRead);
 HRESULT WriteRegsToThdCtx(IeXdi2EnumCpuRegs* piOsAxsEnumCpuRegThreadCtx, DWORD dwNbRegsInList, REGVAL_TYPE* prvList);
 HRESULT AddDataBpsInProcAndThd(DWORD ProcID, DWORD ThdID, DWORD cdbp, DATA_BP_TYPE adbp, IeXdi2DataBp* apieXdi2DataBp);
+HRESULT ClearServiceMap(BSTR in_bstrServiceCategoryID);
 HRESULT RegisterEmbeddedBpOpCode(DWORD dwOpCodeSizeInByte, const BYTE* pbOpCode, DWORD dwExecMode, BOOL fToBeUsedAsSwBp);
+HRESULT RegisterRefreshEvent(BSTR in_bstrEventName);
 HRESULT OnStatusChangeNotify(DWORD dwPreviousState, DWORD dwCurrentState, LPCOLESTR pwszStringData, IUnknown* pUnk);
 HRESULT WriteMemoryByProc(DWORD ProcID, LINEAR_MEM_MAP_TYPE lmt, ADDRESS_TYPE Address, DWORD dwNbElemToWrite, BYTE bAccessWidthInBytes, const BYTE* pbWriteBuffer, DWORD* pdwNbElementEffectWritten);
+HRESULT SetServiceMap(BSTR in_bstrServiceCategoryID, BSTR in_bstrServiceInfoID);
+HRESULT FindObject(BSTR in_bstrNameOrID, ICcObject** out_ppiObject);
 bool WaitForActiveServer (DWORD WaitTimeInMSec);
+HRESULT SetProperty(BSTR bstrPropertyName, BSTR bstrPropertyValue);
 HRESULT SearchMemoryByProc(DWORD ProcID, LINEAR_MEM_MAP_TYPE lmt, ADDRESS_TYPE AddressRangeStart, ADDRESS_TYPE AddressRangeEnd, DWORD dwNbElem, BYTE bAccessWidthInBytes, BYTE* pbSequenceToSearch ADDRESS_TYPE** ppAddressFound);
 HRESULT GetCallStack(DWORD dwStartingFrameNb, DWORD dwEndingFrameNb, IeXdi2EnumCpuRegs* piOsAxsEnumCpuRegThreadCtx, IOsAxsProcess* piOsAxsCurProc, IeXdi2EnumCpuRegs** ppiOsAxsEnumCpuRegThreadCtxNew, IOsAxsProcess** ppiOsAxsCurProcNew, DWORD* pdwNbActualFramesRead, FRAME_TYPE ** ppframeList);
+HRESULT SearchFileSystem(LPCOLESTR in_Criteria, LPCOLESTR in_StartingDirectory, SAFEARRAY(BSTR)* out_FileSystems);
 HRESULT AddCodeBpsInProcAndThd(DWORD ProcID, DWORD ThdID, DWORD ccbp, CODE_BP_TYPE acbp, IeXdi2CodeBp* apieXdi2CodeBp);
 HRESULT FillMemoryX(DWORD dwCpuNum, LINEAR_MEM_MAP_TYPE lmt, ADDRESS_TYPE AddressRangeStart, ADDRESS_TYPE AddressRangeEnd, DWORD dwNbElem, BYTE bAccessWidthInBytes, BYTE* pbSequenceToFill);
 HRESULT ReadMemoryByProc(DWORD ProcID, LINEAR_MEM_MAP_TYPE lmt, ADDRESS_TYPE Address, DWORD dwNbElemToRead, BYTE bAccessWidthInBytes, BYTE* pbReadBuffer, DWORD* pdwNbElementEffectRead);
@@ -2952,125 +2788,125 @@ HRESULT WriteMemoryX(DWORD dwCpuNum, LINEAR_MEM_MAP_TYPE lmt, ADDRESS_TYPE Addre
 HRESULT FillMemoryByProc(DWORD ProcID, LINEAR_MEM_MAP_TYPE lmt, ADDRESS_TYPE AddressRangeStart, ADDRESS_TYPE AddressRangeEnd, DWORD dwNbElem, BYTE bAccessWidthInBytes, BYTE* pbSequenceToFill);
 HRESULT WriteAll(DWORD dwCpuNum, DWORD dwNbRegsInList, REGVAL_TYPE* prvList);
 HRESULT SearchMemoryX(DWORD dwCpuNum, LINEAR_MEM_MAP_TYPE lmt, ADDRESS_TYPE AddressRangeStart, ADDRESS_TYPE AddressRangeEnd, DWORD dwNbElem, BYTE bAccessWidthInBytes, BYTE* pbSequenceToSearch, ADDRESS_TYPE** ppAddressFound);
-bool VirtualMemory(const TCHAR* const tpsParm)
-DWORD ISRHandler(DWORD InstanceIndex);
-PVOID PDD_AllocateBuffer(LPVOID PDDContext, ULONG ulModeType);
-PVOID PDD_Init(PVOID MDDContext, PPDDFUNCTBL pPDDFuncTbl);
-HRESULT Create16BppTexture(int fRenderTarget, UINT nWidth, UINT nHeight, int fKeepsystemMemory, ICustomSurface** ppSurface)
+HRESULT ReadClientScratchPad(GUID guidClient, DWORD* pdwBuffOutSize, BYTE** ppbBufferOut);
+bool VirtualMemory(const TCHAR* const tpsParm);
+HRESULT Create16BppTexture(int fRenderTarget, UINT nWidth, UINT nHeight, int fKeepsystemMemory, ICustomSurface** ppSurface);
 BOOL ReadFileScatter(HANDLE hFile, FILE_SEGMENT_ELEMENT aSegmentArray, DWORD nNumberOfBytesToRead, LPDWORD lpReserved, LPOVERLAPPED lpOverlapped);
 BOOL DefragVolume(HANDLE hVolume, PDISK_INFO pdi, PDEFRAG_OPTIONS pdo, PFN_PROGRESS pfnProgress, PFN_MESSAGE pfnMessage);
 BOOL ScanVolume(HANDLE hVolume, PDISK_INFO pdi, PSCAN_OPTIONS pso, PFN_PROGRESS pfnProgress, PFN_MESSAGE pfnMessage);
 DWORD FormatVolume(HANDLE hVolume, PDISK_INFO pdi, PFORMAT_OPTIONS pfo, PFN_PROGRESS pfnProgress, PFN_PROGRESS pfnMessage);
 BOOL WriteFileGather(HANDLE hFile, FILE_SEGMENT_ELEMENT aSegmentArray, DWORD nNumberOfBytesToWrite, LPDWORD lpReserved, LPOVERLAPPED lpOverlapped);
+HRESULT MatchResolve(LPCWSTR pszId, ULONGLONG ullMetadataVersion, ULONGLONG ullInstanceId, ULONGLONG ullMessageNumber, LPCWSTR pszSessionId, const WSD_NAME_LIST* pTypesList, const WSD_URI_LIST* pScopesList, const WSD_URI_LIST* pXAddrsList const WSDXML_ELEMENT* pHeaderAny, const WSDXML_ELEMENT* pReferenceParameterAny, const WSDXML_ELEMENT* pPolicyAny, const WSDXML_ELEMENT* pEndpointReferenceAny, const WSDXML_ELEMENT* pAny);
 RESULT get_EventPackage(BSTR* pbstrEventPackage);
-void* WSDAllocateLinkedMemory(void* pParent, size_t cbSize);
 COLORREF RGBA(BYTE byRed, BYTE byGreen, BYTE byBlue, BYTE alpha);
-public void RunOnThread (Control control, AnonymousDelegate handler)
-DeviceConnection get_DeviceConnection ()
-public boolean get_PluginClosing ()
-public void AddToMenu (Menu menu)
-boolean get_ContainedInToolWindow ()
-boolean get_AllowThisPluginToBeFound () void set_AllowThisPluginToBeFound (boolean value)
-function get AllowThisPluginToBeFound () : boolean function set AllowThisPluginToBeFound (value : boolean)
-public RtfxAboutBox ()
-boolean get_ShellShuttingDown ()
-public long GetHeartbeatRefCount ()
-public void ProcessCommandEx (ProcessCommandExData pcexdata)
-public bool ProvisionDeviceXML (string XMLin, PROVISIONDEVICEXMLTYPES flags, out string XMLout)
-public void add_PendingRequest (EventHandler value) public void remove_PendingRequest (EventHandler value)
-public bool LaunchPlugin (string guidDevice, string guidPlugin, EventHandler doneEvent, Object tag)
-Object get_CustomAPI ()
-public ShellDisplayModes get_ShellDisplayMode () public void set_ShellDisplayMode (ShellDisplayModes value)
-public function get ShellDisplayMode () : ShellDisplayModes public function set ShellDisplayMode (value : ShellDisplayModes)
-CommandTransport get_CommandTransport ()
-public boolean get_RequiresDevicePings ()
-DeviceDatabase get_DeviceDatabase ()
-public void IncrementHeartbeatRefCount ()
-boolean get_ShowPacketSniffer () void set_ShowPacketSniffer (boolean value)
-function get ShowPacketSniffer () : boolean function set ShowPacketSniffer (value : boolean)
-boolean get_UsingVirtualData ()
-public PluginLaunchedEventArgs ()
-public CommandUI ()
-public void SetStatusBarText (string text)
-bool CanExportFile ()
-public void add_ConnectionEvent (EventHandler value) public void remove_ConnectionEvent (EventHandler value)
-public static boolean get_InUse ()
-public void ClosePlugin ()
-public FrameworkInformation ()
-public bool GetSystemInfoEx (out SYSTEMINFOEX systemInfo)
-protected void SetCustomAPI (Object api)
-public CommandPacket get_CommandPacket ()
-public void DecrementHeartbeatRefCount ()
-public CommandTransportCommandEventArgs (CommandPacket commandPacket)
-bool CanImportFile ()
-boolean get_RunningInShell ()
-public static StandaloneDeviceConnection FromDeviceGuid (string deviceGuid, bool useDeviceProxy)
-boolean get_ContainedInForm ()
-public function get DeviceConnection () : DeviceConnection public function set DeviceConnection (value : DeviceConnection)
-CommandUI get_CommandUI ()
-boolean get_RunningUnderAutomation ()
-public boolean get_ParentedToDifferentPlugin () public void set_ParentedToDifferentPlugin (boolean value)
-public function get ParentedToDifferentPlugin () : boolean public function set ParentedToDifferentPlugin (value : boolean)
-public boolean get_SilentLoad () public void set_SilentLoad (boolean value)
-public function get SilentLoad () : boolean public function set SilentLoad (value : boolean)
-public CommandTransport DeployCoreConService (string guidService, bool deployToolHelp)
-boolean get_Standalone ()
-public CommandTransport DeployViaDeviceProxy (List> deployFiles, string deviceFolder, string guidPackage, bool deployToolHelp, bool deviceSideIsManaged)
-public PluginComponent get_OwningPluginComponent () public void set_OwningPluginComponent (PluginComponent value)
-public function get OwningPluginComponent () : PluginComponent public function set OwningPluginComponent (value : PluginComponent)
-public List GetGuidsOfAvailablePlugins (bool onlyThosePluginsWhichDependOnThisPlugin)
-boolean get_RequiresToolHelpDll () void set_RequiresToolHelpDll (boolean value)
-function get RequiresToolHelpDll () : boolean function set RequiresToolHelpDll (value : boolean)
-public static CommandPacket MakeCopy (CommandPacket source)
-public static void ConfigureDevices (IntPtr hWnd)
-public ProcessCommandExData (CommandPacket commandIn, PluginData pluginData)
-boolean get_DoesNotDeployDeviceComponent () void set_DoesNotDeployDeviceComponent (boolean value)
-function get DoesNotDeployDeviceComponent () : boolean function set DoesNotDeployDeviceComponent (value : boolean)
-Private Sub form_Activate()
-Private Sub commandbar_ComboBoxChange(combobox)
-Private Sub commandbar_ComboBoxClick(combobox)
-Private Sub grid_Compare(row1, row2, cmp)
-Private Sub winsock_ConnectionRequest()
-Private Sub winsock_DataArrival(bytesTotal)
-Private Sub object_DblClick()
-Private Sub form_Deactivate()
-Private Sub combo_DropDown()
-Private Sub grid_EnterCell()
-Private Sub winsock_Error(number, description)
-Private Sub control_AfterLabelEdit(cancel, newstring)
-Private Sub treeview_Expand(index)
-Private Sub commandbar_HelpClick()
-Private Sub object_GotFocus()
-Private Sub object_KeyDown(keycode, shift)
-Private Sub object_KeyPress(keyascii)
-Private Sub object_KeyUp(keycode, shift)
-Private Sub grid_LeaveCell()
-Private Sub object_MenuClick(menu)
-Private Sub control_BeforeLabelEdit(cancel)
-Private Sub object_MouseDown(button, shift, x, y)
-Private Sub object_MouseMove(button, shift, x, y)
-Private Sub object_MouseUp(button, shift, x, y)
-Private Sub treeview_NodeClick(index)
-Private Sub commandbar_OKClick()
-Private Sub comm_OnComm()
-Private Sub object_Paint()
-Private Sub Form_QueryUnload(cancel, unloadmode)
-Private Sub grid_RowColChange()
-Private Sub commandbar_ButtonClick(button)
-Private Sub grid_Scroll()
-Private Sub control_Scroll()
-Private Sub grid_SelChange()
-Private Sub winsock_SendComplete()
-Private Sub winsock_SendProgress(bytesSent, bytesRemaining)
-Private Sub form_Terminate()
-Private Sub timer_Timer()
-Private Sub form_Unload(cancel)
-Private Sub object_Click()
-Private Sub winsock_Close()
-Private Sub treeview_Collapse(index)
-Private Sub listview_ColumnClick(index)
+public void RunOnThread (Control control, AnonymousDelegate handler);
+DeviceConnection get_DeviceConnection ();
+public boolean get_PluginClosing ();
+public void AddToMenu (Menu menu);
+boolean get_ContainedInToolWindow ();
+boolean get_AllowThisPluginToBeFound () void set_AllowThisPluginToBeFound (boolean value);
+function get AllowThisPluginToBeFound () : boolean function set AllowThisPluginToBeFound (value : boolean);
+public RtfxAboutBox ();
+boolean get_ShellShuttingDown ();
+public long GetHeartbeatRefCount ();
+public void ProcessCommandEx (ProcessCommandExData pcexdata);
+public void add_PendingRequest (EventHandler value) public void remove_PendingRequest (EventHandler value);
+public bool LaunchPlugin (string guidDevice, string guidPlugin, EventHandler doneEvent, Object tag);
+Object get_CustomAPI ();
+public ShellDisplayModes get_ShellDisplayMode () public void set_ShellDisplayMode (ShellDisplayModes value);
+public function get ShellDisplayMode () : ShellDisplayModes public function set ShellDisplayMode (value : ShellDisplayModes);
+CommandTransport get_CommandTransport ();
+public boolean get_RequiresDevicePings ();
+DeviceDatabase get_DeviceDatabase ();
+public void IncrementHeartbeatRefCount ();
+boolean get_ShowPacketSniffer () void set_ShowPacketSniffer (boolean value);
+function get ShowPacketSniffer () : boolean function set ShowPacketSniffer (value : boolean);
+boolean get_UsingVirtualData ();
+public PluginLaunchedEventArgs ();
+public CommandUI ();
+public void SetStatusBarText (string text);
+bool CanExportFile ();
+public void add_ConnectionEvent (EventHandler value) public void remove_ConnectionEvent (EventHandler value);
+public static boolean get_InUse ();
+public void ClosePlugin ();
+public FrameworkInformation ();
+public bool GetSystemInfoEx (out SYSTEMINFOEX systemInfo);
+protected void SetCustomAPI (Object api);
+public CommandPacket get_CommandPacket ();
+public void DecrementHeartbeatRefCount ();
+public CommandTransportCommandEventArgs (CommandPacket commandPacket);
+bool CanImportFile ();
+boolean get_RunningInShell ();
+public static StandaloneDeviceConnection FromDeviceGuid (string deviceGuid, bool useDeviceProxy);
+boolean get_ContainedInForm ();
+public function get DeviceConnection () : DeviceConnection public function set DeviceConnection (value : DeviceConnection);
+CommandUI get_CommandUI ();
+boolean get_RunningUnderAutomation ();
+public boolean get_ParentedToDifferentPlugin () public void set_ParentedToDifferentPlugin (boolean value);
+public function get ParentedToDifferentPlugin () : boolean public function set ParentedToDifferentPlugin (value : boolean);
+public boolean get_SilentLoad () public void set_SilentLoad (boolean value);
+public function get SilentLoad () : boolean public function set SilentLoad (value : boolean);
+public CommandTransport DeployCoreConService (string guidService, bool deployToolHelp);
+boolean get_Standalone ();
+public CommandTransport DeployViaDeviceProxy (List> deployFiles, string deviceFolder, string guidPackage, bool deployToolHelp, bool deviceSideIsManaged);
+public PluginComponent get_OwningPluginComponent () public void set_OwningPluginComponent (PluginComponent value);
+public function get OwningPluginComponent () : PluginComponent public function set OwningPluginComponent (value : PluginComponent);
+public List GetGuidsOfAvailablePlugins (bool onlyThosePluginsWhichDependOnThisPlugin);
+boolean get_RequiresToolHelpDll () void set_RequiresToolHelpDll (boolean value);
+function get RequiresToolHelpDll () : boolean function set RequiresToolHelpDll (value : boolean);
+public static CommandPacket MakeCopy (CommandPacket source);
+public static void ConfigureDevices (IntPtr hWnd);
+public ProcessCommandExData (CommandPacket commandIn, PluginData pluginData);
+boolean get_DoesNotDeployDeviceComponent () void set_DoesNotDeployDeviceComponent (boolean value);
+function get DoesNotDeployDeviceComponent () : boolean function set DoesNotDeployDeviceComponent (value : boolean);
+Private Sub form_Activate();
+Private Sub commandbar_ComboBoxChange(combobox);
+Private Sub commandbar_ComboBoxClick(combobox);
+Private Sub grid_Compare(row1, row2, cmp);
+Private Sub winsock_ConnectionRequest();
+Private Sub winsock_DataArrival(bytesTotal);
+Private Sub object_DblClick();
+Private Sub form_Deactivate();
+Private Sub combo_DropDown();
+Private Sub grid_EnterCell();
+Private Sub winsock_Error(number, description);
+Private Sub control_AfterLabelEdit(cancel, newstring);
+Private Sub treeview_Expand(index);
+Private Sub commandbar_HelpClick();
+Private Sub object_GotFocus();
+Private Sub object_KeyDown(keycode, shift);
+Private Sub object_KeyPress(keyascii);
+Private Sub object_KeyUp(keycode, shift);
+Private Sub grid_LeaveCell();
+Private Sub object_MenuClick(menu);
+Private Sub control_BeforeLabelEdit(cancel);
+Private Sub object_MouseDown(button, shift, x, y);
+Private Sub object_MouseMove(button, shift, x, y);
+Private Sub object_MouseUp(button, shift, x, y);
+Private Sub treeview_NodeClick(index);
+Private Sub commandbar_OKClick();
+Private Sub comm_OnComm();
+Private Sub object_Paint();
+Private Sub Form_QueryUnload(cancel, unloadmode);
+Private Sub grid_RowColChange();
+Private Sub commandbar_ButtonClick(button);
+Private Sub grid_Scroll();
+Private Sub control_Scroll();
+Private Sub grid_SelChange();
+Private Sub winsock_SendComplete();
+Private Sub winsock_SendProgress(bytesSent, bytesRemaining);
+Private Sub form_Terminate();
+Private Sub timer_Timer();
+Private Sub form_Unload(cancel);
+Private Sub object_Click();
+Private Sub winsock_Close();
+Private Sub treeview_Collapse(index);
+Private Sub listview_ColumnClick(index);
 HRESUTL get_TimerEnabled(BOOL*pfEnabled);
+HRESULT get_VoiceMenu(IUnknown **ppUnknownVoiceMenu);
+HRESULT put_VoiceMenu(IUnknown *pUnknownVoiceMenu);
 HREULT SendMsg(long uMsg, long wParam, long lParam);
+HRESULT FindDevices(ppPNDEVICE ppDevArray, DWORD *pdwNumDev);
 ATLAPI AtlAxGetControl(HWND h, IUnknown** pp);
 ATLAPI AtlAxGetHost(HWND h, IUnknown** pp);
 HRESULT AtlSetChildSite(IUnknown* punkChild, IUnknown* punkParent);
@@ -3085,37 +2921,37 @@ void WINAPI BattyerNotifyOfTimeChange(BOOL fForward, FILETIME * pftDelta);
 int CALLBACK LibMain(HINSTANCE hinst, WORD wDataSeg, WORD cbHeapSize, LPSTR lpszCmdLine);
 BOOL NotifyIME(HIMC hIMC, DWORD dwAction, DWORD dwIndex, DWORD dwValue);
 void CALLBACK LineCallbackFunc (DWORD hDevice, DWORD dwMsg, DWORD wCallbackInstance, DWORD dwParam1, DWORD dwParam2, DWORD dwParam3);
-Private Sub object_Activate()
-Private Sub object_DropDown()
-Private Sub object_EnterCell ()
-Private Sub object_Expand (node[index])
-Private Sub Form_GotFocus()
-Private Sub object_ItemCheck()
-Private Sub object_AfterLabelEdit (newstring)
-Private Sub Form_KeyDown(keycode, shift)
-Private Sub Form_KeyPress(keyascii)
-Private Sub object_LeaveCell ()
-Private Sub object_LostFocus()
-Private Sub Form_MouseDown(button, shift, x, y)
-Private Sub Form_MouseMove(button, shift, x, y)
-Private Sub object_NodeClick (node[index])
-Private Sub object_OnComm ()
-Private Sub Form_Paint()
-Private Sub object_BeforeLabelEdit(newstring)
-Private Sub Form_Resize()
-Private Sub object_RowColChange ()
-Private Sub object_Scroll()
-Private Sub object_SelChange ()
-Private Sub object_Terminate()
-Private Sub object_Timer()
-Private Sub Form_Unload(cancel)
-Private Sub Form_Click()
-Private Sub object_Collapse (node[index])
-Private Sub object_ColumnClick(columnheader[index])
-Private Sub object_Compare(row1, row2)
-Call MyProc(0)
+Private Sub object_Activate();
+Private Sub object_DropDown();
+Private Sub object_EnterCell ();
+Private Sub object_Expand (node[index]);
+Private Sub Form_GotFocus();
+Private Sub object_ItemCheck();
+Private Sub object_AfterLabelEdit (newstring);
+Private Sub Form_KeyDown(keycode, shift);
+Private Sub Form_KeyPress(keyascii);
+Private Sub object_LeaveCell ();
+Private Sub object_LostFocus();
+Private Sub Form_MouseDown(button, shift, x, y);
+Private Sub Form_MouseMove(button, shift, x, y);
+Private Sub object_NodeClick (node[index]);
+Private Sub object_OnComm ();
+Private Sub Form_Paint();
+Private Sub object_BeforeLabelEdit(newstring);
+Private Sub Form_Resize();
+Private Sub object_RowColChange ();
+Private Sub object_Scroll();
+Private Sub object_SelChange ();
+Private Sub object_Terminate();
+Private Sub object_Timer();
+Private Sub Form_Unload(cancel);
+Private Sub Form_Click();
+Private Sub object_Collapse (node[index]);
+Private Sub object_ColumnClick(columnheader[index]);
+Private Sub object_Compare(row1, row2);
 HRESULT GetAmbientFont(IFont** ppFont);
 HRESULT RegisterClassObjects(DWORD dwClsContext, DWORD* dwFlags);
+HRESULT EnumAdvise(IEnumSTATDATA** ppenumAdvise);
 HRESULT GetDisplayString(DISPID dispID, BSTR* pBstr);
 UINT GetObjectSchema();
 BOOL PolylineTo(const POINT* lpPoints, int nCount);
@@ -3134,45 +2970,50 @@ HTREEITEM GetParentItem(HTREEITEM hItem);
 HTREEITEM GetPrevSiblingItem(HTREEITEM hItem);
 HTREEITEM GetPrevVisibleItem(HTREEITEM hItem);
 HTREEITEM GetRootItem();
+HTREEITEM GetSelectedItem();
 BOOL ItemHasChildren(HTREEITEM hItem);
 HTREEITEM SelectDropTarget(HTREEITEM hItem);
 BOOL SetItemImage(HTREEITEM hItem, int nImage, int nSelectedImage);
 BOOL SortChildren(HTREEITEM hItem);
 BOOL Expand(HTREEITEM hItem, UINT nCode);
-VOID VIOUninitialize ();
+HRESULT get_Items(BSTR *pbstrItems);
 HTREEITEM TreeView_GetDropHilite(hwnd);
+enum {
+ SHIC_FEATURE_RESTOREDEFAULT = 0,
+ SHIC_FEATURE_AUTOCORRECT = 0x00000001L,
+ SHIC_FEATURE_AUTOSUGGEST = 0x00000002L,
+ SHIC_FEATURE_HAVETRAILER = 0x00000003L,
+ SHIC_FEATURE_CLASS = 0x00000004L
+} SHIC_FEATURE;
 void LogMemUse(void);
-Private Sub control_AfterLabelEdit(cancel, newstring)
-Private Sub control_BeforeLabelEdit(cancel)
-Private Sub commandbar_ButtonClick(button)
-Call MyProc(0)
-Private Sub treeview_Collapse(index)
-Private Sub listview_ColumnClick(index)
-Private Sub commandbar_ComboBoxChange(combobox)
-Private Sub commandbar_ComboBoxClick(combobox)
-Private Sub winsock_ConnectionRequest()
-Private Sub winsock_DataArrival(bytesTotal)
-Private Sub combo_DropDown()
+Private Sub control_AfterLabelEdit(cancel, newstring);
+Private Sub control_BeforeLabelEdit(cancel);
+Private Sub commandbar_ButtonClick(button);
+Private Sub treeview_Collapse(index);
+Private Sub listview_ColumnClick(index);
+Private Sub commandbar_ComboBoxChange(combobox);
+Private Sub commandbar_ComboBoxClick(combobox);
+Private Sub winsock_ConnectionRequest();
+Private Sub winsock_DataArrival(bytesTotal);
+Private Sub combo_DropDown();
 void WINAPI (IfilterGraph* pGraph,
- DWORD dwLevel)
-Private Sub grid_EnterCell()
-Private Sub commandbar_HelpClick()
+ DWORD dwLevel);
+Private Sub grid_EnterCell();
+Private Sub commandbar_HelpClick();
 EXTERN_C BOOL buildDDHALInfo (LPDDHALINFO lpddhi,
 DWORD modeidx);
 public DataSchemaErrorTask(string message,
  TaskCategory category,
  TaskErrorCategory errorCategory,
- TaskPriority priority)
-Private Sub object_ItemCheck()
-Private Sub grid_LeaveCell()
-Private Sub object_MenuClick(menu)
-Private Sub treeview_NodeClick(index)
-BOOL OEMIsROM(LPVOID pvAddr,
- DWORD cbSize);
-Private Sub commandbar_OKClick()
-Private Sub comm_OnComm()
-Private Sub object_OpenComplete()
-Private Sub object_Paint()
+ TaskPriority priority);
+Private Sub object_ItemCheck();
+Private Sub grid_LeaveCell();
+Private Sub object_MenuClick(menu);
+Private Sub treeview_NodeClick(index);
+Private Sub commandbar_OKClick();
+Private Sub comm_OnComm();
+Private Sub object_OpenComplete();
+Private Sub object_Paint();
 BOOL PIN_Deinit(DWORD dwContext);
 BOOL PIN_IOControl(DWORD dwContext,
  DWORD Ioctl,
@@ -3183,14 +3024,14 @@ BOOL PIN_IOControl(DWORD dwContext,
  PDWORD pdwBytesTransferred);
 extern HRESULT (*pIoctl_Register_DataCollector)(LPVOID,DWORD,LPVOID,DWORD);
 extern HRESULT (*pIoctl_Send_DataCollector)(LPVOID,DWORD,LPVOID,DWORD);
-Private Sub Form_QueryUnload(cancel, unloadmode)
-Private Sub grid_RowColChange()
-Private Sub grid_SelChange()
-Private Sub winsock_SendComplete()
-Private Sub winsock_SendProgress(bytesSent, bytesRemaining)
+Private Sub Form_QueryUnload(cancel, unloadmode);
+Private Sub grid_RowColChange();
+Private Sub grid_SelChange();
+Private Sub winsock_SendComplete();
+Private Sub winsock_SendProgress(bytesSent, bytesRemaining);
 Private Sub object_StateChange(ByVal oldState As Long,
- ByVal newState As Long)
-Private Sub timer_Timer()
+ ByVal newState As Long);
+Private Sub timer_Timer();
 interface IFst { HRESULT fst(BSTR b); HRESULT fst(long l); };
 #pragma keyword("interface", on)
 #pragma warning(disable:4199)
@@ -3205,7 +3046,6 @@ interface I2 {
 };
 interface I3 : I1, I2 {
 };
-interface IX11 { // id and helpstring not valid on property int Size; };
 typedef struct CVF { D3DMVECTOR position; D3DMVECTOR normal; D3DMCOLOR diffuse; float u, v; // 1st set, 2-D float t; // 2nd set, 1-D } CustomVertexFormat;
 typedef struct _DDHAL_DDEXEBUFCALLBACKS { DWORD dwSize; DWORD dwFlags; LPDDHALEXEBUFCB_CANCREATEEXEBUF CanCreateExecuteBuffer; LPDDHALEXEBUFCB_CREATEEXEBUF CreateExecuteBuffer; LPDDHALEXEBUFCB_DESTROYEXEBUF DestroyExecuteBuffer; LPDDHALEXEBUFCB_LOCKEXEBUF LockExecuteBuffer; LPDDHALEXEBUFCB_UNLOCKEXEBUF UnlockExecuteBuffer; } DDHAL_DDEXEBUFCALLBACKS;
 typedef struct _GUID { DWORD Data1; WORD Data2; WORD Data3; BYTE Data4[8]; } GUID;
@@ -3215,7 +3055,6 @@ typedef struct tagMyData { };
 typedef struct _NM_UPDOWN { NMHDR hdr; int iPos; int iDelta; } NM_UPDOWNW;
 typedef struct _obex_command { unsigned int uiOp; unsigned int uiResp; unsigned int fFinal; ObexPacketData sPktData; unsigned int cProp; unsigned int *aPropID; ObexVariant *aPropVar; } ObexCommand;
 typedef struct _obex_transaction { unsigned int uiConnectionId; unsigned int uiTransactionId; unsigned int uiOp; ObexCommand *pObex; MemAlloc ObexAlloc; MemFree ObexFree; ServerCallback ObexExecute; AuthCallback ObexAuthRequest; } ObexTransaction;
-typedef struct tagPNACCURACY{ DWORD dwStructureSize; PNTIME tiTime; PNDouble dHorizError; PNDouble dVerticalError; PNDouble dEDOP; PNDouble dNDOP; PNDouble dVDOP; PNDouble dPDOP; PNDouble dTDOP; PNDouble dGDOP; PNAVACCURACY acAvAccuracy; DWORD dwPNReserved; } PNACCURACY;
 typedef struct tagPNALMANAC{ DWORD dwStructureSize; PNTIME tiTime; PNSATELLITE saSatellite[PN_NUM_SATS_c]; DWORD dwPNReserved; } PNALMANAC;
 typedef struct tagPNAVACCURACY{ DWORD dwStructureSize; DWORD dwAv1; DWORD dwPNReserved; } PNAVACCURACY;
 typedef struct tagPNAVDEVSTATE{ DWORD dwStructureSize; DWORD dwAv1; DWORD wPNReserved; } PNAVDEVSTATE;
@@ -3226,19 +3065,10 @@ typedef struct tagPNAVSETTINGS{ DWORD dwStructureSize; DWORD dwAv1; DWORD dwPNRe
 typedef struct tagPNAVSTATION{ DWORD dwStructureSize; DWORD dwAv1; DWORD dwPNReserved; } PNAVSTATION;
 typedef struct tagPNAVTM { DWORD dwStructureSize; DWORD dwAv1; DWORD dwPNReserved; } PNAVTM;
 typedef struct tagPNAVVELENU{ DWORD dwStructureSize; DWORD dwAv1; DWORD dwPNReserved; } PNAVVELENU;
-typedef struct tagPNCONFIG{ DWORD dwStructureSize; PNPOSITION poPositionData; PNACCURACY acAccuracy; PNPOSITION poStaticRefPos; PNALMANAC alAlmanac; PNSETTINGS seSettings; PNBool fInitAlmanac; PNBool fInitPosition; PNBool fInitTime; DWORD dwPNReserved; } PNCONFIG;
-typedef struct tagPNDEVICE{ DWORD dwStructureSize; WCHAR szManufacturer[PN_MNFCT_SIZE_c]; WCHAR szModel[PN_MODEL_SIZE_c]; PNReceiver_t rtReceiverType; DWORD dwUseCount; DWORD dwQuality; WCHAR szComPort[PN_COM_PORT_LEN_c]; WCHAR szRegRoot[PN_REG_PATH_LEN_c]; DWORD dwComPort; DWORD dwPNReserved; struct tagPNDEVICE* pNext; } PNDEVICE;
-typedef struct tagPNDEVSTATE{ DWORD dwStructureSize; PNTIME tiTime; PNDeviceState_t dsState; PNAVDEVSTATE dsAvState; DWORD dwPNReserved; } PNDEVSTATE;
-typedef struct tagPNINDSTATION{ DWORD dwStructureSize; PNTIME tiTime; PNStationState_t ssState; DWORD dwStationIDNum; PNBool fUsed; PNDouble dSatElevation; PNDouble dSatAzimuth; PNDouble dSignalStrength; DWORD dwCoverage; PNAVINDSTATION siAvIndStation; DWORD dwPNReserved; } PNINDSTATION;
 typedef struct tagPNPOSITION{ DWORD dwStructureSize; PNTIME tiTime; PNPOSLLA psPosition; PNAVPOSLLA psAvPosition; DWORD dwPNReserved; } PNPOSITION;
-typedef struct tagPNPOSLLA{ PNDouble dLong; PNDouble dLat; PNDouble dAlt; PNBool fRadians; } PNPOSLLA;
-typedef struct tagPNSATELLITE{ DWORD dwStructureSize; PNTIME tiTime; PNBool fSetData; DWORD dwPRN; PNByte bSatHealth; DWORD dwRefWeekNumber; DWORD dwRefTimeOfWeek; PNDouble dEccentricity; PNDouble dRootSemiMajorAxis; PNDouble dArgumentOfPerigee; PNDouble dMeanAnomalyAtRefTime; PNDouble dRightAscensionAtRefTime; PNDouble dRateRightAscension; PNDouble dCorrectToInclination; PNDouble dAF0ClockCorrect; PNDouble dAF1ClockCorrect; PNAVSATELLITE saAvSatellite; DWORD dwPNReserved; } PNSATELLITE;
-typedef struct tagPNSETTINGS{ DWORD dwStructureSize; PNTIME tiTime; PNSTATIONMODE cmMode[PN_NUM_SATS_c]; PNBool fDGPSEnable; PNBool fDREnable;; DWORD dwDGPSTimeOut; PNBool fDGPS2DEnable; DWORD dwDGPS2DTimeOut; PNDatum_t daDatum; PNPowerState_t pwPowerState; PNAltHold_t ahAltitudeHold; PNDouble dAHAltitude; PN2DMode_t mo2DPosMode; PNDouble d2DAltitude; PNAccess_t asAccess; PNEnv_t etEnvironment; PNAVSETTINGS seAvSettings; DWORD dwPNReserved; } PNSETTINGS;
 typedef struct tagPNSTATION{ DWORD dwStructureSize; PNTIME tiTime; DWORD dwNumAvailable; DWORD dwNumUsed; PNAVSTATION snAvStation; PNINDSTATION siStations[PN_NUM_STATIONS_c]; DWORD dwPNReserved; } PNSTATION;
 typedef struct tagPNTIME{ PNTM tmDevice; PNAVTM tmAvDevice; PNTM tmLeapDiffTime; PNAVTM tmAvLeapDiffTime; PNTM tmComputer; PNAVTM tmAvComputer; } PNTIME;
 typedef struct tagPNTM{ DWORD dwMillisec; DWORD dwDay; } PNTM;
-typedef struct tagPNVELBEAR{ PNDouble dBearing; PNDouble dHorizSpeed; PNDouble dVertSpeed; } PNVELBEAR;
-typedef struct tagPNVELENU{ PNDouble dEast; PNDouble dNorth; PNDouble dUp; } PNVELENU;
 typedef struct tagPNVELOCITY{ DWORD dwStructureSize; PNTIME tiTime; PNVELENU vlVelocity; PNAVVELENU vlAvVelocity; DWORD dwPNReserved; } PNVELOCITY;
 typedef struct _ServicesExeCallbackFunctions { PFN_SERVICE_SHUTDOWN pfnServiceShutdown; } ServicesExeCallbackFunctions;
 typedef struct StringFileInfo { WORD wLength; WORD wValueLength; WORD wType; WCHAR szKey; WORD Padding; StringTable Children; } StringFileInfo;
@@ -3270,29 +3100,6 @@ typedef struct tagSTGMEDIUM {
  }u;
  IUnknown *pUnkForRelease;
 } uSTGMEDIUM;
-typedef struct _DDHAL_CALLBACKS
-{
- DDHAL_DDCALLBACKS cbDDCallbacks;
- DDHAL_DDSURFACECALLBACKS cbDDSurfaceCallbacks;
- DDHAL_DDPALETTECALLBACKS cbDDPaletteCallbacks;
- DDHAL_DDCALLBACKS HALDD;
- DDHAL_DDSURFACECALLBACKS HALDDSurface;
- DDHAL_DDPALETTECALLBACKS HALDDPalette;
- DDHAL_DDCALLBACKS HELDD;
- DDHAL_DDSURFACECALLBACKS HELDDSurface;
- DDAHL_DDPALETTECALLBACKS HELDDPalette;
- DDHAL_DDEXEBUFCALLBACKS cbDDExeBufCallbacks;
- DDHAL_DDEXBUFCALLBACKS HALDDExeBuf;
- DDHAL_DDEXEBUFCALLBACKS HELDDExeBuf;
- DDHAL_DDVIDEOPORTCALLBACKS cbDDVideoPortCallbacks;
- DDHAL_DDVIDEOPORTCALLBACKS HALDDVideoport;
- DDHAL_DDCOLORCONTROLCALLBACKS cbDDColorControlCallbacks;
- DDHAL_DDCOLORCONTROLCALLBACKS HALDDColorControl;
- DDHAL_DDMISCELLANEOUSCALLBACKS cbDDMiscellaneousCallbacks;
- DDHAL_DDMISCELLANEOUSCALLBACKS HALDDMiscellaneous;
- DDHAL_DDKERNELCALLBACKS cbDDKernelCallbacks;
- DDHAL_DDKERNELCALLBACKS HALDDKernel;
-} DDHAL_CALLBACKS, far *LPDDHAL_CALLBACKS;
 typedef struct {
  DWORD dwMicroSecPerFrame;
  DWORD dwMaxBytesPerSec;
@@ -3306,21 +3113,6 @@ typedef struct {
  DWORD dwHeight;
  DWORD dwReserved[4];
 } MainAVIHeader;
-typedef struct {
- FOURCC fccType;
- FOURCC fccHandler;
- DWORD dwFlags;
- DWORD dwPriority;
- DWORD dwInitialFrames;
- DWORD dwScale;
- DWORD dwRate;
- DWORD dwStart;
- DWORD dwLength;
- DWORD dwSuggestedBufferSize;
- DWORD dwQuality;
- DWORD dwSampleSize;
- RECT rcFrame;
-} AVIStreamHeader;
 struct hostent {
  char FAR *h_name;
  char FAR *FAR *h_aliases;
@@ -3340,14 +3132,6 @@ struct sockaddr_in{
  unsigned short sin_port;
  IN_ADDR sin_addr;
  char sin_zero[8];};
-struct WSAData {
- WORD wVersion;
- WORD wHighVersion;
- char szDescription[WSADESCRIPTION_LEN+1];
- char szSystemStatus[WSASYSSTATUS_LEN+1];
- unsigned short iMaxSockets;
- unsigned short iMaxUdpDg;
- char *lpVendorInfo;};
 SOCKET accept(SOCKET s, struct sockaddr *addr, int *addrlen);
 int bind(SOCKET s, const struct sockaddr *addr, int namelen);
 struct hostent *gethostbyaddr(const char *addr, int len, int type);
@@ -3406,9 +3190,6 @@ typedef struct tagTOOLINFO {
 struct servent {char FAR* s_name;char FAR* FAR* s_aliases;short s_port;char FAR* s_proto;};
 struct timeval {long tv_sec;long tv_usec;};
 struct protoent {char FAR* p_name;char FAR* FAR* p_aliases;short p_proto;};
-int WSAConnect(SOCKET s,const struct sockaddr FAR* name,int namelen,LPWSABUF lpCallerData,LPWSABUF lpCalleeData,LPQOS lpSQOS,LPQOS lpGQOS);
-SOCKET WSAJoinLeaf(SOCKET s,const struct sockaddr FAR* name,int namelen,LPWSABUF lpCallerData,LPWSABUF lpCalleeData,LPQOS lpSQOS,LPQOS lpGQOS,DWORD dwFlags);
-int WSARecvFrom(SOCKET s,LPWSABUF lpBuffers,DWORD dwBufferCount,LPDWORD lpNumberOfBytesRecvd,LPDWORD lpFlags,struct sockaddr FAR* lpFrom,LPINT lpFromlen,LPWSAOVERLAPPED lpOverlapped,LPWSAOVERLAPPED_COMPLETION_ROUTINE lpCompletionRoutine);
 struct S { int *b : 1; // error };
 struct A* pA;
 struct B { int i; };
@@ -3418,7 +3199,6 @@ void main()
  pA++; // error, size of A not known
  pB++;
 };
-#ifdef __cplusplus
 struct S
 {
  int mem0;
@@ -3428,7 +3208,6 @@ void main()
  pS->mem1 = 0; // error, mem1 is not a member
  pS->mem0 = 0;
 };
-#endif /* __cplusplus */
 struct S; union S;
 typedef struct _IMAGE_CE_RUNTIME_FUNCTION_ENTRY { unsigned int FuncStart : 32; unsigned int PrologLen : 8; unsigned int FuncLen : 22; unsigned int ThirtyTwoBit : 1; unsigned int ExceptionFlag : 1;} IMAGE_CE_RUNTIME_FUNCTION_ENTRY,*PIMAGE_CE_RUNTIME_FUNCTION_ENTRY;
 struct PDATA_EH { unsigned int* pHandler; unsigned int* pHandlerData;};
@@ -3441,19 +3220,6 @@ typedef struct IDirect3DSurface8 *LPDIRECT3DSURFACE8, *PDIRECT3DSURFACE8;
 typedef struct IDirect3DSwapChain8 *LPDIRECT3DSWAPCHAIN8, *PDIRECT3DSWAPCHAIN8;
 typedef struct IDirect3DTexture8 *LPDIRECT3DTEXTURE8, *PDIRECT3DTEXTURE8;
 typedef struct IDirect3DVertexBuffer8 *LPDIRECT3DVERTEXBUFFER8, *PDIRECT3DVERTEXBUFFER8;
-SOCKET WSAAccept(SOCKET s, struct SOCK_ADDR* addr, LPINT addrlen, LPCONDITIONPROC lpfnCondition, DWORD dwCallbackData);
-struct RNDIS_PDD_CHARACTERISTICS {
- PFN_PDD_SEND_RNDIS_MESSAGE SendRndisMessageHandler;
- PFN_PDD_SEND_RNDIS_PACKET SendRndisPacketHandler;
- PFN_PDD_INDICATE_RNDIS_PACKET_COMPLETE
- IndicateRndisPacketCompleteHandler;
- PFN_PDD_SET SetHandler;
- PFN_PDD_GET GetHandler;
- PFN_PDD_ISR ISRHandler;
- DWORD dwIRQ;
- DWORD dwMaxRx;
- DWORD dwBaseAddr;
-};
 typedef struct _CE_DMA_ADAPTER {
  ULONG Size;
  INTERFACE_TYPE InterfaceType;
@@ -3486,18 +3252,6 @@ typedef struct SMSROUTERMSGINFO_TAG{
  UINT nTotalParts;
  UINT iPartIndex;
 } SMSROUTERMSGINFO, *LPSMSROUTERMSGINFO;
-struct XRMouseEventArgs : XRRoutedEventArgs{
- XRPoint Position;
- IXRStylusInfo *pStylusInfo;
- IXRStylusPointCollection *pStylusPoints;
-};
-struct XRRoutedEventArgs : XREventArgs{ IXRDependencyObject *pSource; };
-struct XRGestureEventArgs : XREventArgs
-{
- BOOL Handled;
- HWND hWnd;
- GESTUREINFO GestureInfo;
-};
 struct COMMAND_MESSAGE_DATA {
  DWORD dwCommand;
  HPACKET hPacketIn;
@@ -3810,14 +3564,9 @@ typedef short *p_short;
 typedef wchar_t wchar;
 typedef unsigned char wchar_t;
 typedef HRESULT (CALLBACK *SHOWHTMLDIALOGEXFN)(HWND hwndParent, IMoniker *pMk, DWORD dwDialogFlags, VARIANT *pvarArgIn, TCHAR *pchOptions, VARIANT *pvarArgOut);
-typedef HRESULT (CALLBACK *SHOWMODELESSHTMLDIALOGFN)(HWND hwndParent, IMoniker *pMk, VARIANT *pvarArgIn, TCHAR *pchOptions, IHTMLWindow2 **ppWindow);
-typedef HRESULT (STDAPICALLTYPE RAPIEXT)(DWORD cbInput,BYTE * pInput,DWORD * pcbOutput,BYTE ** ppOutput,IRAPIStream * pIRAPIStream);
-typedef void (CALLBACK* PFN_PROPERTY_CHANGE)(IXRDependencyObject* pControl, XRValue* pOldValue, XRValue* pNewValue);
 #ifdef __cplusplus
 typedef HRESULT STDAPICALLTYPE pfnCommandCallback(DWORD dwCmd, const CCommandPacket *pCmdIn, CCommandPacket *pCmdOut);
 #endif /* __cplusplus */
-typedef HRESULT (CALLBACK *PFN_CREATE_CONTROL)(IXRDependencyObject *pExistingAXDO, IXRDependencyObject** pNewAXDO);
-typedef HRESULT (CALLBACK* PFN_TYPE_CONVERTER)(XRValue *pValIn, XRValue *pValOut);
 typedef PVOID PSECURITY_DESCRIPTOR;
 #ifdef __cplusplus
 typedef HRESULT STDAPICALLTYPE pfnCommandCallback(DWORD dwCmd,

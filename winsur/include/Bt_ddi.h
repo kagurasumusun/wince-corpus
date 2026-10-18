@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 31 constants, 13 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 31 constants, 11 declarations, 2 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _BT_DDI_
 #define _BT_DDI_
@@ -54,18 +54,8 @@
  * ================================================================ */
 
 /* BD_ADDR  [struct; ce-only] */
-#pragma pack(push, 1)
- typedef struct __bd_addr {
- union {
- struct {
- unsigned int LAP : 24; 
- unsigned int UAP : 8; 
- };
- unsigned int SAP; 
- };
- unsigned short NAP; 
- } BD_ADDR;
-#pragma pack(pop);
+
+/* HCIEventContext  [typedef; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -74,35 +64,41 @@
  * ================================================================ */
 
 /* ControllerEvent  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__CONTROLLER_EVENT_PACKET
+#define __WINCE_DEFINED__CONTROLLER_EVENT_PACKET
 typedef struct _controller_event_packet {
  int cSize;
  unsigned char* pData;
 } ControllerEvent;
+#endif /* __WINCE_DEFINED__CONTROLLER_EVENT_PACKET */
+#ifndef __WINCE_DEFINED_PCONTROLLEREVENT
+#define __WINCE_DEFINED_PCONTROLLEREVENT
 typedef ControllerEvent *PControllerEvent, *LPControllerEvent;
+#endif /* __WINCE_DEFINED_PCONTROLLEREVENT */
 
 /* HCI_Buffer_Size  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__HOST_BUFFER_SIZE
+#define __WINCE_DEFINED__HOST_BUFFER_SIZE
 typedef struct _host_buffer_size {
  unsigned short ACL_Data_Packet_Length;
  unsigned char SCO_Data_Packet_Length;
  unsigned short Total_Num_ACL_Data_Packets;
  unsigned short Total_Num_SCO_Data_Packets;
 } HCI_Buffer_Size;
+#endif /* __WINCE_DEFINED__HOST_BUFFER_SIZE */
+#ifndef __WINCE_DEFINED_PHCI_BUFFER_SIZE
+#define __WINCE_DEFINED_PHCI_BUFFER_SIZE
 typedef HCI_Buffer_Size *PHCI_Buffer_Size, *LPHCI_Buffer_Size;
-
-/* HCIEventContext  [typedef; ce-only] */
-typedef union _event_context {
- HCI_Buffer_Size Host_Buffer;
- ControllerEvent Event; 
-} HCIEventContext;
-typedef HCIEventContext *PHCIEventContext, *LPHCIEventContext;
+#endif /* __WINCE_DEFINED_PHCI_BUFFER_SIZE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* HCI_DataPacketDown_Out  [callback; ce-only; CE 4.0..699; Btd.lib] */
-typedef int (*HCI_DataPacketDown_Out)(
- void* pCallContext,
- int iError
-);
+#ifndef __WINCE_DEFINED_HCI_DATAPACKETDOWN_OUT
+#define __WINCE_DEFINED_HCI_DATAPACKETDOWN_OUT
+typedef int (*HCI_DataPacketDown_Out)(void* pCallContext,
+ int iError);
+#endif /* __WINCE_DEFINED_HCI_DATAPACKETDOWN_OUT */
 #endif /* _WIN32_WCE */
 
 /* ==================================================================
@@ -112,9 +108,7 @@ typedef int (*HCI_DataPacketDown_Out)(
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* HCI_CloseDeviceContext  [function; ce-only; CE 4.0..699; Btd.lib] */
-int HCI_CloseDeviceContext(
- HANDLE hDeviceContext
-);
+int HCI_CloseDeviceContext(HANDLE hDeviceContext);
 #endif /* _WIN32_WCE */
 
 #endif /* _BT_DDI_ */

@@ -26,33 +26,50 @@
  * ================================================================ */
 
 /* BrowserNavConstants  [enum; ce-only] */
-typedef enum BrowserNavConstants { 
- navOpenInNewWindow = 0x1, 
- navNoHistory = 0x2, 
- navNoReadFromCache = 0x4, 
- navNoWriteToCache = 0x8, 
- navAllowAutosearch = 0x10, 
- navBrowserBar = 0x20, 
- navHyperlink = 0x40 
+#ifndef __WINCE_DEFINED_BROWSERNAVCONSTANTS
+#define __WINCE_DEFINED_BROWSERNAVCONSTANTS
+typedef enum BrowserNavConstants {
+ navOpenInNewWindow = 0x1,
+ navNoHistory = 0x2,
+ navNoReadFromCache = 0x4,
+ navNoWriteToCache = 0x8,
+ navAllowAutosearch = 0x10,
+ navBrowserBar = 0x20,
+ navHyperlink = 0x40
 } BrowserNavConstants;
+#endif /* __WINCE_DEFINED_BROWSERNAVCONSTANTS */
+#ifndef __WINCE_DEFINED_PBROWSERNAVCONSTANTS
+#define __WINCE_DEFINED_PBROWSERNAVCONSTANTS
 typedef BrowserNavConstants *PBrowserNavConstants, *LPBrowserNavConstants;
+#endif /* __WINCE_DEFINED_PBROWSERNAVCONSTANTS */
 
 /* CommandStateChangeConstants  [enum; ce-only; shdocvw.lib] */
+#ifndef __WINCE_DEFINED_COMMANDSTATECHANGECONSTANTS
+#define __WINCE_DEFINED_COMMANDSTATECHANGECONSTANTS
 enum CommandStateChangeConstants{
  CSC_NAVIGATEFORWARD = 0x1,
  CSC_NAVIGATEBACK = 0x2
 } CommandStateChangeConstants;
+#endif /* __WINCE_DEFINED_COMMANDSTATECHANGECONSTANTS */
 
 /* RefreshConstants  [enum; ce-only] */
-typedef enum RefreshConstants { 
- REFRESH_NORMAL = 0, 
- REFRESH_IFEXPIRED = 1, 
- REFRESH_CONTINUE = 2, 
- REFRESH_COMPLETELY = 3 
+#ifndef __WINCE_DEFINED_REFRESHCONSTANTS
+#define __WINCE_DEFINED_REFRESHCONSTANTS
+typedef enum RefreshConstants {
+ REFRESH_NORMAL = 0,
+ REFRESH_IFEXPIRED = 1,
+ REFRESH_CONTINUE = 2,
+ REFRESH_COMPLETELY = 3
 } RefreshConstants;
+#endif /* __WINCE_DEFINED_REFRESHCONSTANTS */
+#ifndef __WINCE_DEFINED_PREFRESHCONSTANTS
+#define __WINCE_DEFINED_PREFRESHCONSTANTS
 typedef RefreshConstants *PRefreshConstants, *LPRefreshConstants;
+#endif /* __WINCE_DEFINED_PREFRESHCONSTANTS */
 
 /* SecureLockIconConstants  [enum; ce-only; shdocvw.lib] */
+#ifndef __WINCE_DEFINED_SECURELOCKICONCONSTANTS
+#define __WINCE_DEFINED_SECURELOCKICONCONSTANTS
 enum SecureLockIconConstants{
  secureLockIconUnsecure = 0,
  secureLockIconMixed = 0x1,
@@ -62,6 +79,7 @@ enum SecureLockIconConstants{
  secureLockIconSecureFortezza = 0x5,
  secureLockIconSecure128Bit = 0x6
 } SecureLockIconConstants;
+#endif /* __WINCE_DEFINED_SECURELOCKICONCONSTANTS */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

@@ -5,11 +5,17 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 39 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 0 constants, 38 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _CARDSV2_
 #define _CARDSV2_
 
+
+/* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* CARD_CONFIG_INFO  [struct; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -18,6 +24,9 @@
  * ================================================================ */
 
 /* CARD_WINDOW_HANDLE  [typedef; ce-only] */
+#ifndef __WINCE_DEFINED_CARD_WINDOW_HANDLE
+#define __WINCE_DEFINED_CARD_WINDOW_HANDLE
 typedef PVOID CARD_WINDOW_HANDLE;
+#endif /* __WINCE_DEFINED_CARD_WINDOW_HANDLE */
 
 #endif /* _CARDSV2_ */

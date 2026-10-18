@@ -5,11 +5,17 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 23 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 0 constants, 22 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _NETUI_
 #define _NETUI_
 
+
+/* ==================================================================
+ * macros -- the macro/#define blocks the pages print (verbatim)
+ * ================================================================ */
+
+/* GETDRIVERNAMEPARMS  [struct; ce-only] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -18,6 +24,8 @@
  * ================================================================ */
 
 /* LINECONFIGDATA  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__LINECONFIGDATA
+#define __WINCE_DEFINED__LINECONFIGDATA
 typedef struct _LINECONFIGDATA {
  DWORD dwVersion;
  DWORD dwBaudRate;
@@ -36,11 +44,15 @@ typedef struct _LINECONFIGDATA {
  TCHAR szDialModifier[NETUI_LCD_DIAL_MOD_LEN + 1];
  WORD wSettableStopParity;
 } LINECONFIGDATA, *PLINECONFIGDATA;
+#endif /* __WINCE_DEFINED__LINECONFIGDATA */
 
 /* NETUI_NEWPWD  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__NETUI_NEWPWD
+#define __WINCE_DEFINED__NETUI_NEWPWD
 typedef struct _NETUI_NEWPWD{
  TCHAR szNewPassword[PWLEN+1];
 } NETUI_NEWPWD, *PNETUI_NEWPWD;
+#endif /* __WINCE_DEFINED__NETUI_NEWPWD */
 
 /* ==================================================================
  * functions and callbacks
@@ -49,81 +61,57 @@ typedef struct _NETUI_NEWPWD{
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
 
 /* AdapterIPProperties  [function; ce-only; CE 3.0..699; Netui.lib, netui.lib] */
-BOOL AdapterIPProperties(
- HWND hWndOwner, 
- LPTSTR szAdapterName
-);
+BOOL AdapterIPProperties(HWND hWndOwner,
+ LPTSTR szAdapterName);
 
 /* DisconnectDialog  [function; ce-only; CE 3.0..699; Netui.lib, netui.lib] */
-BOOL DisconnectDialog( 
- HWND hParent, 
- DWORD dwType
-);
+BOOL DisconnectDialog(HWND hParent,
+ DWORD dwType);
 
 /* GetIPAddress  [function; ce-only; CE 3.0..699; Netui.lib, netui.lib] */
-DWORD GetIPAddress(
- HWND hParent
-);
+DWORD GetIPAddress(HWND hParent);
 
 /* GetNetString  [function; ce-only; CE 3.0..699; Netui.lib, netui.lib] */
-int GetNetString(
- UINT uID, 
- LPTSTR lpBuffer, 
- int cchBufferMax
-);
+int GetNetString(UINT uID,
+ LPTSTR lpBuffer,
+ int cchBufferMax);
 
 /* LineConfigEdit  [function; ce-only; CE 3.0..699; Netui.lib, netui.lib] */
-BOOL LineConfigEdit(
- HWND hParent, 
- PLINECONFIGDATA pLineConfigData
-);
+BOOL LineConfigEdit(HWND hParent,
+ PLINECONFIGDATA pLineConfigData);
 
 /* NetMsgBox  [function; ce-only; CE 3.0..699; Netui.lib, netui.lib] */
-BOOL NetMsgBox(
- HWND hParent, 
- DWORD dwFlags, 
- TCHAR* szStr
-);
+BOOL NetMsgBox(HWND hParent,
+ DWORD dwFlags,
+ TCHAR* szStr);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* CreateScanDevice  [function; ce-only; CE 4.0..699; Netui.lib] */
-int CreateScanDevice(
- HINSTANCE hInstance, 
- HWND hWnd
-);
+int CreateScanDevice(HINSTANCE hInstance,
+ HWND hWnd);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* CloseUsernamePasswordDialog  [function; ce-only; CE 5.0..699; Netui.lib] */
-BOOL CloseUsernamePasswordDialog(
- HWND hDlg
-);
+BOOL CloseUsernamePasswordDialog(HWND hDlg);
 
 /* GetNewPassword  [function; ce-only; CE 5.0..699; Netui.lib] */
-BOOL WINAPI GetNewPassword (
- HWND hParent, 
- OUT PNETUI_NEWPWD pNewPwd
-);
+BOOL WINAPI GetNewPassword (HWND hParent,
+ OUT PNETUI_NEWPWD pNewPwd);
 
 /* GetNewPasswordEx  [function; ce-only; CE 5.0..699; Netui.lib] */
-BOOL WINAPI GetNewPasswordEx (
- HWND hParent, 
- OUT PNETUI_NEWPWD pNewPwd, 
- OUT OPTIONAL HWND* phDlg
-);
+BOOL WINAPI GetNewPasswordEx (HWND hParent,
+ OUT PNETUI_NEWPWD pNewPwd,
+ OUT OPTIONAL HWND* phDlg);
 
 /* RegisterIPClass  [function; ce-only; CE 5.0..699; Netui.lib] */
-void RegisterIPClass(
- HINSTANCE hInst
-);
+void RegisterIPClass(HINSTANCE hInst);
 
 /* UnregisterIPClass  [function; ce-only; CE 5.0..699; Netui.lib] */
-void UnregisterIPClass(
- HINSTANCE hInst
-);
+void UnregisterIPClass(HINSTANCE hInst);
 #endif /* _WIN32_WCE */
 
 /* ==================================================================

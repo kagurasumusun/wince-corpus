@@ -24,14 +24,22 @@
  * ================================================================ */
 
 /* FW_ACTIONS  [enum; ce-only] */
+#ifndef __WINCE_DEFINED__FW_ACTIONS
+#define __WINCE_DEFINED__FW_ACTIONS
 typedef enum _FW_ACTIONS {
  FWA_BLOCK = 0x01,
  FWA_ALLOW = 0x02,
  FWA_ALLOW_RESPONSE = 0x03,
 } FW_ACTIONS;
+#endif /* __WINCE_DEFINED__FW_ACTIONS */
+#ifndef __WINCE_DEFINED_PFW_ACTIONS
+#define __WINCE_DEFINED_PFW_ACTIONS
 typedef FW_ACTIONS *PFW_ACTIONS, *LPFW_ACTIONS;
+#endif /* __WINCE_DEFINED_PFW_ACTIONS */
 
 /* FW_DAYS  [enum; ce-only] */
+#ifndef __WINCE_DEFINED__FW_DAYS
+#define __WINCE_DEFINED__FW_DAYS
 typedef enum _FW_DAYS {
  FWD_SUNDAY = 0x01,
  FWD_MONDAY = 0x02,
@@ -43,16 +51,28 @@ typedef enum _FW_DAYS {
  FWD_WEEKDAY = 0x3E,
  FWD_WEEKEND = 0x41,
 } FW_DAYS;
+#endif /* __WINCE_DEFINED__FW_DAYS */
+#ifndef __WINCE_DEFINED_PFW_DAYS
+#define __WINCE_DEFINED_PFW_DAYS
 typedef FW_DAYS *PFW_DAYS, *LPFW_DAYS;
+#endif /* __WINCE_DEFINED_PFW_DAYS */
 
 /* FW_DIRECTIONS  [enum; ce-only] */
+#ifndef __WINCE_DEFINED__FW_DIRECTIONS
+#define __WINCE_DEFINED__FW_DIRECTIONS
 typedef enum _FW_DIRECTIONS {
  FWD_INBOUND = 0x08,
  FWD_OUTBOUND = 0x10,
 } FW_DIRECTIONS;
+#endif /* __WINCE_DEFINED__FW_DIRECTIONS */
+#ifndef __WINCE_DEFINED_PFW_DIRECTIONS
+#define __WINCE_DEFINED_PFW_DIRECTIONS
 typedef FW_DIRECTIONS *PFW_DIRECTIONS, *LPFW_DIRECTIONS;
+#endif /* __WINCE_DEFINED_PFW_DIRECTIONS */
 
 /* FW_RULE_FLAGS  [enum; ce-only] */
+#ifndef __WINCE_DEFINED__FW_RULE_FLAGS
+#define __WINCE_DEFINED__FW_RULE_FLAGS
 typedef enum _FW_RULE_FLAGS {
  FWF_BLOCK = FWA_BLOCK,
  FWF_ALLOW = FWA_ALLOW,
@@ -61,7 +81,11 @@ typedef enum _FW_RULE_FLAGS {
  FWF_OUTBOUND = FWD_OUTBOUND,
  FWF_DISABLED = 0x20
 } FW_RULE_FLAGS;
+#endif /* __WINCE_DEFINED__FW_RULE_FLAGS */
+#ifndef __WINCE_DEFINED_PFW_RULE_FLAGS
+#define __WINCE_DEFINED_PFW_RULE_FLAGS
 typedef FW_RULE_FLAGS *PFW_RULE_FLAGS, *LPFW_RULE_FLAGS;
+#endif /* __WINCE_DEFINED_PFW_RULE_FLAGS */
 
 /* ==================================================================
  * functions and callbacks
@@ -70,11 +94,9 @@ typedef FW_RULE_FLAGS *PFW_RULE_FLAGS, *LPFW_RULE_FLAGS;
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* FirewallEnable  [function; ce-only; CE 4.0..699; Fwapi.lib, fwapi.lib] */
-DWORD FirewallEnable(
- USHORT Family,
- BOOL bEnable, 
- BOOL bPersist
-);
+DWORD FirewallEnable(USHORT Family,
+ BOOL bEnable,
+ BOOL bPersist);
 
 /* FirewallLogInit  [function; ce-only; CE 4.0..699] */
 void FirewallLogInit();
@@ -86,21 +108,15 @@ void FirewallLogUninit();
 VOID FirewallRefresh();
 
 /* FirewallSetInterface  [function; ce-only; CE 4.0..699] */
-DWORD FirewallSetInterface(
- LPCWSTR pszInterfaceName, 
- BOOL bFirewalled, 
- BOOL bPersist
-);
+DWORD FirewallSetInterface(LPCWSTR pszInterfaceName,
+ BOOL bFirewalled,
+ BOOL bPersist);
 
 /* IsFirewallEnabled  [function; ce-only; CE 4.0..699] */
-BOOL IsFirewallEnabled(
- USHORT Family
-);
+BOOL IsFirewallEnabled(USHORT Family);
 
 /* IsInterfaceFirewalled  [function; ce-only; CE 4.0..699] */
-BOOL IsInterfaceFirewalled(
- LPCWSTR pszInterfaceName
-);
+BOOL IsInterfaceFirewalled(LPCWSTR pszInterfaceName);
 #endif /* _WIN32_WCE */
 
 #endif /* _FWAPI_ */

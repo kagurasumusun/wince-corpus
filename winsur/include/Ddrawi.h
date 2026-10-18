@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 83 declarations, 44 outlines, 0 base types, 0 extra macros, 12 extra decls
+ * 0 constants, 81 declarations, 46 outlines, 0 base types, 0 extra macros, 12 extra decls
  */
 #ifndef _DDRAWI_
 #define _DDRAWI_
@@ -40,6 +40,8 @@
 /* DDHAL_FLIPTOGDISURFACEDATA  [struct; ce-only] */
 
 /* DDHAL_FLIPVPORTDATA  [struct, typedef; ce-only] */
+
+/* DDHAL_GETAVAILDRIVERMEMORYDATA  [struct; ce-only] */
 
 /* DDHAL_GETHEAPALIGNMENTDATA  [struct; ce-only] */
 
@@ -99,6 +101,8 @@
 
 /* DDRAWI_DDVIDEOPORT_LCL  [struct, typedef; ce-only] */
 
+/* DDRAWI_DIRECTDRAW_GBL  [struct; ce-only] */
+
 /* DDRAWI_DIRECTDRAW_INT  [struct; ce-only] */
 
 /* DDRAWI_DIRECTDRAW_LCL  [struct; ce-only] */
@@ -110,6 +114,8 @@
  * ================================================================ */
 
 /* ATTACHLIST  [struct, typedef; ce-only] */
+#ifndef __WINCE_DEFINED__ATTACHLIST
+#define __WINCE_DEFINED__ATTACHLIST
 typedef struct _ATTACHLIST {
  DWORD dwFlags;
  struct _ATTACHLIST FAR* lpLink;
@@ -117,8 +123,11 @@ typedef struct _ATTACHLIST {
  struct _DDRAWI_DDRAWSURFACE_INT FAR* lpIAttached;
 } ATTACHLIST;
 typedef ATTACHLIST FAR *LPATTACHLIST;
+#endif /* __WINCE_DEFINED__ATTACHLIST */
 
 /* DDHALMODEINFO  [struct, typedef; ce-only] */
+#ifndef __WINCE_DEFINED__DDHALMODEINFO
+#define __WINCE_DEFINED__DDHALMODEINFO
 typedef struct _DDHALMODEINFO {
  DWORD dwWidth;
  DWORD dwHeight;
@@ -132,26 +141,30 @@ typedef struct _DDHALMODEINFO {
  DWORD dwAlphaBitMask;
 } DDHALMODEINFO;
 typedef DDHALMODEINFO FAR* LPDDHALMODEINFO;
+#endif /* __WINCE_DEFINED__DDHALMODEINFO */
 
 /* DDMORECAPS  [struct; ce-only] */
-typedef struct _DDMORECAPS 
-{ 
-DWORD dwSize; 
-DWORD dwAlphaCaps; 
-DWORD dwSVBAlphaCaps; 
-DWORD dwVSBAlphaCaps; 
-DWORD dwSSBAlphaCaps; 
-DWORD dwFilterCaps; 
-DWORD dwSVBFilterCaps; 
-DWORD dwVSBFilterCaps; 
-DWORD dwSSBFilterCaps; 
-DWORD dwTransformCaps; 
-DWORD dwSVBTransformCaps; 
-DWORD dwVSBTransformCaps; 
-DWORD dwSSBTransformCaps; 
-DWORD dwBltAffineMinifyLimit; 
-DWORD dwOverlayAffineMinifyLimit; 
-} DDMORECAPS, FAR *LPDDMORECAPS; 
+#ifndef __WINCE_DEFINED__DDMORECAPS
+#define __WINCE_DEFINED__DDMORECAPS
+typedef struct _DDMORECAPS
+{
+DWORD dwSize;
+DWORD dwAlphaCaps;
+DWORD dwSVBAlphaCaps;
+DWORD dwVSBAlphaCaps;
+DWORD dwSSBAlphaCaps;
+DWORD dwFilterCaps;
+DWORD dwSVBFilterCaps;
+DWORD dwVSBFilterCaps;
+DWORD dwSSBFilterCaps;
+DWORD dwTransformCaps;
+DWORD dwSVBTransformCaps;
+DWORD dwVSBTransformCaps;
+DWORD dwSSBTransformCaps;
+DWORD dwBltAffineMinifyLimit;
+DWORD dwOverlayAffineMinifyLimit;
+} DDMORECAPS, FAR *LPDDMORECAPS;
 typedef struct _DDMORECAPS FAR *LPDDMORECAPS;
+#endif /* __WINCE_DEFINED__DDMORECAPS */
 
 #endif /* _DDRAWI_ */

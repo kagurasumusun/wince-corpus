@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 46 constants, 17 declarations, 0 outlines, 0 base types, 0 extra macros, 80 extra decls
+ * 46 constants, 13 declarations, 4 outlines, 0 base types, 0 extra macros, 79 extra decls
  */
 #ifndef _DVDATA_
 #define _DVDATA_
@@ -67,9 +67,17 @@
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
 
+/* DVD_TITLE_SET_INFO  [struct; ce-only] */
+
+/* EDVDDomainType  [enum; ce-only] */
+
+/* EPGCLinkType  [enum; ce-only] */
+
+/* EPGCPlaybackMode  [enum; ce-only] */
+
 /* UNICODE_PATH  [macro; ce-only] */
 #define MAX_PATH 128
-typedef [string] WCHAR UNICODE_PATH [MAX_PATH];
+typedef WCHAR UNICODE_PATH [MAX_PATH];
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member
@@ -77,38 +85,19 @@ typedef [string] WCHAR UNICODE_PATH [MAX_PATH];
  * declaration body no page prints
  * ================================================================ */
 
-/* EDVDDomainType  [enum; ce-only] */
-typedef enum {
- DVD_FP_DOM,
- DVD_VMGM_DOM,
- DVD_VTSM_DOM,
- DVD_TT_DOM
-} EDVDDomainType;
-typedef EDVDDomainType *PEDVDDomainType, *LPEDVDDomainType;
-
 /* ENavCmdArea  [enum; ce-only] */
+#ifndef __WINCE_DEFINED_ENAVCMDAREA
+#define __WINCE_DEFINED_ENAVCMDAREA
 typedef enum {
  DVD_PRE_CMD = 0,
  DVD_POST_CMD = 1,
  DVD_CELL_CMD = 2
 } ENavCmdArea;
+#endif /* __WINCE_DEFINED_ENAVCMDAREA */
+#ifndef __WINCE_DEFINED_PENAVCMDAREA
+#define __WINCE_DEFINED_PENAVCMDAREA
 typedef ENavCmdArea *PENavCmdArea, *LPENavCmdArea;
-
-/* EPGCLinkType  [enum; ce-only] */
-typedef enum {
- DVD_NEXT_PGC,
- DVD_PREVIOUS_PGC,
- DVD_UP_PGC
-} EPGCLinkType;
-typedef EPGCLinkType *PEPGCLinkType, *LPEPGCLinkType;
-
-/* EPGCPlaybackMode  [enum; ce-only] */
-typedef enum {
- DVD_PLAYMODE_SEQUENTIAL,
- DVD_PLAYMODE_RANDOM,
- DVD_PLAYMODE_SHUFFLE
-} EPGCPlaybackMode;
-typedef EPGCPlaybackMode *PEPGCPlaybackMode, *LPEPGCPlaybackMode;
+#endif /* __WINCE_DEFINED_PENAVCMDAREA */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

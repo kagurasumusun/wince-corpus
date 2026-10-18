@@ -18,17 +18,22 @@
  * ================================================================ */
 
 /* D3DLIGHTINGCAPS  [struct, typedef; ce-only] */
+#ifndef __WINCE_DEFINED__D3DLIGHTINGCAPS
+#define __WINCE_DEFINED__D3DLIGHTINGCAPS
 typedef struct _D3DLIGHTINGCAPS {
  DWORD dwSize;
  DWORD dwCaps;
- DWORD dwLightingModel; 
+ DWORD dwLightingModel;
  DWORD dwNumLights;
 } D3DLIGHTINGCAPS, *LPD3DLIGHTINGCAPS;
+#endif /* __WINCE_DEFINED__D3DLIGHTINGCAPS */
 
 /* D3DPRIMCAPS  [struct, typedef; ce-only] */
+#ifndef __WINCE_DEFINED__D3DPRIMCAPS
+#define __WINCE_DEFINED__D3DPRIMCAPS
 typedef struct _D3DPrimCaps {
  DWORD dwSize;
- DWORD dwMiscCaps; 
+ DWORD dwMiscCaps;
  DWORD dwRasterCaps;
  DWORD dwZCmpCaps;
  DWORD dwSrcBlendCaps;
@@ -39,14 +44,18 @@ typedef struct _D3DPrimCaps {
  DWORD dwTextureFilterCaps;
  DWORD dwTextureBlendCaps;
  DWORD dwTextureAddressCaps;
- DWORD dwStippleWidth; 
- DWORD dwStippleHeight; 
+ DWORD dwStippleWidth;
+ DWORD dwStippleHeight;
 } D3DPRIMCAPS, *LPD3DPRIMCAPS;
+#endif /* __WINCE_DEFINED__D3DPRIMCAPS */
 
 /* D3DTRANSFORMCAPS  [struct, typedef; ce-only] */
+#ifndef __WINCE_DEFINED__D3DTRANSFORMCAPS
+#define __WINCE_DEFINED__D3DTRANSFORMCAPS
 typedef struct _D3DTRANSFORMCAPS {
  DWORD dwSize;
  DWORD dwCaps;
 } D3DTRANSFORMCAPS, *LPD3DTRANSFORMCAPS;
+#endif /* __WINCE_DEFINED__D3DTRANSFORMCAPS */
 
 #endif /* _D3DCAPS_ */

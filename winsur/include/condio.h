@@ -18,10 +18,10 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x600)) /* CE 5.0..599 */
 
 /* towlower  [function; ce-only; CE 5.0..599; coredll.dll] */
-int towlower( wint_t c );
+int towlower(wint_t c);
 
 /* towupper  [function; ce-only; CE 5.0..599; coredll.dll] */
-int towupper( wint_t c );
+int towupper(wint_t c);
 #endif /* _WIN32_WCE */
 
 #endif /* _CONDIO_ */

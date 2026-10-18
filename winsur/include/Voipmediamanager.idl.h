@@ -18,21 +18,27 @@
  * ================================================================ */
 
 /* VoIPProgressTone  [enum; ce-only] */
-typedef enum VoIPProgressTone { 
- e_vptInvalid = 0, 
- e_vptDial, 
- e_vptStutter, 
- e_vptOffHookWarning, 
- e_vptConfirmation, 
- e_vptMessageWaiting, 
- e_vptRingback, 
- e_vptCallWaiting, 
- e_vptReorder, 
- e_vptCongestion, 
- e_vptClientBusy, 
- e_vptNetworkBusy 
+#ifndef __WINCE_DEFINED_VOIPPROGRESSTONE
+#define __WINCE_DEFINED_VOIPPROGRESSTONE
+typedef enum VoIPProgressTone {
+ e_vptInvalid = 0,
+ e_vptDial,
+ e_vptStutter,
+ e_vptOffHookWarning,
+ e_vptConfirmation,
+ e_vptMessageWaiting,
+ e_vptRingback,
+ e_vptCallWaiting,
+ e_vptReorder,
+ e_vptCongestion,
+ e_vptClientBusy,
+ e_vptNetworkBusy
 } VoIPProgressTone;
+#endif /* __WINCE_DEFINED_VOIPPROGRESSTONE */
+#ifndef __WINCE_DEFINED_PVOIPPROGRESSTONE
+#define __WINCE_DEFINED_PVOIPPROGRESSTONE
 typedef VoIPProgressTone *PVoIPProgressTone, *LPVoIPProgressTone;
+#endif /* __WINCE_DEFINED_PVOIPPROGRESSTONE */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main

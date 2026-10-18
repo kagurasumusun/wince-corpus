@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 27 constants, 10 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
+ * 27 constants, 9 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _CARDSERV_
 #define _CARDSERV_
@@ -52,6 +52,9 @@
  * ================================================================ */
 
 /* CARD_CLIENT_HANDLE  [typedef; ce-only] */
+#ifndef __WINCE_DEFINED_CARD_CLIENT_HANDLE
+#define __WINCE_DEFINED_CARD_CLIENT_HANDLE
 typedef PVOID CARD_CLIENT_HANDLE;
+#endif /* __WINCE_DEFINED_CARD_CLIENT_HANDLE */
 
 #endif /* _CARDSERV_ */

@@ -18,6 +18,8 @@
  * ================================================================ */
 
 /* NotifyPacket  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_NOTIFYPACKET
+#define __WINCE_DEFINED_NOTIFYPACKET
 struct NotifyPacket {
  NotifyPacket* pNext;
  NotifyPacket* pPrev;
@@ -28,12 +30,15 @@ struct NotifyPacket {
  int fHasIcon;
  HWND hDlg;
  void* pExtraUIData;
- PersistentPacket* sPacket; 
+ PersistentPacket* sPacket;
 };
+#endif /* __WINCE_DEFINED_NOTIFYPACKET */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x300 && _WIN32_WCE < 0x700)) /* CE 3.0..699 */
 
 /* PersistentPacket  [?; ce-only; CE 3.0..699] */
+#ifndef __WINCE_DEFINED_PERSISTENTPACKET
+#define __WINCE_DEFINED_PERSISTENTPACKET
 union PersistentPacket {
  struct {
  DWORD dwActionFlags;
@@ -66,11 +71,14 @@ union PersistentPacket {
  };
  unsigned char header_end[1];
  };
- unsigned char packet_start[1]; 
+ unsigned char packet_start[1];
 };
+#endif /* __WINCE_DEFINED_PERSISTENTPACKET */
 #endif /* _WIN32_WCE */
 
 /* sPacket  [extra struct] */
+#ifndef __WINCE_DEFINED_NOTIFYPACKET
+#define __WINCE_DEFINED_NOTIFYPACKET
 struct NotifyPacket {
  NotifyPacket *pNext;
  NotifyPacket *pPrev;
@@ -82,6 +90,7 @@ struct NotifyPacket {
  HWND hDlg;
  void *pExtraUIData;
  PersistentPacket *sPacket; };
+#endif /* __WINCE_DEFINED_NOTIFYPACKET */
 
 /* ==================================================================
  * functions and callbacks
@@ -93,52 +102,38 @@ struct NotifyPacket {
 void CeNotifyPrivate_ClearUserAlarm (void);
 
 /* CeNotifyPrivate_DeleteNotification  [function; ce-only; CE 3.0..699] */
-void CeNotifyPrivate_DeleteNotification(
- CEOID oid
-);
+void CeNotifyPrivate_DeleteNotification(CEOID oid);
 
 /* CeNotifyPrivate_Lock  [function; ce-only; CE 3.0..699] */
 void CeNotifyPrivate_Lock (void);
 
 /* CeNotifyPrivate_Reschedule  [function; ce-only; CE 3.0..699] */
-int CeNotifyPrivate_Reschedule(
- CEOID oid,
- Int iDelaySeconds
-);
+int CeNotifyPrivate_Reschedule(CEOID oid,
+ Int iDelaySeconds);
 
 /* CeNotifyPrivate_SetUserAlarm  [function; ce-only; CE 3.0..699] */
-void CeNotifyPrivate_SetUserAlarm(
- FILETIME* ftWhen
-);
+void CeNotifyPrivate_SetUserAlarm(FILETIME* ftWhen);
 
 /* CeNotifyPrivate_Unlock  [function; ce-only; CE 3.0..699] */
 void CeNotifyPrivate_Unlock (void);
 
 /* CeNotifyPublic_DisposeOfPacket  [function; ce-only; CE 3.0..699] */
-void CeNotifyPublic_DisposeOfPacket(
- NotifyPacket* pPacket
-);
+void CeNotifyPublic_DisposeOfPacket(NotifyPacket* pPacket);
 
 /* CeNotifyPublic_FilterEvent  [function; ce-only; CE 3.0..699] */
-int CeNotifyPublic_FilterEvent(
- DWORD dwEvent
-);
+int CeNotifyPublic_FilterEvent(DWORD dwEvent);
 
 /* CeNotifyPublic_Initialize  [function; ce-only; CE 3.0..699] */
 int CeNotifyPublic_Initialize(void);
 
 /* CeNotifyPublic_NewPacket  [function; ce-only; CE 3.0..699] */
-void CeNotifyPublic_NewPacket(
- CEOID oidRecord
-);
+void CeNotifyPublic_NewPacket(CEOID oidRecord);
 
 /* CeNotifyPublic_UIWndProc  [function; ce-only; CE 3.0..699] */
-LRESULT CALLBACK CeNotifyPublic_UIWndProc(
- HWND hWnd,
+LRESULT CALLBACK CeNotifyPublic_UIWndProc(HWND hWnd,
  UINT message,
  WPARAM wParam,
- LPARAM lParam
-);
+ LPARAM lParam);
 
 /* CeNotifyPublic_UserAlarmSignalled  [function; ce-only; CE 3.0..699] */
 void CeNotifyPublic_UserAlarmSignalled (void);
@@ -147,10 +142,8 @@ void CeNotifyPublic_UserAlarmSignalled (void);
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* CeNotifyPublic_InitializeUI  [function; ce-only; CE 5.0..699] */
-int CeNotifyPublic_InitializeUI(
- HINSTANCE hInst,
- HWND hwndUI
-);
+int CeNotifyPublic_InitializeUI(HINSTANCE hInst,
+ HWND hwndUI);
 
 /* CeNotifyPublic_Uninitialize  [function; ce-only; CE 5.0..699] */
 void CeNotifyPublic_Uninitialize(void);

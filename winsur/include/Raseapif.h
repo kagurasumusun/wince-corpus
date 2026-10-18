@@ -18,26 +18,37 @@
  * ================================================================ */
 
 /* PPP_EAP_ACTION  [enum; shared] */
+#ifndef __WINCE_DEFINED__PPP_EAP_ACTION
+#define __WINCE_DEFINED__PPP_EAP_ACTION
 typedef enum _PPP_EAP_ACTION {
  EAPACTION_NoAction,
- EAPACTION_Authenticate, 
- EAPACTION_Done, 
+ EAPACTION_Authenticate,
+ EAPACTION_Done,
  EAPACTION_SendAndDone,
  EAPACTION_Send,
  EAPACTION_SendWithTimeout,
  EAPACTION_SendWithTimeoutInteractive
 } PPP_EAP_ACTION;
+#endif /* __WINCE_DEFINED__PPP_EAP_ACTION */
+#ifndef __WINCE_DEFINED_PPPP_EAP_ACTION
+#define __WINCE_DEFINED_PPPP_EAP_ACTION
 typedef PPP_EAP_ACTION *PPPP_EAP_ACTION, *LPPPP_EAP_ACTION;
+#endif /* __WINCE_DEFINED_PPPP_EAP_ACTION */
 
 /* PPP_EAP_PACKET  [struct; shared] */
+#ifndef __WINCE_DEFINED__PPP_EAP_PACKET
+#define __WINCE_DEFINED__PPP_EAP_PACKET
 typedef struct _PPP_EAP_PACKET {
  BYTE Code;
  BYTE Id;
  BYTE Length[2];
  BYTE Data[1];
 } PPP_EAP_PACKET, *PPPP_EAP_PACKET;
+#endif /* __WINCE_DEFINED__PPP_EAP_PACKET */
 
 /* RAS_AUTH_ATTRIBUTE_TYPE  [enum; shared] */
+#ifndef __WINCE_DEFINED__RAS_AUTH_ATTRIBUTE_TYPE_
+#define __WINCE_DEFINED__RAS_AUTH_ATTRIBUTE_TYPE_
 typedef enum _RAS_AUTH_ATTRIBUTE_TYPE_ {
  raatMinimum = 0,
  raatUserName,
@@ -116,26 +127,35 @@ typedef enum _RAS_AUTH_ATTRIBUTE_TYPE_ {
  raatARAPGuestLogon = 8096,
  raatReserved = 0xFFFFFFFF
 } RAS_AUTH_ATTRIBUTE_TYPE;
+#endif /* __WINCE_DEFINED__RAS_AUTH_ATTRIBUTE_TYPE_ */
+#ifndef __WINCE_DEFINED_PRAS_AUTH_ATTRIBUTE_TYPE
+#define __WINCE_DEFINED_PRAS_AUTH_ATTRIBUTE_TYPE
 typedef RAS_AUTH_ATTRIBUTE_TYPE *PRAS_AUTH_ATTRIBUTE_TYPE, *LPRAS_AUTH_ATTRIBUTE_TYPE;
+#endif /* __WINCE_DEFINED_PRAS_AUTH_ATTRIBUTE_TYPE */
 
 /* RAS_AUTH_ATTRIBUTE  [struct; shared] */
+#ifndef __WINCE_DEFINED__RAS_AUTH_ATTRIBUTE
+#define __WINCE_DEFINED__RAS_AUTH_ATTRIBUTE
 typedef struct _RAS_AUTH_ATTRIBUTE {
  RAS_AUTH_ATTRIBUTE_TYPE raaType;
  DWORD dwLength;
  PVOID Value;
 } RAS_AUTH_ATTRIBUTE, *PRAS_AUTH_ATTRIBUTE;
+#endif /* __WINCE_DEFINED__RAS_AUTH_ATTRIBUTE */
 
 /* PPP_EAP_INPUT  [struct; shared] */
+#ifndef __WINCE_DEFINED__PPP_EAP_INPUT
+#define __WINCE_DEFINED__PPP_EAP_INPUT
 typedef struct _PPP_EAP_INPUT {
  DWORD dwSizeInBytes;
  DWORD fFlags;
- BOOL fAuthenticator; 
- WCHAR* pwszIdentity; 
- WCHAR* pwszPassword; 
- BYTE bInitialId; 
- RAS_AUTH_ATTRIBUTE* pUserAttributes; 
- BOOL fAuthenticationComplete; 
- DWORD dwAuthResultCode; 
+ BOOL fAuthenticator;
+ WCHAR* pwszIdentity;
+ WCHAR* pwszPassword;
+ BYTE bInitialId;
+ RAS_AUTH_ATTRIBUTE* pUserAttributes;
+ BOOL fAuthenticationComplete;
+ DWORD dwAuthResultCode;
  HANDLE hTokenImpersonateUser;
  BOOL fSuccessPacketReceived;
  BOOL fDataReceivedFromInteractiveUI;
@@ -147,8 +167,11 @@ typedef struct _PPP_EAP_INPUT {
  DWORD dwSizeOfUserData;
  HANDLE hReserved;
 } PPP_EAP_INPUT, *PPPP_EAP_INPUT;
+#endif /* __WINCE_DEFINED__PPP_EAP_INPUT */
 
 /* PPP_EAP_OUTPUT  [struct; shared] */
+#ifndef __WINCE_DEFINED__PPP_EAP_OUTPUT
+#define __WINCE_DEFINED__PPP_EAP_OUTPUT
 typedef struct _PPP_EAP_OUTPUT {
  DWORD dwSizeInBytes;
  PPP_EAP_ACTION Action;
@@ -164,30 +187,26 @@ typedef struct _PPP_EAP_OUTPUT {
  PBYTE pUserData;
  DWORD dwSizeOfUserData;
 } PPP_EAP_OUTPUT, *PPPP_EAP_OUTPUT;
+#endif /* __WINCE_DEFINED__PPP_EAP_OUTPUT */
 
 /* PPP_EAP_INFO  [struct; shared] */
+#ifndef __WINCE_DEFINED__PPP_EAP_INFO
+#define __WINCE_DEFINED__PPP_EAP_INFO
 typedef struct _PPP_EAP_INFO {
  DWORD dwSizeInBytes;
- DWORD dwEapTypeId; 
- DWORD (*RasEapInitialize) (
- BOOL fInitialize
- );
- DWORD (*RasEapBegin) (
- VOID** ppWorkBuffer,
- PPP_EAP_INPUT* pPppEapInput
- );
- DWORD (*RasEapEnd) (
- VOID* pWorkBuffer
- );
- DWORD (*RasEapMakeMessage) (
- VOID* pWorkBuf,
+ DWORD dwEapTypeId;
+ DWORD (*RasEapInitialize) (BOOL fInitialize);
+ DWORD (*RasEapBegin) (VOID** ppWorkBuffer,
+ PPP_EAP_INPUT* pPppEapInput);
+ DWORD (*RasEapEnd) (VOID* pWorkBuffer);
+ DWORD (*RasEapMakeMessage) (VOID* pWorkBuf,
  PPP_EAP_PACKET* pReceivePacket,
  PPP_EAP_PACKET* pSendPacket,
  DWORD cbSendPacket,
  PPP_EAP_OUTPUT* pEapOutput,
- PPP_EAP_INPUT* pEapInput
- );
+ PPP_EAP_INPUT* pEapInput);
 } PPP_EAP_INFO, *PPPP_EAP_INFO;
+#endif /* __WINCE_DEFINED__PPP_EAP_INFO */
 
 /* ==================================================================
  * functions and callbacks
@@ -196,59 +215,47 @@ typedef struct _PPP_EAP_INFO {
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* RasEapFreeMemory  [function; shared; CE 4.0..699] */
-DWORD RasEapFreeMemory(
- BYTE* pMemory
-);
+DWORD RasEapFreeMemory(BYTE* pMemory);
 
 /* RasEapGetIdentity  [function; shared; CE 4.0..699] */
-DWORD RasEapGetIdentity(
- DWORD dwEapTypeId, 
- HWND hwndParent, 
- DWORD dwFlags, 
- const WCHAR* pwszPhonebook, 
- const WCHAR* pwszEntry, 
- BYTE* pConnectionDataIn, 
- DWORD dwSizeOfConnectionDataIn, 
- BYTE* pUserDataIn, 
- DWORD dwSizeOfUserDataIn, 
- BYTE** ppUserDataOut, 
- DWORD* pdwSizeOfUserDataOut, 
- WCHAR** ppwszIdentity
-);
+DWORD RasEapGetIdentity(DWORD dwEapTypeId,
+ HWND hwndParent,
+ DWORD dwFlags,
+ const WCHAR* pwszPhonebook,
+ const WCHAR* pwszEntry,
+ BYTE* pConnectionDataIn,
+ DWORD dwSizeOfConnectionDataIn,
+ BYTE* pUserDataIn,
+ DWORD dwSizeOfUserDataIn,
+ BYTE** ppUserDataOut,
+ DWORD* pdwSizeOfUserDataOut,
+ WCHAR** ppwszIdentity);
 
 /* RasEapGetInfo  [function; shared; CE 4.0..699] */
-DWORD RasEapGetInfo(
- DWORD dwEapTypeId,
- PPP_EAP_INFO* pEapInfo
-);
+DWORD RasEapGetInfo(DWORD dwEapTypeId,
+ PPP_EAP_INFO* pEapInfo);
 
 /* RasEapInitialize  [function; ce-only; CE 4.0..699] */
-DWORD RasEapInitialize(
- BOOL fInitialize
-);
+DWORD RasEapInitialize(BOOL fInitialize);
 
 /* RasEapInvokeConfigUI  [function; shared; CE 4.0..699] */
-DWORD RasEapInvokeConfigUI(
- DWORD dwEapTypeId, 
- HINSTANCE hInstance, 
- HWND hwndParent, 
- DWORD dwFlags, 
- BYTE* pConnectionDataIn, 
- DWORD dwSizeOfConnectionDataIn, 
- BYTE** ppConnectionDataOut, 
- DWORD* pdwSizeOfConnectionDataOut 
-);
+DWORD RasEapInvokeConfigUI(DWORD dwEapTypeId,
+ HINSTANCE hInstance,
+ HWND hwndParent,
+ DWORD dwFlags,
+ BYTE* pConnectionDataIn,
+ DWORD dwSizeOfConnectionDataIn,
+ BYTE** ppConnectionDataOut,
+ DWORD* pdwSizeOfConnectionDataOut);
 
 /* RasEapInvokeInteractiveUI  [function; shared; CE 4.0..699] */
-DWORD RasEapInvokeInteractiveUI(
- DWORD dwEapTypeId, 
- HINSTANCE hInstance, 
- HWND hwndParent, 
- BYTE* pUIContextData, 
- DWORD dwSizeofUIContextData, 
- BYTE** ppDataFromInteractiveUI, 
- DWORD* pdwSizeOfDataFromInteractiveUI
-);
+DWORD RasEapInvokeInteractiveUI(DWORD dwEapTypeId,
+ HINSTANCE hInstance,
+ HWND hwndParent,
+ BYTE* pUIContextData,
+ DWORD dwSizeofUIContextData,
+ BYTE** ppDataFromInteractiveUI,
+ DWORD* pdwSizeOfDataFromInteractiveUI);
 #endif /* _WIN32_WCE */
 
 #endif /* _RASEAPIF_ */

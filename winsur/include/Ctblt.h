@@ -18,16 +18,12 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x500 && _WIN32_WCE < 0x700)) /* CE 5.0..699 */
 
 /* SetClearTypeBltGamma  [function; ce-only; CE 5.0..699; Ctblt.lib] */
-void SetClearTypeBltGamma(
- ULONG ulGamma
-);
+void SetClearTypeBltGamma(ULONG ulGamma);
 
 /* SetClearTypeBltMasks  [function; ce-only; CE 5.0..699; Ctblt.lib] */
-void SetClearTypeBltMasks(
- ULONG fRedMask,
+void SetClearTypeBltMasks(ULONG fRedMask,
  ULONG fGreMask,
- ULONG fBluMask
-);
+ ULONG fBluMask);
 #endif /* _WIN32_WCE */
 
 #endif /* _CTBLT_ */

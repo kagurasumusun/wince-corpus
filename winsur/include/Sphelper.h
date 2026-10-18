@@ -18,16 +18,12 @@
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* SpGetDefaultTokenIdFromCategoryId  [function; ce-only; CE 4.0..699; Sapilib.lib, sapilib.lib] */
-inline HRESULT SpGetDefaultTokenIdFromCategoryId(
- const WCHAR* pszCategoryId,
- WCHAR** ppszTokenId
-);
+inline HRESULT SpGetDefaultTokenIdFromCategoryId(const WCHAR* pszCategoryId,
+ WCHAR** ppszTokenId);
 
 /* SpSetDefaultTokenIdForCategoryId  [function; ce-only; CE 4.0..699; Sapilib.lib, sapilib.lib] */
-inline HRESULT SpSetDefaultTokenIdForCategoryId(
- const WCHAR* pszCategoryId,
- const WCHAR* pszTokenId
-);
+inline HRESULT SpSetDefaultTokenIdForCategoryId(const WCHAR* pszCategoryId,
+ const WCHAR* pszTokenId);
 #endif /* _WIN32_WCE */
 
 #endif /* _SPHELPER_ */

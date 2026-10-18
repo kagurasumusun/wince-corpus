@@ -36,56 +36,42 @@
  * ================================================================ */
 
 /* ActivateService  [function; ce-only; unified-kb; unified-kb] */
-HANDLE ActivateService( 
- LPCWSTR lpszDevKey, 
- DWORD dwClientInfo 
-);
+HANDLE ActivateService(LPCWSTR lpszDevKey,
+ DWORD dwClientInfo);
 
 /* GetServiceHandle  [function; ce-only; unified-kb; unified-kb] */
-HANDLE GetServiceHandle( 
- LPWSTR szPrefix, 
- LPWSTR szDllName, 
- DWORD pdwDllBuf 
-);
+HANDLE GetServiceHandle(LPWSTR szPrefix,
+ LPWSTR szDllName,
+ DWORD pdwDllBuf);
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
 
 /* DeregisterService  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-BOOL DeregisterService(
- HANDLE hDevice
-);
+BOOL DeregisterService(HANDLE hDevice);
 
 /* EnumServices  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-BOOL EnumServices(
- PBYTE pBuffer,
+BOOL EnumServices(PBYTE pBuffer,
  DWORD pdwServiceEntries,
- DWORD pdwBufferLen
-);
+ DWORD pdwBufferLen);
 
 /* RegisterService  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-HANDLE RegisterService(
- LPCWSTR lpszType,
+HANDLE RegisterService(LPCWSTR lpszType,
  DWORD dwIndex,
  LPCWSTR lpszLib,
- DWORD dwInfo
-);
+ DWORD dwInfo);
 
 /* ServiceIoControl  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-BOOL ServiceIoControl(
- HANDLE hService,
+BOOL ServiceIoControl(HANDLE hService,
  DWORD dwIoControlCode,
  LPVOID lpInBuf,
  DWORD nInBufSize,
  LPVOID lpOutBuf,
  DWORD nOutBufSize,
  LPDWORD lpBytesReturned,
- LPOVERLAPPED lpOverlapped
-);
+ LPOVERLAPPED lpOverlapped);
 
 /* ServiceUnbindPorts  [function; ce-only; CE 4.0..699; Coredll.lib, coredll.lib] */
-BOOL ServiceUnbindPorts(
- HANDLE hService
-);
+BOOL ServiceUnbindPorts(HANDLE hService);
 #endif /* _WIN32_WCE */
 
 #endif /* _SERVICE_ */

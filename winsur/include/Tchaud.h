@@ -18,14 +18,20 @@
  * ================================================================ */
 
 /* TOUCHPANEL_POINT_SAMPLE  [struct; ce-only] */
-typedef struct { 
-USHORT XSample; 
-USHORT XzaSample; 
-USHORT XzbSample; 
-USHORT YSample; 
-USHORT YzaSample; 
-USHORT YzbSample; 
+#ifndef __WINCE_DEFINED_TOUCHPANEL_POINT_SAMPLE
+#define __WINCE_DEFINED_TOUCHPANEL_POINT_SAMPLE
+typedef struct {
+USHORT XSample;
+USHORT XzaSample;
+USHORT XzbSample;
+USHORT YSample;
+USHORT YzaSample;
+USHORT YzbSample;
 } TOUCHPANEL_POINT_SAMPLE;
+#endif /* __WINCE_DEFINED_TOUCHPANEL_POINT_SAMPLE */
+#ifndef __WINCE_DEFINED_PTOUCHPANEL_POINT_SAMPLE
+#define __WINCE_DEFINED_PTOUCHPANEL_POINT_SAMPLE
 typedef TOUCHPANEL_POINT_SAMPLE *PTOUCHPANEL_POINT_SAMPLE, *LPTOUCHPANEL_POINT_SAMPLE;
+#endif /* __WINCE_DEFINED_PTOUCHPANEL_POINT_SAMPLE */
 
 #endif /* _TCHAUD_ */

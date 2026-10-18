@@ -18,41 +18,53 @@
  * ================================================================ */
 
 /* CD_SENSE_DATA  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__CD_SENSE_DATA
+#define __WINCE_DEFINED__CD_SENSE_DATA
 typedef struct _CD_SENSE_DATA {
- BYTE sd_ErrCode; 
- BYTE sd_SegNum; 
- BYTE sd_ILI_Key; 
- BYTE sd_Info[4]; 
- BYTE sd_Length; 
- BYTE sd_CmdInfo[4]; 
- BYTE sd_SenseCode; 
- BYTE sd_Qualifier; 
- BYTE sd_UnitCode; 
- BYTE sd_Key1; 
- BYTE sd_Key2; 
- BYTE sd_Key3; 
+ BYTE sd_ErrCode;
+ BYTE sd_SegNum;
+ BYTE sd_ILI_Key;
+ BYTE sd_Info[4];
+ BYTE sd_Length;
+ BYTE sd_CmdInfo[4];
+ BYTE sd_SenseCode;
+ BYTE sd_Qualifier;
+ BYTE sd_UnitCode;
+ BYTE sd_Key1;
+ BYTE sd_Key2;
+ BYTE sd_Key3;
 } CD_SENSE_DATA, *PCD_SENSE_DATA;
+#endif /* __WINCE_DEFINED__CD_SENSE_DATA */
 
 /* CDROM_PLAY_AUDIO_MSF  [struct, typedef; ce-only] */
+#ifndef __WINCE_DEFINED__CDROM_PLAY_AUDIO_MSF
+#define __WINCE_DEFINED__CDROM_PLAY_AUDIO_MSF
 typedef struct _CDROM_PLAY_AUDIO_MSF {
- UCHAR StartingM; 
- UCHAR StartingS; 
- UCHAR StartingF; 
- UCHAR EndingM; 
- UCHAR EndingS; 
- UCHAR EndingF; 
+ UCHAR StartingM;
+ UCHAR StartingS;
+ UCHAR StartingF;
+ UCHAR EndingM;
+ UCHAR EndingS;
+ UCHAR EndingF;
 } CDROM_PLAY_AUDIO_MSF, *PCDROM_PLAY_AUDIO_MSF;
+#endif /* __WINCE_DEFINED__CDROM_PLAY_AUDIO_MSF */
 
 /* CDROM_TESTUNITREADY  [struct; ce-only] */
+#ifndef __WINCE_DEFINED_CDROM_TESTUNITREADY
+#define __WINCE_DEFINED_CDROM_TESTUNITREADY
 typedef struct CDROM_TESTUNITREADY {
- ULONG Reserved; 
- BOOL bUnitReady; 
+ ULONG Reserved;
+ BOOL bUnitReady;
 } CDROM_TESTUNITREADY, *PCDROM_TESTUNITREADY;
+#endif /* __WINCE_DEFINED_CDROM_TESTUNITREADY */
 
 /* SGX_BUF  [struct; ce-only] */
+#ifndef __WINCE_DEFINED__SGX_BUF
+#define __WINCE_DEFINED__SGX_BUF
 typedef struct _SGX_BUF {
- PUCHAR sb_buf; 
- DWORD sb_len; 
+ PUCHAR sb_buf;
+ DWORD sb_len;
 } SGX_BUF, *PSGX_BUF;
+#endif /* __WINCE_DEFINED__SGX_BUF */
 
 #endif /* _CDIOCTL_ */

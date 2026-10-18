@@ -1,4 +1,4 @@
-/* CcServiceConfigure.h -- Windows CE unified surface
+/* XRPtr.h -- Windows CE unified surface
  *
  * ONE tree for every CE generation.  Version differences use
  * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
@@ -7,8 +7,8 @@
  * tools/gen-include-def.py --unified.
  * 0 constants, 0 declarations, 0 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
-#ifndef _CCSERVICECONFIGURE_
-#define _CCSERVICECONFIGURE_
+#ifndef _XRPTR_
+#define _XRPTR_
 
 
 /* ==================================================================
@@ -17,6 +17,6 @@
  * ================================================================ */
 
 /* function */
-HRESULT SetProperty(BSTRbstrPropertyName, BSTRbstrPropertyValue);
+void Attach(Interface* pInterface);
 
-#endif /* _CCSERVICECONFIGURE_ */
+#endif /* _XRPTR_ */

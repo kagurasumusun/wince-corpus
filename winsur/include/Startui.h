@@ -21,27 +21,19 @@
 void Startup_DestroyDialogCallback(void);
 
 /* Startup_DlgProc  [function; ce-only; CE 3.0..699] */
-BOOL Startup_DlgProc( 
- HWND hDlg, 
- UINT message, 
- WPARAM wParam, 
- LPARAM lParam 
-);
+BOOL Startup_DlgProc(HWND hDlg,
+ UINT message,
+ WPARAM wParam,
+ LPARAM lParam);
 
 /* Startup_Initialize  [function; ce-only; CE 3.0..699] */
-void Startup_Initialize( 
- HINSTANCE hinst 
-);
+void Startup_Initialize(HINSTANCE hinst);
 
 /* Startup_PowerOffWhileStartupActiveNotification  [function; ce-only; CE 3.0..699] */
-void Startup_PowerOnNotification( 
- HWND hwndDlg 
-);
+void Startup_PowerOnNotification(HWND hwndDlg);
 
 /* Startup_PowerOnNotification  [function; ce-only; CE 3.0..699] */
-void Startup_PowerOnNotification( 
- HWND hwndDlg 
-);
+void Startup_PowerOnNotification(HWND hwndDlg);
 
 /* Startup_WantStartupScreen  [function; ce-only; CE 3.0..699] */
 BOOL Startup_WantStartupScreen(void);
