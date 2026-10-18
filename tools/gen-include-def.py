@@ -231,6 +231,27 @@ def c_decl_text(text):
     kept but wrapped in ``#ifdef __cplusplus`` so the C surface builds.
     The KB keeps the pages' spelling verbatim (docs/clean-room.md); the
     surface applies these repairs and reports them as derived changes."""
+    # strip the page's trailing "//" prose BEFORE any repair can join
+    # a following line onto it (a joined ");" gets eaten together with
+    # the comment -- the recurring truncated-prototype root cause).
+    if isinstance(text, str) and text and \
+            not text.lstrip().startswith("#"):
+        def _strip_comment_tails(_t):
+            def _one(m):
+                line = m.group(0)
+                ci = line.find("//")
+                before, tail = line[:ci], line[ci:]
+                # a comment the page glued mid-prototype (`pPages //Pointer
+                # to structure );`): the closing tokens after the prose are
+                # CODE and must survive the strip (an open '(' before the
+                # comment proves the declaration is unfinished here).
+                if before.count("(") > before.count(")"):
+                    mm = re.search(r"([);,]+)\s*$", tail)
+                    if mm:
+                        return before.rstrip() + " " + mm.group(1)
+                return before.rstrip()
+            return re.sub(r"(?m)^[^\n]*//[^\n]*$", _one, _t)
+        text = _strip_comment_tails(text)
     if not text:
         return text
     text = quality_filters.strip_midl_attributes(text)
@@ -258,10 +279,40 @@ def c_decl_text(text):
     text = _finish_decl_semicolons(text)
     text = _finish_enum_commas(text)
     text = _fix_enum_member_refs(text)
-    # a '//'-comment hiding inside a prototype eats the closing ')' and
-    # every following param on the line -- strip it (defines may hold URLs)
-    if text and not text.lstrip().startswith("#"):
-        text = re.sub(r"//[^\n]*", "", text)
+    # a function-pointer prototype whose parens are lost (`BOOL WINAPI
+    # *SetHeader(`): the pointer needs its own paren pair to be C.
+    text = re.sub(
+        r"^(\w[\w\t \*]*?\b)(?:((?:WINAPI|CALLBACK|APIENTRY|"
+        r"STDMETHODCALLTYPE|__stdcall|NTAPI)[ \t]*))\*([ \t]*)"
+        r"([A-Za-z_]\w*)[ \t]*\(",
+        r"\1(\2*\3\4)(", text, flags=re.M)
+    # 16-bit-era storage qualifiers some CE pages print in typedefs
+    text = re.sub(r"\b__(?:near|far)\b\s*", "", text)
+    # a member whose array bound references a value-unprinted constant
+    # (data/constant-gaps.tsv) cannot compile; keep it as an in-body note
+    _cgaps = globals().get("_CONSTANT_GAPS") or set()
+    if _cgaps and text and "{" in text:
+        def _omit_gap_member(m):
+            stmt = m.group(0)
+            for g in _cgaps:
+                if re.search(r"\b%s\b" % re.escape(g), stmt):
+                    return ("/* DERIVED member omitted -- size constant "
+                            "value not stated in the corpus: %s */"
+                            % " ".join(stmt.split()))
+            return stmt
+        text = re.sub(r"[^;{}]*\[[^\]]*\][^;{}]*;", _omit_gap_member, text)
+    # a page that prints struct members inside an enum body (NDIS 11 LSM):
+    # member form `TYPE NAME;` with no `=`/`:` -- the body is a structure
+    # body; keep the tag, change the keyword.
+    if text and re.search(r"\benum\b", text):
+        _em = re.search(r"\{([^{}]*)\}", text)
+        if _em:
+            _ebody = _em.group(1).strip()
+            if _ebody and "=" not in _ebody and ":" not in _ebody and \
+                    re.fullmatch(
+                        r"(?:[A-Za-z_]\w*\s+\*?[A-Za-z_]\w*\s*"
+                        r"(?:\[[^\]]*\])?\s*;\s*)+", _ebody):
+                text = re.sub(r"\benum\b", "struct", text, count=1)
     # a page's list marker printed onto member lines (``..e_vctInvalid``)
     text = re.sub(r"(?m)^(\s*)\.\.+", r"\1", text)
     # SAL/MIDL qualifiers printed in the prototype (``__out_opt unsigned``)
@@ -558,6 +609,50 @@ def _fix_enum_member_refs(text):
     if not members:
         return text
     by_lower = {m.lower(): m for m in members}
+    # a member `X = Y` that references a member defined LATER in the same
+    # enum body (the page's printed order is not dependency order): move
+    # Y's member line before X's so the reference resolves.
+    for _pass in range(16):
+        # members may share a line (the pages pack them): split on the
+        # top-level commas first so every member is a unit.
+        pre, brace, post = "", text, ""
+        bm = re.search(r"\{([^{}]*)\}", text)
+        if not bm:
+            break
+        pre, body, post = text[:bm.start() + 1], bm.group(1), text[bm.end():]
+        # paren-aware split (MAKEFOURCC(a,b,c,d) holds commas)
+        stmts, depth, cur = [], 0, []
+        for ch in body:
+            if ch == "(":
+                depth += 1
+            elif ch == ")":
+                depth -= 1
+            if ch == "," and depth == 0:
+                stmts.append("".join(cur).strip())
+                cur = []
+            else:
+                cur.append(ch)
+        if "".join(cur).strip():
+            stmts.append("".join(cur).strip())
+        name_at = {}
+        for i, st in enumerate(stmts):
+            mm = re.match(r"^([A-Za-z_]\w*)", st)
+            if mm:
+                name_at.setdefault(mm.group(1), i)
+        moved = False
+        for i, st in enumerate(stmts):
+            mm = re.match(r"^([A-Za-z_]\w*)\s*=\s*([A-Za-z_]\w*)$", st.strip())
+            if mm:
+                ref = mm.group(2)
+                if ref in name_at and name_at[ref] > i:
+                    stmts.insert(i, stmts.pop(name_at[ref]))
+                    moved = True
+                    break
+        if moved:
+            text = (pre + "\n    " + ",\n    ".join(stmts) + ",\n} "
+                    + post.lstrip())
+        if not moved:
+            break
 
     def repl(match):
         tok = match.group(0)
@@ -3595,7 +3690,8 @@ def run_unified(args):
         text = d.get("declaration") or ""
         keep = quality_filters.is_c_toolchain_declaration(
             text, name, d.get("type") or "") \
-            and not quality_filters.decl_unusable_for_c(text, name)
+            and not quality_filters.decl_unusable_for_c(text, name) \
+            and not quality_filters.is_broken_c(text)
         # Junk stays out of WinDef/Winuser.  Keepable C (MmMapIoSpace) may
         # fill a hole in a core header from harvest, not from a copied file.
         if hdr and hdr.lower() in CE_CORE_HEADERS | {"windows.h", "windowsapis.h"}:
@@ -3644,6 +3740,52 @@ def run_unified(args):
         leftover_decls.append(d)
         leftover_names.add(name)
         emitted_names.add(name)
+
+    # derived constants: names a CE page's struct members reference whose
+    # values no corpus page prints.  Values come from the pinned,
+    # licence-vetted w32api-cegcc reference in sources/ (provenance recorded
+    # per constant in data/derived-constants.tsv).  CE-specific names with no
+    # value in any corpus page OR pinned reference stay in
+    # data/constant-gaps.tsv and their struct members become documented
+    # omissions -- never fabricated values.
+    try:
+        for ln in open(os.path.join(os.path.dirname(__file__), "..",
+                                   "data", "derived-constants.tsv"),
+                       encoding="utf-8"):
+            ln = ln.strip()
+            if not ln or ln.startswith("#"):
+                continue
+            parts = ln.split("\t")
+            if len(parts) < 3:
+                continue
+            name, value, note = parts[0], parts[1], parts[2]
+            hdrs = [h.strip() for h in (parts[3] if len(parts) > 3 else "").split(";") if h.strip()]
+            for hdr in hdrs:
+                key = hdr.lower()
+                if any(d.get("name") == name
+                       for d in extra_macros_by_header.get(key, [])):
+                    continue
+                extra_macros_by_header[key].append({
+                    "name": name,
+                    "type": "macro",
+                    "definition":
+                        "#ifndef %s\n#define %s %s /* DERIVED value -- %s */\n#endif"
+                        % (name, name, value, note),
+                })
+    except OSError:
+        pass
+    _constant_gaps = set()
+    try:
+        for ln in open(os.path.join(os.path.dirname(__file__), "..",
+                                   "data", "constant-gaps.tsv"),
+                       encoding="utf-8"):
+            ln = ln.strip()
+            if not ln or ln.startswith("#"):
+                continue
+            _constant_gaps.add(ln.split("\t")[0].strip())
+    except OSError:
+        pass
+    globals()["_CONSTANT_GAPS"] = _constant_gaps
 
     extra_keys = set(extra_macros_by_header) | set(extra_decls_by_header)
 
@@ -4942,6 +5084,28 @@ def _write_lines(path, lines):
             else:
                 _fixed.append(line)
         lines = _fixed
+    # two pages keep two DIFFERENT prototypes for one function name: keep
+    # the first form (the first fragment's evidence), document the alternate
+    # as a comment so the surface compiles (a conflicting prototype is a
+    # corpus-disagreement record, not a C redefinition).
+    first_proto = {}
+    _fixed = []
+    for line in lines:
+        m = (re.match(r"^(?!#|/\*|typedef)(?:[A-Za-z_][\w\s\*]*?)"
+                      r"\b([A-Za-z_]\w*)\s*\(([^;]*)\)\s*;\s*$", line)
+             if "{" not in line else None)
+        if m:
+            fname = m.group(1)
+            key = fname.lower()
+            if key in first_proto and first_proto[key] != line:
+                _fixed.append(
+                    "/* CONFLICTING PROTOTYPE -- kept the first %s() form; "
+                    "another page prints: %s */"
+                    % (fname, " ".join(line.split())))
+                continue
+            first_proto[key] = line
+        _fixed.append(line)
+    lines = _fixed
     with open(path, "w", encoding="utf-8") as fh:
         fh.write("\n".join(lines) + "\n")
 

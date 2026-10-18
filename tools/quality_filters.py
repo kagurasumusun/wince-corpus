@@ -398,7 +398,7 @@ def is_broken_c(text: str) -> bool:
     # double return type (``VOID STDAPI WriteBSTR`` -- macro + type)
     if re.search(r"\b(VOID|BOOL|HRESULT|DWORD|UINT|int|void|long|WORD|BYTE|"
                  r"HANDLE|SHORT|CHAR|WCHAR|BYTE|ULONG)\s+"
-                 r"(STDAPI|WINAPI|STDMETHODIMP|WINAPI|NTAPI|STDAPIV|STDAPIW)\b",
+                 r"(STDAPI|STDMETHODIMP|STDAPIV|STDAPIW)\b",
                  body):
         return True
     # ``_asm`` sample slot
@@ -461,7 +461,12 @@ def is_broken_c(text: str) -> bool:
     if body.count("(") != body.count(")"):
         return True
     # ``InterlockedExchangeAdd(`` -- the page dropped the return type.
-    if re.match(r"[A-Za-z_]\w*\s*\(", body.lstrip()):
+    # (a function-pointer group `TYPE (WINAPI *Name)(` keeps its name
+    # inside the parens and is NOT a dropped return type)
+    if re.match(r"[A-Za-z_]\w*\s*\(", body.lstrip()) and \
+            not re.match(r"[A-Za-z_]\w*\s*\(\s*(?:WINAPI|CALLBACK|"
+                         r"APIENTRY|STDMETHODCALLTYPE|__stdcall|NTAPI|\*)",
+                         body.lstrip()):
         return True
     # ``lplf lplf`` -- the page printed the argument name as the type.
     if re.search(r"\b(lp[a-z]{2,12})\s+\1\b", body):
@@ -493,6 +498,36 @@ def is_broken_c(text: str) -> bool:
     # ``DWORD cbSize.;`` / ``UINT fSipUp.:1`` -- page glued a '.' onto the name.
     if re.search(r"[A-Za-z0-9_]\s*\.;", body) or re.search(r"[A-Za-z0-9_]\s*\.:", body):
         return True
+    # the documentation's own example type names (`typedef Sample
+    # MyBadSample;`, `VeryLongClassNameA`): book-lesson junk, not API.
+    if re.match(r"^(typedef\s+)?(VeryLongClassName[A-D]|MyBadSample|"
+                r"MyGoodSample|Sample|Object|string)\b", body):
+        return True
+    # a prototype whose function name is missing (`void WINAPI (IfilterGraph*
+    # pGraph`): the page lost the name; not a declaration.
+    if re.match(r"^[\w\s\*]*\b(?:WINAPI|CALLBACK|APIENTRY|STDMETHODCALLTYPE|"
+                r"__stdcall|NTAPI)\s*\(", body):
+        return True
+    # three or more words before '(' whose words before the name cannot parse
+    # as a C type (two plain identifiers side by side): the page printed a
+    # stray word into the prototype (`BOOL TranDeInit Library (void)`).
+    pm = re.match(r"^([\w\s\*]+?)\s*\(", body)
+    if pm and "{" not in body.split("(")[0]:
+        words = pm.group(1).split()
+        if len(words) >= 3:
+            mods = {"const", "volatile", "unsigned", "signed", "long",
+                    "short", "struct", "enum", "union", "far", "near",
+                    "FAR", "NEAR", "static", "extern", "inline", "WINAPI",
+                    "APIENTRY", "CALLBACK", "STDMETHODCALLTYPE",
+                    "STDAPICALLTYPE", "PASCAL", "__stdcall", "__cdecl",
+                    "NTAPI", "VOID", "WINOLEAPI", "EXTERN_C"}
+            type_words = words[:-1]
+            for i in range(len(type_words) - 1):
+                a, b = type_words[i], type_words[i + 1]
+                if (re.fullmatch(r"[A-Za-z_]\w*", a)
+                        and re.fullmatch(r"[A-Za-z_]\w*", b)
+                        and a not in mods and b not in mods):
+                    return True
     return False
 
 
