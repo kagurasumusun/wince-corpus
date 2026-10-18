@@ -25,17 +25,17 @@
 /* function */
 HRESULT CleanRegistry();
 HRESULT CloseAllStreams();
-HRESULT CopyQueuedFiles( long* pdwTotalSize );
-HRESULT CpuNum( long* pdwNum );
-HRESULT Flags( long* pdwFlags );
-HRESULT GetQueueCount( long *pdwCount );
-HRESULT Level( long* pdwLevel );
-HRESULT Locale( long* pdwLocale );
-HRESULT LocaleId( long *pdwLocaleId );
-HRESULT MajorVersion( int* pwMajor );
-HRESULT MinorVersion( int* pwMinor );
-HRESULT PageSize( long *pdwPageSize );
+HRESULT CopyQueuedFiles(long* pdwTotalSize);
+HRESULT CpuNum(long* pdwNum);
+HRESULT Flags(long* pdwFlags);
+HRESULT GetQueueCount(long *pdwCount);
+HRESULT Level(long* pdwLevel);
+HRESULT Locale(long* pdwLocale);
+HRESULT LocaleId(long *pdwLocaleId);
+HRESULT MajorVersion(int* pwMajor);
+HRESULT MinorVersion(int* pwMinor);
+HRESULT PageSize(long *pdwPageSize);
 HRESULT ResetQueue();
-HRESULT Type( long* pdwType );
+HRESULT Type(long* pdwType);
 
 #endif /* _CEMGR_IDL_ */

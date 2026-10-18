@@ -77,6 +77,6 @@ typedef struct IRDA_DEVICE_INFO {
 } _IRDA_DEVICE_INFO;
 
 /* irdaServiceName  [extra struct] */
-struct sockaddr_irda {  u_short irdaAddressFamily;  u_char irdaDeviceID[4];  char irdaServiceName[25];};
+struct sockaddr_irda { u_short irdaAddressFamily; u_char irdaDeviceID[4]; char irdaServiceName[25];};
 
 #endif /* _AF_IRDA_ */

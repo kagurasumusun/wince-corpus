@@ -30,7 +30,7 @@ enum IP_NAT_DIRECTION {
 };
 
 /* NatOutboundDirection  [extra enum] */
-enum IP_NAT_DIRECTION {  NatInboundDirection,  NatOutboundDirection};
+enum IP_NAT_DIRECTION { NatInboundDirection, NatOutboundDirection};
 
 /* ==================================================================
  * functions and callbacks

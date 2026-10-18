@@ -219,37 +219,37 @@ HRESULT WINAPI EnumModesCallback(
  * ================================================================ */
 
 /* function */
-HRESULT AddOverlayDirtyRect( LPRECT lpRect);
+HRESULT AddOverlayDirtyRect(LPRECT lpRect);
 HRESULT ChangeUniquenessValue();
 HRESULT Compact();
 HRESULT FlipToGDISurface();
-HRESULT GetAvailableVidMem( LPDDSCAPS2 lpDDSCaps2, LPDWORD lpdwTotal, LPDWORD lpdwFree);
-HRESULT GetColorControls( LPDDCOLORCONTROL lpColorControl);
-HRESULT GetColorKey( DWORD dwFlags, LPDDCOLORKEY lpDDColorKey);
-HRESULT GetDDInterface( LPVOID FAR *lplpDD);
-HRESULT GetDeviceIdentifier( LPDDDEVICEIDENTIFIER lpdddi, DWORD dwFlags);
-HRESULT GetDisplayMode( LPDDSURFACEDESC2 lpDDSurfaceDesc2);
-HRESULT GetEntries( DWORD dwFlags, DWORD dwBase, DWORD dwNumEntries, LPPALETTEENTRY lpEntries);
-HRESULT GetFourCCCodes( LPDWORD lpNumCodes, LPDWORD lpCodes);
-HRESULT GetHWnd( HWND FAR *lphWnd);
-HRESULT GetMonitorFrequency( LPDWORD lpdwFrequency);
-HRESULT GetOverlayPosition( LPLONG lplX, LPLONG lplY);
-HRESULT GetScanLine( LPDWORD lpdwScanLine);
-HRESULT GetSurfaceDesc( LPDDSURFACEDESC2 lpDDSurfaceDesc);
-HRESULT GetUniquenessValue( LPDWORD lpValue,);
-HRESULT GetVerticalBlankStatus( LPBOOL lpbIsInVB);
-HRESULT IsClipListChanged( BOOL FAR *lpbChanged);
+HRESULT GetAvailableVidMem(LPDDSCAPS2 lpDDSCaps2, LPDWORD lpdwTotal, LPDWORD lpdwFree);
+HRESULT GetColorControls(LPDDCOLORCONTROL lpColorControl);
+HRESULT GetColorKey(DWORD dwFlags, LPDDCOLORKEY lpDDColorKey);
+HRESULT GetDDInterface(LPVOID FAR *lplpDD);
+HRESULT GetDeviceIdentifier(LPDDDEVICEIDENTIFIER lpdddi, DWORD dwFlags);
+HRESULT GetDisplayMode(LPDDSURFACEDESC2 lpDDSurfaceDesc2);
+HRESULT GetEntries(DWORD dwFlags, DWORD dwBase, DWORD dwNumEntries, LPPALETTEENTRY lpEntries);
+HRESULT GetFourCCCodes(LPDWORD lpNumCodes, LPDWORD lpCodes);
+HRESULT GetHWnd(HWND FAR *lphWnd);
+HRESULT GetMonitorFrequency(LPDWORD lpdwFrequency);
+HRESULT GetOverlayPosition(LPLONG lplX, LPLONG lplY);
+HRESULT GetScanLine(LPDWORD lpdwScanLine);
+HRESULT GetSurfaceDesc(LPDDSURFACEDESC2 lpDDSurfaceDesc);
+HRESULT GetUniquenessValue(LPDWORD lpValue,);
+HRESULT GetVerticalBlankStatus(LPBOOL lpbIsInVB);
+HRESULT IsClipListChanged(BOOL FAR *lpbChanged);
 HRESULT IsLost();
-HRESULT PageLock( DWORD dwFlags);
-HRESULT PageUnlock( DWORD dwFlags);
+HRESULT PageLock(DWORD dwFlags);
+HRESULT PageUnlock(DWORD dwFlags);
 HRESULT Restore();
 HRESULT RestoreAllSurfaces();
 HRESULT RestoreDisplayMode();
-HRESULT SetColorControls( LPDDCOLORCONTROL lpColorControl);
-HRESULT SetCooperativeLevel( HWND hWnd, DWORD dwFlags);
-HRESULT SetDisplayMode( DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwRefreshRate, DWORD dwFlags);
-HRESULT SetHWnd( DWORD dwFlags, HWND hWnd);
-HRESULT SetSurfaceDesc( LPDDSURFACEDESC2 lpddsd2, DWORD dwFlags);
+HRESULT SetColorControls(LPDDCOLORCONTROL lpColorControl);
+HRESULT SetCooperativeLevel(HWND hWnd, DWORD dwFlags);
+HRESULT SetDisplayMode(DWORD dwWidth, DWORD dwHeight, DWORD dwBPP, DWORD dwRefreshRate, DWORD dwFlags);
+HRESULT SetHWnd(DWORD dwFlags, HWND hWnd);
+HRESULT SetSurfaceDesc(LPDDSURFACEDESC2 lpddsd2, DWORD dwFlags);
 HRESULT TestCooperativeLevel(void);
 
 #endif /* _DDRAW_ */

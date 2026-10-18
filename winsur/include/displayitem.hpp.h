@@ -17,10 +17,10 @@
  * ================================================================ */
 
 /* function */
-BOOL GetHeight( UINT* pHeight );
-HRESULT GetSubItemText( int Index, WCHAR* pBuffer, UINT cchBuffer );
-BOOL IsSelectable( void );
-BOOL NeedsToolTip( RECT* pRectangle );
-HRESULT SetText( WCHAR* pText );
+BOOL GetHeight(UINT* pHeight);
+HRESULT GetSubItemText(int Index, WCHAR* pBuffer, UINT cchBuffer);
+BOOL IsSelectable(void);
+BOOL NeedsToolTip(RECT* pRectangle);
+HRESULT SetText(WCHAR* pText);
 
 #endif /* _DISPLAYITEM_HPP_ */

@@ -17,6 +17,6 @@
  * ================================================================ */
 
 /* function */
-void RemoveImage( int nImage );
+void RemoveImage(int nImage);
 
 #endif /* _AFXCOLL_ */

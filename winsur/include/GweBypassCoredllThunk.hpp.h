@@ -17,6 +17,6 @@
  * ================================================================ */
 
 /* function */
-static ScrollBarInfoInternal* GetSBInfoInternal(  HWND hwnd,  BOOL fVert  );
+static ScrollBarInfoInternal* GetSBInfoInternal(HWND hwnd, BOOL fVert);
 
 #endif /* _GWEBYPASSCOREDLLTHUNK_HPP_ */

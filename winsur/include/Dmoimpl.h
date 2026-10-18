@@ -18,8 +18,8 @@
 
 /* function */
 bool CheckTypesSet(void);
-bool InputTypeSet(  DWORD ulInputStreamIndex  );
-HRESULT InternalAcceptingInput( DWORD dwInputStreamIndex );
-bool OutputTypeSet(  DWORD ulOutputStreamIndex  );
+bool InputTypeSet(DWORD ulInputStreamIndex);
+HRESULT InternalAcceptingInput(DWORD dwInputStreamIndex);
+bool OutputTypeSet(DWORD ulOutputStreamIndex);
 
 #endif /* _DMOIMPL_ */

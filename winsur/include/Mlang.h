@@ -245,33 +245,33 @@ HRESULT Rfc1766ToLcid(
  * ================================================================ */
 
 /* function */
-HRESULT BreakLineA( LCID locale, UINT uCodePage, const CHAR* pszSrc, long cchSrc, long cMaxColumns, long* pcchLine, long* pcchSkip );
-HRESULT BreakLineW( LCID locale, const WCHAR* pszSrc, long cchSrc, long cMaxColumns, long* pcchLine, long* pcchSkip );
-HRESULT CodePageToCodePages( UINT uCodePage, DWORD* pdwCodePages );
-HRESULT CodePagesToCodePage( DWORD dwCodePages, UINT uDefaultCodePage, UINT* puCodePage );
-HRESULT ConvertString( DWORD* pdwMode, DWORD dwSrcEncoding, DWORD dwDstEncoding, BYTE* pSrcStr, UINT* pcSrcSize, BYTE* pDstStr, UINT* pcDstSize );
-HRESULT ConvertStringFromUnicode( DWORD* pdwMode, DWORD dwEncoding, WCHAR* pSrcStr, UINT* pcSrcSize, CHAR* pDstStr, UINT* pcDstSize );
-HRESULT ConvertStringFromUnicodeEx( DWORD* pdwMode, DWORD dwEncoding, WCHAR* pSrcStr, UINT* pcSrcSize, CHAR* pDstStr, UINT* pcDstSize, DWORD dwFlag, WCHAR* lpFallBack );
-HRESULT ConvertStringToUnicode( DWORD* pdwMode, DWORD dwEncoding, CHAR* pSrcStr, UINT* pcSrcSize, WCHAR* pDstStr, UINT* pcDstSize );
-HRESULT ConvertStringToUnicodeEx( DWORD* pdwMode, DWORD dwEncoding, CHAR* pSrcStr, UINT* pcSrcSize, WCHAR* pDstStr, UINT* pcDstSize, DWORD dwFlag, WCHAR* lpFallBack );
-HRESULT DetectOutboundCodePage( DWORD dwFlags, LPCWSTR lpWideCharStr, UINT cchWideChar, UINT* puiPreferredCodePages, UINT nPreferredCodePages, UINT* puiDetectedCodePages, UINT* pnDetectedCodePages, WCHAR* lpSpecialChar );
-HRESULT DoConversion( BYTE* pSrcStr, UINT* pcSrcSize, BYTE* pDstStr, UINT* pcDstSize );
-HRESULT DoConversionFromUnicode( WCHAR* pSrcStr, UINT* pcSrcSize, CHAR* pDstStr, UINT* pcDstSize );
-HRESULT DoConversionToUnicode( CHAR* pSrcStr, UINT* pcSrcSize, WCHAR* pDstStr, UINT* pcDstSize );
-HRESULT GetCharCodePages( WCHAR chSrc, DWORD* pdwCodePages );
-HRESULT GetCodePageDescription( UINT uiCodePage, LCID lcid, LPWSTR lpWideCharStr, int cchWideChar );
-HRESULT GetDestinationCodePage( UINT* puiDstCodePage );
-HRESULT GetFamilyCodePage( UINT uiCodePage, UINT* puiFamilyCodePage );
-HRESULT GetFontCodePages( HDC hDC, HFONT hFont, DWORD* pdwCodePages );
-HRESULT GetFontUnicodeRanges( HDC hDC, UINT* puiRanges, UNICODERANGE* pUranges );
-HRESULT GetNumberOfCodePageInfo( UINT* pcCodePage );
-HRESULT GetNumberOfScripts( UINT* pnScripts );
-HRESULT GetSourceCodePage( UINT* puiSrcCodePage );
-HRESULT GetStrCodePages( const WCHAR* pszSrc, long cchSrc, DWORD dwPriorityCodePages, DWORD* pdwCodePages, long* pcchCodePages );
-HRESULT IsConvertible( DWORD dwSrcEncoding, DWORD dwDstEncoding );
-HRESULT MapFont( HDC hDC, DWORD dwCodePages, WCHAR chSrc, HFONT* pFont );
-HRESULT ReleaseFont( HFONT hFont );
+HRESULT BreakLineA(LCID locale, UINT uCodePage, const CHAR* pszSrc, long cchSrc, long cMaxColumns, long* pcchLine, long* pcchSkip);
+HRESULT BreakLineW(LCID locale, const WCHAR* pszSrc, long cchSrc, long cMaxColumns, long* pcchLine, long* pcchSkip);
+HRESULT CodePageToCodePages(UINT uCodePage, DWORD* pdwCodePages);
+HRESULT CodePagesToCodePage(DWORD dwCodePages, UINT uDefaultCodePage, UINT* puCodePage);
+HRESULT ConvertString(DWORD* pdwMode, DWORD dwSrcEncoding, DWORD dwDstEncoding, BYTE* pSrcStr, UINT* pcSrcSize, BYTE* pDstStr, UINT* pcDstSize);
+HRESULT ConvertStringFromUnicode(DWORD* pdwMode, DWORD dwEncoding, WCHAR* pSrcStr, UINT* pcSrcSize, CHAR* pDstStr, UINT* pcDstSize);
+HRESULT ConvertStringFromUnicodeEx(DWORD* pdwMode, DWORD dwEncoding, WCHAR* pSrcStr, UINT* pcSrcSize, CHAR* pDstStr, UINT* pcDstSize, DWORD dwFlag, WCHAR* lpFallBack);
+HRESULT ConvertStringToUnicode(DWORD* pdwMode, DWORD dwEncoding, CHAR* pSrcStr, UINT* pcSrcSize, WCHAR* pDstStr, UINT* pcDstSize);
+HRESULT ConvertStringToUnicodeEx(DWORD* pdwMode, DWORD dwEncoding, CHAR* pSrcStr, UINT* pcSrcSize, WCHAR* pDstStr, UINT* pcDstSize, DWORD dwFlag, WCHAR* lpFallBack);
+HRESULT DetectOutboundCodePage(DWORD dwFlags, LPCWSTR lpWideCharStr, UINT cchWideChar, UINT* puiPreferredCodePages, UINT nPreferredCodePages, UINT* puiDetectedCodePages, UINT* pnDetectedCodePages, WCHAR* lpSpecialChar);
+HRESULT DoConversion(BYTE* pSrcStr, UINT* pcSrcSize, BYTE* pDstStr, UINT* pcDstSize);
+HRESULT DoConversionFromUnicode(WCHAR* pSrcStr, UINT* pcSrcSize, CHAR* pDstStr, UINT* pcDstSize);
+HRESULT DoConversionToUnicode(CHAR* pSrcStr, UINT* pcSrcSize, WCHAR* pDstStr, UINT* pcDstSize);
+HRESULT GetCharCodePages(WCHAR chSrc, DWORD* pdwCodePages);
+HRESULT GetCodePageDescription(UINT uiCodePage, LCID lcid, LPWSTR lpWideCharStr, int cchWideChar);
+HRESULT GetDestinationCodePage(UINT* puiDstCodePage);
+HRESULT GetFamilyCodePage(UINT uiCodePage, UINT* puiFamilyCodePage);
+HRESULT GetFontCodePages(HDC hDC, HFONT hFont, DWORD* pdwCodePages);
+HRESULT GetFontUnicodeRanges(HDC hDC, UINT* puiRanges, UNICODERANGE* pUranges);
+HRESULT GetNumberOfCodePageInfo(UINT* pcCodePage);
+HRESULT GetNumberOfScripts(UINT* pnScripts);
+HRESULT GetSourceCodePage(UINT* puiSrcCodePage);
+HRESULT GetStrCodePages(const WCHAR* pszSrc, long cchSrc, DWORD dwPriorityCodePages, DWORD* pdwCodePages, long* pcchCodePages);
+HRESULT IsConvertible(DWORD dwSrcEncoding, DWORD dwDstEncoding);
+HRESULT MapFont(HDC hDC, DWORD dwCodePages, WCHAR chSrc, HFONT* pFont);
+HRESULT ReleaseFont(HFONT hFont);
 HRESULT ResetFontMapping(void);
-HRESULT SetMimeDBSource( MIMECONTF dwSource );
+HRESULT SetMimeDBSource(MIMECONTF dwSource);
 
 #endif /* _MLANG_ */

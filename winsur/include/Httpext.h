@@ -89,7 +89,7 @@ BOOL WINAPI TerminateExtension(
  * ================================================================ */
 
 /* function */
-BOOL WINAPIGetExtensionVersion(HSE_VERSION_INFO* pVer );
-BOOL WINAPITerminateExtension(DWORD dwFlags );
+BOOL WINAPIGetExtensionVersion(HSE_VERSION_INFO* pVer);
+BOOL WINAPITerminateExtension(DWORD dwFlags);
 
 #endif /* _HTTPEXT_ */

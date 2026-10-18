@@ -169,25 +169,25 @@ typedef TRISTATE_TYPE *PTRISTATE_TYPE, *LPTRISTATE_TYPE;
  * ================================================================ */
 
 /* function */
-HRESULT AuthorizeTargetRestart( BOOL *pfContinue, DWORD *pdwRetryDelayMs);
-HRESULT ChangeExceptionAction( DWORD dwExceptionCode, EXCEPTION_DEFAULT_ACTION_TYPE2 efd2);
-HRESULT EnumAllCodeBps( TRISTATE_TYPE f3Enabled, IeXdi2EnumCodeBp** ppieXdi2EnumCodeBp);
-HRESULT EnumAllCpuRegs( IeXdi2EnumCpuRegs** ppieXdi2EnumCpuRegs);
-HRESULT EnumAllCpuRegsInGroup( DWORD dwGroupIdx, IeXdi2EnumCpuRegs** ppieXdi2EnumCpuRegs );
-HRESULT EnumAllDataBps( TRISTATE_TYPEf3Enabled, IeXdi2EnumDataBp** ppieXdi2EnumDataBp);
-HRESULT GetCurrentExecMode( DWORD dwCpuNum, DWORD* pdwExecMode );
-HRESULT GetNbBpAvail( DWORD* pdwNbHwCodeBpAvail, DWORD* pdwNbSwCodeBpAvail, DWORD* pdwNbHwDataBpAvail, DWORD* pdwNbSwDataBpAvail);
-HRESULT InitAndLockHelper( IeXdi2Exec* pieXdi2ExecDownLink, IeXdi2Mem* pieXdi2MemDownLink, IeXdi2ClientNotifyMemChg* pieXdiClientNotifMemChg2UpLink, IeXdi2ClientNotifyRunChg* pieXdiClientNotifRunChg2UpLink, IeXdi2ClientAuthorizeContinuation* pieXdiClientAuthorizeContUpLink, MISC_EXDIACCESS_SERVICE_INFO measInfo);
-HRESULT InitAndLockProbeHandler( IeXdi2ClientNotifyMemChg* pieXdiClientNotifMemChg2UpLink, IeXdi2ClientNotifyRunChg* pieXdiClientNotifRunChg2UpLink, IeXdi2ClientAuthorizeContinuation* pieXdiClientAuthorizeContUpLink, MISC_EXDIACCESS_SERVICE_INFO measInfo);
+HRESULT AuthorizeTargetRestart(BOOL *pfContinue, DWORD *pdwRetryDelayMs);
+HRESULT ChangeExceptionAction(DWORD dwExceptionCode, EXCEPTION_DEFAULT_ACTION_TYPE2 efd2);
+HRESULT EnumAllCodeBps(TRISTATE_TYPE f3Enabled, IeXdi2EnumCodeBp** ppieXdi2EnumCodeBp);
+HRESULT EnumAllCpuRegs(IeXdi2EnumCpuRegs** ppieXdi2EnumCpuRegs);
+HRESULT EnumAllCpuRegsInGroup(DWORD dwGroupIdx, IeXdi2EnumCpuRegs** ppieXdi2EnumCpuRegs);
+HRESULT EnumAllDataBps(TRISTATE_TYPEf3Enabled, IeXdi2EnumDataBp** ppieXdi2EnumDataBp);
+HRESULT GetCurrentExecMode(DWORD dwCpuNum, DWORD* pdwExecMode);
+HRESULT GetNbBpAvail(DWORD* pdwNbHwCodeBpAvail, DWORD* pdwNbSwCodeBpAvail, DWORD* pdwNbHwDataBpAvail, DWORD* pdwNbSwDataBpAvail);
+HRESULT InitAndLockHelper(IeXdi2Exec* pieXdi2ExecDownLink, IeXdi2Mem* pieXdi2MemDownLink, IeXdi2ClientNotifyMemChg* pieXdiClientNotifMemChg2UpLink, IeXdi2ClientNotifyRunChg* pieXdiClientNotifRunChg2UpLink, IeXdi2ClientAuthorizeContinuation* pieXdiClientAuthorizeContUpLink, MISC_EXDIACCESS_SERVICE_INFO measInfo);
+HRESULT InitAndLockProbeHandler(IeXdi2ClientNotifyMemChg* pieXdiClientNotifMemChg2UpLink, IeXdi2ClientNotifyRunChg* pieXdiClientNotifRunChg2UpLink, IeXdi2ClientAuthorizeContinuation* pieXdiClientAuthorizeContUpLink, MISC_EXDIACCESS_SERVICE_INFO measInfo);
 HRESULT LockChanges(BOOL fLock);
-HRESULT LockChangesAll( BOOL fLock);
+HRESULT LockChangesAll(BOOL fLock);
 HRESULT LockHelper ();
 HRESULT LockProbe ();
 HRESULT NotifyCpuRegChange();
 HRESULT NotifyErrorState();
 HRESULT NotifyReset();
 HRESULT NotifyRun();
-HRESULT SingleStep( BOOL fIgnoreCurrentExcept, BOOL fOneCycleOnly );
+HRESULT SingleStep(BOOL fIgnoreCurrentExcept, BOOL fOneCycleOnly);
 HRESULT UnlockHelper ();
 HRESULT UnlockProbe ();
 

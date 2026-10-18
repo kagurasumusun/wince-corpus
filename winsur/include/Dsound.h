@@ -31,12 +31,12 @@
  * ================================================================ */
 
 /* function */
-HRESULT GetFormat( LPWAVEFORMATEX lpwfxFormat, DWORD dwSizeAllocated, LPDWORD lpdwSizeWritten );
-HRESULT GetFrequency( LPDWORD lpdwFrequency );
-HRESULT GetPan( LPLONG lplPan );
-HRESULT GetVolume( LPLONG lplVolume );
-HRESULT SetCurrentPosition( DWORD dwNewPosition );
-HRESULT SetPan( LONG lPan );
-HRESULT SetVolume( LONG lVolume );
+HRESULT GetFormat(LPWAVEFORMATEX lpwfxFormat, DWORD dwSizeAllocated, LPDWORD lpdwSizeWritten);
+HRESULT GetFrequency(LPDWORD lpdwFrequency);
+HRESULT GetPan(LPLONG lplPan);
+HRESULT GetVolume(LPLONG lplVolume);
+HRESULT SetCurrentPosition(DWORD dwNewPosition);
+HRESULT SetPan(LONG lPan);
+HRESULT SetVolume(LONG lVolume);
 
 #endif /* _DSOUND_ */

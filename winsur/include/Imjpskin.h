@@ -31,11 +31,11 @@ typedef struct _MARGINS {
  * ================================================================ */
 
 /* function */
-void AdjustRect( LPRECT lprcContent, DWORD dwState );
-HANDLE CreateRenderingMetrics( HDC hDC, INT iMaxCand, WCHAR* pszCandidates, WCHAR* pszInlineComments, HFONT hFontCandidates, HFONT hFontInlineComments, HICON hIconMemo, DWORD dwFlags );
-HANDLE FreeRenderingMetrics( HANDLE hMetrics );
+void AdjustRect(LPRECT lprcContent, DWORD dwState);
+HANDLE CreateRenderingMetrics(HDC hDC, INT iMaxCand, WCHAR* pszCandidates, WCHAR* pszInlineComments, HFONT hFontCandidates, HFONT hFontInlineComments, HICON hIconMemo, DWORD dwFlags);
+HANDLE FreeRenderingMetrics(HANDLE hMetrics);
 DWORD GetHorizontalOffset(void);
-void GetMargins( PMARGINS pMargins );
+void GetMargins(PMARGINS pMargins);
 static INT GetMaxHeight(void);
 static INT GetMaxItems(void);
 UINT GetSeparator(void);
@@ -44,13 +44,13 @@ DWORD GetWndStyleEx(void);
 BOOL IsAvailable(void);
 BOOL IsHoverActionSupported(void);
 BOOL IsVisibleAlways(void);
-void PaintBackground( HDC hDC, LPRECT lprc, DWORD dwState, DWORD dwFlags );
-void PaintBitmap( HDC hDC, LPRECT lprc, HBITMAP hBitmap, DWORD dwState, DWORD dwFlags );
-void PaintCandidateString( HDC hDC, const LPRECT lprc, HANDLE hMetrics, INT iIdMenu, INT iIdMenuMax, BOOL bSel, BOOL fScrollBarIsVisible, LPCTSTR pszCandString, DWORD dwFlags );
-BOOL PaintGripper( HDC hDC, LPRECT lprc, DWORD dwType );
-void PaintIcon( HDC hDC, LPRECT lprc, HICON hIcon, DWORD dwState, DWORD dwFlags );
-void PaintInlineComment( HDC hDC, const LPRECT lprc, HANDLE hMetrics, INT iIdMenu, INT iIdMenuMax, BOOL bSel, BOOL fScrollBarIsVisible, LPCTSTR pszInlineComment, DWORD dwFlags );
-void PaintText( HDC hDC, LPRECT lprc, const WCHAR* pchText, INT cchText, DWORD dwTextFlag, DWORD dwState );
+void PaintBackground(HDC hDC, LPRECT lprc, DWORD dwState, DWORD dwFlags);
+void PaintBitmap(HDC hDC, LPRECT lprc, HBITMAP hBitmap, DWORD dwState, DWORD dwFlags);
+void PaintCandidateString(HDC hDC, const LPRECT lprc, HANDLE hMetrics, INT iIdMenu, INT iIdMenuMax, BOOL bSel, BOOL fScrollBarIsVisible, LPCTSTR pszCandString, DWORD dwFlags);
+BOOL PaintGripper(HDC hDC, LPRECT lprc, DWORD dwType);
+void PaintIcon(HDC hDC, LPRECT lprc, HICON hIcon, DWORD dwState, DWORD dwFlags);
+void PaintInlineComment(HDC hDC, const LPRECT lprc, HANDLE hMetrics, INT iIdMenu, INT iIdMenuMax, BOOL bSel, BOOL fScrollBarIsVisible, LPCTSTR pszInlineComment, DWORD dwFlags);
+void PaintText(HDC hDC, LPRECT lprc, const WCHAR* pchText, INT cchText, DWORD dwTextFlag, DWORD dwState);
 BOOL UseCandMenuButton(void);
 BOOL UseCandNumText(void);
 BOOL UseNumButtons(void);

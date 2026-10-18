@@ -68,25 +68,25 @@
  * ================================================================ */
 
 /* function */
-HRESULT AddDirtyRect( CONST RECT* pDirtyRect );
+HRESULT AddDirtyRect(CONST RECT* pDirtyRect);
 HRESULT BeginScene();
-VOID WINAPI Direct3DMobileCreate( UINT SDKVersion );
+VOID WINAPI Direct3DMobileCreate(UINT SDKVersion);
 HRESULT EndScene();
 UINT GetAdapterCount();
-UINT GetAdapterModeCount( UINT Adapter );
-HRESULT GetCurrentTexturePalette( UINT* PaletteNumber );
+UINT GetAdapterModeCount(UINT Adapter);
+HRESULT GetCurrentTexturePalette(UINT* PaletteNumber);
 DWORD GetLOD();
 DWORD GetLevelCount();
-HRESULT GetLightEnable( DWORD Index, BOOL* pEnable );
+HRESULT GetLightEnable(DWORD Index, BOOL* pEnable);
 DWORD GetPriority();
-HRESULT LightEnable( DWORD Index, BOOL Enable );
+HRESULT LightEnable(DWORD Index, BOOL Enable);
 void PreLoad();
-HRESULT RegisterSoftwareDevice( VOID* pInitializeFunction );
-HRESULT ResourceManagerDiscardBytes( DWORD Bytes );
-HRESULT SetCurrentTexturePalette( UINT PaletteNumber );
-DWORD SetLOD( DWORD LODNew );
-DWORD SetPriority( DWORD PriorityNew );
+HRESULT RegisterSoftwareDevice(VOID* pInitializeFunction);
+HRESULT ResourceManagerDiscardBytes(DWORD Bytes);
+HRESULT SetCurrentTexturePalette(UINT PaletteNumber);
+DWORD SetLOD(DWORD LODNew);
+DWORD SetPriority(DWORD PriorityNew);
 HRESULT UnlockRect();
-HRESULT ValidateDevice( DWORD* pNumPasses );
+HRESULT ValidateDevice(DWORD* pNumPasses);
 
 #endif /* _D3DM_ */

@@ -30,7 +30,7 @@
  * ================================================================ */
 
 /* function */
-HRESULT GetCurrentState ( DWORD*pdwCurrentState);
+HRESULT GetCurrentState (DWORD*pdwCurrentState);
 HRESULT LockService()
 HRESULT UnlockService()
 

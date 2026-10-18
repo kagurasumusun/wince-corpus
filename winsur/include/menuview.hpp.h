@@ -18,21 +18,23 @@
 
 /* function */
 int CascadeArrowWidth(void);
-void ColumnComputeWidth( long& xColumn, long cxMaxString, long cxMaxAccel, long* pcxTotal, long* pxAccel );
-void DrawCascadeArrow( HDC hdc, long x, long y, long cx, long cy, UINT menustate, BOOL bRightToLeft );
-void DrawCheckMark( HDC hdc, long x, long y, UINT menustate, );
-void DrawColumnBreak( HDC hdc, long x, long y, long cx, long cy, long cxMenu, long cyMenu, UINT menustate );
-void DrawScrollArrows( HDC hdc, long cxMenu, long cyMenu, BOOL bUpArrowEnabled, BOOL bDownArrowEnabled );
-void DrawSeparator( HDC hdc, long x, long y, long cx, long cy, long cxMenu );
-void DrawString( HDC hdc, WCHAR* pszItemString, int cchItemString, BOOL bPopup, UINT menustate, UINT uDrawAction, BOOL bBigFillRect, long x, long y, long cx, long cy, long cxMenu, long ichAccel, long xAccel, WCHAR chMnemo, long cxArrow );
-void EraseBackground( HDC hdc, RECT* prc );
+#ifdef __cplusplus
+void ColumnComputeWidth(long& xColumn, long cxMaxString, long cxMaxAccel, long* pcxTotal, long* pxAccel);
+#endif /* __cplusplus */
+void DrawCascadeArrow(HDC hdc, long x, long y, long cx, long cy, UINT menustate, BOOL bRightToLeft);
+void DrawCheckMark(HDC hdc, long x, long y, UINT menustate,);
+void DrawColumnBreak(HDC hdc, long x, long y, long cx, long cy, long cxMenu, long cyMenu, UINT menustate);
+void DrawScrollArrows(HDC hdc, long cxMenu, long cyMenu, BOOL bUpArrowEnabled, BOOL bDownArrowEnabled);
+void DrawSeparator(HDC hdc, long x, long y, long cx, long cy, long cxMenu);
+void DrawString(HDC hdc, WCHAR* pszItemString, int cchItemString, BOOL bPopup, UINT menustate, UINT uDrawAction, BOOL bBigFillRect, long x, long y, long cx, long cy, long cxMenu, long ichAccel, long xAccel, WCHAR chMnemo, long cxArrow);
+void EraseBackground(HDC hdc, RECT* prc);
 static HFONT MenuBarFont(void);
-void NotPopupStringItemComputeSize( HDC hdc, WCHAR* pszItemString, int cchItemString, long cxMenu, long cyMenu, long* pcx, long* pcy );
+void NotPopupStringItemComputeSize(HDC hdc, WCHAR* pszItemString, int cchItemString, long cxMenu, long cyMenu, long* pcx, long* pcy);
 static HFONT PopupMenuFont(void);
-void PopupStringItemComputeSize( HDC hdc, WCHAR* pszItemString, int cchItemString, int ichAccel, WCHAR chMnemo, long cxMenu, long cyMenu, long* pcx, long* pcy );
+void PopupStringItemComputeSize(HDC hdc, WCHAR* pszItemString, int cchItemString, int ichAccel, WCHAR chMnemo, long cxMenu, long cyMenu, long* pcx, long* pcy);
 int ScrollArrowHeight(void);
-void SeparatorItemComputeSize( BOOL bPopup, long cxMenu, long cyMenu, long* pcx, long* pcy );
-void SetupColors( HDC hdc, UINT menustate );
-void SingleColumnComputeWidth( long cxMaxString, long cxMaxAccel, long* pcxTotal, long* pxAccel );
+void SeparatorItemComputeSize(BOOL bPopup, long cxMenu, long cyMenu, long* pcx, long* pcy);
+void SetupColors(HDC hdc, UINT menustate);
+void SingleColumnComputeWidth(long cxMaxString, long cxMaxAccel, long* pcxTotal, long* pxAccel);
 
 #endif /* _MENUVIEW_HPP_ */

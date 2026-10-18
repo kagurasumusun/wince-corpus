@@ -17,6 +17,8 @@
  * ================================================================ */
 
 /* function */
+#ifdef __cplusplus
 CTransport *CreateTransport();
+#endif /* __cplusplus */
 
 #endif /* _TRANS_ */

@@ -28,6 +28,6 @@ _PNH _set_new_handler(
  * ================================================================ */
 
 /* function */
-int handle_program_memory_depletion( size_t );
+int handle_program_memory_depletion(size_t);
 
 #endif /* _NEW_ */

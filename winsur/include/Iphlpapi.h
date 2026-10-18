@@ -65,7 +65,7 @@ DWORD GetFriendlyIfIndex(
 typedef struct mib_entry { AsnObjectIdentifier Oid; void * Storage; BYTE Type; UINT Access; UINT (*MibFunc) (UINT, struct mib_entry *, RFC1157VarBind *); struct mib_entry * MibNext; } MIB_ENTRY;
 
 /* pdwBestIfIndex  [extra struct] */
-DWORD GetBestInterfaceEX(  struct sockaddr* pDestAddr,  PDWORD pdwBestIfIndex  );
+DWORD GetBestInterfaceEX(struct sockaddr* pDestAddr, PDWORD pdwBestIfIndex);
 
 /* ==================================================================
  * functions and callbacks
@@ -136,10 +136,10 @@ DWORD SetIpTTL(
  * ================================================================ */
 
 /* function */
-DWORD GetBestInterfaceEX( struct sockaddr* pDestAddr, PDWORD pdwBestIfIndex );
-UINT MIB_control_func ( IN UINT Action, IN MIB_ENTRY *MibPtr, IN RFC1157VarBind *VarBind );
-UINT MIB_doneness_func ( IN UINT Action, IN MIB_ENTRY *MibPtr, IN RFC1157VarBind *VarBind );
-UINT MIB_leaf_func ( IN UINT Action, IN MIB_ENTRY *MibPtr, IN RFC1157VarBind *VarBind );
-UINT MIB_toasttype_func ( IN UINT Action, IN MIB_ENTRY *MibPtr, IN RFC1157VarBind *VarBind );
+DWORD GetBestInterfaceEX(struct sockaddr* pDestAddr, PDWORD pdwBestIfIndex);
+UINT MIB_control_func (IN UINT Action, IN MIB_ENTRY *MibPtr, IN RFC1157VarBind *VarBind);
+UINT MIB_doneness_func (IN UINT Action, IN MIB_ENTRY *MibPtr, IN RFC1157VarBind *VarBind);
+UINT MIB_leaf_func (IN UINT Action, IN MIB_ENTRY *MibPtr, IN RFC1157VarBind *VarBind);
+UINT MIB_toasttype_func (IN UINT Action, IN MIB_ENTRY *MibPtr, IN RFC1157VarBind *VarBind);
 
 #endif /* _IPHLPAPI_ */

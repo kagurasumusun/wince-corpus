@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 12 constants, 46 declarations, 2 outlines, 0 base types, 0 extra macros, 70 extra decls
+ * 12 constants, 50 declarations, 2 outlines, 0 base types, 0 extra macros, 70 extra decls
  */
 #ifndef _DSHOW_
 #define _DSHOW_
@@ -57,6 +57,21 @@ typedef enum {
  AM_FILE_OVERWRITE = 0x00000001,
 } AM_FILESINK_FLAGS;
 typedef AM_FILESINK_FLAGS *PAM_FILESINK_FLAGS, *LPAM_FILESINK_FLAGS;
+
+/* AM_SAMPLE_PROPERTY_FLAGS  [enum, typedef; ce-only; heuristic-prefix] */
+enum tagAM_SAMPLE_PROPERTY_FLAGS { 
+ AM_SAMPLE_SPLICEPOINT = 0x01, 
+ AM_SAMPLE_PREROLL = 0x02, 
+ AM_SAMPLE_DATADISCONTINUITY = 0x04, 
+ AM_SAMPLE_TYPECHANGED = 0x08, 
+ AM_SAMPLE_TIMEVALID = 0x10, 
+ AM_SAMPLE_TIMEDISCONTINUITY = 0x40, 
+ AM_SAMPLE_FLUSH_ON_PAUSE = 0x80, 
+ AM_SAMPLE_STOPVALID = 0x100, 
+ AM_SAMPLE_ENDOFSTREAM = 0x200, 
+ AM_STREAM_MEDIA = 0, 
+ AM_STREAM_CONTROL = 1 
+};
 
 /* AM_STREAM_INFO_FLAGS  [enum, typedef; shared; entity-headers] */
 typedef enum {
@@ -158,6 +173,23 @@ typedef enum _FilterState {
 } FILTER_STATE;
 typedef FILTER_STATE *PFILTER_STATE, *LPFILTER_STATE;
 
+/* MPEG2Level  [enum, typedef; ce-only; heuristic-prefix] */
+enum MPEG2Level {
+ MPEG2Level_Low = 1,
+ MPEG2Level_Main,
+ MPEG2Level_High1440,
+ MPEG2Level_High
+};
+
+/* MPEG2Profile  [enum, typedef; ce-only; heuristic-prefix] */
+enum MPEG2Profile {
+ MPEG2Profile_Simple = 1,
+ MPEG2Profile_Main,
+ MPEG2Profile_SNRScalable,
+ MPEG2Profile_SpatiallyScalable,
+ MPEG2Profile_High
+};
+
 /* PIN_DIRECTION  [enum, typedef; shared; entity-headers] */
 typedef enum _PinDirection {
  PINDIR_INPUT,
@@ -175,6 +207,12 @@ typedef enum {
  Flood
 } QualityMessageType;
 typedef QualityMessageType *PQualityMessageType, *LPQualityMessageType;
+
+/* StreamControlState  [enum, typedef; ce-only; heuristic-prefix] */
+enum StreamControlState {
+ STREAM_FLOWING,
+ STREAM_DISCARDING
+};
 
 /* TIMECODE  [struct, typedef; shared] */
 typedef struct tagTIMECODE {
@@ -258,62 +296,62 @@ HRESULT QueryWriteSync( );
  * ================================================================ */
 
 /* function */
-HRESULT AddSourceFilter( LPCWSTR lpwstrFileName, LPCWSTR lpwstrFilterName, IbaseFilter **ppFilter );
-HRESULT AutoTune( long lChannel, long *plFoundSignal);
-HRESULT ChannelMinMax( long *lChannelMin, long *lChannelMax);
-HRESULT CheckMemory( const BYTE *pBuffer);
-DWORD ColorKey (void );
-HRESULT Enable( long lIndex, DWORD dwFlags);
-HRESULT GetAllocatorProperties( ALLOCATOR_PROPERTIES* pprop );
-HRESULT GetAvailableModes( long *plModes);
-HRESULT GetAverageFrameSize( long* plAverageSize);
-HRESULT GetDefaultColorKey( COLORKEY *pColorKey);
-HRESULT GetDevId( DWORD *pdwDevId);
-HRESULT GetDroppedInfo( long lSize, long* plArray, long* plNumCopied);
+HRESULT AddSourceFilter(LPCWSTR lpwstrFileName, LPCWSTR lpwstrFilterName, IbaseFilter **ppFilter);
+HRESULT AutoTune(long lChannel, long *plFoundSignal);
+HRESULT ChannelMinMax(long *lChannelMin, long *lChannelMax);
+HRESULT CheckMemory(const BYTE *pBuffer);
+DWORD ColorKey (void);
+HRESULT Enable(long lIndex, DWORD dwFlags);
+HRESULT GetAllocatorProperties(ALLOCATOR_PROPERTIES* pprop);
+HRESULT GetAvailableModes(long *plModes);
+HRESULT GetAverageFrameSize(long* plAverageSize);
+HRESULT GetDefaultColorKey(COLORKEY *pColorKey);
+HRESULT GetDevId(DWORD *pdwDevId);
+HRESULT GetDroppedInfo(long lSize, long* plArray, long* plNumCopied);
 LONG GetMiscFlags(void);
-HRESULT GetNumDropped( long* plDropped);
-HRESULT GetNumNotDropped( long* plNotDropped);
-HRESULT GetNumberOfCapabilities( int* piCount, int* piSize );
-HRESULT GetRange( long Property, long* pMin, long* pMax, long* pSteppingDelta, long* pDefault, long* pCapsFlags );
-HRESULT GetStreamCaps( int iIndex, AM_MEDIA_TYPE** pmt, BYTE* pSCC );
-HRESULT Length( LONGLONG* pTotal, LONGLONG* pAvailable );
+HRESULT GetNumDropped(long* plDropped);
+HRESULT GetNumNotDropped(long* plNotDropped);
+HRESULT GetNumberOfCapabilities(int* piCount, int* piSize);
+HRESULT GetRange(long Property, long* pMin, long* pMax, long* pSteppingDelta, long* pDefault, long* pCapsFlags);
+HRESULT GetStreamCaps(int iIndex, AM_MEDIA_TYPE** pmt, BYTE* pSCC);
+HRESULT Length(LONGLONG* pTotal, LONGLONG* pAvailable);
 HRESULT Logout(void);
-HRESULT NotifyGraphChange( );
-HRESULT OnColorKeyChange( COLORKEY *pColorKey);
-HRESULT OnPaletteChange( DWORD dwColors, const PALETTEENTRY *pPalette);
-HRESULT OnPositionChange( const RECT *pSourceRect, const RECT *pDestinationRect);
-HRESULT OverrideFrameSize( long FrameNumber, long Size );
-HRESULT OverrideKeyFrame( long FrameNumber );
-HRESULT QueryVersion( LONG *pVersion);
-HRESULT RenderFile( LPCWSTR lpwstrFile, LPCWSTR lpwstrPlayList);
+HRESULT NotifyGraphChange();
+HRESULT OnColorKeyChange(COLORKEY *pColorKey);
+HRESULT OnPaletteChange(DWORD dwColors, const PALETTEENTRY *pPalette);
+HRESULT OnPositionChange(const RECT *pSourceRect, const RECT *pDestinationRect);
+HRESULT OverrideFrameSize(long FrameNumber, long Size);
+HRESULT OverrideKeyFrame(long FrameNumber);
+HRESULT QueryVersion(LONG *pVersion);
+HRESULT RenderFile(LPCWSTR lpwstrFile, LPCWSTR lpwstrPlayList);
 HRESULT SetDefaultSyncSource(void);
-HRESULT SetLogFile( HANDLE hFile);
-HRESULT SignalPresent( long *plSignalStrength);
+HRESULT SetLogFile(HANDLE hFile);
+HRESULT SignalPresent(long *plSignalStrength);
 HRESULT StoreAutoTune(void);
-HRESULT SuggestAllocatorProperties( const ALLOCATOR_PROPERTIES* pprop );
-HRESULT SyncRead( LONGLONG llPosition, LONG lLength, BYTE* pBuffer);
-HRESULT WriteSync( );
-HRESULT get_AudioFrequency( long *lFreq);
-HRESULT get_AvailableTVFormats( long *lAnalogVideoStandard);
-HRESULT get_Channel ( long *plChannel, long *plVideoSubChannel, long *plAudioSubChannel);
-HRESULT get_ConnectInput ( long *plIndex);
-HRESULT get_CountryCode( long *plCountryCode);
-HRESULT get_InputType ( long lIndex, TunerInputType *pInputType);
-HRESULT get_Mode( AMTunerModeType *plMode);
-HRESULT get_NumInputConnections( long *plNumInputConnections);
-HRESULT get_PFramesPerKeyFrame( long* pPFramesPerKeyFrame );
-HRESULT get_Quality( double* pQuality );
-HRESULT get_TVFormat( long *plAnalogVideoStandard);
-HRESULT get_TuningSpace( long *plTuningSpace);
-HRESULT get_VideoFrequency( long *lFreq);
-HRESULT put_Channel( long lChannel, long lVideoSubChannel, long lAudioSubChannel);
-HRESULT put_ConnectInput( long lIndex);
-HRESULT put_CountryCode( long lCountryCode);
-HRESULT put_InputType( long lIndex, TunerInputType InputType);
-HRESULT put_KeyFrameRate( long KeyFrameRate );
-HRESULT put_Mode( AMTunerModeType lMode);
-HRESULT put_PFramesPerKeyFrame( long PFramesPerKeyFrame );
-HRESULT put_Quality( double Quality );
-HRESULT put_TuningSpace( long lTuningSpace);
+HRESULT SuggestAllocatorProperties(const ALLOCATOR_PROPERTIES* pprop);
+HRESULT SyncRead(LONGLONG llPosition, LONG lLength, BYTE* pBuffer);
+HRESULT WriteSync();
+HRESULT get_AudioFrequency(long *lFreq);
+HRESULT get_AvailableTVFormats(long *lAnalogVideoStandard);
+HRESULT get_Channel (long *plChannel, long *plVideoSubChannel, long *plAudioSubChannel);
+HRESULT get_ConnectInput (long *plIndex);
+HRESULT get_CountryCode(long *plCountryCode);
+HRESULT get_InputType (long lIndex, TunerInputType *pInputType);
+HRESULT get_Mode(AMTunerModeType *plMode);
+HRESULT get_NumInputConnections(long *plNumInputConnections);
+HRESULT get_PFramesPerKeyFrame(long* pPFramesPerKeyFrame);
+HRESULT get_Quality(double* pQuality);
+HRESULT get_TVFormat(long *plAnalogVideoStandard);
+HRESULT get_TuningSpace(long *plTuningSpace);
+HRESULT get_VideoFrequency(long *lFreq);
+HRESULT put_Channel(long lChannel, long lVideoSubChannel, long lAudioSubChannel);
+HRESULT put_ConnectInput(long lIndex);
+HRESULT put_CountryCode(long lCountryCode);
+HRESULT put_InputType(long lIndex, TunerInputType InputType);
+HRESULT put_KeyFrameRate(long KeyFrameRate);
+HRESULT put_Mode(AMTunerModeType lMode);
+HRESULT put_PFramesPerKeyFrame(long PFramesPerKeyFrame);
+HRESULT put_Quality(double Quality);
+HRESULT put_TuningSpace(long lTuningSpace);
 
 #endif /* _DSHOW_ */

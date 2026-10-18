@@ -17,11 +17,11 @@
  * ================================================================ */
 
 /* function */
-HRESULT GetFlags( DWORD* pdwFlags );
-HRESULT GetItemCount( DWORD* pdwItems );
-HRESULT GetRepeatInfo( DWORD* pdwRepeatCount, DWORD* pdwRepeatStart, DWORD* pdwRepeatEnd );
-HRESULT GetSourceCount( DWORD* pdwSources );
-HRESULT GetSourceEndMarker( DWORD dwSourceIndex, DWORD* pdwMarker );
-HRESULT GetSourceStartMarker( DWORD dwSourceIndex, DWORD* pdwMarker );
+HRESULT GetFlags(DWORD* pdwFlags);
+HRESULT GetItemCount(DWORD* pdwItems);
+HRESULT GetRepeatInfo(DWORD* pdwRepeatCount, DWORD* pdwRepeatStart, DWORD* pdwRepeatEnd);
+HRESULT GetSourceCount(DWORD* pdwSources);
+HRESULT GetSourceEndMarker(DWORD dwSourceIndex, DWORD* pdwMarker);
+HRESULT GetSourceStartMarker(DWORD dwSourceIndex, DWORD* pdwMarker);
 
 #endif /* _PLAYLIST_ */

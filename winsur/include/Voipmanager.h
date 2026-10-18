@@ -101,13 +101,13 @@ typedef VoIPSystemEvent *PVoIPSystemEvent, *LPVoIPSystemEvent;
 /* function */
 HRESULT Hangup();
 HRESULT Ignore();
-HRESULT OnSystemEvent( VoIPSystemEvent vseEvent, INT_PTR iptrParam );
-HRESULT RegisterWithSIPServer( SIPServerRegistrationParameters *pParams );
-HRESULT Reregister( VoIPMgrParameters* pvmpMgrParams );
+HRESULT OnSystemEvent(VoIPSystemEvent vseEvent, INT_PTR iptrParam);
+HRESULT RegisterWithSIPServer(SIPServerRegistrationParameters *pParams);
+HRESULT Reregister(VoIPMgrParameters* pvmpMgrParams);
 HRESULT Unhold();
-HRESULT get_MissedCallTimeout( UINT* pnTimeoutMilliseconds );
-HRESULT get_NetworkStatus( LONG* plStatus );
-HRESULT get_Parameters( VoIPMgrParameters* pvmpUsed );
-HRESULT put_MissedCallTimeout( UINT nTimeoutMilliseconds );
+HRESULT get_MissedCallTimeout(UINT* pnTimeoutMilliseconds);
+HRESULT get_NetworkStatus(LONG* plStatus);
+HRESULT get_Parameters(VoIPMgrParameters* pvmpUsed);
+HRESULT put_MissedCallTimeout(UINT nTimeoutMilliseconds);
 
 #endif /* _VOIPMANAGER_ */

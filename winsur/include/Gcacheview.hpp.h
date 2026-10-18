@@ -17,7 +17,7 @@
  * ================================================================ */
 
 /* function */
-void ComputeMinWindowSize( LONG* pcxMinWinSize, LONG* pcyMinWinSize );
-int SystemMetrics( int nIndex );
+void ComputeMinWindowSize(LONG* pcxMinWinSize, LONG* pcyMinWinSize);
+int SystemMetrics(int nIndex);
 
 #endif /* _GCACHEVIEW_HPP_ */

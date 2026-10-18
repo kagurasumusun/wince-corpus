@@ -17,16 +17,22 @@
  * ================================================================ */
 
 /* function */
-int GetColumnCount( );
-void GetColumnInfo( int col, int& cxCur, int& cxMin );
-int GetRowCount( );
-void GetRowInfo( int row, int& cyCur, int& cyMin );
-int IdFromRowCol( int row, int col );
-void RecalcLayout( );
-void SerializeRaw( CArchive& ar );
-void SetColumnInfo( int col, int cxIdeal, int cxMin );
-void SetRowInfo( int row, int cyIdeal, int cyMin );
-void SetScrollStyle( DWORD dwStyle );
-void SizeToContent( );
+int GetColumnCount();
+#ifdef __cplusplus
+void GetColumnInfo(int col, int& cxCur, int& cxMin);
+#endif /* __cplusplus */
+int GetRowCount();
+#ifdef __cplusplus
+void GetRowInfo(int row, int& cyCur, int& cyMin);
+#endif /* __cplusplus */
+int IdFromRowCol(int row, int col);
+void RecalcLayout();
+#ifdef __cplusplus
+void SerializeRaw(CArchive& ar);
+#endif /* __cplusplus */
+void SetColumnInfo(int col, int cxIdeal, int cxMin);
+void SetRowInfo(int row, int cyIdeal, int cyMin);
+void SetScrollStyle(DWORD dwStyle);
+void SizeToContent();
 
 #endif /* _AFXEXT_ */

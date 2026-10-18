@@ -38,10 +38,10 @@
  * ================================================================ */
 
 /* function */
-HRESULT ReadValue( UINT fWhichItem, WCHAR *wszDataBuffer, UINT cchDataBuffer );
-HRESULT UpdateSettingsFromFile( const WCHAR *c_wszFileName, UINT fSettingsToUpdate, UINT *pfUpdatedSettings );
-HRESULT UpdateSettingsFromServer( const WCHAR *c_wszServerName, WCHAR* ldap_cred, ULONG ldap_method, UINT fSettingsToUpdate, UINT *pfUpdatedSettings );
-HRESULT UpdateSettingsFromXML( const WCHAR *c_wszXML, UINT fSettingsToUpdate, UINT *pfUpdatedSettings );
-HRESULT WriteValue( UINT fWhichItem, const WCHAR *c_wszNewValue );
+HRESULT ReadValue(UINT fWhichItem, WCHAR *wszDataBuffer, UINT cchDataBuffer);
+HRESULT UpdateSettingsFromFile(const WCHAR *c_wszFileName, UINT fSettingsToUpdate, UINT *pfUpdatedSettings);
+HRESULT UpdateSettingsFromServer(const WCHAR *c_wszServerName, WCHAR* ldap_cred, ULONG ldap_method, UINT fSettingsToUpdate, UINT *pfUpdatedSettings);
+HRESULT UpdateSettingsFromXML(const WCHAR *c_wszXML, UINT fSettingsToUpdate, UINT *pfUpdatedSettings);
+HRESULT WriteValue(UINT fWhichItem, const WCHAR *c_wszNewValue);
 
 #endif /* _VOIPCONFIGURATIONDATASTORE_ */

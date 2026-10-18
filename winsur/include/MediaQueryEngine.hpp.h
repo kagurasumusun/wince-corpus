@@ -112,88 +112,88 @@ enum SortBy_e {
 
 /* Attr_ProtocolInfo  [extra enum] */
 enum Item_Attribute_e {
-  Attr_Title = 0,
-  Attr_Class,
-  Attr_UpnpItemId,
-  Attr_UpnpParentId,
-  Attr_URI,
-  Attr_Date,
-  Attr_Artist,
-  Attr_Actor,
-  Attr_Album,
-  Attr_AlbumArtURI,
-  Attr_Genre,
-  Attr_Rating,
-  Attr_ResSize,
-  Attr_ResDuration,
-  Attr_ResResolution,
-  Attr_ResColorDepth,
-  Attr_MusicSampleFrequency,
-  Attr_MusicAudioChannels,
-  Attr_Description,
-  Attr_ProtocolInfo
+ Attr_Title = 0,
+ Attr_Class,
+ Attr_UpnpItemId,
+ Attr_UpnpParentId,
+ Attr_URI,
+ Attr_Date,
+ Attr_Artist,
+ Attr_Actor,
+ Attr_Album,
+ Attr_AlbumArtURI,
+ Attr_Genre,
+ Attr_Rating,
+ Attr_ResSize,
+ Attr_ResDuration,
+ Attr_ResResolution,
+ Attr_ResColorDepth,
+ Attr_MusicSampleFrequency,
+ Attr_MusicAudioChannels,
+ Attr_Description,
+ Attr_ProtocolInfo
 };
 
 /* VideoGenre  [extra enum] */
 enum MediaType_e {
-  Music = 0,
-  Video,
-  Picture,
-  Playlist,
-  MusicAlbum,
-  VideoAlbum,
-  PictureAlbum,
-  MusicArtist,
-  MovieActor,
-  PictureDateFolder,
-  MusicGenre,
-  VideoGenre
+ Music = 0,
+ Video,
+ Picture,
+ Playlist,
+ MusicAlbum,
+ VideoAlbum,
+ PictureAlbum,
+ MusicArtist,
+ MovieActor,
+ PictureDateFolder,
+ MusicGenre,
+ VideoGenre
 };
 
 /* Running  [extra enum] */
 enum QueryEngineState_e {
-  UnInitialized = 0,
-  Error,
-  Stopped,
-  Running
+ UnInitialized = 0,
+ Error,
+ Stopped,
+ Running
 };
 
 /* MQE_EVENT_CRITICALERROR  [extra enum] */
 enum QuerySinkEvent_e {
-  MQE_EVENT_NETWORKAVAILABLE = 0,
-  MQE_EVENT_NETWORKNOTAVAILABLE,
-  MQE_EVENT_SERVERCONNECTED,
-  MQE_EVENT_SERVERDISCONNECTED,
-  MQE_EVENT_SERVERACTIVATED,
-  MQE_EVENT_SERVERDEACTIVATED,
-  MQE_EVENT_DEVICEAUTHORIZED,
-  MQE_EVENT_DEVICEAUTHORIZATIONREVOKED,
-  MQE_EVENT_DEVICEREGISTERED,
-  MQE_EVENT_DEVICEREGISTRATIONREVOKED,
-  MQE_EVENT_CONTENTUPDATE_MUSIC,
-  MQE_EVENT_CONTENTUPDATE_VIDEO,
-  MQE_EVENT_CONTENTUPDATE_PICTURE,
-  MQE_EVENT_CRITICALERROR
+ MQE_EVENT_NETWORKAVAILABLE = 0,
+ MQE_EVENT_NETWORKNOTAVAILABLE,
+ MQE_EVENT_SERVERCONNECTED,
+ MQE_EVENT_SERVERDISCONNECTED,
+ MQE_EVENT_SERVERACTIVATED,
+ MQE_EVENT_SERVERDEACTIVATED,
+ MQE_EVENT_DEVICEAUTHORIZED,
+ MQE_EVENT_DEVICEAUTHORIZATIONREVOKED,
+ MQE_EVENT_DEVICEREGISTERED,
+ MQE_EVENT_DEVICEREGISTRATIONREVOKED,
+ MQE_EVENT_CONTENTUPDATE_MUSIC,
+ MQE_EVENT_CONTENTUPDATE_VIDEO,
+ MQE_EVENT_CONTENTUPDATE_PICTURE,
+ MQE_EVENT_CRITICALERROR
 };
 
 /* SearchBy_Date  [extra enum] */
 enum SearchBy_e {
-  SearchBy_None = 0,
-  SearchBy_Title,
-  SearchBy_Artist,
-  SearchBy_Actor,
-  SearchBy_Album,
-  SearchBy_Genre,
-  SearchBy_Date
+ SearchBy_None = 0,
+ SearchBy_Title,
+ SearchBy_Artist,
+ SearchBy_Actor,
+ SearchBy_Album,
+ SearchBy_Genre,
+ SearchBy_Date
 };
 
 /* SortBy_Date_Descending  [extra enum] */
 enum SortBy_e {
-  SortBy_None = 0,
-  SortBy_Name_Ascending,
-  SortBy_Name_Descending,
-  SortBy_Date_Ascending,
-  SortBy_Date_Descending
+ SortBy_None = 0,
+ SortBy_Name_Ascending,
+ SortBy_Name_Descending,
+ SortBy_Date_Ascending,
+ SortBy_Date_Descending
 };
 
 /* ==================================================================
@@ -202,32 +202,36 @@ enum SortBy_e {
  * ================================================================ */
 
 /* function */
-Bool ActiveServerName(WCHAR*pBuffer,  int*pBufferLen);
-Bool ActiveServerUDN(  WCHAR* pBuffer, int* pBufferLen);
-bool AddSink (  const QueryEngineSink_t*pNewSinkObj);
-int BatchSize ( none );
+Bool ActiveServerName(WCHAR*pBuffer, int*pBufferLen);
+Bool ActiveServerUDN(WCHAR* pBuffer, int* pBufferLen);
+bool AddSink (const QueryEngineSink_t*pNewSinkObj);
+int BatchSize (none);
+#ifdef __cplusplus
 MediaQuery_t CreateNewQuery(constQueryParams_t &QueryParams);
-int CurrentItemOffset ( void );
-DeviceStatus_e DeviceStatus ( void );
-bool FriendlyDeviceName(  WCHAR* pBuffer,  int* pBufferLength  );
-bool GetItemAttribute ( ItemAttribute_e AttributeName,  WCHAR* pBuffer,  int* pBufferLength  );
-MediaItem_t GetMediaItem( int Index  );
-MediaItemBatch_t GetNextBatch ( none );
-ServerInfo_t GetServerInfo ( int Index  );
-bool IsContainer ( none );
-bool IsRestricted( none );
-ServerInfoCollection_t KnownMediaServers( void );
-bool ModelNumber (  WCHAR* pBuffer,  int* pBufferLength  );
-MediaQuery_t OemExtensionUpnpBrowseChildren( const WCHAR* pObjectIdStr, const WCHAR* pSortString, int BatchSize );
-bool OemExtensionUpnpItemAttribute ( const WCHAR* pAttributeName,  WCHAR* pBuffer,  int* pBufferLength,  unsigned long nIndex = 0  );
-MediaQuery_t OemExtensionUpnpQuery ( const WCHAR* pContainerIdStr, const WCHAR* pSearchString, const WCHAR* pSortString, int BatchSize);
-bool RegisterContentUpdateCallback(constContentUpdateCallback_t* pCallbackObj  );
-bool RemoveSink( const QueryEngineSink_t*pRemoveThis);
-QueryEngineState_e State ( void );
-int TotalItems( none );
-int TotalServers ( void );
+#endif /* __cplusplus */
+int CurrentItemOffset (void);
+DeviceStatus_e DeviceStatus (void);
+bool FriendlyDeviceName(WCHAR* pBuffer, int* pBufferLength);
+bool GetItemAttribute (ItemAttribute_e AttributeName, WCHAR* pBuffer, int* pBufferLength);
+MediaItem_t GetMediaItem(int Index);
+MediaItemBatch_t GetNextBatch (none);
+ServerInfo_t GetServerInfo (int Index);
+bool IsContainer (none);
+bool IsRestricted(none);
+ServerInfoCollection_t KnownMediaServers(void);
+bool ModelNumber (WCHAR* pBuffer, int* pBufferLength);
+MediaQuery_t OemExtensionUpnpBrowseChildren(const WCHAR* pObjectIdStr, const WCHAR* pSortString, int BatchSize);
+#ifdef __cplusplus
+bool OemExtensionUpnpItemAttribute (const WCHAR* pAttributeName, WCHAR* pBuffer, int* pBufferLength, unsigned long nIndex = 0);
+#endif /* __cplusplus */
+MediaQuery_t OemExtensionUpnpQuery (const WCHAR* pContainerIdStr, const WCHAR* pSearchString, const WCHAR* pSortString, int BatchSize);
+bool RegisterContentUpdateCallback(constContentUpdateCallback_t* pCallbackObj);
+bool RemoveSink(const QueryEngineSink_t*pRemoveThis);
+QueryEngineState_e State (void);
+int TotalItems(none);
+int TotalServers (void);
 bool UnInitialize (void);
-bool UnRegisterContentUpdateCallback( const ContentUpdateCallback_t* pCallbackObj  );
-bool UniqueDeviceName(  WCHAR* pBuffer,  int* pBufferLength  );
+bool UnRegisterContentUpdateCallback(const ContentUpdateCallback_t* pCallbackObj);
+bool UniqueDeviceName(WCHAR* pBuffer, int* pBufferLength);
 
 #endif /* _MEDIAQUERYENGINE_HPP_ */

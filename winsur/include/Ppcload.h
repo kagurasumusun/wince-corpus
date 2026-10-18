@@ -42,7 +42,7 @@ Private Sub form_Load( );
  * ================================================================ */
 
 /* function */
-Private Sub Form_Load( )
-Private Sub form_Load( )
+Private Sub Form_Load()
+Private Sub form_Load()
 
 #endif /* _PPCLOAD_ */

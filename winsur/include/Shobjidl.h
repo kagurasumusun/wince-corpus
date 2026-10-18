@@ -85,15 +85,15 @@ typedef SHGNO *PSHGNO, *LPSHGNO;
  * ================================================================ */
 
 /* function */
-HRESULT ActivateTab( HWND hwnd );
-HRESULT AddTab( HWND hwnd );
-HRESULT DeleteTab( HWND hwnd );
+HRESULT ActivateTab(HWND hwnd);
+HRESULT AddTab(HWND hwnd);
+HRESULT DeleteTab(HWND hwnd);
 HRESULT DestroyViewWindow(void);
-HRESULT EnableModeless( BOOL fEnable );
+HRESULT EnableModeless(BOOL fEnable);
 HRESULT HrInit(VOID);
-HRESULT MarkFullscreenWindow( HWND hwnd, BOOL fFullscreen );
+HRESULT MarkFullscreenWindow(HWND hwnd, BOOL fFullscreen);
 HRESULT SaveViewState(void);
-HRESULT SetActiveAlt( HWND hwnd );
-HRESULT UIActivate( UINT uState );
+HRESULT SetActiveAlt(HWND hwnd);
+HRESULT UIActivate(UINT uState);
 
 #endif /* _SHOBJIDL_ */

@@ -17,8 +17,8 @@
  * ================================================================ */
 
 /* function */
-HRESULT Bandwidth( DWORD* pdwRate);
-HRESULT MTU( DWORD* pdwMTU);
-HRESULT Recv( DWORD dwTimeout, BYTE*pBuffer, DWORD*pcbBuffer );
+HRESULT Bandwidth(DWORD* pdwRate);
+HRESULT MTU(DWORD* pdwMTU);
+HRESULT Recv(DWORD dwTimeout, BYTE*pBuffer, DWORD*pcbBuffer);
 
 #endif /* _CCTRANSPORT_IDL_ */

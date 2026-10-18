@@ -36,77 +36,77 @@ typedef struct _DSDMP_MSG {
 typedef DSDMP_MSG *PDSDMP_MSG, *LPDSDMP_MSG;
 
 /* DSDMP_DELETEBUFFER  [extra struct] */
-typedef struct { DWORD dwMsg;  PDWORD dwInstance; } DSDMP_DELETEBUFFER;
+typedef struct { DWORD dwMsg; PDWORD dwInstance; } DSDMP_DELETEBUFFER;
 
 /* DSDMP_DUPLICATEBUFFER  [extra struct] */
 typedef struct {
-  DWORD dwMsg;
-  DWORD dwInstance;
-  PDWORD pdwInstance;
+ DWORD dwMsg;
+ DWORD dwInstance;
+ PDWORD pdwInstance;
 } DSDMP_DUPLICATEBUFFER;
 
 /* DSDMP_GETPOSITION  [extra struct] */
 typedef struct {
-  DWORD dwMsg;
-  DWORD dwInstance;
-  PDWORD pdwPlay;
-  PDWORD pdwWrite;
+ DWORD dwMsg;
+ DWORD dwInstance;
+ PDWORD pdwPlay;
+ PDWORD pdwWrite;
 } DSDMP_GETPOSITION;
 
 /* DSDMP_GETSTATUS  [extra struct] */
 typedef struct {
-  DWORD dwMsg;
-  DWORD dwInstance;
-  PDWORD pdwStatus;
+ DWORD dwMsg;
+ DWORD dwInstance;
+ PDWORD pdwStatus;
 } DSDMP_GETSTATUS;
 
 /* DSDMP_LOCK  [extra struct] */
 typedef struct {
-  DWORD dwMsg;
-  DWORD dwInstance;
-  DWORD dwOffset;
-  DWORD dwCount;
-  LPVOID* ppBuffer1;
-  LPDWORD pdwCount1;
-  LPVOID* ppBuffer2;
-  LPDWORD pdwCount2;
-  DWORD dwFlags;
+ DWORD dwMsg;
+ DWORD dwInstance;
+ DWORD dwOffset;
+ DWORD dwCount;
+ LPVOID* ppBuffer1;
+ LPDWORD pdwCount1;
+ LPVOID* ppBuffer2;
+ LPDWORD pdwCount2;
+ DWORD dwFlags;
 } DSDMP_LOCK;
 
 /* DSDMP_PLAY  [extra struct] */
 typedef struct {
-  DWORD dwMsg;
-  DWORD dwInstance;
-  DWORD dwFlags;
+ DWORD dwMsg;
+ DWORD dwInstance;
+ DWORD dwFlags;
 } DSDMP_PLAY;
 
 /* DSDMP_SETFORMAT  [extra struct] */
 typedef struct {
-  DWORD dwMsg;
-  DWORD dwInstance;
-  LPWAVEFORMATEX pWFX;
+ DWORD dwMsg;
+ DWORD dwInstance;
+ LPWAVEFORMATEX pWFX;
 } DSDMP_SETFORMAT;
 
 /* DSDMP_SETFREQUENCY  [extra struct] */
 typedef struct {
-  DWORD dwMsg;
-  DWORD dwInstance;
-  DWORD dwFreq;
+ DWORD dwMsg;
+ DWORD dwInstance;
+ DWORD dwFreq;
 } DSDMP_SETFREQUENCY;
 
 /* DSDMP_SETPOSITION  [extra struct] */
 typedef struct {
-  DWORD dwMsg;
-  DWORD dwInstance;
-  DWORD dwPosition;
+ DWORD dwMsg;
+ DWORD dwInstance;
+ DWORD dwPosition;
 } DSDMP_SETPOSITION;
 
 /* DSDMP_SETVOLUMEPAN  [extra struct] */
 typedef struct {
-  DWORD dwMsg;
-  DWORD dwInstance;
-  LONG lVolume;
-  LONG lPan;
+ DWORD dwMsg;
+ DWORD dwInstance;
+ LONG lVolume;
+ LONG lPan;
 } DSDMP_SETVOLUMEPAN;
 
 /* DSDMP_STOP  [extra struct] */

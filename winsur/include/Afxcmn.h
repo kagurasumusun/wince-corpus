@@ -17,36 +17,42 @@
  * ================================================================ */
 
 /* function */
-BOOL DeleteAllItems( );
-BOOL DeleteColumn( int nCol );
-BOOL DeleteImageList( );
-static BOOL DragShowNolock( BOOL bShow );
-CEdit* EditLabel( int nItem );
-static void EndDrag( );
-BOOL EnsureVisible( int nItem, BOOL bPartialOK );
-UINT GetIndent( );
-UINT GetVisibleCount( );
-int OffsetPos( int nPos );
-BOOL RedrawItems( int nFirst, int nLast );
-BOOL Replace( int nImage, CBitmap* pbmImage, CBitmap* pbmMask );
-int SetBase( int nBase );
-BOOL SetCallbackMask( UINT nMask );
-CImageList* SetImageList( CImageList* pImageList, int nImageList );
-void SetIndent( UINT nIndent );
-void SetItemCount( int nItems );
-BOOL SetItemPosition( int nItem, POINT pt );
-BOOL SetItemText( int nItem, int nSubItem, LPTSTR lpszText );
-int SetLineSize( int nSize );
-BOOL SetOverlayImage( int nImage, int nOverlay );
-int SetPageSize( int nSize );
-int SetPos( int nPos );
-void SetRange( int nLower, int nUpper );
-void SetSelection( int nMin, int nMax );
-int SetStep( int nStep );
-BOOL SetTextBkColor( COLORREF cr );
-BOOL SetTic( int nTic );
-void SetTicFreq( int nFreq );
-int StepIt( );
-void VerifyPos( );
+BOOL DeleteAllItems();
+BOOL DeleteColumn(int nCol);
+BOOL DeleteImageList();
+static BOOL DragShowNolock(BOOL bShow);
+#ifdef __cplusplus
+CEdit* EditLabel(int nItem);
+#endif /* __cplusplus */
+static void EndDrag();
+BOOL EnsureVisible(int nItem, BOOL bPartialOK);
+UINT GetIndent();
+UINT GetVisibleCount();
+int OffsetPos(int nPos);
+BOOL RedrawItems(int nFirst, int nLast);
+#ifdef __cplusplus
+BOOL Replace(int nImage, CBitmap* pbmImage, CBitmap* pbmMask);
+#endif /* __cplusplus */
+int SetBase(int nBase);
+BOOL SetCallbackMask(UINT nMask);
+#ifdef __cplusplus
+CImageList* SetImageList(CImageList* pImageList, int nImageList);
+#endif /* __cplusplus */
+void SetIndent(UINT nIndent);
+void SetItemCount(int nItems);
+BOOL SetItemPosition(int nItem, POINT pt);
+BOOL SetItemText(int nItem, int nSubItem, LPTSTR lpszText);
+int SetLineSize(int nSize);
+BOOL SetOverlayImage(int nImage, int nOverlay);
+int SetPageSize(int nSize);
+int SetPos(int nPos);
+void SetRange(int nLower, int nUpper);
+void SetSelection(int nMin, int nMax);
+int SetStep(int nStep);
+BOOL SetTextBkColor(COLORREF cr);
+BOOL SetTic(int nTic);
+void SetTicFreq(int nFreq);
+int StepIt();
+void VerifyPos();
 
 #endif /* _AFXCMN_ */

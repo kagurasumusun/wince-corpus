@@ -17,6 +17,6 @@
  * ================================================================ */
 
 /* function */
-HRESULT get_Locale ( DWORD* pdwLocale);
+HRESULT get_Locale (DWORD* pdwLocale);
 
 #endif /* _CCSERVER_ */

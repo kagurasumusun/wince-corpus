@@ -127,42 +127,52 @@ enum _DMO_VIDEO_OUTPUT_STREAM_FLAGS {
 /*   rtTimelength */
 
 /* x00000001  [extra enum] */
-enum DMO_ENUM_FLAGS {  DMO_ENUMF_INCLUDE_KEYED = 0x00000001  };
+enum DMO_ENUM_FLAGS { DMO_ENUMF_INCLUDE_KEYED = 0x00000001 };
 
 /* x00000004  [extra enum] */
+#ifdef __cplusplus
 enum _DMO_INPUT_DATA_BUFFER_FLAGS {
-  DMO_INPUT_DATA_BUFFERF_SYNCPOINT = 0x00000001,
-  DMO_INPUT_DATA_BUFFERF_TIME = 0x00000002,
-  DMO_INPUT_DATA_BUFFERF_TIMELENGTH = 0x00000004
+ DMO_INPUT_DATA_BUFFERF_SYNCPOINT = 0x00000001,
+ DMO_INPUT_DATA_BUFFERF_TIME = 0x00000002,
+ DMO_INPUT_DATA_BUFFERF_TIMELENGTH = 0x00000004
 };
+#endif /* __cplusplus */
 
 /* x00000008  [extra enum] */
+#ifdef __cplusplus
 enum _DMO_INPUT_STREAM_INFO_FLAGS {
-  DMO_INPUT_STREAMF_WHOLE_SAMPLES = 0x00000001,
-  DMO_INPUT_STREAMF_SINGLE_SAMPLE_PER_BUFFER = 0x00000002,
-  DMO_INPUT_STREAMF_FIXED_SAMPLE_SIZE = 0x00000004,
-  DMO_INPUT_STREAMF_HOLDS_BUFFERS = 0x00000008
+ DMO_INPUT_STREAMF_WHOLE_SAMPLES = 0x00000001,
+ DMO_INPUT_STREAMF_SINGLE_SAMPLE_PER_BUFFER = 0x00000002,
+ DMO_INPUT_STREAMF_FIXED_SAMPLE_SIZE = 0x00000004,
+ DMO_INPUT_STREAMF_HOLDS_BUFFERS = 0x00000008
 };
+#endif /* __cplusplus */
 
 /* x01000000  [extra enum] */
+#ifdef __cplusplus
 enum _DMO_OUTPUT_DATA_BUFFER_FLAGS {
-  DMO_OUTPUT_DATA_BUFFERF_SYNCPOINT = 0x00000001,
-  DMO_OUTPUT_DATA_BUFFERF_TIME = 0x00000002,
-  DMO_OUTPUT_DATA_BUFFERF_TIMELENGTH = 0x00000004,
-  DMO_OUTPUT_DATA_BUFFERF_INCOMPLETE = 0x01000000
+ DMO_OUTPUT_DATA_BUFFERF_SYNCPOINT = 0x00000001,
+ DMO_OUTPUT_DATA_BUFFERF_TIME = 0x00000002,
+ DMO_OUTPUT_DATA_BUFFERF_TIMELENGTH = 0x00000004,
+ DMO_OUTPUT_DATA_BUFFERF_INCOMPLETE = 0x01000000
 };
+#endif /* __cplusplus */
 
 /* x00000010  [extra enum] */
+#ifdef __cplusplus
 enum _DMO_OUTPUT_STREAM_INFO_FLAGS {
-  DMO_OUTPUT_STREAMF_WHOLE_SAMPLES = 0x00000001,
-  DMO_OUTPUT_STREAMF_SINGLE_SAMPLE_PER_BUFFER = 0x00000002,
-  DMO_OUTPUT_STREAMF_FIXED_SAMPLE_SIZE = 0x00000004,
-  DMO_OUTPUT_STREAMF_DISCARDABLE = 0x00000008,
-  DMO_OUTPUT_STREAMF_OPTIONAL = 0x00000010
+ DMO_OUTPUT_STREAMF_WHOLE_SAMPLES = 0x00000001,
+ DMO_OUTPUT_STREAMF_SINGLE_SAMPLE_PER_BUFFER = 0x00000002,
+ DMO_OUTPUT_STREAMF_FIXED_SAMPLE_SIZE = 0x00000004,
+ DMO_OUTPUT_STREAMF_DISCARDABLE = 0x00000008,
+ DMO_OUTPUT_STREAMF_OPTIONAL = 0x00000010
 };
+#endif /* __cplusplus */
 
 /* x00000002  [extra enum] */
-enum _DMO_SET_TYPE_FLAGS {  DMO_SET_TYPEF_TEST_ONLY = 0x00000001,  DMO_SET_TYPEF_CLEAR = 0x00000002  };
+#ifdef __cplusplus
+enum _DMO_SET_TYPE_FLAGS { DMO_SET_TYPEF_TEST_ONLY = 0x00000001, DMO_SET_TYPEF_CLEAR = 0x00000002 };
+#endif /* __cplusplus */
 
 /* ==================================================================
  * functions and callbacks
@@ -212,28 +222,28 @@ HRESULT MoInitMediaType(
 
 /* function */
 HRESULT AllocateStreamingResources(void);
-HRESULT Discontinuity( DWORD dwInputStreamIndex );
+HRESULT Discontinuity(DWORD dwInputStreamIndex);
 HRESULT FreeStreamingResources(void);
-HRESULT GetBufferAndLength( BYTE** ppBuffer, DWORD* pcbLength );
-HRESULT GetCurrentOperationMode( ULONG ulOutputStreamIndex, DWORD* pdwEnabledFeatures );
-HRESULT GetCurrentSampleRequirements( ULONG ulOutputStreamIndex, DWORD* pdwRequestedFeatures );
-HRESULT GetInputCurrentType( DWORD dwInputStreamIndex, DMO_MEDIA_TYPE* pmt );
-HRESULT GetInputSizeInfo( DWORD dwInputStreamIndex, DWORD* pcbSize, DWORD* pcbMaxLookahead, DWORD* pcbAlignment );
-HRESULT GetInputStatus( DWORD dwInputStreamIndex, DWORD* dwFlags );
-HRESULT GetInputStreamInfo( DWORD dwInputStreamIndex, DWORD* pdwFlags );
-HRESULT GetInputType( DWORD dwInputStreamIndex, DWORD dwTypeIndex, DMO_MEDIA_TYPE* pmt );
-HRESULT GetMaxLength( DWORD* pcbMaxLength );
-HRESULT GetOutputCurrentType( DWORD dwOutputStreamIndex, DMO_MEDIA_TYPE* pmt );
-HRESULT GetOutputSizeInfo( DWORD dwOutputStreamIndex, DWORD* pcbSize, DWORD* pcbAlignment );
-HRESULT GetOutputStreamInfo( DWORD dwOutputStreamIndex, DWORD* pdwFlags );
-HRESULT GetOutputType( DWORD dwOutputStreamIndex, DWORD dwTypeIndex, DMO_MEDIA_TYPE* pmt );
-HRESULT GetStreamCount( DWORD* pcInputStreams, DWORD* pcOutputStreams );
-HRESULT ProcessOutput( DWORD dwFlags, DWORD cOutputBufferCount, DMO_OUTPUT_DATA_BUFFER* pOutputBuffers, DWORD* pdwStatus );
-HRESULT QueryOperationModePreferences( ULONG ulOutputStreamIndex, DWORD* pdwRequestedCapabilities );
-HRESULT SetInputType( DWORD dwInputStreamIndex, const DMO_MEDIA_TYPE* pmt, DWORD dwFlags );
-HRESULT SetLength( DWORD cbLength );
-HRESULT SetOperationMode( ULONG ulOutputStreamIndex, DWORD dwEnabledFeatures );
-HRESULT SetOutputType( DWORD dwOutputStreamIndex, const DMO_MEDIA_TYPE* pmt, DWORD dwFlags );
-HRESULT SetStatus( DWORD dwFlags );
+HRESULT GetBufferAndLength(BYTE** ppBuffer, DWORD* pcbLength);
+HRESULT GetCurrentOperationMode(ULONG ulOutputStreamIndex, DWORD* pdwEnabledFeatures);
+HRESULT GetCurrentSampleRequirements(ULONG ulOutputStreamIndex, DWORD* pdwRequestedFeatures);
+HRESULT GetInputCurrentType(DWORD dwInputStreamIndex, DMO_MEDIA_TYPE* pmt);
+HRESULT GetInputSizeInfo(DWORD dwInputStreamIndex, DWORD* pcbSize, DWORD* pcbMaxLookahead, DWORD* pcbAlignment);
+HRESULT GetInputStatus(DWORD dwInputStreamIndex, DWORD* dwFlags);
+HRESULT GetInputStreamInfo(DWORD dwInputStreamIndex, DWORD* pdwFlags);
+HRESULT GetInputType(DWORD dwInputStreamIndex, DWORD dwTypeIndex, DMO_MEDIA_TYPE* pmt);
+HRESULT GetMaxLength(DWORD* pcbMaxLength);
+HRESULT GetOutputCurrentType(DWORD dwOutputStreamIndex, DMO_MEDIA_TYPE* pmt);
+HRESULT GetOutputSizeInfo(DWORD dwOutputStreamIndex, DWORD* pcbSize, DWORD* pcbAlignment);
+HRESULT GetOutputStreamInfo(DWORD dwOutputStreamIndex, DWORD* pdwFlags);
+HRESULT GetOutputType(DWORD dwOutputStreamIndex, DWORD dwTypeIndex, DMO_MEDIA_TYPE* pmt);
+HRESULT GetStreamCount(DWORD* pcInputStreams, DWORD* pcOutputStreams);
+HRESULT ProcessOutput(DWORD dwFlags, DWORD cOutputBufferCount, DMO_OUTPUT_DATA_BUFFER* pOutputBuffers, DWORD* pdwStatus);
+HRESULT QueryOperationModePreferences(ULONG ulOutputStreamIndex, DWORD* pdwRequestedCapabilities);
+HRESULT SetInputType(DWORD dwInputStreamIndex, const DMO_MEDIA_TYPE* pmt, DWORD dwFlags);
+HRESULT SetLength(DWORD cbLength);
+HRESULT SetOperationMode(ULONG ulOutputStreamIndex, DWORD dwEnabledFeatures);
+HRESULT SetOutputType(DWORD dwOutputStreamIndex, const DMO_MEDIA_TYPE* pmt, DWORD dwFlags);
+HRESULT SetStatus(DWORD dwFlags);
 
 #endif /* _DMO_ */

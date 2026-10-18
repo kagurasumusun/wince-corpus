@@ -17,7 +17,7 @@
  * ================================================================ */
 
 /* function */
-HRESULT GetControlNavigationCapabilities( DWORD* navigationFlags );
-HRESULT GetNavigationRectCount( DWORD __RPC_FAR* rectCount );
+HRESULT GetControlNavigationCapabilities(DWORD* navigationFlags);
+HRESULT GetNavigationRectCount(DWORD __RPC_FAR* rectCount);
 
 #endif /* _MSHTMHST_IDL_ */

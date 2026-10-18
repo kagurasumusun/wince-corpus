@@ -66,7 +66,7 @@
  * ================================================================ */
 
 /* function */
-HRESULT EndEntity( const wchar_t* pwchName,  int cchName );
+HRESULT EndEntity(const wchar_t* pwchName, int cchName);
 HRESULT ParseURL(const wchar_t* pwchUrl);
 HRESULT get_length(long* dataLength);
 HRESULT get_readyState(long* value);

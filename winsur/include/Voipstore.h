@@ -41,11 +41,11 @@ enum {
 
 /* function */
 HRESULT DeleteFromDB();
-HRESULT get_CallType( VoIPCallType* pvctType );
-HRESULT get_Capacity( int* cRecords );
-HRESULT get_SpeedDialEntry( int* pidxSpeedDial );
-HRESULT put_CallType( VoIPCallType vctType );
-HRESULT put_Capacity( int cRecords );
-HRESULT put_SpeedDialEntry( int idxSpeedDial );
+HRESULT get_CallType(VoIPCallType* pvctType);
+HRESULT get_Capacity(int* cRecords);
+HRESULT get_SpeedDialEntry(int* pidxSpeedDial);
+HRESULT put_CallType(VoIPCallType vctType);
+HRESULT put_Capacity(int cRecords);
+HRESULT put_SpeedDialEntry(int idxSpeedDial);
 
 #endif /* _VOIPSTORE_ */

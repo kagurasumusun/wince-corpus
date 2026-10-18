@@ -52,12 +52,12 @@
  * ================================================================ */
 
 /* function */
-HRESULT CancelAsyncFind( LONG lFindData );
-HRESULT LoadComplete( HRESULT hrLoadResult );
-HRESULT SearchComplete( LONG lFindData );
-HRESULT StartAsyncFind( LONG lFindData );
-HRESULT get_LastTransportStatus( long* plValue );
-HRESULT get_LoadResult( long* phrError );
-HRESULT get_ReadyState( LONG* plReadyState );
+HRESULT CancelAsyncFind(LONG lFindData);
+HRESULT LoadComplete(HRESULT hrLoadResult);
+HRESULT SearchComplete(LONG lFindData);
+HRESULT StartAsyncFind(LONG lFindData);
+HRESULT get_LastTransportStatus(long* plValue);
+HRESULT get_LoadResult(long* phrError);
+HRESULT get_ReadyState(LONG* plReadyState);
 
 #endif /* _UPNP_ */

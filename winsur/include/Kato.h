@@ -43,17 +43,17 @@ BOOL KatoSetServer(
  * ================================================================ */
 
 /* function */
-INT BeginLevel(  DWORD dwLevelID,  LPCTSTR szFormat );
-INT BeginLevelV( DWORD dwLevelID,  LPCTSTR szFormat,  va_list pArgs  );
-BOOL Comment( DWORD dwVerbosity, LPCTSTR szFormat );
-BOOL CommentV( DWORD dwVerbosity, LPCTSTR szFormat, va_list pArgs );
-INT EndLevel( LPCTSTR szFormat );
-INT EndLevelV( LPCTSTR szFormat,  va_list pArgs  );
+INT BeginLevel(DWORD dwLevelID, LPCTSTR szFormat);
+INT BeginLevelV(DWORD dwLevelID, LPCTSTR szFormat, va_list pArgs);
+BOOL Comment(DWORD dwVerbosity, LPCTSTR szFormat);
+BOOL CommentV(DWORD dwVerbosity, LPCTSTR szFormat, va_list pArgs);
+INT EndLevel(LPCTSTR szFormat);
+INT EndLevelV(LPCTSTR szFormat, va_list pArgs);
 DWORD GetCurrentLevel ();
 DWORD GetItemData (void);
-INT GetVerbosityCount( DWORD dwVerbosity,  DWORD dwLevel  );
-BOOL LogV( DWORD dwVerbosity, LPCTSTR szFormat, va_list pArgs );
-BOOL SendSystemData( DWORD dwSystemID, LPCVOID lpcvBuffer, DWORD dwSize );
-BOOL SetItemData( DWORD dwItemData );
+INT GetVerbosityCount(DWORD dwVerbosity, DWORD dwLevel);
+BOOL LogV(DWORD dwVerbosity, LPCTSTR szFormat, va_list pArgs);
+BOOL SendSystemData(DWORD dwSystemID, LPCVOID lpcvBuffer, DWORD dwSize);
+BOOL SetItemData(DWORD dwItemData);
 
 #endif /* _KATO_ */

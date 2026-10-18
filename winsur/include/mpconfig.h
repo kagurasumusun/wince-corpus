@@ -17,13 +17,13 @@
  * ================================================================ */
 
 /* function */
-HRESULT GetBlendingParameter( DWORD *pdwBlendingParameter );
-HRESULT GetRelativePosition( DWORD *pdwLeft, DWORD *pdwTop, DWORD *pdwRight, DWORD *pdwBottom );
-HRESULT GetStreamTransparent( BOOL *pbStreamTransparent );
-HRESULT GetZOrder( DWORD *pdwZOrder );
-HRESULT SetBlendingParameter( DWORD dwBlendingParameter );
-HRESULT SetRelativePosition( DWORD dwLeft, DWORD dwTop, DWORD dwRight, DWORD dwBottom );
-HRESULT SetStreamTransparent( BOOL bStreamTransparent );
-HRESULT SetZOrder( DWORD dwZOrder );
+HRESULT GetBlendingParameter(DWORD *pdwBlendingParameter);
+HRESULT GetRelativePosition(DWORD *pdwLeft, DWORD *pdwTop, DWORD *pdwRight, DWORD *pdwBottom);
+HRESULT GetStreamTransparent(BOOL *pbStreamTransparent);
+HRESULT GetZOrder(DWORD *pdwZOrder);
+HRESULT SetBlendingParameter(DWORD dwBlendingParameter);
+HRESULT SetRelativePosition(DWORD dwLeft, DWORD dwTop, DWORD dwRight, DWORD dwBottom);
+HRESULT SetStreamTransparent(BOOL bStreamTransparent);
+HRESULT SetZOrder(DWORD dwZOrder);
 
 #endif /* _MPCONFIG_ */

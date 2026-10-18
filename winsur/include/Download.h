@@ -17,8 +17,8 @@
  * ================================================================ */
 
 /* function */
-HRESULT JumpToImage( DWORD dwJumpFlags );
-HRESULT OnProgressNotify( DWORD dwCurrentSize, DWORD dwTotalSize );
+HRESULT JumpToImage(DWORD dwJumpFlags);
+HRESULT OnProgressNotify(DWORD dwCurrentSize, DWORD dwTotalSize);
 HRESULT StopDownloadImage();
 HRESULT StopJumpToImage();
 

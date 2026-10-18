@@ -17,7 +17,7 @@
  * ================================================================ */
 
 /* function */
-LONG AddRef( void );
-LONG Release( void );
+LONG AddRef(void);
+LONG Release(void);
 
 #endif /* _UNKNOWN_ */

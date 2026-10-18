@@ -65,13 +65,15 @@ HRESULT WatsonUploadResponse(
  * ================================================================ */
 
 /* function */
+#ifdef __cplusplus
 enum {
-  ResponseTypeMin = 0,
-  ResponseTypeDialogLink = 0,
-  ResponseTypeAutolaunch = 1,
-  ResponseTypeDialogSurvey = 2,
-  ResponseTypeLightweight = 3,
-  ResponseTypeMax = 4,
+ ResponseTypeMin = 0,
+ ResponseTypeDialogLink = 0,
+ ResponseTypeAutolaunch = 1,
+ ResponseTypeDialogSurvey = 2,
+ ResponseTypeLightweight = 3,
+ ResponseTypeMax = 4,
 };
+#endif /* __cplusplus */
 
 #endif /* _DWUI_ */

@@ -44,7 +44,9 @@ struct TPDC_SAMPLE_RATE {
 };
 
 /* x40000000  [extra enum] */
+#ifdef __cplusplus
 enum enumTouchPanelSampleFlags {TouchSampleValidFlag = 0x01,TouchSampleDownFlag = 0x02,TouchSampleIsCalibratedFlag = 0x04,TouchSamplePreviousDownFlag = 0x08,TouchSampleIgnore = 0x10,TouchSampleMouse = 0x40000000};
+#endif /* __cplusplus */
 
 /* ==================================================================
  * functions and callbacks

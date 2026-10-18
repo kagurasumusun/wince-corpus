@@ -17,8 +17,8 @@
  * ================================================================ */
 
 /* function */
-void HorzDrawSettings( DWORD dwStyle, int iVersion, LPRECT prcBtn, BOOL bEnabled, BOOL fHasBorder, unsigned fUp, unsigned fDown, int nPos, int nUpper, int nLower, UINT uHot, UINT* puLeftFlags, LPRECT prcLeft, UINT* puRightFlags, LPRECT prcRight );
-void SetSunkenBorder( DWORD dwStyle, UINT* puBorderType );
-void VertDrawSettings( DWORD dwStyle, int iVersion, LPRECT prcBtn, BOOL bEnabled, BOOL fHasBorder, unsigned fUp, unsigned fDown, int nPos, int nUpper, int nLower, UINT uHot, UINT* puUpFlags, LPRECT prcUp, UINT* puDownFlags, LPRECT prcDown );
+void HorzDrawSettings(DWORD dwStyle, int iVersion, LPRECT prcBtn, BOOL bEnabled, BOOL fHasBorder, unsigned fUp, unsigned fDown, int nPos, int nUpper, int nLower, UINT uHot, UINT* puLeftFlags, LPRECT prcLeft, UINT* puRightFlags, LPRECT prcRight);
+void SetSunkenBorder(DWORD dwStyle, UINT* puBorderType);
+void VertDrawSettings(DWORD dwStyle, int iVersion, LPRECT prcBtn, BOOL bEnabled, BOOL fHasBorder, unsigned fUp, unsigned fDown, int nPos, int nUpper, int nLower, UINT uHot, UINT* puUpFlags, LPRECT prcUp, UINT* puDownFlags, LPRECT prcDown);
 
 #endif /* _UPDOWNVIEW_HPP_ */

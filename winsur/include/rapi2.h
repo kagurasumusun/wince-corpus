@@ -17,6 +17,6 @@
  * ================================================================ */
 
 /* function */
-HRESULT UnAdvise( DWORD dwContext );
+HRESULT UnAdvise(DWORD dwContext);
 
 #endif /* _RAPI2_ */

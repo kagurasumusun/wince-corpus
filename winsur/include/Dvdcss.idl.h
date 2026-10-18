@@ -22,6 +22,6 @@ HRESULT EnableDescrambler();
 HRESULT InitiateAuthentication();
 HRESULT NewDisk();
 HRESULT ResetAuthentication();
-HRESULT SetSectorLength( UINT dwLength );
+HRESULT SetSectorLength(UINT dwLength);
 
 #endif /* _DVDCSS_IDL_ */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 37 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 0 constants, 36 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _ARMINTR_
 #define _ARMINTR_
@@ -278,23 +278,6 @@ Void _MoveToCoprocessor2(
  unsigned int crm,
  unsigned int opcode2
 );
-
-/* _swi  [function; ce-only; CE 5.0..699] */
-unsigned int __swi(
- unsigned swi_number,
- arg2,
- arg3,
- arg4
-);
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-int __swi( unsigned swi_number, arg2, arg3, arg4 );
-unsigned int__swi(unsigned swi_number,arg2, arg3, arg4);
 
 #endif /* _ARMINTR_ */

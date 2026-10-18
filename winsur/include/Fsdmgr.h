@@ -191,6 +191,6 @@ DWORD FSDMGR_ResizeCache(
  * ================================================================ */
 
 /* function */
-BOOL MyFSD_EmptyLockContainer( PFILELOCKSTATE pFileLockState );
+BOOL MyFSD_EmptyLockContainer(PFILELOCKSTATE pFileLockState);
 
 #endif /* _FSDMGR_ */

@@ -35,10 +35,10 @@ typedef RTC_SUBSCRIPTION_STATE *PRTC_SUBSCRIPTION_STATE, *LPRTC_SUBSCRIPTION_STA
  * ================================================================ */
 
 /* function */
-HRESULT StatusCode( LONG* pStatusCode );
-HRESULT SubscriptionState( RTC_SUBSCRIPTION_STATE* pSubscriptionState );
-HRESULT get_SIPPrivacyType( LONG* pPrivacyFlags );
-HRESULT get_SubscriptionState ( RTC_SUBSCRIPTION_STATE *pSubscriptionState );
-HRESULT put_SIPPrivacyType( LONG PrivacyType );
+HRESULT StatusCode(LONG* pStatusCode);
+HRESULT SubscriptionState(RTC_SUBSCRIPTION_STATE* pSubscriptionState);
+HRESULT get_SIPPrivacyType(LONG* pPrivacyFlags);
+HRESULT get_SubscriptionState (RTC_SUBSCRIPTION_STATE *pSubscriptionState);
+HRESULT put_SIPPrivacyType(LONG PrivacyType);
 
 #endif /* _RTCCORE_IDL_ */

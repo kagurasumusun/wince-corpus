@@ -27,7 +27,7 @@
  * ================================================================ */
 
 /* function */
-HRESULT CompletionStatus( DWORD dwFlags, DWORD dwMilliseconds);
-HRESULT GetEndOfStreamEventHandle( HANDLE *phEOS);
+HRESULT CompletionStatus(DWORD dwFlags, DWORD dwMilliseconds);
+HRESULT GetEndOfStreamEventHandle(HANDLE *phEOS);
 
 #endif /* _MMSTREAM_ */

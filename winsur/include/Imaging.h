@@ -154,71 +154,77 @@ enum SinkFlags {
 
 /* BufferDisposalFlagUnmapView  [extra enum] */
 enum BufferDisposalFlag {
-  BufferDisposalFlagNone,
-  BufferDisposalFlagGlobalFree,
-  BufferDisposalFlagCoTaskMemFree,
-  BufferDisposalFlagUnmapView
+ BufferDisposalFlagNone,
+ BufferDisposalFlagGlobalFree,
+ BufferDisposalFlagCoTaskMemFree,
+ BufferDisposalFlagUnmapView
 };
 
 /* x0002  [extra enum] */
+#ifdef __cplusplus
 enum DecoderInitFlag {
-  DecoderInitFlagNone = 0,
-  DecoderInitFlagNoBlock = 0x0001,
-  DecoderInitFlagBuiltIn1st = 0x0002
+ DecoderInitFlagNone = 0,
+ DecoderInitFlagNoBlock = 0x0001,
+ DecoderInitFlagBuiltIn1st = 0x0002
 };
+#endif /* __cplusplus */
 
 /* EncoderParameterValueTypeRationalRange  [extra enum] */
+#ifdef __cplusplus
 enum EncoderParameterValueType {
-  EncoderParameterValueTypeByte = 1,
-  EncoderParameterValueTypeASCII = 2,
-  EncoderParameterValueTypeShort = 3,
-  EncoderParameterValueTypeLong = 4,
-  EncoderParameterValueTypeRational = 5,
-  EncoderParameterValueTypeLongRange = 6,
-  EncoderParameterValueTypeUndefined = 7,
-  EncoderParameterValueTypeRationalRange = 8
+ EncoderParameterValueTypeByte = 1,
+ EncoderParameterValueTypeASCII = 2,
+ EncoderParameterValueTypeShort = 3,
+ EncoderParameterValueTypeLong = 4,
+ EncoderParameterValueTypeRational = 5,
+ EncoderParameterValueTypeLongRange = 6,
+ EncoderParameterValueTypeUndefined = 7,
+ EncoderParameterValueTypeRationalRange = 8
 };
+#endif /* __cplusplus */
 
 /* EncoderValueFrameDimensionPage  [extra enum] */
 enum EncoderValue {
-  EncoderValueColorTypeCMYK,
-  EncoderValueColorTypeYCCK,
-  EncoderValueCompressionLZW,
-  EncoderValueCompressionCCITT3,
-  EncoderValueCompressionCCITT4,
-  EncoderValueCompressionRle,
-  EncoderValueCompressionNone,
-  EncoderValueScanMethodInterlaced,
-  EncoderValueScanMethodNonInterlaced,
-  EncoderValueVersionGif87,
-  EncoderValueVersionGif89,
-  EncoderValueRenderProgressive,
-  EncoderValueRenderNonProgressive,
-  EncoderValueTransformRotate90,
-  EncoderValueTransformRotate180,
-  EncoderValueTransformRotate270,
-  EncoderValueTransformFlipHorizontal,
-  EncoderValueTransformFlipVertical,
-  EncoderValueMultiFrame,
-  EncoderValueLastFrame,
-  EncoderValueFlush,
-  EncoderValueFrameDimensionTime,
-  EncoderValueFrameDimensionResolution,
-  EncoderValueFrameDimensionPage
+ EncoderValueColorTypeCMYK,
+ EncoderValueColorTypeYCCK,
+ EncoderValueCompressionLZW,
+ EncoderValueCompressionCCITT3,
+ EncoderValueCompressionCCITT4,
+ EncoderValueCompressionRle,
+ EncoderValueCompressionNone,
+ EncoderValueScanMethodInterlaced,
+ EncoderValueScanMethodNonInterlaced,
+ EncoderValueVersionGif87,
+ EncoderValueVersionGif89,
+ EncoderValueRenderProgressive,
+ EncoderValueRenderNonProgressive,
+ EncoderValueTransformRotate90,
+ EncoderValueTransformRotate180,
+ EncoderValueTransformRotate270,
+ EncoderValueTransformFlipHorizontal,
+ EncoderValueTransformFlipVertical,
+ EncoderValueMultiFrame,
+ EncoderValueLastFrame,
+ EncoderValueFlush,
+ EncoderValueFrameDimensionTime,
+ EncoderValueFrameDimensionResolution,
+ EncoderValueFrameDimensionPage
 };
 
 /* x00200000  [extra enum] */
+#ifdef __cplusplus
 enum SinkFlags {
-  SinkFlagsScalable = ImageFlagsScalable,
-  SinkFlagsHasAlpha = ImageFlagsHasAlpha,
-  SinkFlagsPartiallyScalable = ImageFlagsPartiallyScalable,
-  SinkFlagsTopDown = 0x00010000,
-  SinkFlagsBottomUp = 0x00020000,
-  SinkFlagsFullWidth = 0x00040000,
-  SinkFlagsMultipass = 0x00080000,
-  SinkFlagsComposite = 0x00100000,
-  SinkFlagsWantProps = 0x00200000
+ SinkFlagsScalable = ImageFlagsScalable,
+ SinkFlagsHasAlpha = ImageFlagsHasAlpha,
+ SinkFlagsPartiallyScalable = ImageFlagsPartiallyScalable,
+ SinkFlagsTopDown = 0x00010000,
+ SinkFlagsBottomUp = 0x00020000,
+ SinkFlagsFullWidth = 0x00040000,
+ SinkFlagsMultipass = 0x00080000,
+ SinkFlagsComposite = 0x00100000,
+ SinkFlagsWantProps = 0x00200000
 };
+#endif /* __cplusplus */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main
@@ -226,36 +232,36 @@ enum SinkFlags {
  * ================================================================ */
 
 /* function */
-HRESULT AdjustBrightness( FLOAT percent );
-HRESULT AdjustContrast( FLOAT shadow, FLOAT highlight );
-HRESULT AdjustGamma( FLOAT gamma );
-HRESULT BeginSink( ImageInfo* imageInfo, OPTIONAL RECT* subarea );
+HRESULT AdjustBrightness(FLOAT percent);
+HRESULT AdjustContrast(FLOAT shadow, FLOAT highlight);
+HRESULT AdjustGamma(FLOAT gamma);
+HRESULT BeginSink(ImageInfo* imageInfo, OPTIONAL RECT* subarea);
 HRESULT Decode();
-HRESULT Draw( HDC hdc, const RECT* dstRect, OPTIONAL const RECT* srcRect );
-HRESULT EndDecode( HRESULT statusCode );
-HRESULT EndSink( HRESULT statusCode );
-HRESULT GetAllPropertyItems( UINT totalBufferSize, UINT numProperties, PropertyItem* allItems );
-HRESULT GetEncoderParameterList( UINT size, EncoderParameters* Params );
-HRESULT GetEncoderParameterListSize( UINT* size );
-HRESULT GetFrameDimensionsCount( UINT* count );
-HRESULT GetImageInfo( ImageInfo* imageInfo );
-HRESULT GetInstalledDecoders( UINT* count, ImageCodecInfo** decoders );
-HRESULT GetInstalledEncoders( UINT* count, ImageCodecInfo** encoders );
-HRESULT GetPhysicalDimension( SIZE* size );
-HRESULT GetPropertyBuffer( UINT uiTotalBufferSize, PropertyItem** ppBuffer );
-HRESULT GetPropertyCount( UINT* numOfProperty );
-HRESULT GetPropertySize( UINT* totalBufferSize, UINT* numProperties );
-HRESULT InstallImageCodec( const ImageCodecInfo* codecInfo );
+HRESULT Draw(HDC hdc, const RECT* dstRect, OPTIONAL const RECT* srcRect);
+HRESULT EndDecode(HRESULT statusCode);
+HRESULT EndSink(HRESULT statusCode);
+HRESULT GetAllPropertyItems(UINT totalBufferSize, UINT numProperties, PropertyItem* allItems);
+HRESULT GetEncoderParameterList(UINT size, EncoderParameters* Params);
+HRESULT GetEncoderParameterListSize(UINT* size);
+HRESULT GetFrameDimensionsCount(UINT* count);
+HRESULT GetImageInfo(ImageInfo* imageInfo);
+HRESULT GetInstalledDecoders(UINT* count, ImageCodecInfo** decoders);
+HRESULT GetInstalledEncoders(UINT* count, ImageCodecInfo** encoders);
+HRESULT GetPhysicalDimension(SIZE* size);
+HRESULT GetPropertyBuffer(UINT uiTotalBufferSize, PropertyItem** ppBuffer);
+HRESULT GetPropertyCount(UINT* numOfProperty);
+HRESULT GetPropertySize(UINT* totalBufferSize, UINT* numProperties);
+HRESULT InstallImageCodec(const ImageCodecInfo* codecInfo);
 HRESULT NeedRawProperty();
-HRESULT NeedTransform( UINT* rotation );
-HRESULT PushPropertyItems( UINT numOfItems, UINT uiTotalBufferSize, PropertyItem* item );
-HRESULT PushRawData( const VOID* buffer, UINT bufsize );
-HRESULT PushRawInfo( void* info );
-HRESULT SetEncoderParameters( const EncoderParameters* Param );
-HRESULT SetImageFlags( UINT flags );
-HRESULT SetPropertyItem( PropertyItem item );
+HRESULT NeedTransform(UINT* rotation);
+HRESULT PushPropertyItems(UINT numOfItems, UINT uiTotalBufferSize, PropertyItem* item);
+HRESULT PushRawData(const VOID* buffer, UINT bufsize);
+HRESULT PushRawInfo(void* info);
+HRESULT SetEncoderParameters(const EncoderParameters* Param);
+HRESULT SetImageFlags(UINT flags);
+HRESULT SetPropertyItem(PropertyItem item);
 HRESULT TerminateDecoder();
 HRESULT TerminateEncoder();
-HRESULT UninstallImageCodec( const WCHAR* codecName, UINT flags );
+HRESULT UninstallImageCodec(const WCHAR* codecName, UINT flags);
 
 #endif /* _IMAGING_ */

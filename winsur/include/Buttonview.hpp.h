@@ -34,7 +34,7 @@ enum ButtonControlRectangleStyle_t {
 };
 
 /* alignment  [extra enum] */
-static void DrawText(  HWND hwnd,  HDC hdc,  BOOL dbt,  BOOL fDepress,  UINT pbfPush,  enum ButtonControlRectangleStyle_t bcrs,  WORD alignment  );
+static void DrawText(HWND hwnd, HDC hdc, BOOL dbt, BOOL fDepress, UINT pbfPush, enum ButtonControlRectangleStyle_t bcrs, WORD alignment);
 
 /* ==================================================================
  * extra declarations -- corpus pages the main
@@ -42,13 +42,13 @@ static void DrawText(  HWND hwnd,  HDC hdc,  BOOL dbt,  BOOL fDepress,  UINT pbf
  * ================================================================ */
 
 /* function */
-void DrawCheckBoxandRadioStyle( HWND hwnd, HDC hdc, HBRUSH hbr, WORD alignment );
-void DrawGroupBoxText( HWND hwnd, HBRUSH hbr, HDC hdc, WORD alignment );
-void DrawPushStyle( HWND hwnd, HDC hdc, HBRUSH hbr, UINT pbfPush, UINT state );
-void DrawPushable( HDC hdc, HBRUSH hbr, RECT* lprc, UINT state, UINT flags );
-static bool HitDetect(  HWND hwnd,  POINT pt  );
-static HBRUSH InitDC(  HWND hwnd,  HDC hdc  );
-void PaintGroupBox( HWND hwnd, HDC hdc, HBRUSH hbr, WORD alignment );
-void PaintNonPushStyle( HWND hwnd, HDC hdc, HBRUSH hbr );
+void DrawCheckBoxandRadioStyle(HWND hwnd, HDC hdc, HBRUSH hbr, WORD alignment);
+void DrawGroupBoxText(HWND hwnd, HBRUSH hbr, HDC hdc, WORD alignment);
+void DrawPushStyle(HWND hwnd, HDC hdc, HBRUSH hbr, UINT pbfPush, UINT state);
+void DrawPushable(HDC hdc, HBRUSH hbr, RECT* lprc, UINT state, UINT flags);
+static bool HitDetect(HWND hwnd, POINT pt);
+static HBRUSH InitDC(HWND hwnd, HDC hdc);
+void PaintGroupBox(HWND hwnd, HDC hdc, HBRUSH hbr, WORD alignment);
+void PaintNonPushStyle(HWND hwnd, HDC hdc, HBRUSH hbr);
 
 #endif /* _BUTTONVIEW_HPP_ */

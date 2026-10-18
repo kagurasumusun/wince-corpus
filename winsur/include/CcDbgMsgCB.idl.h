@@ -17,6 +17,6 @@
  * ================================================================ */
 
 /* function */
-HRESULT MsgOut( LPCWSTR pszMsg, DWORD dwThrdId, DWORD dwProcId, DWORD dwTimeStamp);
+HRESULT MsgOut(LPCWSTR pszMsg, DWORD dwThrdId, DWORD dwProcId, DWORD dwTimeStamp);
 
 #endif /* _CCDBGMSGCB_IDL_ */

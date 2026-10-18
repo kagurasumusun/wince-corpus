@@ -17,14 +17,22 @@
  * ================================================================ */
 
 /* function */
-void AddPage( CPropertyPage *pPage );
-void CancelToClose( );
-void Construct( UINT nIDTemplate, UINT nIDCaption = 0 );
-static CFindReplaceDialog* PASCAL GetNotifier( LPARAM lParam );
-int GetPageCount( );
-BOOL PressButton( int nButton );
-LRESULT QuerySiblings( WPARAM wParam, LPARAM lParam );
-void RemovePage( CPropertyPage *pPage );
-BOOL SetActivePage( int nPage );
+#ifdef __cplusplus
+void AddPage(CPropertyPage *pPage);
+#endif /* __cplusplus */
+void CancelToClose();
+#ifdef __cplusplus
+void Construct(UINT nIDTemplate, UINT nIDCaption = 0);
+#endif /* __cplusplus */
+#ifdef __cplusplus
+static CFindReplaceDialog* PASCAL GetNotifier(LPARAM lParam);
+#endif /* __cplusplus */
+int GetPageCount();
+BOOL PressButton(int nButton);
+LRESULT QuerySiblings(WPARAM wParam, LPARAM lParam);
+#ifdef __cplusplus
+void RemovePage(CPropertyPage *pPage);
+#endif /* __cplusplus */
+BOOL SetActivePage(int nPage);
 
 #endif /* _AFXDLGS_ */

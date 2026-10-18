@@ -17,11 +17,11 @@
  * ================================================================ */
 
 /* function */
-HRESULT SetConnectInfo( DWORD dwChosenEntry);
-HRESULT SetDDSurfaceKernelHandles( DWORD cHandles, DWORD* rgDDKernelHandles );
-HRESULT SetDirectDrawKernelHandle( DWORD dwDDKernelHandle);
+HRESULT SetConnectInfo(DWORD dwChosenEntry);
+HRESULT SetDDSurfaceKernelHandles(DWORD cHandles, DWORD* rgDDKernelHandles);
+HRESULT SetDirectDrawKernelHandle(DWORD dwDDKernelHandle);
 HRESULT SetInvertPolarity(void);
-HRESULT SetVideoFormat( DWORD dwChosenEntry);
-HRESULT SetVideoPortID ( DWORD dwVideoPortID);
+HRESULT SetVideoFormat(DWORD dwChosenEntry);
+HRESULT SetVideoPortID (DWORD dwVideoPortID);
 
 #endif /* _VPCONFIG_ */

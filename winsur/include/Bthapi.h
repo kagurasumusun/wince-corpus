@@ -17,22 +17,22 @@
  * ================================================================ */
 
 /* function */
-HRESULT AppendNode( NodeData* pData );
-HRESULT CreateFromStream( UCHAR* pStream, ULONG size );
-HRESULT GetAttribute( USHORT attribute, NodeData* pNode );
-HRESULT GetAttributeAsStream( USHORT attribute, CHAR** ppStream, ULONG* pSize );
-HRESULT GetAttributeList( USHORT** ppList, ULONG* pListSize );
-HRESULT GetNode( ULONG nodeIndex, NodeData* pData );
+HRESULT AppendNode(NodeData* pData);
+HRESULT CreateFromStream(UCHAR* pStream, ULONG size);
+HRESULT GetAttribute(USHORT attribute, NodeData* pNode);
+HRESULT GetAttributeAsStream(USHORT attribute, CHAR** ppStream, ULONG* pSize);
+HRESULT GetAttributeList(USHORT** ppList, ULONG* pListSize);
+HRESULT GetNode(ULONG nodeIndex, NodeData* pData);
 HRESULT GetNodeCount(ULONG* pNodeCount);
 HRESULT GetNodeStringData(ULONG nodeIndex,NodeData* pData);
-HRESULT GetStreamSize( ULONG* pSize );
+HRESULT GetStreamSize(ULONG* pSize);
 HRESULT LockContainer(UCHAR lock);
-HRESULT SetAttribute( USHORT attribute, NodeData* pNode );
-HRESULT SetAttributeFromStream( USHORT attribute, UCHAR* pStream, ULONG size );
+HRESULT SetAttribute(USHORT attribute, NodeData* pNode);
+HRESULT SetAttributeFromStream(USHORT attribute, UCHAR* pStream, ULONG size);
 HRESULT SetNode(ULONG nodeIndex,NodeData* pData);
-HRESULT Validate( UCHAR* pStream, ULONG size, ULONG_PTR* pErrorByte );
-HRESULT WalkStream( UCHAR elementType, ULONG elementSize, UCHAR* pStream );
-HRESULT WriteStream( UCHAR* pStream, ULONG* pNumBytesWritten );
-HRESULT WriteToStream( UCHAR** ppStream, ULONG* pStreamSize, ULONG preSize, ULONG postSize );
+HRESULT Validate(UCHAR* pStream, ULONG size, ULONG_PTR* pErrorByte);
+HRESULT WalkStream(UCHAR elementType, ULONG elementSize, UCHAR* pStream);
+HRESULT WriteStream(UCHAR* pStream, ULONG* pNumBytesWritten);
+HRESULT WriteToStream(UCHAR** ppStream, ULONG* pStreamSize, ULONG preSize, ULONG postSize);
 
 #endif /* _BTHAPI_ */

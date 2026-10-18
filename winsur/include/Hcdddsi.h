@@ -30,6 +30,6 @@ DWORD HcdMdd_SetCapability(
  * ================================================================ */
 
 /* function */
-BOOL HcdMdd_DestroyOhcdObject( LPVOID lpvOhcdObject );
+BOOL HcdMdd_DestroyOhcdObject(LPVOID lpvOhcdObject);
 
 #endif /* _HCDDDSI_ */

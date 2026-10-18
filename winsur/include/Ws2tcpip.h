@@ -91,17 +91,17 @@ struct sockaddr_in6 {short sin6_family;u_short sin6_port;u_longsin6_flowinfo;str
 
 /* ai_next  [extra struct] */
 struct addrinfo {
-  int ai_flags;
-  int ai_family;
-  int ai_socktype;
-  int ai_protocol;
-  size_t ai_addrlen;
-  char* ai_canonname;
-  struct sockaddr* ai_addr;
-  struct addrinfo* ai_next;
+ int ai_flags;
+ int ai_family;
+ int ai_socktype;
+ int ai_protocol;
+ size_t ai_addrlen;
+ char* ai_canonname;
+ struct sockaddr* ai_addr;
+ struct addrinfo* ai_next;
 };
 
 /* flags  [extra struct] */
-int getnameinfo( const struct sockaddr FAR* sa, socklen_t salen, char FAR* host, DWORD hostlen, char FAR* serv, DWORD servlen, int flags );
+int getnameinfo(const struct sockaddr FAR* sa, socklen_t salen, char FAR* host, DWORD hostlen, char FAR* serv, DWORD servlen, int flags);
 
 #endif /* _WS2TCPIP_ */

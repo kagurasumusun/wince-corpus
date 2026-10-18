@@ -17,30 +17,48 @@
  * ================================================================ */
 
 /* function */
-BOOL AddProp( CCeDBProp* pProp );
-BOOL AddProps( CCeDBProp* pPropArray, int nNumProps );
-BOOL AddRecord( CCeDBRecord* pRecord );
-void DeleteAllProps( );
-BOOL DeleteCurrRecord( );
-void DeleteProp( WORD wPropIdent );
-static BOOL Exists( LPCWSTR szName );
-CEOID SeekFirst( );
-CEOID SeekFirstEqual( CCeDBProp& Prop );
-CEOID SeekNext( );
-CEOID SeekNextEqual( CCeDBProp& Prop );
-CEOID SeekPrev( );
-CEOID SeekToRecord( CEOID CeOID );
-CEOID SeekValueGreater( CCeDBProp& Prop );
-CEOID SeekValueSmaller( CCeDBProp& Prop );
-void SetFiletime( FILETIME filetime );
-BOOL SetIdent( DWORD dwIdent );
-BOOL SetLastModified( FILETIME ftLastModified );
-void SetLong( long lVal );
-void SetShort( short iVal );
-void SetSortFlags( WORD wSortFlags );
-BOOL SetSortProps( int nSize, const CCeDBProp *pSortProps );
-void SetString( LPWSTR lpwstr, UINT nMode = Copy );
-void SetULong( ULONG ulVal );
-void SetUShort( USHORT uiVal );
+#ifdef __cplusplus
+BOOL AddProp(CCeDBProp* pProp);
+#endif /* __cplusplus */
+#ifdef __cplusplus
+BOOL AddProps(CCeDBProp* pPropArray, int nNumProps);
+#endif /* __cplusplus */
+#ifdef __cplusplus
+BOOL AddRecord(CCeDBRecord* pRecord);
+#endif /* __cplusplus */
+void DeleteAllProps();
+BOOL DeleteCurrRecord();
+void DeleteProp(WORD wPropIdent);
+static BOOL Exists(LPCWSTR szName);
+CEOID SeekFirst();
+#ifdef __cplusplus
+CEOID SeekFirstEqual(CCeDBProp& Prop);
+#endif /* __cplusplus */
+CEOID SeekNext();
+#ifdef __cplusplus
+CEOID SeekNextEqual(CCeDBProp& Prop);
+#endif /* __cplusplus */
+CEOID SeekPrev();
+CEOID SeekToRecord(CEOID CeOID);
+#ifdef __cplusplus
+CEOID SeekValueGreater(CCeDBProp& Prop);
+#endif /* __cplusplus */
+#ifdef __cplusplus
+CEOID SeekValueSmaller(CCeDBProp& Prop);
+#endif /* __cplusplus */
+void SetFiletime(FILETIME filetime);
+BOOL SetIdent(DWORD dwIdent);
+BOOL SetLastModified(FILETIME ftLastModified);
+void SetLong(long lVal);
+void SetShort(short iVal);
+void SetSortFlags(WORD wSortFlags);
+#ifdef __cplusplus
+BOOL SetSortProps(int nSize, const CCeDBProp *pSortProps);
+#endif /* __cplusplus */
+#ifdef __cplusplus
+void SetString(LPWSTR lpwstr, UINT nMode = Copy);
+#endif /* __cplusplus */
+void SetULong(ULONG ulVal);
+void SetUShort(USHORT uiVal);
 
 #endif /* _WCEDB_ */

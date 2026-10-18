@@ -250,77 +250,89 @@ enum UPnPAVError
 };
 
 /* strPossibleRecQualityModes  [extra struct] */
+#ifdef __cplusplus
 struct DeviceCapabilities
 {
-  wstring strPossiblePlayMedia;
-  wstring strPossibleRecMedia;
-  wstring strPossibleRecQualityModes;
+ wstring strPossiblePlayMedia;
+ wstring strPossibleRecMedia;
+ wstring strPossibleRecQualityModes;
 };
+#endif /* __cplusplus */
 
 /* strWriteStatus  [extra struct] */
+#ifdef __cplusplus
 struct MediaInfo
 {
-  unsigned long nNrTracks;
-  wstring strMediaDuration;
-  wstring strCurrentURI;
-  wstring strCurrentURIMetaData;
-  wstring strNextURI;
-  wstring strNextURIMetaData;
-  wstring strPlayMedium;
-  wstring strRecordMedium;
-  wstring strWriteStatus;
+ unsigned long nNrTracks;
+ wstring strMediaDuration;
+ wstring strCurrentURI;
+ wstring strCurrentURIMetaData;
+ wstring strNextURI;
+ wstring strNextURIMetaData;
+ wstring strPlayMedium;
+ wstring strRecordMedium;
+ wstring strWriteStatus;
 };
+#endif /* __cplusplus */
 
 /* shown  [extra struct] */
+#ifdef __cplusplus
 struct object
 {
-  bool bContainer;
-  wstring strID;
-  wstring strParentID;
-  wstring strTitle;
-  wstring strClass;
-  bool bRestricted;
+ bool bContainer;
+ wstring strID;
+ wstring strParentID;
+ wstring strTitle;
+ wstring strClass;
+ bool bRestricted;
 };
+#endif /* __cplusplus */
 
 /* nAbsCount  [extra struct] */
+#ifdef __cplusplus
 struct PositionInfo
 {
-  unsigned long nTrack;
-  wstring strTrackDuration;
-  wstring strTrackMetaData;
-  wstring strTrackURI;
-  wstring strRelTime;
-  wstring strAbsTime;
-  long nRelCount;
-  long nAbsCount;
+ unsigned long nTrack;
+ wstring strTrackDuration;
+ wstring strTrackMetaData;
+ wstring strTrackURI;
+ wstring strRelTime;
+ wstring strAbsTime;
+ long nRelCount;
+ long nAbsCount;
 };
+#endif /* __cplusplus */
 
 /* bRecord  [extra struct] */
 struct TransportActions
 {
-  bool bPlay;
-  bool bStop;
-  bool bPause;
-  bool bSeek;
-  bool bNext;
-  bool bPrevious;
-  bool bRecord;
+ bool bPlay;
+ bool bStop;
+ bool bPause;
+ bool bSeek;
+ bool bNext;
+ bool bPrevious;
+ bool bRecord;
 };
 
 /* strCurrentSpeed  [extra struct] */
+#ifdef __cplusplus
 struct TransportInfo
 {
-  wstring strCurrentTransportState;
-  wstring strCurrentTransportStatus;
-  wstring strCurrentSpeed;
+ wstring strCurrentTransportState;
+ wstring strCurrentTransportStatus;
+ wstring strCurrentSpeed;
 };
+#endif /* __cplusplus */
 
 /* strRecQualityMode  [extra struct] */
+#ifdef __cplusplus
 struct TransportSettings
 {
-  wstring strPlayMode;
-  wstring strRecQualityMode;
+ wstring strPlayMode;
+ wstring strRecQualityMode;
 };
+#endif /* __cplusplus */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main
@@ -328,12 +340,12 @@ struct TransportSettings
  * ================================================================ */
 
 /* function */
-bool AddNamespaceMapping(  LPCWSTR pszNamespace,  LPCWSTR pszPrefix  );
-DWORD AddSinkProtocol( LPCWSTR pszProtocolInfo );
-DWORD AddSourceProtocol( LPCWSTR pszProtocolInfo );
-bool GetFirstObject(  LPCWSTR pszXml,  object* pObj  );
-bool GetNextObject(  object* pObj  );
-DWORD RemoveSinkProtocol( LPCWSTR pszProtocolInfo );
-DWORD RemoveSourceProtocol( LPCWSTR pszProtocolInfo );
+bool AddNamespaceMapping(LPCWSTR pszNamespace, LPCWSTR pszPrefix);
+DWORD AddSinkProtocol(LPCWSTR pszProtocolInfo);
+DWORD AddSourceProtocol(LPCWSTR pszProtocolInfo);
+bool GetFirstObject(LPCWSTR pszXml, object* pObj);
+bool GetNextObject(object* pObj);
+DWORD RemoveSinkProtocol(LPCWSTR pszProtocolInfo);
+DWORD RemoveSourceProtocol(LPCWSTR pszProtocolInfo);
 
 #endif /* _AV_UPNP_ */

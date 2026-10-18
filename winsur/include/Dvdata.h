@@ -116,14 +116,14 @@ typedef EPGCPlaybackMode *PEPGCPlaybackMode, *LPEPGCPlaybackMode;
  * ================================================================ */
 
 /* function */
-HRESULT EnumerateTextLanguageUnits( IEnumDVD_TEXT_LANGUAGE_UNIT** ppEnum );
-HRESULT GetAudioAttr( UINT nStreamNo, DVD_AUDIO_STREAM_ATTR* pAudioAttr );
-HRESULT GetPOSCode( DVD_POS_CODE* pPOSCode );
-HRESULT GetProviderID( DVD_PROVIDER_ID* pProvider );
-HRESULT GetRecordingVideoInfo( DVD_ISRC* pVideo );
+HRESULT EnumerateTextLanguageUnits(IEnumDVD_TEXT_LANGUAGE_UNIT** ppEnum);
+HRESULT GetAudioAttr(UINT nStreamNo, DVD_AUDIO_STREAM_ATTR* pAudioAttr);
+HRESULT GetPOSCode(DVD_POS_CODE* pPOSCode);
+HRESULT GetProviderID(DVD_PROVIDER_ID* pProvider);
+HRESULT GetRecordingVideoInfo(DVD_ISRC* pVideo);
 HRESULT NotifyNewPCI();
 HRESULT ReaderLock(void);
 HRESULT ReaderUnlock(void);
-HRESULT ReleaseMem( HRESULT* bufptr );
+HRESULT ReleaseMem(HRESULT* bufptr);
 
 #endif /* _DVDATA_ */

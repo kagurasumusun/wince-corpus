@@ -17,7 +17,7 @@
  * ================================================================ */
 
 /* function */
-HRESULT Control( DWORD dwControl, DWORD dwBufSize, BYTE* pbData );
+HRESULT Control(DWORD dwControl, DWORD dwBufSize, BYTE* pbData);
 HRESULT StartPublishing();
 HRESULT StopPublishing();
 

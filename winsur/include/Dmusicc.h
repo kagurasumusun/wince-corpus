@@ -52,18 +52,18 @@ typedef DMUS_WAVES_REVERB_PARAMS *PDMUS_WAVES_REVERB_PARAMS, *LPDMUS_WAVES_REVER
  * ================================================================ */
 
 /* function */
-HRESULT EnumInstrument( DWORD dwIndex, DWORD* pdwPatch, LPWSTR pwszName, DWORD dwNameLen );
-HRESULT GetAppend( DWORD* pdwAppend );
-HRESULT GetChannelPriority( DWORD dwChannelGroup, DWORD dwChannel, LPDWORD pdwPriority );
-HRESULT GetDLId( DWORD* pdwStartDLId, DWORD dwCount );
-HRESULT GetMaxBytes( LPDWORD pcb );
-HRESULT GetRawBufferPtr( LPBYTE* ppData );
-HRESULT GetUsedBytes( LPDWORD pcb );
+HRESULT EnumInstrument(DWORD dwIndex, DWORD* pdwPatch, LPWSTR pwszName, DWORD dwNameLen);
+HRESULT GetAppend(DWORD* pdwAppend);
+HRESULT GetChannelPriority(DWORD dwChannelGroup, DWORD dwChannel, LPDWORD pdwPriority);
+HRESULT GetDLId(DWORD* pdwStartDLId, DWORD dwCount);
+HRESULT GetMaxBytes(LPDWORD pcb);
+HRESULT GetRawBufferPtr(LPBYTE* ppData);
+HRESULT GetUsedBytes(LPDWORD pcb);
 HRESULT ResetReadPtr()
-HRESULT SetChannelPriority( DWORD dwChannelGroup, DWORD dwChannel, DWORD dwPriority );
-HRESULT SetNumChannelGroups( DWORD dwChannelGroups );
-HRESULT SetPatch( DWORD dwPatch );
-HRESULT SetReadNotificationHandle( HANDLE hEvent );
-HRESULT SetUsedBytes( DWORD cb );
+HRESULT SetChannelPriority(DWORD dwChannelGroup, DWORD dwChannel, DWORD dwPriority);
+HRESULT SetNumChannelGroups(DWORD dwChannelGroups);
+HRESULT SetPatch(DWORD dwPatch);
+HRESULT SetReadNotificationHandle(HANDLE hEvent);
+HRESULT SetUsedBytes(DWORD cb);
 
 #endif /* _DMUSICC_ */

@@ -132,6 +132,6 @@ void UnregisterIPClass(
  * ================================================================ */
 
 /* function */
-DWORD LineTranslateDialog ( HWND hParent, HWND *pDialogWnd);
+DWORD LineTranslateDialog (HWND hParent, HWND *pDialogWnd);
 
 #endif /* _NETUI_ */

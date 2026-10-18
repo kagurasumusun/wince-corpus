@@ -40,12 +40,12 @@ typedef VoIPProgressTone *PVoIPProgressTone, *LPVoIPProgressTone;
  * ================================================================ */
 
 /* function */
-HRESULT PlayProgressTone( VoIPProgressTone vpt );
+HRESULT PlayProgressTone(VoIPProgressTone vpt);
 HRESULT StopProgressTone();
 HRESULT StopSound();
-HRESULT get_MicrophoneVolume( float* pfpVolume );
-HRESULT get_SpeakerVolume( float* pfpVolume );
-HRESULT put_MicrophoneVolume( float fpVolume );
-HRESULT put_SpeakerVolume( float fpVolume );
+HRESULT get_MicrophoneVolume(float* pfpVolume);
+HRESULT get_SpeakerVolume(float* pfpVolume);
+HRESULT put_MicrophoneVolume(float fpVolume);
+HRESULT put_SpeakerVolume(float fpVolume);
 
 #endif /* _VOIPMEDIAMANAGER_IDL_ */

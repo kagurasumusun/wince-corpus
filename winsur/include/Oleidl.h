@@ -117,26 +117,26 @@ typedef OLEWHICHMK *POLEWHICHMK, *LPOLEWHICHMK;
 /* function */
 HRESULT BindIfRunning(void);
 HRESULT CanInPlaceActivate();
-HRESULT ContextSensitiveHelp( BOOL fEnterMode);
+HRESULT ContextSensitiveHelp(BOOL fEnterMode);
 HRESULT DragLeave(void);
-HRESULT Freeze( DWORD dwAspect, LONG lindex, void *pvAspect, DWORD *pdwFreeze);
-HRESULT GetMiscStatus( DWORD dwAspect, DWORD *pdwStatus);
-HRESULT GetUpdateOptions( DWORD* pdwUpdateOpt );
+HRESULT Freeze(DWORD dwAspect, LONG lindex, void *pvAspect, DWORD *pdwFreeze);
+HRESULT GetMiscStatus(DWORD dwAspect, DWORD *pdwStatus);
+HRESULT GetUpdateOptions(DWORD* pdwUpdateOpt);
 HRESULT IsUpToDate();
 HRESULT OnInPlaceActivate();
 HRESULT OnInPlaceDeactivate();
-HRESULT OnPosRectChange( LPCRECT lprcPosRect);
-HRESULT OnShowWindow( BOOL fShow);
-HRESULT OnUIDeactivate( BOOL fUndoable);
+HRESULT OnPosRectChange(LPCRECT lprcPosRect);
+HRESULT OnShowWindow(BOOL fShow);
+HRESULT OnUIDeactivate(BOOL fUndoable);
 HRESULT RequestNewObjectLayout();
 HRESULT RequestNewObjectlayout();
-HRESULT SaveObject( void );
+HRESULT SaveObject(void);
 HRESULT SendOnClose()
 HRESULT SendOnSave()
-HRESULT SetUpdateOptions( DWORD dwUpdateOpt );
+HRESULT SetUpdateOptions(DWORD dwUpdateOpt);
 HRESULT ShowObject();
 HRESULT UnbindSource(void);
-HRESULT Unfreeze( DWORD dwFreeze);
+HRESULT Unfreeze(DWORD dwFreeze);
 HRESULT Update();
 
 #endif /* _OLEIDL_ */

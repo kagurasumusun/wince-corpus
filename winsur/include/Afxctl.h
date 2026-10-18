@@ -17,55 +17,65 @@
  * ================================================================ */
 
 /* function */
-BOOL AmbientShowGrabHandles( );
-BOOL AmbientShowHatching( );
-short AmbientTextAlign( );
-BOOL AmbientUIDead( );
-BOOL AmbientUserMode( );
-BOOL ClipCaretRect( LPRECT lpRect );
-void ControlInfoChanged( );
-void DoClick( );
-void EnableSimpleFrame( );
-BOOL ExchangeExtent( CPropExchange* pPX );
-void ExchangeStockProps( CPropExchange* pPX );
-void FireClick( );
-void FireDblClick( );
-void FireKeyDown( USHORT* pnChar, short nShiftState );
-void FireKeyPress( USHORT* pnChar );
-void FireKeyUp( USHORT* pnChar, short nShiftState );
-void FireReadyStateChange( );
-short GetAppearance ( );
-short GetBorderStyle( );
-void GetControlSize( int* pcx, int* pcy );
-BOOL GetControlStatus( UINT nID );
-BOOL GetEnabled( );
-HFONT GetFontHandle( );
-void GetFontTextMetrics( LPTEXTMETRIC lptm, CFontHolder& fontHolder );
-void GetNotSupported( );
-long GetReadyState( );
-BOOL GetRectInContainer( LPRECT lpRect );
-void GetStockTextMetrics( LPTEXTMETRIC lptm );
-void IgnoreApply( UINT nID );
-void InternalSetReadyState( long lNewReadyState );
-BOOL IsConvertingVBX( );
-BOOL IsOptimizedDraw( );
-void PostModalDialog( );
-void PreModalDialog( );
-void RecreateControlWindow( );
-void ResetStockProps( );
-void ResetVersion( DWORD dwVersionDefault );
-void SerializeExtent( CArchive& ar );
-void SerializeStockProps( CArchive& ar );
-void SetAppearance ( short sAppearance );
-void SetBorderStyle( short sBorderStyle );
-BOOL SetControlSize( int cx, int cy );
-BOOL SetControlStatus( UINT nID, BOOL IsDirty );
-void SetDialogResource( HGLOBAL hDialog );
-void SetEnabled( BOOL bEnabled );
-void SetInitialSize( int cx, int cy );
-void SetNotPermitted( );
-void SetNotSupported( );
-void SetPageName( LPCTSTR lpszPageName );
-BOOL WillAmbientsBeValidDuringLoad( );
+BOOL AmbientShowGrabHandles();
+BOOL AmbientShowHatching();
+short AmbientTextAlign();
+BOOL AmbientUIDead();
+BOOL AmbientUserMode();
+BOOL ClipCaretRect(LPRECT lpRect);
+void ControlInfoChanged();
+void DoClick();
+void EnableSimpleFrame();
+#ifdef __cplusplus
+BOOL ExchangeExtent(CPropExchange* pPX);
+#endif /* __cplusplus */
+#ifdef __cplusplus
+void ExchangeStockProps(CPropExchange* pPX);
+#endif /* __cplusplus */
+void FireClick();
+void FireDblClick();
+void FireKeyDown(USHORT* pnChar, short nShiftState);
+void FireKeyPress(USHORT* pnChar);
+void FireKeyUp(USHORT* pnChar, short nShiftState);
+void FireReadyStateChange();
+short GetAppearance ();
+short GetBorderStyle();
+void GetControlSize(int* pcx, int* pcy);
+BOOL GetControlStatus(UINT nID);
+BOOL GetEnabled();
+HFONT GetFontHandle();
+#ifdef __cplusplus
+void GetFontTextMetrics(LPTEXTMETRIC lptm, CFontHolder& fontHolder);
+#endif /* __cplusplus */
+void GetNotSupported();
+long GetReadyState();
+BOOL GetRectInContainer(LPRECT lpRect);
+void GetStockTextMetrics(LPTEXTMETRIC lptm);
+void IgnoreApply(UINT nID);
+void InternalSetReadyState(long lNewReadyState);
+BOOL IsConvertingVBX();
+BOOL IsOptimizedDraw();
+void PostModalDialog();
+void PreModalDialog();
+void RecreateControlWindow();
+void ResetStockProps();
+void ResetVersion(DWORD dwVersionDefault);
+#ifdef __cplusplus
+void SerializeExtent(CArchive& ar);
+#endif /* __cplusplus */
+#ifdef __cplusplus
+void SerializeStockProps(CArchive& ar);
+#endif /* __cplusplus */
+void SetAppearance (short sAppearance);
+void SetBorderStyle(short sBorderStyle);
+BOOL SetControlSize(int cx, int cy);
+BOOL SetControlStatus(UINT nID, BOOL IsDirty);
+void SetDialogResource(HGLOBAL hDialog);
+void SetEnabled(BOOL bEnabled);
+void SetInitialSize(int cx, int cy);
+void SetNotPermitted();
+void SetNotSupported();
+void SetPageName(LPCTSTR lpszPageName);
+BOOL WillAmbientsBeValidDuringLoad();
 
 #endif /* _AFXCTL_ */

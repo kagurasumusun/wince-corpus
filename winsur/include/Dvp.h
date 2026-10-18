@@ -58,11 +58,11 @@ typedef struct _DDVIDEOPORTCAPS {
  * ================================================================ */
 
 /* function */
-HRESULT GetFieldPolarity( LPBOOL lpbFieldPolarity);
-HRESULT GetVideoLine( LPDWORD lpdwLine);
-HRESULT QueryVideoPortStatus( DWORD dwPortId, LPDDVIDEOPORTSTATUS lpVPStatus);
-HRESULT StartVideo( LPDDVIDEOPORTINFO lpVideoInfo);
+HRESULT GetFieldPolarity(LPBOOL lpbFieldPolarity);
+HRESULT GetVideoLine(LPDWORD lpdwLine);
+HRESULT QueryVideoPortStatus(DWORD dwPortId, LPDDVIDEOPORTSTATUS lpVPStatus);
+HRESULT StartVideo(LPDDVIDEOPORTINFO lpVideoInfo);
 HRESULT StopVideo();
-HRESULT UpdateVideo( LPDDVIDEOPORTINFO lpVideoInfo);
+HRESULT UpdateVideo(LPDDVIDEOPORTINFO lpVideoInfo);
 
 #endif /* _DVP_ */

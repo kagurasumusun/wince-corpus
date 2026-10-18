@@ -34,17 +34,17 @@ typedef LMDATA *PLMDATA, *LPLMDATA;
  * ================================================================ */
 
 /* function */
-HRESULT Deselect( void );
-HRESULT GetImData( DWORD dwSize, void *pvImData);
-HRESULT Hiding( void );
-HRESULT Select( HWND hwndSip);
+HRESULT Deselect(void);
+HRESULT GetImData(DWORD dwSize, void *pvImData);
+HRESULT Hiding(void);
+HRESULT Select(HWND hwndSip);
 HRESULT SendAlternatives (LMDATA* plmd);
-HRESULT SendAlternatives2( LMDATA *plmd);
-HRESULT SendCharEvents( UINT uVK, UINT uKeyFlags, UINT uChars, UINT *puShift, UINT *puChars);
-HRESULT SendString( LPTSTR ptszStr, DWORD dwSize);
-HRESULT SendVirtualKey( BYTE bVk, DWORD dwFlags);
-HRESULT SetIMMActiveContext ( HWND hwnd, BOOL bOpen, DWORD dwConversion, DWORD dwSentence, DWORD hkl);
-HRESULT SetImData( DWORD dwSize, void *pvImData);
-HRESULT Showing( void );
+HRESULT SendAlternatives2(LMDATA *plmd);
+HRESULT SendCharEvents(UINT uVK, UINT uKeyFlags, UINT uChars, UINT *puShift, UINT *puChars);
+HRESULT SendString(LPTSTR ptszStr, DWORD dwSize);
+HRESULT SendVirtualKey(BYTE bVk, DWORD dwFlags);
+HRESULT SetIMMActiveContext (HWND hwnd, BOOL bOpen, DWORD dwConversion, DWORD dwSentence, DWORD hkl);
+HRESULT SetImData(DWORD dwSize, void *pvImData);
+HRESULT Showing(void);
 
 #endif /* _SIP_ */

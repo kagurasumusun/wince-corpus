@@ -39,11 +39,11 @@ typedef MMDRV_MESSAGE_PARAMS *PMMDRV_MESSAGE_PARAMS, *LPMMDRV_MESSAGE_PARAMS;
 
 /* CMDRV_MESSAGE_PARAMS  [extra struct] */
 typedef struct {
-  DWORD dwDriverID;
-  HANDLE hDriver;
-  UINT uMsg;
-  LPARAM lParam1;
-  LPARAM lParam2;
+ DWORD dwDriverID;
+ HANDLE hDriver;
+ UINT uMsg;
+ LPARAM lParam1;
+ LPARAM lParam2;
 } CMDRV_MESSAGE_PARAMS;
 
 #endif /* _WAVEDEV_ */

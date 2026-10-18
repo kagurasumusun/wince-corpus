@@ -17,6 +17,6 @@
  * ================================================================ */
 
 /* function */
-HRESULT put_RegistrationParameters( DirectoryClientRegParams* pdcrp );
+HRESULT put_RegistrationParameters(DirectoryClientRegParams* pdcrp);
 
 #endif /* _VOIPPROV_IDL_ */

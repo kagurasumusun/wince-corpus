@@ -69,18 +69,18 @@ enum SecureLockIconConstants{
  * ================================================================ */
 
 /* function */
-void ClientToHostWindow( long* plCX, long* plCY );
-HRESULT ClientToWindow( int* pcx, int* pcy );
+void ClientToHostWindow(long* plCX, long* plCY);
+HRESULT ClientToWindow(int* pcx, int* pcy);
 HRESULT GoBack(VOID);
 HRESULT GoForward(VOID);
 HRESULT GoHome(VOID);
 HRESULT GoSearch(VOID);
-void ProgressChange( long lProgress, long lProgressMax );
+void ProgressChange(long lProgress, long lProgressMax);
 HRESULT Quit(VOID);
-void SetSecureLockIcon( long lSecureLockIcon );
-void WindowSetHeight( long lHeight );
-void WindowSetLeft( long lLeft );
-void WindowSetTop( long lTop );
-void WindowSetWidth( long lWidth );
+void SetSecureLockIcon(long lSecureLockIcon);
+void WindowSetHeight(long lHeight);
+void WindowSetLeft(long lLeft);
+void WindowSetTop(long lTop);
+void WindowSetWidth(long lWidth);
 
 #endif /* _EXDISP_ */

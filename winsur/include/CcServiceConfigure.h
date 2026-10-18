@@ -17,6 +17,6 @@
  * ================================================================ */
 
 /* function */
-HRESULT SetProperty( BSTRbstrPropertyName, BSTRbstrPropertyValue);
+HRESULT SetProperty(BSTRbstrPropertyName, BSTRbstrPropertyValue);
 
 #endif /* _CCSERVICECONFIGURE_ */

@@ -111,37 +111,37 @@ HRESULT
  * ================================================================ */
 
 /* function */
-HREPLOBJ BytesToObject(  LPBYTE lpb,  UINT cb);
-HRESULT Clone( IEnumReplItem FAR *FAR *ppEnum);
-int CompareItem( HREPLITEM hItem1, HREPLITEM hItem2);
-HRESULT CompareStoreIDs( LPBYTE lpbID1, UINT cbID1, LPBYTE lpbID2, UINT cbID2);
-BOOL CopyObject( HREPLOBJ hObjSrc, HREPLOBJ hObjDst);
-HRESULT DeleteObj( PREPLSETUP pSetup);
-HRESULT FindFirstItem( HREPLFLD hFolder, HREPLITEM *phItem, BOOL *pfExist);
-HRESULT FindItemClose( HREPLFLD hFolder);
-HRESULT FindNextItem( HREPLFLD hFolder, HREPLITEM *phItem, BOOL *pfExist);
-void FreeObject( HREPLOBJ hObject);
-HRESULT GetConflictInfo( PCONFINFO pConfInfo);
-hHREPLFLD GetFolderHandle ( );
+HREPLOBJ BytesToObject(LPBYTE lpb, UINT cb);
+HRESULT Clone(IEnumReplItem FAR *FAR *ppEnum);
+int CompareItem(HREPLITEM hItem1, HREPLITEM hItem2);
+HRESULT CompareStoreIDs(LPBYTE lpbID1, UINT cbID1, LPBYTE lpbID2, UINT cbID2);
+BOOL CopyObject(HREPLOBJ hObjSrc, HREPLOBJ hObjDst);
+HRESULT DeleteObj(PREPLSETUP pSetup);
+HRESULT FindFirstItem(HREPLFLD hFolder, HREPLITEM *phItem, BOOL *pfExist);
+HRESULT FindItemClose(HREPLFLD hFolder);
+HRESULT FindNextItem(HREPLFLD hFolder, HREPLITEM *phItem, BOOL *pfExist);
+void FreeObject(HREPLOBJ hObject);
+HRESULT GetConflictInfo(PCONFINFO pConfInfo);
+hHREPLFLD GetFolderHandle ();
 BOOL GetObjTypeInfo (POBJTYPEINFO pObjTypeInfo);
-HRESULT GetObjTypeUIData( HREPLFLD hFolder, POBJUIDATA pData);
-HRESULT GetPacket( LPBYTE *lppbData, DWORD *pcbData, DWORD cbRecommend);
-HRESULT IsFolderChanged( HREPLFLD hFolder, BOOL *pfChanged);
-BOOL IsItemChanged( HREPLFLD hFolder, HREPLITEM hItem, HREPLITEM hItemComp);
-HRESULT IsValidObject( HREPLFLD hFolder, HREPLITEM hItem, UINT uFlags);
-HRESULT Next( unsigned long celt, HREPLITEM *phItem, unsigned long FAR *pCeltFetched);
-BOOL ObjectNotify( POBJNOTIFY pNotify);
-UINT ObjectToBytes( HREPLOBJ hObject, LPBYTE lpb);
-HRESULT OnItemNotify( UINT uCode, LPSTR lpszProgId, LPSTR lpszObjType, HREPLITEM hItem, ULONG ulFlags);
-HRESULT OnObjectCompleted( PREPLSETUP pSetup);
-void QueryDevice( UINT uCode, LPVOID *ppvData);
-HRESULT RemoveDuplicates( LPSTR lpszObjType, UINT uFlags);
-HRESULT ReportStatus( HREPLFLD hFolder, HREPLITEM hItem, UINT uStatus, UINT uParam);
+HRESULT GetObjTypeUIData(HREPLFLD hFolder, POBJUIDATA pData);
+HRESULT GetPacket(LPBYTE *lppbData, DWORD *pcbData, DWORD cbRecommend);
+HRESULT IsFolderChanged(HREPLFLD hFolder, BOOL *pfChanged);
+BOOL IsItemChanged(HREPLFLD hFolder, HREPLITEM hItem, HREPLITEM hItemComp);
+HRESULT IsValidObject(HREPLFLD hFolder, HREPLITEM hItem, UINT uFlags);
+HRESULT Next(unsigned long celt, HREPLITEM *phItem, unsigned long FAR *pCeltFetched);
+BOOL ObjectNotify(POBJNOTIFY pNotify);
+UINT ObjectToBytes(HREPLOBJ hObject, LPBYTE lpb);
+HRESULT OnItemNotify(UINT uCode, LPSTR lpszProgId, LPSTR lpszObjType, HREPLITEM hItem, ULONG ulFlags);
+HRESULT OnObjectCompleted(PREPLSETUP pSetup);
+void QueryDevice(UINT uCode, LPVOID *ppvData);
+HRESULT RemoveDuplicates(LPSTR lpszObjType, UINT uFlags);
+HRESULT ReportStatus(HREPLFLD hFolder, HREPLITEM hItem, UINT uStatus, UINT uParam);
 HRESULT Reset();
-HRESULT SetPacket( LPBYTE lpbData, DWORD cbData);
-HRESULT SetStatusText ( LPSTR lpszText);
-HRESULT Setup( PREPLSETUP pSetup);
-HRESULT Skip( unsigned long celt);
-void UpdateItem( HREPLFLD hFolder, HREPLITEM hItemDst, HREPLITEM hItemSrc);
+HRESULT SetPacket(LPBYTE lpbData, DWORD cbData);
+HRESULT SetStatusText (LPSTR lpszText);
+HRESULT Setup(PREPLSETUP pSetup);
+HRESULT Skip(unsigned long celt);
+void UpdateItem(HREPLFLD hFolder, HREPLITEM hItemDst, HREPLITEM hItemSrc);
 
 #endif /* _CESYNC_ */

@@ -158,6 +158,70 @@ _SAMPLE_PATH = re.compile(
     r"|_Sample_|Sample_Application|Code_Sample|NLSDemo"
 )
 
+_MIDL_ATTR_WORDS = frozenset(
+    "in out string unique ptr ref const optional retval app odl hidden local "
+    "propget propput propputref helpstring helpstringcontext helpstringdll "
+    "switch_is size_is length_is first_is last_is max_is min_is byte_count "
+    "defaultvalue v1_enum public import export library addref release "
+    "allocate call_as entry idl_quote ignore include require_endpoint "
+    "case context_handle encode decode error_status_t handle_t "
+    "implicit_handle explicit_handle param_sourcecode software_aggregate "
+    "asynchronous broadcast represent_as type_handle user_marshal "
+    "usage_aggregate".split())
+_MIDL_ATTR = re.compile(r"\[\s*([^\[\]]*?)\s*\]")
+_MIDDL_OK_IDENT = re.compile(r"^[A-Za-z_]\w*(\s*\+\s*[A-Za-z0-9_]+)?$")
+
+
+def _is_midl_attr(content: str) -> bool:
+    c = (content or "").strip()
+    if not c:
+        return True
+    if any(ch in c for ch in ",(=)>"):
+        return True
+    if c.lower().split("(")[0].strip() in _MIDL_ATTR_WORDS:
+        return True
+    return False
+
+
+def strip_midl_attributes(text: str) -> str:
+    """Derived repair at emission only: MIDL parameter/type attributes
+    (``[in]``, ``[in, size_is(n)]``, ``typedef [string] WCHAR ...``) are
+    not C.  Array dimensions (``[MAX_PATH]``, ``[1]``) are kept -- only
+    bracket groups that are attribute-shaped are removed."""
+    out = _MIDL_ATTR.sub(
+        lambda m: "" if _is_midl_attr(m.group(1)) else m.group(0),
+        text or "")
+    out = re.sub(r"[ \t]{2,}", " ", out)
+    out = re.sub(r"[ \t]+\n", "\n", out)
+    out = re.sub(r"\(\s+", "(", out)
+    out = re.sub(r"\s+([,;)])", r"\1", out)
+    return out
+
+
+_CPP_MARKERS = (
+    r"\btemplate\s*<",
+    r"::",
+    r"\bvirtual\b",
+    r"\boperator\s*[^\w\s]",
+    r"\bclass\s+[A-Za-z_]\w*",
+    r"\bwstring\b",
+    r"\bnew\s*\(",
+    r"\bdelete\s*[\(\[]",
+    r"[A-Za-z_]\w*\s*&\s*[A-Za-z_]\w*\s*[,)]",      # reference parameter
+    r"[,(]\s*[^,()]*\b[A-Za-z_]\w*\s*=\s*[^=]",     # default argument
+    r"\bC[A-Z][A-Za-z0-9_]*[a-z][A-Za-z0-9_]*\b",   # MFC/ATL CName types
+    r"\b[A-Za-z_]\w*\s*<\s*[A-Za-z_]",              # template instantiation
+)
+
+
+def is_cpp_declaration(text: str) -> bool:
+    """True when the declaration uses C++ syntax/types: it belongs behind
+    ``#ifdef __cplusplus`` in a C surface."""
+    body = strip_markup(text or "")
+    if not body:
+        return False
+    return any(re.search(p, body) for p in _CPP_MARKERS)
+
 
 def is_sample_source(path: str) -> bool:
     return bool(path) and bool(_SAMPLE_PATH.search(path.replace("\\", "/")))
@@ -247,6 +311,13 @@ def is_broken_c(text: str) -> bool:
     if is_glued_prototype(body):
         return True
     if "SEC_ENTRY" in body or "IMPLICIT_CALL" in body or "IMPLICIT_DECL" in body:
+        return True
+    # ``int __swi( unsigned swi_number, arg2, arg3, arg4 )`` -- the page
+    # printed untyped placeholder parameters.
+    if re.search(r"[,(]\s*arg[0-9]+\s*[,)]", body):
+        return True
+    # stray apostrophe breaks the C tokeniser ('missing terminating ' ')
+    if body.count("'") % 2 == 1:
         return True
     # Message-crack PRE: ``TCM_REMOVEIMAGE | wParam = ...`` is not a prototype.
     if re.search(r"\bwParam\s*=", body) or re.search(r"\blParam\s*=", body):

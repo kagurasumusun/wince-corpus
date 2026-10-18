@@ -17,8 +17,8 @@
  * ================================================================ */
 
 /* function */
-static HBRUSH BackgroundBrush( HWND hwnd, HDC hdc );
-void DrawSelection( HDC hdc, RECT* prc, COLORREF* prcOldBackgroundColor, COLORREF* prcOldTextColor );
-static COLORREF TextColor( HWND hwnd, HDC hdc );
+static HBRUSH BackgroundBrush(HWND hwnd, HDC hdc);
+void DrawSelection(HDC hdc, RECT* prc, COLORREF* prcOldBackgroundColor, COLORREF* prcOldTextColor);
+static COLORREF TextColor(HWND hwnd, HDC hdc);
 
 #endif /* _EDITVIEW_HPP_ */

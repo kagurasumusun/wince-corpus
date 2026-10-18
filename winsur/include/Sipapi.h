@@ -88,6 +88,6 @@ DWORD SipStatus(void);
  * ================================================================ */
 
 /* function */
-BOOL SipSetDefautRect( RECT * pRect );
+BOOL SipSetDefautRect(RECT * pRect);
 
 #endif /* _SIPAPI_ */

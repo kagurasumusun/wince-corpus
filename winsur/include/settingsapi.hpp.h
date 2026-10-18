@@ -74,45 +74,45 @@ enum PHVolumeSetting
 /* phsLockPhoneAfterUpdatingPIN  [extra enum] */
 enum PHSetting
 {
-  phsDoNotDisturb = 0,
-  phsCallForwarding,
-  phsAutoDial,
-  phsBlockCallerId,
-  phsMissedCalls,
-  phsIncomingCalls,
-  phsOutgoingCalls,
-  phsGalFilterType,
-  phsContactFilterType,
-  phsDeviceLocked,
-  phsAutoDialRulesAvailability,
-  phsPhoneAppStatus,
-  phsDisableAGC,
-  phsLockPhoneAfterUpdatingPIN,
+ phsDoNotDisturb = 0,
+ phsCallForwarding,
+ phsAutoDial,
+ phsBlockCallerId,
+ phsMissedCalls,
+ phsIncomingCalls,
+ phsOutgoingCalls,
+ phsGalFilterType,
+ phsContactFilterType,
+ phsDeviceLocked,
+ phsAutoDialRulesAvailability,
+ phsPhoneAppStatus,
+ phsDisableAGC,
+ phsLockPhoneAfterUpdatingPIN,
 };
 
 /* phvsMicrophoneVolume  [extra enum] */
 enum PHVolumeSetting
 {
-  phvsSpeakerVolume,
-  phvsRingerVolume,
-  phvsHandsetVolume,
-  phvsMicrophoneVolume,
+ phvsSpeakerVolume,
+ phvsRingerVolume,
+ phvsHandsetVolume,
+ phvsMicrophoneVolume,
 };
 
 /* LastVolumeMode  [extra enum] */
 enum PHActiveVolumeMode
 {
-  SpeakerVolumeMode = 0,
-  RingerVolumeMode,
-  LastVolumeMode,
+ SpeakerVolumeMode = 0,
+ RingerVolumeMode,
+ LastVolumeMode,
 };
 
 /* AuthSucceeded  [extra enum] */
 enum AuthenticationResult_e
 {
-  AuthCanceled = 0,
-  AuthInProgress,
-  AuthSucceeded,
+ AuthCanceled = 0,
+ AuthInProgress,
+ AuthSucceeded,
 };
 
 /* ==================================================================

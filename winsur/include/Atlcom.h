@@ -36,12 +36,12 @@ HRESULT AtlAdviseSinkMap( T* pT, bool bAdvise );
  * ================================================================ */
 
 /* function */
-HRESULT FinalConstruct( );
-void FinalRelease( );
-ULONG InternalAddRef( );
-HRESULT InternalQueryInterface( void* pThis, const _ATL_INTMAP_ENTRY* pEntries, REFIiD iid, void** ppvObject);
-ULONG InternalRelease( );
-ULONG OuterAddRef( );
-ULONG OuterRelease( );
+HRESULT FinalConstruct();
+void FinalRelease();
+ULONG InternalAddRef();
+HRESULT InternalQueryInterface(void* pThis, const _ATL_INTMAP_ENTRY* pEntries, REFIiD iid, void** ppvObject);
+ULONG InternalRelease();
+ULONG OuterAddRef();
+ULONG OuterRelease();
 
 #endif /* _ATLCOM_ */

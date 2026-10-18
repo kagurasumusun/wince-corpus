@@ -35,16 +35,16 @@ enum BitmapType {
 
 /* btOk  [extra enum] */
 enum BitmapType {
-  btStdSmallColor,
-  btStdSmallMono,
-  btViewSmallColor,
-  btViewSmallMono,
-  btClose,
-  btOk
+ btStdSmallColor,
+ btStdSmallMono,
+ btViewSmallColor,
+ btViewSmallMono,
+ btClose,
+ btOk
 };
 
 /* bt  [extra enum] */
-static HBITMAP LoadSystemBitmap(  enum BitmapType bt  );
+static HBITMAP LoadSystemBitmap(enum BitmapType bt);
 
 /* BitmapTypebt  [extra enum] */
 static HBITMAP LoadSystemBitmap(enum BitmapTypebt);
@@ -55,8 +55,8 @@ static HBITMAP LoadSystemBitmap(enum BitmapTypebt);
  * ================================================================ */
 
 /* function */
-void DrawDropdownArrow( HDC hdc, int x, int y, int dx, int dy, int cxEdge, int cyEdge, int cyBorder, COLORREF clrBtnFace, int cxDropdownArrow, int yOffset );
-void FaceRect( RECT* prcButton, int cxEdge, int cyEdge );
-void InitializeButtonSlopValue( int* pxSlop, int* pySlop );
+void DrawDropdownArrow(HDC hdc, int x, int y, int dx, int dy, int cxEdge, int cyEdge, int cyBorder, COLORREF clrBtnFace, int cxDropdownArrow, int yOffset);
+void FaceRect(RECT* prcButton, int cxEdge, int cyEdge);
+void InitializeButtonSlopValue(int* pxSlop, int* pySlop);
 
 #endif /* _TOOLBARVIEW_HPP_ */

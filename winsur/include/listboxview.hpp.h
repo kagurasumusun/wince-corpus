@@ -17,7 +17,7 @@
  * ================================================================ */
 
 /* function */
-void DrawBackground( HWND hwnd, HWND hwndOwner, HDC hdc, RECT* prc );
-int ItemHeight( HWND hwnd, HDC hdc );
+void DrawBackground(HWND hwnd, HWND hwndOwner, HDC hdc, RECT* prc);
+int ItemHeight(HWND hwnd, HDC hdc);
 
 #endif /* _LISTBOXVIEW_HPP_ */

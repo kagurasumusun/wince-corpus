@@ -17,10 +17,14 @@
  * ================================================================ */
 
 /* function */
-void CancelBlockingCall( );
-BOOL IOCtl( long lCommand, DWORD* lpArgument );
-BOOL IsBlocking( );
-BOOL Listen( int nConnectionBacklog = 5 );
-BOOL ShutDown( int nHow = sends );
+void CancelBlockingCall();
+BOOL IOCtl(long lCommand, DWORD* lpArgument);
+BOOL IsBlocking();
+#ifdef __cplusplus
+BOOL Listen(int nConnectionBacklog = 5);
+#endif /* __cplusplus */
+#ifdef __cplusplus
+BOOL ShutDown(int nHow = sends);
+#endif /* __cplusplus */
 
 #endif /* _AFXSOCK_ */

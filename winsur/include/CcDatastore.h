@@ -20,11 +20,11 @@
 HRESULT AddFileContainer()
 HRESULT AddPropertyContainer()
 HRESULT ClearOSImage()
-HRESULT ClearServiceMap( BSTRin_bstrServiceCategoryID);
-HRESULT GetOSImage( HRESULT GetOSImage );
-HRESULT RegisterRefreshEvent( BSTRin_bstrEventName);
-HRESULT SetOSImage( BSTRin_bstrOSImage);
-HRESULT SetServiceMap( BSTRin_bstrServiceCategoryID, BSTRin_bstrServiceInfoID);
+HRESULT ClearServiceMap(BSTRin_bstrServiceCategoryID);
+HRESULT GetOSImage(HRESULT GetOSImage);
+HRESULT RegisterRefreshEvent(BSTRin_bstrEventName);
+HRESULT SetOSImage(BSTRin_bstrOSImage);
+HRESULT SetServiceMap(BSTRin_bstrServiceCategoryID, BSTRin_bstrServiceInfoID);
 HRESULT UnregisterRefreshEvent()
 
 #endif /* _CCDATASTORE_ */

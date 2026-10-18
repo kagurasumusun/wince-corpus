@@ -33,6 +33,6 @@ UIPARAM auiParams[4]; };
 typedef struct _FATUIDATA FATUIDATA, *PFATUIDATA;
 
 /* dwValue  [extra struct] */
-struct _UIPARAM {  DWORD dwType,  DWORD dwValue };
+struct _UIPARAM { DWORD dwType, DWORD dwValue };
 
 #endif /* _FATUI_ */

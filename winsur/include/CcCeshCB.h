@@ -17,6 +17,6 @@
  * ================================================================ */
 
 /* function */
-HRESULT CmdOut( BSTRbstrData);
+HRESULT CmdOut(BSTRbstrData);
 
 #endif /* _CCCESHCB_ */

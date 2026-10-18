@@ -38,6 +38,8 @@ enum FLASH_READ_STATUS {
 enum FLASH_READ_STATUS { FLASH_READ_STATUS_ECC_CORRECTION_REQUIRED = 0x1 };
 
 /* x2  [extra enum] */
+#ifdef __cplusplus
 enum FLASH_BLOCK_STATUS { FLASH_BLOCK_STATUS_BAD = 0x1, FLASH_BLOCK_STATUS_RESERVED = 0x2 };
+#endif /* __cplusplus */
 
 #endif /* _FLASHPDD_ */

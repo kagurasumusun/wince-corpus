@@ -92,42 +92,42 @@ struct GALSearchCriteria {
 };
 
 /* wszLastName  [extra struct] */
-struct ContactsSearchCriteria {  WCHAR* wszFirstName;  WCHAR* wszLastName;  };
+struct ContactsSearchCriteria { WCHAR* wszFirstName; WCHAR* wszLastName; };
 
 /* e_ecrsNoCredentials  [extra enum] */
 enum ExchangeClientRequestStatus
 {
-  e_ecrsPending = 0,
-  e_ecrsInProgress,
-  e_ecrsSending,
-  e_ecrsBypassingOWAPage,
-  e_ecrsSucceeded,
-  e_ecrsOutOfMemory,
-  e_ecrsParseFailed,
-  e_ecrsHttpFailure,
-  e_ecrsFailedToSend,
-  e_ecrsFailedToBypassAuthPage,
-  e_ecrsCancelled,
-  e_ecrsNoCredentials,
+ e_ecrsPending = 0,
+ e_ecrsInProgress,
+ e_ecrsSending,
+ e_ecrsBypassingOWAPage,
+ e_ecrsSucceeded,
+ e_ecrsOutOfMemory,
+ e_ecrsParseFailed,
+ e_ecrsHttpFailure,
+ e_ecrsFailedToSend,
+ e_ecrsFailedToBypassAuthPage,
+ e_ecrsCancelled,
+ e_ecrsNoCredentials,
 };
 
 /* e_ecrtFreeBusy  [extra enum] */
 enum ExchangeClientRequestType
 {
-  e_ecrtInvalid = 0,
-  e_ecrtContacts,
-  e_ecrtGALSearch,
-  e_ecrtFreeBusy,
+ e_ecrtInvalid = 0,
+ e_ecrtContacts,
+ e_ecrtGALSearch,
+ e_ecrtFreeBusy,
 };
 
 /* pstStart  [extra struct] */
-struct FreeBusyCriteria {  WCHAR* wszAlias;  SYSTEMTIME* pstStart;  };
+struct FreeBusyCriteria { WCHAR* wszAlias; SYSTEMTIME* pstStart; };
 
 /* pStatus  [extra enum] */
-HRESULT GetStatus(  enum ExchangeClientRequestStatus* pStatus  );
+HRESULT GetStatus(enum ExchangeClientRequestStatus* pStatus);
 
 /* pecrt  [extra enum] */
-HRESULT GetType(  enum ExchangeClientRequestType* pecrt  );
+HRESULT GetType(enum ExchangeClientRequestType* pecrt);
 
 /* ==================================================================
  * extra declarations -- corpus pages the main
@@ -136,22 +136,22 @@ HRESULT GetType(  enum ExchangeClientRequestType* pecrt  );
 
 /* function */
 HRESULT CancelPendingRequests();
-HRESULT GetAlias( WCHAR* wszBuffer, UINT cchBuffer );
-HRESULT GetEmailAddress( WCHAR* wszBuffer, UINT cchBuffer );
-HRESULT GetFreeBusyData( WCHAR* wszDataBuffer, UINT cchDataBuffer );
-HRESULT GetHomeAddress( WCHAR* wszBuffer, UINT cchBuffer );
-HRESULT GetHomePhoneNumber( WCHAR* wszNumberBuffer, UINT cchNumberBuffer );
-HRESULT GetHttpStatus( LONG* plHttpStatus );
-HRESULT GetMobilePhoneNumber( WCHAR* wszBuffer, UINT cchBuffer );
-HRESULT GetOffice( WCHAR* wszBuffer, UINT cchBuffer );
-HRESULT GetPhoneNumber( WCHAR* wszNumberBuffer, UINT cchNumberBuffer );
-HRESULT GetSMTPAddress( WCHAR* wszBuffer, UINT cchBuffer );
-HRESULT GetServer( WCHAR* wszBuffer, UINT cchBuffer );
-HRESULT GetWorkAddress( WCHAR* wszBuffer, UINT cchBuffer );
-HRESULT GetWorkPhoneNumber( WCHAR* wszBuffer, UINT cchBuffer );
+HRESULT GetAlias(WCHAR* wszBuffer, UINT cchBuffer);
+HRESULT GetEmailAddress(WCHAR* wszBuffer, UINT cchBuffer);
+HRESULT GetFreeBusyData(WCHAR* wszDataBuffer, UINT cchDataBuffer);
+HRESULT GetHomeAddress(WCHAR* wszBuffer, UINT cchBuffer);
+HRESULT GetHomePhoneNumber(WCHAR* wszNumberBuffer, UINT cchNumberBuffer);
+HRESULT GetHttpStatus(LONG* plHttpStatus);
+HRESULT GetMobilePhoneNumber(WCHAR* wszBuffer, UINT cchBuffer);
+HRESULT GetOffice(WCHAR* wszBuffer, UINT cchBuffer);
+HRESULT GetPhoneNumber(WCHAR* wszNumberBuffer, UINT cchNumberBuffer);
+HRESULT GetSMTPAddress(WCHAR* wszBuffer, UINT cchBuffer);
+HRESULT GetServer(WCHAR* wszBuffer, UINT cchBuffer);
+HRESULT GetWorkAddress(WCHAR* wszBuffer, UINT cchBuffer);
+HRESULT GetWorkPhoneNumber(WCHAR* wszBuffer, UINT cchBuffer);
 HRESULT OnShutdown();
-HRESULT SetCredentials( const WCHAR* c_wszUsername, const WCHAR* c_wszPassword );
-HRESULT SetServer( const WCHAR* c_wszServername );
+HRESULT SetCredentials(const WCHAR* c_wszUsername, const WCHAR* c_wszPassword);
+HRESULT SetServer(const WCHAR* c_wszServername);
 HRESULT Uninitialize();
 
 #endif /* _IEXCHANGECLIENT_ */

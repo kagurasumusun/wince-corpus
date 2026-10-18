@@ -34,6 +34,6 @@ struct _RTCRTPHeader {
  * ================================================================ */
 
 /* function */
-HRESULT CheckAcceptableFmtp( const CHAR *szFmtp );
+HRESULT CheckAcceptableFmtp(const CHAR *szFmtp);
 
 #endif /* _RTCVIDEOPLUGIN_ */

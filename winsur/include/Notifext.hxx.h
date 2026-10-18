@@ -72,16 +72,16 @@ union PersistentPacket {
 
 /* sPacket  [extra struct] */
 struct NotifyPacket {
-  NotifyPacket *pNext;
-  NotifyPacket *pPrev;
-  unsigned int uiPacketType;
-  CEOID oidRecord;
-  HICON hIcon;
-  HICON hBigIcon;
-  int fHasIcon;
-  HWND hDlg;
-  void *pExtraUIData;
-  PersistentPacket *sPacket; };
+ NotifyPacket *pNext;
+ NotifyPacket *pPrev;
+ unsigned int uiPacketType;
+ CEOID oidRecord;
+ HICON hIcon;
+ HICON hBigIcon;
+ int fHasIcon;
+ HWND hDlg;
+ void *pExtraUIData;
+ PersistentPacket *sPacket; };
 
 /* ==================================================================
  * functions and callbacks
@@ -162,7 +162,7 @@ void CeNotifyPublic_Uninitialize(void);
  * ================================================================ */
 
 /* function */
-void CeNotifyPrivate_FilterType ( unsigned int uiFlag );
-NotifyPacket *CeNotifyPrivate_TranslateOID (  CEOID oid );
+void CeNotifyPrivate_FilterType (unsigned int uiFlag);
+NotifyPacket *CeNotifyPrivate_TranslateOID (CEOID oid);
 
 #endif /* _NOTIFEXT_HXX_ */

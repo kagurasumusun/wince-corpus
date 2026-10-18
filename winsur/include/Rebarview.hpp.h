@@ -17,8 +17,8 @@
  * ================================================================ */
 
 /* function */
-BOOL DrawGripper( HDC hdc, LPRECT lprc );
-void InitSpacingValues( int* pstartspace, int* pgripperwidth, int* pinterspace );
-void SetEdgeBorderType( UINT* puEdgeType, UINT* puBorderType );
+BOOL DrawGripper(HDC hdc, LPRECT lprc);
+void InitSpacingValues(int* pstartspace, int* pgripperwidth, int* pinterspace);
+void SetEdgeBorderType(UINT* puEdgeType, UINT* puBorderType);
 
 #endif /* _REBARVIEW_HPP_ */

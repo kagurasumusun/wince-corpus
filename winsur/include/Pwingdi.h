@@ -24,6 +24,6 @@ struct ContrastCmdInputParm {
 };
 
 /* parm  [extra struct] */
-struct ContrastCmdInputParm {  int command;  int parm;  };
+struct ContrastCmdInputParm { int command; int parm; };
 
 #endif /* _PWINGDI_ */

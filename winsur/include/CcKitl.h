@@ -28,7 +28,7 @@
  * ================================================================ */
 
 /* function */
-HRESULT BootFlags ( DWORD dwBootFlags);
-HRESULT TransportId ( DWORD*pdwTransportId);
+HRESULT BootFlags (DWORD dwBootFlags);
+HRESULT TransportId (DWORD*pdwTransportId);
 
 #endif /* _CCKITL_ */

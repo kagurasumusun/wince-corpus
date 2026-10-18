@@ -47,15 +47,15 @@
  * ================================================================ */
 
 /* function */
-HRESULT CanUseOverlayStretch( long *UseOverlayStretch);
-HRESULT CanUseScanLine( long *UseScanLine);
-HRESULT GetSurfaceType( DWORD *pSurfaceType);
-HRESULT GetSwitches( DWORD *pSwitches);
-HRESULT SetDefault( );
-HRESULT SetSwitches( DWORD pSwitches);
-HRESULT UseOverlayStretch( long UseOverlayStretch);
-HRESULT UseScanLine( long UseScanLine);
-HRESULT UseWhenFullScreen( long UseWhenFullScreen);
-HRESULT WillUseFullScreen( long *UseWhenFullScreen);
+HRESULT CanUseOverlayStretch(long *UseOverlayStretch);
+HRESULT CanUseScanLine(long *UseScanLine);
+HRESULT GetSurfaceType(DWORD *pSurfaceType);
+HRESULT GetSwitches(DWORD *pSwitches);
+HRESULT SetDefault();
+HRESULT SetSwitches(DWORD pSwitches);
+HRESULT UseOverlayStretch(long UseOverlayStretch);
+HRESULT UseScanLine(long UseScanLine);
+HRESULT UseWhenFullScreen(long UseWhenFullScreen);
+HRESULT WillUseFullScreen(long *UseWhenFullScreen);
 
 #endif /* _AMVIDEO_ */

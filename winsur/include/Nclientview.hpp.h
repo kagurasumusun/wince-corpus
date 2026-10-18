@@ -37,16 +37,16 @@ enum WidgetId{
 };
 
 /* bTopLevelWindow  [extra enum] */
-static RECT WidgetRect(  HWND hwnd,  enum WidgetId wid,  bool bTopLevelWindow  );
+static RECT WidgetRect(HWND hwnd, enum WidgetId wid, bool bTopLevelWindow);
 
 /* widHelp  [extra enum] */
 enum WidgetId{
-  widInvalid = -1,
-  widClose,
-  widMaxRestore,
-  widMin,
-  widOk,
-  widHelp
+ widInvalid = -1,
+ widClose,
+ widMaxRestore,
+ widMin,
+ widOk,
+ widHelp
 };
 
 /* ==================================================================
@@ -55,15 +55,15 @@ enum WidgetId{
  * ================================================================ */
 
 /* function */
-void BoundPoint( RECT* prcBound, POINT* ppt );
-static RECT BoundingRect(  HWND hwnd  );
-BOOL CalcCaptionRect( HWND hwnd, RECT* lprc );
-void CalcClientRectWithHorzScrollBars( RECT* lprc );
-void CalcClientRectWithNoScrollBars( HWND hwnd, RECT* lprc, DWORD dwStyle, DWORD dwExStyle );
-void CalcClientRectWithVertScrollBars( RECT* lprc, DWORD dwExStyle );
-static bool DoesHorzScrollBarFit(  RECT* lprc  );
-static bool DoesVertScrollBarFit(  RECT* lprc  );
-BOOL DrawBorder( HWND hwnd, HDC hdc, LPCRECT lprc );
-BOOL ExposedDrawFrameControl( HDC hdc, RECT* prc, UINT wType, UINT wState );
+void BoundPoint(RECT* prcBound, POINT* ppt);
+static RECT BoundingRect(HWND hwnd);
+BOOL CalcCaptionRect(HWND hwnd, RECT* lprc);
+void CalcClientRectWithHorzScrollBars(RECT* lprc);
+void CalcClientRectWithNoScrollBars(HWND hwnd, RECT* lprc, DWORD dwStyle, DWORD dwExStyle);
+void CalcClientRectWithVertScrollBars(RECT* lprc, DWORD dwExStyle);
+static bool DoesHorzScrollBarFit(RECT* lprc);
+static bool DoesVertScrollBarFit(RECT* lprc);
+BOOL DrawBorder(HWND hwnd, HDC hdc, LPCRECT lprc);
+BOOL ExposedDrawFrameControl(HDC hdc, RECT* prc, UINT wType, UINT wState);
 
 #endif /* _NCLIENTVIEW_HPP_ */

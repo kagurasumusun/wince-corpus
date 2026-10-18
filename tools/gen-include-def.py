@@ -226,19 +226,24 @@ _DECL_KEYWORD_HEAD = re.compile(
 def c_decl_text(text):
     """Derived repair at emission only: C declaration keywords are
     lowercase in C, and some documentation pages print ``Typedef``
-    (learn/windows-ce-5.0 aa447838 and kin).  The KB keeps the pages'
-    spelling verbatim (docs/clean-room.md); the surface applies this
-    repair so the text compiles, and reports it as a derived change."""
+    (learn/windows-ce-5.0 aa447838 and kin); MIDL bracket attributes
+    (``[in]``, ``[size_is(n)]``) are stripped.  C++ declarations are
+    kept but wrapped in ``#ifdef __cplusplus`` so the C surface builds.
+    The KB keeps the pages' spelling verbatim (docs/clean-room.md); the
+    surface applies these repairs and reports them as derived changes."""
     if not text:
         return text
+    text = quality_filters.strip_midl_attributes(text)
     match = _DECL_KEYWORD_HEAD.match(text.lstrip())
-    if not match:
-        return text
-    body = text.lstrip()
-    leading = text[:len(text) - len(body)]
-    pre = (match.group("pre") or "").lower()
-    kw = match.group("kw").lower()
-    return leading + pre + kw + body[match.end():]
+    if match:
+        body = text.lstrip()
+        leading = text[:len(text) - len(body)]
+        pre = (match.group("pre") or "").lower()
+        kw = match.group("kw").lower()
+        text = leading + pre + kw + body[match.end():]
+    if quality_filters.is_cpp_declaration(text):
+        return "#ifdef __cplusplus\n" + text + "\n#endif /* __cplusplus */"
+    return text
 
 
 def load_heuristic_headers():
@@ -603,6 +608,31 @@ def write_includes(out, by_header, generated):
         with open(path, "w", encoding="utf-8") as fh:
             fh.write("\n".join(lines) + "\n")
     return include_dir
+
+
+def load_derived_forwards():
+    """data/derived-forward-types.tsv -> [(name, form, note)].
+
+    Derived opaque forwards so printed prototypes compile where no
+    corpus page prints the type body.  DERIVED structure -- the form
+    (struct-forward / struct-pointer / void-pointer / guid-ref /
+    int-placeholder) and the note travel with every emission."""
+    path = os.path.join(ROOT, "data", "derived-forward-types.tsv")
+    out = []
+    if not os.path.exists(path):
+        return out
+    with open(path, encoding="utf-8") as fh:
+        header = fh.readline().rstrip("\n").split("\t")
+        for line in fh:
+            cells = line.rstrip("\n").split("\t")
+            row = dict(zip(header, cells)) if header else {}
+            name = row.get("name") or (cells[0] if cells else "")
+            form = (row.get("form")
+                    or (cells[1] if len(cells) > 1 else "struct-forward"))
+            note = row.get("note") or ""
+            if name:
+                out.append((name, form, note))
+    return out
 
 
 def load_base_types():
@@ -3232,6 +3262,8 @@ def run_unified(args):
                 " * These expand to nothing / long long.  Not copied from an SDK.",
                 " * stdarg.h is ISO C (va_list on FormatMessage). */",
                 "#include <stdarg.h>",
+                "/* stdbool.h is ISO C99 (bool printed by some pages). */",
+                "#include <stdbool.h>",
                 "#ifndef CONST",
                 "#define CONST const",
                 "#endif",
@@ -3481,6 +3513,41 @@ def run_unified(args):
                 defn_lines = defn.split("\\n")
                 for defn_line in defn_lines:
                     lines.append(defn_line)
+        # Derived opaque forwards (data/derived-forward-types.tsv): types
+        # whose body no corpus page prints but whose names the printed
+        # prototypes use.  DERIVED structure -- marked as such; see
+        # docs/ce-surface-audit-2026-10-18.ja.md.
+        fwd_rows = load_derived_forwards()
+        if fwd_rows and key.lower() == "windef.h":
+            lines.append("")
+            lines.append("/* " + "=" * 66)
+            lines.append(" * derived forwards -- opaque types whose bodies")
+            lines.append(" * no corpus page prints; prototypes compile against")
+            lines.append(" * these (DERIVED, not quoted; data/derived-forward-")
+            lines.append(" * types.tsv)")
+            lines.append(" * " + "=" * 64 + " */")
+            for fname, form, fnote in fwd_rows:
+                if fname in emitted_type_names:
+                    continue
+                emitted_type_names.add(fname)
+                if fname.startswith("LP") and len(fname) > 4:
+                    base = fname[2:]
+                elif fname.startswith("P") and fname[1:2].isupper():
+                    base = fname[1:]
+                else:
+                    base = fname
+                if form == "struct-pointer":
+                    decl = f"typedef struct _{base} *{fname};"
+                elif form == "void-pointer":
+                    decl = f"typedef void *{fname};"
+                elif form == "guid-ref":
+                    decl = f"typedef const struct _GUID *{fname};"
+                elif form == "int-placeholder":
+                    decl = f"typedef int {fname};"
+                else:
+                    decl = f"typedef struct {fname} {fname};"
+                lines.append(f"/* DERIVED forward -- {fnote} */")
+                lines.append(decl)
         # Extra macros filed into this header (quality-filtered, not
         # already numbered as constants above).  Object-like first, then
         # function-like, so the two kinds are not mixed.

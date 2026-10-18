@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 33 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
+ * 0 constants, 32 declarations, 0 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _CMNINTRIN_
 #define _CMNINTRIN_
@@ -37,9 +37,6 @@ void __cdecl __CacheRelease( void *);
 
 /* _CacheWriteBack  [function; ce-only; CE 4.0..599] */
 void __cdecl __CacheWriteback( void *);
-
-/* _trap  [function; ce-only; CE 4.0..599] */
-int __cdecl __trap(arg1,);
 #endif /* _WIN32_WCE */
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x700)) /* CE 4.0..699 */
@@ -194,6 +191,9 @@ void __cdecl _ReadBarrier(void);
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x600 && _WIN32_WCE < 0x700)) /* CE 6.0..699 */
 
+/* __trap  [function; ce-only; CE 6.0..699] */
+int __cdecl __trap(int arg1, ...);
+
 /* _ReadBarrier  [function; ce-only; CE 6.0..699; entity-headers] */
 void __cdecl _ReadWriteBarrier(void);
 void __cdecl _WriteBarrier(void);
@@ -206,7 +206,7 @@ void __cdecl _ReadBarrier(void);
  * ================================================================ */
 
 /* function */
-void __cdecl __CacheWriteback( void *);
-void __cdecl __ICacheRefresh( void *);
+void __cdecl __CacheWriteback(void *);
+void __cdecl __ICacheRefresh(void *);
 
 #endif /* _CMNINTRIN_ */

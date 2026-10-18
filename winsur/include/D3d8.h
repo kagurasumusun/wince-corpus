@@ -39,15 +39,15 @@
  * ================================================================ */
 
 /* function */
-HRESULT ApplyStateBlock( DWORD Token );
+HRESULT ApplyStateBlock(DWORD Token);
 HRESULT BeginStateBlock();
-HRESULT CaptureStateBlock( DWORD Token );
-HRESULT DeleteStateBlock( DWORD Token );
-HRESULT EndStateBlock( DWORD* pToken );
-HMONITOR GetAdapterMonitor( UINT Adapter );
+HRESULT CaptureStateBlock(DWORD Token);
+HRESULT DeleteStateBlock(DWORD Token);
+HRESULT EndStateBlock(DWORD* pToken);
+HMONITOR GetAdapterMonitor(UINT Adapter);
 UINT GetAvailableTextureMem();
-HRESULT GetClipPlane( DWORD Index, float* pPlane );
-HRESULT GetVertexShader( DWORD* pHandle );
-HRESULT SetClipPlane( DWORD Index, CONST float* pPlane );
+HRESULT GetClipPlane(DWORD Index, float* pPlane);
+HRESULT GetVertexShader(DWORD* pHandle);
+HRESULT SetClipPlane(DWORD Index, CONST float* pPlane);
 
 #endif /* _D3D8_ */

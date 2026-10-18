@@ -17,7 +17,7 @@
  * ================================================================ */
 
 /* function */
-HRESULT Allocate( PVOID pSrcMarshalled, DWORD cbSrc, DWORD ArgumentDescriptor );
+HRESULT Allocate(PVOID pSrcMarshalled, DWORD cbSrc, DWORD ArgumentDescriptor);
 HRESULT Unmarshal();
 
 #endif /* _MARSHAL_HPP_ */

@@ -1098,10 +1098,14 @@ DWORD WINAPI CryptMsgCalculateEncodedLength(
  * ================================================================ */
 
 /* function */
-BOOL CRYPTFUNCCryptDestroyHash( HCRYPTHASHhHash);
+#ifdef __cplusplus
+BOOL CRYPTFUNCCryptDestroyHash(HCRYPTHASHhHash);
+#endif /* __cplusplus */
+#ifdef __cplusplus
 BOOL CRYPTFUNCCryptExportKey(HCRYPTKEY hKey,HCRYPTKEY hExpKey,DWORD dwBlobType,DWORD dwFlags,BYTE* pbData,DWORD* pdwbDataLen);
-VOID WINAPI CertEnumStoreLocationCallback( LPCWSTR pvszStoreLoocations DWORD dwFlags, void *pvReserved, void *pvArg );
-VOID WINAPI CertEnumSystemStoreCallback( const void *pvSystemStore, DWORD dwFlags, PCERT_SYSTEM_STORE_INFO pStoreInfo, void *pvReserved, void *pvArg );
-VOID WINAPI CmsgStreamOutputCallback( const void *pvArg, //in BYTE *pbData, //in DWORD cbData, //in BOOL fFinal //in );
+#endif /* __cplusplus */
+VOID WINAPI CertEnumStoreLocationCallback(LPCWSTR pvszStoreLoocations DWORD dwFlags, void *pvReserved, void *pvArg);
+VOID WINAPI CertEnumSystemStoreCallback(const void *pvSystemStore, DWORD dwFlags, PCERT_SYSTEM_STORE_INFO pStoreInfo, void *pvReserved, void *pvArg);
+VOID WINAPI CmsgStreamOutputCallback(const void *pvArg, //in BYTE *pbData, //in DWORD cbData, //in BOOL fFinal //in);
 
 #endif /* _WINCRYPT_ */

@@ -51,21 +51,31 @@ void _cdecl AtlTrace( LPCTSTR lpszFormat, ... );
  * ================================================================ */
 
 /* function */
-void Append( const CComBSTR& bstrSrc );
-void CComAutoCriticalSection( );
-ULONG CComPtr( VOID );
-ULONG CComQIPtr( VOID );
-static ULONG Decrement( LPLONG p);
-LONG DeleteSubKey( LPCTSTR lpszSubKey );
-void Empty( );
-LONG GetLockCount( );
-HINSTANCE GetModuleInstance( );
-HINSTANCE GetResourceInstance( );
-HINSTANCE GetTypeLibInstance( );
-static ULONG Increment( LPLONG p);
-LONG QueryValue( DWORD& dwValue, LPCTSTR lpszValueName );
-LONG RecurseDeleteKey( LPCTSTR lpszKey );
-HRESULT RevokeClassObjects( );
-void Term( );
+#ifdef __cplusplus
+void Append(const CComBSTR& bstrSrc);
+#endif /* __cplusplus */
+#ifdef __cplusplus
+void CComAutoCriticalSection();
+#endif /* __cplusplus */
+#ifdef __cplusplus
+ULONG CComPtr(VOID);
+#endif /* __cplusplus */
+#ifdef __cplusplus
+ULONG CComQIPtr(VOID);
+#endif /* __cplusplus */
+static ULONG Decrement(LPLONG p);
+LONG DeleteSubKey(LPCTSTR lpszSubKey);
+void Empty();
+LONG GetLockCount();
+HINSTANCE GetModuleInstance();
+HINSTANCE GetResourceInstance();
+HINSTANCE GetTypeLibInstance();
+static ULONG Increment(LPLONG p);
+#ifdef __cplusplus
+LONG QueryValue(DWORD& dwValue, LPCTSTR lpszValueName);
+#endif /* __cplusplus */
+LONG RecurseDeleteKey(LPCTSTR lpszKey);
+HRESULT RevokeClassObjects();
+void Term();
 
 #endif /* _ATLBASE_ */

@@ -160,19 +160,19 @@ typedef IDirectMusicObject __RPC_FAR *LPDMUS_OBJECT;
  * ================================================================ */
 
 /* function */
-HRESULT AllocPMsg( ULONG cb, DMUS_PMSG** ppPMSG );
+HRESULT AllocPMsg(ULONG cb, DMUS_PMSG** ppPMSG);
 HRESULT CloseDown();
-HRESULT FreePMsg( DMUS_PMSG* pPMSG );
-HRESULT GetBumperLength( DWORD* pdwMilliSeconds );
-HRESULT GetNotificationPMsg( DMUS_NOTIFICATION_PMSG** ppNotificationPMsg );
-HRESULT GetPatch( DWORD* pdwPatch );
-HRESULT GetPrepareTime( DWORD* pdwMilliSeconds );
-HRESULT GetRepeats( DWORD* pdwRepeats );
-HRESULT GetScale( DWORD* pdwScale );
-HRESULT SendPMsg( DMUS_PMSG* pPMSG );
-HRESULT SetBumperLength( DWORD dwMilliSeconds );
-HRESULT SetDescriptor( LPDMUS_OBJECTDESC pDesc );
-HRESULT SetPrepareTime( DWORD dwMilliSeconds );
-HRESULT StampPMsg( DMUS_PMSG* pPMSG );
+HRESULT FreePMsg(DMUS_PMSG* pPMSG);
+HRESULT GetBumperLength(DWORD* pdwMilliSeconds);
+HRESULT GetNotificationPMsg(DMUS_NOTIFICATION_PMSG** ppNotificationPMsg);
+HRESULT GetPatch(DWORD* pdwPatch);
+HRESULT GetPrepareTime(DWORD* pdwMilliSeconds);
+HRESULT GetRepeats(DWORD* pdwRepeats);
+HRESULT GetScale(DWORD* pdwScale);
+HRESULT SendPMsg(DMUS_PMSG* pPMSG);
+HRESULT SetBumperLength(DWORD dwMilliSeconds);
+HRESULT SetDescriptor(LPDMUS_OBJECTDESC pDesc);
+HRESULT SetPrepareTime(DWORD dwMilliSeconds);
+HRESULT StampPMsg(DMUS_PMSG* pPMSG);
 
 #endif /* _DMUSICI_ */

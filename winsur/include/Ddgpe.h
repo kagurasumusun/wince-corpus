@@ -57,27 +57,29 @@ typedef enum EDDGPEPixelFormat{
 };
 
 /* x1000  [extra enum] */
+#ifdef __cplusplus
 enum EDDGPEPixelFormat
 {
-  ddgpePixelFormat_1bpp = 0,
-  ddgpePixelFormat_2bpp,
-  ddgpePixelFormat_4bpp,
-  ddgpePixelFormat_8bpp,
-  ddgpePixelFormat_565,
-  ddgpePixelFormat_5551,
-  ddgpePixelFormat_4444,
-  ddgpePixelFormat_5550,
-  ddgpePixelFormat_8880,
-  ddgpePixelFormat_8888,
-  ddgpePixelFormat_YUYV422,
-  ddgpePixelFormat_UYVY422,
-  ddgpePixelFormat_15bppGeneric,
-  ddgpePixelFormat_16bppGeneric,
-  ddgpePixelFormat_24bppGeneric,
-  ddgpePixelFormat_32bppGeneric,
-  ddgpePixelFormat_UnknownFormat,
-  ddgpePixelFormat_CustomFormat = 0x1000
+ ddgpePixelFormat_1bpp = 0,
+ ddgpePixelFormat_2bpp,
+ ddgpePixelFormat_4bpp,
+ ddgpePixelFormat_8bpp,
+ ddgpePixelFormat_565,
+ ddgpePixelFormat_5551,
+ ddgpePixelFormat_4444,
+ ddgpePixelFormat_5550,
+ ddgpePixelFormat_8880,
+ ddgpePixelFormat_8888,
+ ddgpePixelFormat_YUYV422,
+ ddgpePixelFormat_UYVY422,
+ ddgpePixelFormat_15bppGeneric,
+ ddgpePixelFormat_16bppGeneric,
+ ddgpePixelFormat_24bppGeneric,
+ ddgpePixelFormat_32bppGeneric,
+ ddgpePixelFormat_UnknownFormat,
+ ddgpePixelFormat_CustomFormat = 0x1000
 };
+#endif /* __cplusplus */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main
@@ -86,7 +88,7 @@ enum EDDGPEPixelFormat
 
 /* function */
 void SetOverlay();
-void SetRotation( int width, int height, int iRotate );
+void SetRotation(int width, int height, int iRotate);
 int SurfaceSize();
 
 #endif /* _DDGPE_ */

@@ -17,14 +17,14 @@
  * ================================================================ */
 
 /* function */
-HRESULT CancelDefaultHandling( long lEvCode);
-HRESULT FreeEventParams( long lEventCode, long lParam1, long lParam2);
-HRESULT RestoreDefaultHandling( long lEvCode);
-HRESULT SetNotifyFlags( long lNoNotifyFlags);
-HRESULT StopWhenReady( );
-HRESULT get_Balance( long *plBalance);
-HRESULT get_Volume( long *plVolume);
-HRESULT put_Balance( long lBalance);
-HRESULT put_Volume( long lVolume);
+HRESULT CancelDefaultHandling(long lEvCode);
+HRESULT FreeEventParams(long lEventCode, long lParam1, long lParam2);
+HRESULT RestoreDefaultHandling(long lEvCode);
+HRESULT SetNotifyFlags(long lNoNotifyFlags);
+HRESULT StopWhenReady();
+HRESULT get_Balance(long *plBalance);
+HRESULT get_Volume(long *plVolume);
+HRESULT put_Balance(long lBalance);
+HRESULT put_Volume(long lVolume);
 
 #endif /* _CONTROL_ */

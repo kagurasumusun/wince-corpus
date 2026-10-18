@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 0 constants, 199 declarations, 0 outlines, 0 base types, 0 extra macros, 5 extra decls
+ * 0 constants, 135 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _MIPSINTR_
 #define _MIPSINTR_
@@ -17,66 +17,11 @@
 
 #if defined(_WIN32_WCE) && ((_WIN32_WCE >= 0x400 && _WIN32_WCE < 0x500)) /* CE 4.0..499 */
 
-/* _abs_ps  [function; ce-only; CE 4.0..499] */
-double __cdecl _abs_ps(
- arg1
-);
-
-/* _abs_sl  [function; ce-only; CE 4.0..499] */
-float __cdecl _abs_sl(
- arg1
-);
-
-/* _abs_su  [function; ce-only; CE 4.0..499] */
-float __cdecl _abs_su(
- arg1
-);
-
-/* _abs_vl  [function; ce-only; CE 4.0..499] */
-double __cdecl _abs_vl(
- arg1
-);
-
-/* _abs_vu  [function; ce-only; CE 4.0..499] */
-double __cdecl _abs_vu(
- arg1
-);
-
 /* _add_ob  [function; ce-only; CE 4.0..499] */
 double _add_ob(
  double Arg1,
  double Arg2,
  int Arg3
-);
-
-/* _add_ps  [function; ce-only; CE 4.0..499] */
-double __cdecl _add_ps(
- arg1,
- arg2
-);
-
-/* _add_sl  [function; ce-only; CE 4.0..499] */
-float __cdecl _add_sl(
- arg1,
- arg2
-);
-
-/* _add_su  [function; ce-only; CE 4.0..499] */
-float __cdecl _add_su(
- arg1,
- arg2
-);
-
-/* _add_vl  [function; ce-only; CE 4.0..499] */
-double __cdecl _add_vl(
- arg1,
- arg2
-);
-
-/* _add_vu  [function; ce-only; CE 4.0..499] */
-double __cdecl _add_vu(
- arg1,
- arg2
 );
 
 /* _alni_ob  [function; ce-only; CE 4.0..499] */
@@ -690,96 +635,6 @@ float __cdecl _cvt_s_pu(
  double
 );
 
-/* _div_ps  [function; ce-only; CE 4.0..499] */
-double __cdecl _div_ps(
- arg1,
- arg2
-);
-
-/* _div_sl  [function; ce-only; CE 4.0..499] */
-float __cdecl _div_sl(
- arg1,
- arg2
-);
-
-/* _div_su  [function; ce-only; CE 4.0..499] */
-float __cdecl _div_su(
- arg1,
- arg2
-);
-
-/* _div_vl  [function; ce-only; CE 4.0..499] */
-double __cdecl _div_vl(
- arg1,
- arg2
-);
-
-/* _div_vu  [function; ce-only; CE 4.0..499] */
-double __cdecl _div_vu(
- arg1,
- arg2
-);
-
-/* _ersqrt_ps  [function; ce-only; CE 4.0..499] */
-double __cdecl _esrqrt_ps(
- arg1
-);
-
-/* _ersqrt_sl  [function; ce-only; CE 4.0..499] */
-float __cdecl _esrqrt_sl(
- arg1
-);
-
-/* _ersqrt_su  [function; ce-only; CE 4.0..499] */
-float __cdecl _esrqrt_su(
- arg1
-);
-
-/* _ersqrt_vl  [function; ce-only; CE 4.0..499] */
-double __cdecl _esrqrt_vl(
- arg1
-);
-
-/* _ersqrt_vu  [function; ce-only; CE 4.0..499] */
-double __cdecl _esrqrt_vu(
- arg1
-);
-
-/* _madd_ps  [function; ce-only; CE 4.0..499] */
-double __cdecl _madd_ps(
- arg1,
- arg2,
- arg3
-);
-
-/* _madd_sl  [function; ce-only; CE 4.0..499] */
-float __cdecl _madd_sl(
- arg1,
- arg2,
- arg3
-);
-
-/* _madd_su  [function; ce-only; CE 4.0..499] */
-float __cdecl _madd_su(
- arg1,
- arg2,
- arg3
-);
-
-/* _madd_vl  [function; ce-only; CE 4.0..499] */
-double __cdecl _madd_vl(
- arg1,
- arg2,
- arg3
-);
-
-/* _madd_vu  [function; ce-only; CE 4.0..499] */
-double __cdecl _madd_vu(
- arg1,
- arg2,
- arg3
-);
-
 /* _max_ob  [function; ce-only; CE 4.0..499] */
 double _max_ob(
  double Arg1,
@@ -943,101 +798,6 @@ void _mulsl_ob(
  int Arg3
 );
 
-/* _neg_ps  [function; ce-only; CE 4.0..499] */
-double __cdecl _neg_ps(
- arg1
-);
-
-/* _neg_sl  [function; ce-only; CE 4.0..499] */
-float __cdecl _neg_sl(
- arg1
-);
-
-/* _neg_su  [function; ce-only; CE 4.0..499] */
-float __cdecl _neg_su(
- arg1
-);
-
-/* _neg_vl  [function; ce-only; CE 4.0..499] */
-float __cdecl _neg_vl(
- arg1
-);
-
-/* _neg_vu  [function; ce-only; CE 4.0..499] */
-double __cdecl _neg_sl(
- arg1
-);
-
-/* _nmadd_ps  [function; ce-only; CE 4.0..499] */
-double __cdecl _nmadd_ps(
- arg1,
- arg2,
- arg3
-);
-
-/* _nmadd_sl  [function; ce-only; CE 4.0..499] */
-float __cdecl _nmadd_sl(
- arg1,
- arg2,
- arg3
-);
-
-/* _nmadd_su  [function; ce-only; CE 4.0..499] */
-float __cdecl _nmadd_su(
- arg1,
- arg2,
- arg3
-);
-
-/* _nmadd_vl  [function; ce-only; CE 4.0..499] */
-double __cdecl _nmadd_vl(
- arg1,
- arg2,
- arg3
-);
-
-/* _nmadd_vu  [function; ce-only; CE 4.0..499] */
-double __cdecl _nmadd_vu(
- arg1,
- arg2,
- arg3
-);
-
-/* _nmsub_ps  [function; ce-only; CE 4.0..499] */
-double __cdecl _nmsub_vl(
- arg1,
- arg2,
- arg3
-);
-
-/* _nmsub_sl  [function; ce-only; CE 4.0..499] */
-float __cdecl _nmsub_sl(
- arg1,
- arg2,
- arg3
-);
-
-/* _nmsub_su  [function; ce-only; CE 4.0..499] */
-float __cdecl _nmsub_su(
- arg1,
- arg2,
- arg3
-);
-
-/* _nmsub_vl  [function; ce-only; CE 4.0..499] */
-double __cdecl _nmsub_vl(
- arg1,
- arg2,
- arg3
-);
-
-/* _nmsub_vu  [function; ce-only; CE 4.0..499] */
-double __cdecl _nmsub_vu(
- arg1,
- arg2,
- arg3
-);
-
 /* _nor_ob  [function; ce-only; CE 4.0..499] */
 double _nor_ob(
  double Arg1,
@@ -1066,30 +826,6 @@ double _pickt_ob(
  int Arg3
 );
 
-/* _pll_ps  [function; ce-only; CE 4.0..499] */
-double __cdecl _pll_ps(
- arg1,
- arg2
-);
-
-/* _plu_ps  [function; ce-only; CE 4.0..499] */
-double __cdecl _plu_ps(
- arg1,
- arg2
-);
-
-/* _pul_ps  [function; ce-only; CE 4.0..499] */
-double __cdecl _pul_ps(
- arg1,
- arg2
-);
-
-/* _puu_ps  [function; ce-only; CE 4.0..499] */
-double __cdecl _puu_ps(
- arg1,
- arg2
-);
-
 /* _rach_ob  [function; ce-only; CE 4.0..499] */
 double _rach_ob(void);
 
@@ -1098,56 +834,6 @@ double _racl_ob(void);
 
 /* _racm_ob  [function; ce-only; CE 4.0..499] */
 double _racm_ob(void);
-
-/* _recip_ps  [function; ce-only; CE 4.0..499] */
-double __cdecl _recip_ps(
- arg1
-);
-
-/* _recip_sl  [function; ce-only; CE 4.0..499] */
-float __cdecl _recip_sl(
- arg1
-);
-
-/* _recip_su  [function; ce-only; CE 4.0..499] */
-float __cdecl _recip_su(
- arg1
-);
-
-/* _recip_vl  [function; ce-only; CE 4.0..499] */
-double __cdecl _recip_vl(
- arg1
-);
-
-/* _recip_vu  [function; ce-only; CE 4.0..499] */
-double __cdecl _recip_vu(
- arg1
-);
-
-/* _rsqrt_ps  [function; ce-only; CE 4.0..499] */
-double __cdecl _rsqrt_ps(
- arg1
-);
-
-/* _rsqrt_sl  [function; ce-only; CE 4.0..499] */
-float __cdecl _rsqrt_sl(
- arg1
-);
-
-/* _rsqrt_su  [function; ce-only; CE 4.0..499] */
-float __cdecl _rsqrt_su(
- arg1
-);
-
-/* _rsqrt_vl  [function; ce-only; CE 4.0..499] */
-double __cdecl _rsqrt_vl(
- arg1
-);
-
-/* _rsqrt_vu  [function; ce-only; CE 4.0..499] */
-double __cdecl _rsqrt_vu(
- arg1
-);
 
 /* _rzu_ob  [function; ce-only; CE 4.0..499] */
 double _rzu_ob(
@@ -1191,31 +877,6 @@ double _sll_ob(
  int Arg3
 );
 
-/* _sqrt_ps  [function; ce-only; CE 4.0..499] */
-double __cdecl _sqrt_ps(
- arg1
-);
-
-/* _sqrt_sl  [function; ce-only; CE 4.0..499] */
-float __cdecl _sqrt_sl(
- arg1
-);
-
-/* _sqrt_su  [function; ce-only; CE 4.0..499] */
-float __cdecl _sqrt_su(
- arg1
-);
-
-/* _sqrt_vl  [function; ce-only; CE 4.0..499] */
-double __cdecl _sqrt_vl(
- arg1
-);
-
-/* _sqrt_vu  [function; ce-only; CE 4.0..499] */
-double __cdecl _sqrt_vu(
- arg1
-);
-
 /* _srl_ob  [function; ce-only; CE 4.0..499] */
 double _srl_ob(
  double Arg1,
@@ -1228,36 +889,6 @@ double _sub_ob(
  double Arg1,
  double Arg2,
  int Arg3
-);
-
-/* _sub_ps  [function; ce-only; CE 4.0..499] */
-double __cdecl _sub_ps(
- arg1,
- arg2
-);
-
-/* _sub_sl  [function; ce-only; CE 4.0..499] */
-float __cdecl _sub_sl(
- arg1,
- arg2
-);
-
-/* _sub_su  [function; ce-only; CE 4.0..499] */
-float __cdecl _sub_su(
- arg1,
- arg2
-);
-
-/* _sub_vl  [function; ce-only; CE 4.0..499] */
-double __cdecl _sub_vl(
- arg1,
- arg2
-);
-
-/* _sub_vu  [function; ce-only; CE 4.0..499] */
-double __cdecl _sub_vu(
- arg1,
- arg2
 );
 
 /* _wach_ob  [function; ce-only; CE 4.0..499] */
@@ -1278,17 +909,5 @@ double _xor_ob(
  int Arg3
 );
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-double __cdecl _esrqrt_ps( arg1 );
-float __cdecl _esrqrt_sl( arg1 );
-float __cdecl _esrqrt_su( arg1 );
-double __cdecl _esrqrt_vl( arg1 );
-double __cdecl _esrqrt_vu( arg1 );
 
 #endif /* _MIPSINTR_ */

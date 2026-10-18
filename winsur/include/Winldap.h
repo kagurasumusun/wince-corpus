@@ -293,7 +293,7 @@ typedef ldapmsg LDAPMessage, *PLDAPMessage;
 typedef struct ldapsearch LDAPSearch, *PLDAPSearch;
 
 /* vals  [extra struct] */
-ULONG ldap_count_values_len(  struct berval** vals  );
+ULONG ldap_count_values_len(struct berval** vals);
 
 /* ==================================================================
  * functions and callbacks

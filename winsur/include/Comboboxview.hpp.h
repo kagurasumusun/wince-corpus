@@ -17,8 +17,8 @@
  * ================================================================ */
 
 /* function */
-void DrawFocus( HDC hdc, RECT* prc );
-int TopCoordinate( HDC hdc, RECT* lprc );
-void WindowStyleCustomization( HWND hwnd, DWORD Style, DWORD ExStyle, DWORD* pStyle, DWORD* pExStyle );
+void DrawFocus(HDC hdc, RECT* prc);
+int TopCoordinate(HDC hdc, RECT* lprc);
+void WindowStyleCustomization(HWND hwnd, DWORD Style, DWORD ExStyle, DWORD* pStyle, DWORD* pExStyle);
 
 #endif /* _COMBOBOXVIEW_HPP_ */

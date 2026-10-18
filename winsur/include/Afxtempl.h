@@ -17,7 +17,7 @@
  * ================================================================ */
 
 /* function */
-void FreeExtra( );
-void InitHashTable( UINT hashSize );
+void FreeExtra();
+void InitHashTable(UINT hashSize);
 
 #endif /* _AFXTEMPL_ */

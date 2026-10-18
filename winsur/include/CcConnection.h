@@ -17,11 +17,11 @@
  * ================================================================ */
 
 /* function */
-HRESULT CloseProcessHandle ( DWORD in_ProcessHandle );
+HRESULT CloseProcessHandle (DWORD in_ProcessHandle);
 HRESULT DisconnectDevice ();
-HRESULT GetFileInfo( LPCOLESTRin_szDeviceFile,FileInfo*out_pFileInfo);
-HRESULT MakeDirectory( LPCOLESTRin_szDeviceDirectory);
-HRESULT RemoveFile( LPCOLESTRin_szDeviceFile);
-HRESULT VerifyFilesInstalled( DWORD in_ArraySize, [in, size_is(in_ArraySize), length_is(in_ArraySize)] FileVerifyReferencein_InfoArray[], [out, size_is(in_ArraySize), length_is(in_ArraySize)] FileVerifyResultout_ExistenceArray[]);
+HRESULT GetFileInfo(LPCOLESTRin_szDeviceFile,FileInfo*out_pFileInfo);
+HRESULT MakeDirectory(LPCOLESTRin_szDeviceDirectory);
+HRESULT RemoveFile(LPCOLESTRin_szDeviceFile);
+HRESULT VerifyFilesInstalled(DWORD in_ArraySize, FileVerifyReferencein_InfoArray, FileVerifyResultout_ExistenceArray);
 
 #endif /* _CCCONNECTION_ */

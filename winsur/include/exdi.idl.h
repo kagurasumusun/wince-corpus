@@ -17,22 +17,22 @@
  * ================================================================ */
 
 /* function */
-HRESULT DelCodeBreakpoint( IeXdiCodeBreakpoint* pieXdiCodeBreakpoint );
-HRESULT DelDataBreakpoint( IeXdiDataBreakpoint* pieXdiDataBreakpoint );
+HRESULT DelCodeBreakpoint(IeXdiCodeBreakpoint* pieXdiCodeBreakpoint);
+HRESULT DelDataBreakpoint(IeXdiDataBreakpoint* pieXdiDataBreakpoint);
 HRESULT DisableAll (void);
-HRESULT DoMultipleStep( DWORD dwNbInstructions );
+HRESULT DoMultipleStep(DWORD dwNbInstructions);
 HRESULT DoSingleStep ();
 HRESULT EnableAll (void);
-HRESULT EnumAllCodeBreakpoints( IeXdiEnumCodeBreakpoint** ppieXdiEnumCodeBreakpoint );
-HRESULT EnumAllDataBreakpoints( IeXdiEnumDataBreakpoint** ppieXdiEnumDataBreakpoint );
-HRESULT GetNbCodeBpAvail( DWORD* pdwNbHwCodeBpAvail, DWORD* pdwNbSwCodeBpAvail );
-HRESULT GetNbDataBpAvail( DWORD* pdwNbDataBpAvail );
-HRESULT GetNext( IeXdiCodeBreakpoint** ppieXdiCodeBreakpoint );
+HRESULT EnumAllCodeBreakpoints(IeXdiEnumCodeBreakpoint** ppieXdiEnumCodeBreakpoint);
+HRESULT EnumAllDataBreakpoints(IeXdiEnumDataBreakpoint** ppieXdiEnumDataBreakpoint);
+HRESULT GetNbCodeBpAvail(DWORD* pdwNbHwCodeBpAvail, DWORD* pdwNbSwCodeBpAvail);
+HRESULT GetNbDataBpAvail(DWORD* pdwNbDataBpAvail);
+HRESULT GetNext(IeXdiCodeBreakpoint** ppieXdiCodeBreakpoint);
 HRESULT Halt ();
 HRESULT Reboot ();
-HRESULT StartNotifyingMemChg( IeXdiClientNotifyMemChg* pieXdiClientNotifyMemChg, DWORD* pdwConnectionCookie );
-HRESULT StartNotifyingRunChg( IeXdiClientNotifyRunChg *pieXdiClientNotifyRunChg, DWORD* pdwConnectionCookie );
-HRESULT StopNotifyingMemChg( DWORD dwConnectionCookie );
-HRESULT StopNotifyingRunChg( DWORD dwConnectionCookie );
+HRESULT StartNotifyingMemChg(IeXdiClientNotifyMemChg* pieXdiClientNotifyMemChg, DWORD* pdwConnectionCookie);
+HRESULT StartNotifyingRunChg(IeXdiClientNotifyRunChg *pieXdiClientNotifyRunChg, DWORD* pdwConnectionCookie);
+HRESULT StopNotifyingMemChg(DWORD dwConnectionCookie);
+HRESULT StopNotifyingRunChg(DWORD dwConnectionCookie);
 
 #endif /* _EXDI_IDL_ */

@@ -35,15 +35,17 @@ TCHAR m_szFullName[_MAX_PATH];
 };
 
 /* _MAX_PATH  [extra struct] */
+#ifdef __cplusplus
 struct CFileStatus
 {
-  CTime m_ctime;
-  CTime m_mtime;
-  CTime m_atime;
-  LONG m_size;
-  BYTE m_attribute;
-  TCHAR m_szFullName[_MAX_PATH];
+ CTime m_ctime;
+ CTime m_mtime;
+ CTime m_atime;
+ LONG m_size;
+ BYTE m_attribute;
+ TCHAR m_szFullName[_MAX_PATH];
 };
+#endif /* __cplusplus */
 
 /* ==================================================================
  * extra declarations -- corpus pages the main
@@ -51,21 +53,29 @@ struct CFileStatus
  * ================================================================ */
 
 /* function */
-static int PASCAL ErrnoToException( int nErrno );
-void GrowFile( DWORD dwNewLen );
-void MakeLower( );
-void MakeReverse( );
-void MakeUpper( );
-BYTE * Memcpy( BYTE* lpMemTarget, BYTE* lpMemSource, UINT nBytes );
-static int PASCAL OsErrorToException( LONG lOsError );
-void SerializeClass( const CRuntimeClass* pRuntimeClass );
-void SetDepth( int nNewDepth );
-void SetLoadParams( UINT nGrowBy = 1024 );
-void SetObjectSchema( UINT nSchema );
-void SetStoreParams( UINT nHashSize = 2053, UINT nBlockSize = 128 );
-static void PASCAL ThrowErrno( int nErrno );
-void TrimLeft( );
-void TrimRight( );
-void WriteClass( const CRuntimeClass* pClassRef );
+static int PASCAL ErrnoToException(int nErrno);
+void GrowFile(DWORD dwNewLen);
+void MakeLower();
+void MakeReverse();
+void MakeUpper();
+BYTE * Memcpy(BYTE* lpMemTarget, BYTE* lpMemSource, UINT nBytes);
+static int PASCAL OsErrorToException(LONG lOsError);
+#ifdef __cplusplus
+void SerializeClass(const CRuntimeClass* pRuntimeClass);
+#endif /* __cplusplus */
+void SetDepth(int nNewDepth);
+#ifdef __cplusplus
+void SetLoadParams(UINT nGrowBy = 1024);
+#endif /* __cplusplus */
+void SetObjectSchema(UINT nSchema);
+#ifdef __cplusplus
+void SetStoreParams(UINT nHashSize = 2053, UINT nBlockSize = 128);
+#endif /* __cplusplus */
+static void PASCAL ThrowErrno(int nErrno);
+void TrimLeft();
+void TrimRight();
+#ifdef __cplusplus
+void WriteClass(const CRuntimeClass* pClassRef);
+#endif /* __cplusplus */
 
 #endif /* _AFX_ */

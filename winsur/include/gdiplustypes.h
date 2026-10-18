@@ -17,6 +17,6 @@
  * ================================================================ */
 
 /* function */
-DWORD Size (void );
+DWORD Size (void);
 
 #endif /* _GDIPLUSTYPES_ */

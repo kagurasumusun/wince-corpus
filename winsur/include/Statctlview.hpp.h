@@ -40,13 +40,13 @@ enum StaticControlType {
 };
 
 /* hImage  [extra enum] */
-static void DrawStaticImage(  HWND hwnd,  enum StaticControlType sct,  HDC hdc,  HBRUSH hbrBk,  HANDLE hImage  );
+static void DrawStaticImage(HWND hwnd, enum StaticControlType sct, HDC hdc, HBRUSH hbrBk, HANDLE hImage);
 
 /* hbrBk  [extra enum] */
-static void DrawStaticText(  HWND hwnd,  unsigned int Style,  enum StaticControlType sct,  HDC hdc,  HBRUSH hbrBk  );
+static void DrawStaticText(HWND hwnd, unsigned int Style, enum StaticControlType sct, HDC hdc, HBRUSH hbrBk);
 
 /* prc  [extra enum] */
-static bool ResizeRectToImage(  HWND hwnd,  unsigned int Style,  enum StaticControlType sct,  HANDLE hImage,  RECT* prc  );
+static bool ResizeRectToImage(HWND hwnd, unsigned int Style, enum StaticControlType sct, HANDLE hImage, RECT* prc);
 
 /* ==================================================================
  * extra declarations -- corpus pages the main
@@ -54,7 +54,7 @@ static bool ResizeRectToImage(  HWND hwnd,  unsigned int Style,  enum StaticCont
  * ================================================================ */
 
 /* function */
-void DrawStaticImage( HWND hwnd, enum StaticControlType sct, HDC hdc, HBRUSH hbrBk, HANDLE hImage );
-void DrawStaticText( HWND hwnd, unsigned int Style, enum StaticControlType sct, HDC hdc, HBRUSH hbrBk );
+void DrawStaticImage(HWND hwnd, enum StaticControlType sct, HDC hdc, HBRUSH hbrBk, HANDLE hImage);
+void DrawStaticText(HWND hwnd, unsigned int Style, enum StaticControlType sct, HDC hdc, HBRUSH hbrBk);
 
 #endif /* _STATCTLVIEW_HPP_ */

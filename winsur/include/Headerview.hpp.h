@@ -17,8 +17,8 @@
  * ================================================================ */
 
 /* function */
-void CalcOffset( int cxBorder, int cyBorder, int* pxOffset, int* pyOffset );
-void DrawButtonBorder( HDC hdc, DWORD style, LPRECT prc, BOOL fItemSunken );
-int Height( int cyChar, int cyEdge );
+void CalcOffset(int cxBorder, int cyBorder, int* pxOffset, int* pyOffset);
+void DrawButtonBorder(HDC hdc, DWORD style, LPRECT prc, BOOL fItemSunken);
+int Height(int cyChar, int cyEdge);
 
 #endif /* _HEADERVIEW_HPP_ */

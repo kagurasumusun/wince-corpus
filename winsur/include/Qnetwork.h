@@ -34,11 +34,11 @@ typedef enum AMExtendedSeekingCapabilities{
  * ================================================================ */
 
 /* function */
-HRESULT GetMarkerTime( long MarkerNum, double* pMarkerTime );
-HRESULT get_CurrentMarker( long* pCurrentMarker );
-HRESULT get_ExSeekCapabilities( long* pExCapabilities );
-HRESULT get_MarkerCount( long* pMarkerCount );
-HRESULT get_PlaybackSpeed( double* pSpeed );
-HRESULT put_PlaybackSpeed( double Speed );
+HRESULT GetMarkerTime(long MarkerNum, double* pMarkerTime);
+HRESULT get_CurrentMarker(long* pCurrentMarker);
+HRESULT get_ExSeekCapabilities(long* pExCapabilities);
+HRESULT get_MarkerCount(long* pMarkerCount);
+HRESULT get_PlaybackSpeed(double* pSpeed);
+HRESULT put_PlaybackSpeed(double Speed);
 
 #endif /* _QNETWORK_ */

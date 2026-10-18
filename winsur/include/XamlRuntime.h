@@ -466,166 +466,202 @@ enum XRVisibility{
 };
 
 /* XRLineStackingStrategy_BlockLineHeight  [extra enum] */
+#ifdef __cplusplus
 enum XRLineStackingStrategy{ XRLineStackingStrategy_MaxHeight=0, XRLineStackingStrategy_BlockLineHeight=1 };
+#endif /* __cplusplus */
 
 /* XRTextWrapping_Wrap  [extra enum] */
+#ifdef __cplusplus
 enum XRTextWrapping{ XRTextWrapping_NoWrap = 1, XRTextWrapping_Wrap = 2 };
+#endif /* __cplusplus */
 
 /* XRFontWeight_ExtraBlack  [extra enum] */
+#ifdef __cplusplus
 enum XRFontWeight{
-  XRFontWeight_Thin=100,
-  XRFontWeight_ExtraLight=200,
-  XRFontWeight_Light=300,
-  XRFontWeight_Normal=400,
-  XRFontWeight_Medium=500,
-  XRFontWeight_SemiBold=600,
-  XRFontWeight_Bold=700,
-  XRFontWeight_ExtraBold=800,
-  XRFontWeight_Black=900,
-  XRFontWeight_ExtraBlack=950
+ XRFontWeight_Thin=100,
+ XRFontWeight_ExtraLight=200,
+ XRFontWeight_Light=300,
+ XRFontWeight_Normal=400,
+ XRFontWeight_Medium=500,
+ XRFontWeight_SemiBold=600,
+ XRFontWeight_Bold=700,
+ XRFontWeight_ExtraBold=800,
+ XRFontWeight_Black=900,
+ XRFontWeight_ExtraBlack=950
 };
+#endif /* __cplusplus */
 
 /* XRPenLineJoin_Round  [extra enum] */
+#ifdef __cplusplus
 enum XRPenLineJoin{
-  XRPenLineJoin_Miter=0,
-  XRPenLineJoin_Bevel=1,
-  XRPenLineJoin_Round=2
+ XRPenLineJoin_Miter=0,
+ XRPenLineJoin_Bevel=1,
+ XRPenLineJoin_Round=2
 };
+#endif /* __cplusplus */
 
 /* XRClockState_Stopped  [extra enum] */
+#ifdef __cplusplus
 enum XRClockState
 {
-  XRClockState_Active=0,
-  XRClockState_Filling=1,
-  XRClockState_Stopped=2
+ XRClockState_Active=0,
+ XRClockState_Filling=1,
+ XRClockState_Stopped=2
 };
+#endif /* __cplusplus */
 
 /* DurationType  [extra struct] */
 struct XRDuration{
-  enum _DurationType{
-    DurationType_Automatic,
-    DurationType_TimeSpan,
-    DurationType_Forever
-  };
-  XRTimeSpan TimeSpan;
-  _DurationType DurationType;
+ enum _DurationType{
+ DurationType_Automatic,
+ DurationType_TimeSpan,
+ DurationType_Forever
+ };
+ XRTimeSpan TimeSpan;
+ _DurationType DurationType;
 };
 
 /* XRColorInterpolationMode_SRgbLinearInterpolation  [extra enum] */
+#ifdef __cplusplus
 enum XRColorInterpolationMode{ XRColorInterpolationMode_ScRgbLinearInterpolation=0, XRColorInterpolationMode_SRgbLinearInterpolation=1 };
+#endif /* __cplusplus */
 
 /* XRGridUnitType_Star  [extra enum] */
+#ifdef __cplusplus
 enum XRGridUnitType{
-  XRGridUnitType_Auto=0,
-  XRGridUnitType_Pixel=1,
-  XRGridUnitType_Star=2
+ XRGridUnitType_Auto=0,
+ XRGridUnitType_Pixel=1,
+ XRGridUnitType_Star=2
 };
+#endif /* __cplusplus */
 
 /* XRStretch_UniformToFill  [extra enum] */
+#ifdef __cplusplus
 enum XRStretch{
-  XRStretch_None=0,
-  XRStretch_Fill=1,
-  XRStretch_Uniform=2,
-  XRStretch_UniformToFill=3
+ XRStretch_None=0,
+ XRStretch_Fill=1,
+ XRStretch_Uniform=2,
+ XRStretch_UniformToFill=3
 };
+#endif /* __cplusplus */
 
 /* XRStyleSimulations_BoldItalicSimulation  [extra enum] */
+#ifdef __cplusplus
 enum XRStyleSimulations{
-  XRStyleSimulations_None=0,
-  XRStyleSimulations_BoldSimulation=1,
-  XRStyleSimulations_ItalicSimulation=2,
-  XRStyleSimulations_BoldItalicSimulation=3
+ XRStyleSimulations_None=0,
+ XRStyleSimulations_BoldSimulation=1,
+ XRStyleSimulations_ItalicSimulation=2,
+ XRStyleSimulations_BoldItalicSimulation=3
 };
+#endif /* __cplusplus */
 
 /* XRGradientSpreadMethod_Repeat  [extra enum] */
+#ifdef __cplusplus
 enum XRGradientSpreadMethod{
-  XRGradientSpreadMethod_Pad=0,
-  XRGradientSpreadMethod_Reflect=1,
-  XRGradientSpreadMethod_Repeat=2
+ XRGradientSpreadMethod_Pad=0,
+ XRGradientSpreadMethod_Reflect=1,
+ XRGradientSpreadMethod_Repeat=2
 };
+#endif /* __cplusplus */
 
 /* XRThreeState_Indeterminate  [extra enum] */
 enum XRThreeState
 {
-  XRThreeState_Unchecked = 0,
-  XRThreeState_Checked,
-  XRThreeState_Indeterminate
+ XRThreeState_Unchecked = 0,
+ XRThreeState_Checked,
+ XRThreeState_Indeterminate
 };
 
 /* XRPenLineCap_Triangle  [extra enum] */
+#ifdef __cplusplus
 enum XRPenLineCap{
-  XRPenLineCap_Flat=0,
-  XRPenLineCap_Square=1,
-  XRPenLineCap_Round=2,
-  XRPenLineCap_Triangle=3
+ XRPenLineCap_Flat=0,
+ XRPenLineCap_Square=1,
+ XRPenLineCap_Round=2,
+ XRPenLineCap_Triangle=3
 };
+#endif /* __cplusplus */
 
 /* XRAlignmentY_Bottom  [extra enum] */
+#ifdef __cplusplus
 enum XRAlignmentY{
-  XRAlignmentY_Top=0,
-  XRAlignmentY_Center=1,
-  XRAlignmentY_Bottom=2
+ XRAlignmentY_Top=0,
+ XRAlignmentY_Center=1,
+ XRAlignmentY_Bottom=2
 };
+#endif /* __cplusplus */
 
 /* XRBrushMappingMode_RelativeToBoundingBox  [extra enum] */
+#ifdef __cplusplus
 enum XRBrushMappingMode
 {
-  XRBrushMappingMode_Absolute=0,
-  XRBrushMappingMode_RelativeToBoundingBox=1
+ XRBrushMappingMode_Absolute=0,
+ XRBrushMappingMode_RelativeToBoundingBox=1
 };
+#endif /* __cplusplus */
 
 /* NewSize  [extra struct] */
 struct XRSizeChangedEventArgs : XRRoutedEventArgs
 {
-  XRSize PreviousSize;
-  XRSize NewSize;
+ XRSize PreviousSize;
+ XRSize NewSize;
 };
 
 /* BehaviorType  [extra struct] */
 struct XRRepeatBehavior{
-  enum RepeatBehaviorType{
-    RepeatBehaviorType_IterationCount,
-    RepeatBehaviorType_RepeatDuration,
-    RepeatBehaviorType_Forever
-  };
-  float IterationCount;
-  XRTimeSpan RepeatDuration;
-  RepeatBehaviorType BehaviorType;
+ enum RepeatBehaviorType{
+ RepeatBehaviorType_IterationCount,
+ RepeatBehaviorType_RepeatDuration,
+ RepeatBehaviorType_Forever
+ };
+ float IterationCount;
+ XRTimeSpan RepeatDuration;
+ RepeatBehaviorType BehaviorType;
 };
 
 /* XRVerticalAlignment_Stretch  [extra enum] */
+#ifdef __cplusplus
 enum XRVerticalAlignment{
-  XRVerticalAlignment_Top=0,
-  XRVerticalAlignment_Center=1,
-  XRVerticalAlignment_Bottom=2,
-  XRVerticalAlignment_Stretch=3
+ XRVerticalAlignment_Top=0,
+ XRVerticalAlignment_Center=1,
+ XRVerticalAlignment_Bottom=2,
+ XRVerticalAlignment_Stretch=3
 };
+#endif /* __cplusplus */
 
 /* XRVisibility_Collapsed  [extra enum] */
+#ifdef __cplusplus
 enum XRVisibility{ XRVisibility_Visible = 0, XRVisibility_Collapsed = 1 };
+#endif /* __cplusplus */
 
 /* Handled  [extra struct] */
 struct XRMouseButtonEventArgs : XRMouseEventArgs{ BOOL Handled; };
 
 /* XRSweepDirection_Clockwise  [extra enum] */
+#ifdef __cplusplus
 enum XRSweepDirection
 {
-  XRSweepDirection_Counterclockwise=0,
-  XRSweepDirection_Clockwise=1
+ XRSweepDirection_Counterclockwise=0,
+ XRSweepDirection_Clockwise=1
 };
+#endif /* __cplusplus */
 
 /* HorizontalOffset  [extra struct] */
 struct XRDragStartedEventArgs : XRRoutedEventArgs{ double VerticalOffset; double HorizontalOffset; };
 
 /* XRTextDecorationType_Underline  [extra enum] */
+#ifdef __cplusplus
 enum XRTextDecorationType{ XRTextDecorationType_None=0, XRTextDecorationType_Underline=1 };
+#endif /* __cplusplus */
 
 /* XRTextAlignment_Right  [extra enum] */
+#ifdef __cplusplus
 enum XRTextAlignment{
-  XRTextAlignment_Center=0,
-  XRTextAlignment_Left=1,
-  XRTextAlignment_Right=2
+ XRTextAlignment_Center=0,
+ XRTextAlignment_Left=1,
+ XRTextAlignment_Right=2
 };
+#endif /* __cplusplus */
 
 /* PlatformKeyCode  [extra struct] */
 struct XRKeyEventArgs : XRRoutedEventArgs{ BOOL Handled; UINT PlatformKeyCode; };
@@ -633,164 +669,182 @@ struct XRKeyEventArgs : XRRoutedEventArgs{ BOOL Handled; UINT PlatformKeyCode; }
 /* ScrollEventType  [extra struct] */
 struct XRScrollEventArgs : XRRoutedEventArgs
 {
-  float NewValue;
-  XRScrollEventType ScrollEventType;
+ float NewValue;
+ XRScrollEventType ScrollEventType;
 };
 
 /* BottomLeft  [extra struct] */
 struct XRCornerRadius{
-  float TopLeft;
-  float TopRight;
-  float BottomRight;
-  float BottomLeft;
+ float TopLeft;
+ float TopRight;
+ float BottomRight;
+ float BottomLeft;
 };
 
 /* XRFillRule_Nonzero  [extra enum] */
+#ifdef __cplusplus
 enum XRFillRule
 {
-  XRFillRule_EvenOdd=0,
-  XRFillRule_Nonzero=1
+ XRFillRule_EvenOdd=0,
+ XRFillRule_Nonzero=1
 };
+#endif /* __cplusplus */
 
 /* XRKeyboardNavigationMode_Once  [extra enum] */
+#ifdef __cplusplus
 enum XRKeyboardNavigationMode{
-  XRKeyboardNavigationMode_Local=0,
-  XRKeyboardNavigationMode_Cycle=1,
-  XRKeyboardNavigationMode_Once=2
+ XRKeyboardNavigationMode_Local=0,
+ XRKeyboardNavigationMode_Cycle=1,
+ XRKeyboardNavigationMode_Once=2
 };
+#endif /* __cplusplus */
 
 /* XRHorizontalAlignment_Stretch  [extra enum] */
+#ifdef __cplusplus
 enum XRHorizontalAlignment{
-  XRHorizontalAlignment_Left=0,
-  XRHorizontalAlignment_Center=1,
-  XRHorizontalAlignment_Right=2,
-  XRHorizontalAlignment_Stretch=3
+ XRHorizontalAlignment_Left=0,
+ XRHorizontalAlignment_Center=1,
+ XRHorizontalAlignment_Right=2,
+ XRHorizontalAlignment_Stretch=3
 };
+#endif /* __cplusplus */
 
 /* Bottom  [extra struct] */
 struct XRThickness{
-  float Left;
-  float Top;
-  float Right;
-  float Bottom;
+ float Left;
+ float Top;
+ float Right;
+ float Bottom;
 };
 
 /* XROrientation_Horizontal  [extra enum] */
+#ifdef __cplusplus
 enum XROrientation{ XROrientation_Vertical=0, XROrientation_Horizontal=1 };
+#endif /* __cplusplus */
 
 /* XRScrollEventType_ThumbTrack  [extra enum] */
+#ifdef __cplusplus
 enum XRScrollEventType{
-  XRScrollEventType_EndScroll = 8,
-  XRScrollEventType_First = 6,
-  XRScrollEventType_LargeDecrement = 2,
-  XRScrollEventType_LargeIncrement = 3,
-  XRScrollEventType_Last = 7,
-  XRScrollEventType_SmallDecrement = 0,
-  XRScrollEventType_SmallIncrement = 1,
-  XRScrollEventType_ThumbPosition = 4,
-  XRScrollEventType_ThumbTrack = 5
+ XRScrollEventType_EndScroll = 8,
+ XRScrollEventType_First = 6,
+ XRScrollEventType_LargeDecrement = 2,
+ XRScrollEventType_LargeIncrement = 3,
+ XRScrollEventType_Last = 7,
+ XRScrollEventType_SmallDecrement = 0,
+ XRScrollEventType_SmallIncrement = 1,
+ XRScrollEventType_ThumbPosition = 4,
+ XRScrollEventType_ThumbTrack = 5
 };
+#endif /* __cplusplus */
 
 /* YOffset  [extra struct] */
 struct XRScrollChangedEventArgs : XRRoutedEventArgs
 {
-  float XOffset;
-  float YOffset;
+ float XOffset;
+ float YOffset;
 };
 
 /* XRClickMode_Hover  [extra enum] */
 enum XRClickMode{
-  XRClickMode_Release = 0,
-  XRClickMode_Press,
-  XRClickMode_Hover,
+ XRClickMode_Release = 0,
+ XRClickMode_Press,
+ XRClickMode_Hover,
 };
 
 /* XRFillBehavior_Stop  [extra enum] */
+#ifdef __cplusplus
 enum XRFillBehavior{ XRFillBehavior_HoldEnd=0, XRFillBehavior_Stop=1 };
+#endif /* __cplusplus */
 
 /* XRAlignmentX_Right  [extra enum] */
+#ifdef __cplusplus
 enum XRAlignmentX{
-  XRAlignmentX_Left=0,
-  XRAlignmentX_Center=1,
-  XRAlignmentX_Right=2
+ XRAlignmentX_Left=0,
+ XRAlignmentX_Center=1,
+ XRAlignmentX_Right=2
 };
+#endif /* __cplusplus */
 
 /* cy  [extra struct] */
 struct XRSize{ float cx; float cy; };
 
 /* Cancelled  [extra struct] */
 struct XRDragCompletedEventArgs : XRRoutedEventArgs{
-  double HorizontalChange;
-  double VerticalChange;
-  bool Cancelled;
+ double HorizontalChange;
+ double VerticalChange;
+ bool Cancelled;
 };
 
 /* TicksPerMillisecond  [extra struct] */
 struct XRTimeSpan
 {
-  XRTimeSpan(){};
-  XRTimeSpan(__int64 TotalTicks)
-  XRTimeSpan(int Days, int Hours, int Minutes, int Seconds,
-  int Milliseconds)
-  static const int MinutesPerDay = 3600;
-  static const int HoursPerDay = 24;
-  static const int MinutesPerHour = 60;
-  static const int MillisecondPerSecond = 1000;
-  __int64 TotalSeconds()
-  __int64 TotalMinutes()
-  __int64 TotalHours()
-  __int64 TotalMilliseconds()
-  static __int64 FromSeconds(double Value)
-  static __int64 Interval(double Value, int scale)
-  __int64 Ticks;
-  static const __int64 TicksPerDay = 864000000000;
-  static const __int64 TicksPerHour = 36000000000;
-  static const __int64 TicksPerMinute = 600000000;
-  static const __int64 TicksPerSecond = 10000000;
-  static const __int64 TicksPerMillisecond = 10000;
+ XRTimeSpan(){};
+ XRTimeSpan(__int64 TotalTicks)
+ XRTimeSpan(int Days, int Hours, int Minutes, int Seconds,
+ int Milliseconds)
+ static const int MinutesPerDay = 3600;
+ static const int HoursPerDay = 24;
+ static const int MinutesPerHour = 60;
+ static const int MillisecondPerSecond = 1000;
+ __int64 TotalSeconds()
+ __int64 TotalMinutes()
+ __int64 TotalHours()
+ __int64 TotalMilliseconds()
+ static __int64 FromSeconds(double Value)
+ static __int64 Interval(double Value, int scale)
+ __int64 Ticks;
+ static const __int64 TicksPerDay = 864000000000;
+ static const __int64 TicksPerHour = 36000000000;
+ static const __int64 TicksPerMinute = 600000000;
+ static const __int64 TicksPerSecond = 10000000;
+ static const __int64 TicksPerMillisecond = 10000;
 };
 
 /* XRScrollBarVisibility_Visible  [extra enum] */
 enum XRScrollBarVisibility
 {
-  XRScrollBarVisibility_Disabled = 0,
-  XRScrollBarVisibility_Auto,
-  XRScrollBarVisibility_Hidden,
-  XRScrollBarVisibility_Visible
+ XRScrollBarVisibility_Disabled = 0,
+ XRScrollBarVisibility_Auto,
+ XRScrollBarVisibility_Hidden,
+ XRScrollBarVisibility_Visible
 };
 
 /* XRCursor_None  [extra enum] */
+#ifdef __cplusplus
 enum XRCursor
 {
-  XRCursor_Default = 0,
-  XRCursor_Arrow = 1,
-  XRCursor_Hand = 2,
-  XRCursor_Wait = 3,
-  XRCursor_IBeam = 4,
-  XRCursor_Stylus = 5,
-  XRCursor_Eraser = 6,
-  XRCursor_SizeNS = 7,
-  XRCursor_SizeWE = 8,
-  XRCursor_None = 9
+ XRCursor_Default = 0,
+ XRCursor_Arrow = 1,
+ XRCursor_Hand = 2,
+ XRCursor_Wait = 3,
+ XRCursor_IBeam = 4,
+ XRCursor_Stylus = 5,
+ XRCursor_Eraser = 6,
+ XRCursor_SizeNS = 7,
+ XRCursor_SizeWE = 8,
+ XRCursor_None = 9
 };
+#endif /* __cplusplus */
 
 /* VeriticalDelta  [extra struct] */
 struct XRDragDeltaEventArgs : XRRoutedEventArgs{ double HorizontalDelta; double VeriticalDelta; };
 
 /* bottom  [extra struct] */
 struct XRRect{
-  float left;
-  float top;
-  float right;
-  float bottom;
+ float left;
+ float top;
+ float right;
+ float bottom;
 };
 
 /* XRFontStyle_Italic  [extra enum] */
+#ifdef __cplusplus
 enum XRFontStyle{
-  XRFontStyle_Normal=0,
-  XRFontStyle_Oblique=1,
-  XRFontStyle_Italic=2
+ XRFontStyle_Normal=0,
+ XRFontStyle_Oblique=1,
+ XRFontStyle_Italic=2
 };
+#endif /* __cplusplus */
 
 /* UnitType  [extra struct] */
 struct XRGridLength{ float UnitValue; XRGridUnitType UnitType; };
@@ -829,6 +883,6 @@ BOOL CALLBACK HostHookProc(
  * ================================================================ */
 
 /* function */
-BOOL CALLBACK HostHookProc( VOID* pv, HWND hwnd, UINT Msg, WPARAM wParam, LPARAM lParam, LRESULT* pRetVal );
+BOOL CALLBACK HostHookProc(VOID* pv, HWND hwnd, UINT Msg, WPARAM wParam, LPARAM lParam, LRESULT* pRetVal);
 
 #endif /* _XAMLRUNTIME_ */

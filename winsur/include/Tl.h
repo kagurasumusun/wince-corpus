@@ -17,7 +17,7 @@
  * ================================================================ */
 
 /* function */
-HRESULT GetConnectionInfo( DWORD dwMaxSize, BYTE* pData, LPDWORD pdwActualSize );
-HRESULT WriteBytes( DWORD dwSize, BYTE* pData, LPDWORD pdwBytesWritten );
+HRESULT GetConnectionInfo(DWORD dwMaxSize, BYTE* pData, LPDWORD pdwActualSize);
+HRESULT WriteBytes(DWORD dwSize, BYTE* pData, LPDWORD pdwBytesWritten);
 
 #endif /* _TL_ */

@@ -142,15 +142,15 @@ typedef VIEWSTATUS *PVIEWSTATUS, *LPVIEWSTATUS;
  * ================================================================ */
 
 /* function */
-HRESULT GetLicInfo( LICINFO *pLicInfo );
-HRESULT GetPages( CAUUID *pPages //Pointer to structure );
-HRESULT GetSizeMax( ULARGE_INTEGER *pcbSize );
-HRESULT GetViewStatus( DWORD* pdwStatus );
-HRESULT LockInPlaceActive( BOOL fLock);
+HRESULT GetLicInfo(LICINFO *pLicInfo);
+HRESULT GetPages(CAUUID *pPages //Pointer to structure);
+HRESULT GetSizeMax(ULARGE_INTEGER *pcbSize);
+HRESULT GetViewStatus(DWORD* pdwStatus);
+HRESULT LockInPlaceActive(BOOL fLock);
 HRESULT OnControlInfoChanged(void);
-HRESULT OnFocus( BOOL fGotFocus);
-HRESULT QueryHitRect( DWORD dwAspect, LPRECT pRectBounds, LPRECT pRectLoc, LONG lCloseHint, DWORD* pHitResult );
+HRESULT OnFocus(BOOL fGotFocus);
+HRESULT QueryHitRect(DWORD dwAspect, LPRECT pRectBounds, LPRECT pRectLoc, LONG lCloseHint, DWORD* pHitResult);
 HRESULT ShowPropertyFrame(void);
-HRESULT Unadvise( DWORD dwCookie );
+HRESULT Unadvise(DWORD dwCookie);
 
 #endif /* _OCIDL_ */

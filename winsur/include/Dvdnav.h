@@ -54,32 +54,32 @@ typedef EDVDSParamEvent *PEDVDSParamEvent, *LPEDVDSParamEvent;
  * ================================================================ */
 
 /* function */
-HRESULT BackwardScan( double dblSpeed );
-HRESULT ButonSelectAndActivate( BYTE byteButtonNumber );
+HRESULT BackwardScan(double dblSpeed);
+HRESULT ButonSelectAndActivate(BYTE byteButtonNumber);
 HRESULT ButtonActivate(void);
-HRESULT ButtonSelect( BYTE byteDirection );
-HRESULT ButtonSelectDirect( BYTE byteButtonNumber );
-HRESULT ChangeAngel( BYTE byteAngleNumber );
-HRESULT ChangeAudioStream( BYTE byteStreamNumber );
-HRESULT ChangeSubPictureStream( BYTE streamNumber, BOOL bDisplayFlag );
-HRESULT ForwardScan( double dblSpeed );
-HRESULT GetPlaybackState( EDDVDPlaybackState* peState );
-HRESULT InitializeSystemParameters( EDVDSParamEvent eventCode);
-HRESULT ManuLanguageSelect( USHORT uhLanguageCode );
-HRESULT MenuCall( BYTE byteMenu_ID );
-HRESULT OnDiskReadError( DWORD osCode );
-HRESULT OnGOPUserData( DVDUserGOPData* pData );
-HRESULT OnNavigationException( EDVDNavException excCode );
-HRESULT ParentalCountrySelect( USHORT uhCountryCode );
-HRESULT ParentalLevelSelect( BYTE byteLevel );
-HRESULT PartPlay( BYTE byteTitleNumber, USHORT uhPartOfTheTitle );
-HRESULT ProgramSearch( BYTE byteProgramType );
+HRESULT ButtonSelect(BYTE byteDirection);
+HRESULT ButtonSelectDirect(BYTE byteButtonNumber);
+HRESULT ChangeAngel(BYTE byteAngleNumber);
+HRESULT ChangeAudioStream(BYTE byteStreamNumber);
+HRESULT ChangeSubPictureStream(BYTE streamNumber, BOOL bDisplayFlag);
+HRESULT ForwardScan(double dblSpeed);
+HRESULT GetPlaybackState(EDDVDPlaybackState* peState);
+HRESULT InitializeSystemParameters(EDVDSParamEvent eventCode);
+HRESULT ManuLanguageSelect(USHORT uhLanguageCode);
+HRESULT MenuCall(BYTE byteMenu_ID);
+HRESULT OnDiskReadError(DWORD osCode);
+HRESULT OnGOPUserData(DVDUserGOPData* pData);
+HRESULT OnNavigationException(EDVDNavException excCode);
+HRESULT ParentalCountrySelect(USHORT uhCountryCode);
+HRESULT ParentalLevelSelect(BYTE byteLevel);
+HRESULT PartPlay(BYTE byteTitleNumber, USHORT uhPartOfTheTitle);
+HRESULT ProgramSearch(BYTE byteProgramType);
 HRESULT Resume(void);
 HRESULT StillOff(void);
-HRESULT TimePlay( USHORT uhPartOfTheTitle );
-HRESULT TimeSearch( UINT uiBCDTime );
-HRESULT TitlePlay( BYTE byteTitleNumber );
-HRESULT UseRenderer( WCHAR* pszRendererName );
-HRESULT VideoPresentationModeChange( USHORT uhVideoMode );
+HRESULT TimePlay(USHORT uhPartOfTheTitle);
+HRESULT TimeSearch(UINT uiBCDTime);
+HRESULT TitlePlay(BYTE byteTitleNumber);
+HRESULT UseRenderer(WCHAR* pszRendererName);
+HRESULT VideoPresentationModeChange(USHORT uhVideoMode);
 
 #endif /* _DVDNAV_ */

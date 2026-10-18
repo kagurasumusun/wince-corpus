@@ -236,20 +236,24 @@ enum OlSensitivity {
 typedef enum tagPIMTYPE { PT_CALENDAR = 0, PT_TASKS, PT_CONTACT } PIMTYPE;
 
 /* olConfidential  [extra enum] */
+#ifdef __cplusplus
 enum OlSensitivity {
-  olNormal = 0,
-  olPersonal = 1,
-  olPrivate = 2,
-  olConfidential = 3
+ olNormal = 0,
+ olPersonal = 1,
+ olPrivate = 2,
+ olConfidential = 3
 };
+#endif /* __cplusplus */
 
 /* olMeetingCanceled  [extra enum] */
+#ifdef __cplusplus
 enum OlMeetingStatus {
-  olNonMeeting = 0,
-  olMeeting = 1,
-  olMeetingAccepted = 3,
-  olMeetingCanceled = 7
+ olNonMeeting = 0,
+ olMeeting = 1,
+ olMeetingAccepted = 3,
+ olMeetingCanceled = 7
 };
+#endif /* __cplusplus */
 
 /* ==================================================================
  * functions and callbacks
@@ -279,8 +283,8 @@ HRESULT ClearRecurrencePattern();
 HRESULT Delete();
 HRESULT Display();
 HRESULT Logoff();
-HRESULT Logon( long hWnd );
-HRESULT Remove( int iItem );
+HRESULT Logon(long hWnd);
+HRESULT Remove(int iItem);
 HRESULT Save();
 HRESULT Send();
 HRESULT SendToInfrared();

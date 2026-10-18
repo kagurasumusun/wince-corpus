@@ -1,11 +1,11 @@
-/* WinDef.h -- Windows CE unified surface
+/* Windef.h -- Windows CE unified surface
  *
  * ONE tree for every CE generation.  Version differences use
  * #if defined(_WIN32_WCE) && (_WIN32_WCE >= NNN) branches.
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 23 constants, 8 declarations, 7 outlines, 122 base types, 0 extra macros, 0 extra decls
+ * 23 constants, 8 declarations, 4 outlines, 122 base types, 0 extra macros, 0 extra decls
  */
 #ifndef _WINDEF_
 #define _WINDEF_
@@ -23,6 +23,8 @@
  * These expand to nothing / long long.  Not copied from an SDK.
  * stdarg.h is ISO C (va_list on FormatMessage). */
 #include <stdarg.h>
+/* stdbool.h is ISO C99 (bool printed by some pages). */
+#include <stdbool.h>
 #ifndef CONST
 #define CONST const
 #endif
@@ -730,12 +732,101 @@ typedef int (CALLBACK *FONTENUMPROCW)(ENUMLOGFONT FAR *, TEXTMETRIC FAR *, int, 
 typedef HICON HCURSOR;
 
 /* ==================================================================
+ * derived forwards -- opaque types whose bodies
+ * no corpus page prints; prototypes compile against
+ * these (DERIVED, not quoted; data/derived-forward-
+ * types.tsv)
+ * ================================================================ */
+/* DERIVED forward -- derived forward: CommCtrl handle; no corpus page prints the struct body */
+typedef struct _HIMAGELIST *HIMAGELIST;
+/* DERIVED forward -- derived forward: LP- pointer typedef; no corpus page prints the struct body */
+typedef struct _DDVIDEOPORTINFO *LPDDVIDEOPORTINFO;
+/* DERIVED forward -- derived forward: LP- pointer typedef; no corpus page prints the struct body */
+typedef struct _DDDEVICEIDENTIFIER *LPDDDEVICEIDENTIFIER;
+/* DERIVED forward -- derived forward: LP- pointer typedef; no corpus page prints the struct body */
+typedef struct _DDVIDEOPORTSTATUS *LPDDVIDEOPORTSTATUS;
+/* DERIVED forward -- derived forward: LP- pointer typedef; no corpus page prints the struct body */
+typedef struct _DMUS_OBJECTDESC *LPDMUS_OBJECTDESC;
+/* DERIVED forward -- derived forward: P- pointer typedef; no corpus page prints the struct body */
+typedef struct _REPLSETUP *PREPLSETUP;
+/* DERIVED forward -- derived forward: handle-style name; no corpus page prints the type body */
+typedef void *hHREPLFLD;
+/* DERIVED forward -- derived forward: reference-to-IID spelling printed by the page; no corpus page prints the typedef */
+typedef const struct _GUID *REFIiD;
+/* DERIVED forward -- derived placeholder: enumeration body no corpus page prints */
+typedef int TunerInputType;
+/* DERIVED forward -- derived placeholder: enumeration body no corpus page prints */
+typedef int AMTunerModeType;
+/* DERIVED forward -- derived forward: no corpus page prints the struct body */
+typedef struct DMO_MEDIA_TYPE DMO_MEDIA_TYPE;
+/* DERIVED forward -- derived forward: no corpus page prints the struct body */
+typedef struct DMUS_PMSG DMUS_PMSG;
+/* DERIVED forward -- derived forward: no corpus page prints the struct body */
+typedef struct DMUS_NOTIFICATION_PMSG DMUS_NOTIFICATION_PMSG;
+/* DERIVED forward -- derived forward: no corpus page prints the struct body */
+typedef struct DMO_OUTPUT_DATA_BUFFER DMO_OUTPUT_DATA_BUFFER;
+/* DERIVED forward -- derived forward: no corpus page prints the struct body */
+typedef struct AM_MEDIA_TYPE AM_MEDIA_TYPE;
+/* DERIVED forward -- derived forward: outline only; no corpus page prints the struct body */
+typedef struct BITMAP BITMAP;
+/* DERIVED forward -- derived forward: outline only; no corpus page prints the struct body */
+typedef struct LOGBRUSH LOGBRUSH;
+/* DERIVED forward -- derived forward: outline only; no corpus page prints the struct body */
+typedef struct LOGFONT LOGFONT;
+/* DERIVED forward -- derived forward: outline only; no corpus page prints the struct body */
+typedef struct LOGPEN LOGPEN;
+/* DERIVED forward -- derived forward: outline only; no corpus page prints the struct body */
+typedef struct MSG MSG;
+/* DERIVED forward -- derived forward: outline only; no corpus page prints the struct body */
+typedef struct CY CY;
+/* DERIVED forward -- derived forward: no corpus page prints the struct body */
+typedef struct CEL_INT_DATA CEL_INT_DATA;
+/* DERIVED forward -- derived forward: no corpus page prints the type body */
+typedef struct ControlCloseStatus ControlCloseStatus;
+/* DERIVED forward -- derived forward: no corpus page prints the struct body */
+typedef struct DVDUserGOPData DVDUserGOPData;
+/* DERIVED forward -- derived forward: no corpus page prints the struct body */
+typedef struct DVD_AUDIO_STREAM_ATTR DVD_AUDIO_STREAM_ATTR;
+/* DERIVED forward -- derived forward: no corpus page prints the struct body */
+typedef struct DVD_ISRC DVD_ISRC;
+/* DERIVED forward -- derived forward: no corpus page prints the type body */
+typedef struct DVD_POS_CODE DVD_POS_CODE;
+/* DERIVED forward -- derived forward: no corpus page prints the type body */
+typedef struct DVD_PROVIDER_ID DVD_PROVIDER_ID;
+/* DERIVED forward -- derived forward: no corpus page prints the type body */
+typedef struct ExtendedDisconnectReasonCode ExtendedDisconnectReasonCode;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IDirectMusicBand IDirectMusicBand;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IDirectMusicLoader IDirectMusicLoader;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IDirectMusicObject IDirectMusicObject;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IEnumDVD_TEXT_LANGUAGE_UNIT IEnumDVD_TEXT_LANGUAGE_UNIT;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IEnumReplItem IEnumReplItem;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IFilterGraph IFilterGraph;
+/* DERIVED forward -- derived forward: interface pointer type; body no corpus page prints */
+typedef struct IbaseFilter IbaseFilter;
+/* DERIVED forward -- derived forward: no corpus page prints the union body */
+typedef struct NodeDataUnion NodeDataUnion;
+/* DERIVED forward -- derived forward: no corpus page prints the union body */
+typedef struct SdpQueryUuidUnion SdpQueryUuidUnion;
+/* DERIVED forward -- derived forward: no corpus page prints the type body */
+typedef struct PCONFINFO PCONFINFO;
+/* DERIVED forward -- derived forward: no corpus page prints the type body */
+typedef struct POBJNOTIFY POBJNOTIFY;
+/* DERIVED forward -- derived forward: no corpus page prints the type body */
+typedef struct POBJTYPEINFO POBJTYPEINFO;
+/* DERIVED forward -- derived forward: no corpus page prints the type body */
+typedef struct POBJUIDATA POBJUIDATA;
+/* DERIVED forward -- derived forward: ATL map entry; body no corpus page prints */
+typedef struct _ATL_INTMAP_ENTRY _ATL_INTMAP_ENTRY;
+
+/* ==================================================================
  * macros -- the macro/#define blocks the pages print (verbatim)
  * ================================================================ */
-
-/* EDITSTREAM  [macro, typedef; ce-only; heuristic-prefix] */
-
-/* EM_CANPASTE  [macro, typedef; ce-only; heuristic-prefix] */
 
 /* HIBYTE  [macro; shared] */
 
@@ -752,8 +843,6 @@ typedef HICON HCURSOR;
 /* MAKEWORD  [macro; shared] */
 #define MAKEWORD(a, b) \ 
  ((WORD) (((BYTE) (a)) | ((WORD) ((BYTE) (b))) << 8));
-
-/* VIEWATTRIBUTES  [macro, typedef; ce-only; heuristic-prefix] */
 
 /* ==================================================================
  * types -- structures, enumerations and typedefs; the member

@@ -17,12 +17,12 @@
  * ================================================================ */
 
 /* function */
-HRESULT AddArray( const char *pName, IRemoteUI_Array **pArray );
-HRESULT FindFirstArray( IRemoteUI_Array **pArray );
-HRESULT FindNextArray( IRemoteUI_Array **pArray );
-HRESULT GetArray(  const char *pName,  IRemoteUI_Array **pArray  )
-HRESULT ModuleName ( char **pModuleName );
-HRESULT NeedHTTPDRestart( BOOL *pVal );
-HRESULT NeedNetworkRestart( BOOL *pVal );
+HRESULT AddArray(const char *pName, IRemoteUI_Array **pArray);
+HRESULT FindFirstArray(IRemoteUI_Array **pArray);
+HRESULT FindNextArray(IRemoteUI_Array **pArray);
+HRESULT GetArray(const char *pName, IRemoteUI_Array **pArray)
+HRESULT ModuleName (char **pModuleName);
+HRESULT NeedHTTPDRestart(BOOL *pVal);
+HRESULT NeedNetworkRestart(BOOL *pVal);
 
 #endif /* _REMOTEUI_ */

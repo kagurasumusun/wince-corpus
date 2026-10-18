@@ -143,16 +143,16 @@ enum SF_REQ_TYPE{
 
 /* SF_REQ_DISABLE_NOTIFICATIONS  [extra enum] */
 enum SF_REQ_TYPE{
-  SF_REQ_SEND_RESPONSE_HEADER,
-  SF_REQ_ADD_HEADERS_ON_DENIAL,
-  SF_REQ_SET_NEXT_READ_SIZE,
-  SF_REQ_SET_PROXY_INFO,
-  SF_REQ_GET_CONNID,
-  SF_REQ_SET_CERTIFICATE_INFO,
-  SF_REQ_GET_PROPERTY,
-  SF_REQ_NORMALIZE_URL,
-  SF_REQ_DISABLE_NOTIFICATIONS
-} ;
+ SF_REQ_SEND_RESPONSE_HEADER,
+ SF_REQ_ADD_HEADERS_ON_DENIAL,
+ SF_REQ_SET_NEXT_READ_SIZE,
+ SF_REQ_SET_PROXY_INFO,
+ SF_REQ_GET_CONNID,
+ SF_REQ_SET_CERTIFICATE_INFO,
+ SF_REQ_GET_PROPERTY,
+ SF_REQ_NORMALIZE_URL,
+ SF_REQ_DISABLE_NOTIFICATIONS
+};
 
 /* ==================================================================
  * functions and callbacks
@@ -200,6 +200,6 @@ BOOL WINAPI TerminateFilter(
  * ================================================================ */
 
 /* function */
-BOOL WINAPI *SetHeader(  PHTTP_FILTER_CONTEXT pfc,  LPSTR lpszName,  LPSTR lpszValue );
+BOOL WINAPI *SetHeader(PHTTP_FILTER_CONTEXT pfc, LPSTR lpszName, LPSTR lpszValue);
 
 #endif /* _HTTPFILT_ */

@@ -17,8 +17,8 @@
  * ================================================================ */
 
 /* function */
-VOID WINAPI CreatePermanentDIBSection( HDC hdc, CONST BITMAPINFO* pbmi, UINT iUsage, void** ppvBits, HANDLE hSection, DWORD dwOffset );
-int DibByteWidth( unsigned int N, unsigned int W );
-int DibSize( unsigned int N, unsigned int W, int H );
+VOID WINAPI CreatePermanentDIBSection(HDC hdc, CONST BITMAPINFO* pbmi, UINT iUsage, void** ppvBits, HANDLE hSection, DWORD dwOffset);
+int DibByteWidth(unsigned int N, unsigned int W);
+int DibSize(unsigned int N, unsigned int W, int H);
 
 #endif /* _GDI_HPP_ */

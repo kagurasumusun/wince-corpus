@@ -42,14 +42,14 @@ struct ScrollBarInfoInternal {
 
 /* SCROLL_NEXT_FREE  [extra enum] */
 enum SCROLL_STATE {
-  SCROLL_NO_PRESS,
-  SCROLL_UP_PRESS,
-  SCROLL_DN_PRESS,
-  SCROLL_PGUP_PRESS,
-  SCROLL_PGDN_PRESS,
-  SCROLL_SLIDE_PRESS,
-  SCROLL_UNAVAIL,
-  SCROLL_NEXT_FREE
+ SCROLL_NO_PRESS,
+ SCROLL_UP_PRESS,
+ SCROLL_DN_PRESS,
+ SCROLL_PGUP_PRESS,
+ SCROLL_PGDN_PRESS,
+ SCROLL_SLIDE_PRESS,
+ SCROLL_UNAVAIL,
+ SCROLL_NEXT_FREE
 };
 
 /* ==================================================================
@@ -58,9 +58,9 @@ enum SCROLL_STATE {
  * ================================================================ */
 
 /* function */
-int GetScrollRects( HWND hwnd, RECT* prcBounds, RECT* prcUp, RECT* prcDn, RECT* prcThumb, BOOL fVert, ScrollBarInfoInternal* psbii );
-LONG GetThumbPixel( HWND hwnd, BOOL fVert, ScrollBarInfoInternal* psbii );
-static SCROLL_STATE ScrollHitTest(  HWND hwnd,  POINT pt,  BOOL fVert,  ScrollBarInfoInternal* psbii  );
-void TrackThumb( HWND hwnd, HDC hdc, POINT pt, BOOL fVert, ScrollBarInfoInternal* psbii );
+int GetScrollRects(HWND hwnd, RECT* prcBounds, RECT* prcUp, RECT* prcDn, RECT* prcThumb, BOOL fVert, ScrollBarInfoInternal* psbii);
+LONG GetThumbPixel(HWND hwnd, BOOL fVert, ScrollBarInfoInternal* psbii);
+static SCROLL_STATE ScrollHitTest(HWND hwnd, POINT pt, BOOL fVert, ScrollBarInfoInternal* psbii);
+void TrackThumb(HWND hwnd, HDC hdc, POINT pt, BOOL fVert, ScrollBarInfoInternal* psbii);
 
 #endif /* _SCROLLVIEW_HPP_ */

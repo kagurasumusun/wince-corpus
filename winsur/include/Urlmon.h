@@ -431,36 +431,36 @@ BOOL WriteHitLogging (
  * ================================================================ */
 
 /* function */
-HRESULT Authenticate( HWND* phwnd, LPWSTR* pszUsername, LPWSTR* pszPassword );
-HRESULT BeginningTransaction( LPCWSTR szURL, DWORD dwReserved, LPCWSTR szHeaders, LPWSTR* pszAdditionalHeaders );
-HRESULT CombineUrl( LPCWSTR pwzBaseUrl, LPCWSTR pwzRelativeUrl, DWORD dwCombineFlags, LPWSTR pwzResult, DWORD cchResult, DWORD* pcchResult, DWORD dwReserved );
+HRESULT Authenticate(HWND* phwnd, LPWSTR* pszUsername, LPWSTR* pszPassword);
+HRESULT BeginningTransaction(LPCWSTR szURL, DWORD dwReserved, LPCWSTR szHeaders, LPWSTR* pszAdditionalHeaders);
+HRESULT CombineUrl(LPCWSTR pwzBaseUrl, LPCWSTR pwzRelativeUrl, DWORD dwCombineFlags, LPWSTR pwzResult, DWORD cchResult, DWORD* pcchResult, DWORD dwReserved);
 HRESULT CommitSwitch(VOID);
-HRESULT CompareUrl( LPCWSTR pwzUrl1, LPCWSTR pwzUrl2, DWORD dwCompareFlags );
-HRESULT Continue( PROTOCOLDATA* pProtocolData );
-HRESULT CreateZoneEnumerator( DWORD* pdwEnum, DWORD* pdwCount, DWORD dwFlags );
-HRESULT DestroyZoneEnumerator( DWORD dwEnum );
-HRESULT GetBindInfo( DWORD* grfBINDF, BINDINFO* pbindinfo );
-HRESULT GetSecurityId( BYTE* pbSecurityId, DWORD* pcbSecurityId, DWORD_PTR dwReserved );
-HRESULT GetZoneActionPolicy( DWORD dwZone, DWORD dwAction, BYTE* pPolicy, DWORD cbPolicy, URLZONEREG urlZoneReg );
-HRESULT GetZoneAt( DWORD dwEnum, DWORD dwIndex, DWORD* pdwZone );
-HRESULT GetZoneAttributes( DWORD dwZone, ZONEATTRIBUTES* pZoneAttributes );
-HRESULT MapUrlToZone( LPCWSTR pwszUrl, DWORD* pdwZone, DWORD dwFlags );
-HRESULT OnResponse( DWORD dwResponseCode, LPCWSTR szResponseHeaders, LPCWSTR szRequestHeaders, LPWSTR* pszAdditionalRequestHeaders );
-HRESULT OnSecurityProblem( DWORD dwProblem );
-HRESULT OnStopBinding( HRESULT hresult, LPCWSTR szError );
-HRESULT ParseUrl( LPCWSTR pwzUrl, PARSEACTION ParseAction, DWORD dwParseFlags, LPWSTR pwzResult, DWORD cchResult, DWORD* pcchResult, DWORD dwReserved );
-HRESULT ProcessUrlAction( DWORD dwAction, BYTE* pPolicy, DWORD cbPolicy, BYTE* pContext, DWORD cbContext, DWORD dwFlags, DWORD dwReserved );
-HRESULT PutProperty( MONIKERPROPERTY mkp, LPCWSTR val );
-HRESULT QueryInfo( LPCWSTR pwzUrl, QUERYOPTION OueryOption, DWORD dwQueryFlags, LPVOID pBuffer, DWORD cbBuffer, DWORD* pcbBuf, DWORD dwReserved );
-HRESULT QueryOption( DWORD dwOption, LPVOID pBuffer, DWORD* pcbBuf );
-HRESULT ReportData( DWORD grfBSCF, ULONG ulProgress, ULONG ulProgressMax );
-HRESULT ReportProgress( ULONG ulStatusCode, LPCWSTR szStatusText );
-HRESULT ReportResult( HRESULT hrResult, DWORD dwError, LPCWSTR szResult );
+HRESULT CompareUrl(LPCWSTR pwzUrl1, LPCWSTR pwzUrl2, DWORD dwCompareFlags);
+HRESULT Continue(PROTOCOLDATA* pProtocolData);
+HRESULT CreateZoneEnumerator(DWORD* pdwEnum, DWORD* pdwCount, DWORD dwFlags);
+HRESULT DestroyZoneEnumerator(DWORD dwEnum);
+HRESULT GetBindInfo(DWORD* grfBINDF, BINDINFO* pbindinfo);
+HRESULT GetSecurityId(BYTE* pbSecurityId, DWORD* pcbSecurityId, DWORD_PTR dwReserved);
+HRESULT GetZoneActionPolicy(DWORD dwZone, DWORD dwAction, BYTE* pPolicy, DWORD cbPolicy, URLZONEREG urlZoneReg);
+HRESULT GetZoneAt(DWORD dwEnum, DWORD dwIndex, DWORD* pdwZone);
+HRESULT GetZoneAttributes(DWORD dwZone, ZONEATTRIBUTES* pZoneAttributes);
+HRESULT MapUrlToZone(LPCWSTR pwszUrl, DWORD* pdwZone, DWORD dwFlags);
+HRESULT OnResponse(DWORD dwResponseCode, LPCWSTR szResponseHeaders, LPCWSTR szRequestHeaders, LPWSTR* pszAdditionalRequestHeaders);
+HRESULT OnSecurityProblem(DWORD dwProblem);
+HRESULT OnStopBinding(HRESULT hresult, LPCWSTR szError);
+HRESULT ParseUrl(LPCWSTR pwzUrl, PARSEACTION ParseAction, DWORD dwParseFlags, LPWSTR pwzResult, DWORD cchResult, DWORD* pcchResult, DWORD dwReserved);
+HRESULT ProcessUrlAction(DWORD dwAction, BYTE* pPolicy, DWORD cbPolicy, BYTE* pContext, DWORD cbContext, DWORD dwFlags, DWORD dwReserved);
+HRESULT PutProperty(MONIKERPROPERTY mkp, LPCWSTR val);
+HRESULT QueryInfo(LPCWSTR pwzUrl, QUERYOPTION OueryOption, DWORD dwQueryFlags, LPVOID pBuffer, DWORD cbBuffer, DWORD* pcbBuf, DWORD dwReserved);
+HRESULT QueryOption(DWORD dwOption, LPVOID pBuffer, DWORD* pcbBuf);
+HRESULT ReportData(DWORD grfBSCF, ULONG ulProgress, ULONG ulProgressMax);
+HRESULT ReportProgress(ULONG ulStatusCode, LPCWSTR szStatusText);
+HRESULT ReportResult(HRESULT hrResult, DWORD dwError, LPCWSTR szResult);
 HRESULT RollbackSwitch(VOID);
-HRESULT SetZoneActionPolicy( DWORD dwZone, DWORD dwAction, BYTE* pPolicy, DWORD cbPolicy, URLZONEREG urlZoneReg );
-HRESULT SetZoneAttributes( DWORD dwZone, ZONEATTRIBUTES* pZoneAttributes );
-HRESULT SetZoneMapping( DWORD dwZone, LPCWSTR lpszPattern, DWORD dwFlags );
-HRESULT Switch( PROTOCOLDATA* pProtocolData );
+HRESULT SetZoneActionPolicy(DWORD dwZone, DWORD dwAction, BYTE* pPolicy, DWORD cbPolicy, URLZONEREG urlZoneReg);
+HRESULT SetZoneAttributes(DWORD dwZone, ZONEATTRIBUTES* pZoneAttributes);
+HRESULT SetZoneMapping(DWORD dwZone, LPCWSTR lpszPattern, DWORD dwFlags);
+HRESULT Switch(PROTOCOLDATA* pProtocolData);
 HRESULT UnlockRequest(VOID);
 
 #endif /* _URLMON_ */

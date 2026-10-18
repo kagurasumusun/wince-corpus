@@ -26,18 +26,26 @@ typedef CAxWindowT<CWindow> CAxWindow;
  * ================================================================ */
 
 /* function */
-BOOL CallChain( DWORD dwChainID, HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& lResult );
-BOOL CreateGrayCaret( int nWidth, int nHeight );
-BOOL CreateSolidCaret( int nWidth, int nHeight );
-static LPCTSTR GetWndClassName( );
-BOOL ModifyStyle( DWORD dwRemove, DWORD dwAdd, UINT nFlags = 0 );
-BOOL ModifyStyleEx( DWORD dwRemove, DWORD dwAdd, UINT nFlags = 0 );
-ATOM RegisterWndSuperClass( );
-BOOL RemoveChainEntry( DWORD dwChainID );
-BOOL SetChainEntry( DWORD dwChainID, CMessageMap* pObject, DWORD dwMsgMapID = 0 );
-int SetDlgCtrlID( int nID );
-BOOL SubclassWindow( HWND hWnd);
-void SwitchMessageMap( DWORD dwMsgMapID);
-HWND UnsubclassWindow( );
+#ifdef __cplusplus
+BOOL CallChain(DWORD dwChainID, HWND hWnd, UINT uMsg, WPARAM wParam, LPARAM lParam, LRESULT& lResult);
+#endif /* __cplusplus */
+BOOL CreateGrayCaret(int nWidth, int nHeight);
+BOOL CreateSolidCaret(int nWidth, int nHeight);
+static LPCTSTR GetWndClassName();
+#ifdef __cplusplus
+BOOL ModifyStyle(DWORD dwRemove, DWORD dwAdd, UINT nFlags = 0);
+#endif /* __cplusplus */
+#ifdef __cplusplus
+BOOL ModifyStyleEx(DWORD dwRemove, DWORD dwAdd, UINT nFlags = 0);
+#endif /* __cplusplus */
+ATOM RegisterWndSuperClass();
+BOOL RemoveChainEntry(DWORD dwChainID);
+#ifdef __cplusplus
+BOOL SetChainEntry(DWORD dwChainID, CMessageMap* pObject, DWORD dwMsgMapID = 0);
+#endif /* __cplusplus */
+int SetDlgCtrlID(int nID);
+BOOL SubclassWindow(HWND hWnd);
+void SwitchMessageMap(DWORD dwMsgMapID);
+HWND UnsubclassWindow();
 
 #endif /* _ATLWIN_ */
