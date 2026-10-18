@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 39 constants, 12 declarations, 37 outlines, 0 base types, 0 extra macros, 72 extra decls
+ * 39 constants, 12 declarations, 37 outlines, 0 base types, 0 extra macros, 42 extra decls
  */
 #ifndef _OBJIDL_
 #define _OBJIDL_
@@ -294,27 +294,17 @@ typedef TYMED *PTYMED, *LPTYMED;
  * ================================================================ */
 
 /* function */
-HRESULT AddConnection(DWORD exconn, DWORD dwreserved);
 HRESULT Commit(DWORD grfCommitFlags);
 HRESULT DUnadvise(DWORD dwConnection);
 HRESULT DestroyElement(WCHAR *pwcsName);
 int DidAlloc(void* pv);
-HRESULT DisconnectObject(DWORD dwReserved);
-HRESULT FillAppend(void const *pv, ULONG cb, ULONG *pcbWritten);
-HRESULT FillAt(ULARGE_INTEGER uIOffset, void const *pv, ULONG cb, ULONG *pcbWritten);
 HRESULT FreeSurrogate();
 HRESULT GetBindOptions(BIND_OPTS* pbindopts);
 HRESULT GetCanonicalFormatEtc(FORMATETC* pFormatetcIn, FORMATETC* pFormatetcOut);
-HRESULT GetComparisonData(byte *pbData, ULONG cbMax, ULONG *pcbData);
 HRESULT GetData(FORMATETC* pFormatetc, STGMEDIUM* pmedium);
 HRESULT GetDataHere(FORMATETC* pFormatetc, STGMEDIUM* pmedium);
 HRESULT HandsOfStorage(void);
 void HeapMinimize();
-HRESULT ImpersonateClient();
-HRESULT IsDirty(void);
-BOOL IsImpersonating();
-HRESULT LockRunning(BOOL fLock, BOOL fLastUnlockCloses);
-HRESULT NoteChangeTime(DWORD dwRegister, FILETIME *pfiletime);
 HRESULT OnProgress(DWORD dwProgressCurrent, DWORD dwProgressMaximum, BOOL fAccurate, BOOL fOwner);
 void* PostAlloc(void* pActual);
 int PostDidAlloc(void* pRequest, BOOL fSpyed, int fActual);
@@ -329,23 +319,15 @@ void* PreGetSize(void* pRequest, BOOL fSpyed);
 void PreHeapMinimize(void);
 LONG PreRealloc(void* pRequest, ULONG cbRequest, void** ppNewRequest, BOOL fSpyed);
 HRESULT QueryGetData(FORMATETC* pFormatetc);
-HRESULT QueryMultipleInterfaces(ULONG cMQIs, MULTI_QI *pMQIs);
-HRESULT Read(void *pv, ULONG cb, ULONG *pcbRead);
 void* Realloc(void* pv, ULONG cb);
 HRESULT ReleaseBoundObjects(void);
 HRESULT RenameElement(const WCHAR *pwcsOldName, const WCHAR *pwcsNewName);
 HRESULT Revert(void);
-HRESULT RevertToSelf();
-HRESULT Revoke(DWORD dwRegister);
 HRESULT RevokeInterfaceFromGlobal(DWORD dwCookie);
 HRESULT Seek(ULARGE_INTEGER dlibMove, DWORD dwOrigin, ULARGE_INTEGER plibNewPosition);
 HRESULT SetBindOptions(BIND_OPTS* pbindopts);
-HRESULT SetContainedObject(BOOL fContained);
 HRESULT SetData(FORMATETC* pFormatetc, STGMEDIUM* pmedium, BOOL fRelease);
 HRESULT SetElementTimes(const WCHAR *pwcsName, FILETIME const *pctime, FILETIME const *patime, FILETIME const *pmtime);
-HRESULT SetFillSize(ULARGE_INTEGER uISize);
 HRESULT SetStateBits(DWORD grfStateBits, DWORD grfMask);
-HRESULT Terminate(BOOL bCanceled);
-HRESULT Write(void const *pv, ULONG cb, ULONG *pcbWritten);
 
 #endif /* _OBJIDL_ */

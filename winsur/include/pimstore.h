@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 71 constants, 11 declarations, 24 outlines, 0 base types, 0 extra macros, 18 extra decls
+ * 71 constants, 11 declarations, 24 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _PIMSTORE_
 #define _PIMSTORE_
@@ -312,25 +312,5 @@ void CePimCommand(HWND hWnd,
  HANDLE * rghData,
  void pReserved);
 #endif /* _WIN32_WCE */
-
-/* ==================================================================
- * extra declarations -- corpus pages the main
- * parser did not turn into an entity declaration
- * ================================================================ */
-
-/* function */
-HRESULT Cancel();
-HRESULT ClearReccurencePattern();
-HRESULT ClearRecurrencePattern();
-HRESULT Delete();
-HRESULT Display();
-HRESULT Logoff();
-HRESULT Logon(long hWnd);
-HRESULT ReceiveFromInfrared();
-HRESULT Remove(int iItem);
-HRESULT Save();
-HRESULT Send();
-HRESULT SendToInfrared();
-HRESULT SkipRecurrence();
 
 #endif /* _PIMSTORE_ */

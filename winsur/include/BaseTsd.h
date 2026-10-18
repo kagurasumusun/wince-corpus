@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 14 constants, 111 declarations, 31 outlines, 21 base types, 0 extra macros, 0 extra decls
+ * 14 constants, 111 declarations, 31 outlines, 21 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _BASETSD_
 #define _BASETSD_
@@ -674,5 +674,11 @@ typedef HANDLE SERVICE_STATUS_HANDLE;
 #define __WINCE_DEFINED_HCURSOR
 typedef HICON HCURSOR;
 #endif /* __WINCE_DEFINED_HCURSOR */
+
+/* HRESULT  [extra typedef] */
+#ifndef __WINCE_DEFINED_HRESULT
+#define __WINCE_DEFINED_HRESULT
+typedef long HRESULT;
+#endif /* __WINCE_DEFINED_HRESULT */
 
 #endif /* _BASETSD_ */

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 198 constants, 23 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 198 constants, 23 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _COMMDLG_
 #define _COMMDLG_
@@ -284,5 +284,14 @@ UINT APIENTRY PrintHookProc(HWND hdlg,
  WPARAM wParam,
  LPARAM lParam);
 #endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* function */
+BOOL PageSetupDlg(LPPAGESETUPDLG lppsd);
+BOOL PrintDlg(LPPRINTDLG lppd);
 
 #endif /* _COMMDLG_ */

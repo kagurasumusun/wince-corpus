@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 13 constants, 11 declarations, 11 outlines, 0 base types, 0 extra macros, 15 extra decls
+ * 13 constants, 11 declarations, 11 outlines, 0 base types, 0 extra macros, 12 extra decls
  */
 #ifndef _OCIDL_
 #define _OCIDL_
@@ -214,15 +214,12 @@ typedef VIEWSTATUS *PVIEWSTATUS, *LPVIEWSTATUS;
  * ================================================================ */
 
 /* function */
-HRESULT GetLicInfo(LICINFO *pLicInfo);
 HRESULT GetPages(CAUUID *pPages //Pointer to structure);
-HRESULT GetSizeMax(ULARGE_INTEGER *pcbSize);
 HRESULT GetViewStatus(DWORD* pdwStatus);
 HRESULT LockInPlaceActive(BOOL fLock);
 HRESULT OnControlInfoChanged(void);
 HRESULT OnFocus(BOOL fGotFocus);
 HRESULT QueryHitRect(DWORD dwAspect, LPRECT pRectBounds, LPRECT pRectLoc, LONG lCloseHint, DWORD* pHitResult);
 HRESULT ShowPropertyFrame(void);
-HRESULT Unadvise(DWORD dwCookie);
 
 #endif /* _OCIDL_ */

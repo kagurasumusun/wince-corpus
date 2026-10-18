@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 1264 constants, 147 declarations, 4 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 1264 constants, 147 declarations, 4 outlines, 0 base types, 0 extra macros, 10 extra decls
  */
 #ifndef _WINGDI_
 #define _WINGDI_
@@ -1690,6 +1690,21 @@ typedef struct _RGNDATA {
 typedef RGNDATA *PRGNDATA, *LPRGNDATA;
 #endif /* __WINCE_DEFINED_PRGNDATA */
 
+/* PS_MESSAGE_CLASSUNSPECIFIED  [extra enum] */
+#ifndef __WINCE_DEFINED_PROVIDER_SPECIFIC_MESSAGE_CLASS
+#define __WINCE_DEFINED_PROVIDER_SPECIFIC_MESSAGE_CLASS
+#ifndef __WINCE_DEFINED_PS_MESSAGE_CLASSUNSPECIFIED
+#define __WINCE_DEFINED_PS_MESSAGE_CLASSUNSPECIFIED
+enum PROVIDER_SPECIFIC_MESSAGE_CLASS {
+ PS_MESSAGE_CLASS0 = 0,
+ PS_MESSAGE_CLASS1,
+ PS_MESSAGE_CLASS2,
+ PS_MESSAGE_CLASS3,
+ PS_MESSAGE_CLASSUNSPECIFIED,
+};
+#endif /* __WINCE_DEFINED_PS_MESSAGE_CLASSUNSPECIFIED */
+#endif /* __WINCE_DEFINED_PROVIDER_SPECIFIC_MESSAGE_CLASS */
+
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
@@ -2241,7 +2256,7 @@ WINGDIAPI BOOL WINAPI MoveToEx(HDC hdc,
 /* SetBitmapBits  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
 LONG SetBitmapBits(HBITMAP hbmp,
  DWORD cBytes,
- CONST VOID *lpBits);
+ CONST, VOID *lpBits);
 
 /* SetDIBitsToDevice  [function; shared; CE 5.0..699; Coredll.lib, coredll.lib; +not-umbrella] */
 int SetDIBitsToDevice(HDC hdc,
@@ -2293,5 +2308,20 @@ BOOL TransparentBlt(HDC hdcDest,
  int nHeightSrc,
  UINT crTransparent);
 #endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* function */
+HRESULT Architecture(int* pwArchitecture);
+BOOL CreateFont(int nHeight, int nWidth, int nEscapement, int nOrientation, int nWeight, BYTE bItalic, BYTE bUnderline, BYTE cStrikeOut, BYTE nCharSet, BYTE nOutPrecision, BYTE nClipPrecision, BYTE nQuality, BYTE nPitchAndFamily, LPCTSTR lpszFacename);
+static LPCTSTR WINAPI GetObjectDescription();
+UINT GetObjectSchema();
+HRESULT GetPath(LPCWSTR* ppszPath);
+BOOL PolyPolygon (LPPOINT lpPoints, LPINT lpPolyCounts, int nCount);
+BOOL PolyPolyline(const POINT* lpPoints, const DWORD* lpPolyPoints, int nCount);
+BOOL PolylineTo(const POINT* lpPoints, int nCount);
 
 #endif /* _WINGDI_ */

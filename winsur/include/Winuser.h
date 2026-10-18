@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 2175 constants, 311 declarations, 5 outlines, 1 base types, 0 extra macros, 0 extra decls
+ * 2175 constants, 311 declarations, 5 outlines, 1 base types, 0 extra macros, 19 extra decls
  */
 #ifndef _WINUSER_
 #define _WINUSER_
@@ -3240,6 +3240,15 @@ typedef struct _WNDCLASS {
 typedef WNDCLASS *PWNDCLASS, *LPWNDCLASS;
 #endif /* __WINCE_DEFINED_PWNDCLASS */
 
+/* MYDATA  [extra struct] */
+#ifndef __WINCE_DEFINED_TAGMYDATA
+#define __WINCE_DEFINED_TAGMYDATA
+#ifndef __WINCE_DEFINED_MYDATA
+#define __WINCE_DEFINED_MYDATA
+typedef struct tagMyData { };
+#endif /* __WINCE_DEFINED_MYDATA */
+#endif /* __WINCE_DEFINED_TAGMYDATA */
+
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
@@ -4295,5 +4304,22 @@ BOOL WINAPI RedrawWindow(HWND hwnd,
 /* AllKeys  [function; ce-only; CE 6.0..699] */
 BOOL AllKeys(BOOL bAllKeys);
 #endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* function */
+HRESULT GetFocusRect(RECT *pRect);
+HRESULT GetWindowHandle(HWND *pHwnd);
+VOID WINAPI IsDlgButtonChecked(HWND hDlg, int nIDButton);
+HRESULT PostMessageToApp(long uMsg, long wParam, long lParam);
+HRESULT RegisterClassObjects(DWORD dwClsContext, DWORD* dwFlags);
+void SetCursorPosition(UINT XScreenSpace, UINT YScreenSpace, DWORD Flags);
+HRESULT SetFocusNext(void);
+HRESULT SetFocusPrev(void);
+BOOL SetRectInContainer(LPRECT lpRect);
+void SetRectNP(LPCRECT lpRect);
 
 #endif /* _WINUSER_ */

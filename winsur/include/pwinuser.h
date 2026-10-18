@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 18 constants, 38 declarations, 1 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 18 constants, 38 declarations, 1 outlines, 0 base types, 0 extra macros, 1 extra decls
  */
 #ifndef _PWINUSER_
 #define _PWINUSER_
@@ -268,5 +268,13 @@ BOOL GetWindowAutoGesture(HWND hWnd,
 BOOL SetWindowAutoGesture(HWND hWnd,
  LPWAGINFO lpAutoGestureInfo);
 #endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* function */
+void WINAPI BattyerNotifyOfTimeChange(BOOL fForward, FILETIME * pftDelta);
 
 #endif /* _PWINUSER_ */

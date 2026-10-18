@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 56 constants, 7 declarations, 5 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 56 constants, 7 declarations, 5 outlines, 0 base types, 0 extra macros, 2 extra decls
  */
 #ifndef _AYGSHELL_
 #define _AYGSHELL_
@@ -172,5 +172,13 @@ typedef struct tagSHRGI {
 #endif /* __WINCE_DEFINED_PSHRGINFO */
 #endif /* __WINCE_DEFINED_SHRGINFO */
 #endif /* __WINCE_DEFINED_TAGSHRGI */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* function */
+HRESULT CreateNewItem (HWND hwndParent);
 
 #endif /* _AYGSHELL_ */

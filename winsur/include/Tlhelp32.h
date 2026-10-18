@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 20 constants, 53 declarations, 0 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 20 constants, 53 declarations, 0 outlines, 0 base types, 0 extra macros, 4 extra decls
  */
 #ifndef _TLHELP32_
 #define _TLHELP32_

@@ -5,7 +5,7 @@
  * Win32-shared entries are marked 'win32-ref'.
  * Generated from wince-docs-corpus knowledge/ by
  * tools/gen-include-def.py --unified.
- * 686 constants, 334 declarations, 9 outlines, 0 base types, 0 extra macros, 0 extra decls
+ * 686 constants, 334 declarations, 9 outlines, 0 base types, 0 extra macros, 13 extra decls
  */
 #ifndef _WINBASE_
 #define _WINBASE_
@@ -1223,6 +1223,31 @@ typedef BY_HANDLE_FILE_INFORMATION *PBY_HANDLE_FILE_INFORMATION, *LPBY_HANDLE_FI
 /*   EvtChar */
 /*   wReserved1 */
 
+/* CBR_PUSHBUTTON  [extra enum] */
+#ifndef __WINCE_DEFINED_BUTTONCONTROLRECTANGLESTYLE_T
+#define __WINCE_DEFINED_BUTTONCONTROLRECTANGLESTYLE_T
+#ifndef __WINCE_DEFINED_CBR_PUSHBUTTON
+#define __WINCE_DEFINED_CBR_PUSHBUTTON
+enum ButtonControlRectangleStyle_t {
+ CBR_CLIENTRECT,
+ CBR_CHECKBOX,
+ CBR_CHECKTEXT,
+ CBR_GROUPTEXT,
+ CBR_GROUPFRAME,
+ CBR_PUSHBUTTON
+};
+#endif /* __WINCE_DEFINED_CBR_PUSHBUTTON */
+#endif /* __WINCE_DEFINED_BUTTONCONTROLRECTANGLESTYLE_T */
+
+/* DEVICE_ERROR  [extra enum] */
+#ifndef __WINCE_DEFINED_HCI_EVENT
+#define __WINCE_DEFINED_HCI_EVENT
+#ifndef __WINCE_DEFINED_DEVICE_ERROR
+#define __WINCE_DEFINED_DEVICE_ERROR
+enum HCI_EVENT {DEVICE_UP,DEVICE_DOWN,DEVICE_ERROR};
+#endif /* __WINCE_DEFINED_DEVICE_ERROR */
+#endif /* __WINCE_DEFINED_HCI_EVENT */
+
 /* ==================================================================
  * functions and callbacks
  * ================================================================ */
@@ -2389,5 +2414,18 @@ DWORD VirtualQueryEx(HANDLE hProcess,
  PMEMORY_BASIC_INFORMATION lpBuffer,
  DWORD dwLength);
 #endif /* _WIN32_WCE */
+
+/* ==================================================================
+ * extra declarations -- corpus pages the main
+ * parser did not turn into an entity declaration
+ * ================================================================ */
+
+/* function */
+HANDLE ExitThreadEvent(void);
+bool WaitForActiveServer (DWORD WaitTimeInMSec);
+HRESULT WaitForCompletion(long msTimeout, long *pEvCode);
+HRESULT WaitForNotifyEvent(DWORD dwMilliseconds);
+HRESULT WaitForSync(DWORD dwFlags, DWORD dwLine, DWORD dwTimeout);
+HRESULT WaitForThreadDone(BOOL fForceStop, HRESULT* phrThreadResult, ULONG msTimeOut);
 
 #endif /* _WINBASE_ */

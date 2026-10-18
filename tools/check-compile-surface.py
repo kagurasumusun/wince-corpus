@@ -43,9 +43,9 @@ UNKNOWN_TYPE_RE = re.compile(
     r"unknown type name [\u2018'\"](?P<name>[^\u2019'\"]+)[\u2019'\"]"
     r"\s*;?\s*(did you mean.*)?$")
 DEFINES_TYPE = re.compile(
-    r"^\s*(?:typedef\s+)?(?:struct|union|enum)\s+(?P<tag>\w+)|"
-    r"^\s*typedef\s+[^;]*?\b(?P<tname>\w+)\s*;|"
     r"^\s*typedef\b[^;{]*(?:\{[^}]*\}[^;]*)?\b(?P<tname2>\w+)\s*;|"
+    r"^\s*typedef\s+[^;]*?\b(?P<tname>\w+)\s*;|"
+    r"^\s*(?:typedef\s+)?(?:struct|union|enum)\s+(?P<tag>\w+)|"
     r"\}\s*(?P<stname>\w+)\s*[,;]|"
     r"^\s*#\s*define\s+(?P<macro>[A-Za-z_]\w*)\b", re.M)
 FORWARD_HINT = re.compile(r"\b(?:struct|union|enum)\s+(\w+)\s*\*")

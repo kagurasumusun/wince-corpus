@@ -314,11 +314,24 @@ def c_decl_text(text):
             r"([,)])",
             _fix_missing_comma, text)
         # star-parameter shape: ``CHAR * ServiceName CHAR * DeviceName``
+        _star_qual = {"FAR", "NEAR", "const", "volatile", "IN", "OUT",
+                      "OPTIONAL", "RESTRICTED", "unsigned", "signed",
+                      "long", "short", "struct", "union", "enum", "void"}
+
         def _fix_star_comma(m):
+            g1w = m.group(1).split()[0]
+            g2w = m.group(2).split()[0]
+            if g1w in _star_qual or g2w in _star_qual:
+                return m.group(0)
             return f"{m.group(1)}, {m.group(2)}"
         text = re.sub(
             r"\b([A-Za-z_]\w+[ \t]+\*{1,2}[ \t]*[A-Za-z_]\w+)[ \t]+"
             r"([A-Za-z_]\w+[ \t]+\*{1,2}[ \t]*[A-Za-z_]\w+[ \t]*[,)])",
+            _fix_star_comma, text)
+        # ``name TYPE *name``-shape: ``pszBuf PDWORD *pdwSize``
+        text = re.sub(
+            r"\b([A-Za-z_]\w*)[ \t]+([A-Za-z_]\w+[ \t]+\*{1,2}[ \t]*"
+            r"[A-Za-z_]\w+[ \t]*[,)])",
             _fix_star_comma, text)
         # a lost space that fused type and parameter: ``ADDRESS_TYPEAddr``
         # (env-gated experiment; the regex class over-splits real identifiers
@@ -986,6 +999,53 @@ def load_derived_forwards():
                 definition = row.get("definition") or ""
                 if name:
                     out.append((name, form, note, definition))
+    # one row per name: a row carrying a real definition beats a bare
+    # forward (the definition makes the type complete)
+    best = {}
+    for r in out:
+        n = r[0]
+        prev = best.get(n)
+        if prev is None:
+            best[n] = r
+            continue
+        # a self-contained row beats a spelling-alias; then a row with a
+        # real definition beats a bare forward
+        if prev[1] != "spelling-alias" and r[1] == "spelling-alias":
+            continue
+        if r[1] != "spelling-alias" and prev[1] == "spelling-alias":
+            best[n] = r
+            continue
+        if r[3] and not prev[3]:
+            best[n] = r
+    # a row whose definition references other rows must come after them
+    # (``typedef OLECHAR *BSTR`` needs OLECHAR first)
+    rows = list(best.values())
+    names = {r[0] for r in rows}
+    deps = {}
+    for r in rows:
+        refs = set()
+        if r[3]:
+            refs = {t for t in re.findall(r"\b[A-Za-z_]\w*\b", r[3])
+                    if t in names and t != r[0]}
+        deps[r[0]] = refs
+    ordered = []
+    seen = set()
+
+    def _visit(n, stack):
+        if n in seen:
+            return
+        if n in stack:
+            return  # cycle: leave to stable order
+        stack.add(n)
+        for d in sorted(deps.get(n, ())):
+            _visit(d, stack)
+        stack.discard(n)
+        seen.add(n)
+        ordered.append(n)
+    for r in sorted(rows, key=lambda x: x[0]):
+        _visit(r[0], set())
+    pos = {n: i for i, n in enumerate(ordered)}
+    out = sorted(rows, key=lambda r: pos[r[0]])
     _DERIVED_FORWARDS_CACHE = out
     return out
 
@@ -3391,6 +3451,44 @@ def run_unified(args):
     leftover_defines = []
     leftover_decls = []
 
+    # ---- per-method reference pages name their owner in the file name:
+    # ``wcesdkrcbasefilter__pause`` = CBaseFilter::Pause,
+    # ``_wcesdk_com_IRunnableObject__Run`` = IRunnableObject::Run,
+    # ``_wcesdk_IContact_PropertyList`` = IContact::PropertyList.
+    # A method is not a free function: it goes to the interface/class method
+    # evidence table (vtable work), never into a free-decl surface.
+    _owner_entity_names = set()
+    for ent in all_entities:
+        _n = ent.get("name") or ""
+        if _n:
+            _owner_entity_names.add(_n.casefold())
+    method_rows = []
+
+    def _method_owner_from_source(name, source):
+        fn = (source or "").split("/")[-1]
+        m = re.search(r"wcesdkrc([A-Za-z_]\w*?)__([A-Za-z_]\w*)\.html?$",
+                      fn)
+        if m:
+            owner = "C" + m.group(1)[:1].upper() + m.group(1)[1:]
+            return owner, "class", m.group(2)
+        m = re.search(r"_wcesdk_com_([A-Za-z_]\w*?)__([A-Za-z_]\w*)\.html?$",
+                      fn)
+        if m:
+            return m.group(1), ("class" if m.group(1)[:1].islower()
+                                else "interface"), m.group(2)
+        m = re.search(r"\b(_?wcesdk_[A-Za-z_]\w*?)__([A-Za-z_]\w*)\.html?$",
+                      fn)
+        if m:
+            owner = m.group(1).split("_")[-1]
+            return owner, "class", m.group(2)
+        m = re.search(r"_wcesdk_([A-Za-z_]\w*?)_([A-Za-z_]\w*)\.html?$",
+                      fn)
+        if m and m.group(1).casefold() in _owner_entity_names \
+                and m.group(1).casefold() not in {"win32", "com", "oa96",
+                                                  "crypto2", "wce"}:
+            return m.group(1), "interface", m.group(2)
+        return None
+
     def _pick_header_for_extra(name, source, kinds=None):
         # Macros from sample pages must not ride a page's Header into an
         # API fragment.  The shared name map is the only extra-macro filing.
@@ -3434,6 +3532,17 @@ def run_unified(args):
             continue
         if quality_filters.is_sample_source(d.get("source") or ""):
             continue
+        _mo = _method_owner_from_source(name, d.get("source") or "")
+        if _mo and (d.get("type") or "") in ("function", "callback", ""):
+            method_rows.append({
+                "owner": _mo[0],
+                "owner_kind": _mo[1],
+                "method": _mo[2],
+                "signature": (d.get("declaration") or "").strip(),
+                "source_page": d.get("source") or "",
+            })
+            emitted_names.add(name)
+            continue
         hdr = _pick_header_for_extra(name, d.get("source") or "",
                                      [d.get("type") or ""])
         if not hdr:
@@ -3445,7 +3554,10 @@ def run_unified(args):
         # Junk stays out of WinDef/Winuser.  Keepable C (MmMapIoSpace) may
         # fill a hole in a core header from harvest, not from a copied file.
         if hdr and hdr.lower() in CE_CORE_HEADERS | {"windows.h", "windowsapis.h"}:
-            if keep and hdr.lower() in {"ceddk.h", "pkfuncs.h", "kfuncs.h"}:
+            # Evidence-backed + quality-passing decls fill name holes in the
+            # core fragments.  The umbrella headers (windows.h / windowsapis.h)
+            # never carry decl bodies.
+            if keep and hdr.lower() not in {"windows.h", "windowsapis.h"}:
                 printed_forms.setdefault(hdr.lower(), hdr)
                 extra_decls_by_header[hdr.lower()].append(d)
                 emitted_names.add(name)
@@ -3458,6 +3570,26 @@ def run_unified(args):
             emitted_names.add(name)
         else:
             leftover_decls.append(d)
+
+    if method_rows:
+        _mpath = os.path.join(os.path.dirname(os.path.abspath(__file__)),
+                              os.pardir, "data", "interface-methods.tsv")
+        _seen_m = set()
+        with open(_mpath, "w", encoding="utf-8") as fh:
+            fh.write("owner\towner_kind\tmethod\tsignature\tsource_page\n")
+            for mr in sorted(method_rows, key=lambda x: (
+                    x["owner"].lower(), x["method"].lower(),
+                    x["source_page"])):
+                _mk = (mr["owner"].lower(), mr["method"].lower(),
+                       mr["signature"])
+                if _mk in _seen_m:
+                    continue
+                _seen_m.add(_mk)
+                fh.write("\t".join(
+                    (mr["owner"], mr["owner_kind"], mr["method"],
+                     mr["signature"].replace("\t", " ")
+                     .replace("\n", " ").strip()[:400],
+                     mr["source_page"])) + "\n")
 
     leftover_names = {d.get("name") for d in leftover_decls}
     for d in leftover_kb_decls:
@@ -3997,14 +4129,16 @@ def run_unified(args):
         # prototypes use.  DERIVED structure -- marked as such; see
         # docs/ce-surface-audit-2026-10-18.ja.md.
         fwd_rows = load_derived_forwards()
+        windef_fwd_lines = []
         if fwd_rows and key.lower() == "windef.h":
-            lines.append("")
-            lines.append("/* " + "=" * 66)
-            lines.append(" * derived forwards -- opaque types whose bodies")
-            lines.append(" * no corpus page prints; prototypes compile against")
-            lines.append(" * these (DERIVED, not quoted; data/derived-forward-")
-            lines.append(" * types.tsv)")
-            lines.append(" * " + "=" * 64 + " */")
+            lines = lines  # forward block is appended at the fragment END
+            windef_fwd_lines.append("")
+            windef_fwd_lines.append("/* " + "=" * 66)
+            windef_fwd_lines.append(" * derived forwards -- opaque types whose bodies")
+            windef_fwd_lines.append(" * no corpus page prints; prototypes compile against")
+            windef_fwd_lines.append(" * these (DERIVED, not quoted; data/derived-forward-")
+            windef_fwd_lines.append(" * types.tsv)")
+            windef_fwd_lines.append(" * " + "=" * 64 + " */")
             for fname, form, fnote, fdefn in fwd_rows:
                 if fname in emitted_type_names or (
                         os.environ.get("GEN_FWD_SUPPRESS")
@@ -4029,8 +4163,9 @@ def run_unified(args):
                     decl = f"typedef int {fname};"
                 else:
                     decl = f"typedef struct {fname} {fname};"
-                lines.append(f"/* DERIVED forward -- {fnote} */")
-                lines.extend(type_guard_lines(fname, decl, lines))
+                windef_fwd_lines.append(f"/* DERIVED forward -- {fnote} */")
+                windef_fwd_lines.extend(
+                    type_guard_lines(fname, decl, windef_fwd_lines))
         # Extra macros filed into this header (quality-filtered, not
         # already numbered as constants above).  Object-like first, then
         # function-like, so the two kinds are not mixed.
@@ -4386,6 +4521,9 @@ def run_unified(args):
                 "typedef POINT *PPOINT, *LPPOINT;",
                 "typedef SIZE *PSIZE, *LPSIZE;",
             ]
+            # the derived-forward block lands at the very END of the
+            # fragment: its rows reference the shims/base types above
+            lines += windef_fwd_lines
         # Close the include guard
         lines.append("")
         lines.append(f"#endif /* _{guard_name} */")

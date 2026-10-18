@@ -329,6 +329,25 @@ def is_broken_c(text: str) -> bool:
     # printed untyped placeholder parameters.
     if re.search(r"[,(]\s*arg[0-9]+\s*[,)]", body):
         return True
+    # prose leaking into the parameter list (``..., filters for the
+    # incomming connection, ...``)
+    paren = body[body.find("("):] if "(" in body else ""
+    if re.search(r"\b(for|the|and|with|which)\s+\w+", paren):
+        return True
+    # bare MIDL attribute left as a parameter (``MyInt ia,out, MyInt``)
+    if re.search(r"[,(]\s*(?:in|out|optional|retval|string|unique|ptr|ref"
+                 r"|const|in|out)\s*[,)]", body):
+        return True
+    # IDL tutorial sample interfaces (``interface I2 { }; interface I3 : I1``)
+    if re.search(r"\binterface\s+I[0-9]+\b", body):
+        return True
+    # managed (.NET CF) signatures (``PinClickEventArgs args``)
+    if re.search(r"\b[A-Za-z_]\w*(?:EventArgs|EventHandler)\b", body):
+        return True
+    # Microsoft sample type names (``MyInt`` / ``MyStruct``)
+    if re.search(r"\bMy(?:Int|Struct|Class|Interface|Enum|Type|Object|"
+                 r"Delegate)\b", body):
+        return True
     # bare numeric parameter: the page printed ``Foo(int, 42)``-style junk
     if re.search(r"[,(]\s*[0-9]+\s*[,)]", body):
         return True
