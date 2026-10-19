@@ -9,6 +9,9 @@ Header evidence ranks (lower = stronger):
                           group sentence)
     30 constant-page      the page numbering the constant states a header
     40 family-statement   a CE page's "PREFIX_* ... include Y.h" sentence
+    45 include-instruction an umbrella include ("req.include-header:
+                          Windows.h"): the page says including it brings
+                          the name in, not that it declares the name
 
 This is deliberately weaker-evidence-free compared to the old pipeline:
 there is no reference-header rank, no pinvoke rank, no co-mention rank
@@ -37,13 +40,17 @@ RANK_SUBJECT = 10
 RANK_MEMBERSHIP = 20
 RANK_CONSTANT_PAGE = 30
 RANK_FAMILY = 40
+RANK_INCLUDE = 45
 RANK_NAMES = {
     RANK_REVIEWED: "reviewed",
     RANK_SUBJECT: "subject-requirement",
     RANK_MEMBERSHIP: "membership",
     RANK_CONSTANT_PAGE: "constant-page",
     RANK_FAMILY: "family-statement",
+    RANK_INCLUDE: "include-instruction",
 }
+
+_INCLUDE_LABELS = {"req.include-header", "include", "include file"}
 
 _UNICODE_PAIR = re.compile(r"([A-Za-z_][A-Za-z0-9_]*)\s*\((Unicode|ANSI)\)", re.I)
 
@@ -117,14 +124,19 @@ def _resolve_headers(conn, layers: dict[str, str], reviews: Reviews) -> None:
             slot["reviews"].add(review_id)
 
     # 1. Requirements: the subject's own page (10), or a name-row target (20).
-    for oid, sym, for_name, page in conn.execute(
-            "SELECT ro.obs_id, ro.subject_key, ro.for_name, ro.page_path"
-            " FROM requirement_observations ro WHERE ro.field='header'"):
+    #    An include instruction (sdk-api req.include-header: the umbrella a
+    #    page tells you to include) is not a declaring-header claim.
+    for oid, sym, for_name, page, label in conn.execute(
+            "SELECT ro.obs_id, ro.subject_key, ro.for_name, ro.page_path,"
+            " ro.label FROM requirement_observations ro WHERE ro.field='header'"):
         headers = [r[0] for r in conn.execute(
             "SELECT file_key FROM requirement_files WHERE obs_id=?"
             " AND file_kind='header'", (oid,))]
+        include_only = (label or "").strip().lower() in _INCLUDE_LABELS
         for hkey in headers:
-            if for_name:
+            if include_only:
+                add(sym, hkey, layers[page], RANK_INCLUDE, oid)
+            elif for_name:
                 add(symbol_key(for_name), hkey, layers[page],
                     RANK_MEMBERSHIP, oid)
             else:
@@ -142,9 +154,11 @@ def _resolve_headers(conn, layers: dict[str, str], reviews: Reviews) -> None:
 
     # 3. Constants: group sentence (20) and the numbering page's headers (30).
     page_headers: dict[str, list[tuple[str, str]]] = collections.defaultdict(list)
-    for oid, page in conn.execute(
-            "SELECT obs_id, page_path FROM requirement_observations"
+    for oid, page, label in conn.execute(
+            "SELECT obs_id, page_path, label FROM requirement_observations"
             " WHERE field='header'"):
+        if (label or "").strip().lower() in _INCLUDE_LABELS:
+            continue
         for (hkey,) in conn.execute(
                 "SELECT file_key FROM requirement_files WHERE obs_id=?"
                 " AND file_kind='header'", (oid,)):
