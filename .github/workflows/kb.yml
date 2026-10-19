@@ -79,7 +79,25 @@ jobs:
           python3 tools/check-licenses.py
           python3 tools/check-licenses.py --tracked
 
+      - name: Check the inputs did not move during the build
+        id: freshness
+        run: |
+          # A build takes ~15 min; if a newer push changed KB inputs in the
+          # meantime, this run's products are already stale.  Committing
+          # them (rebased onto the newer code) would pair a manifest with
+          # code that did not produce it, so skip publishing entirely --
+          # the queued run for the newer push produces matching products.
+          git fetch origin "${GITHUB_REF_NAME}"
+          if git diff --quiet "${GITHUB_SHA}" "origin/${GITHUB_REF_NAME}" -- \
+              corpus data kb/schema.sql kb/inputs tools sources; then
+            echo "stale=false" >> "$GITHUB_OUTPUT"
+          else
+            echo "stale=true" >> "$GITHUB_OUTPUT"
+            echo "::notice::KB inputs changed during the build; products not published"
+          fi
+
       - name: Publish the database as a release asset
+        if: steps.freshness.outputs.stale != 'true'
         env:
           GH_TOKEN: ${{ secrets.GIT_PAT || secrets.GITHUB_TOKEN }}
         run: |
@@ -91,6 +109,7 @@ jobs:
           gh release upload kb-latest kb.sqlite3.gz --clobber
 
       - name: Commit the manifest and reports
+        if: steps.freshness.outputs.stale != 'true'
         run: |
           git config user.name "wince-docs-corpus kb"
           git config user.email "wince-corpus-harvester@users.noreply.github.com"
