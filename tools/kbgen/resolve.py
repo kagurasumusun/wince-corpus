@@ -471,7 +471,7 @@ def _resolve_constants(conn, layers: dict[str, str], reviews: Reviews) -> None:
                 continue
             _conflict(conn, "constant-value", sym, layer,
                       f"reviewed-unresolved: {display} pages print "
-                      f"{sorted(int_groups)}")
+                      f"{sorted(int_groups)}", status="reviewed")
             continue
 
         # Version-scoping: each value's doc-set versions must be non-empty

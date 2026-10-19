@@ -69,8 +69,15 @@ def obs_id(prefix: str, *parts) -> str:
 
 
 def ws_norm(text: str) -> str:
-    """Whitespace-collapsed form used to group declaration variants."""
-    return _WS.sub(" ", text).strip()
+    """Whitespace-free form used to group declaration variants.
+
+    The same declaration reaches us as ``HANDLE CreateFile(`` on one page
+    and ``HANDLECreateFile(`` (spacing collapsed by the archive's HTML)
+    or ``__emit( const`` (a space after the parenthesis) on another;
+    dropping whitespace entirely is what makes those one variant.  The
+    verbatim text is of course kept beside it.
+    """
+    return _WS.sub("", text)
 
 
 # ------------------------------------------------------------------- layers
@@ -282,7 +289,11 @@ def parse_availability(raw: str) -> tuple[str | None, str | None, str]:
     if not raw:
         return None, None, "unparsed"
     text = raw.lower()
-    found = [v for v in _VERSION_RE.findall(text) if v in CE_VERSIONS]
+    # 1.01 and 2.10 are how the era's pages print those releases; they are
+    # kept as printed labels (only membership in the recognised set matters
+    # for whether a number is a CE version at all).
+    found = [v for v in _VERSION_RE.findall(text)
+             if v in CE_VERSIONS or v in ("1.01", "2.10")]
     if not found:
         return None, None, "unparsed"
 

@@ -222,9 +222,13 @@ class Builder:
 
     def _ingest_requirements(self, fact, primary_key, subject_keys):
         path = fact["path"]
-        for req in fact["requirements"]:
+        for index, req in enumerate(fact["requirements"]):
             for_name = req.get("for_name")
-            oid = obs_id("r", path, req["field"], req["value"], for_name or "")
+            # A page may print the same field/value in two sections (a
+            # Requirements table and an Information list); each print is
+            # its own observation, so the per-page index is part of the id.
+            oid = obs_id("r", path, index, req["field"], req["value"],
+                         for_name or "")
             if not self.register_obs(oid, "requirement", path):
                 continue
             subject = primary_key
@@ -355,6 +359,7 @@ class Builder:
             membership("link", primary_key, None, None, None, None,
                        tokens[0] if tokens else None, item.get("text"))
         for item in fact["listed_requirements"]:
+            self.register_symbol(item.get("name"), path, "listed-function")
             field = item.get("field")
             tokens = file_tokens(item.get("value")) \
                 if field in ("library", "dll") else []
