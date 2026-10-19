@@ -153,24 +153,25 @@ def _resolve_headers(conn, layers: dict[str, str], reviews: Reviews) -> None:
             add(symbol_key(target), hkey, layers[page], RANK_MEMBERSHIP, oid)
 
     # 3. Constants: group sentence (20) and the numbering page's headers (30).
-    page_headers: dict[str, list[tuple[str, str]]] = collections.defaultdict(list)
+    page_headers: dict[str, list[tuple[str, str, bool]]] = (
+        collections.defaultdict(list))
     for oid, page, label in conn.execute(
             "SELECT obs_id, page_path, label FROM requirement_observations"
             " WHERE field='header'"):
-        if (label or "").strip().lower() in _INCLUDE_LABELS:
-            continue
+        is_include = (label or "").strip().lower() in _INCLUDE_LABELS
         for (hkey,) in conn.execute(
                 "SELECT file_key FROM requirement_files WHERE obs_id=?"
                 " AND file_kind='header'", (oid,)):
-            page_headers[page].append((hkey, oid))
+            page_headers[page].append((hkey, oid, is_include))
     for oid, sym, page, group_header in conn.execute(
             "SELECT obs_id, symbol_key, page_path, group_header"
             " FROM constant_observations"):
         layer = layers[page]
         for hkey, _sp in header_tokens(group_header):
             add(sym, hkey, layer, RANK_MEMBERSHIP, oid)
-        for hkey, roid in page_headers.get(page, ()):
-            add(sym, hkey, layer, RANK_CONSTANT_PAGE, roid)
+        for hkey, roid, is_include in page_headers.get(page, ()):
+            add(sym, hkey, layer,
+                RANK_INCLUDE if is_include else RANK_CONSTANT_PAGE, roid)
 
     # 4. Family statements of CE pages ("MFT_* ... include Winuser.h").
     prefixes = []
