@@ -7,11 +7,11 @@ was located, the file it was read from and the wording itself.  The longest
 matching rule governs a path.
 
 This module is the single place that answers "which scope is this path in?".
-``tools/build-kb.py`` stamps the answer on every record it writes (so a fact
-can never be read without its rights attached), ``tools/gen-include-def.py``
-reports the scopes behind its output, and ``tools/check-licenses.py`` checks
-that the registry covers everything and that every quoted statement is really
-in the file it names.
+``tools/kbgen`` stamps the answer on every page row it writes (so a fact can
+never be read without its rights attached), and ``tools/check-licenses.py``
+checks that the registry covers everything and that every quoted statement
+is really in the file it names.  The include/.def generator to be designed
+on top of the KB must likewise report the scopes behind its output.
 
 Nothing here decides what may be published; it records what each item's own
 statement says.  See docs/LICENSING.md.

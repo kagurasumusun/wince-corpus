@@ -1,0 +1,104 @@
+# Build and verify the knowledge base (KB Gen layer).
+#
+# The pipeline is Harvest -> Corpus -> KB Gen -> Header/.def Gen, and each
+# layer keeps its own artifact boundary: the collection workflows update
+# corpus/ and data/index/ only; THIS workflow turns corpus into kb/
+# (tools/kbgen) and never touches corpus/.
+#
+# kb/kb.sqlite3 is ~570 MB -- larger than GitHub's 100 MiB file limit --
+# so the database itself is published as a gzipped asset of the rolling
+# `kb-latest` release, while the repository commits kb/manifest.json and
+# kb/reports/.  The build is deterministic (canonical table hashes in the
+# manifest), so anyone can rebuild the same bytes from corpus/ and verify
+# them against the committed manifest; `python3 -m tools.kbgen check`
+# reports input drift if the KB lags the corpus.
+#
+# Runs when anything the KB is built from changes, or on demand.
+
+name: Build knowledge base
+
+on:
+  push:
+    paths:
+      - 'corpus/**'
+      - 'data/index/INDEX.tsv'
+      - 'data/catalogs/**'
+      - 'data/license-scopes.tsv'
+      - 'data/reports/win32-shared.tsv'
+      - 'kb/schema.sql'
+      - 'kb/inputs/**'
+      - 'tools/kbgen/**'
+      - 'tools/page_parse.py'
+      - 'sources/w32api-cegcc/*.tar.gz'
+      - 'sources/dotnet-pinvoke/*.tar.gz'
+  workflow_dispatch:
+    inputs:
+      verify_reproducible:
+        description: 'Also rebuild into a temp file and require identical table hashes'
+        required: false
+        type: boolean
+        default: false
+
+concurrency:
+  group: kb
+  cancel-in-progress: false
+
+permissions:
+  contents: write
+
+jobs:
+  kb:
+    runs-on: ubuntu-latest
+    timeout-minutes: 180
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GIT_PAT || secrets.GITHUB_TOKEN }}
+          ref: ${{ github.ref_name }}
+          fetch-depth: 0
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.x'
+
+      - name: Unit tests (kbgen)
+        run: python3 -m unittest discover -s tools/tests -p 'test_kbgen_*.py' -v
+
+      - name: Build the knowledge base from the corpus
+        run: python3 -m tools.kbgen build --workers 4
+
+      - name: Validate (integrity, evidence, layer isolation, page freshness)
+        run: python3 -m tools.kbgen check
+
+      - name: Reproducibility (rebuild must give identical table hashes)
+        if: ${{ github.event.inputs.verify_reproducible == 'true' }}
+        run: python3 -m tools.kbgen check --skip-page-hashes --verify-reproducible --workers 4
+
+      - name: Rights registry still covers everything
+        run: |
+          python3 tools/check-licenses.py
+          python3 tools/check-licenses.py --tracked
+
+      - name: Publish the database as a release asset
+        env:
+          GH_TOKEN: ${{ secrets.GIT_PAT || secrets.GITHUB_TOKEN }}
+        run: |
+          gzip -c kb/kb.sqlite3 > kb.sqlite3.gz
+          gh release view kb-latest >/dev/null 2>&1 || \
+            gh release create kb-latest \
+              --title "Knowledge base (rolling)" \
+              --notes "kb/kb.sqlite3 (gzipped) matching kb/manifest.json at this commit. Build it yourself with: python3 -m tools.kbgen build"
+          gh release upload kb-latest kb.sqlite3.gz --clobber
+
+      - name: Commit the manifest and reports
+        run: |
+          git config user.name "wince-docs-corpus kb"
+          git config user.email "wince-corpus-harvester@users.noreply.github.com"
+          git add kb/manifest.json kb/reports data/reports/license-audit.tsv
+          if git diff --staged --quiet; then
+            echo "kb/ already matches the corpus"
+            exit 0
+          fi
+          git commit -m "kb: rebuild from corpus"
+          git pull --rebase
+          git push

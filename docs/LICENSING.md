@@ -12,9 +12,9 @@ The rule is implemented, not promised:
 |----------|------------|
 | `data/license-scopes.tsv` | The rights registry. One row per rule (a directory prefix, or `file:` for a single file), each carrying **the wording itself quoted**, the file it was read from, what is permitted, the conditions, and the finding (`yes`/`no`/`unclear`). The longest matching rule governs, so a file rule overrides its tree. |
 | `sources/terms/` | Statements that are not in the repository as a file of their own (the Microsoft Learn Terms of Use excerpt), quoted verbatim with the URL and the date read. |
-| `license` on every record | Every declaration, requirement and constraint record carries the scope id of the page it came from; every entity carries `licenses` (all the pages that document it — one name can have a CE page and a Win32 page under different statements). |
+| `license_scope` on every page | Every knowledge-base observation joins to its page, and the `pages` table carries that page's scope id (one name can have a CE page and a Win32 page under different statements; `tools/kbgen check` verifies every citation chain). |
 | `tools/check-licenses.py` | Checks the registry: every corpus page and every tracked file resolves to exactly one rule; every quoted statement is found, verbatim, in the file it names; and counts what is published. |
-| `knowledge/reports/license-audit.tsv` | The result: pages and published files per scope, with the permission and the terms. |
+| `data/reports/license-audit.tsv` | The result: pages and published files per scope, with the permission and the terms. |
 | `docs/LICENSING.md` (this file) | The finding, and the decision that is still open. |
 
 Every record names its page, and that page's terms govern the record (the
@@ -45,8 +45,8 @@ published (git-tracked) files by redistribution: yes 5,291, no 115,943, unclear 
 | `sdl-1.2-lgpl-2.1` | the SDL 1.2 LGPL notice excerpt | "Activities other than copying, distribution and modification are not covered by this License; they are outside its scope." The source was not stored. The excerpt is not a verbatim copy of COPYING, so it is not offered as one | no |
 | `qt-4.8-wince-lgpl` | the licence notice in Qt 4.8 `qfunctions_wince.h` | "this file may be used under the terms of the GNU Lesser" (LGPL 2.1 or 3, also GPL 3 or commercial, in the same notice). The header and the implementation were not stored | no |
 | `dotnet-pinvoke-mit` | the pinned dotnet/pinvoke tarball + its licence under `sources/dotnet-pinvoke/` | The archived .NET Foundation repo's `LICENSE`: \"Permission is hereby granted, free of charge, to any person obtaining a copy\" (MIT) | yes |
-| `w32api-public-domain` | the pinned CeGCC w32api tarball + its `README.w32api` under `sources/w32api-cegcc/` | The package statement: \"THIS SOFTWARE IS NOT COPYRIGHTED. This source code is offered for use in the public domain. You may use, modify or distribute it freely.\" — file-level exceptions it names: permissive UCB/DEC notices in the three winsock headers, Mesa's `gl.h` (outside the top-level parse scope). Use: review reports, header membership, and **gap-fill of a `#define` only when a CE page names the constant and no documentation page numbers it**. Headers are not copied. | yes |
-| `derived-from-sources` | `knowledge/`, `winsur/`, `data/` | No separate statement: each record names its page, and that page's terms govern the record | per record |
+| `w32api-public-domain` | the pinned CeGCC w32api tarball + its `README.w32api` under `sources/w32api-cegcc/` | The package statement: \"THIS SOFTWARE IS NOT COPYRIGHTED. This source code is offered for use in the public domain. You may use, modify or distribute it freely.\" — file-level exceptions it names: permissive UCB/DEC notices in the three winsock headers, Mesa's `gl.h` (outside the top-level parse scope). Use: comparison only, inside the knowledge base's isolated `reference_*` tables — since the 2026-10-19 redesign it is never used as a gap-fill value or header-membership evidence. Headers are not copied. | yes |
+| `derived-from-sources` | `kb/`, `data/` | No separate statement: each record names its page, and that page's terms govern the record | per record |
 | `project-own` | `tools/`, `docs/`, `queues/`, `.github/`, the READMEs | **The repository publishes no LICENSE file** — its own licence is undecided | undecided |
 
 Every quote above is checked against the file it was read from
@@ -71,7 +71,7 @@ whitespace aside). A summary is never used in place of the wording.
   `INSTALL.WCE` and the notice it requires, and the wxWidgets Windows CE
   readme with the permission notice the licence requires. That is 5,291 files.
 * Knowing a declaration's text is not the same as being allowed to publish it:
-  the quotes in `knowledge/kb/declarations.jsonl` are as restricted as the
+  the declaration quotes in the knowledge base (`kb/kb.sqlite3`, `declaration_observations`) are as restricted as the
   pages they come from.
 * Learning the Win32 terms' priority clause — "Certain documentation may be
   subject to explicit license terms separate from the terms contained here. To
@@ -82,13 +82,14 @@ whitespace aside). A summary is never used in place of the wording.
 ## What the project does about it
 
 1. **Measure, per item.** `tools/check-licenses.py --tracked` is the audit;
-   `knowledge/reports/license-audit.tsv` is the committed result.
+   `data/reports/license-audit.tsv` is the committed result.
 2. **Make the gate available.** `--fail-on-restricted` exits non-zero while
    anything that may not be published is tracked. It is *not* enabled in CI:
    the decision is the owner's, and the report is what CI keeps.
-3. **Do not publish what is generated.** `tools/gen-include-def.py` writes into
-   a git-ignored `build/`, and its report lists the rights scopes behind the
-   output, so an export can be filtered before it leaves the machine.
+3. **Do not publish what is generated.** The include/.def generator (being
+   designed separately, on top of the KB) must write into a git-ignored
+   `build/` and list the rights scopes behind its output, so an export can
+   be filtered before it leaves the machine.
 4. **Do not launder the terms into the facts.** `unclear` and `no` are recorded
    as they are; a media whose statement was not located is treated as all rights
    reserved rather than rounded up to something convenient.

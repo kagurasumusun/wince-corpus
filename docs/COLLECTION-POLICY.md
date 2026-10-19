@@ -8,18 +8,17 @@ in `queues/oss-docs.tsv`** — nothing else.
 Windows CE is **not** a full Win32: it is the CE-specific surface plus the
 shared part, so "shared" is decided not by resemblance but by a Windows CE
 document using the name.  The knowledge base carries that decision per name
-(`surface` in `knowledge/kb/entities.jsonl`, one row per name in
-`knowledge/reports/surface.tsv`).
+(`kb/kb.sqlite3`, view `v_symbol_surface`: which layers document the name).
 
 The policy is executable: `tools/check-policy.py` fails (exit 1) when a page
 that does not belong appears in `corpus/`. Every collection workflow runs it.
 
 ```
 python3 tools/check-policy.py
-corpus/            121,050 pages in 10 trees
-  CE trees         105,103 pages
-  other layers     10,668 pages (dotnet, oss; oss allowlist 11)
-corpus/win32/api/  5,279 CE-shared API pages
+corpus/            122,170 pages in 10 trees
+  CE trees         105,132 pages
+  other layers     10,668 pages (dotnet, oss, pinvoke; oss allowlist 11)
+corpus/win32/api/  6,370 CE-shared API pages
 # corpus/win32/common/  shared-surface reference pages (data/win32-common-pages.tsv)
 policy             OK
 ```
@@ -60,14 +59,17 @@ The corpus is the *material* of a knowledge base, not the end product: the
 goal is a machine-readable, traceable description of the Windows CE API
 surface from which the include and def files of a CE-targeting toolchain can be
 generated. The collection policy therefore also decides what is *structured*:
-`tools/build-kb.py` reads the pages and writes `knowledge/` (entities,
-declarations, requirements, constraints), each record quoting the page it came
-from, and the .NET tree is parsed into that layer with `layer: "dotnet"` rather
+`tools/kbgen` (KB Gen) reads the pages and writes `kb/` (one SQLite
+database: per-page observations quoting their page, and the facts resolved
+from them), and the .NET tree is stored in the separate `dotnet` layer rather
 than mixed into the CE surface. Nothing is ever invented to fill a gap; gaps
-are listed (`knowledge/reports/gaps.tsv`) and collected. The first consumer of
-that layer, `tools/gen-include-def.py`, turns one CE version's records into
-header fragments and `.def` worklists under a git-ignored `build/` -- material
-for a generator, not a finished toolchain. See `knowledge/README.md`.
+are listed (`kb/reports/gaps.tsv`) and collected. The consumer of that layer
+-- the include/.def generator (winsur) -- is designed separately on top of
+the KB and reads nothing else. See `kb/README.md` and
+`docs/kb-design.ja.md` (the pipeline is Harvest -> Corpus -> KB Gen ->
+Header/.def Gen, each layer keeping its own artifact boundary; the KB
+database itself is published as a release asset because of its size, with
+`kb/manifest.json` committed).
 
 ## The Win32-common rule
 
@@ -116,78 +118,59 @@ CE page ids that document it.
 
 The rule is not a guess and not an assumption that Windows CE is Win32: a name
 is in the corpus only when a CE document uses it, and the knowledge base says so
-per name — `surface` in `knowledge/kb/entities.jsonl` (and
-`knowledge/reports/surface.tsv`) marks each entity `ce-only`, `shared`,
-`win32-spelling` (an A/W spelling of a CE name), `catalog-only` (only the CE TOC
-names it — a collection lead) or `win32-only` (documented by the shared-surface
-reference only — the base-type rows of `corpus/win32/common/` that no CE page
-names, e.g. `HRESULT` in the CE 5.0 list's absence).
+per name — `v_symbol_surface` in `kb/kb.sqlite3` states which layers document
+each name (CE page, Win32 page, both), and `symbol_relations` records A/W
+spelling variants of a CE base name with the basis (`page-statement` or
+`import-rule`). A Win32 page with no CE name behind it has no place here; a
+name documented by the shared-surface reference only (the base-type rows of
+`corpus/win32/common/` that no CE page names) stays visible as exactly that,
+never as a CE fact.
 
-The rule is reviewed from both sides: `tools/build-win32-coverage.py` lists the
-CE-documented names that state a shared-surface header (`Winbase.h`,
-`Winuser.h`, ...) but have no page in `corpus/win32/`
-(`data/reports/win32-coverage.tsv`).  Names the reference documents through a
-Unicode/ANSI variant spelling are not listed -- the knowledge base folds
-`CreateSemaphoreW` onto the CE name `CreateSemaphore` on the page's own
-"Unicode and ANSI" statement. Of the 960 rows that remain, 768 are
-message/notification/macro constants (`WM_PAINT`, `CB_GETEDITSEL`, ...) that
-sdk-api has no page for, and the rest are CE-only APIs (`Ce*` RAPI,
-`CommandBar_*`) and Win32 APIs the reference no longer pages (`GetStringType`,
-`Random`): no page was missed, and the list keeps the question answerable.
+The rule can still be reviewed from the other side: CE-documented names with
+no page under `corpus/win32/` are one query against the knowledge base
+(`v_symbol_surface` rows with `has_ce_page=1 AND has_win32_page=0`), and names
+the reference documents through a Unicode/ANSI variant spelling are folded
+onto the CE name by `symbol_relations` on the page's own "Unicode and ANSI"
+statement or on the import rule that admitted the page. (The old generated
+worklist `data/reports/win32-coverage.tsv` and its builder were retired with
+the 2026-10-19 KB redesign; its conclusion stands: the remaining rows were
+message/notification constants sdk-api has no page for, CE-only APIs and Win32
+APIs the reference no longer pages — no page was missed.)
 
-## The one third-party exception: pinvoke as weak auxiliary reference
+## The one third-party exception: pinvoke as isolated comparison material
 
 Every rule above says the corpus is **Microsoft's own documentation**.  There
 is one deliberate carve-out, and its boundary is written into the tools rather
-than left to habit.  It has two accept paths, both equally isolated:
+than left to habit:
 
 * `sources/dotnet-pinvoke/` holds the pinned snapshot of
   [github.com/dotnet/pinvoke](https://github.com/dotnet/pinvoke) (the .NET
   Foundation's community-maintained re-formatting of the pinvoke.net data as
   C# bindings; **archived upstream**, MIT): `sources/dotnet-pinvoke/PROVENANCE.md`
   records the commit.  Because the tree is C# *code*, it is kept out of
-  `corpus/` (the corpus stays documentation-only): `tools/pinvoke_extract.py`
-  reads the tarball and writes only the isolated aux records (constant names
-  and values as printed, module placement, `[DllImport]` APIs) to
-  `knowledge/aux/`, every row quoting its `.cs` line by archive member and
-  line number and stamped `dotnet-pinvoke-mit`.
-* `corpus/pinvoke/` may hold pages of the pinvoke.net P/Invoke reference wiki
-  (a user-contributed third-party site), and **only** the wiki sections named
-  in `queues/pinvoke-net.txt` (`default.aspx/{module}`: the CE-relevant
-  modules such as `coredll` and `rapi`, the shared Win32 modules, and the
-  wiki's Constants/Structures/Enums sections).  `tools/check-policy.py`
-  refuses any page outside exactly those sections — the queue is the door,
-  the same way `queues/oss-docs.tsv` is for `corpus/oss/`.
-* **Why it exists at all**: the constants problem.  The official
-  documentation numbers fewer constants than an include file needs
-  (`WM_USER`, `SW_SHOW`, `WS_OVERLAPPED` and thousands of others are
-  documented by name but never *numbered* by Microsoft's CE pages), while
-  the pinvoke community pages print numeric spellings of those names.  It
-  is used **only** as a *weak auxiliary* hint for judging constant /
-  value / header **linkage** where Microsoft's own pages state nothing —
-  highest-suspicion, lowest-priority evidence by construction.  In
-  practice: the dotnet/pinvoke rows currently file **343** otherwise
-  unlinked constants at rank `pinvoke-weak`, the remaining **2,012** names
-  stay on the open worklist (`knowledge/reports/constant-header-gaps.tsv`),
-  and the review table (`knowledge/reports/constant-pinvoke-review.tsv`)
-  compares each community value against the documented CE value (335 of
-  335 linked names agree, hex/decimal spellings aside).
-* **Why it is isolated**: pinvoke.net is not documentation of Windows CE and
-  its numbers are not Windows CE facts.  Therefore
-  * `tools/build-kb.py` never mints an entity, declaration, requirement or
-    constant from it; its facts are written to `knowledge/aux/`, a separate
-    layer beside (never inside) the specification the include/def surface is
-    generated from — see `knowledge/aux/README.md`;
-    * the generator (`tools/gen-include-def.py`) consumes it at the
-      weakest rank: header *linkage* as `pinvoke-weak` in
-      `kb/constant-headers.tsv`, and — only for a constant a CE page
-      **names** but no CE page, Win32 CC-BY page, or public-domain CeGCC
-      w32api **numbers** — a last-rank MIT *value* (`tools/pinvoke_gaps.py`).
-      Official numbers always outrank it.  No C header is copied.
-  * `data/license-scopes.tsv` stamps the wiki tree `pinvoke-user-wiki`,
-    redistribution **no**, and the tarball `dotnet-pinvoke-mit` (MIT):
-    either way it is evidence for review, never publishable documentation
-    inside the CE surface.
+  `corpus/` (the corpus stays documentation-only).
+* **What it is used for (since the 2026-10-19 KB redesign): comparison
+  only.**  `tools/kbgen` loads it into the `reference_*` tables of
+  `kb/kb.sqlite3` — an isolated layer whose rows can never be cited as
+  evidence for a CE fact (the evidence foreign keys cannot point there, and
+  `kb-check` verifies the isolation).  It files no constant into a header,
+  supplies no value at any rank, and mints no symbol: the old `pinvoke-weak`
+  linkage rank and the last-rank value fill were abolished — a hint that
+  silently becomes a fact is how wrong headers happen.  What remains is the
+  honest use: comparing a community value with the documented CE value
+  (`v_constant_reference_compare`) and spotting names worth searching
+  Microsoft's documentation for.
+* `queues/pinvoke-net.txt` names the pinvoke.net wiki sections that *may* be
+  harvested into `corpus/pinvoke/` (the queue is the door, the same way
+  `queues/oss-docs.tsv` is for `corpus/oss/`, and `tools/check-policy.py`
+  refuses any page outside exactly those sections).  None has been
+  harvested; the knowledge base has no layer for that tree and refuses to
+  build over it until one is designed (`tools/kbgen/common.py`), so a wiki
+  page can never be laundered into a CE fact by accident.
+* `data/license-scopes.tsv` stamps the wiki tree `pinvoke-user-wiki`,
+  redistribution **no**, and the tarball `dotnet-pinvoke-mit` (MIT): either
+  way it is evidence for review, never publishable documentation inside the
+  CE surface.
 
 ## The second third-party exception: licence-vetted header mirrors as review-only cross-check
 
@@ -212,19 +195,18 @@ the files themselves, usage decision, all recorded in the source's
   reference here.**  Their snapshots and every report derived from them
   are deleted; do not re-add them.
 
-`tools/xcheck_references.py` writes only *reports* under
-`knowledge/reports/xcheck-*.tsv` + `xcheck-summary.md` (each row
-attributed header:line of its pinned commit): 24,936 candidate names
-absent from the CE corpus from w32api-cegcc (plus 10,828 `.def` export
-leads from its `libce/`+`lib/` lists against `winsur/link/*.def`); and
-where both sides number a name the verdicts run to flagged divergences —
-`MAX_PATH` (CE's DirectShow DVD `Dvdata.h` page prints 128,
-a local shadow of the desktop's 260) and `HTTP_QUERY_MAX` (CE pages
-print 75; the reference prints 45 — generational drift).  The
-isolation is stricter than the pinvoke carve-out: nothing it parses is
-an input to `tools/build-kb.py`, `tools/gen-include-def.py` or
-`winsur/`.  A listed name is a lead for further documentation
-searching, never a value to adopt.
+It is loaded only into the same isolated `reference_*` tables as the
+pinvoke snapshot (each row attributed archive-member:line of the pinned
+commit), where it answers: which names exist that the CE corpus never
+documents (collection leads), and do values agree where both sides speak
+(the flagged divergences found by the old cross-check stand: `MAX_PATH` —
+CE's DirectShow DVD `Dvdata.h` page prints 128, a local shadow of the
+desktop's 260 — and `HTTP_QUERY_MAX` — CE pages print 75, the reference
+prints 45, generational drift).  The old header-membership evidence rank
+(`reference-header`) and the value fill (`tools/w32api_gaps.py`) were
+abolished with the 2026-10-19 redesign: nothing it parses feeds a resolved
+fact.  A listed name is a lead for further documentation searching, never
+a value or a header to adopt.
 
 ## Review 2026-10 (what was wrong, what changed)
 
@@ -284,8 +266,9 @@ Checked and found correct during the same review, so it stayed:
    `tools/dedupe-corpus.py --check`, `tools/audit-sources.py`,
    `tools/build-chm-inventory.py`, `tools/build-index.py`,
    `tools/build-index-sql.py`, `tools/build-ce-api-names.py`,
-   `tools/build-win32-map.py`, `tools/build-win32-coverage.py`,
-   `tools/build-kb.py` and `tools/check-kb.py`, and commit the refreshed
-   reports with it.  (All five collection workflows do exactly this before they
-   commit; `tools/build-topic-coverage.py --pattern <subject> --out …` measures
-   a whole subject area when a collection question is about one.)
+   `tools/build-win32-map.py`, and commit the refreshed reports with it.
+   The knowledge base is a separate layer and is refreshed separately
+   (`python3 -m tools.kbgen build`, or the `KB` workflow) — collection
+   workflows never build it.  (`tools/build-topic-coverage.py --pattern
+   <subject> --out …` measures a whole subject area when a collection
+   question is about one.)

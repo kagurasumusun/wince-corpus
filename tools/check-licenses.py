@@ -14,7 +14,7 @@ Three questions, all answerable from the repository itself:
    permission and by scope?  That is the number that matters for a public
    repository; ``--fail-on-restricted`` turns it into a gate.
 
-The result is written to ``knowledge/reports/license-audit.tsv`` (report only;
+The result is written to ``data/reports/license-audit.tsv`` (report only;
 what to do about a restricted scope is the owner's decision, see
 docs/LICENSING.md).
 
@@ -37,7 +37,7 @@ sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import license_scopes  # noqa: E402
 
 ROOT = license_scopes.ROOT
-REPORTS = os.path.join(ROOT, "knowledge", "reports")
+REPORTS = os.path.join(ROOT, "data", "reports")
 INDEX = os.path.join(ROOT, "data", "index", "INDEX.tsv")
 
 

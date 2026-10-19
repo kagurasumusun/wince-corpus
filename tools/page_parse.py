@@ -1,8 +1,9 @@
 #!/usr/bin/env python3
 """tools/page_parse.py -- read one documentation page into structured facts.
 
-This module is the bottom half of the knowledge base
-(``tools/build-kb.py``).  It knows the page templates the corpus contains and
+This module is the page extractor of the knowledge base: ``tools/kbgen``
+calls it behind its versioned extractor interface (``tools/kbgen/extract.py``;
+see ``docs/kb-design.ja.md``).  It knows the page templates the corpus contains and
 returns *only what the page says*, always with the raw evidence, so a record
 can be checked against its source:
 
@@ -260,7 +261,7 @@ LINE_LABEL = re.compile(
 
 FILEISH = re.compile(r"[A-Za-z0-9_.+\-]+\.(h|hpp|hh|hxx|lib|dll|hlp|inc)\b", re.I)
 PROSE_WORDS = re.compile(r"\b(this|your|the|to|of|for|and|see|use|must|not)\b", re.I)
-# The same extensions ``build-kb.FILE_TOKEN`` treats as a library/DLL file.
+# The extensions treated as a library/DLL file token (kbgen agrees).
 ASSIGNED_FILE = re.compile(
     r"[\w.+-]+\.(?:lib|dll|drv|sys|ocx|tlb)\b", re.I)
 
@@ -1142,7 +1143,7 @@ def statement_text(fragment, plain=False):
 
     ``plain=True``: *fragment* is already the page's own text (the
     markdown reader's raw file) and is passed through untouched -- the
-    clean-room quote check compares markdown records against the raw
+    ``kbgen check`` quote verification compares markdown records against the raw
     .md page, so ``#include <winsock2.h>`` must keep every character
     (running the HTML tag stripper over it would delete ``<winsock2.h>``
     and the quote would no longer be on the page).  An HTML fragment is
@@ -1877,12 +1878,12 @@ def define_line_constants(text, quote_stripped=False):
     constant rows.
 
     ``quote_stripped``: the row quote is the tag-free line -- the .html
-    reader's ground (check-cleanroom compares against
+    reader's ground (``kbgen check``'s re-extraction compares against
     ``text_of(article_html())``).  The markdown reader quotes the raw
     line (its page text is the raw markdown).
 
     ``<pre>`` and fenced code are the syntax/example readers' ground
-    (syntax_constant_rows keeps the cleanroom example rule); this reader
+    (syntax_constant_rows keeps the no-example-code rule); this reader
     covers the definitions a page prints inline -- a table note quoting
     ``#define TBSTYLE_EX_VERTICAL 0x00000004`` for a style the header
     does not define.  The trailing C comment is not part of the value;
@@ -2015,7 +2016,8 @@ def _constants_in_cells(fragment, already, raw_row=False):
                     "origin": "cell",
                     # the evidence is the row as the page printed it; on
                     # a markdown page that includes its markup, which is
-                    # exactly what the page carries (docs/clean-room.md)
+                    # exactly what the page carries (the verbatim-quote rule,
+                    # docs/kb-design.ja.md)
                     "row": (_raw_row_text(row_match.group(0)) if raw_row
                             else cell),
                 })
@@ -2607,7 +2609,7 @@ def listed_type_rows_text(text):
 # a paragraph.  The same honesty rule as the table reader applies:     #
 # the quote is the text the page printed, only a numeric right-hand    #
 # side is a value, and example code is never read (these readers are   #
-# given syntax declarations and prose only, by build-kb.py).           #
+# given syntax declarations and prose only, by kbgen/extract.py).    #
 # ------------------------------------------------------------------ #
 
 # ``#define NAME (0x0400)`` / ``#define NAME MAKE_D3DMHRESULT(2158)`` /
@@ -2744,8 +2746,8 @@ def prose_constants(fragment):
 def syntax_constant_rows(declarations):
     """The constant definitions a page's *syntax* declarations quote.
 
-    build-kb.py hands this reader the declarations a page already
-    classified, so the clean-room rule is kept by construction: a
+    kbgen/extract.py hands this reader the declarations a page already
+    classified, so the verbatim-quote rule is kept by construction: a
     ``role: "example"`` or ``implementation`` block is sample code and
     yields nothing here -- sample ``#define cEvents 3`` is not a
     documented constant of the SDK.
@@ -2771,8 +2773,8 @@ def prose_constants_text(text):
     (0x0001)`` inside a code span is a printed constant) -- but every
     blanking keeps the character count, so a match's offsets still point
     into the raw page and the row quote is the page's own characters,
-    backticks included (check-cleanroom compares the quote against the
-    raw markdown file).
+    backticks included (``kbgen check`` compares the quote against the
+    raw markdown file by re-extraction).
     """
     out = []
     seen = set()
@@ -3530,14 +3532,14 @@ def markdown_structured_requirements(text):
         value = " ".join(cells[1:])
         # The value keeps every character the cell prints -- tags
         # included.  ``<dl> <dt>BaseTsd.h; </dt> ...`` is the page's own
-        # spelling of a multi-file header cell, and check-cleanroom
+        # spelling of a multi-file header cell, and ``kbgen check``
         # verifies the value against the raw markdown file character for
         # character (whitespace aside): stripping the tags would delete
         # printed characters and the quote would no longer be on the
         # page.  Consumers parse names out of the raw value locally
         # (HEADER_TOKEN finds BaseTsd.h inside the markup).
         # The value stays as PRINTED -- markdown escapes (`\_`) and bold
-        # markers are the page's own characters (check-cleanroom verifies
+        # markers are the page's own characters (``kbgen check`` verifies
         # the value character-for-character against the page).  Consumers
         # that parse names out of the value unescape locally.
         value = re.sub(r"\s+", " ", value).strip()

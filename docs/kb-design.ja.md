@@ -1,0 +1,215 @@
+# KB 再設計の記録（wince-docs-corpus）
+
+2026-10-19、KB（知識ベース）を白紙から再設計した記録。方針決定・運用は
+`kb/README.md`、収集範囲は `docs/COLLECTION-POLICY.md`、権利は `docs/LICENSING.md`。
+本書が KB に関する現行の唯一の設計文書である。旧 `knowledge/` と旧設計・作業記録は
+廃棄した（親コミットに残る）。
+
+## 1. 目的と位置づけ
+
+このリポジトリの最終目的は、Windows CE 向け開発基盤（winsur の include/.def）を
+「コーパスの単純変換」ではなく、API 仕様・依存・版条件・ABI を正しく管理して
+生成することである。そのためのパイプラインを責任で4層に分ける。
+
+```
+Harvest -> Corpus -> KB Gen -> Header/.def Gen
+```
+
+- **Harvest / Corpus**（既存、維持）：Microsoft の Windows CE 公式文書の収集と
+  保管。`corpus/` は文書そのもの。今回の作業では一切変更しない。
+- **KB Gen**（今回の範囲）：コーパスから、検証可能で再現性のある知識ベース
+  `kb/`（SQLite 1ファイル＋スキーマ＋manifest＋レポート）を生成する。
+- **Header/.def Gen**（次期、今回の対象外）：KB だけを入力として include/.def を
+  生成する。旧試作（gen-include-def 等）は新設計から作り直せるよう削除した。
+
+KB の要件は「管理可能・構造的に一貫・確実に参照と検証ができる」こと。
+過去設計との互換は要求しない。
+
+## 2. 旧 KB の問題（精査結果、2026-10-19 時点で測定）
+
+旧 `knowledge/` は 1,081 ファイル・221MB の JSONL.gz/TSV 群だった。実測した欠陥：
+
+- **事実決定ロジックの分裂**：同じ「どの値を信じるか」が build-kb.py、
+  kb_unify.py、gen-include-def.py に三重実装され、相互に食い違った。
+- **同一性の欠陥**：定数 30,073 件中 30,051 件が entity=None（名前が実体に
+  紐づかない）。正規化が句読点を落とすため `Foo::Bar` と `FooBar` が同一視
+  される危険があった。
+- **ゴミの混入**：`UNICODE = compile` が定数値として、".h" がヘッダ名として
+  格納されていた（値文法・トークン検証の欠如）。
+- **参照資料の事実化**：unified ビューでは定数 8,914 件中 2,053 件が Win32
+  ページの値で「補完」され、参照ヘッダの所属や pinvoke の値が最弱ランクで
+  事実側に入っていた。弱い証拠が静かに事実になる構造だった。
+- **衝突の不可視化**：勝者の暗黙選択が各所にあり、不一致の全体像が見えなかった。
+- 検証（check-kb.py）は存在したが、層分離の強制（収集ワークフロー内で KB を
+  ビルド）により境界が曖昧だった。
+
+個別修正では「生成基盤としての信頼性」に届かないと判断し、全廃・再設計とした。
+
+## 3. 決定事項
+
+ユーザー決定（2026-10-19 確認）に基づく。
+
+1. **正準KBは SQLite 1ファイル**（`kb/kb.sqlite3`）＋ `kb/schema.sql`（契約）
+   ＋ `kb/manifest.json`（入力・内容ハッシュ）。FK/CHECK で構造を強制し、
+   SQL で参照できることを「参照可能性」とする。
+   - ただし DB 実体は約 570MB で GitHub の 100MiB/ファイルを超過するため、
+     **git にはコミットせず**、manifest とレポートをコミットし、DB は
+     ローリング Release（`kb-latest`）のアセットとして配布する（同日追加決定)。
+     ビルドがバイト再現可能であるため、manifest が DB 内容の完全な記述になる。
+2. **抽出器は既存 `tools/page_parse.py` を版管理インターフェース越しに再利用**
+   （`tools/kbgen/extract.py`、EXTRACTOR_VERSION=1）。ページ形式の読みは
+   実績があるため捨てない。ページ間解決・検証はすべて新規実装。
+3. **レイヤ分離を1つの DB 内で表現**：ce / win32 / dotnet / oss。参照資料
+   （CeGCC w32api、dotnet/pinvoke）は `reference_*` の比較専用テーブルに隔離し、
+   根拠 FK が指せない構造にする。旧 `reference-header`/`pinvoke-weak` ランクと
+   両方の末位補完（値・所属）は**廃止**する。
+4. **旧 KB・後段実装・2026-10 の作業記録は本変更で削除**する（§8）。Harvest と
+   Corpus は維持する。
+
+不変の原則（従来から維持）：すべての事実はコーパスのページを引用する／宣言は
+原文のまま（修復しない）／ABI 事実はページが明記した場合のみ／
+Wine・ReactOS・MinGW-w64 は参照資料として禁止／参照資料の値は CE の事実にしない。
+
+## 4. 入力契約
+
+`tools/kbgen build` の入力は次に限定され、全て `build_inputs` テーブルと
+manifest にハッシュとして記録される。入力が変われば `kbgen check` が
+input drift を報告する。
+
+- `data/index/INDEX.tsv`（コーパスのページ一覧）と `corpus/` のページ実体
+  （各ページの sha256 を `pages` に記録し、検証で再照合する）
+- `data/catalogs/*.tsv`（公式カタログのタイトル対応）
+- `data/license-scopes.tsv`（ページ→権利スコープ。未登録ページはビルドエラー）
+- `data/reports/win32-shared.tsv`（Win32 ページ取り込み規則の監査証跡）
+- `kb/schema.sql`、`tools/kbgen/*.py`、`tools/page_parse.py`
+- `kb/inputs/reviews/*.tsv`（人手レビュー、§6）
+- `sources/w32api-cegcc/*.tar.gz`、`sources/dotnet-pinvoke/*.tar.gz`（比較用）
+
+未知のコーパスツリーは取り込まない（`layer_of` が拒否する）。将来
+`corpus/pinvoke/`（第三者 wiki）を収穫する場合は、先にレイヤ設計が必要。
+
+## 5. データモデル
+
+正は `kb/schema.sql`。要約：
+
+- **観測層**（ページが言ったこと）：`pages` / `doc_sets`、`observation_index`
+  に全観測を登録し、種類別に `declaration_observations`（＋member 行・ABI
+  フラグ）、`requirement_observations`（＋ファイルトークン）、
+  `constant_observations`、`constant_name_observations`（無番号の定数名）、
+  `note_observations`（制約文・ABI 注記・def ルール）、`membership_statements`
+  （所属・除外・リンク・列挙の文）、`documented_members`、`layout_observations`
+  （オフセット表）、`ordinal_observations`、`module_observations`、
+  `support_statements`。本文は `text_blobs` にハッシュで保持。
+  取り込めなかった印刷は `ingest_rejects` に理由・件数・例を記録する
+  （黙って捨てない）。
+- **シンボル層**：`symbols`（同一性は「小文字化＋空白除去＋句読点保持」。
+  `Foo::Bar` ≠ `FooBar`）、`symbol_spellings`、`symbol_kinds`、
+  `page_subjects`、`headers`、`link_files`。
+- **解決層**（KB の判断。すべて根拠付き）：`symbol_headers` / `symbol_files`
+  （候補＋rank＋chosen）、`declaration_variants`（空白正規化で束ねた宣言の版）、
+  `constant_values`（scope=`*` または CE 版）、`symbol_versions`（適用版文の
+  原文と解釈）、`symbol_relations`（A/W 変種。根拠は page-statement /
+  import-rule）、`conflicts`（未解決の不一致）。
+- **根拠**：`*_evidence` テーブルは「観測かレビューのどちらか一方」を必須とし
+  （CHECK）、参照テーブルは指せない。根拠 ID は内容ハッシュ
+  （NULL 列を STRICT 主キーに入れると INSERT OR IGNORE が静かに行を落とす
+  ため、複合 PK ではなく単一ハッシュ列にすることを実測で確定した）。
+
+解決規則（`tools/kbgen/resolve.py` が唯一の定義）：
+
+- ヘッダ rank：reviewed=5 < subject-requirement=10 < membership=20 <
+  constant-page=30 < family-statement=40。同順位タイは未解決衝突（黙って
+  選ばない）。レビュー reject は抑制。ページ根拠が単一ヘッダで一致して
+  レビューと食い違う場合はページを採用し衝突として記録する。
+- リンクファイルは複数 chosen を許す（1つの API が複数ライブラリから
+  リンクされ得る）：rank ≤ membership の全行が chosen。
+- 定数値：整数が1種類なら確定。複数なら、値ごとの文書集合の CE 版集合が
+  互いに素な場合のみ版スコープ付きで確定し、それ以外は衝突（値なし）。
+  レビュー値は「そのレイヤのページが印刷した値」の場合のみ採用。
+- 宣言：syntax 役割・非実装ブロックのみから variant を作り、primary は
+  「空白保持の印刷があるもの→ページ数→ハッシュ順」。保存形式が2種以上
+  あれば宣言差異として衝突に記録（版差異の可視化）。
+
+## 6. 人手レビュー
+
+`kb/inputs/reviews/` の2ファイル（旧 `data/constant-*-review.tsv` から移設、
+意味論を保存）。照合優先順位は 完全一致名 > 最長 prefix > value-base。
+verdict は approve/reject/prefer。レビューはページ印刷の中から選ぶことしか
+できず、生成器が検証する。全行は `reviews` テーブルにも取り込み、根拠として
+引用可能にする。
+
+## 7. 生成・検証・運用
+
+- 生成器は `tools/kbgen` のみ（build/check/query/export）。決定性：ページは
+  パス順に取り込み、全 ID は内容ハッシュ、再ビルドで同一バイト列になる
+  （`check --verify-reproducible` が検証）。
+- `kbgen check`：integrity/FK、根拠の完全性とレイヤ隔離、解決不変条件、
+  全ページのハッシュ再照合、決定サンプルの再抽出、manifest 照合、入力 drift。
+  旧 check-kb.py と check-cleanroom.py（引用の原典照合）の役割をここに統合。
+- ワークフロー：収集レーン（harvest/crawl/extract-chm/import-*）は KB を
+  構築しない。`.github/workflows/kb.yml` が入力変更時に build+check を行い、
+  DB を Release アセットへ、manifest とレポートをリポジトリへコミットする。
+- レポート（`kb/reports/`）は生成物：summary / coverage / conflicts
+  （レビュー課題）/ gaps（収集課題）。正は DB。
+
+## 8. 整理の棚卸し（何を残し、何を消したか）
+
+**維持（変更なし、または参照先の付け替えのみ）**：`corpus/`、`sources/`、
+収集ツール群（harvest/fetch-upstream/extract-chm/extract-mvb/import-*/
+crawl-mirror、check-policy/check-corpus/dedupe/build-index 系/build-ce-api-names/
+build-win32-map/audit-sources/build-chm-inventory/build-topic-coverage 等）、
+`tools/page_parse.py`（kbgen の抽出器として再利用。docstring と旧ツール
+言及コメントのみ更新）、`tools/license_scopes.py`、`tools/check-licenses.py`
+（レポート先を `data/reports/` に変更）、`tools/find-api.py`（KB 参照を
+SQLite 化）、`data/catalogs|toc|manifests|metadata|index`、`data/license-scopes.tsv`
+（knowledge/ 行を kb/ 行に置換）。
+
+**削除したもの（KB Gen の旧実装）**：`knowledge/` 全体、`tools/build-kb.py`、
+`build_kb_shim.py`、`build-unified-kb.py`、`kb_unify.py`、`check-kb.py`、
+`harvest-corpus-kb.py`、`full-pass.py`、`walk-corpus-raw.py`、
+`audit-extraction.py`、`audit-value-misses.py`、`build-win32-coverage.py`
+（＋ `data/reports/win32-coverage.tsv`）、`.github/workflows/knowledge.yml`。
+
+**削除したもの（KB 後段の旧実装）**：`gen-include-def.py`、`_gen_nowrap_tmp.py`、
+`header_map.py`、`assign-declarations-to-headers.py`、`assign-defines-to-headers.py`、
+`heuristic-header-assignment.py`、`fix-output-quality.py`、
+`fix-unassigned-declarations.py`、`check-compile-surface.py`、`build-import-libs.py`、
+`extract-base-types.py`、`audit-base-types.py`、`extract-missing-declarations.py`、
+`extract-missing-defines.py`、`quality_filters.py`、`html_clean.py`、
+`verify-assignments.py`、`check-cleanroom.py`。
+
+**削除したもの（参照の補完系）**：`w32api_gaps.py`、`pinvoke_gaps.py`、
+`pinvoke_extract.py`（読み取りロジックは `tools/kbgen/references.py` に移植）、
+`xcheck_references.py`。
+
+**削除したもの（データ・文書）**：`data/derived-constants.tsv`、
+`data/derived-forward-types.tsv`、`data/unresolved-enum-constants.tsv`、
+`data/constant-gaps.tsv`、`data/interface-methods.tsv`（旧生成系の派生表。
+問いは KB へのクエリとして存続）、`docs/review-2026-10.ja.md`、
+`docs/extraction-review-2026-10-17.ja.md`、`docs/ce-surface-audit-2026-10-18.ja.md`、
+`docs/constant-value-review.md`、`docs/clean-room.md`（作業記録。結論は
+COLLECTION-POLICY / LICENSING / 本書に統合）。対応するテストも削除し、
+page_parse 自体のテスト（test_constants_extract）と新規 test_kbgen_* を残す。
+
+## 9. 移行結果（測定値）
+
+（全量ビルド完了後に記入する。）
+
+## 10. 既知の限界と次の設計事項
+
+- 抽出器（page_parse）の取りこぼし・誤判定はそのまま観測層の性質になる。改善は
+  EXTRACTOR_VERSION を上げて再生成する手続きで追跡する。取りこぼし監査
+  （ページが印刷した事実と観測の突合）は今後の課題。
+- 適用版文の解釈カバレッジ、A/W 関係の根拠カバレッジは `kb/reports/summary.md` が
+  開示する数値が上限。
+- .NET 層は宣言観測をページ引用付きで保持するが、主題シンボルへの連結が無い
+  （旧 KB でも同じ）。マネージド型名を主題として立てるかは、抽出器
+  インターフェースの版上げとして別途判断する。
+- ヘッダ同順位の衝突は候補集合として保持される。include グラフによる
+  優先付けは Header Gen 側の関心事であり、KB は候補と根拠の完全性までを保証する。
+- 宣言の構造化は現状「テキスト＋メンバ行＋規約」まで。パラメータ単位の解析や
+  型依存グラフは Header/.def Gen の設計時に、KB 拡張として要否を判断する
+  （KB に入れるなら解決層の追加として）。
+- DB 実体を git に置かない代償として、DB の入手は「再生成」か Release
+  アセットになる。manifest がテーブル単位の内容ハッシュを持つため、
+  「何が変わったか」はテーブル粒度で追える。

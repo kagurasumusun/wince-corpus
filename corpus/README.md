@@ -101,7 +101,7 @@ everything else goes under `corpus/learn/`.
 
 This is a managed-code layer: its records stay in the knowledge base with
 `layer: "dotnet"` and are kept out of the CE include/def surface
-(`knowledge/README.md`).
+(`../kb/README.md`).
 
 ## File naming
 
@@ -206,5 +206,5 @@ python3 tools/build-index-sql.py   # data/index/corpus.sqlite3
 python3 tools/build-gap-report.py  # data/reports/missing-pages.tsv
 python3 tools/check-policy.py      # the collection policy (must print OK)
 
-# knowledge/ is built from the indexed pages: python3 tools/build-kb.py
+# ../kb/ is built from the indexed pages: python3 -m tools.kbgen build
 ```

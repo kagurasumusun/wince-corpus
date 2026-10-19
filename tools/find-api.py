@@ -45,60 +45,96 @@ ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB = os.path.join(ROOT, "data", "index", "corpus.sqlite3")
 TSV = os.path.join(ROOT, "data", "index", "INDEX.tsv")
 SHARED = os.path.join(ROOT, "data", "reports", "win32-shared.tsv")
-KB = os.path.join(ROOT, "knowledge", "kb", "entities.jsonl.gz")
+KB = os.path.join(ROOT, "kb", "kb.sqlite3")
 
 
-def load_kb():
-    """name -> the knowledge-base record for it (None when kb/ is not built)."""
-    entities = {}
-    path = KB if os.path.exists(KB) else KB[:-3]
-    if not os.path.exists(path):
-        return entities
-    opener = gzip.open if path.endswith(".gz") else open
-    with opener(path, "rt", encoding="utf-8") as fh:
-        for line in fh:
-            try:
-                record = json.loads(line)
-            except ValueError:
-                continue
-            entities[record.get("id", "")] = record
-    return entities
-
-
-def kb_line(record):
-    """One line summarizing what the knowledge base has for an entity."""
-    if not record:
+def open_kb():
+    """The knowledge base (kb/kb.sqlite3), or None when it is not built."""
+    if not os.path.exists(KB):
         return None
-    parts = [f"kb: {record.get('doc_role', '?')}"]
-    if record.get("surface"):
-        # where the name sits in the Windows CE / Win32 split; Windows CE is
-        # the CE-specific surface plus the shared part, not all of Win32
-        parts.append(f"surface: {record['surface']}")
-    if record.get("kinds"):
-        parts.append("/".join(record["kinds"]))
-    if record.get("syntax_declarations"):
-        parts.append(f"{len(record['syntax_declarations'])} declaration(s)")
-    if record.get("headers"):
-        parts.append("header: " + ", ".join(record["headers"][:3]))
-    if record.get("libraries"):
-        parts.append("lib: " + ", ".join(record["libraries"][:3]))
-    if record.get("ce_sets"):
-        parts.append("sets: " + ",".join(record["ce_sets"][:3]))
-    if record.get("variants_of"):
-        variant = record["variants_of"]
-        parts.append(f"{variant.get('kind', '?')} spelling of "
-                     f"{variant.get('name')} ({variant.get('basis')})")
-    if record.get("documented_fields"):
-        # the page documents the members but prints no declaration body: the
-        # names and their order are the fact, offsets are not stated anywhere
-        parts.append(f"{len(record['documented_fields'])} documented member(s), "
-                     "no offsets")
-    leads = collections.OrderedDict()
-    for relation in record.get("relations", ()):
-        if relation.get("type") == "ce-name-lead":
-            leads.setdefault(relation["name"], []).append(relation["page"])
-    for name, pages in leads.items():
-        parts.append(f"CE page(s) print {name!r} ({len(pages)} page(s))")
+    try:
+        return sqlite3.connect(f"file:{KB}?mode=ro", uri=True)
+    except sqlite3.Error:
+        return None
+
+
+def _symbol_key(name):
+    # the KB's identity rule (tools/kbgen/common.py): casefold, drop
+    # whitespace, keep punctuation
+    return "".join((name or "").lower().split())
+
+
+def kb_line(conn, name):
+    """One line summarizing what the knowledge base has for a name."""
+    if conn is None:
+        return None
+    key = _symbol_key(name)
+    row = conn.execute(
+        "SELECT display_name FROM symbols WHERE symbol_key=?",
+        (key,)).fetchone()
+    if not row:
+        return None
+    parts = [f"kb: {row[0]}"]
+    surf = conn.execute(
+        "SELECT has_ce_page, has_win32_page FROM v_symbol_surface"
+        " WHERE symbol_key=?", (key,)).fetchone()
+    if surf:
+        surface = ("shared" if surf[0] and surf[1] else
+                   "ce-only" if surf[0] else "win32-only (reference only)")
+        parts.append(f"surface: {surface}")
+    kinds = [r[0] for r in conn.execute(
+        "SELECT DISTINCT kind FROM symbol_kinds WHERE symbol_key=?"
+        " ORDER BY kind", (key,))]
+    if kinds:
+        parts.append("/".join(kinds[:4]))
+    decls = conn.execute(
+        "SELECT COUNT(*) FROM declaration_variants WHERE symbol_key=?"
+        " AND is_primary=1", (key,)).fetchone()[0]
+    if decls:
+        parts.append(f"{decls} chosen CE declaration")
+    headers = [r[0] for r in conn.execute(
+        "SELECT header_key FROM symbol_headers WHERE symbol_key=?"
+        " AND layer='ce' AND is_chosen=1", (key,))]
+    if headers:
+        spell = [conn.execute(
+            "SELECT display_name FROM headers WHERE header_key=?",
+            (h,)).fetchone()[0] for h in headers]
+        parts.append("header: " + ", ".join(spell[:3]))
+    libs = [r[0] for r in conn.execute(
+        "SELECT DISTINCT file_key FROM symbol_files WHERE symbol_key=?"
+        " AND layer='ce' AND is_chosen=1 AND file_kind='lib' ORDER BY file_key",
+        (key,))]
+    if libs:
+        disp = []
+        for lib in libs[:3]:
+            r = conn.execute(
+                "SELECT display_name FROM link_files WHERE file_key=?"
+                " AND file_kind='lib'", (lib,)).fetchone()
+            disp.append(r[0] if r else lib)
+        parts.append("lib: " + ", ".join(disp))
+    sets = [r[0] for r in conn.execute(
+        "SELECT DISTINCT p.book FROM page_subjects ps JOIN pages p"
+        " ON p.path=ps.page_path JOIN doc_sets d ON d.book=p.book"
+        " WHERE ps.symbol_key=? AND d.layer='ce' ORDER BY p.book LIMIT 3",
+        (key,))]
+    if sets:
+        parts.append("sets: " + ",".join(sets))
+    variant = conn.execute(
+        "SELECT s.display_name, r.variant_kind, r.basis FROM symbol_relations r"
+        " JOIN symbols s ON s.symbol_key=r.other_key WHERE r.symbol_key=?",
+        (key,)).fetchone()
+    if variant:
+        parts.append(f"{variant[1]} spelling of {variant[0]} ({variant[2]})")
+    members = conn.execute(
+        "SELECT COUNT(*) FROM documented_members WHERE subject_key=?",
+        (key,)).fetchone()[0]
+    if members:
+        parts.append(f"{members} documented member(s), no offsets")
+    conflicts = conn.execute(
+        "SELECT COUNT(*) FROM conflicts WHERE symbol_key=? AND status='open'",
+        (key,)).fetchone()[0]
+    if conflicts:
+        parts.append(f"{conflicts} open conflict(s)")
     return "  ".join(parts)
 
 
@@ -243,11 +279,11 @@ def main():
         print(json.dumps(out, ensure_ascii=False, indent=2))
         return 0
 
-    kb = load_kb()
+    kb = open_kb()
     for name in names:
         sh = shared.get(name.lower())
         print(f"{name}" + (f"  [win32-shared: {sh[0]}]" if sh else ""))
-        line = kb_line(kb.get(name.lower()))
+        line = kb_line(kb, name)
         if line:
             print(f"  {line}")
         for _n, kind, page_id, section, title, path in by_name[name]:

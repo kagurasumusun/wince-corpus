@@ -9,22 +9,23 @@ The boundary matters: **Windows CE is not the whole of Win32.**  It is the
 CE-specific surface plus the part of Win32 the CE documentation shares, and the
 corpus is collected that way — a Win32 page is taken only when a Windows CE
 document uses its API name (`docs/COLLECTION-POLICY.md`).  The knowledge base
-states the same boundary per name (`surface`, `knowledge/reports/surface.tsv`:
-18,931 CE-specific names, 4,353 shared with Win32, 1,155 Win32 spelling pages
-for CE names, 3 catalog-only leads, 0 unclaimed Win32 pages).
+states the same boundary per name (`v_symbol_surface` in `kb/kb.sqlite3`:
+25,114 names with a CE page only, 4,052 shared with Win32, 1,209 documented
+by the shared-surface reference only — never CE facts).
 The .NET families that shipped in the same documentation namespace
 (.NET Compact Framework, .NET Micro Framework, POS for .NET) are kept as a
 **separate tree**, `corpus/dotnet/`: they document a layer on top of Windows CE,
 not the operating system its include/def files describe.
 
-**121,050 pages** (2026-10-05 — `data/index/INDEX.tsv` is the live count):
-105,103 CE pages, 10,657 .NET pages, 5,279 Win32 pages (markdown, from
-Microsoft's public `MicrosoftDocs` repositories) and 11 allowlisted
-open-source documents about Windows CE (`corpus/oss/`; not source code). The repository also carries
+**122,170 pages** (2026-10-19 — `data/index/INDEX.tsv` is the live count):
+105,132 CE pages, 10,657 .NET pages, 6,370 Win32 pages (5,279 API pages plus
+the shared-surface reference pages; markdown, from Microsoft's public
+`MicrosoftDocs` repositories) and 11 allowlisted open-source documents about
+Windows CE (`corpus/oss/`; not source code). The repository also carries
 the media the pages were extracted from, the URL queues used to harvest them,
 the upstream snapshot the Win32 pages come from, and the derived catalogs,
-manifests, indexes — and `knowledge/`, the machine-readable knowledge base
-built from the pages.
+manifests, indexes — and `kb/`, the machine-readable knowledge base
+(one SQLite database) built from the pages by `tools/kbgen`.
 
 What belongs in the corpus — and what is kept out — is written down once, in
 [`docs/COLLECTION-POLICY.md`](docs/COLLECTION-POLICY.md), and enforced by
@@ -73,7 +74,7 @@ and support articles, one page per file. Nothing else is imported.
 
 The top level separates the four kinds of material the project needs —
 **media** (`sources/`, the origin), **documents** (`corpus/`, the material),
-**knowledge** (`knowledge/`, the machine-readable statements extracted from the
+**knowledge** (`kb/`, the machine-readable statements extracted from the
 documents) and **working data** (`data/`, `queues/`, `docs/`, `tools/`, about
 the collection rather than part of it).
 
@@ -92,16 +93,16 @@ the collection rather than part of it).
 | `corpus/kb/` | 260 Windows CE KnowledgeBase articles (CE 1.0/2.0/2.1x era, the CE toolkits, H/PC, Palm-size PC, Pocket PC). |
 | `corpus/site/` | 44 pages imported from the CE-era web sites that came with the media (`sources/windows-ce-2.0/developer/` — the CE 2.0 developer site including w32model, comm_mod, porting and mgdi — plus the CE 4.2/5.0/6.0 pages that were still outside the corpus). |
 | `corpus/dotnet/<set>/` | 10,657 .NET pages, kept apart from the CE trees: POS for .NET (5,793), .NET Micro Framework (4,012), .NET Compact Framework (852). See `corpus/dotnet/README.md`. |
-| `corpus/win32/api/` | 5,279 Win32 pages for the 5,068 API names Windows CE documents (from `MicrosoftDocs/sdk-api`, pinned by commit). `data/reports/win32-shared.tsv` maps each name to its CE pages, `data/reports/win32-imported.tsv` records each page's CE evidence, `data/reports/win32-coverage.tsv` is the review worklist of that rule, and `tools/find-api.py` looks a name up on both sides. |
+| `corpus/win32/api/` | 5,279 Win32 pages for the 5,068 API names Windows CE documents (from `MicrosoftDocs/sdk-api`, pinned by commit). `data/reports/win32-shared.tsv` maps each name to its CE pages, `data/reports/win32-imported.tsv` records each page's CE evidence and `tools/find-api.py` looks a name up on both sides. |
 | `corpus/msdn-library/2010-05/<set>/` | 161 Internet Archive copies of MSDN topics (May 2010), filed under the set they duplicate. |
 | `corpus/msdn-library/windows-mobile-6.5/` | 34 Windows Mobile 6.5 topics in MSDN Library (MSHelp) format. |
-| `knowledge/` | The machine-readable knowledge base built from `corpus/` by `tools/build-kb.py`: 30,076 API entities with their `surface` (**where each name sits in the Windows CE / Win32 split** — 24,565 CE-only, 4,353 shared, 1,155 Win32 spellings of CE names, 3 catalog-only, 0 unclaimed Win32 pages), header/library/DLL/module statements, relations (including the Unicode/ANSI variant links and the `ce-name-lead` records of what the CE page actually prints, each with the evidence it rests on) and generation use, 801 structures whose pages document their members without printing a declaration body (5,204 member rows in `knowledge/kb/struct-fields.tsv` — names and documented order; those pages state no offsets, so none is recorded for them), 78,993 C/C++ declaration quotes (plus 31,326 managed-code signatures in the separated .NET file), 193,538 requirements, 3,510 CE constraint sentences and 969 quoted ABI statements (`kind: "abi-note"`: alignment, byte order, pointer size, structure size), an **ABI view per name** (`knowledge/reports/abi.tsv`: the calling convention each declaration prints — never guessed — its member types (38,938 of 46,972 member lines), bitfields, packing/alignment flags, documented offsets and stated sizes), **399 documented offset rows** quoted from the layout tables of 58 pages (`knowledge/kb/abi-offsets.tsv`), **22,937 numbered constants** quoted from name/value tables, from cells a page prints as `NAME = 0x0001` or `NAME (0x0001)`, from `#define` and `enum` blocks of syntax declarations, and from `NAME (0x0400)` prose on 1,675 pages — each row carries a `layer` and an `origin` (`knowledge/kb/constants.tsv`) — plus the **constant -> header linkage ranked by evidence strength** (`knowledge/kb/constant-headers.tsv`: 6,282 rows over 5,336 names: `own-page`, then the entity's own page (`entity-page` / `constant-entity`), then, marked, the Win32 reference, then the pinned reference headers whose file defines the name (`reference-header`, values never taken), then the unanimous `co-mention` of another CE page, and — weakest, from the isolated aux layer, never primary evidence — the pinvoke module hint, 19 names at this point), the **examined value disagreements** (`knowledge/kb/constant-conflicts.tsv`: 8 names with their category and, where the review resolved the case, the reviewed print and the verdict — `docs/constant-value-review.md`), and the **classified collection worklist** (`knowledge/reports/constant-header-gaps.tsv`: 823 names — 286 `vb-language-constant`, 8 `ole-automation-constant`, 529 `needs-sdk-verification`). A constant the page does not number is absent, and the scope of the licence each record's page carries (`license`, from `data/license-scopes.tsv`). Every record names its page. See `knowledge/README.md`. |
+| `kb/` | The knowledge base: one SQLite database (`kb/kb.sqlite3`, schema in `kb/schema.sql`, build manifest `kb/manifest.json`) generated from `corpus/` by `tools/kbgen` — 50,425 symbols (30,375 with a subject page: 25,114 CE-only, 4,052 shared with Win32, 1,209 reference-only), 110,895 declaration quotes (verbatim, page-cited; 31,326 of them the separated .NET layer's managed signatures), 214,791 requirement statements, 29,808 numbered-constant observations resolving to 6,688 CE values (15,186 further names documented but unnumbered — no value is invented), chosen header/file per name with ranked, cited evidence (22,512 CE header choices; ties stay open conflicts, 7,407 of them, never silently picked), version availability, documented struct members and layout offsets (only where a page prints them), and the pinned third-party references (CeGCC w32api, dotnet/pinvoke) in isolated comparison tables that can never be cited as CE evidence. Every observation names its page and carries that page's licence scope; `kb/reports/` holds the generated summary/coverage/conflicts/gaps, and the database itself is published as a release asset (it is larger than GitHub's file limit). See `kb/README.md` and `docs/kb-design.ja.md`. |
 | `sources/` | The verbatim official media the corpus was extracted from (CHMs, HLP/MVB books, documentation zips, the 41-page CE 2.0 site mirror) and the sdk-api snapshot (`sources/microsoftdocs/`), with a `PROVENANCE.md` per release. Reference material — not part of the corpus text. |
 | `data/` | Derived datasets (catalogs, TOC trees, manifests, per-page API metadata, gap report) and the generated index. See `data/README.md`. |
-| `docs/` | `COLLECTION-POLICY.md` — what belongs in the corpus, the Win32-common rule and the .NET split; `LICENSING.md` — the per-item rights registry, the statements it rests on and the finding that most of the collection is not licensed for redistribution; `clean-room.md` — the clean-room definition, the cases, and the invariants `tools/check-cleanroom.py` verifies; `review-2026-10.ja.md` — the 2026-10 review (Japanese), including the round that removed 16,228 pages, the .NET split, the knowledge layer, the rights finding and the ABI layer; `extraction-review-2026-10-17.ja.md` — the extraction/linkage misjudgment round (Japanese): the unread Win32 markdown Requirements tables, the sample-#define pollution, the constant → header ranks without any prefix guess, and the reviewed registry `data/constant-header-review.tsv`. |
+| `docs/` | `COLLECTION-POLICY.md` — what belongs in the corpus, the Win32-common rule and the .NET split; `LICENSING.md` — the per-item rights registry, the statements it rests on and the finding that most of the collection is not licensed for redistribution; `kb-design.ja.md` — the knowledge-base design record (2026-10-19 redesign: schema, resolution rules, validation, migration results; Japanese). |
 | `queues/` | URL work queues consumed by the harvester (plus out-of-policy candidates that are deliberately not harvested). |
-| `tools/` | Collection: `harvest.py` (queue → corpus), `fetch-upstream.py` (import the CE-shared Win32 pages), `extract-mvb.py`, `extract-chm.py`, `crawl-mirror.py`, `import-media.py` + `iso9660.py`, `import-techshelps.py` / `import-kbarchive.py` / `import-site.py`. Checks and indexes: `check-policy.py` (the collection policy), `check-corpus.py` (integrity/duplicate/source-file check), `dedupe-corpus.py` + `alias_index.py` (resolve duplicates and keep the page ids traceable), `build-index.py`, `build-index-sql.py`, `build-gap-report.py`, `build-ce-api-names.py` + `ce_api_names.py`, `build-win32-map.py`, `build-win32-coverage.py` (the shared-surface review worklist, built from the knowledge base), `find-api.py`, `audit-sources.py` (every artifact under `sources/` against where it ended up), `build-chm-inventory.py` (every CHM/HLP/MVB under `sources/` against the queue entry that extracts it) and `build-topic-coverage.py` (how much of a subject area, e.g. Platform Builder, the official catalogs cover and the corpus holds). Knowledge: `page_parse.py` (the page-format readers, including the ABI readers, the header-membership sentences and the implementation-code test) + `build-kb.py` (writes `knowledge/`) + `check-kb.py` (validates it) + `harvest-corpus-kb.py` (re-reads the corpus with the current extractors and keeps the facts the earlier pass missed) + `audit-extraction.py` (per-page accounting: what the pages print vs. what `knowledge/kb/` recorded, one file at a time) + `walk-corpus-raw.py` (opens every corpus file raw, one by one) + `verify-assignments.py` (misjudgment hunt over the constant → header linkage, against the pinned w32api-cegcc reference and `data/constant-header-review.tsv`) + `license_scopes.py` (the rights registry) + `check-licenses.py` (registry coverage, verbatim statements, publication audit) + `check-cleanroom.py` (the six clean-room invariants) + `gen-include-def.py` (the first consumer: writes include/def material into a git-ignored `build/`, refusing to read `corpus/`; `--unified` writes ONE tree for every CE generation with `_WIN32_WCE` version branches for the differences, `--set` writes one generation's tree). Constant → header linkage rests only on page statements, the pinned reference headers (membership only) and the hand review `data/constant-header-review.tsv` — there is no prefix-guess rank. |
-| `.github/workflows/` | `harvest.yml` (harvest a queue from `queues/`; runs on demand or whenever `queues/auto-harvest.txt` changes), `crawl-mirror.yml` (crawl the mirror sites in `queues/mirrors.tsv`, twice a day — this is the live collection), `extract-chm.yml` (unpack the documentation CHMs of a media set in `queues/chm-sets.tsv`), `import-media.yml` (fetch a CD image from the Internet Archive and import its documentation, `queues/media.tsv`) and `import-win32.yml` (re-import `corpus/win32/` from the pinned sdk-api commit). All are `workflow_dispatch` — run them from the Actions tab — and all end with `tools/check-corpus.py` and `tools/check-policy.py`. `knowledge.yml` is the guard on the knowledge base: it rebuilds it, fails if the committed `knowledge/` is not what the code produces (a hand-edit or a stale build), then runs `check-kb.py`, `check-licenses.py` (the publication audit is reported, not enforced — see `docs/LICENSING.md`) and `check-cleanroom.py --all`. |
+| `tools/` | Collection: `harvest.py` (queue → corpus), `fetch-upstream.py` (import the CE-shared Win32 pages), `extract-mvb.py`, `extract-chm.py`, `crawl-mirror.py`, `import-media.py` + `iso9660.py`, `import-techshelps.py` / `import-kbarchive.py` / `import-site.py`. Checks and indexes: `check-policy.py` (the collection policy), `check-corpus.py` (integrity/duplicate/source-file check), `dedupe-corpus.py` + `alias_index.py` (resolve duplicates and keep the page ids traceable), `build-index.py`, `build-index-sql.py`, `build-gap-report.py`, `build-ce-api-names.py` + `ce_api_names.py`, `build-win32-map.py`, `find-api.py`, `audit-sources.py` (every artifact under `sources/` against where it ended up), `build-chm-inventory.py` (every CHM/HLP/MVB under `sources/` against the queue entry that extracts it) and `build-topic-coverage.py` (how much of a subject area, e.g. Platform Builder, the official catalogs cover and the corpus holds). Knowledge: `kbgen/` (KB Gen: `build` / `check` / `query` / `export` — the only writer and validator of `kb/`; `page_parse.py` is its versioned page extractor: the page-format readers, including the ABI readers, the header-membership sentences and the implementation-code test), `find-api.py` (name lookup across corpus index and KB), `license_scopes.py` (the rights registry) + `check-licenses.py` (registry coverage, verbatim statements, publication audit). The include/.def generator is a separate later layer and does not exist in this repository yet; nothing here reads `corpus/` on its behalf. |
+| `.github/workflows/` | `harvest.yml` (harvest a queue from `queues/`; runs on demand or whenever `queues/auto-harvest.txt` changes), `crawl-mirror.yml` (crawl the mirror sites in `queues/mirrors.tsv`, twice a day — this is the live collection), `extract-chm.yml` (unpack the documentation CHMs of a media set in `queues/chm-sets.tsv`), `import-media.yml` (fetch a CD image from the Internet Archive and import its documentation, `queues/media.tsv`) and `import-win32.yml` (re-import `corpus/win32/` from the pinned sdk-api commit). All are `workflow_dispatch` — run them from the Actions tab — and all end with `tools/check-corpus.py` and `tools/check-policy.py`. `kb.yml` is the guard on the knowledge base and its only refresher: it runs `tools/kbgen build` + `tools/kbgen check`, publishes the database as a release asset and commits `kb/manifest.json` + `kb/reports/` — the collection workflows above never build the KB, so Harvest/Corpus and KB Gen stay separate layers. |
 
 ## Corpus conventions
 
@@ -141,19 +142,17 @@ python3 tools/build-ce-api-names.py    # data/reports/ce-api-names.tsv (the CE A
 python3 tools/fetch-upstream.py list   # what the Win32 import would take
 python3 tools/fetch-upstream.py subset --source sdk-api   # corpus/win32/api (pinned commit)
 python3 tools/build-win32-map.py       # data/reports/win32-{shared,imported}.tsv
-python3 tools/build-win32-coverage.py  # data/reports/win32-coverage.tsv (review worklist)
 python3 tools/find-api.py CreateFile   # look a name up across CE + Win32
 python3 tools/audit-sources.py         # sources/ artifact -> corpus receipt, or a worklist
 python3 tools/build-chm-inventory.py   # every CHM under sources/ -> the corpus directory it fed
 python3 tools/build-topic-coverage.py --pattern "Platform Builder|OAL|BSP" \
     --out data/reports/platform-builder-coverage.tsv
-python3 tools/build-kb.py              # knowledge/ (entities, declarations, requirements)
-python3 tools/check-kb.py              # validate knowledge/ ("knowledge OK")
+python3 -m tools.kbgen build          # kb/ (KB Gen: corpus -> kb/kb.sqlite3 + reports)
+python3 -m tools.kbgen check          # validate kb/ ("kb OK"; --verify-reproducible for a rebuild compare)
+python3 -m tools.kbgen query symbol CreateFile   # ask the KB about a name
 
-# Turn the knowledge base into include/def material (prototype; writes to build/)
-python3 tools/gen-include-def.py --list
-python3 tools/gen-include-def.py --unified --out build/generated/unified   # ONE tree for every CE generation
-python3 tools/gen-include-def.py --set learn/windows-ce-5.0 --out build/generated/wince50
+# The include/.def generator (winsur surface) is designed separately on top of kb/;
+# it is not part of this repository yet.
 
 # The desktop Win32 programming guides, as an offline extra outside the corpus
 python3 tools/fetch-upstream.py guides --out .cache/win32-guides
@@ -190,6 +189,30 @@ resume check) don't have to rescan ~120k files.
 
 ## Provenance and history
 
+* 2026-10-19 (the knowledge base is redesigned from a blank sheet): the old
+  `knowledge/` tree (1,081 files of JSONL/TSV views whose fact-choice logic
+  was duplicated across the builder, the unifier and the header generator)
+  is replaced by `kb/` — one SQLite database with a declared schema
+  (`kb/schema.sql`), written and validated only by `tools/kbgen`
+  (deterministically: the same inputs rebuild the same bytes).  Facts are
+  resolved once, in one place, from page-cited observations; disagreements
+  stay open conflicts instead of being silently picked; the CeGCC w32api and
+  dotnet/pinvoke references are demoted to isolated comparison tables (the
+  `reference-header` membership rank, the `pinvoke-weak` rank and both
+  last-rank value fills are abolished — a CE value now comes only from a CE
+  or Win32 documentation page, or from a human review row in
+  `kb/inputs/reviews/` that itself only selects among page prints).  The
+  surface is unchanged by the move (25,114 CE-only / 4,052 shared / 1,209
+  reference-only names, against the old KB's 25,111 / 4,052 / 1,209), which
+  is the migration's evidence that nothing was lost.  With the old KB go its
+  builder/validator, the unified-view builder, the prototype include/.def
+  generator and its assignment-fix tooling, and the 2026-10 work-record
+  documents: the pipeline is now Harvest -> Corpus -> KB Gen, each layer
+  keeping its own artifact boundary (the collection workflows no longer
+  build the KB; `kb.yml` does, publishing the ~570 MB database as a release
+  asset with `kb/manifest.json` committed), and the Header/.def Gen layer
+  is to be designed fresh on top of the new KB.  `docs/kb-design.ja.md` is
+  the design record.  The corpus itself is untouched by this round.
 * 2026-10-14 JST (the unlinked constants are classified, the value
   disagreements examined end to end, and the fragments laid out for
   reading): the constant -> header linkage gained three marked evidence
