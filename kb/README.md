@@ -16,7 +16,7 @@ this database and nothing else; it never reads `corpus/` directly.
 | File | What it is |
 |------|------------|
 | `schema.sql` | The contract. STRICT tables, foreign keys and CHECKs are the rules; this file is the only place they are defined. |
-| `kb.sqlite3` | The built database (~570 MB). **Not in git** (over GitHub's 100 MiB file limit): rebuild it, or download `kb.sqlite3.gz` from the rolling `kb-latest` release. |
+| `kb.sqlite3` | The built database (~600 MB). **Not in git** (over GitHub's 100 MiB file limit): rebuild it, or download `kb.sqlite3.gz` from the rolling `kb-latest` release. |
 | `manifest.json` | Committed. The database's sha256 plus a content hash per table and the hashes of every build input — how a stale or hand-edited DB is detected. |
 | `reports/` | Committed, generated. `summary.md` (shape), `coverage.tsv` (per doc set), `conflicts.tsv` (review worklist), `gaps.tsv` (collection worklist). Never edit by hand. |
 | `inputs/reviews/*.tsv` | The only hand-maintained inputs: human verdicts on constant→header filing and constant value disagreements. See `inputs/reviews/README.md`. |
