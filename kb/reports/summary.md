@@ -13,7 +13,7 @@ this file exists so a reader can see the shape without a query tool.
 - constant observations: 29,904 over 8,763 names
 - resolved CE constant values: 6,688 (version-scoped rows: 23)
 - constants documented but unnumbered: 15,186 names
-- headers: 753; chosen CE symbol->header: 22,379
+- headers: 753; chosen CE symbol->header: 22,530
 - link files: 938; chosen CE symbol->file: 12,053
 - availability statements parsed/partial/unparsed: 56,185/2,322/741
 - Unicode/ANSI variant relations: 2,223 (page-statement: 1,068, import-rule: 1,155)
