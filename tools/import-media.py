@@ -89,6 +89,31 @@ PAGE_EXT = (".htm", ".html")
 DEFAULT_EXCLUDE = r"(^|/)(_vti_cnf|_vti_pvt|_derived|_private)(/|\\)"
 
 HELP_EXT = (".hlp", ".mvb", ".mvw", ".gid", ".ivt", ".ivi")
+
+# MS Help 2 titles on installer media (the MSDN Library DVDs) carry MSI
+# file names -- FL_<title>_hxs_enu, sometimes with a merge-module GUID
+# after a final dot -- while a loose title keeps its plain <title>.HxS.
+HELP2_GUID_SUFFIX = re.compile(r"\.[0-9A-F]{8}(?:_[0-9A-F]+)+$", re.I)
+HELP2_MANGLED = re.compile(r"^FL_(.+)_hxs(?:_[A-Za-z0-9]+)*$", re.I)
+
+
+def help2_title(filename):
+    """The MS Help 2 (.HxS) title of a payload file name, or None.
+
+    The title is the book the pages land under; the companion index
+    payloads (_hxi/_hxt/_hxq/_hxa) are not titles and return None.
+    """
+    name = os.path.basename(filename)
+    stem, ext = os.path.splitext(name)
+    if ext.lower() == ".hxs":
+        title = stem
+    else:
+        match = HELP2_MANGLED.match(HELP2_GUID_SUFFIX.sub("", name))
+        if not match:
+            return None
+        title = match.group(1)
+    title = re.sub(r"[^A-Za-z0-9._-]+", "_", title).strip(".").lower()
+    return title or None
 # Assets, binaries, toolchains and source code: counted, never imported.  A
 # medium is a carrier for its documentation; the code it ships stays where it
 # is (see "What is collected" in the top-level README).
@@ -425,7 +450,8 @@ def walk_medium(root, seven, depth=0, unpacked=None, prefix=""):
                     yield from walk_medium(target, seven, depth + 1, unpacked,
                                            inner_prefix)
                     continue
-            if lower.endswith(PAGE_EXT + HELP_EXT + (".chm",)):
+            if lower.endswith(PAGE_EXT + HELP_EXT + (".chm",)) \
+                    or help2_title(name):
                 yield path, "documentation", rel
             elif lower.endswith(SKIP_EXT):
                 yield path, "asset", rel
@@ -461,7 +487,7 @@ def inventory(root, label, exclude="", list_files=False):
         if kind == "documentation":
             if ext in PAGE_EXT:
                 pages += 1
-            elif ext in HELP_EXT:
+            elif ext in HELP_EXT or help2_title(os.path.basename(path)):
                 help_files += 1
             elif ext == ".chm":
                 chms += 1
@@ -470,7 +496,7 @@ def inventory(root, label, exclude="", list_files=False):
             examples[ext].append(rel)
     refused = excluder(exclude)
     log(f"[media] {label}: {sum(counts.values()):,} files "
-        f"({pages:,} HTML pages, {help_files:,} WinHelp/MVB/InfoViewer,"
+        f"({pages:,} HTML pages, {help_files:,} WinHelp/MVB/InfoViewer/HxS,"
         f" {chms:,} CHM"
         f"{', import excludes ' + exclude if refused else ''})")
     for ext, number in counts.most_common(20):
@@ -558,6 +584,19 @@ def extract_pages(root, out, label, dry_run=False, exclude=""):
             extract_chm = _tool_module("extract-chm")
             pages, _size = extract_chm.extract_chm(seven, path, components)
             imported += pages
+        elif help2_title(os.path.basename(path)):
+            title = help2_title(os.path.basename(path))
+            components = os.path.join(out, title)
+            if dry_run:
+                imported += 1
+                continue
+            if os.path.isdir(components):
+                continue
+            extract_hxs = _tool_module("extract-chm")
+            pages, _size = extract_hxs.extract_hxs(seven, path, components)
+            imported += pages
+            log(f"[media] {os.path.basename(rel)} -> {pages} pages "
+                f"(HxS title {title})")
         elif ext in HELP_EXT:
             imported += extract_helpfile(path, out, rel, dry_run)
         log(f"    {os.path.basename(path)}: {kind} ({ext})")

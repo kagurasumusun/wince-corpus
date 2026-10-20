@@ -131,16 +131,32 @@ def page_title(path):
 
 def extract_chm(seven_zip, chm_path, dest_dir, dry_run=False):
     """Unpack one CHM into dest_dir; returns (pages, bytes)."""
+    return _extract_container(seven_zip, chm_path, dest_dir, dry_run, "chm")
+
+
+def extract_hxs(seven_zip, hxs_path, dest_dir, dry_run=False):
+    """Unpack one MS Help 2 title (.HxS) into dest_dir; returns (pages, bytes).
+
+    A Help 2 title is an ITSS container like a CHM and 7-Zip reads
+    both, so the extraction path is shared; what differs is only
+    which files the media lane routes here (an .HxS carries its own
+    metadata streams and TOC/index companions, all filtered by the
+    same page rules as a CHM's internals).
+    """
+    return _extract_container(seven_zip, hxs_path, dest_dir, dry_run, "hxs")
+
+
+def _extract_container(seven_zip, path, dest_dir, dry_run, tag):
     if dry_run:
         return 0, 0
     os.makedirs(dest_dir, exist_ok=True)
-    with tempfile.TemporaryDirectory(prefix="chm-") as tmp:
+    with tempfile.TemporaryDirectory(prefix=f"{tag}-") as tmp:
         result = subprocess.run(
-            [seven_zip, "x", "-y", "-bso0", "-bsp0", chm_path, f"-o{tmp}"],
+            [seven_zip, "x", "-y", "-bso0", "-bsp0", path, f"-o{tmp}"],
             capture_output=True, text=True)
         if result.returncode != 0:
             tail = (result.stderr or result.stdout or "").strip().splitlines()
-            print(f"[chm] 7z failed on {os.path.basename(chm_path)}: "
+            print(f"[{tag}] 7z failed on {os.path.basename(path)}: "
                   f"{tail[-1] if tail else 'no output'}", file=sys.stderr)
             return 0, 0
         pages = written_bytes = 0
