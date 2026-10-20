@@ -17,7 +17,7 @@ this file exists so a reader can see the shape without a query tool.
 - link files: 980; chosen CE symbol->file: 12,063
 - availability statements parsed/partial/unparsed: 57,029/2,739/2,407
 - Unicode/ANSI variant relations: 2,223 (page-statement: 1,068, import-rule: 1,155); typedef-alias relations: 2,919
-- conflicts open: 12,735; reviewed: 8
+- conflicts open: 6,225; reviewed: 8
 - ingest rejects: 54 (see ingest_rejects table)
 - reference names: 67,299; CE values agreeing/differing vs references: 2,455/82
 - CeGCC-adopted (layer 'cegcc', only where CE docs are silent): 3,382 constant values, 4,702 header choices
