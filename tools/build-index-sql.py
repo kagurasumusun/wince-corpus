@@ -35,8 +35,12 @@ MicrosoftDocs, see corpus/win32/README.md).  Markdown pages get their title
 from the ``title:`` front-matter field and their API name from the ``nf-`` /
 ``ns-`` / ... file-name prefix instead of the HTML print patterns.
 
-Writes are wrapped in a single transaction; the DB is safe to commit
-to git (WAL off, page_size 4096).
+Writes are wrapped in a single transaction.  The DB is a derived
+cache and is NOT committed: at 173k pages it passes GitHub's
+100 MiB file limit (76 MB at 127k pages, over the limit after the
+2026-10 mass harvest), so every workflow that reads it builds it
+first (a full build is ~2 minutes) -- the same treatment as
+kb/kb.sqlite3.  Locally, just run this tool once.
 """
 import argparse
 import glob

@@ -7,13 +7,15 @@ __pycache__/
 # Upstream download cache (tools/fetch-upstream.py --cache-dir)
 .cache/
 
-# SQLite: only the committed corpus index is kept; every other *.sqlite3
-# (working copies, WAL/journal files) is ignored.  That includes
-# kb/kb.sqlite3: at ~570 MB it exceeds GitHub's 100 MiB file limit, so it
-# is published as a release asset instead; kb/manifest.json (committed)
-# pins its hash and the build is deterministic.
+# SQLite databases are derived caches and are not committed:
+# kb/kb.sqlite3 (~570 MB) exceeds GitHub's 100 MiB file limit and is
+# published as a release asset instead (kb/manifest.json, committed,
+# pins its hash; the build is deterministic), and
+# data/index/corpus.sqlite3 outgrew the same limit in the 2026-10
+# mass harvest (76 MB committed at 127k pages, over 100 MiB at
+# 173k) -- every workflow that reads it builds it first with
+# tools/build-index-sql.py.
 *.sqlite3*
-!data/index/corpus.sqlite3
 
 # Scratch build output.  Nothing generated here is committed: the
 # include/.def generator (a separate layer on top of kb/, not yet in

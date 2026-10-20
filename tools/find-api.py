@@ -154,6 +154,11 @@ def load_shared():
 
 def query_db(db_path, mode, needle):
     """Return rows (name, kind, page_id, section, title, path)."""
+    if not os.path.isfile(db_path):
+        raise SystemExit(
+            f"{db_path} does not exist: the index is a derived cache "
+            "and is no longer committed -- build it with "
+            "python3 tools/build-index-sql.py")
     con = sqlite3.connect(f"file:{db_path}?mode=ro", uri=True)
     where = {"exact": "lower(n.name) = ?",
              "grep": "lower(n.name) LIKE ?",

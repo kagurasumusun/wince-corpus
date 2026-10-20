@@ -125,9 +125,12 @@ the collection rather than part of it).
   guessed into the wrong set — 413 pages, mostly CE 2.12/3.0-era native API
   topics; all of them come from the `previous-versions/windows/embedded`
   namespace.
-* **Generated files** (`data/index/INDEX.tsv`, `data/index/corpus.sqlite3`,
-  `data/reports/*.tsv`) are produced by the tools below — do not edit them by
-  hand. `data/logs/` (harvest failure logs) is not committed.
+* **Generated files** (`data/index/INDEX.tsv`, `data/reports/*.tsv`) are
+  produced by the tools below — do not edit them by hand.
+  `data/index/corpus.sqlite3` is generated the same way but too large to
+  commit (over GitHub's 100 MiB limit since the 2026-10 mass harvest);
+  like `kb/kb.sqlite3` it is a local cache every workflow rebuilds, and
+  `data/logs/` (harvest failure logs) is not committed either.
 
 ## Working with the repository
 
@@ -136,7 +139,7 @@ python3 tools/check-policy.py          # is corpus/ still CE documentation only?
 python3 tools/check-corpus.py --report # integrity, duplicates, source files
 python3 tools/dedupe-corpus.py --check # duplicates/aliases still in place
 python3 tools/build-index.py           # data/index/INDEX.tsv  (id, set, path, title)
-python3 tools/build-index-sql.py       # data/index/corpus.sqlite3 (incremental; --full to rebuild)
+python3 tools/build-index-sql.py       # data/index/corpus.sqlite3 (local cache, uncommitted)
 python3 tools/build-gap-report.py      # data/reports/missing-pages.tsv (catalog vs corpus)
 python3 tools/build-ce-api-names.py    # data/reports/ce-api-names.tsv (the CE API names)
 python3 tools/fetch-upstream.py list   # what the Win32 import would take

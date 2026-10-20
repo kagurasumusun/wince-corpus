@@ -43,6 +43,12 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Build the SQL index
+        # fetch-upstream decides the CE-shared set from the mined CE
+        # API names (tools/ce_api_names.py over corpus.sqlite3); the
+        # index is no longer committed, so build it first.
+        run: python3 tools/build-index-sql.py
+
       - name: Import the CE-shared sdk-api pages
         run: python3 tools/fetch-upstream.py subset --source sdk-api
 
@@ -52,6 +58,8 @@ jobs:
 
       - name: Refresh reports and indexes
         run: |
+          python3 tools/build-index.py
+          python3 tools/build-index-sql.py
           python3 tools/build-ce-api-names.py
           python3 tools/build-win32-map.py
           # the alias table has to stay intact (a collapsed page must not
@@ -60,8 +68,6 @@ jobs:
           # never inside a collection lane: Harvest -> Corpus -> KB Gen are
           # separate layers (docs/kb-design.ja.md).
           python3 tools/dedupe-corpus.py --check
-          python3 tools/build-index.py
-          python3 tools/build-index-sql.py
           python3 tools/check-corpus.py --report || true
           python3 tools/check-policy.py
 

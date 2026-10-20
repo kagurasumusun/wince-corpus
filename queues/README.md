@@ -61,8 +61,8 @@ editing sandbox has no route to either, so queues are run on a GitHub runner by
 
 Start with `dry_run: true` to see what a queue would still fetch — it makes no
 requests at all. (For the automatic run, the equivalent is a comment-only
-`queues/auto-harvest.txt`: it does nothing at all.) The harvester resumes from `data/index/corpus.sqlite3`, so a
-queue can be re-run safely and a job that hits the 6-hour runner limit simply
+`queues/auto-harvest.txt`: it does nothing at all.) The harvester resumes from the page index (`data/index/corpus.sqlite3`
+when present, a tree scan otherwise), so a queue can be re-run safely and a job that hits the 6-hour runner limit simply
 continues on the next run. `wayback-msdn-2010` turned out to be a no-op: its
 31,388 topics are the same documents, id for id, as the pages already in
 `corpus/learn/` (the 2010 MSDN Library and learn.microsoft.com "previous
