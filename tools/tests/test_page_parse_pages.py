@@ -115,3 +115,32 @@ class MarkdownMessagePageTests(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
+
+
+class KindOfDeclarationTests(unittest.TestCase):
+    """A declaration's kind comes from what it declares, not from type
+    words its parameters happen to mention."""
+
+    def check(self, text, kind):
+        import page_parse
+        self.assertEqual(page_parse._kind_of(text), kind, text[:60])
+
+    def test_prototypes_mentioning_types_are_functions(self):
+        self.check("SOCKET accept(SOCKET s, struct sockaddr *addr,"
+                   " int *addrlen);", "function")
+        self.check("HRESULT GetStatus(enum ExchangeClientRequestStatus"
+                   "* pStatus);", "function")
+        self.check("DWORD GetIfEntry(PMIB_IFROW pIfRow "
+                   "// pointer to interface entry );", "function")
+
+    def test_bodies_and_typedefs(self):
+        self.check("typedef struct tagPOINT { LONG x; LONG y; } POINT;",
+                   "struct")
+        self.check("typedef struct FARSTRUCT tagDISPPARAMS { int cArgs; }"
+                   " DISPPARAMS;", "struct")
+        self.check("typedef enum _A { A1, A2 } A;", "enum")
+        self.check("enum { TL_KEEPALIVE = 0x1 };", "enum")
+        self.check("typedef struct _REPLOBJ FAR *HREPLOBJ;", "typedef")
+        self.check("#define RASPPPIPV6 struct tagRASPPPIPV6 { DWORD d; }",
+                   "struct")
+        self.check("typedef int (*CB)(struct _X *p);", "callback")

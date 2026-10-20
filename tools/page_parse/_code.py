@@ -402,21 +402,37 @@ def _is_build_script(text):
 
 
 def _kind_of(text):
+    """What a declaration text declares, judged by its own shape.
+
+    A struct/enum *body* (``... {``) decides -- the words alone do not:
+    a prototype whose parameter is typed ``struct sockaddr *`` or
+    ``enum SF_REQ_TYPE`` declares a function, not the type it mentions.
+    (The earlier anywhere-match classified accept()/bind() as structs
+    and every ``// pointer to interface entry`` prototype as an
+    interface.)
+    """
     lowered = text.lower()
     if _is_build_script(text):
         return "build-variable"
-    if re.search(r"\btypedef\s+struct\b|\bstruct\s+[A-Za-z_]", lowered):
+    # Up to two name tokens cover `struct FARSTRUCT tagDISPPARAMS {`.
+    if re.search(r"\b(?:typedef\s+)?(?:struct|union)"
+                 r"(?:\s+[A-Za-z_]\w*){0,2}\s*\{", text):
         return "struct"
-    if "typedef enum" in lowered or re.search(r"\benum\s+[A-Za-z_]", lowered):
+    if re.search(r"\b(?:typedef\s+)?enum(?:\s+[A-Za-z_]\w*)?\s*\{", text):
         return "enum"
     if re.match(r"\s*#\s*define\b", text):
         return "macro"
     if re.search(r"\(\s*\*\s*[A-Za-z_]", text) and "typedef" in lowered:
         return "callback"
-    if re.search(r"\bDECLARE_INTERFACE|\binterface\s+[A-Za-z_]", text):
+    if re.search(r"\bDECLARE_INTERFACE", text) or \
+            re.search(r"(?m)^\s*interface\s+[A-Za-z_]", text):
         return "interface"
     if re.match(r"\s*typedef\b", text):
         return "typedef"
+    if re.match(r"\s*(?:struct|union)\s+[A-Za-z_]", text):
+        return "struct"
+    if re.match(r"\s*enum\s+[A-Za-z_]", text):
+        return "enum"
     if "(" in text and ")" in text:
         return "function"
     return None
