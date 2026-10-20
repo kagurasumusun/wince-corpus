@@ -59,13 +59,13 @@ can collect them):
 
 | Source | Where | Why it matters |
 |--------|-------|----------------|
-| CE 2.0 SDK "Books Online" — **partly collected**: the SDK disc's `windbg.hlp` and ReadMe are imported (`corpus/mvb/windows-ce-2.0-sdk/`), but its Books Online is InfoViewer `.ivt` (10 books, `data1/Online_help_files/`), which no tool here decodes | Internet Archive `MPLATSDK.20` (02/98), see `queues/media.tsv` | the CE 2.0 Win32 API reference itself comes from the MSDN Library sets already in the corpus; an `.ivt` decoder would add the SDK's own platform documentation |
+| CE 2.0 SDK "Books Online" — **collected 2026-10-20**: the disc's 11 InfoViewer titles (`.ivt`, `data1/Online_help_files/`) are decoded by `tools/extract-ivt.py` (pure-Python; b-tree directory + MSZIP members) next to the earlier `windbg.hlp` and ReadMe: 5,085 pages in `corpus/mvb/windows-ce-2.0-sdk/` (WCESDK 2,817, WCESDKG 618, WCEDDK 323, plus the CPU books VR4100/PR3910/SH* and MIPS). The sibling `.ivi` files are index-only containers (0 HTML topics) | Internet Archive `MPLATSDK.20` (02/98), see `queues/media.tsv` | the SDK's own platform documentation, incl. per-API "Windows CE 1.0/2.0" requirement evidence; complements the MSDN Library sets |
 | CE 5.0 CD5 | <https://archive.org/details/en_win_ce_net_cd5> | **inventoried 2026-10-20: no documentation aboard** (18,798 files, 0 HTML/WinHelp/CHM -- a binaries disc); not collected |
 | CE 6.0 R2 update | <https://archive.org/details/windows-embedded-ce-6.0-r2> | **inventoried 2026-10-20: product payload only** (26,811 files, no documentation set); not collected |
 | CE 6.0 R3 update | <https://archive.org/details/CE6R3> | **inventoried 2026-10-20: product payload only** (19,745 files, no documentation set -- the CF 3.5 reference is not on this disc); not collected |
 | CE 6.0 Platform Builder SP1 | <https://archive.org/details/windows-embedded-ce-6.0-platform-builder-sp1> + Microsoft Download Center id 4097 (`Release Notes.htm` is a plain file) | **inventoried 2026-10-20: tools payload only** (3,326 files, 0 documentation pages); not collected |
 | CE 5.0 Standard SDK | Microsoft Download Center id 17310 (still live) | the CE 5.0 Standard SDK API surface |
-| MSDN Library discs (2001–2010) | Internet Archive / WinWorld | the MSDN-era captures of CE 3.0–5.0 reference, including custom-hardware docs |
+| MSDN Library discs (2001–2010) | Internet Archive / WinWorld — **one pinned 2026-10-20**: MSDN Library for Visual Studio 2008 SP1 (Nov 2008), archive.org `X15-18280` (`DVD1.iso`, 2.2 GB, sha256 `81876da478c4…`); the same disc (X15-06188) is still served by Microsoft Download Center id 20955. Queued as `inventory-scratch` in `queues/media.tsv`: the disc is mostly desktop documentation, so nothing imports until the inventory shows how its CE / Windows Mobile content is packaged (loose HTML vs MS Help 2 `.HxS`) and an exclude regex can scope it | the MSDN-era captures of CE 3.0–5.0 / Windows Mobile reference (the `bb*` topics never migrated to Learn), including custom-hardware docs |
 
 Inventory outcome (2026-10-20, runs 39363624759/39364902845): all
 four items above were downloaded and inventoried via

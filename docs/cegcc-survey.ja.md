@@ -232,8 +232,15 @@ CE 分岐行 (版数下限つき 73 + `wce` 38) を直接の根拠とする。
   残して削除済み。残る本命は MSDN Library ディスク (2001–2010)
   で、archive.org アイテムの特定が次の作業になる。
 - **CE 2.0 SDK Books Online** は MPLATSDK.20 の展開自体は完了して
-  いるが、中身が InfoViewer `.ivt` (10 冊) でデコーダが無いこと
-  が真のブロッカ (sources/README.md)。unshield の問題ではない。
+  いたが、中身が InfoViewer `.ivt` でデコーダが無いことがブロッカ
+  だった。2026-10-20 に `tools/extract-ivt.py` (公開フォーマット
+  記述に基づく独自実装。WinHelp 系 b-tree ディレクトリ + MSZIP
+  メンバ) を実装し、PRONOM 研究コレクションの実タイトル 33 件で
+  検証のうえ再取り込み: 11 冊 4,793 ページが corpus/mvb/
+  windows-ce-2.0-sdk/ に入った。`.ivi` は索引のみのコンテナで
+  HTML トピックを持たない。再取り込みでは dedupe 済みページの
+  復活が問題になり、import-media のヘルプファイル経路にも
+  エイリアス尊重を追加した (7a4438708)。
 - **datadungeon の MSDN Library June 1998** (msdn-1998-06) は
   2026-10-20 に目次を確認したが CE セクションが存在しない
   (当時の CE 文書は SDK 同梱のみ)。同じミラーの April 2000 版の

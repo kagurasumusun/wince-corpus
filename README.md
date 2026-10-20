@@ -17,7 +17,7 @@ The .NET families that shipped in the same documentation namespace
 **separate tree**, `corpus/dotnet/`: they document a layer on top of Windows CE,
 not the operating system its include/def files describe.
 
-**122,170 pages** (2026-10-19 — `data/index/INDEX.tsv` is the live count):
+**126,963 pages** (2026-10-20 — `data/index/INDEX.tsv` is the live count):
 105,132 CE pages, 10,657 .NET pages, 6,370 Win32 pages (5,279 API pages plus
 the shared-surface reference pages; markdown, from Microsoft's public
 `MicrosoftDocs` repositories) and 11 allowlisted open-source documents about
@@ -86,7 +86,7 @@ the collection rather than part of it).
 | `corpus/chm/windows-ce-4.2/` | 566 pages: the emulator board and remote-tools reference of the CE .NET 4.2 Platform Builder Emulation Edition media. |
 | `corpus/chm/windows-ce-3.0/` | 8,962 pages extracted from the official Windows CE 3.0 documentation CHM. |
 | `corpus/mvb/windows-ce-1.0/` | 2,103 pages decoded from the CE 1.0 Books Online (Multimedia Viewer books + WinHelp release notes). |
-| `corpus/mvb/windows-ce-2.0-sdk/` | 292 pages of the Windows CE Platform SDK (H/PC) 2.0 disc (02/98): the CE debugger reference (`windbg.hlp`) and the disc ReadMe. The disc's InfoViewer Books Online has no decoder yet; the SDK's headers, libraries and samples are deliberately not imported. |
+| `corpus/mvb/windows-ce-2.0-sdk/` | 5,085 pages of the Windows CE Platform SDK (H/PC) 2.0 disc (02/98): the InfoViewer Books Online (11 `.ivt` titles decoded by `tools/extract-ivt.py` — WCESDK, WCESDKG, WCEDDK and the MIPS/SH/VR4100 CPU books), the CE debugger reference (`windbg.hlp`) and the disc ReadMe. The SDK's headers, libraries and samples are deliberately not imported. |
 | `corpus/msdn-library/techshelps/` | 5,165 pages of the MSDN Library's Windows CE 1.0/2.0 sets, from the techshelps mirror (CEGUIDE, WCEMFC, WCEATL, VBCE, WCEDDK, VCCE, DNEMBED). |
 | `corpus/msdn-library/datadungeon-2000-04/` | The Windows CE documentation of the MSDN Library April 2000 (CE 2.12/3.0 era), crawled page by page from library.thedatadungeon.com — 2,931 pages collected so far, the crawl continues twice a day. |
 | `corpus/msdn-library/wcedevcon-99/` | 6,382 pages of the Windows CE 2.11/2.12 SDK, DDK and Platform Builder documentation on the DevCon '99 conference disc. The disc's sponsor pages, sample trees, desktop Media Player 2 help and FrontPage metadata are refused (see `queues/media.tsv`). |
