@@ -17,12 +17,15 @@ mdf = importlib.util.module_from_spec(_SPEC)
 _SPEC.loader.exec_module(mdf)
 
 
-def build_image(sector_size, offset, volume_id=b"CD001", sectors=20):
+def build_image(sector_size, offset, volume_id=b"CD001", sectors=20,
+                lead=0, corroborate=True):
     out = bytearray()
-    for i in range(sectors):
-        data = bytes([i % 256]) * 2048
+    for i in range(-lead, sectors):
+        data = bytes([max(i, 0) % 256]) * 2048
         if i == 16:
             data = b"\x01" + volume_id + data[6:]
+        elif i == 17 and corroborate:
+            data = b"\xff" + volume_id + data[6:]
         sector = bytearray(sector_size)
         sector[offset:offset + 2048] = data
         out += sector
@@ -33,8 +36,8 @@ def build_image(sector_size, offset, volume_id=b"CD001", sectors=20):
 
 
 class SectorLayoutTests(unittest.TestCase):
-    def convert(self, sector_size, offset, volume_id=b"CD001"):
-        path, raw = build_image(sector_size, offset, volume_id)
+    def convert(self, sector_size, offset, volume_id=b"CD001", lead=0):
+        path, raw = build_image(sector_size, offset, volume_id, lead=lead)
         dest = path + ".iso"
         try:
             ok = mdf.to_iso(path, dest)
@@ -61,6 +64,40 @@ class SectorLayoutTests(unittest.TestCase):
         ok, body = self.convert(2336, 0, b"NSR03")
         self.assertTrue(ok)
         self.assertEqual(body[16 * 2048 + 1:16 * 2048 + 6], b"NSR03")
+
+    def test_mode2_form1_sectors(self):
+        ok, body = self.convert(2352, 24)
+        self.assertTrue(ok)
+        self.assertEqual(body[16 * 2048 + 1:16 * 2048 + 6], b"CD001")
+
+    def test_2336_mode2_sectors(self):
+        ok, body = self.convert(2336, 8)
+        self.assertTrue(ok)
+        self.assertEqual(body[16 * 2048 + 1:16 * 2048 + 6], b"CD001")
+
+    def test_2448_subchannel_sectors(self):
+        ok, body = self.convert(2448, 16)
+        self.assertTrue(ok)
+        self.assertEqual(body[16 * 2048 + 1:16 * 2048 + 6], b"CD001")
+        self.assertEqual(body[3 * 2048], 3)
+
+    def test_pregap_lead_sectors_are_skipped(self):
+        # rips may carry the 150-sector pregap: user data then starts
+        # that many sectors into the file
+        ok, body = self.convert(2352, 16, lead=150)
+        self.assertTrue(ok)
+        self.assertEqual(len(body), 20 * 2048)
+        self.assertEqual(body[16 * 2048 + 1:16 * 2048 + 6], b"CD001")
+
+    def test_uncorroborated_descriptor_is_refused(self):
+        # an identifier at sector 16 with junk at 17 is data, not a
+        # volume descriptor pair
+        path, _raw = build_image(2352, 16, corroborate=False)
+        try:
+            self.assertIsNone(mdf.sector_layout(path))
+            self.assertFalse(mdf.to_iso(path, path + ".iso"))
+        finally:
+            os.unlink(path)
 
     def test_no_volume_descriptor_is_refused(self):
         path, _raw = build_image(2352, 16, b"XXXXX")

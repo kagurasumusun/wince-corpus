@@ -154,27 +154,15 @@ wcedevcon-99	windowscedevcon99conferencecd	\.iso$	corpus/msdn-library/wcedevcon-
 # was cleared for this retry.
 msdn-library-vs2008-sp1	X15-18280	\.iso$	corpus/msdn-library/vs2008-sp1	import-scratch	^(?!.*FL_(wce|mobilesdk5|_toc_wince50|fxref_microsoft\.windowsmobile)).*$
 
-# (The combined run of 2026-10-21 imported the Jan-2002 titles
-# and inventoried wave B, but its index refresh failed and
-# nothing committed; the workflow now commits the refresh log on
-# failure, and this push is the retry.  Downloads are cached.
-# The retry failed the same way and its log commit died on a
-# rebase over the refresh's own unstaged changes; --autostash and
-# per-tool markers are in.  The log named it: importing the
-# Jan-2002 WCEMFC collided with techshelps' on page_id, and the
-# page_id-keyed names index lost FINDREPLACE -- corpus.sqlite3
-# names are keyed by path now (the migration test caught one
-# ordering bug first; a rebuild on the real index recovers
-# 10,464 collision-lost name rows).  That retry still failed in
-# the refresh and its log commit died too (exit 128, tree state);
-# the lane now frees runner disk first, drops cached images of
-# recorded imports, and commits failure logs via commit-tree.
-# That run's log showed every check green and the commit done --
-# the tee logging itself kept dirtying the tree and killed the
-# pull --rebase.  Logging now stops before the git section --
-# which promptly failed invisibly instead, so the tee target
-# lives outside the tree and is copied in once, finished.
-# This push is the re-retry.)
+# (The Jan-2002 import below took nine lane runs to land on
+# 2026-10-21: the failures peeled off in layers -- a page_id
+# collision corrupting the names index (names are keyed by path
+# now; the rebuild recovered 10,464 silently lost rows), the
+# failure-log commit's own git habits (commit-tree plumbing
+# now), the refresh tee dirtying the tree it was committing,
+# and corpus.sqlite3 passing GitHub's 100 MiB file limit (an
+# uncommitted derived cache now, like kb.sqlite3).  All fixes
+# are in the git history of this file and of the workflow.)
 #
 # --- Scouting wave of 2026-10-21: six media pinned and inventoried
 # together (full file listings) to decide imports.  MSDN Library
@@ -188,15 +176,18 @@ msdn-library-vs2008-sp1	X15-18280	\.iso$	corpus/msdn-library/vs2008-sp1	import-s
 # library (VS.NET 2002).  Inventoried 2026-10-21: 716 loose .HXS
 # titles, of which the CE set is WCE* (WCESDKR, WCECOMM, WCEDDK,
 # WCEMFC, WCEATL, ... 22 titles), ADOCE31, DNAPPCOM, DNCE21 and
-# DNCE30.  This entry imports exactly those.
+# DNCE30.  Imported 2026-10-21 (13,429 pages).
 msdn-library-jan-2002	msdn-jan-2002	\.iso$	corpus/msdn-library/jan-2002	import-scratch	^(?!.*/(WCE[A-Z0-9]*|ADOCE31|DNAPPCOM|DNCE21|DNCE30)\.HXS$).*$
 # MSDN Library for Visual Studio .NET 2003, Discs 1-3 (May 2003,
 # part numbers X09-46370 / X09-46249 / X09-46251, volume labels
 # MSDVVSD1-3): the CE .NET 4.2 and Windows Mobile 2003 era.  The
 # first inventory saw seven files per disc: the dumps are
 # Alcohol 120% MDF/MDS images inside the .7z files.  tools/mdf.py
-# now converts a data MDF to ISO bytes in the walk, so these
-# inventory again below.
+# converts a data MDF to ISO bytes in the walk, but the
+# 2026-10-21 re-inventory found no volume descriptor at the
+# three layouts its first sniffer tried; the sniffer now scans
+# for aligned descriptor pairs (Mode 1/2, subchannel, pregap),
+# so these inventory once more.
 msdn-library-vsnet2003-d1	X09-46370	\.7z$	corpus/msdn-library/vsnet-2003	inventory-list-scratch
 msdn-library-vsnet2003-d2	X09-46249	\.7z$	corpus/msdn-library/vsnet-2003	inventory-list-scratch
 msdn-library-vsnet2003-d3	X09-46251	\.7z$	corpus/msdn-library/vsnet-2003	inventory-list-scratch
@@ -209,19 +200,29 @@ msdn-library-vsnet2003-d3	X09-46251	\.7z$	corpus/msdn-library/vsnet-2003	invento
 # _293PPCUI__1_CHM); the PPC 2003 reference is expected in the
 # VS.NET 2003 library above instead.
 #
-# --- Scouting wave B (2026-10-21), also inventory-only:
-# The Windows Mobile 5.0 / 6.1 / 6.5 Pocket PC SDK MSIs -- the
-# 6.x SDK documentation, if it is in these installers at all.
-windows-mobile-sdk-bundle	windows-mobile-5.0-pocket-pc-sdk	\.msi$	corpus/msdn-library/windows-mobile-sdks	inventory-list-scratch
-# MSDN Library 2005 (3 CDs, X11-45985/6/7 in one item): the
-# VS2005 library -- CE 5.0 / WM5 first-generation sets.
-msdn-library-vs2005	MsdnLibrary2005X11-45985X11-45986X11-45987	\.iso$	corpus/msdn-library/vs2005	inventory-list-scratch
-# MSDN Subscriptions Library January 2008, Disc 1 (X14-30632):
-# the VS2008 RTM library -- does it hold a Windows Mobile 6 set
-# the SP1 disc lacks?
-msdn-library-jan-2008	msdn-subscriptions-library-january-2008-x14-30632-dvd1	\.iso$	corpus/msdn-library/jan-2008	inventory-list-scratch
-# 2026-10-21 run 39429639156 was refresh-green but the PUSH was rejected:
-# data/index/corpus.sqlite3 passes GitHub's 100 MiB file limit at 173k
-# pages (98.3 MB already at 160k after the names.full rebuild). The
-# index is now an uncommitted derived cache like kb.sqlite3 (every
-# workflow builds it in-step); this retry should land Jan 2002.
+# --- Scouting wave B (2026-10-21): inventoried, nothing to import:
+# * windows-mobile-sdk-bundle (item windows-mobile-5.0-pocket-pc-sdk,
+#   the WM 5.0/6.1/6.5 Pocket PC SDK MSIs): 2,559 files, 3 HTML
+#   pages, no help titles at all -- headers/libs/samples/emulator
+#   material, like the WM6 Refresh above.  The WM 6.x reference
+#   remains only in the Learn windows-mobile-6.5 set.
+# * msdn-library-vs2005 (3 CDs, X11-45985/6/7): its CE HxS titles
+#   are title-for-title the CE 5.0 set the VS2008 SP1 disc already
+#   imported (wce*5 + mobilesdk5 + wce_devcompiler), an earlier
+#   snapshot of the same documentation; its 7 CHMs are desktop
+#   sample help (scribble, tstcon32, ...).  Duplicative.
+# * msdn-library-jan-2008 (X14-30632 DVD1): the same CE 5.0 set
+#   again; the only deltas over SP1 are enu_kbmobilekb and two
+#   managed fxref subtrees -- not worth importing a 2.1 GB disc
+#   for.  (Its inventory also settles the scouting question: no
+#   Windows Mobile 6 set the SP1 disc lacks.)
+# Rows removed so future runs do not fetch them again; the
+# listings are in the git history of data/reports/media-last.txt.
+#
+# --- Scouting wave C (2026-10-21), inventory-only:
+# MSDN Library January 2001 (X06-07342, one 5.28 GB DVD image):
+# the pre-Help-2 library -- the CE 3.0 documentation as first
+# shipped, a year before the Jan-2002 set above.  What form its
+# CE titles take (loose HTML, CHM, InfoViewer) is what the
+# inventory is for.
+msdn-library-jan-2001	msdn-library-january-2001-x06-07342	\.iso$	corpus/msdn-library/jan-2001	inventory-list-scratch
