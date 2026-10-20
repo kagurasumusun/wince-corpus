@@ -15,8 +15,8 @@ that does not belong appears in `corpus/`. Every collection workflow runs it.
 
 ```
 python3 tools/check-policy.py
-corpus/            126,963 pages in 10 trees
-  CE trees         105,132 pages
+corpus/            210,773 pages in 10 trees
+  CE trees         193,735 pages
   other layers     10,668 pages (dotnet, oss, pinvoke; oss allowlist 11)
 corpus/win32/api/  6,370 CE-shared API pages
 # corpus/win32/common/  shared-surface reference pages (data/win32-common-pages.tsv)

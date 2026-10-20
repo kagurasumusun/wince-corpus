@@ -17,8 +17,8 @@ The .NET families that shipped in the same documentation namespace
 **separate tree**, `corpus/dotnet/`: they document a layer on top of Windows CE,
 not the operating system its include/def files describe.
 
-**126,963 pages** (2026-10-20 — `data/index/INDEX.tsv` is the live count):
-105,132 CE pages, 10,657 .NET pages, 6,370 Win32 pages (5,279 API pages plus
+**210,773 pages** (2026-10-21 — `data/index/INDEX.tsv` is the live count):
+193,735 CE pages, 10,657 .NET pages, 6,370 Win32 pages (5,279 API pages plus
 the shared-surface reference pages; markdown, from Microsoft's public
 `MicrosoftDocs` repositories) and 11 allowlisted open-source documents about
 Windows CE (`corpus/oss/`; not source code). The repository also carries
@@ -90,6 +90,9 @@ the collection rather than part of it).
 | `corpus/msdn-library/techshelps/` | 5,165 pages of the MSDN Library's Windows CE 1.0/2.0 sets, from the techshelps mirror (CEGUIDE, WCEMFC, WCEATL, VBCE, WCEDDK, VCCE, DNEMBED). |
 | `corpus/msdn-library/datadungeon-2000-04/` | The Windows CE documentation of the MSDN Library April 2000 (CE 2.12/3.0 era), crawled page by page from library.thedatadungeon.com — 2,931 pages collected so far, the crawl continues twice a day. |
 | `corpus/msdn-library/wcedevcon-99/` | 6,382 pages of the Windows CE 2.11/2.12 SDK, DDK and Platform Builder documentation on the DevCon '99 conference disc. The disc's sponsor pages, sample trees, desktop Media Player 2 help and FrontPage metadata are refused (see `queues/media.tsv`). |
+| `corpus/msdn-library/jan-2002/` | 13,429 pages: the CE 3.0 titles of the first MS Help 2 library (MSDN January 2002 disc) — 22 `WCE*` books plus ADOCE31, DNAPPCOM, DNCE21 and DNCE30, keep-only-scoped out of a mostly-desktop disc. |
+| `corpus/msdn-library/vsnet-2003/` | 37,371 pages: the CE .NET 4.x-era titles of the MSDN Library for VS.NET 2003 (118 MS Help 2 titles — the fine-grained `WCE*` split, `DV_WCE*4`, `DNCE*`, the CETK books) from the three Alcohol-MDF disc dumps (`tools/mdf.py`). |
+| `corpus/msdn-library/vs2008-sp1/` | 33,010 pages: the CE 5.0 `wce*5` books and `mobilesdk5` (the Windows Mobile 5.0 SDK reference whose `bb*` topics never migrated to Learn) from the MSDN Library for VS2008 SP1 disc's MSI payload, plus the managed `fxref_microsoft.windowsmobile.*` titles. |
 | `corpus/kb/` | 260 Windows CE KnowledgeBase articles (CE 1.0/2.0/2.1x era, the CE toolkits, H/PC, Palm-size PC, Pocket PC). |
 | `corpus/site/` | 44 pages imported from the CE-era web sites that came with the media (`sources/windows-ce-2.0/developer/` — the CE 2.0 developer site including w32model, comm_mod, porting and mgdi — plus the CE 4.2/5.0/6.0 pages that were still outside the corpus). |
 | `corpus/dotnet/<set>/` | 10,657 .NET pages, kept apart from the CE trees: POS for .NET (5,793), .NET Micro Framework (4,012), .NET Compact Framework (852). See `corpus/dotnet/README.md`. |

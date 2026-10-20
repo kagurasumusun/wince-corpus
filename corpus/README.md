@@ -12,7 +12,7 @@ corpus/
 ├── chm/windows-ce-5.0/       the 98 component CHMs of the CE 5.0 CD1
 ├── chm/windows-ce-4.2/       emulator + remote tools CHMs of CE .NET 4.2
 ├── mvb/windows-ce-1.0/       CE 1.0 books (Multimedia Viewer/WinHelp era)
-├── mvb/windows-ce-2.0-sdk/   CE 2.0 SDK (H/PC) debugger reference + disc ReadMe
+├── mvb/windows-ce-2.0-sdk/   CE 2.0 SDK (H/PC) Books Online (InfoViewer) + debugger ref.
 ├── kb/                       Windows CE KnowledgeBase articles (CE 1.0/2.0 era)
 ├── site/<set>/               pages of the CE-era web sites that came with the media
 ├── dotnet/<set>/             the .NET families, documented on top of Windows CE
@@ -23,13 +23,17 @@ corpus/
     ├── techshelps/<set>/     MSDN Library CE 1.0/2.0 sets (techshelps mirror)
     ├── datadungeon-2000-04/  MSDN Library April 2000 CE documentation (crawled)
     ├── wcedevcon-99/         CE 2.11/2.12 SDK/DDK docs of the DevCon '99 disc
+    ├── jan-2002/             CE 3.0 titles of the MSDN January 2002 disc (MS Help 2)
+    ├── vsnet-2003/           CE .NET 4.x titles of the MSDN Library for VS.NET 2003
+    ├── vs2008-sp1/           CE 5.0 + Windows Mobile 5 books (VS2008 SP1 MSDN disc)
     ├── msdn-magazine/        MSDN Magazine CE-era articles (2000-2003, Wayback)
     └── windows-mobile-6.5/   MSHelp-format Windows Mobile 6.5 topics
 ```
 
-Total: about 121,000 pages = about 105,000 CE pages + 10,657 .NET pages +
-about 5,280 Win32-common pages (2026-10-15 rough recount by filename;
-the April 2000 crawl is still running, so the CE number grows daily).
+Total: 210,773 pages = 193,735 CE pages + 10,657 .NET pages + 6,370
+Win32-common pages + 11 open-source pages (2026-10-21; the live count
+is `data/index/INDEX.tsv`. The April 2000 crawl is still running, so
+the CE number grows daily).
 The learn-side mslearn harvest is complete (both URL queues fully
 covered; see `queues/README.md`), and the 12-article MSDN Magazine
 CE audit is closed (`queues/to-fetch-msdn-magazine.txt`). The CE trees are `learn/`, `chm/`, `mvb/`, `kb/`, `site/` and
@@ -146,13 +150,14 @@ keeps file names joinable with `data/catalogs/*.tsv`, `data/manifests/*` and
   `tools/check-policy.py` fails on one).
 * `kb/` — 260 Windows CE KnowledgeBase articles from
   <https://github.com/jeffpar/kbarchive>; see `kb/README.md`.
-* `mvb/windows-ce-2.0-sdk/` — 293 pages of the Microsoft Windows CE Platform
-  SDK (H/PC) 2.0 disc (02/98, Internet Archive `MPLATSDK.20`): the CE debugger
-  reference (`windbg.hlp`, 292 pages) and the disc's ReadMe. The disc's
-  InfoViewer Books Online (`.ivt`) is not decodable yet; the SDK itself
-  (headers, libraries, samples) is deliberately not imported. The medium is
-  fetched to a scratch directory and discarded — see
-  `mvb/windows-ce-2.0-sdk/README.md`.
+* `mvb/windows-ce-2.0-sdk/` — 5,085 pages of the Microsoft Windows CE
+  Platform SDK (H/PC) 2.0 disc (02/98, Internet Archive `MPLATSDK.20`):
+  the InfoViewer Books Online (11 `.ivt` titles decoded by
+  `tools/extract-ivt.py` — WCESDK, WCESDKG, WCEDDK and the CPU books),
+  the CE debugger reference (`windbg.hlp`) and the disc's ReadMe. The
+  SDK itself (headers, libraries, samples) is deliberately not
+  imported. The medium is fetched to a scratch directory and discarded
+  — see `mvb/windows-ce-2.0-sdk/README.md`.
 * `mvb/windows-ce-1.0/` — the CE 1.0 Books Online (`PEGSDK.MVB` 1,919 pages,
   `PEGDDK.MVB` 181, `RELNOTES.HLP` 4) decoded from the Multimedia Viewer
   format with helpdeco and converted by `tools/extract-mvb.py`; see
@@ -178,6 +183,23 @@ keeps file names joinable with `data/catalogs/*.tsv`, `data/manifests/*` and
   pages, sample trees, desktop Media Player 2 help and FrontPage metadata are
   refused by the exclude regex in `queues/media.tsv` — see
   `msdn-library/wcedevcon-99/PROVENANCE.md`.
+* `msdn-library/jan-2002/` — 13,429 pages: the CE 3.0 MS Help 2 titles
+  (22 `WCE*` books, ADOCE31, DNAPPCOM, DNCE21, DNCE30) of the MSDN
+  Subscriptions Library January 2002 disc (Internet Archive
+  `msdn-jan-2002`); the rest of the disc is the desktop library and
+  is refused by the keep-only exclude in `queues/media.tsv`.
+* `msdn-library/vsnet-2003/` — 37,371 pages: the CE .NET 4.x-era MS
+  Help 2 titles (118: the fine-grained `WCE*` split incl. the `*40`
+  books, `DV_WCE*4`, `DNCE*` incl. Automotive, the CETK books,
+  ADOCE31, the two `ENU_KB*` CE article titles) of the three MSDN
+  Library for Visual Studio .NET 2003 discs (Alcohol 120% MDF
+  dumps, converted by `tools/mdf.py`).
+* `msdn-library/vs2008-sp1/` — 33,010 pages: the CE 5.0 books
+  (`wce*5`, `wce_devcompiler`), `mobilesdk5` (the Windows Mobile 5.0
+  SDK reference) and the managed `fxref_microsoft.windowsmobile.*`
+  titles from the MSDN Library for Visual Studio 2008 SP1 disc (an
+  MSI payload of MS Help 2 titles; Internet Archive `X15-18280`,
+  the same disc as Microsoft Download Center id 20955).
 * `site/` — 44 pages imported from the CE-era web sites that came with the
   media (`sources/windows-ce-2.0/developer/` — the CE 2.0 developer site,
   including the w32model, comm_mod, porting and mgdi guides — plus the CE

@@ -65,7 +65,7 @@ can collect them):
 | CE 6.0 R3 update | <https://archive.org/details/CE6R3> | **inventoried 2026-10-20: product payload only** (19,745 files, no documentation set -- the CF 3.5 reference is not on this disc); not collected |
 | CE 6.0 Platform Builder SP1 | <https://archive.org/details/windows-embedded-ce-6.0-platform-builder-sp1> + Microsoft Download Center id 4097 (`Release Notes.htm` is a plain file) | **inventoried 2026-10-20: tools payload only** (3,326 files, 0 documentation pages); not collected |
 | CE 5.0 Standard SDK | Microsoft Download Center id 17310 (still live) | the CE 5.0 Standard SDK API surface |
-| MSDN Library discs (2001–2010) | Internet Archive: **VS2008 SP1 (Nov 2008) imported 2026-10-21** (`X15-18280`, 2.2 GB; same disc X15-06188 at Microsoft Download Center id 20955): an MSI payload of 1,268 MS Help 2 `.HxS` titles, of which the CE 5.0 `wce*5` set + `mobilesdk5` + managed `fxref_microsoft.windowsmobile.*` are in `corpus/msdn-library/vs2008-sp1/` (33,010 pages) via the lane's new HxS routing. **Jan 2002 imported 2026-10-21** (`msdn-jan-2002`): the first Help-2 library's CE 3.0 titles (22 `WCE*` + ADOCE31/DNAPPCOM/DNCE21/DNCE30, 13,429 pages in `corpus/msdn-library/jan-2002/`). **VS.NET 2003 discs inventoried, conversion pending** (Alcohol MDF images; `tools/mdf.py`'s sniffer generalized 2026-10-21, re-inventory queued — the CE .NET 4.2-era set). **Jan 2001 inventory queued** (`msdn-library-january-2001-x06-07342`, 5.28 GB DVD, pre-Help-2). **VS2005 and Jan-2008 editions inventoried 2026-10-21 and set aside**: their CE title sets duplicate the VS2008 SP1 import title-for-title | the MSDN-era captures of CE 3.0–5.0 / Windows Mobile reference (the `bb*` topics never migrated to Learn), including custom-hardware docs |
+| MSDN Library discs (2001–2010) | Internet Archive: **VS2008 SP1 (Nov 2008) imported 2026-10-21** (`X15-18280`, 2.2 GB; same disc X15-06188 at Microsoft Download Center id 20955): an MSI payload of 1,268 MS Help 2 `.HxS` titles, of which the CE 5.0 `wce*5` set + `mobilesdk5` + managed `fxref_microsoft.windowsmobile.*` are in `corpus/msdn-library/vs2008-sp1/` (33,010 pages) via the lane's new HxS routing. **Jan 2002 imported 2026-10-21** (`msdn-jan-2002`): the first Help-2 library's CE 3.0 titles (22 `WCE*` + ADOCE31/DNAPPCOM/DNCE21/DNCE30, 13,429 pages in `corpus/msdn-library/jan-2002/`). **VS.NET 2003 imported 2026-10-21** (the three discs are Alcohol-MDF dumps with 2448-byte sectors; `tools/mdf.py` converts them — 118 CE titles, 37,371 pages in `corpus/msdn-library/vsnet-2003/`). **Jan 2001 inventoried and set aside** (5.28 GB DVD whose CE CHM titles duplicate the Jan-2002 set). **VS2005 and Jan-2008 editions inventoried 2026-10-21 and set aside**: their CE title sets duplicate the VS2008 SP1 import title-for-title | the MSDN-era captures of CE 3.0–5.0 / Windows Mobile reference (the `bb*` topics never migrated to Learn), including custom-hardware docs |
 | Windows Mobile 5.0/6.1/6.5 Pocket PC SDK MSIs | <https://archive.org/details/windows-mobile-5.0-pocket-pc-sdk> | **inventoried 2026-10-21: no documentation set aboard** (2,559 files: headers/libs/samples/emulator material); not collected. The WM6 SDK Refresh and Pocket PC 2003 SDK MSIs inventoried the same way and are likewise documentation-free |
 
 Inventory outcome (2026-10-20, runs 39363624759/39364902845): all
@@ -76,11 +76,12 @@ table), so none was imported and the rows were removed again.
 MSDN Library outcome (2026-10-21): the disc-set vein paid off —
 after adding MS Help 2 and MDF support to the media lane, the
 VS2008 SP1 disc yielded the full CE 5.0 + Windows Mobile 5
-reference (33,010 pages) and the January 2002 disc the CE 3.0
-library (13,429 pages), taking the corpus to 173,402 pages.
-Still open: the VS.NET 2003 set (CE .NET 4.2 era, MDF
-conversion) and the January 2001 DVD, both queued in
-`queues/media.tsv`.
+reference (33,010 pages), the January 2002 disc the CE 3.0
+library (13,429 pages), and the three VS.NET 2003 discs the
+CE .NET 4.x library (37,371 pages), taking the corpus to
+210,773 pages. The January 2001 DVD, MSDN Library 2005 and
+January 2008 editions were inventoried and set aside as
+duplicative of those imports (see `queues/media.tsv`).
 
 For page-level material the *queues* are the actionable list, and as of
 2026-10 both of them are done: `queues/mslearn-embedded.txt` is exhausted
