@@ -52,3 +52,15 @@ downloads it to a scratch directory, imports the documentation pages of the
 tree above and discards the image. Binaries, headers, samples and toolchains
 are not part of this corpus - see "What is collected" in the top-level
 README.
+
+---
+
+Repair note (2026-10-21): the `enu_kbmobilekb` and
+`enu_kbwinceddk` titles hold their topics as UTF-16 HTML. The
+media lane's byte-wise charset sniff could not see that and
+stored all 628 pages as cp1252 mojibake; `to_utf8`
+(tools/extract-chm.py, tools/import-media.py) now reads the
+UTF-16 BOM first, and the stored pages were rewritten with
+exactly the bytes the fixed extractor emits (the mojibake was
+a reversible cp1252/UTF-8 shadow of the members; verified page
+by page).

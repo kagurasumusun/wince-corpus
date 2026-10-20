@@ -96,6 +96,10 @@ CE_WORDS = ("windows ce", "windows embedded ce", "ce .net", "wince",
 
 def decode(raw):
     """bytes -> str, deciding the encoding the way the rest of the tools do."""
+    if raw[:2] in (b"\xff\xfe", b"\xfe\xff"):
+        # UTF-16 by BOM (stored pages are normalised to UTF-8 at
+        # extraction; this guards any route that keeps raw bytes).
+        return raw.decode("utf-16")
     for codec in ("utf-8", "cp1252"):
         try:
             return raw.decode(codec)

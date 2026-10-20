@@ -587,6 +587,13 @@ def page_title(path):
 
 
 def to_utf8(body):
+    # A UTF-16 member declares itself only by its BOM: the byte-wise
+    # charset sniff below cannot see through the NUL interleaving,
+    # and the cp1252 fallback would store the member as mojibake
+    # (the ENU_KB* Help 2 titles of the VS.NET 2003 discs -- 628
+    # pages extracted unreadable until this sniff existed).
+    if body[:2] in (b"\xff\xfe", b"\xfe\xff"):
+        return body.decode("utf-16").encode("utf-8")
     match = CHARSET_RE.search(body[:2048])
     charset = match.group(1).decode("ascii", "replace").lower() if match else ""
     if charset in ("utf-8", "utf8", "us-ascii", "ascii"):

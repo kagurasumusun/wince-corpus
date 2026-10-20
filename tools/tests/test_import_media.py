@@ -134,6 +134,34 @@ printf '<xml/>' > "$out/meta.xml"
 """
 
 
+class ToUtf8Tests(unittest.TestCase):
+    """to_utf8 (extract-chm's and import-media's twin normalisers)
+    must read a UTF-16 member by its BOM: the byte-wise charset
+    sniff cannot see through NUL interleaving, and the cp1252
+    fallback stored the ENU_KB* Help 2 titles (628 pages of the
+    VS.NET 2003 import) as mojibake."""
+
+    def setUp(self):
+        spec = importlib.util.spec_from_file_location(
+            "extract_chm", os.path.join(_HERE, "..", "extract-chm.py"))
+        self.extract = importlib.util.module_from_spec(spec)
+        spec.loader.exec_module(self.extract)
+
+    def test_utf16_bom_wins(self):
+        body = "<HTML><TITLE>Q281710 - Café</TITLE></HTML>"
+        for mod in (media, self.extract):
+            out = mod.to_utf8(body.encode("utf-16")).decode("utf-8")
+            self.assertIn("Q281710", out)
+            self.assertNotIn("\x00", out)
+            out = mod.to_utf8(b"\xfe\xff" + body.encode("utf-16-be"))
+            self.assertIn("Q281710", out.decode("utf-8"))
+            # the old shapes keep their behaviour
+            self.assertEqual(mod.to_utf8(b"<HTML>plain</HTML>"),
+                             b"<HTML>plain</HTML>")
+            self.assertEqual(mod.to_utf8("café".encode("cp1252")),
+                             "café".encode("utf-8"))
+
+
 class ExtractHxsTests(unittest.TestCase):
     def setUp(self):
         spec = importlib.util.spec_from_file_location(
