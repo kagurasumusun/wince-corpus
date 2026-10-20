@@ -16,7 +16,7 @@ as `invalid` and skipped.
 | `auto-harvest.txt` | 1 | Not a URL queue: the budget the daily automatic run reads (`<queue> <pages per run> [batch]`, or `off`). See below. |
 | `third-party-sources.md` (`Not collected` section) | 4+ | Candidate sources that are **not** harvested: vendor/community material, kept as a record of what was deliberately left out and why (licence or scope). |
 | `chm-sets.tsv` | 2 | Not a URL queue: which CHMs under `sources/` are extracted into which corpus directory (`tools/extract-chm.py`, `.github/workflows/extract-chm.yml`). `python3 tools/build-chm-inventory.py` lists every help file under `sources/` against this table, so a CHM that no entry covers shows up instead of being forgotten. |
-| `media.tsv` | 3 | Not a URL queue: the CD/DVD images to fetch from the Internet Archive and import (`tools/import-media.py`, `.github/workflows/import-media.yml`), one row per medium with its exclude regex. |
+| `media.tsv` | 9 | Not a URL queue: the CD/DVD images to fetch from the Internet Archive and import (`tools/import-media.py`, `.github/workflows/import-media.yml`), one row per medium with its exclude regex. |
 | `site-sets.tsv` | 4 | Not a URL queue: the plain-HTML page trees under `sources/` that are neither a CHM set nor a CD image (the CE 2.0 developer site, the CE 4.2/5.0/6.0 release notes), with the regex that refuses the site's shop-window pages (`tools/import-site.py`; every refusal is written to `data/reports/site-excluded.tsv`). |
 
 ## What `--limit` counts

@@ -205,13 +205,45 @@ def write_scratch_provenance(out, item, data, rows):
         fh.write(text)
 
 
+def _item_files(data, pattern):
+    """The original files of an item that the entry's pattern selects."""
+    return [f for f in data.get("files", [])
+            if f.get("source") == "original"
+            and not f["name"].lower().endswith((".torrent", ".xml", ".sqlite",
+                                                ".jpg", ".jpeg", ".png"))
+            and re.search(pattern, f["name"], re.I)]
+
+
+def _cached_provenance(entry, source_dir, out):
+    """PROVENANCE.md for a scratch medium an earlier run fetched.
+
+    The fetch of a scratch medium and its import can be different
+    runs (an inventory first, the import once it is scoped), and
+    ``_SCRATCH`` only lives for one process; without this the
+    imported pages would carry no provenance at all.  The rows are
+    rebuilt from the item metadata and the files on disk.
+    """
+    try:
+        data = metadata(entry["item"])
+    except Exception as exc:                              # noqa: BLE001
+        log(f"[media] {entry['name']}: no provenance (metadata: {exc})")
+        return
+    rows = []
+    for f in _item_files(data, entry["pattern"]):
+        dest = os.path.join(source_dir, f["name"])
+        size = (os.path.getsize(dest) if os.path.exists(dest)
+                else int(f.get("size") or 0))
+        url = (f"{BASE_URL}/download/{urllib.parse.quote(entry['item'])}/"
+               f"{urllib.parse.quote(f['name'])}")
+        rows.append((f["name"], size, f.get("md5", ""), url))
+    write_scratch_provenance(out, entry["item"], data, rows)
+    log(f"[media] {entry['name']}: provenance written to "
+        f"{os.path.relpath(os.path.join(out, 'PROVENANCE.md'), ROOT)}")
+
+
 def fetch_item(item, name, pattern, keep=True, list_files=False):
     data = metadata(item)
-    files = [f for f in data.get("files", [])
-             if f.get("source") == "original"
-             and not f["name"].lower().endswith((".torrent", ".xml", ".sqlite",
-                                                 ".jpg", ".jpeg", ".png"))
-             and re.search(pattern, f["name"], re.I)]
+    files = _item_files(data, pattern)
     if not files:
         log(f"[media] {item}: nothing matches {pattern!r}")
         return 1
@@ -406,9 +438,13 @@ def walk_medium(root, seven, depth=0, unpacked=None, prefix=""):
                     stem = stem[:60].rsplit("_", 1)[0].rstrip("_")
                 inner_prefix = f"{prefix}{stem}/" if stem else prefix
                 if seven or lower.endswith(".iso") or lower.endswith(".cab"):
+                    # Keyed on the file itself, not its name inside the
+                    # medium: two media whose images share a name
+                    # ("DVD1.iso") must never share an unpacked tree.
                     target = os.path.join(
                         tempfile.gettempdir(), "media-unpack", f"d{depth}",
-                        hashlib.md5(key.encode()).hexdigest()[:12])
+                        hashlib.md5(os.path.abspath(path).encode())
+                        .hexdigest()[:12])
                     done = os.path.isdir(target)
                     if not done and lower.endswith(".iso"):
                         if seven and has_udf_filesystem(path):
@@ -437,7 +473,8 @@ def walk_medium(root, seven, depth=0, unpacked=None, prefix=""):
                     # A machine without 7z can still look inside a zip.
                     target = os.path.join(
                         tempfile.gettempdir(), "media-unpack", f"d{depth}",
-                        hashlib.md5(key.encode()).hexdigest()[:12])
+                        hashlib.md5(os.path.abspath(path).encode())
+                        .hexdigest()[:12])
                     if not os.path.isdir(target):
                         os.makedirs(target, exist_ok=True)
                         try:
@@ -777,6 +814,13 @@ def run_config(config, only, dry_run=False, force=False):
                                          scratch_info["rows"])
                 log(f"[media] {entry['name']}: provenance written to "
                     f"{os.path.relpath(os.path.join(out, 'PROVENANCE.md'), ROOT)}")
+            elif scratch and not dry_run and pages:
+                _cached_provenance(entry, source_dir, out)
+        # A queue can name several discs: one medium's unpacked trees
+        # must not eat the disk the next medium needs.  (Within one
+        # medium the inventory and the import still share them.)
+        shutil.rmtree(os.path.join(tempfile.gettempdir(), "media-unpack"),
+                      ignore_errors=True)
     return 0
 
 

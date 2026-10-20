@@ -141,18 +141,35 @@ def extract_hxs(seven_zip, hxs_path, dest_dir, dry_run=False):
     both, so the extraction path is shared; what differs is only
     which files the media lane routes here (an .HxS carries its own
     metadata streams and TOC/index companions, all filtered by the
-    same page rules as a CHM's internals).
+    same page rules as a CHM's internals).  7-Zip picks its HXS
+    handler by extension/type, and installer media carry the titles
+    under extensionless MSI names (FL_<title>_hxs_enu), so the type
+    is forced and the title is presented under an .hxs name -- under
+    its MSI name 7-Zip answers "Cannot open the file as archive".
     """
-    return _extract_container(seven_zip, hxs_path, dest_dir, dry_run, "hxs")
+    if dry_run or hxs_path.lower().endswith(".hxs"):
+        return _extract_container(seven_zip, hxs_path, dest_dir,
+                                  dry_run, "hxs", force_type="Hxs")
+    with tempfile.TemporaryDirectory(prefix="hxs-name-") as named:
+        link = os.path.join(named, "title.hxs")
+        try:
+            os.symlink(os.path.abspath(hxs_path), link)
+        except OSError:
+            shutil.copyfile(hxs_path, link)
+        return _extract_container(seven_zip, link, dest_dir,
+                                  dry_run, "hxs", force_type="Hxs")
 
 
-def _extract_container(seven_zip, path, dest_dir, dry_run, tag):
+def _extract_container(seven_zip, path, dest_dir, dry_run, tag,
+                       force_type=None):
     if dry_run:
         return 0, 0
     os.makedirs(dest_dir, exist_ok=True)
     with tempfile.TemporaryDirectory(prefix=f"{tag}-") as tmp:
         result = subprocess.run(
-            [seven_zip, "x", "-y", "-bso0", "-bsp0", path, f"-o{tmp}"],
+            [seven_zip, "x"]
+            + ([f"-t{force_type}"] if force_type else [])
+            + ["-y", "-bso0", "-bsp0", path, f"-o{tmp}"],
             capture_output=True, text=True)
         if result.returncode != 0:
             tail = (result.stderr or result.stdout or "").strip().splitlines()

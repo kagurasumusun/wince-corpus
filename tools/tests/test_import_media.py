@@ -103,6 +103,7 @@ FAKE_SEVEN = """#!/bin/sh
 out=""
 for a in "$@"; do case "$a" in -o*) out="${a#-o}";; esac; done
 mkdir -p "$out/html" "$out/images"
+[ -n "$FAKE7Z_ARGV" ] && printf '%s\n' "$@" > "$FAKE7Z_ARGV"
 printf '<html><head><title>Topic One</title></head><body>%s</body></html>' topic > "$out/html/one.htm"
 printf '<html><head><title>Topic Not Found</title></head><body>no</body></html>' > "$out/html/gone.htm"
 printf 'not an image really' > "$out/images/a.png"
@@ -135,6 +136,24 @@ class ExtractHxsTests(unittest.TestCase):
                 landed += [os.path.relpath(os.path.join(dirpath, f), dest)
                            for f in files]
             self.assertEqual(landed, [os.path.join("html", "one.html")])
+
+    def test_extensionless_payload_is_presented_as_hxs(self):
+        with tempfile.TemporaryDirectory() as box:
+            payload = os.path.join(box, "FL_wcecoreos5_hxs_enu")
+            with open(payload, "wb") as fh:
+                fh.write(b"not really a title")
+            argv_file = os.path.join(box, "argv.txt")
+            os.environ["FAKE7Z_ARGV"] = argv_file
+            try:
+                pages, _size = self.extract.extract_hxs(
+                    self.fake, payload, os.path.join(box, "out"))
+            finally:
+                del os.environ["FAKE7Z_ARGV"]
+            self.assertEqual(pages, 1)
+            argv = open(argv_file).read().splitlines()
+            self.assertIn("-tHxs", argv)
+            archive = [a for a in argv if a.endswith(".hxs")]
+            self.assertEqual(len(archive), 1, argv)
 
     def test_chm_and_hxs_share_the_extraction_contract(self):
         for fn in (self.extract.extract_chm, self.extract.extract_hxs):
