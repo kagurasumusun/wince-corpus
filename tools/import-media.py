@@ -802,6 +802,13 @@ def run_config(config, only, dry_run=False, force=False):
                 log(f"[media] {entry['name']}: already imported on "
                     f"{receipt['date']} ({receipt['pages']} pages) - "
                     f"nothing to fetch (--force to redo)")
+                cached = os.path.join(ROOT, ".cache", "media",
+                                      entry["name"])
+                if os.path.isdir(cached):
+                    # The import is recorded; the cached image is dead
+                    # weight in the runner's media cache.
+                    shutil.rmtree(cached, ignore_errors=True)
+                    log(f"[media] {entry['name']}: cached image discarded")
                 continue
         source_dir = (os.path.join(ROOT, ".cache", "media", entry["name"])
                       if scratch else

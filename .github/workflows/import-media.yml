@@ -57,6 +57,14 @@ jobs:
         with:
           python-version: '3.x'
 
+      - name: Free disk space
+        # Several disc images plus their unpacked trees do not fit
+        # next to the runner's preinstalled SDKs; drop the big ones
+        # this lane never uses (~15 GB).
+        run: |
+          sudo rm -rf /usr/share/dotnet /usr/local/lib/android-sdk /opt/ghc /opt/hostedtoolcache/CodeQL || true
+          df -h / | tail -1
+
       - name: Restore the media cache
         # A scratch medium is thrown away at the end of the run, and a run can
         # fail after a 338 MB download; this keeps the image around for the
@@ -121,6 +129,7 @@ jobs:
           # step after this one commits that log when this step fails.
           set -o pipefail
           exec > >(stdbuf -oL tee data/reports/media-refresh.txt) 2>&1
+          df -h / | tail -1
           echo "== build-index =="
           python3 tools/build-index.py
           echo "== build-index-sql =="
@@ -158,14 +167,22 @@ jobs:
       - name: Commit the logs when the refresh fails
         if: ${{ failure() && steps.refresh.outcome == 'failure' && github.event.inputs.dry_run != 'true' }}
         run: |
+          # Plumbing only: build the log commit on top of the branch
+          # tip in a scratch index.  The failed refresh left the
+          # working tree full of unstaged index files and untracked
+          # pages, and both a plain commit and a rebase died on that
+          # (exit 128) -- this never touches the tree at all.
           git config user.name "wince-docs-corpus importer"
           git config user.email "wince-corpus-harvester@users.noreply.github.com"
-          git add data/reports/media-refresh.txt data/reports/media-last.txt || true
-          git diff --staged --quiet || git commit -m "media: index refresh failed (logs)"
-          # --autostash: the failed refresh left unstaged index changes
-          # and untracked pages around; a plain rebase refuses them.
-          git pull --rebase --autostash
-          git push
+          export GIT_INDEX_FILE=/tmp/media-log-index
+          for attempt in 1 2; do
+            git fetch origin "${GITHUB_REF_NAME}"
+            git read-tree "origin/${GITHUB_REF_NAME}"
+            git add -f data/reports/media-refresh.txt data/reports/media-last.txt || true
+            tree=$(git write-tree)
+            commit=$(git commit-tree "$tree" -p "origin/${GITHUB_REF_NAME}" -m "media: index refresh failed (logs)")
+            if git push origin "$commit:${GITHUB_REF_NAME}"; then break; fi
+          done
 
       - name: Report the outcome
         if: ${{ steps.media.outcome == 'failure' && github.event.inputs.dry_run != 'true' }}
